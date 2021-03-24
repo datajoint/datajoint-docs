@@ -66,7 +66,9 @@ Examples:
   ``dj.kill('HOST LIKE "%compute%"')`` lists only connections from hosts containing "compute".
   ``dj.kill('TIME > 600')`` lists only connections older than 10 minutes.
 
-A list of connections meeting the restriction conditions (if present) are presented to the user, along with the option to kill processes.
+A list of connections meeting the restriction conditions (if present) are presented to the user, along with the option to kill processes. By default, output is ordered by ascending connection ID. To change the output order of dj.kill(), an additional order_by argument can be provided.
+
+.. include:: 06-distributed-computing_kill_order_by.rst
 
 .. |python| image:: ../_static/img/python-tiny.png
 .. |matlab| image:: ../_static/img/matlab-tiny.png
