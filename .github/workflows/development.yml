@@ -14,31 +14,18 @@ jobs:
       - name: Compile docs static artifacts
         run: |
           MODE=BUILD HOST_UID=$(id -u) docker-compose up --exit-code-from docs --build
-      # - name: Add docs static artifacts
-      #   uses: actions/upload-artifact@v2
-      #   with:
-      #     name: docs-static
-      #     path: site
-      #     retention-days: 1
-      # - name: Fetch docs static artifacts
-      #   uses: actions/download-artifact@v2
-      #   with:
-      #     name: docs-static
-      #     path: site
       - name: Commit documentation changes
         run: |
           git clone https://github.com/${GITHUB_REPOSITORY}.git \
               --branch gh-pages --single-branch gh-pages
           rm -R gh-pages/*
           cp -r site/* gh-pages/
-          # cp .gitignore gh-pages/
-          # touch gh-pages/.nojekyll
           cd gh-pages
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           git add . --all
           git commit -m "Update documentation" -a || true
-          # The above command will exit if no changes were present, so we ignore
+          # The above command will fail if no changes were present, so we ignore
           # the return code.
       - name: Push changes
         uses: ad-m/github-push-action@master
@@ -46,11 +33,3 @@ jobs:
           branch: gh-pages
           directory: gh-pages
           github_token: ${{secrets.GITHUB_TOKEN}}
-# git checkout gh-pages
-# rm -R ./*
-# cp -R /tmp/site/* ./
-# git add . --all
-# git commit -m "Update documentation" -a || true
-# # The above command will fail if no changes were present, so we ignore
-# # the return code.
-# git push -u origin gh-pages

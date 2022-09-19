@@ -1,5 +1,6 @@
-# MODE="LIVE|BUILD" HOST_UID=1000 docker compose up --build
-# navigate to http://localhost/
+# MODE="LIVE|BUILD" HOST_UID=$(id -u) docker compose up --build
+# 
+# Navigate to http://localhost/
 version: "2.4"
 services:
   docs:
