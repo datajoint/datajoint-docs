@@ -5,6 +5,8 @@ services:
   docs:
     build:
       dockerfile: .docker/Dockerfile
+      context: .
+    image: datajoint/documentation
     environment:
       - MODE
     volumes:
