@@ -1,0 +1,36 @@
+# MODE="LIVE|BUILD" HOST_UID=1000 docker compose up --build
+# navigate to http://localhost/
+version: "2.4"
+services:
+  docs:
+    build:
+      dockerfile: .docker/Dockerfile
+    environment:
+      - MODE
+      - GITHUB_TOKEN
+    volumes:
+      - .:/main
+    user: ${HOST_UID}:anaconda
+    ports:
+      - 80:80
+    command:
+      - sh
+      - -c
+      - |
+        set -e
+        if echo "$${MODE}" | grep -i live &>/dev/null; then
+            mkdocs serve --config-file ./mkdocs.yaml -a 0.0.0.0:80
+        elif echo "$${MODE}" | grep -i build &>/dev/null; then
+            mkdocs build --config-file ./mkdocs.yaml
+            # git checkout gh-pages
+            # rm -R ./*
+            # cp -R /tmp/site/* ./
+            # git add . --all
+            # git commit -m "Update documentation" -a || true
+            # # The above command will fail if no changes were present, so we ignore
+            # # the return code.
+            # git push -u origin gh-pages
+        else
+            echo "Unexpected mode..."
+            exit 1
+        fi

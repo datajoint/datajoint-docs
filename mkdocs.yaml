@@ -1,0 +1,70 @@
+# ---------------------- PROJECT SPECIFIC ---------------------------
+
+site_name: DataJoint Documentation
+repo_url: https://github.com/datajoint-company/documentation
+repo_name: datajoint-company/documentation
+nav:
+  - Getting Started: getting_started.md
+  - Core: core.md
+  - Elements: elements.md
+  - Concepts:
+    - Datatypes: concepts/datatypes.md
+  - Glossary: glossary.md
+  - About:
+    - Contribution: about/contribution.md
+
+# ---------------------------- STANDARD -----------------------------
+
+docs_dir: ./src
+edit_uri: ./edit/main/src
+theme:
+  name: material
+  custom_dir: src/.overrides
+  logo: assets/images/project-logo-black.png
+  favicon: assets/images/project-logo-color.png
+  features:
+    - toc.integrate
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: datajoint
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+plugins:
+  - search
+  - redirects:
+      redirect_maps:
+        "index.md": "getting_started.md"
+markdown_extensions:
+  - attr_list
+  - toc:
+      permalink: true
+  - pymdownx.emoji:
+      options:
+        custom_icons:
+          - .overrides/.icons
+  - mdx_truly_sane_lists
+extra:
+  generator: false # Disable watermark
+  social:
+    - icon: datajoint/company-logo
+      link: https://www.datajoint.com/
+    - icon: fontawesome/brands/slack
+      link: https://datajoint.slack.com
+    - icon: fontawesome/brands/linkedin
+      link: https://www.linkedin.com/company/datajoint
+    - icon: fontawesome/brands/twitter
+      link: https://twitter.com/DataJointIO
+    - icon: fontawesome/brands/github
+      link: https://github.com/datajoint
+    - icon: fontawesome/brands/stack-overflow
+      link: https://stackoverflow.com/questions/tagged/datajoint
+    - icon: fontawesome/brands/youtube
+      link: https://www.youtube.com/channel/UCdeCuFOTCXlVMRzh6Wk-lGg
+extra_css:
+  - assets/stylesheets/extra.css
