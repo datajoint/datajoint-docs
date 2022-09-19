@@ -4,12 +4,32 @@ on:
     branches:
       - main
 jobs:
-  deploy:
+  deploy-docs:
     runs-on: ubuntu-latest
+    env:
+      DOCKER_CLIENT_TIMEOUT: "120"
+      COMPOSE_HTTP_TIMEOUT: "120"
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-python@v2
+      - name: Compile docs static artifacts
+        run: |
+          MODE=BUILD HOST_UID=$(id -u) docker-compose up --exit-code-from docs --build
+      - name: Commit documentation changes
+        run: |
+          git clone https://github.com/${GITHUB_REPOSITORY}.git \
+              --branch gh-pages --single-branch gh-pages
+          rm -R gh-pages/*
+          cp -r site/* gh-pages/
+          cd gh-pages
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add . --all
+          git commit -m "Update documentation" -a || true
+          # The above command will fail if no changes were present, so we ignore
+          # the return code.
+      - name: Push changes
+        uses: ad-m/github-push-action@master
         with:
-          python-version: 3.x
-      - run: pip install mkdocs-material
-      - run: mkdocs gh-deploy --force
+          branch: gh-pages
+          directory: gh-pages
+          github_token: ${{secrets.GITHUB_TOKEN}}

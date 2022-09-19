@@ -1,0 +1,30 @@
+# MODE="LIVE|BUILD" HOST_UID=$(id -u) docker compose up --build
+# 
+# Navigate to http://localhost/
+version: "2.4"
+services:
+  docs:
+    build:
+      dockerfile: .docker/Dockerfile
+      context: .
+    image: datajoint/documentation
+    environment:
+      - MODE
+    volumes:
+      - .:/main
+    user: ${HOST_UID}:anaconda
+    ports:
+      - 80:80
+    command:
+      - sh
+      - -c
+      - |
+        set -e
+        if echo "$${MODE}" | grep -i live &>/dev/null; then
+            mkdocs serve --config-file ./mkdocs.yaml -a 0.0.0.0:80
+        elif echo "$${MODE}" | grep -i build &>/dev/null; then
+            mkdocs build --config-file ./mkdocs.yaml
+        else
+            echo "Unexpected mode..."
+            exit 1
+        fi
