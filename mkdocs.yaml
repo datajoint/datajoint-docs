@@ -18,9 +18,13 @@ nav:
 docs_dir: ./src
 edit_uri: ./edit/main/src
 theme:
+  font:
+    text: Roboto Slab
+    code: Source Code Pro
   name: material
   custom_dir: src/.overrides
-  logo: assets/images/project-logo-black.png
+  icon:
+    logo: main/project-logo-black
   favicon: assets/images/project-logo-color.png
   features:
     - toc.integrate
@@ -57,8 +61,10 @@ markdown_extensions:
 extra:
   generator: false # Disable watermark
   social:
-    - icon: datajoint/company-logo
+    - icon: main/company-logo
       link: https://www.datajoint.com/
+    - icon: fontawesome/solid/ticket
+      link: https://support.djneuro.io/portal/en/home
     - icon: fontawesome/brands/slack
       link: https://datajoint.slack.com
     - icon: fontawesome/brands/linkedin
@@ -67,6 +73,10 @@ extra:
       link: https://twitter.com/DataJointIO
     - icon: fontawesome/brands/github
       link: https://github.com/datajoint
+    - icon: fontawesome/brands/docker
+      link: https://hub.docker.com/u/datajoint
+    - icon: fontawesome/brands/python
+      link: https://pypi.org/user/datajointbot
     - icon: fontawesome/brands/stack-overflow
       link: https://stackoverflow.com/questions/tagged/datajoint
     - icon: fontawesome/brands/youtube
