@@ -1,25 +1,17 @@
 # Core
 
-## Relational Database
+DataJoint Core projects are fully open-source and are built to develop, define, manage, and visualize [data pipelines](../glossary#data-pipeline). Below are the projects that make up the family of core open-source projects.
 
-- MySQL usage
-- Optimal configuration
-- Maintenance
-- Permission management and access control 
+## [API](https://en.wikipedia.org/wiki/API)'s
 
+- **[DataJoint Python](https://datajoint.com/docs/core/datajoint-python/)**: A low-level client for managing [data pipelines](../glossary#data-pipeline).
+- **[DataJoint MATLAB](https://datajoint.com/docs/core/datajoint-matlab/)**: A low-level client for managing [data pipelines](../glossary#data-pipeline).
+- **[Pharus](https://datajoint.com/docs/core/pharus/)**: Expose [data pipelines](../glossary#data-pipeline) via a [REST](https://en.wikipedia.org/wiki/Representational_state_transfer) interface.
 
-## Programming Interfaces
+## Web [GUI](https://en.wikipedia.org/wiki/Graphical_user_interface)'s
 
-Below are the projects that make up the family of core open-source projects:
-
-- **[Python API](https://datajoint.com/docs/core/datajoint-python/)**: Relational framework that allows for intuitive queries and reproducible computation.
-- **[MATLAB API](https://datajoint.com/docs/core/datajoint-matlab/)**: Relational framework that allows for intuitive queries and reproducible computation.
-- **[Pharus](https://datajoint.com/docs/core/pharus/)**: REST interface for communicating with data pipelines.
-
-## Web Interfaces
-
-- **[LabBook](https://datajoint.com/docs/core/datajoint-labbook/)**: Data entry and data model browsing web GUI.
-- **[SciViz](https://datajoint.com/docs/core/sci-viz/)**: Visualization framework for making low-code web apps.
+- **[LabBook](https://datajoint.com/docs/core/datajoint-labbook/)**: Data entry and data model browsing for [data pipelines](../glossary#data-pipeline).
+- **[SciViz](https://datajoint.com/docs/core/sci-viz/)**: A visualization framework for making [low-code](https://en.wikipedia.org/wiki/Low-code_development_platform) web apps for [data pipelines](../glossary#data-pipeline).
 
 ## Container Images
 
@@ -33,10 +25,10 @@ graph
   datajoint/djlab --> datajoint/djlabhub;
 ```
 
-- **[datajoint/mysql](https://datajoint.com/docs/core/mysql-docker/)**: Optimized MySQL image for use with DataJoint Engine.
-- **[datajoint/miniconda3](https://datajoint.com/docs/core/miniconda3-docker/)**: Minimal Python image with `conda`.
-- **[datajoint/djbase](https://datajoint.com/docs/core/djbase-docker/)**: DataJoint engine dependencies only.
-- **[datajoint/djtest](https://datajoint.com/docs/core/djtest-docker/)**: Includes testing tools like `pytest`.
-- **[datajoint/datajoint](https://datajoint.com/docs/core/datajoint-python/)**: Official DataJoint engine image.
-- **[datajoint/djlab](https://datajoint.com/docs/core/djlab-docker/)**: Includes local Jupyter Lab environment.
-- **[datajoint/djlabhub](https://datajoint.com/docs/core/djlabhub-docker/)**: Includes necessary dependencies for launching with Jupyter Hub.
+- **[datajoint/mysql](https://datajoint.com/docs/core/mysql-docker/)**: An optimized, MySQL backend for [data pipelines](../glossary#data-pipeline).
+- **[datajoint/miniconda3](https://datajoint.com/docs/core/miniconda3-docker/)**: A minimal Python image with [conda](https://docs.conda.io/en/latest/).
+- **[datajoint/djbase](https://datajoint.com/docs/core/djbase-docker/)**: Adds only dependencies for managing [data pipelines](../glossary#data-pipeline).
+- **[datajoint/djtest](https://datajoint.com/docs/core/djtest-docker/)**: Adds testing tools like [pytest](https://docs.pytest.org/en/7.1.x/).
+- **[datajoint/datajoint](https://datajoint.com/docs/core/datajoint-python/)**: Official image for managing [data pipelines](../glossary#data-pipeline).
+- **[datajoint/djlab](https://datajoint.com/docs/core/djlab-docker/)**: Adds a local [Jupyter Lab](https://jupyterlab.readthedocs.io/en/stable/) environment.
+- **[datajoint/djlabhub](https://datajoint.com/docs/core/djlabhub-docker/)**: Adds a client to allow hosting with [Jupyter Hub](https://jupyter.org/hub).
