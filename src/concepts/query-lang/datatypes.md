@@ -4,14 +4,14 @@ Throughout the DataJoint ecosystem, there are several datatypes that are used to
 
 ## Standard Types
 
-These types are largely wrappers around existing types in MySQL since this is the backend to the DataJoint Engine.
+These types are largely wrappers around existing types in the current [query backend](../../ref-integrity/query-backend) for [data pipelines](../../../glossary#data-pipeline).
 
 | Datatype | Description | Size | Example |
 | --- | --- | ---| --- |
-| int | integer | 4 bytes | `8` |
+| <span id="int">int</span> | integer | 4 bytes | `8` |
 
 ## Unique Types
 
 | Datatype | Description | Size | Example |
 | --- | --- | ---| --- |
-| uuid | a unique GUID value | 16 bytes | `6ed5ed09-e69c-466f-8d06-a5afbf273e61` |
+| <span id="uuid">uuid</span> | a unique GUID value | 16 bytes | `6ed5ed09-e69c-466f-8d06-a5afbf273e61` |
