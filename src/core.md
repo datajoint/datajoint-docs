@@ -4,14 +4,58 @@ DataJoint Core projects are fully open-source and are built to develop, define, 
 
 ## [API](https://en.wikipedia.org/wiki/API)'s
 
-- **[DataJoint Python](https://datajoint.com/docs/core/datajoint-python/)**: A low-level client for managing [data pipelines](../glossary#data-pipeline).
-- **[DataJoint MATLAB](https://datajoint.com/docs/core/datajoint-matlab/)**: A low-level client for managing [data pipelines](../glossary#data-pipeline).
-- **[Pharus](https://datajoint.com/docs/core/pharus/)**: Expose [data pipelines](../glossary#data-pipeline) via a [REST](https://en.wikipedia.org/wiki/Representational_state_transfer) interface.
+
+
+<div class="grid cards" markdown>
+
+-   :fontawesome-brands-python:{ .lg .middle } **DataJoint Python**
+
+    ---
+
+    A low-level client for managing [data pipelines](../glossary#data-pipeline).
+
+    [:octicons-arrow-right-24: Getting started](https://datajoint.com/docs/core/datajoint-python/)
+
+-   :fontawesome-brands-java:{ .lg .middle } **DataJoint MATLAB**
+
+    ---
+
+    A low-level client for managing [data pipelines](../glossary#data-pipeline).
+
+    [:octicons-arrow-right-24: Getting started](https://datajoint.com/docs/core/datajoint-matlab/)
+
+-   :fontawesome-solid-flask:{ .lg .middle } **Pharus**
+
+    ---
+
+    Expose [data pipelines](../glossary#data-pipeline) via a [REST](https://en.wikipedia.org/wiki/Representational_state_transfer) interface.
+
+    [:octicons-arrow-right-24: Getting started](https://datajoint.com/docs/core/pharus/)
+
+</div>
 
 ## Web [GUI](https://en.wikipedia.org/wiki/Graphical_user_interface)'s
 
-- **[LabBook](https://datajoint.com/docs/core/datajoint-labbook/)**: Data entry and data model browsing for [data pipelines](../glossary#data-pipeline).
-- **[SciViz](https://datajoint.com/docs/core/sci-viz/)**: A visualization framework for making [low-code](https://en.wikipedia.org/wiki/Low-code_development_platform) web apps for [data pipelines](../glossary#data-pipeline).
+
+<div class="grid cards" markdown>
+
+-   :fontawesome-brands-chrome:{ .lg .middle } **LabBook**
+
+    ---
+
+    Data entry and data model browsing for [data pipelines](../glossary#data-pipeline).
+
+    [:octicons-arrow-right-24: Getting started](https://datajoint.com/docs/core/datajoint-labbook/)
+
+-   :fontawesome-brands-chrome:{ .lg .middle } **SciViz**
+
+    ---
+
+    A visualization framework for making [low-code](https://en.wikipedia.org/wiki/Low-code_development_platform) web apps for [data pipelines](../glossary#data-pipeline).
+
+    [:octicons-arrow-right-24: Getting started](https://datajoint.com/docs/core/sci-viz/)
+
+</div>
 
 ## Container Images
 
@@ -25,10 +69,62 @@ graph
   datajoint/djlab --> datajoint/djlabhub;
 ```
 
-- **[datajoint/mysql](https://datajoint.com/docs/core/mysql-docker/)**: An optimized, MySQL backend for [data pipelines](../glossary#data-pipeline).
-- **[datajoint/miniconda3](https://datajoint.com/docs/core/miniconda3-docker/)**: A minimal Python image with [conda](https://docs.conda.io/en/latest/).
-- **[datajoint/djbase](https://datajoint.com/docs/core/djbase-docker/)**: Adds only dependencies for managing [data pipelines](../glossary#data-pipeline).
-- **[datajoint/djtest](https://datajoint.com/docs/core/djtest-docker/)**: Adds testing tools like [pytest](https://docs.pytest.org/en/7.1.x/).
-- **[datajoint/datajoint](https://datajoint.com/docs/core/datajoint-python/)**: Official image for managing [data pipelines](../glossary#data-pipeline).
-- **[datajoint/djlab](https://datajoint.com/docs/core/djlab-docker/)**: Adds a local [Jupyter Lab](https://jupyterlab.readthedocs.io/en/stable/) environment.
-- **[datajoint/djlabhub](https://datajoint.com/docs/core/djlabhub-docker/)**: Adds a client to allow hosting with [Jupyter Hub](https://jupyter.org/hub).
+<div class="grid cards" markdown>
+
+-   :fontawesome-brands-docker:{ .lg .middle } **datajoint/mysql**
+
+    ---
+
+    An optimized, MySQL backend for [data pipelines](../glossary#data-pipeline).
+
+    [:octicons-arrow-right-24: Getting started](https://datajoint.com/docs/core/mysql-docker/)
+
+-   :fontawesome-brands-docker:{ .lg .middle } **datajoint/miniconda3**
+
+    ---
+
+    A minimal Python image with [conda](https://docs.conda.io/en/latest/).
+
+    [:octicons-arrow-right-24: Getting started](https://datajoint.com/docs/core/miniconda3-docker/)
+
+-   :fontawesome-brands-docker:{ .lg .middle } **datajoint/djbase**
+
+    ---
+
+    Adds only dependencies for managing [data pipelines](../glossary#data-pipeline).
+
+    [:octicons-arrow-right-24: Getting started](https://datajoint.com/docs/core/djbase-docker/)
+
+-   :fontawesome-brands-docker:{ .lg .middle } **datajoint/djtest**
+
+    ---
+
+    Adds testing tools like [pytest](https://docs.pytest.org/en/7.1.x/).
+
+    [:octicons-arrow-right-24: Getting started](https://datajoint.com/docs/core/djtest-docker/)
+
+-   :fontawesome-brands-docker:{ .lg .middle } **datajoint/datajoint**
+
+    ---
+
+    Official image for managing [data pipelines](../glossary#data-pipeline).
+
+    [:octicons-arrow-right-24: Getting started](https://datajoint.com/docs/core/datajoint-python/)
+
+-   :fontawesome-brands-docker:{ .lg .middle } **datajoint/djlab**
+
+    ---
+
+    Adds a local [Jupyter Lab](https://jupyterlab.readthedocs.io/en/stable/) environment.
+
+    [:octicons-arrow-right-24: Getting started](https://datajoint.com/docs/core/djlab-docker/)
+
+-   :fontawesome-brands-docker:{ .lg .middle } **datajoint/djlabhub**
+
+    ---
+
+    Adds a client to allow hosting with [Jupyter Hub](https://jupyter.org/hub).
+
+    [:octicons-arrow-right-24: Getting started](https://datajoint.com/docs/core/djlabhub-docker/)
+
+</div>
