@@ -1,9 +1,13 @@
 # Howdy :wave:
 
-Welcome to the home for DataJoint documentation. We'll guide you to help you find what you are looking for quickly.
+Welcome to the home for DataJoint documentation. Here we'll help get you to the right place quickly.
 
-The ecosystem is divided into 2 distinct areas:
+<br>
 
-**Core**: Fully open-source projects built and designed specifically for the DataJoint engine.
+The DataJoint ecosystem is divided into 2 distinct areas:
 
-**Elements**: Fully open-source, domain-specific projects built with DataJoint Core. Primarily with a focus on neuroscience.
+<br>
+
+**Core**: Fully open-source projects built and designed specifically to support the [DataJoint Mantra](../concepts/mantra/).
+
+**Elements**: Fully open-source, domain-specific projects built with [DataJoint Core](../core). Currently, these are primarily focused on [Neuroscience](https://en.wikipedia.org/wiki/Neuroscience).
