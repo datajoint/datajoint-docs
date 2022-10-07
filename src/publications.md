@@ -22,6 +22,12 @@ line-spacing="2">
 
 <h3>2022</h3>
 
+<!-- 2022 ---> <div id="ref-franke2022state" class="csl-entry"> 
+
+Franke, K., Willeke, K. F., Ponder, K., Galdamez, M., Zhou, N., Muhammad, T., ... & Tolias, A. S. (2022). <a href="https://www.nature.com/articles/s41586-022-05270-3" target="_blank", style="color:#1589F0;">State-dependent pupil dilation rapidly shifts visual feature selectivity</a>. <i>Nature</i>, 1-7.
+
+</div><br />
+
 <!-- 2022 ---> <div id="ref-pettit2022fos" class="csl-entry"> 
 
 Pettit, N. H., Yap, E., Greenberg, M. E., Harvey, C. D. (2022). <a href="https://www.nature.com/articles/s41586-022-05113-1" target="_blank", style="color:#1589F0;">Fos ensembles encode and shape stable spatial maps in the hippocampus</a>. <i>Nature</i>.
