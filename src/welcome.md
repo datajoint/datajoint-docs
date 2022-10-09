@@ -29,3 +29,7 @@ If your work uses DataJoint and DataJoint Elements, please cite the respective R
 
   > DataJoint Elements ([RRID:SCR_021894](https://scicrunch.org/resolver/SCR_021894)) - 
   > Element `Enter Element name` (version `<Enter version number>`)
+
+## Feedback
+
+DataJoint and DataJoint Elements are supported by NIH grant U24 NS116470 for disseminating open-source software for neuroscience research. Your feedback is essential for continued funding. Your feedback also helps shape the technology development roadmap for the DataJoint ecosystem. Please tell us about your projects by filling out the [DataJoint Census](https://community.datajoint.io).
