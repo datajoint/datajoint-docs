@@ -3,9 +3,8 @@
 ## Sustainability Roadmap  between DataJoint Elements and DANDI Archive
 <br>
 <p align="center">
-  <img src="https://github.com/datajoint/datajoint-elements/blob/main/docs/img/dandi.png?raw=true" width="83" height="83">&nbsp;&nbsp;
-  <!-- <img src="https://www.dandiarchive.org/handbook/img/dandi-logo-square_sw.png" width="83" height="83">&nbsp;&nbsp;   -->
-  <img src="https://raw.githubusercontent.com/datajoint/datajoint.org/0a05cf5c2530a3595a13fc11f6abac64746d845d/static/images/elements-logo.png" width="300" height="83">
+  <img src="https://github.com/datajoint/datajoint-docs/blob/main/src/images/dandi-logo.png?raw=true" width="83" height="83">&nbsp;&nbsp;
+  <img src="https://github.com/datajoint/datajoint-docs/blob/main/src/images/elements-logo.png?raw=true" width="300" height="83">
 </p>  <br>
 
 ## Aim
