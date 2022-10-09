@@ -1,4 +1,4 @@
-# Adopt
+# Guidelines for Adoption
 
 You have several options for adopting DataJoint workflows for your own experiments.
 
