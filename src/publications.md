@@ -160,7 +160,7 @@ DataJoint Elements
 
 + Yatsenko, D., Josić, K., Ecker, A. S., Froudarakis, E., Cotton, R. J., & Tolias, A. S. (2015). <a href="https://doi.org/10.1371/journal.pcbi.1004083" target="_blank" style="color:#1589F0;">Improved estimation and interpretation of correlations in neural circuits</a>. *PLoS Comput Biol*, *11*(3), e1004083.
 
-## 2014
+## 2014 <!-- 4 -->
 
 + Ecker, A. S., Berens, P., Cotton, R. J., Subramaniyan, M., Denfield, G. H., Cadwell, C. R., Smirnakis, S. M., Bethge, M., & Tolias, A. S. (2014). <a href="https://doi.org/10.1016/j.neuron.2014.02.006" target="_blank" style="color:#1589F0;">State dependence of noise correlations in macaque primary visual cortex</a>. *Neuron*, *82*(1), 235–248.
 
