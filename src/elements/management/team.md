@@ -41,4 +41,4 @@ The first-person pronouns "we" and "our" in these documents refer to the perform
 ## External contributors
 
 The principal components of the Resource are developed and distributed as open-source projects and external contributions are welcome.
-We have adopted the following Contribution Guide for DataJoint, DataJoint Elements, and related open-source tools: https://docs.datajoint.org/python/community/02-Contribute.html
+We have adopted a [Contribution Guide](/community/contribution) for DataJoint, DataJoint Elements, and related open-source tools.
