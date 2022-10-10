@@ -50,6 +50,6 @@ However, many activate functions perform other work associated with activating t
 To make the code more modular with fewer dependencies, Elements' modules do not `import` upstream schemas directly. 
 Instead, all required classes and functions must be defined in a `linking_module` and passed to the module's `activate` function.
 
-For instance, the [`element_calcium_imaging.scan`](https://github.com/datajoint/element-calcium-imaging/blob/main/element_calcium_imaging/scan.py) module receives
+For instance, the [Scan module](https://github.com/datajoint/element-calcium-imaging/blob/main/element_calcium_imaging/scan.py) receives
 its required functions from the linking module passed into the module's `activate` function.
 See the [corresponding workflow](https://github.com/datajoint/workflow-calcium-imaging/blob/main/workflow_calcium_imaging/pipeline.py) for an example of how the linking module is passed into the Element's module.
