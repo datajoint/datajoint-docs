@@ -140,7 +140,7 @@ DataJoint Elements
 
 + Shan, K. Q., Lubenov, E. V., & Siapas, A. G. (2017). <a href="https://doi.org/10.1016/j.jneumeth.2017.06.017" target="_blank" style="color:#1589F0;">Model-based spike sorting with a mixture of drifting t-distributions</a>. *Journal of Neuroscience Methods*, *288*, 82–98.
 
-## 2016
+## 2016 <!-- 6 -->
 
 + Baden, T., Berens, P., Franke, K., Rosón, M. R., Bethge, M., & Euler, T. (2016). <a href="https://doi.org/10.1038%2Fnature16468" target="_blank" style="color:#1589F0;">The functional diversity of retinal ganglion cells in the mouse</a>. *Nature*, *529*(7586), 345–350.
 
