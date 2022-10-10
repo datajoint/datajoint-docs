@@ -1,4 +1,4 @@
-# Developer guide
+# Developer instructions
 
 ## Development mode installation
 
