@@ -14,7 +14,7 @@ DataJoint
 DataJoint Elements
 > Yatsenko D, Nguyen T, Shen S, Gunalan K, Turner CA, Guzman R, Sasaki M, Sitonic D, Reimer J, Walker EY, Tolias AS. <a href="https://doi.org/10.1101/2021.03.30.437358" target="_blank" style="color:#1589F0;">DataJoint Elements: Data Workflows for Neurophysiology</a>. bioRxiv. 2021 Jan 1.
 
-## 2022
+## 2022 <!-- 20 -->
 
 + Wang, Y., Chiola, S., Yang, G., Russell, C., Armstrong, C. J., Wu, Y., ... & Shcheglovitov, A. (2022). <a href="https://www.nature.com/articles/s41467-022-33364-z" target="_blank", style="color:#1589F0;">Modeling human telencephalic development and autism-associated SHANK3 deficiency using organoids generated from single neural rosettes</a>. *Nature Communications*, 13(1), 1-25.
 
