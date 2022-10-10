@@ -143,3 +143,6 @@
 
 ## Jupytext
 TODO: Configuration and syncing
+
+## Release process
+TODO: git tag and git push upstream
