@@ -104,7 +104,7 @@ DataJoint Elements
 
 + Zhao, Z., Klindt, D. A., Chagas, A. M., Szatko, K. P., Rogerson, L., Protti, D. A., Behrens, C., Dalkara, D., Schubert, T., Bethge, M., others. (2020). <a href="https://doi.org/10.1038/s41598-020-60214-z" target="_blank" style="color:#1589F0;">The temporal structure of the inner retina at a single glance</a>. *Scientific Reports*, *10*(1), 1–17.
 
-## 2019
+## 2019 <!-- 8 -->
 
 + Bonacchi, N., Chapuis, G., Churchland, A., Harris, K. D., Rossant, C., Sasaki, M., Shen, S., Steinmetz, N. A., Walker, E. Y., Winter, O., others. (2019). <a href="https://doi.org/10.1101/827873" target="_blank" style="color:#1589F0;">Data architecture and visualization for a large-scale neuroscience collaboration</a>. *BioRxiv*, 827873.
 
