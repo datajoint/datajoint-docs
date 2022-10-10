@@ -19,7 +19,6 @@ The project is performed by [DataJoint](https://www.datajoint.com) with Dimitri 
 - Raphael Guzman - Software Engineer
 - Drew Yang - Data Systems Engineer
 - Jeroen Verswijver - Software Engineer
-- Carlos Ortiz - Software Engineer
 - Adib Baji - Software Engineer
 - Timothy Chandler - Data Systems Engineer
 - Chetana Pitani - Software Engineer
