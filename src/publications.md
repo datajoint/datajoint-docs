@@ -56,7 +56,7 @@ DataJoint Elements
 
 + Willeke, K. F., Fahey, P. G., Bashiri, M., Pede, L., Burg, M. F., Blessing, C., ... & Sinz, F. H. (2022). <a href="https://doi.org/10.48550/arXiv.2206.08666" target="_blank" style="color:#1589F0;">The Sensorium competition on predicting large-scale mouse primary visual cortex activity</a>. *arXiv preprint arXiv:2206.08666*.
 
-## 2021
+## 2021 <!-- 14 -->
 
 + Bae, J. A., Baptiste, M., Bodor, A. L., Brittain, D., Buchanan, J., Bumbarger, D. J., Castro, M. A., Celii, B., Cobos, E., Collman, F.others. (2021). <a href="https://doi.org/10.1101/2021.07.28.454025" target="_blank" style="color:#1589F0;">Functional connectomics spanning multiple areas of mouse visual cortex</a>. *bioRxiv*. 
 
