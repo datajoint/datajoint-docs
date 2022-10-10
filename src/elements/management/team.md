@@ -35,7 +35,7 @@ The project is performed by [DataJoint](https://www.datajoint.com) with Dimitri 
 - David Godinez - Data Engineer
 - Geetika Singh - Data Engineer
 
-The first-person pronouns "we" and "our" in these documents refer to the performer team.
+The first-person pronouns "we" and "our" in these documents refer to those listed above.
 
 ## External contributors
 
