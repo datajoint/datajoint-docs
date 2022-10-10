@@ -154,7 +154,7 @@ DataJoint Elements
 
 + Shan, K. Q., Lubenov, E. V., Papadopoulou, M., & Siapas, A. G. (2016). <a href="https://doi.org/10.7554/elife.14321" target="_blank" style="color:#1589F0;">Spatial tuning and brain state account for dorsal hippocampal CA1 activity in a non-spatial learning task</a>. *eLife*, *5*, e14321.
 
-## 2015
+## 2015 <!-- 2 -->
 
 + Jiang, X., Shen, S., Cadwell, C. R., Berens, P., Sinz, F., Ecker, A. S., Patel, S., & Tolias, A. S. (2015). <a href="https://doi.org/10.1126%2Fscience.aac9462" target="_blank" style="color:#1589F0;">Principles of connectivity among morphologically defined cell types in adult neocortex</a>. *Science*, *350*(6264), aac9462. <https://doi.org/10.1126/science.aac9462>
 
