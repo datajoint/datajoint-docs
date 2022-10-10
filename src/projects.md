@@ -64,7 +64,7 @@ Please let us know if you would like to add another group or make other correcti
 + MIT
   + <a href="https://www.wanglab-neuro.org" target="_blank">Fan Wang Lab</a>
 + National Institute of Environmental Health Sciences
-  + Eric E. Thomson
+  + <a href="http://ericthomson.net/" target="_blank">Eric E. Thomson</a>
 + New York University
   + <a href="https://angelakilabnyu.org/" target="_blank">Dora Angelaki Lab</a>
 + Northwestern University
