@@ -93,7 +93,7 @@ Please let us know if you would like to add another group or make other correcti
   + <a href="https://franklab.ucsf.edu/" target="_blank">Loren Frank Lab</a>
 + University of Oregon
   + <a href="https://ion.uoregon.edu/content/santiago-jaramillo" target="_blank">Santiago Jaramillo Lab</a> (<a href="https://github.com/sjara/uobrainflex" target="_blank">GitHub</a>)
-  + <a href="https://ion.uoregon.edu/content/michael-wehr" target="_blank">Michael Wehr Lab</a> (<a href="https://github.com/wehr-lab" target="_blank">GitHub</a>)
+  + <a href="https://ion.uoregon.edu/research/faculty-page/53" target="_blank">Michael Wehr Lab</a> (<a href="https://github.com/wehr-lab" target="_blank">GitHub</a>)
 + University of Rochester
   + <a href="http://www.sas.rochester.edu/bcs/people/faculty/deangelis_greg/index.html" target="_blank">Greg DeAngelis Lab</a>
   + <a href="https://www2.bcs.rochester.edu/sites/haefnerlab/index.html" target="_blank">Ralf Haefner Lab</a>
