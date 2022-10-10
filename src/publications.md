@@ -170,8 +170,8 @@ DataJoint Elements
 
 + Reimer, J., Froudarakis, E., Cadwell, C. R., Yatsenko, D., Denfield, G. H., & Tolias, A. S. (2014). <a href="https://doi.org/10.1016/j.neuron.2014.09.033" target="_blank" style="color:#1589F0;">Pupil fluctuations track fast switching of cortical states during quiet wakefulness</a>. *Neuron*, *84*(2), 355–362.
 
-+ Cotton, R. J., Froudarakis, E., Storer, P., Saggau, P., & Tolias, A. S. (2013). <a href="https://doi.org/10.3389/fncir.2013.00151" target="_blank" style="color:#1589F0;">Three-dimensional mapping of microcircuit correlation structure</a>. *Frontiers in Neural Circuits*, *7*, 151.
 
-## 2013
+## 2013 <!-- 2 -->
++ Cotton, R. J., Froudarakis, E., Storer, P., Saggau, P., & Tolias, A. S. (2013). <a href="https://doi.org/10.3389/fncir.2013.00151" target="_blank" style="color:#1589F0;">Three-dimensional mapping of microcircuit correlation structure</a>. *Frontiers in Neural Circuits*, *7*, 151.
 
 + Vaiceliunaite, A., Erisken, S., Franzen, F., Katzner, S., & Busse, L. (2013). <a href="https://doi.org/10.1152/jn.00138.2013" target="_blank" style="color:#1589F0;">Spatial integration in mouse primary visual cortex</a>. *Journal of Neurophysiology*, *110*(4), 964–972.
