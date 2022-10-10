@@ -18,7 +18,7 @@ Please let us know if you would like to add another group or make other correcti
   + Princeton<a href="https://www.braincogs.org/" target="_blank"> BRAIN CoGS</a> (<a href="https://github.com/braincogs/" target="_blank">GitHub</a>)
   + Rochester-NYU-Harvard<a href="https://causalityinmotion.github.io/team.html" target="_blank"> Neural basis of causal inference</a>
 
-## Individual Labs
+## Individual Labs <!-- 55 -->
 
 + Allen Institute
   + <a href="https://alleninstitute.org/what-we-do/brain-science/research/mindscope-program/" target="_blank">Mindscope Program</a>
