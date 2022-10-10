@@ -122,7 +122,7 @@ DataJoint Elements
 
 + Walker, E. Y., Sinz, F. H., Cobos, E., Muhammad, T., Froudarakis, E., Fahey, P. G., Ecker, A. S., Reimer, J., Pitkow, X., & Tolias, A. S. (2019). <a href="https://doi.org/10.1038/s41593-019-0517-x" target="_blank" style="color:#1589F0;">Inception loops discover what excites neurons most using deep predictive models</a>. *Nature Neuroscience*, *22*(12), 2060–2065.
 
-## 2018
+## 2018 <!-- 4 -->
 
 + Denfield, G. H., Ecker, A. S., Shinn, T. J., Bethge, M., & Tolias, A. S. (2018). <a href="https://doi.org/10.1038/s41467-018-05123-6" target="_blank" style="color:#1589F0;">Attentional fluctuations induce shared variability in macaque primary visual cortex</a>. *Nature Communications*, *9*(1), 2654.
 
