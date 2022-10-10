@@ -10,7 +10,7 @@ The project oversight and guidance is provided by the Scientific Steering Group 
 
 - [Mackenzie Mathis (EPFL)](http://www.mackenziemathislab.org/team)
 - [John Cunningham (Columbia U)](https://stat.columbia.edu/~cunningham/)
-- [Carlos Brody (Princeton U)](https://https://pni.princeton.edu/faculty/carlos-brody)
+- [Carlos Brody (Princeton U)](https://pni.princeton.edu/faculty/carlos-brody)
 - [Karel Svoboda (Allen Institute)](https://alleninstitute.org/what-we-do/brain-science/about/team/staff-profiles/karel-svoboda1/)
 - [Nick Steinmetz (U of Washington)](http://www.nicksteinmetz.com/)
 - [Loren Frank (UCSF)](https://franklab.ucsf.edu/)
