@@ -19,6 +19,7 @@ All components and their revisions must include appropriate automated software t
 Generally, this includes tests related to:
 
 - **Syntax**: Verify that the code base does not contain any syntax errors and will run or compile successfully.
+
 - **Unit & Integration**: Verify that low-level, method-specific tests (unit tests) and any tests related coordinated interface between methods (integration tests) pass successfully. Typically, when bugs are patched or features are introduced, unit and integration tests are added to ensure that the use-case intended to be satisfied is accounted for. This helps us prevent any regression in functionality.
 
 - **Style**: Verify that the code base adheres to style guides for optimal readability.
@@ -50,7 +51,9 @@ When introducing new code to the code base, the following will be required for a
 Upon satisfactory adherence to the above Coding Standards, Automated Testing, and Code Reviews:
 
 - The package version will be incremented following the standard definition of [Semantic Versioning](https://semver.org/spec/v2.0.0.html) with a `Major.Minor.Patch` number.
+
 - Updates will be merged into the base repository `main` branch.
+
 - A new release will be made on PyPI.
 
 For external research teams that reach out to us, we will provide engineering support to help users adopt the updated software, collect feedback, and resolve issues following the processes described in the section below. If the updates require changes in the design of the database schema or formats, a process for data migration will be provided upon request.
