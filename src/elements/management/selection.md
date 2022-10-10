@@ -1,6 +1,6 @@
 # Project Selection Process
 
-The project milestones are set annually by the team under the stewardship of the NIH programmatic staff and with the guidance of the project's [Scientific Steering Group](./governance.md)
+The project milestones are set annually by the team under the stewardship of the NIH programmatic staff and with the guidance of the project's [Scientific Steering Group](/elements/management/governance)
 
 We have adopted the following general criteria for selecting and accepting new projects to be included in the Resource.
 
