@@ -5,7 +5,7 @@ DataJoint was originally developed by working systems neuroscientists at Baylor 
 Below is a partial list of known teams who use DataJoint. 
 Please let us know if you would like to add another group or make other corrections by sending an email to support@datajoint.com.
 
-## Multi-lab collaboratives
+## Multi-lab collaboratives <!-- 9 -->
 
 + <a href="https://www.internationalbrainlab.com/#home" target="_blank">International Brain Lab</a> (<a href="https://github.com/int-brain-lab" target="_blank">GitHub</a>)
 + <a href="https://www.simonsfoundation.org/funded-project/multi-regional-neuronal-dynamics-of-memory-guided-flexible-behavior/" target="_blank">Mesoscale Activity Project</a>
