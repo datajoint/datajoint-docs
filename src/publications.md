@@ -86,7 +86,7 @@ DataJoint Elements
 
 + Wang, Y., Chiola, S., Yang, G., Russell, C., Armstrong, C. J., Wu, Y., Spampanato, J., Tarboton, P., Chang, A. N., Harmin, D. A.others. (2021). <a href="https://doi.org/10.1101/2021.01.25.428022" target="_blank" style="color:#1589F0;">Modeling autism-associated SHANK3 deficiency using human cortico-striatal organoids generated from single neural rosettes</a>. *bioRxiv*.
 
-## 2020
+## 2020 <!-- 8 -->
 
 + Aguillon-Rodriguez, V., Angelaki, D. E., Bayer, H. M., Bonacchi, N., Carandini, M., Cazettes, F., Chapuis, G. A., Churchland, A. K., Dan, Y., Dewitt, E. E.others. (2020). <a href="https://doi.org/10.7554/eLife.63711" target="_blank" style="color:#1589F0;">A standardized and reproducible method to measure decision-making in mice</a>. *BioRxiv*.
 
