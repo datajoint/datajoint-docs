@@ -136,7 +136,7 @@ DataJoint Elements
 
 + Franke, K., Berens, P., Schubert, T., Bethge, M., Euler, T., & Baden, T. (2017). <a href="https://doi.org/10.1038%2Fnature21394" target="_blank" style="color:#1589F0;">Inhibition decorrelates visual feature representations in the inner retina</a>. *Nature*, *542*(7642), 439.
 
-+ Jurjut, O., Georgieva, P., Busse, L., & Katzner, S. (2017). <a href=" https://doi.org/10.1523/JNEUROSCI.3485-16.2017" target="_blank" style="color:#1589F0;">Learning enhances sensory processing in mouse V1 before improving behavior</a>. *Journal of Neuroscience*, *37*(27), 6460–6474.
++ Jurjut, O., Georgieva, P., Busse, L., & Katzner, S. (2017). <a href="https://doi.org/10.1523/JNEUROSCI.3485-16.2017" target="_blank" style="color:#1589F0;">Learning enhances sensory processing in mouse V1 before improving behavior</a>. *Journal of Neuroscience*, *37*(27), 6460–6474.
 
 + Shan, K. Q., Lubenov, E. V., & Siapas, A. G. (2017). <a href="https://doi.org/10.1016/j.jneumeth.2017.06.017" target="_blank" style="color:#1589F0;">Model-based spike sorting with a mixture of drifting t-distributions</a>. *Journal of Neuroscience Methods*, *288*, 82–98.
 
