@@ -132,7 +132,7 @@ DataJoint Elements
 
 + Walker, E. Y., Sinz, F. H., Froudarakis, E., Fahey, P. G., Muhammad, T., Ecker, A. S., Cobos, E., Reimer, J., Pitkow, X., & Tolias, A. S. (2018). <a href="https://doi.org/10.1101/506956" target="_blank" style="color:#1589F0;">Inception in visual cortex: In vivo-silico loops reveal most exciting images</a>. *bioRxiv*, 506956.
 
-## 2017
+## 2017 <!-- 3 -->
 
 + Franke, K., Berens, P., Schubert, T., Bethge, M., Euler, T., & Baden, T. (2017). <a href="https://doi.org/10.1038%2Fnature21394" target="_blank" style="color:#1589F0;">Inhibition decorrelates visual feature representations in the inner retina</a>. *Nature*, *542*(7642), 439.
 
