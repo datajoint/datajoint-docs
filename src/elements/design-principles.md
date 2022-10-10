@@ -1,6 +1,6 @@
 # Design Principles
 
-The following conventions describe the Python implementation. Matlab conventions are similar and will be described separately.
+The following conventions describe the Python implementation. 
 
 ## DataJoint Schemas
 
