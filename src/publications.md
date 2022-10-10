@@ -52,7 +52,7 @@ DataJoint Elements
 
 + Turner, N. L., Macrina, T., Bae, J. A., Yang, R., Wilson, A. M., Schneider-Mizell, C., ... & Seung, H. S. (2022). <a href="https://doi.org/10.1016/j.cell.2022.01.023" target="_blank" style="color:#1589F0;">Reconstruction of neocortex: Organelles, compartments, cells, circuits, and activity. </a>. *Cell, 185*(6), 1082-1100.
 
-+ Ustyuzhaninov, I., Burg, M.F., Cadena, S.A., Fu, J., Muhammad, T., Ponder, K., Froudarakis, E., Ding, Z., Bethge, M., Tolias, A. & Ecker, A.S. <a href="https://doi.org/10.1101/2022.02.10.479884" target="_blank" style="color:#1589F0;">Digital twin reveals combinatorial code of non-linear computations in the mouse primary visual cortex</a>. *bioRxiv*.
++ Ustyuzhaninov, I., Burg, M.F., Cadena, S.A., Fu, J., Muhammad, T., Ponder, K., Froudarakis, E., Ding, Z., Bethge, M., Tolias, A. & Ecker, A.S. (2022). <a href="https://doi.org/10.1101/2022.02.10.479884" target="_blank" style="color:#1589F0;">Digital twin reveals combinatorial code of non-linear computations in the mouse primary visual cortex</a>. *bioRxiv*.
 
 + Willeke, K. F., Fahey, P. G., Bashiri, M., Pede, L., Burg, M. F., Blessing, C., ... & Sinz, F. H. (2022). <a href="https://doi.org/10.48550/arXiv.2206.08666" target="_blank" style="color:#1589F0;">The Sensorium competition on predicting large-scale mouse primary visual cortex activity</a>. *arXiv preprint arXiv:2206.08666*.
 
