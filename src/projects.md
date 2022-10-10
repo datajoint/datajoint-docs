@@ -16,7 +16,7 @@ Please let us know if you would like to add another group or make other correcti
   + Harvard<a href="https://www.teamdope.org/" target="_blank"> DOPE</a>
   + Columbia<a href="https://confluence.columbia.edu/confluence/display/zmbbi/U19+Data+Science" target="_blank"> MoC3</a>
   + Princeton<a href="https://www.braincogs.org/" target="_blank"> BRAIN CoGS</a> (<a href="https://github.com/braincogs/" target="_blank">GitHub</a>)
-  + Rochester-NYU-Harvard<a href="https://reporter.nih.gov/project-details/10047607" target="_blank"> Neural basis of causal inference</a>
+  + Rochester-NYU-Harvard<a href="https://causalityinmotion.github.io/team.html" target="_blank"> Neural basis of causal inference</a>
 
 ## Individual Labs
 
