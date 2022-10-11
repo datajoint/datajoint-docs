@@ -4,7 +4,7 @@ The following conventions describe the Python implementation.
 
 ## DataJoint Schemas
 
-DataJoint allows creating _database schemas_, which are namespaces for collections of related tables.
+The DataJoint Python API allows creating _database schemas_, which are namespaces for collections of related tables.
 
 The following commands declare a new schema and create the object named `schema` to reference the database schema.
 
