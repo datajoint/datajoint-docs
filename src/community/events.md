@@ -32,7 +32,7 @@ The DataJoint open source team are offering monthly Office Hours ([see details h
 + DataJoint Office Hours - April 27, 2022
   + Filepath handling, `linking_module`, and `key` management in `make` functions.
 
-+ UCL Neuropixels Course - October 19, 2021
++ [UCL Neuropixels Course](https://www.ucl.ac.uk/neuropixels/training/2021-neuropixels-course) - October 19, 2021
 
 + INCF Neuroinformatics Training Week - August 30 - September 2, 2021
   + [Session 1 Recording](https://youtu.be/YOSNIW6vlQ8)
