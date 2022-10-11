@@ -4,9 +4,7 @@ Find us at the following workshops and conferences!
 
 ## DataJoint Office Hours
 
-+ The DataJoint open source team are offering monthly Office Hours ([see details here](/community/support)).
-
-+ [Sign up for Office Hours!](https://docs.google.com/forms/d/e/1FAIpQLSeMhZtzQQWB47I8HfPcJ5_pFyMhZO284PLIblDfshe30dEuXw/viewform)
+The DataJoint open source team are offering monthly Office Hours ([see details here](/community/support)). Sign up [here](https://docs.google.com/forms/d/e/1FAIpQLSeMhZtzQQWB47I8HfPcJ5_pFyMhZO284PLIblDfshe30dEuXw/viewform)!
 
 ## Upcoming Workshops
 
