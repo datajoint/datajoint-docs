@@ -14,7 +14,7 @@ schema = dj.schema('<schema_name>')
 ```
 
 We follow the convention of having only one schema defined per Python module.
-Then such a module becomes a "DataJoint schema" comprising a python module with a corresponding database schema.
+Then such a module becomes a _DataJoint schema_ comprising a Python module with a corresponding _database schema_.
 
 The module's `schema` object is then used as the decorator for classes that define tables in the database.
 
