@@ -8,7 +8,7 @@ DataJoint Elements provides an efficient approach for neuroscience labs to creat
 manage _scientific data workflows_: the complex multi-step methods for data collection,
 preparation, processing, analysis, and modeling that researchers must perform in the
 course of an experimental study. Elements are a collection of curated modules for
-assembling workflows for the major modalities of neurophysiology experiments
+assembling workflows for several modalities of neurophysiology experiments
 and are designed for ease of integration into diverse custom workflows. This work is
 derived from the developments in leading neuroscience projects and uses the
 [DataJoint API](/core) for defining, deploying, and sharing their data workflows.
