@@ -1,6 +1,6 @@
 # Design Principles
 
-The following conventions describe the Python implementation. 
+The following conventions describe the DataJoint Python API implementation. 
 
 ## DataJoint Schemas
 
