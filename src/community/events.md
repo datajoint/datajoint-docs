@@ -24,7 +24,7 @@ The DataJoint open source team are offering monthly Office Hours ([see details h
 
 + [NWB Hackathon User Days](https://github.com/NeurodataWithoutBorders/nwb_hackathons/blob/main/HCK13_2022_Janelia/projects/PROJECTS.md) - July 24-27, 2022
 
-+ NIH BRAIN Initiative Meeting - June 21-22, 2022
++ [NIH BRAIN Initiative Meeting](https://braininitiative.nih.gov/News-Events/event/8th-annual-brain-initiative-meeting) - June 21-22, 2022
 
 + DataJoint Office Hours - May 20, 2022
   + MATLAB/Python interoperability. [Video Link](https://www.youtube.com/watch?v=Y7JG2-B2O5U)
