@@ -7,8 +7,7 @@
   dependencies (e.g., `element-array-ephys`).
 
 - Launch a new terminal and change directory to where you want to clone the
-  repositories
-  `bash cd ~/Projects `
+  repositories (e.g., `bash cd ~/Projects`)
 
 - `workflow-array-ephys`
     <details>
