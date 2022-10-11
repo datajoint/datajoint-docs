@@ -16,7 +16,7 @@ Find us at the following workshops and conferences!
 
 ## Past Events
 
-+ NeuroDataReHack Hackathon - October 3-5, 2022
++ [NeuroDataReHack Hackathon](https://alleninstitute.org/what-we-do/brain-science/events-training/2022-neurodatarehack-hackathon/) - October 3-5, 2022
 
 + [Neuropixels and OpenScope Workshop](https://alleninstitute.org/what-we-do/brain-science/events-training/2022-neuropixels-openscope-workshop/2022-workshop-attendee-information/) - September 21-23, 2022
 
