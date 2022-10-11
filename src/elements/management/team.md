@@ -34,6 +34,7 @@ The project is performed by [DataJoint](https://www.datajoint.com) with Dimitri 
 - Christopher Turner - Data Systems Engineer
 - David Godinez - Data Engineer
 - Geetika Singh - Data Engineer
+- Carlos Ortiz - Software Engineer
 
 The first-person pronouns "we" and "our" in these documents refer to those listed above.
 
