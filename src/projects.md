@@ -22,7 +22,7 @@ Please let us know if you would like to add another group or make other correcti
 
 + Allen Institute
   + <a href="https://alleninstitute.org/what-we-do/brain-science/research/mindscope-program/" target="_blank">Mindscope Program</a>
-  + <a href="https://alleninstitute.org/what-we-do/brain-science/about/team/staff-profiles/karel-svoboda1/" target="_blank">Karel Svoboda</a> Lab (<a href="https://www.janelia.org/lab/svoboda-lab" target="_blank">Previously at Janelia Research Campus</a>)
+  + <a href="https://alleninstitute.org/what-we-do/brain-science/about/team/staff-profiles/karel-svoboda1/" target="_blank">Karel Svoboda Lab</a>
   + <a href="https://alleninstitute.org/what-we-do/brain-science/about/team/staff-profiles/forrest-collman/" target="_blank">Forrest Collman</a>
 + Arizona State University
   + <a href="https://isearch.asu.edu/profile/500553" target="_blank">Rick Gerkin Lab</a>
