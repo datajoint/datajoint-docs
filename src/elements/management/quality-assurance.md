@@ -7,6 +7,8 @@ DataJoint and DataJoint Elements serve as a framework and starting points for nu
 When writing code, the following principles should be observed.
 
 - **Style**: Code shall be written for clear readability. Uniform and clear naming conventions, module structure, and formatting requirements shall be established across all components of the project. Python's [PEP8](https://www.python.org/dev/peps/pep-0008/#naming-conventions) standard offers clear guidance to this regard which can similarly be applied to all languages.
+  - Python code is formatted with the [black](https://github.com/psf/black) code formatter.
+  - Line length should be a maximum of 88 characters.
 
 - **Maintenance Overhead**: Code base size should be noted to prevent large, unnecessarily complex solutions from being introduced. The idea is that the larger the code base, the more there is to review and maintain. Therefore, we should aim to find a compromise where we can keep the code base from becoming too large without adding convoluted complexity.
 
