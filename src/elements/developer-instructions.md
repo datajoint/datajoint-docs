@@ -2,6 +2,8 @@
 
 ## Development mode installation
 
+- We recommend doing development work in a conda environment. For information on setting up conda for the first time, see [this article](https://towardsdatascience.com/get-your-computer-ready-for-machine-learning-how-what-and-why-you-should-use-anaconda-miniconda-d213444f36d6).
+
 - This method allows you to modify the source code for example DataJoint
   workflows (e.g. `workflow-array-ephys`) and their
   dependencies (e.g., `element-array-ephys`).
