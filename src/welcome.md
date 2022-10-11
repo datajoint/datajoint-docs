@@ -12,7 +12,7 @@ The DataJoint ecosystem is divided into 2 distinct areas:
 
 ## Citation
 
-If your work uses DataJoint and DataJoint Elements, please cite the respective Research Resource Identifiers (RRIDs) and manuscripts.
+If your work uses the DataJoint API's and DataJoint Elements, please cite the respective Research Resource Identifiers (RRIDs) and manuscripts.
 
 + DataJoint API for Python or MATLAB
   > Yatsenko D, Reimer J, Ecker AS, Walker EY, Sinz F, Berens P, Hoenselaar A, Cotton RJ,
