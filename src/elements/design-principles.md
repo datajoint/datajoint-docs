@@ -1,10 +1,10 @@
 # Design Principles
 
-The following conventions describe the Python implementation. 
+The following conventions describe the DataJoint Python API implementation. 
 
 ## DataJoint Schemas
 
-DataJoint allows creating _database schemas_, which are namespaces for collections of related tables.
+The DataJoint Python API allows creating _database schemas_, which are namespaces for collections of related tables.
 
 The following commands declare a new schema and create the object named `schema` to reference the database schema.
 
@@ -14,7 +14,7 @@ schema = dj.schema('<schema_name>')
 ```
 
 We follow the convention of having only one schema defined per Python module.
-Then such a module becomes a "DataJoint schema" comprising a python module with a corresponding database schema.
+Then such a module becomes a _DataJoint schema_ comprising a Python module with a corresponding _database schema_.
 
 The module's `schema` object is then used as the decorator for classes that define tables in the database.
 
@@ -22,7 +22,7 @@ The module's `schema` object is then used as the decorator for classes that defi
 
 An Element is a software package defining one or more DataJoint schemas serving a particular purpose.
 By convention, such packages are hosted in individual GitHub repositories.
-For example, Element `element_calcium_imaging` is hosted at `https://github.com/datajoint/element-calcium-imaging`,
+For example, Element `element_calcium_imaging` is hosted at https://github.com/datajoint/element-calcium-imaging
 and contains two DataJoint schemas: `scan` and `imaging`.
 
 ### Deferred schemas
@@ -33,7 +33,7 @@ Instead, they are declared by calling `schema.activate('<schema_name>')` after i
 
 By convention, all modules corresponding to deferred schema must declare the function `activate` which in turn calls `schema.activate`.
 
-Thus Element modules begin with
+Thus, Element modules begin with:
 
 ```python
 import datajoint as dj
@@ -47,7 +47,7 @@ However, many activate functions perform other work associated with activating t
 
 ### Linking Module
 
-To make the code more modular with fewer dependencies, Elements' modules do not `import` upstream schemas directly. 
+To make the code more modular with fewer dependencies, Element modules do not `import` upstream schemas directly. 
 Instead, all required classes and functions must be defined in a `linking_module` and passed to the module's `activate` function. By keeping all upstream requirements in the linking module, all Elements can be activated as part of any larger pipeline.
 
 For instance, the [Scan module](https://github.com/datajoint/element-calcium-imaging/blob/main/element_calcium_imaging/scan.py) receives
