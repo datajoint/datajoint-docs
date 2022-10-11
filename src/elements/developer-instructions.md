@@ -11,61 +11,18 @@
 - Launch a new terminal and change directory to where you want to clone the
   repositories (e.g., `bash cd ~/Projects`)
 
-- `workflow-array-ephys`
-    <details>
-    <summary>Click to expand details</summary>
-
-  - Clone the repositories
-
+- Clone the relevant workflow and refer to the `requirements.txt` in the workflow for the list of Elements to clone and install as editable. You will also need to install `element-interface` 
     ```bash
-    git clone https://github.com/datajoint/element-lab
-    git clone https://github.com/datajoint/element-animal
-    git clone https://github.com/datajoint/element-session
-    git clone https://github.com/datajoint/element-interface
-    git clone https://github.com/datajoint/element-array-ephys
-    git clone https://github.com/datajoint/workflow-array-ephys
+    deps=("lab" "animal" "session" "interface" "<others>")
+    for repo in $deps # clone each
+    do 
+        git clone https://github.com/datajoint/element-$repo
+    done
+    for repo in $(ls -d ./{element,workflow}*) # editable install 
+    do 
+        pip install -e ./$repo
+    done
     ```
-
-  - Install each package with the `-e` option
-
-    ```bash
-    pip install -e ./element-lab
-    pip install -e ./element-animal
-    pip install -e ./element-session
-    pip install -e ./element-interface
-    pip install -e ./element-array-ephys
-    pip install -e ./workflow-array-ephys
-    ```
-
-    </details>
-
-- `workflow-calcium-imaging`
-    <details>
-    <summary>Click to expand details</summary>
-
-  - Clone the repositories
-
-    ```bash
-    git clone https://github.com/datajoint/element-lab
-    git clone https://github.com/datajoint/element-animal
-    git clone https://github.com/datajoint/element-session
-    git clone https://github.com/datajoint/element-interface
-    git clone https://github.com/datajoint/element-calcium-imaging
-    git clone https://github.com/datajoint/workflow-calcium-imaging
-    ```
-
-  - Install each package with the `-e` option
-
-    ```bash
-    pip install -e ./element-lab
-    pip install -e ./element-animal
-    pip install -e ./element-session
-    pip install -e ./element-interface
-    pip install -e ./element-calcium-imaging
-    pip install -e ./workflow-calcium-imaging
-    ```
-
-    </details>
 
 ## Optionally drop all schemas
 
@@ -93,7 +50,9 @@ If you need to drop all schemas to start fresh, you'll need to do following the 
   ```
 
 ## Jupytext
-TODO: Configuration and syncing
+We maintain `.py` script copies of all didactic notebooks to facilitate the GitHub review process. From the main workflow directory, we recommend the following command to generate these copies. You may wish to save this as an alias in your `.bash_profile`. Note that the jupytext sync features may cause issues with the original notebooks.
 
-## Release process
-TODO: git tag and git push upstream
+    ```bash
+    pip install jupytext
+    jupytext --to py notebooks/0*ipynb; mv notebooks/*py notebooks/py_scripts
+    ```
