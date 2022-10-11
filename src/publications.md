@@ -16,13 +16,13 @@ DataJoint Elements
 
 ## 2022 <!-- 20 -->
 
-+ Wang, Y., Chiola, S., Yang, G., Russell, C., Armstrong, C. J., Wu, Y., ... & Shcheglovitov, A. (2022). <a href="https://www.nature.com/articles/s41467-022-33364-z" target="_blank", style="color:#1589F0;">Modeling human telencephalic development and autism-associated SHANK3 deficiency using organoids generated from single neural rosettes</a>. *Nature Communications*, 13(1), 1-25.
++ Wang, Y., Chiola, S., Yang, G., Russell, C., Armstrong, C. J., Wu, Y., ... & Shcheglovitov, A. (2022). <a href="https://www.nature.com/articles/s41467-022-33364-z" target="_blank" style="color:#1589F0;">Modeling human telencephalic development and autism-associated SHANK3 deficiency using organoids generated from single neural rosettes</a>. *Nature Communications*, 13(1), 1-25.
 
-+ Franke, K., Willeke, K. F., Ponder, K., Galdamez, M., Zhou, N., Muhammad, T., ... & Tolias, A. S. (2022). <a href="https://www.nature.com/articles/s41586-022-05270-3" target="_blank", style="color:#1589F0;">State-dependent pupil dilation rapidly shifts visual feature selectivity</a>. *Nature*, 1-7.
++ Franke, K., Willeke, K. F., Ponder, K., Galdamez, M., Zhou, N., Muhammad, T., ... & Tolias, A. S. (2022). <a href="https://www.nature.com/articles/s41586-022-05270-3" target="_blank" style="color:#1589F0;">State-dependent pupil dilation rapidly shifts visual feature selectivity</a>. *Nature*, 1-7.
 
-+ Pettit, N. H., Yap, E., Greenberg, M. E., Harvey, C. D. (2022). <a href="https://www.nature.com/articles/s41586-022-05113-1" target="_blank", style="color:#1589F0;">Fos ensembles encode and shape stable spatial maps in the hippocampus</a>. *Nature*.
++ Pettit, N. H., Yap, E., Greenberg, M. E., Harvey, C. D. (2022). <a href="https://www.nature.com/articles/s41586-022-05113-1" target="_blank" style="color:#1589F0;">Fos ensembles encode and shape stable spatial maps in the hippocampus</a>. *Nature*.
 
-+ Saunders, J. L., Ott, L. A., Wehr, M. (2022). <a href="https://doi.org/10.1101/807693" target="_blank", style="color:#1589F0;">AUTOPILOT: Automating experiments with lots of Raspberry Pis</a>. *bioRxiv*.
++ Saunders, J. L., Ott, L. A., Wehr, M. (2022). <a href="https://doi.org/10.1101/807693" target="_blank" style="color:#1589F0;">AUTOPILOT: Automating experiments with lots of Raspberry Pis</a>. *bioRxiv*.
 
 + Born, G. (2022). <a href="https://edoc.ub.uni-muenchen.de/30350/1/Born_Gregory.pdf" target="_blank" style="color:#1589F0;">The effect of feedback on sensory processing in the mouse early visual system</a>. *Doctoral dissertation*.
 
