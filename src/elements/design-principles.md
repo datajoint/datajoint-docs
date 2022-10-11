@@ -33,7 +33,7 @@ Instead, they are declared by calling `schema.activate('<schema_name>')` after i
 
 By convention, all modules corresponding to deferred schema must declare the function `activate` which in turn calls `schema.activate`.
 
-Thus Element modules begin with
+Thus, Element modules begin with:
 
 ```python
 import datajoint as dj
