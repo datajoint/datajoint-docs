@@ -156,7 +156,7 @@ DataJoint Elements
 
 ## 2015 <!-- 2 -->
 
-+ Jiang, X., Shen, S., Cadwell, C. R., Berens, P., Sinz, F., Ecker, A. S., Patel, S., & Tolias, A. S. (2015). <a href="https://doi.org/10.1126%2Fscience.aac9462" target="_blank" style="color:#1589F0;">Principles of connectivity among morphologically defined cell types in adult neocortex</a>. *Science*, *350*(6264), aac9462. <https://doi.org/10.1126/science.aac9462>
++ Jiang, X., Shen, S., Cadwell, C. R., Berens, P., Sinz, F., Ecker, A. S., Patel, S., & Tolias, A. S. (2015). <a href="https://doi.org/10.1126%2Fscience.aac9462" target="_blank" style="color:#1589F0;">Principles of connectivity among morphologically defined cell types in adult neocortex</a>. *Science*, *350*(6264), aac9462. 
 
 + Yatsenko, D., Josić, K., Ecker, A. S., Froudarakis, E., Cotton, R. J., & Tolias, A. S. (2015). <a href="https://doi.org/10.1371/journal.pcbi.1004083" target="_blank" style="color:#1589F0;">Improved estimation and interpretation of correlations in neural circuits</a>. *PLoS Comput Biol*, *11*(3), e1004083.
 
