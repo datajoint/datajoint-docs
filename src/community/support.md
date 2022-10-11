@@ -3,17 +3,12 @@
 We have a general policy for DataJoint open-source [community engagement](
     /community/contribution/#5-i-am-not-yet-too-comfortable-contributing-but-would-like-to-engage-the-community-what-is-the-policy-on-community-engagement).
 
-+ General how-to questions: [StackOverflow: datajoint tag](
++ General how-to or error question? Post on StackOverflow with the [`datajoint` tag](
      https://stackoverflow.com/questions/tagged/datajoint)
 
-+ Error questions: [StackOverflow: datajoint tag](
-     https://stackoverflow.com/questions/tagged/datajoint)
++ Bug report or feature request? Submit a GitHub issue to the relevant repository
 
-+ Bug report: GitHub issue tracker
-
-+ New feature request: GitHub issue tracker
-
-+ Open-ended discussions: [DataJoint Slack](
++ For open-ended discussions, join us on the [DataJoint Slack](
      https://join.slack.com/t/datajoint/shared_invite/enQtMjkwNjQxMjI5MDk0LWIzN2ExYzBiM2NlODQxN2YxODAxNWQwOWVkNjVmZDkzYzEwMjM5OWJkM2EwYTRhYmRiZDgxMjUzYjBlZWVjMzA)
 
 + DataJoint Office Hours
