@@ -22,7 +22,7 @@ This includes:
   - fully managed cloud hosting by DataJoint
 - Workflow execution
   - configuration and automation
-  - optional fully managed service by DataJoint;
+  - optional fully managed service by DataJoint
 - Interfaces for data entry, export and publishing
 
-These services may be subsidized by the grant funding for qualified research groups.
+These services may be subsidized by grant funding for qualified research groups.

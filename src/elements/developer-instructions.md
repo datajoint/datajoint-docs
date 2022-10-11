@@ -4,7 +4,7 @@
 
 - This method allows you to modify the source code for example DataJoint
   workflows (e.g. `workflow-array-ephys`, `workflow-calcium-imaging`) and their
-  dependencies (i.e., DataJoint Elements).
+  dependencies (e.g., `element-array-ephys`).
 
 - Launch a new terminal and change directory to where you want to clone the
   repositories
@@ -68,57 +68,7 @@
 
 ## Optionally drop all schemas
 
-- If required to drop all schemas, the following is the dependency order.
-  Also refer to `notebooks/06-drop-optional.ipynb` within the respective
-  `workflow`.
-
-- `workflow-array-ephys`
-    <details>
-    <summary>Click to expand details</summary>
-    
-    ```
-    from workflow_array_ephys.pipeline import *
-
-    ephys.schema.drop()
-    probe.schema.drop()
-    session.schema.drop()
-    subject.schema.drop()
-    lab.schema.drop()
-    ```
-
-    </details>
-
-
-- `workflow-calcium-imaging`
-    <details>
-    <summary>Click to expand details</summary>
-    
-    ```
-    from workflow_calcium_imaging.pipeline import *
-
-    imaging.schema.drop()
-    scan.schema.drop()
-    session.schema.drop()
-    subject.schema.drop()
-    lab.schema.drop()
-    ```
-
-    </details>
-
-- `workflow-miniscope`
-    <details>
-    <summary>Click to expand details</summary>
-    
-    ```
-    from workflow_miniscope.pipeline import *
-
-    miniscope.schema.drop()
-    session.schema.drop()
-    subject.schema.drop()
-    lab.schema.drop()
-    ```
-
-    </details>
+If you need to drop all schemas to start fresh, you'll need to do following the dependency order. Refer to the workflow's notebook (`notebooks/06-drop-optional.ipynb`) for the drop order.
 
 ## Run integration tests
 

@@ -4,9 +4,7 @@ Find us at the following workshops and conferences!
 
 ## DataJoint Office Hours
 
-+ The DataJoint open source team are offering monthly Office Hours ([see details here](/community/support)).
-
-+ [Sign up for Office Hours!](https://docs.google.com/forms/d/e/1FAIpQLSeMhZtzQQWB47I8HfPcJ5_pFyMhZO284PLIblDfshe30dEuXw/viewform)
+The DataJoint open source team are offering monthly Office Hours ([see details here](/community/support)). Sign up [here](https://docs.google.com/forms/d/e/1FAIpQLSeMhZtzQQWB47I8HfPcJ5_pFyMhZO284PLIblDfshe30dEuXw/viewform)!
 
 ## Upcoming Workshops
 
@@ -16,7 +14,7 @@ Find us at the following workshops and conferences!
 
 ## Past Events
 
-+ NeuroDataReHack Hackathon - October 3-5, 2022
++ [NeuroDataReHack Hackathon](https://alleninstitute.org/what-we-do/brain-science/events-training/2022-neurodatarehack-hackathon/) - October 3-5, 2022
 
 + [Neuropixels and OpenScope Workshop](https://alleninstitute.org/what-we-do/brain-science/events-training/2022-neuropixels-openscope-workshop/2022-workshop-attendee-information/) - September 21-23, 2022
 
@@ -26,7 +24,7 @@ Find us at the following workshops and conferences!
 
 + [NWB Hackathon User Days](https://github.com/NeurodataWithoutBorders/nwb_hackathons/blob/main/HCK13_2022_Janelia/projects/PROJECTS.md) - July 24-27, 2022
 
-+ NIH BRAIN Initiative Meeting - June 21-22, 2022
++ [NIH BRAIN Initiative Meeting](https://braininitiative.nih.gov/News-Events/event/8th-annual-brain-initiative-meeting) - June 21-22, 2022
 
 + DataJoint Office Hours - May 20, 2022
   + MATLAB/Python interoperability. [Video Link](https://www.youtube.com/watch?v=Y7JG2-B2O5U)
@@ -34,7 +32,7 @@ Find us at the following workshops and conferences!
 + DataJoint Office Hours - April 27, 2022
   + Filepath handling, `linking_module`, and `key` management in `make` functions.
 
-+ UCL Neuropixels Course - October 19, 2021
++ [UCL Neuropixels Course](https://www.ucl.ac.uk/neuropixels/training/2021-neuropixels-course) - October 19, 2021
 
 + INCF Neuroinformatics Training Week - August 30 - September 2, 2021
   + [Session 1 Recording](https://youtu.be/YOSNIW6vlQ8)

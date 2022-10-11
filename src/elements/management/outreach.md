@@ -10,7 +10,7 @@ Our [Selection Process](/elements/management/selection) requires a "Precursor Pr
 A precursor project is a project that develops a DataJoint pipeline for its own experiments either independently or in collaboration with our team.
 We reach out to teams who develop DataJoint pipelines for new experiment paradigms and modalities to identify essential design motifs, analysis tools, and related tools and interfaces.
 We interview the core team to learn about their collaborative culture, practices, and procedures.
-We jointly review their open-source code and their plans for disseminating it.
+We jointly review their open-source code and their plans for dissemination.
 In many cases, our team already collaborates with such teams through our other projects and we have a good understanding of their process.
 As we develop a new Element to support the new modality, we remain in contact with the team to include their contribution, solicit feedback, and evaluate design tradeoffs,  
 When the new Element is released, a full attribution is given to the Precursor Project.
