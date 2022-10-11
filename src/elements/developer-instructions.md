@@ -4,7 +4,7 @@
 
 - This method allows you to modify the source code for example DataJoint
   workflows (e.g. `workflow-array-ephys`, `workflow-calcium-imaging`) and their
-  dependencies (i.e., DataJoint Elements).
+  dependencies (e.g., `element-array-ephys`).
 
 - Launch a new terminal and change directory to where you want to clone the
   repositories
