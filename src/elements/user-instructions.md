@@ -1,47 +1,646 @@
 # User setup instructions
 
-- Instructions for workflows created with the DataJoint Elements
+The following document describes how to setup a development environment and connect to
+a database so that you can use the DataJoint Elements to build and run a workflow on 
+your local machine. 
 
-- The following document describes the steps to setup a development environment
-  so that you can use the DataJoint Elements to build and run a workflow on your
-  local machine.
+If you'd rather run through similar tutorials in an online 
+Jupyter environment, please visit [CodeBook](https://codebook.datajoint.io/).
 
-- The DataJoint Elements can be combined together to create a workflow that
-  matches your experimental setup. We have created example workflows (e.g.
-  `workflow-array-ephys`, `workflow-calcium-imaging`) for your reference. In this
-  tutorial we will install these example DataJoint workflows.
+Any of the DataJoint Elements can be combined together to create a workflow that matches
+  your experimental setup. We have a number of [example workflows](#example-workflows)
+  to get you started. Each focuses on a specific modality, but they can be adapted for
+  your custom workflow. 
 
-- These instructions can be adapted for your custom DataJoint workflow.
+Getting up and running will require a couple items for a good **development
+environment**. If any of these items are already familiar to you and installed on your 
+machine, you can skip the corresponding section.
 
-- There are several ways to create a development environment. Here we will
-  discuss one method in detail, and will highlight other methods along the way.
-  If you have already set up certain components, feel free to skip those sections.
+<!-- no toc -->
+1. [Python](#python)
+2. [Conda](#conda)
+3. [Integrated Development Environment](#integrated-development-environment)
+4. [Version Control (git)](#version-control-git)
+5. [Visualization packages (Jupyter Notebooks, DataJoint Diagrams)](#visualization-packages-jupyter-notebooks-datajoint-diagrams)
 
-- You will need administrative privileges on your system for the following setup
-  instructions.
+Next, you'll need to download one of the **[example workflows](#example-workflows)** and 
+corresponding [example data](#example-data). 
 
-## System architecture
+Finally, there are a couple different approaches to
+**connecting to a database**. Here, we highlight two approaches:
 
-- The above diagram describes the general components for a local DataJoint
-  development environment.
+1. [First Time](#first-time): temporary storage to learn the ropes.
+2. [Production Use](#production-use): permenant setup for your real pipeline.
 
-## Install an integrated development environment
+## Development Environment
 
-- DataJoint development and use can be done with a plain text editor in the
-  terminal. However, an integrated development environment (IDE) can improve your
-  experience. Several IDEs are available.
+This diagram describes the general components for a local DataJoint environment. 
 
-- In this setup example, we will use Microsoft's Visual Studio Code.
-  [Installation instructions here](https://code.visualstudio.com/download)
+```mermaid
+flowchart LR
+  py_interp  -->|DataJoint| db_server[("Database Server\n(e.g., MySQL)")]
+  subgraph conda["Conda environment"]
+    direction TB
+    py_interp[Python Interpreter]
+  end
+  subgraph empty1[" "] %% Empty subgraphs prevent overlapping titles
+    direction TB
+    style empty1 fill:none, stroke-dasharray: 0 1
+    conda
+  end
+  subgraph term["Terminal or Jupyter Notebook"]
+    direction TB
+    empty1
+  end
+  subgraph empty2[" "] %% Empty subgraphs prevent overlapping titles
+    direction TB
+    style empty2 fill:none, stroke-dasharray: 0 1
+    term
+  end
+  subgraph ide["Integrated Development Environment"]
+    direction TB
+    empty2
+  end
+```
 
-## Install a relational database
+### Python
 
-- A key feature of DataJoint is the ability to connect with a database server
-  from a scientific programming environment (i.e., Python or MATLAB) so that your
-  experimental data can be stored in the database and downloaded from the
-  database.
+DataJoint Elements are written in Python. The DataJoint Python API supports Python 
+versions 3.7 and up. We recommend downloading the latest stable
+release of 3.9 [here](https://wiki.python.org/moin/BeginnersGuide/Download), and
+following the install instructions. 
 
-- There are several options if you would like to install a local relational
+### Conda
+
+Python projects each rely on different depenencies, which may conflict across projects.
+We recommend working in a Conda environment for each project to isolate the
+dependencies. For more information on why Conda, and setting up the version of Conda
+that best suits your needs, see 
+[this article](https://towardsdatascience.com/get-your-computer-ready-for-machine-learning-how-what-and-why-you-should-use-anaconda-miniconda-d213444f36d6).
+
+To get going quickly, we recommend you ...
+
+1. [Download Miniconda](https://docs.conda.io/en/latest/miniconda.html#latest-miniconda-installer-links)
+and go through the setup, including adding Miniconda to your `PATH` (full
+  instructions 
+  [here](https://developers.google.com/earth-engine/guides/python_install-conda#add_miniconda_to_path_variable)).
+
+2. Declare and initialize a new conda environment with the following commands. Edit
+   `<name>` to reflect your project.
+
+    ```bash
+    conda create --name datajoint-workflow-<name> python=3.9 
+    conda activate dj-workflow-<name>
+    ```
+
+<details>
+<summary>Apple M1 users: Click to expand</summary>
+    Running analyses with Element DeepLabCut or Element Calcium imaging may require
+    tensorflow, which can cause issues on M1 machines. By saving the `yaml` file below,
+    this environment can be loaded with `conda create -f my-file.yaml`. If you encounter
+    errors related to `clang`, try launching xcode and retrying.
+
+    ```yaml
+    name: dj-workflow-<name>
+    channels:
+        - apple 
+        - conda-forge
+        - defaults
+    dependencies:
+        - tensorflow-deps
+        - opencv
+        - python=3.9
+        - pip>=19.0 
+        - pip:
+        - tensorflow-macos
+        - tensorflow-metal
+        - datajoint
+    ```
+</details>
+
+### Integrated Development Environment (IDE)
+
+Development and use can be done with a plain text editor in the terminal. However, an
+  integrated development environment (IDE) can improve your experience. Several IDEs are
+  available. We recommend 
+  [Microsoft's Visual Studio Code](https://code.visualstudio.com/download), also called 
+  VS Code. To set up VS Code with Python for the first time, follow 
+  [this tutorial](https://code.visualstudio.com/docs/python/python-tutorial).
+
+### Version Control (git)
+
+Table definitions and analysis code can change over time, especially with multiple
+collaborators working on the same project. Git is an open-source, distributed version
+control system that helps keep track of what changes where made when, and by whom.
+GitHub is a platform that hosts projects managed with Git. The example DataJoint
+Workflows are hosted on GitHub, we will use Git to clone (i.e., download) this
+repository. 
+
+1. Check if you already have git by typing `git --version` in a terminal window.
+2. If git is not installed on your system, please
+[install git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git). 
+3. You can read more about git basics [here](https://www.atlassian.com/git).
+
+### Visualization packages (Jupyter Notebooks, DataJoint Diagrams)
+
+To run the demo notebooks and generate visualizations associated with an example
+workflow, you'll need a couple extra packages. 
+
+**Jupyter Notebooks** help structure code (see
+[here](https://code.visualstudio.com/docs/datascience/jupyter-notebooks) for full
+instructions on Jupyter within VS Code).
+ 
+1. Install Jupyter packages
+    ```bash
+    Conda install jupyter ipykernel nb_conda_kernels
+    ```
+
+2. Ensure your VS Code python intepreter is set to your Conda environment path: 
+   
+    <details>
+    <summary>Click to expand</summary>
+
+      - View > Command Palette
+    
+      - Type "Python: Select Interpreter", hit enter.
+    
+      - If asked, select the workspace where you plan to download the workflow.
+    
+      - If present, select your Conda environment. If not present, enter in the path.
+    </details>
+
+**DataJoint Diagrams** rely on additional packages. To install these packages,
+enter the following command...
+    ```bash
+    Conda install graphviz python-graphviz pydotplus
+    ```
+
+## Example Config, Workflows and Data
+
+Of the [options below](#example-workflows), pick the workflow that best matches your 
+needs.
+
+1. Change the directory to where you want to download the workflow.
+
+    ```bash
+    cd ~/Projects
+    ```
+
+2. Clone the relevant repository, and change directories to this new directory.
+    ```bash
+    git clone https://github.com/datajoint/<repository>
+    cd <repository>
+    ```
+
+3. Install this directory as editable with the `-e` flag.
+    ```bash
+    pip install -e .
+    ```
+    <details>
+    <summary>Why editable? Click for details</summary>
+        This lets you modify the code after installation and experiment with different
+        designs or adding additional tables. You may wish to edit `pipeline.py` or 
+        `paths.py` to better suit your needs. If no modification is required, 
+        using `pip install .` is sufficient.
+    </details>
+
+
+4. Install `element-interface`, which has utilities used across different Elements and 
+   Workflows.
+
+    ```bash
+    pip install "element-interface @ git+https://github.com/datajoint/element-interface"
+    ```
+
+5. <a name="config">&#8203</a>Set up a local DataJoint config file by saving the 
+    following block as a json in your workflow directory as `dj_local_conf.json`. Not
+    sure what to put for the values in `< >` below? We'll cover this when we 
+    [connect to the database](#relational-databases)
+  
+    ```json
+    {
+        "database.host": "<hostname>",
+        "database.user": "<username>",
+        "database.password": "<password>",
+        "loglevel": "INFO",
+        "safemode": true,
+        "display.limit": 7,
+        "display.width": 14,
+        "display.show_tuple_count": true,
+        "custom": {
+            "database.prefix": "<username_>"
+        }
+    }
+    ```
+
+### Example Workflows
+
+<div class="grid cards" markdown>
+
+-   :fontawesome-brands-python:{ .lg .middle } **Workflow Session**
+
+    ---
+
+    An example workflow for session management.
+
+    [:octicons-repo-forked-24: Clone from GitHub](https://github.com/datajoint/workflow-session/)
+
+-   :fontawesome-brands-python:{ .lg .middle } **Workflow Array Electrophysiology**
+
+    ---
+
+    An example workflow for Neuropixels probes.
+
+    [:octicons-repo-forked-24: Clone from GitHub](https://github.com/datajoint/workflow-array-ephys/)
+
+-   :fontawesome-brands-python:{ .lg .middle } **Workflow Calcium Imaging**
+
+    ---
+
+    An example workflow for calcium imaging microscopy.
+
+    [:octicons-repo-forked-24: Clone from GitHub](https://github.com/datajoint/workflow-calcium-imaging/)
+
+-   :fontawesome-brands-python:{ .lg .middle } **Workflow Miniscope**
+
+    ---
+
+    An example workflow for miniscope calcium imaging.
+
+    [:octicons-repo-forked-24: Clone from GitHub](https://github.com/datajoint/workflow-miniscope/)
+
+-   :fontawesome-brands-python:{ .lg .middle } **Workflow DeepLabCut**
+
+    ---
+
+    An example workflow for pose estimation with DeepLabCut.
+
+    [:octicons-repo-forked-24: Clone from GitHub](https://github.com/datajoint/workflow-deeplabcut/)
+
+</div>
+
+### Example Data
+
+The first notebook in each workflow will guide you through downloading example data
+from DataJoint's AWS storage archive. You can also process your own data. To use the 
+example data, you would ...
+
+1. Install `djarchive-client`
+
+    ```bash
+    pip install git+https://github.com/datajoint/djarchive-client.git
+    ```
+
+2. Use a python terminal to import the `djarchive` client and view available datasets, 
+   and revisions.
+
+    ```python
+    import djarchive_client
+    client = djarchive_client.client()
+    list(client.datasets())  # List available datasets, select one
+    list(client.revisions()) # List available revisions, select one
+    ```
+
+3. Prepare a directory to store the download data, for example in `/tmp`, then download
+   the data with the `djarchive` client. This may take some time with larger datasets.
+
+    ```python
+    import os
+    os.makedirs('/tmp/example_data/', exist_ok=True)
+    client.download(
+        '<workflow-dataset>',
+        target_directory='/tmp/example_data',
+        revision='<revision>'
+    )
+    ```
+
+#### Example Data Organization
+
+<details>
+<summary>Array Ephys: Click to expand details</summary>
+    <ul>
+        <li><b>Dataset</b>: workflow-array-ephys-benchmark</li>
+        <li><b>Revision</b>: 0.1.0a4</li>
+        <li><b>Size</b>: 293 GB</li>
+    </ul>
+    The example <code>subject6/session1</code> data was recorded with SpikeGLX and
+    processed with Kilosort2. 
+    ```
+    /tmp/example_data/
+    - subject6
+    - session1
+        - towersTask_g0_imec0
+        - towersTask_g0_t0_nidq.meta
+        - towersTask_g0_t0.nidq.bin
+    ```
+    Element and Workflow Array Ephys also support data recorded with 
+    OpenEphys.
+</details>
+
+<details>
+<summary>Calcium Imaging: Click to expand details</summary>
+    <ul>
+        <li><b>Dataset</b>: workflow-array-calcium-imaging-test-set</li>
+        <li><b>Revision</b>: 0_1_0a2</li>
+        <li><b>Size</b>: 142 GB</li>
+    </ul>
+    The example <code>subject3</code> data was recorded with Scanbox. 
+    The example <code>subject7</code> data was recorded with ScanImage.
+    Both datasets were processed with Suite2p.
+    ```
+    /tmp/example_data/
+    - subject3/
+        - 210107_run00_orientation_8dir/
+            - run00_orientation_8dir_000_000.sbx
+            - run00_orientation_8dir_000_000.mat
+            - suite2p/
+                - combined
+                - plane0
+                - plane1
+                - plane2
+                - plane3
+    - subject7/
+        - session1
+            - suite2p
+                - plane0
+    ```
+    Element and Workflow Calcium Imaging also support ...
+    <ul>
+        <li>data collected with Nikon.</li>
+        <li>data processed with CaImAn.</li>
+    <ul>
+</details>
+
+<details>
+<summary>DeepLabCut: Click to expand details</summary>
+    <ul>
+        <li><b>Dataset</b>: workflow-dlc-data</li>
+        <li><b>Revision</b>: v1</li>
+        <li><b>Size</b>: .3 GB</li>
+    </ul>
+    The example data includes both training data and pretrained models.
+    ```
+    /tmp/test_data/from_top_tracking/
+    - config.yml
+    - dlc-models/iteration-0/from_top_trackingFeb23-trainset95shuffle1/
+        - test/pose_cfg.yaml
+        - train/
+            - checkpoint
+            - checkpoint_orig
+            ─ learning_stats.csv
+            ─ log.txt
+            ─ pose_cfg.yaml
+            ─ snapshot-10300.data-00000-of-00001
+            ─ snapshot-10300.index
+            ─ snapshot-10300.meta   # same for 103000
+    - labeled-data/
+        - train1/
+            - CollectedData_DJ.csv
+            - CollectedData_DJ.h5
+            - img00674.png          # and others
+        - train2/                   # similar to above
+    - videos/
+        - test.mp4
+        - train1.mp4
+    ```
+</details>
+
+<details>
+<summary>FaceMap: Click to expand details</summary>
+    <b>Associated workflow still under development</b>
+    <ul>
+        <li><b>Dataset</b>: workflow-facemap</li>
+        <li><b>Revision</b>: 0.0.0</li>
+        <li><b>Size</b>: .3 GB</li>
+    </ul>
+</details>
+
+
+#### Using Your Own Data
+
+Some of the workflows carry some assumptions about how your file directory will be 
+organized, and how some files are named.
+
+<details>
+<summary>Array Ephys: Click to expand details</summary>
+    <ul>
+        <li>In your <a href="config">DataJoint config</a>, add another item under 
+            <code>custom</code>, <code>ephys_root_data_dir</code>, for your local root 
+            data directory. This can include multiple roots.
+            ```json
+            "custom": {
+                "database.prefix": "<username_>",
+                "ephys_root_data_dir": ["/local/root/dir1", "/local/root/dir2"]
+            }
+            ```
+            </li>
+        <li>The <code>subject</code> directory names must match the subject IDs in your
+            subjects table. The <code>ingest.py</code> script (
+            <a href="https://github.com/datajoint/workflow-array-ephys/blob/main/notebooks/04-automate-optional.ipynb">
+            demo ingestion notebook</a>) can help load these values from 
+            <code>./user_data/subjects.csv</code>.</li>
+        <li>The <code>session</code> directories can have any naming convention, but 
+            must be specified in the session table (see also
+            <a href="https://github.com/datajoint/workflow-array-ephys/blob/main/notebooks/04-automate-optional.ipynb">
+            demo ingestion notebook</a>). </li>
+        <li>Each session can have multiple probes.</li>
+        <li>The <code>probe</code> directory names must end in a one-digit number "
+            corresponding to the probe number.</li>
+        <li>Each <code>probe</code> directory should contain:
+            <ul>
+                <li>One neuropixels meta file named <code>*[0-9].ap.meta</code></li>
+                <li>Optionally, one Kilosort output folder</li>
+            </ul>
+        </li>
+    </ul>
+    Folder structure:
+    ```
+    <ephys_root_data_dir>/
+    └───<subject1>/                       # Subject name in `subjects.csv`
+    │   └───<session0>/                   # Session directory in `sessions.csv`
+    │   │   └───imec0/
+    │   │   │   │   *imec0.ap.meta
+    │   │   │   └───ksdir/
+    │   │   │       │   spike_times.npy
+    │   │   │       │   templates.npy
+    │   │   │       │   ...
+    │   │   └───imec1/
+    │   │       │   *imec1.ap.meta
+    │   │       └───ksdir/
+    │   │           │   spike_times.npy
+    │   │           │   templates.npy
+    │   │           │   ...
+    │   └───<session1>/
+    │   │   │   ...
+    └───<subject2>/
+    │   │   ...
+    ```
+</details>
+
+<details>
+<summary>Calcium Imaging: Click to expand details</summary>
+    <b>Note:</b> While Element Calcium Imaging can accommodate multiple scans per 
+    session, Workflow Calcium Imaging assumes there is only one scan per session.
+    <ul>
+        <li>In your <a href="config">DataJoint config</a>, add another item under 
+        <code>custom</code>, <code>imaging_root_data_dir</code>, for your local root 
+        data directory. This can include multiple roots.
+        ```json
+        "custom": {
+            "database.prefix": "<username_>",
+            "imaging_root_data_dir": ["/local/root/dir1", "/local/root/dir2"]
+        }
+        ```
+        </li>
+        <li>The <code>subject</code> directory names must match the subject IDs in your
+        subjects table. The <code>ingest.py</code> script (
+        <a href="https://github.com/datajoint/workflow-calcium-imaging/blob/main/notebooks/04-automate-optional.ipynb">
+        demo ingestion notebook</a>) can help load these values from 
+        <code>./user_data/subjects.csv</code>.</li>
+        <li>The <code>session</code> directories can have any naming convention, but 
+        must be specified in the session table (see also
+        <a href="https://github.com/datajoint/workflow-calcium-imaging/blob/main/notebooks/04-automate-optional.ipynb">
+        demo ingestion notebook</a>). </li>
+        <li>Each <code>session</code> directory should contain:
+            <ul>
+                <li>All <code>.tif</code> or <code>.sbx</code> files for the scan, with 
+                any naming convention.</li>
+                <li>One <code>suite2p</code> subfolder, containing the analysis outputs
+                 in the default naming convention.</li>
+                <li>One <code>caiman</code> subfolder, containing the analysis output 
+                <code>.hdf5</code> file, with any naming convention.</li>
+            </ul>
+        </li>
+    </ul>
+    Folder structure:
+    ```
+    imaging_root_data_dir/
+    └───<subject1>/                     # Subject name in `subjects.csv`
+    │   └───<session0>/                 # Session directory in `sessions.csv`
+    │   │   │   scan_0001.tif
+    │   │   │   scan_0002.tif
+    │   │   │   scan_0003.tif
+    │   │   │   ...
+    │   │   └───suite2p/
+    │   │       │   ops1.npy
+    │   │       └───plane0/
+    │   │       │   │   ops.npy
+    │   │       │   │   spks.npy
+    │   │       │   │   stat.npy
+    │   │       │   │   ...
+    │   │       └───plane1/
+    │   │           │   ops.npy
+    │   │           │   spks.npy
+    │   │           │   stat.npy
+    │   │           │   ...
+    │   │   └───caiman/
+    │   │       │   analysis_results.hdf5
+    │   └───<session1>/                 # Session directory in `sessions.csv`
+    │   │   │   scan_0001.tif
+    │   │   │   scan_0002.tif
+    │   │   │   ...
+    └───<subject2>/                     # Subject name in `subjects.csv`
+    │   │   ...
+    ```
+</details>
+
+
+<details>
+<summary>DeepLabCut: Click to expand details</summary>
+    <b>Note:</b> Element DeepLabCut assumes you've already used the DeepLabCut GUI to 
+    set up your project and label your data. This can include multiple roots.
+    <ul>
+        <li>In your <a href="config">DataJoint config</a>, add another item under 
+        <code>custom</code>, <code>dlc_root_data_dir</code>, for your local root 
+        data directory.
+        ```json
+        "custom": {
+            "database.prefix": "<username_>",
+            "dlc_root_data_dir": ["/local/root/dir1", "/local/root/dir2"]
+        }
+        ```
+        </li>
+        <li>You have preserved the default DeepLabCut project directory, shown below.
+        </li>
+        <li>The paths in your various <code>yaml</code> files reflect the current
+        folder structure.<li>
+        <li>You have generated thge <code>pickle</code> and <code>mat</code> training
+        files. If not, follow the DeepLabCut guide to 
+        <a href="https://github.com/DeepLabCut/DeepLabCut/blob/master/docs/standardDeepLabCut_UserGuide.md#f-create-training-datasets">
+        create a training dataset</a></li>
+    </ul>
+    Folder structure:
+    ```
+    /dlc_root_data_dir/your_project/
+    - config.yaml                   # Including correct path information
+    - dlc-models/iteration-*/your_project_date-trainset*shuffle*/
+        - test/pose_cfg.yaml        # Including correct path information
+        - train/pose_cfg.yaml       # Including correct path information
+    - labeled-data/any_names/*{csv,h5,png}
+    - training-datasets/iteration-*/UnaugmentedDataSet_your_project_date/
+        - your_project_*shuffle*.pickle
+        - your_project_scorer*shuffle*.mat
+    - videos/any_names.mp4
+    ```
+</details>
+
+<details>
+<summary>Miniscope: Click to expand details</summary>
+    <ul>
+        <li>In your <a href="config">DataJoint config</a>, add another item under 
+        <code>custom</code>, <code>miniscope_root_data_dir</code>, for your local root 
+        data directory.
+        ```json
+        "custom": {
+            "database.prefix": "<username_>",
+            "miniscope_root_data_dir": "/local/root/dir"
+        }
+        ```
+        </li>
+    </ul>
+</details>
+
+## Relational databases
+
+DataJoint helps you connect to a database server from your programming environment 
+(i.e., Python or MATLAB), granting a number of benefits over traditional file heirarchies 
+(see [YouTube Explainer](https://www.youtube.com/watch?v=q-PMUSC5P5o)). We offer two 
+options:
+
+1. The [First Time](#first-time) approach loads example data to a temporary existing 
+   database, saving you setup time. But, because this data will be purged intermittently,
+   it should not be used in a true experiment.
+2. The [Production Use](#production-use) approach will walk you through setting up your
+   own database, which you'll be able to control, including granting others access.
+
+### First time
+
+1. Make an account at [accounts.datajoint.io](https://accounts.datajoint.io/).
+2. In a workflow directory, make a <a href="#config">config</a> `json` file called
+   `dj_local_conf.json` using your DataJoint account information and 
+   `tutorial-db.datajoint.io` as the host.
+    ```json
+    {
+        "database.host": "tutorial-db.datajoint.io",
+        "database.user": "<datajoint-username>",
+        "database.password": "<datajoint-password>",
+        "loglevel": "INFO",
+        "safemode": true,
+        "display.limit": 7,
+        "display.width": 14,
+        "display.show_tuple_count": true,
+        "custom": {
+        "database.prefix": "<datajoint-username_>"
+        }
+    }
+    ```
+3. Launch a Python terminal and start interacting with the workflow.
+
+### Production use
+
+<!-- HOW MUCH SHOULD THIS MIRROR https://tutorials.datajoint.org/setting-up/get-database.html? -->
+
+<!-- - There are several options if you would like to install a local relational
   database server.
 
   - If using the Docker and Compose files that come with each workflow (e.g. [workflow-calcium-imaging](https://github.com/datajoint/workflow-calcium-imaging/tree/main/docker)), these are preconfigured with a Docker container that hosts a MySQL server.
@@ -56,164 +655,6 @@
   the tutorial database should not be used for your experimental analysis as the 
   storage is not persistent.
 
-## Install a version control system
-
-- Git is an open-source, distributed version control system for collaborating
-  with software development. GitHub is a platform that hosts projects managed
-  with Git. As the example DataJoint workflows are hosted on GitHub, we will use
-  Git to clone (i.e., download) this repository.
-
-- For your own DataJoint workflow development we recommended that you use Git
-  and GitHub for collaboration.
-
-- Many systems come preinstalled with Git. You can test if Git is already
-  installed by typing `git` in a terminal window.
-
-- If Git is not installed on your system, [Install Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git).
-
-## Install a virtual environment
-
-- A virtual environment allows you to install the packages required for a
-  specific project within an isolated environment on your computer.
-
-- It is highly recommended (though not strictly required) to create a virtual
-  environment to run the workflow.
-
-- Conda and virtualenv are virtual environment managers and you can use either
-  option. Below you will find instructions for conda.
-
-  + Miniconda is a minimal installer for conda.  Follow the [installer instructions](
-      https://conda.io/en/latest/miniconda.html) for your operating system.
-
-  + You may need to add the Miniconda directory to the PATH environment
-      variable
-
-    + First locate the Miniconda directory
-
-    + Then modify and run the following command
-        ```bash
-        export PATH="<absolute-path-to-miniconda-directory>/bin:$PATH"
-        ```
-  + Create a new conda environment
-    ```bash
-    conda create -n <environment_name> python=<version>
-    ```
-
-    + Example command to create a conda environment
-      ```bash
-      conda create -n workflow-array-ephys python=3.8.11
-      ```
-
-  + Activate the conda environment
-      ```bash
-      conda activate <environment_name>
-      ```
-
-## Install Jupyter Notebook packages
-
-- Install the following, if you are using Jupyter Notebook.
-
-  ```bash
-  conda install jupyter ipykernel nb_conda_kernels
-  ```
-
-- Install the following, for `dj.Diagram` to render.
-  ```bash
-  conda install graphviz python-graphviz pydotplus
-  ```
-
-## Clone and install the relevant repository
-
-- In a terminal window and change the directory to where you want to clone
-  the repository
-
-  ```bash
-  cd ~/Projects
-  ```
-
-- Clone the relevant repository, often one of the workflows
-
-  ```bash
-  git clone https://github.com/datajoint/<repository>
-  ```
-
-- Change into the cloned directory
-
-  ```bash
-  cd <repository>
-  ```
-
-- From the root of the cloned repository directory. Note: the `-e` flag, which will
-  will install this repository in editable mode, in case there's a need to modify the
-  code (e.g. the workflow `pipeline.py` or `paths.py` scripts). If no such
-  modification is required, using `pip install .` is sufficient.
-  ```bash
-   pip install -e .
-  ```
-- Install `element-interface`, which contains scripts to load data for many of our
-  Elements, and all workflows
-
-  ```bash
-  pip install "element-interface @ git+https://github.com/datajoint/element-interface"
-  ```
-
-- Items specific to `workflow-calcium-imaging`
-    <details>
-    <summary>Click to expand details</summary>
-
-  - `element-interface` can also be used to install packages used for reading
-    acquired data (e.g., `scanreader`) and running analyses (e.g., `CaImAn`).
-
-  - Install `element-interface` with `scanreader`
-
-    ```bash
-    pip install "element-interface[scanreader] @ git+https://github.com/datajoint/element-interface"
-    ```
-
-  - Install `element-interface` with `sbxreader`
-
-    ```bash
-    pip install "element-interface[sbxreader] @ git+https://github.com/datajoint/element-interface"
-    ```
-
-  - Install `element-interface` with `Suite2p`
-
-    ```bash
-    pip install "element-interface[suite2p] @ git+https://github.com/datajoint/element-interface"
-    ```
-
-  - Install `element-interface` with `CaImAn` requires two separate commands
-
-    ```bash
-    pip install "element-interface[caiman_requirements] @ git+https://github.com/datajoint/element-interface"
-    pip install "element-interface[caiman] @ git+https://github.com/datajoint/element-interface"
-    ```
-
-  - Example `element-interface` installation with multiple packages
-  `bash pip install "element-interface[caiman_requirements] @ git+https://github.com/datajoint/element-interface" pip install "element-interface[scanreader,sbxreader,suite2p,caiman] @ git+https://github.com/datajoint/element-interface" `
-  </details>
-
-## Set up a connection to the database server
-
-- One way to set up a connection to the database server with DataJoint is to
-  create a local configuration file (i.e., `dj_local_conf.json`) at the root of the
-  repository folder, with the following template:
-
-  ```json
-  {
-    "database.host": "<hostname>",
-    "database.user": "<username>",
-    "database.password": "<password>",
-    "loglevel": "INFO",
-    "safemode": true,
-    "display.limit": 7,
-    "display.width": 14,
-    "display.show_tuple_count": true,
-    "custom": {
-      "database.prefix": "<username_>"
-    }
-  }
-  ```
 
 - Specify the database's `hostname`, `username`, and `password`.
 
@@ -234,294 +675,25 @@
 - Specific workflows will require additional information in the custom field, including
   paths to data directories, following the convention described in the
   [directory structure section](#directory-structure-and-file-naming-convention). If
-  multiple root directories exist, include all in the relevant json array.
+  multiple root directories exist, include all in the relevant json array. -->
 
-    + `workflow-array-ephys`
-        <details>
-        <summary>Click to expand</summary>
 
-        ```json
-        "custom": {
-            "database.prefix": "<username_>",
-            "ephys_root_data_dir": ["Full path to root directory of raw data",
-                                    "Full path to root directory of processed data"]
-            }
-        ```
-        </details>
+## Interacting with the Workflow
 
-    + `workflow-calcium-imaging`
-        <details>
-        <summary>Click to expand</summary>
+### In Python
 
-        ```json
-        "custom": {
-            "database.prefix": "<username_>",
-            "imaging_root_data_dir": ["Full path to root directory of raw data",
-                                      "Full path to root directory of processed data"]
-            }
-        ```
-        </details>
+1. Connect to the database and import tables
 
-    + `workflow-miniscope`
-        <details>
-        <summary>Click to expand</summary>
-
-        ```json
-        "custom": {
-            "database.prefix": "<username_>",
-            "miniscope_root_data_dir": ["Full path to root directory of raw data",
-                                        "Full path to root directory of processed data"]
-            }
-        ```
-        </details>
-
-    + `workflow-deeplabcut`
-        <details>
-        <summary>Click to expand</summary>
-
-        ```json
-        "custom": {
-            "database.prefix": "<username_>",
-            "dlc_root_data_dir": ["Full path to root directory of raw data",
-                                  "Full path to root directory of processed data"]
-            }
-        ```
-        </details>
-
-## Setup complete
-
-- At this point the setup of this workflow is complete.
-
-## Download example data
-
-- We provide example data to use with the example DataJoint workflows.
-
-- The data is hosted on DataJoint's Archive which is an AWS storage and can be
-  download with [djarchive-client](https://github.com/datajoint/djarchive-client).
-
-- Install `djarchive-client`
-
-  ```bash
-  pip install git+https://github.com/datajoint/djarchive-client.git
-  ```
-
-- In your python interpreter, import the client
-
-  ```python
-  import djarchive_client
-  client = djarchive_client.client()
-  ```
-
-- Browse the available datasets
-
-  ```python
-  list(client.datasets())
-  ```
-
-- Each datasets has different versions associated with the version of the
-  workflow package. Browse the revisions.
-  `python list(client.revisions()) `
-
-- Prepare a directory to store the download data, for example in `/tmp`
-
-  ```bash
-  mkdir /tmp/example_data
-  ```
-
-- Download a given dataset
-
-  ```python
-  client.download('<workflow-dataset>',
-                  target_directory='/tmp/example_data',
-                  revision='<revision>')
-  ```
-
-- We will use this data as an example for the tutorial notebooks for each
-  workflow. If you want to use for own dataset for the workflow, change the path
-  accordingly.
-
-- Directory organization
-
-  - `workflow-array-ephys`
-      <details>
-      <summary>Click to expand details</summary>
-
-    ```
-    /tmp/example_data/
-    - subject6
-        - session1
-            - towersTask_g0_imec0
-            - towersTask_g0_t0_nidq.meta
-            - towersTask_g0_t0.nidq.bin
+    ```python
+    from <relevant-workflow>.pipeline import *
     ```
 
-    - The example subject6/session1 data was recorded with SpikeGLX and
-      processed with Kilosort2.
-
-    - `element-array-ephys` and `workflow-array-ephys` also support data
-      recorded with OpenEphys.
-
-      </details>
-
-  - `workflow-calcium-imaging`
-      <details>
-      <summary>Click to expand details</summary>
-
-    ```
-    /tmp/example_data/
-    - subject3/
-        - 210107_run00_orientation_8dir/
-            - run00_orientation_8dir_000_000.sbx
-            - run00_orientation_8dir_000_000.mat
-            - suite2p/
-                - combined
-                - plane0
-                - plane1
-                - plane2
-                - plane3
-    - subject7/
-        - session1
-            - suite2p
-                - plane0
-    ```
-
-    - The example subject3 data was recorded with Scanbox and processed with
-      Suite2p.
-
-    - The example subject7 data was recorded with ScanImage and processed
-      with Suite2p.
-
-    - `element-calcium-imaging` and `workflow-calcium-imaging` also support
-      data processed with CaImAn.
-
-      </details>
-
-## Directory structure and file naming convention
-
-- The workflow presented here is designed to work with the directory structure
-  and file naming convention as described below.
-
-- `workflow-array-ephys`
+2. View the declared tables. For a more in depth explanation of how to run the workflow
+    and explore the data, refer to the 
+    [Jupyter notebooks](#visualization-packages-jupyter-notebooks-datajoint-diagrams) 
+    in the workflow directory.
     <details>
-    <summary>Click to expand details</summary>
-
-  - The `ephys_root_data_dir` is configurable in the `dj_local_conf.json`,
-    under `custom/ephys_root_data_dir` variable.
-
-  - The `subject` directory names must match the identifiers of your subjects
-    in the `subjects.csv script` (`./user_data/subjects.csv`).
-
-  - The `session` directories can have any naming convention.
-
-  - Each session can have multiple probes, the `probe` directories must match
-    the following naming convention:
-
-        `*[0-9]` (where `[0-9]` is a one digit number specifying the probe
-        number)
-
-  - Each `probe` directory should contain:
-
-    - One neuropixels meta file, with the following naming convention:
-
-      `*[0-9].ap.meta`
-
-    - Potentially one Kilosort output folder
-
-  ```
-  <ephys_root_data_dir>/
-  └───<subject1>/                       # Subject name in `subjects.csv`
-  │   └───<session0>/                   # Session directory in `sessions.csv`
-  │   │   └───imec0/
-  │   │   │   │   *imec0.ap.meta
-  │   │   │   └───ksdir/
-  │   │   │       │   spike_times.npy
-  │   │   │       │   templates.npy
-  │   │   │       │   ...
-  │   │   └───imec1/
-  │   │       │   *imec1.ap.meta
-  │   │       └───ksdir/
-  │   │           │   spike_times.npy
-  │   │           │   templates.npy
-  │   │           │   ...
-  │   └───<session1>/
-  │   │   │   ...
-  └───<subject2>/
-  │   │   ...
-  ```
-
-    </details>
-
-- `workflow-calcium-imaging`
-    <details>
-    <summary>Click to expand details</summary>
-
-  - Note: the `element-calcium-imaging` is designed to accommodate multiple
-    scans per session, however, in this particular `workflow-calcium-imaging`,
-    we take the assumption that there is only one scan per session.
-
-  - The `imaging_root_data_dir` directory is configurable in the
-    `dj_local_conf.json`, under the `custom/imaging_root_data_dir` variable
-
-  - The `subject` directory names must match the identifiers of your subjects
-    in the `subjects.csv` script (`./user_data/subjects.csv`).
-
-  - The `session` directories can have any naming convention
-  - Each `session` directory should contain:
-
-    - All `.tif` or `.sbx` files for the scan, with any naming convention
-
-    - One `suite2p` subfolder per `session` folder, containing the `Suite2p`
-      analysis outputs
-
-    - One `caiman` subfolder per `session` folder, containing the `CaImAn`
-      analysis output `.hdf5` file, with any naming convention
-
-  ```
-  imaging_root_data_dir/
-  └───<subject1>/                     # Subject name in `subjects.csv`
-  │   └───<session0>/                 # Session directory in `sessions.csv`
-  │   │   │   scan_0001.tif
-  │   │   │   scan_0002.tif
-  │   │   │   scan_0003.tif
-  │   │   │   ...
-  │   │   └───suite2p/
-  │   │       │   ops1.npy
-  │   │       └───plane0/
-  │   │       │   │   ops.npy
-  │   │       │   │   spks.npy
-  │   │       │   │   stat.npy
-  │   │       │   │   ...
-  │   │       └───plane1/
-  │   │           │   ops.npy
-  │   │           │   spks.npy
-  │   │           │   stat.npy
-  │   │           │   ...
-  │   │   └───caiman/
-  │   │       │   analysis_results.hdf5
-  │   └───<session1>/                 # Session directory in `sessions.csv`
-  │   │   │   scan_0001.tif
-  │   │   │   scan_0002.tif
-  │   │   │   ...
-  └───<subject2>/                     # Subject name in `subjects.csv`
-  │   │   ...
-  ```
-
-    </details>
-
-## Interacting with the DataJoint workflow
-
-- Connect to the database and import tables
-
-  ```python
-  from <relevant-workflow>.pipeline import *
-  ```
-
-- View the declared tables
-
-    - `workflow-array-ephys`
-        <details>
-        <summary>Click to expand details</summary>
-
+    <summary>Array Ephys: Click to expand details</summary>
         ```python
         subject.Subject()
         session.Session()
@@ -530,13 +702,9 @@
         ephys.Clustering()
         ephys.Clustering.Unit()
         ```
-
     </details>
-
-    - `workflow-calcium-imaging`
-        <details>
-        <summary>Click to expand details</summary>
-
+    <details>
+    <summary>Calcium Imaging: Click to expand details</summary>
         ```python
         subject.Subject()
         session.Session()
@@ -545,17 +713,29 @@
         imaging.ProcessingParamSet()
         imaging.ProcessingTask()
         ```
+    </details>
+    <details>
+    <summary>DeepLabCut: Click to expand details</summary>
+        ```python
+        subject.Subject()
+        session.Session()
+        train.TrainingTask()
+        model.VideoRecording.File()
+        model.Model()
+        model.PoseEstimation.BodyPartPosition()
+        ```
+    </details>
 
-        </details>
 
-- For an in depth explanation of how to run the workflows and explore the data,
-  please refer to the following workflow specific Jupyter notebooks. + `workflow-array-ephys` [Jupyter notebooks](https://github.com/datajoint/workflow-array-ephys/tree/main/notebooks) + `workflow-calcium-imaging` [Jupyter notebooks](https://github.com/datajoint/workflow-calcium-imaging/tree/main/notebooks)
+### DataJoint LabBook
 
-## DataJoint LabBook
+DataJoint LabBook is a graphical user interface to facilitate data entry for existing
+DataJoint tables.
 
-- DataJoint LabBook is a graphical user interface to facilitate working with
-  DataJoint tables.
+- [Labbook Website](https://labbook.datajoint.io/) - If a database is public (like 
+    `tutorial-db`) and you have access, you can view the contents here.
 
-- [DataJoint LabBook Documentation](https://datajoint.github.io/datajoint-labbook/), including prerequisites, installation, and running the application
+- [DataJoint LabBook Documentation](https://datajoint.github.io/datajoint-labbook/), 
+    including prerequisites, installation, and running the application
 
 - [DataJoint LabBook GitHub Repository](https://github.com/datajoint/datajoint-labbook)
