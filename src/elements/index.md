@@ -69,7 +69,7 @@ Below are the projects that make up the family of open-source DataJoint Elements
 
     [:octicons-arrow-right-24: Getting started](https://datajoint.com/docs/elements/element-facemap/)
 
--   :fontawesome-brands-python:{ .lg .middle } **Element Visual Stimulus**
+-   :fontawesome-brands-java:{ .lg .middle } **Element Visual Stimulus**
 
     ---
 
