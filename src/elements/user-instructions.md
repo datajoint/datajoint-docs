@@ -97,7 +97,7 @@ and go through the setup, including adding Miniconda to your `PATH` (full
 2. Declare and initialize a new conda environment with the following commands. Edit
    `<name>` to reflect your project.
 
-    ``` bash
+    ``` console
     conda create --name datajoint-workflow-<name> python=3.9 
     conda activate dj-workflow-<name> 
     ```
