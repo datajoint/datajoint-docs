@@ -1,11 +1,17 @@
 :root {
     --dj-primary: #00a0df;
     --dj-secondary: #ff5113;
-    --dj-tertiary: #ad370b;
     --dj-background: #808285;
     --dj-black: #000000;
     --dj-white: #ffffff;
 }
+
+/* These just restate the default for reference
+    --md-code-hl-constant-color: #6e59d9;
+    --md-code-hl-keyword-color: #3f6ec6;
+    --md-code-hl-generic-color-light: #808285; 
+    --md-code-hl-generic-color-dark: #d1d7fa; 
+*/
 
 [data-md-color-scheme="datajoint"] {
     /* ribbon */
@@ -19,7 +25,7 @@
     /* navigation header + links */
     --md-typeset-a-color: var(--dj-primary);
     /* navigation on hover + diagram outline */
-    --md-accent-fg-color: var(--dj-tertiary);
+    --md-accent-fg-color: var(--dj-secondary);
 
     /* main */
     /* main header + already viewed*/
@@ -27,7 +33,7 @@
     /* primary text */
     --md-typeset-color: var(--dj-black);
     /* code comments + diagram text */
-    --md-code-fg-color: var(--dj-tertiary);
+    --md-code-fg-color: var(--dj-primary);
 
     /* footer */
     /* previous/next text */
@@ -54,9 +60,23 @@
     /* primary text */
     --md-typeset-color: var(--dj-white);
     /* code comments + diagram text */
-    --md-code-fg-color: var(--dj-secondary);
+    --md-code-fg-color: var(--dj-primary);
 
     /* footer */
     /* previous/next text */
     --md-footer-fg-color: var(--dj-white);
+}
+
+/* For Mermaid */
+.basic.label-container {
+    fill: rgb(255, 0, 208);
+    stroke-width: 0px;
+}
+.div.md-container {
+    fill: rgb(255, 0, 208);
+    stroke-width: 0px;
+}
+.pyinterp > rect {
+    fill: rgb(255, 0, 208) !important;
+    stroke-width: 0px;
 }

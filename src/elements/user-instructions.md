@@ -61,6 +61,8 @@ flowchart LR
     direction TB
     empty2
   end
+  class py_interp,conda,term,ide,db_server,DataJoint boxes;
+  classDef boxes fill:#ddd, stroke:#333;
 ```
 
 ### Python
@@ -88,9 +90,9 @@ and go through the setup, including adding Miniconda to your `PATH` (full
 2. Declare and initialize a new conda environment with the following commands. Edit
    `<name>` to reflect your project.
 
-    ```bash
+    ``` bash
     conda create --name datajoint-workflow-<name> python=3.9 
-    conda activate dj-workflow-<name>
+    conda activate dj-workflow-<name> 
     ```
 
 <details>
@@ -151,8 +153,8 @@ workflow, you'll need a couple extra packages.
 instructions on Jupyter within VS Code).
  
 1. Install Jupyter packages
-    ```bash
-    Conda install jupyter ipykernel nb_conda_kernels
+    ```shell
+    conda install jupyter ipykernel nb_conda_kernels
     ```
 
 2. Ensure your VS Code python intepreter is set to your Conda environment path: 
@@ -171,8 +173,8 @@ instructions on Jupyter within VS Code).
 
 **DataJoint Diagrams** rely on additional packages. To install these packages,
 enter the following command...
-    ```bash
-    Conda install graphviz python-graphviz pydotplus
+    ```console
+    conda install graphviz python-graphviz pydotplus
     ```
 
 ## Example Config, Workflows and Data
@@ -182,18 +184,18 @@ needs.
 
 1. Change the directory to where you want to download the workflow.
 
-    ```bash
+    ```console
     cd ~/Projects
     ```
 
 2. Clone the relevant repository, and change directories to this new directory.
-    ```bash
+    ```console
     git clone https://github.com/datajoint/<repository>
     cd <repository>
     ```
 
 3. Install this directory as editable with the `-e` flag.
-    ```bash
+    ```console
     pip install -e .
     ```
     <details>
@@ -208,13 +210,13 @@ needs.
 4. Install `element-interface`, which has utilities used across different Elements and 
    Workflows.
 
-    ```bash
+    ```console
     pip install "element-interface @ git+https://github.com/datajoint/element-interface"
     ```
 
 5. <a name="config">&#8203</a>Set up a local DataJoint config file by saving the 
     following block as a json in your workflow directory as `dj_local_conf.json`. Not
-    sure what to put for the values in `< >` below? We'll cover this when we 
+    sure what to put for the `< >` values below? We'll cover this when we 
     [connect to the database](#relational-databases)
   
     ```json
@@ -287,7 +289,7 @@ example data, you would ...
 
 1. Install `djarchive-client`
 
-    ```bash
+    ```console
     pip install git+https://github.com/datajoint/djarchive-client.git
     ```
 
