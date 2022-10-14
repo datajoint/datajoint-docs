@@ -8,29 +8,36 @@ If you'd rather run through similar tutorials in an online
 Jupyter environment, please visit [CodeBook](https://codebook.datajoint.io/).
 
 Any of the DataJoint Elements can be combined together to create a workflow that matches
-  your experimental setup. We have a number of [example workflows](#example-workflows)
-  to get you started. Each focuses on a specific modality, but they can be adapted for
-  your custom workflow. 
+your experimental setup. We have a number of [example workflows](#example-workflows)
+to get you started. Each focuses on a specific modality, but they can be adapted for
+your custom workflow. 
 
-Getting up and running will require a couple items for a good **development
-environment**. If any of these items are already familiar to you and installed on your 
-machine, you can skip the corresponding section.
+1. Getting up and running will require a couple items for a good [development
+  environment](#development-environment). If any of these items are already familiar to
+  you and installed on your machine, you can skip the corresponding section.
 
-<!-- no toc -->
-1. [Python](#python)
-2. [Conda](#conda)
-3. [Integrated Development Environment](#integrated-development-environment)
-4. [Version Control (git)](#version-control-git)
-5. [Visualization packages (Jupyter Notebooks, DataJoint Diagrams)](#visualization-packages-jupyter-notebooks-datajoint-diagrams)
+    1. [Python](#python)
 
-Next, you'll need to download one of the **[example workflows](#example-workflows)** and 
-corresponding [example data](#example-data). 
+    2. [Conda](#conda)
 
-Finally, there are a couple different approaches to
-**connecting to a database**. Here, we highlight two approaches:
+    3. [Integrated Development Environment](#integrated-development-environment)
 
-1. [First Time](#first-time): temporary storage to learn the ropes.
-2. [Production Use](#production-use): permenant setup for your real pipeline.
+    4. [Version Control (git)](#version-control-git)
+
+    5. [Visualization packages](#visualization-packages-jupyter-notebooks-datajoint-diagrams)
+
+2. Next, you'll need to download one of the [example workflows](#example-workflows) and 
+  corresponding [example data](#example-data). 
+
+3. Finally, there are a couple different approaches to
+  [connecting to a database](#relational-databases). Here, we highlight three approaches:
+
+    1. [First Time](#first-time): Beginner. Temporary storage to learn the ropes.
+    
+    2. [Local Database](#local-database): Intermediate. Deployed on local hardware, managed 
+        by you.
+    
+    3. [Central Database](#central-database): Advanced: Deployed on dedicated hardware.
 
 ## Development Environment
 
@@ -98,9 +105,10 @@ and go through the setup, including adding Miniconda to your `PATH` (full
 <details>
 <summary>Apple M1 users: Click to expand</summary>
     Running analyses with Element DeepLabCut or Element Calcium imaging may require
-    tensorflow, which can cause issues on M1 machines. By saving the `yaml` file below,
-    this environment can be loaded with `conda create -f my-file.yaml`. If you encounter
-    errors related to `clang`, try launching xcode and retrying.
+    tensorflow, which can cause issues on M1 machines. By saving the <code>yaml</code> 
+    file below, this environment can be loaded with <code>conda create -f my-file.yaml
+    </code>. If you encounter errors related to <code>clang</code>, try launching xcode 
+    and retrying.
 
     ```yaml
     name: dj-workflow-<name>
@@ -114,28 +122,28 @@ and go through the setup, including adding Miniconda to your `PATH` (full
         - python=3.9
         - pip>=19.0 
         - pip:
-        - tensorflow-macos
-        - tensorflow-metal
-        - datajoint
+            - tensorflow-macos
+            - tensorflow-metal
+            - datajoint
     ```
 </details>
 
 ### Integrated Development Environment (IDE)
 
 Development and use can be done with a plain text editor in the terminal. However, an
-  integrated development environment (IDE) can improve your experience. Several IDEs are
-  available. We recommend 
-  [Microsoft's Visual Studio Code](https://code.visualstudio.com/download), also called 
-  VS Code. To set up VS Code with Python for the first time, follow 
-  [this tutorial](https://code.visualstudio.com/docs/python/python-tutorial).
+integrated development environment (IDE) can improve your experience. Several IDEs are
+available. We recommend 
+[Microsoft's Visual Studio Code](https://code.visualstudio.com/download), also called 
+VS Code. To set up VS Code with Python for the first time, follow 
+[this tutorial](https://code.visualstudio.com/docs/python/python-tutorial).
 
 ### Version Control (git)
 
 Table definitions and analysis code can change over time, especially with multiple
 collaborators working on the same project. Git is an open-source, distributed version
 control system that helps keep track of what changes where made when, and by whom.
-GitHub is a platform that hosts projects managed with Git. The example DataJoint
-Workflows are hosted on GitHub, we will use Git to clone (i.e., download) this
+GitHub is a platform that hosts projects managed with git. The example DataJoint
+Workflows are hosted on GitHub, we will use git to clone (i.e., download) this
 repository. 
 
 1. Check if you already have git by typing `git --version` in a terminal window.
@@ -153,22 +161,21 @@ workflow, you'll need a couple extra packages.
 instructions on Jupyter within VS Code).
  
 1. Install Jupyter packages
-    ```shell
+    ```console
     conda install jupyter ipykernel nb_conda_kernels
     ```
 
-2. Ensure your VS Code python intepreter is set to your Conda environment path: 
+2. Ensure your VS Code python intepreter is set to your Conda environment path.
    
     <details>
-    <summary>Click to expand</summary>
-
-      - View > Command Palette
-    
-      - Type "Python: Select Interpreter", hit enter.
-    
-      - If asked, select the workspace where you plan to download the workflow.
-    
-      - If present, select your Conda environment. If not present, enter in the path.
+    <summary>Click to expand more details.</summary>
+    <ul>
+        <li>View > Command Palette</li>
+        <li>Type "Python: Select Interpreter", hit enter.</li>
+        <li>If asked, select the workspace where you plan to download the workflow.</li>
+        <li>If present, select your Conda environment. If not present, enter in the 
+        path.</li>
+    </ul>
     </details>
 
 **DataJoint Diagrams** rely on additional packages. To install these packages,
@@ -369,6 +376,7 @@ example data, you would ...
     Element and Workflow Calcium Imaging also support ...
     <ul>
         <li>data collected with Nikon.</li>
+        <li>data collected with Prairie View.</li>
         <li>data processed with CaImAn.</li>
     <ul>
 </details>
@@ -609,13 +617,19 @@ DataJoint helps you connect to a database server from your programming environme
 (see [YouTube Explainer](https://www.youtube.com/watch?v=q-PMUSC5P5o)). We offer two 
 options:
 
-1. The [First Time](#first-time) approach loads example data to a temporary existing 
+1. The [First Time](#first-time) beginner approach loads example data to a temporary existing 
    database, saving you setup time. But, because this data will be purged intermittently,
    it should not be used in a true experiment.
-2. The [Production Use](#production-use) approach will walk you through setting up your
-   own database, which you'll be able to control, including granting others access.
+2. The [Local Database](#local-database) intermediate approach will walk you through 
+   setting up your own database on your own hardware. While easier to manage, it may be 
+   difficult to expose this to outside collaborators.
+3. The [Central Database](#central-database) advanced approach has the benefits of running
+on dedicated hardware, but may require significant IT expertise and infrastructure
+depending on your needs.
 
 ### First time
+
+*Temporary storage. Not for production use.*
 
 1. Make an account at [accounts.datajoint.io](https://accounts.datajoint.io/).
 2. In a workflow directory, make a <a href="#config">config</a> `json` file called
@@ -636,49 +650,75 @@ options:
         }
     }
     ```
+    <b>Note:</b> Your database prefix must begin with your username in order to have 
+    permission to declare new tables.
 3. Launch a Python terminal and start interacting with the workflow.
 
-### Production use
+### Local Database
 
-<!-- HOW MUCH SHOULD THIS MIRROR https://tutorials.datajoint.org/setting-up/get-database.html? -->
+1. Install [Docker](https://docs.docker.com/engine/install/).
+   <details>
+   <summary>Why Docker? Click for details.</summary>
 
-<!-- - There are several options if you would like to install a local relational
-  database server.
+        Docker makes it easy to package a program, including the file system and related 
+        code libraries, in a *container*. This container can be distributed to any 
+        machine, both automating and standardizing the setup process.
+   
+   </details>
+2. Test that docker has been installed by running the following command:
+   ```console
+   docker run --rm hello-world
+   ```
+3. Launch the DataJoint MySQL server with the following command:
+   ```console
+    docker run -p 3306:3306 -e MYSQL_ROOT_PASSWORD=tutorial datajoint/mysql
+   ```
+    <details>
+    <summary>What's this doing? Click for details.</summary>
+    <ul>
+    <li>Download a container image called datajoint/mysql, which is pre-installed and 
+        configured MySQL database with appropriate settings for use with DataJoint
+    </li>
+    <li>Open up the port 3306 (MySQL default) on your computer so that your database 
+        server can accept connections.
+    </li>
+    <li>Set the password for the root database user to be tutorial, which are then used 
+        in the config file.
+    </li>
+    </ul>
+    </details>  
+4. In a workflow directory, make a <a href="#config">config</a> `json` file called
+   `dj_local_conf.json` using the following details. The prefix can be set to any value.
+    ```json
+    {
+        "database.host": "localhost",
+        "database.password": "tutorial",
+        "database.user": "root",
+        "database.port": 3306,
+        "loglevel": "INFO",
+        "safemode": true,
+        "display.limit": 7,
+        "display.width": 14,
+        "display.show_tuple_count": true,
+        "custom": {
+            "database.prefix": "neuro_"
+        }
+    }
+    ```
 
-  - If using the Docker and Compose files that come with each workflow (e.g. [workflow-calcium-imaging](https://github.com/datajoint/workflow-calcium-imaging/tree/main/docker)), these are preconfigured with a Docker container that hosts a MySQL server.
-  - [Docker image for MySQL server configured for use with DataJoint](
-        https://github.com/datajoint/mysql-docker)
-  - [Install MariaDB server](https://mariadb.com/kb/en/binary-packages/)
+<details>
+<summary>Already familiar with Docker? Click here for details.</summary>
+    This document is written to apply to all example workflows. Many have a docker 
+    folder used by developers to set up both a database and a local environment for 
+    integration tests. Simply <code>docker compose up</code> the relevant file and 
+    <code>docker exec</code> into the relevant container.
+</details>
 
-- Alternatively, for the simplicity of this tutorial you can use the DataJoint
-  tutorial database located at `tutorial-db.datajoint.io` which has
-  already been configured. The credentials to log in to the tutorial database are the 
-  same as for [DataJoint Accounts](https://accounts.datajoint.io).  Please note that 
-  the tutorial database should not be used for your experimental analysis as the 
-  storage is not persistent.
+### Central Database
 
-
-- Specify the database's `hostname`, `username`, and `password`.
-
-  - If using the
-    [Docker image for MySQL server configured for use with DataJoint](https://github.com/datajoint/mysql-docker) then the `hostname` will be
-    `localhost`.
-
-  - If using the tutorial database, the `hostname` will be
-    `tutorial-db.datajoint.io`. And the `username` and `password` will be the
-    credentials for your [DataJoint account](https://accounts.datajoint.io).
-
-- Specify a `database.prefix` which will be the prefix for your schema names.
-
-  - For a local setup, it can be set as you see fit (e.g., `neuro_`).
-
-  - For the `tutorial-db` database, you will use your DataJoint username.
-
-- Specific workflows will require additional information in the custom field, including
-  paths to data directories, following the convention described in the
-  [directory structure section](#directory-structure-and-file-naming-convention). If
-  multiple root directories exist, include all in the relevant json array. -->
-
+To set up a detabase on dedicated hardware may require expertise to set up and maintain.
+DataJoint's [MySQL Docker image project](https://github.com/datajoint/mysql-docker) 
+provides all the informaiton required to set up a dedicated database.
 
 ## Interacting with the Workflow
 
@@ -734,7 +774,7 @@ options:
 DataJoint LabBook is a graphical user interface to facilitate data entry for existing
 DataJoint tables.
 
-- [Labbook Website](https://labbook.datajoint.io/) - If a database is public (like 
+- [Labbook Website](https://labbook.datajoint.io/) - If a database is public (e.g., 
     `tutorial-db`) and you have access, you can view the contents here.
 
 - [DataJoint LabBook Documentation](https://datajoint.github.io/datajoint-labbook/), 
