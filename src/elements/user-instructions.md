@@ -1,4 +1,11 @@
 # User setup instructions
+<!-- NEED TO MENTION YOUTUBE
+
+https://www.youtube.com/watch?v=5R-qnz37BKU
+https://www.youtube.com/watch?v=NRqpKNoHEY0
+https://www.youtube.com/watch?v=q-PMUSC5P5o
+https://www.youtube.com/watch?v=tat9MSjkH_U
+ -->
 
 The following document describes how to setup a development environment and connect to
 a database so that you can use the DataJoint Elements to build and run a workflow on 
