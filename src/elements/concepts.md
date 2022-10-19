@@ -34,8 +34,8 @@ The following YouTube videos provide information on basic design principles and 
 - [Quickstart Guide](https://www.youtube.com/watch?v=5R-qnz37BKU) including 
   terminology, and how to read DataJoint Diagrams and DataJoint Python table 
   definitions.
-- [Intro to the Element/Workflow Files](https://www.youtube.com/watch?v=tat9MSjkH_U)
-  for an overview of the structure of the respective GitHub repositiories.
+- [Intro to the Element and Workflow files](https://www.youtube.com/watch?v=tat9MSjkH_U)
+  for an overview of the respective GitHub repositories.
 - [Overview of upstream Elements](https://www.youtube.com/watch?v=NRqpKNoHEY0) to 
   ingest and explore Lab, Animal, and Session metadata. 
 
