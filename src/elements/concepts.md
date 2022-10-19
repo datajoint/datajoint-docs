@@ -1,4 +1,4 @@
-# Design Principles
+# Concepts
 
 The following conventions describe the DataJoint Python API implementation. 
 
@@ -24,6 +24,24 @@ An Element is a software package defining one or more DataJoint schemas serving 
 By convention, such packages are hosted in individual GitHub repositories.
 For example, Element `element_calcium_imaging` is hosted at https://github.com/datajoint/element-calcium-imaging
 and contains two DataJoint schemas: `scan` and `imaging`.
+
+### YouTube Tutorials
+
+The following YouTube videos provide information on basic design principles and file organization.
+
+- [Why neuroscientists should use relational databases](https://www.youtube.com/watch?v=q-PMUSC5P5o) 
+  compared to traditional file heirarchies.
+- [Quickstart Guide](https://www.youtube.com/watch?v=5R-qnz37BKU) including 
+  terminology, and how to read DataJoint Diagrams and DataJoint Python table 
+  definitions.
+- [Intro to the Element/Workflow Files](https://www.youtube.com/watch?v=tat9MSjkH_U)
+  for an overview of the structure of the respective GitHub repositiories.
+- [Overview of upstream Elements](https://www.youtube.com/watch?v=NRqpKNoHEY0) to 
+  ingest and explore Lab, Animal, and Session metadata. 
+
+*Note:* Some videos feature outdated versions of the respective GitHub 
+repositories. For the most updated information, check the 
+[documentation page](datajoint.com/docs/elements) for the corresponding Element.
 
 ### Deferred schemas
 
