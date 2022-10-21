@@ -12,7 +12,7 @@
   repositories (e.g., `bash cd ~/Projects`)
 
 - Clone the relevant workflow and refer to the `requirements.txt` in the workflow for the list of Elements to clone and install as editable. You will also need to install `element-interface` 
-    ```bash
+    ```console
     deps=("lab" "animal" "session" "interface" "<others>")
     for repo in $deps # clone each
     do 
@@ -52,7 +52,7 @@ If you need to drop all schemas to start fresh, you'll need to do following the 
 ## Jupytext
 We maintain `.py` script copies of all didactic notebooks to facilitate the GitHub review process. From the main workflow directory, we recommend the following command to generate these copies. You may wish to save this as an alias in your `.bash_profile`. Note that the jupytext sync features may cause issues with the original notebooks.
 
-    ```bash
-    pip install jupytext
-    jupytext --to py notebooks/0*ipynb; mv notebooks/*py notebooks/py_scripts
-    ```
+   ```console
+   pip install jupytext
+   jupytext --to py notebooks/0*ipynb; mv notebooks/*py notebooks/py_scripts
+   ```
