@@ -14,7 +14,7 @@ DataJoint Core projects are fully open-source and are built to develop, define, 
 
     A low-level client for managing [data pipelines](../glossary#data-pipeline).
 
-    [:octicons-arrow-right-24: Getting started](https://datajoint.com/docs/core/datajoint-python/)
+    [:octicons-arrow-right-24: Getting started](./datajoint-python/)
 
 -   :fontawesome-brands-java:{ .lg .middle } **DataJoint MATLAB**
 
@@ -22,7 +22,7 @@ DataJoint Core projects are fully open-source and are built to develop, define, 
 
     A low-level client for managing [data pipelines](../glossary#data-pipeline).
 
-    [:octicons-arrow-right-24: Getting started](https://datajoint.com/docs/core/datajoint-matlab/)
+    [:octicons-arrow-right-24: Getting started](./datajoint-matlab/)
 
 -   :fontawesome-solid-flask:{ .lg .middle } **Pharus**
 
@@ -30,7 +30,7 @@ DataJoint Core projects are fully open-source and are built to develop, define, 
 
     Expose [data pipelines](../glossary#data-pipeline) via a [REST](https://en.wikipedia.org/wiki/Representational_state_transfer) interface.
 
-    [:octicons-arrow-right-24: Getting started](https://datajoint.com/docs/core/pharus/)
+    [:octicons-arrow-right-24: Getting started](./pharus/)
 
 </div>
 
@@ -45,7 +45,7 @@ DataJoint Core projects are fully open-source and are built to develop, define, 
 
     Data entry and data model browsing for [data pipelines](../glossary#data-pipeline).
 
-    [:octicons-arrow-right-24: Getting started](https://datajoint.com/docs/core/datajoint-labbook/)
+    [:octicons-arrow-right-24: Getting started](./datajoint-labbook/)
 
 -   :fontawesome-brands-chrome:{ .lg .middle } **SciViz**
 
@@ -53,7 +53,7 @@ DataJoint Core projects are fully open-source and are built to develop, define, 
 
     A visualization framework for making [low-code](https://en.wikipedia.org/wiki/Low-code_development_platform) web apps for [data pipelines](../glossary#data-pipeline).
 
-    [:octicons-arrow-right-24: Getting started](https://datajoint.com/docs/core/sci-viz/)
+    [:octicons-arrow-right-24: Getting started](./sci-viz/)
 
 </div>
 
@@ -85,7 +85,7 @@ graph
 
     A minimal Python image with [conda](https://docs.conda.io/en/latest/).
 
-    [:octicons-arrow-right-24: Getting started](https://datajoint.com/docs/core/miniconda3-docker/)
+    [:octicons-arrow-right-24: Getting started](./miniconda3-docker/)
 
 -   :fontawesome-brands-docker:{ .lg .middle } **datajoint/djbase**
 
@@ -93,7 +93,7 @@ graph
 
     Adds only dependencies for managing [data pipelines](../glossary#data-pipeline).
 
-    [:octicons-arrow-right-24: Getting started](https://datajoint.com/docs/core/djbase-docker/)
+    [:octicons-arrow-right-24: Getting started](./djbase-docker/)
 
 -   :fontawesome-brands-docker:{ .lg .middle } **datajoint/djtest**
 
@@ -101,7 +101,7 @@ graph
 
     Adds testing tools like [pytest](https://docs.pytest.org/en/7.1.x/).
 
-    [:octicons-arrow-right-24: Getting started](https://datajoint.com/docs/core/djtest-docker/)
+    [:octicons-arrow-right-24: Getting started](./djtest-docker/)
 
 -   :fontawesome-brands-docker:{ .lg .middle } **datajoint/datajoint**
 
@@ -109,7 +109,7 @@ graph
 
     Official image for managing [data pipelines](../glossary#data-pipeline).
 
-    [:octicons-arrow-right-24: Getting started](https://datajoint.com/docs/core/datajoint-python/)
+    [:octicons-arrow-right-24: Getting started](./datajoint-python/)
 
 -   :fontawesome-brands-docker:{ .lg .middle } **datajoint/djlab**
 
@@ -117,7 +117,7 @@ graph
 
     Adds a local [Jupyter Lab](https://jupyterlab.readthedocs.io/en/stable/) environment.
 
-    [:octicons-arrow-right-24: Getting started](https://datajoint.com/docs/core/djlab-docker/)
+    [:octicons-arrow-right-24: Getting started](./djlab-docker/)
 
 -   :fontawesome-brands-docker:{ .lg .middle } **datajoint/djlabhub**
 
@@ -125,6 +125,6 @@ graph
 
     Adds a client to allow hosting with [Jupyter Hub](https://jupyter.org/hub).
 
-    [:octicons-arrow-right-24: Getting started](https://datajoint.com/docs/core/djlabhub-docker/)
+    [:octicons-arrow-right-24: Getting started](./djlabhub-docker/)
 
 </div>

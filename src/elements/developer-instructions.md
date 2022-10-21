@@ -52,7 +52,7 @@ If you need to drop all schemas to start fresh, you'll need to do following the 
 ## Jupytext
 We maintain `.py` script copies of all didactic notebooks to facilitate the GitHub review process. From the main workflow directory, we recommend the following command to generate these copies. You may wish to save this as an alias in your `.bash_profile`. Note that the jupytext sync features may cause issues with the original notebooks.
 
-    ```bash
-    pip install jupytext
-    jupytext --to py notebooks/0*ipynb; mv notebooks/*py notebooks/py_scripts
-    ```
+   ```bash
+   pip install jupytext
+   jupytext --to py notebooks/0*ipynb; mv notebooks/*py notebooks/py_scripts
+   ```

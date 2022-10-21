@@ -6,13 +6,13 @@ Welcome to the home for DataJoint documentation. Here we'll help get you to the 
 
 The DataJoint ecosystem is divided into 2 distinct areas:
 
-+ **Core**: Fully open-source projects built and designed specifically to support the [DataJoint Mantra](../concepts/mantra/).
++ **Core**: Fully open-source projects built and designed specifically to support the [DataJoint Mantra](../concepts/mantra).
 
-+ **Elements**: Fully open-source, data pipelines for neuroscience built with [DataJoint Core](/core).
++ **Elements**: Fully open-source, data pipelines for neuroscience built with [DataJoint Core](../core).
 
 ## Citation
 
-If your work uses the DataJoint API's and DataJoint Elements, please cite the respective Research Resource Identifiers (RRIDs) and manuscripts.
+If your work uses the DataJoint APIs and DataJoint Elements, please cite the respective Research Resource Identifiers (RRIDs) and manuscripts.
 
 + DataJoint API for Python or MATLAB
   > Yatsenko D, Reimer J, Ecker AS, Walker EY, Sinz F, Berens P, Hoenselaar A, Cotton RJ,
@@ -32,4 +32,4 @@ If your work uses the DataJoint API's and DataJoint Elements, please cite the re
 
 ## Feedback
 
-DataJoint API's, DataJoint Web GUI's, and DataJoint Elements are supported by NIH grant U24 NS116470 for disseminating open-source software for neuroscience research. Your feedback is essential for continued funding. Your feedback also helps shape the technology development roadmap for the DataJoint ecosystem. Please tell us about your projects by filling out the [DataJoint Census](https://community.datajoint.io).
+DataJoint APIs, DataJoint Web GUIs, and DataJoint Elements are supported by NIH grant U24 NS116470 for disseminating open-source software for neuroscience research. Your feedback is essential for continued funding. Your feedback also helps shape the technology development roadmap for the DataJoint ecosystem. Please tell us about your projects by filling out the [DataJoint Census](https://community.datajoint.io).
