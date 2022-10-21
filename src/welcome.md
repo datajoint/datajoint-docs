@@ -1,4 +1,4 @@
-# Howdy :wave:
+# :wave: Howdy
 
 Welcome to the home for DataJoint documentation. Here we'll help get you to the right place quickly.
 

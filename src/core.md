@@ -77,7 +77,7 @@ graph
 
     An optimized, MySQL backend for [data pipelines](../glossary#data-pipeline).
 
-    [:octicons-arrow-right-24: Getting started](https://datajoint.com/docs/core/mysql-docker/)
+    [:octicons-arrow-right-24: Getting started](./mysql-docker/)
 
 -   :fontawesome-brands-docker:{ .lg .middle } **datajoint/miniconda3**
 
