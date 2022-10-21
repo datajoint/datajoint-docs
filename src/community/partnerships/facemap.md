@@ -1,12 +1,9 @@
 # Facemap
 
 ## Sustainability Roadmap between DataJoint Elements and Facemap
-<br>
-<p align="center">
-  <img src="https://github.com/datajoint/datajoint-docs/blob/main/src/images/facemap-logo.png?raw=true" width="150" height="28">&nbsp;&nbsp;
-  <img src="https://github.com/datajoint/datajoint-docs/blob/main/src/images/elements-logo.png?raw=true" width="300" height="83">
-</p>
-<br />
+
+![Elements ><](../../images/elements-logo.png){: style="width:300px"}
+![facemap ><](../../images/facemap-logo.png){style="width:150px"}
 
 ## Aim
 **DataJoint Elements** and **Facemap** are two neuroinformatics initiatives in active
