@@ -1297,15 +1297,15 @@
 </ul>
 <ul>
 <li>Clone the relevant workflow and refer to the <code>requirements.txt</code> in the workflow for the list of Elements to clone and install as editable. You will also need to install <code>element-interface</code> 
-    <div class="highlight"><pre><span></span><code><span class="nv">deps</span><span class="o">=(</span><span class="s2">&quot;lab&quot;</span> <span class="s2">&quot;animal&quot;</span> <span class="s2">&quot;session&quot;</span> <span class="s2">&quot;interface&quot;</span> <span class="s2">&quot;&lt;others&gt;&quot;</span><span class="o">)</span>
-<span class="k">for</span> repo <span class="k">in</span> <span class="nv">$deps</span> <span class="c1"># clone each</span>
-<span class="k">do</span> 
-    git clone https://github.com/datajoint/element-<span class="nv">$repo</span>
-<span class="k">done</span>
-<span class="k">for</span> repo <span class="k">in</span> <span class="k">$(</span>ls -d ./<span class="o">{</span>element,workflow<span class="o">}</span>*<span class="k">)</span> <span class="c1"># editable install </span>
-<span class="k">do</span> 
-    pip install -e ./<span class="nv">$repo</span>
-<span class="k">done</span>
+    <div class="highlight"><pre><span></span><code><span class="go">deps=(&quot;lab&quot; &quot;animal&quot; &quot;session&quot; &quot;interface&quot; &quot;&lt;others&gt;&quot;)</span>
+<span class="go">for repo in $deps # clone each</span>
+<span class="go">do </span>
+<span class="go">    git clone https://github.com/datajoint/element-$repo</span>
+<span class="go">done</span>
+<span class="go">for repo in $(ls -d ./{element,workflow}*) # editable install </span>
+<span class="go">do </span>
+<span class="go">    pip install -e ./$repo</span>
+<span class="go">done</span>
 </code></pre></div></li>
 </ul>
 <h2 id="optionally-drop-all-schemas">Optionally drop all schemas<a class="headerlink" href="#optionally-drop-all-schemas" title="Permanent link">&para;</a></h2>
@@ -1335,11 +1335,9 @@
 </ul>
 <h2 id="jupytext">Jupytext<a class="headerlink" href="#jupytext" title="Permanent link">&para;</a></h2>
 <p>We maintain <code>.py</code> script copies of all didactic notebooks to facilitate the GitHub review process. From the main workflow directory, we recommend the following command to generate these copies. You may wish to save this as an alias in your <code>.bash_profile</code>. Note that the jupytext sync features may cause issues with the original notebooks.</p>
-<pre><code>```bash
-pip install jupytext
-jupytext --to py notebooks/0*ipynb; mv notebooks/*py notebooks/py_scripts
-```
-</code></pre>
+<div class="highlight"><pre><span></span><code><span class="go">pip install jupytext</span>
+<span class="go">jupytext --to py notebooks/0*ipynb; mv notebooks/*py notebooks/py_scripts</span>
+</code></pre></div>
 
 
 

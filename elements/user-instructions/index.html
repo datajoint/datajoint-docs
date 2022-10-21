@@ -1473,24 +1473,24 @@
 </ul>
 <ul>
 <li>Then modify and run the following command
-    <div class="highlight"><pre><span></span><code><span class="nb">export</span> <span class="nv">PATH</span><span class="o">=</span><span class="s2">&quot;&lt;absolute-path-to-miniconda-directory&gt;/bin:</span><span class="nv">$PATH</span><span class="s2">&quot;</span>
+    <div class="highlight"><pre><span></span><code><span class="go">export PATH=&quot;&lt;absolute-path-to-miniconda-directory&gt;/bin:$PATH&quot;</span>
 </code></pre></div><ul>
 <li>Create a new conda environment
-<div class="highlight"><pre><span></span><code>conda create -n &lt;environment_name&gt; <span class="nv">python</span><span class="o">=</span>&lt;version&gt;
+<div class="highlight"><pre><span></span><code><span class="go">conda create -n &lt;environment_name&gt; python=&lt;version&gt;</span>
 </code></pre></div></li>
 </ul>
 </li>
 </ul>
 <ul>
 <li>Example command to create a conda environment
-  <div class="highlight"><pre><span></span><code>conda create -n workflow-array-ephys <span class="nv">python</span><span class="o">=</span><span class="m">3</span>.8.11
+  <div class="highlight"><pre><span></span><code><span class="go">conda create -n workflow-array-ephys python=3.8.11</span>
 </code></pre></div></li>
 </ul>
 </li>
 </ul>
 <ul>
 <li>Activate the conda environment
-    <div class="highlight"><pre><span></span><code>conda activate &lt;environment_name&gt;
+    <div class="highlight"><pre><span></span><code><span class="go">conda activate &lt;environment_name&gt;</span>
 </code></pre></div></li>
 </ul>
 </li>
@@ -1499,13 +1499,13 @@
 <ul>
 <li>
 <p>Install the following, if you are using Jupyter Notebook.</p>
-<div class="highlight"><pre><span></span><code>conda install jupyter ipykernel nb_conda_kernels
+<div class="highlight"><pre><span></span><code><span class="go">conda install jupyter ipykernel nb_conda_kernels</span>
 </code></pre></div>
 </li>
 </ul>
 <ul>
 <li>Install the following, for <code>dj.Diagram</code> to render.
-  <div class="highlight"><pre><span></span><code>conda install graphviz python-graphviz pydotplus
+  <div class="highlight"><pre><span></span><code><span class="go">conda install graphviz python-graphviz pydotplus</span>
 </code></pre></div></li>
 </ul>
 <h2 id="clone-and-install-the-relevant-repository">Clone and install the relevant repository<a class="headerlink" href="#clone-and-install-the-relevant-repository" title="Permanent link">&para;</a></h2>
@@ -1513,21 +1513,21 @@
 <li>
 <p>In a terminal window and change the directory to where you want to clone
   the repository</p>
-<div class="highlight"><pre><span></span><code><span class="nb">cd</span> ~/Projects
+<div class="highlight"><pre><span></span><code><span class="go">cd ~/Projects</span>
 </code></pre></div>
 </li>
 </ul>
 <ul>
 <li>
 <p>Clone the relevant repository, often one of the workflows</p>
-<div class="highlight"><pre><span></span><code>git clone https://github.com/datajoint/&lt;repository&gt;
+<div class="highlight"><pre><span></span><code><span class="go">git clone https://github.com/datajoint/&lt;repository&gt;</span>
 </code></pre></div>
 </li>
 </ul>
 <ul>
 <li>
 <p>Change into the cloned directory</p>
-<div class="highlight"><pre><span></span><code><span class="nb">cd</span> &lt;repository&gt;
+<div class="highlight"><pre><span></span><code><span class="go">cd &lt;repository&gt;</span>
 </code></pre></div>
 </li>
 </ul>
@@ -1536,12 +1536,12 @@
   will install this repository in editable mode, in case there's a need to modify the
   code (e.g. the workflow <code>pipeline.py</code> or <code>paths.py</code> scripts). If no such
   modification is required, using <code>pip install .</code> is sufficient.
-  <div class="highlight"><pre><span></span><code> pip install -e .
+  <div class="highlight"><pre><span></span><code><span class="go"> pip install -e .</span>
 </code></pre></div></li>
 <li>
 <p>Install <code>element-interface</code>, which contains scripts to load data for many of our
   Elements, and all workflows</p>
-<div class="highlight"><pre><span></span><code>pip install <span class="s2">&quot;element-interface @ git+https://github.com/datajoint/element-interface&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="go">pip install &quot;element-interface @ git+https://github.com/datajoint/element-interface&quot;</span>
 </code></pre></div>
 </li>
 </ul>
@@ -1557,29 +1557,29 @@
 <ul>
 <li>
 <p>Install <code>element-interface</code> with <code>scanreader</code></p>
-<div class="highlight"><pre><span></span><code>pip install <span class="s2">&quot;element-interface[scanreader] @ git+https://github.com/datajoint/element-interface&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="go">pip install &quot;element-interface[scanreader] @ git+https://github.com/datajoint/element-interface&quot;</span>
 </code></pre></div>
 </li>
 </ul>
 <ul>
 <li>
 <p>Install <code>element-interface</code> with <code>sbxreader</code></p>
-<div class="highlight"><pre><span></span><code>pip install <span class="s2">&quot;element-interface[sbxreader] @ git+https://github.com/datajoint/element-interface&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="go">pip install &quot;element-interface[sbxreader] @ git+https://github.com/datajoint/element-interface&quot;</span>
 </code></pre></div>
 </li>
 </ul>
 <ul>
 <li>
 <p>Install <code>element-interface</code> with <code>Suite2p</code></p>
-<div class="highlight"><pre><span></span><code>pip install <span class="s2">&quot;element-interface[suite2p] @ git+https://github.com/datajoint/element-interface&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="go">pip install &quot;element-interface[suite2p] @ git+https://github.com/datajoint/element-interface&quot;</span>
 </code></pre></div>
 </li>
 </ul>
 <ul>
 <li>
 <p>Install <code>element-interface</code> with <code>CaImAn</code> requires two separate commands</p>
-<div class="highlight"><pre><span></span><code>pip install <span class="s2">&quot;element-interface[caiman_requirements] @ git+https://github.com/datajoint/element-interface&quot;</span>
-pip install <span class="s2">&quot;element-interface[caiman] @ git+https://github.com/datajoint/element-interface&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="go">pip install &quot;element-interface[caiman_requirements] @ git+https://github.com/datajoint/element-interface&quot;</span>
+<span class="go">pip install &quot;element-interface[caiman] @ git+https://github.com/datajoint/element-interface&quot;</span>
 </code></pre></div>
 </li>
 </ul>
@@ -1639,57 +1639,67 @@ pip install <span class="s2">&quot;element-interface[caiman] @ git+https://githu
 </li>
 </ul>
 <ul>
-<li>Specific workflows will require additional information in the custom field, including
+<li>
+<p>Specific workflows will require additional information in the custom field, including
   paths to data directories, following the convention described in the
   <a href="#directory-structure-and-file-naming-convention">directory structure section</a>. If
-  multiple root directories exist, include all in the relevant json array.<p>+ <code>workflow-array-ephys</code>
-      <details>
-      <summary>Click to expand</summary></p>
-<pre><code>  ```json
-  "custom": {
-      "database.prefix": "&lt;username_&gt;",
-      "ephys_root_data_dir": ["Full path to root directory of raw data",
-                              "Full path to root directory of processed data"]
-      }
-  ```
-  &lt;/details&gt;
-</code></pre>
-<p>+ <code>workflow-calcium-imaging</code>
-      <details>
-      <summary>Click to expand</summary></p>
-<pre><code>  ```json
-  "custom": {
-      "database.prefix": "&lt;username_&gt;",
-      "imaging_root_data_dir": ["Full path to root directory of raw data",
-                                "Full path to root directory of processed data"]
-      }
-  ```
-  &lt;/details&gt;
-</code></pre>
-<p>+ <code>workflow-miniscope</code>
-      <details>
-      <summary>Click to expand</summary></p>
-<pre><code>  ```json
-  "custom": {
-      "database.prefix": "&lt;username_&gt;",
-      "miniscope_root_data_dir": ["Full path to root directory of raw data",
-                                  "Full path to root directory of processed data"]
-      }
-  ```
-  &lt;/details&gt;
-</code></pre>
-<p>+ <code>workflow-deeplabcut</code>
-      <details>
-      <summary>Click to expand</summary></p>
-<pre><code>  ```json
-  "custom": {
-      "database.prefix": "&lt;username_&gt;",
-      "dlc_root_data_dir": ["Full path to root directory of raw data",
-                            "Full path to root directory of processed data"]
-      }
-  ```
-  &lt;/details&gt;
-</code></pre>
+  multiple root directories exist, include all in the relevant json array.</p>
+<ul>
+<li>
+<p><code>workflow-array-ephys</code>
+   <details>
+   <summary>Click to expand</summary></p>
+<p><div class="highlight"><pre><span></span><code><span class="nt">&quot;custom&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;database.prefix&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;username_&gt;&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;ephys_root_data_dir&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;Full path to root directory of raw data&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">                            </span><span class="s2">&quot;Full path to root directory of processed data&quot;</span><span class="p">]</span><span class="w"></span>
+<span class="w">    </span><span class="p">}</span><span class="w"></span>
+</code></pre></div>
+ </details></p>
+</li>
+</ul>
+<ul>
+<li>
+<p><code>workflow-calcium-imaging</code>
+   <details>
+   <summary>Click to expand</summary></p>
+<p><div class="highlight"><pre><span></span><code><span class="nt">&quot;custom&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;database.prefix&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;username_&gt;&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;imaging_root_data_dir&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;Full path to root directory of raw data&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">                              </span><span class="s2">&quot;Full path to root directory of processed data&quot;</span><span class="p">]</span><span class="w"></span>
+<span class="w">    </span><span class="p">}</span><span class="w"></span>
+</code></pre></div>
+ </details></p>
+</li>
+</ul>
+<ul>
+<li>
+<p><code>workflow-miniscope</code>
+  <details>
+  <summary>Click to expand</summary></p>
+<p><div class="highlight"><pre><span></span><code><span class="nt">&quot;custom&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;database.prefix&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;username_&gt;&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;miniscope_root_data_dir&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;Full path to root directory of raw data&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">                                </span><span class="s2">&quot;Full path to root directory of processed data&quot;</span><span class="p">]</span><span class="w"></span>
+<span class="w">    </span><span class="p">}</span><span class="w"></span>
+</code></pre></div>
+</details></p>
+</li>
+</ul>
+<ul>
+<li>
+<p><code>workflow-deeplabcut</code>
+  <details>
+  <summary>Click to expand</summary></p>
+<p><div class="highlight"><pre><span></span><code><span class="nt">&quot;custom&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;database.prefix&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;username_&gt;&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;dlc_root_data_dir&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;Full path to root directory of raw data&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">                          </span><span class="s2">&quot;Full path to root directory of processed data&quot;</span><span class="p">]</span><span class="w"></span>
+<span class="w">    </span><span class="p">}</span><span class="w"></span>
+</code></pre></div>
+</details></p>
+</li>
+</ul>
 </li>
 </ul>
 <h2 id="setup-complete">Setup complete<a class="headerlink" href="#setup-complete" title="Permanent link">&para;</a></h2>
@@ -1707,7 +1717,7 @@ pip install <span class="s2">&quot;element-interface[caiman] @ git+https://githu
 <ul>
 <li>
 <p>Install <code>djarchive-client</code></p>
-<div class="highlight"><pre><span></span><code>pip install git+https://github.com/datajoint/djarchive-client.git
+<div class="highlight"><pre><span></span><code><span class="go">pip install git+https://github.com/datajoint/djarchive-client.git</span>
 </code></pre></div>
 </li>
 </ul>
@@ -1734,7 +1744,7 @@ pip install <span class="s2">&quot;element-interface[caiman] @ git+https://githu
 <ul>
 <li>
 <p>Prepare a directory to store the download data, for example in <code>/tmp</code></p>
-<div class="highlight"><pre><span></span><code>mkdir /tmp/example_data
+<div class="highlight"><pre><span></span><code><span class="go">mkdir /tmp/example_data</span>
 </code></pre></div>
 </li>
 </ul>
@@ -1960,33 +1970,38 @@ number)
 </li>
 </ul>
 <ul>
-<li>View the declared tables<p>- <code>workflow-array-ephys</code>
-      <details>
-      <summary>Click to expand details</summary></p>
-<pre><code>  ```python
-  subject.Subject()
-  session.Session()
-  ephys.ProbeInsertion()
-  ephys.EphysRecording()
-  ephys.Clustering()
-  ephys.Clustering.Unit()
-  ```
-</code></pre>
+<li>
+<p>View the declared tables</p>
+<ul>
+<li>
+<p><code>workflow-array-ephys</code>
+  <details>
+  <summary>Click to expand details</summary></p>
+<div class="highlight"><pre><span></span><code><span class="n">subject</span><span class="o">.</span><span class="n">Subject</span><span class="p">()</span>
+<span class="n">session</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span>
+<span class="n">ephys</span><span class="o">.</span><span class="n">ProbeInsertion</span><span class="p">()</span>
+<span class="n">ephys</span><span class="o">.</span><span class="n">EphysRecording</span><span class="p">()</span>
+<span class="n">ephys</span><span class="o">.</span><span class="n">Clustering</span><span class="p">()</span>
+<span class="n">ephys</span><span class="o">.</span><span class="n">Clustering</span><span class="o">.</span><span class="n">Unit</span><span class="p">()</span>
+</code></pre></div>
 </details>
-<p>- <code>workflow-calcium-imaging</code>
-      <details>
-      <summary>Click to expand details</summary></p>
-<pre><code>  ```python
-  subject.Subject()
-  session.Session()
-  scan.Scan()
-  scan.ScanInfo()
-  imaging.ProcessingParamSet()
-  imaging.ProcessingTask()
-  ```
-
-  &lt;/details&gt;
-</code></pre>
+</li>
+</ul>
+<ul>
+<li>
+<p><code>workflow-calcium-imaging</code>
+  <details>
+  <summary>Click to expand details</summary></p>
+<div class="highlight"><pre><span></span><code><span class="n">subject</span><span class="o">.</span><span class="n">Subject</span><span class="p">()</span>
+<span class="n">session</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span>
+<span class="n">scan</span><span class="o">.</span><span class="n">Scan</span><span class="p">()</span>
+<span class="n">scan</span><span class="o">.</span><span class="n">ScanInfo</span><span class="p">()</span>
+<span class="n">imaging</span><span class="o">.</span><span class="n">ProcessingParamSet</span><span class="p">()</span>
+<span class="n">imaging</span><span class="o">.</span><span class="n">ProcessingTask</span><span class="p">()</span>
+</code></pre></div>
+</details>
+</li>
+</ul>
 </li>
 </ul>
 <ul>
@@ -1999,7 +2014,7 @@ number)
   DataJoint tables.</li>
 </ul>
 <ul>
-<li><a href="https://datajoint.github.io/datajoint-labbook/">DataJoint LabBook Documentation</a>, including prerequisites, installation, and running the application</li>
+<li><a href="../../core/datajoint-labbook/">DataJoint LabBook Documentation</a>, including prerequisites, installation, and running the application</li>
 </ul>
 <ul>
 <li><a href="https://github.com/datajoint/datajoint-labbook">DataJoint LabBook GitHub Repository</a></li>
