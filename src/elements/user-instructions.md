@@ -91,21 +91,21 @@
     + First locate the Miniconda directory
 
     + Then modify and run the following command
-        ```bash
+        ```console
         export PATH="<absolute-path-to-miniconda-directory>/bin:$PATH"
         ```
   + Create a new conda environment
-    ```bash
+    ```console
     conda create -n <environment_name> python=<version>
     ```
 
     + Example command to create a conda environment
-      ```bash
+      ```console
       conda create -n workflow-array-ephys python=3.8.11
       ```
 
   + Activate the conda environment
-      ```bash
+      ```console
       conda activate <environment_name>
       ```
 
@@ -113,12 +113,12 @@
 
 - Install the following, if you are using Jupyter Notebook.
 
-  ```bash
+  ```console
   conda install jupyter ipykernel nb_conda_kernels
   ```
 
 - Install the following, for `dj.Diagram` to render.
-  ```bash
+  ```console
   conda install graphviz python-graphviz pydotplus
   ```
 
@@ -127,19 +127,19 @@
 - In a terminal window and change the directory to where you want to clone
   the repository
 
-  ```bash
+  ```console
   cd ~/Projects
   ```
 
 - Clone the relevant repository, often one of the workflows
 
-  ```bash
+  ```console
   git clone https://github.com/datajoint/<repository>
   ```
 
 - Change into the cloned directory
 
-  ```bash
+  ```console
   cd <repository>
   ```
 
@@ -147,13 +147,13 @@
   will install this repository in editable mode, in case there's a need to modify the
   code (e.g. the workflow `pipeline.py` or `paths.py` scripts). If no such
   modification is required, using `pip install .` is sufficient.
-  ```bash
+  ```console
    pip install -e .
   ```
 - Install `element-interface`, which contains scripts to load data for many of our
   Elements, and all workflows
 
-  ```bash
+  ```console
   pip install "element-interface @ git+https://github.com/datajoint/element-interface"
   ```
 
@@ -166,25 +166,25 @@
 
   - Install `element-interface` with `scanreader`
 
-    ```bash
+    ```console
     pip install "element-interface[scanreader] @ git+https://github.com/datajoint/element-interface"
     ```
 
   - Install `element-interface` with `sbxreader`
 
-    ```bash
+    ```console
     pip install "element-interface[sbxreader] @ git+https://github.com/datajoint/element-interface"
     ```
 
   - Install `element-interface` with `Suite2p`
 
-    ```bash
+    ```console
     pip install "element-interface[suite2p] @ git+https://github.com/datajoint/element-interface"
     ```
 
   - Install `element-interface` with `CaImAn` requires two separate commands
 
-    ```bash
+    ```console
     pip install "element-interface[caiman_requirements] @ git+https://github.com/datajoint/element-interface"
     pip install "element-interface[caiman] @ git+https://github.com/datajoint/element-interface"
     ```
@@ -301,7 +301,7 @@
 
 - Install `djarchive-client`
 
-  ```bash
+  ```console
   pip install git+https://github.com/datajoint/djarchive-client.git
   ```
 
@@ -324,7 +324,7 @@
 
 - Prepare a directory to store the download data, for example in `/tmp`
 
-  ```bash
+  ```console
   mkdir /tmp/example_data
   ```
 
