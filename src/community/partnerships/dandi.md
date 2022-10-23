@@ -1,9 +1,11 @@
 # DANDI
 
-## Sustainability Roadmap  between DataJoint Elements and DANDI Archive
+## Sustainability Roadmap between DataJoint Elements and DANDI Archive
 
-![Elements ><](../../images/elements-logo.png){: style="height:83px"}
-![Dandi ><](../../images/dandi-logo.png){: style="height:83px"}
+<figure markdown>
+  ![Elements](../../images/elements-logo.png){: style="height:83px"}
+  ![DANDI](../../images/dandi-logo.png){: style="height:83px"}
+</figure>
 
 ## Aim
 **DataJoint Elements** and **The DANDI Archive (DANDI)** are two neuroinformatics initiatives in active development. The projects develop independently yet they have complementary aims and overlapping user communities. This document establishes key processes for coordinating development and communications in order to promote integration and interoperability across the two ecosystems.
