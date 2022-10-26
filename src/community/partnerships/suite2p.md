@@ -2,11 +2,10 @@
 
 ## Sustainability Roadmap between DataJoint Elements and Suite2p
 
-<p align="center">
-  <img src="https://github.com/datajoint/datajoint-docs/blob/main/src/images/suite2p-logo.png?raw=true" width="66" height="87">&nbsp;&nbsp;
-  <img src="https://github.com/datajoint/datajoint-docs/blob/main/src/images/elements-logo.png?raw=true" width="300" height="83">
-</p>
-<br />
+<figure markdown>
+  ![Elements](../../images/elements-logo.png){: style="height:83px"}
+  ![suite2p](../../images/suite2p-logo.png){: style="height:87px"}
+</figure>
 
 ## Aim
 **DataJoint Elements** and **Suite2p** are two neuroinformatics initiatives in active

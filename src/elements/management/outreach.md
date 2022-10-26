@@ -6,7 +6,7 @@ We conduct five types of outreach activities that require different approaches:
 
 # 1. Precursor Projects
 
-Our [Selection Process](/elements/management/selection) requires a "Precursor Project" for any new experiment modality to be included in DataJoint Elements.
+Our [Selection Process](../selection) requires a "Precursor Project" for any new experiment modality to be included in DataJoint Elements.
 A precursor project is a project that develops a DataJoint pipeline for its own experiments either independently or in collaboration with our team.
 We reach out to teams who develop DataJoint pipelines for new experiment paradigms and modalities to identify essential design motifs, analysis tools, and related tools and interfaces.
 We interview the core team to learn about their collaborative culture, practices, and procedures.

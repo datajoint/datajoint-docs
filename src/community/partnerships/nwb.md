@@ -1,11 +1,11 @@
 # NWB
 
 ## Integrations between DataJoint Elements and Neurodata Without Borders 
-<br>
-<p align="center">
-  <img src="https://github.com/datajoint/datajoint-docs/blob/main/src/images/nwb-logo.png?raw=true" width="300" height="55">&nbsp;&nbsp;
-  <img src="https://github.com/datajoint/datajoint-docs/blob/main/src/images/elements-logo.png?raw=true" width="300" height="83">
-</p>  
+
+<figure markdown>
+  ![Elements](../../images/elements-logo.png){: style="width:300px"}
+  ![NWB](../../images/nwb-logo.png){: style="width:300px"}
+</figure>
 
 ## Aim
 **DataJoint Elements** and **Neurodata Without Borders (NWB)** are two neuroinformatics 
