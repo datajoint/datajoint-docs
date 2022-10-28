@@ -6,6 +6,10 @@ To help keep everyone in alignment and coordinated in the community effort, we�
 
 The principal maintainer of DataJoint and associated tools is the DataJoint company. The pronouns “we” and “us” in this guideline refer to the principal maintainers. We invite reviews and contributions of the open-source software. We compiled these guidelines to make this work clear and efficient.
 
+## Feedback
+
+DataJoint APIs, DataJoint Web GUIs, and DataJoint Elements are supported by NIH grant U24 NS116470 for disseminating open-source software for neuroscience research. Your feedback is essential for continued funding. Your feedback also helps shape the technology development roadmap for the DataJoint ecosystem. Please tell us about your projects by filling out the [DataJoint Census](https://community.datajoint.io).
+
 ## 1) Which issue should I contribute towards?
 
 There are three primary things to consider when looking to contribute.

@@ -18,7 +18,7 @@ Please let us know if you would like to add another group or make other correcti
   + Princeton<a href="https://www.braincogs.org/" target="_blank"> BRAIN CoGS</a> (<a href="https://github.com/braincogs/" target="_blank">GitHub</a>)
   + Rochester-NYU-Harvard<a href="https://causalityinmotion.github.io/team.html" target="_blank"> Neural basis of causal inference</a>
 
-## Individual Labs <!-- 55 -->
+## Individual Labs <!-- 56 -->
 
 + Allen Institute
   + <a href="https://alleninstitute.org/what-we-do/brain-science/research/mindscope-program/" target="_blank">Mindscope Program</a>
@@ -97,6 +97,8 @@ Please let us know if you would like to add another group or make other correcti
 + University of Rochester
   + <a href="http://www.sas.rochester.edu/bcs/people/faculty/deangelis_greg/index.html" target="_blank">Greg DeAngelis Lab</a>
   + <a href="https://www2.bcs.rochester.edu/sites/haefnerlab/index.html" target="_blank">Ralf Haefner Lab</a>
++ University of Utah
+  + <a href="http://shcheglovitov-lab.utah.edu/" target="_blank">Aleksandr Shcheglovitov Lab</a> (<a href="https://github.com/yueqiw/ephys_analysis" target="_blank">GitHub</a>)
 + University of Washington
   + <a href="https://eywalkerlab.com/" target="_blank">Edgar Y. Walker Lab</a>
   + <a href="http://faculty.washington.edu/tuthill/" target="_blank">Tuthill Lab</a>
