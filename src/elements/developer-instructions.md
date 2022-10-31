@@ -59,8 +59,7 @@ We maintain `.py` script copies of all didactic notebooks to facilitate the GitH
 
 ### Other auxiliary tools
 
-+ DataJoint utilities - general-purpose functions/utilities for working with DataJoint pipelines
-  + [https://github.com/datajoint-company/datajoint-utilities](https://github.com/datajoint-company/datajoint-utilities)
++ [DataJoint utilities](https://github.com/datajoint-company/datajoint-utilities) - general-purpose functions/utilities for working with DataJoint pipelines
   + Text search
   + Data migration between tables/schemas/servers
   + DataJoint workers
