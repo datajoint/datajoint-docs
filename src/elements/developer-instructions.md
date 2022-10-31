@@ -64,6 +64,4 @@ We maintain `.py` script copies of all didactic notebooks to facilitate the GitH
   + Text search
   + Data migration between tables/schemas/servers
   + DataJoint workers
-
-+ DataJoint for Julia - wrapper library developed in Carlos Brody lab
-    + [https://github.com/datajoint/neuronex_workshop_2018/tree/master/julia](https://github.com/datajoint/neuronex_workshop_2018/tree/master/julia)
++ [DataJoint for Julia](https://github.com/datajoint/neuronex_workshop_2018/tree/master/julia) - wrapper library developed in Carlos Brody lab
