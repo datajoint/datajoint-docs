@@ -4,9 +4,13 @@ You have several options for adopting DataJoint workflows for your own experimen
 
 ## Adopt independently
 
-DataJoint Elements are designed for adoption by independent users with moderate software development skills, good understanding of DataJoint principles, and adequate IT expertise or support.
+DataJoint Elements are designed for adoption by independent users with moderate software
+development skills, good understanding of DataJoint principles, and adequate IT
+expertise or support.
 
-If you have not yet used DataJoint, we recommend completing our online training tutorials or attending a workshop either online or in person.  Interactive tutorials can be found on [DataJoint CodeBook](https://codebook.datajoint.io).
+If you have not yet used DataJoint, we recommend completing our online training
+tutorials or attending a workshop either online or in person.  Interactive tutorials
+can be found on [DataJoint CodeBook](https://codebook.datajoint.io).
 
 ## Support from DataJoint
 

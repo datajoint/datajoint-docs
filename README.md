@@ -12,4 +12,5 @@ Then run the following:
 
 Navigate to `http://localhost/` to preview the changes.
 
-This setup supports live-reloading so all that is needed is to save the markdown files and/or `mkdocs.yaml` file to trigger a reload.
+This setup supports live-reloading so all that is needed is to save the markdown files
+and/or `mkdocs.yaml` file to trigger a reload.
