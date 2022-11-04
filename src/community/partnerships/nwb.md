@@ -1,10 +1,10 @@
 # NWB
 
-## Integrations between DataJoint Elements and Neurodata Without Borders 
+## Integrations between DataJoint Elements and Neurodata Without Borders
 
 <figure markdown>
-  ![Elements](../../images/elements-logo.png){: style="width:300px"}
-  ![NWB](../../images/nwb-logo.png){: style="width:300px"}
+  ![Elements](../../images/_elements-logo.png){: style="width:300px"}
+  ![NWB](../../images/community-partnerships-nwb-logo.png){: style="width:300px"}
 </figure>
 
 ## Aim

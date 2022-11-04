@@ -1,8 +1,8 @@
 # DataJoint Elements for Neurophysiology
 
-<p align="center">
-  <img src="https://raw.githubusercontent.com/datajoint/datajoint.org/0a05cf5c2530a3595a13fc11f6abac64746d845d/static/images/elements-logo.png" width="300">
-</p>
+<figure markdown>
+![Elements](../images/_elements-logo.png){: style="height:83px"}
+</figure>
 
 DataJoint Elements provides an efficient approach for neuroscience labs to create and
 manage _scientific data workflows_: the complex multi-step methods for data collection,

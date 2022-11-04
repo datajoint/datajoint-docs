@@ -13,3 +13,6 @@ find how we've understood and use these terms.
 | <span id="datajoint-schema">DataJoint schema</span> | a software module implementing a portion of an experiment workflow. Includes database table definitions, dependencies, and associated computations. |
 | <span id="datajoint-elements">DataJoint Elements</span> | software modules implementing portions of experiment workflows designed for ease of integration into diverse custom workflows. |
 | <span id="djhub">djHub</span> | our team's internal platform for delivering cloud-based infrastructure to support online training resources, validation studies, and collaborative projects. |
+| <span id="primary-key">primary key</span> | the subset of table attributes that uniquely identify each entity in the table. |
+| <span id="foreign-key">foreign key</span> | a field that is linked to another table's primary key. |
+| <span id="seconday-attribute">seconday attribute</span> | any field in a table not in the primary key. |

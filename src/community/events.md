@@ -8,11 +8,11 @@ The DataJoint open source team are offering monthly Office Hours ([see details h
 
 ## Upcoming Workshops
 
-+ Senses in Motion Symposium - October 17, 2022
-
 + Society for Neuroscience - November 12-16, 2022
 
 ## Past Events
+
++ [Senses in Motion Symposium](https://sensesinmotion.org/) - October 17, 2022
 
 + [NeuroDataReHack Hackathon](https://alleninstitute.org/what-we-do/brain-science/events-training/2022-neurodatarehack-hackathon/) - October 3-5, 2022
 

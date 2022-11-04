@@ -78,8 +78,8 @@ The goal is to ensure [data pipelines](../../glossary#data-pipeline) always refl
 truth of how data was created.
 
 In the realm of databases, entities can be related to one another through 
-[foreign keys](https://en.wikipedia.org/wiki/Foreign_key). However, our opinionated view is that
-foreign keys on [primary keys](https://en.wikipedia.org/wiki/Primary_key) should
+[foreign keys](https://en.wikipedia.org/wiki/Foreign_key). However, our opinionated view
+is that foreign keys on [primary keys](https://en.wikipedia.org/wiki/Primary_key) should
 enforce the contraint.
 
 What this means is that our data model always reflects the truth. When a parent entity
