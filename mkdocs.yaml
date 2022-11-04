@@ -85,17 +85,18 @@ markdown_extensions:
       emoji_index: !!python/name:materialx.emoji.twemoji
       emoji_generator: !!python/name:materialx.emoji.to_svg
   - mdx_truly_sane_lists
-  - pymdownx.superfences:
+  - pymdownx.superfences: # Triple backtic code blocks
       custom_fences:
-        - name: mermaid
+        - name: mermaid # Add mermaid as available styling
           class: mermaid
           format: !!python/name:pymdownx.superfences.fence_code_format
-  - pymdownx.tabbed:
-      alternate_style: true
   - pymdownx.highlight:
-      linenums: true
-  - pymdownx.inlinehilite
-  - pymdownx.snippets
+      linenums: true # Add line numbers to code blocks
+  - pymdownx.details: # permit folded <details> blocks via `??? Note "Title"` format
+  # - pymdownx.tabbed: # Allows tabbed blocks e.g.: === "Python" 
+      # alternate_style: true # Styling via CSS, not JS + stacked tabs w/narrow screens
+  # - pymdownx.inlinehilite # Allows language-specific highlighting e.g.: `#!py3 code`
+  # - pymdownx.snippets # Allows including file snippets e.g. --8<-- "file.md:4:6"
 extra:
   generator: false # Disable watermark
   social:
