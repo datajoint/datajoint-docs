@@ -102,8 +102,8 @@ and go through the setup, including adding Miniconda to your `PATH` (full
     conda activate dj-workflow-<name> 
     ```
 
-<details>
-<summary>Apple M1 users: Click to expand</summary>
+??? Warning "Apple M1 users: Click to expand"
+
     Running analyses with Element DeepLabCut or Element Calcium imaging may require
     tensorflow, which can cause issues on M1 machines. By saving the <code>yaml</code> 
     file below, this environment can be loaded with <code>conda create -f my-file.yaml
@@ -126,7 +126,6 @@ and go through the setup, including adding Miniconda to your `PATH` (full
             - tensorflow-metal
             - datajoint
     ```
-</details>
 
 ### Integrated Development Environment (IDE)
 
@@ -144,7 +143,7 @@ collaborators working on the same project. Git is an open-source, distributed ve
 control system that helps keep track of what changes where made when, and by whom.
 GitHub is a platform that hosts projects managed with git. The example DataJoint
 Workflows are hosted on GitHub, we will use git to clone (i.e., download) this
-repository. 
+repository.
 
 1. Check if you already have git by typing `git --version` in a terminal window.
 2. If git is not installed on your system, please
@@ -159,7 +158,7 @@ workflow, you'll need a couple extra packages.
 **Jupyter Notebooks** help structure code (see
 [here](https://code.visualstudio.com/docs/datascience/jupyter-notebooks) for full
 instructions on Jupyter within VS Code).
- 
+
 1. Install Jupyter packages
     ```console
     conda install jupyter ipykernel nb_conda_kernels
@@ -167,7 +166,7 @@ instructions on Jupyter within VS Code).
 
 2. Ensure your VS Code python intepreter is set to your Conda environment path.
    
-    <details>
+    <details> <!-- Can't use `??? Note` format within list  -->
     <summary>Click to expand more details.</summary>
     <ul>
         <li>View > Command Palette</li>
@@ -325,13 +324,12 @@ example data, you would ...
 
 #### Example Data Organization
 
-<details>
-<summary>Array Ephys: Click to expand details</summary>
-    <ul>
-        <li><b>Dataset</b>: workflow-array-ephys-benchmark</li>
-        <li><b>Revision</b>: 0.1.0a4</li>
-        <li><b>Size</b>: 293 GB</li>
-    </ul>
+??? Note "Array Ephys: Click to expand details"
+
+    - **Dataset**: workflow-array-ephys-benchmark
+    - **Revision**: 0.1.0a4
+    - **Size**: 293 GB
+
     The example <code>subject6/session1</code> data was recorded with SpikeGLX and
     processed with Kilosort2. 
     ```
@@ -344,17 +342,15 @@ example data, you would ...
     ```
     Element and Workflow Array Ephys also support data recorded with 
     OpenEphys.
-</details>
 
-<details>
-<summary>Calcium Imaging: Click to expand details</summary>
-    <ul>
-        <li><b>Dataset</b>: workflow-array-calcium-imaging-test-set</li>
-        <li><b>Revision</b>: 0_1_0a2</li>
-        <li><b>Size</b>: 142 GB</li>
-    </ul>
-    The example <code>subject3</code> data was recorded with Scanbox. 
-    The example <code>subject7</code> data was recorded with ScanImage.
+
+??? Note "Calcium Imaging: Click to expand details"
+    - **Dataset**: workflow-array-calcium-imaging-test-set
+    - **Revision**: 0_1_0a2
+    - **Size**: 142 GB
+    
+    The example `subject3` data was recorded with Scanbox. 
+    The example `subject7` data was recorded with ScanImage.
     Both datasets were processed with Suite2p.
     ```
     /tmp/example_data/
@@ -373,21 +369,16 @@ example data, you would ...
             - suite2p
                 - plane0
     ```
-    Element and Workflow Calcium Imaging also support ...
-    <ul>
-        <li>data collected with Nikon.</li>
-        <li>data collected with Prairie View.</li>
-        <li>data processed with CaImAn.</li>
-    <ul>
-</details>
+    Element and Workflow Calcium Imaging also support data collected with ...
+    - Nikon
+    - Prairie View
+    - CaImAn
 
-<details>
-<summary>DeepLabCut: Click to expand details</summary>
-    <ul>
-        <li><b>Dataset</b>: workflow-dlc-data</li>
-        <li><b>Revision</b>: v1</li>
-        <li><b>Size</b>: .3 GB</li>
-    </ul>
+??? Note "DeepLabCut: Click to expand details"
+    - **Dataset**: workflow-dlc-data
+    - **Revision**: v1
+    - **Size**: .3 GB
+    
     The example data includes both training data and pretrained models.
     ```
     /tmp/test_data/from_top_tracking/
@@ -413,17 +404,14 @@ example data, you would ...
         - test.mp4
         - train1.mp4
     ```
-</details>
 
-<details>
-<summary>FaceMap: Click to expand details</summary>
-    <b>Associated workflow still under development</b>
-    <ul>
-        <li><b>Dataset</b>: workflow-facemap</li>
-        <li><b>Revision</b>: 0.0.0</li>
-        <li><b>Size</b>: .3 GB</li>
-    </ul>
-</details>
+??? Note "FaceMap: Click to expand details"
+
+    **Associated workflow still under development**
+
+    - **Dataset**: workflow-facemap
+    - **Revision**: 0.0.0
+    - **Size**: .3 GB
 
 
 #### Using Your Own Data
@@ -431,38 +419,38 @@ example data, you would ...
 Some of the workflows carry some assumptions about how your file directory will be 
 organized, and how some files are named.
 
-<details>
-<summary>Array Ephys: Click to expand details</summary>
-    <ul>
-        <li>In your <a href="config">DataJoint config</a>, add another item under 
-            <code>custom</code>, <code>ephys_root_data_dir</code>, for your local root 
-            data directory. This can include multiple roots.
-            ```json
-            "custom": {
-                "database.prefix": "<username_>",
-                "ephys_root_data_dir": ["/local/root/dir1", "/local/root/dir2"]
-            }
-            ```
-            </li>
-        <li>The <code>subject</code> directory names must match the subject IDs in your
-            subjects table. The <code>ingest.py</code> script (
-            <a href="https://github.com/datajoint/workflow-array-ephys/blob/main/notebooks/04-automate-optional.ipynb">
-            demo ingestion notebook</a>) can help load these values from 
-            <code>./user_data/subjects.csv</code>.</li>
-        <li>The <code>session</code> directories can have any naming convention, but 
-            must be specified in the session table (see also
-            <a href="https://github.com/datajoint/workflow-array-ephys/blob/main/notebooks/04-automate-optional.ipynb">
-            demo ingestion notebook</a>). </li>
-        <li>Each session can have multiple probes.</li>
-        <li>The <code>probe</code> directory names must end in a one-digit number "
-            corresponding to the probe number.</li>
-        <li>Each <code>probe</code> directory should contain:
-            <ul>
-                <li>One neuropixels meta file named <code>*[0-9].ap.meta</code></li>
-                <li>Optionally, one Kilosort output folder</li>
-            </ul>
-        </li>
-    </ul>
+??? Note "Array Ephys: Click to expand details"
+
+    - In your [DataJoint config](#config), add another item under `custom`, 
+        `ephys_root_data_dir`, for your local root data directory. This can include 
+        multiple roots.
+
+        ```json
+        "custom": {
+            "database.prefix": "<username_>",
+            "ephys_root_data_dir": ["/local/root/dir1", "/local/root/dir2"]
+        }
+        ```
+
+    - The `subject` directory names must match the subject IDs in your subjects table. 
+        The `ingest.py` script (
+        [demo ingestion notebook](https://github.com/datajoint/workflow-array-ephys/blob/main/notebooks/04-automate-optional.ipynb)
+        ) can help load these values from `./user_data/subjects.csv`.
+
+    - The `session` directories can have any naming convention, but must be specified 
+        in the session table (see also
+        [demo ingestion notebook](https://github.com/datajoint/workflow-array-ephys/blob/main/notebooks/04-automate-optional.ipynb)
+        ). 
+
+    - Each session can have multiple probes.
+    
+    - The `probe` directory names must end in a one-digit number corresponding to the 
+        probe number.
+    
+    - Each `probe` directory should contain:
+        - One neuropixels meta file named `*[0-9].ap.meta`
+        - Optionally, one Kilosort output folder
+        
     Folder structure:
     ```
     <ephys_root_data_dir>/
@@ -485,43 +473,39 @@ organized, and how some files are named.
     └───<subject2>/
     │   │   ...
     ```
-</details>
 
-<details>
-<summary>Calcium Imaging: Click to expand details</summary>
-    <b>Note:</b> While Element Calcium Imaging can accommodate multiple scans per 
+??? Note "Calcium Imaging: Click to expand details"
+
+    **Note:** While Element Calcium Imaging can accommodate multiple scans per 
     session, Workflow Calcium Imaging assumes there is only one scan per session.
-    <ul>
-        <li>In your <a href="config">DataJoint config</a>, add another item under 
-        <code>custom</code>, <code>imaging_root_data_dir</code>, for your local root 
-        data directory. This can include multiple roots.
+
+    - In your [DataJoint config](#config), add another item under `custom`, 
+        `imaging_root_data_dir`, for your local root data directory. 
+
         ```json
         "custom": {
             "database.prefix": "<username_>",
-            "imaging_root_data_dir": ["/local/root/dir1", "/local/root/dir2"]
+            "imaging_root_data_dir": "/local/root/dir1"
         }
         ```
-        </li>
-        <li>The <code>subject</code> directory names must match the subject IDs in your
-        subjects table. The <code>ingest.py</code> script (
-        <a href="https://github.com/datajoint/workflow-calcium-imaging/blob/main/notebooks/04-automate-optional.ipynb">
-        demo ingestion notebook</a>) can help load these values from 
-        <code>./user_data/subjects.csv</code>.</li>
-        <li>The <code>session</code> directories can have any naming convention, but 
-        must be specified in the session table (see also
-        <a href="https://github.com/datajoint/workflow-calcium-imaging/blob/main/notebooks/04-automate-optional.ipynb">
-        demo ingestion notebook</a>). </li>
-        <li>Each <code>session</code> directory should contain:
-            <ul>
-                <li>All <code>.tif</code> or <code>.sbx</code> files for the scan, with 
-                any naming convention.</li>
-                <li>One <code>suite2p</code> subfolder, containing the analysis outputs
-                 in the default naming convention.</li>
-                <li>One <code>caiman</code> subfolder, containing the analysis output 
-                <code>.hdf5</code> file, with any naming convention.</li>
-            </ul>
-        </li>
-    </ul>
+        
+    - The `subject` directory names must match the subject IDs in your subjects table. 
+        The `ingest.py` script (
+        [demo ingestion notebook](https://github.com/datajoint/workflow-calcium-imaging/blob/main/notebooks/04-automate-optional.ipynb)
+        ) can help load these values from `./user_data/subjects.csv`.
+
+    - The `session` directories can have any naming convention, but must be specified 
+        in the session table (see also
+        [demo ingestion notebook])(https://github.com/datajoint/workflow-calcium-imaging/blob/main/notebooks/04-automate-optional.ipynb)
+        . 
+
+    - Each `session` directory should contain:
+        - All `.tif` or `.sbx` files for the scan, with any naming convention.
+        - One `suite2p` subfolder, containing the analysis outputs in the default naming 
+            convention.
+        - One `caiman` subfolder, containing the analysis output `.hdf5` file, with any
+            naming convention.
+        
     Folder structure:
     ```
     imaging_root_data_dir/
@@ -552,16 +536,14 @@ organized, and how some files are named.
     └───<subject2>/                     # Subject name in `subjects.csv`
     │   │   ...
     ```
-</details>
 
+??? Note "DeepLabCut: Click to expand details"
 
-<details>
-<summary>DeepLabCut: Click to expand details</summary>
-    <b>Note:</b> Element DeepLabCut assumes you've already used the DeepLabCut GUI to 
+    **Note:** Element DeepLabCut assumes you've already used the DeepLabCut GUI to 
     set up your project and label your data. This can include multiple roots.
-    <ul>
-        <li>In your <a href="config">DataJoint config</a>, add another item under 
-        <code>custom</code>, <code>dlc_root_data_dir</code>, for your local root 
+
+    - In your [DataJoint config](#config), add another item under 
+        `custom`, `dlc_root_data_dir`, for your local root 
         data directory.
         ```json
         "custom": {
@@ -569,16 +551,15 @@ organized, and how some files are named.
             "dlc_root_data_dir": ["/local/root/dir1", "/local/root/dir2"]
         }
         ```
-        </li>
-        <li>You have preserved the default DeepLabCut project directory, shown below.
-        </li>
-        <li>The paths in your various <code>yaml</code> files reflect the current
-        folder structure.<li>
-        <li>You have generated thge <code>pickle</code> and <code>mat</code> training
-        files. If not, follow the DeepLabCut guide to 
-        <a href="https://github.com/DeepLabCut/DeepLabCut/blob/master/docs/standardDeepLabCut_UserGuide.md#f-create-training-datasets">
-        create a training dataset</a></li>
-    </ul>
+        
+    - You have preserved the default DeepLabCut project directory, shown below.
+        
+    - The paths in your various `yaml` files reflect the current folder structure.
+
+    - You have generated thge `pickle` and `mat` training files. If not, follow the 
+        DeepLabCut guide to 
+        [create a training dataset](https://github.com/DeepLabCut/DeepLabCut/blob/master/docs/standardDeepLabCut_UserGuide.md#f-create-training-datasets)
+
     Folder structure:
     ```
     /dlc_root_data_dir/your_project/
@@ -592,23 +573,18 @@ organized, and how some files are named.
         - your_project_scorer*shuffle*.mat
     - videos/any_names.mp4
     ```
-</details>
 
-<details>
-<summary>Miniscope: Click to expand details</summary>
-    <ul>
-        <li>In your <a href="config">DataJoint config</a>, add another item under 
-        <code>custom</code>, <code>miniscope_root_data_dir</code>, for your local root 
-        data directory.
+??? Note "Miniscope: Click to expand details"
+
+    - In your [DataJoint config](#config), add another item under `custom`, 
+        `miniscope_root_data_dir`, for your local root data directory.
+        
         ```json
         "custom": {
             "database.prefix": "<username_>",
             "miniscope_root_data_dir": "/local/root/dir"
         }
         ```
-        </li>
-    </ul>
-</details>
 
 ## Relational databases
 
@@ -657,11 +633,11 @@ depending on your needs.
 ### Local Database
 
 1. Install [Docker](https://docs.docker.com/engine/install/).
-   <details>
+   <details> <!-- Can't use `??? Note "Title" notation within list, must use HTML -->
    <summary>Why Docker? Click for details.</summary>
 
         Docker makes it easy to package a program, including the file system and related 
-        code libraries, in a *container*. This container can be distributed to any 
+        code libraries, in a <i>container</i>. This container can be distributed to any 
         machine, both automating and standardizing the setup process.
    
    </details>
@@ -706,13 +682,12 @@ depending on your needs.
     }
     ```
 
-<details>
-<summary>Already familiar with Docker? Click here for details.</summary>
+??? Note "Already familiar with Docker? Click here for details."
+
     This document is written to apply to all example workflows. Many have a docker 
     folder used by developers to set up both a database and a local environment for 
-    integration tests. Simply <code>docker compose up</code> the relevant file and 
-    <code>docker exec</code> into the relevant container.
-</details>
+    integration tests. Simply `docker compose up` the relevant file and 
+    `docker exec` into the relevant container.
 
 ### Central Database
 
@@ -734,7 +709,7 @@ provides all the informaiton required to set up a dedicated database.
     and explore the data, refer to the 
     [Jupyter notebooks](#visualization-packages-jupyter-notebooks-datajoint-diagrams) 
     in the workflow directory.
-    <details>
+    <details>  <!-- Can't use `??? Note "Title" notation within list, must use HTML -->
     <summary>Array Ephys: Click to expand details</summary>
         ```python
         subject.Subject()
