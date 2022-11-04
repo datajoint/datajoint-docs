@@ -14,13 +14,13 @@ respectively.
 
 A `make` function should do three things:
 
-1.  Fetch data from tables upstream in the pipeline using the key for restriction.
+1.  [Fetch](../query-lang/common-commands#fetch) data from tables upstream in the
+pipeline using the key for restriction.
 
 2.  Compute and add any missing attributes to the fields already in the key.
 
-3.  Inserts the entire entity into the triggering table.
-
-<!-- TODO: Add links to query-lang folder -->
+3.  [Inserts](../query-lang/common-commands#insert) the entire entity into the
+triggering table.
 
 ## Populate
 
@@ -28,8 +28,7 @@ The `make` method is sometimes referred to as the `populate` function because th
 the class method called to run the `make` method on all relevant keys[^2].
 
 [^2]: For information on reprocessing keys that resulted in an error, see information
-on the Jobs table. 
-<!-- TODO: Link here  -->
+on the [Jobs table](../ref-integrity/distributed-computing). 
 
 === "Python"
 
@@ -45,4 +44,5 @@ on the Jobs table.
     ```
 
 For more information on the `populate` options in each language, please visit the 
-[Python](TODO) and [Matlab](TODO) documentation pages.
+[Python](https://datajoint.com/docs/core/datajoint-python/) and 
+[Matlab](https://datajoint.com/docs/core/datajoint-matlab/) documentation pages.

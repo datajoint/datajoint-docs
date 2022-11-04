@@ -41,6 +41,11 @@ insert data as follows.
     insert(tutorial.Mouse, data)
     ```
 
+## Make
+
+The `make` method populates automated tables from inserted data. Read more in the
+full article [here](../reproduce/make-method.md)
+
 ## Fetch
 
 Data queries in DataJoint comprise two distinct steps:
@@ -94,3 +99,27 @@ table definitions to take effect.
     drop(lab.Person)
     ```
 
+## Diagrams
+
+The `Diagram` or `ERD` command can help you visualize your pipeline, or understand
+an existing pipeline. 
+
+=== "Python"
+
+    ``` python
+    import datajoint as dj
+    schema = dj.Schema('my_database')
+    dj.Diagram(schema).draw()
+    ```
+
+=== "Matlab"
+
+    The schema object for a package can be obtained using its `getSchema`
+    function. (See `schema`.)
+
+    ``` matlab
+    draw(dj.ERD(seq.getSchema))   % draw the diagram
+    ```
+
+For more information about diagrams, see [this article](../getting-started/diagrams).
+For more examples in Python or Matlab, please visit the respective API documentation. 

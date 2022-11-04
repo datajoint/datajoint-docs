@@ -29,17 +29,21 @@ nav:
       - Data Pipelines: concepts/getting-started/data-pipelines.md
       - Table Definitions: concepts/getting-started/table-definitions.md
       - Diagrams: concepts/getting-started/diagrams.md
+      - Dependencies: concepts/getting-started/dependencies.md
     - Query Language:
       - Data Types: concepts/query-lang/data-types.md
       - Query Objects: concepts/query-lang/query-objs.md
       - Operators:  concepts/query-lang/operators.md
       - Common Commands: concepts/query-lang/common-commands.md
+      - Primary Key: concepts/query-lang/primary-key.md
       - Normalization: concepts/query-lang/normalization.md
     - Reproducibility:
       - Table Tiers: concepts/reproduce/table-tiers.md
       - Make Methods: concepts/reproduce/make-method.md
     - Referential Integrity:
       - Query Backend: concepts/ref-integrity/query-backend.md
+      - Distributed Computing: concepts/ref-integrity/distributed-computing.md
+      - Relational Databases: concepts/ref-integrity/relational-databases.md
     - FAQ: FAQ.md
   - Glossary: glossary.md
   - Citation: citation.md
@@ -87,6 +91,10 @@ plugins:
   - redirects:
       redirect_maps:
         "index.md": "welcome.md"
+  - exclude:
+      glob:
+        - archive/*
+        - images/*md
 markdown_extensions:
   - attr_list
   - md_in_html
@@ -107,7 +115,8 @@ markdown_extensions:
   - pymdownx.tabbed:
       alternate_style: true
   - footnotes
-  - pymdownx.details:
+  - pymdownx.details: # permit folded <details> blocks via `??? note "Title"` format
+  - pymdownx.snippets # Allows including file snippets e.g. --8<-- "; src/file.md"
 extra:
   generator: false # Disable watermark
   analytics:

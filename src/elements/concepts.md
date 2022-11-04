@@ -10,17 +10,27 @@ collections of related tables.
 The following commands declare a new schema and create the object named `schema` to
 reference the database schema.
 
-```python
-import datajoint as dj
-schema = dj.schema('<schema_name>')
-```
+=== "Python"
 
-We follow the convention of having only one schema defined per Python module. Then such
-a module becomes a _DataJoint schema_ comprising a Python module with a
-corresponding _database schema_.
+  ```python
+  import datajoint as dj
+  schema = dj.schema('<schema_name>')
+  ```
 
-The module's `schema` object is then used as the decorator for classes that define
-tables in the database.
+  We follow the convention of having only one schema defined per Python module. Then
+  such a module becomes a _DataJoint schema_ comprising a Python module with a
+  corresponding _database schema_.
+
+  The module's `schema` object is then used as the decorator for classes that define
+  tables in the database. 
+
+=== "Matlab"
+
+  ```matlab
+  dj.createSchema
+  ```
+
+  In Matlab, we list one table per file and place schemas in folders.
 
 ## Elements
 
@@ -44,9 +54,11 @@ The following YouTube videos provide information on basic design principles and 
 - [Overview of upstream Elements](https://www.youtube.com/watch?v=NRqpKNoHEY0) to 
   ingest and explore Lab, Animal, and Session metadata. 
 
-*Note:* Some videos feature outdated versions of the respective GitHub 
-repositories. For the most updated information, check the 
-[documentation page](datajoint.com/docs/elements) for the corresponding Element.
+???+ Note
+
+    Some videos feature outdated versions of the respective GitHub repositories. For the
+    most updated information, check the
+    [documentation page](datajoint.com/docs/elements) for the corresponding Element.
 
 ### Deferred schemas
 

@@ -3,7 +3,7 @@
 DataJoint is a free open-source framework for creating scientific data pipelines
 directly from Python or MATLAB (or both). The data are stored in a language-independent
 way, accessible via both Python and MATLAB. In DataJoint, a data pipeline is a sequence
-of steps (see also [DAGs](TODO))) with integrated data storage at each step, as defined
+of steps (see also [DAGs](./diagrams))) with integrated data storage at each step, as defined
 by the [tables](../reproduce/tabletiers). 
 
 Formally, a scientific **data pipeline** is a collection of processes and systems
@@ -76,8 +76,9 @@ cross-references, dependencies, and groupings among the data.
 Most scientists have some familiarity with these concepts, for example the notion of
 maintaining consistency between data and the metadata that describes it, or applying a
 filter to an Excel spreadsheet to retrieve specific subsets of information. However,
-usually the more advanced concepts involved in building and using 
-[relational databases](TODO) fall under the specific expertise of data scientists.
+usually the more advanced concepts involved in building and using
+[relational databases](../ref-integrity/relational-databases) fall under the specific
+expertise of data scientists.
 
 ### Data pipelines
 

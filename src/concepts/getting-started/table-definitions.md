@@ -1,5 +1,13 @@
 # Table Definitions
 
+DataJoint models data as sets of **entities** (rows) with shared **attributes**
+(columns or fields). These are visualized as tables with rows and columns. Each row
+represents a single entity and the values of all of its attributes. Each column
+represents a single attribute with a name and a datatype. Unlike rows in a spreadsheet,
+entities in DataJoint don't have names or numbers: they can only be identified by the
+values of their attributes. Defining a table means defining the names and datatypes of
+the attributes as well as the constraints to be applied to those attributes.
+
 To make it easy to work with tables in Python and Matlab, DataJoint APIs create a
 separate class for each table[^1]. For example, the class `experiment.Subject` in the
 DataJoint client language may correspond to the table called `subject` on the database
@@ -28,9 +36,8 @@ server. Each table class must inherit from one of the
 
 ## Table Definition Syntax
 
-
-A table definition consists of one or more lines. Each line can be one
-of the following:
+Both MATLAB and Python use the same syntax define tables. A table definition consists of
+one or more lines. Each line can be one of the following:
 
 -   `#`: The optional first line may provide a description
     of the table's purpose. 
@@ -118,3 +125,41 @@ Here are some examples of attributes with default values:
     due_date = "2020-05-31" : date
     additional_comments = NULL : varchar(256)
 ```
+
+## Changing the Definition
+
+Once the table is created in the database, the definition string has no effect.
+Just changing the definition string in the
+class of an existing table will make any corresponding changes on the database
+definition. 
+
+To change the table in the database, one can either...
+
+1. [Drop](..query-lang/common-commands#drop) the existing table, deleting the
+entire contents, and then declare a new adjusted table.
+
+2. Or alter the table definition. Altering is limited to 
+[seconday attributes](../../../glossary#seconday-attribute) and should be done with 
+caution, as it may impact existing data.
+
+In the initial phases of designing a pipeline, it's best to experiment with variations
+of the design before populating it with substantial amounts of data.
+
+
+# Reverse-engineering the Definition
+
+DataJoint objects provide the `describe` method, which displays the table definition
+used to define the table when it was created in the database. This definition may
+differ from the definition string of the class if the definition string has been edited
+after creation of the table (see above).
+
+=== "Python"
+
+   ``` python
+      s = lab.User.describe()
+   ```
+
+=== "Matlab"
+
+   ``` matlab
+      s = describe(lab.User)

@@ -2,7 +2,7 @@
 
 The *DataJoint Mantra* consists of three main objectives:
 
-- Simplify your queries through an intuitive [query language](./#query-language).
+- Simplify your data queries through an intuitive [query language](./#query-language).
 - Make automated, [reproducible computation](./#reproducible-computation) by integrating
   computation with the data model.
 - Ensure validity of your data through [referential integrity](./#referential-integrity).

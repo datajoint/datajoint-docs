@@ -108,5 +108,5 @@ Recommendations
 
 # Docker
 
-A Docker image is available for a MySQL server configured to work with
-DataJoint: <https://github.com/datajoint/mysql-docker>.
+A [Docker image](https://github.com/datajoint/mysql-docker) is available for a MySQL server configured to work with
+DataJoint.

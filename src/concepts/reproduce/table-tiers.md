@@ -10,10 +10,12 @@ helps make these stages explicit with data tiers, indicating data origin.
 | **Manual**   | Data entered entered with by hand or with external helper scripts.     | Manual subject metadata entry.                  |
 | **Imported** | Data ingested automatically from outside files.                        | Loading a raw data file.                        |
 | **Computed** | Data computed automatically entirely inside the pipeline.              | Running analyses and storing results.           |  
-| **Part**     | Data in a many-to-one relationship with the corresponding master table.| Independent unit results from a given analysis. |
+| **Part**\*   | Data in a many-to-one relationship with the corresponding master table.| Independent unit results from a given analysis. |
 
-*Note*: While all other types correspond to their data tier, part tables inherit the
- tier of their master table.
+<!--??? is note block, + means open on page load -->
+???+ Note "\*Part tables"
+    While all other types correspond to their data tier, Part tables inherit the
+    tier of their master table.
 
 Lookup and Manual tables generally handle manually added data. Imported and Computed
 tables both allow for automation, but differ in the source of information. And Part
@@ -31,8 +33,9 @@ Lookup tables contain basic facts that are not specific to an experiment and are
 persistent. In GUIs, lookup tables are often used for drop-down menus or radio buttons.
 In Computed tables, the contents of Lookup tables are often used to specify alternative
 methods for computations. Unlike Manual tables, Lookup tables can specify contents in
-the schema definition. For syntax, please visit the [Python](TODO) and 
-[Matlab](TODO) documentation pages.
+the schema definition. For syntax, please visit the 
+[Python](https://datajoint.com/docs/core/datajoint-python/) and 
+[Matlab](https://datajoint.com/docs/core/datajoint-matlab/) documentation pages.
 
 Lookup tables are especially useful for entities with many unique features. Rather than
 adding many primary keys, this information can be retrieved through an index. For an
@@ -101,23 +104,7 @@ part tables that depend on each other. See link above.
 
 ## Example
 
-```mermaid
-flowchart TB
-  Mouse --> Session --> Scan 
-  Scan --> Alignment --> Segmentation --> Trace --> RF
-  Scan --> Stimulus --> RF
-  SegmentationMethod --> Segmentation
-  class Alignment,Mouse,RF,Scan,Segmentation,SegmentationMethod,Session,Stimulus,Trace boxes;
-  class Mouse,Scan,Session,Stimulus manual;
-  class Segmentation,Trace,RF compute;
-  class SegmentationMethod lookup;
-  class Alignment import;
-  classDef boxes stroke:#333;
-  classDef manual fill:#090;
-  classDef compute fill:#900;
-  classDef import fill:#009;
-  classDef lookup fill:#333;
-```
+--8<-- "src/images/concepts-table-tiers-diagram.md"
 
 In this example, the experimenter first enters information into the Manual tables, shown
 in geen. They enter information about a mouse, then a session, and then each scan
@@ -130,5 +117,5 @@ visual stimulus information.
 
 For more information on table dependencies and diagrams, see their respective articles:
 
-- [Dependencies](TODO)
-- [Diagrams](TODO)
+- [Dependencies](../getting-started/dependencies)
+- [Diagrams](../getting-started/diagrams)
