@@ -23,7 +23,6 @@ tables have a unique relationship to their corresponding Master table.
 
 ## Data Entry: Lookup and Manual
 
-
 Manual tables are populated during experiments through a variety of interfaces. Not all
 manual information is entered by typing. Automated software can enter it directly into
 the database. What makes a manual table manual is that it does not perform any
@@ -43,15 +42,15 @@ example, see *ClusteringParamSet* in Element Array Ephys.
 
 <!-- TODO: Add link to ephys ClusteringParamSet -->
 
-While this distinction is useful for strucutring a pipeline, it is not enforced, and
-left to the best judgement of the resercher.
+While this distinction is useful for structuring a pipeline, it is not enforced, and
+left to the best judgement of the researcher.
 
 ## Automation: Imported and Computed
 
 Auto-populated tables are used to define, execute, and coordinate computations in a
 DataJoint pipeline. These tables belong to one of the two auto-populated data tiers:
 *Imported* and *Computed*. The difference is not strictly enforced, but the convention
-helps researchers understand data provenance at a glane. 
+helps researchers understand data provenance at a glance.
 
 *Imported* tables require access to external files, such as raw storage, outside the
  database. If a entry were deleted, it could be retrieved from the raw files on disk.
@@ -71,7 +70,6 @@ helps researchers understand data provenance at a glane.
 
 Data should never be directly inserted into auto-populated tables. Instead, these tables
 specify a [`make` method](./make-method). 
-
 
 ## Master-Part Relationship
 
@@ -107,7 +105,7 @@ part tables that depend on each other. See link above.
 --8<-- "src/images/concepts-table-tiers-diagram.md"
 
 In this example, the experimenter first enters information into the Manual tables, shown
-in geen. They enter information about a mouse, then a session, and then each scan
+in green. They enter information about a mouse, then a session, and then each scan
 performed, with the stimuli. Next the automated portion of the pipeline takes over,
 Importing the raw data and performing image alignment, shown in blue. Computed tables
 are shown in red. Image segmentation identifies cells in the images, and extraction of

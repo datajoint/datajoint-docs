@@ -18,7 +18,8 @@ keys, can be visualized as a graph with nodes and edges, in a [diagram](./diagra
 Foreign keys are defined with arrows `->` in the
 [table definition](./table-definitions), pointing to another table.
 
-In the example below, there are three [foreign keys](../../../glossary#foreign-key), including one within the [primary key](../../../glossary#primary-key) above the `---`.
+In the example below, there are three [foreign keys](../../../glossary#foreign-key),
+including one within the [primary key](../../../glossary#primary-key) above the `---`.
 
 ``` text
 ## brain slice

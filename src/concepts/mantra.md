@@ -27,7 +27,7 @@ in [FAIR](https://www.go-fair.org/fair-principles/).
 
 Case in point, here is a comparison of equivalent queries:
 
-*SQL*
+*SQL*:
 
 ```sql
 SELECT *
@@ -39,11 +39,13 @@ WHERE (
 ```
 
 === "*DataJoint (Python)*"
+
     ```python
     Rectangle * Area & dict(shape_height=2, shape_area=8)
     ```
 
 === "*DataJoint (MATLAB)*"
+
     ```matlab
     shapes.Rectangle * shapes.Area & struct('shape_height', 2, 'shape_area', 8)
     ```

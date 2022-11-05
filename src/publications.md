@@ -1,3 +1,8 @@
+---
+# cspell:ignoreRegExp (\s|\*|\-)[A-Z]*
+# CAUTION: Above sets cspell to ignore capitalized words after space/asterisk/hyphen
+---
+<!-- markdownlint-disable MD013 -->
 # Publications
 
 The following publications relied on DataJoint open-source software for data analysis.
@@ -6,12 +11,13 @@ If you would like make additions or corrections, please send an email to support
 
 If your work uses DataJoint or DataJoint Elements, please cite the following:
 
-DataJoint
+DataJoint API preprint:
 > Yatsenko D, Reimer J, Ecker AS, Walker EY, Sinz F, Berens P, Hoenselaar A, Cotton RJ, Siapas AS, Tolias AS. <a href="https://doi.org/10.1101/031658" target="_blank" style="color:#1589F0;">DataJoint: managing big scientific data using MATLAB or Python</a>. bioRxiv. 2015 Jan 1:031658.
 
+DataJoint model preprint:
 > Yatsenko D, Walker EY, Tolias AS. <a href="https://doi.org/10.48550/arXiv.1807.11104" target="_blank" style="color:#1589F0;">DataJoint: a simpler relational data model</a>. arXiv:1807.11104. 2018 Jul 29.
 
-DataJoint Elements
+DataJoint Elements:
 > Yatsenko D, Nguyen T, Shen S, Gunalan K, Turner CA, Guzman R, Sasaki M, Sitonic D, Reimer J, Walker EY, Tolias AS. <a href="https://doi.org/10.1101/2021.03.30.437358" target="_blank" style="color:#1589F0;">DataJoint Elements: Data Workflows for Neurophysiology</a>. bioRxiv. 2021 Jan 1.
 
 ## 2022 <!-- 20 -->
@@ -58,7 +64,7 @@ DataJoint Elements
 
 ## 2021 <!-- 14 -->
 
-+ Bae, J. A., Baptiste, M., Bodor, A. L., Brittain, D., Buchanan, J., Bumbarger, D. J., Castro, M. A., Celii, B., Cobos, E., Collman, F.others. (2021). <a href="https://doi.org/10.1101/2021.07.28.454025" target="_blank" style="color:#1589F0;">Functional connectomics spanning multiple areas of mouse visual cortex</a>. *bioRxiv*. 
++ Bae, J. A., Baptiste, M., Bodor, A. L., Brittain, D., Buchanan, J., Bumbarger, D. J., Castro, M. A., Celii, B., Cobos, E., Collman, F.others. (2021). <a href="https://doi.org/10.1101/2021.07.28.454025" target="_blank" style="color:#1589F0;">Functional connectomics spanning multiple areas of mouse visual cortex</a>. *bioRxiv*.
 
 + Born, G., Schneider-Soupiadis, F. A., Erisken, S., Vaiceliunaite, A., Lao, C. L., Mobarhan, M. H., Spacek, M. A., Einevoll, G. T., & Busse, L. (2021). <a href="https://doi.org/10.1038/s41593-021-00943-0" target="_blank" style="color:#1589F0;">Corticothalamic feedback sculpts visual spatial integration in mouse thalamus</a>. *Nature Neuroscience*, *24*(12), 1711–1720.
 
@@ -156,7 +162,7 @@ DataJoint Elements
 
 ## 2015 <!-- 2 -->
 
-+ Jiang, X., Shen, S., Cadwell, C. R., Berens, P., Sinz, F., Ecker, A. S., Patel, S., & Tolias, A. S. (2015). <a href="https://doi.org/10.1126%2Fscience.aac9462" target="_blank" style="color:#1589F0;">Principles of connectivity among morphologically defined cell types in adult neocortex</a>. *Science*, *350*(6264), aac9462. 
++ Jiang, X., Shen, S., Cadwell, C. R., Berens, P., Sinz, F., Ecker, A. S., Patel, S., & Tolias, A. S. (2015). <a href="https://doi.org/10.1126%2Fscience.aac9462" target="_blank" style="color:#1589F0;">Principles of connectivity among morphologically defined cell types in adult neocortex</a>. *Science*, *350*(6264), aac9462.
 
 + Yatsenko, D., Josić, K., Ecker, A. S., Froudarakis, E., Cotton, R. J., & Tolias, A. S. (2015). <a href="https://doi.org/10.1371/journal.pcbi.1004083" target="_blank" style="color:#1589F0;">Improved estimation and interpretation of correlations in neural circuits</a>. *PLoS Comput Biol*, *11*(3), e1004083.
 
@@ -170,8 +176,8 @@ DataJoint Elements
 
 + Reimer, J., Froudarakis, E., Cadwell, C. R., Yatsenko, D., Denfield, G. H., & Tolias, A. S. (2014). <a href="https://doi.org/10.1016/j.neuron.2014.09.033" target="_blank" style="color:#1589F0;">Pupil fluctuations track fast switching of cortical states during quiet wakefulness</a>. *Neuron*, *84*(2), 355–362.
 
-
 ## 2013 <!-- 2 -->
+
 + Cotton, R. J., Froudarakis, E., Storer, P., Saggau, P., & Tolias, A. S. (2013). <a href="https://doi.org/10.3389/fncir.2013.00151" target="_blank" style="color:#1589F0;">Three-dimensional mapping of microcircuit correlation structure</a>. *Frontiers in Neural Circuits*, *7*, 151.
 
 + Vaiceliunaite, A., Erisken, S., Franzen, F., Katzner, S., & Busse, L. (2013). <a href="https://doi.org/10.1152/jn.00138.2013" target="_blank" style="color:#1589F0;">Spatial integration in mouse primary visual cortex</a>. *Journal of Neurophysiology*, *110*(4), 964–972.

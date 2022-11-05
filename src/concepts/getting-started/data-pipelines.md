@@ -54,14 +54,14 @@ flowchart LR
   classDef boxes fill:#ddd, stroke:#333;
 ```
 
-### Data repositories
+## Data repositories
 
 A shared **data repository** gives all team members access to the data.
 This might include a collection of files with standard naming conventions,
 organized into folders and sub-folders. Or, a data repository might be a collection of 
 S3 buckets hosted on a cloud server.
 
-### Database systems
+## Database systems
 
 **Databases** are a form of data repository, with additional capabilities:
 
@@ -80,7 +80,7 @@ usually the more advanced concepts involved in building and using
 [relational databases](../ref-integrity/relational-databases) fall under the specific
 expertise of data scientists.
 
-### Data pipelines
+## Data pipelines
 
 **Data pipeline** frameworks may include all the features of a database
 system along with additional functionality:
@@ -97,4 +97,3 @@ The informal notion of an analysis "workflow" will be familiar to most scientist
 could include the the logistical difficulties associated making sure each file is 
 preprocessed, while distributing the load across multiple team members or compute 
 resources.
-

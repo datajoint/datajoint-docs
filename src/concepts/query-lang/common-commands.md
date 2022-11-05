@@ -5,7 +5,7 @@
 Data entry is as easy as providing the appropriate data structure to a permitted
 [table](../reproduce/table-tiers.md).
 
-Given the following [table definiton](../getting-started/table-definitions.md), we can
+Given the following [table definition](../getting-started/table-definitions.md), we can
 insert data as follows.
 
 ```text      

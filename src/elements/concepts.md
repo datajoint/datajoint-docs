@@ -44,7 +44,7 @@ schemas: `scan` and `imaging`.
 
 The following YouTube videos provide information on basic design principles and file organization.
 
-- [Why neuroscientists should use relational databases](https://www.youtube.com/watch?v=q-PMUSC5P5o) 
+- [Why neuroscientists should use relational databases](https://www.youtube.com/watch?v=q-PMUSC5P5o)
   compared to traditional file heirarchies.
 - [Quickstart Guide](https://www.youtube.com/watch?v=5R-qnz37BKU) including 
   terminology, and how to read DataJoint Diagrams and DataJoint Python table 
@@ -66,7 +66,8 @@ A _deferred schema_ is one in which the name of the database schema name is not 
 This module does not declare schema and tables upon import.
 Instead, they are declared by calling `schema.activate('<schema_name>')` after import.
 
-By convention, all modules corresponding to deferred schema must declare the function `activate` which in turn calls `schema.activate`.
+By convention, all modules corresponding to deferred schema must declare the function
+`activate` which in turn calls `schema.activate`.
 
 Thus, Element modules begin with:
 
@@ -75,7 +76,7 @@ import datajoint as dj
 schema = dj.schema()
 
 def activate(schema_name):
-	schema.activate(schema_name)
+schema.activate(schema_name)
 ```
 
 However, many activate functions perform other work associated with activating the

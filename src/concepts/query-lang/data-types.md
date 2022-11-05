@@ -23,8 +23,8 @@ These types are largely wrappers around existing types in the current
 
 ### Less Common Types
 
-The following types add more specificty to the options above. Note that any integer type
-can be unsigned, shifting their range from the listed ±2<sup>n</sup> to from 0 - 
+The following types add more specificity to the options above. Note that any integer
+type can be unsigned, shifting their range from the listed ±2<sup>n</sup> to from 0 -
 2<sup>n+1</sup>. Float and decimal types can be similarly unsigned
 
 |           Datatype                     | Description  |  Size   | Example | Range |
@@ -56,7 +56,6 @@ can be unsigned, shifting their range from the listed ±2<sup>n</sup> to from 0 
 - text
 - longtext
 - bit
-
 
 For more information about datatypes, see 
 [additional documentation](https://dev.mysql.com/doc/refman/5.6/en/data-types.html)

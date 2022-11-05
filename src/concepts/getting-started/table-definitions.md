@@ -11,7 +11,7 @@ the attributes as well as the constraints to be applied to those attributes.
 To make it easy to work with tables in Python and Matlab, DataJoint APIs create a
 separate class for each table[^1]. For example, the class `experiment.Subject` in the
 DataJoint client language may correspond to the table called `subject` on the database
-server. Each table class must inherit from one of the 
+server. Each table class must inherit from one of the
 [table tier](../reproduce/table-tiers/) classes.
 
 [^1]: Computer programmers refer to this concept as 
@@ -139,7 +139,7 @@ To change the table in the database, one can either...
 entire contents, and then declare a new adjusted table.
 
 2. Or alter the table definition. Altering is limited to 
-[seconday attributes](../../../glossary#seconday-attribute) and should be done with 
+[secondary attributes](../../../glossary#seconday-attribute) and should be done with 
 caution, as it may impact existing data.
 
 In the initial phases of designing a pipeline, it's best to experiment with variations

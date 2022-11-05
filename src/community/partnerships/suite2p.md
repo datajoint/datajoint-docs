@@ -8,6 +8,7 @@
 </figure>
 
 ## Aim
+
 **DataJoint Elements** and **Suite2p** are two neuroinformatics initiatives in active
   development. The projects develop independently yet they have complementary aims and
   overlapping user communities. This document establishes key processes for
@@ -18,11 +19,11 @@
 
 ### DataJoint
 
-**DataJoint Elements** — https://datajoint.com/docs/elements/ — is a collection of open-source
-  reference database schemas and analysis workflows for neurophysiology experiments,
-  supported by **DataJoint** — https://datajoint.com/docs/core/ — an open-source software
-  framework. The project is funded by the NIH grant U24 NS116470 and led by Dr. Dimitri
-  Yatsenko.
+**DataJoint Elements** — https://datajoint.com/docs/elements/ — is a collection of
+  open-source reference database schemas and analysis workflows for neurophysiology
+  experiments, supported by **DataJoint** — https://datajoint.com/docs/core/ — an
+  open-source software framework. The project is funded by the NIH grant U24 NS116470
+  and led by Dr. Dimitri Yatsenko.
   
 The principal developer of DataJoint Elements and the DataJoint framework is the company
 DataJoint — https://datajoint.com.
@@ -98,4 +99,5 @@ and Suite2p.
 ## Citation
 
 If you use Suite2p please cite 
-[Pachitariu et al., bioRxiv 2017](https://www.biorxiv.org/content/10.1101/061507v2) in your publications.
+[Pachitariu et al., bioRxiv 2017](https://www.biorxiv.org/content/10.1101/061507v2)
+in your publications.

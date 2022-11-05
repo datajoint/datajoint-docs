@@ -2,8 +2,8 @@
 
 [Data queries](./query-objs) make use of operators to derive the desired table. They
 represent the desired data symbolically, but do not contain any data. Once a query is
-formed, we can [fetch](./common-commands#fetch) the data into the local workspace. Since the
-expressions are only symbolic, repeated `fetch` calls may yield different results as
+formed, we can [fetch](./common-commands#fetch) the data into the local workspace. Since
+the expressions are only symbolic, repeated `fetch` calls may yield different results as
 the state of the database is modified.
 
 DataJoint implements a complete algebra of operators on tables:
@@ -78,7 +78,7 @@ This has all the primary keys of both tables (a union thereof, shown in bold) as
 all [secondary attributes](../../../glossary#seconday-attribute) (i.e., user and
 duration). This also excludes the session for which we don't have a scan.
 
-We can also join based on seondary attributes, as shown in the example below.
+We can also join based on secondary attributes, as shown in the example below.
 
 <figure markdown>
 ![Join example](../../images/concepts-operators-join2.png){: style="height:200px"}

@@ -1,6 +1,7 @@
 # Team
 
-The project is performed by [DataJoint](https://www.datajoint.com) with Dimitri Yatsenko as Principal Investigator.
+The project is performed by [DataJoint](https://www.datajoint.com) with Dimitri Yatsenko
+as Principal Investigator.
 
 ## Scientists
 
@@ -25,7 +26,8 @@ The project is performed by [DataJoint](https://www.datajoint.com) with Dimitri 
 
 ## Past contributors
 
-- Edgar Y. Walker - System architect, Data Scientist, Project Manager (from project start to Jan, 2021)
+- Edgar Y. Walker - System architect, Data Scientist, Project Manager 
+(from project start to Jan, 2021)
 - Andreas S. Tolias - Grant proposal contributor
 - Jacob Reimer - Grant proposal contributor
 - Shan Shen - Data Scientist
@@ -40,5 +42,7 @@ The first-person pronouns "we" and "our" in these documents refer to those liste
 
 ## External contributors
 
-The principal components of the Resource are developed and distributed as open-source projects and external contributions are welcome.
-We have adopted a [Contribution Guide](../../../community/contribution) for DataJoint, DataJoint Elements, and related open-source tools.
+The principal components of the Resource are developed and distributed as open-source
+projects and external contributions are welcome. We have adopted a 
+[Contribution Guide](../../../community/contribution) for DataJoint, DataJoint Elements,
+and related open-source tools.

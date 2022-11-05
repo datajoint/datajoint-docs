@@ -55,7 +55,10 @@ Generally, this includes tests related to:
 When introducing new code to the code base, the following will be required for
 acceptance by DataJoint core team into the main code repository.
 
-- **Independence**: Proposed changes should not directly alter the code base in the review process. New changes should be applied separately on a copy of the code base and proposed for review by the DataJoint core team. For example, apply changes on a GitHub fork and open a pull request targeting the `main` branch once ready for review.
+- **Independence**: Proposed changes should not directly alter the code base in the
+  review process. New changes should be applied separately on a copy of the code base
+  and proposed for review by the DataJoint core team. For example, apply changes on a
+  GitHub fork and open a pull request targeting the `main` branch once ready for review.
 
 - **Etiquette**: An author who has requested for a code for review should not accept and
     merge their own code to the code base. A reviewer should not commit any suggestions
@@ -71,7 +74,8 @@ acceptance by DataJoint core team into the main code repository.
     tracker that would be resolved by acceptance should be properly linked and
     referenced.
 
-- **Satisfy Automated Tests**: All automated tests associated with the project will be verified to be successful prior to acceptance.
+- **Satisfy Automated Tests**: All automated tests associated with the project will be
+  verified to be successful prior to acceptance.
 
 - **Documentation**: Documentation should be included to reflect any new feature or
     behavior introduced.

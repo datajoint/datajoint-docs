@@ -35,7 +35,7 @@ DataJoint uses the following conventions:
 -   [Dependencies](./dependencies) indicated as edges in the graph and always
     directed downward (see [DAG](../../glossary#dag))
 
--   Depenency type is indicated by the line.
+-   Dependency type is indicated by the line.
 
     - **Solid lines**: The [foreign key](../../glossary#foreign-key) in the
       [primary key](../../glossary#primary-key).
@@ -54,13 +54,20 @@ The following diagram example is an approximation of a DataJoint diagram using
 
 --8<-- "src/images/concepts-table-tiers-diagram.md"
 
-Here, we see 
+Here, we see ...
+
 1. A 1-to-1 relationship between *Session* and *Scan*, as designated by the thick edge.
+
 2. A non-primary foreign key linking *SegmentationMethod* and *Segmentation*
-3. Manual tables for *Mouse*, *Session*, S*can*, and *Stimulus*. 
-4. A Lookup table: *SegmentationMethod* 
-5. An Imported table: *Alginment*
+
+3. Manual tables for *Mouse*, *Session*, *Scan*, and *Stimulus*.
+
+4. A Lookup table: *SegmentationMethod*
+
+5. An Imported table: *Alignment*
+
 6. Several Computed tables: *Segmentation*, *Trace*, and *RF*
+
 7. A part table: *Field*
  
 For examples calling `Diagram` in Python and Matlab, please visit the documentation for

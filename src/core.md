@@ -6,8 +6,6 @@ make up the family of core open-source projects.
 
 ## [API](https://en.wikipedia.org/wiki/API)s
 
-
-
 <div class="grid cards" markdown>
 
 -   :fontawesome-brands-python:{ .lg .middle } **DataJoint Python**
@@ -30,14 +28,14 @@ make up the family of core open-source projects.
 
     ---
 
-    Expose [data pipelines](../glossary#data-pipeline) via a [REST](https://en.wikipedia.org/wiki/Representational_state_transfer) interface.
+    Expose [data pipelines](../glossary#data-pipeline) via a
+    [REST](https://en.wikipedia.org/wiki/Representational_state_transfer) interface.
 
     [:octicons-arrow-right-24: Getting started](./pharus/)
 
 </div>
 
 ## Web [GUI](https://en.wikipedia.org/wiki/Graphical_user_interface)s
-
 
 <div class="grid cards" markdown>
 
@@ -53,7 +51,9 @@ make up the family of core open-source projects.
 
     ---
 
-    A visualization framework for making [low-code](https://en.wikipedia.org/wiki/Low-code_development_platform) web apps for [data pipelines](../glossary#data-pipeline).
+    A visualization framework for making
+    [low-code](https://en.wikipedia.org/wiki/Low-code_development_platform) web apps
+    for [data pipelines](../glossary#data-pipeline).
 
     [:octicons-arrow-right-24: Getting started](./sci-viz/)
 

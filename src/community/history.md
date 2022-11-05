@@ -6,10 +6,10 @@ implemented as a thin MySQL API in MATLAB, it defined the major principles of th
 DataJoint model.
 
 Many students and postdocs in the lab as well as collaborators and early adopters have
-contributed to the project. Jacob Reimer and Emmanouil Froudarakis became early
-adopters in Andreas Tolias' Lab and propelled development. Alexander S. Ecker, Philipp
-Berens, Andreas Hoenselaar, and R. James Cotton contributed to the formulation of the
-overall requirements for the data model and critical reviews of DataJoint development.
+contributed to the project. Jacob Reimer and Emmanouil Froudarakis became early adopters
+in Andreas Tolias' Lab and propelled development. Alexander S. Ecker, Philipp Berens,
+Andreas Hoenselaar, and R. James Cotton contributed to the formulation of the overall
+requirements for the data model and critical reviews of DataJoint development.
 
 Outside the Tolias lab, the first labs to adopt DataJoint (approx. 2010) were the labs
 of Athanassios G. Siapas at CalTech, Laura Busse and Steffen Katzner at the University

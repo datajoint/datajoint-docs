@@ -31,17 +31,17 @@ cases.
 The table below summarizes the terms used for similar concepts across
 the related data models.
 
-| Relational            | ERM             | SQL                | DataJoint (formal) | This manual      |
-|-----------------------|-----------------|--------------------|--------------------|------------------|
-| relation              | entity set      | table              | entity set         | table            |
-| tuple                 | entity          | row                | entity             | entity           |
-| domain                | value set       | datatype           | datatype           | datatype         |
-| attribute             | attribute       | column             | attribute          | attribute        |
-| attribute value       | attribute value | field value        | attribute value    | attribute value  |
-| primary key           | primary key     | primary key        | primary key        | primary key      |
-| foreign key           | foreign key     | foreign key        | foreign key        | foreign key      |
-| schema                | schema          | schema or database | schema             | schema           |
-| relational expression | data query      | `SELECT` statement | query expression   | query expression |
+| Relational            | ERM             | SQL                | DataJoint (formal) | This manual       |
+|-----------------------|-----------------|--------------------|--------------------|------------------ |
+| relation              | entity set      | table              | entity set         | table             |
+| tuple                 | entity          | row                | entity             | entity            |
+| domain                | value set       | datatype           | datatype           | datatype          |
+| attribute             | attribute       | column             | attribute          | attribute or field|
+| attribute value       | attribute value | field value        | attribute value    | attribute value   |
+| primary key           | primary key     | primary key        | primary key        | primary key       |
+| foreign key           | foreign key     | foreign key        | foreign key        | foreign key       |
+| schema                | schema          | schema or database | schema             | schema            |
+| relational expression | data query      | `SELECT` statement | query expression   | query expression  |
 
 Data model terminology
 

@@ -1,3 +1,4 @@
+<!-- markdownlint-disable MD013 -->
 # Projects <!-- 64 -->
 
 DataJoint was originally developed by working systems neuroscientists at Baylor College

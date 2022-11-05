@@ -1,6 +1,6 @@
 # DataJoint 101
 
-Migrating from a unique system to a shared 
+Migrating from a unique system to a shared
 [relational database](../ref-integrity/relational-database) can be challenging, but 
 there are a lot of materials to help you get started.
 
