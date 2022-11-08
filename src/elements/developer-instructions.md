@@ -56,3 +56,11 @@ We maintain `.py` script copies of all didactic notebooks to facilitate the GitH
    pip install jupytext
    jupytext --to py notebooks/0*ipynb; mv notebooks/*py notebooks/py_scripts
    ```
+
+### Other auxiliary tools
+
++ [DataJoint utilities](https://github.com/datajoint-company/datajoint-utilities) - general-purpose functions/utilities for working with DataJoint pipelines
+  + Text search
+  + Data migration between tables/schemas/servers
+  + DataJoint workers
++ [DataJoint for Julia](https://github.com/datajoint/neuronex_workshop_2018/tree/master/julia) - wrapper library developed in Carlos Brody lab
