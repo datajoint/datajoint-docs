@@ -1,6 +1,8 @@
 # Core
 
-DataJoint Core projects are fully open-source and are built to develop, define, manage, and visualize [data pipelines](../glossary#data-pipeline). Below are the projects that make up the family of core open-source projects.
+DataJoint Core projects are fully open-source and are built to develop, define, manage,
+and visualize [data pipelines](../glossary#data-pipeline). Below are the projects that
+make up the family of core open-source projects.
 
 ## [API](https://en.wikipedia.org/wiki/API)s
 
