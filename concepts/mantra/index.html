@@ -1309,12 +1309,25 @@
 <p>The <em>DataJoint Mantra</em> consists of three main objectives:</p>
 <ul>
 <li>Simplify your queries through an intuitive <a href="./#query-language">query language</a>.</li>
-<li>Make automated, <a href="./#reproducible-computation">reproducible computation</a> by integrating computation with the data model.</li>
+<li>Make automated, <a href="./#reproducible-computation">reproducible computation</a> by integrating
+  computation with the data model.</li>
 <li>Ensure validity of your data through <a href="./#referential-integrity">referential integrity</a>.</li>
 </ul>
 <h2 id="query-language">Query Language<a class="headerlink" href="#query-language" title="Permanent link">&para;</a></h2>
-<p>Writing good, optimized <a href="https://en.wikipedia.org/wiki/SQL">SQL</a> queries can be difficult and often becomes a barrier for individuals lacking experience in <a href="https://en.wikipedia.org/wiki/Computer_science">computer science</a> and programming. That said, we don't feel this should discourage the use of databases. Databases help to structure our daily lives which streamlines the time required to glean insights and build robust applications from truth. <a href="https://en.wikipedia.org/wiki/SQL">SQL</a> is powerful but requires practice which we feel is the real fault in the language.</p>
-<p>To address this, the DataJoint query language serves as a query builder and optimizer for <a href="https://en.wikipedia.org/wiki/SQL">SQL</a>. It leverages the stack's own operator precedence and combines it with both operator overloading and <a href="https://en.wikipedia.org/wiki/SQL">SQL</a> algebra to achieve a more intuitive experience. Additionally, interoperability between Python and MATLAB is crucial due to the diversity of tools available to scientists. So much so that this is a guiding principle in <a href="https://www.go-fair.org/fair-principles/">FAIR</a>.</p>
+<p>Writing good, optimized <a href="https://en.wikipedia.org/wiki/SQL">SQL</a> queries can be
+difficult and often becomes a barrier for individuals lacking experience in
+<a href="https://en.wikipedia.org/wiki/Computer_science">computer science</a> and programming.
+That said, we don't feel this should discourage the use of databases. Databases help to
+structure our daily lives which streamlines the time required to glean insights and
+build robust applications from truth. <a href="https://en.wikipedia.org/wiki/SQL">SQL</a> is
+powerful but requires practice which we feel is the real fault in the language.</p>
+<p>To address this, the DataJoint query language serves as a query builder and optimizer
+for <a href="https://en.wikipedia.org/wiki/SQL">SQL</a>. It leverages the stack's own operator
+precedence and combines it with both operator overloading and 
+<a href="https://en.wikipedia.org/wiki/SQL">SQL</a> algebra to achieve a more intuitive experience.
+Additionally, interoperability between Python and MATLAB is crucial due to the
+diversity of tools available to scientists. So much so that this is a guiding principle
+in <a href="https://www.go-fair.org/fair-principles/">FAIR</a>.</p>
 <p>Case in point, here is a comparison of equivalent queries:</p>
 <p><em>SQL</em></p>
 <div class="highlight"><pre><span></span><code><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"></span>
@@ -1324,22 +1337,51 @@
 <span class="w">    </span><span class="p">(</span><span class="o">`</span><span class="n">shape_area</span><span class="o">`=</span><span class="mi">8</span><span class="p">)</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="p">(</span><span class="o">`</span><span class="n">shape_height</span><span class="o">`=</span><span class="mi">2</span><span class="p">)</span><span class="w"></span>
 <span class="p">);</span><span class="w"></span>
 </code></pre></div>
-<p><em>DataJoint (Python)</em>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1"><em>DataJoint (Python)</em></label><label for="__tabbed_1_2"><em>DataJoint (MATLAB)</em></label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
 <div class="highlight"><pre><span></span><code><span class="n">Rectangle</span> <span class="o">*</span> <span class="n">Area</span> <span class="o">&amp;</span> <span class="nb">dict</span><span class="p">(</span><span class="n">shape_height</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">shape_area</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
-</code></pre></div></p>
-<p><em>DataJoint (MATLAB)</em>
+</code></pre></div>
+</div>
+<div class="tabbed-block">
 <div class="highlight"><pre><span></span><code><span class="n">shapes</span><span class="p">.</span><span class="n">Rectangle</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">shapes</span><span class="p">.</span><span class="n">Area</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="nb">struct</span><span class="p">(</span><span class="s">&#39;shape_height&#39;</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="s">&#39;shape_area&#39;</span><span class="p">,</span><span class="w"> </span><span class="mi">8</span><span class="p">)</span><span class="w"></span>
-</code></pre></div></p>
+</code></pre></div>
+</div>
+</div>
+</div>
 <h2 id="reproducible-computation">Reproducible Computation<a class="headerlink" href="#reproducible-computation" title="Permanent link">&para;</a></h2>
-<p>Reproducibility is a key concept within the scientific community since research is largely conducted, shared, and reviewed in the public domain. This is necessary to independently validate discoveries and have others support new findings. Such a practice is well advocated in the scientific community as <a href="Open_science">open science</a>.</p>
-<p>Yet, reliably reproducing computed results of others has proven difficult since there are many factors that affect the determinism of a process e.g. hardware, software environment, scripts, input data, seeding, etc.</p>
-<p>DataJoint pipelines address these challenges by allowing computation to be defined such that they are associated <em>with</em> an entity. Drawing relationships between many entities we can create a <a href="https://en.wikipedia.org/wiki/Directed_acyclic_graph">DAG</a> that describes a compute workflow as an <a href="https://en.wikipedia.org/wiki/Entity%E2%80%93relationship_model">entity-relationship model</a>.</p>
-<p>For instance, an entity such as <code>Area</code> could represent the computed value of a parent entity, <code>Rectangle</code>. Therefore, we feel it should be reasonable when defining <code>Area</code> to include the specification of a computation that automates how <code>Area</code> is generated based on relation to <code>Rectangle</code>.</p>
+<p>Reproducibility is a key concept within the scientific community since research is
+largely conducted, shared, and reviewed in the public domain. This is necessary to
+independently validate discoveries and have others support new findings. Such a
+practice is well advocated in the scientific community as 
+<a href="Open_science">open science</a>.</p>
+<p>Yet, reliably reproducing computed results of others has proven difficult since there
+are many factors that affect the determinism of a process e.g. hardware, software
+environment, scripts, input data, seeding, etc.</p>
+<p>DataJoint pipelines address these challenges by allowing computation to be defined such
+that they are associated <em>with</em> an entity. Drawing relationships between many entities
+we can create a <a href="https://en.wikipedia.org/wiki/Directed_acyclic_graph">DAG</a> that
+describes a compute workflow as an 
+<a href="https://en.wikipedia.org/wiki/Entity%E2%80%93relationship_model">entity-relationship model</a>.</p>
+<p>For instance, an entity such as <code>Area</code> could represent the computed value of a parent
+entity, <code>Rectangle</code>. Therefore, we feel it should be reasonable when defining <code>Area</code> to
+include the specification of a computation that automates how <code>Area</code> is generated based
+on relation to <code>Rectangle</code>.</p>
 <h2 id="referential-integrity">Referential Integrity<a class="headerlink" href="#referential-integrity" title="Permanent link">&para;</a></h2>
-<p>Referential integrity is the concept of keeping all your data consistent and up-to-date. The goal is to ensure <a href="../../glossary#data-pipeline">data pipelines</a> always reflect the truth of how data was created.</p>
-<p>In the realm of databases, entities can be related to one another through <a href="https://en.wikipedia.org/wiki/Foreign_key">foreign keys</a>. However, our opinionated view is that foreign keys on <a href="https://en.wikipedia.org/wiki/Primary_key">primary keys</a> should enforce the contraint.</p>
-<p>What this means is that our data model always reflects the truth. When a parent entity is removed, all child computed values will also be removed since they no longer have meaning without the subject. There is not a clear way to reproduce the results otherwise.</p>
-<p>An important consequence to note is that deletes take longer as a result since they must be cascaded down to all the descendants. We believe this to be a feature as it is the behavior most inline with typical expectations. Deletes should be done cautiously. </p>
+<p>Referential integrity is the concept of keeping all your data consistent and up-to-date.
+The goal is to ensure <a href="../../glossary#data-pipeline">data pipelines</a> always reflect the
+truth of how data was created.</p>
+<p>In the realm of databases, entities can be related to one another through 
+<a href="https://en.wikipedia.org/wiki/Foreign_key">foreign keys</a>. However, our opinionated view is that
+foreign keys on <a href="https://en.wikipedia.org/wiki/Primary_key">primary keys</a> should
+enforce the contraint.</p>
+<p>What this means is that our data model always reflects the truth. When a parent entity
+is removed, all child computed values will also be removed since they no longer have
+meaning without the subject. There is not a clear way to reproduce the results
+otherwise.</p>
+<p>An important consequence to note is that deletes take longer as a result since they must
+be cascaded down to all the descendants. We believe this to be a feature as it is the
+behavior most inline with typical expectations. Deletes should be done cautiously. </p>
 
 
 

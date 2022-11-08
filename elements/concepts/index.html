@@ -1332,19 +1332,24 @@
 <h1 id="concepts">Concepts<a class="headerlink" href="#concepts" title="Permanent link">&para;</a></h1>
 <p>The following conventions describe the DataJoint Python API implementation. </p>
 <h2 id="datajoint-schemas">DataJoint Schemas<a class="headerlink" href="#datajoint-schemas" title="Permanent link">&para;</a></h2>
-<p>The DataJoint Python API allows creating <em>database schemas</em>, which are namespaces for collections of related tables.</p>
-<p>The following commands declare a new schema and create the object named <code>schema</code> to reference the database schema.</p>
+<p>The DataJoint Python API allows creating <em>database schemas</em>, which are namespaces for
+collections of related tables.</p>
+<p>The following commands declare a new schema and create the object named <code>schema</code> to
+reference the database schema.</p>
 <div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">datajoint</span> <span class="k">as</span> <span class="nn">dj</span>
 <span class="n">schema</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">schema</span><span class="p">(</span><span class="s1">&#39;&lt;schema_name&gt;&#39;</span><span class="p">)</span>
 </code></pre></div>
-<p>We follow the convention of having only one schema defined per Python module.
-Then such a module becomes a <em>DataJoint schema</em> comprising a Python module with a corresponding <em>database schema</em>.</p>
-<p>The module's <code>schema</code> object is then used as the decorator for classes that define tables in the database.</p>
+<p>We follow the convention of having only one schema defined per Python module. Then such
+a module becomes a <em>DataJoint schema</em> comprising a Python module with a
+corresponding <em>database schema</em>.</p>
+<p>The module's <code>schema</code> object is then used as the decorator for classes that define
+tables in the database.</p>
 <h2 id="elements">Elements<a class="headerlink" href="#elements" title="Permanent link">&para;</a></h2>
-<p>An Element is a software package defining one or more DataJoint schemas serving a particular purpose.
-By convention, such packages are hosted in individual GitHub repositories.
-For example, Element <code>element_calcium_imaging</code> is hosted at https://github.com/datajoint/element-calcium-imaging
-and contains two DataJoint schemas: <code>scan</code> and <code>imaging</code>.</p>
+<p>An Element is a software package defining one or more DataJoint schemas serving a
+particular purpose. By convention, such packages are hosted in individual GitHub
+repositories. For example, Element <code>element_calcium_imaging</code> is hosted at
+https://github.com/datajoint/element-calcium-imaging and contains two DataJoint
+schemas: <code>scan</code> and <code>imaging</code>.</p>
 <h3 id="youtube-tutorials">YouTube Tutorials<a class="headerlink" href="#youtube-tutorials" title="Permanent link">&para;</a></h3>
 <p>The following YouTube videos provide information on basic design principles and file organization.</p>
 <ul>
@@ -1373,13 +1378,20 @@ Instead, they are declared by calling <code>schema.activate('&lt;schema_name&gt;
 <span class="k">def</span> <span class="nf">activate</span><span class="p">(</span><span class="n">schema_name</span><span class="p">):</span>
     <span class="n">schema</span><span class="o">.</span><span class="n">activate</span><span class="p">(</span><span class="n">schema_name</span><span class="p">)</span>
 </code></pre></div>
-<p>However, many activate functions perform other work associated with activating the schema such as activating other schemas upstream.</p>
+<p>However, many activate functions perform other work associated with activating the
+schema such as activating other schemas upstream.</p>
 <h3 id="linking-module">Linking Module<a class="headerlink" href="#linking-module" title="Permanent link">&para;</a></h3>
-<p>To make the code more modular with fewer dependencies, Element modules do not <code>import</code> upstream schemas directly. 
-Instead, all required classes and functions must be defined in a <code>linking_module</code> and passed to the module's <code>activate</code> function. By keeping all upstream requirements in the linking module, all Elements can be activated as part of any larger pipeline.</p>
-<p>For instance, the <a href="https://github.com/datajoint/element-calcium-imaging/blob/main/element_calcium_imaging/scan.py">Scan module</a> receives
-its required functions from the linking module passed into the module's <code>activate</code> function.
-See the <a href="https://github.com/datajoint/workflow-calcium-imaging/blob/main/workflow_calcium_imaging/pipeline.py">corresponding workflow</a> for an example of how the linking module is passed into the Element's module.</p>
+<p>To make the code more modular with fewer dependencies, Element modules do not <code>import</code>
+upstream schemas directly. Instead, all required classes and functions must be defined
+in a <code>linking_module</code> and passed to the module's <code>activate</code> function. By keeping all
+upstream requirements in the linking module, all Elements can be activated as part of
+any larger pipeline.</p>
+<p>For instance, the 
+<a href="https://github.com/datajoint/element-calcium-imaging/blob/main/element_calcium_imaging/scan.py">Scan module</a>
+receives its required functions from the linking module passed into the module's
+<code>activate</code> function. See the 
+<a href="https://github.com/datajoint/workflow-calcium-imaging/blob/main/workflow_calcium_imaging/pipeline.py">corresponding workflow</a>
+for an example of how the linking module is passed into the Element's module.</p>
 
 
 

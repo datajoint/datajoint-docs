@@ -1332,7 +1332,9 @@
 <h1 id="developer-instructions">Developer instructions<a class="headerlink" href="#developer-instructions" title="Permanent link">&para;</a></h1>
 <h2 id="development-mode-installation">Development mode installation<a class="headerlink" href="#development-mode-installation" title="Permanent link">&para;</a></h2>
 <ul>
-<li>We recommend doing development work in a conda environment. For information on setting up conda for the first time, see <a href="https://towardsdatascience.com/get-your-computer-ready-for-machine-learning-how-what-and-why-you-should-use-anaconda-miniconda-d213444f36d6">this article</a>.</li>
+<li>We recommend doing development work in a conda environment. For information on setting
+  up conda for the first time, see 
+  <a href="https://towardsdatascience.com/get-your-computer-ready-for-machine-learning-how-what-and-why-you-should-use-anaconda-miniconda-d213444f36d6">this article</a>.</li>
 </ul>
 <ul>
 <li>This method allows you to modify the source code for example DataJoint
@@ -1344,8 +1346,9 @@
   repositories (e.g., <code>bash cd ~/Projects</code>)</li>
 </ul>
 <ul>
-<li>Clone the relevant workflow and refer to the <code>requirements.txt</code> in the workflow for the list of Elements to clone and install as editable. You will also need to install <code>element-interface</code> 
-    <div class="highlight"><pre><span></span><code><span class="go">deps=(&quot;lab&quot; &quot;animal&quot; &quot;session&quot; &quot;interface&quot; &quot;&lt;others&gt;&quot;)</span>
+<li>Clone the relevant workflow and refer to the <code>requirements.txt</code> in the workflow for
+  the list of Elements to clone and install as editable. You will also need to install
+  <code>element-interface</code> <div class="highlight"><pre><span></span><code><span class="go">deps=(&quot;lab&quot; &quot;animal&quot; &quot;session&quot; &quot;interface&quot; &quot;&lt;others&gt;&quot;)</span>
 <span class="go">for repo in $deps # clone each</span>
 <span class="go">do </span>
 <span class="go">    git clone https://github.com/datajoint/element-$repo</span>
@@ -1354,35 +1357,40 @@
 <span class="go">do </span>
 <span class="go">    pip install -e ./$repo</span>
 <span class="go">done</span>
-</code></pre></div></li>
+</code></pre></div>
+</li>
 </ul>
 <h2 id="optionally-drop-all-schemas">Optionally drop all schemas<a class="headerlink" href="#optionally-drop-all-schemas" title="Permanent link">&para;</a></h2>
-<p>If you need to drop all schemas to start fresh, you'll need to do following the dependency order. Refer to the workflow's notebook (<code>notebooks/06-drop-optional.ipynb</code>) for the drop order.</p>
+<p>If you need to drop all schemas to start fresh, you'll need to do following the
+dependency order. Refer to the workflow's notebook
+(<code>notebooks/06-drop-optional.ipynb</code>) for the drop order.</p>
 <h2 id="run-integration-tests">Run integration tests<a class="headerlink" href="#run-integration-tests" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Download the test dataset to your local machine. Note the directory where the
-  dataset is saved (e.g. <code>/tmp/testset</code>).</li>
+<li>Download the test dataset to your local machine. Note the directory where the dataset
+  is saved (e.g. <code>/tmp/testset</code>).</li>
 </ul>
 <ul>
-<li>Create an <code>.env</code> file within the <code>docker</code> directory with the following content. 
+<li>Create an <code>.env</code> file within the <code>docker</code> directory with the following content.
   Replace <code>/tmp/testset</code> with the directory where you have the test dataset downloaded.
   <code>TEST_DATA_DIR=/tmp/testset</code></li>
 </ul>
 <ul>
-<li>If testing an unreleased version of the <code>element</code> or your fork of an <code>element</code>
-  or the <code>workflow</code>, within the <code>Dockerfile</code> uncomment the lines from the
-  different options presented. This will allow you to install the repositories
-  of interest and run the integration tests on those packages. Be sure that the
-  <code>element</code> package version matches the version in the <code>requirements.txt</code> of the
-  <code>workflow</code>.</li>
+<li>If testing an unreleased version of the <code>element</code> or your fork of an <code>element</code> or the
+  <code>workflow</code>, within the <code>Dockerfile</code> uncomment the lines from the different options
+  presented. This will allow you to install the repositories of interest and run the
+  integration tests on those packages. Be sure that the <code>element</code> package version
+  matches the version in the <code>requirements.txt</code> of the <code>workflow</code>.</li>
 </ul>
 <ul>
 <li>Run the Docker container.
-  <div class="highlight"><pre><span></span><code>docker-compose -f ./docker/docker-compose-test.yaml up --build
+  <div class="highlight"><pre><span></span><code><span class="go">docker-compose -f ./docker/docker-compose-test.yaml up --build</span>
 </code></pre></div></li>
 </ul>
 <h2 id="jupytext">Jupytext<a class="headerlink" href="#jupytext" title="Permanent link">&para;</a></h2>
-<p>We maintain <code>.py</code> script copies of all didactic notebooks to facilitate the GitHub review process. From the main workflow directory, we recommend the following command to generate these copies. You may wish to save this as an alias in your <code>.bash_profile</code>. Note that the jupytext sync features may cause issues with the original notebooks.</p>
+<p>We maintain <code>.py</code> script copies of all didactic notebooks to facilitate the GitHub
+review process. From the main workflow directory, we recommend the following command to
+generate these copies. You may wish to save this as an alias in your <code>.bash_profile</code>.
+Note that the jupytext sync features may cause issues with the original notebooks.</p>
 <div class="highlight"><pre><span></span><code><span class="go">pip install jupytext</span>
 <span class="go">jupytext --to py notebooks/0*ipynb; mv notebooks/*py notebooks/py_scripts</span>
 </code></pre></div>

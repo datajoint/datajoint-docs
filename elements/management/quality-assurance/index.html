@@ -1326,67 +1326,102 @@
 
 
 <h1 id="quality-assurance">Quality Assurance<a class="headerlink" href="#quality-assurance" title="Permanent link">&para;</a></h1>
-<p>DataJoint and DataJoint Elements serve as a framework and starting points for numerous new projects, setting the standard of quality for data architecture and software design. To ensure higher quality, the following policies have been adopted into the software development lifecycle (SDLC).</p>
+<p>DataJoint and DataJoint Elements serve as a framework and starting points for numerous
+new projects, setting the standard of quality for data architecture and software
+design. To ensure higher quality, the following policies have been adopted into the
+software development lifecycle (SDLC).</p>
 <h2 id="coding-standards">Coding Standards<a class="headerlink" href="#coding-standards" title="Permanent link">&para;</a></h2>
 <p>When writing code, the following principles should be observed.</p>
 <ul>
-<li><strong>Style</strong>: Code shall be written for clear readability. Uniform and clear naming conventions, module structure, and formatting requirements shall be established across all components of the project. Python's <a href="https://www.python.org/dev/peps/pep-0008/#naming-conventions">PEP8</a> standard offers clear guidance to this regard which can similarly be applied to all languages.<ul>
+<li><strong>Style</strong>: Code shall be written for clear readability. Uniform and clear naming
+    conventions, module structure, and formatting requirements shall be established
+    across all components of the project. Python's 
+    <a href="https://www.python.org/dev/peps/pep-0008/#naming-conventions">PEP8</a> standard offers
+    clear guidance to this regard which can similarly be applied to all languages.<ul>
 <li>Python code is formatted with the <a href="https://github.com/psf/black">black</a> code formatter.</li>
 <li>Line length should be a maximum of 88 characters.</li>
 </ul>
 </li>
 </ul>
 <ul>
-<li><strong>Maintenance Overhead</strong>: Code base size should be noted to prevent large, unnecessarily complex solutions from being introduced. The idea is that the larger the code base, the more there is to review and maintain. Therefore, we should aim to find a compromise where we can keep the code base from becoming too large without adding convoluted complexity.</li>
+<li><strong>Maintenance Overhead</strong>: Code base size should be noted to prevent large,
+    unnecessarily complex solutions from being introduced. The idea is that the larger
+    the code base, the more there is to review and maintain. Therefore, we should aim
+    to find a compromise where we can keep the code base from becoming too large
+    without adding convoluted complexity.</li>
 </ul>
 <ul>
-<li><strong>Performance</strong>: Performance drawbacks should be avoided, controlled, or, at least, be properly monitored and justified. For instance: memory management, garbage collection, disk reads/writes, and processing overhead should be regarded to ensure that an efficient solution is achieved.</li>
+<li><strong>Performance</strong>: Performance drawbacks should be avoided, controlled, or, at least, be
+    properly monitored and justified. For instance: memory management, garbage
+    collection, disk reads/writes, and processing overhead should be regarded to ensure
+    that an efficient solution is achieved.</li>
 </ul>
 <h2 id="automated-testing">Automated Testing<a class="headerlink" href="#automated-testing" title="Permanent link">&para;</a></h2>
-<p>All components and their revisions must include appropriate automated software testing to be considered for release. The core framework must undergo thorough performance evaluation and comprehensive integration testing.</p>
+<p>All components and their revisions must include appropriate automated software testing
+to be considered for release. The core framework must undergo thorough performance
+evaluation and comprehensive integration testing.</p>
 <p>Generally, this includes tests related to:</p>
 <ul>
-<li><strong>Syntax</strong>: Verify that the code base does not contain any syntax errors and will run or compile successfully.</li>
+<li><strong>Syntax</strong>: Verify that the code base does not contain any syntax errors and will run
+    or compile successfully.</li>
 </ul>
 <ul>
-<li><strong>Unit &amp; Integration</strong>: Verify that low-level, method-specific tests (unit tests) and any tests related coordinated interface between methods (integration tests) pass successfully. Typically, when bugs are patched or features are introduced, unit and integration tests are added to ensure that the use-case intended to be satisfied is accounted for. This helps us prevent any regression in functionality.</li>
+<li><strong>Unit &amp; Integration</strong>: Verify that low-level, method-specific tests (unit tests) and
+    any tests related coordinated interface between methods (integration tests) pass
+    successfully. Typically, when bugs are patched or features are introduced, unit and
+    integration tests are added to ensure that the use-case intended to be satisfied is
+    accounted for. This helps us prevent any regression in functionality.</li>
 </ul>
 <ul>
 <li><strong>Style</strong>: Verify that the code base adheres to style guides for optimal readability.</li>
 </ul>
 <ul>
-<li><strong>Code Coverage</strong>: Verify that the code base has similar or better code coverage than the last run.</li>
+<li><strong>Code Coverage</strong>: Verify that the code base has similar or better code coverage than
+    the last run.</li>
 </ul>
 <h2 id="code-reviews">Code Reviews<a class="headerlink" href="#code-reviews" title="Permanent link">&para;</a></h2>
-<p>When introducing new code to the code base, the following will be required for acceptance by DataJoint core team into the main code repository.</p>
+<p>When introducing new code to the code base, the following will be required for
+acceptance by DataJoint core team into the main code repository.</p>
 <ul>
 <li><strong>Independence</strong>: Proposed changes should not directly alter the code base in the review process. New changes should be applied separately on a copy of the code base and proposed for review by the DataJoint core team. For example, apply changes on a GitHub fork and open a pull request targeting the <code>main</code> branch once ready for review.</li>
 </ul>
 <ul>
-<li><strong>Etiquette</strong>: An author who has requested for a code for review should not accept and merge their own code to the code base. A reviewer should not commit any suggestions directly to the authors proposed changes but rather should allow the author to review.</li>
+<li><strong>Etiquette</strong>: An author who has requested for a code for review should not accept and
+    merge their own code to the code base. A reviewer should not commit any suggestions
+    directly to the authors proposed changes but rather should allow the author to
+    review.</li>
 </ul>
 <ul>
 <li><strong>Coding Standards</strong>: Ensure the above coding standards are respected.</li>
 </ul>
 <ul>
-<li><strong>Summary</strong>: A description should be included that summarizes and highlights the notable changes that are being proposed.</li>
+<li><strong>Summary</strong>: A description should be included that summarizes and highlights the
+    notable changes that are being proposed.</li>
 </ul>
 <ul>
-<li><strong>Issue Reference</strong>: Any bugs or feature requests that have been filed in the issue tracker that would be resolved by acceptance should be properly linked and referenced.</li>
+<li><strong>Issue Reference</strong>: Any bugs or feature requests that have been filed in the issue
+    tracker that would be resolved by acceptance should be properly linked and
+    referenced.</li>
 </ul>
 <ul>
 <li><strong>Satisfy Automated Tests</strong>: All automated tests associated with the project will be verified to be successful prior to acceptance.</li>
 </ul>
 <ul>
-<li><strong>Documentation</strong>: Documentation should be included to reflect any new feature or behavior introduced.</li>
+<li><strong>Documentation</strong>: Documentation should be included to reflect any new feature or
+    behavior introduced.</li>
 </ul>
 <ul>
-<li><strong>Release Notes</strong>: Include necessary updates to the release notes or change log to capture a summary of the patched bugs and new feature introduction. Proper linking should be maintained to associated tickets in issue tracker and reviews.</li>
+<li><strong>Release Notes</strong>: Include necessary updates to the release notes or change log to
+    capture a summary of the patched bugs and new feature introduction. Proper linking
+    should be maintained to associated tickets in issue tracker and reviews.</li>
 </ul>
 <h2 id="release-process">Release Process<a class="headerlink" href="#release-process" title="Permanent link">&para;</a></h2>
-<p>Upon satisfactory adherence to the above Coding Standards, Automated Testing, and Code Reviews:</p>
+<p>Upon satisfactory adherence to the above Coding Standards, Automated Testing, and Code
+Reviews:</p>
 <ul>
-<li>The package version will be incremented following the standard definition of <a href="https://semver.org/spec/v2.0.0.html">Semantic Versioning</a> with a <code>Major.Minor.Patch</code> number.</li>
+<li>The package version will be incremented following the standard definition of
+  <a href="https://semver.org/spec/v2.0.0.html">Semantic Versioning</a> with a <code>Major.Minor.Patch</code>
+  number.</li>
 </ul>
 <ul>
 <li>Updates will be merged into the base repository <code>main</code> branch.</li>
@@ -1394,9 +1429,20 @@
 <ul>
 <li>A new release will be made on PyPI.</li>
 </ul>
-<p>For external research teams that reach out to us, we will provide engineering support to help users adopt the updated software, collect feedback, and resolve issues following the processes described in the section below. If the updates require changes in the design of the database schema or formats, a process for data migration will be provided upon request.</p>
+<p>For external research teams that reach out to us, we will provide engineering support to
+help users adopt the updated software, collect feedback, and resolve issues following
+the processes described in the section below. If the updates require changes in the
+design of the database schema or formats, a process for data migration will be provided
+upon request.</p>
 <h2 id="user-feedback-issue-tracking">User Feedback &amp; Issue Tracking<a class="headerlink" href="#user-feedback-issue-tracking" title="Permanent link">&para;</a></h2>
-<p>All components will be organized in GitHub repositories with guidelines for contribution, feedback, and issue submission to the issue tracker. For more information on the general policy around issue filing, tracking, and escalation, see the <a href="../../../community/contribution">DataJoint Open-Source Contribute</a> policy. For research groups that reach out to us, our team will work closely to collect feedback and resolve issues. Typically issues will be prioritized based on their criticality and impact. If new feature requirements become apparent, this may trigger the creation of a separate workflow or a major revision of an existing workflow.</p>
+<p>All components will be organized in GitHub repositories with guidelines for
+contribution, feedback, and issue submission to the issue tracker. For more information
+on the general policy around issue filing, tracking, and escalation, see the
+<a href="../../../community/contribution">DataJoint Open-Source Contribute</a> policy. For
+research groups that reach out to us, our team will work closely to collect feedback
+and resolve issues. Typically issues will be prioritized based on their criticality and
+impact. If new feature requirements become apparent, this may trigger the creation of a
+separate workflow or a major revision of an existing workflow.</p>
 
 
 
