@@ -1,6 +1,4 @@
----
-title: Primary Key
----
+# Primary Key
 
 # Primary keys in DataJoint
 

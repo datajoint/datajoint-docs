@@ -1,6 +1,4 @@
----
-title: Database Server Hosting
----
+# Database Server Hosting
 
 Let’s say a person, a lab, or a multi-lab consortium decide to use
 DataJoint as their data pipeline platform. What IT resources and support

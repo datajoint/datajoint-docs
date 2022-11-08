@@ -1,6 +1,4 @@
----
-title: Key Source
----
+# Key Source
 
 # Default key source
 

@@ -1,6 +1,4 @@
----
-title: External Store
----
+# External Store
 
 DataJoint organizes most of its data in a relational database.
 Relational databases excel at representing relationships between
@@ -14,7 +12,7 @@ should not be put in the relational database. In addition, storing data
 in cloud-hosted relational databases (e.g. AWS RDS) may be more
 expensive than in cloud-hosted simple storage systems (e.g. AWS S3).
 
-DataJoint allows the use of <span class="title-ref">external</span>
+DataJoint allows the use of external
 storage to store large data objects within its relational framework but
 outside of the main database.
 
@@ -38,12 +36,9 @@ movies.
 aligned_movie :  blob@external  # motion-aligned movie in 'external' store
 ```
 
-All `insert <insert>` and `fetch <fetch>` operations work identically
-for <span class="title-ref">external</span> attributes as they do for
-<span class="title-ref">blob</span> attributes, with the same
-serialization protocol. Similar to <span class="title-ref">blobs</span>,
-<span class="title-ref">external</span> attributes cannot be used in
-restriction conditions.
+All `insert <insert>` and `fetch <fetch>` operations work identically for external
+attributes as they do for blob attributes, with the same serialization protocol.
+Similar to blobs, external attributes cannot be used in restriction conditions.
 
 Multiple external storage configurations may be used simultaneously with
 the `@storename` portion of the attribute definition determining the
@@ -67,46 +62,28 @@ preserve the same data integrity principles as in relational storage.
 
 === "Python"
 
-{{BEGIN INDENT}}
-
-``` python
-dj.config['stores'] = {
-  'external': dict(  # 'regular' external storage for this pipeline
-                protocol='s3',
-                endpoint='s3.amazonaws.com:9000',
-                bucket = 'testbucket',
-                location = 'datajoint-projects/lab1',
-                access_key='1234567',
-                secret_key='foaf1234'),
-  'external-raw': dict( # 'raw' storage for this pipeline
-                protocol='file',
-                location='/net/djblobs/myschema')
-}
-# external object cache - see fetch operation below for details.
-dj.config['cache'] = '/net/djcache'
-```
-
-{{END INDENT}}
+    ``` python
+    dj.config['stores'] = {
+      'external': dict(  # 'regular' external storage for this pipeline
+                    protocol='s3',
+                    endpoint='s3.amazonaws.com:9000',
+                    bucket = 'testbucket',
+                    location = 'datajoint-projects/lab1',
+                    access_key='1234567',
+                    secret_key='foaf1234'),
+      'external-raw': dict( # 'raw' storage for this pipeline
+                    protocol='file',
+                    location='/net/djblobs/myschema')
+    }
+    # external object cache - see fetch operation below for details.
+    dj.config['cache'] = '/net/djcache'
+    ```
 
 === "Matlab"
 
-{{BEGIN INDENT}}
-
-<div class="note">
-
-<div class="title">
-
-Note
-
-</div>
-
-External storage is not yet implemented in MATLAB. The feature will be
-added in an upcoming release:
-<https://github.com/datajoint/datajoint-matlab/issues/143>
-
-</div>
-
-{{END INDENT}}
+    Note: External storage is not yet implemented in MATLAB. The feature will be
+    added in an upcoming release:
+    <https://github.com/datajoint/datajoint-matlab/issues/143>
 
 2.  Each schema corresponds to a dedicated folder at the storage
     location with the same name as the database schema.
@@ -143,8 +120,7 @@ added in an upcoming release:
 
     \~external_raw
 
-    The fields <span class="title-ref">filepath</span> and <span
-    class="title-ref">contents_hash</span> relate to the
+    The fields filepath and contents_hash relate to the
     `filepath <filepath>` datatype, which will be discussed separately.
 
 7.  Attributes of type `@<storename>` are declared as renamed
@@ -160,15 +136,14 @@ added in an upcoming release:
 
 9.  The `delete <delete>` operation first deletes the foreign key
     reference in the target table. The external table entry and actual
-    external object is not actually deleted at this time (<span
-    class="title-ref">soft-delete</span>).
+    external object is not actually deleted at this time (soft-delete).
 
 10\. The `fetch <fetch>` operation uses the hash values to find the data.  
 In order to prevent excessive network overhead, a special external store
 named `cache` can be configured. If the `cache` is enabled, the `fetch`
 operation need not access `~external_<storename>` directly. Instead
 `fetch` will retrieve the cached object without downloading directly
-from the <span class="title-ref">real</span> external store.
+from the real external store.
 
 11. Cleanup is performed regularly when the database is in light use or
     off-line.
@@ -194,173 +169,92 @@ The following steps must be performed to enable external storage:
 1.  Assign external location settings for each storage as shown in the
     `Step 1 <principles>` example above.
 
-> === "Python"
->
-> {{BEGIN INDENT}}
->
-> Use `dj.config` for configuration.
->
-> {{END INDENT}}
->
-> === "Matlab"
->
-> {{BEGIN INDENT}}
->
-> Use `dj.config` for configuration.
->
-> {{END INDENT}}
->
-> -   `protocol` \[<span class="title-ref">s3</span>, <span
->     class="title-ref">file</span>\] Specifies whether <span
->     class="title-ref">s3</span> or <span class="title-ref">file</span>
->     external storage is desired.
-> -   `endpoint` \[<span class="title-ref">s3</span>\] Specifies the
->     remote endpoint to the external data for all schemas as well as
->     the target port.
-> -   `bucket` \[<span class="title-ref">s3</span>\] Specifies the
->     appropriate <span class="title-ref">s3</span> bucket organization.
-> -   `location` \[<span class="title-ref">s3</span>, <span
->     class="title-ref">file</span>\] Specifies the subdirectory within
->     the root or bucket of store to preserve data. External objects are
->     thus stored remotely with the following path structure:
->     `<bucket (if applicable)>/<location>/<schema_name>/<subfolding_strategy>/<object>`.
-> -   `access_key` \[<span class="title-ref">s3</span>\] Specifies the
->     access key credentials for accessing the external location.
-> -   `secret_key` \[<span class="title-ref">s3</span>\] Specifies the
->     secret key credentials for accessing the external location.
-> -   `secure` \[<span class="title-ref">s3</span>\] Optional
->     specification to establish secure external storage connection with
->     TLS (aka SSL, HTTPS). Defaults to `False`.
+ === "Python"
+
+    Use `dj.config` for configuration.
+
+ === "Matlab"
+
+     Use `dj.config` for configuration.
+
+     -   `protocol` s3, file Specifies whether s3 or file external storage is desired.
+     -   `endpoint` s3 Specifies the
+         remote endpoint to the external data for all schemas as well as
+         the target port.
+     -   `bucket` s3 Specifies the
+         appropriate s3 bucket organization.
+     -   `location` s3, file Specifies the subdirectory within
+         the root or bucket of store to preserve data. External objects are
+         thus stored remotely with the following path structure:
+         `<bucket (if applicable)>/<location>/<schema_name>/<subfolding_strategy>/<object>`.
+     -   `access_key` s3 Specifies the
+         access key credentials for accessing the external location.
+     -   `secret_key` s3 Specifies the
+         secret key credentials for accessing the external location.
+     -   `secure` s3 Optional
+         specification to establish secure external storage connection with
+         TLS (aka SSL, HTTPS). Defaults to `False`.
 
 2.  Optionally, for each schema specify the `cache` folder for local
     fetch cache.
 
 === "Python"
 
-{{BEGIN INDENT}}
-
-> This is done by saving the path in the `cache` key of the DataJoint
-> configuration dictionary:
->
-> ``` python
-> dj.config['cache'] = '/temp/dj-cache'
-> ```
-
-{{END INDENT}}
+    > This is done by saving the path in the `cache` key of the DataJoint
+    > configuration dictionary:
+    >
+    > ``` python
+    > dj.config['cache'] = '/temp/dj-cache'
+    > ```
 
 === "Matlab"
 
-{{BEGIN INDENT}}
-
-<div class="note">
-
-<div class="title">
-
-Note
-
-</div>
-
-The cache folder is not yet implemented in MATLAB. The feature will be
-added in an upcoming release:
-<https://github.com/datajoint/datajoint-matlab/issues/143>
-
-</div>
-
-{{END INDENT}}
+    Note: The cache folder is not yet implemented in MATLAB. The feature will be
+    added in an upcoming release:
+    <https://github.com/datajoint/datajoint-matlab/issues/143>
 
 # Cleanup
 
-Deletion of records containing externally stored blobs is a <span
-class="title-ref">soft-delete</span> which only removes the
-database-side records from the database. To cleanup the external
-tracking table or the actual external files, a separate process is
-provided as follows.
+Deletion of records containing externally stored blobs is a soft-delete which only
+removes the database-side records from the database. To cleanup the external tracking
+table or the actual external files, a separate process is provided as follows.
 
 === "Python"
 
-{{BEGIN INDENT}}
+    To remove only the tracking entries in the external table, call `delete`
+    on the `~external_<storename>` table for the external configuration with
+    the argument `delete_external_files=False`.
 
-To remove only the tracking entries in the external table, call `delete`
-on the `~external_<storename>` table for the external configuration with
-the argument `delete_external_files=False`.
+    Note: Currently, cleanup operations on a schema's external table are not 100%
+    transaction safe and so must be run when there is no write activity
+    occurring in tables which use a given schema / external store pairing.
 
-<div class="note">
+    ``` python
+    >>> schema.external['external_raw'].delete(delete_external_files=False)
+    ```
 
-<div class="title">
+    To remove the tracking entries as well as the underlying files, call
+    delete on the external table for the
+    external configuration with the argument delete_external_files=True.
 
-Note
+    ``` python
+    >>> schema.external['external_raw'].delete(delete_external_files=True)
+    ```
 
-</div>
-
-Currently, cleanup operations on a schema's external table are not 100%
-transaction safe and so must be run when there is no write activity
-occurring in tables which use a given schema / external store pairing.
-
-</div>
-
-``` python
->>> schema.external['external_raw'].delete(delete_external_files=False)
-```
-
-To remove the tracking entries as well as the underlying files, call
-<span class="title-ref">delete</span> on the external table for the
-external configuration with the argument <span
-class="title-ref">delete_external_files=True</span>.
-
-``` python
->>> schema.external['external_raw'].delete(delete_external_files=True)
-```
-
-<div class="note">
-
-<div class="title">
-
-Note
-
-</div>
-
-Setting `delete_external_files=True` will always attempt to delete the
-underlying data file, and so should not typically be used with the
-`filepath` datatype.
-
-</div>
-
-{{END INDENT}}
+    Note: Setting `delete_external_files=True` will always attempt to delete the
+    underlying data file, and so should not typically be used with the
+    `filepath` datatype.
 
 === "Matlab"
 
-{{BEGIN INDENT}}
-
-<div class="note">
-
-<div class="title">
-
-Note
-
-</div>
-
-External storage is not yet implemented in MATLAB. The feature will be
-added in an upcoming release:
-<https://github.com/datajoint/datajoint-matlab/issues/143>
-
-</div>
-
-{{END INDENT}}
+    Note: External storage is not yet implemented in MATLAB. The feature will be
+    added in an upcoming release:
+    <https://github.com/datajoint/datajoint-matlab/issues/143>
 
 # Migration between DataJoint v0.11 and v0.12
 
-<div class="note">
-
-<div class="title">
-
-Note
-
-</div>
-
-Please read carefully if you have used external storage in DataJoint
+Note: Please read carefully if you have used external storage in DataJoint
 v0.11!
-
-</div>
 
 The initial implementation of external storage was reworked for
 DataJoint v0.12. These changes are backward-incompatible with DataJoint
@@ -370,15 +264,15 @@ compatible with DataJoint v0.12 when a schema rebuild is not desired.
 
 The primary changes to the external data implementation are:
 
-> -   The external object tracking mechanism was modified. Tracking
->     tables were extended for additional external datatypes and split
->     into per-store tables to improve database performance in schemas
->     with many external objects.
-> -   The external storage format was modified to use a nested subfolder
->     structure (<span class="title-ref">folding</span>) to improve
->     performance and interoperability with some filesystems that have
->     limitations or performance problems when storing large numbers of
->     files in single directories.
+ -   The external object tracking mechanism was modified. Tracking
+     tables were extended for additional external datatypes and split
+     into per-store tables to improve database performance in schemas
+     with many external objects.
+ -   The external storage format was modified to use a nested subfolder
+     structure (folding) to improve
+     performance and interoperability with some filesystems that have
+     limitations or performance problems when storing large numbers of
+     files in single directories.
 
 Depending on the circumstances, the simplest way to migrate data to
 v0.12 may be to drop and repopulate the affected schemas. This will
@@ -387,57 +281,45 @@ the need for database migration. When recreation is not possible or is
 not preferred to upgrade to DataJoint v0.12, the following process
 should be followed:
 
-> 1)  Stop write activity to all schemas using external storage.
-> 2)  Perform a full backup of your database(s).
-> 3)  Upgrade your DataJoint installation to v0.12
-> 4)  Adjust your external storage configuration (in <span
->     class="title-ref">datajoint.config</span>) to the new v0.12
->     configuration format (see above).
-> 5)  Migrate external tracking tables for each schema to use the new
->     format. For instance in Python:
+ 1)  Stop write activity to all schemas using external storage.
+ 2)  Perform a full backup of your database(s).
+ 3)  Upgrade your DataJoint installation to v0.12
+ 4)  Adjust your external storage configuration (in datajoint.config) to the new v0.12
+     configuration format (see above).
+ 5)  Migrate external tracking tables for each schema to use the new
+     format. For instance in Python:
 
 ``` python
->>> import datajoint.migrate as migrate
->>> db_schema_name='schema_1'
->>> external_store='raw'
->>> migrate.migrate_dj011_external_blob_storage_to_dj012(db_schema_name, external_store)
+>> import datajoint.migrate as migrate
+>> db_schema_name='schema_1'
+>> external_store='raw'
+>> migrate.migrate_dj011_external_blob_storage_to_dj012(db_schema_name, external_store)
 
 6) Verify pipeline functionality after this process has completed. For instance in Python:
 ```
 
 ``` python
->>> x = myschema.TableWithExternal.fetch('external_field', limit=1)[0]
+>> x = myschema.TableWithExternal.fetch('external_field', limit=1)[0]
 ```
 
-<div class="note">
-
-<div class="title">
-
-Note
-
-</div>
-
-This migration function is provided on a best-effort basis, and will
+Note: This migration function is provided on a best-effort basis, and will
 convert the external tracking tables into a format which is compatible
 with DataJoint v0.12. While we have attempted to ensure correctness of
 the process, all use-cases have not been heavily tested. Please be sure
 to fully back-up your data and be prepared to investigate problems with
 the migration, should they occur.
 
-</div>
-
 Please note:
 
-> -   The migration only migrates the tracking table format and does not
->     modify the backing file structure to support <span
->     class="title-ref">folding</span>. The DataJoint v0.12 logic is
->     able to work with this format, but to take advantage of the new
->     backend storage, manual adjustment of the tracking table and
->     files, or a full rebuild of the schema should be performed.
-> -   Additional care to ensure all clients are using v0.12 should be
->     taken after the upgrade. Legacy clients may incorrectly create
->     data in the old format which would then need to be combined or
->     otherwise reconciled with the data in v0.12 format. You might wish
->     to take the opportunity to version-pin your installations so that
->     future changes requiring controlled upgrades can be coordinated on
->     a system wide basis.
+ -   The migration only migrates the tracking table format and does not
+     modify the backing file structure to support folding. The DataJoint v0.12 logic is
+     able to work with this format, but to take advantage of the new
+     backend storage, manual adjustment of the tracking table and
+     files, or a full rebuild of the schema should be performed.
+ -   Additional care to ensure all clients are using v0.12 should be
+     taken after the upgrade. Legacy clients may incorrectly create
+     data in the old format which would then need to be combined or
+     otherwise reconciled with the data in v0.12 format. You might wish
+     to take the opportunity to version-pin your installations so that
+     future changes requiring controlled upgrades can be coordinated on
+     a system wide basis.

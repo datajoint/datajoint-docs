@@ -1,6 +1,4 @@
----
-title: Input and Output
----
+# Input and Output
 
 # Where is my data?
 

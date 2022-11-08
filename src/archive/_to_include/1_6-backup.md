@@ -1,6 +1,4 @@
----
-title: Backups and Recovery
----
+# Backups and Recovery
 
 Backing up your DataJoint installation is critical to ensuring that your
 work is safe and can be continued in the event of system failures, and

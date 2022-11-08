@@ -219,11 +219,17 @@ For union, order does not matter.
 
 All of the above operators are designed to preserve their input type. Some queries may
 require creating a new entity type not already represented by existing tables. This
-means that the new type must be defined as part of the query. Universal sets fulfill
-this role using `dj.U` notation. They denote the set of all possible entities with
-given attributes of any possible datatype. Attributes of universal sets are allowed to
-be matched to any namesake attributes, even those that do not come from the same
-initial source.
+means that the new type must be defined as part of the query. 
+
+Universal sets fulfill this role using `dj.U` notation. They denote the set of all
+possible entities with given attributes of any possible datatype. Attributes of
+universal sets are allowed to be matched to any namesake attributes, even those that do
+not come from the same initial source.
+
+Universal sets should be used sparingly when no suitable base tables already exist. In
+some cases, defining a new base table can make queries clearer and more semantically
+constrained.
+
 
 For examples in Python and Matlab, please visit the documentation for the respective
 API.

@@ -1,6 +1,4 @@
----
-title: Bulk Storage Systems
----
+# Bulk Storage Systems
 
 # Why External Bulk Storage?
 

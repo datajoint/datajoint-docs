@@ -1,6 +1,4 @@
----
-title: Relational Database Server
----
+# Relational Database Server
 
 # Hardware considerations
 

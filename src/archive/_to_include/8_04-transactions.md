@@ -1,6 +1,4 @@
----
-title: Transactions in Make
----
+# Transactions in Make
 
 Each call of the `make <make>` method is enclosed in a transaction.
 DataJoint users do not need to explicitly manage transactions but must

@@ -1,6 +1,4 @@
----
-title: Terminology
----
+# Terminology
 
 DataJoint introduces a principled data model, which is described in
 detail in [Yatsenko et al., 2018](https://arxiv.org/abs/1807.11104).

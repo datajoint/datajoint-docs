@@ -1,6 +1,4 @@
----
-title: Distributed Computing
----
+# Distributed Computing
 
 # Job reservations
 

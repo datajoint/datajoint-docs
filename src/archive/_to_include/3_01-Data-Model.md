@@ -1,6 +1,4 @@
----
-title: Data Model
----
+# Data Model
 
 # What is a data model?
 

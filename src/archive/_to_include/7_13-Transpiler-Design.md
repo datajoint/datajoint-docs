@@ -1,6 +1,4 @@
----
-title: Transpiler Design
----
+# Transpiler Design
 
 This section contains the information and reasoning that went into the design of the
 DataJoint-to-SQL transpiler.

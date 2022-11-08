@@ -1,6 +1,4 @@
----
-title: External Data
----
+# External Data
 
 # File Attachment Datatype
 

@@ -1,6 +1,4 @@
----
-title: Data Integrity
----
+# Data Integrity
 
 The term **data integrity** describes guarantees made by the data
 management process that prevent errors and corruption in data due to
@@ -103,59 +101,51 @@ relationship, as in the example below.
 
 === "Python"
 
-{{BEGIN INDENT}}
+    ``` python
+    @schema
+    class Mouse(dj.Manual):
+      definition = """
+      mouse_name : varchar(64)
+      ---
+      mouse_dob : datetime
+      """
 
-``` python
-@schema
-class Mouse(dj.Manual):
-  definition = """
-  mouse_name : varchar(64)
-  ---
-  mouse_dob : datetime
-  """
-
-@schema
-class MouseDeath(dj.Manual):
-  definition = """
-  -> Mouse
-  ---
-  death_date : datetime
-  """
-```
-
-{{END INDENT}}
+    @schema
+    class MouseDeath(dj.Manual):
+      definition = """
+      -> Mouse
+      ---
+      death_date : datetime
+      """
+    ```
 
 === "Matlab"
 
-{{BEGIN INDENT}}
+    `+test/Mouse.m`
 
-`+test/Mouse.m`
+    ``` matlab
+    %{
+    mouse_name : varchar(64)
+    ---
+    mouse_dob : datetime
+    %}
 
-``` matlab
-%{
-mouse_name : varchar(64)
----
-mouse_dob : datetime
-%}
+    classdef Mouse < dj.Manual
+    end
+    ```
 
-classdef Mouse < dj.Manual
-end
-```
+    `+test/MouseDeath.m`
 
-`+test/MouseDeath.m`
+    ``` matlab
+    %{
+    -> test.Mouse
+    ---
+    death_date : datetime
+    %}
 
-``` matlab
-%{
--> test.Mouse
----
-death_date : datetime
-%}
-
-classdef MouseDeath < dj.Manual
-end
-```
-
-{{END INDENT}}
+    classdef MouseDeath < dj.Manual
+    end
+    ```
 
 ![](../_static/img/doc_1-1.png)
 
@@ -166,65 +156,57 @@ multi-channel recordings, representing a one-to-many relationship.
 
 === "Python"
 
-{{BEGIN INDENT}}
+    ``` python
+    @schema
+    class EEGRecording(dj.Manual):
+      definition = """
+      -> Session
+      eeg_recording_id : int
+      ---
+      eeg_system : varchar(64)
+      num_channels : int
+      """
 
-``` python
-@schema
-class EEGRecording(dj.Manual):
-  definition = """
-  -> Session
-  eeg_recording_id : int
-  ---
-  eeg_system : varchar(64)
-  num_channels : int
-  """
-
-@schema
-class ChannelData(dj.Imported):
-  definition = """
-  -> EEGRecording
-  channel_idx : int
-  ---
-  channel_data : longblob
-  """
-```
-
-{{END INDENT}}
+    @schema
+    class ChannelData(dj.Imported):
+      definition = """
+      -> EEGRecording
+      channel_idx : int
+      ---
+      channel_data : longblob
+      """
+    ```
 
 === "Matlab"
 
-{{BEGIN INDENT}}
+    `+test/EEGRecording.m`
 
-`+test/EEGRecording.m`
+    ``` matlab
+    %{
+    -> test.Session
+    eeg_recording_id : int
+    ---
+    eeg_system : varchar(64)
+    num_channels : int
+    %}
 
-``` matlab
-%{
--> test.Session
-eeg_recording_id : int
----
-eeg_system : varchar(64)
-num_channels : int
-%}
+    classdef EEGRecording < dj.Manual
+    end
+    ```
 
-classdef EEGRecording < dj.Manual
-end
-```
+    `+test/ChannelData.m`
 
-`+test/ChannelData.m`
+    ``` matlab
+    %{
+    -> test.EEGRecording
+    channel_idx : int
+    ---
+    channel_data : longblob
+    %}
 
-``` matlab
-%{
--> test.EEGRecording
-channel_idx : int
----
-channel_data : longblob
-%}
-
-classdef ChannelData < dj.Imported
-end
-```
-
-{{END INDENT}}
+    classdef ChannelData < dj.Imported
+    end
+    ```
 
 ![](../_static/img/doc_1-many.png)
 
@@ -239,77 +221,69 @@ entities in `GroupMember`.
 
 === "Python"
 
-{{BEGIN INDENT}}
+    ``` python
+    @schema
+    class Mouse(dj.Manual):
+      definition = """
+      mouse_name : varchar(64)
+      ---
+      mouse_dob : datetime
+      """
 
-``` python
-@schema
-class Mouse(dj.Manual):
-  definition = """
-  mouse_name : varchar(64)
-  ---
-  mouse_dob : datetime
-  """
+    @schema
+    class SubjectGroup(dj.Manual):
+      definition = """
+      group_number : int
+      ---
+      group_name : varchar(64)
+      """
 
-@schema
-class SubjectGroup(dj.Manual):
-  definition = """
-  group_number : int
-  ---
-  group_name : varchar(64)
-  """
-
-  class GroupMember(dj.Part):
-    definition = """
-    -> master
-    -> Mouse
-    """
-```
-
-{{END INDENT}}
+      class GroupMember(dj.Part):
+        definition = """
+        -> master
+        -> Mouse
+        """
+    ```
 
 === "Matlab"
 
-{{BEGIN INDENT}}
+    `+test/Mouse.m`
 
-`+test/Mouse.m`
+    ``` matlab
+    %{
+    mouse_name : varchar(64)
+    ---
+    mouse_dob : datetime
+    %}
 
-``` matlab
-%{
-mouse_name : varchar(64)
----
-mouse_dob : datetime
-%}
+    classdef Mouse < dj.Manual
+    end
+    ```
 
-classdef Mouse < dj.Manual
-end
-```
+    `+test/SubjectGroup.m`
 
-`+test/SubjectGroup.m`
+    ``` matlab
+    %{
+    group_number : int
+    ---
+    group_name : varchar(64)
+    %}
 
-``` matlab
-%{
-group_number : int
----
-group_name : varchar(64)
-%}
+    classdef SubjectGroup < dj.Manual
+    end
+    ```
 
-classdef SubjectGroup < dj.Manual
-end
-```
+    `+test/SubjectGroupGroupMember.m`
 
-`+test/SubjectGroupGroupMember.m`
+    ``` matlab
+    %{
+    -> test.SubjectGroup
+    -> test.Mouse
+    %}
 
-``` matlab
-%{
--> test.SubjectGroup
--> test.Mouse
-%}
-
-classdef SubjectGroupGroupMember < dj.Part
-end
-```
-
-{{END INDENT}}
+    classdef SubjectGroupGroupMember < dj.Part
+    end
+    ```
 
 ![](../_static/img/doc_many-1.png)
 
@@ -324,71 +298,63 @@ third table represent the modes used for each session.
 
 === "Python"
 
-{{BEGIN INDENT}}
+    ``` python
+    @schema
+    class RecordingModality(dj.Lookup):
+      definition = """
+      modality : varchar(64)
+      """
 
-``` python
-@schema
-class RecordingModality(dj.Lookup):
-  definition = """
-  modality : varchar(64)
-  """
+    @schema
+    class MultimodalSession(dj.Manual):
+      definition = """
+      -> Session
+      modes : int
+      """
 
-@schema
-class MultimodalSession(dj.Manual):
-  definition = """
-  -> Session
-  modes : int
-  """
-
-  class SessionMode(dj.Part):
-    definition = """
-    -> master
-    -> RecordingModality
-    """
-```
-
-{{END INDENT}}
+      class SessionMode(dj.Part):
+        definition = """
+        -> master
+        -> RecordingModality
+        """
+    ```
 
 === "Matlab"
 
-{{BEGIN INDENT}}
+    `+test/RecordingModality.m`
 
-`+test/RecordingModality.m`
+    ``` matlab
+    %{
+    modality : varchar(64)
+    %}
 
-``` matlab
-%{
-modality : varchar(64)
-%}
+    classdef RecordingModality < dj.Lookup
+    end
+    ```
 
-classdef RecordingModality < dj.Lookup
-end
-```
+    `+test/MultimodalSession.m`
 
-`+test/MultimodalSession.m`
+    ``` matlab
+    %{
+    -> test.Session
+    modes : int
+    %}
 
-``` matlab
-%{
--> test.Session
-modes : int
-%}
+    classdef MultimodalSession < dj.Manual
+    end
+    ```
 
-classdef MultimodalSession < dj.Manual
-end
-```
+    `+test/MultimodalSessionSessionMode.m`
 
-`+test/MultimodalSessionSessionMode.m`
+    ``` matlab
+    %{
+    -> test.MultimodalSession
+    -> test.RecordingModality
+    %}
 
-``` matlab
-%{
--> test.MultimodalSession
--> test.RecordingModality
-%}
-
-classdef MultimodalSessionSessionMode < dj.Part
-end
-```
-
-{{END INDENT}}
+    classdef MultimodalSessionSessionMode < dj.Part
+    end
+    ```
 
 ![](../_static/img/doc_many-many.png)
 

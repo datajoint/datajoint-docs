@@ -1,6 +1,4 @@
----
-title: Teamwork
----
+# Teamwork
 
 # Data management in a science project
 

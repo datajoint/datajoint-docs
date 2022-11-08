@@ -1,6 +1,4 @@
----
-title: Example Schema
----
+# Example Schema
 
 The example schema below contains data for a university enrollment
 system. Information about students, departments, courses, etc. are
@@ -8,15 +6,7 @@ organized in multiple tables.
 
 === "Python"
 
-  <div class="warning">
-
-  <div class="title">
-
-  Warning
-
-  </div>
-
-  Empty primary keys, such as in the `CurrentTerm` table, are not yet
+  Warning: Empty primary keys, such as in the `CurrentTerm` table, are not yet
   supported by DataJoint. This feature will become available in a future
   release. See [Issue
   \#113](https://github.com/datajoint/datajoint-python/issues/113) for
@@ -120,15 +110,7 @@ organized in multiple tables.
 
 === "Matlab"
 
-  <div class="warning">
-
-  <div class="title">
-
-  Warning
-
-  </div>
-
-  Empty primary keys, such as in the `CurrentTerm` table, are not yet
+  Warning: Empty primary keys, such as in the `CurrentTerm` table, are not yet
   supported by DataJoint. This feature will become available in a future
   release. See [Issue
   \#127](https://github.com/datajoint/datajoint-matlab/issues/127) for
