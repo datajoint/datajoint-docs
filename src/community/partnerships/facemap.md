@@ -3,11 +3,12 @@
 ## Sustainability Roadmap between DataJoint Elements and Facemap
 
 <figure markdown>
-  ![Elements](../../images/elements-logo.png){: style="width:300px"}
-  ![facemap](../../images/facemap-logo.png){: style="width:150px"}
+  ![Elements](../../images/_elements-logo.png){: style="width:300px"}
+  ![facemap](../../images/community-partnerships-facemap-logo.png){: style="width:150px"}
 </figure>
 
 ## Aim
+
 **DataJoint Elements** and **Facemap** are two neuroinformatics initiatives in active
 development. The projects develop independently yet they have complementary aims and
 overlapping user communities. This document establishes key processes for coordinating
@@ -18,11 +19,11 @@ across the two ecosystems.
 
 ### DataJoint
 
-**DataJoint Elements** — https://datajoint.com/docs/elements/ — is a collection of open-source
-  reference database schemas and analysis workflows for neurophysiology experiments, 
-  supported by **DataJoint** — https://datajoint.com/docs/core/ — an open-source software 
-  framework. The project is funded by the NIH grant U24 NS116470 and led by Dr. Dimitri 
-  Yatsenko.
+**DataJoint Elements** — https://datajoint.com/docs/elements/ — is a collection of
+  open-source reference database schemas and analysis workflows for neurophysiology
+  experiments, supported by **DataJoint** — https://datajoint.com/docs/core/ — an
+  open-source software framework. The project is funded by the NIH grant U24 NS116470
+  and led by Dr. Dimitri Yatsenko.
   
 The principal developer of DataJoint Elements and the DataJoint framework is the company
 DataJoint — https://datajoint.com.
@@ -95,5 +96,5 @@ and Facemap.
 ## Citation
 
 If you use Facemap please cite 
-[Stringer*, Pachitariu*, et al., Science 2019](https://doi.org/10.1126%2Fscience.aav7893) in 
-your publications.
+[Stringer*, Pachitariu*, et al., Science 2019](https://doi.org/10.1126%2Fscience.aav7893)
+in your publications.

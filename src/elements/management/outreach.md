@@ -5,7 +5,7 @@ integration, and adoption of the Resource components.
 
 We conduct five types of outreach activities that require different approaches:
 
-# 1. Precursor Projects
+## 1. Precursor Projects
 
 Our [Selection Process](../selection) requires a "Precursor Project" for any new
 experiment modality to be included in DataJoint Elements. A precursor project is a
@@ -25,16 +25,17 @@ attribution is given to the Precursor Project.
   neurophysiology data acquisition and analysis. Rather it aims to systematize and
   disseminate existing open-source tools proven in leading research projects.
 
-# 2. Tool Developers
+## 2. Tool Developers
 
 DataJoint pipelines rely on analysis tools, atlases, data standards, archives and
 catalogs, and other neuroinformatics resources developed and maintained by the broader
 scientific community. To ensure sustainability of the Resource, we reach out to the
 tool developer to establish joint sustainability roadmaps.
 
-# 3. Dissemination
+## 3. Dissemination
 
-We conduct activities to disseminate Resource components for adoption in diverse neuroscience labs. These activities include
+We conduct activities to disseminate Resource components for adoption in diverse
+neuroscience labs. These activities include
 
 - A central [website](https://datajoint.com/docs/elements/) for the Resource.
 - Conference talks, presentations, and workshops
@@ -44,9 +45,10 @@ We conduct activities to disseminate Resource components for adoption in diverse
 - Remote workshops and webinars
 - Online interactive tutorials hosted on [DataJoint CodeBook](https://codebook.datajoint.io).
 
-# 4. Census
+## 4. Census
 
-In order to measure the effectiveness of the Resource, we conduct several activities to estimate the adoption and use of the Resource components:
+In order to measure the effectiveness of the Resource, we conduct several activities to
+estimate the adoption and use of the Resource components:
 
 - A citation mechanism for individual components of the Resource.
 
