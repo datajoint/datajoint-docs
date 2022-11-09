@@ -45,7 +45,7 @@ key concepts, features, and capabilities of the relational model for the sake of
 convenient programming constructs in the language.
 
 In contrast, DataJoint implements a data model that is a refinement of the relational
-data model and that adheres to it faithfully without compromising its principles.
+data model without compromising its core principles of data representation and queries.
 DataJoint supports data integrity (entity integrity, referential integrity, and group
 integrity) and provides a fully capable relational query language. DataJoint remains
 absolutely data-centric, with the primary focus on the structure and integrity of the
