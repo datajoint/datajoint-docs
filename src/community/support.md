@@ -24,5 +24,5 @@ We have a general policy for DataJoint open-source [community engagement](
 
   + [Sign up for Office Hours!](https://docs.google.com/forms/d/e/1FAIpQLSeMhZtzQQWB47I8HfPcJ5_pFyMhZO284PLIblDfshe30dEuXw/viewform)
 
-For fully managed services, we invite you to visit the 
-[DataJoint Solutions](https://www.datajoint.com/solutions) page and request more information.
+For fully managed services, we invite you to visit 
+[DataJoint](https://www.datajoint.com) for solutions and request more information.
