@@ -1,9 +1,6 @@
-<!-- markdownlint-disable MD009 -->
-
 # Welcome to the DataJoint Documentation
 
-The DataJoint ecosystem is divided into 3 distinct areas: DataJoint Core, DataJoint
-Elements, and DataJoint Works.
+## DataJoint Ecosystem
 
 <div class="grid cards" markdown>
 
@@ -14,10 +11,15 @@ Elements, and DataJoint Works.
      Open-source clients for managing data pipelines.
 
      - DataJoint API for Python
+
      - DataJoint API for MATLAB
+
      - DataJoint Pharus
+
      - DataJoint LabBook
+
      - DataJoint SciViz
+
      - DataJoint Container Images
 
      [:octicons-arrow-right-24: Learn more](./core/)
@@ -37,5 +39,14 @@ Elements, and DataJoint Works.
      Managed services for neurophysiology built with DataJoint Core and DataJoint Elements.
 
      [:octicons-arrow-right-24: Learn more](./works/)
+
+</div>
+
+## Research supported by DataJoint
+
+<div class="grid cards" markdown>
+-   [**Projects**](./projects.md)
+
+-   [**Publications**](./publications.md)
 
 </div>
