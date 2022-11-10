@@ -1835,12 +1835,12 @@
 <p>Diagrams are a great way to visualize all or part of a pipeline and understand the flow
 of data. DataJoint diagrams are based on <strong>entity relationship diagram</strong> (ERD), with
 some minor departures fom this standard. </p>
-<p>Here, tables are depicted as nodes and <a href="./dependencies">dependencies</a> as directed edges
+<p>Here, tables are depicted as nodes and <a href="../dependencies">dependencies</a> as directed edges
 between them. The <code>draw</code> method plots the graph, with many other methods (
 <a href="https://datajoint.com/docs/core/datajoint-python/latest/api/datajoint/diagram/">Python</a>,
 <a href="https://github.com/datajoint/datajoint-matlab/blob/master/%2Bdj/ERD.m">Matlab</a>) to
 save or adjust the output.</p>
-<p>Because DataJoint pipelines are <a href="../../../glossary#dag">directional</a>, the tables at the
+<p>Because DataJoint pipelines are directional (see <a href="../../../glossary#dag">DAG</a>), the tables at the
 top will need to be populated first, followed by those tables one step below and so
 forth until the last table is populated at the bottom of the pipeline. The top of the
 pipeline tends to be dominated by Lookup and manual tables. The middle has many
@@ -1848,11 +1848,11 @@ imported tables, and the bottom has computed tables.</p>
 <h2 id="notation">Notation<a class="headerlink" href="#notation" title="Permanent link">&para;</a></h2>
 <p>DataJoint uses the following conventions:</p>
 <ul>
-<li>Tables are indicated as nodes in the graph. The corresponding class name is
-    indicated by each node.</li>
+<li><a href="../table-definitions">Tables</a> are indicated as nodes in the graph. The
+    corresponding class name is indicated by each node.</li>
 </ul>
 <ul>
-<li><a href="../reproduce-table-tiers">Table type</a> is indicated by colors and symbols, with some
+<li><a href="../../reproduce/table-tiers">Table type</a> is indicated by colors and symbols, with some
     differences across Python and Matlab: 
     - <strong>Lookup</strong>: gray, rectangle or asterisk
     - <strong>Manual</strong>: green, rectangle or square
@@ -1861,18 +1861,18 @@ imported tables, and the bottom has computed tables.</p>
     - <strong>Part</strong>: black dot with smaller font or black text</li>
 </ul>
 <ul>
-<li><a href="./dependencies">Dependencies</a> indicated as edges in the graph and always
+<li><a href="../dependencies">Dependencies</a> indicated as edges in the graph and always
     directed downward (see <a href="../../glossary#dag">DAG</a>)</li>
 </ul>
 <ul>
 <li>Dependency type is indicated by the line.<p>- <strong>Solid lines</strong>: The <a href="../../glossary#foreign-key">foreign key</a> in the
-    <a href="../../glossary#primary-key">primary key</a>.
-  - <strong>Dashed lines</strong>: The <a href="../../glossary#foreign-key">foreign key</a> outside the
-    <a href="../../glossary#primary-key">primary key</a>. 
-  - <strong>Thick line</strong>: The <a href="../../glossary#foreign-key">foreign key</a> the only item in
-    the <a href="../../glossary#primary-key">primary key</a>. This is a 1-to-1 relationship.
-  - <strong>Dot on the line</strong>: The <a href="../../glossary#foreign-key">foreign key</a> was renamed
-    via the <a href="../query-lang/operators#proj">projection</a></p>
+    <a href="../../glossary#primary-key">primary key</a>.</p>
+<p>- <strong>Dashed lines</strong>: The <a href="../../glossary#foreign-key">foreign key</a> outside the
+    <a href="../../glossary#primary-key">primary key</a>. </p>
+<p>- <strong>Thick line</strong>: The <a href="../../glossary#foreign-key">foreign key</a> the only item in
+    the <a href="../../glossary#primary-key">primary key</a>. This is a 1-to-1 relationship.</p>
+<p>- <strong>Dot on the line</strong>: The <a href="../../glossary#foreign-key">foreign key</a> was renamed
+    via the <a href="../../query-lang/operators#proj">projection</a></p>
 </li>
 </ul>
 <h2 id="example">Example<a class="headerlink" href="#example" title="Permanent link">&para;</a></h2>

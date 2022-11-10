@@ -1867,27 +1867,25 @@
 collections of related tables.</p>
 <p>The following commands declare a new schema and create the object named <code>schema</code> to
 reference the database schema.</p>
-<div class="tabbed-set tabbed-alternate" data-tabs="1:1"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">Python</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">Python</label><label for="__tabbed_1_2">Matlab</label></div>
 <div class="tabbed-content">
-<div class="tabbed-block"></div>
-</div>
-</div>
+<div class="tabbed-block">
 <div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">datajoint</span> <span class="k">as</span> <span class="nn">dj</span>
 <span class="n">schema</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">schema</span><span class="p">(</span><span class="s1">&#39;&lt;schema_name&gt;&#39;</span><span class="p">)</span>
 </code></pre></div>
 <p>We follow the convention of having only one schema defined per Python module. Then
-  such a module becomes a <em>DataJoint schema</em> comprising a Python module with a
-  corresponding <em>database schema</em>.</p>
+such a module becomes a <em>DataJoint schema</em> comprising a Python module with a
+corresponding <em>database schema</em>.</p>
 <p>The module's <code>schema</code> object is then used as the decorator for classes that define
-  tables in the database. </p>
-<div class="tabbed-set tabbed-alternate" data-tabs="2:1"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio" /><div class="tabbed-labels"><label for="__tabbed_2_1">Matlab</label></div>
-<div class="tabbed-content">
-<div class="tabbed-block"></div>
+tables in the database. </p>
 </div>
-</div>
+<div class="tabbed-block">
 <div class="highlight"><pre><span></span><code><span class="n">dj</span><span class="p">.</span><span class="n">createSchema</span><span class="w"></span>
 </code></pre></div>
 <p>In Matlab, we list one table per file and place schemas in folders.</p>
+</div>
+</div>
+</div>
 <h2 id="elements">Elements<a class="headerlink" href="#elements" title="Permanent link">&para;</a></h2>
 <p>An Element is a software package defining one or more DataJoint schemas serving a
 particular purpose. By convention, such packages are hosted in individual GitHub
@@ -1911,7 +1909,7 @@ schemas: <code>scan</code> and <code>imaging</code>.</p>
 <summary>Note</summary>
 <p>Some videos feature outdated versions of the respective GitHub repositories. For the
 most updated information, check the
-<a href="datajoint.com/docs/elements">documentation page</a> for the corresponding Element.</p>
+<a href="../">documentation page</a> for the corresponding Element.</p>
 </details>
 <h3 id="deferred-schemas">Deferred schemas<a class="headerlink" href="#deferred-schemas" title="Permanent link">&para;</a></h3>
 <p>A <em>deferred schema</em> is one in which the name of the database schema name is not specified.
@@ -1938,7 +1936,7 @@ any larger pipeline.</p>
 <a href="https://github.com/datajoint/element-calcium-imaging/blob/main/element_calcium_imaging/scan.py">Scan module</a>
 receives its required functions from the linking module passed into the module's
 <code>activate</code> function. See the 
-<a href="https://github.com/datajoint/workflow-calcium-imaging/blob/main/workflow_calcium_imaging/pipeline.py">corresponding workflow</a>
+<a href="https://github.com/datajoint/workflow-calcium-imaging/">corresponding workflow</a>
 for an example of how the linking module is passed into the Element's module.</p>
 
 

@@ -1891,7 +1891,7 @@ one or more lines. Each line can be one of the following:</p>
 </ul>
 <ul>
 <li>A field (i.e., attribute) definition can take any of the following forms (see
-    also <a href="../query-lang/data-types">valid datatypes</a>):<p>- <code>name : datatype</code> 
+    also <a href="../../query-lang/data-types">valid datatypes</a>):<p>- <code>name : datatype</code> 
   - <code>name : datatype # comment</code>
   - <code>name = default : datatype</code> 
   - <code>name = default : datatype  # comment</code></p>
@@ -1899,7 +1899,7 @@ one or more lines. Each line can be one of the following:</p>
 </ul>
 <ul>
 <li>The divider <code>---</code> (at least three hyphens) separates 
-    <a href="../../../glossary#primary-key">primary key attributes</a> above from 
+    <a href="../../query-lang/primary-key">primary key attributes</a> above from 
     <a href="../../../glossary#seconday-attributes">secondary attributes</a> below.</li>
 </ul>
 <ul>
@@ -1919,7 +1919,7 @@ start_date :  date   # date when joined the lab
     sex: enum(&#39;M&#39;, &#39;F&#39;, &#39;U&#39;) # sex of mouse - Male, Female, or Unknown
 </code></pre></div></p>
 <p>This will define the table with attributes <code>mouse_id</code>, <code>dob</code>, and
-<code>sex</code>, in which <code>mouse_id</code> is the <a href="../../../glossary#primary-key">primary key</a>.</p>
+<code>sex</code>, in which <code>mouse_id</code> is the <a href="../../query-lang/primary-key">primary key</a>.</p>
 <h3 id="attribute-names">Attribute names<a class="headerlink" href="#attribute-names" title="Permanent link">&para;</a></h3>
 <p>Attribute names must be in lowercase and must start with a letter. They
 can only contain alphanumerical characters and underscores. The
@@ -1943,17 +1943,17 @@ table, such as <code>session_start_time</code> or <code>recording_start_time</co
 <h3 id="default-values">Default values<a class="headerlink" href="#default-values" title="Permanent link">&para;</a></h3>
 <p>Secondary attributes can be given default values. A default value will be used for an
 attribute if no other value is given at the time the entry is 
-<a href="../query-lang/common-commands#insert">inserted</a> into the table. Generally, default 
+<a href="../../query-lang/common-commands#insert">inserted</a> into the table. Generally, default 
 values are numerical values or character strings. Default values for dates must be given
 as strings as well, contained within quotes (with the exception of
 <code>CURRENT_TIMESTAMP</code>). 
 Primary key attributes cannot have default values (with the exceptions of
 <code>auto_increment</code> and <code>CURRENT_TIMESTAMP</code> attributes; see 
-<a href="../query-lang/primary-key]">primary keys</a>.</p>
+<a href="../../query-lang/primary-key">primary keys</a>.</p>
 <p>An attribute with a default value of <code>NULL</code> is called a <strong>nullable attribute</strong>, which
 may be absent in some entities. Nullable attributes should <em>not</em> be used to indicate
 that an attribute is inapplicable to some entities in a table (see 
-<a href="../query-lang/normalization">normalization</a>). Nullable attributes should be used
+<a href="../../query-lang/normalization">normalization</a>). Nullable attributes should be used
 sparingly to indicate optional rather than inapplicable attributes that still apply to
 all entities in the table. <code>NULL</code> is a special literal value and does not need to be
 enclosed in quotes.</p>
@@ -1970,12 +1970,12 @@ definition. </p>
 <p>To change the table in the database, one can either...</p>
 <ol>
 <li>
-<p><a href="..query-lang/common-commands#drop">Drop</a> the existing table, deleting the
+<p><a href="../../query-lang/common-commands#drop">Drop</a> the existing table, deleting the
 entire contents, and then declare a new adjusted table.</p>
 </li>
 <li>
 <p>Or alter the table definition. Altering is limited to 
-<a href="../../../glossary#seconday-attribute">secondary attributes</a> and should be done with 
+<a href="../../../glossary#secondary-attribute">secondary attributes</a> and should be done with 
 caution, as it may impact existing data.</p>
 </li>
 </ol>
@@ -1986,20 +1986,18 @@ of the design before populating it with substantial amounts of data.</p>
 used to define the table when it was created in the database. This definition may
 differ from the definition string of the class if the definition string has been edited
 after creation of the table (see above).</p>
-<div class="tabbed-set tabbed-alternate" data-tabs="1:1"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">Python</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">Python</label><label for="__tabbed_1_2">Matlab</label></div>
 <div class="tabbed-content">
-<div class="tabbed-block"></div>
-</div>
-</div>
-<div class="highlight"><pre><span></span><code>   <span class="n">s</span> <span class="o">=</span> <span class="n">lab</span><span class="o">.</span><span class="n">User</span><span class="o">.</span><span class="n">describe</span><span class="p">()</span>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="n">s</span> <span class="o">=</span> <span class="n">lab</span><span class="o">.</span><span class="n">User</span><span class="o">.</span><span class="n">describe</span><span class="p">()</span>
 </code></pre></div>
-<div class="tabbed-set tabbed-alternate" data-tabs="2:1"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio" /><div class="tabbed-labels"><label for="__tabbed_2_1">Matlab</label></div>
-<div class="tabbed-content">
-<div class="tabbed-block"></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="n">s</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">describe</span><span class="p">(</span><span class="n">lab</span><span class="p">.</span><span class="n">User</span><span class="p">)</span><span class="w"></span>
+</code></pre></div>
 </div>
 </div>
-<p>``` matlab
-      s = describe(lab.User)</p>
+</div>
 <div class="footnote">
 <hr />
 <ol>

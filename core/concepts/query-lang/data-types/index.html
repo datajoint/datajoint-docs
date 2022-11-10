@@ -1871,7 +1871,7 @@ these types as they can have implications in the queries you form and the capaci
 their storage.</p>
 <h2 id="standard-types">Standard Types<a class="headerlink" href="#standard-types" title="Permanent link">&para;</a></h2>
 <p>These types are largely wrappers around existing types in the current 
-<a href="../../ref-integrity/query-backend">query backend</a> for <a href="../../../glossary#data-pipeline">data pipelines</a>.</p>
+<a href="../../ref-integrity/query-backend">query backend</a> for <a href="../../getting-started/data-pipelines">data pipelines</a>.</p>
 <h3 id="common-types">Common Types<a class="headerlink" href="#common-types" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -1889,14 +1889,14 @@ their storage.</p>
 <td>integer</td>
 <td>4 bytes</td>
 <td><code>8</code></td>
-<td>-2<sup>31</sup> - 2<sup>31</sup>-1</td>
+<td>-2<sup>31</sup> to 2<sup>31</sup>-1</td>
 </tr>
 <tr>
 <td><span id="enum">enum</span><sup id="fnref:1"><a class="footnote-ref" href="#fn:1">1</a></sup></td>
 <td>category</td>
 <td>1-2 bytes</td>
 <td><code>M</code>, <code>F</code></td>
-<td>-2<sup>31</sup> - 2<sup>31</sup>-1</td>
+<td>-2<sup>31</sup> to 2<sup>31</sup>-1</td>
 </tr>
 <tr>
 <td><span id="datetime">datetime</span><sup id="fnref:2"><a class="footnote-ref" href="#fn:2">2</a></sup></td>
@@ -1948,21 +1948,21 @@ type can be unsigned, shifting their range from the listed ±2<sup>n</sup> to fr
 <td>tiny integer</td>
 <td>1 byte</td>
 <td><code>2</code></td>
-<td>-2<sup>7</sup> - 2<sup>7</sup>-1</td>
+<td>-2<sup>7</sup> to 2<sup>7</sup>-1</td>
 </tr>
 <tr>
 <td><span id="small-int">smallint</span></td>
 <td>small integer</td>
 <td>2 bytes</td>
 <td><code>21,000</code></td>
-<td>-2<sup>15</sup> - 2<sup>15</sup>-1</td>
+<td>-2<sup>15</sup> to 2<sup>15</sup>-1</td>
 </tr>
 <tr>
 <td><span id="medium-int">mediumint</span></td>
 <td>medium integer</td>
 <td>3 bytes</td>
 <td><code>401,000</code></td>
-<td>-2<sup>23</sup> - 2<sup>23</sup>-1</td>
+<td>-2<sup>23</sup> to 2<sup>23</sup>-1</td>
 </tr>
 <tr>
 <td><span id="date">date</span></td>
@@ -1987,7 +1987,7 @@ type can be unsigned, shifting their range from the listed ±2<sup>n</sup> to fr
 </tr>
 <tr>
 <td><span id="char(N)">char(N)</span></td>
-<td>string of length <em>N</em></td>
+<td>string of exactly length <em>N</em></td>
 <td><em>N</em> bytes</td>
 <td><code>text</code></td>
 <td></td>

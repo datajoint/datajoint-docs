@@ -1838,7 +1838,7 @@
 
 <h1 id="core">Core<a class="headerlink" href="#core" title="Permanent link">&para;</a></h1>
 <p>DataJoint Core projects are fully open-source and are built to develop, define, manage,
-and visualize <a href="./glossary#data-pipeline">data pipelines</a>. Below are the projects that
+and visualize <a href="./getting-started/data-pipelines">data pipelines</a>. Below are the projects that
 make up the family of core open-source projects.</p>
 <h2 id="apis">APIs<a class="headerlink" href="#apis" title="Permanent link">&para;</a></h2>
 <div class="grid cards">
@@ -1879,12 +1879,21 @@ make up the family of core open-source projects.</p>
 </div>
 <h2 id="container-images">Container Images<a class="headerlink" href="#container-images" title="Permanent link">&para;</a></h2>
 <pre class="mermaid"><code>graph
-  datajoint/mysql;
-  datajoint/miniconda3 --&gt; datajoint/djbase;
-  datajoint/djbase --&gt; datajoint/djtest;
-  datajoint/djbase --&gt; datajoint/datajoint;
-  datajoint/djbase --&gt; datajoint/djlab;
-  datajoint/djlab --&gt; datajoint/djlabhub;</code></pre>
+  %% Give short names
+  dj["datajoint/datajoint"]
+  base["datajoint/djbase"]
+  lab["datajoint/djlab"]
+  hub["datajoint/djlabhub"]
+  test["datajoint/djtest"]
+  conda3["datajoint/miniconda3"]
+  mysql["datajoint/mysql"]
+  %% Define connections
+  conda3 --&gt; base --&gt; test;
+  base --&gt; dj;
+  base --&gt; lab --&gt; hub;
+  %% Add all to class
+  class dj,base,lab,hub,test,conda3,mysql boxes;
+  classDef boxes stroke:#333; %% Grey stroke for class</code></pre>
 <div class="grid cards">
 <ul>
 <li><span class="twemoji lg middle"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M349.9 236.3h-66.1v-59.4h66.1v59.4zm0-204.3h-66.1v60.7h66.1V32zm78.2 144.8H362v59.4h66.1v-59.4zm-156.3-72.1h-66.1v60.1h66.1v-60.1zm78.1 0h-66.1v60.1h66.1v-60.1zm276.8 100c-14.4-9.7-47.6-13.2-73.1-8.4-3.3-24-16.7-44.9-41.1-63.7l-14-9.3-9.3 14c-18.4 27.8-23.4 73.6-3.7 103.8-8.7 4.7-25.8 11.1-48.4 10.7H2.4c-8.7 50.8 5.8 116.8 44 162.1 37.1 43.9 92.7 66.2 165.4 66.2 157.4 0 273.9-72.5 328.4-204.2 21.4.4 67.6.1 91.3-45.2 1.5-2.5 6.6-13.2 8.5-17.1l-13.3-8.9zm-511.1-27.9h-66v59.4h66.1v-59.4zm78.1 0h-66.1v59.4h66.1v-59.4zm78.1 0h-66.1v59.4h66.1v-59.4zm-78.1-72.1h-66.1v60.1h66.1v-60.1z"/></svg></span> <strong>datajoint/mysql</strong><hr />

@@ -1868,9 +1868,9 @@
 
 
 <h1 id="operators">Operators<a class="headerlink" href="#operators" title="Permanent link">&para;</a></h1>
-<p><a href="./query-objs">Data queries</a> make use of operators to derive the desired table. They
+<p><a href="../query-objs">Data queries</a> make use of operators to derive the desired table. They
 represent the desired data symbolically, but do not contain any data. Once a query is
-formed, we can <a href="./common-commands#fetch">fetch</a> the data into the local workspace. Since
+formed, we can <a href="../common-commands#fetch">fetch</a> the data into the local workspace. Since
 the expressions are only symbolic, repeated <code>fetch</code> calls may yield different results as
 the state of the database is modified.</p>
 <p>DataJoint implements a complete algebra of operators on tables:</p>
@@ -2072,7 +2072,7 @@ and others. For examples in Python and Matlab, please visit the documentation fo
 respective API.</p>
 <h2 id="union">Union<a class="headerlink" href="#union" title="Permanent link">&para;</a></h2>
 <p>The result of the union operator <code>A + B</code> contains all the entities from both operands. </p>
-<p><a href="./normalization">Entity normalization</a> requires that <code>A</code> and <code>B</code> are of the same type,
+<p><a href="../normalization">Entity normalization</a> requires that <code>A</code> and <code>B</code> are of the same type,
 with with the same <a href="../../../glossary#primary-key">primary key</a>, using homologous
 attributes. Without secondary attributes, the result is the simple set union. With
 secondary attributes, they must have the same names and datatypes. The two operands
