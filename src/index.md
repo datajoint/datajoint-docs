@@ -9,14 +9,18 @@
      ---
 
      Open-source clients for managing data pipelines.
-     <ul>
-          <li>API for Python</li>
-          <li>API for MATLAB</li>
-          <li>Pharus</li>
-          <li>LabBook</li>
-          <li>SciViz</li>
-          <li>Container Images</li>
-     </ul>
+
+     - DataJoint API for Python
+
+     - DataJoint API for MATLAB
+
+     - DataJoint Pharus
+
+     - DataJoint LabBook
+
+     - DataJoint SciViz
+
+     - DataJoint Container Images
 
      [:octicons-arrow-right-24: Learn more](./core/)
     
@@ -41,8 +45,8 @@
 ## Research supported by DataJoint
 
 <div class="grid cards" markdown>
-     <ul>
-          <li><a href="https://datajoint.com/docs/projects/"><b>Projects</b></a></li>
-          <li><a href="https://datajoint.com/docs/publications/"><b>Publications</b></a></li>
-     </ul>
+-   [**Projects**](./projects.md)
+
+-   [**Publications**](./publications.md)
+
 </div>
