@@ -1,4 +1,4 @@
-# :wave: Welcome to DataJoint Documentation
+# Welcome to DataJoint Documentation
 
 The DataJoint ecosystem is divided into 3 distinct areas: DataJoint Core, DataJoint
 Elements, and DataJoint Works.
