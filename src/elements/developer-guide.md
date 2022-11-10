@@ -29,13 +29,13 @@
     done
     ```
 
-## Optionally drop all schemas
+## Drop schemas
 
 If you need to drop all schemas to start fresh, you'll need to do following the
 dependency order. Refer to the workflow's notebook
 (`notebooks/06-drop-optional.ipynb`) for the drop order.
 
-## Run integration tests
+## Pytests
 
 - Download the test dataset to your local machine. Note the directory where the dataset
   is saved (e.g. `/tmp/testset`).
@@ -67,10 +67,10 @@ Note that the jupytext sync features may cause issues with the original notebook
    jupytext --to py notebooks/0*ipynb; mv notebooks/*py notebooks/py_scripts
    ```
 
-### Other auxiliary tools
+## Auxiliary tools
 
-+ [DataJoint utilities](https://github.com/datajoint-company/datajoint-utilities) - general-purpose functions/utilities for working with DataJoint pipelines
-  + Text search
-  + Data migration between tables/schemas/servers
-  + DataJoint workers
-+ [DataJoint for Julia](https://github.com/datajoint/neuronex_workshop_2018/tree/master/julia) - wrapper library developed in Carlos Brody lab
+- [DataJoint utilities](https://github.com/datajoint-company/datajoint-utilities) - general-purpose functions/utilities for working with DataJoint pipelines
+  - Text search
+  - Data migration between tables/schemas/servers
+  - DataJoint workers
+- [DataJoint for Julia](https://github.com/datajoint/neuronex_workshop_2018/tree/master/julia) - wrapper library developed in Carlos Brody lab
