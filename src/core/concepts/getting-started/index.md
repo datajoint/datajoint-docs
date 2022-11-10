@@ -8,7 +8,7 @@ there are a lot of materials to help you get started.
 
 First, it helps to see a data pipeline in action. DataJoint's Works platform
 offers graphical user interfaces for our most common pipelines via 
-[Elements](../../elements/index.md). Many of the Elements also have Jupyter notebooks
+[Elements](../../../elements/index.md). Many of the Elements also have Jupyter notebooks
 you can run on your own machine, to start using Python or Matlab interfaces.
 Follow along with the general [user instructions](../../elements/user-instructions)
 to get started.
