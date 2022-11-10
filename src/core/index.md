@@ -1,7 +1,7 @@
 # Core
 
 DataJoint Core projects are fully open-source and are built to develop, define, manage,
-and visualize [data pipelines](../glossary#data-pipeline). Below are the projects that
+and visualize [data pipelines](./glossary#data-pipeline). Below are the projects that
 make up the family of core open-source projects.
 
 ## APIs
@@ -12,7 +12,7 @@ make up the family of core open-source projects.
 
     ---
 
-    A low-level client for managing [data pipelines](../glossary#data-pipeline).
+    A low-level client for managing [data pipelines](./glossary#data-pipeline).
 
     [:octicons-arrow-right-24: Getting started](./datajoint-python/)
 
@@ -20,18 +20,17 @@ make up the family of core open-source projects.
 
     ---
 
-    A low-level client for managing [data pipelines](../glossary#data-pipeline).
+    A low-level client for managing [data pipelines](./glossary#data-pipeline).
 
-    `Docs coming soon!`
+    :octicons-arrow-right-24: Docs coming soon!
 
 -   :fontawesome-solid-flask:{ .lg .middle } **Pharus**
 
     ---
 
-    Expose [data pipelines](../glossary#data-pipeline) via a
-    [REST](https://en.wikipedia.org/wiki/Representational_state_transfer) interface.
+    Expose [data pipelines](./glossary#data-pipeline) via a REST interface.
 
-    `Docs coming soon!`
+    :octicons-arrow-right-24: Docs coming soon!
 
 </div>
 
@@ -43,19 +42,18 @@ make up the family of core open-source projects.
 
     ---
 
-    Data entry and data model browsing for [data pipelines](../glossary#data-pipeline).
+    Data entry and data model browsing for [data pipelines](./glossary#data-pipeline).
 
-    `Docs coming soon!`
+    :octicons-arrow-right-24: Docs coming soon!
 
 -   :fontawesome-brands-chrome:{ .lg .middle } **SciViz**
 
     ---
 
-    A visualization framework for making
-    [low-code](https://en.wikipedia.org/wiki/Low-code_development_platform) web apps
-    for [data pipelines](../glossary#data-pipeline).
+    A visualization framework for making low-code web apps for 
+    [data pipelines](./glossary#data-pipeline).
 
-    `Docs coming soon!`
+    :octicons-arrow-right-24: Docs coming soon!
 
 </div>
 
@@ -77,9 +75,9 @@ graph
 
     ---
 
-    An optimized, MySQL backend for [data pipelines](../glossary#data-pipeline).
+    An optimized, MySQL backend for [data pipelines](./glossary#data-pipeline).
 
-    `Docs coming soon!`
+    :octicons-arrow-right-24: Docs coming soon!
 
 -   :fontawesome-brands-docker:{ .lg .middle } **datajoint/miniconda3**
 
@@ -87,15 +85,15 @@ graph
 
     A minimal Python image with [conda](https://docs.conda.io/en/latest/).
 
-    `Docs coming soon!`
+    :octicons-arrow-right-24: Docs coming soon!
 
 -   :fontawesome-brands-docker:{ .lg .middle } **datajoint/djbase**
 
     ---
 
-    Adds only dependencies for managing [data pipelines](../glossary#data-pipeline).
+    Adds only dependencies for managing [data pipelines](./glossary#data-pipeline).
 
-    `Docs coming soon!`
+    :octicons-arrow-right-24: Docs coming soon!
 
 -   :fontawesome-brands-docker:{ .lg .middle } **datajoint/djtest**
 
@@ -103,15 +101,15 @@ graph
 
     Adds testing tools like [pytest](https://docs.pytest.org/en/7.1.x/).
 
-    `Docs coming soon!`
+    :octicons-arrow-right-24: Docs coming soon!
 
 -   :fontawesome-brands-docker:{ .lg .middle } **datajoint/datajoint**
 
     ---
 
-    Official image for managing [data pipelines](../glossary#data-pipeline).
+    Official image for managing [data pipelines](./glossary#data-pipeline).
 
-    `Docs coming soon!`
+    :octicons-arrow-right-24: Docs coming soon!
 
 -   :fontawesome-brands-docker:{ .lg .middle } **datajoint/djlab**
 
@@ -119,7 +117,7 @@ graph
 
     Adds a local [Jupyter Lab](https://jupyterlab.readthedocs.io/en/stable/) environment.
 
-    `Docs coming soon!`
+    :octicons-arrow-right-24: Docs coming soon!
 
 -   :fontawesome-brands-docker:{ .lg .middle } **datajoint/djlabhub**
 
@@ -127,6 +125,6 @@ graph
 
     Adds a client to allow hosting with [Jupyter Hub](https://jupyter.org/hub).
 
-    `Docs coming soon!`
+    :octicons-arrow-right-24: Docs coming soon!
 
 </div>
