@@ -1,9 +1,9 @@
 ---
-# cspell:ignoreRegExp (\s|\*|\-)[A-Z]*
+Title: Publications
+# cspell:ignoreRegExp [\s|\*|\-](A-Z)*
 # CAUTION: Above sets cspell to ignore capitalized words after space/asterisk/hyphen
 ---
 <!-- markdownlint-disable MD013 -->
-# Publications
 
 The following publications relied on DataJoint open-source software for data analysis.
 
