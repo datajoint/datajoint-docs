@@ -1154,18 +1154,18 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#optionally-drop-all-schemas" class="md-nav__link">
+  <a href="#drop-schemas" class="md-nav__link">
     <span class="md-ellipsis">
-      Optionally drop all schemas
+      Drop schemas
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#run-integration-tests" class="md-nav__link">
+  <a href="#pytests" class="md-nav__link">
     <span class="md-ellipsis">
-      Run integration tests
+      Pytests
     </span>
   </a>
   
@@ -1178,20 +1178,14 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Jupytext">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#other-auxiliary-tools" class="md-nav__link">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#auxiliary-tools" class="md-nav__link">
     <span class="md-ellipsis">
-      Other auxiliary tools
+      Auxiliary tools
     </span>
   </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -1891,11 +1885,11 @@
 </code></pre></div>
 </li>
 </ul>
-<h2 id="optionally-drop-all-schemas">Optionally drop all schemas<a class="headerlink" href="#optionally-drop-all-schemas" title="Permanent link">&para;</a></h2>
+<h2 id="drop-schemas">Drop schemas<a class="headerlink" href="#drop-schemas" title="Permanent link">&para;</a></h2>
 <p>If you need to drop all schemas to start fresh, you'll need to do following the
 dependency order. Refer to the workflow's notebook
 (<code>notebooks/06-drop-optional.ipynb</code>) for the drop order.</p>
-<h2 id="run-integration-tests">Run integration tests<a class="headerlink" href="#run-integration-tests" title="Permanent link">&para;</a></h2>
+<h2 id="pytests">Pytests<a class="headerlink" href="#pytests" title="Permanent link">&para;</a></h2>
 <ul>
 <li>Download the test dataset to your local machine. Note the directory where the dataset
   is saved (e.g. <code>/tmp/testset</code>).</li>
@@ -1925,7 +1919,7 @@ Note that the jupytext sync features may cause issues with the original notebook
 <div class="highlight"><pre><span></span><code><span class="go">pip install jupytext</span>
 <span class="go">jupytext --to py notebooks/0*ipynb; mv notebooks/*py notebooks/py_scripts</span>
 </code></pre></div>
-<h3 id="other-auxiliary-tools">Other auxiliary tools<a class="headerlink" href="#other-auxiliary-tools" title="Permanent link">&para;</a></h3>
+<h2 id="auxiliary-tools">Auxiliary tools<a class="headerlink" href="#auxiliary-tools" title="Permanent link">&para;</a></h2>
 <ul>
 <li><a href="https://github.com/datajoint-company/datajoint-utilities">DataJoint utilities</a> - general-purpose functions/utilities for working with DataJoint pipelines<ul>
 <li>Text search</li>
