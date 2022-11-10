@@ -4,7 +4,7 @@ DataJoint Core projects are fully open-source and are built to develop, define, 
 and visualize [data pipelines](../glossary#data-pipeline). Below are the projects that
 make up the family of core open-source projects.
 
-## [API](https://en.wikipedia.org/wiki/API)s
+## APIs
 
 <div class="grid cards" markdown>
 
@@ -35,7 +35,7 @@ make up the family of core open-source projects.
 
 </div>
 
-## Web [GUI](https://en.wikipedia.org/wiki/Graphical_user_interface)s
+## Web GUIs
 
 <div class="grid cards" markdown>
 
