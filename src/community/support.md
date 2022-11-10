@@ -1,8 +1,5 @@
 # Support
 
-We have a general policy for DataJoint open-source [community engagement](
-    /community/contribution/#5-i-am-not-yet-too-comfortable-contributing-but-would-like-to-engage-the-community-what-is-the-policy-on-community-engagement).
-
 + General how-to or error question? Post on StackOverflow with the [`datajoint` tag](
      https://stackoverflow.com/questions/tagged/datajoint)
 
