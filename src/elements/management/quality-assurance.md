@@ -108,7 +108,7 @@ upon request.
 All components will be organized in GitHub repositories with guidelines for
 contribution, feedback, and issue submission to the issue tracker. For more information
 on the general policy around issue filing, tracking, and escalation, see the
-[DataJoint Open-Source Contribute](../../../community/contribution) policy. For
+[DataJoint Open-Source Contribute](../../../community/contribute) policy. For
 research groups that reach out to us, our team will work closely to collect feedback
 and resolve issues. Typically issues will be prioritized based on their criticality and
 impact. If new feature requirements become apparent, this may trigger the creation of a

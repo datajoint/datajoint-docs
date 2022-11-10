@@ -43,7 +43,7 @@ one or more lines. Each line can be one of the following:
     of the table's purpose. 
 
 -   A field (i.e., attribute) definition can take any of the following forms (see
-    also [valid datatypes](../query-lang/data-types)):
+    also [valid datatypes](../../query-lang/data-types)):
 
     - `name : datatype` 
     - `name : datatype # comment`
@@ -51,7 +51,7 @@ one or more lines. Each line can be one of the following:
     - `name = default : datatype  # comment`
 
 -   The divider `---` (at least three hyphens) separates 
-    [primary key attributes](../../../glossary#primary-key) above from 
+    [primary key attributes](../../query-lang/primary-key) above from 
     [secondary attributes](../../../glossary#seconday-attributes) below.
 
 -   A [foreign key](../../../glossary#foreign-key) in the format `-> ReferencedTable`.
@@ -74,7 +74,7 @@ start_date :  date   # date when joined the lab
 ``` 
 
 This will define the table with attributes `mouse_id`, `dob`, and
-`sex`, in which `mouse_id` is the [primary key](../../../glossary#primary-key).
+`sex`, in which `mouse_id` is the [primary key](../../query-lang/primary-key).
 
 ### Attribute names
 
@@ -102,18 +102,18 @@ table, such as `session_start_time` or `recording_start_time`.
 
 Secondary attributes can be given default values. A default value will be used for an
 attribute if no other value is given at the time the entry is 
-[inserted](../query-lang/common-commands#insert) into the table. Generally, default 
+[inserted](../../query-lang/common-commands#insert) into the table. Generally, default 
 values are numerical values or character strings. Default values for dates must be given
 as strings as well, contained within quotes (with the exception of
 `CURRENT_TIMESTAMP`). 
 Primary key attributes cannot have default values (with the exceptions of
 `auto_increment` and `CURRENT_TIMESTAMP` attributes; see 
-[primary keys](../query-lang/primary-key]).
+[primary keys](../../query-lang/primary-key).
 
 An attribute with a default value of `NULL` is called a **nullable attribute**, which
 may be absent in some entities. Nullable attributes should *not* be used to indicate
 that an attribute is inapplicable to some entities in a table (see 
-[normalization](../query-lang/normalization)). Nullable attributes should be used
+[normalization](../../query-lang/normalization)). Nullable attributes should be used
 sparingly to indicate optional rather than inapplicable attributes that still apply to
 all entities in the table. `NULL` is a special literal value and does not need to be
 enclosed in quotes.
@@ -135,11 +135,11 @@ definition.
 
 To change the table in the database, one can either...
 
-1. [Drop](..query-lang/common-commands#drop) the existing table, deleting the
+1. [Drop](../../query-lang/common-commands#drop) the existing table, deleting the
 entire contents, and then declare a new adjusted table.
 
 2. Or alter the table definition. Altering is limited to 
-[secondary attributes](../../../glossary#seconday-attribute) and should be done with 
+[secondary attributes](../../../glossary#secondary-attribute) and should be done with 
 caution, as it may impact existing data.
 
 In the initial phases of designing a pipeline, it's best to experiment with variations
@@ -155,11 +155,12 @@ after creation of the table (see above).
 
 === "Python"
 
-   ``` python
-      s = lab.User.describe()
-   ```
+    ``` python
+    s = lab.User.describe()
+    ```
 
 === "Matlab"
 
-   ``` matlab
-      s = describe(lab.User)
+    ``` matlab
+    s = describe(lab.User)
+    ```

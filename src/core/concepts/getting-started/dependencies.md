@@ -11,12 +11,12 @@ A **foreign key** defines a **dependency** of entities in one table on entities 
 another within a schema. Dependencies provide entities in one table with access to data
 in another table and establish certain constraints on entities containing a foreign
 key. A DataJoint pipeline, including the dependency relationships established by foreign
-keys, can be visualized as a graph with nodes and edges, in a [diagram](./diagrams). 
+keys, can be visualized as a graph with nodes and edges, in a [diagram](../diagrams). 
 
 ## Defining a dependency
 
 Foreign keys are defined with arrows `->` in the
-[table definition](./table-definitions), pointing to another table.
+[table definition](..w/table-definitions), pointing to another table.
 
 In the example below, there are three [foreign keys](../../../glossary#foreign-key),
 including one within the [primary key](../../../glossary#primary-key) above the `---`.
