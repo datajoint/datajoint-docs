@@ -9,18 +9,18 @@ The *DataJoint Mantra* consists of three main objectives:
 
 ## Query Language
 
-Writing good, optimized [SQL](https://en.wikipedia.org/wiki/SQL) queries can be
+Writing good, optimized SQL queries can be
 difficult and often becomes a barrier for individuals lacking experience in
-[computer science](https://en.wikipedia.org/wiki/Computer_science) and programming.
+computer science and programming.
 That said, we don't feel this should discourage the use of databases. Databases help to
 structure our daily lives which streamlines the time required to glean insights and
-build robust applications from truth. [SQL](https://en.wikipedia.org/wiki/SQL) is
+build robust applications from truth. SQL is
 powerful but requires practice which we feel is the real fault in the language.
 
 To address this, the DataJoint query language serves as a query builder and optimizer
-for [SQL](https://en.wikipedia.org/wiki/SQL). It leverages the stack's own operator
+for SQL. It leverages the stack's own operator
 precedence and combines it with both operator overloading and 
-[SQL](https://en.wikipedia.org/wiki/SQL) algebra to achieve a more intuitive experience.
+SQL algebra to achieve a more intuitive experience.
 Additionally, interoperability between Python and MATLAB is crucial due to the
 diversity of tools available to scientists. So much so that this is a guiding principle
 in [FAIR](https://www.go-fair.org/fair-principles/).
@@ -55,8 +55,7 @@ WHERE (
 Reproducibility is a key concept within the scientific community since research is
 largely conducted, shared, and reviewed in the public domain. This is necessary to
 independently validate discoveries and have others support new findings. Such a
-practice is well advocated in the scientific community as 
-[open science](Open_science).
+practice is well advocated in the scientific community as open science.
 
 Yet, reliably reproducing computed results of others has proven difficult since there
 are many factors that affect the determinism of a process e.g. hardware, software
@@ -64,7 +63,7 @@ environment, scripts, input data, seeding, etc.
 
 DataJoint pipelines address these challenges by allowing computation to be defined such
 that they are associated *with* an entity. Drawing relationships between many entities
-we can create a [DAG](https://en.wikipedia.org/wiki/Directed_acyclic_graph) that
+we can create a [DAG](../../glossary#dag) that
 describes a compute workflow as an 
 [entity-relationship model](https://en.wikipedia.org/wiki/Entity%E2%80%93relationship_model).
 
@@ -80,8 +79,8 @@ The goal is to ensure [data pipelines](../../glossary#data-pipeline) always refl
 truth of how data was created.
 
 In the realm of databases, entities can be related to one another through 
-[foreign keys](https://en.wikipedia.org/wiki/Foreign_key). However, our opinionated view
-is that foreign keys on [primary keys](https://en.wikipedia.org/wiki/Primary_key) should
+[foreign keys](../../glossary#foreign-key). However, our opinionated view
+is that foreign keys on [primary keys](../../glossary#primary-key) should
 enforce the contraint.
 
 What this means is that our data model always reflects the truth. When a parent entity
