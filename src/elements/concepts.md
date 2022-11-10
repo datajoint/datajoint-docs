@@ -12,25 +12,25 @@ reference the database schema.
 
 === "Python"
 
-  ```python
-  import datajoint as dj
-  schema = dj.schema('<schema_name>')
-  ```
+    ```python
+    import datajoint as dj
+    schema = dj.schema('<schema_name>')
+    ```
 
-  We follow the convention of having only one schema defined per Python module. Then
-  such a module becomes a _DataJoint schema_ comprising a Python module with a
-  corresponding _database schema_.
+    We follow the convention of having only one schema defined per Python module. Then
+    such a module becomes a _DataJoint schema_ comprising a Python module with a
+    corresponding _database schema_.
 
-  The module's `schema` object is then used as the decorator for classes that define
-  tables in the database. 
+    The module's `schema` object is then used as the decorator for classes that define
+    tables in the database. 
 
 === "Matlab"
 
-  ```matlab
-  dj.createSchema
-  ```
+    ```matlab
+    dj.createSchema
+    ```
 
-  In Matlab, we list one table per file and place schemas in folders.
+    In Matlab, we list one table per file and place schemas in folders.
 
 ## Elements
 
