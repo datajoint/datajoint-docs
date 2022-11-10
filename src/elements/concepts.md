@@ -12,25 +12,25 @@ reference the database schema.
 
 === "Python"
 
-  ```python
-  import datajoint as dj
-  schema = dj.schema('<schema_name>')
-  ```
+    ```python
+    import datajoint as dj
+    schema = dj.schema('<schema_name>')
+    ```
 
-  We follow the convention of having only one schema defined per Python module. Then
-  such a module becomes a _DataJoint schema_ comprising a Python module with a
-  corresponding _database schema_.
+    We follow the convention of having only one schema defined per Python module. Then
+    such a module becomes a _DataJoint schema_ comprising a Python module with a
+    corresponding _database schema_.
 
-  The module's `schema` object is then used as the decorator for classes that define
-  tables in the database. 
+    The module's `schema` object is then used as the decorator for classes that define
+    tables in the database. 
 
 === "Matlab"
 
-  ```matlab
-  dj.createSchema
-  ```
+    ```matlab
+    dj.createSchema
+    ```
 
-  In Matlab, we list one table per file and place schemas in folders.
+    In Matlab, we list one table per file and place schemas in folders.
 
 ## Elements
 
@@ -58,7 +58,7 @@ The following YouTube videos provide information on basic design principles and 
 
     Some videos feature outdated versions of the respective GitHub repositories. For the
     most updated information, check the
-    [documentation page](datajoint.com/docs/elements) for the corresponding Element.
+    [documentation page](../) for the corresponding Element.
 
 ### Deferred schemas
 
@@ -94,5 +94,5 @@ For instance, the
 [Scan module](https://github.com/datajoint/element-calcium-imaging/blob/main/element_calcium_imaging/scan.py)
 receives its required functions from the linking module passed into the module's
 `activate` function. See the 
-[corresponding workflow](https://github.com/datajoint/workflow-calcium-imaging/blob/main/workflow_calcium_imaging/pipeline.py)
+[corresponding workflow](https://github.com/datajoint/workflow-calcium-imaging/)
 for an example of how the linking module is passed into the Element's module.

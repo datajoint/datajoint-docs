@@ -69,7 +69,7 @@ helps researchers understand data provenance at a glance.
  table executes these computations and stores the results.
 
 Data should never be directly inserted into auto-populated tables. Instead, these tables
-specify a [`make` method](./make-method). 
+specify a [`make` method](../make-method). 
 
 ## Master-Part Relationship
 
@@ -115,5 +115,5 @@ visual stimulus information.
 
 For more information on table dependencies and diagrams, see their respective articles:
 
-- [Dependencies](../getting-started/dependencies)
-- [Diagrams](../getting-started/diagrams)
+- [Dependencies](../../getting-started/dependencies)
+- [Diagrams](../../getting-started/diagrams)

@@ -1,8 +1,8 @@
 # Operators
 
-[Data queries](./query-objs) make use of operators to derive the desired table. They
+[Data queries](../query-objs) make use of operators to derive the desired table. They
 represent the desired data symbolically, but do not contain any data. Once a query is
-formed, we can [fetch](./common-commands#fetch) the data into the local workspace. Since
+formed, we can [fetch](../common-commands#fetch) the data into the local workspace. Since
 the expressions are only symbolic, repeated `fetch` calls may yield different results as
 the state of the database is modified.
 
@@ -172,7 +172,7 @@ respective API.
 
 The result of the union operator `A + B` contains all the entities from both operands. 
 
-[Entity normalization](./normalization) requires that `A` and `B` are of the same type,
+[Entity normalization](../normalization) requires that `A` and `B` are of the same type,
 with with the same [primary key](../../../glossary#primary-key), using homologous
 attributes. Without secondary attributes, the result is the simple set union. With
 secondary attributes, they must have the same names and datatypes. The two operands

@@ -75,7 +75,7 @@ on relation to `Rectangle`.
 ## Referential Integrity
 
 Referential integrity is the concept of keeping all your data consistent and up-to-date.
-The goal is to ensure [data pipelines](../../glossary#data-pipeline) always reflect the
+The goal is to ensure [data pipelines](../getting-started/data-pipelines) always reflect the
 truth of how data was created.
 
 In the realm of databases, entities can be related to one another through 

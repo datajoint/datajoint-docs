@@ -5,8 +5,7 @@
 
 + Bug report or feature request? Submit a GitHub issue to the relevant repository
 
-+ For open-ended discussions, join us on the [DataJoint Slack](
-     https://join.slack.com/t/datajoint/shared_invite/enQtMjkwNjQxMjI5MDk0LWIzN2ExYzBiM2NlODQxN2YxODAxNWQwOWVkNjVmZDkzYzEwMjM5OWJkM2EwYTRhYmRiZDgxMjUzYjBlZWVjMzA)
++ For open-ended discussions, join us on the [DataJoint Slack](https://join.slack.com/t/datajoint/shared_invite/enQtMjkwNjQxMjI5MDk0LTQ3ZjFiZmNmNGVkYWFkYjgwYjdhNTBlZTBmMWEyZDc2NzZlYTBjOTNmYzYwOWRmOGFmN2MyYzU0OWQ0MWZiYTE)
 
 + DataJoint Office Hours
   + The DataJoint open source team will be offering monthly Office Hours.  These are

@@ -8,14 +8,14 @@ their storage.
 ## Standard Types
 
 These types are largely wrappers around existing types in the current 
-[query backend](../../ref-integrity/query-backend) for [data pipelines](../../../glossary#data-pipeline).
+[query backend](../../ref-integrity/query-backend) for [data pipelines](../../getting-started/data-pipelines).
 
 ### Common Types
 
 |           Datatype                     | Description  |  Size   | Example | Range |
 |              ---                       |     ---      |   ---   |   ---   |  ---  |
-| <span id="int">int</span>              |   integer    | 4 bytes |   `8`   | -2<sup>31</sup> - 2<sup>31</sup>-1 |
-| <span id="enum">enum</span>[^1]        |   category   |1-2 bytes| `M`, `F`| -2<sup>31</sup> - 2<sup>31</sup>-1 |
+| <span id="int">int</span>              |   integer    | 4 bytes |   `8`   | -2<sup>31</sup> to 2<sup>31</sup>-1 |
+| <span id="enum">enum</span>[^1]        |   category   |1-2 bytes| `M`, `F`| -2<sup>31</sup> to 2<sup>31</sup>-1 |
 | <span id="datetime">datetime</span>[^2]| date and time in `YYYY-MM-DD HH:MM:SS` format | 5 bytes | `'2020-01-02 03:04:05'` | |
 | <span id="varchar">varchar(N)</span>   | string of length *M*, up to *N* | *M* + 1-2 bytes| `text`| |
 | <span id="float">float</span>[^3]      | floating point number | 4 bytes| `2.04`| 3.40E+38 to -1.17E-38, 0, and 1.17E-38 to 3.40E+38 |
@@ -29,14 +29,14 @@ type can be unsigned, shifting their range from the listed ±2<sup>n</sup> to fr
 
 |           Datatype                     | Description  |  Size   | Example | Range |
 |              ---                       |     ---      |   ---   |   ---   |  ---  |
-| <span id="tiny-int">tinyint</span>     |tiny integer  | 1 byte  |   `2`   | -2<sup>7</sup> - 2<sup>7</sup>-1 |
-| <span id="small-int">smallint</span>   |small integer | 2 bytes | `21,000`| -2<sup>15</sup> - 2<sup>15</sup>-1 |
-| <span id="medium-int">mediumint</span> |medium integer| 3 bytes |`401,000`| -2<sup>23</sup> - 2<sup>23</sup>-1 |
+| <span id="tiny-int">tinyint</span>     |tiny integer  | 1 byte  |   `2`   | -2<sup>7</sup> to 2<sup>7</sup>-1 |
+| <span id="small-int">smallint</span>   |small integer | 2 bytes | `21,000`| -2<sup>15</sup> to 2<sup>15</sup>-1 |
+| <span id="medium-int">mediumint</span> |medium integer| 3 bytes |`401,000`| -2<sup>23</sup> to 2<sup>23</sup>-1 |
 | <span id="date">date</span>            |date          | 5 bytes | `'2020-01-02'` | |
 | <span id="time">time</span>            |time          | 5 bytes | `'03:04:05'` | |
 | <span id="datetime">datetime</span>[^5]|date and time | 5 bytes | `'2020-01-02 03:04:05'` | |
-| <span id="char(N)">char(N)</span>      |string of length *N* | *N* bytes| `text` | |
-| <span id="double">double</span>        |double-precision floating point number | 8 bytes | | |
+| <span id="char(N)">char(N)</span>      |string of exactly length *N*           | *N* bytes| `text` | |
+| <span id="double">double</span>        |double-precision floating point number | 8 bytes  | | |
 | <span id="decimalnf">decimal(N,F)</span>   |a fixed-point number with *N* total and *F* fractional digits | 4 bytes per 9 digits | | |
 | <span id="tinyblob">tinyblob</span>[^4]    | arbitrary numeric data| ≲ 256 bytes | | |
 | <span id="blob">blob</span>[^4]            | arbitrary numeric data| ≤ 64 KiB    | | |

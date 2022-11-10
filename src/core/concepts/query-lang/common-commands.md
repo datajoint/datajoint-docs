@@ -51,7 +51,7 @@ full article [here](../reproduce/make-method.md)
 Data queries in DataJoint comprise two distinct steps:
 
 1.  Construct the `query` object to represent the required data using
-    tables and [operators](./operators).
+    tables and [operators](../operators).
 2.  Fetch the data from `query` into the workspace of the host language.
 
 Note that entities returned by `fetch` methods are not guaranteed to be sorted in any
@@ -121,5 +121,5 @@ an existing pipeline.
     draw(dj.ERD(seq.getSchema))   % draw the diagram
     ```
 
-For more information about diagrams, see [this article](../getting-started/diagrams).
+For more information about diagrams, see [this article](../../getting-started/diagrams).
 For more examples in Python or Matlab, please visit the respective API documentation. 

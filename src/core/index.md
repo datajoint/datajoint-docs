@@ -1,7 +1,7 @@
 # Core
 
 DataJoint Core projects are fully open-source and are built to develop, define, manage,
-and visualize [data pipelines](./glossary#data-pipeline). Below are the projects that
+and visualize [data pipelines](./getting-started/data-pipelines). Below are the projects that
 make up the family of core open-source projects.
 
 ## APIs
@@ -61,12 +61,21 @@ make up the family of core open-source projects.
 
 ``` mermaid
 graph
-  datajoint/mysql;
-  datajoint/miniconda3 --> datajoint/djbase;
-  datajoint/djbase --> datajoint/djtest;
-  datajoint/djbase --> datajoint/datajoint;
-  datajoint/djbase --> datajoint/djlab;
-  datajoint/djlab --> datajoint/djlabhub;
+  %% Give short names
+  dj["datajoint/datajoint"]
+  base["datajoint/djbase"]
+  lab["datajoint/djlab"]
+  hub["datajoint/djlabhub"]
+  test["datajoint/djtest"]
+  conda3["datajoint/miniconda3"]
+  mysql["datajoint/mysql"]
+  %% Define connections
+  conda3 --> base --> test;
+  base --> dj;
+  base --> lab --> hub;
+  %% Add all to class
+  class dj,base,lab,hub,test,conda3,mysql boxes;
+  classDef boxes stroke:#333; %% Grey stroke for class
 ```
 
 <div class="grid cards" markdown>

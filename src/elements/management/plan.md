@@ -12,6 +12,6 @@ The following sections provide detailed information.
 - [Project Governance](../governance)
 - [Project Selection Process](../selection)
 - [Quality Assurance](../quality-assurance)
-- [Contribution Guideline](../../../community/contribution)
+- [Contribution Guideline](../../../community/contribute)
 - [Outreach Plan](../outreach)
 - [Licenses and User Agreements](../../../community/licenses)

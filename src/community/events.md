@@ -9,7 +9,7 @@ Sign up [here](https://docs.google.com/forms/d/e/1FAIpQLSeMhZtzQQWB47I8HfPcJ5_pF
 
 ## Upcoming Workshops
 
-+ Society for Neuroscience: November 12-16, 2022
++ [Society for Neuroscience](https://www.sfn.org/meetings/neuroscience-2022): November 12-16, 2022
 
 ## Past Events
 
