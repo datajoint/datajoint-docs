@@ -18,5 +18,5 @@ find how we've understood and use these terms.
 | <span id="djhub">djHub</span> | our team's internal platform for delivering cloud-based infrastructure to support online training resources, validation studies, and collaborative projects. |
 | <span id="foreign-key">foreign key</span> | a field that is linked to another table's primary key. |
 | <span id="primary-key">primary key</span> | the subset of table attributes that uniquely identify each entity in the table. |
-| <span id="secondray-attribute">secondray attribute</span> | any field in a table not in the primary key. |
+| <span id="secondary-attribute">secondray attribute</span> | any field in a table not in the primary key. |
 | <span id="workflow">workflow</span> | a formal representation of the steps for executing an experiment from data collection to analysis. Also the software configured for performing these steps. A typical workflow is composed of tables with inter-dependencies and processes to compute and insert data into the tables. |

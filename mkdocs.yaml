@@ -5,13 +5,38 @@ site_url: http://localhost/docs
 repo_name: datajoint-company/datajoint-docs
 repo_url: https://github.com/datajoint-company/datajoint-docs
 nav:
-  - Welcome: welcome.md
-  - Core: core.md
+  - Welcome: index.md
+  - Core:
+    - Overview: core/index.md
+    - Concepts:
+      - Mantra: core/concepts/mantra.md
+      - Getting Started:
+        - First Steps: core/concepts/getting-started/index.md
+        - Data Pipelines: core/concepts/getting-started/data-pipelines.md
+        - Table Definitions: core/concepts/getting-started/table-definitions.md
+        - Diagrams: core/concepts/getting-started/diagrams.md
+        - Dependencies: core/concepts/getting-started/dependencies.md
+      - Query Language:
+        - Data Types: core/concepts/query-lang/data-types.md
+        - Query Objects: core/concepts/query-lang/query-objs.md
+        - Operators:  core/concepts/query-lang/operators.md
+        - Common Commands: core/concepts/query-lang/common-commands.md
+        - Primary Key: core/concepts/query-lang/primary-key.md
+        - Normalization: core/concepts/query-lang/normalization.md
+      - Reproducibility:
+        - Table Tiers: core/concepts/reproduce/table-tiers.md
+        - Make Methods: core/concepts/reproduce/make-method.md
+      - Referential Integrity:
+        - Query Backend: core/concepts/ref-integrity/query-backend.md
+        - Distributed Computing: core/concepts/ref-integrity/distributed-computing.md
+        - Relational Databases: core/concepts/ref-integrity/relational-databases.md
+      - Glossary: core/glossary.md
+      - FAQ: core/faq.md
   - Elements:
     - Overview: elements/index.md
     - Concepts: elements/concepts.md
-    - User Instructions: elements/user-instructions.md
-    - Developer Guide: elements/developer-instructions.md
+    - User Guide: elements/user-guide.md
+    - Developer Guide: elements/developer-guide.md
     - Management:
         - Plan: elements/management/plan.md
         - Team: elements/management/team.md
@@ -20,45 +45,23 @@ nav:
         - Quality Assurance: elements/management/quality-assurance.md
         - Outreach: elements/management/outreach.md
         - Adopt: elements/management/adopt.md
+  - Works:
+    - Overview: works/index.md
   - Projects: projects.md
   - Publications: publications.md
-  - Concepts:
-    - Mantra: concepts/mantra.md
-    - Getting Started:
-      - First Steps: concepts/getting-started/index.md
-      - Data Pipelines: concepts/getting-started/data-pipelines.md
-      - Table Definitions: concepts/getting-started/table-definitions.md
-      - Diagrams: concepts/getting-started/diagrams.md
-      - Dependencies: concepts/getting-started/dependencies.md
-    - Query Language:
-      - Data Types: concepts/query-lang/data-types.md
-      - Query Objects: concepts/query-lang/query-objs.md
-      - Operators:  concepts/query-lang/operators.md
-      - Common Commands: concepts/query-lang/common-commands.md
-      - Primary Key: concepts/query-lang/primary-key.md
-      - Normalization: concepts/query-lang/normalization.md
-    - Reproducibility:
-      - Table Tiers: concepts/reproduce/table-tiers.md
-      - Make Methods: concepts/reproduce/make-method.md
-    - Referential Integrity:
-      - Query Backend: concepts/ref-integrity/query-backend.md
-      - Distributed Computing: concepts/ref-integrity/distributed-computing.md
-      - Relational Databases: concepts/ref-integrity/relational-databases.md
-    - FAQ: FAQ.md
-  - Glossary: glossary.md
   - Citation: citation.md
   - Community:
     - Support: community/support.md
     - Events: community/events.md
-    - Contribution: community/contribution.md
+    - Contribute: community/contribute.md
     - Licenses: community/licenses.md
+    - History: community/history.md
     - Partnerships:
       - NWB: community/partnerships/nwb.md
       - DANDI: community/partnerships/dandi.md
       - Suite2p: community/partnerships/suite2p.md
       - Facemap: community/partnerships/facemap.md
       - INCF: community/partnerships/incf.md
-    - History: community/history.md
 
 # ---------------------------- STANDARD -----------------------------
 

@@ -2,11 +2,7 @@
 # Projects <!-- 64 -->
 
 DataJoint was originally developed by working systems neuroscientists at Baylor College
-of Medicine to meet the needs of their own research.
-
-Below is a partial list of known teams who use DataJoint. Please let us know if you
-would like to add another group or make other corrections by sending an email to
-support@datajoint.com.
+of Medicine to meet the needs of their own research. Below is a partial list of known teams who use DataJoint.
 
 ## Multi-lab collaboratives <!-- 9 -->
 
