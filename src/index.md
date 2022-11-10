@@ -1,14 +1,26 @@
-# :wave: Howdy
+# :wave: Welcome to DataJoint Documentation
 
-Welcome to the home for DataJoint documentation. Here we'll help get you to the right
-place quickly.
+The DataJoint ecosystem is divided into 2 distinct areas, DataJoint Core and DataJoint Elements.
 
-<br>
+**DataJoint Core**
 
-The DataJoint ecosystem is divided into 2 distinct areas:
+---
 
-+ **Core**: Fully open-source projects built and designed specifically to support the
-    [DataJoint Mantra](../concepts/mantra).
+Open-source clients for managing data pipelines.
 
-+ **Elements**: Fully open-source, data pipelines for neuroscience built with
-    [DataJoint Core](../core).
++ DataJoint API for Python
++ DataJoint API for MATLAB
++ DataJoint Pharus
++ DataJoint LabBook
++ DataJoint SciViz
++ DataJoint Container Images
+
+[:octicons-arrow-right-24: Learn more](./elements/)
+
+**DataJoint Elements**
+
+---
+
+Open-source data pipelines for neuroscience built with DataJoint API for Python.
+
+[:octicons-arrow-right-24: Learn more](./elements/)
