@@ -1,6 +1,6 @@
 # Welcome to the DataJoint Documentation
 
-## DataJoint Ecosystem
+<h2> DataJoint Ecosystem </h2>
 
 <div class="grid cards" markdown>
 
@@ -42,7 +42,7 @@
 
 </div>
 
-## Research supported by DataJoint
+<h2> Research supported by DataJoint </h2>
 
 <div class="grid cards" markdown>
 -   [**Projects**](./projects.md)
