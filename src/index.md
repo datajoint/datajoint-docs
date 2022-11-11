@@ -45,8 +45,17 @@
 <h2> Research supported by DataJoint </h2>
 
 <div class="grid cards" markdown>
--   [**Projects**](./projects.md)
 
--   [**Publications**](./publications.md)
+-   **Projects**
+
+     ---
+
+     [:octicons-arrow-right-24: Learn more](./projects)
+
+-   **Publications**
+
+     ---
+
+     [:octicons-arrow-right-24: Learn more](./publications)
 
 </div>
