@@ -50,12 +50,12 @@
 
      ---
 
-     [:octicons-arrow-right-24: Learn more](./projects)
+     [:octicons-arrow-right-24: Learn more](./projects/)
 
 -   **Publications**
 
      ---
 
-     [:octicons-arrow-right-24: Learn more](./publications)
+     [:octicons-arrow-right-24: Learn more](./publications/)
 
 </div>
