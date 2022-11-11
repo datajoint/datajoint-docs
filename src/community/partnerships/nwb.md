@@ -1,13 +1,14 @@
 # NWB
 
-## Integrations between DataJoint Elements and Neurodata Without Borders 
+## Integrations between DataJoint Elements and Neurodata Without Borders
 
 <figure markdown>
-  ![Elements](../../images/elements-logo.png){: style="width:300px"}
-  ![NWB](../../images/nwb-logo.png){: style="width:300px"}
+  ![Elements](../../images/_elements-logo.png){: style="width:300px"}
+  ![NWB](../../images/community-partnerships-nwb-logo.png){: style="width:300px"}
 </figure>
 
 ## Aim
+
 **DataJoint Elements** and **Neurodata Without Borders (NWB)** are two neuroinformatics 
   initiatives in active development. The projects develop independently yet they have
   complementary aims and overlapping user communities. This document establishes key
@@ -18,11 +19,11 @@
 
 ### DataJoint
 
-**DataJoint Elements** — https://datajoint.com/docs/elements/ — is a collection of open-source
-  reference database schemas and analysis workflows for neurophysiology experiments, 
-  supported by **DataJoint** — https://datajoint.com/docs/core/ — an open-source software 
-  framework. The project is funded by the NIH grant U24 NS116470 and led by Dr. Dimitri 
-  Yatsenko.
+**DataJoint Elements** — https://datajoint.com/docs/elements/ — is a collection of
+  open-source reference database schemas and analysis workflows for neurophysiology
+  experiments, supported by **DataJoint** — https://datajoint.com/docs/core/ — an
+  open-source software framework. The project is funded by the NIH grant U24 NS116470
+  and led by Dr. Dimitri Yatsenko.
   
 The principal developer of DataJoint Elements and the DataJoint framework is the company
 DataJoint — https://datajoint.com.

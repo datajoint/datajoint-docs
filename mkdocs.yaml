@@ -5,13 +5,38 @@ site_url: http://localhost/docs
 repo_name: datajoint-company/datajoint-docs
 repo_url: https://github.com/datajoint-company/datajoint-docs
 nav:
-  - Welcome: welcome.md
-  - Core: core.md
+  - Welcome: index.md
+  - Core:
+    - Overview: core/index.md
+    - Concepts:
+      - Mantra: core/concepts/mantra.md
+      - Getting Started:
+        - First Steps: core/concepts/getting-started/index.md
+        - Data Pipelines: core/concepts/getting-started/data-pipelines.md
+        - Table Definitions: core/concepts/getting-started/table-definitions.md
+        - Diagrams: core/concepts/getting-started/diagrams.md
+        - Dependencies: core/concepts/getting-started/dependencies.md
+      - Query Language:
+        - Data Types: core/concepts/query-lang/data-types.md
+        - Query Objects: core/concepts/query-lang/query-objs.md
+        - Operators:  core/concepts/query-lang/operators.md
+        - Common Commands: core/concepts/query-lang/common-commands.md
+        - Primary Key: core/concepts/query-lang/primary-key.md
+        - Normalization: core/concepts/query-lang/normalization.md
+      - Reproducibility:
+        - Table Tiers: core/concepts/reproduce/table-tiers.md
+        - Make Methods: core/concepts/reproduce/make-method.md
+      - Referential Integrity:
+        - Query Backend: core/concepts/ref-integrity/query-backend.md
+        - Distributed Computing: core/concepts/ref-integrity/distributed-computing.md
+        - Relational Databases: core/concepts/ref-integrity/relational-databases.md
+      - Glossary: core/glossary.md
+      - FAQ: core/faq.md
   - Elements:
     - Overview: elements/index.md
     - Concepts: elements/concepts.md
-    - User Instructions: elements/user-instructions.md
-    - Developer Guide: elements/developer-instructions.md
+    - User Guide: elements/user-guide.md
+    - Developer Guide: elements/developer-guide.md
     - Management:
         - Plan: elements/management/plan.md
         - Team: elements/management/team.md
@@ -20,26 +45,23 @@ nav:
         - Quality Assurance: elements/management/quality-assurance.md
         - Outreach: elements/management/outreach.md
         - Adopt: elements/management/adopt.md
-  - Concepts:
-    - Mantra: concepts/mantra.md
-    - Query Language:
-      - Datatypes: concepts/query-lang/datatypes.md
-    - Referential Integrity:
-        - Query Backend: concepts/ref-integrity/query-backend.md
-  - Glossary: glossary.md
+  - Works:
+    - Overview: works/index.md
+  - Projects: projects.md
+  - Publications: publications.md
+  - Citation: citation.md
   - Community:
     - Support: community/support.md
     - Events: community/events.md
-    - Contribution: community/contribution.md
+    - Contribute: community/contribute.md
     - Licenses: community/licenses.md
+    - History: community/history.md
     - Partnerships:
       - NWB: community/partnerships/nwb.md
       - DANDI: community/partnerships/dandi.md
       - Suite2p: community/partnerships/suite2p.md
       - Facemap: community/partnerships/facemap.md
       - INCF: community/partnerships/incf.md
-  - Projects: projects.md
-  - Publications: publications.md
 
 # ---------------------------- STANDARD -----------------------------
 
@@ -52,11 +74,10 @@ theme:
   name: material
   custom_dir: src/.overrides
   icon:
-    logo: main/project-logo-black
-  favicon: assets/images/project-logo-color.png
+    logo: main/company-logo
+  favicon: assets/images/company-logo-blue.png
   features:
     - toc.integrate
-    - content.code.annotate
   palette:
     - media: "(prefers-color-scheme: light)"
       scheme: datajoint
@@ -73,6 +94,10 @@ plugins:
   - redirects:
       redirect_maps:
         "index.md": "welcome.md"
+  - exclude:
+      glob:
+        - archive/*
+        - images/*md
 markdown_extensions:
   - attr_list
   - md_in_html
@@ -85,41 +110,51 @@ markdown_extensions:
       emoji_index: !!python/name:materialx.emoji.twemoji
       emoji_generator: !!python/name:materialx.emoji.to_svg
   - mdx_truly_sane_lists
-  - pymdownx.superfences: # Triple backtic code blocks
+  - pymdownx.superfences:
       custom_fences:
-        - name: mermaid # Add mermaid as available styling
+        - name: mermaid
           class: mermaid
           format: !!python/name:pymdownx.superfences.fence_code_format
-  - pymdownx.highlight:
-      linenums: true # Add line numbers to code blocks
-  - pymdownx.details: # permit folded <details> blocks via `??? Note "Title"` format
-  # - pymdownx.tabbed: # Allows tabbed blocks e.g.: === "Python" 
-      # alternate_style: true # Styling via CSS, not JS + stacked tabs w/narrow screens
-  # - pymdownx.inlinehilite # Allows language-specific highlighting e.g.: `#!py3 code`
-  # - pymdownx.snippets # Allows including file snippets e.g. --8<-- "file.md:4:6"
+  - pymdownx.tabbed:
+      alternate_style: true
+  - footnotes
+  - pymdownx.details: # permit folded <details> blocks via `??? note "Title"` format
+  - pymdownx.snippets # Allows including file snippets e.g. --8<-- "; src/file.md"
 extra:
   generator: false # Disable watermark
+  analytics:
+    provider: google
+    property: !ENV GOOGLE_ANALYTICS_KEY
+  version:
+    provider: mike
   social:
     - icon: main/company-logo
-      link: https://www.datajoint.com/
-    - icon: fontawesome/solid/ticket
-      link: https://support.djneuro.io/portal/en/home
+      link: https://www.datajoint.com
+      name: DataJoint
     - icon: fontawesome/brands/slack
       link: https://datajoint.slack.com
+      name: Slack
     - icon: fontawesome/brands/linkedin
       link: https://www.linkedin.com/company/datajoint
+      name: LinkedIn
     - icon: fontawesome/brands/twitter
-      link: https://twitter.com/DataJointIO
+      link: https://twitter.com/datajoint
+      name: Twitter
     - icon: fontawesome/brands/github
       link: https://github.com/datajoint
+      name: GitHub
     - icon: fontawesome/brands/docker
       link: https://hub.docker.com/u/datajoint
+      name: DockerHub
     - icon: fontawesome/brands/python
       link: https://pypi.org/user/datajointbot
+      name: PyPI
     - icon: fontawesome/brands/stack-overflow
       link: https://stackoverflow.com/questions/tagged/datajoint
+      name: StackOverflow
     - icon: fontawesome/brands/youtube
       link: https://www.youtube.com/channel/UCdeCuFOTCXlVMRzh6Wk-lGg
+      name: YouTube
 extra_css:
   - assets/stylesheets/extra.css
 extra_javascript:

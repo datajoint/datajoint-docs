@@ -10,6 +10,7 @@ jobs:
       DOCKER_CLIENT_TIMEOUT: "120"
       COMPOSE_HTTP_TIMEOUT: "120"
       DJBOT_GH_TOKEN: ${{secrets.djbot_gh_token}}
+      GOOGLE_ANALYTICS_KEY: ${{secrets.GOOGLE_ANALYTICS_KEY}}
     steps:
       - uses: actions/checkout@v2
       - name: Compile docs static artifacts

@@ -12,6 +12,7 @@ services:
     image: datajoint/datajoint-docs
     environment:
       - MODE
+      - GOOGLE_ANALYTICS_KEY
     volumes:
       - .:/main
     user: ${HOST_UID}:anaconda

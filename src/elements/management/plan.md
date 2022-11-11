@@ -1,8 +1,10 @@
 # Management Plan
 
-DataJoint Elements has established a Resource Management Plan to select projects for development, to assure quality, and to disseminate its output as summarized in the figure below:
+DataJoint Elements has established a Resource Management Plan to select projects for
+development, to assure quality, and to disseminate its output as summarized in the
+figure below:
 
-![Resource Management Plan](../../images/management-plan.png)
+![Resource Management Plan](../../images/elements-management-plan.png)
 
 The following sections provide detailed information.
 
@@ -10,6 +12,6 @@ The following sections provide detailed information.
 - [Project Governance](../governance)
 - [Project Selection Process](../selection)
 - [Quality Assurance](../quality-assurance)
-- [Contribution Guideline](../../../community/contribution)
+- [Contribution Guideline](../../../community/contribute)
 - [Outreach Plan](../outreach)
 - [Licenses and User Agreements](../../../community/licenses)

@@ -6,18 +6,54 @@
     --dj-white: #ffffff;
 }
 
-/* Default for reference
-    --md-code-hl-constant-color: #6e59d9;
-    --md-code-hl-keyword-color: #3f6ec6;
-    --md-code-hl-generic-color-light: #808285; 
-    --md-code-hl-generic-color-dark: #d1d7fa; 
-*/
+/* footer previous/next navigation */
+.md-footer__inner:not([hidden]) {
+    display: none
+}
+
+/* left navigation title */
+.md-nav__title {
+    visibility: hidden;
+}
+.md-nav__title:after {
+    visibility: hidden;
+    content: 'DataJoint Documentation';
+    display: block;
+ }
+
+/* footer social icons */
+html a[title="DataJoint"].md-social__link svg {
+    color: var(--dj-primary);
+}
+html a[title="Slack"].md-social__link svg {
+    color: var(--dj-primary);
+}
+html a[title="LinkedIn"].md-social__link svg {
+    color: var(--dj-primary);
+}
+html a[title="Twitter"].md-social__link svg {
+    color: var(--dj-primary);
+}
+html a[title="GitHub"].md-social__link svg {
+    color: var(--dj-primary);
+}
+html a[title="DockerHub"].md-social__link svg {
+    color: var(--dj-primary);
+}
+html a[title="PyPI"].md-social__link svg {
+    color: var(--dj-primary);
+}
+html a[title="StackOverflow"].md-social__link svg {
+    color: var(--dj-primary);
+}
+html a[title="YouTube"].md-social__link svg {
+    color: var(--dj-primary);
+}
 
 [data-md-color-scheme="datajoint"] {
     /* ribbon */
     /* ribbon + markdown heading expansion */
     --md-primary-fg-color: var(--dj-black);
-    --md-primary-fg-color--dark: var(--dj-black);
     /* ribbon text */
     --md-primary-bg-color: var(--dj-primary);
 
@@ -37,14 +73,13 @@
 
     /* footer */
     /* previous/next text */
-    --md-footer-fg-color: var(--dj-primary);
+    /* --md-footer-fg-color: var(--dj-primary); */
 }
 
 [data-md-color-scheme="slate"] {
     /* ribbon */
     /* ribbon + markdown heading expansion */
     --md-primary-fg-color: var(--dj-primary);
-    --md-primary-fg-color--dark: var(--dj-primary);
     /* ribbon text */
     --md-primary-bg-color: var(--dj-white);
 
@@ -64,9 +99,5 @@
 
     /* footer */
     /* previous/next text */
-    --md-footer-fg-color: var(--dj-white);
-}
-
-.md-typeset figure img {
-    display: inline;
+    /* --md-footer-fg-color: var(--dj-white); */
 }
