@@ -14,7 +14,7 @@ make up the family of core open-source projects.
 
     A low-level client for managing [data pipelines](./glossary#data-pipeline).
 
-    [:octicons-arrow-right-24: Learn more](./datajoint-python/)
+    :octicons-arrow-right-24: New docs coming soon!  In the meantime, refer to our [legacy docs](https://docs.datajoint.org/python/)
 
 -   :fontawesome-brands-java:{ .lg .middle } **DataJoint MATLAB**
 
@@ -22,7 +22,7 @@ make up the family of core open-source projects.
 
     A low-level client for managing [data pipelines](./glossary#data-pipeline).
 
-    :octicons-arrow-right-24: Docs coming soon!
+    :octicons-arrow-right-24: New docs coming soon!  In the meantime, refer to our [legacy docs](https://docs.datajoint.org/matlab/).
 
 -   :fontawesome-solid-flask:{ .lg .middle } **Pharus**
 
@@ -30,7 +30,7 @@ make up the family of core open-source projects.
 
     Expose [data pipelines](./glossary#data-pipeline) via a REST interface.
 
-    :octicons-arrow-right-24: Docs coming soon!
+    :octicons-arrow-right-24: New docs coming soon!  In the meantime, refer to our [legacy docs](https://datajoint.github.io/pharus/).
 
 </div>
 
@@ -44,7 +44,7 @@ make up the family of core open-source projects.
 
     Data entry and data model browsing for [data pipelines](./glossary#data-pipeline).
 
-    :octicons-arrow-right-24: Docs coming soon!
+    :octicons-arrow-right-24: New docs coming soon!  In the meantime, refer to our [legacy docs](https://datajoint.github.io/datajoint-labbook/).
 
 -   :fontawesome-brands-chrome:{ .lg .middle } **SciViz**
 
@@ -53,7 +53,7 @@ make up the family of core open-source projects.
     A visualization framework for making low-code web apps for 
     [data pipelines](./glossary#data-pipeline).
 
-    :octicons-arrow-right-24: Docs coming soon!
+    :octicons-arrow-right-24: New docs coming soon!
 
 </div>
 
@@ -86,7 +86,7 @@ graph
 
     An optimized, MySQL backend for [data pipelines](./glossary#data-pipeline).
 
-    :octicons-arrow-right-24: Docs coming soon!
+    :octicons-arrow-right-24: New docs coming soon!
 
 -   :fontawesome-brands-docker:{ .lg .middle } **datajoint/miniconda3**
 
@@ -94,7 +94,7 @@ graph
 
     A minimal Python image with [conda](https://docs.conda.io/en/latest/).
 
-    :octicons-arrow-right-24: Docs coming soon!
+    :octicons-arrow-right-24: New docs coming soon!  In the meantime, refer to our [legacy docs](https://datajoint.github.io/miniconda3-docker/).
 
 -   :fontawesome-brands-docker:{ .lg .middle } **datajoint/djbase**
 
@@ -102,7 +102,7 @@ graph
 
     Adds only dependencies for managing [data pipelines](./glossary#data-pipeline).
 
-    :octicons-arrow-right-24: Docs coming soon!
+    :octicons-arrow-right-24: New docs coming soon!  In the meantime, refer to our [legacy docs](https://datajoint.github.io/djbase-docker/).
 
 -   :fontawesome-brands-docker:{ .lg .middle } **datajoint/djtest**
 
@@ -110,7 +110,7 @@ graph
 
     Adds testing tools like [pytest](https://docs.pytest.org/en/7.1.x/).
 
-    :octicons-arrow-right-24: Docs coming soon!
+    :octicons-arrow-right-24: New docs coming soon!  In the meantime, refer to our [legacy docs](https://datajoint.github.io/djtest-docker/).
 
 -   :fontawesome-brands-docker:{ .lg .middle } **datajoint/datajoint**
 
@@ -118,7 +118,7 @@ graph
 
     Official image for managing [data pipelines](./glossary#data-pipeline).
 
-    :octicons-arrow-right-24: Docs coming soon!
+    :octicons-arrow-right-24: New docs coming soon!
 
 -   :fontawesome-brands-docker:{ .lg .middle } **datajoint/djlab**
 
@@ -126,7 +126,7 @@ graph
 
     Adds a local [Jupyter Lab](https://jupyterlab.readthedocs.io/en/stable/) environment.
 
-    :octicons-arrow-right-24: Docs coming soon!
+    :octicons-arrow-right-24: New docs coming soon!  In the meantime, refer to our [legacy docs](https://datajoint.github.io/djlab-docker/).
 
 -   :fontawesome-brands-docker:{ .lg .middle } **datajoint/djlabhub**
 
@@ -134,6 +134,6 @@ graph
 
     Adds a client to allow hosting with [Jupyter Hub](https://jupyter.org/hub).
 
-    :octicons-arrow-right-24: Docs coming soon!
+    :octicons-arrow-right-24: New docs coming soon!  In the meantime, refer to our [legacy docs](https://datajoint.github.io/djlabhub-docker/).
 
 </div>
