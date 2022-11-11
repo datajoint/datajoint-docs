@@ -23,7 +23,7 @@ Below are the projects that make up the family of open-source DataJoint Elements
 
     A data pipeline for calcium imaging microscopy.
 
-    [:octicons-arrow-right-24: Getting started](./element-calcium-imaging/)
+    [:octicons-arrow-right-24: Learn more](./element-calcium-imaging/)
 
 -   :fontawesome-brands-python:{ .lg .middle } **Element Array Electrophysiology**
 
@@ -31,7 +31,7 @@ Below are the projects that make up the family of open-source DataJoint Elements
 
     A data pipeline for Neuropixels probes.
 
-    [:octicons-arrow-right-24: Getting started](./element-array-ephys/)
+    [:octicons-arrow-right-24: Learn more](./element-array-ephys/)
 
 -   :fontawesome-brands-python:{ .lg .middle } **Element Electrode Localization**
 
@@ -39,7 +39,7 @@ Below are the projects that make up the family of open-source DataJoint Elements
 
     A data pipeline for electrode localization of Neuropixels probes.
 
-    [:octicons-arrow-right-24: Getting started](./element-electrode-localization/)
+    [:octicons-arrow-right-24: Learn more](./element-electrode-localization/)
 
 -   :fontawesome-brands-python:{ .lg .middle } **Element Miniscope**
 
@@ -47,7 +47,7 @@ Below are the projects that make up the family of open-source DataJoint Elements
 
     A data pipeline for miniscope calcium imaging.
 
-    [:octicons-arrow-right-24: Getting started](./element-miniscope/)
+    [:octicons-arrow-right-24: Learn more](./element-miniscope/)
 
 -   :fontawesome-brands-python:{ .lg .middle } **Element DeepLabCut**
 
@@ -55,7 +55,7 @@ Below are the projects that make up the family of open-source DataJoint Elements
 
     A data pipeline for pose estimation with DeepLabCut.
 
-    [:octicons-arrow-right-24: Getting started](./element-deeplabcut/)
+    [:octicons-arrow-right-24: Learn more](./element-deeplabcut/)
 
 -   :fontawesome-brands-python:{ .lg .middle } **Element Facemap**
 
@@ -63,7 +63,7 @@ Below are the projects that make up the family of open-source DataJoint Elements
 
     A data pipeline for pose estimation with Facemap.
 
-    [:octicons-arrow-right-24: Getting started](./element-facemap/)
+    [:octicons-arrow-right-24: Learn more](./element-facemap/)
 
 -   :fontawesome-brands-java:{ .lg .middle } **Element Visual Stimulus**
 
@@ -71,7 +71,7 @@ Below are the projects that make up the family of open-source DataJoint Elements
 
     A data pipeline for visual stimulation with Psychtoolbox.
 
-    [:octicons-arrow-right-24: Getting started](./element-visual-stimulus/)
+    [:octicons-arrow-right-24: Learn more](./element-visual-stimulus/)
 
 -   :fontawesome-brands-python:{ .lg .middle } **Element Lab**
 
@@ -79,7 +79,7 @@ Below are the projects that make up the family of open-source DataJoint Elements
 
     A data pipeline for lab management.
 
-    [:octicons-arrow-right-24: Getting started](./element-lab/)
+    [:octicons-arrow-right-24: Learn more](./element-lab/)
 
 -   :fontawesome-brands-python:{ .lg .middle } **Element Animal**
 
@@ -87,7 +87,7 @@ Below are the projects that make up the family of open-source DataJoint Elements
 
     A data pipeline for subject management.
 
-    [:octicons-arrow-right-24: Getting started](./element-animal/)
+    [:octicons-arrow-right-24: Learn more](./element-animal/)
 
 -   :fontawesome-brands-python:{ .lg .middle } **Element Session**
 
@@ -95,7 +95,7 @@ Below are the projects that make up the family of open-source DataJoint Elements
 
     A data pipeline for session management.
 
-    [:octicons-arrow-right-24: Getting started](./element-session/)
+    [:octicons-arrow-right-24: Learn more](./element-session/)
 
 -   :fontawesome-brands-python:{ .lg .middle } **Element Event**
 
@@ -103,6 +103,14 @@ Below are the projects that make up the family of open-source DataJoint Elements
 
     A data pipeline for event- and trial-based experiments.
 
-    [:octicons-arrow-right-24: Getting started](./element-event/)
+    [:octicons-arrow-right-24: Learn more](./element-event/)
+
+-   :fontawesome-brands-python:{ .lg .middle } **Element Interface**
+
+    ---
+
+    Common functions for the DataJoint Elements.
+
+    [:octicons-arrow-right-24: Learn more](./element-interface/)
 
 </div>

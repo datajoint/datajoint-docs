@@ -14,7 +14,7 @@ make up the family of core open-source projects.
 
     A low-level client for managing [data pipelines](./glossary#data-pipeline).
 
-    [:octicons-arrow-right-24: Getting started](./datajoint-python/)
+    [:octicons-arrow-right-24: Learn more](./datajoint-python/)
 
 -   :fontawesome-brands-java:{ .lg .middle } **DataJoint MATLAB**
 
