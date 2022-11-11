@@ -105,4 +105,12 @@ Below are the projects that make up the family of open-source DataJoint Elements
 
     [:octicons-arrow-right-24: Getting started](./element-event/)
 
+-   :fontawesome-brands-python:{ .lg .middle } **Element Interface**
+
+    ---
+
+    Common functions for the DataJoint Elements.
+
+    [:octicons-arrow-right-24: Getting started](./element-interface/)
+
 </div>
