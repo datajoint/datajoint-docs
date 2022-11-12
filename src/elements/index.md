@@ -71,7 +71,7 @@ Below are the projects that make up the family of open-source DataJoint Elements
 
     A data pipeline for visual stimulation with Psychtoolbox.
 
-    [:octicons-arrow-right-24: Learn more](./element-visual-stimulus/)
+    :octicons-arrow-right-24: New docs coming soon!
 
 -   :fontawesome-brands-python:{ .lg .middle } **Element Lab**
 
@@ -111,6 +111,6 @@ Below are the projects that make up the family of open-source DataJoint Elements
 
     Common functions for the DataJoint Elements.
 
-    [:octicons-arrow-right-24: Learn more](./element-interface/)
+    :octicons-arrow-right-24: New docs coming soon!
 
 </div>
