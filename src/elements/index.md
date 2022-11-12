@@ -63,7 +63,7 @@ Below are the projects that make up the family of open-source DataJoint Elements
 
     A data pipeline for pose estimation with Facemap.
 
-    [:octicons-arrow-right-24: Learn more](./element-facemap/)
+    :octicons-arrow-right-24: New docs coming soon!
 
 -   :fontawesome-brands-java:{ .lg .middle } **Element Visual Stimulus**
 
