@@ -31,7 +31,7 @@ Below are the projects that make up the family of open-source DataJoint Elements
 
     A data pipeline for Neuropixels probes.
 
-    :octicons-arrow-right-24: New docs coming soon!
+    [:octicons-arrow-right-24: Learn more](./element-array-ephys/)
 
 -   :fontawesome-brands-python:{ .lg .middle } **Element Electrode Localization**
 
