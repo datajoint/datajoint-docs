@@ -17,7 +17,7 @@ of Medicine to meet the needs of their own research. Below is a partial list of 
   + Princeton<a href="https://www.braincogs.org/" target="_blank"> BRAIN CoGS</a> (<a href="https://github.com/braincogs/" target="_blank">GitHub</a>)
   + Rochester-NYU-Harvard<a href="https://causalityinmotion.github.io/team.html" target="_blank"> Neural basis of causal inference</a>
 
-## Individual Labs <!-- 56 -->
+## Individual Labs <!-- 60 -->
 
 + Allen Institute
   + <a href="https://alleninstitute.org/what-we-do/brain-science/research/mindscope-program/" target="_blank">Mindscope Program</a>
@@ -66,8 +66,11 @@ of Medicine to meet the needs of their own research. Below is a partial list of 
   + <a href="http://ericthomson.net/" target="_blank">Eric E. Thomson</a>
 + New York University
   + <a href="https://angelakilabnyu.org/" target="_blank">Dora Angelaki Lab</a>
++ New York University Langone Medical Center
+  + <a href="https://www.sippylab.com/" target="_blank">Tanya Sippy Lab</a>
 + Northwestern University
   + <a href="https://www.feinberg.northwestern.edu/faculty-profiles/az/profile.html?xid=49313" target="_blank">James Cotton Lab</a> (<a href="https://github.com/peabody124/PosePipeline" target="_blank">GitHub</a>)
+  + <a href="http://schwartzlab.feinberg.northwestern.edu/" target="_blank">Gregory Schwartz Lab</a> (<a href="https://github.com/SchwartzNU/DJ_schwartzlab" target="_blank">GitHub</a>)
   + <a href="https://www.pintolab.org" target="_blank">Lucas Pinto Lab</a>
 + Princeton University
   + <a href="http://brodylab.org" target="_blank">Carlos Brody Lab</a>
@@ -81,6 +84,7 @@ of Medicine to meet the needs of their own research. Below is a partial list of 
   + <a href="http://web.stanford.edu/group/dlab/" target="_blank">Karl Deisseroth Lab</a>
   + <a href="https://www.druckmannlab.com" target="_blank">Shaul Druckmann Lab</a>
 + Tel-Aviv University
+  + <a href="https://www.finkelstein.sites.tau.ac.il/" target="_blank">Arseny Finkelstein Lab</a> (<a href="https://github.com/ArsenyFinkelsteinLab" target="_blank">GitHub</a>)
   + <a href="http://pblab.tau.ac.il/en/" target="_blank">Pablo Blinder Lab</a> (<a href="https://github.com/PBLab" target="_blank">GitHub</a>)
 + University of Bonn
   + <a href="https://rose-group.ieecr-bonn.de" target="_blank">Tobias Rose Lab</a>
@@ -96,6 +100,8 @@ of Medicine to meet the needs of their own research. Below is a partial list of 
 + University of Rochester
   + <a href="http://www.sas.rochester.edu/bcs/people/faculty/deangelis_greg/index.html" target="_blank">Greg DeAngelis Lab</a>
   + <a href="https://www2.bcs.rochester.edu/sites/haefnerlab/index.html" target="_blank">Ralf Haefner Lab</a>
++ Universität Tübingen
+  + <a href="https://www.mackelab.org" target="_blank">Jakob Macke Lab</a> (<a href="https://github.com/mackelab" target="_blank">GitHub</a>)
 + University of Utah
   + <a href="http://shcheglovitov-lab.utah.edu/" target="_blank">Aleksandr Shcheglovitov Lab</a> (<a href="https://github.com/yueqiw/ephys_analysis" target="_blank">GitHub</a>)
 + University of Washington
