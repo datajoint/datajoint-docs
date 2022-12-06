@@ -10,12 +10,12 @@ between them. The `draw` method plots the graph, with many other methods (
 [Matlab](https://github.com/datajoint/datajoint-matlab/blob/master/%2Bdj/ERD.m)) to
 save or adjust the output.
 
-Because DataJoint pipelines are directional (see [DAG](../../../glossary#dag)), the tables at the
+Because DataJoint pipelines are directional (see [DAG](../../../glossary#dag)), the 
+tables at the
 top will need to be populated first, followed by those tables one step below and so
 forth until the last table is populated at the bottom of the pipeline. The top of the
 pipeline tends to be dominated by Lookup and manual tables. The middle has many
 imported tables, and the bottom has computed tables.
-
 
 ## Notation
 
@@ -26,10 +26,15 @@ DataJoint uses the following conventions:
 
 -   [Table type](../../reproduce/table-tiers) is indicated by colors and symbols, with some
     differences across Python and Matlab: 
+
     - **Lookup**: gray, rectangle or asterisk
+    
     - **Manual**: green, rectangle or square
+    
     - **Imported**: blue, circle or oval
+    
     - **Computed**: red, rectangle or star
+    
     - **Part**: black dot with smaller font or black text
 
 -   [Dependencies](../dependencies) indicated as edges in the graph and always
@@ -48,7 +53,6 @@ DataJoint uses the following conventions:
 
     - **Dot on the line**: The [foreign key](../../glossary#foreign-key) was renamed
       via the [projection](../../query-lang/operators#proj)
-
 
 ## Example
 
@@ -75,4 +79,3 @@ Here, we see ...
  
 For examples calling `Diagram` in Python and Matlab, please visit the documentation for
 the respective API.
-
