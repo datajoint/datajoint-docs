@@ -21,4 +21,4 @@
   + [Sign up for Office Hours!](https://docs.google.com/forms/d/e/1FAIpQLSeMhZtzQQWB47I8HfPcJ5_pFyMhZO284PLIblDfshe30dEuXw/viewform)
 
 For fully managed services, we invite you to visit 
-[DataJoint](https://www.datajoint.com) for solutions and request more information.
+[DataJoint](https://www.datajoint.com) for solutions or to [chat with our teeam](./#hs-chat-open) for more information.
