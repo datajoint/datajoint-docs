@@ -23,7 +23,7 @@ create a query object to retrieve its entire contents as follows:
     ```
 
 More generally, a query object may be formed as a **query expression**
-constructed by applying [operators](../operators.md) to other query objects.
+constructed by applying [operators](./operators.md) to other query objects.
 
 For example, the following query retrieves information about all
 experiments and scans for mouse 001:

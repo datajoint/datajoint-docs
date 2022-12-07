@@ -71,7 +71,7 @@ In the example below, we look at the union of (A) a table pairing sessions with 
 and (B) a table pairing sessions with scan. 
 
 <figure markdown>
-![Join example](../../images/concepts-operators-join1.png){: style="height:200px"}
+![Join example](../../../images/concepts-operators-join1.png){: style="height:200px"}
 </figure>
 
 This has all the primary keys of both tables (a union thereof, shown in bold) as well as
@@ -81,7 +81,7 @@ duration). This also excludes the session for which we don't have a scan.
 We can also join based on secondary attributes, as shown in the example below.
 
 <figure markdown>
-![Join example](../../images/concepts-operators-join2.png){: style="height:200px"}
+![Join example](../../../images/concepts-operators-join2.png){: style="height:200px"}
 </figure>
 
 ??? notes "Additional join properties" 
@@ -104,7 +104,7 @@ restriction, i.e. the subset of entities from `A` that do not meet the condition
 The same query could be constructed using either `A & cond` or `A - Not(cond)`.
 
 <figure markdown>
-![Restriction and exclusion.](../../images/concepts-operators-restriction.png){: style="height:200px"}
+![Restriction and exclusion.](../../../images/concepts-operators-restriction.png){: style="height:200px"}
 </figure>
 
 The condition `cond` may be one of the following:
@@ -204,10 +204,10 @@ These requirements prevent ambiguity of attribute values and preserve entity ide
 For union, order does not matter.
 
 <figure markdown>
-![Union Example 1](../../images/concepts-operators-union1.png){: style="height:200px"}
+![Union Example 1](../../../images/concepts-operators-union1.png){: style="height:200px"}
 </figure>
 <figure markdown>
-![Union Example 2](../../images/concepts-operators-union2.png){: style="height:200px"}
+![Union Example 2](../../../images/concepts-operators-union2.png){: style="height:200px"}
 </figure>
 
 ??? Note "Properties of union"
