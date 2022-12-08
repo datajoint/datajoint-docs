@@ -10,12 +10,11 @@ between them. The `draw` method plots the graph, with many other methods (
 [Matlab](https://github.com/datajoint/datajoint-matlab/blob/master/%2Bdj/ERD.m)) to
 save or adjust the output.
 
-Because DataJoint pipelines are directional (see [DAG](../../../glossary#dag)), the 
-tables at the
-top will need to be populated first, followed by those tables one step below and so
-forth until the last table is populated at the bottom of the pipeline. The top of the
-pipeline tends to be dominated by Lookup and manual tables. The middle has many
-imported tables, and the bottom has computed tables.
+Because DataJoint pipelines are directional (see [DAG](../../../glossary#dag)), the
+tables at the top will need to be populated first, followed by those tables one step
+below and so forth until the last table is populated at the bottom of the pipeline. The
+top of the pipeline tends to be dominated by Lookup and manual tables. The middle has
+many imported tables, and the bottom has computed tables.
 
 ## Notation
 
