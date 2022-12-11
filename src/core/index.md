@@ -1,63 +1,69 @@
 # Core
 
-DataJoint Core projects are fully open-source and are built to develop, define, manage,
-and visualize [data pipelines](./getting-started/data-pipelines). Below are the projects that
-make up the family of core open-source projects.
+DataJoint Core is a collection of  open-source tools for defining and operating scientific data pipelines.
 
 ## APIs
 
 <div class="grid cards" markdown>
 
--   :fontawesome-brands-python:{ .lg .middle } **DataJoint Python**
+-   :fontawesome-brands-python:{ .lg .middle } **DataJoint for Python**
 
     ---
 
-    A low-level client for managing [data pipelines](./glossary#data-pipeline).
+    A Python client for defining, operating, and querying data pipelines.
 
-    :octicons-arrow-right-24: New docs coming soon!  In the meantime, refer to our [legacy docs](https://docs.datajoint.org/python/)
+    :octicons-arrow-right-24: [Documentation](https://docs.datajoint.org/python/)
 
--   :fontawesome-brands-java:{ .lg .middle } **DataJoint MATLAB**
+    :octicons-arrow-right-24: [Source code](https://datajoint.com/datajoint/datajoint-matlab)
+
+-   :fontawesome-brands-java:{ .lg .middle } **DataJoint for MATLAB**
 
     ---
 
-    A low-level client for managing [data pipelines](./glossary#data-pipeline).
+    A MATLAB client for defining, operating, and querying data pipelines.
 
-    :octicons-arrow-right-24: New docs coming soon!  In the meantime, refer to our [legacy docs](https://docs.datajoint.org/matlab/).
+    :octicons-arrow-right-24: [Documentation](https://docs.datajoint.org/matlab/)
+
+    :octicons-arrow-right-24: [Source code](https://datajoint.com/datajoint/datajoint-matlab)
 
 -   :fontawesome-solid-flask:{ .lg .middle } **Pharus**
 
     ---
 
-    Expose [data pipelines](./glossary#data-pipeline) via a REST interface.
+    A REST API server for interacting with DataJoint pipelines.
 
-    :octicons-arrow-right-24: New docs coming soon!  In the meantime, refer to our [legacy docs](./pharus/).
+    :octicons-arrow-right-24: [Documentation](https://datajoint.github.io/pharus/)
 
+    :octicons-arrow-right-24: [Source code](https://github.com/datajoint/pharus/)
+ 
 </div>
 
 ## Web GUIs
 
 <div class="grid cards" markdown>
 
+
 -   :fontawesome-brands-chrome:{ .lg .middle } **LabBook**
 
     ---
 
-    Data entry and data model browsing for [data pipelines](./glossary#data-pipeline).
+	A browser-based graphical user interface for data entry and navigation. 
 
-    :octicons-arrow-right-24: New docs coming soon!  In the meantime, refer to our [legacy docs](./datajoint-labbook/).
+    :octicons-arrow-right-24: [Documentation](https://datajoint.github.io/datajoint-labbook/)
+
+    :octicons-arrow-right-24: [Source code](https://github.com/datajoint/datajoint-labbook/)
 
 -   :fontawesome-brands-chrome:{ .lg .middle } **SciViz**
 
     ---
 
-    A visualization framework for making low-code web apps for 
-    [data pipelines](./glossary#data-pipeline).
+    A framework for making low-code web apps for data visualization.
 
-    :octicons-arrow-right-24: New docs coming soon!
+    :octicons-arrow-right-24: [Source code](https://github.com/datajoint/sci-viz)
 
 </div>
 
-## Container Images
+## Docker Images
 
 ``` mermaid
 graph
@@ -77,7 +83,6 @@ graph
   class dj,base,lab,hub,test,conda3,mysql boxes;
   classDef boxes stroke:#333; %% Grey stroke for class
 ```
-
 <div class="grid cards" markdown>
 
 -   :fontawesome-brands-docker:{ .lg .middle } **datajoint/mysql**
@@ -86,15 +91,11 @@ graph
 
     An optimized, MySQL backend for [data pipelines](./glossary#data-pipeline).
 
-    :octicons-arrow-right-24: New docs coming soon!
-
 -   :fontawesome-brands-docker:{ .lg .middle } **datajoint/miniconda3**
 
     ---
 
     A minimal Python image with [conda](https://docs.conda.io/en/latest/).
-
-    :octicons-arrow-right-24: New docs coming soon!  In the meantime, refer to our [legacy docs](./miniconda3-docker/).
 
 -   :fontawesome-brands-docker:{ .lg .middle } **datajoint/djbase**
 
@@ -102,15 +103,11 @@ graph
 
     Adds only dependencies for managing [data pipelines](./glossary#data-pipeline).
 
-    :octicons-arrow-right-24: New docs coming soon!  In the meantime, refer to our [legacy docs](./djbase-docker/).
-
 -   :fontawesome-brands-docker:{ .lg .middle } **datajoint/djtest**
 
     ---
 
     Adds testing tools like [pytest](https://docs.pytest.org/en/7.1.x/).
-
-    :octicons-arrow-right-24: New docs coming soon!  In the meantime, refer to our [legacy docs](./djtest-docker/).
 
 -   :fontawesome-brands-docker:{ .lg .middle } **datajoint/datajoint**
 
@@ -118,15 +115,12 @@ graph
 
     Official image for managing [data pipelines](./glossary#data-pipeline).
 
-    :octicons-arrow-right-24: New docs coming soon!
-
 -   :fontawesome-brands-docker:{ .lg .middle } **datajoint/djlab**
 
     ---
 
     Adds a local [Jupyter Lab](https://jupyterlab.readthedocs.io/en/stable/) environment.
 
-    :octicons-arrow-right-24: New docs coming soon!  In the meantime, refer to our [legacy docs](./djlab-docker/).
 
 -   :fontawesome-brands-docker:{ .lg .middle } **datajoint/djlabhub**
 
@@ -134,6 +128,6 @@ graph
 
     Adds a client to allow hosting with [Jupyter Hub](https://jupyter.org/hub).
 
-    :octicons-arrow-right-24: New docs coming soon!  In the meantime, refer to our [legacy docs](./djlabhub-docker/).
+
 
 </div>

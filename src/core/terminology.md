@@ -1,9 +1,7 @@
 <!-- markdownlint-disable MD013 -->
 # Glossary
 
-There are many terms that are reused throughout the documentation that we feel important
-to define together. We've taken careful consideration to be consistent. Below you will
-find how we've understood and use these terms.
+We've taken careful consideration to use consistent terminology. 
 
 <!-- Contributors: Please keep this table in alphabetical order -->
 
