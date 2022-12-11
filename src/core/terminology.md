@@ -1,5 +1,5 @@
 <!-- markdownlint-disable MD013 -->
-# Glossary
+# Terminology
 
 We've taken careful consideration to use consistent terminology. 
 
