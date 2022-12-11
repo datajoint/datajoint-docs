@@ -1,4 +1,4 @@
-# Mantra
+# Key Principes
 
 The *DataJoint Mantra* consists of three main objectives:
 

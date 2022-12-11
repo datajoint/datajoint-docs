@@ -38,7 +38,7 @@ DataJoint Core is a collection of  open-source tools for defining and operating 
  
 </div>
 
-## Web GUIs
+## Web Applicaitons
 
 <div class="grid cards" markdown>
 
@@ -85,49 +85,47 @@ graph
 ```
 <div class="grid cards" markdown>
 
--   :fontawesome-brands-docker:{ .lg .middle } **datajoint/mysql**
+-   :fontawesome-brands-docker:{ .lg .middle } [**datajoint/mysql**](https://hub.docker.com/r/datajoint/mysql)
 
     ---
+    MySQL server pre-configured to work smoothly with DataJoint. 
 
-    An optimized, MySQL backend for [data pipelines](./glossary#data-pipeline).
-
--   :fontawesome-brands-docker:{ .lg .middle } **datajoint/miniconda3**
+-   :fontawesome-brands-docker:{ .lg .middle } [**datajoint/miniconda3**](https://hub.docker.com/r/datajoint/niniconda3)
 
     ---
 
     A minimal Python image with [conda](https://docs.conda.io/en/latest/).
 
--   :fontawesome-brands-docker:{ .lg .middle } **datajoint/djbase**
+-   :fontawesome-brands-docker:{ .lg .middle } [**datajoint/djbase**](https://hub.docker.com/r/datajoint/djbase)
 
     ---
 
-    Adds only dependencies for managing [data pipelines](./glossary#data-pipeline).
+    A minimal base docker image with DataJoint Python dependencies installed. 
 
--   :fontawesome-brands-docker:{ .lg .middle } **datajoint/djtest**
-
-    ---
-
-    Adds testing tools like [pytest](https://docs.pytest.org/en/7.1.x/).
-
--   :fontawesome-brands-docker:{ .lg .middle } **datajoint/datajoint**
+-   :fontawesome-brands-docker:{ .lg .middle } [**datajoint/djtest**](https://hub.docker.com/r/datajoint/djtest)
 
     ---
 
-    Official image for managing [data pipelines](./glossary#data-pipeline).
+    A docker image for running tests related to DataJoint Python. 
 
--   :fontawesome-brands-docker:{ .lg .middle } **datajoint/djlab**
-
-    ---
-
-    Adds a local [Jupyter Lab](https://jupyterlab.readthedocs.io/en/stable/) environment.
-
-
--   :fontawesome-brands-docker:{ .lg .middle } **datajoint/djlabhub**
+-   :fontawesome-brands-docker:{ .lg .middle } [**datajoint/datajoint**](https://hub.docker.com/r/datajoint/datajoint)
 
     ---
 
-    Adds a client to allow hosting with [Jupyter Hub](https://jupyter.org/hub).
+    Official DataJoint Docker image.
 
+-   :fontawesome-brands-docker:{ .lg .middle } [**datajoint/djlab**](https://hub.docker.com/r/datajoint/djlab)
+
+    ---
+
+	A docker image optimized for running a JupyterLab environment with DataJoint Python. 
+
+
+-   :fontawesome-brands-docker:{ .lg .middle } [**datajoint/djlabhub**](https://hub.docker.com/r/datajoint/djlabhub)
+
+    ---
+
+	A docker image optimized for deploying to JupyterHub a JupyterLab environment with DataJoint Python. 
 
 
 </div>
