@@ -6,11 +6,54 @@
     --dj-white: #ffffff;
 }
 
+/* footer previous/next navigation */
+.md-footer__inner:not([hidden]) {
+    display: none
+}
+
+/* left navigation title */
+.md-nav__title {
+    visibility: hidden;
+}
+.md-nav__title:after {
+    visibility: hidden;
+    content: 'DataJoint Documentation';
+    display: block;
+ }
+
+/* footer social icons */
+html a[title="DataJoint"].md-social__link svg {
+    color: var(--dj-primary);
+}
+html a[title="Slack"].md-social__link svg {
+    color: var(--dj-primary);
+}
+html a[title="LinkedIn"].md-social__link svg {
+    color: var(--dj-primary);
+}
+html a[title="Twitter"].md-social__link svg {
+    color: var(--dj-primary);
+}
+html a[title="GitHub"].md-social__link svg {
+    color: var(--dj-primary);
+}
+html a[title="DockerHub"].md-social__link svg {
+    color: var(--dj-primary);
+}
+html a[title="PyPI"].md-social__link svg {
+    color: var(--dj-primary);
+}
+html a[title="StackOverflow"].md-social__link svg {
+    color: var(--dj-primary);
+}
+html a[title="YouTube"].md-social__link svg {
+    color: var(--dj-primary);
+}
+
 [data-md-color-scheme="datajoint"] {
     /* ribbon */
     /* ribbon + markdown heading expansion */
     --md-primary-fg-color: var(--dj-black);
-    --md-primary-fg-color--dark: var(--dj-black);
     /* ribbon text */
     --md-primary-bg-color: var(--dj-primary);
 
@@ -26,18 +69,17 @@
     /* primary text */
     --md-typeset-color: var(--dj-black);
     /* code comments + diagram text */
-    --md-code-fg-color: var(--dj-secondary);
+    --md-code-fg-color: var(--dj-primary);
 
     /* footer */
     /* previous/next text */
-    --md-footer-fg-color: var(--dj-primary);
+    /* --md-footer-fg-color: var(--dj-primary); */
 }
 
 [data-md-color-scheme="slate"] {
     /* ribbon */
     /* ribbon + markdown heading expansion */
     --md-primary-fg-color: var(--dj-primary);
-    --md-primary-fg-color--dark: var(--dj-primary);
     /* ribbon text */
     --md-primary-bg-color: var(--dj-white);
 
@@ -53,9 +95,9 @@
     /* primary text */
     --md-typeset-color: var(--dj-white);
     /* code comments + diagram text */
-    --md-code-fg-color: var(--dj-secondary);
+    --md-code-fg-color: var(--dj-primary);
 
     /* footer */
     /* previous/next text */
-    --md-footer-fg-color: var(--dj-white);
+    /* --md-footer-fg-color: var(--dj-white); */
 }
