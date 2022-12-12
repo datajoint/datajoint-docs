@@ -1840,11 +1840,11 @@ between them. The <code>draw</code> method plots the graph, with many other meth
 <a href="https://datajoint.com/docs/core/datajoint-python/latest/api/datajoint/diagram/">Python</a>,
 <a href="https://github.com/datajoint/datajoint-matlab/blob/master/%2Bdj/ERD.m">Matlab</a>) to
 save or adjust the output.</p>
-<p>Because DataJoint pipelines are directional (see <a href="../../../glossary#dag">DAG</a>), the tables at the
-top will need to be populated first, followed by those tables one step below and so
-forth until the last table is populated at the bottom of the pipeline. The top of the
-pipeline tends to be dominated by Lookup and manual tables. The middle has many
-imported tables, and the bottom has computed tables.</p>
+<p>Because DataJoint pipelines are directional (see <a href="../../../glossary#dag">DAG</a>), the
+tables at the top will need to be populated first, followed by those tables one step
+below and so forth until the last table is populated at the bottom of the pipeline. The
+top of the pipeline tends to be dominated by Lookup and manual tables. The middle has
+many imported tables, and the bottom has computed tables.</p>
 <h2 id="notation">Notation<a class="headerlink" href="#notation" title="Permanent link">&para;</a></h2>
 <p>DataJoint uses the following conventions:</p>
 <ul>
@@ -1853,12 +1853,12 @@ imported tables, and the bottom has computed tables.</p>
 </ul>
 <ul>
 <li><a href="../../reproduce/table-tiers">Table type</a> is indicated by colors and symbols, with some
-    differences across Python and Matlab: 
-    - <strong>Lookup</strong>: gray, rectangle or asterisk
-    - <strong>Manual</strong>: green, rectangle or square
-    - <strong>Imported</strong>: blue, circle or oval
-    - <strong>Computed</strong>: red, rectangle or star
-    - <strong>Part</strong>: black dot with smaller font or black text</li>
+    differences across Python and Matlab: <p>- <strong>Lookup</strong>: gray, rectangle or asterisk</p>
+<p>- <strong>Manual</strong>: green, rectangle or square</p>
+<p>- <strong>Imported</strong>: blue, circle or oval</p>
+<p>- <strong>Computed</strong>: red, rectangle or star</p>
+<p>- <strong>Part</strong>: black dot with smaller font or black text</p>
+</li>
 </ul>
 <ul>
 <li><a href="../dependencies">Dependencies</a> indicated as edges in the graph and always
