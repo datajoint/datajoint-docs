@@ -1,6 +1,6 @@
 <!-- markdownlint-disable MD013 -->
 
-# Terminology
+# Glossary
 
 We've taken careful consideration to use consistent terminology. 
 
