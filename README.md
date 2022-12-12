@@ -1,6 +1,6 @@
 # DataJoint Documentation
 
-This is the home for all DataJoint's open-source and commercial documentation.
+This is the home for DataJoint software documentation as hosted at https://datajoint.com/docs
 
 ## Test Locally
 
