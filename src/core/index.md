@@ -12,9 +12,7 @@ DataJoint Core is a collection of  open-source tools for defining and operating 
 
     A Python client for defining, operating, and querying data pipelines.
 
-    :octicons-arrow-right-24: [Documentation](https://docs.datajoint.org/python/)
-
-    :octicons-arrow-right-24: [Source code](https://datajoint.com/datajoint/datajoint-matlab)
+    :octicons-arrow-right-24: [Documentation](https://docs.datajoint.org/python/) | [Source code](https://datajoint.com/datajoint/datajoint-matlab)
 
 -   :fontawesome-brands-java:{ .lg .middle } **DataJoint for MATLAB**
 
@@ -22,9 +20,7 @@ DataJoint Core is a collection of  open-source tools for defining and operating 
 
     A MATLAB client for defining, operating, and querying data pipelines.
 
-    :octicons-arrow-right-24: [Documentation](https://docs.datajoint.org/matlab/)
-
-    :octicons-arrow-right-24: [Source code](https://datajoint.com/datajoint/datajoint-matlab)
+    :octicons-arrow-right-24: [Documentation](https://docs.datajoint.org/matlab/) | [Source code](https://datajoint.com/datajoint/datajoint-matlab)
 
 -   :fontawesome-solid-flask:{ .lg .middle } **Pharus**
 
@@ -32,9 +28,7 @@ DataJoint Core is a collection of  open-source tools for defining and operating 
 
     A REST API server for interacting with DataJoint pipelines.
 
-    :octicons-arrow-right-24: [Documentation](https://datajoint.github.io/pharus/)
-
-    :octicons-arrow-right-24: [Source code](https://github.com/datajoint/pharus/)
+    :octicons-arrow-right-24: [Documentation](https://datajoint.github.io/pharus/) | [Source code](https://github.com/datajoint/pharus/)
  
 </div>
 
@@ -49,9 +43,7 @@ DataJoint Core is a collection of  open-source tools for defining and operating 
 
 	A browser-based graphical user interface for data entry and navigation. 
 
-    :octicons-arrow-right-24: [Documentation](https://datajoint.github.io/datajoint-labbook/)
-
-    :octicons-arrow-right-24: [Source code](https://github.com/datajoint/datajoint-labbook/)
+    :octicons-arrow-right-24: [Documentation](https://datajoint.github.io/datajoint-labbook/) | [Source code](https://github.com/datajoint/datajoint-labbook/)
 
 -   :fontawesome-brands-chrome:{ .lg .middle } **SciViz**
 
