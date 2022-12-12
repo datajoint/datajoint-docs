@@ -1,4 +1,0 @@
-# Relational Databases
-
-Coming soon!
-
