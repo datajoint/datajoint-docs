@@ -1,6 +1,6 @@
 # Core
 
-DataJoint Core is a collection of  open-source tools for defining and operating scientific data pipelines.
+DataJoint Core is a collection of open-source tools for building and operating scientific data pipelines.
 
 ## APIs
 

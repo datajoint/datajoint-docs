@@ -36,9 +36,7 @@
 
      ---
 
-     Managed services for neurophysiology built with DataJoint Core and DataJoint Elements.
-
-     [:octicons-arrow-right-24: Learn more](./works/)
+     https://works.datajoint.com:  A cloud platform for automated analysis workflows. It relies on DataJoint Core and DataJoint Elements.
 
 </div>
 
