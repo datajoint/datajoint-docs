@@ -55,7 +55,7 @@ DataJoint Core is a collection of open-source tools for building and operating s
 
 </div>
 
-## Docker Images
+## Container Images
 
 ``` mermaid
 graph
