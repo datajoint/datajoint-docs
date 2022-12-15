@@ -32,7 +32,7 @@ DataJoint Core is a collection of open-source tools for building and operating s
  
 </div>
 
-## Web Applicaitons
+## Web Applications
 
 <div class="grid cards" markdown>
 
