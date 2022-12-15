@@ -36,7 +36,7 @@
 
      ---
 
-     https://works.datajoint.com:  A cloud platform for automated analysis workflows. It relies on DataJoint Core and DataJoint Elements.
+     [:octicons-arrow-right-24: Try it out](https://works.datajoint.com):  A cloud platform for automated analysis workflows. It relies on DataJoint Core and DataJoint Elements.
 
 </div>
 
