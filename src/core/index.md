@@ -12,7 +12,7 @@ DataJoint Core is a collection of open-source tools for building and operating s
 
     A Python client for defining, operating, and querying data pipelines.
 
-    :octicons-arrow-right-24: [Documentation](https://docs.datajoint.org/python/) | [Source code](https://datajoint.com/datajoint/datajoint-matlab)
+    :octicons-arrow-right-24: [Documentation](https://datajoint.com/docs/core/datajoint-python/) | [Source code](https://github.com/datajoint/datajoint-python)
 
 -   :fontawesome-brands-java:{ .lg .middle } **DataJoint for MATLAB**
 
