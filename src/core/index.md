@@ -82,7 +82,7 @@ graph
     ---
     MySQL server pre-configured to work smoothly with DataJoint. 
 
--   :fontawesome-brands-docker:{ .lg .middle } [**datajoint/miniconda3**](https://hub.docker.com/r/datajoint/niniconda3)
+-   :fontawesome-brands-docker:{ .lg .middle } [**datajoint/miniconda3**](https://hub.docker.com/r/datajoint/miniconda3)
 
     ---
 
