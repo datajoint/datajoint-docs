@@ -3,7 +3,7 @@
 ## Sustainability Roadmap between DataJoint Elements and Facemap
 
 <figure markdown>
-  ![Elements](../../images/_elements-logo.png){: style="width:300px"}
+  ![datajoint](../../images/company-logo-black.svg){: style="height:83px; padding-right:25px"}
   ![facemap](../../images/community-partnerships-facemap-logo.png){: style="width:150px"}
 </figure>
 

@@ -3,8 +3,8 @@
 ## Sustainability Roadmap between DataJoint Elements and DANDI Archive
 
 <figure markdown>
-  ![Elements](../../images/_elements-logo.png){: style="height:83px"}
-  ![DANDI](../../images/community-partnerships-dandi-logo.png){: style="height:83px"}
+  ![datajoint](../../images/company-logo-black.svg){: style="height:83px; padding-right:25px"}
+  ![dandi](../../images/community-partnerships-dandi-logo.png){: style="height:83px"}
 </figure>
 
 ## Aim

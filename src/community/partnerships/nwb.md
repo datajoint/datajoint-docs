@@ -3,7 +3,7 @@
 ## Integrations between DataJoint Elements and Neurodata Without Borders
 
 <figure markdown>
-  ![Elements](../../images/_elements-logo.png){: style="width:300px"}
+  ![datajoint](../../images/company-logo-black.svg){: style="height:83px; padding-right:25px"}
   ![NWB](../../images/community-partnerships-nwb-logo.png){: style="width:300px"}
 </figure>
 
