@@ -45,7 +45,7 @@ The two projects will coordinate their development approaches to ensure maximum 
 
 To achieve the aims of coordinated development, both projects appoint a primary point of
 contact (POC) to respond to questions relating to the integration and interoperability 
-of DataJoint Elements and the Open Ephys GUI.
+of DataJoint Elements and Open Ephys GUI.
 
 For 2023, the DataJoint Elements POC is Dr. Thinh Nguyen (thinh@datajoint.com).
 
@@ -66,9 +66,9 @@ and Open Ephys GUI.
 
 - Mechanism to import data acquired with the Open Ephys GUI - Completed 2021 - [DataJoint Element Array Ephys - Open Ephys module](https://github.com/datajoint/element-array-ephys/blob/main/element_array_ephys/readers/openephys.py)
 
-- Integration tests to verify loading Open Ephys data - Completed 2021 - [Pytests](https://github.com/datajoint/workflow-array-ephys/blob/main/tests/test_populate.py)
+- Integration tests to verify loading of Open Ephys data - Completed 2021 - [Pytests](https://github.com/datajoint/workflow-array-ephys/blob/main/tests/test_populate.py)
 
-- The Open Ephys team will inform the DataJoint team about any software releases that include changes to the Binary data format (ongoing).
+- The Open Ephys team will inform the DataJoint team about any software releases that include changes to the binary data format (ongoing).
 
 ## Citation
 
