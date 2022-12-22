@@ -3,8 +3,8 @@
 ## Sustainability Roadmap between DataJoint Elements and Suite2p
 
 <figure markdown>
-  ![datajoint](../../images/company-logo-black.svg){: style="height:83px; padding-right:25px"}
-  ![suite2p](../../images/community-partnerships-suite2p-logo.png){: style="height:87px"}
+  ![datajoint](../../images/company-logo-black.svg){: style="height:50px; padding-right:25px"}
+  ![suite2p](../../images/community-partnerships-suite2p-logo.png){: style="height:70px"}
 </figure>
 
 ## Aim
