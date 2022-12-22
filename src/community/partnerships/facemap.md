@@ -87,11 +87,11 @@ and Facemap.
 - [x] Mechanism to run Facemap within DataJoint Elements - Completed 2022 - 
 [Element Facemap](https://github.com/datajoint/element-facemap/blob/0ccab4ec6731cd612e7cf61a221c64fb9bf22566/element_facemap/facial_behavior_estimation.py#L259-L266)
 
-- [ ] Tutorials on running DataJoint Element with Facemap - Under development 
+- [ ] Tutorials on running DataJoint Element with Facemap 
 
-- [ ] Integration tests to verify loading Facemap data - Under development
+- [ ] Integration tests to verify loading Facemap data
 
-- [ ] Integration tests to verify running Facemap - Under development
+- [ ] Integration tests to verify running Facemap
 
 ## Citation
 
