@@ -28,7 +28,7 @@ integration and interoperability across the two ecosystems.
 The principal developer of DataJoint Elements and the DataJoint framework is the company
 DataJoint — https://datajoint.com.
 
-### Neurodata without Borders (NWB)
+### Distributed Archives for Neurophysiology Data Integration (DANDI)
 
 **DANDI** - https://dandiarchive.org — is an archive for neurophysiology data, 
 providing neuroscientists with a common platform to share, archive, and process data. 
