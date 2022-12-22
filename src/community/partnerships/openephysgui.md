@@ -3,7 +3,7 @@
 ## Sustainability Roadmap between DataJoint Elements and Open Ephys GUI
 
 <figure markdown>
-  ![datajoint](../../images/company-logo-black.svg){: style="height:83px; padding-right:25px"}
+  ![datajoint](../../images/company-logo-black.svg){: style="height:50px; padding-right:25px"}
   ![openephysgui](../../images/community-partnerships-openephysgui-logo.png){: style="height:87px"}
 </figure>
 
