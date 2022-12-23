@@ -1,93 +1,81 @@
-# Key Principles
+# Principles
 
-The *DataJoint Mantra* consists of three main objectives:
+The DataJoint framework provides a systematic approach for managing scientific data and computation. 
+DataJoint is a new clarification of the classical 
+[relational model](https://en.wikipedia.org/wiki/Relational_model).
+Most notably, DataJoint extends the data model to introduce the concept of 
+*computational dependencies* as its native citizen. 
+These modifications of the relational data model simplify its use for organizing scientific data. 
 
-- Simplify your data queries through an intuitive [query language](./#query-language).
-- Make automated, [reproducible computation](./#reproducible-computation) by integrating
-  computation with the data model.
-- Ensure validity of your data through [referential integrity](./#referential-integrity).
+## Data definition 
 
-## Query Language
+### Data representation
 
-Writing good, optimized SQL queries can be
-difficult and often becomes a barrier for individuals lacking experience in
-computer science and programming.
-That said, we don't feel this should discourage the use of databases. Databases help to
-structure our daily lives which streamlines the time required to glean insights and
-build robust applications from truth. SQL is
-powerful but requires practice which we feel is the real fault in the language.
+1. All data are represented in the form of *entity sets*, i.e. an ordered collection of *entities* belonging to one *entity class*. 
+3. All entities in a given entity set have the same set of named attributes. 
+4. Each entity set has a *primary key*, *i.e.* a subset of attributes that, jointly, uniquely identify 
+5. Each attribute in an entity set has a *data type* (or *domain*), representing a set of valid values.
+6. Each Entity provides *attribute values* for all of the attributes of its entity sets.
 
-To address this, the DataJoint query language serves as a query builder and optimizer
-for SQL. It leverages the stack's own operator
-precedence and combines it with both operator overloading and 
-SQL algebra to achieve a more intuitive experience.
-Additionally, interoperability between Python and MATLAB is crucial due to the
-diversity of tools available to scientists. So much so that this is a guiding principle
-in [FAIR](https://www.go-fair.org/fair-principles/).
+We often use simpler (while less precise) terms:
 
-Case in point, here is a comparison of equivalent queries:
+* entity set = *table* 
+* attribute = *column*
+* attribute value = *field*
 
-*SQL*:
-
-```sql
-SELECT *
-FROM `shapes`.`rectangle`
-NATURAL JOIN `shapes`.`area`
-WHERE (
-    (`shape_area`=8) AND (`shape_height`=2)
-);
+DataJoint introduces a streamlined syntax for defining an entity set. 
+Each line of the definition defines an attribute with its name, data type, an optional default value, and an optional comment in the format:
+```
+name [=value] : type  [# comment]
 ```
 
-=== "*DataJoint (Python)*"
+Primary attributes come first and are separated from the rest of the attributes with the divider `---`.
 
-    ```python
-    Rectangle * Area & dict(shape_height=2, shape_area=8)
-    ```
+For example, the following code defines the entity set for entities of class `Employee`:
 
-=== "*DataJoint (MATLAB)*"
+```
+employee_id : int
+---
+ssn = null : int     # optional social security number
+date_of_birth : date
+gender : enum('male', 'female', 'other')
+home_address="" : varchar(1000) 
+primary_phone="" : varchar(12)
+```
 
-    ```matlab
-    shapes.Rectangle * shapes.Area & struct('shape_height', 2, 'shape_area', 8)
-    ```
+Entity sets (tables) can be *stored* or *derived*. 
 
-## Reproducible Computation
+### Data normalization 
+A collection of data are considered normalized when they are organized into a collection of entity sets, 
+where each entity set contains entities of the same class and where all attributes apply to each entity 
+and where the same primary key can identify all entities. 
 
-Reproducibility is a key concept within the scientific community since research is
-largely conducted, shared, and reviewed in the public domain. This is necessary to
-independently validate discoveries and have others support new findings. Such a
-practice is well advocated in the scientific community as open science.
+The normalization procedure often includes splitting data from one table into several tables, 
+one for each proper entity set. 
 
-Yet, reliably reproducing computed results of others has proven difficult since there
-are many factors that affect the determinism of a process e.g. hardware, software
-environment, scripts, input data, seeding, etc.
+### Entity integrity
+*Entity integrity* is the guarantee made by the data management process of the 1:1 mapping between 
+real-world entities and their digital representations. 
+In practice, entity integrity is ensured when it is made clear 
 
-DataJoint pipelines address these challenges by allowing computation to be defined such
-that they are associated *with* an entity. Drawing relationships between many entities
-we can create a [DAG](../../glossary#dag) that
-describes a compute workflow as an 
-[entity-relationship model](https://en.wikipedia.org/wiki/Entity%E2%80%93relationship_model).
+### Databases and Schemas 
+Stored tables have names grouped into namespaces called *schemas* within *databases*. 
+A *database* is a globally unique address or name. A *schema* is a unique name within a database. 
+Within a *connection* to a particular database, a stored table is identified 
+A schema typically groups tables that are logically related.
 
-For instance, an entity such as `Area` could represent the computed value of a parent
-entity, `Rectangle`. Therefore, we feel it should be reasonable when defining `Area` to
-include the specification of a computation that automates how `Area` is generated based
-on relation to `Rectangle`.
 
-## Referential Integrity
+### Dependencies 
+Entity sets can form referential dependencies that express and 
 
-Referential integrity is the concept of keeping all your data consistent and up-to-date.
-The goal is to ensure [data pipelines](../getting-started/data-pipelines) always reflect the
-truth of how data was created.
 
-In the realm of databases, entities can be related to one another through 
-[foreign keys](../../glossary#foreign-key). However, our opinionated view
-is that foreign keys on [primary keys](../../glossary#primary-key) should
-enforce the contraint.
+### Diagramming 
 
-What this means is that our data model always reflects the truth. When a parent entity
-is removed, all child computed values will also be removed since they no longer have
-meaning without the subject. There is not a clear way to reproduce the results
-otherwise.
+## Data manipulations
 
-An important consequence to note is that deletes take longer as a result since they must
-be cascaded down to all the descendants. We believe this to be a feature as it is the
-behavior most inline with typical expectations. Deletes should be done cautiously. 
+## Data queries 
+
+### Operators 
+
+## Computational dependencies 
+
