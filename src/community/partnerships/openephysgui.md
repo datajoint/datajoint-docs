@@ -64,9 +64,9 @@ and Open Ephys GUI.
 
 ## Development Roadmap
 
-- [x] Mechanism to import data acquired with the Open Ephys GUI - Completed 2021 - [DataJoint Element Array Ephys - Open Ephys module](https://github.com/datajoint/element-array-ephys/blob/main/element_array_ephys/readers/openephys.py)
+- [x] Mechanism to import data acquired with the Open Ephys GUI - [DataJoint Element Array Ephys - Open Ephys module](https://github.com/datajoint/element-array-ephys/blob/main/element_array_ephys/readers/openephys.py)
 
-- [x] Integration tests to verify loading of Open Ephys data - Completed 2021 - [Pytests](https://github.com/datajoint/workflow-array-ephys/blob/main/tests/test_populate.py)
+- [x] Tests to verify loading of Open Ephys data - [Pytests](https://github.com/datajoint/workflow-array-ephys/blob/main/tests/test_populate.py)
 
 - [x] The Open Ephys team will inform the DataJoint team about any software releases that include changes to the binary data format (ongoing).
 

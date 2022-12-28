@@ -83,8 +83,8 @@ and DANDI.
 
 ## Development Roadmap
 
-- [x] Mechanism to upload to DANDI - Completed 2022 - 
+- [x] Mechanism to upload to DANDI - 
   [Element Interface DANDI module](https://github.com/datajoint/element-interface/blob/main/element_interface/dandi.py)
 
-- [x] Documentation to upload to DANDI - Completed 2022 - 
+- [x] Documentation to upload to DANDI - 
   [Jupyter notebook](https://github.com/datajoint/workflow-array-ephys/blob/main/notebooks/09-NWB-export.ipynb)
