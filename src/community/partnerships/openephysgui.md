@@ -72,4 +72,4 @@ and Open Ephys GUI.
 
 ## Citation
 
-If you use this package, please cite the Open Ephys [paper](https://iopscience.iop.org/article/10.1088/1741-2552/aa5eea/meta) in your publications.
+If you use this package, please cite the [Open Ephys paper](https://iopscience.iop.org/article/10.1088/1741-2552/aa5eea/meta) in your publications.
