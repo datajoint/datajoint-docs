@@ -111,6 +111,6 @@ Below are the projects that make up the family of open-source DataJoint Elements
 
     Common functions for the DataJoint Elements.
 
-    :octicons-arrow-right-24: New docs coming soon!
+    [:octicons-arrow-right-24: Learn more](./element-interface/)
 
 </div>
