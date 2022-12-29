@@ -3,8 +3,8 @@
 ## Sustainability Roadmap between DataJoint Elements and Suite2p
 
 <figure markdown>
-  ![Elements](../../images/_elements-logo.png){: style="height:83px"}
-  ![suite2p](../../images/community-partnerships-suite2p-logo.png){: style="height:87px"}
+  ![datajoint](../../images/company-logo-black.svg){: style="height:50px; padding-right:25px"}
+  ![suite2p](../../images/community-partnerships-suite2p-logo.png){: style="height:70px"}
 </figure>
 
 ## Aim
@@ -81,19 +81,19 @@ and Suite2p.
 
 ## Development Roadmap
 
-- Mechanism to import Suite2p results - Completed 2021 - 
+- [x] Mechanism to import Suite2p results - 
 [Element Interface Suite2p module](https://github.com/datajoint/element-interface/blob/main/element_interface/suite2p_loader.py)
 
-- Mechanism to run Suite2p within DataJoint Element - Completed 2022 - 
+- [x] Mechanism to run Suite2p within DataJoint Element - 
 [Element Calcium Imaging](https://github.com/datajoint/element-calcium-imaging/blob/00df4434fcfd6c1497d7950601248f046170139e/element_calcium_imaging/imaging.py#L267-L299)
 
-- Tutorials on running DataJoint Element with Suite2p - Completed 2021 -
+- [x] Tutorials on running DataJoint Element with Suite2p - 
 [Workflow Calcium Imaging Jupyter notebooks](https://github.com/datajoint/workflow-calcium-imaging/tree/main/notebooks)
 
-- Integration tests to verify loading Suite2p data - Completed 2021 - 
+- [x] Tests to verify loading Suite2p data - 
 [Pytests](https://github.com/datajoint/workflow-calcium-imaging/blob/main/tests/test_populate.py)
 
-- Integration tests to verify running Suite2p - Completed 2022 - 
+- [x] Tests to verify running Suite2p - 
 [Pytests](https://github.com/datajoint/workflow-calcium-imaging/blob/main/tests/test_populate.py)
 
 ## Citation

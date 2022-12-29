@@ -57,11 +57,12 @@ nav:
     - Licenses: community/licenses.md
     - History: community/history.md
     - Partnerships:
-      - NWB: community/partnerships/nwb.md
       - DANDI: community/partnerships/dandi.md
-      - Suite2p: community/partnerships/suite2p.md
       - Facemap: community/partnerships/facemap.md
       - INCF: community/partnerships/incf.md
+      - NWB: community/partnerships/nwb.md
+      - Open Ephys GUI: community/partnerships/openephysgui.md
+      - Suite2p: community/partnerships/suite2p.md
 
 # ---------------------------- STANDARD -----------------------------
 
@@ -120,6 +121,9 @@ markdown_extensions:
   - footnotes
   - pymdownx.details: # permit folded <details> blocks via `??? note "Title"` format
   - pymdownx.snippets # Allows including file snippets e.g. --8<-- "; src/file.md"
+  - pymdownx.magiclink # Displays bare URLs as links
+  - pymdownx.tasklist: # Renders check boxes in tasks lists
+      custom_checkbox: true
 extra:
   generator: false # Disable watermark
   analytics:
