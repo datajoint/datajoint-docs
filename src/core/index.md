@@ -14,7 +14,7 @@ make up the family of core open-source projects.
 
     A low-level client for managing [data pipelines](./glossary#data-pipeline).
 
-    :octicons-arrow-right-24: New docs coming soon!  In the meantime, refer to our [legacy docs](https://docs.datajoint.org/python/)
+    :octicons-arrow-right-24: [New docs](./datajoint-python/) coming soon!  In the meantime, refer to our [legacy docs](https://docs.datajoint.org/python/).
 
 -   :fontawesome-brands-java:{ .lg .middle } **DataJoint MATLAB**
 
@@ -53,7 +53,7 @@ make up the family of core open-source projects.
     A visualization framework for making low-code web apps for 
     [data pipelines](./glossary#data-pipeline).
 
-    :octicons-arrow-right-24: New docs coming soon!
+    :octicons-arrow-right-24: See [documentation](./sci-viz/).
 
 </div>
 
@@ -86,7 +86,7 @@ graph
 
     An optimized, MySQL backend for [data pipelines](./glossary#data-pipeline).
 
-    :octicons-arrow-right-24: New docs coming soon!
+    :octicons-arrow-right-24: New docs coming soon! In the meantime, refer to our [legacy docs](https://github.com/datajoint/mysql-docker#mysql-for-datajoint).
 
 -   :fontawesome-brands-docker:{ .lg .middle } **datajoint/miniconda3**
 
@@ -118,7 +118,7 @@ graph
 
     Official image for managing [data pipelines](./glossary#data-pipeline).
 
-    :octicons-arrow-right-24: New docs coming soon!
+    :octicons-arrow-right-24: [New docs](./datajoint-python/) coming soon!  In the meantime, refer to our [legacy docs](https://docs.datajoint.org/python/).
 
 -   :fontawesome-brands-docker:{ .lg .middle } **datajoint/djlab**
 
