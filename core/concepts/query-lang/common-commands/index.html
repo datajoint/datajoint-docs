@@ -1904,15 +1904,15 @@ insert data as follows.</p>
 </code></pre></div>
 </div>
 <div class="tabbed-block">
-<div class="highlight"><pre><span></span><code><span class="n">insert</span><span class="p">(</span><span class="n">tutorial</span><span class="p">.</span><span class="n">Mouse</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="s">&#39;2017-03-01&#39;</span><span class="p">,</span><span class="w"> </span><span class="s">&#39;M&#39;</span><span class="p">}</span><span class="w"> </span><span class="p">)</span><span class="w"> </span>#<span class="w"> </span><span class="n">Single</span><span class="w"> </span><span class="n">entry</span><span class="w"></span>
-<span class="n">data</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
-<span class="w">  </span><span class="p">{</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="s">&#39;2016-11-19&#39;</span><span class="p">,</span><span class="w"> </span><span class="s">&#39;M&#39;</span><span class="p">},</span><span class="w"></span>
-<span class="w">  </span><span class="p">{</span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="s">&#39;2016-11-20&#39;</span><span class="p">,</span><span class="w"> </span><span class="s">&#39;U&#39;</span><span class="p">},</span><span class="w"></span>
-<span class="w">  </span><span class="p">{</span><span class="mi">5</span><span class="p">,</span><span class="w"> </span><span class="s">&#39;2016-12-25&#39;</span><span class="p">,</span><span class="w"> </span><span class="s">&#39;F&#39;</span><span class="p">}</span><span class="w"></span>
-<span class="p">]</span><span class="w"></span>
+<div class="highlight"><pre><span></span><code><span class="n">insert</span><span class="p">(</span><span class="n">tutorial</span><span class="p">.</span><span class="n">Mouse</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="s">&#39;2017-03-01&#39;</span><span class="p">,</span><span class="w"> </span><span class="s">&#39;M&#39;</span><span class="p">}</span><span class="w"> </span><span class="p">)</span><span class="w"> </span>#<span class="w"> </span><span class="n">Single</span><span class="w"> </span><span class="n">entry</span>
+<span class="n">data</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="p">[</span>
+<span class="w">  </span><span class="p">{</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="s">&#39;2016-11-19&#39;</span><span class="p">,</span><span class="w"> </span><span class="s">&#39;M&#39;</span><span class="p">},</span>
+<span class="w">  </span><span class="p">{</span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="s">&#39;2016-11-20&#39;</span><span class="p">,</span><span class="w"> </span><span class="s">&#39;U&#39;</span><span class="p">},</span>
+<span class="w">  </span><span class="p">{</span><span class="mi">5</span><span class="p">,</span><span class="w"> </span><span class="s">&#39;2016-12-25&#39;</span><span class="p">,</span><span class="w"> </span><span class="s">&#39;F&#39;</span><span class="p">}</span>
+<span class="p">]</span>
 
-<span class="c">% now insert all at once</span><span class="w"></span>
-<span class="n">insert</span><span class="p">(</span><span class="n">tutorial</span><span class="p">.</span><span class="n">Mouse</span><span class="p">,</span><span class="w"> </span><span class="n">data</span><span class="p">)</span><span class="w"></span>
+<span class="c">% now insert all at once</span>
+<span class="n">insert</span><span class="p">(</span><span class="n">tutorial</span><span class="p">.</span><span class="n">Mouse</span><span class="p">,</span><span class="w"> </span><span class="n">data</span><span class="p">)</span>
 </code></pre></div>
 </div>
 </div>
@@ -1940,7 +1940,7 @@ call.</p>
 </code></pre></div>
 </div>
 <div class="tabbed-block">
-<div class="highlight"><pre><span></span><code><span class="n">result</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">query</span><span class="p">.</span><span class="n">fetch</span><span class="p">(</span><span class="n">query</span><span class="p">,</span><span class="w"> </span><span class="s">&#39;attr1&#39;</span><span class="p">)</span><span class="w"></span>
+<div class="highlight"><pre><span></span><code><span class="n">result</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">query</span><span class="p">.</span><span class="n">fetch</span><span class="p">(</span><span class="n">query</span><span class="p">,</span><span class="w"> </span><span class="s">&#39;attr1&#39;</span><span class="p">)</span>
 </code></pre></div>
 </div>
 </div>
@@ -1961,8 +1961,8 @@ table definitions to take effect.</p>
 </code></pre></div>
 </div>
 <div class="tabbed-block">
-<div class="highlight"><pre><span></span><code><span class="c">% drop the Person table from the lab schema</span><span class="w"></span>
-<span class="n">drop</span><span class="p">(</span><span class="n">lab</span><span class="p">.</span><span class="n">Person</span><span class="p">)</span><span class="w"></span>
+<div class="highlight"><pre><span></span><code><span class="c">% drop the Person table from the lab schema</span>
+<span class="n">drop</span><span class="p">(</span><span class="n">lab</span><span class="p">.</span><span class="n">Person</span><span class="p">)</span>
 </code></pre></div>
 </div>
 </div>
@@ -1981,7 +1981,7 @@ an existing pipeline. </p>
 <div class="tabbed-block">
 <p>The schema object for a package can be obtained using its <code>getSchema</code>
 function. (See <code>schema</code>.)</p>
-<div class="highlight"><pre><span></span><code><span class="n">draw</span><span class="p">(</span><span class="n">dj</span><span class="p">.</span><span class="n">ERD</span><span class="p">(</span><span class="n">seq</span><span class="p">.</span><span class="n">getSchema</span><span class="p">))</span><span class="w">   </span><span class="c">% draw the diagram</span><span class="w"></span>
+<div class="highlight"><pre><span></span><code><span class="n">draw</span><span class="p">(</span><span class="n">dj</span><span class="p">.</span><span class="n">ERD</span><span class="p">(</span><span class="n">seq</span><span class="p">.</span><span class="n">getSchema</span><span class="p">))</span><span class="w">   </span><span class="c">% draw the diagram</span>
 </code></pre></div>
 </div>
 </div>

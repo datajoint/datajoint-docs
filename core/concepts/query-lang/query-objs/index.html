@@ -1877,7 +1877,7 @@ create a query object to retrieve its entire contents as follows:</p>
 </code></pre></div>
 </div>
 <div class="tabbed-block">
-<div class="highlight"><pre><span></span><code><span class="n">query</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">Session</span><span class="p">;</span><span class="w"></span>
+<div class="highlight"><pre><span></span><code><span class="n">query</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">Session</span><span class="p">;</span>
 </code></pre></div>
 </div>
 </div>
@@ -1895,7 +1895,7 @@ experiments and scans for mouse 001:</p>
 <code>Session</code> instead of <code>Session()</code>.</p>
 </div>
 <div class="tabbed-block">
-<div class="highlight"><pre><span></span><code><span class="n">query</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">Session</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">Scan</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="s">&#39;animal_id = 001&#39;</span><span class="p">;</span><span class="w"></span>
+<div class="highlight"><pre><span></span><code><span class="n">query</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">Session</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">Scan</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="s">&#39;animal_id = 001&#39;</span><span class="p">;</span>
 </code></pre></div>
 </div>
 </div>
@@ -1909,7 +1909,7 @@ contents of the query simply displaying the object. </p>
 </code></pre></div>
 </div>
 <div class="tabbed-block">
-<div class="highlight"><pre><span></span><code><span class="n">Session</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">Scan</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="s">&#39;sample_rate &gt; 1000&#39;</span><span class="p">;</span><span class="w"></span>
+<div class="highlight"><pre><span></span><code><span class="n">Session</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">Scan</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="s">&#39;sample_rate &gt; 1000&#39;</span><span class="p">;</span>
 </code></pre></div>
 </div>
 </div>
@@ -1944,8 +1944,8 @@ object from the database server into the workspace of the host language.</p>
 <code>s</code> of the queried data.</p>
 </div>
 <div class="tabbed-block">
-<div class="highlight"><pre><span></span><code><span class="n">query</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">Session</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">Scan</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="s">&#39;sample_rate &gt; 1000&#39;</span><span class="p">;</span><span class="w"></span>
-<span class="n">s</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">query</span><span class="p">.</span><span class="n">fetch</span><span class="p">();</span><span class="w"></span>
+<div class="highlight"><pre><span></span><code><span class="n">query</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">Session</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">Scan</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="s">&#39;sample_rate &gt; 1000&#39;</span><span class="p">;</span>
+<span class="n">s</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">query</span><span class="p">.</span><span class="n">fetch</span><span class="p">();</span>
 </code></pre></div>
 <p>Here fetching from the <code>query</code> object produces the struct array <code>s</code> of
 the queried data.</p>
@@ -1974,8 +1974,8 @@ entities returned by the query.</p>
 query returns any entities and to <code>false</code> if the query result is empty.</p>
 <p>The <code>count</code> method applied to a query object determines the number of
 entities returned by the query.</p>
-<div class="highlight"><pre><span></span><code><span class="c">% number of ephys sessions since the start of 2018.</span><span class="w"></span>
-<span class="n">n</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">count</span><span class="p">(</span><span class="n">ephys</span><span class="p">.</span><span class="n">Session</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="s">&#39;session_date &gt;= &quot;2018-01-01&quot;&#39;</span><span class="p">)</span><span class="w"></span>
+<div class="highlight"><pre><span></span><code><span class="c">% number of ephys sessions since the start of 2018.</span>
+<span class="n">n</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">count</span><span class="p">(</span><span class="n">ephys</span><span class="p">.</span><span class="n">Session</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="s">&#39;session_date &gt;= &quot;2018-01-01&quot;&#39;</span><span class="p">)</span>
 </code></pre></div>
 </div>
 </div>
