@@ -64,10 +64,6 @@ flowchart LR
     style empty2 fill:none, stroke-dasharray: 0 1
     term
   end
-  subgraph ide["Integrated Development Environment"]
-    direction TB
-    empty2
-  end
   class py_interp,conda,term,ide,db_server,DataJoint boxes;
   classDef boxes fill:#ddd, stroke:#333;
 ```
@@ -181,7 +177,7 @@ instructions on Jupyter within VS Code).
 enter the following command...
     ```console
     conda install graphviz python-graphviz pydotplus
-    ```
+```
 
 ## Example Config, Workflows and Data
 
@@ -211,7 +207,6 @@ needs.
         `paths.py` to better suit your needs. If no modification is required, 
         using `pip install .` is sufficient.
     </details>
-
 
 4. Install `element-interface`, which has utilities used across different Elements and 
    Workflows.
@@ -343,7 +338,6 @@ example data, you would ...
     Element and Workflow Array Ephys also support data recorded with 
     OpenEphys.
 
-
 ??? Note "Calcium Imaging: Click to expand details"
     - **Dataset**: workflow-array-calcium-imaging-test-set
     - **Revision**: 0_1_0a2
@@ -412,7 +406,6 @@ example data, you would ...
     - **Dataset**: workflow-facemap
     - **Revision**: 0.0.0
     - **Size**: .3 GB
-
 
 #### Using Your Own Data
 
@@ -742,7 +735,6 @@ provides all the informaiton required to set up a dedicated database.
         model.PoseEstimation.BodyPartPosition()
         ```
     </details>
-
 
 ### DataJoint LabBook
 
