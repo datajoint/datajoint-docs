@@ -177,7 +177,7 @@ instructions on Jupyter within VS Code).
 enter the following command...
     ```console
     conda install graphviz python-graphviz pydotplus
-```
+    ```
 
 ## Example Config, Workflows and Data
 
@@ -214,6 +214,7 @@ needs.
     ```console
     pip install "element-interface @ git+https://github.com/datajoint/element-interface"
     ```
+
 
 5. <a name="config">&#8203</a>Set up a local DataJoint config file by saving the 
     following block as a json in your workflow directory as `dj_local_conf.json`. Not
@@ -338,6 +339,7 @@ example data, you would ...
     Element and Workflow Array Ephys also support data recorded with 
     OpenEphys.
 
+
 ??? Note "Calcium Imaging: Click to expand details"
     - **Dataset**: workflow-array-calcium-imaging-test-set
     - **Revision**: 0_1_0a2
@@ -406,6 +408,7 @@ example data, you would ...
     - **Dataset**: workflow-facemap
     - **Revision**: 0.0.0
     - **Size**: .3 GB
+
 
 #### Using Your Own Data
 
@@ -735,6 +738,7 @@ provides all the informaiton required to set up a dedicated database.
         model.PoseEstimation.BodyPartPosition()
         ```
     </details>
+
 
 ### DataJoint LabBook
 
