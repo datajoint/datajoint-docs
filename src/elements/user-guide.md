@@ -215,7 +215,6 @@ needs.
     pip install "element-interface @ git+https://github.com/datajoint/element-interface"
     ```
 
-
 5. <a name="config">&#8203</a>Set up a local DataJoint config file by saving the 
     following block as a json in your workflow directory as `dj_local_conf.json`. Not
     sure what to put for the `< >` values below? We'll cover this when we 
