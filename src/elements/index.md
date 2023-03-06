@@ -23,6 +23,8 @@ Below are the projects that make up the family of open-source DataJoint Elements
 
     A data pipeline for calcium imaging microscopy.
 
+    ![calcium](../images/elements-calcium.png){: style="height:200px"}
+
     [:octicons-arrow-right-24: Learn more](./element-calcium-imaging/)
 
 -   :fontawesome-brands-python:{ .lg .middle } **Element Array Electrophysiology**
@@ -30,6 +32,8 @@ Below are the projects that make up the family of open-source DataJoint Elements
     ---
 
     A data pipeline for Neuropixels probes.
+
+    ![ephys](../images/elements-ephys.png){: style="height:200px"}
 
     [:octicons-arrow-right-24: Learn more](./element-array-ephys/)
 
