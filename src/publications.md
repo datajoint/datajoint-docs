@@ -1,14 +1,12 @@
 ---
 Title: Publications
-# cspell:ignoreRegExp [\s|\*|\-](A-Z)*
-# CAUTION: Above sets cspell to ignore capitalized words after space/asterisk/hyphen
 ---
 <!-- markdownlint-disable MD013 -->
 
 The following publications relied on DataJoint open-source software for data analysis.  If your work uses DataJoint or DataJoint Elements, please cite the respective
 [manuscripts and RRIDs](./citation.md).
 
-## 2022 <!-- 20 -->
+## 2022 <!-- 21 -->
 
 + Wang, Y., Chiola, S., Yang, G., Russell, C., Armstrong, C. J., Wu, Y., ... & Shcheglovitov, A. (2022). <a href="https://www.nature.com/articles/s41467-022-33364-z" target="_blank" style="color:#1589F0;">Modeling human telencephalic development and autism-associated SHANK3 deficiency using organoids generated from single neural rosettes</a>. *Nature Communications*, 13(1), 1-25.
 
@@ -19,6 +17,8 @@ The following publications relied on DataJoint open-source software for data ana
 + Saunders, J. L., Ott, L. A., Wehr, M. (2022). <a href="https://doi.org/10.1101/807693" target="_blank" style="color:#1589F0;">AUTOPILOT: Automating experiments with lots of Raspberry Pis</a>. *bioRxiv*.
 
 + Born, G. (2022). <a href="https://edoc.ub.uni-muenchen.de/30350/1/Born_Gregory.pdf" target="_blank" style="color:#1589F0;">The effect of feedback on sensory processing in the mouse early visual system</a>. *Doctoral dissertation*.
+
++ Cobos, E., Muhammad, T., Fahey, P. G., Ding, Z., Ding, Z., Reimer, J., ... & Tolias, A. (2022). <a href="https://www.biorxiv.org/content/10.1101/2022.12.09.519708v1" target="_blank" style="color:#1589F0;">It takes neurons to understand neurons: Digital twins of visual cortex synthesize neural metamers</a>. *bioRxiv*, 2022-12.
 
 + Cadena, S. A., Willeke, K. F., Restivo, K., Denfield, G., Sinz, F. H., Bethge, M., ... & Ecker, A. S. (2022). <a href="https://doi.org/10.1101/2022.05.18.492503" target="_blank" style="color:#1589F0;">Diverse task-driven modeling of macaque V4 reveals functional specialization towards semantic tasks.</a>. *bioRxiv*.
 

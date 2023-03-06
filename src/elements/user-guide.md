@@ -95,7 +95,7 @@ and go through the setup, including adding Miniconda to your `PATH` (full
 
     ``` console
     conda create --name datajoint-workflow-<name> python=3.9 
-    conda activate dj-workflow-<name> 
+    conda activate datajoint-workflow-<name> 
     ```
 
 ??? Warning "Apple M1 users: Click to expand"
