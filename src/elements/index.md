@@ -25,11 +25,11 @@ Below are the projects that make up the family of open-source DataJoint Elements
 
     ![calcium](../images/elements-calcium.png){: style="height:200px"}
 
-    <a href="https://github.com/datajoint/workflow-calcium-imaging" target="_blank">
+    <a href="https://github.com/datajoint/workflow-calcium-imaging#interactive-tutorial" target="_blank">
     :octicons-arrow-right-24: Interactive
-    tutorial</a>
+    tutorial on GitHub Codespaces</a>
 
-    [:octicons-arrow-right-24: Detailed docs](./element-calcium-imaging/)
+    [:octicons-arrow-right-24: Docs](./element-calcium-imaging/)
 
 -   :fontawesome-brands-python:{ .lg .middle } **Element Array Electrophysiology**
 
@@ -39,7 +39,11 @@ Below are the projects that make up the family of open-source DataJoint Elements
 
     ![ephys](../images/elements-ephys.png){: style="height:200px"}
 
-    [:octicons-arrow-right-24: Learn more](./element-array-ephys/)
+    <a href="https://github.com/datajoint/workflow-array-ephys#interactive-tutorial" target="_blank">
+    :octicons-arrow-right-24: Interactive
+    tutorial on GitHub Codespaces</a>
+
+    [:octicons-arrow-right-24: Docs](./element-array-ephys/)
 
 -   :fontawesome-brands-python:{ .lg .middle } **Element Electrode Localization**
 
