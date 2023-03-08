@@ -25,7 +25,7 @@ Below are the projects that make up the family of open-source DataJoint Elements
 
     ![calcium](../images/elements-calcium.png){: style="height:200px"}
 
-    <a href="https://github.com/datajoint/workflow-calcium-imaging" target="_blank">
+    <a href="https://github.com/datajoint/workflow-calcium-imaging#interactive-tutorial" target="_blank">
     :octicons-arrow-right-24: Interactive
     tutorial on GitHub Codespaces</a>
 
@@ -39,7 +39,7 @@ Below are the projects that make up the family of open-source DataJoint Elements
 
     ![ephys](../images/elements-ephys.png){: style="height:200px"}
 
-    <a href="https://github.com/datajoint/workflow-array-ephys" target="_blank">
+    <a href="https://github.com/datajoint/workflow-array-ephys#interactive-tutorial" target="_blank">
     :octicons-arrow-right-24: Interactive
     tutorial on GitHub Codespaces</a>
 
