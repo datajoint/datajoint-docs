@@ -6,7 +6,15 @@ Title: Publications
 The following publications relied on DataJoint open-source software for data analysis.  If your work uses DataJoint or DataJoint Elements, please cite the respective
 [manuscripts and RRIDs](./citation.md).
 
-## 2022 <!-- 21 -->
+## 2023 <!-- 3 -->
+
++ Chen, S., Liu, Y., Wang, Z., Colonell, J., Liu, L. D., Hou, H., ... & Svoboda, K. (2023). <a href="https://doi.org/10.1101/2023.03.01.530520" target="_blank" style="color:#1589F0;">Brain-wide neural activity underlying memory-guided movement</a>. *bioRxiv*. 2023-03.
+
++ Cotton, R. J., Cimorelli, A., Shah, K., Anarwala, S., Uhlrich, S., & Karakostas, T. (2023). <a href="https://doi.org/10.48550/arXiv.2303.02413" target="_blank" style="color:#1589F0;">Improved Trajectory Reconstruction for Markerless Pose Estimation</a>. *arXiv*. 2303.02413.
+
++ Laboratory, I. B., Bonacchi, N., Chapuis, G. A., Churchland, A. K., DeWitt, E. E., Faulkner, M., ... & Wells, M. J. (2023). <a href="https://doi.org/10.1038/s41592-022-01742-6" target="_blank" style="color:#1589F0;">A modular architecture for organizing, processing and sharing neurophysiology data</a>. *Nature Methods*. 1-5.
+
+## 2022 <!-- 22 -->
 
 + Wang, Y., Chiola, S., Yang, G., Russell, C., Armstrong, C. J., Wu, Y., ... & Shcheglovitov, A. (2022). <a href="https://www.nature.com/articles/s41467-022-33364-z" target="_blank" style="color:#1589F0;">Modeling human telencephalic development and autism-associated SHANK3 deficiency using organoids generated from single neural rosettes</a>. *Nature Communications*, 13(1), 1-25.
 
@@ -31,6 +39,11 @@ The following publications relied on DataJoint open-source software for data ana
 + Fu, J., Willeke, K. F., Pierzchlewicz, P. A., Muhammad, T., Denfield, G. H., Sinz, F. H., & Tolias, A. S. (2022). <a href="https://dx.doi.org/10.2139/ssrn.4029075" target="_blank" style="color:#1589F0;">Heterogeneous Orientation Tuning Across Sub-Regions of Receptive Fields of V1 Neurons in Mice</a>. *Available at SSRN 4029075*.
 
 + Goetz, J., Jessen, Z. F., Jacobi, A., Mani, A., Cooler, S., Greer, D., ... & Schwartz, G. W. (2022). <a href="https://doi.org/10.1016/j.celrep.2022.111040" target="_blank" style="color:#1589F0;">Unified classification of mouse retinal ganglion cells using function, morphology, and gene expression</a>. *Cell reports*, 40(2), 111040.
+
++ Huang, J. Y., Hess, M., Bajpai, A., Barton, S. J., Li, X., Hobson, L. N., & Lu, H. C.
+  (2022). <a href="https://doi.org/10.1101/2022.10.23.513371" target="_blank"
+  style="color:#1589F0;">Sex-and GABAergic-modulated neuronal subnetwork assemblies in
+  the developing somatosensory cortex</a>. bioRxiv, 2022-10.
 
 + Jaffe, A. (2022). <a href="https://nrs.harvard.edu/URN-3:HUL.INSTREPOS:37371150" target="_blank" style="color:#1589F0;">Optical investigation of microcircuit computations in mouse primary visual cortex</a>. *Doctoral dissertation*.
 
@@ -80,9 +93,7 @@ The following publications relied on DataJoint open-source software for data ana
 
 + Wang, Y., Chiola, S., Yang, G., Russell, C., Armstrong, C. J., Wu, Y., Spampanato, J., Tarboton, P., Chang, A. N., Harmin, D. A., ... (2021). <a href="https://doi.org/10.1101/2021.01.25.428022" target="_blank" style="color:#1589F0;">Modeling autism-associated SHANK3 deficiency using human cortico-striatal organoids generated from single neural rosettes</a>. *bioRxiv*.
 
-## 2020 <!-- 8 -->
-
-+ Aguillon-Rodriguez, V., Angelaki, D. E., Bayer, H. M., Bonacchi, N., Carandini, M., Cazettes, F., Chapuis, G. A., Churchland, A. K., Dan, Y., Dewitt, E. E., ... (2020). <a href="https://doi.org/10.7554/eLife.63711" target="_blank" style="color:#1589F0;">A standardized and reproducible method to measure decision-making in mice</a>. *BioRxiv*.
+## 2020 <!-- 7 -->
 
 + Angelaki, D. E., Ng, J., Abrego, A. M., Cham, H. X., Asprodini, E. K., Dickman, J. D., & Laurens, J. (2020). <a href="https://doi.org/10.1038/s41467-020-15566-5" target="_blank" style="color:#1589F0;">A gravity-based three-dimensional compass in the mouse brain</a>. *Nature Communications*, *11*(1), 1–13.
 
@@ -98,9 +109,7 @@ The following publications relied on DataJoint open-source software for data ana
 
 + Zhao, Z., Klindt, D. A., Chagas, A. M., Szatko, K. P., Rogerson, L., Protti, D. A., Behrens, C., Dalkara, D., Schubert, T., Bethge, M., others. (2020). <a href="https://doi.org/10.1038/s41598-020-60214-z" target="_blank" style="color:#1589F0;">The temporal structure of the inner retina at a single glance</a>. *Scientific Reports*, *10*(1), 1–17.
 
-## 2019 <!-- 8 -->
-
-+ Bonacchi, N., Chapuis, G., Churchland, A., Harris, K. D., Rossant, C., Sasaki, M., Shen, S., Steinmetz, N. A., Walker, E. Y., Winter, O., others. (2019). <a href="https://doi.org/10.1101/827873" target="_blank" style="color:#1589F0;">Data architecture and visualization for a large-scale neuroscience collaboration</a>. *BioRxiv*, 827873.
+## 2019 <!-- 7 -->
 
 + Cadena, S. A., Denfield, G. H., Walker, E. Y., Gatys, L. A., Tolias, A. S., Bethge, M., & Ecker, A. S. (2019). <a href="https://doi.org/10.1152/jn.00612.2019" target="_blank" style="color:#1589F0;">Deep convolutional models improve predictions of macaque V1 responses to natural images</a>. *PLoS Computational Biology*, *15*(4), e1006897.
 
