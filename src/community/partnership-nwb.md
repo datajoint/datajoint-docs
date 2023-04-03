@@ -1,6 +1,4 @@
-# NWB
-
-## Integrations between DataJoint Elements and Neurodata Without Borders
+# Sustainability Roadmap between DataJoint Elements and Neurodata Without Borders
 
 <figure markdown>
   ![datajoint](../../images/company-logo-black.svg){: style="height:50px; padding-right:25px"}

@@ -1,6 +1,4 @@
-# Facemap
-
-## Sustainability Roadmap between DataJoint Elements and Facemap
+# Sustainability Roadmap between DataJoint Elements and Facemap
 
 <figure markdown>
   ![datajoint](../../images/company-logo-black.svg){: style="height:50px; padding-right:25px"}

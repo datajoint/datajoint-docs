@@ -1,6 +1,4 @@
-# DANDI
-
-## Sustainability Roadmap between DataJoint Elements and DANDI Archive
+# Sustainability Roadmap between DataJoint Elements and DANDI Archive
 
 <figure markdown>
   ![datajoint](../../images/company-logo-black.svg){: style="height:50px; padding-right:25px"}

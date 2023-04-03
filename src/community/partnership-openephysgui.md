@@ -1,6 +1,4 @@
-# Open Ephys GUI
-
-## Sustainability Roadmap between DataJoint Elements and Open Ephys GUI
+# Sustainability Roadmap between DataJoint Elements and Open Ephys GUI
 
 <figure markdown>
   ![datajoint](../../images/company-logo-black.svg){: style="height:50px; padding-right:25px"}
