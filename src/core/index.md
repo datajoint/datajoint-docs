@@ -14,6 +14,10 @@ make up the family of core open-source projects.
 
     A low-level client for managing [data pipelines](./glossary#data-pipeline).
 
+    <a href="https://github.com/datajoint/datajoint-tutorials" target="_blank">
+    :octicons-arrow-right-24: Interactive
+    tutorial on GitHub Codespaces</a>
+
     :octicons-arrow-right-24: [New docs](./datajoint-python/) coming soon!  In the meantime, refer to our [legacy docs](https://docs.datajoint.org/python/).
 
 -   :fontawesome-brands-java:{ .lg .middle } **DataJoint MATLAB**
