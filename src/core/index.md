@@ -12,7 +12,7 @@ make up the family of core open-source projects.
 
     ---
 
-    A low-level client for managing [data pipelines](./glossary#data-pipeline).
+    A low-level client for managing data pipelines.
 
     <a href="https://github.com/datajoint/datajoint-tutorials" target="_blank">
     :octicons-arrow-right-24: Interactive
@@ -24,7 +24,7 @@ make up the family of core open-source projects.
 
     ---
 
-    A low-level client for managing [data pipelines](./glossary#data-pipeline).
+    A low-level client for managing data pipelines.
 
     :octicons-arrow-right-24: New docs coming soon!  In the meantime, refer to our [legacy docs](https://docs.datajoint.org/matlab/).
 
@@ -32,7 +32,7 @@ make up the family of core open-source projects.
 
     ---
 
-    Expose [data pipelines](./glossary#data-pipeline) via a REST interface.
+    Expose DataJoint pipelines via a REST interface.
 
     :octicons-arrow-right-24: New docs coming soon!  In the meantime, refer to our [legacy docs](./pharus/).
 
@@ -46,7 +46,7 @@ make up the family of core open-source projects.
 
     ---
 
-    Data entry and data model browsing for [data pipelines](./glossary#data-pipeline).
+    Data entry and data model browsing for DataJoint pipelines.
 
     :octicons-arrow-right-24: New docs coming soon!  In the meantime, refer to our [legacy docs](./datajoint-labbook/).
 
@@ -54,8 +54,7 @@ make up the family of core open-source projects.
 
     ---
 
-    A visualization framework for making low-code web apps for 
-    [data pipelines](./glossary#data-pipeline).
+    A visualization framework for making low-code web apps for DataJoint pipelines.
 
     :octicons-arrow-right-24: See [documentation](./sci-viz/).
 
@@ -88,7 +87,7 @@ graph
 
     ---
 
-    An optimized, MySQL backend for [data pipelines](./glossary#data-pipeline).
+    An optimized, MySQL backend for DataJoint pipelines.
 
     :octicons-arrow-right-24: New docs coming soon! In the meantime, refer to our [legacy docs](https://github.com/datajoint/mysql-docker#mysql-for-datajoint).
 
@@ -104,7 +103,7 @@ graph
 
     ---
 
-    Adds only dependencies for managing [data pipelines](./glossary#data-pipeline).
+    Adds only dependencies for managing DataJoint pipelines.
 
     :octicons-arrow-right-24: New docs coming soon!  In the meantime, refer to our [legacy docs](./djbase-docker/).
 
@@ -120,7 +119,7 @@ graph
 
     ---
 
-    Official image for managing [data pipelines](./glossary#data-pipeline).
+    Official image for managing DataJoint pipelines.
 
     :octicons-arrow-right-24: [New docs](./datajoint-python/) coming soon!  In the meantime, refer to our [legacy docs](https://docs.datajoint.org/python/).
 
