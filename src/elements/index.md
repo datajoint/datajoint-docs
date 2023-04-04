@@ -57,6 +57,14 @@ Below are the projects that make up the family of open-source DataJoint Elements
 
     [:octicons-arrow-right-24: Docs](./element-miniscope/)
 
+-   :fontawesome-brands-python:{ .lg .middle } **Element ZStack**
+
+    ---
+
+    A data pipeline for segmenting volumetric microscopy data with Cellpose.
+
+    :octicons-arrow-right-24: New docs coming soon!
+
 -   :fontawesome-brands-python:{ .lg .middle } **Element DeepLabCut**
 
     ---
@@ -72,6 +80,14 @@ Below are the projects that make up the family of open-source DataJoint Elements
     A data pipeline for pose estimation with Facemap.
 
     [:octicons-arrow-right-24: Docs](./element-facemap/)
+
+-   :fontawesome-brands-python:{ .lg .middle } **Element Optogenetics**
+
+    ---
+
+    A data pipeline for managing data from optogenetics experiments.
+
+    :octicons-arrow-right-24: New docs coming soon!
 
 -   :fontawesome-brands-java:{ .lg .middle } **Element Visual Stimulus**
 
