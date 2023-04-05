@@ -23,9 +23,8 @@ Below are the projects that make up the family of open-source DataJoint Elements
 
     A data pipeline for calcium imaging microscopy.
 
-    <a href="https://github.com/datajoint/workflow-calcium-imaging#interactive-tutorial" target="_blank">
-    :octicons-arrow-right-24: Interactive
-    tutorial on GitHub Codespaces</a>
+    [:octicons-arrow-right-24: Interactive tutorial on GitHub
+    Codespaces](https://github.com/datajoint/workflow-calcium-imaging#interactive-tutorial){:target="_blank"}
 
     [:octicons-arrow-right-24: Docs](./element-calcium-imaging/)
 
@@ -35,9 +34,8 @@ Below are the projects that make up the family of open-source DataJoint Elements
 
     A data pipeline for Neuropixels probes.
 
-    <a href="https://github.com/datajoint/workflow-array-ephys#interactive-tutorial" target="_blank">
-    :octicons-arrow-right-24: Interactive
-    tutorial on GitHub Codespaces</a>
+    [:octicons-arrow-right-24: Interactive tutorial on GitHub
+    Codespaces](https://github.com/datajoint/workflow-array-ephys#interactive-tutorial){:target="_blank"}
 
     [:octicons-arrow-right-24: Docs](./element-array-ephys/)
 
