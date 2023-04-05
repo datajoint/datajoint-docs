@@ -8,7 +8,6 @@ as Principal Investigator.
 - Dimitri Yatsenko - PI
 - Thinh Nguyen - Data Scientist
 - Kabilar Gunalan - Data Scientist
-- Tolga Dincer - Data Scientist
 - Sid Hulyalkar - Data Scientist
 - Jaerong Ahn - Data Scientist
 - Kushal Bakshi - Data Scientist
@@ -29,6 +28,7 @@ as Principal Investigator.
 - Shan Shen - Data Scientist
 - Joseph Burling - Data Scientist
 - Chris Brozdowski - Data Scientist
+- Tolga Dincer - Data Scientist
 - Maho Sasaki - Software Engineer
 - Daniel Sitonic - Software Engineer
 - Carlos Ortiz - Software Engineer
