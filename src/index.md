@@ -38,7 +38,7 @@
 
      Managed services for neurophysiology built with DataJoint Core and DataJoint Elements.
 
-     <a href="https://works.datajoint.com/" target="_blank">:octicons-arrow-right-24: Sign in</a>
+     [:octicons-arrow-right-24: Sign in](https://works.datajoint.com/){:target="_blank"}
 
 </div>
 
