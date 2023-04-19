@@ -6,8 +6,8 @@ as Principal Investigator.
 ## Scientists
 
 - Dimitri Yatsenko - PI
+- Kabilar Gunalan - Project Manager, Data Scientist
 - Thinh Nguyen - Data Scientist
-- Kabilar Gunalan - Data Scientist
 - Sid Hulyalkar - Data Scientist
 - Jaerong Ahn - Data Scientist
 - Kushal Bakshi - Data Scientist
@@ -21,7 +21,7 @@ as Principal Investigator.
 
 ## Past contributors
 
-- Edgar Y. Walker - System architect, Data Scientist, Project Manager 
+- Edgar Y. Walker - System Architect, Data Scientist, Project Manager 
 (from project start to Jan, 2021)
 - Andreas S. Tolias - Grant proposal contributor
 - Jacob Reimer - Grant proposal contributor
