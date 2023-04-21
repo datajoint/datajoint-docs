@@ -6,7 +6,11 @@ Title: Publications
 The following publications relied on DataJoint open-source software for data analysis.  If your work uses DataJoint or DataJoint Elements, please cite the respective
 [manuscripts and RRIDs](./citation.md).
 
-## 2023 <!-- 3 -->
+## 2023 <!-- 4 -->
+
++ Celii, B., Papadopoulos, S., Ding, Z., Fahey, P. G., Wang, E., Papadopoulos, C., ... &
+Reimer, J. (2023). [NEURD: automated proofreading and feature extraction for
+connectomics.](https://doi.org/10.1101/2023.03.14.532674){:target="_blank"}. *bioRxiv*. 2023-03.
 
 + Chen, S., Liu, Y., Wang, Z., Colonell, J., Liu, L. D., Hou, H., ... & Svoboda, K. (2023). [Brain-wide neural activity underlying memory-guided movement](https://doi.org/10.1101/2023.03.01.530520){:target="_blank"}. *bioRxiv*. 2023-03.
     
