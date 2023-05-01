@@ -6,7 +6,7 @@ Title: Publications
 The following publications relied on DataJoint open-source software for data analysis.  If your work uses DataJoint or DataJoint Elements, please cite the respective
 [manuscripts and RRIDs](./citation.md).
 
-## 2023 <!-- 4 -->
+## 2023 <!-- 5 -->
 
 + Celii, B., Papadopoulos, S., Ding, Z., Fahey, P. G., Wang, E., Papadopoulos, C., ... &
 Reimer, J. (2023). [NEURD: automated proofreading and feature extraction for
@@ -15,6 +15,8 @@ connectomics.](https://doi.org/10.1101/2023.03.14.532674){:target="_blank"}. *bi
 + Chen, S., Liu, Y., Wang, Z., Colonell, J., Liu, L. D., Hou, H., ... & Svoboda, K. (2023). [Brain-wide neural activity underlying memory-guided movement](https://doi.org/10.1101/2023.03.01.530520){:target="_blank"}. *bioRxiv*. 2023-03.
     
 + Cotton, R. J., Cimorelli, A., Shah, K., Anarwala, S., Uhlrich, S., & Karakostas, T. (2023). [Improved Trajectory Reconstruction for Markerless Pose Estimation](https://doi.org/10.48550/arXiv.2303.02413){:target="_blank"}. *arXiv*. 2303.02413.
+
++ Ding, Z., Fahey, P. G., Papadopoulos, S., Wang, E., Celii, B., Papadopoulos, C., ... & Tolias, A. S. (2023). [Functional connectomics reveals general wiring rule in mouse visual cortex](https://doi.org/10.1101/2023.03.13.531369){:target="_blank"}. bioRxiv, 2023-03.
 
 + Laboratory, I. B., Bonacchi, N., Chapuis, G. A., Churchland, A. K., DeWitt, E. E., Faulkner, M., ... & Wells, M. J. (2023). [A modular architecture for organizing, processing and sharing neurophysiology data](https://doi.org/10.1038/s41592-022-01742-6){:target="_blank"}. *Nature Methods*. 1-5.
 
