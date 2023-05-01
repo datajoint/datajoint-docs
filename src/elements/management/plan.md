@@ -14,4 +14,5 @@ The following sections provide detailed information.
 - [Quality Assurance](../quality-assurance)
 - [Contribution Guideline](../../../community/contribute)
 - [Outreach Plan](../outreach)
+- [Dissemination Plan](../dissemination)
 - [Licenses and User Agreements](../../../community/licenses)

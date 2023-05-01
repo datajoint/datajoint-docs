@@ -28,5 +28,3 @@ In 2017, DARPA awarded a small-business innovation research grant to Vathes LLC
 
 In June 2018, the Princeton Neuroscience Institute, under the leadership of Prof. Carlos
 Brody, began funding a project to generate a detailed DataJoint user manual.
-
-<!-- WHAT ELSE? -->
