@@ -85,7 +85,10 @@ Below are the projects that make up the family of open-source DataJoint Elements
 
     A data pipeline for managing data from optogenetics experiments.
 
-    :octicons-arrow-right-24: New docs coming soon!
+    [:octicons-arrow-right-24: Interactive tutorial on GitHub
+    Codespaces](https://github.com/datajoint/workflow-optogenetics#interactive-tutorial){:target="_blank"}
+
+    [:octicons-arrow-right-24: Docs](./element-optogenetics/)
 
 -   :fontawesome-brands-java:{ .lg .middle } **Element Visual Stimulus**
 
