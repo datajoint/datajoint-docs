@@ -61,8 +61,9 @@ nav:
       - Distributed Computing: core/compute/distributed.md
     - Internals:
       - SQL transpilation: core/internal/transpilation.md
+    - FAQ: core/faq.md
   - Elements:
-    - Overview: elements/index.md
+    - elements/index.md
     - Concepts: elements/concepts.md
     - User Guide: elements/user-guide.md
     - Developer Guide: elements/developer-guide.md
@@ -73,7 +74,8 @@ nav:
       - Selection: elements/management/selection.md
       - Quality Assurance: elements/management/quality-assurance.md
       - Outreach: elements/management/outreach.md
-      - Adopt: elements/management/adopt.md
+      - Dissemination: elements/management/dissemination.md
+      - Adoption: elements/management/adoption.md
   - Projects: projects.md
   - Publications: publications.md
   - Citation: citation.md
@@ -83,12 +85,12 @@ nav:
     - Contribute: community/contribute.md
     - Licenses: community/licenses.md
     - History: community/history.md
-    - Partnerships:
-      - NWB: community/partnerships/nwb.md
-      - DANDI: community/partnerships/dandi.md
-      - Suite2p: community/partnerships/suite2p.md
-      - Facemap: community/partnerships/facemap.md
-      - INCF: community/partnerships/incf.md
+    - Partnership - DANDI: community/partnership-dandi.md
+    - Partnership - Facemap: community/partnership-facemap.md
+    - Partnership - INCF: community/partnership-incf.md
+    - Partnership - NWB: community/partnership-nwb.md
+    - Partnership - Open Ephys GUI: community/partnership-openephysgui.md
+    - Partnership - Suite2p: community/partnership-suite2p.md
 
 # ---------------------------- STANDARD -----------------------------
 
@@ -118,6 +120,7 @@ theme:
         name: Switch to light mode
 plugins:
   - search
+  - section-index
   - redirects:
       redirect_maps:
         "index.md": "welcome.md"
@@ -147,11 +150,11 @@ markdown_extensions:
   - footnotes
   - pymdownx.details: # permit folded <details> blocks via `??? note "Title"` format
   - pymdownx.snippets # Allows including file snippets e.g. --8<-- "; src/file.md"
+  - pymdownx.magiclink # Displays bare URLs as links
+  - pymdownx.tasklist: # Renders check boxes in tasks lists
+      custom_checkbox: true
 extra:
   generator: false # Disable watermark
-  analytics:
-    provider: google
-    property: !ENV GOOGLE_ANALYTICS_KEY
   version:
     provider: mike
   social:

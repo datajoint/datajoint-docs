@@ -10,7 +10,8 @@ expertise or support.
 
 If you have not yet used DataJoint, we recommend completing our online training
 tutorials or attending a workshop either online or in person.  Interactive tutorials
-can be found on [DataJoint CodeBook](https://codebook.datajoint.io).
+can be found on the [DataJoint
+Tutorials](https://github.com/datajoint/datajoint-tutorials) repository.
 
 ## Support from DataJoint
 

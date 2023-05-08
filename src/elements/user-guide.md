@@ -64,10 +64,6 @@ flowchart LR
     style empty2 fill:none, stroke-dasharray: 0 1
     term
   end
-  subgraph ide["Integrated Development Environment"]
-    direction TB
-    empty2
-  end
   class py_interp,conda,term,ide,db_server,DataJoint boxes;
   classDef boxes fill:#ddd, stroke:#333;
 ```
@@ -99,7 +95,7 @@ and go through the setup, including adding Miniconda to your `PATH` (full
 
     ``` console
     conda create --name datajoint-workflow-<name> python=3.9 
-    conda activate dj-workflow-<name> 
+    conda activate datajoint-workflow-<name> 
     ```
 
 ??? Warning "Apple M1 users: Click to expand"
@@ -211,7 +207,6 @@ needs.
         `paths.py` to better suit your needs. If no modification is required, 
         using `pip install .` is sufficient.
     </details>
-
 
 4. Install `element-interface`, which has utilities used across different Elements and 
    Workflows.
