@@ -6,11 +6,8 @@ as Principal Investigator.
 ## Scientists
 
 - Dimitri Yatsenko - PI
+- Kabilar Gunalan - Project Manager, Data Scientist
 - Thinh Nguyen - Data Scientist
-- Kabilar Gunalan - Data Scientist
-- Joseph Burling - Data Scientist
-- Chris Brozdowski - Data Scientist
-- Tolga Dincer - Data Scientist
 - Sid Hulyalkar - Data Scientist
 - Jaerong Ahn - Data Scientist
 - Kushal Bakshi - Data Scientist
@@ -21,22 +18,25 @@ as Principal Investigator.
 - Drew Yang - Data Systems Engineer
 - Jeroen Verswijver - Software Engineer
 - Adib Baji - Software Engineer
-- Timothy Chandler - Data Systems Engineer
-- Chetana Pitani - Software Engineer
 
 ## Past contributors
 
-- Edgar Y. Walker - System architect, Data Scientist, Project Manager 
+- Edgar Y. Walker - System Architect, Data Scientist, Project Manager 
 (from project start to Jan, 2021)
 - Andreas S. Tolias - Grant proposal contributor
 - Jacob Reimer - Grant proposal contributor
 - Shan Shen - Data Scientist
+- Joseph Burling - Data Scientist
+- Chris Brozdowski - Data Scientist
+- Tolga Dincer - Data Scientist
 - Maho Sasaki - Software Engineer
 - Daniel Sitonic - Software Engineer
+- Carlos Ortiz - Software Engineer
+- Chetana Pitani - Software Engineer
 - Christopher Turner - Data Systems Engineer
+- Timothy Chandler - Data Systems Engineer
 - David Godinez - Data Engineer
 - Geetika Singh - Data Engineer
-- Carlos Ortiz - Software Engineer
 
 The first-person pronouns "we" and "our" in these documents refer to those listed above.
 

@@ -1,10 +1,8 @@
-# Facemap
-
-## Sustainability Roadmap between DataJoint Elements and Facemap
+# Sustainability Roadmap between DataJoint Elements and Facemap
 
 <figure markdown>
-  ![Elements](../../images/_elements-logo.png){: style="width:300px"}
-  ![facemap](../../images/community-partnerships-facemap-logo.png){: style="width:150px"}
+  ![datajoint](../../images/company-logo-black.svg){: style="height:50px; padding-right:25px"}
+  ![facemap](../../images/community-partnerships-facemap-logo.png){: style="width:100px"}
 </figure>
 
 ## Aim
@@ -62,7 +60,7 @@ To achieve the aims of coordinated development, both projects appoint a primary 
 contact (POC) to respond to questions relating to the integration and interoperability 
 of DataJoint Elements and Facemap.
 
-For 2022, the DataJoint Elements POC is Dr. Tolga Dincer (tolga@datajoint.com)
+For 2022, the DataJoint Elements POC is Dr. Kabilar Gunalan (kabilar@datajoint.com)
 
 For 2022, the Facemap POC is Dr. Carsen Stringer (stringerc@janelia.hhmi.org)
 
@@ -81,17 +79,17 @@ and Facemap.
 
 ## Development Roadmap
 
-- Mechanism to import Facemap results - Completed 2022 - 
+- [x] Mechanism to import Facemap results - 
 [Element Facemap](https://github.com/datajoint/element-facemap/blob/0ccab4ec6731cd612e7cf61a221c64fb9bf22566/element_facemap/facial_behavior_estimation.py#L389-L405)
 
-- Mechanism to run Facemap within DataJoint Elements - Completed 2022 - 
+- [x] Mechanism to run Facemap within DataJoint Elements - 
 [Element Facemap](https://github.com/datajoint/element-facemap/blob/0ccab4ec6731cd612e7cf61a221c64fb9bf22566/element_facemap/facial_behavior_estimation.py#L259-L266)
 
-- Tutorials on running DataJoint Element with Facemap - Under development 
+- [ ] Tutorials on running DataJoint Element with Facemap 
 
-- Integration tests to verify loading Facemap data - Under development
+- [ ] Tests to verify loading Facemap data
 
-- Integration tests to verify running Facemap - Under development
+- [ ] Tests to verify running Facemap
 
 ## Citation
 

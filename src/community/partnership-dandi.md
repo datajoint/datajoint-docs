@@ -1,10 +1,8 @@
-# DANDI
-
-## Sustainability Roadmap between DataJoint Elements and DANDI Archive
+# Sustainability Roadmap between DataJoint Elements and DANDI Archive
 
 <figure markdown>
-  ![Elements](../../images/_elements-logo.png){: style="height:83px"}
-  ![DANDI](../../images/community-partnerships-dandi-logo.png){: style="height:83px"}
+  ![datajoint](../../images/company-logo-black.svg){: style="height:50px; padding-right:25px"}
+  ![dandi](../../images/community-partnerships-dandi-logo.png){: style="height:83px"}
 </figure>
 
 ## Aim
@@ -28,7 +26,7 @@ integration and interoperability across the two ecosystems.
 The principal developer of DataJoint Elements and the DataJoint framework is the company
 DataJoint — https://datajoint.com.
 
-### Neurodata without Borders (NWB)
+### Distributed Archives for Neurophysiology Data Integration (DANDI)
 
 **DANDI** - https://dandiarchive.org — is an archive for neurophysiology data, 
 providing neuroscientists with a common platform to share, archive, and process data. 
@@ -64,7 +62,7 @@ To achieve the aims of coordinated development, both projects appoint a primary 
 contact (POC) to respond to questions relating to the integration and interoperability 
 of DataJoint Elements and DANDI.
 
-For 2022, the DataJoint Elements POC is Dr. Chris Brozdowski (cbroz@datajoint.com)
+For 2022, the DataJoint Elements POC is Dr. Kabilar Gunalan (kabilar@datajoint.com)
 
 For 2022, the DANDI POC is Dr.Satrajit Ghosh (satra@mit.edu)
 
@@ -83,8 +81,8 @@ and DANDI.
 
 ## Development Roadmap
 
-- Mechanism to upload to DANDI - Completed 2022 - 
+- [x] Mechanism to upload to DANDI - 
   [Element Interface DANDI module](https://github.com/datajoint/element-interface/blob/main/element_interface/dandi.py)
 
-- Documentation to upload to DANDI - Completed 2022 - 
+- [x] Documentation to upload to DANDI - 
   [Jupyter notebook](https://github.com/datajoint/workflow-array-ephys/blob/main/notebooks/09-NWB-export.ipynb)

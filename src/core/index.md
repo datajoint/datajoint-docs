@@ -12,7 +12,9 @@ DataJoint Core is a collection of open-source tools for building and operating s
 
     A Python client for defining, operating, and querying data pipelines.
 
-    :octicons-arrow-right-24: [Documentation](https://datajoint.com/docs/core/datajoint-python/) | [Source code](https://github.com/datajoint/datajoint-python)
+    [:octicons-arrow-right-24: Interactive tutorial on GitHub Codespaces](https://github.com/datajoint/datajoint-tutorials){:target="_blank"}
+
+    :octicons-arrow-right-24: [New docs](./datajoint-python/) coming soon!  In the meantime, refer to our [legacy docs](https://docs.datajoint.org/python/).
 
 -   :fontawesome-brands-java:{ .lg .middle } **DataJoint for MATLAB**
 
@@ -27,6 +29,8 @@ DataJoint Core is a collection of open-source tools for building and operating s
     ---
 
     A REST API server for interacting with DataJoint pipelines.
+
+    :octicons-arrow-right-24: New docs coming soon!  In the meantime, refer to our [legacy docs](./pharus/).
 
     :octicons-arrow-right-24: [Documentation](https://datajoint.github.io/pharus/) | [Source code](https://github.com/datajoint/pharus/)
  
@@ -80,7 +84,9 @@ graph
 -   :fontawesome-brands-docker:{ .lg .middle } [**datajoint/mysql**](https://hub.docker.com/r/datajoint/mysql)
 
     ---
-    MySQL server pre-configured to work smoothly with DataJoint. 
+    MySQL server pre-configured to work smoothly with DataJoint.
+
+    :octicons-arrow-right-24: New docs coming soon! In the meantime, refer to our [legacy docs](https://github.com/datajoint/mysql-docker#mysql-for-datajoint).
 
 -   :fontawesome-brands-docker:{ .lg .middle } [**datajoint/miniconda3**](https://hub.docker.com/r/datajoint/miniconda3)
 
@@ -105,6 +111,8 @@ graph
     ---
 
     Official DataJoint Docker image.
+
+    :octicons-arrow-right-24: [New docs](./datajoint-python/) coming soon!  In the meantime, refer to our [legacy docs](https://docs.datajoint.org/python/).
 
 -   :fontawesome-brands-docker:{ .lg .middle } [**datajoint/djlab**](https://hub.docker.com/r/datajoint/djlab)
 

@@ -23,7 +23,10 @@ Below are the projects that make up the family of open-source DataJoint Elements
 
     A data pipeline for calcium imaging microscopy.
 
-    [:octicons-arrow-right-24: Learn more](./element-calcium-imaging/)
+    [:octicons-arrow-right-24: Interactive tutorial on GitHub
+    Codespaces](https://github.com/datajoint/workflow-calcium-imaging#interactive-tutorial){:target="_blank"}
+
+    [:octicons-arrow-right-24: Docs](./element-calcium-imaging/)
 
 -   :fontawesome-brands-python:{ .lg .middle } **Element Array Electrophysiology**
 
@@ -31,7 +34,10 @@ Below are the projects that make up the family of open-source DataJoint Elements
 
     A data pipeline for Neuropixels probes.
 
-    [:octicons-arrow-right-24: Learn more](./element-array-ephys/)
+    [:octicons-arrow-right-24: Interactive tutorial on GitHub
+    Codespaces](https://github.com/datajoint/workflow-array-ephys#interactive-tutorial){:target="_blank"}
+
+    [:octicons-arrow-right-24: Docs](./element-array-ephys/)
 
 -   :fontawesome-brands-python:{ .lg .middle } **Element Electrode Localization**
 
@@ -39,7 +45,7 @@ Below are the projects that make up the family of open-source DataJoint Elements
 
     A data pipeline for electrode localization of Neuropixels probes.
 
-    [:octicons-arrow-right-24: Learn more](./element-electrode-localization/)
+    [:octicons-arrow-right-24: Docs](./element-electrode-localization/)
 
 -   :fontawesome-brands-python:{ .lg .middle } **Element Miniscope**
 
@@ -47,7 +53,15 @@ Below are the projects that make up the family of open-source DataJoint Elements
 
     A data pipeline for miniscope calcium imaging.
 
-    [:octicons-arrow-right-24: Learn more](./element-miniscope/)
+    [:octicons-arrow-right-24: Docs](./element-miniscope/)
+
+-   :fontawesome-brands-python:{ .lg .middle } **Element ZStack**
+
+    ---
+
+    A data pipeline for segmenting volumetric microscopy data with Cellpose.
+
+    :octicons-arrow-right-24: New docs coming soon!
 
 -   :fontawesome-brands-python:{ .lg .middle } **Element DeepLabCut**
 
@@ -55,13 +69,21 @@ Below are the projects that make up the family of open-source DataJoint Elements
 
     A data pipeline for pose estimation with DeepLabCut.
 
-    [:octicons-arrow-right-24: Learn more](./element-deeplabcut/)
+    [:octicons-arrow-right-24: Docs](./element-deeplabcut/)
 
 -   :fontawesome-brands-python:{ .lg .middle } **Element Facemap**
 
     ---
 
     A data pipeline for pose estimation with Facemap.
+
+    [:octicons-arrow-right-24: Docs](./element-facemap/)
+
+-   :fontawesome-brands-python:{ .lg .middle } **Element Optogenetics**
+
+    ---
+
+    A data pipeline for managing data from optogenetics experiments.
 
     :octicons-arrow-right-24: New docs coming soon!
 
@@ -71,7 +93,7 @@ Below are the projects that make up the family of open-source DataJoint Elements
 
     A data pipeline for visual stimulation with Psychtoolbox.
 
-    :octicons-arrow-right-24: New docs coming soon!
+    [:octicons-arrow-right-24: Docs](./element-visual-stimulus/)
 
 -   :fontawesome-brands-python:{ .lg .middle } **Element Lab**
 
@@ -79,7 +101,7 @@ Below are the projects that make up the family of open-source DataJoint Elements
 
     A data pipeline for lab management.
 
-    [:octicons-arrow-right-24: Learn more](./element-lab/)
+    [:octicons-arrow-right-24: Docs](./element-lab/)
 
 -   :fontawesome-brands-python:{ .lg .middle } **Element Animal**
 
@@ -87,7 +109,7 @@ Below are the projects that make up the family of open-source DataJoint Elements
 
     A data pipeline for subject management.
 
-    [:octicons-arrow-right-24: Learn more](./element-animal/)
+    [:octicons-arrow-right-24: Docs](./element-animal/)
 
 -   :fontawesome-brands-python:{ .lg .middle } **Element Session**
 
@@ -95,7 +117,7 @@ Below are the projects that make up the family of open-source DataJoint Elements
 
     A data pipeline for session management.
 
-    [:octicons-arrow-right-24: Learn more](./element-session/)
+    [:octicons-arrow-right-24: Docs](./element-session/)
 
 -   :fontawesome-brands-python:{ .lg .middle } **Element Event**
 
@@ -103,7 +125,7 @@ Below are the projects that make up the family of open-source DataJoint Elements
 
     A data pipeline for event- and trial-based experiments.
 
-    [:octicons-arrow-right-24: Learn more](./element-event/)
+    [:octicons-arrow-right-24: Docs](./element-event/)
 
 -   :fontawesome-brands-python:{ .lg .middle } **Element Interface**
 
@@ -111,6 +133,6 @@ Below are the projects that make up the family of open-source DataJoint Elements
 
     Common functions for the DataJoint Elements.
 
-    :octicons-arrow-right-24: New docs coming soon!
+    [:octicons-arrow-right-24: Docs](./element-interface/)
 
 </div>
