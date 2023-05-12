@@ -8,7 +8,7 @@
 
      ---
 
-     Open-source clients for managing data pipelines.
+     Open-source software for managing data pipelines
 
      - DataJoint API for Python
 
@@ -28,7 +28,7 @@
 
      ---
 
-     Open-source data pipelines for neuroscience built with DataJoint API for Python.
+     Open-source implementation of data pipelines for neuroscience studies
 
      [:octicons-arrow-right-24: Learn more](./elements/)
 
@@ -36,9 +36,10 @@
 
      ---
 
-     Managed services for neurophysiology built with DataJoint Core and DataJoint Elements.
+     A cloud platform for automated analysis workflows. It relies on DataJoint Core and DataJoint Elements.
 
-     [:octicons-arrow-right-24: Sign in](https://works.datajoint.com/){:target="_blank"}
+     [:octicons-arrow-right-24: Learn more](https://datajoint.com/works){:target="_blank"}
+     [:octicons-arrow-right-24: Sign-in](https://works.datajoint.com){:target="_blank"}
 
 </div>
 
@@ -50,12 +51,16 @@
 
      ---
 
-     [:octicons-arrow-right-24: Learn more](./projects/)
+     Projects and research teams using DataJoint Core, DataJoint Elements, or DataJoint Works
+
+     [:octicons-arrow-right-24: Project List](./projects/)
 
 -   **Publications**
 
      ---
 
-     [:octicons-arrow-right-24: Learn more](./publications/)
+     Scientific studies and peer-reviewed publications
+     
+     [:octicons-arrow-right-24: Publication List](./publications/)
 
 </div>

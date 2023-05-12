@@ -37,7 +37,7 @@ reference the database schema.
 An Element is a software package defining one or more DataJoint schemas serving a
 particular purpose. By convention, such packages are hosted in individual GitHub
 repositories. For example, Element `element_calcium_imaging` is hosted at
-https://github.com/datajoint/element-calcium-imaging and contains two DataJoint
+[this GitHub repository](https://github.com/datajoint/element-calcium-imaging) and contains two DataJoint
 schemas: `scan` and `imaging`.
 
 ### YouTube Tutorials
