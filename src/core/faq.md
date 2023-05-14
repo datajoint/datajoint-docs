@@ -2,8 +2,7 @@
 
 ## How do I use DataJoint with a GUI?
 
-1. The DataJoint Works platform is set up as a fully managed service, that will
-host and process data for you.
+1. The DataJoint Works platform is set up as a fully managed service to host and execute data pipelines.
 
 2. [LabBook](https://github.com/datajoint/datajoint-labbook) is an open source project
 for data entry.

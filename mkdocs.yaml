@@ -7,45 +7,75 @@ repo_url: https://github.com/datajoint-company/datajoint-docs
 nav:
   - Welcome: index.md
   - Core:
-    - core/index.md
-    - Concepts:
-      - Mantra: core/concepts/mantra.md
-      - Getting Started:
-        - First Steps: core/concepts/getting-started/index.md
-        - Data Pipelines: core/concepts/getting-started/data-pipelines.md
-        - Table Definitions: core/concepts/getting-started/table-definitions.md
-        - Diagrams: core/concepts/getting-started/diagrams.md
-        - Dependencies: core/concepts/getting-started/dependencies.md
-      - Query Language:
-        - Data Types: core/concepts/query-lang/data-types.md
-        - Query Objects: core/concepts/query-lang/query-objs.md
-        - Operators:  core/concepts/query-lang/operators.md
-        - Common Commands: core/concepts/query-lang/common-commands.md
-        - Primary Key: core/concepts/query-lang/primary-key.md
-        - Normalization: core/concepts/query-lang/normalization.md
-      - Reproducibility:
-        - Table Tiers: core/concepts/reproduce/table-tiers.md
-        - Make Methods: core/concepts/reproduce/make-method.md
-      - Referential Integrity:
-        - Query Backend: core/concepts/ref-integrity/query-backend.md
-        - Distributed Computing: core/concepts/ref-integrity/distributed-computing.md
-        - Relational Databases: core/concepts/ref-integrity/relational-databases.md
-      - Glossary: core/glossary.md
-      - FAQ: core/faq.md
+    - Overview: core/index.md
+    - Concepts: 
+      - Principles: core/concepts/principles.md
+      - Glossary: core/concepts/glossary.md
+    - System Administration: 
+      - Database Administration: core/sysadmin/dba.md
+      - File Storage: core/sysadmin/filestore.md
+    - Client Configuration: 
+      - Install: core/client/install.md
+      - Credentials: core/client/creds.md
+      - Settings: core/client/settings.md
+      - File stores: core/client/stores.md
+    - Schema Design:
+      - Schema Creation: core/design/schema.md
+      - Table Definition:
+        - Table tiers: core/design/tables/tiers.md
+        - Declaration Syntax: core/design/tables/declare.md
+        - Primary Key: core/design/tables/primary.md
+        - Attributes: core/design/tables/attributes.md
+        - Lookup Tables: core/design/tables/lookup.md
+        - Blobs: core/design/tables/blobs.md
+        - Attachments: core/design/tables/attach.md
+        - Filepaths: core/design/tables/filepath.md
+        - Custom Datatypes: core/design/tables/customtype.md
+        - Dependencies: core/design/tables/dependencies.md
+        - Indexes: core/design/tables/indexes.md
+        - Master-Part Relationships: core/design/tables/master-part.md
+      - Schema Diagrams: core/design/diagrams.md
+      - Entity Normalization: core/design/normalization.md 
+      - Data Integrity: core/design/integrity.md
+      - Schema Recall: core/design/recall.md
+      - Schema Drop: core/design/drop.md
+      - Schema Modification: core/design/alter.md
+    - Data Manipulations:
+      - Insert: core/manipulation/insert.md
+      - Delete: core/manipulations/delete.md
+      - Update: core/manipulations/update.md
+      - Transactions: core/manipulations/transactions.md
+    - Data queries:
+      - Query principles: core/query/operators.md
+      - Fetch: core/query/fetch.md
+      - Restrict: core/query/restrict.md
+      - Projection: core/query/project.md
+      - Join: core/query/join.md
+      - Aggregation: core/query/aggregation.md
+      - Union: core/query/union.md
+      - Universal Sets: core/query/universals.md
+    - Computations:
+      - Make Method: core/compute/make.md
+      - Populate: core/compute/populate.md
+      - Key Source: core/compmute/keysource.md
+      - Distributed Computing: core/compute/distributed.md
+    - Internals:
+      - SQL transpilation: core/internal/transpilation.md
+    - FAQ: core/faq.md
   - Elements:
     - elements/index.md
     - Concepts: elements/concepts.md
     - User Guide: elements/user-guide.md
     - Developer Guide: elements/developer-guide.md
     - Management:
-        - Plan: elements/management/plan.md
-        - Team: elements/management/team.md
-        - Governance: elements/management/governance.md
-        - Selection: elements/management/selection.md
-        - Quality Assurance: elements/management/quality-assurance.md
-        - Outreach: elements/management/outreach.md
-        - Dissemination: elements/management/dissemination.md
-        - Adoption: elements/management/adoption.md
+      - Plan: elements/management/plan.md
+      - Team: elements/management/team.md
+      - Governance: elements/management/governance.md
+      - Selection: elements/management/selection.md
+      - Quality Assurance: elements/management/quality-assurance.md
+      - Outreach: elements/management/outreach.md
+      - Dissemination: elements/management/dissemination.md
+      - Adoption: elements/management/adoption.md
   - Projects: projects.md
   - Publications: publications.md
   - Citation: citation.md

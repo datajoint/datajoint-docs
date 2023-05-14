@@ -1,5 +1,5 @@
 <!-- markdownlint-disable MD013 -->
-# Projects <!-- 73 -->
+# Projects <!-- 74 -->
 
 DataJoint was originally developed by working systems neuroscientists at Baylor College
 of Medicine to meet the needs of their own research. Below is a partial list of known teams who use DataJoint.
@@ -89,6 +89,7 @@ of Medicine to meet the needs of their own research. Below is a partial list of 
   + <a href="http://pblab.tau.ac.il/en/" target="_blank">Pablo Blinder Lab</a> (<a href="https://github.com/PBLab" target="_blank">GitHub</a>)
 + University of Bonn
   + <a href="https://rose-group.ieecr-bonn.de" target="_blank">Tobias Rose Lab</a>
+  + <a href="https://https://www.ukbonn.de/en/epileptology/workgroups/mormann-workgroup-cognitive-und-clinical-neurophysiology/">Mormann Workgroup</a>
 + University of California, Los Angeles
   + <a href="https://churchlandlab.org/" target="_blank">Anne Churchland Lab</a>
 + University of California, San Diego
