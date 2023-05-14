@@ -4,9 +4,6 @@ The following document describes how to setup a development environment and conn
 a database so that you can use the DataJoint Elements to build and run a workflow on 
 your local machine. 
 
-If you'd rather run through similar tutorials in an online 
-Jupyter environment, please visit [CodeBook](https://codebook.datajoint.io/).
-
 Any of the DataJoint Elements can be combined together to create a workflow that matches
 your experimental setup. We have a number of [example workflows](#example-workflows)
 to get you started. Each focuses on a specific modality, but they can be adapted for
@@ -338,7 +335,6 @@ example data, you would ...
     Element and Workflow Array Ephys also support data recorded with 
     OpenEphys.
 
-
 ??? Note "Calcium Imaging: Click to expand details"
     - **Dataset**: workflow-array-calcium-imaging-test-set
     - **Revision**: 0_1_0a2
@@ -407,7 +403,6 @@ example data, you would ...
     - **Dataset**: workflow-facemap
     - **Revision**: 0.0.0
     - **Size**: .3 GB
-
 
 #### Using Your Own Data
 
@@ -737,7 +732,6 @@ provides all the informaiton required to set up a dedicated database.
         model.PoseEstimation.BodyPartPosition()
         ```
     </details>
-
 
 ### DataJoint LabBook
 
