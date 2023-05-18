@@ -53,8 +53,7 @@ Below are the projects that make up the family of open-source DataJoint Elements
 
     A data pipeline for miniscope calcium imaging.
 
-    [:octicons-arrow-right-24: Interactive tutorial on GitHub
-    Codespaces](https://github.com/datajoint/workflow-miniscope#interactive-tutorial){:target="_blank"}
+    [:octicons-arrow-right-24: Interactive tutorial](https://github.com/datajoint/workflow-miniscope#interactive-tutorial){:target="_blank"}
 
     [:octicons-arrow-right-24: Docs](./element-miniscope/)
 
@@ -65,8 +64,7 @@ Below are the projects that make up the family of open-source DataJoint Elements
     A data pipeline for segmenting volumetric microscopy data with Cellpose, uploading
     to BossDB, and visualizing with Neuroglancer.
 
-    [:octicons-arrow-right-24: Interactive tutorial on GitHub
-    Codespaces](https://github.com/datajoint/workflow-zstack#interactive-tutorial){:target="_blank"}
+    [:octicons-arrow-right-24: Interactive tutorial](https://github.com/datajoint/workflow-zstack#interactive-tutorial){:target="_blank"}
 
     [:octicons-arrow-right-24: Docs](./element-zstack/)
 
