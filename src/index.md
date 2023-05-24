@@ -8,7 +8,7 @@
 
      ---
 
-     Open-source software for managing data pipelines
+     Open-source framework for defining, operating, and querying data pipelines
 
      [:octicons-arrow-right-24: Learn more](./datajoint-python/)
     
