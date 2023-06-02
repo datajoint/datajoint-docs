@@ -15,7 +15,7 @@ neuroscience labs. These activities include
   - [DataJoint Tutorials](https://github.com/datajoint/datajoint-tutorials)
   - [DataJoint Workflow Array
     Ephys](https://github.com/datajoint/workflow-array-ephys#interactive-tutorial)
-  - [DataJoint Workflow Calcium Imaging](https://github.com/datajoint/workflow-calcium-imaging#interactive-tutorial)
+  - [DataJoint Element Calcium Imaging](https://github.com/datajoint/element-calcium-imaging#interactive-tutorial)
 
 ## 2. Community Survey
 

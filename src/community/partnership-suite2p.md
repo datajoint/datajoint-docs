@@ -86,13 +86,13 @@ and Suite2p.
 [Element Calcium Imaging](https://github.com/datajoint/element-calcium-imaging/blob/00df4434fcfd6c1497d7950601248f046170139e/element_calcium_imaging/imaging.py#L267-L299)
 
 - [x] Tutorials on running DataJoint Element with Suite2p - 
-[Workflow Calcium Imaging Jupyter notebooks](https://github.com/datajoint/workflow-calcium-imaging/tree/main/notebooks)
+[Element Calcium Imaging Jupyter notebooks](https://github.com/datajoint/element-calcium-imaging/tree/main/notebooks)
 
 - [x] Tests to verify loading Suite2p data - 
-[Pytests](https://github.com/datajoint/workflow-calcium-imaging/blob/main/tests/test_populate.py)
+[Pytests](https://github.com/datajoint/element-calcium-imaging/blob/main/tests/test_populate.py)
 
 - [x] Tests to verify running Suite2p - 
-[Pytests](https://github.com/datajoint/workflow-calcium-imaging/blob/main/tests/test_populate.py)
+[Pytests](https://github.com/datajoint/element-calcium-imaging/blob/main/tests/test_populate.py)
 
 ## Citation
 
