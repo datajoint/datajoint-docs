@@ -1,5 +1,7 @@
 # Welcome to the DataJoint Documentation
 
+![pipeline](https://raw.githubusercontent.com/datajoint/datajoint-python/master/images/pipeline.png){: style="height:300px;"}
+
 <h2> DataJoint Ecosystem </h2>
 
 <div class="grid cards" markdown>
