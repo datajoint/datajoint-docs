@@ -259,7 +259,7 @@ needs.
 
     An example workflow for calcium imaging microscopy.
 
-    [:octicons-repo-forked-24: Clone from GitHub](https://github.com/datajoint/workflow-calcium-imaging/)
+    [:octicons-repo-forked-24: Clone from GitHub](https://github.com/datajoint/element-calcium-imaging/)
 
 -   :fontawesome-brands-python:{ .lg .middle } **Workflow Miniscope**
 
@@ -481,12 +481,12 @@ organized, and how some files are named.
         
     - The `subject` directory names must match the subject IDs in your subjects table. 
         The `ingest.py` script (
-        [demo ingestion notebook](https://github.com/datajoint/workflow-calcium-imaging/blob/main/notebooks/04-automate-optional.ipynb)
+        [tutorial notebook](https://github.com/datajoint/element-calcium-imaging/blob/main/notebooks/tutorial.ipynb)
         ) can help load these values from `./user_data/subjects.csv`.
 
     - The `session` directories can have any naming convention, but must be specified 
         in the session table (see also
-        [demo ingestion notebook])(https://github.com/datajoint/workflow-calcium-imaging/blob/main/notebooks/04-automate-optional.ipynb)
+        [tutorial notebook])(https://github.com/datajoint/element-calcium-imaging/blob/main/notebooks/tutorial.ipynb)
         . 
 
     - Each `session` directory should contain:
