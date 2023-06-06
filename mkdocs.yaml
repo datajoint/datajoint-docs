@@ -1,0 +1,191 @@
+# ---------------------- PROJECT SPECIFIC ---------------------------
+
+site_name: DataJoint Documentation
+site_url: http://localhost/docs
+repo_name: datajoint-company/datajoint-docs
+repo_url: https://github.com/datajoint-company/datajoint-docs
+nav:
+  - Welcome: index.md
+  - Core:
+    - core/index.md
+    - Concepts: 
+      - Principles: core/concepts/principles.md
+      - Glossary: core/concepts/glossary.md
+    - System Administration: 
+      - Database Administration: core/sysadmin/dba.md
+      - File Storage: core/sysadmin/filestore.md
+    - Client Configuration: 
+      - Install: core/client/install.md
+      - Credentials: core/client/creds.md
+      - Settings: core/client/settings.md
+      - File stores: core/client/stores.md
+    - Schema Design:
+      - Schema Creation: core/design/schema.md
+      - Table Definition:
+        - Table tiers: core/design/tables/tiers.md
+        - Declaration Syntax: core/design/tables/declare.md
+        - Primary Key: core/design/tables/primary.md
+        - Attributes: core/design/tables/attributes.md
+        - Lookup Tables: core/design/tables/lookup.md
+        - Blobs: core/design/tables/blobs.md
+        - Attachments: core/design/tables/attach.md
+        - Filepaths: core/design/tables/filepath.md
+        - Custom Datatypes: core/design/tables/customtype.md
+        - Dependencies: core/design/tables/dependencies.md
+        - Indexes: core/design/tables/indexes.md
+        - Master-Part Relationships: core/design/tables/master-part.md
+      - Schema Diagrams: core/design/diagrams.md
+      - Entity Normalization: core/design/normalization.md 
+      - Data Integrity: core/design/integrity.md
+      - Schema Recall: core/design/recall.md
+      - Schema Drop: core/design/drop.md
+      - Schema Modification: core/design/alter.md
+    - Data Manipulations:
+      - Insert: core/manipulation/insert.md
+      - Delete: core/manipulations/delete.md
+      - Update: core/manipulations/update.md
+      - Transactions: core/manipulations/transactions.md
+    - Data queries:
+      - Query principles: core/query/operators.md
+      - Fetch: core/query/fetch.md
+      - Restrict: core/query/restrict.md
+      - Projection: core/query/project.md
+      - Join: core/query/join.md
+      - Aggregation: core/query/aggregation.md
+      - Union: core/query/union.md
+      - Universal Sets: core/query/universals.md
+    - Computations:
+      - Make Method: core/compute/make.md
+      - Populate: core/compute/populate.md
+      - Key Source: core/compmute/keysource.md
+      - Distributed Computing: core/compute/distributed.md
+    - Internals:
+      - SQL transpilation: core/internal/transpilation.md
+    - FAQ: core/faq.md
+  - Elements:
+    - elements/index.md
+    - Concepts: elements/concepts.md
+    - User Guide: elements/user-guide.md
+    - Developer Guide: elements/developer-guide.md
+    - Management:
+      - Plan: elements/management/plan.md
+      - Team: elements/management/team.md
+      - Governance: elements/management/governance.md
+      - Selection: elements/management/selection.md
+      - Quality Assurance: elements/management/quality-assurance.md
+      - Outreach: elements/management/outreach.md
+      - Dissemination: elements/management/dissemination.md
+      - Adoption: elements/management/adoption.md
+  - Projects: projects.md
+  - Publications: publications.md
+  - Citation: citation.md
+  - Community:
+    - Support: community/support.md
+    - Events: community/events.md
+    - Contribute: community/contribute.md
+    - Licenses: community/licenses.md
+    - History: community/history.md
+    - Partnership - DANDI: community/partnership-dandi.md
+    - Partnership - Facemap: community/partnership-facemap.md
+    - Partnership - INCF: community/partnership-incf.md
+    - Partnership - NWB: community/partnership-nwb.md
+    - Partnership - Open Ephys GUI: community/partnership-openephysgui.md
+    - Partnership - Suite2p: community/partnership-suite2p.md
+
+# ---------------------------- STANDARD -----------------------------
+
+docs_dir: ./src
+edit_uri: ./edit/main/src
+theme:
+  font:
+    text: Roboto Slab
+    code: Source Code Pro
+  name: material
+  custom_dir: src/.overrides
+  icon:
+    logo: main/company-logo
+  favicon: assets/images/company-logo-blue.png
+  features:
+    - toc.integrate
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: datajoint
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+plugins:
+  - search
+  - section-index
+  - redirects:
+      redirect_maps:
+        "index.md": "welcome.md"
+  - exclude:
+      glob:
+        - archive/*
+        - images/*md
+markdown_extensions:
+  - attr_list
+  - md_in_html
+  - toc:
+      permalink: true
+  - pymdownx.emoji:
+      options:
+        custom_icons:
+          - .overrides/.icons
+      emoji_index: !!python/name:materialx.emoji.twemoji
+      emoji_generator: !!python/name:materialx.emoji.to_svg
+  - mdx_truly_sane_lists
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+  - footnotes
+  - pymdownx.details: # permit folded <details> blocks via `??? note "Title"` format
+  - pymdownx.snippets # Allows including file snippets e.g. --8<-- "; src/file.md"
+  - pymdownx.magiclink # Displays bare URLs as links
+  - pymdownx.tasklist: # Renders check boxes in tasks lists
+      custom_checkbox: true
+extra:
+  generator: false # Disable watermark
+  version:
+    provider: mike
+  social:
+    - icon: main/company-logo
+      link: https://www.datajoint.com
+      name: DataJoint
+    - icon: fontawesome/brands/slack
+      link: https://datajoint.slack.com
+      name: Slack
+    - icon: fontawesome/brands/linkedin
+      link: https://www.linkedin.com/company/datajoint
+      name: LinkedIn
+    - icon: fontawesome/brands/twitter
+      link: https://twitter.com/datajoint
+      name: Twitter
+    - icon: fontawesome/brands/github
+      link: https://github.com/datajoint
+      name: GitHub
+    - icon: fontawesome/brands/docker
+      link: https://hub.docker.com/u/datajoint
+      name: DockerHub
+    - icon: fontawesome/brands/python
+      link: https://pypi.org/user/datajointbot
+      name: PyPI
+    - icon: fontawesome/brands/stack-overflow
+      link: https://stackoverflow.com/questions/tagged/datajoint
+      name: StackOverflow
+    - icon: fontawesome/brands/youtube
+      link: https://www.youtube.com/channel/UCdeCuFOTCXlVMRzh6Wk-lGg
+      name: YouTube
+extra_css:
+  - assets/stylesheets/extra.css
+extra_javascript:
+  - https://js-na1.hs-scripts.com/23133402.js  # HubSpot chatbot
