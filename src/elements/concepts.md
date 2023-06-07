@@ -94,5 +94,5 @@ For instance, the
 [Scan module](https://github.com/datajoint/element-calcium-imaging/blob/main/element_calcium_imaging/scan.py)
 receives its required functions from the linking module passed into the module's
 `activate` function. See the 
-[corresponding workflow](https://github.com/datajoint/workflow-calcium-imaging/)
+[example notebooks](https://github.com/datajoint/element-calcium-imaging/)
 for an example of how the linking module is passed into the Element's module.

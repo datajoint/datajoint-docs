@@ -24,7 +24,7 @@ Below are the projects that make up the family of open-source DataJoint Elements
     A data pipeline for calcium imaging microscopy.
 
     [:octicons-arrow-right-24: Interactive tutorial on GitHub
-    Codespaces](https://github.com/datajoint/workflow-calcium-imaging#interactive-tutorial){:target="_blank"}
+    Codespaces](https://github.com/datajoint/element-calcium-imaging#interactive-tutorial){:target="_blank"}
 
     [:octicons-arrow-right-24: Docs](./element-calcium-imaging/)
 
