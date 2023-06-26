@@ -32,7 +32,7 @@ A collection of additional open-source tools for building and operating scientif
 
     ---
 
- A browser-based graphical user interface for data entry and navigation. 
+    A browser-based graphical user interface for data entry and navigation. 
 
     :octicons-arrow-right-24: [Legacy docs](https://datajoint.github.io/datajoint-labbook/) | [Source code](https://github.com/datajoint/datajoint-labbook/)
 
