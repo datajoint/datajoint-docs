@@ -42,7 +42,7 @@ A collection of additional open-source tools for building and operating scientif
 
     A framework for making low-code web apps for data visualization.
 
-    :octicons-arrow-right-24: [Source code](https://github.com/datajoint/sci-viz)
+    :octicons-arrow-right-24: [Legacy docs](https://datajoint.com/docs/core/sci-viz/) | [Source code](https://github.com/datajoint/sci-viz)
 
 </div>
 
