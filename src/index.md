@@ -12,7 +12,7 @@
 
      Open-source framework for defining, operating, and querying data pipelines
 
-     [:octicons-arrow-right-24: Learn more](./datajoint-python/)
+     [:octicons-arrow-right-24: Learn more](./core/datajoint-python/)
     
 -   **DataJoint Elements**
 
