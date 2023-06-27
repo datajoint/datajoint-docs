@@ -1,20 +1,10 @@
-# Core
+# Additional Resources
 
-DataJoint Core is a collection of open-source tools for building and operating scientific data pipelines.
+A collection of additional open-source tools for building and operating scientific data pipelines.
 
-## APIs
+## API
 
 <div class="grid cards" markdown>
-
--   :fontawesome-brands-python:{ .lg .middle } **DataJoint for Python**
-
-    ---
-
-    A Python client for defining, operating, and querying data pipelines.
-
-    [:octicons-arrow-right-24: Interactive tutorial on GitHub Codespaces](https://github.com/datajoint/datajoint-tutorials){:target="_blank"}
-
-    :octicons-arrow-right-24: [New docs](./datajoint-python/) coming soon!  In the meantime, refer to our [legacy docs](https://docs.datajoint.org/python/).
 
 -   :fontawesome-brands-java:{ .lg .middle } **DataJoint for MATLAB**
 
@@ -22,7 +12,7 @@ DataJoint Core is a collection of open-source tools for building and operating s
 
     A MATLAB client for defining, operating, and querying data pipelines.
 
-    :octicons-arrow-right-24: [Documentation](https://datajoint.com/docs/core/datajoint-matlab) | [Source code](https://github.com/datajoint/datajoint-matlab)
+    :octicons-arrow-right-24: [Legacy docs](https://docs.datajoint.org/matlab/) | [Source code](https://github.com/datajoint/datajoint-matlab)
 
 -   :fontawesome-solid-flask:{ .lg .middle } **Pharus**
 
@@ -30,9 +20,7 @@ DataJoint Core is a collection of open-source tools for building and operating s
 
     A REST API server for interacting with DataJoint pipelines.
 
-    :octicons-arrow-right-24: New docs coming soon!  In the meantime, refer to our [legacy docs](./pharus/).
-
-    :octicons-arrow-right-24: [Documentation](https://datajoint.github.io/pharus/) | [Source code](https://github.com/datajoint/pharus/)
+    :octicons-arrow-right-24: [Legacy docs](https://datajoint.github.io/pharus/) | [Source code](https://github.com/datajoint/pharus/)
  
 </div>
 
@@ -40,14 +28,13 @@ DataJoint Core is a collection of open-source tools for building and operating s
 
 <div class="grid cards" markdown>
 
-
 -   :fontawesome-brands-chrome:{ .lg .middle } **LabBook**
 
     ---
 
-	A browser-based graphical user interface for data entry and navigation. 
+    A browser-based graphical user interface for data entry and navigation. 
 
-    :octicons-arrow-right-24: [Documentation](https://datajoint.github.io/datajoint-labbook/) | [Source code](https://github.com/datajoint/datajoint-labbook/)
+    :octicons-arrow-right-24: [Legacy docs](https://datajoint.github.io/datajoint-labbook/) | [Source code](https://github.com/datajoint/datajoint-labbook/)
 
 -   :fontawesome-brands-chrome:{ .lg .middle } **SciViz**
 
@@ -86,7 +73,7 @@ graph
     ---
     MySQL server pre-configured to work smoothly with DataJoint.
 
-    :octicons-arrow-right-24: New docs coming soon! In the meantime, refer to our [legacy docs](https://github.com/datajoint/mysql-docker#mysql-for-datajoint).
+    :octicons-arrow-right-24: [Legacy docs](https://github.com/datajoint/mysql-docker#mysql-for-datajoint).
 
 -   :fontawesome-brands-docker:{ .lg .middle } [**datajoint/miniconda3**](https://hub.docker.com/r/datajoint/miniconda3)
 
@@ -112,20 +99,18 @@ graph
 
     Official DataJoint Docker image.
 
-    :octicons-arrow-right-24: [New docs](./datajoint-python/) coming soon!  In the meantime, refer to our [legacy docs](https://docs.datajoint.org/python/).
+    :octicons-arrow-right-24: [Legacy docs](https://docs.datajoint.org/python/).
 
 -   :fontawesome-brands-docker:{ .lg .middle } [**datajoint/djlab**](https://hub.docker.com/r/datajoint/djlab)
 
     ---
 
-	A docker image optimized for running a JupyterLab environment with DataJoint Python. 
-
+ A docker image optimized for running a JupyterLab environment with DataJoint Python. 
 
 -   :fontawesome-brands-docker:{ .lg .middle } [**datajoint/djlabhub**](https://hub.docker.com/r/datajoint/djlabhub)
 
     ---
 
-	A docker image optimized for deploying to JupyterHub a JupyterLab environment with DataJoint Python. 
-
+ A docker image optimized for deploying to JupyterHub a JupyterLab environment with DataJoint Python. 
 
 </div>

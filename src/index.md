@@ -6,25 +6,13 @@
 
 <div class="grid cards" markdown>
 
--   **DataJoint Core**
+-   **DataJoint for Python**
 
      ---
 
-     Open-source software for managing data pipelines
+     Open-source framework for defining, operating, and querying data pipelines
 
-     - DataJoint API for Python
-
-     - DataJoint API for MATLAB
-
-     - DataJoint Pharus
-
-     - DataJoint LabBook
-
-     - DataJoint SciViz
-
-     - DataJoint Container Images
-
-     [:octicons-arrow-right-24: Learn more](./core/)
+     [:octicons-arrow-right-24: Learn more](./datajoint-python/)
     
 -   **DataJoint Elements**
 
@@ -38,7 +26,7 @@
 
      ---
 
-     A cloud platform for automated analysis workflows. It relies on DataJoint Core and DataJoint Elements.
+     A cloud platform for automated analysis workflows. It relies on DataJoint for Python and DataJoint Elements.
 
      [:octicons-arrow-right-24: Learn
      more](https://datajoint.com/works){:target="_blank"}
@@ -55,7 +43,7 @@
 
      ---
 
-     Projects and research teams using DataJoint Core, DataJoint Elements, or DataJoint Works
+     Projects and research teams using DataJoint for Python, DataJoint Elements, or DataJoint Works
 
      [:octicons-arrow-right-24: Project List](./projects/)
 

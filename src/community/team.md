@@ -14,7 +14,6 @@ as Principal Investigator.
 
 ## Engineers
 
-- Raphael Guzman - Software Engineer
 - Drew Yang - Data Systems Engineer
 - Jeroen Verswijver - Software Engineer
 - Adib Baji - Software Engineer
@@ -29,6 +28,7 @@ as Principal Investigator.
 - Joseph Burling - Data Scientist
 - Chris Brozdowski - Data Scientist
 - Tolga Dincer - Data Scientist
+- Raphael Guzman - Software Engineer
 - Maho Sasaki - Software Engineer
 - Daniel Sitonic - Software Engineer
 - Carlos Ortiz - Software Engineer
@@ -44,5 +44,5 @@ The first-person pronouns "we" and "our" in these documents refer to those liste
 
 The principal components of the Resource are developed and distributed as open-source
 projects and external contributions are welcome. We have adopted a 
-[Contribution Guide](../../../community/contribute) for DataJoint, DataJoint Elements,
+[Contribution Guide](.contribute) for DataJoint, DataJoint Elements,
 and related open-source tools.
