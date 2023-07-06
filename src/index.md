@@ -2,8 +2,6 @@
 
 ![pipeline](https://raw.githubusercontent.com/datajoint/datajoint-python/master/images/pipeline.png){: style="height:300px;"}
 
-<h2> DataJoint Ecosystem </h2>
-
 <div class="grid cards" markdown>
 
 -   **DataJoint for Python**
@@ -33,13 +31,7 @@
 
      [:octicons-arrow-right-24: Sign-in](https://works.datajoint.com){:target="_blank"}
 
-</div>
-
-<h2> Research supported by DataJoint </h2>
-
-<div class="grid cards" markdown>
-
--   **Projects**
+-   **Research projects supported by DataJoint**
 
      ---
 
@@ -47,7 +39,7 @@
 
      [:octicons-arrow-right-24: Project List](./projects/)
 
--   **Publications**
+-   **Publications supported by DataJoint**
 
      ---
 
