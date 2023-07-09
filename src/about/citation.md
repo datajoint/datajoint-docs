@@ -1,4 +1,4 @@
-# Citation
+# Citation Guidelines
 
 If your work uses the DataJoint Python, MATLAB, or Elements, please cite the
 respective manuscripts and Research Resource Identifiers (RRIDs).
