@@ -2,11 +2,9 @@
 
 ![pipeline](https://raw.githubusercontent.com/datajoint/datajoint-python/master/images/pipeline.png){: style="height:300px;"}
 
-<h2> DataJoint Ecosystem </h2>
-
 <div class="grid cards" markdown>
 
--   **DataJoint for Python**
+-   **DataJoint Python**
 
      ---
 
@@ -26,33 +24,19 @@
 
      ---
 
-     A cloud platform for automated analysis workflows. It relies on DataJoint for Python and DataJoint Elements.
+     A cloud platform for automated analysis workflows. It relies on DataJoint 
+     Python and DataJoint Elements.
 
      [:octicons-arrow-right-24: Learn
-     more](https://datajoint.com/works){:target="_blank"}
+     more](https://datajoint.com/works){:target="_blank"} | [Sign-in](https://works.datajoint.com){:target="_blank"}
 
-     [:octicons-arrow-right-24: Sign-in](https://works.datajoint.com){:target="_blank"}
-
-</div>
-
-<h2> Research supported by DataJoint </h2>
-
-<div class="grid cards" markdown>
-
--   **Projects**
+-   **Research projects supported by DataJoint**
 
      ---
 
-     Projects and research teams using DataJoint for Python, DataJoint Elements, or DataJoint Works
+     Projects and research teams using DataJoint Python, DataJoint Elements, or 
+     DataJoint Works
 
-     [:octicons-arrow-right-24: Project List](./projects/)
-
--   **Publications**
-
-     ---
-
-     Scientific studies and peer-reviewed publications
-     
-     [:octicons-arrow-right-24: Publication List](./publications/)
+     [:octicons-arrow-right-24: Project Showcase](projects/index.md)
 
 </div>
