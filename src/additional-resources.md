@@ -2,11 +2,11 @@
 
 A collection of additional open-source tools for building and operating scientific data pipelines.
 
-## API
+## APIs
 
 <div class="grid cards" markdown>
 
--   :fontawesome-brands-java:{ .lg .middle } **DataJoint for MATLAB**
+-   :fontawesome-brands-java:{ .lg .middle } **DataJoint MATLAB**
 
     ---
 
@@ -14,7 +14,7 @@ A collection of additional open-source tools for building and operating scientif
 
     :octicons-arrow-right-24: [Legacy docs](https://docs.datajoint.org/matlab/) | [Source code](https://github.com/datajoint/datajoint-matlab)
 
--   :fontawesome-solid-flask:{ .lg .middle } **Pharus**
+-   :fontawesome-solid-flask:{ .lg .middle } **DataJoint Pharus**
 
     ---
 
@@ -28,7 +28,7 @@ A collection of additional open-source tools for building and operating scientif
 
 <div class="grid cards" markdown>
 
--   :fontawesome-brands-chrome:{ .lg .middle } **LabBook**
+-   :fontawesome-brands-chrome:{ .lg .middle } **DataJoint LabBook**
 
     ---
 
@@ -36,7 +36,7 @@ A collection of additional open-source tools for building and operating scientif
 
     :octicons-arrow-right-24: [Legacy docs](https://datajoint.com/docs/core/datajoint-labbook/) | [Source code](https://github.com/datajoint/datajoint-labbook/)
 
--   :fontawesome-brands-chrome:{ .lg .middle } **SciViz**
+-   :fontawesome-brands-chrome:{ .lg .middle } **DataJoint SciViz**
 
     ---
 
