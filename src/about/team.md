@@ -44,5 +44,5 @@ The first-person pronouns "we" and "our" in these documents refer to those liste
 
 The principal components of the Resource are developed and distributed as open-source
 projects and external contributions are welcome. We have adopted a 
-[Contribution Guide](.contribute) for DataJoint, DataJoint Elements,
+[Contribution Guide](contribute.md) for DataJoint, DataJoint Elements,
 and related open-source tools.
