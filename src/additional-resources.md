@@ -12,7 +12,8 @@ A collection of additional open-source tools for building and operating scientif
 
     A MATLAB client for defining, operating, and querying data pipelines.
 
-    :octicons-arrow-right-24: [Legacy docs](https://docs.datajoint.org/matlab/) | [Source code](https://github.com/datajoint/datajoint-matlab)
+    :octicons-arrow-right-24: [Legacy docs](https://docs.datajoint.org/matlab/) | 
+    [Source code](https://github.com/datajoint/datajoint-matlab)
 
 -   :fontawesome-solid-flask:{ .lg .middle } **DataJoint Pharus**
 
@@ -20,7 +21,8 @@ A collection of additional open-source tools for building and operating scientif
 
     A REST API server for interacting with DataJoint pipelines.
 
-    :octicons-arrow-right-24: [Legacy docs](https://datajoint.com/docs/core/pharus) | [Source code](https://github.com/datajoint/pharus/)
+    :octicons-arrow-right-24: [Legacy docs](https://datajoint.com/docs/core/pharus) | 
+    [Source code](https://github.com/datajoint/pharus/)
  
 </div>
 
@@ -34,7 +36,9 @@ A collection of additional open-source tools for building and operating scientif
 
     A browser-based graphical user interface for data entry and navigation. 
 
-    :octicons-arrow-right-24: [Legacy docs](https://datajoint.com/docs/core/datajoint-labbook/) | [Source code](https://github.com/datajoint/datajoint-labbook/)
+    :octicons-arrow-right-24: [Legacy 
+    docs](https://datajoint.com/docs/core/datajoint-labbook/) | 
+    [Source code](https://github.com/datajoint/datajoint-labbook/)
 
 -   :fontawesome-brands-chrome:{ .lg .middle } **DataJoint SciViz**
 
@@ -42,7 +46,8 @@ A collection of additional open-source tools for building and operating scientif
 
     A framework for making low-code web apps for data visualization.
 
-    :octicons-arrow-right-24: [Legacy docs](https://datajoint.com/docs/core/sci-viz/) | [Source code](https://github.com/datajoint/sci-viz)
+    :octicons-arrow-right-24: [Legacy docs](https://datajoint.com/docs/core/sci-viz/) | 
+    [Source code](https://github.com/datajoint/sci-viz)
 
 </div>
 
