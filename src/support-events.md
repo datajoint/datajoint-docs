@@ -6,20 +6,27 @@ Find us at the following workshops and conferences!
 
 The DataJoint open source team are offering monthly Office Hours.  Sign up [here](https://docs.google.com/forms/d/e/1FAIpQLSeMhZtzQQWB47I8HfPcJ5_pFyMhZO284PLIblDfshe30dEuXw/viewform)!
 
-## Past Events
+## Events
 
-+ University of Bonn - March 22-23, 2023
+Find us at the following workshops and conferences!
 
-+ Tel Aviv University - March 19-20, 2023
+- Allen Institute Neuropixels and OpenScope Workshop - June 21-22, 2023
 
-+ [COSYNE](https://www.cosyne.org/) - March 9-12, 2023
+- NIH BRAIN Initiative meeting - June 12-13, 2023
 
-+ [Flatiron Institute CCN 2023 Workshop on Calcium & Voltage Imaging Analysis](https://indico.flatironinstitute.org/event/3293/) - January 29 - February 1, 2023
+- Northwestern University - June 9, 2023
 
-+ [Society for Neuroscience](https://www.sfn.org/meetings/neuroscience-2022) - November 12-16, 2022
+- University of Bonn - March 22-23, 2023
 
-+ [Senses in Motion Symposium](https://sensesinmotion.org/) - October 17, 2022
+- Tel Aviv University - March 19-20, 2023
 
+- [COSYNE](https://www.cosyne.org/) - March 9-12, 2023
+
+- [Flatiron Institute CCN 2023 Workshop on Calcium & Voltage Imaging Analysis](https://indico.flatironinstitute.org/event/3293/) - January 29 - February 1, 2023
+
+- [Society for Neuroscience](https://www.sfn.org/meetings/neuroscience-2022) - November 12-16, 2022
+
+- [Senses in Motion Symposium](https://sensesinmotion.org/) - October 17, 2022
 
 - [NeuroDataReHack
   Hackathon](https://alleninstitute.org/what-we-do/brain-science/events-training/2022-neurodatarehack-hackathon/) -
