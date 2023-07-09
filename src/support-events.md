@@ -1,10 +1,17 @@
-# Events
+# Community Support & Events
 
-Find us at the following workshops and conferences!
+## Support
 
-## DataJoint Office Hours
+- Email our team at support@datajoint.com
 
-The DataJoint open source team are offering monthly Office Hours.  Sign up [here](https://docs.google.com/forms/d/e/1FAIpQLSeMhZtzQQWB47I8HfPcJ5_pFyMhZO284PLIblDfshe30dEuXw/viewform)!
+- [DataJoint
+  Slack](https://join.slack.com/t/datajoint/shared_invite/enQtMjkwNjQxMjI5MDk0LTQ3ZjFiZmNmNGVkYWFkYjgwYjdhNTBlZTBmMWEyZDc2NzZlYTBjOTNmYzYwOWRmOGFmN2MyYzU0OWQ0MWZiYTE)
+
+- [DataJoint Office Hours](https://docs.google.com/forms/d/e/1FAIpQLSeMhZtzQQWB47I8HfPcJ5_pFyMhZO284PLIblDfshe30dEuXw/viewform)
+
+- [GitHub issue](https://github.com/datajoint) on the relevant repository
+
+- [DataJoint.com](https://www.datajoint.com) for fully managed services
 
 ## Events
 
