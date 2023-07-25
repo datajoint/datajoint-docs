@@ -63,8 +63,9 @@ of Medicine to meet the needs of their own research. Below is a partial list of 
   + <a href="https://www.neuro.bio.lmu.de/research_groups/res-katzner/index.html" target="_blank">Katzner Lab</a>
 + MIT
   + <a href="https://www.wanglab-neuro.org" target="_blank">Fan Wang Lab</a>
-+ National Institute of Environmental Health Sciences
++ National Institutes Health
   + <a href="http://ericthomson.net/" target="_blank">Eric E. Thomson</a>
+  + Joshua Gordon Lab / David Kupferschmidt 
 + New York University
   + <a href="https://angelakilabnyu.org/" target="_blank">Dora Angelaki Lab</a>
 + New York University Langone Medical Center
