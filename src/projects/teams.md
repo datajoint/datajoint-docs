@@ -68,7 +68,7 @@ of Medicine to meet the needs of their own research. Below is a partial list of 
   + <a href="https://www.wanglab-neuro.org" target="_blank">Fan Wang Lab</a>
 + National Institutes of Health
   + <a href="http://ericthomson.net/" target="_blank">Eric E. Thomson</a>
-  + <a href="https://research.ninds.nih.gov/staff-directory/david-kupferschmidt-phd" target="_blank">David Kupferschmidt Lab</a>
+  + <a href="https://research.ninds.nih.gov/staff-directory/joshua-gordon-md-phd" target="_blank">Joshua Gordon Lab / David Kupferschmidt</a>
 + New York University
   + <a href="https://angelakilabnyu.org/" target="_blank">Dora Angelaki Lab</a>
 + New York University Langone Medical Center
