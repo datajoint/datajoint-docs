@@ -30,13 +30,12 @@
      [:octicons-arrow-right-24: Learn
      more](https://datajoint.com/works){:target="_blank"} | [Sign-in](https://works.datajoint.com){:target="_blank"}
 
--   **Research projects supported by DataJoint**
+-   **Project Showcase**
 
      ---
 
-     Projects and research teams using DataJoint Python, DataJoint Elements, or 
-     DataJoint Works
+     Projects and research teams supported by DataJoint software
 
-     [:octicons-arrow-right-24: Project Showcase](projects/index.md)
+     [:octicons-arrow-right-24: Learn more](projects/index.md)
 
 </div>
