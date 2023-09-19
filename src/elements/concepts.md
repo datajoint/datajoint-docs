@@ -45,7 +45,7 @@ schemas: `scan` and `imaging`.
 The following YouTube videos provide information on basic design principles and file organization.
 
 - [Why neuroscientists should use relational databases](https://www.youtube.com/watch?v=q-PMUSC5P5o)
-  compared to traditional file heirarchies.
+  compared to traditional file hierarchies.
 - [Quickstart Guide](https://www.youtube.com/watch?v=5R-qnz37BKU) including 
   terminology, and how to read DataJoint Diagrams and DataJoint Python table 
   definitions.
