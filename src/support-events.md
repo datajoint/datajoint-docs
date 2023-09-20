@@ -31,7 +31,7 @@ Find us at the following workshops and conferences!
 
 - [Harvard School of Medicine Workshop: Data Workflows for Neuroscience Teams](https://try.datajoint.com/hmsworkshop)- October 17, 18 & 20, 2023
 
-- [MIT Odin Symposium](https://odin.mit.edu/schedule.html) - October 10-12, 2023
+- [MIT ODIN Symposium](https://odin.mit.edu/schedule.html) - October 10-12, 2023
 
 - [HLTH 2023](https://www.hlth.com/2023event) - October 8-11, 2023
 
