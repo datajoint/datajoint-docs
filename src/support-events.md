@@ -29,6 +29,10 @@ Find us at the following workshops and conferences!
 
 - [Society for Neuroscience](https://www.sfn.org/meetings/neuroscience-2023) - November 11-15, 2023
 
+- [Harvard School of Medicine Workshop: Data Workflows for Neuroscience Teams](https://try.datajoint.com/hmsworkshop)- October 17, 18 & 20, 2023
+
+- [MIT ODIN Symposium](https://odin.mit.edu/schedule.html) - October 10-12, 2023
+
 - [HLTH 2023](https://www.hlth.com/2023event) - October 8-11, 2023
 
 - [INCF Short Course: Introduction to Neuroinformatics](https://datajoint.com/news/datajoint-presenter-incf-short-course) - October 2-4, 2023 
