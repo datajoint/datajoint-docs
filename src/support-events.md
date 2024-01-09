@@ -25,7 +25,11 @@ Find us at the following workshops and conferences!
 
 - DataJoint Workshop - April 15-16, 2024
 
-- [COSYNE](https://www.cosyne.org/) - March 9-14, 2024
+- [COSYNE](https://www.cosyne.org/) - January 29 - March 3, 2024
+
+- [Kavli NDI] (https://kavlijhu.org/events) - January 18,2024
+
+- [RESI] (https://resiconference.com/) - January 9-11, 2024
 
 - [Society for Neuroscience](https://www.sfn.org/meetings/neuroscience-2023) - November 11-15, 2023
 
