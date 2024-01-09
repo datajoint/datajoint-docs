@@ -25,7 +25,7 @@ Find us at the following workshops and conferences!
 
 - DataJoint Workshop - April 15-16, 2024
 
-- [COSYNE](https://www.cosyne.org/) - January 29- March 3, 2024
+- [COSYNE](https://www.cosyne.org/) - January 29 - March 3, 2024
 
 - [Kavli NDI] (https://kavlijhu.org/events) - January 18,2024
 
