@@ -1,5 +1,5 @@
 <!-- markdownlint-disable MD013 -->
-# Projects <!-- 74 -->
+# Projects
 
 DataJoint was originally developed by working systems neuroscientists at Baylor College
 of Medicine to meet the needs of their own research. Below is a partial list of known teams who use DataJoint.
@@ -17,7 +17,7 @@ of Medicine to meet the needs of their own research. Below is a partial list of 
   + Princeton<a href="https://www.braincogs.org/" target="_blank"> BRAIN CoGS</a> (<a href="https://github.com/braincogs/" target="_blank">GitHub</a>)
   + Rochester-NYU-Harvard<a href="https://causalityinmotion.github.io/team.html" target="_blank"> Neural basis of causal inference</a>
 
-## Individual Labs and Researchers <!-- 64 -->
+## Individual Labs and Researchers <!-- 67 -->
 
 + Allen Institute
   + <a href="https://alleninstitute.org/what-we-do/brain-science/research/mindscope-program/" target="_blank">Mindscope Program</a>
@@ -54,6 +54,9 @@ of Medicine to meet the needs of their own research. Below is a partial list of 
   + <a href="https://smirnakislab.bwh.harvard.edu/" target="_blank">Stelios Smirnakis Lab</a>
 + Indiana University
   + <a href="http://www.lulaboratory.com/" target="_blank">Lu Lab</a>
++ Janelia Research Campus
+  + <a href="https://www.janelia.org/lab/dennis-lab" target="_blank">Emily Dennis Lab</a>
+  + <a href="https://www.janelia.org/lab/koay-lab" target="_blank">Sue Ann Koay Lab</a>
 + Johns Hopkins University
   + <a href="https://www.jhuapl.edu/" target="_blank">Applied Physics Lab</a> (<a href="https://github.com/aplbrain" target="_blank">GitHub</a>)
 + Kavli Institute for Systems Neuroscience
@@ -63,9 +66,9 @@ of Medicine to meet the needs of their own research. Below is a partial list of 
   + <a href="https://www.neuro.bio.lmu.de/research_groups/res-katzner/index.html" target="_blank">Katzner Lab</a>
 + MIT
   + <a href="https://www.wanglab-neuro.org" target="_blank">Fan Wang Lab</a>
-+ National Institutes Health
++ National Institutes of Health
   + <a href="http://ericthomson.net/" target="_blank">Eric E. Thomson</a>
-  + Joshua Gordon Lab / David Kupferschmidt 
+  + <a href="https://research.ninds.nih.gov/staff-directory/joshua-gordon-md-phd" target="_blank">Joshua Gordon Lab / David Kupferschmidt</a>
 + New York University
   + <a href="https://angelakilabnyu.org/" target="_blank">Dora Angelaki Lab</a>
 + New York University Langone Medical Center

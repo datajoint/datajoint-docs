@@ -74,7 +74,7 @@ following the install instructions.
 
 ### Conda
 
-Python projects each rely on different depenencies, which may conflict across projects.
+Python projects each rely on different dependencies, which may conflict across projects.
 We recommend working in a Conda environment for each project to isolate the
 dependencies. For more information on why Conda, and setting up the version of Conda
 that best suits your needs, see 
@@ -157,7 +157,7 @@ instructions on Jupyter within VS Code).
     conda install jupyter ipykernel nb_conda_kernels
     ```
 
-2. Ensure your VS Code python intepreter is set to your Conda environment path.
+2. Ensure your VS Code python interpreter is set to your Conda environment path.
    
     <details> <!-- Can't use `??? Note` format within list  -->
     <summary>Click to expand more details.</summary>
@@ -546,7 +546,7 @@ organized, and how some files are named.
         
     - The paths in your various `yaml` files reflect the current folder structure.
 
-    - You have generated thge `pickle` and `mat` training files. If not, follow the 
+    - You have generated the `pickle` and `mat` training files. If not, follow the 
         DeepLabCut guide to 
         [create a training dataset](https://github.com/DeepLabCut/DeepLabCut/blob/master/docs/standardDeepLabCut_UserGuide.md#f-create-training-datasets)
 
@@ -579,7 +579,7 @@ organized, and how some files are named.
 ## Relational databases
 
 DataJoint helps you connect to a database server from your programming environment 
-(i.e., Python or MATLAB), granting a number of benefits over traditional file heirarchies 
+(i.e., Python or MATLAB), granting a number of benefits over traditional file hierarchies 
 (see [YouTube Explainer](https://www.youtube.com/watch?v=q-PMUSC5P5o)). We offer two 
 options:
 
@@ -681,9 +681,9 @@ depending on your needs.
 
 ### Central Database
 
-To set up a detabase on dedicated hardware may require expertise to set up and maintain.
+To set up a database on dedicated hardware may require expertise to set up and maintain.
 DataJoint's [MySQL Docker image project](https://github.com/datajoint/mysql-docker) 
-provides all the informaiton required to set up a dedicated database.
+provides all the information required to set up a dedicated database.
 
 ## Interacting with the Workflow
 

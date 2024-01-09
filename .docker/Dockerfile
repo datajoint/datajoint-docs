@@ -8,7 +8,7 @@ RUN \
     rm ${PIP_REQUIREMENTS} && \
     rm ${APK_REQUIREMENTS}
 RUN \
-    pip install --no-cache git+https://${GITHUB_TOKEN}@github.com/guzman-raphael/mkdocs-material-insiders.git@master || \
+    pip install --no-cache git+https://${GITHUB_TOKEN}@github.com/datajoint/mkdocs-material-insiders.git@master || \
     echo "using public mkdocs-material..."
 COPY --chown=anaconda:anaconda ./mkdocs.yaml /main/mkdocs.yaml
 COPY --chown=anaconda:anaconda ./src /main/src

@@ -17,6 +17,36 @@
 
 Find us at the following workshops and conferences!
 
+- [FENS Forum](https://fensforum.org/) - June 25-29, 2024
+
+- NIH BRAIN Initiative Meeting - June 18-19, 2024
+
+- NWB Developer Days - April 16-19, 2024
+
+- DataJoint Workshop - April 15-16, 2024
+
+- [COSYNE](https://www.cosyne.org/) - January 29 - March 3, 2024
+
+- [Kavli NDI] (https://kavlijhu.org/events) - January 18,2024
+
+- [RESI] (https://resiconference.com/) - January 9-11, 2024
+
+- [Society for Neuroscience](https://www.sfn.org/meetings/neuroscience-2023) - November 11-15, 2023
+
+- [Harvard School of Medicine Workshop: Data Workflows for Neuroscience Teams](https://try.datajoint.com/hmsworkshop)- October 17, 18 & 20, 2023
+
+- [MIT ODIN Symposium](https://odin.mit.edu/schedule.html) - October 10-12, 2023
+
+- [HLTH 2023](https://www.hlth.com/2023event) - October 8-11, 2023
+
+- [INCF Short Course: Introduction to Neuroinformatics](https://datajoint.com/news/datajoint-presenter-incf-short-course) - October 2-4, 2023 
+
+- [INCF Neuroinformatics Assembly Workshop: Research Workflows for Collaborative Neuroscience](https://datajoint.com/news/datajoint-collaborative-research-workflows-workshop) - September 18-20, 2023
+
+- [SciPy](https://www.scipy2023.scipy.org/) - July 12-14, 2023
+
+- [Cold Spring Harbor Laboratory Neural Data Science Course](https://meetings.cshl.edu/courses.aspx?course=C-NEUDATA&year=23) - July 11-24, 2023
+
 - Allen Institute Neuropixels and OpenScope Workshop - June 21-22, 2023
 
 - NIH BRAIN Initiative meeting - June 12-13, 2023
