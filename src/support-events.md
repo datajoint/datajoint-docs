@@ -27,6 +27,10 @@ Find us at the following workshops and conferences!
 
 - [COSYNE](https://www.cosyne.org/) - March 9-14, 2024
 
+- [Kavli NDI] (https://kavlijhu.org/events) - January 18,2024
+
+- [RESI] (https://resiconference.com/) - January 9-11, 2024
+
 - [Society for Neuroscience](https://www.sfn.org/meetings/neuroscience-2023) - November 11-15, 2023
 
 - [Harvard School of Medicine Workshop: Data Workflows for Neuroscience Teams](https://try.datajoint.com/hmsworkshop)- October 17, 18 & 20, 2023
