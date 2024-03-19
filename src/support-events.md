@@ -17,19 +17,25 @@
 
 Find us at the following workshops and conferences!
 
-- [FENS Forum](https://fensforum.org/) - June 25-29, 2024
+- [ACCN](https://neurosciencenetwork.org/) 
 
-- NIH BRAIN Initiative Meeting - June 18-19, 2024
+- [Gladstone Institutes - Neuroscience Seminar](https://gladstone.org/neuroscience-seminar/neuroscience-seminar-series) - June 13, 2024
 
-- NWB Developer Days - April 16-19, 2024
+- [10th Annual NIH BRAIN Initiative Conference](https://braininitiative.nih.gov/news-events/events/10th-annual-brain-initiative-conference) - June 16-18, 2024
 
-- DataJoint Workshop - April 15-16, 2024
+- [BIO](https://convention.bio.org/) - June 3-6, 2024
 
-- [COSYNE](https://www.cosyne.org/) - January 29 - March 3, 2024
+- [2024 NWB Developer Hackathon](https://try.datajoint.com/nwb-hackathon2024) - April 17-19, 2024
 
-- [Kavli NDI] (https://kavlijhu.org/events) - January 18,2024
+- [DataJoint SciOps Summit 2024](https://try.datajoint.com/sciops-summit-2024) - April 15-17, 2024
 
-- [RESI] (https://resiconference.com/) - January 9-11, 2024
+- [COSYNE](https://www.cosyne.org/) - February 29 - March 3, 2024
+
+- [Kavli NDI](https://kavlijhu.org/events) - January 18,2024
+
+- UCSF - January 12, 2024
+
+- [RESI](https://resiconference.com/) - January 9-11, 2024
 
 - [Society for Neuroscience](https://www.sfn.org/meetings/neuroscience-2023) - November 11-15, 2023
 
