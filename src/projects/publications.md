@@ -6,6 +6,12 @@ Title: Publications
 The following publications relied on DataJoint open-source software for data analysis.  If your work uses DataJoint or DataJoint Elements, please cite the respective
 [manuscripts and RRIDs](./citation.md).
 
+## 2024 
+
++ Kyu Hyun Lee, Eric L. Denovellis, Ryan Ly, Jeremy Magland, Jeff Soules, Alison E. Comrie, Daniel P. Gramling, Jennifer A. Guidera, Rhino Nevers, Philip Adenekan, Chris Brozdowski, Samuel R. Bray, Emily Monroe, Ji Hyun Bak, Michael E. Coulter, Xulu Sun, Emrey Broyles, Donghoon Shin, Sharon Chiang, Cristofer Holobetz, Andrew Tritt, Oliver Rübel, Thinh Nguyen, Dimitri Yatsenko, Joshua Chu, Caleb Kemere, Samuel Garcia, Alessio Buccino, Loren M. Frank
+[Spyglass: a framework for reproducible and shareable neuroscience research](https://doi.org/10.1101/2024.01.25.577295)
+*bioRxiv* 2024.01.25.577295
+
 ## 2023 <!-- 5 -->
 
 + Celii, B., Papadopoulos, S., Ding, Z., Fahey, P. G., Wang, E., Papadopoulos, C., ... &
