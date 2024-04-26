@@ -60,7 +60,7 @@ To achieve the aims of coordinated development, both projects appoint a primary 
 contact (POC) to respond to questions relating to the integration and interoperability 
 of DataJoint Elements and Suite2p.
 
-For 2022, the DataJoint Elements POC is Dr. Kabilar Gunalan (kabilar@datajoint.com)
+For 2022, the DataJoint Elements POC is Dr. Kushal Bakshi (kushal@datajoint.com)
 
 For 2022, the Suite2p POC is Dr. Carsen Stringer (stringerc@janelia.hhmi.org)
 
