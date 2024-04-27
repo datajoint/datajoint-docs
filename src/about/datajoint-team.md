@@ -9,7 +9,6 @@ as Principal Investigator.
 - Thinh Nguyen - Data Scientist
 - Kushal Bakshi - Data Scientist
 - Milagros Marín - Data Scientist
-- Sid Hulyalkar - Data Scientist
 
 ## Engineers
 
@@ -39,6 +38,7 @@ as Principal Investigator.
 - Jaerong Ahn - Data Scientist
 - Jeroen Verswijver - Software Engineer
 - Adib Baji - Software Engineer
+- Sid Hulyalkar - Data Scientist
 
 The first-person pronouns "we" and "our" in these documents refer to those listed above.
 
