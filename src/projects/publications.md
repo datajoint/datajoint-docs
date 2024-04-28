@@ -12,6 +12,8 @@ The following publications relied on DataJoint open-source software for data ana
 [Spyglass: a framework for reproducible and shareable neuroscience research](https://doi.org/10.1101/2024.01.25.577295)
 *bioRxiv* 2024.01.25.577295
 
++ Gonzalo Cogno, S., Obenhaus, H. A., Lautrup, A., Jacobsen, R. I., Clopath, C., Andersson, S. O., ... & Moser, E. I. (2024). [Minute-scale oscillatory sequences in medial entorhinal cortex](https://www.nature.com/articles/s41586-023-06864-1). *Nature*, 625(7994), 338-344.
+
 ## 2023 <!-- 5 -->
 
 + Celii, B., Papadopoulos, S., Ding, Z., Fahey, P. G., Wang, E., Papadopoulos, C., ... &
@@ -49,6 +51,8 @@ connectomics.](https://doi.org/10.1101/2023.03.14.532674){:target="_blank"}. *bi
 + Cotton, R. J., McClerklin, E., Cimorelli, A., Patel, A., & Karakostas, T. (2022). [Transforming Gait: Video-Based Spatiotemporal Gait Analysis](https://doi.org/10.48550/arXiv.2203.09371){:target="_blank"}. *arXiv*. 2203.09371.
 
 + Fu, J., Willeke, K. F., Pierzchlewicz, P. A., Muhammad, T., Denfield, G. H., Sinz, F. H., & Tolias, A. S. (2022). [Heterogeneous Orientation Tuning Across Sub-Regions of Receptive Fields of V1 Neurons in Mice](https://dx.doi.org/10.2139/ssrn.4029075){:target="_blank"}. *Available at SSRN 4029075*.
+
++ Zong, W., Obenhaus, H.A., Skytøen, E.R., Eneqvist, H., de Jong, N.L., Vale, R., Jorge, M.R., Moser, M.B. and Moser, E.I., 2022. [Large-scale two-photon calcium imaging in freely moving mice](https://www.sciencedirect.com/science/article/pii/S0092867422001970)(:target="_blank"}. *Cell*, 185(7), pp.1240-1256.
 
 + Goetz, J., Jessen, Z. F., Jacobi, A., Mani, A., Cooler, S., Greer, D., ... & Schwartz, G. W. (2022). [Unified classification of mouse retinal ganglion cells using function, morphology, and gene expression](https://doi.org/10.1016/j.celrep.2022.111040){:target="_blank"}. *Cell reports*, 40(2), 111040.
 
