@@ -4,7 +4,7 @@ Title: Publications
 <!-- markdownlint-disable MD013 -->
 
 The following publications relied on DataJoint open-source software for data analysis.  If your work uses DataJoint or DataJoint Elements, please cite the respective
-[manuscripts and RRIDs](./citation.md).
+[manuscripts and RRIDs](../about/citation.md).
 
 ## 2024 
 
