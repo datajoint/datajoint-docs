@@ -12,6 +12,10 @@ The following publications relied on DataJoint open-source software for data ana
 [Spyglass: a framework for reproducible and shareable neuroscience research](https://doi.org/10.1101/2024.01.25.577295)
 *bioRxiv* 2024.01.25.577295
 
++ Cimorelli, A., Patel, A., Karakostas, T., & Cotton, R. J. (2024). [Validation of portable in-clinic video-based gait analysis for prosthesis users](https://www.nature.com/articles/s41598-024-53217-7). *Nature Scientific Reports*, 14(1), 3840.
+
++ Papadopouli, M., Koniotakis, E., Smyrnakis, I., Savaglio, M. A., Psilou, E., Brozi, C., ... & Smirnakis, S. M. (2024). [Brain orchestra under spontaneous conditions: Identifying communication modules from the functional architecture of area V1](https://doi.org/10.1101/2024.02.29.582364). *bioRxiv*, 2024-02.
+
 ## 2023 <!-- 5 -->
 
 + Celii, B., Papadopoulos, S., Ding, Z., Fahey, P. G., Wang, E., Papadopoulos, C., ... &
@@ -85,6 +89,8 @@ connectomics.](https://doi.org/10.1101/2023.03.14.532674){:target="_blank"}. *bi
 + Claudi, F., Campagner, D., & Branco, T. (2021). [Innate heuristics and fast learning support escape route selection in mice](https://doi.org/10.1016/j.cub.2022.05.020){:target="_blank"}. *bioRxiv*.
 
 + Cohrs, K.H. (2021). [Investigation of feedback mechanisms in visual cortex using deep learning models](http://dx.doi.org/10.13140/RG.2.2.35328.35845){:target="_blank"}. Master’s thesis. University of Göttingen.
+
++ Dennis, E. J., El Hady, A., Michaiel, A., Clemens, A., Tervo, D. R. G., Voigts, J., & Datta, S. R. (2021). [Systems neuroscience of natural behaviors in rodents](https://www.jneurosci.org/content/41/5/911.abstract). *Journal of Neuroscience*, 41(5), 911-919.
 
 + Finkelstein, A., Fontolan, L., Economo, M. N., Li, N., Romani, S., & Svoboda, K. (2021). [Attractor dynamics gate cortical information flow during decision-making](https://doi.org/10.1038/s41593-021-00840-6){:target="_blank"}. *Nature Neuroscience*. *24*(6), 843-850.
 
