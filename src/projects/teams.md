@@ -61,8 +61,6 @@ of Medicine to meet the needs of their own research. Below is a partial list of 
 + Johns Hopkins University
   + <a href="https://www.jhuapl.edu/" target="_blank">Applied Physics Lab</a> (<a href="https://github.com/aplbrain" target="_blank">GitHub</a>)
   + <a href="https://neuroscience.jhu.edu/research/faculty/82">Marshall Shuler</a>
-+ Kavli Institute for Systems Neuroscience
-  + <a href="https://www.ntnu.edu/kavli/moser-group" target="_blank">Moser Group</a>
 + Ludwig-Maximilians-Universität München
   + <a href="https://www.neuro.bio.lmu.de/research_groups/res-busse_l/index.html" target="_blank">Busse Lab</a>
   + <a href="https://www.neuro.bio.lmu.de/research_groups/res-katzner/index.html" target="_blank">Katzner Lab</a>
@@ -89,6 +87,9 @@ of Medicine to meet the needs of their own research. Below is a partial list of 
   + <a href="https://pni.princeton.edu/people/tatiana-engel">Tatiana Engel Lab</a>
   + <a href="https://pillowlab.princeton.edu" target="_blank">Jonathan Pillow Lab</a>
   + <a href="http://seunglab.org/" target="_blank">Seung Lab</a>
++ Norwegian University for Science and Technology - Kavli Institute for Systems Neuroscience 
+  + <a href="https://www.ntnu.edu/kavli/moser-group" target="_blank">Moser Group</a>
+  + <a href="https://grassfoundation.org/people/horst-obenhaus/">Horst Obenhaus</a>
 + Sainsbury Wellcome Centre
   + <a href="https://branco-lab.org" target="_blank">Tiago Branco Lab</a> (<a href="https://github.com/BrancoLab/LocomotionControl" target="_blank">GitHub</a>)
 + Stanford University
