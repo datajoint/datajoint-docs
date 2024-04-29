@@ -49,6 +49,7 @@ of Medicine to meet the needs of their own research. Below is a partial list of 
   + <a href="https://www.fmi.ch/research-groups/groupleader.html?group=35"> Andreas Luthi Lab </a>
 + Harvard Medical School
   + <a href="https://drugowitschlab.hms.harvard.edu" target="_blank">Jan Drugowitsch Lab</a>
+  + <a href="http://datta.hms.harvard.edu/">Datta Lab</a>
   + <a href="https://harveylab.hms.harvard.edu/" target="_blank">Harvey Lab</a>
   + <a href="http://sabatini.hms.harvard.edu/" target="_blank">Sabatini Lab</a>
   + <a href="https://smirnakislab.bwh.harvard.edu/" target="_blank">Stelios Smirnakis Lab</a>
@@ -59,8 +60,7 @@ of Medicine to meet the needs of their own research. Below is a partial list of 
   + <a href="https://www.janelia.org/lab/koay-lab" target="_blank">Sue Ann Koay Lab</a>
 + Johns Hopkins University
   + <a href="https://www.jhuapl.edu/" target="_blank">Applied Physics Lab</a> (<a href="https://github.com/aplbrain" target="_blank">GitHub</a>)
-+ Kavli Institute for Systems Neuroscience
-  + <a href="https://www.ntnu.edu/kavli/moser-group" target="_blank">Moser Group</a>
+  + <a href="https://neuroscience.jhu.edu/research/faculty/82">Marshall Shuler</a>
 + Ludwig-Maximilians-Universität München
   + <a href="https://www.neuro.bio.lmu.de/research_groups/res-busse_l/index.html" target="_blank">Busse Lab</a>
   + <a href="https://www.neuro.bio.lmu.de/research_groups/res-katzner/index.html" target="_blank">Katzner Lab</a>
@@ -73,6 +73,9 @@ of Medicine to meet the needs of their own research. Below is a partial list of 
   + <a href="https://angelakilabnyu.org/" target="_blank">Dora Angelaki Lab</a>
 + New York University Langone Medical Center
   + <a href="https://www.sippylab.com/" target="_blank">Tanya Sippy Lab</a>
++ Netherlands Neuroscience Institute 
+  + <a href="https://nin.nl/">Chris Van Der Togt </a> (<a href="https://github.com/Herseninstituut/FYD_Matlab">Github</a>)
+
 + Northwestern University
   + <a href="https://www.feinberg.northwestern.edu/faculty-profiles/az/profile.html?xid=49313" target="_blank">James Cotton Lab</a> (<a href="https://github.com/peabody124/PosePipeline" target="_blank">GitHub</a>)
   + <a href="http://schwartzlab.feinberg.northwestern.edu/" target="_blank">Gregory Schwartz Lab</a> (<a href="https://github.com/SchwartzNU/DJ_schwartzlab" target="_blank">GitHub</a>)
@@ -84,6 +87,9 @@ of Medicine to meet the needs of their own research. Below is a partial list of 
   + <a href="https://pni.princeton.edu/people/tatiana-engel">Tatiana Engel Lab</a>
   + <a href="https://pillowlab.princeton.edu" target="_blank">Jonathan Pillow Lab</a>
   + <a href="http://seunglab.org/" target="_blank">Seung Lab</a>
++ Norwegian University for Science and Technology - Kavli Institute for Systems Neuroscience 
+  + <a href="https://www.ntnu.edu/kavli/moser-group" target="_blank">Moser Group</a>
+  + <a href="https://grassfoundation.org/people/horst-obenhaus/">Horst Obenhaus</a>
 + Sainsbury Wellcome Centre
   + <a href="https://branco-lab.org" target="_blank">Tiago Branco Lab</a> (<a href="https://github.com/BrancoLab/LocomotionControl" target="_blank">GitHub</a>)
 + Stanford University
@@ -101,6 +107,7 @@ of Medicine to meet the needs of their own research. Below is a partial list of 
   + <a href="https://neurophysics.ucsd.edu" target="_blank">David Kleinfeld Lab</a> (<a href="https://github.com/ActiveBrainAtlas" target="_blank">GitHub</a>)
 + University of California, San Francisco
   + <a href="https://franklab.ucsf.edu/" target="_blank">Loren Frank Lab</a>
+  + <a href="https://braintumorcenter.ucsf.edu/people/cathryn-cadwell" target="_blank">Cathryn Cadwell Lab</a>
 + University of Houston
   + <a href="https://www.opt.uh.edu/about/directory/profiles/lauri-nurminen/">Lauri Nurminen Lab<a>
 + University of Oregon
@@ -117,15 +124,20 @@ of Medicine to meet the needs of their own research. Below is a partial list of 
   + <a href="https://www.mackelab.org" target="_blank">Macke Lab</a> (<a href="https://github.com/mackelab/epiphyte" target="_blank">GitHub</a>)
 + University of Utah
   + <a href="http://shcheglovitov-lab.utah.edu/" target="_blank">Oleksandr Shcheglovitov Lab</a> (<a href="https://github.com/yueqiw/ephys_analysis" target="_blank">GitHub</a>)
+  + <a href="https://neuroscience.med.utah.edu/faculty/kubanek.php">Jan Kubanek Lab</a>
+
 + University of Valencia
   + <a href="https://scholar.google.com/citations?user=2NKBJkEAAAAJ" target="_blank">Kai-Hendrik Cohrs</a>
+
 + University of Washington
   + <a href="https://eywalkerlab.com/" target="_blank">Edgar Y. Walker Lab</a>
   + <a href="http://faculty.washington.edu/tuthill/" target="_blank">Tuthill Lab</a>
+  + <a href="https://www.gillespie-lab.com/" target="_blank">Anne Gillespie Lab</a>
+
 + University of Zurich
-  + <a href="https://https://www.hifo.uzh.ch/en/research/helmchen.html>Fritjof Helmchen Lab</a>
+  + <a href="https://https://www.hifo.uzh.ch/en/research/helmchen.html">Fritjof Helmchen Lab</a>
+
 + Wilhelm Schickard Institute for Computer Science
   + <a href="https://sinzlab.org/" target="_blank">Sinz Lab</a>
-  + <a href="http://www.eye-tuebingen.de/eulerlab/" target="_blank">Euler Lab</a>
   + <a href="http://bethgelab.org/" target="_blank">Bethge Lab</a>
 + ... and more labs
