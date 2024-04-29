@@ -4,7 +4,20 @@ Title: Publications
 <!-- markdownlint-disable MD013 -->
 
 The following publications relied on DataJoint open-source software for data analysis.  If your work uses DataJoint or DataJoint Elements, please cite the respective
-[manuscripts and RRIDs](./citation.md).
+[manuscripts and RRIDs](../about/citation.md).
+
+## 2024 
+
++ Kyu Hyun Lee, Eric L. Denovellis, Ryan Ly, Jeremy Magland, Jeff Soules, Alison E. Comrie, Daniel P. Gramling, Jennifer A. Guidera, Rhino Nevers, Philip Adenekan, Chris Brozdowski, Samuel R. Bray, Emily Monroe, Ji Hyun Bak, Michael E. Coulter, Xulu Sun, Emrey Broyles, Donghoon Shin, Sharon Chiang, Cristofer Holobetz, Andrew Tritt, Oliver Rübel, Thinh Nguyen, Dimitri Yatsenko, Joshua Chu, Caleb Kemere, Samuel Garcia, Alessio Buccino, Loren M. Frank
+[Spyglass: a framework for reproducible and shareable neuroscience research](https://doi.org/10.1101/2024.01.25.577295)
+*bioRxiv* 2024.01.25.577295
+
++ Gonzalo Cogno, S., Obenhaus, H. A., Lautrup, A., Jacobsen, R. I., Clopath, C., Andersson, S. O., ... & Moser, E. I. (2024). [Minute-scale oscillatory sequences in medial entorhinal cortex](https://www.nature.com/articles/s41586-023-06864-1). *Nature*, 625(7994), 338-344.
+
++ Cimorelli, A., Patel, A., Karakostas, T., & Cotton, R. J. (2024). [Validation of portable in-clinic video-based gait analysis for prosthesis users](https://www.nature.com/articles/s41598-024-53217-7). *Nature Scientific Reports*, 14(1), 3840.
+
++ Papadopouli, M., Koniotakis, E., Smyrnakis, I., Savaglio, M. A., Psilou, E., Brozi, C., ... & Smirnakis, S. M. (2024). [Brain orchestra under spontaneous conditions: Identifying communication modules from the functional architecture of area V1](https://doi.org/10.1101/2024.02.29.582364). *bioRxiv*, 2024-02.
+
 
 ## 2023 <!-- 5 -->
 
@@ -44,6 +57,8 @@ connectomics.](https://doi.org/10.1101/2023.03.14.532674){:target="_blank"}. *bi
 
 + Fu, J., Willeke, K. F., Pierzchlewicz, P. A., Muhammad, T., Denfield, G. H., Sinz, F. H., & Tolias, A. S. (2022). [Heterogeneous Orientation Tuning Across Sub-Regions of Receptive Fields of V1 Neurons in Mice](https://dx.doi.org/10.2139/ssrn.4029075){:target="_blank"}. *Available at SSRN 4029075*.
 
++ Zong, W., Obenhaus, H.A., Skytøen, E.R., Eneqvist, H., de Jong, N.L., Vale, R., Jorge, M.R., Moser, M.B. and Moser, E.I., 2022. [Large-scale two-photon calcium imaging in freely moving mice](https://www.sciencedirect.com/science/article/pii/S0092867422001970)(:target="_blank"}. *Cell*, 185(7), pp.1240-1256.
+
 + Goetz, J., Jessen, Z. F., Jacobi, A., Mani, A., Cooler, S., Greer, D., ... & Schwartz, G. W. (2022). [Unified classification of mouse retinal ganglion cells using function, morphology, and gene expression](https://doi.org/10.1016/j.celrep.2022.111040){:target="_blank"}. *Cell reports*, 40(2), 111040.
 
 + Huang, J. Y., Hess, M., Bajpai, A., Barton, S. J., Li, X., Hobson, L. N., & Lu, H. C.
@@ -79,6 +94,8 @@ connectomics.](https://doi.org/10.1101/2023.03.14.532674){:target="_blank"}. *bi
 + Claudi, F., Campagner, D., & Branco, T. (2021). [Innate heuristics and fast learning support escape route selection in mice](https://doi.org/10.1016/j.cub.2022.05.020){:target="_blank"}. *bioRxiv*.
 
 + Cohrs, K.H. (2021). [Investigation of feedback mechanisms in visual cortex using deep learning models](http://dx.doi.org/10.13140/RG.2.2.35328.35845){:target="_blank"}. Master’s thesis. University of Göttingen.
+
++ Dennis, E. J., El Hady, A., Michaiel, A., Clemens, A., Tervo, D. R. G., Voigts, J., & Datta, S. R. (2021). [Systems neuroscience of natural behaviors in rodents](https://www.jneurosci.org/content/41/5/911.abstract). *Journal of Neuroscience*, 41(5), 911-919.
 
 + Finkelstein, A., Fontolan, L., Economo, M. N., Li, N., Romani, S., & Svoboda, K. (2021). [Attractor dynamics gate cortical information flow during decision-making](https://doi.org/10.1038/s41593-021-00840-6){:target="_blank"}. *Nature Neuroscience*. *24*(6), 843-850.
 

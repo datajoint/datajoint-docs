@@ -79,6 +79,17 @@ Below are the projects that make up the family of open-source DataJoint Elements
 
     [:octicons-arrow-right-24: Docs](./element-deeplabcut/)
 
+-   :fontawesome-brands-python:{ .lg .middle } **Element MoSeq**
+
+    ---
+
+    A data pipeline for motion sequencing with Keypoint-MoSeq.
+
+    [:octicons-arrow-right-24: Interactive tutorial on GitHub
+    Codespaces](https://github.com/datajoint/element-moseq#interactive-tutorial){:target="_blank"}
+
+    [:octicons-arrow-right-24: Docs](./element-moseq/)
+
 -   :fontawesome-brands-python:{ .lg .middle } **Element Facemap**
 
     ---

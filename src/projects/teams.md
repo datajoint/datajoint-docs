@@ -37,8 +37,6 @@ of Medicine to meet the needs of their own research. Below is a partial list of 
 + California Institute of Technology
   + <a href="https://www.pma.caltech.edu/people/michael-l-roukes" target="_blank">Roukes Group</a>
   + <a href="https://www.bbe.caltech.edu/people/thanos-siapas" target="_blank">Siapas Lab</a>
-+ Cold Spring Harbor Laboratory
-  + <a href="https://www.cshl.edu/research/faculty-staff/tatiana-engel/" target="_blank">Engel Lab</a>
 + Columbia University's Zuckerman Institute
   + <a href="https://churchland.zuckermaninstitute.columbia.edu" target="_blank">Mark Churchland Lab</a>
   + <a href="https://hillmanlab.zuckermaninstitute.columbia.edu/" target="_blank">Elizabeth Hillman Lab</a>
@@ -47,6 +45,8 @@ of Medicine to meet the needs of their own research. Below is a partial list of 
   + <a href="http://www.mackenziemathislab.org/" target="_blank">Mackenzie Mathis Lab</a>
 + FORTH
   + <a href="https://www.imbb.forth.gr/imbb-people/en/froudarakis-home" target="_blank">Emmanouil Froudarakis Lab</a> (<a href="https://github.com/ef-lab" target="_blank">GitHub</a>)
++ Friedrich Miescher Institute for Biomedical Research: FMI
+  + <a href="https://www.fmi.ch/research-groups/groupleader.html?group=35"> Andreas Luthi Lab </a>
 + Harvard Medical School
   + <a href="https://drugowitschlab.hms.harvard.edu" target="_blank">Jan Drugowitsch Lab</a>
   + <a href="https://harveylab.hms.harvard.edu/" target="_blank">Harvey Lab</a>
@@ -81,6 +81,7 @@ of Medicine to meet the needs of their own research. Below is a partial list of 
   + <a href="http://brodylab.org" target="_blank">Carlos Brody Lab</a>
   + <a href="https://pni.princeton.edu/faculty/david-tank" target="_blank">David Tank Lab</a>
   + <a href="https://wittenlab.org" target="_blank">Ilana Witten Lab</a>
+  + <a href="https://pni.princeton.edu/people/tatiana-engel">Tatiana Engel Lab</a>
   + <a href="https://pillowlab.princeton.edu" target="_blank">Jonathan Pillow Lab</a>
   + <a href="http://seunglab.org/" target="_blank">Seung Lab</a>
 + Sainsbury Wellcome Centre
@@ -100,6 +101,8 @@ of Medicine to meet the needs of their own research. Below is a partial list of 
   + <a href="https://neurophysics.ucsd.edu" target="_blank">David Kleinfeld Lab</a> (<a href="https://github.com/ActiveBrainAtlas" target="_blank">GitHub</a>)
 + University of California, San Francisco
   + <a href="https://franklab.ucsf.edu/" target="_blank">Loren Frank Lab</a>
++ University of Houston
+  + <a href="https://www.opt.uh.edu/about/directory/profiles/lauri-nurminen/">Lauri Nurminen Lab<a>
 + University of Oregon
   + <a href="https://ion.uoregon.edu/research/faculty-page/93" target="_blank">Santiago Jaramillo Lab</a> (<a href="https://github.com/sjara/uobrainflex" target="_blank">GitHub</a>)
   + <a href="https://ion.uoregon.edu/research/faculty-page/53" target="_blank">Michael Wehr Lab</a> (<a href="https://github.com/wehr-lab" target="_blank">GitHub</a>)
@@ -113,12 +116,14 @@ of Medicine to meet the needs of their own research. Below is a partial list of 
   + <a href="https://www.eye-tuebingen.de/euler/" target="_blank">Euler Lab</a>
   + <a href="https://www.mackelab.org" target="_blank">Macke Lab</a> (<a href="https://github.com/mackelab/epiphyte" target="_blank">GitHub</a>)
 + University of Utah
-  + <a href="http://shcheglovitov-lab.utah.edu/" target="_blank">Aleksandr Shcheglovitov Lab</a> (<a href="https://github.com/yueqiw/ephys_analysis" target="_blank">GitHub</a>)
+  + <a href="http://shcheglovitov-lab.utah.edu/" target="_blank">Oleksandr Shcheglovitov Lab</a> (<a href="https://github.com/yueqiw/ephys_analysis" target="_blank">GitHub</a>)
 + University of Valencia
   + <a href="https://scholar.google.com/citations?user=2NKBJkEAAAAJ" target="_blank">Kai-Hendrik Cohrs</a>
 + University of Washington
   + <a href="https://eywalkerlab.com/" target="_blank">Edgar Y. Walker Lab</a>
   + <a href="http://faculty.washington.edu/tuthill/" target="_blank">Tuthill Lab</a>
++ University of Zurich
+  + <a href="https://https://www.hifo.uzh.ch/en/research/helmchen.html>Fritjof Helmchen Lab</a>
 + Wilhelm Schickard Institute for Computer Science
   + <a href="https://sinzlab.org/" target="_blank">Sinz Lab</a>
   + <a href="http://www.eye-tuebingen.de/eulerlab/" target="_blank">Euler Lab</a>

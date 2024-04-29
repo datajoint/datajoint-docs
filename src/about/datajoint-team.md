@@ -6,17 +6,14 @@ as Principal Investigator.
 ## Scientists
 
 - Dimitri Yatsenko - PI
-- Kabilar Gunalan - Project Manager, Data Scientist
 - Thinh Nguyen - Data Scientist
-- Sid Hulyalkar - Data Scientist
-- Jaerong Ahn - Data Scientist
 - Kushal Bakshi - Data Scientist
+- Milagros Marín - Data Scientist
 
 ## Engineers
 
 - Drew Yang - Data Systems Engineer
-- Jeroen Verswijver - Software Engineer
-- Adib Baji - Software Engineer
+- Ethan Ho - Software Engineer
 
 ## Past contributors
 
@@ -37,6 +34,11 @@ as Principal Investigator.
 - Timothy Chandler - Data Systems Engineer
 - David Godinez - Data Engineer
 - Geetika Singh - Data Engineer
+- Kabilar Gunalan - Project Manager, Data Scientist
+- Jaerong Ahn - Data Scientist
+- Jeroen Verswijver - Software Engineer
+- Adib Baji - Software Engineer
+- Sid Hulyalkar - Data Scientist
 
 The first-person pronouns "we" and "our" in these documents refer to those listed above.
 
