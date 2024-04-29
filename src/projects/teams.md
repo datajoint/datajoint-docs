@@ -49,6 +49,7 @@ of Medicine to meet the needs of their own research. Below is a partial list of 
   + <a href="https://www.fmi.ch/research-groups/groupleader.html?group=35"> Andreas Luthi Lab </a>
 + Harvard Medical School
   + <a href="https://drugowitschlab.hms.harvard.edu" target="_blank">Jan Drugowitsch Lab</a>
+  + <a href="http://datta.hms.harvard.edu/">Datta Lab</a>
   + <a href="https://harveylab.hms.harvard.edu/" target="_blank">Harvey Lab</a>
   + <a href="http://sabatini.hms.harvard.edu/" target="_blank">Sabatini Lab</a>
   + <a href="https://smirnakislab.bwh.harvard.edu/" target="_blank">Stelios Smirnakis Lab</a>
@@ -59,6 +60,7 @@ of Medicine to meet the needs of their own research. Below is a partial list of 
   + <a href="https://www.janelia.org/lab/koay-lab" target="_blank">Sue Ann Koay Lab</a>
 + Johns Hopkins University
   + <a href="https://www.jhuapl.edu/" target="_blank">Applied Physics Lab</a> (<a href="https://github.com/aplbrain" target="_blank">GitHub</a>)
+  + <a href="https://neuroscience.jhu.edu/research/faculty/82">Marshall Shuler</a>
 + Kavli Institute for Systems Neuroscience
   + <a href="https://www.ntnu.edu/kavli/moser-group" target="_blank">Moser Group</a>
 + Ludwig-Maximilians-Universität München
