@@ -74,7 +74,7 @@ of Medicine to meet the needs of their own research. Below is a partial list of 
 + New York University Langone Medical Center
   + <a href="https://www.sippylab.com/" target="_blank">Tanya Sippy Lab</a>
 + Netherlands Neuroscience Institute 
-  + <a href="https://nin.nl/">Chris Van Der Togt </a> (<a href="https://github.com/Herseninstituut/FYD_Matlab">Github</a>)
+  + <a href="https://nin.nl/">Chris Van Der Togt </a> (<a href="https://github.com/Herseninstituut/FYD_Matlab">Github</a>) - 7 labs.
 
 + Northwestern University
   + <a href="https://www.feinberg.northwestern.edu/faculty-profiles/az/profile.html?xid=49313" target="_blank">James Cotton Lab</a> (<a href="https://github.com/peabody124/PosePipeline" target="_blank">GitHub</a>)
@@ -98,8 +98,8 @@ of Medicine to meet the needs of their own research. Below is a partial list of 
 + Tel-Aviv University
   + <a href="https://www.finkelstein.sites.tau.ac.il/" target="_blank">Arseny Finkelstein Lab</a> (<a href="https://github.com/ArsenyFinkelsteinLab" target="_blank">GitHub</a>)
   + <a href="http://pblab.tau.ac.il/en/" target="_blank">Pablo Blinder Lab</a> (<a href="https://github.com/PBLab" target="_blank">GitHub</a>)
-+ TIFR-National Center for Biological Sciences, Bengaluru
-  
++ [IFR-National Center for Biological Sciences, Bengaluru](https://www.ncbs.res.in/)
+  + [Abhilasha Joshi](https://profiles.ucsf.edu/abhilasha.joshi)
 + University of Bonn
   + <a href="https://rose-group.ieecr-bonn.de" target="_blank">Tobias Rose Lab</a>
   + <a href="https://https://www.ukbonn.de/en/epileptology/workgroups/mormann-workgroup-cognitive-und-clinical-neurophysiology/">Mormann Workgroup</a>
