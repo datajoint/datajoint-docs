@@ -12,6 +12,8 @@ The following publications relied on DataJoint open-source software for data ana
 [Spyglass: a framework for reproducible and shareable neuroscience research](https://doi.org/10.1101/2024.01.25.577295)
 *bioRxiv* 2024.01.25.577295
 
++ Chen, S., Liu, Y., Wang, Z. A., Colonell, J., Liu, L. D., Hou, H., ... & Svoboda, K. (2024). [Brain-wide neural activity underlying memory-guided movement](https://www.cell.com/cell/pdf/S0092-8674(23)01445-9.pdf). Cell, 187(3), 676-691.
+
 + Gonzalo Cogno, S., Obenhaus, H. A., Lautrup, A., Jacobsen, R. I., Clopath, C., Andersson, S. O., ... & Moser, E. I. (2024). [Minute-scale oscillatory sequences in medial entorhinal cortex](https://www.nature.com/articles/s41586-023-06864-1). *Nature*, 625(7994), 338-344.
 
 + Cimorelli, A., Patel, A., Karakostas, T., & Cotton, R. J. (2024). [Validation of portable in-clinic video-based gait analysis for prosthesis users](https://www.nature.com/articles/s41598-024-53217-7). *Nature Scientific Reports*, 14(1), 3840.

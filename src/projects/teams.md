@@ -98,6 +98,8 @@ of Medicine to meet the needs of their own research. Below is a partial list of 
 + Tel-Aviv University
   + <a href="https://www.finkelstein.sites.tau.ac.il/" target="_blank">Arseny Finkelstein Lab</a> (<a href="https://github.com/ArsenyFinkelsteinLab" target="_blank">GitHub</a>)
   + <a href="http://pblab.tau.ac.il/en/" target="_blank">Pablo Blinder Lab</a> (<a href="https://github.com/PBLab" target="_blank">GitHub</a>)
++ TIFR-National Center for Biological Sciences, Bengaluru
+  
 + University of Bonn
   + <a href="https://rose-group.ieecr-bonn.de" target="_blank">Tobias Rose Lab</a>
   + <a href="https://https://www.ukbonn.de/en/epileptology/workgroups/mormann-workgroup-cognitive-und-clinical-neurophysiology/">Mormann Workgroup</a>
