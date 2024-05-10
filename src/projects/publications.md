@@ -10,6 +10,8 @@ The following publications relied on DataJoint open-source software for data ana
 
 + Mosberger, A.C., Sibener, L.J., Chen, T.X., Rodrigues, H.F., Hormigo, R., Ingram, J.N., Athalye, V.R., Tabachnik, T., Wolpert, D.M., Murray, J.M. and Costa, R.M., 2024. [Exploration biases forelimb reaching strategies](https://www.cell.com/cell-reports/fulltext/S2211-1247(24)00286-9). Cell Reports, 43(4).
 
++ Guidera, J. A., Gramling, D. P., Comrie, A. E., Joshi, A., Denovellis, E. L., Lee, K. H., ... & Frank, L. M. (2024). [Regional specialization manifests in the reliability of neural population codes](https://doi.org/10.1101/2024.01.25.576941). bioRxiv, 2024-01.
+
 + Kyu Hyun Lee, Eric L. Denovellis, Ryan Ly, Jeremy Magland, Jeff Soules, Alison E. Comrie, Daniel P. Gramling, Jennifer A. Guidera, Rhino Nevers, Philip Adenekan, Chris Brozdowski, Samuel R. Bray, Emily Monroe, Ji Hyun Bak, Michael E. Coulter, Xulu Sun, Emrey Broyles, Donghoon Shin, Sharon Chiang, Cristofer Holobetz, Andrew Tritt, Oliver Rübel, Thinh Nguyen, Dimitri Yatsenko, Joshua Chu, Caleb Kemere, Samuel Garcia, Alessio Buccino, Loren M. Frank
 [Spyglass: a framework for reproducible and shareable neuroscience research](https://doi.org/10.1101/2024.01.25.577295)
 *bioRxiv* 2024.01.25.577295
