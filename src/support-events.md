@@ -17,6 +17,10 @@
 
 Find us at the following workshops and conferences!
 
+- [Society for Neuroscience 2024](https://www.sfn.org/meetings/neuroscience-2024) - October 5-9, 2024
+
+- [INCF Neuroinformatics Assembly](https://neuroinformatics.incf.org/) - September 23-27, 2024
+
 - [ACCN](https://neurosciencenetwork.org/) 
 
 - [Gladstone Institutes - Neuroscience Seminar](https://gladstone.org/neuroscience-seminar/neuroscience-seminar-series) - June 13, 2024
