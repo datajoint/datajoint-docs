@@ -28,7 +28,7 @@
      Python and DataJoint Elements.
 
      [:octicons-arrow-right-24: Learn
-     more](https://datajoint.com/works){:target="_blank"} | [Sign-in](https://works.datajoint.com){:target="_blank"}
+     more](https://datajoint.com/){:target="_blank"} | [Sign-in](https://works.datajoint.com){:target="_blank"}
 
 -   **Project Showcase**
 
