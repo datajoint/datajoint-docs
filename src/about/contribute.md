@@ -1,114 +1,97 @@
 # Contribution Guidelines
 
-Thank you for your interest in contributing! 🤝
+Thank you for your interest in contributing to DataJoint Elements!
 
-To help keep everyone in alignment and coordinated in the community effort, we’ve
-created this document. It serves as the contribution guideline that outlines how
-open-source software development is to be conducted. Any software development that makes
-reference to this document can be assumed to adopt the policies outlined below. We’ve
-structured the guideline in a FAQ (frequently asked questions) format to make it easier
-to digest. Feel free to review the questions below to determine any specific policy.
+These guidelines are designed to ensure smooth collaboration, high-quality
+contributions, and a welcoming environment for all contributors. Please take a moment to
+review this document in order to make the contribution process easy and effective for
+everyone involved.
 
 The principal maintainer of DataJoint and associated tools is the DataJoint company. The
 pronouns “we” and “us” in this guideline refer to the principal maintainers. We invite
 reviews and contributions of the open-source software. We compiled these guidelines to
 make this work clear and efficient.
 
-## Feedback
+## How to Contribute
 
-DataJoint APIs, DataJoint Web GUIs, and DataJoint Elements are supported by NIH grant
-U24 NS116470 for disseminating open-source software for neuroscience research. Your
-feedback is essential for continued funding. Your feedback also helps shape the
-technology development roadmap for the DataJoint ecosystem. Please tell us about your
-projects by filling out the [DataJoint Census](https://community.datajoint.io).
+### Feedback and Communication
 
-## 1) Which issue should I contribute towards?
+Engage with the community through GitHub Issues and PR discussions.
 
-There are three primary things to consider when looking to contribute.
+Use inclusive and professional language.
 
-**Availability:** An indication of whether anyone is currently working on a fix for the
-given issue. Availability is indicated by who is `assigned`. Issues that are
-`unassigned` mean that there is no one yet working on resolving the issue and the issue
-is available for someone to work on. If an issue has been assigned, then any additional
-work on that issue should be coordinated with the assignee.
+For general questions or ideas, discussions and live debugging support, please join
+[DataJoint Slack channel](https://join.slack.com/t/datajoint/shared_invite/enQtMjkwNjQxMjI5MDk0LTQ3ZjFiZmNmNGVkYWFkYjgwYjdhNTBlZTBmMWEyZDc2NzZlYTBjOTNmYzYwOWRmOGFmN2MyYzU0OWQ0MWZiYTE)
+or [other community forums](https://stackoverflow.com/questions/tagged/datajoint), but
+direct technical contributions should stay in GitHub. Response times may vary depending
+on maintainer availability.
 
-**Specification:** In order for issues to be properly addressed, the requirements of
-satisfying and closing the issue should be clear. If it is not, a label will be added as
-`unspecified`. This could be due to more debug info being necessary, more details on
-intended behavior, or perhaps that further discussion is required to determine a good
-solution. Feel free to help us arrive at a proper specification.
+### Reporting Issues
 
-**Priority:** As a community, we work on a concerted effort to bring about the
-realization of the milestones. We utilize milestones as a planning tool to help focus a
-group of changes around a release. To determine the priority of issues, simply have a
-look at the next milestone that is expected to arrive. Therefore, each milestone
-following this can be understood as lower in priority respectively. Bear in mind that
-much like a hurricane forecast, the execution plan is much more likely to be accurate
-the closer to today’s date as opposed to milestones further out. Extremely low priority
-issues are assigned to the `Backburner` milestone. Since `Backburner` does not have a
-target date, this indicates that its issues may be deferred indefinitely. Occasionally
-the maintainers will move issues from `Backburner` as it makes sense to address them
-within a release. Also, issues `unassigned` to a milestone can be understood as new
-issues which have not been triaged.
+Use `GitHub Issues` to report bugs or request features. Clearly describe the issue,
+including:
 
-After considering the above, you may comment on the issue you’d like to help fix and a maintainer will assign it to you.
+- Steps to reproduce (if applicable).
+- Expected and actual outcomes.
+- Any relevant error messages, logs, or screenshots.
+- Include environment details (e.g., OS, library versions) to speed up troubleshooting.
 
-## 2) What is the proper etiquette for proposing changes as contribution?
+Check existing issues to avoid duplicates.
 
-What is generally expected from new contributions are the following:
+### Proposing Features/Changes
 
-Any proposed contributor changes should be introduced in the form of a pull request (PR)
-from their fork.
+Before significant contributions, open a `GitHub Issue` to discuss your proposal. Please
+include:
 
-Proper branch target specified. The following are the generally the available branches
-that can be targeted:
+- A clear problem statement.
+- Proposed solution or feature details.
+- Relevant examples or use cases.
 
-- `main` or `master`: Represents the single source of truth and the latest in completed development.
+### Submitting Pull Requests (PRs)
 
-- `pre`: Represents the source at the point of the last stable release.
+1. Fork the repository and clone it to your local machine.
+2. Create a descriptive branch name, e.g., `fix/typo-docs` or `feature/add-logging`.
+3. Follow [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/): Use
+   commit messages following the commit types for versioning:
 
-For larger more involved changes, a maintainer may determine it best to create a
-feature-specific branch and adjust the PR accordingly.
+- `fix`: Bug fixes (PATCH in Semantic Versioning).
+- `feat`: New features (MINOR in Semantic Versioning).
+- `docs`: Documentation updates.
+- `Breaking changes`: Use ! after the type or add BREAKING CHANGE in the commit footer.
 
-A summary description that describes the overall intent behind the PR.
+- `Example: fix(auth): resolve token expiration bug.`
 
-Proper links to the issue(s) that the PR serves to resolve.
+4. Reference related issue(s) in your PR description (e.g., Closes #123).
+5. Cover new functionality or bug fixes with appropriate tests. Ensure all tests pass
+   before submission. Typically as it relates to tests, this means:
+   1. No syntax errors
+   2. No integration errors
+   3. No style errors e.g. PEP8, etc.
+   4. Similar or better code coverage
+6. Additional documentation to reflect new feature or behavior introduced.
+7. Provide a detailed PR description explaining the changes and their impact.
+8. Submit the PR for review. Maintainers will also ensure that PR’s have the appropriate
+   assignment for reviewer.
 
-Newly introduced changes must pass any required checks. Typically as it relates to tests, this means:
-
-1. No syntax errors
-1. No integration errors
-1. No style errors e.g. PEP8, etc.
-1. Similar or better code coverage
-
-Additional documentation to reflect new feature or behavior introduced.
-
-Necessary updates to the changelog following [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
-convention.
-
-A contributor should not approve or merge their own PR.
+A contributor should not approve or merge their own PR. A maintainer will review and
+approve the PR.
 
 Reviewer suggestions or feedback should not be directly committed to a branch on a
 contributor’s fork. A less intrusive way to collaborate would be for the reviewer to PR
 to the contributor’s fork/branch that is associated with the main PR currently in
 review.
 
-Maintainers will also ensure that PR’s have the appropriate assignment for reviewer, milestone, and project.
+### Code Reviews
 
-## 3) How can I track the progress of an issue that has been assigned?
+Expect constructive feedback from maintainers. Maintainers will review your PR and
+suggest changes or improvements. Be responsive to feedback and iterate as needed.
+Reviews focus on code quality and adherence to standards, and documentation and test
+coverage. Once approved, the PR will be merged.
 
-Since milestones represent the development plan, projects represent the actual
-execution. Projects are typically fixed-time sprints (1-2 weeks). A ‘workable’ number of
-issues that have been assigned to developers and assigned to the next milestone are
-selected and tracked in each project to provide greater granularity in the week-to-week
-progress. Automation is included observing the `Automated kanban with reviews` template.
-Maintainers will adjust the project assignment to reflect the order in which to resolve
-the milestone issues.
+## Releases
 
-## 4) What is the release process? How do I know when my merged contribution will officially make it into a release?
-
-Releases follow the standard definition of [semantic versioning](https://semver.org/spec/v2.0.0.html).
-Meaning:
+Releases follow the standard definition of
+[semantic versioning](https://semver.org/spec/v2.0.0.html). Meaning:
 
 `MAJOR` . `MINOR` . `PATCH`
 
@@ -118,53 +101,32 @@ Meaning:
 
 - `PATCH` version when you make backwards compatible bug fixes.
 
-Each release requires tagging the commit appropriately and is then issued in the normal
-medium for release e.g. PyPi, NPM, YARN, GitHub Release, etc.
+Each release requires tagging the commit appropriately and is then issued following the
+GitHub automated semantic release. The release and Changelog will be generated
+automatically after the PR is merged.
 
-Minor releases are triggered when all the issues assigned to a milestone are resolved
-and closed. Patch releases are triggered periodically from `main` or `master` after a
-reasonable number of PR merges have come in.
+## Community Engagement
 
-## 5) I am not yet too comfortable contributing but would like to engage the community. What is the policy on community engagement?
+- For resolving bugs, errors, or debugging issues, please submit it through **GitHub
+  Issues**.
+- For live debugging, urgent help, or broader discussions, join the
+  [DataJoint Slack](https://join.slack.com/t/datajoint/shared_invite/enQtMjkwNjQxMjI5MDk0LTQ3ZjFiZmNmNGVkYWFkYjgwYjdhNTBlZTBmMWEyZDc2NzZlYTBjOTNmYzYwOWRmOGFmN2MyYzU0OWQ0MWZiYTE).
+  Keep in mind maintainers’ availability may be limited.
+- For feature requests, directly in the GitHub Issue Tracker of the respective
+  repository Provide sufficient details to facilitate discussion and prioritization.
 
-In order to follow the appropriate process and setting, please reference the following flow for your desired mode of engagement:
+## Prerequisites
 
-### 5a) Generally, how do I perform __________?
+- Familiarize yourself with the project documentation and guidelines.
+- Install necessary tools and dependencies listed in the repository's `README`.
 
-If the documentation does not provide clear enough instruction, please see StackOverflow
-posts related to the [datajoint](https://stackoverflow.com/questions/tagged/datajoint)
-tag or ask a new question tagging it appropriately. You may refer to our 
-[datajoint tag wiki](https://stackoverflow.com/tags/datajoint/info)
-for more details on its proper use.
+## Contribution Acknowledgment
 
-### 5b) I just encountered this error, how can I resolve it?
+We deeply appreciate every contribution! By adhering to these guidelines, you help
+maintain the quality, usability, and success of DataJoint Elements.
 
-Please see StackOverflow posts related to the 
-[datajoint](https://stackoverflow.com/questions/tagged/datajoint) tag or ask a new 
-question tagging it appropriately. You may refer to our 
-[datajoint tag wiki](https://stackoverflow.com/tags/datajoint/info) for more details on
-its proper use.
+For any questions, feel free to reach out via GitHub Issues, our
+[community Slack](https://join.slack.com/t/datajoint/shared_invite/enQtMjkwNjQxMjI5MDk0LTQ3ZjFiZmNmNGVkYWFkYjgwYjdhNTBlZTBmMWEyZDc2NzZlYTBjOTNmYzYwOWRmOGFmN2MyYzU0OWQ0MWZiYTE)
+or contact `support@datajoint.com`.
 
-### 5c) I just encountered this error and I am sure it is a bug, how do I report it?
-
-Please file it under the issue tracker associated with the open-source software.
-
-### 5d) I have an idea or new feature request, how do I submit it?
-
-Please file it under the issue tracker associated with the open-source software.
-
-### 5e) I am curious why the maintainers choose to __________? i.e. questions that are ‘opinionated’ in nature with answers that some might disagree.
-
-Please join the community on the 
-[DataJoint Slack](https://join.slack.com/t/datajoint/shared_invite/enQtMjkwNjQxMjI5MDk0LTQ3ZjFiZmNmNGVkYWFkYjgwYjdhNTBlZTBmMWEyZDc2NzZlYTBjOTNmYzYwOWRmOGFmN2MyYzU0OWQ0MWZiYTE)
-and ask on the most relevant channel. There, you may engage directly with the maintainers for proper discourse.
-
-### 5f) What is the timeline or roadmap for the release of certain supported features?
-
-Please refer to milestones and projects associated with the open-source software.
-
-### 5g) I need urgent help best suited for live debugging, how can I reach out directly?
-
-Please join the community on the 
-[DataJoint Slack](https://join.slack.com/t/datajoint/shared_invite/enQtMjkwNjQxMjI5MDk0LTQ3ZjFiZmNmNGVkYWFkYjgwYjdhNTBlZTBmMWEyZDc2NzZlYTBjOTNmYzYwOWRmOGFmN2MyYzU0OWQ0MWZiYTE)
-and ask on the most relevant channel. Please bear in mind that as open-source community software, availability of the maintainers might be limited.
+Thank you for your contributions!
