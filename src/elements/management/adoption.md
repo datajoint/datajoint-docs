@@ -1,33 +1,81 @@
 # Guidelines for Adoption
 
-You have several options for adopting DataJoint workflows for your own experiments.
+DataJoint Elements offer flexible options for adoption, enabling researchers to
+seamlessly integrate them into their workflows. Below are the available paths for
+adoption based on your expertise and needs for your experiments.
 
-## Adopt independently
+## Independent Adoption
 
-DataJoint Elements are designed for adoption by independent users with moderate software
-development skills, good understanding of DataJoint principles, and adequate IT
-expertise or support.
+DataJoint Elements are designed for independent users who have:
 
-If you have not yet used DataJoint, we recommend completing our online training
-tutorials or attending a workshop either online or in person.  Interactive tutorials
-can be found on the [DataJoint
-Tutorials](https://github.com/datajoint/datajoint-tutorials) repository.
+- Moderate software development skills.
+- A solid understanding of DataJoint principles.
+- Adequate IT expertise or support.
 
-## Support from DataJoint
+If you are **new to DataJoint**, we recommend starting with these resources to build a
+strong foundation:
 
-Our team provides support to labs to adopt DataJoint workflows in their research.
+### 1. Online Training Tutorials
 
-This includes:
+Learn to set up your DataJoint pipeline with interactive tutorials hosted on GitHub
+Codespaces:
 
-- User training
-- Developer training
-- Data and computation hosting
-  - on your premises
-  - using your own cloud accounts
-  - fully managed cloud hosting by DataJoint
-- Workflow execution
-  - configuration and automation
-  - optional fully managed service by DataJoint
-- Interfaces for data entry, export and publishing
+- **[DataJoint Tutorials Repository](https://github.com/datajoint/datajoint-tutorials):**
+  A comprehensive set of tutorials to get started with DataJoint Python, organized in
+  Jupyter notebooks.
 
-These services may be subsidized by grant funding for qualified research groups.
+- **Element-Specific Interactive Tutorials:** Explore detailed guides for designing and
+  interacting with specific Element pipelines:
+  - [DataJoint Element Array Ephys](https://github.com/datajoint/element-array-ephys#interactive-tutorial)
+  - [DataJoint Element Calcium Imaging](https://github.com/datajoint/element-calcium-imaging#interactive-tutorial)
+  - [DataJoint Element DeepLabCut](https://github.com/datajoint/element-deeplabcut#interactive-tutorial)
+  - [DataJoint Element Facemap](https://github.com/datajoint/element-facemap#interactive-tutorial)
+  - [DataJoint Element MoSeq](https://github.com/datajoint/element-moseq#interactive-tutorial)
+  - [DataJoint Element Miniscope](https://github.com/datajoint/element-miniscope#interactive-tutorial)
+  - [DataJoint Element Optogenetics](https://github.com/datajoint/element-optogenetics#interactive-tutorial)
+  - [DataJoint Element Zstack](https://github.com/datajoint/element-zstack#interactive-tutorial)
+  - [DataJoint Element Electrode Localization](https://github.com/datajoint/element-electrode-localization#interactive-tutorial)
+  - [DataJoint Element Visual Stimulus](https://github.com/datajoint/element-visual-stimulus#interactive-tutorial)
+
+### 2. Workshops
+
+Participate in [workshops and events](../../support-events.md) (online or in person) to
+gain hands-on experience and practical knowledge for implementing DataJoint workflows
+effectively.
+
+## Adoption with Support from DataJoint
+
+For institutions and labs requiring additional assistance, the DataJoint team offers
+tailored support services, including:
+
+### Training
+
+- **User Training:** Guidance for end-users to effectively utilize workflows.
+- **Developer Training:** Support for developers implementing or extending workflows.
+
+### Hosting and Infrastructure
+
+- **Data and Computation Hosting:**
+  - On-premises setups for your institution or lab.
+  - Integration with your existing cloud accounts.
+  - Fully managed cloud hosting by DataJoint.
+
+### Workflow Execution
+
+- **Configuration and Automation:** Assistance with setting up and automating workflows.
+- **Fully Managed Services:** Optional services to oversee workflow execution and
+  management entirely.
+
+### Interfaces
+
+- **Data Entry, Export, and Publishing:** Streamlined interfaces to efficiently manage
+  and share your research data.
+
+### Subsidized Support
+
+Qualified research groups may be eligible for subsidized services through grant funding.
+Contact the DataJoint team to explore funding options and determine your eligibility.
+
+By choosing the adoption path that best suits your lab's expertise and requirements, you
+can leverage DataJoint Elements to optimize your research workflows. For additional
+information or assistance, please contact the DataJoint team at support@datajoint.com.
