@@ -3,13 +3,14 @@
 ## Funding
 
 This Resource is supported by the National Institute Of Neurological Disorders And
-Stroke of the National Institutes of Health under Award Number U24NS116470. The content
-is solely the responsibility of the authors and does not necessarily represent the
-official views of the National Institutes of Health.
+Stroke of the National Institutes of Health (NIH) under Award Number **U24NS116470**.
+The content is solely the responsibility of the authors and does not necessarily
+represent the official views of the National Institutes of Health.
 
 ## Scientific Steering Group
 
-The project oversight and guidance is provided by the Scientific Steering Group comprising
+The project oversight and guidance is provided by the Scientific Steering Group
+comprising
 
 - [Mackenzie Mathis (EPFL)](http://www.mackenziemathislab.org/team)
 - [John Cunningham (Columbia U)](https://stat.columbia.edu/~cunningham/)
