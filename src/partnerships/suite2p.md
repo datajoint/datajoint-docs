@@ -1,6 +1,9 @@
 # Sustainability Roadmap between DataJoint Elements and Suite2p
 
 <figure markdown>
+  <!-- mkdocs will complain about this -->
+  <!-- since we will host on github pages, the relative ref needs to follow the structure in -->
+  <!-- the mkdocs's build dir $PROJ_DIR/site/images/, which is two directories above the html -->
   ![datajoint](../../images/company-logo-black.svg){: style="height:50px; padding-right:25px"}
   ![suite2p](../../images/community-partnerships-suite2p-logo.png){: style="height:70px"}
 </figure>

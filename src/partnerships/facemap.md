@@ -1,6 +1,9 @@
 # Sustainability Roadmap between DataJoint Elements and Facemap
 
 <figure markdown>
+  <!-- mkdocs will complain about this -->
+  <!-- since we will host on github pages, the relative ref needs to follow the structure in -->
+  <!-- the mkdocs's build dir $PROJ_DIR/site/images/, which is two directories above the html -->
   ![datajoint](../../images/company-logo-black.svg){: style="height:50px; padding-right:25px"}
   ![facemap](../../images/community-partnerships-facemap-logo.png){: style="width:100px"}
 </figure>
