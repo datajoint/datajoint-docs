@@ -1,20 +1,16 @@
-# MODE="LIVE|BUILD" HOST_UID=$(id -u) docker compose up --build
-# 
-# Navigate to http://localhost/
-version: "2.4"
+# MODE="LIVE|BUILD" docker compose up --build
+#
+# Navigate to http://localhost/docs/
 services:
   docs:
     build:
-      dockerfile: .docker/Dockerfile
-      context: .
       args:
-        - GITHUB_TOKEN
+        - BOT_PAT
     image: datajoint/datajoint-docs
     environment:
       - MODE
     volumes:
       - .:/main
-    user: ${HOST_UID}:anaconda
     ports:
       - 80:80
     command:
@@ -23,7 +19,7 @@ services:
       - |
         set -e
         if echo "$${MODE}" | grep -i live &>/dev/null; then
-            mkdocs serve --config-file ./mkdocs.yaml -a 0.0.0.0:80
+            mkdocs serve --config-file ./mkdocs.yaml
         elif echo "$${MODE}" | grep -i build &>/dev/null; then
             mkdocs build --config-file ./mkdocs.yaml
         else
