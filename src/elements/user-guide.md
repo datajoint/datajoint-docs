@@ -17,7 +17,7 @@ your custom workflow.
 
     2. [Conda](#conda)
 
-    3. [Integrated Development Environment](#integrated-development-environment)
+    3. [Integrated Development Environment](#integrated-development-environment-ide)
 
     4. [Version Control (git)](#version-control-git)
 
