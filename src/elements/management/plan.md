@@ -8,11 +8,10 @@ figure below:
 
 The following sections provide detailed information.
 
-- [Team](../team)
-- [Project Governance](../governance)
-- [Project Selection Process](../selection)
-- [Quality Assurance](../quality-assurance)
-- [Contribution Guideline](../../../community/contribute)
-- [Outreach Plan](../outreach)
-- [Dissemination Plan](../dissemination)
-- [Licenses and User Agreements](../../../community/licenses)
+- [Team](../../about/datajoint-team.md)
+- [Project Governance](./governance.md)
+- [Project Selection Process](selection.md)
+- [Quality Assurance](quality-assurance.md)
+- [Contribution Guideline](../../about/contribute.md)
+- [Outreach Plan](outreach.md)
+- [Dissemination Plan](dissemination.md)
