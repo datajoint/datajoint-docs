@@ -6,6 +6,8 @@ repo_name: datajoint/datajoint-docs
 repo_url: https://github.com/datajoint/datajoint-docs
 nav:
   - Welcome: index.md
+  # relative site url, not pointing to any docs in the repo
+  # it's for reverse proxy to proxy datajoint-python docs
   - DataJoint Python: core/datajoint-python/
   - DataJoint Elements:
       - elements/index.md
@@ -69,9 +71,10 @@ theme:
 plugins:
   - search
   - section-index
-  - redirects:
-      redirect_maps:
-        "index.md": "welcome.md"
+  # There is no welcome.md anymore
+  # - redirects:
+  #     redirect_maps:
+  #       "index.md": "welcome.md"
   - exclude:
       glob:
         - archive/*
@@ -85,8 +88,8 @@ markdown_extensions:
       options:
         custom_icons:
           - .overrides/.icons
-      emoji_index: !!python/name:materialx.emoji.twemoji
-      emoji_generator: !!python/name:materialx.emoji.to_svg
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
   - mdx_truly_sane_lists
   - pymdownx.superfences:
       custom_fences:
@@ -103,8 +106,9 @@ markdown_extensions:
       custom_checkbox: true
 extra:
   generator: false # Disable watermark
-  version:
-    provider: mike
+  # There is no version for this doc
+  # version:
+  #   provider: mike
   social:
     - icon: main/company-logo
       link: https://www.datajoint.com
@@ -130,6 +134,9 @@ extra:
     - icon: fontawesome/brands/python
       link: https://pypi.org/user/datajointbot
       name: PyPI
+    - icon: fontawesome/brands/stack-overflow
+      link: https://stackoverflow.com/questions/tagged/datajoint
+      name: StackOverflow
     - icon: fontawesome/brands/youtube
       link: https://www.youtube.com/@datajoint
       name: YouTube
