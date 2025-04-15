@@ -7,7 +7,7 @@ as Principal Investigator.
 
 - Dimitri Yatsenko, PhD - PI & Chief Science and Technology Officer
 
-- Thinh Nguyen, PhD - SciOps Engineer
+- Thinh Nguyen, PhD - SciOps Lead
 - Kushal Bakshi, PhD - SciOps Engineer
 - Milagros Marín, PhD - SciOps Engineer
 
@@ -36,10 +36,10 @@ as Principal Investigator.
 - David Godinez - Data Engineer
 - Geetika Singh - Data Engineer
 - Kabilar Gunalan - Project Manager, Data Scientist
-- Jaerong Ahn - Data Scientist
+- Jaerong Ahn - SciOps Engineer
 - Jeroen Verswijver - Software Engineer
 - Adib Baji - Software Engineer
-- Sid Hulyalkar - Data Scientist
+- Sid Hulyalkar - SciOps Engineer
 
 The first-person pronouns "we" and "our" in these documents refer to those listed above.
 

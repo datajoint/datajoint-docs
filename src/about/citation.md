@@ -47,7 +47,7 @@ Research**, please use the following citation:
 - Manuscript: Johnson EC, Nguyen TT, Dichter BK, Zappulla F, Kosma M, Gunalan K,
   Halchenko YO, Neufeld SQ, Schirner M, Ritter P, Martone ME. SciOps: Achieving
   Productivity and Reliability in Data-Intensive Research. arXiv preprint
-  arXiv:2401.00077v2. 2024 Nov 6. (Under review)
+  arXiv:2401.00077v2. 2023 Dec 29.
 
 - **RRID**: TBD
 
