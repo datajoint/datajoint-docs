@@ -12,7 +12,7 @@ The following publications relied on DataJoint open-source software for data ana
 
 ## 2024 
 
-+ Reimer, M. L., Kauer, S. D., Benson, C. A., King, J. F., Patwa, S., Feng, S., Estacion, M. A., Bangalore, L., Waxman, S. G., & Tan, A. M. (2024). [A FAIR, open-source virtual reality platform for dendritic spine analysis. Patterns](https://doi.org/10.1016/j.patter.2024.101041), 5(9). *Patterns*, 5(9).
++ Reimer, M. L., Kauer, S. D., Benson, C. A., King, J. F., Patwa, S., Feng, S., Estacion, M. A., Bangalore, L., Waxman, S. G., & Tan, A. M. (2024). [A FAIR, open-source virtual reality platform for dendritic spine analysis. Patterns](https://www.cell.com/patterns/pdf/S2666-3899(24)00183-1.pdf), 5(9). *Patterns*, 5(9).
 
 + Gillon, C. J., Baker, C., Ly, R., Balzani, E., Brunton, B. W., Schottdorf, M., Ghosh, S., & Dehghani, N. (2024). [Open Data In Neurophysiology: Advancements, Solutions & Challenges](https://doi.org/10.48550/arXiv.2407.00976). ArXiv, arXiv:2407.00976v1.
 

@@ -22,7 +22,7 @@ When writing code, the following principles should be observed:
 
 - **Maintenance Overhead**: The size of the codebase should be considered to prevent
   unnecessarily large or complex solutions. As the codebase grows, the effort to review
-  and maintain it increases. Therefore, the goal is to find a balance that pevents the
+  and maintain it increases. Therefore, the goal is to find a balance that prevents the
   codebase from becoming too large while avoiding convoluted complexity.
 
 - **Performance**: Performance issues should be avoided, controlled, or, properly

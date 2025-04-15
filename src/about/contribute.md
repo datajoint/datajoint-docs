@@ -7,6 +7,7 @@ These guidelines are designed to ensure smooth collaboration, high-quality contr
 The principal maintainer of DataJoint and associated tools is the DataJoint company. The pronouns “we” and “us” in this guideline refer to the principal maintainers. We invite reviews and contributions of the open-source software. We compiled these guidelines to make this work clear and efficient.
 
 ## Table of Contents
+
 - [Community Engagement](#community-engagement)
 - [How to Contribute](#how-to-contribute)
   - [Project Lists](#project-lists)
@@ -17,7 +18,6 @@ The principal maintainer of DataJoint and associated tools is the DataJoint comp
   - [Code Reviews](#code-reviews)
 - [Releases](#releases)
 - [Contribution Acknowledgment](#contribution-acknowledgment)
-
 
 ## Community Engagement
 
@@ -40,7 +40,7 @@ Actively maintained projects by DataJoint:
 - [DataJoint Docs](https://github.com/datajoint/datajoint-docs)
   - It is the landing page of DataJoint documentation.
   - Each project has its own documentation in its repository.
-  - Please help us to improve our documetations, it's the easiest but most impactful way to contribute!
+  - Please help us to improve our documentations, it's the easiest but most impactful way to contribute!
 - [DataJoint Python](https://github.com/datajoint/datajoint-python)
 - [DataJoint Elements](https://github.com/orgs/datajoint/repositories?q=element)
 - [datajoint/djlabhub-docker](https://github.com/datajoint/djlabhub-docker)
@@ -91,7 +91,7 @@ Before starting your significant work, open a `Github Issue` to discuss your pro
     - Please remember to always sync your fork's main branch with the DataJoint repository's main branch before starting your work.
     - In your own fork, we suggest you use [Feature Branch Workflow](https://www.atlassian.com/git/tutorials/comparing-workflows/feature-branch-workflow) to manage your branches in your own fork, just in case someone will work on multiple contributions at the same time.
 2. Create a descriptive feature/fix branch from your fork's main branch, e.g., `fix/typo-docs` or `feature/add-logging`.
-3. Optionally, but highly recommended to follow [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) to make commit messages easier to be searched and categorized: If you use VSCode, please install [Conventional Commits](https://marketplace.visualstudio.com/items?itemName=vivaxy.vscode-conventional-commits) extention, it will help you to edit your commit messages following the commit types for versioning:
+3. Optionally, but highly recommended to follow [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) to make commit messages easier to be searched and categorized: If you use VSCode, please install [Conventional Commits](https://marketplace.visualstudio.com/items?itemName=vivaxy.vscode-conventional-commits) extension, it will help you to edit your commit messages following the commit types for versioning:
     - `fix`: Bug fixes.
     - `feat`: New features.
     - `docs`: Documentation updates.
