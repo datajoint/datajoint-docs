@@ -49,7 +49,7 @@ of Medicine to meet the needs of their own research. Below is a partial list of 
   + <a href="https://www.fmi.ch/research-groups/groupleader.html?group=35"> Andreas Luthi Lab </a>
 + Harvard Medical School
   + <a href="https://drugowitschlab.hms.harvard.edu" target="_blank">Jan Drugowitsch Lab</a>
-  + <a href="http://datta.hms.harvard.edu/">Datta Lab</a>
+  + <a href="http://datta.hms.harvard.edu/" target="_blank">Datta Lab</a>
   + <a href="https://harveylab.hms.harvard.edu/" target="_blank">Harvey Lab</a>
   + <a href="http://sabatini.hms.harvard.edu/" target="_blank">Sabatini Lab</a>
   + <a href="https://smirnakislab.bwh.harvard.edu/" target="_blank">Stelios Smirnakis Lab</a>
@@ -126,7 +126,7 @@ of Medicine to meet the needs of their own research. Below is a partial list of 
   + <a href="https://www.mackelab.org" target="_blank">Macke Lab</a> (<a href="https://github.com/mackelab/epiphyte" target="_blank">GitHub</a>)
 + University of Utah
   + <a href="http://shcheglovitov-lab.utah.edu/" target="_blank">Oleksandr Shcheglovitov Lab</a> (<a href="https://github.com/yueqiw/ephys_analysis" target="_blank">GitHub</a>)
-  + <a href="https://neuroscience.med.utah.edu/faculty/kubanek.php">Jan Kubanek Lab</a>
+  + <a href="https://neuroscience.med.utah.edu/faculty/kubanek.php" target="_blank">Jan Kubanek Lab</a>
 
 + University of Valencia
   + <a href="https://scholar.google.com/citations?user=2NKBJkEAAAAJ" target="_blank">Kai-Hendrik Cohrs</a>
