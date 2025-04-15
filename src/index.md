@@ -1,4 +1,4 @@
-# Welcome to the DataJoint Documentation
+# **Welcome to the DataJoint Documentation**
 
 ![pipeline](https://raw.githubusercontent.com/datajoint/datajoint-python/master/images/pipeline.png){: style="height:300px;"}
 
@@ -20,7 +20,7 @@
 
      [:octicons-arrow-right-24: Learn more](./elements/)
 
--   **DataJoint Works**
+-   **DataJoint Platform**
 
      ---
 

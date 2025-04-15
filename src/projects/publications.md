@@ -6,7 +6,15 @@ Title: Publications
 The following publications relied on DataJoint open-source software for data analysis.  If your work uses DataJoint or DataJoint Elements, please cite the respective
 [manuscripts and RRIDs](../about/citation.md).
 
+## 2025
+
++ Ding, Z., Fahey, P.G., Papadopoulos, S., Wang, E.Y., Celii, B., Papadopoulos, C., Chang, A., Kunin, A.B., Tran, D., Fu, J. ... & Tolias, A. S. (2025). [Functional connectomics reveals general wiring rule in mouse visual cortex](https://doi.org/10.1038/s41586-025-08840-3). *Nature*, 640(8058), 459-469.
+
 ## 2024 
+
++ Reimer, M. L., Kauer, S. D., Benson, C. A., King, J. F., Patwa, S., Feng, S., Estacion, M. A., Bangalore, L., Waxman, S. G., & Tan, A. M. (2024). [A FAIR, open-source virtual reality platform for dendritic spine analysis. Patterns](https://www.cell.com/patterns/pdf/S2666-3899(24)00183-1.pdf), 5(9). *Patterns*, 5(9).
+
++ Gillon, C. J., Baker, C., Ly, R., Balzani, E., Brunton, B. W., Schottdorf, M., Ghosh, S., & Dehghani, N. (2024). [Open Data In Neurophysiology: Advancements, Solutions & Challenges](https://doi.org/10.48550/arXiv.2407.00976). ArXiv, arXiv:2407.00976v1.
 
 + Mosberger, A.C., Sibener, L.J., Chen, T.X., Rodrigues, H.F., Hormigo, R., Ingram, J.N., Athalye, V.R., Tabachnik, T., Wolpert, D.M., Murray, J.M. and Costa, R.M., 2024. [Exploration biases forelimb reaching strategies](https://www.cell.com/cell-reports/fulltext/S2211-1247(24)00286-9). *Cell Reports*, 43(4).
 
@@ -21,7 +29,6 @@ The following publications relied on DataJoint open-source software for data ana
 + Cimorelli, A., Patel, A., Karakostas, T., & Cotton, R. J. (2024). [Validation of portable in-clinic video-based gait analysis for prosthesis users](https://www.nature.com/articles/s41598-024-53217-7). *Nature Scientific Reports*, 14(1), 3840.
 
 + Papadopouli, M., Koniotakis, E., Smyrnakis, I., Savaglio, M. A., Psilou, E., Brozi, C., ... & Smirnakis, S. M. (2024). [Brain orchestra under spontaneous conditions: Identifying communication modules from the functional architecture of area V1](https://doi.org/10.1101/2024.02.29.582364). *bioRxiv*, 2024-02.
-
 
 ## 2023 <!-- 5 -->
 

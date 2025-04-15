@@ -5,10 +5,11 @@ as Principal Investigator.
 
 ## Scientists
 
-- Dimitri Yatsenko - PI
-- Thinh Nguyen - Data Scientist
-- Kushal Bakshi - Data Scientist
-- Milagros Marín - Data Scientist
+- Dimitri Yatsenko, PhD - PI & Chief Science and Technology Officer
+
+- Thinh Nguyen, PhD - SciOps Lead
+- Kushal Bakshi, PhD - SciOps Engineer
+- Milagros Marín, PhD - SciOps Engineer
 
 ## Engineers
 
@@ -17,8 +18,8 @@ as Principal Investigator.
 
 ## Past contributors
 
-- Edgar Y. Walker - System Architect, Data Scientist, Project Manager 
-(from project start to Jan, 2021)
+- Edgar Y. Walker - System Architect, Data Scientist, Project Manager (from project
+  start to Jan, 2021)
 - Andreas S. Tolias - Grant proposal contributor
 - Jacob Reimer - Grant proposal contributor
 - Shan Shen - Data Scientist
@@ -35,16 +36,16 @@ as Principal Investigator.
 - David Godinez - Data Engineer
 - Geetika Singh - Data Engineer
 - Kabilar Gunalan - Project Manager, Data Scientist
-- Jaerong Ahn - Data Scientist
+- Jaerong Ahn - SciOps Engineer
 - Jeroen Verswijver - Software Engineer
 - Adib Baji - Software Engineer
-- Sid Hulyalkar - Data Scientist
+- Sid Hulyalkar - SciOps Engineer
 
 The first-person pronouns "we" and "our" in these documents refer to those listed above.
 
 ## External contributors
 
 The principal components of the Resource are developed and distributed as open-source
-projects and external contributions are welcome. We have adopted a 
-[Contribution Guide](contribute.md) for DataJoint, DataJoint Elements,
-and related open-source tools.
+projects and external contributions are welcome. We have adopted a
+[Contribution Guide](contribute.md) for DataJoint, DataJoint Elements, and related
+open-source tools.

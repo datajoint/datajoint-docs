@@ -1,6 +1,9 @@
 # Sustainability Roadmap between DataJoint Elements and Open Ephys GUI
 
 <figure markdown>
+  <!-- mkdocs will complain about this -->
+  <!-- since we will host on github pages, the relative ref needs to follow the structure in -->
+  <!-- the mkdocs's build dir $PROJ_DIR/site/images/, which is two directories above the html -->
   ![datajoint](../../images/company-logo-black.svg){: style="height:50px; padding-right:25px"}
   ![openephysgui](../../images/community-partnerships-openephysgui-logo.png){: style="height:87px"}
 </figure>
