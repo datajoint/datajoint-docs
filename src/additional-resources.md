@@ -12,7 +12,7 @@ A collection of additional open-source tools for building and operating scientif
 
     A MATLAB client for defining, operating, and querying data pipelines.
 
-    :octicons-arrow-right-24: [Legacy docs](https://docs.datajoint.org/matlab/) | 
+    :octicons-arrow-right-24: [Legacy docs](https://datajoint.github.io/datajoint-docs-original/matlab/) | 
     [Source code](https://github.com/datajoint/datajoint-matlab)
 
 -   :fontawesome-solid-flask:{ .lg .middle } **DataJoint Pharus**
@@ -21,7 +21,7 @@ A collection of additional open-source tools for building and operating scientif
 
     A REST API server for interacting with DataJoint pipelines.
 
-    :octicons-arrow-right-24: [Docs](https://datajoint.com/docs/core/pharus) | 
+    :octicons-arrow-right-24: [Docs](https://docs.datajoint.com/core/pharus) | 
     [Source code](https://github.com/datajoint/pharus/)
  
 </div>
@@ -36,8 +36,7 @@ A collection of additional open-source tools for building and operating scientif
 
     A browser-based graphical user interface for data entry and navigation. 
 
-    :octicons-arrow-right-24: [Legacy 
-    docs](https://datajoint.com/docs/core/datajoint-labbook/) | 
+    :octicons-arrow-right-24: [Legacy docs](https://datajoint.github.io/datajoint-labbook/) | 
     [Source code](https://github.com/datajoint/datajoint-labbook/)
 
 -   :fontawesome-brands-chrome:{ .lg .middle } **DataJoint SciViz**
@@ -46,7 +45,7 @@ A collection of additional open-source tools for building and operating scientif
 
     A framework for making low-code web apps for data visualization.
 
-    :octicons-arrow-right-24: [Legacy docs](https://datajoint.com/docs/core/sci-viz/) | 
+    :octicons-arrow-right-24: [Docs](https://docs.datajoint.com/core/sci-viz/) | 
     [Source code](https://github.com/datajoint/sci-viz)
 
 </div>
@@ -78,8 +77,7 @@ graph
     ---
     MySQL server configured to work with DataJoint.
 
-    :octicons-arrow-right-24: [Docker 
-    image](https://hub.docker.com/r/datajoint/mysql) | 
+    :octicons-arrow-right-24: [Docker image](https://hub.docker.com/r/datajoint/mysql) | 
     [Source code](https://github.com/datajoint/mysql-docker)
 
 -   :fontawesome-brands-docker:{ .lg .middle } **datajoint/miniconda3**
@@ -88,8 +86,7 @@ graph
 
     Minimal Python Docker image with [conda](https://docs.conda.io/en/latest/).
 
-    :octicons-arrow-right-24: [Docker
-    image](https://hub.docker.com/r/datajoint/miniconda3) | 
+    :octicons-arrow-right-24: [Docker image](https://hub.docker.com/r/datajoint/miniconda3) | 
     [Legacy docs](https://datajoint.github.io/miniconda3-docker/) | 
     [Source code](https://github.com/datajoint/miniconda3-docker)
 
@@ -99,8 +96,7 @@ graph
 
     Minimal base Docker image with DataJoint Python dependencies installed. 
 
-    :octicons-arrow-right-24: [Docker 
-    image](https://hub.docker.com/r/datajoint/djbase) | 
+    :octicons-arrow-right-24: [Docker image](https://hub.docker.com/r/datajoint/djbase) | 
     [Legacy docs](https://datajoint.github.io/djbase-docker/) | 
     [Source code](https://github.com/datajoint/djbase-docker)
 
@@ -110,8 +106,7 @@ graph
 
     Docker image for running tests related to DataJoint Python. 
 
-    :octicons-arrow-right-24: [Docker 
-    image](https://hub.docker.com/r/datajoint/djtest) | 
+    :octicons-arrow-right-24: [Docker image](https://hub.docker.com/r/datajoint/djtest) | 
     [Legacy docs](https://datajoint.github.io/djtest-docker/) | 
     [Source code](https://github.com/datajoint/djtest-docker)
 
@@ -121,8 +116,7 @@ graph
 
     Official DataJoint Docker image.
 
-    :octicons-arrow-right-24: [Docker
-    image](https://hub.docker.com/r/datajoint/datajoint) | 
+    :octicons-arrow-right-24: [Docker image](https://hub.docker.com/r/datajoint/datajoint) | 
     [Source code](https://github.com/datajoint/datajoint-python)
 
 -   :fontawesome-brands-docker:{ .lg .middle } **datajoint/djlab**
@@ -131,9 +125,7 @@ graph
 
     Docker image optimized for running a JupyterLab environment with DataJoint Python. 
 
-    :octicons-arrow-right-24: [Docker 
-    image](https://hub.docker.com/r/datajoint/djlab) | 
-    [Legacy docs](https://datajoint.github.io/djlab-docker/) | 
+    :octicons-arrow-right-24: [Docker image](https://hub.docker.com/r/datajoint/djlab) | 
     [Source code](https://github.com/datajoint/djlab-docker)
 
 -   :fontawesome-brands-docker:{ .lg .middle } **datajoint/djlabhub**
@@ -143,9 +135,7 @@ graph
     Docker image optimized for deploying to JupyterHub a JupyterLab environment with 
     DataJoint Python. 
 
-    :octicons-arrow-right-24: [Docker 
-    image](https://hub.docker.com/r/datajoint/djlabhub) | 
-    [Legacy docs](https://datajoint.github.io/djlabhub-docker/) | 
+    :octicons-arrow-right-24: [Docker image](https://hub.docker.com/r/datajoint/djlabhub) | 
     [Source code](https://github.com/datajoint/djlabhub-docker)
 
 </div>

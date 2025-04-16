@@ -20,9 +20,9 @@ integration and interoperability across the two ecosystems.
 
 ### DataJoint
 
-**DataJoint Elements** — https://datajoint.com/docs/elements/ — is a collection of
+**DataJoint Elements** — https://docs.datajoint.com/elements/ — is a collection of
   open-source reference database schemas and analysis workflows for neurophysiology
-  experiments, supported by **DataJoint** — https://datajoint.com/docs/core/ — an
+  experiments, supported by **DataJoint** — https://docs.datajoint.com/core/ — an
   open-source software framework. The project is funded by the NIH grant U24 NS116470
   and led by Dr. Dimitri Yatsenko.
   
