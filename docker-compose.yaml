@@ -3,7 +3,10 @@
 # Navigate to http://localhost/docs/
 services:
   docs:
-    image: datajoint/datajoint-docs
+    # image: datajoint/datajoint-docs
+    build:
+      context: .
+      dockerfile: Dockerfile
     environment:
       - MODE
     volumes:
