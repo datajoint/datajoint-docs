@@ -71,6 +71,7 @@ theme:
         name: Switch to light mode
 plugins:
   - search
+  - mermaid2
   - section-index
   # There is no welcome.md anymore
   # - redirects:
@@ -96,7 +97,7 @@ markdown_extensions:
       custom_fences:
         - name: mermaid
           class: mermaid
-          format: !!python/name:pymdownx.superfences.fence_code_format
+          format: !!python/name:mermaid2.fence_mermaid_custom
   - pymdownx.tabbed:
       alternate_style: true
   - footnotes
