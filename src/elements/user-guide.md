@@ -42,27 +42,20 @@ This diagram describes the general components for a local DataJoint environment.
 
 ```mermaid
 flowchart LR
-  py_interp  -->|DataJoint| db_server[("Database Server\n(e.g., MySQL)")]
-  subgraph conda["Conda environment"]
-    direction TB
-    py_interp[Python Interpreter]
-  end
-  subgraph empty1[" "] %% Empty subgraphs prevent overlapping titles
-    direction TB
-    style empty1 fill:none, stroke-dasharray: 0 1
-    conda
-  end
-  subgraph term["Terminal or Jupyter Notebook"]
-    direction TB
-    empty1
-  end
-  subgraph empty2[" "] %% Empty subgraphs prevent overlapping titles
-    direction TB
-    style empty2 fill:none, stroke-dasharray: 0 1
-    term
-  end
-  class py_interp,conda,term,ide,db_server,DataJoint boxes;
-  classDef boxes fill:#ddd, stroke:#333;
+  %% Nodes
+  py_interp["Python Interpreter"]
+  db_server["Database Server<br>(e.g., MySQL)"]
+  conda_env["Conda Environment"]
+  terminal["Terminal or Jupyter Notebook"]
+
+  %% Edges
+  py_interp -->|DataJoint| db_server
+  terminal --> conda_env
+  conda_env --> py_interp
+
+  %% Styling
+  classDef boxes fill:#ddd,stroke:#333;
+  class py_interp,db_server,conda_env,terminal boxes;
 ```
 
 ### Python

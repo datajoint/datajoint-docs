@@ -5,7 +5,7 @@
 We conduct activities to disseminate Resource components for adoption in diverse
 neuroscience labs. These activities include
 
-- A central [website](https://datajoint.com/docs/elements/) for the Resource.
+- A central [website](https://docs.datajoint.com/elements/) for the Resource.
 - [Conference talks, presentations, and workshops](../../support-events.md)
 - Publications in peer-reviewed journals
 - White papers posted on internet resources and websites
