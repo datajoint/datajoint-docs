@@ -21,7 +21,7 @@ A collection of additional open-source tools for building and operating scientif
 
     A REST API server for interacting with DataJoint pipelines.
 
-    :octicons-arrow-right-24: [Docs](https://docs.datajoint.com/core/pharus) | 
+    :octicons-arrow-right-24: [Docs](https://docs.datajoint.com/core/pharus/) | 
     [Source code](https://github.com/datajoint/pharus/)
  
 </div>
