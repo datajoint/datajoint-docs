@@ -68,7 +68,8 @@ graph
   base --> lab --> hub;
   %% Add all to class
   class dj,base,lab,hub,test,conda3,mysql boxes;
-  classDef boxes stroke:#333; %% Grey stroke for class
+  classDef boxes stroke:#333;
+  %% Grey stroke for class
 ```
 <div class="grid cards" markdown>
 
