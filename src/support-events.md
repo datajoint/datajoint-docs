@@ -14,6 +14,23 @@
 
 Find us at the following workshops and conferences!
 
+- [10th World Congress of Biomechanics](https://wcb2026.com/) - July 11-15,2026
+
+- [FENS Forum](https://fensforum.org/) - July 6-10, 2026
+
+- [CoSyNe](https://www.cosyne.org/) - March 12-17, 2026
+
+- [Society for Neuroscience](https://www.sfn.org/meetings/neuroscience-2025) - November
+  15-19, 2025
+
+- [PharmStars PharmaTech Innovation Summit](https://www.pharmstars.com/pharmatech-innovation-summit) - November 18, 2025
+
+- [20th Meeting of the Spanish Society for Neuroscience](https://congresosenc.es/) - September 3-5, 2025
+
+- [Neuropixels and OpenScope Workshop](https://alleninstitute.org/events/2025-neuropixels-and-openscope-workshop/) - July 9-11, 2025
+
+- [ODIN (Open Data in Neurophysiology) Workshop](https://odin.mit.edu/conferences/odin_june25_workshop/odin_june2025_workshop.html) - June 24-26, 2025
+
 - [COSYNE](https://www.cosyne.org/) - March 27-30, 2025
 
 - [BRAIN NeuroAI Workshop](https://n4solutionsllc.com/brainneuroai/) - November 12, 2024

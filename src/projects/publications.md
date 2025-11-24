@@ -8,6 +8,14 @@ The following publications relied on DataJoint open-source software for data ana
 
 ## 2025
 
++ Hoegberg, Z., Donahue, S., & Major, M. J. (2025). [An Open-Source Wearable System for Real-Time Human Biomechanical Analysis](https://doi.org/10.3390/s25092931). *Sensors*, 25(9), 2931. 
+
++ Huang, J.Y., Hess, M., Bajpai, A., Li, X., Hobson, L.N., Xu, A.J., Barton, S.J. and Lu, H.C.(2025). [From initial formation to developmental refinement: GABAergic inputs shape neuronal subnetworks in the primary somatosensory cortex](https://doi.org/10.1016/j.isci.2025.112104). *iScience*, 28(3).
+
++ Evangelou, A., Diamantaki, M., Georgelou, K., Drakaki, Z., Ntanavara, L., Gerardos, G., Morou, S., Chatziris, N., Dogani, Z., Petsalaki, E.A. and Raos, O.N. (2025). [EthoPy: Reproducible Behavioral Neuroscience Made Simple](https://doi.org/10.1101/2025.09.08.673974). *bioRxiv*, 2025-09.
+
++ Gillon, C.J., Baker, C., Ly, R., Balzani, E., Brunton, B.W., Schottdorf, M., Ghosh, S. and Dehghani, N.(2025). [Open data in neurophysiology: Advancements, solutions & challenges](https://doi.org/10.1523/ENEURO.0486-24.2025). *eneuro*, 12(11).
+
 + Ding, Z., Fahey, P.G., Papadopoulos, S., Wang, E.Y., Celii, B., Papadopoulos, C., Chang, A., Kunin, A.B., Tran, D., Fu, J. ... & Tolias, A. S. (2025). [Functional connectomics reveals general wiring rule in mouse visual cortex](https://doi.org/10.1038/s41586-025-08840-3). *Nature*, 640(8058), 459-469.
 
 ## 2024 
