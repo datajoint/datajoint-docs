@@ -7,14 +7,40 @@ relational databases with native support for computational workflows. This secti
 explains the core concepts that make DataJoint pipelines reliable, reproducible,
 and scalable.
 
-## Topics
+## Core Concepts
 
-- [Relational Workflow Model](relational-workflow-model.md) — How DataJoint differs from traditional databases
-- [Entity Integrity](entity-integrity.md) — Primary keys and the three questions
-- [Normalization](normalization.md) — Schema design principles
-- [Query Algebra](query-algebra.md) — Operators and their semantics
-- [Type System](type-system.md) — Storage architecture and codecs
-- [Computation Model](computation-model.md) — AutoPopulate and job management
+<div class="grid cards" markdown>
+
+-   :material-sitemap: **[Relational Workflow Model](relational-workflow-model.md)**
+
+    How DataJoint differs from traditional databases. The paradigm shift from
+    storage to workflow.
+
+-   :material-key: **[Entity Integrity](entity-integrity.md)**
+
+    Primary keys and the three questions. Ensuring one-to-one correspondence
+    between entities and records.
+
+-   :material-table-split-cell: **[Normalization](normalization.md)**
+
+    Schema design principles. Organizing tables around workflow steps to
+    minimize redundancy.
+
+-   :material-set-split: **[Query Algebra](query-algebra.md)**
+
+    The five operators: restriction, join, projection, aggregation, union.
+    Workflow-aware query semantics.
+
+-   :material-code-tags: **[Type System](type-system.md)**
+
+    Three-layer architecture: native, core, and codec types. Internal and
+    external storage modes.
+
+-   :material-cog-play: **[Computation Model](computation-model.md)**
+
+    AutoPopulate and Jobs 2.0. Automated, reproducible, distributed computation.
+
+</div>
 
 ## Why These Concepts Matter
 
