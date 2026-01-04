@@ -9,28 +9,6 @@ authoritative references for:
 - Implementing compatible tools and extensions
 - Debugging complex scenarios
 
-## Data Model
-
-| Specification | Description |
-|---------------|-------------|
-| [Primary Key Rules](primary-keys.md) | How primary keys propagate through query operators |
-| [Semantic Matching](semantic-matching.md) | Attribute lineage and join compatibility |
-
-## Type System
-
-| Specification | Description |
-|---------------|-------------|
-| [Type System](type-system.md) | Three-layer type architecture |
-| [Codec API](codec-api.md) | Custom type implementation |
-
-## Computation
-
-| Specification | Description |
-|---------------|-------------|
-| [AutoPopulate](autopopulate.md) | Jobs 2.0 system |
-| [Fetch API](fetch-api.md) | Data retrieval methods |
-| [Job Metadata](job-metadata.md) | Hidden tracking columns |
-
 ## Document Structure
 
 Each specification follows a consistent structure:
@@ -42,3 +20,32 @@ Each specification follows a consistent structure:
 5. **Implementation Details** — Internal behavior
 6. **Examples** — Concrete code samples
 7. **Best Practices** — Recommendations
+
+## Specifications
+
+### Data Model
+
+| Specification | Description |
+|---------------|-------------|
+| [Primary Keys](primary-keys.md) | How primary keys propagate through query operators |
+| [Semantic Matching](semantic-matching.md) | Attribute lineage and join compatibility |
+
+### Type System
+
+| Specification | Description |
+|---------------|-------------|
+| [Type System](type-system.md) | Three-layer type architecture: native, core, and codec types |
+| [Codec API](codec-api.md) | Custom type implementation with encode/decode semantics |
+
+### Queries
+
+| Specification | Description |
+|---------------|-------------|
+| [Fetch API](fetch-api.md) | Data retrieval methods and formats |
+
+### Computation
+
+| Specification | Description |
+|---------------|-------------|
+| [AutoPopulate](autopopulate.md) | Jobs 2.0 system for automated computation |
+| [Job Metadata](job-metadata.md) | Hidden columns for job tracking |
