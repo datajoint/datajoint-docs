@@ -1,43 +1,27 @@
 # API Reference
 
-Auto-generated documentation from DataJoint source code.
+Auto-generated documentation from DataJoint source code docstrings.
 
-This section contains detailed API documentation generated from the docstrings
-in the `datajoint` Python package.
+This section contains detailed API documentation for the `datajoint` Python package.
+Documentation is generated automatically from NumPy-style docstrings in the source.
 
-## Core Classes
+## Quick Links
 
-- [Schema](schema.md) — Database schema management
-- [Table](table.md) — Base table class
-- [FreeTable](freetable.md) — Ad-hoc table access
-- [Connection](connection.md) — Database connections
-
-## Table Types
-
-- [Manual](manual.md) — Manually entered data
-- [Lookup](lookup.md) — Reference data
-- [Imported](imported.md) — Data from external sources
-- [Computed](computed.md) — Derived data
-- [Part](part.md) — Subordinate tables
-
-## Query System
-
-- [QueryExpression](expression.md) — Query operations
-- [Operators](operators.md) — `&`, `-`, `*`, `proj`, `aggr`
-- [Fetch](fetch.md) — Data retrieval
-
-## Type System
-
-- [Codec](codec.md) — Custom type base class
-- [Built-in Codecs](codecs.md) — blob, attach, object, hash, filepath
-
-## Utilities
-
-- [Diagram](diagram.md) — Schema visualization
-- [config](config.md) — Configuration management
-- [errors](errors.md) — Exception classes
+| Module | Description |
+|--------|-------------|
+| [datajoint](datajoint.md) | Main package exports |
+| [Schema](datajoint/schemas.md) | Schema and VirtualModule classes |
+| [Table](datajoint/table.md) | Base Table and FreeTable classes |
+| [Table Types](datajoint/user_tables.md) | Manual, Lookup, Imported, Computed, Part |
+| [Expressions](datajoint/expression.md) | Query expressions and operators |
+| [Fetch](datajoint/fetch.md) | Data retrieval methods |
+| [Connection](datajoint/connection.md) | Database connection management |
+| [Codecs](datajoint/codecs.md) | Type codec system |
+| [Diagram](datajoint/diagram.md) | Schema visualization |
+| [Settings](datajoint/settings.md) | Configuration management |
+| [Errors](datajoint/errors.md) | Exception classes |
 
 ---
 
-*This documentation is auto-generated from source code. For conceptual explanations,
-see [Concepts](../explanation/index.md). For practical guides, see [How-To](../how-to/index.md).*
+*For conceptual explanations, see [Concepts](../explanation/index.md).
+For practical guides, see [How-To](../how-to/index.md).*

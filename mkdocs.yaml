@@ -35,9 +35,7 @@ nav:
       - Configuration: reference/configuration.md
       - Definition Syntax: reference/definition-syntax.md
       - Errors: reference/errors.md
-  - API:
-      - api/index.md
-      # Auto-generated pages will be added here
+  - API: api/  # Auto-generated via gen-files + literate-nav
   - Elements:
       - elements/index.md
       - Concepts: elements/concepts.md
@@ -78,6 +76,29 @@ plugins:
   - search
   - mermaid2
   - section-index
+  - autorefs
+  - mkdocstrings:
+      default_handler: python
+      handlers:
+        python:
+          paths:
+            - ../datajoint-python/src  # Path to datajoint-python source
+          options:
+            docstring_style: numpy
+            members_order: source
+            group_by_category: false
+            show_source: false
+            show_root_heading: true
+            show_root_full_path: false
+            separate_signature: true
+            line_length: 88
+            filters:
+              - "!^_"  # Exclude private members
+  - gen-files:
+      scripts:
+        - scripts/gen_api_pages.py
+  - literate-nav:
+      nav_file: SUMMARY.md
   - mkdocs-jupyter:
       include_source: true
       execute: false  # Don't execute notebooks during build
@@ -85,6 +106,7 @@ plugins:
       glob:
         - archive/*
         - images/*md
+        - "*/SUMMARY.md"
 markdown_extensions:
   - attr_list
   - md_in_html
