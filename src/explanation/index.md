@@ -40,6 +40,10 @@ and scalable.
 
     AutoPopulate and Jobs 2.0. Automated, reproducible, distributed computation.
 
+-   :material-puzzle: **[Custom Codecs](custom-codecs.md)**
+
+    Extend DataJoint with domain-specific types. The codec extensibility system.
+
 </div>
 
 ## Why These Concepts Matter
