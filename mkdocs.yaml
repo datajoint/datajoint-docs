@@ -5,43 +5,47 @@ site_url: https://docs.datajoint.com
 repo_name: datajoint/datajoint-docs
 repo_url: https://github.com/datajoint/datajoint-docs
 nav:
-  - Welcome: index.md
-  # relative site url, not pointing to any docs in the repo
-  # it's for reverse proxy to proxy datajoint-python docs
-  - DataJoint Python: core/datajoint-python/
-  - DataJoint Elements:
+  - Home: index.md
+  - Concepts:
+      - explanation/index.md
+      - Relational Workflow Model: explanation/relational-workflow-model.md
+      - Entity Integrity: explanation/entity-integrity.md
+      - Normalization: explanation/normalization.md
+      - Query Algebra: explanation/query-algebra.md
+      - Type System: explanation/type-system.md
+      - Computation Model: explanation/computation-model.md
+  - Tutorials:
+      - tutorials/index.md
+      # Notebooks will be added here
+  - How-To:
+      - how-to/index.md
+      # Guides will be added here
+  - Reference:
+      - reference/index.md
+      - Specifications:
+          - reference/specs/index.md
+          - Primary Keys: reference/specs/primary-keys.md
+          - Semantic Matching: reference/specs/semantic-matching.md
+          - Type System: reference/specs/type-system.md
+          - Codec API: reference/specs/codec-api.md
+          - AutoPopulate: reference/specs/autopopulate.md
+          - Fetch API: reference/specs/fetch-api.md
+          - Job Metadata: reference/specs/job-metadata.md
+      - Configuration: reference/configuration.md
+      - Definition Syntax: reference/definition-syntax.md
+      - Errors: reference/errors.md
+  - API:
+      - api/index.md
+      # Auto-generated pages will be added here
+  - Elements:
       - elements/index.md
       - Concepts: elements/concepts.md
       - User Guide: elements/user-guide.md
-      - Developer Guide: elements/developer-guide.md
-      - Management:
-          - Plan: elements/management/plan.md
-          - Governance: elements/management/governance.md
-          - Selection: elements/management/selection.md
-          - Quality Assurance: elements/management/quality-assurance.md
-          - Outreach: elements/management/outreach.md
-          - Dissemination: elements/management/dissemination.md
-          - Adoption: elements/management/adoption.md
-  - Additional Resources: additional-resources.md
-  - Project Showcase:
-      - projects/index.md
-      - Catalog: https://catalog.datajoint.io
-      - Teams: projects/teams.md
-      - Publications: projects/publications.md
-  - Support & Events: support-events.md
-  - Partnerships:
-      - DANDI: partnerships/dandi.md
-      - Facemap: partnerships/facemap.md
-      - INCF: partnerships/incf.md
-      - NWB: partnerships/nwb.md
-      - Open Ephys GUI: partnerships/openephysgui.md
-      - Suite2p: partnerships/suite2p.md
   - About:
-      - About: about/about.md
+      - about/index.md
       - History: about/history.md
-      - Team: about/datajoint-team.md
-      - Citation Guidelines: about/citation.md
-      - Contribution Guidelines: about/contribute.md
+      - Citation: about/citation.md
+      - Contributing: about/contributing.md
 
 # ---------------------------- STANDARD -----------------------------
 
@@ -73,10 +77,9 @@ plugins:
   - search
   - mermaid2
   - section-index
-  # There is no welcome.md anymore
-  # - redirects:
-  #     redirect_maps:
-  #       "index.md": "welcome.md"
+  - mkdocs-jupyter:
+      include_source: true
+      execute: false  # Don't execute notebooks during build
   - exclude:
       glob:
         - archive/*

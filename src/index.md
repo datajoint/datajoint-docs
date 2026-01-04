@@ -1,41 +1,89 @@
-# **Welcome to the DataJoint Documentation**
+# DataJoint Documentation
 
-![pipeline](https://raw.githubusercontent.com/datajoint/datajoint-python/master/images/pipeline.png){: style="height:300px;"}
+DataJoint is a framework for building scientific data pipelines using relational
+databases. It combines the rigor of relational data modeling with native support
+for computational workflows.
 
 <div class="grid cards" markdown>
 
--   **DataJoint Python**
+-   :material-lightbulb-outline: **Concepts**
 
-     ---
+    ---
 
-     Open-source framework for defining, operating, and querying data pipelines
+    Understand the Relational Workflow Model and DataJoint's core principles
 
-     [:octicons-arrow-right-24: Learn more](./core/datajoint-python/)
-    
--   **DataJoint Elements**
+    [:octicons-arrow-right-24: Learn the concepts](explanation/index.md)
 
-     ---
+-   :material-school-outline: **Tutorials**
 
-     Open-source implementation of data pipelines for neuroscience studies
+    ---
 
-     [:octicons-arrow-right-24: Learn more](./elements/)
+    Build your first pipeline with hands-on Jupyter notebooks
 
--   **DataJoint Platform**
+    [:octicons-arrow-right-24: Start learning](tutorials/index.md)
 
-     ---
+-   :material-tools: **How-To Guides**
 
-     A cloud platform for automated analysis workflows. It relies on DataJoint 
-     Python and DataJoint Elements.
+    ---
 
-     [:octicons-arrow-right-24: Learn
-     more](https://datajoint.com/){:target="_blank"} | [Sign-in](https://works.datajoint.com){:target="_blank"}
+    Practical guides for common tasks and patterns
 
--   **Project Showcase**
+    [:octicons-arrow-right-24: Find solutions](how-to/index.md)
 
-     ---
+-   :material-book-open-variant: **Reference**
 
-     Projects and research teams supported by DataJoint software
+    ---
 
-     [:octicons-arrow-right-24: Learn more](projects/index.md)
+    Specifications, API documentation, and technical details
+
+    [:octicons-arrow-right-24: Look it up](reference/index.md)
 
 </div>
+
+---
+
+## DataJoint Elements
+
+[DataJoint Elements](elements/index.md) are open-source data pipelines for
+neuroscience experiments, built on DataJoint. They provide ready-to-use
+schemas for common experimental modalities.
+
+[:octicons-arrow-right-24: Explore Elements](elements/index.md)
+
+---
+
+## Quick Start
+
+```bash
+pip install datajoint
+```
+
+```python
+import datajoint as dj
+
+# Connect to database
+dj.config['database.host'] = 'localhost'
+dj.config['database.user'] = 'root'
+dj.config['database.password'] = 'secret'
+
+# Create a schema
+schema = dj.Schema('my_pipeline')
+
+# Define a table
+@schema
+class Subject(dj.Manual):
+    definition = """
+    subject_id : int
+    ---
+    name : varchar(100)
+    date_of_birth : date
+    """
+
+# Insert data
+Subject.insert1({'subject_id': 1, 'name': 'Mouse001', 'date_of_birth': '2024-01-15'})
+
+# Query data
+Subject()
+```
+
+[:octicons-arrow-right-24: Continue with the tutorial](tutorials/index.md)
