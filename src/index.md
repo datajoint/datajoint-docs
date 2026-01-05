@@ -42,16 +42,6 @@ for computational workflows.
 
 ---
 
-## DataJoint Elements
-
-[DataJoint Elements](elements/index.md) are open-source data pipelines for
-neuroscience experiments, built on DataJoint. They provide ready-to-use
-schemas for common experimental modalities.
-
-[:octicons-arrow-right-24: Explore Elements](elements/index.md)
-
----
-
 ## Quick Start
 
 ```bash
