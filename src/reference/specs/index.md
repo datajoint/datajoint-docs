@@ -23,10 +23,11 @@ Each specification follows a consistent structure:
 
 ## Specifications
 
-### Data Model
+### Schema Definition
 
 | Specification | Description |
 |---------------|-------------|
+| [Table Declaration](table-declaration.md) | Table definition syntax, tiers, foreign keys, and indexes |
 | [Primary Keys](primary-keys.md) | How primary keys propagate through query operators |
 | [Semantic Matching](semantic-matching.md) | Attribute lineage and join compatibility |
 
