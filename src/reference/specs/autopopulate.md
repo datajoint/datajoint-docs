@@ -8,7 +8,12 @@ Last Updated: 2025-01-05
 
 AutoPopulate is DataJoint's mechanism for automated computation. Tables that inherit from `dj.Computed` or `dj.Imported` automatically populate themselves by executing a `make()` method for each entry defined by their dependencies.
 
-This specification describes the AutoPopulate system including the per-table job management for distributed computing.
+This specification covers:
+- The populate process and key source calculation
+- Transaction management and atomicity
+- The `make()` method and tripartite pattern
+- Part tables in computed results
+- Distributed computing with job reservation
 
 ---
 
@@ -21,7 +26,7 @@ This specification describes the AutoPopulate system including the per-table job
 | Computed | `dj.Computed` | Results derived from other DataJoint tables |
 | Imported | `dj.Imported` | Data ingested from external sources (files, instruments) |
 
-Both types share the same AutoPopulate mechanism.
+Both types share the same AutoPopulate mechanism. The distinction is semantic—`Imported` indicates external data sources while `Computed` indicates derivation from existing tables.
 
 ### 1.2 Basic Structure
 
@@ -45,28 +50,7 @@ class FilteredImage(dj.Computed):
         self.insert1({**key, 'filtered': filtered})
 ```
 
-### 1.3 The make() Method
-
-The `make()` method defines how to compute one entry:
-
-```python
-def make(self, key):
-    """
-    Compute and insert one entry.
-
-    Parameters
-    ----------
-    key : dict
-        Primary key values identifying which entry to compute.
-    """
-```
-
-**Requirements:**
-- Must insert exactly one row matching the key
-- Should be idempotent (same input → same output)
-- Runs within a transaction (rollback on error)
-
-### 1.4 Primary Key Constraint
+### 1.3 Primary Key Constraint
 
 Auto-populated tables must have primary keys composed entirely of foreign key references:
 
@@ -86,43 +70,58 @@ class Analysis(dj.Computed):
 class Analysis(dj.Computed):
     definition = """
     -> Session
-    method : varchar(32)   # Not allowed
+    method : varchar(32)   # Not allowed - use FK to lookup table
     ---
     result : float64
     """
 ```
 
-**Rationale:** This ensures 1:1 correspondence between jobs and target rows, enabling precise job tracking.
+**Rationale:** This ensures each computed entry is uniquely determined by its upstream dependencies, enabling automatic key source calculation and precise job tracking.
 
 ---
 
-## 2. Key Source
+## 2. Key Source Calculation
 
 ### 2.1 Definition
 
-The `key_source` property defines which entries should exist in the table:
+The `key_source` property defines which entries should exist in the table—the complete set of primary keys that `make()` should be called with.
 
-```python
-@property
-def key_source(self):
-    return Parent1 * Parent2  # Default: join of all parents
-```
+### 2.2 Automatic Key Source
 
-### 2.2 Default Key Source
-
-By default, `key_source` is the natural join of all tables referenced in the primary key:
+By default, DataJoint automatically calculates `key_source` as the join of all tables referenced by foreign keys in the primary key:
 
 ```python
 @schema
-class Analysis(dj.Computed):
+class SpikeDetection(dj.Computed):
     definition = """
-    -> Session
-    -> Method
+    -> Recording
+    -> DetectionMethod
     ---
-    result : float64
+    spike_times : <blob>
     """
-    # Default key_source = Session * Method
+    # Automatic key_source = Recording * DetectionMethod
 ```
+
+**Calculation rules:**
+1. Identify all foreign keys in the primary key section
+2. Join the referenced tables: `Parent1 * Parent2 * ...`
+3. Project to primary key attributes only
+
+For a table with definition:
+```python
+-> Session
+-> Probe
+-> SortingMethod
+---
+units : <blob>
+```
+
+The automatic `key_source` is:
+```python
+Session * Probe * SortingMethod
+```
+
+This produces all valid combinations of (session, probe, method) that could be computed.
 
 ### 2.3 Custom Key Source
 
@@ -143,6 +142,28 @@ class QualityAnalysis(dj.Computed):
         return Session & "quality = 'good'"
 ```
 
+**Common customizations:**
+
+```python
+# Filter by condition
+@property
+def key_source(self):
+    return Session & "status = 'complete'"
+
+# Restrict to specific combinations
+@property
+def key_source(self):
+    return Recording * Method & "method_name != 'deprecated'"
+
+# Add complex logic
+@property
+def key_source(self):
+    # Only sessions with enough trials
+    good_sessions = dj.U('session_id').aggr(
+        Trial, n='count(*)') & 'n >= 100'
+    return Session & good_sessions
+```
+
 ### 2.4 Pending Entries
 
 Entries to be computed = `key_source - self`:
@@ -150,26 +171,34 @@ Entries to be computed = `key_source - self`:
 ```python
 # Entries that should exist but don't yet
 pending = table.key_source - table
+
+# Check how many entries need computing
+n_pending = len(table.key_source - table)
 ```
 
 ---
 
-## 3. Populate Method
+## 3. The Populate Process
 
-### 3.1 Basic Usage
+### 3.1 Basic Populate
+
+The `populate()` method iterates through pending entries and calls `make()` for each:
 
 ```python
 # Populate all pending entries
 FilteredImage.populate()
+```
 
-# Populate with restrictions
-FilteredImage.populate(Session & "session_date > '2024-01-01'")
+**Execution flow (direct mode):**
 
-# Limit number of entries
-FilteredImage.populate(max_calls=100)
-
-# Show progress
-FilteredImage.populate(display_progress=True)
+```
+1. Calculate pending keys: key_source - self
+2. Apply restrictions: pending & restrictions
+3. For each key in pending:
+   a. Start transaction
+   b. Call make(key)
+   c. Commit transaction (or rollback on error)
+4. Return summary
 ```
 
 ### 3.2 Method Signature
@@ -194,58 +223,444 @@ def populate(
 
 | Parameter | Default | Description |
 |-----------|---------|-------------|
-| `*restrictions` | — | Filter `key_source` |
+| `*restrictions` | — | Filter `key_source` to subset of entries |
 | `suppress_errors` | `False` | Continue on errors instead of raising |
 | `return_exception_objects` | `False` | Return exception objects vs strings |
 | `reserve_jobs` | `False` | Enable job reservation for distributed computing |
-| `max_calls` | `None` | Maximum `make()` calls |
+| `max_calls` | `None` | Maximum number of `make()` calls |
 | `display_progress` | `False` | Show progress bar |
-| `processes` | `1` | Number of parallel processes |
-| `make_kwargs` | `None` | Additional kwargs for `make()` |
-| `priority` | `None` | Only process jobs at this priority or lower |
-| `refresh` | `None` | Refresh jobs queue (default from config) |
+| `processes` | `1` | Number of parallel worker processes |
+| `make_kwargs` | `None` | Additional kwargs passed to `make()` |
+| `priority` | `None` | Process only jobs at this priority or more urgent |
+| `refresh` | `None` | Refresh jobs queue before processing |
 
-### 3.4 Operating Modes
+### 3.4 Common Usage Patterns
 
-**Direct Mode** (`reserve_jobs=False`, default):
-- Computes `key_source - self` directly
-- No job tracking
-- Suitable for single-worker scenarios
+```python
+# Populate everything
+Analysis.populate()
 
-**Distributed Mode** (`reserve_jobs=True`):
-- Uses per-table jobs queue
-- Workers reserve jobs before processing
-- Full status tracking and monitoring
+# Populate specific subjects
+Analysis.populate(Subject & "subject_id < 10")
+
+# Populate with progress bar
+Analysis.populate(display_progress=True)
+
+# Populate limited batch
+Analysis.populate(max_calls=100)
+
+# Populate with error collection
+errors = Analysis.populate(suppress_errors=True)
+
+# Parallel populate (single machine)
+Analysis.populate(processes=4)
+```
+
+### 3.5 Return Value
+
+```python
+result = Analysis.populate()
+# {
+#     'success': 150,    # Entries successfully computed
+#     'error': 3,        # Entries that failed
+#     'skip': 0,         # Entries skipped (already exist)
+# }
+```
 
 ---
 
-## 4. Per-Table Jobs
+## 4. The make() Method
 
-### 4.1 Jobs Table
+### 4.1 Basic Pattern
 
-Each auto-populated table has an associated jobs table for tracking computation status:
+The `make()` method computes and inserts one entry:
+
+```python
+def make(self, key):
+    """
+    Compute and insert one entry.
+
+    Parameters
+    ----------
+    key : dict
+        Primary key values identifying which entry to compute.
+    """
+    # 1. Fetch source data
+    source_data = (SourceTable & key).fetch1()
+
+    # 2. Compute result
+    result = compute(source_data)
+
+    # 3. Insert result
+    self.insert1({**key, **result})
+```
+
+### 4.2 Requirements
+
+- **Must insert**: `make()` must insert exactly one row matching the key
+- **Idempotent**: Same input should produce same output
+- **Atomic**: Runs within a transaction—all or nothing
+- **Self-contained**: Should not depend on external state that changes
+
+### 4.3 Accessing Source Data
+
+```python
+def make(self, key):
+    # Fetch single row
+    data = (SourceTable & key).fetch1()
+
+    # Fetch specific attributes
+    image, timestamp = (Recording & key).fetch1('image', 'timestamp')
+
+    # Fetch multiple rows (e.g., trials for a session)
+    trials = (Trial & key).fetch(as_dict=True)
+
+    # Join multiple sources
+    combined = (TableA * TableB & key).fetch()
+```
+
+### 4.4 Tripartite Make Pattern
+
+For long-running computations, use the tripartite pattern to separate fetch, compute, and insert phases. This enables better transaction management for jobs that take minutes or hours.
+
+**Method-based tripartite:**
+
+```python
+@schema
+class HeavyComputation(dj.Computed):
+    definition = """
+    -> Recording
+    ---
+    result : <blob>
+    """
+
+    def make_fetch(self, key):
+        """Fetch all required data (runs in transaction)."""
+        return (Recording & key).fetch1('raw_data')
+
+    def make_compute(self, key, data):
+        """Perform computation (runs outside transaction)."""
+        # Long-running computation - no database locks held
+        return heavy_algorithm(data)
+
+    def make_insert(self, key, result):
+        """Insert results (runs in transaction)."""
+        self.insert1({**key, 'result': result})
+```
+
+**Generator-based tripartite:**
+
+```python
+def make(self, key):
+    # Phase 1: Fetch (in transaction)
+    data = (Recording & key).fetch1('raw_data')
+
+    yield  # Exit transaction, release locks
+
+    # Phase 2: Compute (outside transaction)
+    result = heavy_algorithm(data)  # May take hours
+
+    yield  # Re-enter transaction
+
+    # Phase 3: Insert (in transaction)
+    self.insert1({**key, 'result': result})
+```
+
+**When to use tripartite:**
+- Computation takes more than a few seconds
+- You want to avoid holding database locks during computation
+- Working with external resources (files, APIs) that may be slow
+
+### 4.5 Additional make() Arguments
+
+Pass extra arguments via `make_kwargs`:
+
+```python
+@schema
+class ConfigurableAnalysis(dj.Computed):
+    definition = """
+    -> Session
+    ---
+    result : float64
+    """
+
+    def make(self, key, threshold=0.5, method='default'):
+        data = (Session & key).fetch1('data')
+        result = analyze(data, threshold=threshold, method=method)
+        self.insert1({**key, 'result': result})
+
+# Call with custom parameters
+ConfigurableAnalysis.populate(make_kwargs={'threshold': 0.8})
+```
+
+---
+
+## 5. Transaction Management
+
+### 5.1 Automatic Transactions
+
+Each `make()` call runs within an automatic transaction:
+
+```python
+# Pseudocode for populate loop
+for key in pending_keys:
+    connection.start_transaction()
+    try:
+        self.make(key)
+        connection.commit()
+    except Exception:
+        connection.rollback()
+        raise  # or log if suppress_errors=True
+```
+
+### 5.2 Atomicity Guarantees
+
+- **All or nothing**: If `make()` fails, no partial data is inserted
+- **Isolation**: Concurrent workers see consistent state
+- **Rollback on error**: Any exception rolls back the transaction
+
+```python
+def make(self, key):
+    # If this succeeds...
+    self.insert1({**key, 'step1': result1})
+
+    # But this fails...
+    self.Part.insert(part_data)  # Raises exception
+
+    # Both inserts are rolled back - table unchanged
+```
+
+### 5.3 Transaction Scope
+
+**Simple make (single transaction):**
+```
+BEGIN TRANSACTION
+  └── make(key)
+       ├── fetch source data
+       ├── compute
+       └── insert result
+COMMIT
+```
+
+**Tripartite make (two transactions):**
+```
+BEGIN TRANSACTION 1
+  └── make_fetch(key) or yield point 1
+COMMIT
+
+[No transaction - computation runs here]
+
+BEGIN TRANSACTION 2
+  └── make_insert(key, result) or yield point 2
+COMMIT
+```
+
+### 5.4 Nested Operations
+
+Inserts within `make()` share the same transaction:
+
+```python
+def make(self, key):
+    # Main table insert
+    self.insert1({**key, 'summary': summary})
+
+    # Part table inserts - same transaction
+    self.Part1.insert(part1_data)
+    self.Part2.insert(part2_data)
+
+    # All three inserts commit together or roll back together
+```
+
+### 5.5 Manual Transaction Control
+
+For complex scenarios, use explicit transactions:
+
+```python
+def make(self, key):
+    # Fetch outside transaction
+    data = (Source & key).fetch()
+
+    # Explicit transaction for insert
+    with dj.conn().transaction:
+        self.insert1({**key, 'result': compute(data)})
+        self.Part.insert(parts)
+```
+
+---
+
+## 6. Part Tables
+
+### 6.1 Part Tables in Computed Tables
+
+Computed tables can have Part tables for detailed results:
+
+```python
+@schema
+class SpikeSorting(dj.Computed):
+    definition = """
+    -> Recording
+    ---
+    n_units : int
+    """
+
+    class Unit(dj.Part):
+        definition = """
+        -> master
+        unit_id : int
+        ---
+        waveform : <blob>
+        spike_times : <blob>
+        """
+
+    def make(self, key):
+        # Compute spike sorting
+        units = sort_spikes((Recording & key).fetch1('data'))
+
+        # Insert master entry
+        self.insert1({**key, 'n_units': len(units)})
+
+        # Insert part entries
+        self.Unit.insert([
+            {**key, 'unit_id': i, **unit}
+            for i, unit in enumerate(units)
+        ])
+```
+
+### 6.2 Transaction Behavior
+
+Master and part inserts share the same transaction:
+
+```python
+def make(self, key):
+    self.insert1({**key, 'summary': s})  # Master
+    self.Part.insert(parts)               # Parts
+
+    # If Part.insert fails, master insert is also rolled back
+```
+
+### 6.3 Fetching Part Data
+
+```python
+# Fetch master with parts
+master = (SpikeSorting & key).fetch1()
+parts = (SpikeSorting.Unit & key).fetch()
+
+# Join master and parts
+combined = (SpikeSorting * SpikeSorting.Unit & key).fetch()
+```
+
+### 6.4 Key Source with Parts
+
+The key source is based on the master table's primary key only:
+
+```python
+# key_source returns master keys, not part keys
+SpikeSorting.key_source  # Recording keys
+```
+
+### 6.5 Deleting Computed Parts
+
+Deleting master entries cascades to parts:
+
+```python
+# Deletes SpikeSorting entry AND all SpikeSorting.Unit entries
+(SpikeSorting & key).delete()
+```
+
+---
+
+## 7. Progress and Monitoring
+
+### 7.1 Progress Method
+
+Check computation progress:
+
+```python
+# Simple progress
+remaining, total = Analysis.progress()
+print(f"{remaining}/{total} entries remaining")
+
+# With display
+Analysis.progress(display=True)
+# Analysis: 150/200 (75%) [===========>    ]
+```
+
+### 7.2 Display Progress During Populate
+
+```python
+Analysis.populate(display_progress=True)
+# [################----] 80% 160/200 [00:15<00:04]
+```
+
+---
+
+## 8. Direct Mode vs Distributed Mode
+
+### 8.1 Direct Mode (Default)
+
+When `reserve_jobs=False` (default):
+
+```python
+Analysis.populate()  # Direct mode
+```
+
+**Characteristics:**
+- Calculates `key_source - self` on each call
+- No job tracking or status persistence
+- Simple and efficient for single-worker scenarios
+- No coordination overhead
+
+**Best for:**
+- Interactive development
+- Single-worker pipelines
+- Small to medium datasets
+
+### 8.2 Distributed Mode
+
+When `reserve_jobs=True`:
+
+```python
+Analysis.populate(reserve_jobs=True)  # Distributed mode
+```
+
+**Characteristics:**
+- Uses per-table jobs queue for coordination
+- Workers reserve jobs before processing
+- Full status tracking (pending, reserved, error, success)
+- Enables monitoring and recovery
+
+**Best for:**
+- Multi-worker distributed computing
+- Long-running pipelines
+- Production environments with monitoring needs
+
+---
+
+## 9. Per-Table Jobs System
+
+### 9.1 Jobs Table
+
+Each auto-populated table has an associated jobs table:
 
 ```
-Table: FilteredImage
-Jobs:  ~~filtered_image
+Table: Analysis
+Jobs:  ~~analysis
 ```
 
 Access via the `.jobs` property:
 
 ```python
-FilteredImage.jobs              # Jobs table
-FilteredImage.jobs.pending      # Pending jobs
-FilteredImage.jobs.errors       # Failed jobs
-FilteredImage.jobs.progress()   # Status summary
+Analysis.jobs              # Jobs table
+Analysis.jobs.pending      # Pending jobs
+Analysis.jobs.errors       # Failed jobs
+Analysis.jobs.progress()   # Status summary
 ```
 
-### 4.2 Jobs Table Structure
+### 9.2 Jobs Table Structure
 
-```python
-# Job queue for FilteredImage
-subject_id : int
-session_id : int
-# ... (FK-derived primary key attributes only)
+```
+# Job queue for Analysis
+<primary key attributes from FK references>
 ---
 status : enum('pending', 'reserved', 'success', 'error', 'ignore')
 priority : uint8                    # Lower = more urgent (0 = highest)
@@ -263,293 +678,175 @@ connection_id : uint64              # MySQL connection ID
 version : varchar(255)              # Code version
 ```
 
-### 4.3 Job Statuses
+### 9.3 Job Statuses
 
 | Status | Description |
 |--------|-------------|
 | `pending` | Queued and ready to process |
-| `reserved` | Currently being processed |
+| `reserved` | Currently being processed by a worker |
 | `success` | Completed successfully (optional retention) |
-| `error` | Failed with error |
+| `error` | Failed with error details |
 | `ignore` | Manually marked to skip |
 
-### 4.4 Status Transitions
-
-```mermaid
-stateDiagram-v2
-    [*] --> pending : refresh()
-    [*] --> ignore : ignore()
-    pending --> reserved : reserve()
-    reserved --> [*] : complete()
-    reserved --> success : complete()*
-    reserved --> error : error()
-    success --> pending : refresh()*
-    error --> [*] : delete()
-    success --> [*] : delete()
-    ignore --> [*] : delete()
-```
-
-- `complete()` deletes job by default
-- `complete()*` keeps as `success` when `keep_completed=True`
-- `refresh()*` re-pends `success` if key in `key_source` but not in table
-
----
-
-## 5. Jobs API
-
-### 5.1 Refresh
-
-Synchronize the jobs queue with `key_source`:
+### 9.4 Jobs API
 
 ```python
-result = FilteredImage.jobs.refresh(
-    *restrictions,           # Filter key_source
-    delay=0,                 # Seconds until jobs available
-    priority=None,           # Priority for new jobs
-    stale_timeout=None,      # Cleanup threshold
-    orphan_timeout=None,     # Orphan cleanup threshold
-)
-# Returns: {'added': N, 'removed': N, 'orphaned': N, 're_pended': N}
-```
+# Refresh job queue (sync with key_source)
+Analysis.jobs.refresh()
 
-**Operations performed:**
-1. Add new jobs: `(key_source & restrictions) - target - jobs` → `pending`
-2. Re-pend success jobs if key in `key_source` but not in target
-3. Remove stale jobs (keys no longer in `key_source`)
-4. Remove orphaned jobs (reserved jobs past timeout)
+# Status queries
+Analysis.jobs.pending       # Pending jobs
+Analysis.jobs.reserved      # Currently processing
+Analysis.jobs.errors        # Failed jobs
+Analysis.jobs.ignored       # Skipped jobs
+Analysis.jobs.completed     # Success jobs (if kept)
 
-### 5.2 Status Queries
+# Progress summary
+Analysis.jobs.progress()
+# {'pending': 150, 'reserved': 3, 'success': 847, 'error': 12, 'total': 1012}
 
-```python
-FilteredImage.jobs.pending      # Pending jobs
-FilteredImage.jobs.reserved     # Reserved jobs
-FilteredImage.jobs.errors       # Failed jobs
-FilteredImage.jobs.ignored      # Ignored jobs
-FilteredImage.jobs.completed    # Success jobs (if kept)
-```
-
-### 5.3 Progress
-
-```python
-FilteredImage.jobs.progress()
-# {
-#     'pending': 150,
-#     'reserved': 3,
-#     'success': 847,
-#     'error': 12,
-#     'ignore': 5,
-#     'total': 1017
-# }
-```
-
-### 5.4 Manual Status Control
-
-```python
-# Mark job to skip
-FilteredImage.jobs.ignore(key)
-
-# Delete specific jobs
-(FilteredImage.jobs & condition).delete()
-
-# Clear all errors
-FilteredImage.jobs.errors.delete()
-
-# Re-add deleted jobs
-FilteredImage.jobs.refresh()
+# Manual control
+Analysis.jobs.ignore(key)                    # Skip a job
+(Analysis.jobs & condition).delete()         # Remove jobs
+Analysis.jobs.errors.delete()                # Clear errors
 ```
 
 ---
 
-## 6. Priority and Scheduling
+## 10. Priority and Scheduling
 
-### 6.1 Priority
+### 10.1 Priority
 
 Lower values = higher priority (0 is most urgent):
 
 ```python
-# Urgent jobs
-FilteredImage.jobs.refresh(priority=0)
+# Urgent jobs (priority 0)
+Analysis.jobs.refresh(priority=0)
 
-# Normal jobs (default priority=5)
-FilteredImage.jobs.refresh()
+# Normal jobs (default priority 5)
+Analysis.jobs.refresh()
 
-# Background jobs
-FilteredImage.jobs.refresh(priority=10)
+# Background jobs (priority 10)
+Analysis.jobs.refresh(priority=10)
 
 # Urgent jobs for specific data
-FilteredImage.jobs.refresh(Subject & "priority='urgent'", priority=0)
+Analysis.jobs.refresh(Subject & "priority='urgent'", priority=0)
 ```
 
-### 6.2 Scheduling
+### 10.2 Scheduling
 
-Delay job availability:
+Delay job availability using server time:
 
 ```python
 # Available in 2 hours
-FilteredImage.jobs.refresh(delay=2*60*60)
+Analysis.jobs.refresh(delay=2*60*60)
 
 # Available tomorrow
-FilteredImage.jobs.refresh(delay=24*60*60)
-
-# Urgent but delayed
-FilteredImage.jobs.refresh(priority=0, delay=3600)
+Analysis.jobs.refresh(delay=24*60*60)
 ```
 
-Jobs with `scheduled_time > now` are not processed.
+Jobs with `scheduled_time > now` are not processed by `populate()`.
 
 ---
 
-## 7. Distributed Computing
+## 11. Distributed Computing
 
-### 7.1 Basic Pattern
+### 11.1 Basic Pattern
+
+Multiple workers can run simultaneously:
 
 ```python
-# Multiple workers can run simultaneously
 # Worker 1
-FilteredImage.populate(reserve_jobs=True)
+Analysis.populate(reserve_jobs=True)
 
-# Worker 2
-FilteredImage.populate(reserve_jobs=True)
+# Worker 2 (different machine/process)
+Analysis.populate(reserve_jobs=True)
 
 # Worker 3
-FilteredImage.populate(reserve_jobs=True)
+Analysis.populate(reserve_jobs=True)
 ```
 
-### 7.2 Execution Flow
+### 11.2 Execution Flow (Distributed)
 
-1. `refresh()` syncs jobs queue (if `auto_refresh=True`)
-2. Fetch pending jobs ordered by `(priority, scheduled_time)`
+```
+1. Refresh jobs queue (if auto_refresh=True)
+2. Fetch pending jobs ordered by (priority, scheduled_time)
 3. For each job:
-   - Mark as `reserved`
-   - Call `make(key)`
-   - On success: mark `success` or delete
-   - On error: mark `error` with details
+   a. Mark as 'reserved'
+   b. Start transaction
+   c. Call make(key)
+   d. Commit transaction
+   e. Mark as 'success' or delete job
+   f. On error: mark as 'error' with details
+```
 
-### 7.3 Conflict Resolution
+### 11.3 Conflict Resolution
 
-When two workers reserve the same job:
+When two workers reserve the same job simultaneously:
 
-1. Both reservations succeed (no locking)
+1. Both reservations succeed (optimistic, no locking)
 2. Both call `make()` for the same key
 3. First worker's transaction commits
-4. Second worker gets duplicate key error (ignored)
+4. Second worker gets duplicate key error (silently ignored)
 5. First worker marks job complete
 
 This is acceptable because:
-- `make()` transaction guarantees data integrity
+- The `make()` transaction guarantees data integrity
 - Conflicts are rare with job reservation
 - Wasted computation is minimal vs locking overhead
 
-### 7.4 Pre-Partitioning
-
-For batch schedulers (Slurm, PBS), pre-partition jobs:
-
-```python
-# Orchestrator divides work
-all_pending = FilteredImage.jobs.pending.fetch("KEY")
-n_workers = 4
-
-for worker_id in range(n_workers):
-    worker_keys = all_pending[worker_id::n_workers]
-    # Send to worker via scheduler
-
-# Each worker processes assigned keys
-for key in assigned_keys:
-    FilteredImage.populate(key)  # Direct mode
-```
-
 ---
 
-## 8. Error Handling
+## 12. Error Handling
 
-### 8.1 Error Recovery
+### 12.1 Default Behavior
+
+Errors stop populate and raise the exception:
 
 ```python
-# View errors
-for err in FilteredImage.jobs.errors.fetch(as_dict=True):
-    print(f"Key: {err}, Error: {err['error_message']}")
-
-# Fix and retry
-(FilteredImage.jobs & problem_key).delete()
-FilteredImage.jobs.refresh()
-FilteredImage.populate(reserve_jobs=True)
+Analysis.populate()  # Stops on first error
 ```
 
-### 8.2 Suppress Errors
+### 12.2 Suppressing Errors
 
 Continue processing despite errors:
 
 ```python
-errors = FilteredImage.populate(
-    reserve_jobs=True,
+errors = Analysis.populate(
     suppress_errors=True,
     return_exception_objects=True
 )
+# errors contains list of (key, exception) tuples
 ```
 
-### 8.3 Stale Jobs
-
-Jobs whose keys no longer exist in `key_source`:
+### 12.3 Error Recovery (Distributed Mode)
 
 ```python
-# Cleaned automatically by refresh()
-FilteredImage.jobs.refresh(stale_timeout=3600)
+# View errors
+for err in Analysis.jobs.errors.fetch(as_dict=True):
+    print(f"Key: {err}, Error: {err['error_message']}")
+
+# Clear and retry
+Analysis.jobs.errors.delete()
+Analysis.jobs.refresh()
+Analysis.populate(reserve_jobs=True)
 ```
 
-### 8.4 Orphaned Jobs
+### 12.4 Stale and Orphaned Jobs
 
-Reserved jobs whose worker crashed:
-
+**Stale jobs**: Keys no longer in `key_source` (upstream deleted)
 ```python
-# Manual cleanup
-(FilteredImage.jobs.reserved &
- "reserved_time < NOW() - INTERVAL 2 HOUR").delete()
-FilteredImage.jobs.refresh()
+Analysis.jobs.refresh(stale_timeout=3600)  # Clean up after 1 hour
+```
 
-# Or automatic with timeout
-FilteredImage.jobs.refresh(orphan_timeout=3600)
+**Orphaned jobs**: Reserved jobs whose worker crashed
+```python
+Analysis.jobs.refresh(orphan_timeout=3600)  # Reset after 1 hour
 ```
 
 ---
 
-## 9. Schema-Level Access
-
-### 9.1 All Jobs Tables
-
-```python
-# List all jobs tables in schema
-schema.jobs
-# [FilteredImage.jobs, Analysis.jobs, ...]
-
-# Pipeline-wide status
-for jobs in schema.jobs:
-    print(f"{jobs.table_name}: {jobs.progress()}")
-
-# Refresh all
-for jobs in schema.jobs:
-    jobs.refresh()
-```
-
-### 9.2 Dashboard Queries
-
-```python
-def pipeline_status(schema):
-    return {
-        jt.table_name: jt.progress()
-        for jt in schema.jobs
-    }
-
-# All errors across pipeline
-all_errors = [
-    {**err, '_table': jt.table_name}
-    for jt in schema.jobs
-    for err in jt.errors.fetch(as_dict=True)
-]
-```
-
----
-
-## 10. Configuration
+## 13. Configuration
 
 ```python
 dj.config['jobs.auto_refresh'] = True       # Auto-refresh on populate
@@ -557,13 +854,12 @@ dj.config['jobs.keep_completed'] = False    # Retain success records
 dj.config['jobs.stale_timeout'] = 3600      # Seconds before stale cleanup
 dj.config['jobs.default_priority'] = 5      # Default priority (lower=urgent)
 dj.config['jobs.version'] = None            # Version string ('git' for auto)
+dj.config['jobs.add_job_metadata'] = False  # Add hidden metadata columns
 ```
-
-Method parameters override config values when explicitly set.
 
 ---
 
-## 11. Hidden Job Metadata
+## 14. Hidden Job Metadata
 
 When `config['jobs.add_job_metadata'] = True`, auto-populated tables receive hidden columns:
 
@@ -573,64 +869,19 @@ When `config['jobs.add_job_metadata'] = True`, auto-populated tables receive hid
 | `_job_duration` | `float64` | Duration in seconds |
 | `_job_version` | `varchar(64)` | Code version |
 
-These columns are:
-- Automatically populated during `make()`
-- Hidden from default fetch (prefix `_`)
-- Queryable with explicit reference
-
 ```python
 # Fetch with job metadata
-FilteredImage.fetch('_job_duration', '_job_version')
+Analysis.fetch('result', '_job_duration')
 
-# Query by duration
-slow_jobs = FilteredImage & '_job_duration > 3600'
+# Query slow computations
+slow = Analysis & '_job_duration > 3600'
 ```
 
 ---
 
-## 12. Implementation Details
+## 15. Migration from Earlier Versions
 
-### 12.1 Table Naming
-
-Jobs tables use the `~~` prefix:
-- Table: `filtered_image`
-- Jobs: `~~filtered_image`
-
-### 12.2 No Foreign Key Constraints
-
-Jobs tables omit FK constraints for performance:
-- High-traffic operations (reserve, complete)
-- Stale cleanup via `refresh()` is more efficient
-- Batch operations vs per-row FK checks
-
-### 12.3 Lazy Creation
-
-Jobs tables are created on first use:
-
-```python
-# Creates ~~filtered_image if needed
-FilteredImage.populate(reserve_jobs=True)
-
-# Or explicitly
-FilteredImage.jobs.refresh()
-```
-
-### 12.4 Drop and Alter
-
-```python
-# Dropping table drops its jobs table
-FilteredImage.drop()
-
-# Altering PK drops jobs table (recreate via refresh)
-FilteredImage.alter()
-FilteredImage.jobs.refresh()
-```
-
----
-
-## 13. Migration from Earlier Versions
-
-### 13.1 Changes from DataJoint 1.x
+### 15.1 Changes from DataJoint 1.x
 
 DataJoint 2.0 replaces the schema-level `~jobs` table with per-table jobs:
 
@@ -639,81 +890,70 @@ DataJoint 2.0 replaces the schema-level `~jobs` table with per-table jobs:
 | Jobs table | Schema-level `~jobs` | Per-table `~~table_name` |
 | Key storage | Hashed | Native (readable) |
 | Statuses | `reserved`, `error`, `ignore` | + `pending`, `success` |
-| FK constraints | None | None (same) |
-| Progress tracking | Limited | Full lifecycle |
 
-### 13.2 Migration Steps
+### 15.2 Migration Steps
 
-1. **Complete or clear pending work** in the old system
-2. **Export error records** if needed for reference
-3. **Drop legacy `~jobs` table** (optional, no longer used)
-4. **Use new system**: `populate(reserve_jobs=True)` creates new jobs tables
+1. Complete or clear pending work in the old system
+2. Export error records if needed for reference
+3. Use new system: `populate(reserve_jobs=True)` creates new jobs tables
 
 ```python
-# Export legacy errors (optional)
-legacy_errors = schema.jobs.fetch(as_dict=True)
-
-# Drop legacy table (optional)
-schema.jobs.drop()
-
 # New system auto-creates jobs tables
-FilteredImage.populate(reserve_jobs=True)
+Analysis.populate(reserve_jobs=True)
 ```
-
-### 13.3 API Changes
-
-```python
-# Legacy (1.x)
-schema.jobs                    # Single ~jobs table
-schema.jobs & 'table_name="x"' # Filter by table
-
-# Current (2.0)
-FilteredImage.jobs             # Per-table access
-schema.jobs                    # List of all jobs tables
-```
-
-### 13.4 Backward Compatibility
-
-- `reserve_jobs=False` (default) bypasses job tracking entirely
-- Legacy tables with non-FK primary keys work with degraded granularity
-- No parallel operation of old/new systems—migrate cleanly
 
 ---
 
-## 14. Quick Reference
+## 16. Quick Reference
 
-### 14.1 Common Operations
+### 16.1 Common Operations
 
 ```python
-# Populate (single worker)
+# Basic populate (direct mode)
 Table.populate()
+Table.populate(restriction)
+Table.populate(max_calls=100, display_progress=True)
 
-# Populate (distributed)
+# Distributed populate
 Table.populate(reserve_jobs=True)
 
 # Check progress
-Table.jobs.progress()
+remaining, total = Table.progress()
+Table.jobs.progress()  # Detailed status
 
-# View errors
+# Error handling
+Table.populate(suppress_errors=True)
 Table.jobs.errors.fetch()
-
-# Clear and retry errors
 Table.jobs.errors.delete()
-Table.jobs.refresh()
 
-# Add urgent jobs
-Table.jobs.refresh(priority=0)
-
-# Schedule future jobs
-Table.jobs.refresh(delay=3600)
+# Priority control
+Table.jobs.refresh(priority=0)  # Urgent
+Table.jobs.refresh(delay=3600)  # Scheduled
 ```
 
-### 14.2 Status Properties
+### 16.2 make() Patterns
 
-| Property | Query |
-|----------|-------|
-| `.pending` | `status='pending'` |
-| `.reserved` | `status='reserved'` |
-| `.completed` | `status='success'` |
-| `.errors` | `status='error'` |
-| `.ignored` | `status='ignore'` |
+```python
+# Simple make
+def make(self, key):
+    data = (Source & key).fetch1()
+    self.insert1({**key, 'result': compute(data)})
+
+# With parts
+def make(self, key):
+    self.insert1({**key, 'summary': s})
+    self.Part.insert(parts)
+
+# Tripartite (generator)
+def make(self, key):
+    data = (Source & key).fetch1()
+    yield  # Release transaction
+    result = heavy_compute(data)
+    yield  # Re-acquire transaction
+    self.insert1({**key, 'result': result})
+
+# Tripartite (methods)
+def make_fetch(self, key): return data
+def make_compute(self, key, data): return result
+def make_insert(self, key, result): self.insert1(...)
+```
