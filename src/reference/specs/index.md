@@ -28,6 +28,12 @@ Each specification follows a consistent structure:
 | Specification | Description |
 |---------------|-------------|
 | [Table Declaration](table-declaration.md) | Table definition syntax, tiers, foreign keys, and indexes |
+
+### Query Operations
+
+| Specification | Description |
+|---------------|-------------|
+| [Query Algebra](query-algebra.md) | Operators: restrict, proj, join, aggr, extend, union, U() |
 | [Primary Keys](primary-keys.md) | How primary keys propagate through query operators |
 | [Semantic Matching](semantic-matching.md) | Attribute lineage and join compatibility |
 
