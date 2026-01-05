@@ -34,6 +34,7 @@ Each specification follows a consistent structure:
 | Specification | Description |
 |---------------|-------------|
 | [Query Algebra](query-algebra.md) | Operators: restrict, proj, join, aggr, extend, union, U() |
+| [Data Manipulation](data-manipulation.md) | Insert, update1, delete operations and workflow normalization |
 | [Primary Keys](primary-keys.md) | How primary keys propagate through query operators |
 | [Semantic Matching](semantic-matching.md) | Attribute lineage and join compatibility |
 
