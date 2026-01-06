@@ -93,27 +93,36 @@ class Gene(dj.Lookup):
 
 ### Surrogate Keys
 
-Use system-generated identifiers:
+A **surrogate key** is an identifier used *primarily inside* the database, with minimal or no exposure to end users. Users typically don't search for entities by surrogate keys or use them in conversation.
 
 ```python
 @schema
-class Sample(dj.Manual):
+class InternalRecord(dj.Manual):
     definition = """
-    sample_id : int unsigned auto_increment
+    record_id : uuid    # internal identifier, not exposed to users
     ---
-    collection_date : date
-    sample_type : varchar(50)
+    created_timestamp : datetime(3)
+    data : <blob>
     """
 ```
 
-**Advantages:**
+**Key distinction from natural keys:** Surrogate keys don't require external identification systems because users don't need to match physical entities to records by these keys.
 
-- Stable (never change)
-- Compact for joins
-- No business logic dependency
+**When surrogate keys are appropriate:**
+
+- Entities that exist only within the system (no physical counterpart)
+- Privacy-sensitive contexts where natural identifiers shouldn't be stored
+- Internal system records that users never reference directly
+
+**Generating surrogate keys:** Since DataJoint requires explicit key values (no auto-increment), use client-side generation:
+
+- **UUIDs** — Generate with `uuid.uuid4()` before insertion
+- **ULIDs** — Sortable unique IDs
+- **Client-side counters** — Query max value and increment
 
 **DataJoint recommendation:** Prefer natural keys when they're stable and
-meaningful. Use surrogates when natural keys are unstable or complex.
+meaningful. Use surrogates only when no natural identifier exists or for
+privacy-sensitive contexts.
 
 ## Composite Keys
 
@@ -125,14 +134,14 @@ attributes:
 class Recording(dj.Manual):
     definition = """
     -> Session
-    recording_id : int   # Recording number within session
+    recording_idx : uint16   # Recording number within session
     ---
-    duration : float     # seconds
+    duration : float32       # seconds
     """
 ```
 
-Here, `(session_id, recording_id)` together form the primary key. Neither
-alone would be unique.
+Here, `(subject_id, session_idx, recording_idx)` together form the primary key.
+Neither alone would be unique.
 
 ## Foreign Keys and Dependencies
 
@@ -147,7 +156,7 @@ class Segmentation(dj.Computed):
     definition = """
     -> Scan           # Depends on Scan
     ---
-    num_cells : int
+    num_cells : uint32
     """
 ```
 
@@ -182,10 +191,10 @@ experimental structure.
 # Wrong: experiment_id alone isn't unique
 class Trial(dj.Manual):
     definition = """
-    experiment_id : int
+    experiment_id : uint32
     ---
-    trial_number : int   # Should be part of key!
-    result : float
+    trial_number : uint16   # Should be part of key!
+    result : float32
     """
 ```
 
@@ -195,10 +204,10 @@ class Trial(dj.Manual):
 # Wrong: timestamp makes every row unique, losing entity semantics
 class Measurement(dj.Manual):
     definition = """
-    subject_id : int
+    subject_id : uint32
     timestamp : datetime(6)   # Microsecond precision
     ---
-    value : float
+    value : float32
     """
 ```
 

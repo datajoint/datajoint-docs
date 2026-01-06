@@ -14,7 +14,7 @@ class Segmentation(dj.Computed):
     definition = """
     -> Scan
     ---
-    num_cells : int
+    num_cells : uint32
     cell_masks : <blob@>
     """
 
@@ -186,6 +186,87 @@ This adds to computed tables:
 - `_job_duration` — How long it took
 - `_job_version` — Code version (if configured)
 
+## The Three-Part Make Model
+
+For long-running computations (hours or days), holding a database transaction
+open for the entire duration causes problems:
+
+- Database locks block other operations
+- Transaction timeouts may occur
+- Resources are held unnecessarily
+
+The **three-part make pattern** solves this by separating the computation from
+the transaction:
+
+```python
+@schema
+class SignalAverage(dj.Computed):
+    definition = """
+    -> RawSignal
+    ---
+    avg_signal : float64
+    """
+
+    def make_fetch(self, key):
+        """Step 1: Fetch input data (outside transaction)"""
+        raw_signal = (RawSignal & key).fetch1("signal")
+        return (raw_signal,)
+
+    def make_compute(self, key, fetched):
+        """Step 2: Perform computation (outside transaction)"""
+        (raw_signal,) = fetched
+        avg = raw_signal.mean()
+        return (avg,)
+
+    def make_insert(self, key, fetched, computed):
+        """Step 3: Insert results (inside brief transaction)"""
+        (avg,) = computed
+        self.insert1({**key, "avg_signal": avg})
+```
+
+### How It Works
+
+DataJoint executes the three parts with verification:
+
+```
+fetched = make_fetch(key)              # Outside transaction
+computed = make_compute(key, fetched)  # Outside transaction
+
+<begin transaction>
+fetched_again = make_fetch(key)        # Re-fetch to verify
+if fetched != fetched_again:
+    <rollback>                         # Inputs changed—abort
+else:
+    make_insert(key, fetched, computed)
+    <commit>
+```
+
+The key insight: **the computation runs outside any transaction**, but
+referential integrity is preserved by re-fetching and verifying inputs before
+insertion. If upstream data changed during computation, the job is cancelled
+rather than inserting inconsistent results.
+
+### Benefits
+
+| Aspect | Standard `make()` | Three-Part Pattern |
+|--------|-------------------|--------------------|
+| Transaction duration | Entire computation | Only final insert |
+| Database locks | Held throughout | Minimal |
+| Suitable for | Short computations | Hours/days |
+| Integrity guarantee | Transaction | Re-fetch verification |
+
+### When to Use Each Pattern
+
+| Computation Time | Pattern | Rationale |
+|------------------|---------|-----------|
+| Seconds to minutes | Standard `make()` | Simple, transaction overhead acceptable |
+| Minutes to hours | Three-part | Avoid long transactions |
+| Hours to days | Three-part | Essential for stability |
+
+The three-part pattern trades off fetching data twice for dramatically reduced
+transaction duration. Use it when computation time significantly exceeds fetch
+time.
+
 ## Best Practices
 
 ### 1. Keep `make()` Focused
@@ -234,5 +315,6 @@ Segmentation.populate()
 1. **`make(key)`** — Computes one entity at a time
 2. **`populate()`** — Executes `make()` for all missing entities
 3. **Jobs 2.0** — Enables parallel, distributed execution
-4. **Cascade deletes** — Maintain workflow integrity
-5. **Error handling** — Robust retry mechanisms
+4. **Three-part make** — For long computations without long transactions
+5. **Cascade deletes** — Maintain workflow integrity
+6. **Error handling** — Robust retry mechanisms
