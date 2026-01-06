@@ -13,6 +13,25 @@ Traditional databases store data but don't understand how it was computed. DataJ
 
 The result is a **Computational Database** where data transformations are first-class citizens. Just as spreadsheets recalculate formulas when inputs change, DataJoint pipelines automatically propagate computations through your workflow.
 
+## Object-Augmented Schemas
+
+Scientific data includes both structured metadata (subjects, sessions, parameters) and large data objects (time series, images, movies, neural recordings, gene sequences). Traditional approaches force a choice: use a relational database for structure or a file system for large data—but not both with equal rigor.
+
+DataJoint solves this with **Object-Augmented Schemas (OAS)**—a unified architecture where:
+
+- **Relational tables** store structured, queryable metadata in the database
+- **Object storage** holds large scientific data objects (arrays, files, directories)
+- **Both are managed as one system** with identical guarantees for integrity, transactions, and lifecycle
+
+**Terminology note:** In DataJoint, "object" refers to large data objects (arrays, files, Zarr stores)—not to be confused with object-oriented programming. Object storage (S3-compatible stores like MinIO, AWS S3, or local filesystems) extends the relational database rather than replacing it.
+
+Key OAS features:
+
+- **Transparent access** — Fetch an image or array just like any other attribute
+- **Automatic lifecycle** — Objects are deleted when their parent row is deleted
+- **Deduplication** — Identical objects are stored once via content-addressing
+- **Lazy loading** — Large objects are fetched only when accessed
+
 <div class="grid cards" markdown>
 
 -   :material-lightbulb-outline: **Concepts**
@@ -107,8 +126,8 @@ class SessionAnalysis(dj.Computed):
         self.insert1({**key, 'result': 42.0})
 
 # Insert data
-Subject.insert1({'subject_id': 1, 'name': 'M001', 'date_of_birth': '2024-01-15'})
-Session.insert1({'subject_id': 1, 'session_idx': 1, 'session_date': '2024-06-01'})
+Subject.insert1({'subject_id': 1, 'name': 'M001', 'date_of_birth': '2026-01-15'})
+Session.insert1({'subject_id': 1, 'session_idx': 1, 'session_date': '2026-01-06'})
 
 # Run computations
 SessionAnalysis.populate()
