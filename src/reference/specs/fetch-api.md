@@ -39,8 +39,14 @@ table.to_dicts(
     limit=None,         # int: maximum rows to return
     offset=None,        # int: rows to skip
     squeeze=False,      # bool: remove singleton dimensions from arrays
-    download_path="."   # str: path for downloading external data
 )
+```
+
+For external storage types (attachments, filepaths), files are downloaded to `config["download_path"]`. Use `config.override()` to change:
+
+```python
+with dj.config.override(download_path="/data"):
+    data = table.to_dicts()
 ```
 
 ### Iteration

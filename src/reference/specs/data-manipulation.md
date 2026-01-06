@@ -299,7 +299,7 @@ for key in (Subject & condition).fetch("KEY"):
 def delete(
     self,
     transaction: bool = True,
-    safemode: bool | None = None,
+    prompt: bool | None = None,
     force_parts: bool = False,
     force_masters: bool = False,
 ) -> int
@@ -310,7 +310,7 @@ def delete(
 | Parameter | Type | Default | Description |
 |-----------|------|---------|-------------|
 | `transaction` | bool | `True` | Wrap in atomic transaction |
-| `safemode` | bool | `None` | Prompt for confirmation (default: config setting) |
+| `prompt` | bool | `None` | Prompt for confirmation (default: config setting) |
 | `force_parts` | bool | `False` | Allow deleting parts without master |
 | `force_masters` | bool | `False` | Include master/part pairs in cascade |
 
@@ -345,7 +345,7 @@ Subject.delete()
 
 ### 4.4 Safe Mode
 
-When `safemode=True` (default from config):
+When `prompt=True` (default from config):
 
 ```
 About to delete:
@@ -360,7 +360,7 @@ Commit deletes? [yes, No]:
 Disable for automated scripts:
 
 ```python
-Subject.delete(safemode=False)
+Subject.delete(prompt=False)
 ```
 
 ### 4.5 Transaction Control
@@ -626,11 +626,11 @@ for row in all_rows:
 ### 9.5 Safe Deletion in Production
 
 ```python
-# Always use safemode in interactive sessions
-(Subject & condition).delete(safemode=True)
+# Always use prompt in interactive sessions
+(Subject & condition).delete(prompt=True)
 
 # Disable only in tested automated scripts
-(Subject & condition).delete(safemode=False)
+(Subject & condition).delete(prompt=False)
 ```
 
 ---
