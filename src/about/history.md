@@ -29,6 +29,16 @@ In 2017, DARPA awarded a small-business innovation research grant to Vathes LLC
 In June 2018, the Princeton Neuroscience Institute, under the leadership of Prof. Carlos
 Brody, began funding a project to generate a detailed DataJoint user manual.
 
-In 2022, DataJoint was awarded NIH grant [NIH U24 NS116470](https://reporter.nih.gov/project-details/10547509) for disseminating open-source software for neuroscience research ([Press Release](https://www.pr.com/press-release/873164)).
+## DataJoint Elements
+
+[DataJoint Elements](https://docs.datajoint.com/elements/) is a separate NIH-funded project ([NIH U24 NS116470](https://reporter.nih.gov/project-details/10547509)) awarded to DataJoint Inc. (PI: Dimitri Yatsenko), performed 2020-2025. The project developed standard, open-source data pipelines for neurophysiology research ([Press Release](https://www.pr.com/press-release/873164)).
+
+Building on DataJoint's workflow framework, Elements provides curated, modular components for common experimental modalities including calcium imaging, electrophysiology, pose estimation, and optogenetics. The project distilled best practices from leading neuroscience labs into reusable pipeline modules that integrate with third-party analysis tools (Suite2p, DeepLabCut, Kilosort, etc.) and data standards (NWB, DANDI).
+
+The project is described in the position paper ["DataJoint Elements: Data Workflows for Neurophysiology"](https://www.biorxiv.org/content/10.1101/2021.03.30.437358v2).
+
+## Recent Developments
 
 In 2025, Jim Olson, former executive at Flywheel, was appointed as the new CEO of DataJoint ([Press Release](https://www.prweb.com/releases/datajoint-appoints-former-flywheel-exec-jim-olson-as-new-ceo-302342644.html)).
+
+In August 2025, DataJoint closed a $4.9M seed funding round to expand data management and AI capabilities in academic and life sciences ([Press Release](https://www.prnewswire.com/news-releases/datajoint-closes-4-9m-seed-funding-to-revolutionize-data-management-and-ai-in-academic-and-life-sciences-pharma-302568792.html)).

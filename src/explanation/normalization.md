@@ -35,12 +35,12 @@ table structure. DataJoint takes a different approach: design tables around
 # Wrong: cage info repeated for every mouse
 class Mouse(dj.Manual):
     definition = """
-    mouse_id : int
+    mouse_id : int32
     ---
-    cage_id : int
+    cage_id : int32
     cage_location : varchar(50)    # Redundant!
-    cage_temperature : float       # Redundant!
-    weight : float
+    cage_temperature : float32     # Redundant!
+    weight : float32
     """
 ```
 
@@ -50,16 +50,16 @@ class Mouse(dj.Manual):
 @schema
 class Cage(dj.Manual):
     definition = """
-    cage_id : int
+    cage_id : int32
     ---
     location : varchar(50)
-    temperature : float
+    temperature : float32
     """
 
 @schema
 class Mouse(dj.Manual):
     definition = """
-    mouse_id : int
+    mouse_id : int32
     ---
     -> Cage
     """
@@ -70,7 +70,7 @@ class MouseWeight(dj.Manual):
     -> Mouse
     weigh_date : date
     ---
-    weight : float
+    weight : float32
     """
 ```
 
@@ -117,10 +117,10 @@ Store versioned configurations:
 @schema
 class AnalysisParams(dj.Lookup):
     definition = """
-    params_id : int
+    params_id : int32
     ---
-    threshold : float
-    window_size : int
+    threshold : float32
+    window_size : int32
     """
 ```
 
@@ -135,7 +135,7 @@ class SubjectWeight(dj.Manual):
     -> Subject
     weight_date : date
     ---
-    weight : float   # grams
+    weight : float32   # grams
     """
 ```
 

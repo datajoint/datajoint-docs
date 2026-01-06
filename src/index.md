@@ -1,8 +1,17 @@
 # DataJoint Documentation
 
-DataJoint is a framework for building scientific data pipelines using relational
-databases. It combines the rigor of relational data modeling with native support
-for computational workflows.
+DataJoint is a framework for scientific data pipelines that introduces the **Relational Workflow Model**—a paradigm where your database schema is an executable specification of your workflow.
+
+## What is the Relational Workflow Model?
+
+Traditional databases store data but don't understand how it was computed. DataJoint extends relational databases with native workflow semantics:
+
+- **Tables represent workflow steps** — Each table is a step in your pipeline where entities are created
+- **Foreign keys encode dependencies** — Parent tables must be populated before child tables
+- **Computations are declarative** — Define *what* to compute; DataJoint determines *when* and tracks *what's done*
+- **Results are immutable** — Computed results preserve full provenance and reproducibility
+
+The result is a **Computational Database** where data transformations are first-class citizens. Just as spreadsheets recalculate formulas when inputs change, DataJoint pipelines automatically propagate computations through your workflow.
 
 <div class="grid cards" markdown>
 
@@ -48,32 +57,61 @@ for computational workflows.
 pip install datajoint
 ```
 
+Configure database credentials in your project (see [Configuration](reference/configuration.md)):
+
+```bash
+# Create datajoint.json for non-sensitive settings
+echo '{"database": {"host": "localhost", "port": 3306}}' > datajoint.json
+
+# Create secrets directory for credentials
+mkdir -p .secrets
+echo "root" > .secrets/database.user
+echo "password" > .secrets/database.password
+```
+
+Define and populate a simple pipeline:
+
 ```python
 import datajoint as dj
 
-# Connect to database
-dj.config['database.host'] = 'localhost'
-dj.config['database.user'] = 'root'
-dj.config['database.password'] = 'secret'
-
-# Create a schema
 schema = dj.Schema('my_pipeline')
 
-# Define a table
 @schema
 class Subject(dj.Manual):
     definition = """
-    subject_id : int
+    subject_id : uint16
     ---
     name : varchar(100)
     date_of_birth : date
     """
 
-# Insert data
-Subject.insert1({'subject_id': 1, 'name': 'Mouse001', 'date_of_birth': '2024-01-15'})
+@schema
+class Session(dj.Manual):
+    definition = """
+    -> Subject
+    session_idx : uint8
+    ---
+    session_date : date
+    """
 
-# Query data
-Subject()
+@schema
+class SessionAnalysis(dj.Computed):
+    definition = """
+    -> Session
+    ---
+    result : float64
+    """
+
+    def make(self, key):
+        # Compute result for this session
+        self.insert1({**key, 'result': 42.0})
+
+# Insert data
+Subject.insert1({'subject_id': 1, 'name': 'M001', 'date_of_birth': '2024-01-15'})
+Session.insert1({'subject_id': 1, 'session_idx': 1, 'session_date': '2024-06-01'})
+
+# Run computations
+SessionAnalysis.populate()
 ```
 
-[:octicons-arrow-right-24: Continue with the tutorial](tutorials/index.md)
+[:octicons-arrow-right-24: Continue with the tutorials](tutorials/index.md)

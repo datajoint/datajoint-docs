@@ -39,7 +39,6 @@ codec_type     = "<" name ["@" [store]] ">"
 ```python
 -> ParentTable                    # Inherit all PK attributes
 -> ParentTable.proj(new='old')    # Rename attributes
-(fk_name) -> ParentTable          # Named FK (for multiple refs to same table)
 ```
 
 ## Attribute Types
@@ -50,7 +49,6 @@ codec_type     = "<" name ["@" [store]] ">"
 mouse_id : int32                  # 32-bit integer
 weight : float64                  # 64-bit float
 name : varchar(100)               # Variable string up to 100 chars
-notes : text                      # Unlimited text
 is_active : bool                  # Boolean
 created : datetime                # Date and time
 data : json                       # JSON document
@@ -72,9 +70,15 @@ raw_path : <filepath@raw>         # Portable file reference
 ```python
 status = "pending" : varchar(20)  # String default
 count = 0 : int32                 # Numeric default
-notes = NULL : text               # Nullable (NULL default)
+notes = '' : varchar(1000)        # Empty string default (preferred for strings)
 created = CURRENT_TIMESTAMP : datetime  # Auto-timestamp
+ratio = NULL : float64            # Nullable (only NULL can be default)
 ```
+
+**Nullable attributes:** An attribute is nullable if and only if its default is `NULL`.
+DataJoint does not allow other defaults for nullable attributes—this prevents ambiguity
+about whether an attribute is optional. For strings, prefer empty string `''` as the
+default rather than `NULL`.
 
 ## Comments
 
@@ -104,14 +108,14 @@ class Session(dj.Manual):
     definition = """
     # Experimental session
     -> Subject
-    session_date : date           # Date of session
-    session_idx : int32           # Session number on this date
+    session_idx : int32           # Session number for this subject
     ---
+    session_date : date           # Date of session
     -> [nullable] Experimenter    # Optional experimenter
-    notes = NULL : text           # Session notes
+    notes = '' : varchar(1000)    # Session notes
     start_time : datetime         # Session start
     duration : float64            # Duration in minutes
-    INDEX (start_time)
+    INDEX (session_date)
     """
 ```
 

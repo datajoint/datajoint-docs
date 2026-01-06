@@ -8,26 +8,32 @@ This document defines a three-layer type architecture:
 2. **Core DataJoint types** - Standardized across backends, scientist-friendly (`float32`, `uint8`, `bool`, `json`).
 3. **Codec Types** - Programmatic types with `encode()`/`decode()` semantics. Composable.
 
+```mermaid
+block-beta
+    columns 1
+    block:layer3:1
+        columns 1
+        L3["Codec Types (Layer 3)"]
+        B3["Built-in: <blob> <attach> <object@> <hash@> <filepath@>\nUser-defined: <custom> <mytype> ..."]
+    end
+    block:layer2:1
+        columns 1
+        L2["Core DataJoint Types (Layer 2)"]
+        B2["float32 float64 int64 uint64 int32 uint32 int16 uint16\nint8 uint8 bool uuid json bytes date datetime\nchar(n) varchar(n) enum(...) decimal(n,f)"]
+    end
+    block:layer1:1
+        columns 1
+        L1["Native Database Types (Layer 1)"]
+        B1["MySQL: TINYINT SMALLINT INT BIGINT FLOAT DOUBLE ...\nPostgreSQL: SMALLINT INTEGER BIGINT REAL DOUBLE PRECISION\n(pass through with warning — discouraged)"]
+    end
+    layer3 --> layer2 --> layer1
 ```
-┌───────────────────────────────────────────────────────────────────┐
-│                      Codec Types (Layer 3)                         │
-│                                                                    │
-│  Built-in:  <blob>  <attach>  <object@>  <hash@>  <filepath@>     │
-│  User:      <custom>  <mytype>   ...                               │
-├───────────────────────────────────────────────────────────────────┤
-│                 Core DataJoint Types (Layer 2)                     │
-│                                                                    │
-│  float32  float64  int64  uint64  int32  uint32  int16  uint16    │
-│  int8  uint8  bool  uuid  json  bytes  date  datetime  text       │
-│  char(n)  varchar(n)  enum(...)  decimal(n,f)                      │
-├───────────────────────────────────────────────────────────────────┤
-│               Native Database Types (Layer 1)                      │
-│                                                                    │
-│  MySQL:      TINYINT  SMALLINT  INT  BIGINT  FLOAT  DOUBLE  ...   │
-│  PostgreSQL: SMALLINT INTEGER   BIGINT  REAL  DOUBLE PRECISION    │
-│  (pass through with warning for non-standard types)                │
-└───────────────────────────────────────────────────────────────────┘
-```
+
+| Layer | Description | Examples |
+|-------|-------------|----------|
+| **3. Codec Types** | Programmatic types with `encode()`/`decode()` semantics | `<blob>`, `<attach>`, `<object@>`, `<hash@>`, `<filepath@>` |
+| **2. Core DataJoint** | Standardized, scientist-friendly types (preferred) | `int32`, `float64`, `varchar(n)`, `bool`, `datetime` |
+| **1. Native Database** | Backend-specific types (discouraged) | `INT`, `FLOAT`, `TINYINT UNSIGNED`, `LONGBLOB` |
 
 **Syntax distinction:**
 - Core types: `int32`, `float64`, `varchar(255)` - no brackets
@@ -123,9 +129,22 @@ for serialized Python objects.
 
 ### Native Passthrough Types
 
-Users may use native database types directly (e.g., `mediumint`, `tinyblob`),
-but these will generate a warning about non-standard usage. Native types are not recorded
-in field comments and may have portability issues across database backends.
+Users may use native database types directly (e.g., `int`, `float`, `mediumint`, `tinyblob`),
+but these are discouraged and will generate a warning. Native types lack explicit size
+information, are not recorded in field comments, and may have portability issues across
+database backends.
+
+**Prefer core DataJoint types over native types:**
+
+| Native (discouraged) | Core DataJoint (preferred) |
+|---------------------|---------------------------|
+| `int` | `int32` |
+| `float` | `float32` or `float64` |
+| `double` | `float64` |
+| `tinyint` | `int8` |
+| `tinyint unsigned` | `uint8` |
+| `smallint` | `int16` |
+| `bigint` | `int64` |
 
 ### Type Modifiers Policy
 

@@ -17,7 +17,11 @@ nav:
       - Custom Codecs: explanation/custom-codecs.md
   - Tutorials:
       - tutorials/index.md
-      # Notebooks will be added here
+      - Getting Started: tutorials/01-getting-started.ipynb
+      - Schema Design: tutorials/02-schema-design.ipynb
+      - Data Entry: tutorials/03-data-entry.ipynb
+      - Queries: tutorials/04-queries.ipynb
+      - Computation: tutorials/05-computation.ipynb
   - How-To:
       - how-to/index.md
       # Guides will be added here
@@ -81,7 +85,7 @@ plugins:
       handlers:
         python:
           paths:
-            - ../datajoint-python/src  # Path to datajoint-python source
+            - /datajoint-python/src  # Path to datajoint-python source (mounted in Docker)
           options:
             docstring_style: numpy
             members_order: source
