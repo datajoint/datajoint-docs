@@ -218,8 +218,8 @@ This ensures join attribute computation automatically excludes hidden attributes
 | Scenario | Hidden Attributes | Result |
 |----------|-------------------|--------|
 | `A * B` (join) | Same hidden attr in both | NOT matched - excluded from USING |
-| `A & B` (semijoin) | Same hidden attr in both | NOT matched |
-| `A - B` (antijoin) | Same hidden attr in both | NOT matched |
+| `A & B` (restriction) | Same hidden attr in both | NOT matched |
+| `A - B` (anti-restriction) | Same hidden attr in both | NOT matched |
 | `A.proj()` | Hidden attrs in A | NOT projected (unless explicitly named) |
 | `A.fetch()` | Hidden attrs in A | NOT returned by default |
 

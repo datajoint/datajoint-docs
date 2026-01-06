@@ -54,7 +54,7 @@ result = expression.restrict(condition, semantic_check=True)
 |------|---------|----------|
 | String | `"x > 5"` | SQL WHERE condition |
 | Dict | `{"status": "active"}` | Equality on attributes |
-| QueryExpression | `OtherTable` | Semijoin (rows with matching keys) |
+| QueryExpression | `OtherTable` | Rows with matching keys in other table |
 | List/Tuple/Set | `[cond1, cond2]` | OR of conditions |
 | Boolean | `True` / `False` | No effect / empty result |
 | pandas.DataFrame | `df` | OR of row conditions |
@@ -82,7 +82,7 @@ Session & {"subject_id": 1, "session_type": "training"}
 
 Multiple key-value pairs are combined with AND.
 
-### 2.5 Expression Conditions (Semijoin)
+### 2.5 Restriction by Query Expression
 
 Restrict to rows with matching primary keys in another expression:
 
