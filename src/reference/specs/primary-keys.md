@@ -259,11 +259,11 @@ A.join(B, left=True, allow_nullable_pk=True)  # Allowed, PK = PK(A) ∪ PK(B)
 
 When bypassed, the resulting primary key is the union of both operands' primary keys (PK(A) ∪ PK(B)). The user must ensure that subsequent operations (such as `GROUP BY` or projection) establish a valid primary key. The parameter name `allow_nullable_pk` reflects the specific issue: primary key attributes from the right operand could be NULL for unmatched rows.
 
-This mechanism is used internally by aggregation (`aggr`) with `keep_all_rows=True`, which resets the primary key via the `GROUP BY` clause.
+This mechanism is used internally by aggregation (`aggr`) when `exclude_nonmatching=False` (the default), which resets the primary key via the `GROUP BY` clause.
 
 ### Aggregation Exception
 
-`A.aggr(B, keep_all_rows=True)` uses a left join internally but has the **opposite requirement**: **B → A** (the group expression B must have all of A's primary key attributes).
+`A.aggr(B)` (with default `exclude_nonmatching=False`) uses a left join internally but has the **opposite requirement**: **B → A** (the group expression B must have all of A's primary key attributes).
 
 This apparent contradiction is resolved by the `GROUP BY` clause:
 
@@ -280,8 +280,8 @@ Note: The semantic check (homologous namesake validation) is still performed for
 Session: session_id*, date
 Trial: session_id*, trial_num*, response_time    (references Session)
 
-# Aggregation with keep_all_rows=True
-Session.aggr(Trial, keep_all_rows=True, avg_rt='avg(response_time)')
+# Aggregation (default keeps all rows)
+Session.aggr(Trial, avg_rt='avg(response_time)')
 
 # Internally: Session LEFT JOIN Trial (with invalid PK allowed)
 # Intermediate PK would be {session_id} ∪ {session_id, trial_num} = {session_id, trial_num}

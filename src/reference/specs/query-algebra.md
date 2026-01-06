@@ -346,7 +346,7 @@ TableA.join(TableB, semantic_check=False)
 result = A.aggr(B, ...)                           # All A attributes
 result = A.aggr(B, 'attr1', 'attr2')              # PK + specified from A
 result = A.aggr(B, ..., count='count(*)')         # With aggregate
-result = A.aggr(B, ..., keep_all_rows=True)       # Left join variant
+result = A.aggr(B, ..., exclude_nonmatching=True) # Only rows with matches
 ```
 
 ### 5.2 Parameters
@@ -354,7 +354,7 @@ result = A.aggr(B, ..., keep_all_rows=True)       # Left join variant
 | Parameter | Default | Description |
 |-----------|---------|-------------|
 | `*attributes` | — | Attributes from A to include |
-| `keep_all_rows` | `False` | Use LEFT JOIN (keep all A rows) |
+| `exclude_nonmatching` | `False` | If True, exclude rows from A that have no matches in B (INNER JOIN). Default keeps all rows (LEFT JOIN). |
 | `**named_attributes` | — | Computed aggregates |
 
 ### 5.3 Requirement
@@ -406,12 +406,19 @@ Restrictions on B attributes → HAVING clause (after GROUP BY)
 Session.aggr(Trial, n='count(*)') & "n > 10"
 ```
 
-### 5.7 Keep All Rows
+### 5.7 Default Behavior: Keep All Rows
+
+By default (`exclude_nonmatching=False`), aggregation keeps all rows from A, even those without matches in B:
 
 ```python
-# Sessions without trials will have NULL aggregates
-Session.aggr(Trial, n='count(*)', keep_all_rows=True)
+# All sessions included; those without trials have n=0
+Session.aggr(Trial, n='count(trial_id)')
+
+# Only sessions that have at least one trial
+Session.aggr(Trial, n='count(trial_id)', exclude_nonmatching=True)
 ```
+
+Note: Use `count(pk_attr)` rather than `count(*)` to correctly count 0 for sessions without trials. `count(*)` counts all rows including the NULL-filled left join row.
 
 ### 5.8 Algebraic Properties
 
@@ -615,7 +622,7 @@ dj.U('invalid') & Student     # Error: 'invalid' not found
 | `table * dj.U()` | `DataJointError` (use `&` instead) |
 | `dj.U() - table` | `DataJointError` (infinite set) |
 | U attributes not in table | `DataJointError` |
-| `dj.U().aggr(..., keep_all_rows=True)` | `DataJointError` |
+| `dj.U().aggr(..., exclude_nonmatching=False)` | `DataJointError` (cannot keep all rows from infinite set) |
 
 ---
 
