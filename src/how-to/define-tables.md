@@ -143,14 +143,13 @@ See [Design Primary Keys](design-primary-keys.md) for detailed guidance on key s
 | `varchar(n)` | Variable-length string |
 | `char(n)` | Fixed-length string |
 | `date` | Date (YYYY-MM-DD) |
-| `time` | Time (HH:MM:SS) |
 | `datetime` | Date and time |
 | `datetime(3)` | With millisecond precision |
 | `datetime(6)` | With microsecond precision |
-| `timestamp` | Auto-updating timestamp |
 | `uuid` | UUID type |
 | `enum('a', 'b', 'c')` | Enumerated values |
 | `json` | JSON data |
+| `bytes` | Raw binary data |
 
 ## Built-in Codecs
 

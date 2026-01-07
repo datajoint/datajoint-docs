@@ -76,7 +76,6 @@ Standardized, scientist-friendly types that work identically across backends.
 |------|-------------|
 | `char(n)` | Fixed-length string |
 | `varchar(n)` | Variable-length string |
-| `text` | Unlimited text |
 
 ### Other Types
 

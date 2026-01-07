@@ -289,4 +289,4 @@ If you use DataJoint in your research, please cite:
 
 Documentation: [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)
 
-DataJoint software: [Apache 2.0](https://github.com/datajoint/datajoint-python/blob/main/LICENSE)
+DataJoint software: [Apache 2.0](https://github.com/datajoint/datajoint-python/blob/master/LICENSE)

@@ -167,7 +167,6 @@ Scientist-friendly type names with guaranteed semantics:
 |------|-------------|-------------|
 | `char(N)` | `char(N)` | Fixed-length string |
 | `varchar(N)` | `varchar(N)` | Variable-length string (max N) |
-| `text` | `text` | Unlimited text |
 | `enum('a','b',...)` | `enum(...)` | Enumerated values |
 
 ### 4.3 Temporal Types
