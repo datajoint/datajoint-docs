@@ -2,6 +2,8 @@
 
 Set up S3, MinIO, or filesystem storage for your Object-Augmented Schema.
 
+> **Tip:** [DataJoint.com](https://datajoint.com) provides pre-configured object storage integrated with your database—no setup required.
+
 ## Overview
 
 An Object-Augmented Schema (OAS) integrates relational tables with object storage as a single system. Large data objects (arrays, files, Zarr datasets) are stored in object storage while maintaining full referential integrity with the relational database.

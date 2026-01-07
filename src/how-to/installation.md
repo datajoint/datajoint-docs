@@ -50,7 +50,11 @@ docker run -d \
   mysql:8.0
 ```
 
-### Managed Services
+### DataJoint.com (Recommended)
+
+[DataJoint.com](https://datajoint.com) provides fully managed infrastructure for scientific data pipelines—cloud or on-premises—with comprehensive support, automatic backups, object storage, and team collaboration features.
+
+### Self-Managed Cloud Databases
 
 - **Amazon RDS** — MySQL or Aurora
 - **Google Cloud SQL** — MySQL
@@ -60,16 +64,16 @@ See [Configure Database Connection](configure-database.md) for connection setup.
 
 ## Requirements
 
-- Python 3.9+
+- Python 3.10+
 - MySQL 8.0+ or MariaDB 10.6+
 - Network access to database server
 
 ## Troubleshooting
 
-### `mysql-connector-python` errors
+### `pymysql` connection errors
 
 ```bash
-pip install mysql-connector-python --force-reinstall
+pip install pymysql --force-reinstall
 ```
 
 ### SSL/TLS connection issues

@@ -2,13 +2,19 @@
 
 Create DataJoint table classes with proper definitions.
 
-## Basic Structure
+## Create a Schema
 
 ```python
 import datajoint as dj
 
-schema = dj.Schema('my_schema')
+schema = dj.Schema('my_schema')  # Creates schema in database if it doesn't exist
+```
 
+The `Schema` object connects to the database and creates the schema (database) if it doesn't already exist.
+
+## Basic Table Structure
+
+```python
 @schema
 class MyTable(dj.Manual):
     definition = """
@@ -77,8 +83,45 @@ score = null : float32        # Nullable attribute
 | `timestamp` | Auto-updating timestamp |
 | `uuid` | UUID type |
 | `enum('a', 'b', 'c')` | Enumerated values |
-| `<blob>` | Binary data (internal storage) |
-| `<blob@store>` | Binary data (external storage) |
+| `json` | JSON data |
+
+## Built-in Codecs
+
+Codecs serialize Python objects to database storage. Use angle brackets for codec types:
+
+| Codec | Description |
+|-------|-------------|
+| `<blob>` | Serialized Python objects (NumPy arrays, etc.) stored in database |
+| `<blob@store>` | Serialized objects stored in external object storage |
+| `<attach>` | File attachments stored in database |
+| `<attach@store>` | File attachments stored in external object storage |
+| `<object@store>` | Python objects via ObjectRef interface (external storage) |
+
+Example:
+
+```python
+definition = """
+recording_id : uuid
+---
+neural_data : <blob@raw>      # NumPy array in 'raw' store
+config_file : <attach>        # Attached file in database
+parameters : json             # JSON data (core type, no brackets)
+"""
+```
+
+## Native Database Types
+
+You can also use native MySQL/MariaDB types directly when needed:
+
+```python
+definition = """
+record_id : int unsigned      # Native MySQL type
+data : mediumblob             # For larger binary data
+description : text            # Unlimited text
+"""
+```
+
+Native types are flagged with a warning at declaration time but are allowed. Core DataJoint types (like `int32`, `float64`) are portable and recommended for most use cases. Native database types provide access to database-specific features when needed.
 
 ## Foreign Keys
 
@@ -154,52 +197,52 @@ class SessionStats(dj.Computed):
         })
 ```
 
-## Unique Constraints
-
-```python
-definition = """
-record_id : uuid
----
-unique index (email)        # email must be unique
-email : varchar(100)
-name : varchar(100)
-"""
-```
-
 ## Indexes
+
+Declare indexes at the end of the definition, after all attributes:
 
 ```python
 definition = """
 subject_id : varchar(16)
 session_idx : uint16
 ---
-index (session_date)        # Index for faster queries
 session_date : date
 experimenter : varchar(50)
-"""
-```
-
-## JSON Attributes
-
-```python
-definition = """
-config_id : uuid
----
-parameters : <json>         # Stores JSON data
+index (session_date)              # Index for faster queries
+index (experimenter)              # Another index
+unique index (external_id)        # Unique constraint
 """
 ```
 
 ## Declaring Tables
 
-Tables are declared when first accessed:
+Tables are declared in the database when the `@schema` decorator applies to the class:
 
 ```python
-# Declaration happens here
-Session()
-
-# Or explicitly
-Session().declare()
+@schema  # Table is declared here
+class Session(dj.Manual):
+    definition = """
+    session_id : uint16
+    ---
+    session_date : date
+    """
 ```
+
+The decorator reads the `definition` string, parses it, and creates the corresponding table in the database if it doesn't exist.
+
+## Dropping Tables and Schemas
+
+During prototyping (before data are populated), you can drop and recreate tables:
+
+```python
+# Drop a single table
+Session.drop()
+
+# Drop entire schema (all tables)
+schema.drop()
+```
+
+**Warning:** These operations permanently delete data. Use only during development.
 
 ## View Table Definition
 

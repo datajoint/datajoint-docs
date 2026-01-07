@@ -2,6 +2,8 @@
 
 Set up your DataJoint database connection.
 
+> **Tip:** [DataJoint.com](https://datajoint.com) handles database configuration automatically with fully managed infrastructure and support.
+
 ## Configuration Structure
 
 DataJoint separates configuration into two parts:
@@ -120,16 +122,3 @@ For local development without TLS:
 }
 ```
 
-## Multiple Connections
-
-```python
-# Default connection
-dj.conn()
-
-# Additional connection to different server
-conn2 = dj.Connection(
-    host='other-server',
-    user='other_user',
-    password='other_pass'
-)
-```

@@ -2,6 +2,8 @@
 
 Protect your data with proper backup strategies.
 
+> **Tip:** [DataJoint.com](https://datajoint.com) provides automatic backups with point-in-time recovery as part of the managed service.
+
 ## Overview
 
 A complete DataJoint backup includes:
