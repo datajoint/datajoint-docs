@@ -16,14 +16,18 @@ Avoid loading everything into memory:
 
 ```python
 # Bad: loads all data at once
-all_data = LargeTable.fetch('big_column')
+all_data = LargeTable().to_arrays('big_column')
 
-# Good: iterate with limit
-for batch in range(0, len(LargeTable), 100):
-    data = (LargeTable & f'id >= {batch}').fetch(
-        'big_column',
-        limit=100
-    )
+# Good: stream rows lazily (single cursor, one row at a time)
+for row in LargeTable():
+    process(row['big_column'])
+
+# Good: batch by ID range
+keys = LargeTable().keys()
+batch_size = 100
+for i in range(0, len(keys), batch_size):
+    batch_keys = keys[i:i + batch_size]
+    data = (LargeTable() & batch_keys).to_arrays('big_column')
     process(data)
 ```
 

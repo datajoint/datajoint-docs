@@ -6,6 +6,8 @@ DataJoint 2.0 is a major release that establishes DataJoint as a mature framewor
 
 DataJoint 2.0 unifies relational tables with object storage into a single coherent system. The relational database stores metadata and references while large objects (arrays, files, Zarr datasets) are stored in object storage—with full referential integrity maintained across both layers.
 
+→ [Type System Specification](../reference/specs/type-system.md)
+
 **Three storage sections:**
 
 | Section | Addressing | Use Case |
@@ -28,7 +30,9 @@ zarr_array : <object@store> # Path-addressed for Zarr/HDF5
 
 ## Extensible Type System
 
-A three-layer architecture separates Python types, DataJoint core types, and storage:
+A three-layer architecture separates Python types, DataJoint core types, and storage.
+
+→ [Type System Specification](../reference/specs/type-system.md) · [Codec API Specification](../reference/specs/codec-api.md)
 
 - **Core types**: Portable types like `int32`, `float64`, `uuid`, `json`
 - **Codecs**: Transform Python objects for storage (`<blob>`, `<attach>`, `<object@>`)
@@ -48,7 +52,9 @@ class GraphCodec(dj.Codec):
 
 ## Jobs 2.0
 
-A redesigned job coordination system for distributed computing:
+A redesigned job coordination system for distributed computing.
+
+→ [AutoPopulate Specification](../reference/specs/autopopulate.md) · [Job Metadata Specification](../reference/specs/job-metadata.md)
 
 - **Per-table jobs**: Each computed table has its own jobs table (`Table.jobs`)
 - **Automatic refresh**: Job queue synchronized with pending work
@@ -70,6 +76,8 @@ Analysis.jobs.errors.fetch()
 
 Query operations now use **lineage-based matching**—attributes are matched not just by name but by their origin through foreign key chains. This prevents accidental matches between attributes that happen to share a name but represent different concepts.
 
+→ [Semantic Matching Specification](../reference/specs/semantic-matching.md)
+
 ```python
 # Attributes matched by lineage, not just name
 result = TableA * TableB  # Semantic join (default)
@@ -77,7 +85,9 @@ result = TableA * TableB  # Semantic join (default)
 
 ## Configuration System
 
-A cleaner configuration approach with separation of concerns:
+A cleaner configuration approach with separation of concerns.
+
+→ [Configuration Reference](../reference/configuration.md)
 
 - **`datajoint.json`**: Non-sensitive settings (commit to version control)
 - **`.secrets/`**: Credentials (never commit)
