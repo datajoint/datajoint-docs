@@ -13,7 +13,7 @@ progress to advanced topics.
 3. [Data Entry](03-data-entry.ipynb) — Inserting and managing data
 4. [Queries](04-queries.ipynb) — Operators and fetching results
 5. [Computation](05-computation.ipynb) — Imported and Computed tables
-6. [External Storage](06-external-storage.ipynb) — Blobs, attachments, and object storage
+6. [Object-Augmented Schemas](06-object-storage.ipynb) — Blobs, attachments, and object storage
 
 ## Advanced Topics
 

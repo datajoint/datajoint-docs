@@ -114,7 +114,14 @@ class InternalRecord(dj.Manual):
 - Privacy-sensitive contexts where natural identifiers shouldn't be stored
 - Internal system records that users never reference directly
 
-**Generating surrogate keys:** Since DataJoint requires explicit key values (no auto-increment), use client-side generation:
+**Generating surrogate keys:** DataJoint requires explicit key values rather than database-generated auto-increment. This is intentional:
+
+- Auto-increment encourages treating keys as "row numbers" rather than entity identifiers
+- It's incompatible with composite keys, which DataJoint uses extensively
+- It breaks reproducibility (different IDs when rebuilding pipelines)
+- It prevents the client-server handshake needed for proper entity integrity
+
+Use client-side generation instead:
 
 - **UUIDs** — Generate with `uuid.uuid4()` before insertion
 - **ULIDs** — Sortable unique IDs

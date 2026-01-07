@@ -59,7 +59,7 @@ services:
       - |
         set -e
         pip install -e /datajoint-python
-        pip install scikit-image
+        pip install scikit-image pooch
         if echo "$${MODE}" | grep -i live &>/dev/null; then
             mkdocs serve --config-file ./mkdocs.yaml -a 0.0.0.0:8000
         elif echo "$${MODE}" | grep -i build &>/dev/null; then

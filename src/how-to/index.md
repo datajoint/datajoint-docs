@@ -9,13 +9,17 @@ they assume you understand the basics and focus on getting things done.
 
 - [Installation](installation.md) — Installing DataJoint
 - [Configure Database Connection](configure-database.md) — Connection settings
-- [Configure External Storage](configure-storage.md) — S3, MinIO, file stores
+- [Configure Object Storage](configure-storage.md) — S3, MinIO, file stores
 
 ## Schema Design
 
 - [Define Tables](define-tables.md) — Table definition syntax
 - [Model Relationships](model-relationships.md) — Foreign key patterns
 - [Design Primary Keys](design-primary-keys.md) — Key selection strategies
+
+## Project Management
+
+- [Manage a Pipeline Project](manage-pipeline-project.md) — Multi-schema pipelines, team collaboration
 
 ## Data Operations
 
@@ -31,9 +35,9 @@ they assume you understand the basics and focus on getting things done.
 - [Handle Errors](handle-errors.md) — Error recovery and job management
 - [Monitor Progress](monitor-progress.md) — Dashboards and status
 
-## Storage
+## Object Storage
 
-- [Use External Storage](use-external-storage.md) — When and how
+- [Use Object Storage](use-object-storage.md) — When and how
 - [Create Custom Codecs](create-custom-codec.md) — Domain-specific types
 - [Manage Large Data](manage-large-data.md) — Blobs, objects, garbage collection
 
