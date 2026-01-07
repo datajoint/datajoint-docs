@@ -2,9 +2,24 @@
 
 Store large data objects as part of your Object-Augmented Schema.
 
+## Object-Augmented Schema (OAS)
+
+An **Object-Augmented Schema** extends relational tables with object storage as a unified system. The relational database stores metadata, references, and small values while large objects (arrays, files, datasets) are stored in object storage. DataJoint maintains referential integrity across both storage layers—when you delete a row, its associated objects are cleaned up automatically.
+
+OAS supports three storage sections:
+
+| Section | Location | Addressing | Use Case |
+|---------|----------|------------|----------|
+| **Internal** | Database | Row-based | Small objects (< 1 MB) |
+| **Hash-addressed** | Object store | Content hash | Arrays, files (deduplication) |
+| **Path-addressed** | Object store | Primary key path | Zarr, HDF5, streaming access |
+
+For complete details, see the [Type System specification](../reference/specs/type-system.md).
+
 ## When to Use Object Storage
 
 Use the `@` modifier for:
+
 - Large arrays (images, videos, neural recordings)
 - File attachments
 - Zarr arrays and HDF5 files
@@ -82,16 +97,30 @@ Configure stores in `datajoint.json`:
 }
 ```
 
-## Content-Addressed Storage
+## Hash-Addressed Storage
 
-`<blob@>` uses hash-based deduplication:
-- Identical data is stored once
-- Multiple references share the same object
-- Automatic deduplication saves space
+`<blob@>` and `<attach@>` use **hash-addressed** storage:
+
+- Objects are stored by their content hash (SHA-256)
+- Identical data is stored once (automatic deduplication)
+- Multiple rows can reference the same object
+- Immutable—changing data creates a new object
+
+```python
+# These two inserts store the same array only once
+data = np.zeros((1000, 1000))
+Table.insert1({'id': 1, 'array': data})
+Table.insert1({'id': 2, 'array': data})  # References same object
+```
 
 ## Path-Addressed Storage
 
-`<object@>` uses key-based paths for file-like objects:
+`<object@>` uses **path-addressed** storage for file-like objects:
+
+- Objects stored at predictable paths based on primary key
+- Path format: `{schema}/{table}/{pk_hash}/{attribute}/`
+- Supports streaming access and partial reads
+- Mutable—can update in place (e.g., append to Zarr)
 
 ```python
 @schema
@@ -103,7 +132,11 @@ class Dataset(dj.Manual):
     """
 ```
 
-Objects are stored at: `{schema}/{table}/{pk}/{attribute}/`
+Use path-addressed storage for:
+
+- Zarr arrays (chunked, appendable)
+- HDF5 files
+- Large datasets requiring streaming access
 
 ## Attachments
 

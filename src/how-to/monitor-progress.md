@@ -104,6 +104,7 @@ dj.config.jobs.keep_completed = True
 ```
 
 This adds hidden attributes to computed tables:
+
 - `_job_start_time` — When computation began
 - `_job_duration` — How long it took
 - `_job_version` — Code version (if configured)

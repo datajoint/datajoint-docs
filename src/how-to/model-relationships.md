@@ -26,6 +26,7 @@ class Session(dj.Manual):
 ```
 
 The `->` syntax:
+
 - Inherits all primary key attributes from the referenced table
 - Creates a foreign key constraint
 - Establishes dependency for cascading deletes
@@ -237,6 +238,7 @@ class ProcessedData(dj.Computed):
 ## Schema as DAG
 
 DataJoint schemas form a directed acyclic graph (DAG). Foreign keys:
+
 - Define data relationships
 - Prescribe workflow execution order
 - Enable cascading deletes

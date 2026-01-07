@@ -48,6 +48,7 @@ session_idx : uint16          # Session number
 ```
 
 Primary key attributes:
+
 - Cannot be NULL
 - Must be unique together
 - Cannot be changed after insertion
@@ -63,6 +64,72 @@ notes = '' : varchar(1000)    # Optional with default
 score = null : float32        # Nullable attribute
 """
 ```
+
+## Default Values and Nullable Attributes
+
+Default values are specified with `= value` before the type:
+
+```python
+definition = """
+subject_id : varchar(16)
+---
+weight = null : float32           # Nullable (default is NULL)
+notes = '' : varchar(1000)        # Default empty string
+is_active = 1 : bool              # Default true
+created = CURRENT_TIMESTAMP : timestamp
+"""
+```
+
+**Key rules:**
+
+- The **only** way to make an attribute nullable is `= null`
+- Attributes without defaults are required (NOT NULL)
+- Primary key attributes cannot be nullable
+- Primary key attributes cannot have static defaults
+
+**Timestamp defaults:**
+
+Primary keys can use time-dependent defaults like `CURRENT_TIMESTAMP`:
+
+```python
+definition = """
+created_at = CURRENT_TIMESTAMP : timestamp(6)   # Microsecond precision
+---
+data : <blob>
+"""
+```
+
+Timestamp precision options:
+
+- `timestamp` or `datetime` — Second precision
+- `timestamp(3)` or `datetime(3)` — Millisecond precision
+- `timestamp(6)` or `datetime(6)` — Microsecond precision
+
+## Auto-Increment (Not Recommended)
+
+DataJoint core types do not support `AUTO_INCREMENT`. This is intentional—explicit key values enforce entity integrity and prevent silent creation of duplicate records.
+
+Use `uuid` or natural keys instead:
+
+```python
+definition = """
+recording_id : uuid              # Globally unique, client-generated
+---
+...
+"""
+```
+
+If you must use auto-increment, native MySQL types allow it (with a warning):
+
+```python
+definition = """
+record_id : int unsigned auto_increment    # Native type
+---
+...
+"""
+```
+
+See [Design Primary Keys](design-primary-keys.md) for detailed guidance on key selection and why DataJoint avoids auto-increment.
 
 ## Core DataJoint Types
 
@@ -92,10 +159,10 @@ Codecs serialize Python objects to database storage. Use angle brackets for code
 | Codec | Description |
 |-------|-------------|
 | `<blob>` | Serialized Python objects (NumPy arrays, etc.) stored in database |
-| `<blob@store>` | Serialized objects stored in external object storage |
-| `<attach>` | File attachments stored in database |
-| `<attach@store>` | File attachments stored in external object storage |
-| `<object@store>` | Python objects via ObjectRef interface (external storage) |
+| `<blob@store>` | Serialized objects in object storage |
+| `<attach>` | File attachments in database |
+| `<attach@store>` | File attachments in object storage |
+| `<object@store>` | Files/folders via ObjectRef (path-addressed, supports Zarr/HDF5) |
 
 Example:
 

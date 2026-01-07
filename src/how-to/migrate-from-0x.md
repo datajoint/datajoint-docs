@@ -1,6 +1,8 @@
-# Migrate from 1.x
+# Migrate from 0.x
 
-Upgrade existing pipelines to DataJoint 2.0.
+Upgrade existing pipelines from DataJoint 0.x to DataJoint 2.0.
+
+DataJoint jumped from version 0.14 directly to 2.0 to communicate the significance of this release. See [What's New in DataJoint 2.0](../explanation/whats-new-2.md) for a summary of major features.
 
 ## Configuration Changes
 
@@ -38,7 +40,7 @@ Move credentials to `.secrets/` directory:
 
 New prefix pattern:
 
-| 1.x | 2.0 |
+| 0.x | 2.0 |
 |-----|-----|
 | `DJ_HOST` | `DJ_HOST` (unchanged) |
 | `DJ_USER` | `DJ_USER` (unchanged) |
@@ -53,7 +55,7 @@ New prefix pattern:
 Update blob syntax:
 
 ```python
-# 1.x syntax
+# 0.x syntax
 definition = """
 data : longblob
 data_external : blob@store
@@ -69,7 +71,7 @@ data_external : <blob@store>
 ### Attach Types
 
 ```python
-# 1.x
+# 0.x
 attachment : attach
 
 # 2.0
@@ -80,7 +82,7 @@ attachment_ext : <attach@store>
 ### Filepath Types
 
 ```python
-# 1.x (copy-based)
+# 0.x (copy-based)
 file : filepath@store
 
 # 2.0 (ObjectRef-based)
@@ -94,7 +96,7 @@ file : <filepath@store>
 Jobs are now per-table instead of per-schema:
 
 ```python
-# 1.x: schema-level ~jobs table
+# 0.x: schema-level ~jobs table
 schema.jobs
 
 # 2.0: per-table ~~table_name
@@ -118,7 +120,7 @@ dj.config.jobs.version_method = "git"
 ### Universal Set
 
 ```python
-# 1.x
+# 0.x
 dj.U() * expression
 
 # 2.0
@@ -128,7 +130,7 @@ dj.U() & expression
 ### Natural Join
 
 ```python
-# 1.x: @ operator for natural join
+# 0.x: @ operator for natural join
 A @ B
 
 # 2.0: explicit method
@@ -226,6 +228,7 @@ grep -r "dj.U() \*" *.py
 ### Semantic Matching
 
 2.0's semantic matching may change join behavior if:
+
 - Tables have attributes with same name but different lineage
 - You relied on name-only matching
 
@@ -234,7 +237,7 @@ Test joins carefully after migration.
 ### External Storage
 
 Object storage paths changed. If using external storage:
-1. Keep 1.x stores accessible during migration
+1. Keep 0.x stores accessible during migration
 2. Re-insert data to new storage format if needed
 3. Or configure stores to use existing paths
 

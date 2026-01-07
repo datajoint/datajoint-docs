@@ -5,6 +5,7 @@ Choose effective primary keys for your tables.
 ## Primary Key Principles
 
 Primary key attributes:
+
 - Uniquely identify each entity
 - Cannot be NULL
 - Cannot be changed after insertion

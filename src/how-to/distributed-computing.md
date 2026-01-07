@@ -30,6 +30,7 @@ ProcessedData.populate(reserve_jobs=True, processes=4)
 ```
 
 Each process:
+
 - Opens its own database connection
 - Reserves jobs independently
 - Processes in parallel

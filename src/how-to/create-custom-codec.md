@@ -5,6 +5,7 @@ Define domain-specific types for seamless storage and retrieval.
 ## Overview
 
 Codecs transform Python objects for storage. Create custom codecs for:
+
 - Domain-specific data types (graphs, images, alignments)
 - Specialized serialization formats
 - Integration with external libraries
@@ -50,6 +51,7 @@ class Connectivity(dj.Manual):
 ### `get_dtype(is_external)`
 
 Return the storage type:
+
 - `is_external=False`: Internal storage (in database)
 - `is_external=True`: Object storage (with `@`)
 
@@ -61,6 +63,7 @@ def get_dtype(self, is_external: bool) -> str:
 ```
 
 Common return values:
+
 - `"bytes"` — Binary in database
 - `"json"` — JSON in database
 - `"<blob>"` — Chain to blob codec

@@ -5,12 +5,13 @@ Organize multi-schema pipelines for team collaboration.
 ## Overview
 
 A production DataJoint pipeline typically involves:
+
 - **Multiple schemas** — Organized by experimental modality or processing stage
 - **Team of users** — With different roles and access levels
 - **Shared infrastructure** — Database server, object storage, code repository
 - **Coordination** — Between code, database, and storage permissions
 
-This guide outlines the key considerations. For managed solutions, see the [DataJoint Works](https://works.datajoint.com) platform.
+This guide outlines the key considerations. For a fully managed solution, [request a DataJoint Platform account](https://www.datajoint.com/sign-up).
 
 ## Pipeline Architecture
 
@@ -19,6 +20,7 @@ A DataJoint pipeline integrates three core components:
 ![DataJoint Platform Architecture](../images/dj-platform.png)
 
 **Core components:**
+
 - **Code Repository** — Version-controlled pipeline definitions, analysis code, configuration
 - **Relational Database** — Metadata store, system of record, integrity enforcement
 - **Object Store** — Scalable storage for large scientific data (images, recordings, videos)
@@ -32,6 +34,7 @@ A DataJoint pipeline forms a **Directed Acyclic Graph (DAG)** at two levels:
 **Nodes** represent Python modules, which correspond to database schemas.
 
 **Edges** represent:
+
 - Python import dependencies between modules
 - Bundles of foreign key references between schemas
 
@@ -353,7 +356,7 @@ Managing a team pipeline requires coordinating:
 | **Compute** | Worker deployment, job distribution, resource allocation |
 | **Monitoring** | Progress tracking, error alerting, audit logging |
 
-These challenges grow with team size and pipeline complexity. The [DataJoint Works](https://works.datajoint.com) platform provides integrated management for these concerns.
+These challenges grow with team size and pipeline complexity. The [DataJoint Platform](https://www.datajoint.com/sign-up) provides integrated management for all these concerns.
 
 ## See Also
 

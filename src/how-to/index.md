@@ -43,6 +43,6 @@ they assume you understand the basics and focus on getting things done.
 
 ## Maintenance
 
-- [Migrate from 1.x](migrate-from-1x.md) — Upgrading existing pipelines
+- [Migrate from 0.x](migrate-from-0x.md) — Upgrading existing pipelines
 - [Alter Tables](alter-tables.md) — Schema evolution
 - [Backup and Restore](backup-restore.md) — Data protection
