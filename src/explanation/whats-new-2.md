@@ -69,7 +69,7 @@ Analysis.populate(reserve_jobs=True, processes=4)
 Analysis.jobs.progress()  # {'pending': 10, 'reserved': 2, 'error': 0}
 
 # Handle errors
-Analysis.jobs.errors.fetch()
+Analysis.jobs.errors.to_dicts()
 ```
 
 ## Semantic Matching

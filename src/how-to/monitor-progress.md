@@ -62,10 +62,9 @@ Inspect specific jobs:
 (ProcessedData.jobs & key).fetch1()
 
 # Recent errors
-ProcessedData.jobs.errors.fetch(
+ProcessedData.jobs.errors.to_dicts(
     order_by='completed_time DESC',
-    limit=10,
-    as_dict=True
+    limit=10
 )
 ```
 
@@ -74,7 +73,7 @@ ProcessedData.jobs.errors.fetch(
 See which workers are processing:
 
 ```python
-for job in ProcessedData.jobs.reserved.fetch(as_dict=True):
+for job in ProcessedData.jobs.reserved.to_dicts():
     print(f"Key: {job}")
     print(f"Host: {job['host']}")
     print(f"PID: {job['pid']}")
@@ -87,7 +86,7 @@ Track how long jobs take:
 
 ```python
 # Average duration of completed jobs
-completed = ProcessedData.jobs.completed.fetch('duration')
+completed = ProcessedData.jobs.completed.to_arrays('duration')
 print(f"Average: {np.mean(completed):.1f}s")
 print(f"Median: {np.median(completed):.1f}s")
 ```

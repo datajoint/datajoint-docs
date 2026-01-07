@@ -106,7 +106,7 @@ Referenced attribute doesn't exist.
 
 ```python
 # Raises UnknownAttributeError
-table.fetch('nonexistent_column')
+table.to_arrays('nonexistent_column')
 ```
 
 **Resolution:**

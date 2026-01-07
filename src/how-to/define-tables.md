@@ -256,7 +256,7 @@ class SessionStats(dj.Computed):
     """
 
     def make(self, key):
-        trials = (Session.Trial & key).fetch()
+        trials = (Session.Trial & key).to_dicts()
         self.insert1({
             **key,
             'n_trials': len(trials),

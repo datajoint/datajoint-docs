@@ -313,10 +313,10 @@ def make(self, key):
     image, timestamp = (Recording & key).fetch1('image', 'timestamp')
 
     # Fetch multiple rows (e.g., trials for a session)
-    trials = (Trial & key).fetch(as_dict=True)
+    trials = (Trial & key).to_dicts()
 
     # Join multiple sources
-    combined = (TableA * TableB & key).fetch()
+    combined = (TableA * TableB & key).to_dicts()
 ```
 
 ### 4.4 Tripartite Make Pattern
@@ -478,7 +478,7 @@ For complex scenarios, use explicit transactions:
 ```python
 def make(self, key):
     # Fetch outside transaction
-    data = (Source & key).fetch()
+    data = (Source & key).to_dicts()
 
     # Explicit transaction for insert
     with dj.conn().transaction:
@@ -543,10 +543,10 @@ def make(self, key):
 ```python
 # Fetch master with parts
 master = (SpikeSorting & key).fetch1()
-parts = (SpikeSorting.Unit & key).fetch()
+parts = (SpikeSorting.Unit & key).to_dicts()
 
 # Join master and parts
-combined = (SpikeSorting * SpikeSorting.Unit & key).fetch()
+combined = (SpikeSorting * SpikeSorting.Unit & key).to_dicts()
 ```
 
 ### 6.4 Key Source with Parts
@@ -823,7 +823,7 @@ errors = Analysis.populate(
 
 ```python
 # View errors
-for err in Analysis.jobs.errors.fetch(as_dict=True):
+for err in Analysis.jobs.errors.to_dicts():
     print(f"Key: {err}, Error: {err['error_message']}")
 
 # Clear and retry
@@ -871,7 +871,7 @@ When `config['jobs.add_job_metadata'] = True`, auto-populated tables receive hid
 
 ```python
 # Fetch with job metadata
-Analysis.fetch('result', '_job_duration')
+Analysis().to_arrays('result', '_job_duration')
 
 # Query slow computations
 slow = Analysis & '_job_duration > 3600'
@@ -923,7 +923,7 @@ Table.jobs.progress()  # Detailed status
 
 # Error handling
 Table.populate(suppress_errors=True)
-Table.jobs.errors.fetch()
+Table.jobs.errors.to_dicts()
 Table.jobs.errors.delete()
 
 # Priority control

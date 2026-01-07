@@ -168,16 +168,16 @@ Query expressions are lazy—they build SQL but don't execute until you fetch:
 
 ```python
 # Fetch as NumPy recarray
-data = query.fetch()
+data = query.to_arrays()
 
 # Fetch as list of dicts
-data = query.fetch(as_dict=True)
+data = query.to_dicts()
 
 # Fetch as pandas DataFrame
-df = query.fetch(format='frame')
+df = query.to_pandas()
 
 # Fetch specific attributes
-ids, dates = query.fetch('mouse_id', 'session_date')
+ids, dates = query.to_arrays('mouse_id', 'session_date')
 
 # Fetch single row
 row = (query & key).fetch1()

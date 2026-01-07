@@ -23,7 +23,7 @@ Check the jobs table for errors:
 ProcessedData.jobs.errors
 
 # View error details
-for job in ProcessedData.jobs.errors.fetch(as_dict=True):
+for job in ProcessedData.jobs.errors.to_dicts():
     print(f"Key: {job}")
     print(f"Message: {job['error_message']}")
 ```

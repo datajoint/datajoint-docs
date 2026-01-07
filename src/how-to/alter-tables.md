@@ -180,7 +180,7 @@ class SubjectNew(dj.Manual):
     """
 
 # 2. Migrate data
-for row in Subject.fetch(as_dict=True):
+for row in Subject().to_dicts():
     SubjectNew.insert1({
         'subject_id': uuid.uuid4(),  # Generate new keys
         'species': row['species']

@@ -284,7 +284,7 @@ DataJoint intentionally does not provide `update()` for multiple rows:
 If you need to update many rows, iterate explicitly:
 
 ```python
-for key in (Subject & condition).fetch("KEY"):
+for key in (Subject & condition).keys():
     Subject.update1({**key, "status": "archived"})
 ```
 

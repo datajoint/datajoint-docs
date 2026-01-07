@@ -134,7 +134,7 @@ Jobs are reserved atomically—no two workers process the same key.
 Segmentation.populate(suppress_errors=True)
 
 # Check what failed
-errors = (Segmentation.jobs & 'status = "error"').fetch()
+errors = (Segmentation.jobs & 'status = "error"').to_dicts()
 
 # Clear specific error to retry
 (Segmentation.jobs & error_key).delete()
@@ -284,8 +284,8 @@ def make(self, key):
 ```python
 def make(self, key):
     # Stream large data instead of loading all at once
-    for chunk in (LargeTable & key).fetch('data', chunked=True):
-        process_chunk(chunk)
+    for row in (LargeTable & key):
+        process_chunk(row['data'])
 ```
 
 ### 3. Use Transactions for Multi-Row Inserts

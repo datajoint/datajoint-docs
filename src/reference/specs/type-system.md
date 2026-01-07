@@ -752,9 +752,10 @@ def garbage_collect(store_name):
         for table in schema.tables:
             for attr in table.heading.attributes:
                 if uses_hash_storage(attr):  # <blob@>, <attach@>, <hash@>
-                    for row in table.fetch(attr.name):
-                        if row and row.get('store') == store_name:
-                            referenced.add(row['hash'])
+                    for row in table:
+                        val = row.get(attr.name)
+                        if val and val.get('store') == store_name:
+                            referenced.add(val['hash'])
 
     # Delete orphaned files
     for hash_id in (all_hashes - referenced):
@@ -873,7 +874,7 @@ def migrate_external_store(schema, store_name):
     """
     external_table = schema.external[store_name]
 
-    for entry in external_table.fetch(as_dict=True):
+    for entry in external_table:
         legacy_uuid = entry['hash']
 
         # Fetch content from legacy location

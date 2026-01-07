@@ -182,7 +182,7 @@ mysql -h host -u user -p test_restore < backup.sql
 import datajoint as dj
 
 # Check external objects are accessible
-for key in MyTable.fetch('KEY'):
+for key in MyTable().keys():
     try:
         (MyTable & key).fetch1('blob_column')
     except Exception as e:

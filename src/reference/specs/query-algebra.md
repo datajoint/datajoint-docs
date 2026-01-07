@@ -33,7 +33,7 @@ Expressions are not executed until data is fetched:
 
 ```python
 expr = (Session * Trial) & "trial_type = 'test'"  # No database query yet
-data = expr.fetch()  # Query executed here
+data = expr.to_dicts()  # Query executed here
 ```
 
 ---

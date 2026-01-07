@@ -108,7 +108,7 @@ Handle failed jobs:
 ```python
 # View errors
 errors = ProcessedData.jobs.errors
-for job in errors.fetch(as_dict=True):
+for job in errors.to_dicts():
     print(f"Key: {job}, Error: {job['error_message']}")
 
 # Clear errors to retry

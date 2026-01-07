@@ -221,7 +221,7 @@ This ensures join attribute computation automatically excludes hidden attributes
 | `A & B` (restriction) | Same hidden attr in both | NOT matched |
 | `A - B` (anti-restriction) | Same hidden attr in both | NOT matched |
 | `A.proj()` | Hidden attrs in A | NOT projected (unless explicitly named) |
-| `A.fetch()` | Hidden attrs in A | NOT returned by default |
+| `A.to_dicts()` | Hidden attrs in A | NOT returned by default |
 
 ## Implementation Details
 
@@ -334,10 +334,10 @@ class ProcessedData(dj.Computed):
 
 # User-facing API unaffected:
 ProcessedData().heading.names  # ['raw_data_id', 'result']
-ProcessedData().fetch()  # Returns only visible attributes
+ProcessedData().to_dicts()  # Returns only visible attributes
 
 # Access hidden attributes explicitly if needed:
-ProcessedData().fetch('_job_start_time', '_job_duration', '_job_version')
+ProcessedData().to_arrays('_job_start_time', '_job_duration', '_job_version')
 ```
 
 ## Summary of Design Decisions
