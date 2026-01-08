@@ -95,7 +95,7 @@ with dj.conn().transaction:
 
 ## Part Tables
 
-Part tables cannot be deleted directly:
+Part tables cannot be deleted directly by default (master-part integrity):
 
 ```python
 # This raises an error
@@ -105,11 +105,21 @@ Session.Trial.delete()  # DataJointError
 (Session & key).delete()
 ```
 
-Force direct deletion when necessary:
+Use `part_integrity` to control this behavior:
 
 ```python
-(Session.Trial & key).delete(force_parts=True)
+# Allow direct deletion (breaks master-part integrity)
+(Session.Trial & key).delete(part_integrity="ignore")
+
+# Delete parts AND cascade up to delete master
+(Session.Trial & key).delete(part_integrity="cascade")
 ```
+
+| Policy | Behavior |
+|--------|----------|
+| `"enforce"` | (default) Error if parts deleted without masters |
+| `"ignore"` | Allow deleting parts without masters |
+| `"cascade"` | Also delete masters when parts are deleted |
 
 ## Quick Delete
 

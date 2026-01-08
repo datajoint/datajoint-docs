@@ -300,8 +300,7 @@ def delete(
     self,
     transaction: bool = True,
     prompt: bool | None = None,
-    force_parts: bool = False,
-    force_masters: bool = False,
+    part_integrity: str = "enforce",
 ) -> int
 ```
 
@@ -311,8 +310,15 @@ def delete(
 |-----------|------|---------|-------------|
 | `transaction` | bool | `True` | Wrap in atomic transaction |
 | `prompt` | bool | `None` | Prompt for confirmation (default: config setting) |
-| `force_parts` | bool | `False` | Allow deleting parts without master |
-| `force_masters` | bool | `False` | Include master/part pairs in cascade |
+| `part_integrity` | str | `"enforce"` | Master-part integrity policy (see below) |
+
+**`part_integrity` values:**
+
+| Value | Behavior |
+|-------|----------|
+| `"enforce"` | Error if parts would be deleted without masters |
+| `"ignore"` | Allow deleting parts without masters (breaks integrity) |
+| `"cascade"` | Also delete masters when parts are deleted |
 
 **Returns:** Number of deleted rows from the primary table.
 
@@ -375,15 +381,26 @@ Subject.delete(prompt=False)
 
 ### 4.6 Part Table Constraints
 
-Cannot delete from part tables without deleting from master:
+Cannot delete from part tables without deleting from master (by default):
 
 ```python
 # Error: cannot delete part without master
 Session.Recording.delete()
 
-# Override with force_parts
-Session.Recording.delete(force_parts=True)
+# Allow breaking master-part integrity
+Session.Recording.delete(part_integrity="ignore")
+
+# Delete parts AND cascade up to delete master
+Session.Recording.delete(part_integrity="cascade")
 ```
+
+**`part_integrity` parameter:**
+
+| Value | Behavior |
+|-------|----------|
+| `"enforce"` | (default) Error if parts would be deleted without masters |
+| `"ignore"` | Allow deleting parts without masters (breaks integrity) |
+| `"cascade"` | Also delete masters when parts are deleted (maintains integrity) |
 
 ### 4.7 `delete_quick()` Method
 
@@ -507,8 +524,11 @@ Cannot delete parts independently (by default):
 # Error
 Session.Recording.delete()
 
-# Must use force_parts
-Session.Recording.delete(force_parts=True)
+# Allow breaking master-part integrity
+Session.Recording.delete(part_integrity="ignore")
+
+# Or cascade up to also delete master
+Session.Recording.delete(part_integrity="cascade")
 ```
 
 ---

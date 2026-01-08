@@ -42,6 +42,48 @@ Session & [{'subject_id': 'M001'}, {'subject_id': 'M002'}]
 Session & "duration > 30" & {'experimenter': 'alice'}
 ```
 
+### Top N Rows (`dj.Top`)
+
+Restrict to the top N rows with optional ordering:
+
+```python
+# First row by primary key
+Session & dj.Top()
+
+# First 10 rows by primary key (ascending)
+Session & dj.Top(10)
+
+# First 10 rows by primary key (descending)
+Session & dj.Top(10, 'KEY DESC')
+
+# Top 5 by score descending
+Result & dj.Top(5, 'score DESC')
+
+# Top 10 most recent sessions
+Session & dj.Top(10, 'session_date DESC')
+
+# Pagination: skip 20, take 10
+Session & dj.Top(10, 'session_date DESC', offset=20)
+
+# All rows ordered (no limit)
+Session & dj.Top(None, 'session_date DESC')
+```
+
+**Parameters**:
+- `limit` (default=1): Maximum rows. Use `None` for no limit.
+- `order_by` (default="KEY"): Attribute(s) to sort by. `"KEY"` expands to all primary key attributes. Add `DESC` for descending order (e.g., `"KEY DESC"`, `"score DESC"`). Use `None` to inherit existing order.
+- `offset` (default=0): Rows to skip.
+
+**Chaining Tops**: When chaining multiple Top restrictions, the second Top can inherit the first's ordering by using `order_by=None`:
+
+```python
+# First Top sets the order, second inherits it
+(Session & dj.Top(100, 'date DESC')) & dj.Top(10, order_by=None)
+# Result: top 10 of top 100 by date descending
+```
+
+**Note**: `dj.Top` can only be used with restriction (`&`), not with anti-restriction (`-`).
+
 ---
 
 ## Anti-Restriction (`-`)

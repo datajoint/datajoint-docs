@@ -28,6 +28,7 @@ Each specification follows a consistent structure:
 | Specification | Description |
 |---------------|-------------|
 | [Table Declaration](table-declaration.md) | Table definition syntax, tiers, foreign keys, and indexes |
+| [Master-Part Relationships](master-part.md) | Compositional data modeling, integrity, and cascading operations |
 
 ### Query Operations
 

@@ -23,6 +23,30 @@ Session & (Subject & "sex = 'M'")    # Sessions for male subjects
 Session & [{'subject_id': 'M001'}, {'subject_id': 'M002'}]
 ```
 
+## Top N Rows (`dj.Top`)
+
+Limit results with optional ordering:
+
+```python
+# First 10 by primary key
+Session & dj.Top(10)
+
+# Top 10 by date (descending)
+Session & dj.Top(10, 'session_date DESC')
+
+# Pagination: skip 20, take 10
+Session & dj.Top(10, 'session_date DESC', offset=20)
+
+# All rows ordered
+Session & dj.Top(None, 'session_date DESC')
+```
+
+Use `"KEY"` for primary key ordering, `"KEY DESC"` for reverse:
+
+```python
+Session & dj.Top(10, 'KEY DESC')  # Last 10 by primary key
+```
+
 ## Anti-Restriction (`-`)
 
 Filter rows that do NOT match:

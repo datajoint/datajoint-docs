@@ -138,6 +138,55 @@ Use path-addressed storage for:
 - HDF5 files
 - Large datasets requiring streaming access
 
+## Write Directly to Object Storage
+
+For large datasets like multi-GB imaging recordings, avoid intermediate copies by writing directly to object storage with `staged_insert1`:
+
+```python
+import zarr
+
+@schema
+class ImagingSession(dj.Manual):
+    definition = """
+    subject_id : int32
+    session_id : int32
+    ---
+    n_frames : int32
+    frame_rate : float32
+    frames : <object@>
+    """
+
+# Write Zarr directly to object storage
+with ImagingSession.staged_insert1 as staged:
+    # 1. Set primary key values first
+    staged.rec['subject_id'] = 1
+    staged.rec['session_id'] = 1
+
+    # 2. Get storage handle
+    store = staged.store('frames', '.zarr')
+
+    # 3. Write directly (no local copy)
+    z = zarr.open(store, mode='w', shape=(1000, 512, 512),
+                  chunks=(10, 512, 512), dtype='uint16')
+    for i in range(1000):
+        z[i] = acquire_frame()  # Write frame-by-frame
+
+    # 4. Set remaining attributes
+    staged.rec['n_frames'] = 1000
+    staged.rec['frame_rate'] = 30.0
+
+# Record inserted with computed metadata on successful exit
+```
+
+The `staged_insert1` context manager:
+
+- Writes directly to the object store (no intermediate files)
+- Computes metadata (size, manifest) automatically on exit
+- Cleans up storage if an error occurs (atomic)
+- Requires primary key values before calling `store()` or `open()`
+
+Use `staged.store(field, ext)` for FSMap access (Zarr), or `staged.open(field, ext)` for file-like access.
+
 ## Attachments
 
 Preserve original filenames with `<attach@>`:
