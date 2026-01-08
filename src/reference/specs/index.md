@@ -29,6 +29,7 @@ Each specification follows a consistent structure:
 |---------------|-------------|
 | [Table Declaration](table-declaration.md) | Table definition syntax, tiers, foreign keys, and indexes |
 | [Master-Part Relationships](master-part.md) | Compositional data modeling, integrity, and cascading operations |
+| [Virtual Schemas](virtual-schemas.md) | Accessing schemas without Python source, introspection API |
 
 ### Query Operations
 
