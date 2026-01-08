@@ -47,6 +47,20 @@ Mouse - StudyMouse
 Session - Recording
 ```
 
+### Top N (`dj.Top`)
+
+Select a limited number of entities with ordering:
+
+```python
+# Most recent 10 sessions
+Session & dj.Top(10, 'session_date DESC')
+
+# First session by primary key
+Session & dj.Top()
+```
+
+The `order_by` parameter accepts attribute names with optional `DESC`/`ASC`. The special value `"KEY"` is an alias for all primary key attributes (e.g., `"KEY DESC"` for reverse primary key order).
+
 ## Join (`*`)
 
 Combine entity sets along shared attributes.

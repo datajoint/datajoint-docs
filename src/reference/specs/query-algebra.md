@@ -711,19 +711,149 @@ Subqueries are generated automatically when needed:
 
 ---
 
-## 12. Implementation Reference
+## 12. Top (`dj.Top`)
+
+### 12.1 Syntax
+
+```python
+result = expression & dj.Top()                          # First row by primary key
+result = expression & dj.Top(limit=5)                   # First 5 rows by primary key
+result = expression & dj.Top(5, 'score DESC')           # Top 5 by score descending
+result = expression & dj.Top(10, order_by='date DESC')  # Top 10 by date descending
+result = expression & dj.Top(5, offset=10)              # Skip 10, take 5
+result = expression & dj.Top(None, 'score DESC')        # All rows, ordered by score
+```
+
+### 12.2 Parameters
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `limit` | `int` or `None` | `1` | Maximum rows to return. `None` = unlimited. |
+| `order_by` | `str`, `list[str]`, or `None` | `"KEY"` | Ordering. `"KEY"` = primary key order. `None` = inherit existing order. |
+| `offset` | `int` | `0` | Rows to skip before taking `limit`. |
+
+### 12.3 Ordering Specification
+
+| Format | Meaning |
+|--------|---------|
+| `"KEY"` | Order by primary key (ascending) |
+| `"attr"` | Order by attribute (ascending) |
+| `"attr DESC"` | Order by attribute (descending) |
+| `"attr ASC"` | Order by attribute (ascending, explicit) |
+| `["attr1 DESC", "attr2"]` | Multiple columns |
+| `None` | Inherit ordering from existing Top |
+
+### 12.4 SQL Equivalent
+
+```sql
+SELECT * FROM table
+ORDER BY order_by
+LIMIT limit OFFSET offset
+```
+
+### 12.5 Chaining Tops
+
+When multiple Tops are chained, behavior depends on the `order_by` parameter:
+
+| Scenario | Behavior |
+|----------|----------|
+| Second Top has `order_by=None` | **Merge**: inherits ordering, limits combined |
+| Both Tops have identical `order_by` | **Merge**: ordering preserved, limits combined |
+| Tops have different `order_by` | **Subquery**: first Top executed, then second applied |
+
+**Merge behavior:**
+- `limit` = minimum of both limits
+- `offset` = sum of both offsets
+- `order_by` = preserved from first Top
+
+```python
+# Merge: same result, single query
+(Table & dj.Top(10, "score DESC")) & dj.Top(5, order_by=None)
+# Effective: Top(5, "score DESC", offset=0)
+
+# Merge with offsets
+(Table & dj.Top(10, "x", offset=5)) & dj.Top(3, order_by=None, offset=2)
+# Effective: Top(3, "x", offset=7)
+
+# Subquery: different orderings
+(Table & dj.Top(10, "score DESC")) & dj.Top(3, "id ASC")
+# First selects top 10 by score, then reorders those 10 by id and takes 3
+```
+
+### 12.6 Preview and Limit
+
+When fetching with a `limit` parameter, the limit is applied as an additional Top that inherits existing ordering:
+
+```python
+# User applies custom ordering
+query = Table & dj.Top(order_by="score DESC")
+
+# Preview respects the ordering
+query.to_arrays("id", "score", limit=5)  # Top 5 by score descending
+```
+
+Internally, `to_arrays(..., limit=N)` applies `dj.Top(N, order_by=None)`, which inherits the existing ordering.
+
+### 12.7 Use Cases
+
+**Top N rows:**
+```python
+# Top 10 highest scores
+Result & dj.Top(10, "score DESC")
+```
+
+**Pagination:**
+```python
+# Page 3 (rows 20-29) sorted by date
+Session & dj.Top(10, "session_date DESC", offset=20)
+```
+
+**Sampling (deterministic):**
+```python
+# First 100 rows by primary key
+BigTable & dj.Top(100)
+```
+
+**Ordering without limit:**
+```python
+# All rows ordered by date
+Session & dj.Top(None, "session_date DESC")
+```
+
+### 12.8 Algebraic Properties
+
+| Property | Value |
+|----------|-------|
+| Primary Key | Preserved: PK(result) = PK(input) |
+| Attributes | Preserved: all attributes retained |
+| Entity Type | Preserved |
+| Row Order | Determined by `order_by` |
+
+### 12.9 Error Conditions
+
+| Condition | Error |
+|-----------|-------|
+| `limit` not int or None | `TypeError` |
+| `order_by` not str, list[str], or None | `TypeError` |
+| `offset` not int | `TypeError` |
+| Top in OR list | `DataJointError` |
+| Top in AndList | `DataJointError` |
+
+---
+
+## 13. Implementation Reference
 
 | File | Purpose |
 |------|---------|
 | `expression.py` | QueryExpression base class, operators |
-| `condition.py` | Restriction condition handling |
+| `condition.py` | Restriction condition handling, Top class |
 | `heading.py` | Attribute metadata and lineage |
 | `table.py` | Table class, fetch interface |
 | `U.py` | Universal set implementation |
 
 ---
 
-## 13. Quick Reference
+## 14. Quick Reference
 
 | Operation | Syntax | Result PK |
 |-----------|--------|-----------|
