@@ -10,6 +10,7 @@ they assume you understand the basics and focus on getting things done.
 - [Installation](installation.md) — Installing DataJoint
 - [Configure Database Connection](configure-database.md) — Connection settings
 - [Configure Object Storage](configure-storage.md) — S3, MinIO, file stores
+- [Use the Command-Line Interface](use-cli.md) — Interactive REPL
 
 ## Schema Design
 
