@@ -1,0 +1,154 @@
+# Configure Object Storage
+
+Set up S3, MinIO, or filesystem storage for your Object-Augmented Schema.
+
+> **Tip:** [DataJoint.com](https://datajoint.com) provides pre-configured object storage integrated with your database—no setup required.
+
+## Overview
+
+An Object-Augmented Schema (OAS) integrates relational tables with object storage as a single system. Large data objects (arrays, files, Zarr datasets) are stored in object storage while maintaining full referential integrity with the relational database.
+
+Object storage is configured per-project and can include multiple named stores for different data types or storage tiers.
+
+## Configuration Methods
+
+DataJoint loads configuration in priority order:
+
+1. **Environment variables** (highest priority)
+2. **Secrets directory** (`.secrets/`)
+3. **Config file** (`datajoint.json`)
+4. **Defaults** (lowest priority)
+
+## File System Store
+
+For local or network-mounted storage:
+
+```json
+{
+  "object_storage": {
+    "project_name": "my_project",
+    "protocol": "file",
+    "location": "/data/datajoint-store"
+  }
+}
+```
+
+## S3 Store
+
+For Amazon S3 or S3-compatible storage:
+
+```json
+{
+  "object_storage": {
+    "project_name": "my_project",
+    "protocol": "s3",
+    "endpoint": "s3.amazonaws.com",
+    "bucket": "my-bucket",
+    "location": "dj/objects",
+    "secure": true
+  }
+}
+```
+
+Store credentials separately in `.secrets/`:
+
+```
+.secrets/
+├── object_storage.access_key
+└── object_storage.secret_key
+```
+
+Or use environment variables:
+
+```bash
+export DJ_OBJECT_STORAGE_ACCESS_KEY=AKIAIOSFODNN7EXAMPLE
+export DJ_OBJECT_STORAGE_SECRET_KEY=wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
+```
+
+## MinIO Store
+
+MinIO uses the S3 protocol with a custom endpoint:
+
+```json
+{
+  "object_storage": {
+    "project_name": "my_project",
+    "protocol": "s3",
+    "endpoint": "minio.example.com:9000",
+    "bucket": "datajoint",
+    "location": "dj/objects",
+    "secure": false
+  }
+}
+```
+
+## Named Stores
+
+Define multiple stores for different data types or storage tiers:
+
+```json
+{
+  "object_storage": {
+    "project_name": "my_project",
+    "protocol": "file",
+    "location": "/data/default",
+    "stores": {
+      "raw": {
+        "protocol": "file",
+        "location": "/data/raw"
+      },
+      "archive": {
+        "protocol": "s3",
+        "endpoint": "s3.amazonaws.com",
+        "bucket": "archive-bucket",
+        "location": "dj/archive"
+      }
+    }
+  }
+}
+```
+
+Use named stores in table definitions:
+
+```python
+@schema
+class Recording(dj.Manual):
+    definition = """
+    recording_id : uuid
+    ---
+    raw_data : <blob@raw>         # Uses 'raw' store
+    processed : <blob@archive>    # Uses 'archive' store
+    """
+```
+
+## Verify Configuration
+
+```python
+import datajoint as dj
+
+# Check default store
+spec = dj.config.get_object_store_spec()
+print(spec)
+
+# Check named store
+spec = dj.config.get_object_store_spec("archive")
+print(spec)
+```
+
+## Configuration Options
+
+| Option | Required | Description |
+|--------|----------|-------------|
+| `project_name` | Yes | Unique identifier for your project |
+| `protocol` | Yes | `file`, `s3`, `gcs`, or `azure` |
+| `location` | Yes | Base path or prefix within bucket |
+| `bucket` | S3/GCS | Bucket name |
+| `endpoint` | S3 | S3 endpoint URL |
+| `secure` | No | Use HTTPS (default: true) |
+| `access_key` | S3 | Access key ID |
+| `secret_key` | S3 | Secret access key |
+
+## See Also
+
+- [Use Object Storage](use-object-storage.md) — When and how to use object storage
+- [Manage Large Data](manage-large-data.md) — Working with blobs and objects
