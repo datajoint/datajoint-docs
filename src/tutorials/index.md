@@ -17,6 +17,7 @@ progress to advanced topics.
 
 ## Advanced Topics
 
+- [JSON Data Type](advanced/json-type.ipynb) — Semi-structured data in tables
 - [Distributed Computing](advanced/distributed.ipynb) — Multi-process and cluster workflows
 - [Custom Codecs](advanced/custom-codecs.ipynb) — Extending the type system
 - [Schema Migration](advanced/migration.ipynb) — Evolving existing pipelines
