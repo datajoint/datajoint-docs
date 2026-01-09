@@ -122,3 +122,60 @@ For local development without TLS:
 }
 ```
 
+## Connection Lifecycle
+
+### Persistent Connection (Default)
+
+DataJoint uses a persistent singleton connection by default:
+
+```python
+import datajoint as dj
+
+# First call establishes connection
+conn = dj.conn()
+
+# Subsequent calls return the same connection
+conn2 = dj.conn()  # Same as conn
+
+# Reset to create a new connection
+conn3 = dj.conn(reset=True)  # New connection
+```
+
+This is ideal for interactive sessions and notebooks.
+
+### Context Manager (Explicit Cleanup)
+
+For serverless environments (AWS Lambda, Cloud Functions) or when you need explicit connection lifecycle control, use the context manager:
+
+```python
+import datajoint as dj
+
+with dj.Connection(host, user, password) as conn:
+    schema = dj.schema('my_schema', connection=conn)
+    MyTable().insert(data)
+# Connection automatically closed when exiting the block
+```
+
+The connection closes automatically even if an exception occurs:
+
+```python
+try:
+    with dj.Connection(**creds) as conn:
+        schema = dj.schema('my_schema', connection=conn)
+        MyTable().insert(data)
+        raise SomeError()
+except SomeError:
+    pass
+# Connection is still closed properly
+```
+
+### Manual Close
+
+You can also close a connection explicitly:
+
+```python
+conn = dj.conn()
+# ... do work ...
+conn.close()
+```
+
