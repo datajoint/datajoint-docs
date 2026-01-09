@@ -14,7 +14,8 @@ block-beta
     block:layer3:1
         columns 1
         L3["Codec Types (Layer 3)"]
-        B3["Built-in: <blob> <attach> <object@> <hash@> <filepath@>\nUser-defined: <custom> <mytype> ..."]
+        B3a["Built-in: &lt;blob&gt; &lt;attach&gt; &lt;object@&gt; &lt;hash@&gt; &lt;filepath@&gt;"]
+        B3b["User-defined: &lt;graph&gt; &lt;image&gt; &lt;custom&gt; ..."]
     end
     block:layer2:1
         columns 1
@@ -24,7 +25,7 @@ block-beta
     block:layer1:1
         columns 1
         L1["Native Database Types (Layer 1)"]
-        B1["MySQL: TINYINT SMALLINT INT BIGINT FLOAT DOUBLE ...\nPostgreSQL: SMALLINT INTEGER BIGINT REAL DOUBLE PRECISION\n(pass through with warning — discouraged)"]
+        B1["MySQL: TINYINT SMALLINT INT BIGINT FLOAT DOUBLE TEXT ...\nPostgreSQL: SMALLINT INTEGER BIGINT REAL DOUBLE PRECISION TEXT\n(pass through with warning — discouraged)"]
     end
     layer3 --> layer2 --> layer1
 ```
