@@ -47,6 +47,22 @@ block-beta
 | Object | `{schema}/{table}/{pk}/` | Primary key | Large objects, Zarr, HDF5 |
 | Hash | `_hash/{hash}` | MD5 hash | Deduplicated blobs/files |
 
+### URL Representation
+
+DataJoint uses consistent URL representation for all storage backends:
+
+| Protocol | URL Format | Example |
+|----------|------------|---------|
+| Local filesystem | `file://` | `file:///data/objects/file.dat` |
+| Amazon S3 | `s3://` | `s3://bucket/path/file.dat` |
+| Google Cloud | `gs://` | `gs://bucket/path/file.dat` |
+| Azure Blob | `az://` | `az://container/path/file.dat` |
+
+This unified approach treats all storage backends uniformly via fsspec, enabling:
+- Consistent path handling across local and cloud storage
+- Transparent switching between storage backends
+- Streaming access to any storage type
+
 ### External References
 
 `<filepath@store>` provides portable relative paths within configured stores with lazy ObjectRef access.

@@ -148,6 +148,29 @@ print(spec)
 | `access_key` | S3 | Access key ID |
 | `secret_key` | S3 | Secret access key |
 
+## URL Representation
+
+DataJoint uses consistent URL representation for all storage backends internally. This means:
+
+- Local filesystem paths are represented as `file://` URLs
+- S3 paths use `s3://bucket/path`
+- GCS paths use `gs://bucket/path`
+- Azure paths use `az://container/path`
+
+You can use either format when specifying paths:
+
+```python
+# Both are equivalent for local files
+"/data/myfile.dat"
+"file:///data/myfile.dat"
+```
+
+This unified approach enables:
+
+- **Consistent internal handling** across all storage types
+- **Seamless switching** between local and cloud storage
+- **Integration with fsspec** for streaming access
+
 ## See Also
 
 - [Use Object Storage](use-object-storage.md) — When and how to use object storage
