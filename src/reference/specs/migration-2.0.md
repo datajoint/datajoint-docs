@@ -12,6 +12,39 @@ This specification defines the migration process from DataJoint 0.x to DataJoint
 >
 > The migration process is designed and tested for agentic execution, allowing AI assistants to safely perform the migration while keeping you informed of each change.
 
+## Why Migrate?
+
+DataJoint 2.0 is a major architectural improvement that makes pipelines faster, more reliable, and easier to maintain.
+
+### Key Benefits
+
+| Improvement | Before (0.x) | After (2.0) |
+|-------------|--------------|-------------|
+| **Type Safety** | Implicit types inferred at runtime | Explicit type labels in schema metadata |
+| **External Storage** | Metadata in hidden tables, UUID indirection | Inline JSON with direct URLs, no hidden tables |
+| **Serialization** | Implicit blob serialization | Explicit `<blob>` codec, clear intent |
+| **Configuration** | Python dict, credentials in code | JSON config file, secrets separated |
+| **Data Retrieval** | Single `.fetch()` with many options | Explicit methods: `to_dicts()`, `to_pandas()`, `to_polars()` |
+| **Iteration** | Fetch all keys, then loop | Lazy streaming from database cursor |
+
+### What You Gain
+
+- **Faster queries** — No hidden table joins for external data
+- **Clearer schemas** — Type information visible in database metadata
+- **Better security** — Credentials separated from configuration
+- **Modern formats** — Native support for pandas, polars, and Arrow
+- **Simpler debugging** — External URLs visible directly in table rows
+- **Reduced complexity** — No hidden `~external_*` tables to manage
+
+### What Changes
+
+- Column comments gain type label prefixes (e.g., `:int32:`, `:blob:`)
+- External storage columns change from `BINARY(16)` UUID to `JSON` metadata
+- Configuration moves from `dj_local_conf.json` to `datajoint.json` + `.secrets/`
+- Code updates needed for new fetch API (`to_dicts()` instead of `fetch()`)
+
+---
+
 ## Overview
 
 DataJoint 2.0 introduces a unified type system with explicit codecs for object storage. **Migration is required** to use 2.0's full feature set. The migration updates table metadata (column comments) to include type labels that 2.0 uses to interpret data correctly.
