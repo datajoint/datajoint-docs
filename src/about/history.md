@@ -10,7 +10,7 @@ In 2017, DARPA awarded a small-business innovation research grant to Vathes LLC 
 
 In 2018, the key theoretical framework was formulated in ["DataJoint: A Simpler Relational Data Model"](https://doi.org/10.48550/arXiv.1807.11104), establishing the formal basis for DataJoint's approach to scientific data management.
 
-In 2022, NIH awarded a Phase II SBIR grant to DataJoint (then Vathes LLC) in collaboration with the Johns Hopkins University Applied Physics Laboratory (Co-PI: Erik C. Johnson) to build a scalable cloud platform for DataJoint pipelines.
+In 2022, NIH awarded a Phase II SBIR grant ([R44 NS129492](https://reporter.nih.gov/project-details/10600812), PI: Dimitri Yatsenko) to DataJoint (then Vathes LLC) in collaboration with the Johns Hopkins University Applied Physics Laboratory (Co-PI: Erik C. Johnson) to build a scalable cloud platform for DataJoint pipelines.
 
 ## DataJoint Elements
 
