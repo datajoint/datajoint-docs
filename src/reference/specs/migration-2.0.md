@@ -933,7 +933,7 @@ for table in schema.list_tables():
     print(f"{table}: {len(tbl)} rows")
     # Fetch sample to verify data access
     if len(tbl) > 0:
-        tbl.fetch(limit=1)
+        tbl.to_dicts(limit=1)
 ```
 
 ---
