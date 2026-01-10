@@ -1,23 +1,65 @@
-# MODE="LIVE|BUILD" docker compose up --build
+# DataJoint Documentation Environment
 #
-# Navigate to http://localhost:8000/
+# MODE="LIVE" docker compose up --build     # Live dev server at http://localhost:8000/
+# MODE="BUILD" docker compose up --build    # Build static site
+# docker compose run docs jupyter nbconvert --execute ...  # Execute notebooks
+#
 services:
+  mysql:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: tutorial
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-ptutorial"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  minio:
+    image: minio/minio:latest
+    environment:
+      MINIO_ROOT_USER: datajoint
+      MINIO_ROOT_PASSWORD: datajoint
+    ports:
+      - "9002:9000"
+      - "9003:9001"
+    volumes:
+      - minio_data:/data
+    command: server /data --console-address ":9001"
+    healthcheck:
+      test: ["CMD", "mc", "ready", "local"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
   docs:
-    # image: datajoint/datajoint-docs
     build:
       context: .
       dockerfile: Dockerfile
     environment:
       - MODE
+      - DJ_HOST=mysql
+      - DJ_USER=root
+      - DJ_PASS=tutorial
     volumes:
       - .:/main
+      - ../datajoint-python:/datajoint-python
     ports:
       - 8000:8000
+    depends_on:
+      mysql:
+        condition: service_healthy
     command:
       - sh
       - -c
       - |
         set -e
+        pip install -e /datajoint-python
+        pip install scikit-image pooch
         if echo "$${MODE}" | grep -i live &>/dev/null; then
             mkdocs serve --config-file ./mkdocs.yaml -a 0.0.0.0:8000
         elif echo "$${MODE}" | grep -i build &>/dev/null; then
@@ -26,3 +68,10 @@ services:
             echo "Unexpected mode..."
             exit 1
         fi
+
+volumes:
+  mysql_data:
+    # Persistent storage for tutorial databases
+    # Use `docker compose down -v` to reset
+  minio_data:
+    # Persistent storage for external objects
