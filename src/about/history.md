@@ -6,16 +6,15 @@ In 2015, additional contributors joined to develop the Python implementation, re
 
 In 2016, Vathes LLC was founded to provide support to groups using DataJoint.
 
-In 2017, DARPA awarded a small-business innovation research grant to Vathes LLC (Contract D17PC00162) to further develop and publicize the DataJoint framework.
+In 2017, DARPA awarded a Phase I SBIR grant (Contract D17PC00162, PI: Dimitri Yatsenko, $150,000, 2017–2018) titled "Tools for Sharing and Analyzing Neuroscience Data" to further develop and publicize the DataJoint framework.
 
 In 2018, the key theoretical framework was formulated in ["DataJoint: A Simpler Relational Data Model"](https://doi.org/10.48550/arXiv.1807.11104), establishing the formal basis for DataJoint's approach to scientific data management.
 
-In June 2018, the Princeton Neuroscience Institute, under the leadership of Prof. Carlos
-Brody, began funding a project to generate a detailed DataJoint user manual.
+In 2022, NIH awarded a Phase II SBIR grant ([R44 NS129492](https://reporter.nih.gov/project-details/10600812), PI: Dimitri Yatsenko, $2,124,457, 2022–2024) titled "DataJoint SciOps: A Managed Service for Neuroscience Data Workflows" to DataJoint (then Vathes LLC) in collaboration with the Johns Hopkins University Applied Physics Laboratory (Co-PI: Erik C. Johnson) to build a scalable cloud platform for DataJoint pipelines.
 
 ## DataJoint Elements
 
-[DataJoint Elements](https://docs.datajoint.com/elements/) is a separate NIH-funded project ([NIH U24 NS116470](https://reporter.nih.gov/project-details/10547509)) awarded to DataJoint Inc. (PI: Dimitri Yatsenko), performed 2020-2025. The project developed standard, open-source data pipelines for neurophysiology research ([Press Release](https://www.pr.com/press-release/873164)).
+[DataJoint Elements](https://docs.datajoint.com/elements/) is an NIH-funded project ([U24 NS116470](https://reporter.nih.gov/project-details/10547509), PI: Dimitri Yatsenko, $3,780,000, 2020–2025) titled "DataJoint Pipelines for Neurophysiology." The project developed standard, open-source data pipelines for neurophysiology research ([Press Release](https://www.pr.com/press-release/873164)).
 
 Building on DataJoint's workflow framework, Elements provides curated, modular components for common experimental modalities including calcium imaging, electrophysiology, pose estimation, and optogenetics. The project distilled best practices from leading neuroscience labs into reusable pipeline modules that integrate with third-party analysis tools (Suite2p, DeepLabCut, Kilosort, etc.) and data standards (NWB, DANDI).
 

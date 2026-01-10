@@ -24,7 +24,10 @@ nav:
       - Queries: tutorials/04-queries.ipynb
       - Computation: tutorials/05-computation.ipynb
       - Object-Augmented Schemas: tutorials/06-object-storage.ipynb
+      - University Database: tutorials/07-university.ipynb
+      - Fractal Pipeline: tutorials/08-fractal-pipeline.ipynb
       - Advanced:
+          - JSON Data Type: tutorials/advanced/json-type.ipynb
           - Distributed Computing: tutorials/advanced/distributed.ipynb
           - Custom Codecs: tutorials/advanced/custom-codecs.ipynb
           - Schema Migration: tutorials/advanced/migration.ipynb
@@ -96,7 +99,9 @@ theme:
     logo: main/company-logo
   favicon: assets/images/company-logo-blue.png
   features:
-    - toc.integrate
+    - navigation.sections
+    - navigation.indexes
+    - toc.follow
     - announce.dismiss
   palette:
     - media: "(prefers-color-scheme: light)"
@@ -169,6 +174,8 @@ markdown_extensions:
   - pymdownx.magiclink # Displays bare URLs as links
   - pymdownx.tasklist: # Renders check boxes in tasks lists
       custom_checkbox: true
+  - pymdownx.arithmatex: # LaTeX math support
+      generic: true
 extra:
   generator: false # Disable watermark
   datajoint_version: "2.0"  # DataJoint Python version this documentation covers
@@ -209,4 +216,6 @@ extra:
 extra_css:
   - assets/stylesheets/extra.css
 extra_javascript:
+  - javascripts/mathjax.js
+  - https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js
   - https://js-na1.hs-scripts.com/23133402.js # HubSpot chatbot

@@ -14,7 +14,8 @@ block-beta
     block:layer3:1
         columns 1
         L3["Codec Types (Layer 3)"]
-        B3["Built-in: <blob> <attach> <object@> <hash@> <filepath@>\nUser-defined: <custom> <mytype> ..."]
+        B3a["Built-in: &lt;blob&gt; &lt;attach&gt; &lt;object@&gt; &lt;hash@&gt; &lt;filepath@&gt;"]
+        B3b["User-defined: &lt;graph&gt; &lt;image&gt; &lt;custom&gt; ..."]
     end
     block:layer2:1
         columns 1
@@ -24,7 +25,7 @@ block-beta
     block:layer1:1
         columns 1
         L1["Native Database Types (Layer 1)"]
-        B1["MySQL: TINYINT SMALLINT INT BIGINT FLOAT DOUBLE ...\nPostgreSQL: SMALLINT INTEGER BIGINT REAL DOUBLE PRECISION\n(pass through with warning — discouraged)"]
+        B1["MySQL: TINYINT SMALLINT INT BIGINT FLOAT DOUBLE TEXT ...\nPostgreSQL: SMALLINT INTEGER BIGINT REAL DOUBLE PRECISION TEXT\n(pass through with warning — discouraged)"]
     end
     layer3 --> layer2 --> layer1
 ```
@@ -46,6 +47,22 @@ block-beta
 |--------|--------------|------------|----------|
 | Object | `{schema}/{table}/{pk}/` | Primary key | Large objects, Zarr, HDF5 |
 | Hash | `_hash/{hash}` | MD5 hash | Deduplicated blobs/files |
+
+### URL Representation
+
+DataJoint uses consistent URL representation for all storage backends:
+
+| Protocol | URL Format | Example |
+|----------|------------|---------|
+| Local filesystem | `file://` | `file:///data/objects/file.dat` |
+| Amazon S3 | `s3://` | `s3://bucket/path/file.dat` |
+| Google Cloud | `gs://` | `gs://bucket/path/file.dat` |
+| Azure Blob | `az://` | `az://container/path/file.dat` |
+
+This unified approach treats all storage backends uniformly via fsspec, enabling:
+- Consistent path handling across local and cloud storage
+- Transparent switching between storage backends
+- Streaming access to any storage type
 
 ### External References
 

@@ -14,9 +14,12 @@ progress to advanced topics.
 4. [Queries](04-queries.ipynb) — Operators and fetching results
 5. [Computation](05-computation.ipynb) — Imported and Computed tables
 6. [Object-Augmented Schemas](06-object-storage.ipynb) — Blobs, attachments, and object storage
+7. [University Database](07-university.ipynb) — A complete example pipeline
+8. [Fractal Pipeline](08-fractal-pipeline.ipynb) — Iterative computation patterns
 
 ## Advanced Topics
 
+- [JSON Data Type](advanced/json-type.ipynb) — Semi-structured data in tables
 - [Distributed Computing](advanced/distributed.ipynb) — Multi-process and cluster workflows
 - [Custom Codecs](advanced/custom-codecs.ipynb) — Extending the type system
 - [Schema Migration](advanced/migration.ipynb) — Evolving existing pipelines
