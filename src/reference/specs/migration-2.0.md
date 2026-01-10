@@ -22,6 +22,7 @@ DataJoint 2.0 is a major architectural improvement that makes pipelines faster, 
 |-------------|--------------|-------------|
 | **Transparency** | Hidden tables, implicit serialization, magic behavior | Everything visible in schema, explicit codecs, no hidden state |
 | **Extensibility** | Fixed set of blob/attachment types | Custom codecs for any data type (images, video, domain objects) |
+| **Portability** | MySQL-specific hidden tables, tight coupling | Backend-agnostic design ready for Polars, Databricks, and other platforms |
 | **Type Safety** | Implicit types inferred at runtime | Explicit type labels in schema metadata |
 | **External Storage** | Metadata in hidden tables, UUID indirection | Inline JSON with direct URLs, no hidden tables |
 | **Configuration** | Python dict, credentials in code | JSON config file, secrets separated |
@@ -39,6 +40,12 @@ DataJoint 2.0 is a major architectural improvement that makes pipelines faster, 
 - **Custom codecs** — Define your own codecs for domain-specific types (e.g., `<nifti>` for neuroimaging, `<video>` for behavior recordings)
 - **Pluggable serialization** — Choose how objects are stored (numpy, pickle, custom formats)
 - **Storage flexibility** — Same codec interface works with internal blobs and external stores
+
+**Portability:**
+- **Backend-agnostic architecture** — No MySQL-specific hidden tables or features required
+- **Future-ready** — Designed for compatibility with alternative backends (Polars, DuckDB, Databricks, cloud data warehouses)
+- **Standard formats** — JSON metadata and explicit type labels work across platforms
+- **Clean separation** — Data model decoupled from storage implementation
 
 **Performance & Usability:**
 - **Faster queries** — No hidden table joins for external data
