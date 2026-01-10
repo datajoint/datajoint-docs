@@ -20,21 +20,31 @@ DataJoint 2.0 is a major architectural improvement that makes pipelines faster, 
 
 | Improvement | Before (0.x) | After (2.0) |
 |-------------|--------------|-------------|
+| **Transparency** | Hidden tables, implicit serialization, magic behavior | Everything visible in schema, explicit codecs, no hidden state |
+| **Extensibility** | Fixed set of blob/attachment types | Custom codecs for any data type (images, video, domain objects) |
 | **Type Safety** | Implicit types inferred at runtime | Explicit type labels in schema metadata |
 | **External Storage** | Metadata in hidden tables, UUID indirection | Inline JSON with direct URLs, no hidden tables |
-| **Serialization** | Implicit blob serialization | Explicit `<blob>` codec, clear intent |
 | **Configuration** | Python dict, credentials in code | JSON config file, secrets separated |
 | **Data Retrieval** | Single `.fetch()` with many options | Explicit methods: `to_dicts()`, `to_pandas()`, `to_polars()` |
-| **Iteration** | Fetch all keys, then loop | Lazy streaming from database cursor |
 
 ### What You Gain
 
+**Transparency:**
+- **No hidden tables** — External storage metadata visible directly in table rows as JSON
+- **Explicit types** — Column types declared in schema, not inferred at runtime
+- **Clear serialization** — `<blob>` codec makes serialization intent obvious
+- **Inspectable storage** — External URLs visible in data, easy to debug and verify
+
+**Extensibility:**
+- **Custom codecs** — Define your own codecs for domain-specific types (e.g., `<nifti>` for neuroimaging, `<video>` for behavior recordings)
+- **Pluggable serialization** — Choose how objects are stored (numpy, pickle, custom formats)
+- **Storage flexibility** — Same codec interface works with internal blobs and external stores
+
+**Performance & Usability:**
 - **Faster queries** — No hidden table joins for external data
-- **Clearer schemas** — Type information visible in database metadata
-- **Better security** — Credentials separated from configuration
 - **Modern formats** — Native support for pandas, polars, and Arrow
-- **Simpler debugging** — External URLs visible directly in table rows
-- **Reduced complexity** — No hidden `~external_*` tables to manage
+- **Lazy iteration** — Stream rows from cursor instead of fetching all keys first
+- **Better security** — Credentials separated from configuration
 
 ### What Changes
 
