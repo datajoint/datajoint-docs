@@ -281,35 +281,392 @@ file_path JSON COMMENT ':filepath@store: data file'
 
 ## AI-Assisted Migration
 
-The migration process is optimized for execution by AI coding assistants. Before running the migration tool, use your AI assistant to:
+The migration process is optimized for execution by AI coding assistants (Claude Code, Cursor, GitHub Copilot, etc.). This section provides detailed prompts for each phase of the migration.
 
-### 1. Schema Analysis
-```
-Analyze my DataJoint schema at [database_host]:
-- List all schemas and tables
-- Identify column types requiring migration
-- Flag external storage usage and store configurations
-- Report any potential compatibility issues
-```
+### Getting Started
 
-### 2. Migration Plan Generation
-```
-Create a migration plan for schema [schema_name]:
-- Step-by-step actions with SQL statements
-- Backup checkpoints before irreversible changes
-- Validation queries after each step
-- Estimated impact (rows affected, storage changes)
-```
+Start a conversation with your AI coding assistant using this initial prompt:
 
-### 3. Supervised Execution
 ```
-Execute the migration plan for [schema_name]:
-- Run each step and report results
-- Pause for confirmation before external storage migration
-- Verify data integrity after completion
+I need to migrate my DataJoint database from version 0.14 to 2.0.
+
+Database connection:
+- Host: [your_host]
+- User: [your_user]
+- Schema(s): [schema1, schema2, ...]
+
+Please read the DataJoint 2.0 Migration Specification at:
+https://docs.datajoint.com/reference/specs/migration-2.0/
+
+Then analyze my schema and create a migration plan.
 ```
 
-The AI assistant will use this specification and the migration tool to execute the plan safely.
+---
+
+### Phase 1: Schema Analysis
+
+Use this prompt to analyze your database before migration:
+
+```
+Analyze my DataJoint schema for 2.0 migration readiness.
+
+Connect to the database and for each schema:
+
+1. LIST ALL TABLES
+   - Query INFORMATION_SCHEMA.TABLES for all tables
+   - Identify user tables vs hidden tables (~external_*, ~jobs_*, ~log)
+   - Count rows in each table
+
+2. IDENTIFY BLOB COLUMNS
+   - Find all LONGBLOB columns in user tables
+   - Check column comments for existing type markers
+   - These will need :blob: codec marker
+
+3. IDENTIFY EXTERNAL STORAGE
+   - Find hidden ~external_* tables
+   - List which stores are configured
+   - For each external column in user tables:
+     - Count rows with external references
+     - Verify referenced hashes exist in external table
+     - Check if external files are accessible
+
+4. IDENTIFY ATTACHMENT COLUMNS
+   - Find columns with :attach: or :attachment: markers
+   - Distinguish internal vs external attachments
+
+5. IDENTIFY FILEPATH COLUMNS
+   - Find columns with :filepath: markers
+   - Verify file accessibility
+
+6. CHECK STORE CONFIGURATION
+   - Read current dj.config['stores'] settings
+   - Verify each store location is accessible
+   - Note protocol (file, s3) for each store
+
+Output a migration readiness report with:
+- Total tables and rows
+- Columns requiring migration by type
+- External storage summary
+- Potential issues or warnings
+```
+
+---
+
+### Phase 2: Backup Verification
+
+Before any changes, ensure backups are in place:
+
+```
+Before proceeding with migration, verify backups:
+
+1. DATABASE BACKUP
+   - Confirm a full mysqldump or equivalent exists
+   - Verify backup timestamp is recent
+   - Test that backup can be restored (on a test server if possible)
+
+2. EXTERNAL STORAGE BACKUP
+   - For each store location, confirm backup exists
+   - File stores: verify rsync/copy of directory
+   - S3 stores: verify bucket versioning or cross-region replication
+
+3. CONFIGURATION BACKUP
+   - Save current dj_local_conf.json
+   - Save current dj.config output
+   - Document environment variables (DJ_*)
+
+4. CREATE ROLLBACK PLAN
+   - Document exact steps to restore from backup
+   - Note that external storage migration is irreversible
+   - Identify point-of-no-return in migration
+
+Confirm all backups are verified before proceeding.
+```
+
+---
+
+### Phase 3: Settings Migration
+
+Migrate configuration to 2.0 format:
+
+```
+Migrate DataJoint configuration to 2.0 format.
+
+1. READ CURRENT CONFIGURATION
+   - Load dj_local_conf.json if exists
+   - Read dj.config programmatically
+   - Check for DJ_* environment variables
+
+2. CREATE datajoint.json
+   Create the new config file with structure:
+   {
+     "database.host": "...",
+     "database.port": 3306,
+     "stores": {
+       "store_name": {
+         "protocol": "file|s3",
+         "location": "...",
+         ...
+       }
+     }
+   }
+
+3. CREATE .secrets/ DIRECTORY
+   - Create .secrets/database.user with username
+   - Create .secrets/database.password with password
+   - Set permissions: chmod 600 .secrets/*
+
+4. UPDATE .gitignore
+   Add if not present:
+   .secrets/
+   datajoint.json
+
+5. VERIFY NEW CONFIGURATION
+   - Test connection with DataJoint 2.0
+   - Verify all stores are accessible
+
+Show me the generated datajoint.json (without secrets) for review.
+```
+
+---
+
+### Phase 4: Core Type Migration
+
+Add type labels to numeric and string columns:
+
+```
+Migrate core data types for schema [schema_name].
+
+For each table in the schema:
+
+1. QUERY COLUMN INFORMATION
+   SELECT COLUMN_NAME, DATA_TYPE, COLUMN_TYPE, COLUMN_COMMENT
+   FROM INFORMATION_SCHEMA.COLUMNS
+   WHERE TABLE_SCHEMA = '[schema_name]' AND TABLE_NAME = '[table_name]'
+
+2. DETERMINE 2.0 TYPE LABELS
+   Map MySQL types to DataJoint 2.0 labels:
+   - TINYINT -> :int8: (or :uint8: if unsigned)
+   - SMALLINT -> :int16: (or :uint16: if unsigned)
+   - INT -> :int32: (or :uint32: if unsigned)
+   - BIGINT -> :int64: (or :uint64: if unsigned)
+   - FLOAT -> :float32:
+   - DOUBLE -> :float64:
+   - TINYINT(1) -> :bool:
+
+3. GENERATE ALTER STATEMENTS
+   For each column needing migration:
+   ALTER TABLE `schema`.`table`
+   MODIFY COLUMN `column` [TYPE] COMMENT ':type_label: original comment';
+
+4. EXECUTE WITH VERIFICATION
+   - Run each ALTER statement
+   - Verify column comment was updated
+   - Log success/failure
+
+Generate and show me all ALTER statements before executing.
+```
+
+---
+
+### Phase 5: Blob Codec Migration
+
+Mark blob columns with the <blob> codec:
+
+```
+Migrate internal blob columns for schema [schema_name].
+
+1. IDENTIFY BLOB COLUMNS
+   Find all LONGBLOB columns without external markers:
+   SELECT TABLE_NAME, COLUMN_NAME, COLUMN_COMMENT
+   FROM INFORMATION_SCHEMA.COLUMNS
+   WHERE TABLE_SCHEMA = '[schema_name]'
+     AND DATA_TYPE = 'longblob'
+     AND COLUMN_COMMENT NOT LIKE '%:external%'
+     AND COLUMN_COMMENT NOT LIKE '%:blob@%'
+
+2. GENERATE ALTER STATEMENTS
+   For each blob column:
+   ALTER TABLE `schema`.`table`
+   MODIFY COLUMN `column` LONGBLOB COMMENT ':blob: original comment';
+
+3. EXECUTE AND VERIFY
+   - Run each ALTER statement
+   - Verify data is still readable (fetch one row)
+   - Log success/failure
+
+Show all ALTER statements for review before executing.
+```
+
+---
+
+### Phase 6: External Storage Migration (IRREVERSIBLE)
+
+**This step cannot be undone. Confirm backups before proceeding.**
+
+```
+Migrate external storage for schema [schema_name].
+
+WARNING: This step is IRREVERSIBLE. Confirm:
+- [ ] Database backup verified
+- [ ] External storage backup verified
+- [ ] All pipelines stopped
+- [ ] Team notified of downtime
+
+For each table with external columns:
+
+1. IDENTIFY EXTERNAL COLUMNS
+   Find columns referencing external storage:
+   - Column type is BINARY(16) (uuid)
+   - Comment contains :external: or similar marker
+
+2. GET STORE INFORMATION
+   For each external column, identify the store name from the comment
+
+3. BUILD MIGRATION QUERY
+   For each row with external data:
+
+   a. Read the UUID hash from the main table
+   b. Look up metadata in ~external_[store]:
+      SELECT size, filepath, attachment_name, contents_hash, timestamp
+      FROM `~external_[store]`
+      WHERE hash = [uuid_value]
+
+   c. Build the JSON object:
+      {
+        "url": "[protocol]://[location]/[filepath]",
+        "size": [size],
+        "hash": "[uuid_hex]",
+        "timestamp": "[timestamp]"
+      }
+
+   d. For attachments, include filename:
+      {
+        "url": "...",
+        "size": ...,
+        "hash": "...",
+        "filename": "[attachment_name]"
+      }
+
+4. ALTER COLUMN TYPE
+   ALTER TABLE `schema`.`table`
+   MODIFY COLUMN `column` JSON COMMENT ':blob@[store]: original comment';
+
+5. UPDATE EACH ROW
+   UPDATE `schema`.`table`
+   SET `column` = '[json_object]'
+   WHERE [primary_key_condition];
+
+6. VERIFY MIGRATION
+   - Count rows with JSON values
+   - Verify JSON structure is valid
+   - Test fetching data through DataJoint 2.0
+
+7. OPTIONAL: DROP HIDDEN TABLES
+   After verification, optionally remove:
+   DROP TABLE `~external_[store]`;
+
+Show me the migration plan with row counts before executing.
+Pause for confirmation before each table.
+```
+
+---
+
+### Phase 7: Validation
+
+Verify the migration was successful:
+
+```
+Validate the DataJoint 2.0 migration for schema [schema_name].
+
+1. CONNECTION TEST
+   - Connect using DataJoint 2.0
+   - Verify schema loads without errors
+
+2. TABLE ACCESS TEST
+   For each table:
+   - Instantiate the table class
+   - Verify heading loads correctly
+   - Fetch 1-5 sample rows
+   - Verify all columns are readable
+
+3. BLOB DATA TEST
+   For tables with blob columns:
+   - Fetch a row with blob data
+   - Verify blob deserializes correctly (numpy array, etc.)
+   - Check data type and shape match expected
+
+4. EXTERNAL DATA TEST
+   For tables with external columns:
+   - Fetch a row with external data
+   - Verify file is retrieved from storage
+   - Verify data deserializes correctly
+   - Check file size matches JSON metadata
+
+5. COMPUTED TABLE TEST
+   For computed tables:
+   - Verify populate() can run on new data
+   - Check that dependencies resolve correctly
+
+6. GENERATE VALIDATION REPORT
+   - Tables tested: X/Y passed
+   - Blob columns verified: X/Y
+   - External columns verified: X/Y
+   - Any errors or warnings
+
+Report any issues found during validation.
+```
+
+---
+
+### Troubleshooting Prompts
+
+If issues arise during migration:
+
+```
+I encountered an error during migration:
+
+Error: [paste error message]
+Step: [which phase/step]
+Table: [table name if applicable]
+
+Please help me:
+1. Diagnose the root cause
+2. Determine if rollback is needed
+3. Provide corrective action
+4. Verify the fix before continuing
+```
+
+```
+The migration completed but I'm seeing issues:
+
+Problem: [describe the issue]
+- Which tables are affected?
+- What data is not accessible?
+- What error messages appear?
+
+Please help me investigate and resolve this.
+```
+
+---
+
+### Post-Migration Checklist
+
+```
+Run the post-migration checklist for schema [schema_name]:
+
+1. [ ] All tables accessible via DataJoint 2.0
+2. [ ] All blob data deserializes correctly
+3. [ ] All external data retrieves correctly
+4. [ ] Computed tables can populate new data
+5. [ ] Job tables functioning (if used)
+6. [ ] All team members updated to DataJoint 2.0
+7. [ ] CI/CD pipelines updated
+8. [ ] Documentation updated with new connection info
+9. [ ] Old dj_local_conf.json archived/removed
+10. [ ] Monitoring in place for any issues
+
+Mark each item as verified.
+```
 
 ---
 
