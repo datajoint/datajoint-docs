@@ -180,9 +180,20 @@ External objects store data in configured storage backends (S3, filesystem) with
 > **This step is irreversible.** Once external references are migrated from hidden tables to JSON fields, DataJoint 0.14 can no longer access the external data.
 
 ### Current Architecture (0.14.x)
-- External object **hash** stored in main table column (`VARCHAR(255)`)
+- External object **UUID hash** stored in main table column (`BINARY(16)` for uuid)
 - Object metadata stored in hidden `~external_<store>` table
 - Hidden table maps hash → storage path, size, timestamp
+
+**Hidden table schema (`~external_<store>`):**
+```sql
+hash              : uuid                  # hash of contents (primary key)
+---
+size              : bigint unsigned       # size of object in bytes
+attachment_name   : varchar(255)          # filename for attachments (nullable)
+filepath          : varchar(1000)         # relative filepath (nullable)
+contents_hash     : uuid                  # used for filepath datatype (nullable)
+timestamp         : timestamp             # automatic timestamp
+```
 
 ### Target Architecture (2.0)
 - External object **metadata** stored directly as JSON in main table
@@ -191,19 +202,21 @@ External objects store data in configured storage backends (S3, filesystem) with
 
 ### Current Storage (0.14.x)
 ```sql
--- Main table
-external_data VARCHAR(255) COMMENT ':external: large array'
--- Value: 'mYhAsH123...'
+-- Main table column stores UUID hash
+external_data BINARY(16) COMMENT ':external: large array'
+-- Value: 0x1A2B3C4D...  (UUID bytes)
 
--- Hidden table: ~external_store
--- hash | size | timestamp | path
--- mYhAsH123... | 1024 | 2024-01-01 | /data/store/mY/hA/mYhAsH123...
+-- Hidden table (~external_mystore) row:
+-- hash: 1a2b3c4d-...
+-- size: 1048576
+-- filepath: 1a/2b/1a2b3c4d...
+-- timestamp: 2024-01-15 10:30:00
 ```
 
 ### Target Format (2.0)
 ```sql
-external_data JSON COMMENT ':blob@external: large array'
--- Value: {"url": "file:///data/store/mY/hA/mYhAsH123...", "size": 1024, "hash": "mYhAsH123..."}
+external_data JSON COMMENT ':blob@mystore: large array'
+-- Value: {"url": "file:///data/mystore/1a/2b/1a2b3c4d...", "size": 1048576, "hash": "1a2b3c4d..."}
 ```
 
 ### Migration Actions
