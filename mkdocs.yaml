@@ -172,6 +172,8 @@ markdown_extensions:
   - pymdownx.magiclink # Displays bare URLs as links
   - pymdownx.tasklist: # Renders check boxes in tasks lists
       custom_checkbox: true
+  - pymdownx.arithmatex: # LaTeX math support
+      generic: true
 extra:
   generator: false # Disable watermark
   datajoint_version: "2.0"  # DataJoint Python version this documentation covers
@@ -212,4 +214,6 @@ extra:
 extra_css:
   - assets/stylesheets/extra.css
 extra_javascript:
+  - javascripts/mathjax.js
+  - https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js
   - https://js-na1.hs-scripts.com/23133402.js # HubSpot chatbot
