@@ -17,9 +17,10 @@ This specification defines the migration process from DataJoint 0.x to DataJoint
 DataJoint 2.0 introduces a unified type system with explicit codecs for object storage. **Migration is required** to use 2.0's full feature set. The migration updates table metadata (column comments) to include type labels that 2.0 uses to interpret data correctly.
 
 **Key points:**
-- DataJoint 2.0 can read 0.x schemas **before migration** (including external storage)
-- Migration updates metadata only; underlying data remains unchanged
-- **External storage migration is one-way** — once migrated, 0.14 loses access to external data
+- DataJoint 2.0 **cannot read external storage** until migration is complete
+- Migration updates metadata (column comments) and converts external references to JSON fields
+- **External storage migration is irreversible** — once migrated, 0.14 loses access
+- Underlying blob/attachment data in storage remains unchanged
 
 ### Migration Components
 
@@ -116,25 +117,33 @@ MODIFY COLUMN `column_name` INT NOT NULL COMMENT ':int32: original comment';
 
 Internal blobs are stored directly in the database as `LONGBLOB` columns.
 
+### Background
+
+DataJoint 0.x **automatically serialized Python objects** (numpy arrays, lists, dicts, etc.) into `LONGBLOB` fields using a custom serialization format. Users simply assigned Python objects to blob attributes, and DataJoint handled serialization transparently.
+
+DataJoint 2.0 introduces a **core type `bytes`** for raw binary data. Serialization is now **explicit** via the `<blob>` codec, which translates Python objects into bytes. The codec uses the same serialization format as 0.x for backward compatibility.
+
 ### Identification
 - Column type: `LONGBLOB`
 - No external store reference in comment
-- Used for numpy arrays, pickled objects
+- Contains serialized numpy arrays, pickled objects, etc.
 
-### Current Storage
+### Current Storage (0.x)
 ```sql
 column_name LONGBLOB COMMENT 'some description'
+-- Implicitly serialized Python objects
 ```
 
-### Target Format
+### Target Format (2.0)
 ```sql
 column_name LONGBLOB COMMENT ':blob: some description'
+-- Explicitly marks column as using <blob> codec for serialization
 ```
 
 ### Migration Actions
 1. Identify all `LONGBLOB` columns without external store markers
 2. Add `:blob:` prefix to column comment
-3. No data modification required (format unchanged)
+3. **No data modification required** — the serialization format is unchanged, only the metadata is updated to explicitly declare the codec
 
 ---
 
@@ -168,27 +177,46 @@ attachment LONGBLOB COMMENT ':attach: uploaded file'
 
 External objects store data in configured storage backends (S3, filesystem) with metadata in the database.
 
-### Identification
-- Column type: `VARCHAR(255)` or similar (stores hash/path)
-- Comment contains store reference (e.g., `:external:`)
-- Corresponding entry in external storage
+> **This step is irreversible.** Once external references are migrated from hidden tables to JSON fields, DataJoint 0.14 can no longer access the external data.
 
-### Current Storage
+### Current Architecture (0.14.x)
+- External object **hash** stored in main table column (`VARCHAR(255)`)
+- Object metadata stored in hidden `~external_<store>` table
+- Hidden table maps hash → storage path, size, timestamp
+
+### Target Architecture (2.0)
+- External object **metadata** stored directly as JSON in main table
+- No hidden tables required
+- JSON contains: URL, size, hash, timestamp
+
+### Current Storage (0.14.x)
 ```sql
+-- Main table
 external_data VARCHAR(255) COMMENT ':external: large array'
+-- Value: 'mYhAsH123...'
+
+-- Hidden table: ~external_store
+-- hash | size | timestamp | path
+-- mYhAsH123... | 1024 | 2024-01-01 | /data/store/mY/hA/mYhAsH123...
 ```
 
-### Target Format
+### Target Format (2.0)
 ```sql
 external_data JSON COMMENT ':blob@external: large array'
+-- Value: {"url": "file:///data/store/mY/hA/mYhAsH123...", "size": 1024, "hash": "mYhAsH123..."}
 ```
 
 ### Migration Actions
-1. Identify external blob/attachment columns
-2. Verify store configuration exists in `datajoint.json`
-3. Update column comment to use `<blob@store>` or `<attach@store>` format
-4. Migrate column type from `VARCHAR` to `JSON` if needed
-5. Update path format to URL representation (`file://`, `s3://`)
+1. **Back up database** before proceeding
+2. Identify all external blob/attachment columns
+3. Verify store configuration exists in `datajoint.json`
+4. For each row with external data:
+   - Look up hash in `~external_<store>` hidden table
+   - Build JSON object with URL, size, hash, timestamp
+   - Update column value from hash string to JSON object
+5. Update column type from `VARCHAR` to `JSON`
+6. Update column comment to `<blob@store>` or `<attach@store>` format
+7. Optionally drop hidden `~external_*` tables after verification
 
 ### Store Configuration
 Ensure stores are defined in `datajoint.json`:
@@ -335,27 +363,36 @@ for table in schema.list_tables():
 
 | DataJoint Version | Can Read 0.x Data | Can Read 2.0 Data |
 |-------------------|-------------------|-------------------|
-| 0.14.x | Yes | No (loses external data access) |
-| 2.0.x | Yes (including external) | Yes |
+| 0.14.x | Yes | No |
+| 2.0.x | No (external storage) | Yes |
 
 ### External Storage Breaking Change
 
-**This is a one-way migration for external storage.**
+**External storage migration is required and irreversible.**
 
 - **0.14.x** stores external object references in hidden tables (`~external_*`)
 - **2.0** stores external object references as JSON fields directly in the table
+- **2.0 does not read the legacy hidden external tables**
 
 | Scenario | Result |
 |----------|--------|
-| Before migration, 2.0 reads 0.x schema | Works - 2.0 can read hidden table format |
+| Before migration, 0.14 reads schema | Works |
+| Before migration, 2.0 reads schema | **Fails for external data** - 2.0 cannot read hidden tables |
 | After migration, 2.0 reads schema | Works - uses JSON field format |
-| After migration, 0.14 reads schema | **Breaks** - 0.14 cannot read JSON format, loses access to external data |
+| After migration, 0.14 reads schema | **Fails** - 0.14 cannot read JSON format |
 
-**Warning:** Once external storage is migrated to 2.0 format, reverting to DataJoint 0.14 will result in loss of access to externally stored data. Ensure all users/pipelines are ready for 2.0 before migrating schemas with external storage.
+**Warning:**
+- DataJoint 2.0 **cannot access external storage** until migration is complete
+- Migration converts hidden table references to JSON fields (irreversible)
+- After migration, DataJoint 0.14 **loses access** to external data
+- **Back up your database before migration**
 
 ### Recommended Migration Order
 
-1. Update all code to DataJoint 2.0
-2. Test with existing schemas (2.0 can read 0.x format)
-3. Migrate schemas once all systems are on 2.0
-4. Verify data access after migration
+1. **Back up database** - Full backup before any changes
+2. **Audit external storage** - Identify all schemas using external stores
+3. **Coordinate downtime** - All pipelines must stop during migration
+4. **Run migration** - Convert external references to JSON fields
+5. **Update all code** - Switch to DataJoint 2.0
+6. **Verify data access** - Test all external data retrieval
+7. **Resume operations** - Only after verification
