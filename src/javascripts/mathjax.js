@@ -6,11 +6,12 @@ window.MathJax = {
     processEnvironments: true
   },
   options: {
-    ignoreHtmlClass: ".*|",
-    processHtmlClass: "arithmatex|jp-RenderedHTMLCommon"
+    ignoreHtmlClass: "no-mathjax",
+    processHtmlClass: "arithmatex|jp-RenderedHTMLCommon|jp-RenderedMarkdown"
+  },
+  startup: {
+    ready: () => {
+      MathJax.startup.defaultReady();
+    }
   }
 };
-
-document$.subscribe(() => {
-  MathJax.typesetPromise()
-})
