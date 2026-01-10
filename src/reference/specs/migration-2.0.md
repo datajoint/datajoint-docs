@@ -24,14 +24,39 @@ DataJoint 2.0 introduces a unified type system with explicit codecs for object s
 
 ### Migration Components
 
-| Step | Component | Description |
-|------|-----------|-------------|
-| 0 | Settings | Update configuration to `datajoint.json` format |
-| 1 | Core Types | Add type labels to column comments for numeric/string types |
-| 2 | Internal Blobs | Convert `LONGBLOB` columns to `<blob>` codec |
-| 3 | Internal Attachments | Convert attachment columns to `<attach>` codec |
-| 4 | External Objects | Convert external blobs/attachments to `<blob@>` / `<attach@>` codecs |
-| 5 | Filepaths | Convert filepath columns to `<filepath@>` codec |
+| Step | Component | Description | Reversible |
+|------|-----------|-------------|------------|
+| 0 | Settings | Update configuration to `datajoint.json` format | Yes |
+| 1 | Core Types | Add type labels to column comments for numeric/string types | Yes |
+| 2 | Internal Blobs | Convert `LONGBLOB` columns to `<blob>` codec | Yes |
+| 3 | Internal Attachments | Convert attachment columns to `<attach>` codec | Yes |
+| 4 | External Objects | Convert external blobs/attachments to `<blob@>` / `<attach@>` codecs | **No** |
+| 5 | Filepaths | Convert filepath columns to `<filepath@>` codec | **No** |
+
+### Safety and Reversibility
+
+**Safe to run repeatedly (idempotent):** All steps check current state before making changes and skip already-migrated items. Re-running any step will not corrupt data.
+
+**Reversible steps (0-3):**
+- Only modify column comments (metadata)
+- Original data remains unchanged
+- Can revert by restoring original comments
+- DataJoint 0.14 continues to work after these steps
+
+**Irreversible steps (4-5):**
+- Convert column types from `BINARY(16)` to `JSON`
+- Transform data from UUID hash references to inline JSON metadata
+- Hidden tables become obsolete
+- **DataJoint 0.14 loses access** to external data after these steps
+- Rollback requires restoring from backup
+
+**Recommended approach:**
+1. Run steps 0-3 first (safe, reversible)
+2. Validate that DataJoint 2.0 works with internal data
+3. Create full backup
+4. Run steps 4-5 (irreversible)
+5. Validate external data access
+6. Update all pipeline code to DataJoint 2.0
 
 ---
 
@@ -179,6 +204,34 @@ External objects store data in configured storage backends (S3, filesystem) with
 
 > **This step is irreversible.** Once external references are migrated from hidden tables to JSON fields, DataJoint 0.14 can no longer access the external data.
 
+### How 0.x Marked External Columns
+
+DataJoint 0.x used **column comments** to identify external storage columns. The markers appear after the column description:
+
+| 0.x Column Comment Pattern | Type | Example |
+|---------------------------|------|---------|
+| `... :external:` | External blob (default store) | `large array :external:` |
+| `... :external-<store>:` | External blob (named store) | `large array :external-s3store:` |
+| `... :external-attach:` | External attachment (default store) | `data file :external-attach:` |
+| `... :external-attach-<store>:` | External attachment (named store) | `data file :external-attach-s3store:` |
+
+**SQL examples from 0.x tables:**
+```sql
+-- External blob using default store
+data_array BINARY(16) COMMENT 'neural data :external:'
+
+-- External blob using named store "s3data"
+large_matrix BINARY(16) COMMENT 'preprocessed matrix :external-s3data:'
+
+-- External attachment using default store
+raw_file BINARY(16) COMMENT 'raw recording :external-attach:'
+
+-- External attachment using named store
+video_file BINARY(16) COMMENT 'behavior video :external-attach-videos:'
+```
+
+The column type is `BINARY(16)` because it stores the **UUID hash** (16 bytes) that references the actual data location in the hidden `~external_<store>` table.
+
 ### Current Architecture (0.14.x)
 - External object **UUID hash** stored in main table column (`BINARY(16)` for uuid)
 - Object metadata stored in hidden `~external_<store>` table
@@ -283,6 +336,16 @@ file_path JSON COMMENT ':filepath@store: data file'
 
 The migration process is optimized for execution by AI coding assistants (Claude Code, Cursor, GitHub Copilot, etc.). This section provides detailed prompts for each phase of the migration.
 
+### Safety Features
+
+All prompts are designed with safety in mind:
+
+- **Dry-run by default:** Analysis phases (1-2) make no changes
+- **Confirmation required:** All modification phases show changes before executing
+- **Idempotent:** Safe to re-run any phase; already-migrated items are skipped
+- **Staged execution:** Reversible steps (0-3) can run separately from irreversible steps (4-5)
+- **Backup verification:** Phase 2 explicitly verifies backups before any changes
+
 ### Getting Started
 
 Start a conversation with your AI coding assistant using this initial prompt:
@@ -325,10 +388,18 @@ Connect to the database and for each schema:
 3. IDENTIFY EXTERNAL STORAGE
    - Find hidden ~external_* tables
    - List which stores are configured
-   - For each external column in user tables:
+
+   Find external columns using 0.x comment patterns:
+   - COLUMN_COMMENT LIKE '%:external:%'          -> blob, default store
+   - COLUMN_COMMENT LIKE '%:external-%'          -> blob, named store
+   - COLUMN_COMMENT LIKE '%:external-attach:%'   -> attachment, default store
+   - COLUMN_COMMENT LIKE '%:external-attach-%'   -> attachment, named store
+
+   For each external column in user tables:
+     - Column type should be BINARY(16) (UUID hash)
      - Count rows with external references
-     - Verify referenced hashes exist in external table
-     - Check if external files are accessible
+     - Verify referenced hashes exist in ~external_<store> table
+     - Check if external files are accessible in storage
 
 4. IDENTIFY ATTACHMENT COLUMNS
    - Find columns with :attach: or :attachment: markers
@@ -391,13 +462,21 @@ Migrate configuration to 2.0 format:
 ```
 Migrate DataJoint configuration to 2.0 format.
 
-1. READ CURRENT CONFIGURATION
+This phase is IDEMPOTENT - safe to run multiple times.
+
+1. CHECK EXISTING 2.0 CONFIGURATION
+   - If datajoint.json exists, read and validate it
+   - If .secrets/ exists, verify contents
+   - Report: "2.0 config already exists" or "needs migration"
+
+2. READ CURRENT CONFIGURATION (if migration needed)
    - Load dj_local_conf.json if exists
    - Read dj.config programmatically
    - Check for DJ_* environment variables
 
-2. CREATE datajoint.json
-   Create the new config file with structure:
+3. CREATE OR UPDATE datajoint.json
+   - If file exists, MERGE new settings (don't overwrite)
+   - If file doesn't exist, create with structure:
    {
      "database.host": "...",
      "database.port": 3306,
@@ -410,21 +489,23 @@ Migrate DataJoint configuration to 2.0 format.
      }
    }
 
-3. CREATE .secrets/ DIRECTORY
-   - Create .secrets/database.user with username
-   - Create .secrets/database.password with password
+4. CREATE .secrets/ DIRECTORY (if not exists)
+   - Skip if .secrets/database.user already exists
+   - Skip if .secrets/database.password already exists
+   - Only create missing files
    - Set permissions: chmod 600 .secrets/*
 
-4. UPDATE .gitignore
-   Add if not present:
+5. UPDATE .gitignore (idempotent)
+   - Check if entries already exist before adding
+   - Add only if not present:
    .secrets/
    datajoint.json
 
-5. VERIFY NEW CONFIGURATION
+6. VERIFY CONFIGURATION
    - Test connection with DataJoint 2.0
    - Verify all stores are accessible
 
-Show me the generated datajoint.json (without secrets) for review.
+Report what was created vs what was skipped (already existed).
 ```
 
 ---
@@ -436,6 +517,8 @@ Add type labels to numeric and string columns:
 ```
 Migrate core data types for schema [schema_name].
 
+This phase is IDEMPOTENT - safe to run multiple times.
+
 For each table in the schema:
 
 1. QUERY COLUMN INFORMATION
@@ -443,7 +526,13 @@ For each table in the schema:
    FROM INFORMATION_SCHEMA.COLUMNS
    WHERE TABLE_SCHEMA = '[schema_name]' AND TABLE_NAME = '[table_name]'
 
-2. DETERMINE 2.0 TYPE LABELS
+2. CHECK IF ALREADY MIGRATED
+   Skip columns where COLUMN_COMMENT already starts with a type label:
+   - REGEXP '^:(int8|uint8|int16|uint16|int32|uint32|int64|uint64|float32|float64|bool):'
+
+   Report: "Column X already has type label, skipping"
+
+3. DETERMINE 2.0 TYPE LABELS (for unmigrated columns only)
    Map MySQL types to DataJoint 2.0 labels:
    - TINYINT -> :int8: (or :uint8: if unsigned)
    - SMALLINT -> :int16: (or :uint16: if unsigned)
@@ -453,17 +542,23 @@ For each table in the schema:
    - DOUBLE -> :float64:
    - TINYINT(1) -> :bool:
 
-3. GENERATE ALTER STATEMENTS
-   For each column needing migration:
+4. GENERATE ALTER STATEMENTS (only for columns needing migration)
    ALTER TABLE `schema`.`table`
    MODIFY COLUMN `column` [TYPE] COMMENT ':type_label: original comment';
 
-4. EXECUTE WITH VERIFICATION
+5. EXECUTE WITH VERIFICATION
    - Run each ALTER statement
    - Verify column comment was updated
    - Log success/failure
 
+6. SUMMARY REPORT
+   - Columns migrated: X
+   - Columns skipped (already migrated): Y
+   - Columns skipped (not applicable): Z
+   - Errors: N
+
 Generate and show me all ALTER statements before executing.
+Re-running this phase will skip already-migrated columns.
 ```
 
 ---
@@ -475,26 +570,43 @@ Mark blob columns with the <blob> codec:
 ```
 Migrate internal blob columns for schema [schema_name].
 
-1. IDENTIFY BLOB COLUMNS
-   Find all LONGBLOB columns without external markers:
+This phase is IDEMPOTENT - safe to run multiple times.
+
+1. IDENTIFY BLOB COLUMNS NEEDING MIGRATION
+   Find LONGBLOB columns that are NOT already migrated:
    SELECT TABLE_NAME, COLUMN_NAME, COLUMN_COMMENT
    FROM INFORMATION_SCHEMA.COLUMNS
    WHERE TABLE_SCHEMA = '[schema_name]'
      AND DATA_TYPE = 'longblob'
-     AND COLUMN_COMMENT NOT LIKE '%:external%'
-     AND COLUMN_COMMENT NOT LIKE '%:blob@%'
+     AND COLUMN_COMMENT NOT LIKE ':blob:%'      -- not already internal blob
+     AND COLUMN_COMMENT NOT LIKE ':blob@%'      -- not external blob
+     AND COLUMN_COMMENT NOT LIKE ':attach:%'    -- not internal attachment
+     AND COLUMN_COMMENT NOT LIKE ':attach@%'    -- not external attachment
 
-2. GENERATE ALTER STATEMENTS
-   For each blob column:
+2. CHECK ALREADY MIGRATED
+   Report columns that already have codec markers:
+   - ":blob: ..." -> "Already migrated as internal blob"
+   - ":blob@store: ..." -> "Already migrated as external blob"
+   - ":attach: ..." -> "Already migrated as internal attachment"
+
+3. GENERATE ALTER STATEMENTS (only for unmigrated columns)
+   For each blob column needing migration:
    ALTER TABLE `schema`.`table`
    MODIFY COLUMN `column` LONGBLOB COMMENT ':blob: original comment';
 
-3. EXECUTE AND VERIFY
+4. EXECUTE AND VERIFY
    - Run each ALTER statement
    - Verify data is still readable (fetch one row)
    - Log success/failure
 
+5. SUMMARY REPORT
+   - Columns migrated: X
+   - Columns skipped (already have :blob:): Y
+   - Columns skipped (external storage): Z
+   - Errors: N
+
 Show all ALTER statements for review before executing.
+Re-running this phase will skip already-migrated columns.
 ```
 
 ---
@@ -506,7 +618,10 @@ Show all ALTER statements for review before executing.
 ```
 Migrate external storage for schema [schema_name].
 
-WARNING: This step is IRREVERSIBLE. Confirm:
+This phase is IDEMPOTENT - safe to run multiple times (skips already-migrated data).
+However, the changes are IRREVERSIBLE for DataJoint 0.14 compatibility.
+
+WARNING: Confirm before proceeding:
 - [ ] Database backup verified
 - [ ] External storage backup verified
 - [ ] All pipelines stopped
@@ -514,16 +629,51 @@ WARNING: This step is IRREVERSIBLE. Confirm:
 
 For each table with external columns:
 
-1. IDENTIFY EXTERNAL COLUMNS
-   Find columns referencing external storage:
-   - Column type is BINARY(16) (uuid)
-   - Comment contains :external: or similar marker
+1. IDENTIFY COLUMN MIGRATION STATE
+   Check each potential external column using 0.x comment patterns:
+
+   0.x EXTERNAL COLUMN COMMENT PATTERNS:
+   - ':external:'           -> External blob (default store)
+   - ':external-<store>:'   -> External blob (named store, e.g., ':external-s3data:')
+   - ':external-attach:'    -> External attachment (default store)
+   - ':external-attach-<store>:' -> External attachment (named store)
+
+   a. Already migrated (JSON type with 2.0 codec comment):
+      - DATA_TYPE = 'json'
+      - COLUMN_COMMENT LIKE ':blob@%' OR COLUMN_COMMENT LIKE ':attach@%'
+      -> Report "Already migrated" and SKIP
+
+   b. Needs migration (BINARY uuid type with 0.x :external: pattern):
+      - DATA_TYPE = 'binary' AND CHARACTER_MAXIMUM_LENGTH = 16
+      - COLUMN_COMMENT matches one of the 0.x patterns above
+      -> Include in migration
+
+   c. Partially migrated (JSON type but old 0.x comment):
+      - DATA_TYPE = 'json'
+      - COLUMN_COMMENT still has ':external' pattern (not ':blob@' or ':attach@')
+      -> Only update comment, skip data migration
 
 2. GET STORE INFORMATION
-   For each external column, identify the store name from the comment
+   For columns needing migration, identify the store name from the comment
 
-3. BUILD MIGRATION QUERY
-   For each row with external data:
+3. CHECK ROW MIGRATION STATE
+   For each row, determine if already migrated:
+
+   -- Row needs migration if column value is BINARY (uuid hash)
+   -- Row already migrated if column value is valid JSON
+
+   SELECT COUNT(*) as needs_migration
+   FROM `table`
+   WHERE `column` IS NOT NULL
+     AND JSON_VALID(`column`) = 0;  -- Not valid JSON = needs migration
+
+   SELECT COUNT(*) as already_migrated
+   FROM `table`
+   WHERE `column` IS NOT NULL
+     AND JSON_VALID(`column`) = 1;  -- Valid JSON = already done
+
+4. BUILD MIGRATION QUERY (only for unmigrated rows)
+   For each row where JSON_VALID(`column`) = 0:
 
    a. Read the UUID hash from the main table
    b. Look up metadata in ~external_[store]:
@@ -547,26 +697,41 @@ For each table with external columns:
         "filename": "[attachment_name]"
       }
 
-4. ALTER COLUMN TYPE
+5. ALTER COLUMN TYPE (if not already JSON)
+   Only if DATA_TYPE != 'json':
    ALTER TABLE `schema`.`table`
    MODIFY COLUMN `column` JSON COMMENT ':blob@[store]: original comment';
 
-5. UPDATE EACH ROW
+6. UPDATE UNMIGRATED ROWS ONLY
    UPDATE `schema`.`table`
    SET `column` = '[json_object]'
-   WHERE [primary_key_condition];
+   WHERE [primary_key_condition]
+     AND JSON_VALID(`column`) = 0;  -- Only update non-JSON values
 
-6. VERIFY MIGRATION
-   - Count rows with JSON values
-   - Verify JSON structure is valid
+7. UPDATE COMMENT (if not already updated)
+   Only if comment doesn't have correct format:
+   ALTER TABLE `schema`.`table`
+   MODIFY COLUMN `column` JSON COMMENT ':blob@[store]: original comment';
+
+8. VERIFY MIGRATION
+   - Count rows with valid JSON values
+   - Verify JSON structure contains required fields
    - Test fetching data through DataJoint 2.0
 
-7. OPTIONAL: DROP HIDDEN TABLES
-   After verification, optionally remove:
-   DROP TABLE `~external_[store]`;
+9. SUMMARY REPORT
+   - Columns migrated: X
+   - Columns skipped (already JSON): Y
+   - Rows migrated: N
+   - Rows skipped (already JSON): M
+   - Errors: E
+
+10. OPTIONAL: DROP HIDDEN TABLES
+    After verification, optionally remove:
+    DROP TABLE `~external_[store]`;
 
 Show me the migration plan with row counts before executing.
 Pause for confirmation before each table.
+Re-running this phase will skip already-migrated columns and rows.
 ```
 
 ---
@@ -694,18 +859,62 @@ migrate_schema('my_schema', dry_run=False)
 
 ## Rollback
 
-If migration issues occur:
+### Reversible Steps (0-3): Safe Rollback
 
-1. **Settings**: Restore original `dj_local_conf.json`
-2. **Column comments**: Revert comment changes via SQL
-3. **Core types and internal blobs**: Fully reversible
+If you need to revert steps 0-3 (settings, core types, internal blobs, internal attachments):
+
+**Step 0 (Settings):**
+```bash
+# Restore original configuration
+cp dj_local_conf.json.backup dj_local_conf.json
+rm datajoint.json
+rm -rf .secrets/
+```
+
+**Steps 1-3 (Column Comments):**
+Column comment changes can be reverted with SQL:
+
+```sql
+-- Remove type label prefix from comment
+-- Before: ':int32: original comment'
+-- After:  'original comment'
+
+ALTER TABLE `schema`.`table`
+MODIFY COLUMN `column` INT NOT NULL
+COMMENT 'original comment';  -- without :int32: prefix
+```
+
+**Batch rollback script** (for AI assistant):
+```
+Revert column comment migration for schema [schema_name].
+
+For each table, query current column comments and remove 2.0 type labels:
+- Remove leading ':int8:', ':uint8:', ':int16:', etc. for numeric types
+- Remove leading ':blob:' for internal blobs
+- Remove leading ':attach:' for internal attachments
+
+Generate ALTER statements to restore original comments.
+Execute only after confirmation.
+```
+
+### Irreversible Steps (4-5): Backup Required
 
 **External storage cannot be rolled back.** Once external object references are migrated from hidden tables to JSON fields:
 - The hidden `~external_*` tables are no longer updated
 - DataJoint 0.14 cannot read the JSON field format
-- Reverting requires restoring from backup
+- Reverting requires restoring from database backup
 
-**Recommendation:** Create a full database backup before migrating schemas with external storage.
+**Before running steps 4-5:**
+```bash
+# Create full backup
+mysqldump --single-transaction --routines --triggers \
+  -u root -p my_schema > my_schema_backup.sql
+
+# Backup external storage
+rsync -av /data/external/ /backup/external/
+```
+
+**Recommendation:** Test migration on a copy of your database before running on production.
 
 ---
 
