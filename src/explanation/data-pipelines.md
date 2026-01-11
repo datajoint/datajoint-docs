@@ -8,20 +8,11 @@ A **scientific data pipeline** extends beyond a database with computations. It i
 - Enables collaboration across teams and institutions
 - Supports reproducibility and provenance tracking throughout
 
-## The Relational Workflow Model
+## Pipeline Architecture
 
-DataJoint pipelines are built on the [Relational Workflow Model](relational-workflow-model.md)—a paradigm that extends relational databases with native support for computational workflows. In this model:
+A DataJoint pipeline integrates three core components:
 
-- **Tables represent workflow steps**, not just data storage
-- **Foreign keys encode dependencies**, prescribing the order of operations
-- **Table tiers** (Lookup, Manual, Imported, Computed) classify how data enters the pipeline
-- **The schema forms a DAG** (directed acyclic graph) that defines valid execution sequences
-
-This model treats the database schema as an **executable workflow specification**—defining not just what data exists but when and how it comes into existence.
-
-## Project Structure
-
-A DataJoint pipeline is organized as a Python package where each module corresponds to a database schema. The project integrates three core components:
+![DataJoint Platform Architecture](../images/dj-platform.png)
 
 | Component | Purpose |
 |-----------|---------|
@@ -29,14 +20,55 @@ A DataJoint pipeline is organized as a Python package where each module correspo
 | **Relational Database** | System of record for metadata, relationships, and integrity enforcement |
 | **Object Store** | Scalable storage for large scientific data (images, recordings, signals) |
 
-The module import structure mirrors the foreign key dependencies between schemas, ensuring code dependencies and data dependencies flow in the same direction.
+These components work together: code defines the schema and computations, the database tracks all metadata and relationships, and object storage holds the large scientific data files.
+
+## Pipeline as a DAG
+
+A DataJoint pipeline forms a **Directed Acyclic Graph (DAG)** at two levels:
+
+![Pipeline DAG Structure](../images/pipeline-illustration.png)
+
+**Nodes** represent Python modules, which correspond to database schemas.
+
+**Edges** represent:
+
+- Python import dependencies between modules
+- Bundles of foreign key references between schemas
+
+This dual structure ensures that both code dependencies and data dependencies flow in the same direction.
+
+### DAG Constraints
+
+> **All foreign key relationships within a schema MUST form a DAG.**
+>
+> **Dependencies between schemas (foreign keys + imports) MUST also form a DAG.**
+
+This constraint is fundamental to DataJoint's design. It ensures:
+
+- **Unidirectional data flow** — Data enters at the top and flows downstream
+- **Clear provenance** — Every result traces back to its inputs
+- **Safe deletion** — Cascading deletes follow the DAG without cycles
+- **Predictable computation** — `populate()` can determine correct execution order
+
+## The Relational Workflow Model
+
+DataJoint pipelines are built on the [Relational Workflow Model](relational-workflow-model.md)—a paradigm that extends relational databases with native support for computational workflows. In this model:
+
+- **Tables represent workflow steps**, not just data storage
+- **Foreign keys encode dependencies**, prescribing the order of operations
+- **Table tiers** (Lookup, Manual, Imported, Computed) classify how data enters the pipeline
+- **The schema forms a DAG** that defines valid execution sequences
+
+This model treats the database schema as an **executable workflow specification**—defining not just what data exists but when and how it comes into existence.
+
+## Schema Organization
+
+Each schema corresponds to a dedicated Python module. The module import structure mirrors the foreign key dependencies between schemas:
+
+![Schema Structure](../images/schema-illustration.png)
 
 ```
 my_pipeline/
-├── datajoint.json          # Shared configuration (committed)
-├── .secrets/               # Credentials (gitignored)
-│   └── ...
-├── pyproject.toml          # Package metadata and dependencies
 ├── src/
 │   └── my_pipeline/
 │       ├── __init__.py
@@ -44,13 +76,9 @@ my_pipeline/
 │       ├── session.py      # session schema (depends on subject)
 │       ├── acquisition.py  # acquisition schema (depends on session)
 │       └── analysis.py     # analysis schema (depends on acquisition)
-├── tests/
-│   └── ...
-└── docs/
-    └── ...
 ```
 
-For detailed guidance on organizing multi-schema pipelines, configuring repositories, and managing team access, see [Manage a Pipeline Project](../how-to/manage-pipeline-project.md).
+For practical guidance on organizing multi-schema pipelines, configuring repositories, and managing team access, see [Manage a Pipeline Project](../how-to/manage-pipeline-project.md).
 
 ## Object-Augmented Schemas
 
@@ -136,15 +164,15 @@ The pipeline approach requires upfront investment in schema design. This investm
 
 Scientific data pipelines extend the Relational Workflow Model into complete data operations systems:
 
-- **Relational Workflow Model** — schemas as executable workflow specifications
-- **Project structure** — Python packages mirroring schema dependencies
-- **Object-Augmented Schemas** — scalable storage with relational semantics
+- **Pipeline Architecture** — Code repository, relational database, and object store working together
+- **DAG Structure** — Unidirectional flow of data and dependencies
+- **Object-Augmented Schemas** — Scalable storage with relational semantics
 
 The schema remains central—defining data structures, dependencies, and computational flow. This pipeline-centric approach lets teams focus on their science while the system handles data integrity, provenance, and reproducibility automatically.
 
 ## See Also
 
 - [Relational Workflow Model](relational-workflow-model.md) — The conceptual foundation
+- [Entity Integrity](entity-integrity.md) — Primary keys and dimensions
 - [Type System](type-system.md) — Codec types and storage modes
 - [Manage a Pipeline Project](../how-to/manage-pipeline-project.md) — Practical project organization
-- [Configure Object Storage](../how-to/configure-storage.md) — Storage setup

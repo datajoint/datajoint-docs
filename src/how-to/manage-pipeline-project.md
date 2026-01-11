@@ -11,42 +11,11 @@ A production DataJoint pipeline typically involves:
 - **Shared infrastructure** — Database server, object storage, code repository
 - **Coordination** — Between code, database, and storage permissions
 
-This guide outlines the key considerations. For a fully managed solution, [request a DataJoint Platform account](https://www.datajoint.com/sign-up).
+This guide covers practical project organization. For conceptual background on pipeline architecture and the DAG structure, see [Data Pipelines](../explanation/data-pipelines.md).
 
-## Pipeline Architecture
+For a fully managed solution, [request a DataJoint Platform account](https://www.datajoint.com/sign-up).
 
-A DataJoint pipeline integrates three core components:
-
-![DataJoint Platform Architecture](../images/dj-platform.png)
-
-**Core components:**
-
-- **Code Repository** — Version-controlled pipeline definitions, analysis code, configuration
-- **Relational Database** — Metadata store, system of record, integrity enforcement
-- **Object Store** — Scalable storage for large scientific data (images, recordings, videos)
-
-## Pipeline as a DAG
-
-A DataJoint pipeline forms a **Directed Acyclic Graph (DAG)** at two levels:
-
-![Pipeline DAG Structure](../images/pipeline-illustration.png)
-
-**Nodes** represent Python modules, which correspond to database schemas.
-
-**Edges** represent:
-
-- Python import dependencies between modules
-- Bundles of foreign key references between schemas
-
-This dual structure ensures that both code dependencies and data dependencies flow in the same direction.
-
-## Schema Organization
-
-Each schema corresponds to a dedicated Python module:
-
-![Schema Structure](../images/schema-illustration.png)
-
-### Project Structure
+## Project Structure
 
 Use a modern Python project layout with source code under `src/`:
 
@@ -125,14 +94,6 @@ class MultiModalAnalysis(dj.Computed):
     correlation : float64
     """
 ```
-
-### DAG Constraints
-
-> **All foreign key relationships within a schema MUST form a DAG.**
->
-> **Dependencies between schemas (foreign keys + imports) MUST also form a DAG.**
-
-This ensures unidirectional flow of data and computational dependencies throughout the pipeline.
 
 ## Repository Configuration
 
@@ -407,6 +368,7 @@ These challenges grow with team size and pipeline complexity. The [DataJoint Pla
 
 ## See Also
 
+- [Data Pipelines](../explanation/data-pipelines.md) — Conceptual overview and architecture
 - [Configure Object Storage](configure-storage.md) — Storage setup
 - [Distributed Computing](distributed-computing.md) — Multi-worker pipelines
-- [Model Relationships](model-relationships.md) — Foreign key patterns
+- [Model Relationships](model-relationships.ipynb) — Foreign key patterns
