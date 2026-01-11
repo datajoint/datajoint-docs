@@ -31,14 +31,14 @@ Each specification follows a consistent structure:
 | [Master-Part Relationships](master-part.md) | Compositional data modeling, integrity, and cascading operations |
 | [Virtual Schemas](virtual-schemas.md) | Accessing schemas without Python source, introspection API |
 
-### Query Operations
+### Query Algebra
 
 | Specification | Description |
 |---------------|-------------|
-| [Query Algebra](query-algebra.md) | Operators: restrict, proj, join, aggr, extend, union, U() |
-| [Data Manipulation](data-manipulation.md) | Insert, update1, delete operations and workflow normalization |
-| [Primary Keys](primary-keys.md) | How primary keys propagate through query operators |
+| [Query Operators](query-algebra.md) | Operators: restrict, proj, join, aggr, extend, union, U() |
 | [Semantic Matching](semantic-matching.md) | Attribute lineage and join compatibility |
+| [Primary Keys](primary-keys.md) | How primary keys propagate through query operators |
+| [Fetch API](fetch-api.md) | Data retrieval methods and formats |
 
 ### Type System
 
@@ -47,15 +47,16 @@ Each specification follows a consistent structure:
 | [Type System](type-system.md) | Three-layer type architecture: native, core, and codec types |
 | [Codec API](codec-api.md) | Custom type implementation with encode/decode semantics |
 
-### Queries
+### Data Operations
 
 | Specification | Description |
 |---------------|-------------|
-| [Fetch API](fetch-api.md) | Data retrieval methods and formats |
-
-### Computation
-
-| Specification | Description |
-|---------------|-------------|
+| [Data Manipulation](data-manipulation.md) | Insert, update1, delete operations and workflow normalization |
 | [AutoPopulate](autopopulate.md) | Jobs 2.0 system for automated computation |
 | [Job Metadata](job-metadata.md) | Hidden columns for job tracking |
+
+### Migration
+
+| Specification | Description |
+|---------------|-------------|
+| [Migration 2.0](migration-2.0.md) | Migrating from DataJoint 0.x to 2.0 |
