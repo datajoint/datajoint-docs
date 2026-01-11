@@ -52,6 +52,7 @@ CREATE TABLE scan (
 ```
 
 The `-> Session` syntax in DataJoint:
+
 - Inherits all primary key attributes from Session
 - Declares the foreign key constraint
 - Establishes the computational dependency (for `populate()`)
@@ -134,12 +135,14 @@ Not exactly. DataJoint and workflow management systems (Airflow, Prefect, Flyte,
 | Query capability | Limited | Full relational algebra |
 
 **DataJoint excels at:**
+
 - Defining *what* needs to be computed based on data dependencies
 - Ensuring computations are never duplicated
 - Maintaining referential integrity across pipeline stages
 - Querying intermediate and final results
 
 **Workflow managers excel at:**
+
 - Scheduling and orchestrating job execution
 - Distributing work across clusters
 - Retry logic and failure handling
@@ -166,6 +169,7 @@ DataJoint and lakehouses share goals—integrating structured data management wi
 A **lakehouse** merges data lake flexibility with data warehouse structure, optimized for analytics workloads.
 
 **DataJoint** prioritizes:
+
 - Rigorous schema definitions
 - Explicit computational dependencies
 - Data integrity and reproducibility
@@ -198,6 +202,7 @@ DataJoint uses a hybrid storage model called **Object-Augmented Schemas (OAS)**:
 - **Object storage**: Stores large files (images, recordings, arrays)
 
 The database maintains references to external objects, preserving:
+
 - Referential integrity (files deleted with their parent records)
 - Query capability (filter by metadata, join across tables)
 - Deduplication (identical content stored once)
@@ -214,6 +219,7 @@ Yes. DataJoint pipelines are inherently collaborative:
 - **Job reservation**: `populate()` coordinates work across processes
 
 Teams typically:
+
 1. Share pipeline code via Git
 2. Connect to a shared database server
 3. Run `populate()` from multiple machines simultaneously
