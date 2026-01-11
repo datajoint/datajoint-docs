@@ -5,6 +5,9 @@ relational databases with native support for computational workflows. This model
 defines a new class of databases called **Computational Databases**, where
 computational transformations are first-class citizens of the data model.
 
+These concepts, along with DataJoint's schema definition language and query algebra,
+were first formalized in [Yatsenko et al., 2018](https://doi.org/10.48550/arXiv.1807.11104).
+
 ## The Problem with Traditional Approaches
 
 Traditional relational databases excel at storing and querying data but struggle

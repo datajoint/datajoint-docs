@@ -2,7 +2,7 @@
 
 ## Why Does DataJoint Have Its Own Definition and Query Language?
 
-DataJoint provides a custom data definition language and [query algebra](query-algebra.md) rather than using raw SQL or Object-Relational Mapping (ORM) patterns. This design reflects DataJoint's purpose: enabling research teams to build **[relational workflows](relational-workflow-model.md) with embedded computations** with maximum clarity.
+DataJoint provides a custom data definition language and [query algebra](query-algebra.md) rather than using raw SQL or Object-Relational Mapping (ORM) patterns. This design reflects DataJoint's purpose: enabling research teams to build **[relational workflows](relational-workflow-model.md) with embedded computations** with maximum clarity. These concepts were first formalized in [Yatsenko et al., 2018](https://doi.org/10.48550/arXiv.1807.11104).
 
 ### The Definition Language
 
