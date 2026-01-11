@@ -230,7 +230,9 @@ dj.U('a', 'b') * A   # DataJointError: use & instead
 
 ### Attribute Lineage
 
-Lineage identifies the **origin** of an attribute - where it was first defined. It is represented as a string:
+Lineage identifies the **origin** of an attribute—the **dimension** where it was first defined. A dimension is an independent axis of variation introduced by a table that defines new primary key attributes. See [Schema Dimensions](../../explanation/entity-integrity.md#schema-dimensions) for details.
+
+Lineage is represented as a string:
 
 ```
 schema_name.table_name.attribute_name

@@ -172,15 +172,161 @@ referential integrity and workflow dependency.
 
 ## Schema Dimensions
 
-Primary keys across tables define **schema dimensions**—the axes along which
-your data varies. Common dimensions in neuroscience:
+A **dimension** is an independent axis of variation in your data, introduced by
+a table that defines new primary key attributes. Dimensions are the fundamental
+building blocks of schema design.
+
+### Dimension-Introducing Tables
+
+A table **introduces a dimension** when it defines primary key attributes that
+don't come from a foreign key. In schema diagrams, these tables have
+**underlined names**.
+
+```python
+@schema
+class Subject(dj.Manual):
+    definition = """
+    subject_id : varchar(16)   # NEW dimension: subject_id
+    ---
+    species : varchar(50)
+    """
+
+@schema
+class Modality(dj.Lookup):
+    definition = """
+    modality : varchar(32)     # NEW dimension: modality
+    ---
+    description : varchar(255)
+    """
+```
+
+Both `Subject` and `Modality` are dimension-introducing tables—they create new
+axes along which data varies.
+
+### Dimension-Inheriting Tables
+
+A table **inherits dimensions** when its entire primary key comes from foreign
+keys. In schema diagrams, these tables have **non-underlined names**.
+
+```python
+@schema
+class SubjectProfile(dj.Manual):
+    definition = """
+    -> Subject                 # Inherits subject_id dimension
+    ---
+    weight : float32
+    """
+```
+
+`SubjectProfile` doesn't introduce a new dimension—it extends the `Subject`
+dimension with additional attributes. There's exactly one profile per subject.
+
+### Mixed Tables
+
+Most tables both inherit and introduce dimensions:
+
+```python
+@schema
+class Session(dj.Manual):
+    definition = """
+    -> Subject                 # Inherits subject_id dimension
+    session_idx : uint16       # NEW dimension within subject
+    ---
+    session_date : date
+    """
+```
+
+`Session` inherits the subject dimension but introduces a new dimension
+(`session_idx`) within each subject. This creates a hierarchical structure.
+
+### Computed Tables and Dimensions
+
+**Computed tables never introduce dimensions.** Their primary key is entirely
+inherited from their dependencies:
+
+```python
+@schema
+class SessionSummary(dj.Computed):
+    definition = """
+    -> Session                 # PK = (subject_id, session_idx)
+    ---
+    num_trials : uint32
+    accuracy : float32
+    """
+```
+
+This makes sense—computed tables derive data from existing entities rather
+than introducing new ones.
+
+### Part Tables CAN Introduce Dimensions
+
+Unlike computed tables, **part tables can introduce new dimensions**:
+
+```python
+@schema
+class Detection(dj.Computed):
+    definition = """
+    -> Image                   # Inherits image_id
+    -> DetectionParams         # Inherits params_id
+    ---
+    num_blobs : uint32
+    """
+
+    class Blob(dj.Part):
+        definition = """
+        -> master              # Inherits (image_id, params_id)
+        blob_idx : uint16      # NEW dimension within detection
+        ---
+        x : float32
+        y : float32
+        """
+```
+
+`Detection` inherits dimensions (no underline in diagram), but `Detection.Blob`
+introduces a new dimension (`blob_idx`) for individual blobs within each
+detection.
+
+### Dimensions and Attribute Lineage
+
+Every primary key attribute traces back to the dimension where it was first
+defined. This is called **attribute lineage**:
+
+```
+Subject.subject_id      → myschema.subject.subject_id (origin)
+Session.subject_id      → myschema.subject.subject_id (inherited)
+Session.session_idx     → myschema.session.session_idx (origin)
+Trial.subject_id        → myschema.subject.subject_id (inherited)
+Trial.session_idx       → myschema.session.session_idx (inherited)
+Trial.trial_idx         → myschema.trial.trial_idx (origin)
+```
+
+Lineage enables **semantic matching**—DataJoint only joins attributes that
+trace back to the same dimension. Two attributes named `id` from different
+dimensions cannot be accidentally joined.
+
+See [Semantic Matching](../reference/specs/semantic-matching.md) for details.
+
+### Recognizing Dimensions in Diagrams
+
+In schema diagrams:
+
+| Visual | Meaning |
+|--------|---------|
+| **Underlined name** | Introduces at least one new dimension |
+| Non-underlined name | All PK attributes inherited (no new dimensions) |
+| **Thick solid line** | One-to-one extension (no new dimension) |
+| **Thin solid line** | Containment (may introduce dimension) |
+
+Common dimensions in neuroscience:
 
 - **Subject** — Who/what is being studied
 - **Session** — When data was collected
-- **Modality** — What type of data (ephys, imaging, behavior)
+- **Trial** — Individual experimental unit
+- **Modality** — Type of data (ephys, imaging, behavior)
+- **Parameter set** — Configuration for analysis
 
 Understanding dimensions helps design schemas that naturally express your
-experimental structure.
+experimental structure and ensures correct joins through semantic matching.
 
 ## Best Practices
 
