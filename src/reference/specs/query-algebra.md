@@ -841,7 +841,104 @@ Session & dj.Top(None, "session_date DESC")
 
 ---
 
-## 13. Implementation Reference
+## 13. SQL Transpilation
+
+This section describes how DataJoint translates query expressions to SQL.
+
+### 13.1 MySQL Clause Evaluation Order
+
+MySQL differs from standard SQL in clause evaluation:
+
+```
+Standard SQL: FROM → WHERE → GROUP BY → HAVING → SELECT
+MySQL:        FROM → WHERE → SELECT → GROUP BY → HAVING
+```
+
+This allows `GROUP BY` and `HAVING` clauses to use alias column names created by `SELECT`. DataJoint targets MySQL's behavior where column aliases can be used in `HAVING`.
+
+### 13.2 QueryExpression Properties
+
+Each `QueryExpression` represents a `SELECT` statement with these properties:
+
+| Property | SQL Clause | Description |
+|----------|------------|-------------|
+| `heading` | `SELECT` | Attributes to retrieve |
+| `restriction` | `WHERE` | List of conditions (AND) |
+| `support` | `FROM` | Tables/subqueries to query |
+
+Operators create new expressions by combining these properties:
+- `proj` → creates new `heading`
+- `&` → appends to `restriction`
+- `*` → adds to `support`
+
+### 13.3 Subquery Generation Rules
+
+Operators merge properties when possible, avoiding subqueries. A subquery is generated when:
+
+| Situation | Reason |
+|-----------|--------|
+| Restriction uses alias attributes | Alias must exist in SELECT before WHERE can reference it |
+| Projection creates alias from alias | Must materialize first alias |
+| Join on alias attribute | Alias must exist before join condition |
+| Aggregation as operand | GROUP BY requires complete subquery |
+| Union operand | UNION requires complete subqueries |
+
+When a subquery is created, the input becomes a `FROM` clause element in a new `QueryExpression`.
+
+### 13.4 Join Mechanics
+
+Joins combine the properties of both inputs:
+
+```python
+result.support = A.support + B.support
+result.restriction = A.restriction + B.restriction
+result.heading = merge(A.heading, B.heading)
+```
+
+Restrictions from inputs propagate to the output. Inputs that don't become subqueries donate their supports, restrictions, and projections directly to the join.
+
+### 13.5 Aggregation SQL
+
+Aggregation translates to:
+
+```sql
+SELECT A.pk, A.secondary, agg_func(B.col) AS computed
+FROM A
+LEFT JOIN B USING (pk)
+WHERE <restrictions on A>
+GROUP BY A.pk
+HAVING <restrictions on B or computed>
+```
+
+Key behavior:
+- Restrictions on A → `WHERE` clause (before grouping)
+- Restrictions on B or computed attributes → `HAVING` clause (after grouping)
+- Aggregation never generates a subquery when restricted
+
+### 13.6 Union SQL
+
+Union performs an outer join:
+
+```sql
+(SELECT A.pk, A.secondary, NULL as B.secondary FROM A)
+UNION
+(SELECT B.pk, NULL as A.secondary, B.secondary FROM B
+ WHERE B.pk NOT IN (SELECT pk FROM A))
+```
+
+All union inputs become subqueries except unrestricted unions.
+
+### 13.7 Query Backprojection
+
+Before execution, `finalize()` recursively projects out unnecessary attributes from all inputs. This optimization:
+
+- Reduces data transfer (especially for blobs)
+- Compensates for MySQL's query optimizer limitations
+- Produces leaner queries for complex expressions
+
+---
+
+## 14. Implementation Reference
 
 | File | Purpose |
 |------|---------|
@@ -853,7 +950,7 @@ Session & dj.Top(None, "session_date DESC")
 
 ---
 
-## 14. Quick Reference
+## 15. Quick Reference
 
 | Operation | Syntax | Result PK |
 |-----------|--------|-----------|
