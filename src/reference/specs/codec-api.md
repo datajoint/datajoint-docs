@@ -1,7 +1,8 @@
-# Codec Specification
+# Codec API Specification
 
-This document specifies the DataJoint Codec API for creating custom attribute types
-that extend DataJoint's native type system.
+This document specifies the DataJoint Codec API for creating custom attribute types.
+For the complete type system architecture (core types, built-in codecs, storage modes),
+see the [Type System Specification](type-system.md).
 
 ## Overview
 
@@ -9,12 +10,10 @@ Codecs define bidirectional conversion between Python objects and database stora
 They enable storing complex data types (graphs, models, custom formats) while
 maintaining DataJoint's query capabilities.
 
-```
-┌─────────────────┐                    ┌─────────────────┐
-│  Python Object  │  ──── encode ────► │  Storage Type   │
-│   (e.g. Graph)  │                    │  (e.g. bytes)   │
-│                 │  ◄─── decode ────  │                 │
-└─────────────────┘                    └─────────────────┘
+```mermaid
+flowchart LR
+    A["Python Object<br/>(e.g. Graph)"] -- encode --> B["Storage Type<br/>(e.g. bytes)"]
+    B -- decode --> A
 ```
 
 ## Quick Start
@@ -283,17 +282,15 @@ During FETCH:
 
 DataJoint's built-in codecs form these chains:
 
-```
-<blob>     → bytes (internal)
-<blob@>    → <hash@> → json (external)
-
-<attach>   → bytes (internal)
-<attach@>  → <hash@> → json (external)
-
-<hash@>    → json (external only)
-<object@>  → json (external only)
-<filepath@> → json (external only)
-```
+| Codec | Chain | Final Storage |
+|-------|-------|---------------|
+| `<blob>` | `<blob>` → `bytes` | Internal |
+| `<blob@>` | `<blob>` → `<hash>` → `json` | External |
+| `<attach>` | `<attach>` → `bytes` | Internal |
+| `<attach@>` | `<attach>` → `<hash>` → `json` | External |
+| `<hash@>` | `<hash>` → `json` | External only |
+| `<object@>` | `<object>` → `json` | External only |
+| `<filepath@>` | `<filepath>` → `json` | External only |
 
 ### Store Name Propagation
 
@@ -438,7 +435,7 @@ from datajoint.codecs import (
 
 ## Built-in Codecs
 
-DataJoint provides these built-in codecs:
+DataJoint provides these built-in codecs. See the [Type System Specification](type-system.md) for detailed behavior and implementation.
 
 | Codec | Internal | External | Description |
 |-------|----------|----------|-------------|

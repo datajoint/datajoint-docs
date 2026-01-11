@@ -46,24 +46,42 @@ Each schema corresponds to a dedicated Python module:
 
 ![Schema Structure](../images/schema-illustration.png)
 
-### One Module Per Schema
+### Project Structure
+
+Use a modern Python project layout with source code under `src/`:
 
 ```
 my_pipeline/
-├── __init__.py
-├── subject.py          # subject schema
-├── session.py          # session schema
-├── ephys.py            # ephys schema
-├── imaging.py          # imaging schema
-├── analysis.py         # analysis schema
-└── utils/
-    └── __init__.py
+├── datajoint.json          # Shared settings (committed)
+├── .secrets/               # Local credentials (gitignored)
+│   ├── database.password
+│   └── storage.credentials
+├── .gitignore
+├── pyproject.toml          # Package metadata and dependencies
+├── README.md
+├── src/
+│   └── my_pipeline/
+│       ├── __init__.py
+│       ├── subject.py      # subject schema
+│       ├── session.py      # session schema
+│       ├── ephys.py        # ephys schema
+│       ├── imaging.py      # imaging schema
+│       ├── analysis.py     # analysis schema
+│       └── utils/
+│           └── __init__.py
+├── tests/
+│   ├── conftest.py
+│   └── test_ephys.py
+└── docs/
+    └── ...
 ```
+
+### One Module Per Schema
 
 Each module defines and binds to its schema:
 
 ```python
-# my_pipeline/ephys.py
+# src/my_pipeline/ephys.py
 import datajoint as dj
 from . import session  # Import dependency
 
@@ -120,18 +138,7 @@ This ensures unidirectional flow of data and computational dependencies througho
 
 ### Shared Settings
 
-Store non-secret configuration in the repository:
-
-```
-my_pipeline/
-├── datajoint.json        # Shared settings (commit this)
-├── .secrets/             # Local secrets (gitignore)
-│   ├── database.password
-│   └── object_storage.secret_key
-├── .gitignore
-└── src/
-    └── my_pipeline/
-```
+Store non-secret configuration in `datajoint.json` at the project root:
 
 **datajoint.json** (committed):
 ```json
@@ -140,37 +147,77 @@ my_pipeline/
     "host": "db.example.com",
     "port": 3306
   },
-  "object_storage": {
-    "project_name": "my_lab_pipeline",
-    "protocol": "s3",
-    "endpoint": "s3.example.com",
-    "bucket": "my-lab-data",
-    "location": "datajoint"
+  "stores": {
+    "main": {
+      "protocol": "s3",
+      "endpoint": "s3.example.com",
+      "bucket": "my-org-data",
+      "location": "my_pipeline"
+    }
   }
 }
 ```
 
-**.gitignore**:
+### Credentials Management
+
+Credentials are stored locally and never committed:
+
+**Option 1: `.secrets/` directory**
 ```
 .secrets/
-*.pyc
-__pycache__/
+├── database.user
+├── database.password
+├── storage.access_key
+└── storage.secret_key
 ```
 
-### User-Specific Credentials
-
-Each team member provides their own credentials:
-
+**Option 2: Environment variables**
 ```bash
-# Set via environment
 export DJ_USER=alice
 export DJ_PASS=alice_password
-export DJ_OBJECT_STORAGE_ACCESS_KEY=alice_key
-export DJ_OBJECT_STORAGE_SECRET_KEY=alice_secret
+export DJ_STORES__MAIN__ACCESS_KEY=...
+export DJ_STORES__MAIN__SECRET_KEY=...
+```
 
-# Or via .secrets/ directory
-echo "alice" > .secrets/database.user
-echo "alice_password" > .secrets/database.password
+### Essential `.gitignore`
+
+```gitignore
+# Credentials
+.secrets/
+
+# Python
+__pycache__/
+*.pyc
+*.egg-info/
+dist/
+build/
+
+# Environment
+.env
+.venv/
+
+# IDE
+.idea/
+.vscode/
+```
+
+### `pyproject.toml` Example
+
+```toml
+[project]
+name = "my-pipeline"
+version = "1.0.0"
+requires-python = ">=3.10"
+dependencies = [
+    "datajoint>=2.0",
+    "numpy",
+]
+
+[project.optional-dependencies]
+dev = ["pytest", "pytest-cov"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
 ```
 
 ## Database Access Control
@@ -280,7 +327,7 @@ A DataJoint project creates a structured storage pattern:
 Initialize schemas in dependency order:
 
 ```python
-# my_pipeline/__init__.py
+# src/my_pipeline/__init__.py
 from . import subject   # No dependencies
 from . import session   # Depends on subject
 from . import ephys     # Depends on session
@@ -303,7 +350,7 @@ def initialize():
 Track schema versions with your code:
 
 ```python
-# my_pipeline/version.py
+# src/my_pipeline/version.py
 __version__ = "1.2.0"
 
 SCHEMA_VERSIONS = {

@@ -1,9 +1,5 @@
 # DataJoint Query Algebra Specification
 
-Version: 1.0
-Status: Draft
-Last Updated: 2026-01-07
-
 ## Overview
 
 This document specifies the query algebra in DataJoint Python. Query expressions are composable objects that represent database queries. All operators return new QueryExpression objects without modifying the original—expressions are immutable.

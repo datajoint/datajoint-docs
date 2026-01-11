@@ -4,6 +4,12 @@ DataJoint provides a powerful query algebra with just five operators. These
 operators work on **entity sets** (query expressions) and always return entity
 sets, enabling arbitrary composition.
 
+## Algebraic Closure
+
+A fundamental property of DataJoint's query algebra is **algebraic closure**: every query result is itself a valid entity set with a well-defined **entity type** — you always know what kind of entity the result represents, identified by a specific primary key. Unlike SQL where query results are unstructured "bags of rows," DataJoint determines the entity type of each result based on the operator and the functional dependencies between operands.
+
+This means operators can be chained indefinitely — the output of any operation is a valid input to any other operation. See [Primary Keys](../reference/specs/primary-keys.md) for the precise rules.
+
 ## The Five Operators
 
 ```mermaid

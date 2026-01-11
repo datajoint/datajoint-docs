@@ -11,6 +11,48 @@ Found a bug or have a feature request? Open an issue on GitHub:
 - [datajoint-python issues](https://github.com/datajoint/datajoint-python/issues)
 - [datajoint-docs issues](https://github.com/datajoint/datajoint-docs/issues)
 
+### Propose Enhancements (RFC Process)
+
+For significant changes to DataJoint—new features, API changes, or specification updates—we use an RFC (Request for Comments) process via GitHub Discussions.
+
+**When to use an RFC:**
+
+- API changes or new features in datajoint-python
+- Changes to the DataJoint specification
+- Breaking changes or deprecations
+- Major documentation restructuring
+
+**RFC Process:**
+
+1. **Propose** — Create a new Discussion using the RFC template in the appropriate repository:
+   - [datajoint-python Discussions](https://github.com/datajoint/datajoint-python/discussions/new?category=rfc)
+   - [datajoint-docs Discussions](https://github.com/datajoint/datajoint-docs/discussions/new?category=rfc)
+
+2. **Discuss** — Community and maintainers provide feedback (2-4 weeks). Use 👍/👎 reactions to signal support. Prototyping in parallel is encouraged.
+
+3. **Final Comment Period** — Once consensus emerges, maintainers announce a 1-2 week final comment period. No changes during this time.
+
+4. **Decision** — RFC is accepted, rejected, or postponed. Accepted RFCs become tracking issues for implementation.
+
+**RFC Labels:**
+
+| Label | Meaning |
+|-------|---------|
+| `rfc` | All enhancement proposals |
+| `status: proposed` | Initial submission |
+| `status: under-review` | Active discussion |
+| `status: final-comment` | Final comment period |
+| `status: accepted` | Approved for implementation |
+| `status: rejected` | Not accepted |
+| `status: postponed` | Deferred to future |
+
+**Tips for a good RFC:**
+
+- Search existing discussions first
+- Include concrete use cases and code examples
+- Consider backwards compatibility
+- Start with motivation before diving into design
+
 ### Improve Documentation
 
 Documentation improvements are valuable contributions:

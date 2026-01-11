@@ -1,9 +1,5 @@
 # DataJoint Table Declaration Specification
 
-Version: 1.0
-Status: Draft
-Last Updated: 2026-01-07
-
 ## Overview
 
 This document specifies the table declaration mechanism in DataJoint Python. Table declarations define the schema structure using a domain-specific language (DSL) embedded in Python class definitions.

@@ -8,33 +8,13 @@ This document defines a three-layer type architecture:
 2. **Core DataJoint types** - Standardized across backends, scientist-friendly (`float32`, `uint8`, `bool`, `json`).
 3. **Codec Types** - Programmatic types with `encode()`/`decode()` semantics. Composable.
 
-```mermaid
-block-beta
-    columns 1
-    block:layer3:1
-        columns 1
-        L3["Codec Types (Layer 3)"]
-        B3a["Built-in: &lt;blob&gt; &lt;attach&gt; &lt;object@&gt; &lt;hash@&gt; &lt;filepath@&gt;"]
-        B3b["User-defined: &lt;graph&gt; &lt;image&gt; &lt;custom&gt; ..."]
-    end
-    block:layer2:1
-        columns 1
-        L2["Core DataJoint Types (Layer 2)"]
-        B2["float32 float64 int64 uint64 int32 uint32 int16 uint16\nint8 uint8 bool uuid json bytes date datetime\nchar(n) varchar(n) enum(...) decimal(n,f)"]
-    end
-    block:layer1:1
-        columns 1
-        L1["Native Database Types (Layer 1)"]
-        B1["MySQL: TINYINT SMALLINT INT BIGINT FLOAT DOUBLE TEXT ...\nPostgreSQL: SMALLINT INTEGER BIGINT REAL DOUBLE PRECISION TEXT\n(pass through with warning — discouraged)"]
-    end
-    layer3 --> layer2 --> layer1
-```
-
 | Layer | Description | Examples |
 |-------|-------------|----------|
-| **3. Codec Types** | Programmatic types with `encode()`/`decode()` semantics | `<blob>`, `<attach>`, `<object@>`, `<hash@>`, `<filepath@>` |
-| **2. Core DataJoint** | Standardized, scientist-friendly types (preferred) | `int32`, `float64`, `varchar(n)`, `bool`, `datetime` |
+| **3. Codec Types** | Programmatic types with `encode()`/`decode()` semantics | `<blob>`, `<attach>`, `<object@>`, `<hash@>`, `<filepath@>`, user-defined |
+| **2. Core DataJoint** | Standardized, scientist-friendly types (preferred) | `int32`, `float64`, `varchar(n)`, `bool`, `datetime`, `json`, `bytes` |
 | **1. Native Database** | Backend-specific types (discouraged) | `INT`, `FLOAT`, `TINYINT UNSIGNED`, `LONGBLOB` |
+
+Codec types resolve through core types to native types: `<blob>` → `bytes` → `LONGBLOB`.
 
 **Syntax distinction:**
 - Core types: `int32`, `float64`, `varchar(255)` - no brackets
@@ -246,85 +226,7 @@ Some codecs support both modes (`<blob>`, `<attach>`), others are external-only 
 
 ### Codec Base Class
 
-Codecs auto-register when subclassed using Python's `__init_subclass__` mechanism.
-No decorator is needed.
-
-```python
-from abc import ABC, abstractmethod
-from typing import Any
-
-# Global codec registry
-_codec_registry: dict[str, "Codec"] = {}
-
-
-class Codec(ABC):
-    """
-    Base class for codec types. Subclasses auto-register by name.
-
-    Requires Python 3.10+.
-    """
-    name: str | None = None  # Must be set by concrete subclasses
-
-    def __init_subclass__(cls, *, register: bool = True, **kwargs):
-        """Auto-register concrete codecs when subclassed."""
-        super().__init_subclass__(**kwargs)
-
-        if not register:
-            return  # Skip registration for abstract bases
-
-        if cls.name is None:
-            return  # Skip registration if no name (abstract)
-
-        if cls.name in _codec_registry:
-            existing = _codec_registry[cls.name]
-            if type(existing) is not cls:
-                raise DataJointError(
-                    f"Codec <{cls.name}> already registered by {type(existing).__name__}"
-                )
-            return  # Same class, idempotent
-
-        _codec_registry[cls.name] = cls()
-
-    def get_dtype(self, is_external: bool) -> str:
-        """
-        Return the storage dtype for this codec.
-
-        Args:
-            is_external: True if @ modifier present (external storage)
-
-        Returns:
-            A core type (e.g., "bytes", "json") or another codec (e.g., "<hash>")
-        """
-        raise NotImplementedError
-
-    @abstractmethod
-    def encode(self, value: Any, *, key: dict | None = None, store_name: str | None = None) -> Any:
-        """Encode Python value for storage."""
-        ...
-
-    @abstractmethod
-    def decode(self, stored: Any, *, key: dict | None = None) -> Any:
-        """Decode stored value back to Python."""
-        ...
-
-    def validate(self, value: Any) -> None:
-        """Optional validation before encoding. Override to add constraints."""
-        pass
-
-
-def list_codecs() -> list[str]:
-    """Return list of registered codec names."""
-    return sorted(_codec_registry.keys())
-
-
-def get_codec(name: str) -> Codec:
-    """Get codec by name. Raises DataJointError if not found."""
-    if name not in _codec_registry:
-        raise DataJointError(f"Unknown codec: <{name}>")
-    return _codec_registry[name]
-```
-
-**Usage - no decorator needed:**
+Codecs inherit from `dj.Codec` and auto-register when their class is defined. See the [Codec API Specification](codec-api.md) for complete details on creating custom codecs.
 
 ```python
 class GraphCodec(dj.Codec):
@@ -345,39 +247,22 @@ class GraphCodec(dj.Codec):
         return G
 ```
 
-**Skip registration for abstract bases:**
-
-```python
-class ExternalOnlyCodec(dj.Codec, register=False):
-    """Abstract base for external-only codecs. Not registered."""
-
-    def get_dtype(self, is_external: bool) -> str:
-        if not is_external:
-            raise DataJointError(f"<{self.name}> requires @ (external only)")
-        return "json"
-```
-
 ### Codec Resolution and Chaining
 
 Codecs resolve to core types through chaining. The `get_dtype(is_external)` method
 returns the appropriate dtype based on storage mode:
 
-```
-Resolution at declaration time:
-
-<blob>         → get_dtype(False) → "bytes"     → LONGBLOB/BYTEA
-<blob@>        → get_dtype(True)  → "<hash>" → json → JSON/JSONB
-<blob@cold>    → get_dtype(True)  → "<hash>" → json (store=cold)
-
-<attach>       → get_dtype(False) → "bytes"     → LONGBLOB/BYTEA
-<attach@>      → get_dtype(True)  → "<hash>" → json → JSON/JSONB
-
-<object@>      → get_dtype(True)  → "json"      → JSON/JSONB
-<object>       → get_dtype(False) → ERROR (external only)
-
-<hash@>     → get_dtype(True)  → "json"      → JSON/JSONB
-<filepath@s>   → get_dtype(True)  → "json"      → JSON/JSONB
-```
+| Codec | `is_external` | Resolution Chain | SQL Type |
+|-------|---------------|------------------|----------|
+| `<blob>` | `False` | `"bytes"` | `LONGBLOB`/`BYTEA` |
+| `<blob@>` | `True` | `"<hash>"` → `"json"` | `JSON`/`JSONB` |
+| `<blob@cold>` | `True` | `"<hash>"` → `"json"` (store=cold) | `JSON`/`JSONB` |
+| `<attach>` | `False` | `"bytes"` | `LONGBLOB`/`BYTEA` |
+| `<attach@>` | `True` | `"<hash>"` → `"json"` | `JSON`/`JSONB` |
+| `<object@>` | `True` | `"json"` | `JSON`/`JSONB` |
+| `<object>` | `False` | ERROR (external only) | — |
+| `<hash@>` | `True` | `"json"` | `JSON`/`JSONB` |
+| `<filepath@>` | `True` | `"json"` | `JSON`/`JSONB` |
 
 ### `<object@>` / `<object@store>` - Path-Addressed Storage
 
@@ -691,48 +576,13 @@ class Attachments(dj.Manual):
 
 ## User-Defined Codecs
 
-Users can define custom codecs for domain-specific data:
+Users can define custom codecs for domain-specific data. See the [Codec API Specification](codec-api.md) for complete examples including:
 
-```python
-class GraphCodec(dj.Codec):
-    """Store NetworkX graphs. Internal only (no external support)."""
-    name = "graph"
-
-    def get_dtype(self, is_external: bool) -> str:
-        if is_external:
-            raise DataJointError("<graph> does not support external storage")
-        return "<blob>"  # Chain to blob for serialization
-
-    def encode(self, graph, *, key=None, store_name=None):
-        return {'nodes': list(graph.nodes()), 'edges': list(graph.edges())}
-
-    def decode(self, stored, *, key=None):
-        import networkx as nx
-        G = nx.Graph()
-        G.add_nodes_from(stored['nodes'])
-        G.add_edges_from(stored['edges'])
-        return G
-```
-
-Custom codecs can support both modes by returning different dtypes:
-
-```python
-class ImageCodec(dj.Codec):
-    """Store images. Supports both internal and external."""
-    name = "image"
-
-    def get_dtype(self, is_external: bool) -> str:
-        return "<hash>" if is_external else "bytes"
-
-    def encode(self, image, *, key=None, store_name=None) -> bytes:
-        # Convert PIL Image to PNG bytes
-        buffer = io.BytesIO()
-        image.save(buffer, format='PNG')
-        return buffer.getvalue()
-
-    def decode(self, stored: bytes, *, key=None):
-        return PIL.Image.open(io.BytesIO(stored))
-```
+- Simple serialization codecs
+- External storage codecs
+- JSON with schema validation
+- Context-dependent encoding
+- External-only codecs (Zarr, HDF5)
 
 ## Storage Comparison
 

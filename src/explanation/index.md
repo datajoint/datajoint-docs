@@ -44,6 +44,16 @@ and scalable.
 
     Extend DataJoint with domain-specific types. The codec extensibility system.
 
+-   :material-pipe: **[Data Pipelines](data-pipelines.md)**
+
+    From workflows to complete data operations systems. Project structure and
+    object-augmented schemas.
+
+-   :material-frequently-asked-questions: **[FAQ](faq.md)**
+
+    How DataJoint compares to ORMs, workflow managers, and lakehouses.
+    Common questions answered.
+
 </div>
 
 ## Why These Concepts Matter

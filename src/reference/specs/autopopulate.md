@@ -1,9 +1,5 @@
 # AutoPopulate Specification
 
-Version: 2.0
-Status: Draft
-Last Updated: 2026-01-07
-
 ## Overview
 
 AutoPopulate is DataJoint's mechanism for automated computation. Tables that inherit from `dj.Computed` or `dj.Imported` automatically populate themselves by executing a `make()` method for each entry defined by their dependencies.

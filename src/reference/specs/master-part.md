@@ -1,9 +1,5 @@
 # Master-Part Relationships Specification
 
-Version: 1.0
-Status: Draft
-Last Updated: 2026-01-08
-
 ## Overview
 
 Master-Part relationships model compositional data where a master entity contains multiple detail records. Part tables provide a way to store variable-length, structured data associated with each master entity while maintaining strict referential integrity.

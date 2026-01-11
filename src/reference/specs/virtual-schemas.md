@@ -1,9 +1,5 @@
 # Virtual Schemas Specification
 
-Version: 1.0
-Status: Stable
-Last Updated: 2026-01-08
-
 ## Overview
 
 Virtual schemas provide a way to access existing database schemas without the original Python source code. This is useful for:
