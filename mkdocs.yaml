@@ -1,7 +1,7 @@
 # ---------------------- PROJECT SPECIFIC ---------------------------
 
 site_name: DataJoint Documentation
-site_url: https://docs.datajoint.com
+site_url: https://docs.datajoint.com/  # Trailing slash required for mike
 repo_name: datajoint/datajoint-docs
 repo_url: https://github.com/datajoint/datajoint-docs
 nav:
@@ -180,9 +180,9 @@ markdown_extensions:
 extra:
   generator: false # Disable watermark
   datajoint_version: "2.0"  # DataJoint Python version this documentation covers
-  # Multi-version docs disabled for now (would use mike)
-  # version:
-  #   provider: mike
+  version:
+    provider: mike
+    default: stable
   social:
     - icon: main/company-logo
       link: https://www.datajoint.com
