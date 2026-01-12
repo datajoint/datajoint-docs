@@ -2,105 +2,26 @@
 
 Upgrade existing pipelines from DataJoint 0.x to DataJoint 2.0.
 
-## Overview
+## Migration Phases
 
-DataJoint 2.0 is largely backward-compatible. Migration happens in two parts:
+| Phase | What | Database Changes | Reversible |
+|-------|------|------------------|------------|
+| 1. Code | Query syntax, API methods | None | Yes |
+| 2. Settings | Config files | None | Yes |
+| 3. Numeric Types | Type definitions | Column types | Yes |
+| 4. Blob/Attach | Internal blobs | Column comments | Yes |
+| 5. External Blob/Attach | External storage | Column comments | Yes |
+| 6. Filepath | Filepath references | Column comments | Yes |
 
-| Part | What Changes | Database Changes |
-|------|--------------|------------------|
-| **Part 1: Code** | Python code, config files | None |
-| **Part 2: Blobs** | Blob column metadata | Column comments only |
-
-**After Part 1, most pipelines work immediately.** Part 2 is only needed if you
-use blob types (`longblob`, `blob@store`, `attach`, `filepath@store`).
+Each phase is independent. Complete phases in order, testing after each.
 
 ---
 
-## Part 1: Code Migration
+## Phase 1: Code Migration
 
-Update your Python code and configuration. No database changes required.
+Update Python code. No database changes.
 
-### 1.1 Install DataJoint 2.0
-
-```bash
-# In your project environment
-pip install datajoint>=2.0
-
-# Verify
-python -c "import datajoint; print(datajoint.__version__)"
-```
-
-### 1.2 Update Configuration
-
-#### Option A: Environment Variables (Recommended)
-
-```bash
-export DJ_HOST=your-database-host
-export DJ_USER=your-username
-export DJ_PASS=your-password
-```
-
-No file changes needed. Works with both 0.x and 2.0.
-
-#### Option B: Config File
-
-Create `datajoint.json` (2.0 ignores `dj_local_conf.json`):
-
-```json
-{
-  "database": {
-    "host": "localhost",
-    "user": "datajoint",
-    "port": 3306
-  }
-}
-```
-
-For credentials, create `.secrets/database.password`:
-
-```bash
-mkdir -p .secrets && chmod 700 .secrets
-echo "your_password" > .secrets/database.password
-chmod 600 .secrets/database.password
-```
-
-### 1.3 Update Table Definitions
-
-Most definitions work unchanged. Update these patterns:
-
-#### Type Syntax
-
-```python
-# 0.x (still works for non-blob types)
-mouse_id : int
-name : varchar(100)
-
-# 2.0 (same - no change needed)
-mouse_id : int
-name : varchar(100)
-```
-
-#### Blob Types (Update Required)
-
-```python
-# 0.x
-data : longblob
-data : blob@store
-file : attach
-file : attach@store
-path : filepath@store
-
-# 2.0
-data : <blob>
-data : <blob@store>
-file : <attach>
-file : <attach@store>
-path : <filepath@store>
-```
-
-### 1.4 Update Queries
-
-#### Universal Set
+### Query Syntax
 
 ```python
 # 0.x
@@ -110,7 +31,17 @@ dj.U('attr') * Table
 dj.U('attr') & Table
 ```
 
-#### Fetch Methods
+### Aggregation
+
+```python
+# 0.x
+Table.aggr(dj.U('group'), count='count(*)')
+
+# 2.0
+dj.U('group').aggr(Table, count='count(*)')
+```
+
+### Fetch Methods
 
 ```python
 # 0.x
@@ -122,96 +53,186 @@ Table.keys()
 Table.to_dicts()
 ```
 
-#### Aggregation
+### Find and Replace
 
-```python
-# 0.x
-Table.aggr(dj.U('group'), count='count(*)')
-
-# 2.0
-dj.U('group').aggr(Table, count='count(*)')
+```bash
+# Find patterns to update
+grep -rn "\.fetch('KEY')" --include="*.py"
+grep -rn "fetch(as_dict=True)" --include="*.py"
+grep -rn "dj\.U.*\*" --include="*.py"
 ```
 
-### 1.5 Test Your Pipeline
-
-After code changes, test with existing tables:
-
-```python
-import datajoint as dj
-from your_pipeline import schema, Mouse, Session, ...
-
-# These should work immediately
-Mouse()                          # View table
-len(Session)                     # Count rows
-(Mouse & 'mouse_id=1').fetch1()  # Query data
-```
-
-**If you don't use blob types, you're done!**
+**Rollback:** Revert code changes with git.
 
 ---
 
-## Part 2: Blob Migration
+## Phase 2: Settings
 
-Required only if your pipeline uses blob types. This updates column metadata
-(comments) to register codecs. **Data is not modified.**
+Update configuration files. No database changes.
 
-### 2.1 Check If Needed
+### Environment Variables (Recommended)
 
-```python
-from datajoint.migrate import check_blob_columns
-
-# Returns list of columns needing migration
-columns = check_blob_columns(schema)
-if not columns:
-    print("No blob migration needed!")
-else:
-    print(f"Columns to migrate: {columns}")
+```bash
+export DJ_HOST=your-host
+export DJ_USER=your-user
+export DJ_PASS=your-password
 ```
 
-### 2.2 Preview Changes
+Works with both 0.x and 2.0.
+
+### Config File
+
+Replace `dj_local_conf.json` with `datajoint.json`:
+
+```json
+{
+  "database": {
+    "host": "localhost",
+    "user": "datajoint",
+    "port": 3306
+  }
+}
+```
+
+### Secrets
+
+```bash
+mkdir -p .secrets && chmod 700 .secrets
+echo "password" > .secrets/database.password
+chmod 600 .secrets/database.password
+```
+
+**Rollback:** Delete `datajoint.json`, revert to `dj_local_conf.json`.
+
+---
+
+## Phase 3: Numeric Types
+
+Update type definitions and database columns.
+
+### Definition Changes
+
+```python
+# 0.x native types
+definition = """
+id : int
+count : int unsigned
+value : float
+"""
+
+# 2.0 core types
+definition = """
+id : int32
+count : uint32
+value : float64
+"""
+```
+
+### Type Mapping
+
+| 0.x | 2.0 | MySQL |
+|-----|-----|-------|
+| `int` | `int32` | INT |
+| `int unsigned` | `uint32` | INT UNSIGNED |
+| `smallint` | `int16` | SMALLINT |
+| `smallint unsigned` | `uint16` | SMALLINT UNSIGNED |
+| `tinyint` | `int8` | TINYINT |
+| `tinyint unsigned` | `uint8` | TINYINT UNSIGNED |
+| `bigint` | `int64` | BIGINT |
+| `bigint unsigned` | `uint64` | BIGINT UNSIGNED |
+| `float` | `float32` | FLOAT |
+| `double` | `float64` | DOUBLE |
+
+### Migration Steps
+
+1. Update definitions in Python code
+2. Run migration to update database:
+
+```python
+from datajoint.migrate import migrate_types
+
+# Preview
+migrate_types(schema, dry_run=True)
+
+# Apply
+migrate_types(schema, dry_run=False)
+```
+
+**Idempotent:** Safe to run multiple times.
+
+**Rollback:**
+```python
+from datajoint.migrate import rollback_types
+rollback_types(schema)
+```
+
+---
+
+## Phase 4: Blob/Attach (Internal)
+
+Migrate internal blob and attach columns (stored in database).
+
+### Definition Changes
+
+```python
+# 0.x
+data : longblob
+file : attach
+
+# 2.0
+data : <blob>
+file : <attach>
+```
+
+### Migration Steps
+
+1. Update definitions in Python code
+2. Run migration:
 
 ```python
 from datajoint.migrate import migrate_blobs
 
-# Dry run - shows what would change
+# Preview
 migrate_blobs(schema, dry_run=True)
+
+# Apply (internal only)
+migrate_blobs(schema, external=False)
 ```
 
-Output shows:
-```
-Table.column: longblob -> <blob>
-Table.external_data: blob@store -> <blob@store>
-```
+This updates column comments to register codecs. **Data unchanged.**
 
-### 2.3 Apply Migration
-
+**Rollback:**
 ```python
-# Apply changes (modifies column comments only)
-migrate_blobs(schema, dry_run=False)
-```
-
-**Idempotent:** Running multiple times is safe - already-migrated columns are skipped.
-
-### 2.4 Verify
-
-```python
-# Test blob fetch
-data = (MyTable & key).fetch1('blob_column')
-print(f"Fetched: {type(data)}")
+from datajoint.migrate import rollback_blobs
+rollback_blobs(schema, external=False)
 ```
 
 ---
 
-## External Storage Migration
+## Phase 5: External Blob/Attach
 
-If you use external storage (`blob@store`, `attach@store`, etc.), configure stores:
+Migrate external blob and attach columns (stored in object storage).
 
-### Update Store Configuration
+### Definition Changes
+
+```python
+# 0.x
+data : blob@store
+file : attach@store
+
+# 2.0
+data : <blob@store>
+file : <attach@store>
+```
+
+### Configure Stores
+
+Ensure stores are configured in `datajoint.json`:
 
 ```json
 {
   "stores": {
-    "your_store_name": {
+    "store": {
       "protocol": "file",
       "location": "/path/to/existing/store"
     }
@@ -219,106 +240,136 @@ If you use external storage (`blob@store`, `attach@store`, etc.), configure stor
 }
 ```
 
-**Use the same paths as 0.x.** DataJoint 2.0 reads existing external data without modification.
+**Use same paths as 0.x** - DataJoint 2.0 reads existing data.
 
-### S3/MinIO Stores
+### Migration Steps
 
-```json
-{
-  "stores": {
-    "s3store": {
-      "protocol": "s3",
-      "endpoint": "s3.amazonaws.com",
-      "bucket": "your-bucket",
-      "location": "datajoint"
-    }
-  }
-}
+1. Update definitions in Python code
+2. Configure stores
+3. Run migration:
+
+```python
+from datajoint.migrate import migrate_blobs
+
+# Preview
+migrate_blobs(schema, dry_run=True, external=True)
+
+# Apply
+migrate_blobs(schema, external=True)
+```
+
+**Rollback:**
+```python
+rollback_blobs(schema, external=True)
 ```
 
 ---
 
-## Rollback
+## Phase 6: Filepath
 
-### Rollback Part 1 (Code)
+Migrate filepath references to external files.
 
-```bash
-# Downgrade package
-pip install datajoint==0.14.2
-
-# Revert code changes
-git checkout <previous-commit>
-```
-
-### Rollback Part 2 (Blobs)
-
-Blob migration only changes column comments. To rollback:
+### Definition Changes
 
 ```python
-from datajoint.migrate import rollback_blobs
+# 0.x
+path : filepath@store
 
-rollback_blobs(schema)  # Removes codec markers from comments
+# 2.0
+path : <filepath@store>
 ```
 
-Or manually:
-```sql
-ALTER TABLE `schema`.`table`
-MODIFY COLUMN `column` LONGBLOB COMMENT 'original comment';
+### Migration Steps
+
+1. Update definitions in Python code
+2. Run migration:
+
+```python
+from datajoint.migrate import migrate_filepath
+
+# Preview
+migrate_filepath(schema, dry_run=True)
+
+# Apply
+migrate_filepath(schema)
+```
+
+**Rollback:**
+```python
+from datajoint.migrate import rollback_filepath
+rollback_filepath(schema)
+```
+
+---
+
+## Verification
+
+After each phase, verify your pipeline:
+
+```python
+import datajoint as dj
+from your_pipeline import schema
+
+# List tables
+print(schema.list_tables())
+
+# Check a table
+SomeTable()
+
+# Test fetch
+data = (SomeTable & key).fetch1()
 ```
 
 ---
 
 ## Quick Reference
 
-### What Works Immediately (No Migration)
-
-- All non-blob table operations
-- Inserts, updates, deletes
-- Queries (restriction, join, projection)
-- Schema inspection (`dj.Diagram`, `heading`)
-- Foreign key relationships
-
-### What Requires Code Changes
+### Code Changes (Phase 1)
 
 | 0.x | 2.0 |
 |-----|-----|
 | `dj.U() * expr` | `dj.U() & expr` |
 | `.fetch('KEY')` | `.keys()` |
 | `.fetch(as_dict=True)` | `.to_dicts()` |
+| `Table.aggr(dj.U('x'), ...)` | `dj.U('x').aggr(Table, ...)` |
+
+### Type Changes (Phase 3)
+
+| 0.x | 2.0 |
+|-----|-----|
+| `int` | `int32` |
+| `int unsigned` | `uint32` |
+| `float` | `float32` |
+| `double` | `float64` |
+
+### Blob Changes (Phases 4-6)
+
+| 0.x | 2.0 |
+|-----|-----|
 | `longblob` | `<blob>` |
 | `blob@store` | `<blob@store>` |
-
-### What Requires Blob Migration
-
-- Fetching existing blob data with 2.0
-- Using codec features (compression, external storage)
+| `attach` | `<attach>` |
+| `attach@store` | `<attach@store>` |
+| `filepath@store` | `<filepath@store>` |
 
 ---
 
 ## Troubleshooting
 
-### "No codec registered" Error
+### "Native type 'int' is used"
 
-Run blob migration:
+Update to core types (Phase 3):
 ```python
-from datajoint.migrate import migrate_blobs
-migrate_blobs(schema)
+# Change: int -> int32
 ```
 
-### External Data Not Found
+### "No codec registered"
 
-Check store configuration matches 0.x paths:
-```python
-import datajoint as dj
-print(dj.config.stores)  # Verify store paths
-```
+Run blob migration (Phases 4-6).
 
-### Import Errors After Downgrade
+### External data not found
 
-Clear Python cache:
-```bash
-find . -name __pycache__ -type d -exec rm -rf {} +
-```
+Check store configuration matches 0.x paths.
 
 ---
 
