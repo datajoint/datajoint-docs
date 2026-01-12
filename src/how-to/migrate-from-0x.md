@@ -14,8 +14,6 @@ Create a `CLAUDE.md` (or similar) file in your project:
 
 Read the migration guide: https://datajoint.com/docs/how-to/migrate-from-0x/
 
-Database: [host] / [schema1, schema2, ...]
-
 Schemas in topological order (dependencies first):
 1. lab
 2. subject
@@ -28,7 +26,6 @@ Then tell your AI assistant:
 ```
 Migrate my DataJoint pipeline from 0.x to 2.0.
 Fetch the migration guide and create a plan for my project.
-Process schemas in topological order (dependencies before dependents).
 ```
 
 ---
