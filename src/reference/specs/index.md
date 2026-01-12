@@ -55,8 +55,3 @@ Each specification follows a consistent structure:
 | [AutoPopulate](autopopulate.md) | Jobs 2.0 system for automated computation |
 | [Job Metadata](job-metadata.md) | Hidden columns for job tracking |
 
-### Migration
-
-| Specification | Description |
-|---------------|-------------|
-| [Migration 2.0](migration-2.0.md) | Migrating from DataJoint 0.x to 2.0 |

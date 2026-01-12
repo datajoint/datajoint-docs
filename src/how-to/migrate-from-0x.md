@@ -2,100 +2,69 @@
 
 Upgrade existing pipelines from DataJoint 0.x to DataJoint 2.0.
 
-> **Before you start:** Back up your database and use version control for code.
+> **This guide is optimized for AI coding assistants.** Point your AI agent at this
+> URL and it will execute the migration with your oversight.
+
+## Quick Start
+
+Create a `CLAUDE.md` (or similar) file in your project:
+
+```markdown
+# DataJoint Migration
+
+Read the migration guide: https://datajoint.com/docs/how-to/migrate-from-0x/
+
+Database: [host] / [schema1, schema2, ...]
+```
+
+Then tell your AI assistant:
+
+```
+Migrate my DataJoint pipeline from 0.x to 2.0.
+Fetch the migration guide and create a plan for my project.
+```
+
+---
+
+## Why Migrate?
+
+| Improvement | Before (0.x) | After (2.0) |
+|-------------|--------------|-------------|
+| **Transparency** | Hidden tables, implicit serialization | Everything visible, explicit codecs |
+| **Extensibility** | Fixed blob/attachment types | Custom codecs for any data type |
+| **Type Safety** | Types inferred at runtime | Explicit type labels in schema |
+| **External Storage** | UUID in hidden tables | Inline JSON with direct URLs |
+| **Configuration** | Python dict, credentials in code | JSON config, secrets separated |
+| **Data Retrieval** | `.fetch()` with options | Explicit: `.to_dicts()`, `.to_pandas()` |
+
+---
 
 ## Migration Phases
 
 | Phase | What | Changes |
 |-------|------|---------|
-| 1. Code | Query syntax, API methods, type names | Python code |
-| 2. Settings | Config files | Files |
-| 3. Numeric Types | Type labels in database | Column comments |
-| 4. Blob/Attach (Internal) | Internal blob columns | Column comments |
-| 5. External Blob/Attach | External storage columns | FK → JSON |
-| 6. Filepath | Filepath columns | FK → JSON |
-| 7. AdaptedTypes | Custom AttributeAdapter classes | Code + column comments |
+| 1 | Code & Definitions | Python code, table definitions |
+| 2 | Settings | Config files |
+| 3 | Numeric Types | Column comments (database) |
+| 4 | Internal Blobs | Column comments (database) |
+| 5 | External Storage | Column type + data (FK → JSON) |
+| 6 | Filepath | Column type + data (FK → JSON) |
+| 7 | AdaptedTypes | Code + column comments |
 
-**Phases 1-4** are straightforward. Phases 3-4 only modify column comments—the
-actual data and column types are unchanged.
+**Phases 1-4, 7**: Only modify code and column comments. Data unchanged.
 
-**Phases 5-6** convert foreign key references to external storage tables into
-JSON entries. The critical step is configuring stores to generate the same
-paths as stored in the legacy external tables.
+**Phases 5-6**: Convert external storage references from hidden tables to JSON.
+Requires matching store configuration to preserve path compatibility.
 
-Most users only need Phases 1-4.
+Most pipelines only need Phases 1-4.
 
 ---
 
-## AI-Assisted Migration Setup
+## Phase 1: Code & Definitions
 
-We recommend using an AI coding assistant for migration. Here's how to set up
-context for effective assistance.
+Update Python code and table definitions. No database changes.
 
-### Provide Documentation Context
-
-Create a `CLAUDE.md` or similar context file in your project root:
-
-```markdown
-# DataJoint Migration Context
-
-## Migration Documentation
-Read the migration guide: https://datajoint.com/docs/how-to/migrate-from-0x/
-Read the migration spec: https://datajoint.com/docs/reference/specs/migration-2.0/
-
-## Database Connection
-- Host: [your-host]
-- User: [your-user]
-- Schema(s): [schema1, schema2, ...]
-
-## Project Structure
-- Pipeline code: src/pipeline/
-- Table definitions: src/pipeline/schema.py
-- Custom adapters: src/pipeline/adapters.py (if any)
-
-## Migration Status
-- [ ] Phase 1: Code migration
-- [ ] Phase 2: Settings
-- [ ] Phase 3: Numeric types
-- [ ] Phase 4: Internal blobs
-- [ ] Phase 5: External blobs (if used)
-- [ ] Phase 6: Filepath (if used)
-- [ ] Phase 7: AdaptedTypes (if used)
-```
-
-### Start the Migration
-
-Use this prompt to begin:
-
-```
-I need to migrate my DataJoint pipeline from 0.x to 2.0.
-
-First, fetch and read these documentation pages:
-- https://datajoint.com/docs/how-to/migrate-from-0x/
-- https://datajoint.com/docs/reference/specs/migration-2.0/
-
-Then analyze my codebase and create a migration plan specific to my project.
-Identify which phases apply to my pipeline.
-```
-
-### Per-Phase Prompts
-
-For each phase, provide specific context:
-
-```
-Continue with Phase [N] of the DataJoint migration.
-
-Reference the migration docs you already read.
-Show me what changes are needed before making them.
-```
-
----
-
-## Phase 1: Code Migration
-
-Update Python code. No database changes.
-
-### Key API Changes
+### API Changes
 
 | 0.x | 2.0 |
 |-----|-----|
@@ -103,35 +72,31 @@ Update Python code. No database changes.
 | `.fetch(as_dict=True)` | `.to_dicts()` |
 | `.fetch(format='frame')` | `.to_pandas()` |
 
-### Table Definition Types
-
-Update type names in your table definitions to use DataJoint core types:
+### Type Names in Definitions
 
 ```python
-# 0.x — native database types
+# 0.x
 @schema
 class Session(dj.Manual):
     definition = """
     session_id : int unsigned
     ---
-    subject_id : int
     weight : float
-    age_days : smallint unsigned
-    is_active : tinyint(1)
+    data : longblob
     """
 
-# 2.0 — DataJoint core types
+# 2.0
 @schema
 class Session(dj.Manual):
     definition = """
     session_id : uint32
     ---
-    subject_id : int32
     weight : float64
-    age_days : uint16
-    is_active : bool
+    data : <blob>
     """
 ```
+
+### Complete Type Mapping
 
 | 0.x (native) | 2.0 (core type) |
 |--------------|-----------------|
@@ -147,383 +112,364 @@ class Session(dj.Manual):
 | `double` | `float64` |
 | `tinyint(1)` | `bool` |
 | `longblob` | `<blob>` |
+| `attach` | `<attach>` |
 | `blob@store` | `<blob@store>` |
+| `attach@store` | `<attach@store>` |
+| `filepath@store` | `<filepath@store>` |
 
-### AI-Assisted Code Conversion
-
-We recommend using an AI coding assistant (Claude Code, Cursor, GitHub Copilot)
-to identify and update deprecated patterns in your codebase:
+### AI Prompt: Code Migration
 
 ```
-Analyze my DataJoint pipeline code for 0.x patterns that need updating for 2.0.
+Migrate Python code for DataJoint 2.0.
 
-Search for:
-1. .fetch('KEY') calls — replace with .keys()
-2. .fetch(as_dict=True) calls — replace with .to_dicts()
-3. .fetch(format='frame') calls — replace with .to_pandas()
-4. Table definitions using native types (int, float, smallint, etc.)
-   — replace with core types (int32, float64, int16, etc.)
-5. Any other deprecated patterns
+Search the codebase for:
+1. .fetch('KEY') → replace with .keys()
+2. .fetch(as_dict=True) → replace with .to_dicts()
+3. .fetch(format='frame') → replace with .to_pandas()
+4. Table definitions with native types (int, float, smallint, etc.)
+   → replace with core types (int32, float64, int16, etc.)
+5. Table definitions with longblob → replace with <blob>
 
-For each file, show me the changes needed before applying them.
+Show changes before applying.
 ```
-
-### Manual Search
-
-```bash
-grep -rn "\.fetch('KEY')" --include="*.py"
-grep -rn "fetch(as_dict=True)" --include="*.py"
-grep -rn "fetch(format=" --include="*.py"
-grep -rn "definition\s*=" --include="*.py" -A 20 | grep -E ":\s*(int|float|smallint|tinyint|bigint|double)"
-```
-
 
 ---
 
 ## Phase 2: Settings
 
-Update configuration. No database changes.
+Update configuration files.
 
-### Environment Variables (Recommended)
+### 0.x Configuration
 
-```bash
-export DJ_HOST=your-host
-export DJ_USER=your-user
-export DJ_PASS=your-password
+```python
+dj.config['database.host'] = 'localhost'
+dj.config['database.user'] = 'root'
+dj.config['database.password'] = 'secret'
+dj.config['stores'] = {'external': {'protocol': 'file', 'location': '/data'}}
 ```
 
-### Config File
+### 2.0 Configuration
 
-Replace `dj_local_conf.json` with `datajoint.json`:
-
+**datajoint.json:**
 ```json
 {
-  "database": {
-    "host": "localhost",
-    "user": "datajoint",
-    "port": 3306
-  }
-}
-```
-
-### Secrets
-
-```bash
-mkdir -p .secrets && chmod 700 .secrets
-echo "password" > .secrets/database.password
-chmod 600 .secrets/database.password
-```
-
-
----
-
-## Phase 3: Numeric Types
-
-Update type names in definitions. Only modifies column comments—the underlying
-MySQL column type (INT, FLOAT, etc.) is unchanged.
-
-### Definition Changes
-
-```python
-# 0.x
-id : int
-count : int unsigned
-value : float
-
-# 2.0
-id : int32
-count : uint32
-value : float64
-```
-
-### Type Mapping
-
-| 0.x | 2.0 | MySQL (unchanged) |
-|-----|-----|-------------------|
-| `int` | `int32` | INT |
-| `int unsigned` | `uint32` | INT UNSIGNED |
-| `smallint` | `int16` | SMALLINT |
-| `smallint unsigned` | `uint16` | SMALLINT UNSIGNED |
-| `tinyint` | `int8` | TINYINT |
-| `tinyint unsigned` | `uint8` | TINYINT UNSIGNED |
-| `bigint` | `int64` | BIGINT |
-| `bigint unsigned` | `uint64` | BIGINT UNSIGNED |
-| `float` | `float32` | FLOAT |
-| `double` | `float64` | DOUBLE |
-
-### Apply
-
-```python
-from datajoint.migrate import migrate_types
-
-migrate_types(schema, dry_run=True)   # Preview
-migrate_types(schema)                  # Apply
-```
-
-**Safe:** Only modifies column comments. Data and column types unchanged.
-
----
-
-## Phase 4: Blob/Attach (Internal)
-
-Migrate internal blobs stored in database. Only modifies column comments.
-
-### Definition Changes
-
-```python
-# 0.x
-data : longblob
-file : attach
-
-# 2.0
-data : <blob>
-file : <attach>
-```
-
-### Apply
-
-```python
-from datajoint.migrate import migrate_blobs
-
-migrate_blobs(schema, dry_run=True)   # Preview
-migrate_blobs(schema, external=False) # Apply internal only
-```
-
-**Safe:** Only modifies column comments. Data unchanged.
-
----
-
-## Phase 5: External Blob/Attach
-
-Migrate external blobs stored in object storage.
-
-**This phase converts foreign key references to external storage tables into
-JSON metadata entries.**
-
-### Definition Changes
-
-```python
-# 0.x
-data : blob@store
-file : attach@store
-
-# 2.0
-data : <blob@store>
-file : <attach@store>
-```
-
-### Critical: Store Configuration
-
-The new store configuration must generate the **same paths** as the legacy
-external tables. Verify path compatibility before migrating.
-
-#### Check Legacy Paths
-
-```python
-# Examine existing external table entries
-from your_pipeline import schema
-
-external_table = schema.external['store']
-sample = external_table.fetch(limit=5)
-print(sample)  # Note the path structure
-```
-
-#### Configure Matching Paths
-
-```json
-{
+  "database.host": "localhost",
   "stores": {
-    "store": {
+    "external": {
       "protocol": "file",
-      "location": "/path/matching/legacy/store"
+      "location": "/data"
     }
   }
 }
 ```
 
-### Verify Before Migration
-
-```python
-from datajoint.migrate import verify_external_paths
-
-# Check that new config generates compatible paths
-verify_external_paths(schema, store='store')
+**.secrets/database.password:**
+```
+secret
 ```
 
-### Apply
+### AI Prompt: Settings Migration
 
-```python
-from datajoint.migrate import migrate_external
-
-migrate_external(schema, dry_run=True)  # Preview
-migrate_external(schema)                 # Apply
 ```
+Migrate DataJoint configuration to 2.0 format.
 
-**Careful:** Converts FK references to JSON. Verify paths first.
+1. Read existing dj_local_conf.json or dj.config settings
+2. Create datajoint.json with non-sensitive settings
+3. Create .secrets/ directory with credentials (chmod 600)
+4. Add .secrets/ and datajoint.json to .gitignore
+5. Verify connection works with new config
+```
 
 ---
 
-## Phase 6: Filepath
+## Phase 3: Numeric Types (Database)
 
-Migrate filepath references to external files.
+Add type labels to column comments. Data and column types unchanged.
 
-**This phase converts foreign key references to external tables into JSON
-metadata entries.**
+### How It Works
 
-### Definition Changes
+DataJoint 2.0 stores type information in column comments:
 
-```python
-# 0.x
-path : filepath@store
+```sql
+-- 0.x: No type label
+column_name INT COMMENT 'session number'
 
-# 2.0
-path : <filepath@store>
+-- 2.0: Type label prefix
+column_name INT COMMENT ':int32: session number'
 ```
+
+### AI Prompt: Numeric Type Migration
+
+```
+Migrate numeric types for schema [schema_name].
+
+1. Query INFORMATION_SCHEMA.COLUMNS for all tables
+2. For each numeric column without type label:
+   - TINYINT → :int8: (or :uint8: if unsigned)
+   - SMALLINT → :int16: (or :uint16: if unsigned)
+   - INT → :int32: (or :uint32: if unsigned)
+   - BIGINT → :int64: (or :uint64: if unsigned)
+   - FLOAT → :float32:
+   - DOUBLE → :float64:
+   - TINYINT(1) → :bool:
+
+3. Generate ALTER TABLE statements:
+   ALTER TABLE `schema`.`table`
+   MODIFY COLUMN `col` INT COMMENT ':int32: original comment';
+
+4. Show all statements before executing
+5. Skip columns that already have type labels
+```
+
+---
+
+## Phase 4: Internal Blobs (Database)
+
+Add codec labels to blob columns. Data unchanged.
+
+### How It Works
+
+```sql
+-- 0.x: No codec label
+data_col LONGBLOB COMMENT 'neural data'
+
+-- 2.0: Codec label prefix
+data_col LONGBLOB COMMENT ':blob: neural data'
+```
+
+### AI Prompt: Blob Migration
+
+```
+Migrate internal blob columns for schema [schema_name].
+
+1. Find LONGBLOB columns without codec labels:
+   - Skip if comment starts with :blob:, :attach:, :blob@, :attach@
+
+2. Generate ALTER statements:
+   ALTER TABLE `schema`.`table`
+   MODIFY COLUMN `col` LONGBLOB COMMENT ':blob: original comment';
+
+3. Show all statements before executing
+```
+
+---
+
+## Phase 5: External Storage (Database)
+
+Convert external blob/attachment references from hidden tables to JSON.
+
+**This changes column types and data format.**
+
+### 0.x Architecture
+
+- Column type: `BINARY(16)` storing UUID hash
+- Column comment: `description :external:` or `:external-storename:`
+- Hidden table `~external_<store>` maps hash → filepath, size, timestamp
+
+### 2.0 Architecture
+
+- Column type: `JSON`
+- Column comment: `:blob@store: description`
+- JSON value: `{"url": "...", "size": ..., "hash": "..."}`
+
+### 0.x Comment Patterns
+
+| Pattern | Meaning |
+|---------|---------|
+| `:external:` | External blob, default store |
+| `:external-storename:` | External blob, named store |
+| `:external-attach:` | External attachment, default store |
+| `:external-attach-storename:` | External attachment, named store |
 
 ### Critical: Path Compatibility
 
-Same as Phase 5—ensure store configuration generates matching paths.
-
-### Apply
+The 2.0 store configuration must generate the **same paths** as stored in the
+legacy `~external_*` tables. Verify before migrating:
 
 ```python
-from datajoint.migrate import migrate_filepath
+# Check existing paths in hidden table
+from your_pipeline import schema
+external = schema.external['store']
+print(external.fetch(limit=5))  # Note the filepath structure
+```
 
-migrate_filepath(schema, dry_run=True)  # Preview
-migrate_filepath(schema)                 # Apply
+### AI Prompt: External Storage Migration
+
+```
+Migrate external storage for schema [schema_name].
+
+WARNING: This changes column types. Back up first.
+
+1. Find external columns:
+   - DATA_TYPE = 'binary', length = 16
+   - COMMENT matches ':external:' or ':external-*:'
+
+2. For each external column:
+   a. Identify store name from comment
+   b. Query ~external_<store> for all referenced hashes
+   c. Build JSON objects:
+      {"url": "<protocol>://<location>/<filepath>", "size": N, "hash": "..."}
+   d. For attachments, include "filename" field
+
+3. ALTER column type to JSON:
+   ALTER TABLE `t` MODIFY COLUMN `c` JSON COMMENT ':blob@store: desc';
+
+4. UPDATE each row with JSON value
+
+5. Verify data accessible through DataJoint 2.0
+
+Show migration plan with row counts before executing.
+```
+
+---
+
+## Phase 6: Filepath (Database)
+
+Convert filepath references to JSON format. Similar to Phase 5.
+
+### AI Prompt: Filepath Migration
+
+```
+Migrate filepath columns for schema [schema_name].
+
+1. Find filepath columns (comment contains :filepath:)
+2. Convert paths to JSON with URL format
+3. ALTER column type to JSON
+4. Verify file accessibility
 ```
 
 ---
 
 ## Phase 7: AdaptedTypes to Codecs
 
-Migrate custom `AttributeAdapter` classes to user-defined codecs.
+Convert custom `AttributeAdapter` classes to `Codec` classes.
 
-**This phase requires updating Python code and column comments.**
-
-### Background
-
-DataJoint 0.x used `dj.AttributeAdapter` subclasses to define custom attribute
-types. In 2.0, this is replaced by the more powerful `dj.Codec` system.
-
-### Definition Changes
+### 0.x AttributeAdapter
 
 ```python
-# 0.x — AttributeAdapter
-@schema
-class MyAdapter(dj.AttributeAdapter):
-    attribute_type = 'filepath@store'  # underlying type
+class ImageAdapter(dj.AttributeAdapter):
+    attribute_type = 'longblob'
 
-    def put(self, filepath):
-        # transform on insert
-        return filepath
+    def put(self, img):
+        return cv2.imencode('.png', img)[1].tobytes()
 
-    def get(self, filepath):
-        # transform on fetch
-        return pathlib.Path(filepath)
+    def get(self, data):
+        return cv2.imdecode(np.frombuffer(data, np.uint8), cv2.IMREAD_COLOR)
 
-# Usage in 0.x
-my_adapter = MyAdapter()
-schema.spawn_missing_classes(context={..., 'adapted': my_adapter})
-
-@schema
-class MyTable(dj.Manual):
-    definition = '''
-    id : int
-    ---
-    path : <adapted>
-    '''
-
-# 2.0 — Codec
-class PathCodec(dj.Codec):
-    name = "path"
-
-    def get_dtype(self, is_external: bool) -> str:
-        return "<filepath>"  # underlying storage
-
-    def encode(self, value, *, key=None, store_name=None):
-        return str(value)
-
-    def decode(self, stored, *, key=None):
-        return pathlib.Path(stored)
-
-# Usage in 2.0 — codec auto-registers when class is defined
-@schema
-class MyTable(dj.Manual):
-    definition = '''
-    id : int32
-    ---
-    path : <path@store>
-    '''
+# Registration required
+image_adapter = ImageAdapter()
+schema.spawn_missing_classes(context={'image': image_adapter})
 ```
 
-### Key Differences
-
-| 0.x AttributeAdapter | 2.0 Codec |
-|---------------------|-----------|
-| `attribute_type` property | `get_dtype(is_external)` method |
-| `put()` method | `encode()` method |
-| `get()` method | `decode()` method |
-| Manual registration via context | Auto-registration on class definition |
-| Instance-based | Class-based with singleton instance |
-
-### Migration Steps
-
-1. **Identify all AttributeAdapter subclasses** in your codebase
-
-2. **Convert each to a Codec class**:
-   - Rename `put()` → `encode()`
-   - Rename `get()` → `decode()`
-   - Replace `attribute_type` with `get_dtype()` method
-   - Add `name` class attribute
-
-3. **Update table definitions**:
-   - Replace adapter references with codec names
-   - Update column comments if needed
-
-4. **Remove adapter registration** from `spawn_missing_classes()` calls
-
-### Apply
+### 2.0 Codec
 
 ```python
-from datajoint.migrate import migrate_adapted_types
+class ImageCodec(dj.Codec):
+    name = "image"  # Use as <image> in definitions
 
-migrate_adapted_types(schema, dry_run=True)  # Preview
-migrate_adapted_types(schema)                 # Apply
+    def get_dtype(self, is_external: bool) -> str:
+        return "<blob>"
+
+    def encode(self, img, *, key=None, store_name=None):
+        return cv2.imencode('.png', img)[1].tobytes()
+
+    def decode(self, data, *, key=None):
+        return cv2.imdecode(np.frombuffer(data, np.uint8), cv2.IMREAD_COLOR)
+
+# Auto-registers when class is defined
+```
+
+### Conversion Table
+
+| 0.x | 2.0 |
+|-----|-----|
+| `attribute_type` property | `get_dtype(is_external)` method |
+| `put(value)` | `encode(value, *, key=None, store_name=None)` |
+| `get(data)` | `decode(data, *, key=None)` |
+| Manual registration | Auto-registration |
+
+### attribute_type to get_dtype() Mapping
+
+| 0.x `attribute_type` | 2.0 `get_dtype()` return |
+|----------------------|--------------------------|
+| `'longblob'` | `'<blob>'` |
+| `'blob@store'` | `'<blob>'` (with @store in definition) |
+| `'attach'` | `'<attach>'` |
+| `'filepath@store'` | `'<filepath>'` |
+| `'varchar(N)'` | `'varchar(N)'` |
+| `'json'` | `'json'` |
+
+### AI Prompt: AdaptedTypes Migration
+
+```
+Migrate AttributeAdapter classes to Codecs.
+
+1. Search for AttributeAdapter subclasses:
+   grep -rn "AttributeAdapter" --include="*.py"
+
+2. For each adapter:
+   - Create equivalent Codec class
+   - Rename put() → encode(), get() → decode()
+   - Replace attribute_type with get_dtype() method
+   - Add name class attribute
+
+3. Update table definitions if type names changed
+
+4. Remove spawn_missing_classes() registrations
+
+5. Ensure codec module is imported before table definitions
+
+6. Test round-trip: insert, fetch, verify data matches
 ```
 
 ---
 
-## Quick Reference
+## Validation
 
-### Types (Phase 1, 3-4)
+After migration, verify everything works:
 
-| 0.x | 2.0 |
-|-----|-----|
-| `int` | `int32` |
-| `float` | `float64` |
-| `longblob` | `<blob>` |
-| `attach` | `<attach>` |
-| `blob@store` | `<blob@store>` |
-| `attach@store` | `<attach@store>` |
-| `filepath@store` | `<filepath@store>` |
+```python
+import datajoint as dj
 
-### API Changes (Phase 1)
+schema = dj.Schema('my_schema')
 
-| 0.x | 2.0 |
-|-----|-----|
-| `.fetch('KEY')` | `.keys()` |
-| `.fetch(as_dict=True)` | `.to_dicts()` |
-| `.fetch(format='frame')` | `.to_pandas()` |
+# Check all tables
+for name in schema.list_tables():
+    table = schema(name)
+    print(f"{name}: {len(table)} rows")
+    if len(table) > 0:
+        table.to_dicts(limit=1)  # Verify fetch works
+```
 
-### AdaptedTypes (Phase 7)
+### AI Prompt: Validation
 
-| 0.x | 2.0 |
-|-----|-----|
-| `dj.AttributeAdapter` | `dj.Codec` |
-| `put()` method | `encode()` method |
-| `get()` method | `decode()` method |
-| `attribute_type` | `get_dtype()` method |
+```
+Validate DataJoint 2.0 migration for schema [schema_name].
+
+1. Connect with DataJoint 2.0
+2. For each table:
+   - Verify heading loads without errors
+   - Fetch sample rows
+   - For blob columns: verify deserialization
+   - For external columns: verify file retrieval
+3. Test populate() on computed tables
+4. Report any errors
+```
+
+---
+
+## Post-Migration Checklist
+
+```
+[ ] All tables accessible via DataJoint 2.0
+[ ] Blob data deserializes correctly
+[ ] External data retrieves correctly
+[ ] Custom codecs working (if applicable)
+[ ] Computed tables can populate
+[ ] Team updated to DataJoint 2.0
+[ ] CI/CD pipelines updated
+[ ] Old config files archived
+```
 
 ---
 
@@ -531,26 +477,22 @@ migrate_adapted_types(schema)                 # Apply
 
 ### "Native type 'int' is used"
 
-Run Phase 3 (numeric types).
+Run Phase 3 to add type labels to numeric columns.
 
 ### "No codec registered"
 
-Run Phase 4 (blob/attach).
+Run Phase 4 to add codec labels to blob columns.
 
 ### External data not found
 
-Phase 5/6: Store paths don't match legacy external table paths.
-Verify configuration with `verify_external_paths()`.
+Phase 5/6: Store paths don't match legacy paths. Check:
+1. Store location in datajoint.json matches original
+2. Path structure matches what's in `~external_*` table
 
-### "Unknown codec" after Phase 7
+### "Unknown codec"
 
-Ensure your new Codec class is imported before table definitions.
+Ensure Codec class is imported before table definitions.
 Codecs auto-register when the class is defined.
-
-### AttributeAdapter still referenced
-
-Remove old adapter instances from `spawn_missing_classes()` context dicts.
-Update table definitions to use new codec names.
 
 ---
 
