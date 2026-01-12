@@ -4,16 +4,24 @@ Upgrade existing pipelines from DataJoint 0.x to DataJoint 2.0.
 
 ## Migration Phases
 
-| Phase | What | Database Changes | Reversible |
-|-------|------|------------------|------------|
-| 1. Code | Query syntax, API methods | None | Yes |
-| 2. Settings | Config files | None | Yes |
-| 3. Numeric Types | Type definitions | Column types | Yes |
-| 4. Blob/Attach | Internal blobs | Column comments | Yes |
-| 5. External Blob/Attach | External storage | Column comments | Yes |
-| 6. Filepath | Filepath references | Column comments | Yes |
+| Phase | What | Changes | Reversible |
+|-------|------|---------|------------|
+| 1. Code | Query syntax, API methods | Python code only | 100% |
+| 2. Settings | Config files | Files only | 100% |
+| 3. Numeric Types | Type names in definitions | Column comments | 100% |
+| 4. Blob/Attach (Internal) | Internal blob columns | Column comments | 100% |
+| 5. External Blob/Attach | External storage columns | FK → JSON | Yes |
+| 6. Filepath | Filepath columns | FK → JSON | Yes |
 
-Each phase is independent. Complete phases in order, testing after each.
+**Phases 1-4** are trivial. Phases 3-4 only modify column comments—the actual
+data and column types are unchanged. You can return to DataJoint 0.x at any
+time without data loss.
+
+**Phases 5-6** convert foreign key references to external storage tables into
+JSON entries. The critical step is configuring stores to generate the same
+paths as stored in the legacy external tables.
+
+Most users only need Phases 1-4.
 
 ---
 
@@ -56,19 +64,18 @@ Table.to_dicts()
 ### Find and Replace
 
 ```bash
-# Find patterns to update
 grep -rn "\.fetch('KEY')" --include="*.py"
 grep -rn "fetch(as_dict=True)" --include="*.py"
 grep -rn "dj\.U.*\*" --include="*.py"
 ```
 
-**Rollback:** Revert code changes with git.
+**Rollback:** `git checkout` to revert code.
 
 ---
 
 ## Phase 2: Settings
 
-Update configuration files. No database changes.
+Update configuration. No database changes.
 
 ### Environment Variables (Recommended)
 
@@ -77,8 +84,6 @@ export DJ_HOST=your-host
 export DJ_USER=your-user
 export DJ_PASS=your-password
 ```
-
-Works with both 0.x and 2.0.
 
 ### Config File
 
@@ -102,36 +107,33 @@ echo "password" > .secrets/database.password
 chmod 600 .secrets/database.password
 ```
 
-**Rollback:** Delete `datajoint.json`, revert to `dj_local_conf.json`.
+**Rollback:** Delete `datajoint.json`, use `dj_local_conf.json`.
 
 ---
 
 ## Phase 3: Numeric Types
 
-Update type definitions and database columns.
+Update type names in definitions. Only modifies column comments—the underlying
+MySQL column type (INT, FLOAT, etc.) is unchanged.
 
 ### Definition Changes
 
 ```python
-# 0.x native types
-definition = """
+# 0.x
 id : int
 count : int unsigned
 value : float
-"""
 
-# 2.0 core types
-definition = """
+# 2.0
 id : int32
 count : uint32
 value : float64
-"""
 ```
 
 ### Type Mapping
 
-| 0.x | 2.0 | MySQL |
-|-----|-----|-------|
+| 0.x | 2.0 | MySQL (unchanged) |
+|-----|-----|-------------------|
 | `int` | `int32` | INT |
 | `int unsigned` | `uint32` | INT UNSIGNED |
 | `smallint` | `int16` | SMALLINT |
@@ -143,34 +145,22 @@ value : float64
 | `float` | `float32` | FLOAT |
 | `double` | `float64` | DOUBLE |
 
-### Migration Steps
-
-1. Update definitions in Python code
-2. Run migration to update database:
+### Apply
 
 ```python
 from datajoint.migrate import migrate_types
 
-# Preview
-migrate_types(schema, dry_run=True)
-
-# Apply
-migrate_types(schema, dry_run=False)
+migrate_types(schema, dry_run=True)   # Preview
+migrate_types(schema)                  # Apply
 ```
 
-**Idempotent:** Safe to run multiple times.
-
-**Rollback:**
-```python
-from datajoint.migrate import rollback_types
-rollback_types(schema)
-```
+**Safe:** Only modifies column comments. Data and column types unchanged.
 
 ---
 
 ## Phase 4: Blob/Attach (Internal)
 
-Migrate internal blob and attach columns (stored in database).
+Migrate internal blobs stored in database. Only modifies column comments.
 
 ### Definition Changes
 
@@ -184,34 +174,25 @@ data : <blob>
 file : <attach>
 ```
 
-### Migration Steps
-
-1. Update definitions in Python code
-2. Run migration:
+### Apply
 
 ```python
 from datajoint.migrate import migrate_blobs
 
-# Preview
-migrate_blobs(schema, dry_run=True)
-
-# Apply (internal only)
-migrate_blobs(schema, external=False)
+migrate_blobs(schema, dry_run=True)   # Preview
+migrate_blobs(schema, external=False) # Apply internal only
 ```
 
-This updates column comments to register codecs. **Data unchanged.**
-
-**Rollback:**
-```python
-from datajoint.migrate import rollback_blobs
-rollback_blobs(schema, external=False)
-```
+**Safe:** Only modifies column comments. Data unchanged.
 
 ---
 
 ## Phase 5: External Blob/Attach
 
-Migrate external blob and attach columns (stored in object storage).
+Migrate external blobs stored in object storage.
+
+**This phase converts foreign key references to external storage tables into
+JSON metadata entries.**
 
 ### Definition Changes
 
@@ -225,49 +206,63 @@ data : <blob@store>
 file : <attach@store>
 ```
 
-### Configure Stores
+### Critical: Store Configuration
 
-Ensure stores are configured in `datajoint.json`:
+The new store configuration must generate the **same paths** as the legacy
+external tables. Verify path compatibility before migrating.
+
+#### Check Legacy Paths
+
+```python
+# Examine existing external table entries
+from your_pipeline import schema
+
+external_table = schema.external['store']
+sample = external_table.fetch(limit=5)
+print(sample)  # Note the path structure
+```
+
+#### Configure Matching Paths
 
 ```json
 {
   "stores": {
     "store": {
       "protocol": "file",
-      "location": "/path/to/existing/store"
+      "location": "/path/matching/legacy/store"
     }
   }
 }
 ```
 
-**Use same paths as 0.x** - DataJoint 2.0 reads existing data.
-
-### Migration Steps
-
-1. Update definitions in Python code
-2. Configure stores
-3. Run migration:
+### Verify Before Migration
 
 ```python
-from datajoint.migrate import migrate_blobs
+from datajoint.migrate import verify_external_paths
 
-# Preview
-migrate_blobs(schema, dry_run=True, external=True)
-
-# Apply
-migrate_blobs(schema, external=True)
+# Check that new config generates compatible paths
+verify_external_paths(schema, store='store')
 ```
 
-**Rollback:**
+### Apply
+
 ```python
-rollback_blobs(schema, external=True)
+from datajoint.migrate import migrate_external
+
+migrate_external(schema, dry_run=True)  # Preview
+migrate_external(schema)                 # Apply
 ```
+
+**Careful:** Converts FK references to JSON. Verify paths first.
 
 ---
 
 ## Phase 6: Filepath
 
 Migrate filepath references to external files.
+
+**This phase converts foreign key references to external tables into JSON
+metadata entries.**
 
 ### Definition Changes
 
@@ -279,50 +274,43 @@ path : filepath@store
 path : <filepath@store>
 ```
 
-### Migration Steps
+### Critical: Path Compatibility
 
-1. Update definitions in Python code
-2. Run migration:
+Same as Phase 5—ensure store configuration generates matching paths.
+
+### Apply
 
 ```python
 from datajoint.migrate import migrate_filepath
 
-# Preview
-migrate_filepath(schema, dry_run=True)
-
-# Apply
-migrate_filepath(schema)
-```
-
-**Rollback:**
-```python
-from datajoint.migrate import rollback_filepath
-rollback_filepath(schema)
-```
-
----
-
-## Verification
-
-After each phase, verify your pipeline:
-
-```python
-import datajoint as dj
-from your_pipeline import schema
-
-# List tables
-print(schema.list_tables())
-
-# Check a table
-SomeTable()
-
-# Test fetch
-data = (SomeTable & key).fetch1()
+migrate_filepath(schema, dry_run=True)  # Preview
+migrate_filepath(schema)                 # Apply
 ```
 
 ---
 
 ## Quick Reference
+
+### Safe Phases (1-4)
+
+Phases 3-4 only modify column comments. Return to 0.x anytime.
+
+| 0.x | 2.0 |
+|-----|-----|
+| `int` | `int32` |
+| `float` | `float64` |
+| `longblob` | `<blob>` |
+| `attach` | `<attach>` |
+
+### Careful Phases (5-6)
+
+Convert FK references to JSON. Verify path compatibility first.
+
+| 0.x | 2.0 |
+|-----|-----|
+| `blob@store` | `<blob@store>` |
+| `attach@store` | `<attach@store>` |
+| `filepath@store` | `<filepath@store>` |
 
 ### Code Changes (Phase 1)
 
@@ -331,26 +319,6 @@ data = (SomeTable & key).fetch1()
 | `dj.U() * expr` | `dj.U() & expr` |
 | `.fetch('KEY')` | `.keys()` |
 | `.fetch(as_dict=True)` | `.to_dicts()` |
-| `Table.aggr(dj.U('x'), ...)` | `dj.U('x').aggr(Table, ...)` |
-
-### Type Changes (Phase 3)
-
-| 0.x | 2.0 |
-|-----|-----|
-| `int` | `int32` |
-| `int unsigned` | `uint32` |
-| `float` | `float32` |
-| `double` | `float64` |
-
-### Blob Changes (Phases 4-6)
-
-| 0.x | 2.0 |
-|-----|-----|
-| `longblob` | `<blob>` |
-| `blob@store` | `<blob@store>` |
-| `attach` | `<attach>` |
-| `attach@store` | `<attach@store>` |
-| `filepath@store` | `<filepath@store>` |
 
 ---
 
@@ -358,18 +326,16 @@ data = (SomeTable & key).fetch1()
 
 ### "Native type 'int' is used"
 
-Update to core types (Phase 3):
-```python
-# Change: int -> int32
-```
+Run Phase 3 (numeric types).
 
 ### "No codec registered"
 
-Run blob migration (Phases 4-6).
+Run Phase 4 (blob/attach).
 
 ### External data not found
 
-Check store configuration matches 0.x paths.
+Phase 5/6: Store paths don't match legacy external table paths.
+Verify configuration with `verify_external_paths()`.
 
 ---
 
