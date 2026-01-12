@@ -30,19 +30,6 @@ Fetch the migration guide and create a plan for my project.
 
 ---
 
-## Why Migrate?
-
-| Improvement | Before (0.x) | After (2.0) |
-|-------------|--------------|-------------|
-| **Transparency** | Hidden tables, implicit serialization | Everything visible, explicit codecs |
-| **Extensibility** | Fixed blob/attachment types | Custom codecs for any data type |
-| **Type Safety** | Types inferred at runtime | Explicit type labels in schema |
-| **External Storage** | UUID in hidden tables | Inline JSON with direct URLs |
-| **Configuration** | Python dict, credentials in code | JSON config, secrets separated |
-| **Data Retrieval** | `.fetch()` with options | Explicit: `.to_dicts()`, `.to_pandas()` |
-
----
-
 ## Migration Phases
 
 | Phase | What | Changes |
