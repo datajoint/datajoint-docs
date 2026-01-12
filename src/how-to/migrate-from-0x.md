@@ -30,44 +30,37 @@ Most users only need Phases 1-4.
 
 Update Python code. No database changes.
 
-### Query Syntax
+### Key API Changes
 
-```python
-# 0.x
-dj.U('attr') * Table
+| 0.x | 2.0 |
+|-----|-----|
+| `.fetch('KEY')` | `.keys()` |
+| `.fetch(as_dict=True)` | `.to_dicts()` |
+| `.fetch(format='frame')` | `.to_pandas()` |
 
-# 2.0
-dj.U('attr') & Table
+### AI-Assisted Code Conversion
+
+We recommend using an AI coding assistant (Claude Code, Cursor, GitHub Copilot)
+to identify and update deprecated patterns in your codebase:
+
+```
+Analyze my DataJoint pipeline code for 0.x patterns that need updating for 2.0.
+
+Search for:
+1. .fetch('KEY') calls — replace with .keys()
+2. .fetch(as_dict=True) calls — replace with .to_dicts()
+3. .fetch(format='frame') calls — replace with .to_pandas()
+4. Any other deprecated fetch patterns
+
+For each file, show me the changes needed before applying them.
 ```
 
-### Aggregation
-
-```python
-# 0.x
-Table.aggr(dj.U('group'), count='count(*)')
-
-# 2.0
-dj.U('group').aggr(Table, count='count(*)')
-```
-
-### Fetch Methods
-
-```python
-# 0.x
-Table.fetch('KEY')
-Table.fetch(as_dict=True)
-
-# 2.0
-Table.keys()
-Table.to_dicts()
-```
-
-### Find and Replace
+### Manual Search
 
 ```bash
 grep -rn "\.fetch('KEY')" --include="*.py"
 grep -rn "fetch(as_dict=True)" --include="*.py"
-grep -rn "dj\.U.*\*" --include="*.py"
+grep -rn "fetch(format=" --include="*.py"
 ```
 
 **Rollback:** `git checkout` to revert code.
@@ -418,9 +411,11 @@ Convert FK references to JSON. Verify path compatibility first.
 
 | 0.x | 2.0 |
 |-----|-----|
-| `dj.U() * expr` | `dj.U() & expr` |
 | `.fetch('KEY')` | `.keys()` |
 | `.fetch(as_dict=True)` | `.to_dicts()` |
+| `.fetch(format='frame')` | `.to_pandas()` |
+
+Use an AI coding assistant to find and update deprecated patterns.
 
 ### AdaptedTypes (Phase 7)
 
