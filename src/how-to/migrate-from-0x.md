@@ -15,6 +15,12 @@ Create a `CLAUDE.md` (or similar) file in your project:
 Read the migration guide: https://datajoint.com/docs/how-to/migrate-from-0x/
 
 Database: [host] / [schema1, schema2, ...]
+
+Schemas in topological order (dependencies first):
+1. lab
+2. subject
+3. session
+4. ephys
 ```
 
 Then tell your AI assistant:
@@ -22,6 +28,7 @@ Then tell your AI assistant:
 ```
 Migrate my DataJoint pipeline from 0.x to 2.0.
 Fetch the migration guide and create a plan for my project.
+Process schemas in topological order (dependencies before dependents).
 ```
 
 ---
@@ -43,26 +50,84 @@ Fetch the migration guide and create a plan for my project.
 
 | Phase | What | Changes |
 |-------|------|---------|
-| 1 | Code & Definitions | Python code, table definitions |
-| 2 | Settings | Config files |
+| 1 | Settings | Config files |
+| 2 | Code & Definitions | Python code, table definitions |
 | 3 | Numeric Types | Column comments (database) |
 | 4 | Internal Blobs | Column comments (database) |
-| 5 | External Storage | Column type + data (FK → JSON) |
-| 6 | Filepath | Column type + data (FK → JSON) |
-| 7 | AdaptedTypes | Code + column comments |
+| 5 | Lineage Table | Create `~lineage` table |
+| 6 | External Storage | Column type + data (FK → JSON) |
+| 7 | Filepath | Column type + data (FK → JSON) |
+| 8 | AdaptedTypes | Code + column comments |
 
-**Phases 1-4, 7**: Only modify code and column comments. Data unchanged.
+**Phase 1**: Update settings first and verify connection before proceeding.
 
-**Phases 5-6**: Convert external storage references from hidden tables to JSON.
+**Phases 2-5, 8**: Modify code and column comments. Data unchanged.
+
+**Phases 6-7**: Convert external storage references from hidden tables to JSON.
 Requires matching store configuration to preserve path compatibility.
 
-Most pipelines only need Phases 1-4.
+**Process each schema in topological order** (dependencies before dependents).
+
+Most pipelines only need Phases 1-5.
 
 ---
 
-## Phase 1: Code & Definitions
+## Phase 1: Settings
+
+Update configuration files first, then verify the connection works.
+
+### 0.x Configuration
+
+```python
+dj.config['database.host'] = 'localhost'
+dj.config['database.user'] = 'root'
+dj.config['database.password'] = 'secret'
+dj.config['stores'] = {'external': {'protocol': 'file', 'location': '/data'}}
+```
+
+### 2.0 Configuration
+
+**datajoint.json:**
+```json
+{
+  "database.host": "localhost",
+  "stores": {
+    "external": {
+      "protocol": "file",
+      "location": "/data"
+    }
+  }
+}
+```
+
+**.secrets/database.password:**
+```
+secret
+```
+
+### AI Prompt: Settings Migration
+
+```
+Migrate DataJoint configuration to 2.0 format.
+
+1. Read existing dj_local_conf.json or dj.config settings
+2. Create datajoint.json with non-sensitive settings
+3. Create .secrets/ directory with credentials (chmod 600)
+4. Add .secrets/ and datajoint.json to .gitignore
+5. Test connection with DataJoint 2.0:
+   import datajoint as dj
+   dj.conn()  # Should connect successfully
+
+Verify connection works before proceeding to Phase 2.
+```
+
+---
+
+## Phase 2: Code & Definitions
 
 Update Python code and table definitions. No database changes.
+
+**Process each schema module in topological order** (dependencies first).
 
 ### API Changes
 
@@ -122,7 +187,9 @@ class Session(dj.Manual):
 ```
 Migrate Python code for DataJoint 2.0.
 
-Search the codebase for:
+Process schema modules in topological order (dependencies first).
+
+For each module:
 1. .fetch('KEY') → replace with .keys()
 2. .fetch(as_dict=True) → replace with .to_dicts()
 3. .fetch(format='frame') → replace with .to_pandas()
@@ -135,56 +202,11 @@ Show changes before applying.
 
 ---
 
-## Phase 2: Settings
-
-Update configuration files.
-
-### 0.x Configuration
-
-```python
-dj.config['database.host'] = 'localhost'
-dj.config['database.user'] = 'root'
-dj.config['database.password'] = 'secret'
-dj.config['stores'] = {'external': {'protocol': 'file', 'location': '/data'}}
-```
-
-### 2.0 Configuration
-
-**datajoint.json:**
-```json
-{
-  "database.host": "localhost",
-  "stores": {
-    "external": {
-      "protocol": "file",
-      "location": "/data"
-    }
-  }
-}
-```
-
-**.secrets/database.password:**
-```
-secret
-```
-
-### AI Prompt: Settings Migration
-
-```
-Migrate DataJoint configuration to 2.0 format.
-
-1. Read existing dj_local_conf.json or dj.config settings
-2. Create datajoint.json with non-sensitive settings
-3. Create .secrets/ directory with credentials (chmod 600)
-4. Add .secrets/ and datajoint.json to .gitignore
-5. Verify connection works with new config
-```
-
----
-
 ## Phase 3: Numeric Types (Database)
 
 Add type labels to column comments. Data and column types unchanged.
+
+**Process each schema in topological order.**
 
 ### How It Works
 
@@ -201,7 +223,9 @@ column_name INT COMMENT ':int32: session number'
 ### AI Prompt: Numeric Type Migration
 
 ```
-Migrate numeric types for schema [schema_name].
+Migrate numeric types for each schema in topological order.
+
+For schema [schema_name]:
 
 1. Query INFORMATION_SCHEMA.COLUMNS for all tables
 2. For each numeric column without type label:
@@ -219,6 +243,8 @@ Migrate numeric types for schema [schema_name].
 
 4. Show all statements before executing
 5. Skip columns that already have type labels
+
+Process schemas in order: [list schemas]
 ```
 
 ---
@@ -226,6 +252,8 @@ Migrate numeric types for schema [schema_name].
 ## Phase 4: Internal Blobs (Database)
 
 Add codec labels to blob columns. Data unchanged.
+
+**Process each schema in topological order.**
 
 ### How It Works
 
@@ -240,7 +268,9 @@ data_col LONGBLOB COMMENT ':blob: neural data'
 ### AI Prompt: Blob Migration
 
 ```
-Migrate internal blob columns for schema [schema_name].
+Migrate internal blob columns for each schema in topological order.
+
+For schema [schema_name]:
 
 1. Find LONGBLOB columns without codec labels:
    - Skip if comment starts with :blob:, :attach:, :blob@, :attach@
@@ -250,15 +280,58 @@ Migrate internal blob columns for schema [schema_name].
    MODIFY COLUMN `col` LONGBLOB COMMENT ':blob: original comment';
 
 3. Show all statements before executing
+
+Process schemas in order: [list schemas]
 ```
 
 ---
 
-## Phase 5: External Storage (Database)
+## Phase 5: Lineage Table
+
+Create the `~lineage` table to track data provenance in each schema.
+
+**Process each schema in topological order.**
+
+### What It Does
+
+DataJoint 2.0 uses a `~lineage` table to track which rows in parent tables
+contributed to each row in child tables. This enables precise dependency
+tracking for deletions and recomputation.
+
+### AI Prompt: Lineage Table Creation
+
+```
+Create lineage tables for each schema in topological order.
+
+For schema [schema_name]:
+
+1. Check if ~lineage table already exists:
+   SHOW TABLES LIKE '~lineage';
+
+2. If not exists, create it:
+   CREATE TABLE `schema`.`~lineage` (
+     `master` varchar(255) NOT NULL COMMENT ':varchar(255): master table',
+     `master_hash` binary(16) NOT NULL COMMENT ':hash: master row hash',
+     `child` varchar(255) NOT NULL COMMENT ':varchar(255): child table',
+     `child_hash` binary(16) NOT NULL COMMENT ':hash: child row hash',
+     PRIMARY KEY (`master`, `master_hash`, `child`, `child_hash`),
+     KEY `child_idx` (`child`, `child_hash`)
+   ) ENGINE=InnoDB;
+
+3. Verify table was created
+
+Process schemas in order: [list schemas]
+```
+
+---
+
+## Phase 6: External Storage (Database)
 
 Convert external blob/attachment references from hidden tables to JSON.
 
 **This changes column types and data format.**
+
+**Process each schema in topological order.**
 
 ### 0.x Architecture
 
@@ -296,9 +369,11 @@ print(external.fetch(limit=5))  # Note the filepath structure
 ### AI Prompt: External Storage Migration
 
 ```
-Migrate external storage for schema [schema_name].
+Migrate external storage for each schema in topological order.
 
 WARNING: This changes column types. Back up first.
+
+For schema [schema_name]:
 
 1. Find external columns:
    - DATA_TYPE = 'binary', length = 16
@@ -319,28 +394,35 @@ WARNING: This changes column types. Back up first.
 5. Verify data accessible through DataJoint 2.0
 
 Show migration plan with row counts before executing.
+Process schemas in order: [list schemas]
 ```
 
 ---
 
-## Phase 6: Filepath (Database)
+## Phase 7: Filepath (Database)
 
-Convert filepath references to JSON format. Similar to Phase 5.
+Convert filepath references to JSON format. Similar to Phase 6.
+
+**Process each schema in topological order.**
 
 ### AI Prompt: Filepath Migration
 
 ```
-Migrate filepath columns for schema [schema_name].
+Migrate filepath columns for each schema in topological order.
+
+For schema [schema_name]:
 
 1. Find filepath columns (comment contains :filepath:)
 2. Convert paths to JSON with URL format
 3. ALTER column type to JSON
 4. Verify file accessibility
+
+Process schemas in order: [list schemas]
 ```
 
 ---
 
-## Phase 7: AdaptedTypes to Codecs
+## Phase 8: AdaptedTypes to Codecs
 
 Convert custom `AttributeAdapter` classes to `Codec` classes.
 
@@ -444,7 +526,9 @@ for name in schema.list_tables():
 ### AI Prompt: Validation
 
 ```
-Validate DataJoint 2.0 migration for schema [schema_name].
+Validate DataJoint 2.0 migration for each schema in topological order.
+
+For schema [schema_name]:
 
 1. Connect with DataJoint 2.0
 2. For each table:
@@ -452,8 +536,11 @@ Validate DataJoint 2.0 migration for schema [schema_name].
    - Fetch sample rows
    - For blob columns: verify deserialization
    - For external columns: verify file retrieval
-3. Test populate() on computed tables
-4. Report any errors
+3. Verify ~lineage table exists
+4. Test populate() on computed tables
+5. Report any errors
+
+Process schemas in order: [list schemas]
 ```
 
 ---
@@ -464,6 +551,7 @@ Validate DataJoint 2.0 migration for schema [schema_name].
 [ ] All tables accessible via DataJoint 2.0
 [ ] Blob data deserializes correctly
 [ ] External data retrieves correctly
+[ ] Lineage tables created in all schemas
 [ ] Custom codecs working (if applicable)
 [ ] Computed tables can populate
 [ ] Team updated to DataJoint 2.0
@@ -485,7 +573,7 @@ Run Phase 4 to add codec labels to blob columns.
 
 ### External data not found
 
-Phase 5/6: Store paths don't match legacy paths. Check:
+Phase 6/7: Store paths don't match legacy paths. Check:
 1. Store location in datajoint.json matches original
 2. Path structure matches what's in `~external_*` table
 
@@ -493,6 +581,10 @@ Phase 5/6: Store paths don't match legacy paths. Check:
 
 Ensure Codec class is imported before table definitions.
 Codecs auto-register when the class is defined.
+
+### Missing ~lineage table
+
+Run Phase 5 to create the lineage table.
 
 ---
 
