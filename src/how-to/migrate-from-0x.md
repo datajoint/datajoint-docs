@@ -458,7 +458,7 @@ class ImageAdapter(dj.AttributeAdapter):
 
 # Registration required
 image_adapter = ImageAdapter()
-schema.spawn_missing_classes(context={'image': image_adapter})
+schema.make_classes(into={'image': image_adapter})
 ```
 
 ### 2.0 Codec
@@ -515,7 +515,7 @@ Migrate AttributeAdapter classes to Codecs.
 
 3. Update table definitions if type names changed
 
-4. Remove spawn_missing_classes() registrations
+4. Remove make_classes() adapter registrations
 
 5. Ensure codec module is imported before table definitions
 

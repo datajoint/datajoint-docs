@@ -163,13 +163,13 @@ lab.schema.list_tables()  # ['subject', 'session', ...]
 
 ## 4. Table Class Generation
 
-### 4.1 `spawn_missing_classes()`
+### 4.1 `make_classes()`
 
 Create Python classes for all tables in a schema:
 
 ```python
 schema = dj.Schema('existing_schema')
-schema.spawn_missing_classes(context=locals())
+schema.make_classes()
 
 # Now table classes are available in local namespace
 Subject.fetch()
@@ -177,7 +177,7 @@ Session & 'date > "2024-01-01"'
 ```
 
 **Parameters:**
-- `context` (dict): Namespace to populate. Defaults to caller's locals.
+- `into` (dict, optional): Namespace to populate. Defaults to caller's locals.
 
 ### 4.2 Generated Class Types
 
@@ -272,7 +272,7 @@ refs = scan_content_references(schema, verbose=True)
 | `for t in schema` | Iterate all tables | `FreeTable` generator |
 | `'Name' in schema` | Check existence | `bool` |
 | `dj.virtual_schema(name)` | Module-like access | `VirtualModule` |
-| `spawn_missing_classes()` | Populate namespace | None (side effect) |
+| `make_classes()` | Populate namespace | None (side effect) |
 
 ---
 
