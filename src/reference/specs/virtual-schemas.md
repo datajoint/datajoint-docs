@@ -244,10 +244,11 @@ class Analysis(dj.Computed):
 old = dj.virtual_schema('old_schema')
 new = dj.Schema('new_schema')
 
-# Copy data
+# Copy data in topological order (iteration yields dependencies first)
 for table in old:
     new_table = new.get_table(table.table_name)
-    new_table.insert(table.fetch(as_dict=True))
+    # Server-side INSERT...SELECT (no client-side data transfer)
+    new_table.insert(table)
 ```
 
 ### 5.4 Garbage Collection
