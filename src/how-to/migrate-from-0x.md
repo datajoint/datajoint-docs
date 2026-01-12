@@ -281,27 +281,29 @@ DataJoint 2.0 uses a `~lineage` table to track which rows in parent tables
 contributed to each row in child tables. This enables precise dependency
 tracking for deletions and recomputation.
 
+### Using rebuild_lineage()
+
+```python
+import datajoint as dj
+
+schema = dj.Schema('my_schema')
+schema.rebuild_lineage()
+```
+
+This creates the `~lineage` table if it doesn't exist and populates it by
+scanning foreign key relationships in all tables.
+
 ### AI Prompt: Lineage Table Creation
 
 ```
 Create lineage tables for each schema in topological order.
 
-For schema [schema_name]:
+For each schema:
 
-1. Check if ~lineage table already exists:
-   SHOW TABLES LIKE '~lineage';
+import datajoint as dj
 
-2. If not exists, create it:
-   CREATE TABLE `schema`.`~lineage` (
-     `master` varchar(255) NOT NULL COMMENT ':varchar(255): master table',
-     `master_hash` binary(16) NOT NULL COMMENT ':hash: master row hash',
-     `child` varchar(255) NOT NULL COMMENT ':varchar(255): child table',
-     `child_hash` binary(16) NOT NULL COMMENT ':hash: child row hash',
-     PRIMARY KEY (`master`, `master_hash`, `child`, `child_hash`),
-     KEY `child_idx` (`child`, `child_hash`)
-   ) ENGINE=InnoDB;
-
-3. Verify table was created
+schema = dj.Schema('schema_name')
+schema.rebuild_lineage()
 
 Process schemas in order: [list schemas]
 ```
