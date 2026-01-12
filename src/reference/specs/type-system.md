@@ -19,14 +19,14 @@ Codec types resolve through core types to native types: `<blob>` → `bytes` →
 **Syntax distinction:**
 - Core types: `int32`, `float64`, `varchar(255)` - no brackets
 - Codec types: `<blob>`, `<object@store>`, `<filepath@main>` - angle brackets
-- The `@` character indicates external storage (object store vs database)
+- The `@` character indicates store (object storage vs inline in database)
 
-### OAS Storage Regions
+### OAS Addressing Schemes
 
-| Region | Path Pattern | Addressing | Use Case |
-|--------|--------------|------------|----------|
-| Object | `{schema}/{table}/{pk}/` | Primary key | Large objects, Zarr, HDF5 |
-| Hash | `_hash/{hash}` | MD5 hash | Deduplicated blobs/files |
+| Scheme | Path Pattern | Description | Use Case |
+|--------|--------------|-------------|----------|
+| **Schema-addressed** | `{schema}/{table}/{pk}/` | Path mirrors database structure | Large objects, Zarr, HDF5, numpy arrays |
+| **Hash-addressed** | `_hash/{hash}` | Path from content hash (MD5) | Deduplicated blobs/attachments |
 
 ### URL Representation
 
@@ -44,7 +44,7 @@ This unified approach treats all storage backends uniformly via fsspec, enabling
 - Transparent switching between storage backends
 - Streaming access to any storage type
 
-### External References
+### Store References
 
 `<filepath@store>` provides portable relative paths within configured stores with lazy ObjectRef access.
 For arbitrary URLs that don't need ObjectRef semantics, use `varchar` instead.
@@ -215,14 +215,14 @@ composable and can be built-in or user-defined.
 
 ### Storage Mode: `@` Convention
 
-The `@` character in codec syntax indicates **external storage** (object store):
+The `@` character in codec syntax indicates **object store** (vs inline in database):
 
-- **No `@`**: Internal storage (database) - e.g., `<blob>`, `<attach>`
-- **`@` present**: External storage (object store) - e.g., `<blob@>`, `<attach@store>`
+- **No `@`**: Inline storage (database column) - e.g., `<blob>`, `<attach>`
+- **`@` present**: Object store - e.g., `<blob@>`, `<attach@store>`
 - **`@` alone**: Use default store - e.g., `<blob@>`
 - **`@name`**: Use named store - e.g., `<blob@cold>`
 
-Some codecs support both modes (`<blob>`, `<attach>`), others are external-only (`<object@>`, `<hash@>`, `<filepath@>`).
+Some codecs support both modes (`<blob>`, `<attach>`), others are store-only (`<object@>`, `<npy@>`, `<hash@>`, `<filepath@>`).
 
 ### Codec Base Class
 
@@ -233,7 +233,7 @@ class GraphCodec(dj.Codec):
     """Auto-registered as <graph>."""
     name = "graph"
 
-    def get_dtype(self, is_external: bool) -> str:
+    def get_dtype(self, is_store: bool) -> str:
         return "<blob>"
 
     def encode(self, graph, *, key=None, store_name=None):
@@ -249,28 +249,30 @@ class GraphCodec(dj.Codec):
 
 ### Codec Resolution and Chaining
 
-Codecs resolve to core types through chaining. The `get_dtype(is_external)` method
+Codecs resolve to core types through chaining. The `get_dtype(is_store)` method
 returns the appropriate dtype based on storage mode:
 
-| Codec | `is_external` | Resolution Chain | SQL Type |
-|-------|---------------|------------------|----------|
+| Codec | `is_store` | Resolution Chain | SQL Type |
+|-------|------------|------------------|----------|
 | `<blob>` | `False` | `"bytes"` | `LONGBLOB`/`BYTEA` |
 | `<blob@>` | `True` | `"<hash>"` → `"json"` | `JSON`/`JSONB` |
 | `<blob@cold>` | `True` | `"<hash>"` → `"json"` (store=cold) | `JSON`/`JSONB` |
 | `<attach>` | `False` | `"bytes"` | `LONGBLOB`/`BYTEA` |
 | `<attach@>` | `True` | `"<hash>"` → `"json"` | `JSON`/`JSONB` |
 | `<object@>` | `True` | `"json"` | `JSON`/`JSONB` |
-| `<object>` | `False` | ERROR (external only) | — |
+| `<npy@>` | `True` | `"json"` | `JSON`/`JSONB` |
+| `<object>` | `False` | ERROR (store only) | — |
+| `<npy>` | `False` | ERROR (store only) | — |
 | `<hash@>` | `True` | `"json"` | `JSON`/`JSONB` |
 | `<filepath@>` | `True` | `"json"` | `JSON`/`JSONB` |
 
-### `<object@>` / `<object@store>` - Path-Addressed Storage
+### `<object@>` / `<object@store>` - Schema-Addressed Storage
 
-**Built-in codec. External only.**
+**Built-in codec. Store only.**
 
-OAS (Object-Augmented Schema) storage for files and folders:
+Schema-addressed OAS storage for files and folders:
 
-- Path derived from primary key: `{schema}/{table}/{pk}/{attribute}/`
+- **Schema-addressed**: Path mirrors database structure: `{schema}/{table}/{pk}/{attribute}/`
 - One-to-one relationship with table row
 - Deleted when row is deleted
 - Returns `ObjectRef` for lazy access
@@ -290,46 +292,45 @@ class Analysis(dj.Computed):
 #### Implementation
 
 ```python
-class ObjectCodec(dj.Codec):
-    """Path-addressed OAS storage. External only."""
+class ObjectCodec(SchemaCodec):
+    """Schema-addressed OAS storage. Store only."""
     name = "object"
 
-    def get_dtype(self, is_external: bool) -> str:
-        if not is_external:
-            raise DataJointError("<object> requires @ (external storage only)")
-        return "json"
+    # get_dtype inherited from SchemaCodec
 
     def encode(self, value, *, key=None, store_name=None) -> dict:
-        store = get_store(store_name or dj.config['stores']['default'])
-        path = self._compute_path(key)  # {schema}/{table}/{pk}/{attr}/
-        store.put(path, value)
+        schema, table, field, pk = self._extract_context(key)
+        path, _ = self._build_path(schema, table, field, pk)
+        backend = self._get_backend(store_name)
+        backend.put(path, value)
         return {"path": path, "store": store_name, ...}
 
     def decode(self, stored: dict, *, key=None) -> ObjectRef:
-        return ObjectRef(store=get_store(stored["store"]), path=stored["path"])
+        backend = self._get_backend(stored["store"])
+        return ObjectRef.from_json(stored, backend=backend)
 ```
 
 ### `<hash@>` / `<hash@store>` - Hash-Addressed Storage
 
-**Built-in codec. External only.**
+**Built-in codec. Store only.**
 
 Hash-addressed storage with deduplication:
 
+- **Hash-addressed**: Path derived from content hash: `_hash/{hash[:2]}/{hash[2:4]}/{hash}`
 - **Single blob only**: stores a single file or serialized object (not folders)
 - **Per-project scope**: content is shared across all schemas in a project (not per-schema)
-- Path derived from content hash: `_hash/{hash[:2]}/{hash[2:4]}/{hash}`
 - Many-to-one: multiple rows (even across schemas) can reference same content
 - Reference counted for garbage collection
 - Deduplication: identical content stored once across the entire project
-- For folders/complex objects, use `object` type instead
+- For folders/complex objects, use `<object@>` instead
 - **dtype**: `json` (stores hash, store name, size, metadata)
 
 ```
 store_root/
-├── {schema}/{table}/{pk}/     # object storage (path-addressed by PK)
+├── {schema}/{table}/{pk}/     # schema-addressed storage
 │   └── {attribute}/
 │
-└── _hash/                   # content storage (hash-addressed)
+└── _hash/                     # hash-addressed storage
     └── {hash[:2]}/{hash[2:4]}/{hash}
 ```
 
@@ -337,12 +338,12 @@ store_root/
 
 ```python
 class HashCodec(dj.Codec):
-    """Hash-addressed storage. External only."""
+    """Hash-addressed storage. Store only."""
     name = "hash"
 
-    def get_dtype(self, is_external: bool) -> str:
-        if not is_external:
-            raise DataJointError("<hash> requires @ (external storage only)")
+    def get_dtype(self, is_store: bool) -> str:
+        if not is_store:
+            raise DataJointError("<hash> requires @ (store only)")
         return "json"
 
     def encode(self, data: bytes, *, key=None, store_name=None) -> dict:

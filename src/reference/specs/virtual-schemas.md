@@ -254,12 +254,12 @@ for table in old:
 ### 5.4 Garbage Collection
 
 ```python
-from datajoint.gc import scan_content_references
+from datajoint.gc import scan_hash_references
 
 schema = dj.Schema('my_schema')
 
-# Scan all tables for content references
-refs = scan_content_references(schema, verbose=True)
+# Scan all tables for hash references
+refs = scan_hash_references(schema, verbose=True)
 ```
 
 ---

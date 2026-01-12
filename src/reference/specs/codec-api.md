@@ -16,7 +16,18 @@ flowchart LR
     B -- decode --> A
 ```
 
-## Quick Start
+## Two Patterns for Custom Codecs
+
+There are two approaches for creating custom codecs:
+
+| Pattern | When to Use | Base Class |
+|---------|-------------|------------|
+| **Type Chaining** | Transform Python objects, use existing storage | `dj.Codec` |
+| **SchemaCodec Subclassing** | Custom file formats with schema-addressed paths | `dj.SchemaCodec` |
+
+### Pattern 1: Type Chaining (Most Common)
+
+Chain to an existing codec for storage. Your codec transforms objects; the chained codec handles storage.
 
 ```python
 import datajoint as dj
@@ -27,7 +38,7 @@ class GraphCodec(dj.Codec):
 
     name = "graph"  # Use as <graph> in definitions
 
-    def get_dtype(self, is_external: bool) -> str:
+    def get_dtype(self, is_store: bool) -> str:
         return "<blob>"  # Delegate to blob for serialization
 
     def encode(self, graph, *, key=None, store_name=None):
@@ -48,7 +59,47 @@ class Connectivity(dj.Manual):
     definition = '''
     conn_id : int
     ---
-    network : <graph>
+    network : <graph>      # inline storage
+    network_ext : <graph@>  # object store
+    '''
+```
+
+### Pattern 2: SchemaCodec Subclassing (File Formats)
+
+For custom file formats that need schema-addressed storage paths.
+
+```python
+import datajoint as dj
+
+class ParquetCodec(dj.SchemaCodec):
+    """Store DataFrames as Parquet files."""
+
+    name = "parquet"
+
+    # get_dtype inherited: returns "json", requires @
+
+    def encode(self, df, *, key=None, store_name=None):
+        import io
+        schema, table, field, pk = self._extract_context(key)
+        path, _ = self._build_path(schema, table, field, pk, ext=".parquet")
+        backend = self._get_backend(store_name)
+
+        buffer = io.BytesIO()
+        df.to_parquet(buffer)
+        backend.put_buffer(buffer.getvalue(), path)
+
+        return {"path": path, "store": store_name, "shape": list(df.shape)}
+
+    def decode(self, stored, *, key=None):
+        return ParquetRef(stored, self._get_backend(stored.get("store")))
+
+# Use in table definition (store only)
+@schema
+class Results(dj.Manual):
+    definition = '''
+    result_id : int
+    ---
+    data : <parquet@>
     '''
 ```
 
@@ -62,7 +113,7 @@ class Codec(ABC):
 
     name: str | None = None  # Required: unique identifier
 
-    def get_dtype(self, is_external: bool) -> str:
+    def get_dtype(self, is_store: bool) -> str:
         """Return the storage dtype."""
         raise NotImplementedError
 
@@ -79,6 +130,33 @@ class Codec(ABC):
     def validate(self, value) -> None:
         """Optional: validate value before encoding."""
         pass
+```
+
+## The SchemaCodec Base Class
+
+For schema-addressed storage (file formats), inherit from `dj.SchemaCodec`:
+
+```python
+class SchemaCodec(Codec, register=False):
+    """Base class for schema-addressed codecs."""
+
+    def get_dtype(self, is_store: bool) -> str:
+        """Store only, returns 'json'."""
+        if not is_store:
+            raise DataJointError(f"<{self.name}> requires @ (store only)")
+        return "json"
+
+    def _extract_context(self, key: dict) -> tuple[str, str, str, dict]:
+        """Parse key into (schema, table, field, primary_key)."""
+        ...
+
+    def _build_path(self, schema, table, field, pk, ext=None) -> tuple[str, str]:
+        """Build schema-addressed path: {schema}/{table}/{pk}/{field}{ext}"""
+        ...
+
+    def _get_backend(self, store_name: str = None):
+        """Get storage backend by name."""
+        ...
 ```
 
 ## Required Components
@@ -100,21 +178,21 @@ Naming conventions:
 
 ### 2. The `get_dtype()` Method
 
-Returns the underlying storage type. The `is_external` parameter indicates whether
+Returns the underlying storage type. The `is_store` parameter indicates whether
 the `@` modifier is present in the table definition:
 
 ```python
-def get_dtype(self, is_external: bool) -> str:
+def get_dtype(self, is_store: bool) -> str:
     """
     Args:
-        is_external: True if @ modifier present (e.g., <mycodec@store>)
+        is_store: True if @ modifier present (e.g., <mycodec@store>)
 
     Returns:
         - A core type: "bytes", "json", "varchar(N)", "int32", etc.
         - Another codec: "<blob>", "<hash>", etc.
 
     Raises:
-        DataJointError: If external storage not supported but @ is present
+        DataJointError: If store not supported but @ is present
     """
 ```
 
@@ -122,17 +200,17 @@ Examples:
 
 ```python
 # Simple: always store as bytes
-def get_dtype(self, is_external: bool) -> str:
+def get_dtype(self, is_store: bool) -> str:
     return "bytes"
 
-# Different behavior for internal/external
-def get_dtype(self, is_external: bool) -> str:
-    return "<hash>" if is_external else "bytes"
+# Different behavior for inline/store
+def get_dtype(self, is_store: bool) -> str:
+    return "<hash>" if is_store else "bytes"
 
-# External-only codec
-def get_dtype(self, is_external: bool) -> str:
-    if not is_external:
-        raise DataJointError("<object> requires @ (external storage only)")
+# Store-only codec
+def get_dtype(self, is_store: bool) -> str:
+    if not is_store:
+        raise DataJointError("<object> requires @ (store only)")
     return "json"
 ```
 
@@ -246,7 +324,7 @@ class CompressedJsonCodec(dj.Codec):
 
     name = "zjson"
 
-    def get_dtype(self, is_external: bool) -> str:
+    def get_dtype(self, is_store: bool) -> str:
         return "<blob>"  # Delegate serialization to blob codec
 
     def encode(self, value, *, key=None, store_name=None):
@@ -264,8 +342,8 @@ class CompressedJsonCodec(dj.Codec):
 
 When DataJoint encounters `<zjson>`:
 
-1. Calls `ZjsonCodec.get_dtype(is_external=False)` → returns `"<blob>"`
-2. Calls `BlobCodec.get_dtype(is_external=False)` → returns `"bytes"`
+1. Calls `ZjsonCodec.get_dtype(is_store=False)` → returns `"<blob>"`
+2. Calls `BlobCodec.get_dtype(is_store=False)` → returns `"bytes"`
 3. Final storage type is `bytes` (LONGBLOB in MySQL)
 
 During INSERT:
@@ -284,26 +362,27 @@ DataJoint's built-in codecs form these chains:
 
 | Codec | Chain | Final Storage |
 |-------|-------|---------------|
-| `<blob>` | `<blob>` → `bytes` | Internal |
-| `<blob@>` | `<blob>` → `<hash>` → `json` | External |
-| `<attach>` | `<attach>` → `bytes` | Internal |
-| `<attach@>` | `<attach>` → `<hash>` → `json` | External |
-| `<hash@>` | `<hash>` → `json` | External only |
-| `<object@>` | `<object>` → `json` | External only |
-| `<filepath@>` | `<filepath>` → `json` | External only |
+| `<blob>` | `<blob>` → `bytes` | Inline |
+| `<blob@>` | `<blob>` → `<hash>` → `json` | Store (hash-addressed) |
+| `<attach>` | `<attach>` → `bytes` | Inline |
+| `<attach@>` | `<attach>` → `<hash>` → `json` | Store (hash-addressed) |
+| `<hash@>` | `<hash>` → `json` | Store only (hash-addressed) |
+| `<object@>` | `<object>` → `json` | Store only (schema-addressed) |
+| `<npy@>` | `<npy>` → `json` | Store only (schema-addressed) |
+| `<filepath@>` | `<filepath>` → `json` | Store only (external ref) |
 
 ### Store Name Propagation
 
-When using external storage (`@`), the store name propagates through the chain:
+When using object storage (`@`), the store name propagates through the chain:
 
 ```python
 # Table definition
 data : <mycodec@coldstore>
 
 # Resolution:
-# 1. MyCodec.get_dtype(is_external=True) → "<blob>"
-# 2. BlobCodec.get_dtype(is_external=True) → "<hash>"
-# 3. HashCodec.get_dtype(is_external=True) → "json"
+# 1. MyCodec.get_dtype(is_store=True) → "<blob>"
+# 2. BlobCodec.get_dtype(is_store=True) → "<hash>"
+# 3. HashCodec.get_dtype(is_store=True) → "json"
 # 4. store_name="coldstore" passed to HashCodec.encode()
 ```
 
@@ -345,7 +424,7 @@ import networkx as nx
 class GraphCodec(dj.Codec):
     name = "graph"
 
-    def get_dtype(self, is_external: bool) -> str:
+    def get_dtype(self, is_store: bool) -> str:
         return "<blob>"
 
     def encode(self, graph, *, key=None, store_name=None):
@@ -363,7 +442,7 @@ class GraphCodec(dj.Codec):
 class WeightedGraphCodec(dj.Codec):
     name = "weighted_graph"
 
-    def get_dtype(self, is_external: bool) -> str:
+    def get_dtype(self, is_store: bool) -> str:
         return "<blob>"
 
     def encode(self, graph, *, key=None, store_name=None):
@@ -437,13 +516,18 @@ from datajoint.codecs import (
 
 DataJoint provides these built-in codecs. See the [Type System Specification](type-system.md) for detailed behavior and implementation.
 
-| Codec | Internal | External | Description |
-|-------|----------|----------|-------------|
-| `<blob>` | `bytes` | `<hash@>` | DataJoint serialization for Python objects |
-| `<hash@>` | N/A | `json` | Content-addressed storage with MD5 deduplication |
-| `<object@>` | N/A | `json` | Path-addressed storage for files/folders |
-| `<attach>` | `bytes` | `<hash@>` | File attachments with filename preserved |
-| `<filepath@>` | N/A | `json` | Reference to existing files in store |
+| Codec | Inline | Store | Addressing | Description |
+|-------|--------|-------|------------|-------------|
+| `<blob>` | `bytes` | `<hash@>` | Hash | DataJoint serialization for Python objects |
+| `<attach>` | `bytes` | `<hash@>` | Hash | File attachments with filename preserved |
+| `<hash@>` | N/A | `json` | Hash | Hash-addressed storage with MD5 deduplication |
+| `<object@>` | N/A | `json` | Schema | Schema-addressed storage for files/folders |
+| `<npy@>` | N/A | `json` | Schema | Schema-addressed storage for numpy arrays |
+| `<filepath@>` | N/A | `json` | External | Reference to existing files in store |
+
+**Addressing schemes:**
+- **Hash-addressed**: Path from content hash. Automatic deduplication.
+- **Schema-addressed**: Path mirrors database structure. One location per entity.
 
 ## Complete Examples
 
@@ -458,7 +542,7 @@ class SpikeTrainCodec(dj.Codec):
 
     name = "spike_train"
 
-    def get_dtype(self, is_external: bool) -> str:
+    def get_dtype(self, is_store: bool) -> str:
         return "<blob>"
 
     def validate(self, value):
@@ -489,9 +573,9 @@ class ModelCodec(dj.Codec):
 
     name = "model"
 
-    def get_dtype(self, is_external: bool) -> str:
+    def get_dtype(self, is_store: bool) -> str:
         # Use hash-addressed storage for large models
-        return "<hash>" if is_external else "<blob>"
+        return "<hash>" if is_store else "<blob>"
 
     def encode(self, model, *, key=None, store_name=None):
         return pickle.dumps(model, protocol=pickle.HIGHEST_PROTOCOL)
@@ -538,7 +622,7 @@ class ConfigCodec(dj.Codec):
         "required": ["version", "settings"],
     }
 
-    def get_dtype(self, is_external: bool) -> str:
+    def get_dtype(self, is_store: bool) -> str:
         return "json"
 
     def validate(self, value):
@@ -561,7 +645,7 @@ class VersionedDataCodec(dj.Codec):
 
     name = "versioned"
 
-    def get_dtype(self, is_external: bool) -> str:
+    def get_dtype(self, is_store: bool) -> str:
         return "<blob>"
 
     def encode(self, value, *, key=None, store_name=None):
@@ -601,8 +685,8 @@ class ZarrCodec(dj.Codec):
 
     name = "zarr"
 
-    def get_dtype(self, is_external: bool) -> str:
-        if not is_external:
+    def get_dtype(self, is_store: bool) -> str:
+        if not is_store:
             raise dj.DataJointError("<zarr> requires @ (external storage only)")
         return "<object>"  # Delegate to object storage
 
@@ -751,8 +835,8 @@ print(dj.list_codecs())
 # Inspect a codec
 codec = dj.get_codec("mycodec")
 print(f"Name: {codec.name}")
-print(f"Internal dtype: {codec.get_dtype(is_external=False)}")
-print(f"External dtype: {codec.get_dtype(is_external=True)}")
+print(f"Internal dtype: {codec.get_dtype(is_store=False)}")
+print(f"External dtype: {codec.get_dtype(is_store=True)}")
 
 # Resolve full chain
 from datajoint.codecs import resolve_dtype

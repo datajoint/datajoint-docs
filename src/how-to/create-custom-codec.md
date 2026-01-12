@@ -20,7 +20,7 @@ class GraphCodec(dj.Codec):
 
     name = "graph"  # Used as <graph> in definitions
 
-    def get_dtype(self, is_external: bool) -> str:
+    def get_dtype(self, is_store: bool) -> str:
         return "<blob>"  # Delegate to blob for serialization
 
     def encode(self, value, *, key=None, store_name=None):
@@ -48,26 +48,26 @@ class Connectivity(dj.Manual):
 
 ## Required Methods
 
-### `get_dtype(is_external)`
+### `get_dtype(is_store)`
 
 Return the storage type:
 
-- `is_external=False`: Internal storage (in database)
-- `is_external=True`: Object storage (with `@`)
+- `is_store=False`: Inline storage (in database column)
+- `is_store=True`: Object store (with `@` modifier)
 
 ```python
-def get_dtype(self, is_external: bool) -> str:
-    if is_external:
-        return "<hash>"  # Content-addressed external
-    return "bytes"       # Database blob
+def get_dtype(self, is_store: bool) -> str:
+    if is_store:
+        return "<hash>"  # Hash-addressed storage
+    return "bytes"       # Inline database blob
 ```
 
 Common return values:
 
 - `"bytes"` — Binary in database
 - `"json"` — JSON in database
-- `"<blob>"` — Chain to blob codec
-- `"<hash>"` — Content-addressed storage
+- `"<blob>"` — Chain to blob codec (hash-addressed when `@`)
+- `"<hash>"` — Hash-addressed storage
 
 ### `encode(value, *, key=None, store_name=None)`
 
@@ -111,7 +111,7 @@ Codecs can delegate to other codecs:
 class ImageCodec(dj.Codec):
     name = "image"
 
-    def get_dtype(self, is_external: bool) -> str:
+    def get_dtype(self, is_store: bool) -> str:
         return "<blob>"  # Chain to blob codec
 
     def encode(self, value, *, key=None, store_name=None):
@@ -124,24 +124,44 @@ class ImageCodec(dj.Codec):
         return Image.fromarray(stored)
 ```
 
-## External-Only Codec
+## Store-Only Codecs
 
-Some codecs require external storage:
+Some codecs require object storage (@ modifier):
 
 ```python
 class ZarrCodec(dj.Codec):
     name = "zarr"
 
-    def get_dtype(self, is_external: bool) -> str:
-        if not is_external:
-            raise DataJointError("<zarr> requires @store")
-        return "<object>"  # Path-addressed storage
+    def get_dtype(self, is_store: bool) -> str:
+        if not is_store:
+            raise DataJointError("<zarr> requires @ (store only)")
+        return "<object>"  # Schema-addressed storage
 
     def encode(self, path, *, key=None, store_name=None):
         return path  # Path to zarr directory
 
     def decode(self, stored, *, key=None):
         return stored  # Returns ObjectRef for lazy access
+```
+
+For custom file formats, consider inheriting from `SchemaCodec`:
+
+```python
+class ParquetCodec(dj.SchemaCodec):
+    """Store DataFrames as Parquet files."""
+    name = "parquet"
+
+    # get_dtype inherited: requires @, returns "json"
+
+    def encode(self, df, *, key=None, store_name=None):
+        schema, table, field, pk = self._extract_context(key)
+        path, _ = self._build_path(schema, table, field, pk, ext=".parquet")
+        backend = self._get_backend(store_name)
+        # ... upload parquet file
+        return {"path": path, "store": store_name, "shape": list(df.shape)}
+
+    def decode(self, stored, *, key=None):
+        return ParquetRef(stored, self._get_backend(stored.get("store")))
 ```
 
 ## Auto-Registration
@@ -177,8 +197,8 @@ class MedicalImageCodec(dj.Codec):
 
     name = "medimage"
 
-    def get_dtype(self, is_external: bool) -> str:
-        return "<blob@>" if is_external else "<blob>"
+    def get_dtype(self, is_store: bool) -> str:
+        return "<blob@>" if is_store else "<blob>"
 
     def encode(self, image, *, key=None, store_name=None):
         return {

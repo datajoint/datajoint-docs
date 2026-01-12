@@ -46,6 +46,7 @@ Each specification follows a consistent structure:
 |---------------|-------------|
 | [Type System](type-system.md) | Three-layer type architecture: native, core, and codec types |
 | [Codec API](codec-api.md) | Custom type implementation with encode/decode semantics |
+| [`<npy>` Codec](npy-codec.md) | Store numpy arrays as portable `.npy` files |
 
 ### Data Operations
 

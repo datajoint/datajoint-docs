@@ -6,13 +6,14 @@ Store large data objects as part of your Object-Augmented Schema.
 
 An **Object-Augmented Schema** extends relational tables with object storage as a unified system. The relational database stores metadata, references, and small values while large objects (arrays, files, datasets) are stored in object storage. DataJoint maintains referential integrity across both storage layers—when you delete a row, its associated objects are cleaned up automatically.
 
-OAS supports three storage sections:
+OAS supports two addressing schemes:
 
-| Section | Location | Addressing | Use Case |
-|---------|----------|------------|----------|
-| **Internal** | Database | Row-based | Small objects (< 1 MB) |
-| **Hash-addressed** | Object store | Content hash | Arrays, files (deduplication) |
-| **Path-addressed** | Object store | Primary key path | Zarr, HDF5, streaming access |
+| Addressing | Location | Path Derived From | Use Case |
+|------------|----------|-------------------|----------|
+| **Hash-addressed** | Object store | Content hash (MD5) | Blobs, attachments (with deduplication) |
+| **Schema-addressed** | Object store | Schema structure | NumPy arrays, Zarr, HDF5 (browsable paths) |
+
+Data can also be stored **inline** directly in the database column (no `@` modifier).
 
 For complete details, see the [Type System specification](../reference/specs/type-system.md).
 
@@ -25,7 +26,7 @@ Use the `@` modifier for:
 - Zarr arrays and HDF5 files
 - Any data too large for efficient database storage
 
-## Internal vs Object Storage
+## Inline vs Object Store
 
 ```python
 @schema
@@ -33,15 +34,17 @@ class Recording(dj.Manual):
     definition = """
     recording_id : uuid
     ---
-    metadata : <blob>           # Internal: stored in database
-    raw_data : <blob@>          # Object storage: stored externally
+    metadata : <blob>           # Inline: stored in database column
+    raw_data : <blob@>          # Object store: hash-addressed
+    waveforms : <npy@>          # Object store: schema-addressed (lazy)
     """
 ```
 
 | Syntax | Storage | Best For |
 |--------|---------|----------|
 | `<blob>` | Database | Small objects (< 1 MB) |
-| `<blob@>` | Default store | Large objects |
+| `<blob@>` | Default store | Large objects (hash-addressed) |
+| `<npy@>` | Default store | NumPy arrays (schema-addressed, lazy) |
 | `<blob@store>` | Named store | Specific storage tier |
 
 ## Store Data
@@ -101,7 +104,7 @@ Configure stores in `datajoint.json`:
 
 `<blob@>` and `<attach@>` use **hash-addressed** storage:
 
-- Objects are stored by their content hash (SHA-256)
+- Objects are stored by their content hash (MD5)
 - Identical data is stored once (automatic deduplication)
 - Multiple rows can reference the same object
 - Immutable—changing data creates a new object
@@ -113,14 +116,14 @@ Table.insert1({'id': 1, 'array': data})
 Table.insert1({'id': 2, 'array': data})  # References same object
 ```
 
-## Path-Addressed Storage
+## Schema-Addressed Storage
 
-`<object@>` uses **path-addressed** storage for file-like objects:
+`<npy@>` and `<object@>` use **schema-addressed** storage:
 
-- Objects stored at predictable paths based on primary key
-- Path format: `{schema}/{table}/{pk_hash}/{attribute}/`
-- Supports streaming access and partial reads
-- Mutable—can update in place (e.g., append to Zarr)
+- Objects stored at paths that mirror database schema: `{schema}/{table}/{pk}/{attribute}.npy`
+- Browsable organization in object storage
+- One object per entity (no deduplication)
+- Supports lazy loading with metadata access
 
 ```python
 @schema
@@ -208,6 +211,66 @@ Document.insert1({
 })
 ```
 
+## NumPy Arrays with `<npy@>`
+
+The `<npy@>` codec stores NumPy arrays as portable `.npy` files with lazy loading:
+
+```python
+@schema
+class Recording(dj.Manual):
+    definition = """
+    recording_id : int32
+    ---
+    waveform : <npy@mystore>    # NumPy array, schema-addressed
+    """
+
+# Insert - just pass the array
+Recording.insert1({
+    'recording_id': 1,
+    'waveform': np.random.randn(1000, 32),
+})
+
+# Fetch returns NpyRef (lazy)
+ref = (Recording & 'recording_id=1').fetch1('waveform')
+```
+
+### NpyRef: Lazy Array Reference
+
+`NpyRef` provides metadata without downloading:
+
+```python
+ref = (Recording & key).fetch1('waveform')
+
+# Metadata access - NO download
+ref.shape    # (1000, 32)
+ref.dtype    # float64
+ref.nbytes   # 256000
+ref.is_loaded  # False
+
+# Explicit loading
+arr = ref.load()    # Downloads and caches
+ref.is_loaded       # True
+
+# Numpy integration (triggers download)
+result = np.mean(ref)           # Uses __array__ protocol
+result = np.asarray(ref) + 1    # Convert then operate
+```
+
+### Bulk Fetch Safety
+
+Fetching many rows doesn't download until you access each array:
+
+```python
+# Fetch 1000 recordings - NO downloads yet
+results = Recording.to_dicts()
+
+# Inspect metadata without downloading
+for rec in results:
+    ref = rec['waveform']
+    if ref.shape[0] > 500:     # Check without download
+        process(ref.load())     # Download only what you need
+```
+
 ## Lazy Loading with ObjectRef
 
 `<object@>` and `<filepath@>` return lazy references:
@@ -227,18 +290,19 @@ local_path = ref.download('/tmp/data')
 
 ### Choose the Right Codec
 
-| Data Type | Codec | Storage |
-|-----------|-------|---------|
-| NumPy arrays | `<blob@>` | Hash-addressed |
-| File attachments | `<attach@>` | Hash-addressed |
-| Zarr/HDF5 | `<object@>` | Path-addressed |
-| File references | `<filepath@>` | Path-addressed |
+| Data Type | Codec | Addressing | Lazy | Best For |
+|-----------|-------|------------|------|----------|
+| NumPy arrays | `<npy@>` | Schema | Yes | Arrays needing lazy load, metadata inspection |
+| Python objects | `<blob@>` | Hash | No | Dicts, lists, small arrays (with dedup) |
+| File attachments | `<attach@>` | Hash | No | Files with original filename preserved |
+| Zarr/HDF5 | `<object@>` | Schema | Yes | Chunked arrays, streaming access |
+| File references | `<filepath@>` | External | Yes | References to external files |
 
 ### Size Guidelines
 
-- **< 1 MB**: Internal storage (`<blob>`) is fine
-- **1 MB - 1 GB**: Object storage (`<blob@>`)
-- **> 1 GB**: Path-addressed (`<object@>`) for streaming
+- **< 1 MB**: Inline storage (`<blob>`) is fine
+- **1 MB - 1 GB**: Object store (`<npy@>` or `<blob@>`)
+- **> 1 GB**: Schema-addressed (`<npy@>`, `<object@>`) for lazy loading
 
 ### Store Tiers
 
