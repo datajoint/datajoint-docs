@@ -2,21 +2,22 @@
 
 Upgrade existing pipelines from DataJoint 0.x to DataJoint 2.0.
 
+> **Before you start:** Back up your database and use version control for code.
+
 ## Migration Phases
 
-| Phase | What | Changes | Reversible |
-|-------|------|---------|------------|
-| 1. Code | Query syntax, API methods | Python code only | 100% |
-| 2. Settings | Config files | Files only | 100% |
-| 3. Numeric Types | Type names in definitions | Column comments | 100% |
-| 4. Blob/Attach (Internal) | Internal blob columns | Column comments | 100% |
-| 5. External Blob/Attach | External storage columns | FK → JSON | Yes |
-| 6. Filepath | Filepath columns | FK → JSON | Yes |
-| 7. AdaptedTypes | Custom AttributeAdapter classes | Code + column comments | 100% |
+| Phase | What | Changes |
+|-------|------|---------|
+| 1. Code | Query syntax, API methods, type names | Python code |
+| 2. Settings | Config files | Files |
+| 3. Numeric Types | Type labels in database | Column comments |
+| 4. Blob/Attach (Internal) | Internal blob columns | Column comments |
+| 5. External Blob/Attach | External storage columns | FK → JSON |
+| 6. Filepath | Filepath columns | FK → JSON |
+| 7. AdaptedTypes | Custom AttributeAdapter classes | Code + column comments |
 
-**Phases 1-4** are trivial. Phases 3-4 only modify column comments—the actual
-data and column types are unchanged. You can return to DataJoint 0.x at any
-time without data loss.
+**Phases 1-4** are straightforward. Phases 3-4 only modify column comments—the
+actual data and column types are unchanged.
 
 **Phases 5-6** convert foreign key references to external storage tables into
 JSON entries. The critical step is configuring stores to generate the same
@@ -176,7 +177,6 @@ grep -rn "fetch(format=" --include="*.py"
 grep -rn "definition\s*=" --include="*.py" -A 20 | grep -E ":\s*(int|float|smallint|tinyint|bigint|double)"
 ```
 
-**Rollback:** `git checkout` to revert code.
 
 ---
 
@@ -214,7 +214,6 @@ echo "password" > .secrets/database.password
 chmod 600 .secrets/database.password
 ```
 
-**Rollback:** Delete `datajoint.json`, use `dj_local_conf.json`.
 
 ---
 
@@ -493,15 +492,11 @@ migrate_adapted_types(schema, dry_run=True)  # Preview
 migrate_adapted_types(schema)                 # Apply
 ```
 
-**Safe:** Only modifies column comments. Data unchanged. Requires code changes.
-
 ---
 
 ## Quick Reference
 
-### Safe Phases (1-4, 7)
-
-Phases 3-4 and 7 only modify column comments. Return to 0.x anytime.
+### Types (Phase 1, 3-4)
 
 | 0.x | 2.0 |
 |-----|-----|
@@ -509,26 +504,17 @@ Phases 3-4 and 7 only modify column comments. Return to 0.x anytime.
 | `float` | `float64` |
 | `longblob` | `<blob>` |
 | `attach` | `<attach>` |
-
-### Careful Phases (5-6)
-
-Convert FK references to JSON. Verify path compatibility first.
-
-| 0.x | 2.0 |
-|-----|-----|
 | `blob@store` | `<blob@store>` |
 | `attach@store` | `<attach@store>` |
 | `filepath@store` | `<filepath@store>` |
 
-### Code Changes (Phase 1)
+### API Changes (Phase 1)
 
 | 0.x | 2.0 |
 |-----|-----|
 | `.fetch('KEY')` | `.keys()` |
 | `.fetch(as_dict=True)` | `.to_dicts()` |
 | `.fetch(format='frame')` | `.to_pandas()` |
-
-Use an AI coding assistant to find and update deprecated patterns.
 
 ### AdaptedTypes (Phase 7)
 
