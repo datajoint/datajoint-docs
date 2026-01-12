@@ -32,23 +32,22 @@ Fetch the migration guide and create a plan for my project.
 
 ## Migration Phases
 
-| Phase | What | Changes |
-|-------|------|---------|
-| 1 | Settings | Config files |
-| 2 | Code & Definitions | Python code, table definitions |
-| 3 | Numeric Types | Column comments (database) |
-| 4 | Internal Blobs | Column comments (database) |
-| 5 | Lineage Table | Create `~lineage` table |
-| 6 | External Storage | Column type + data (FK → JSON) |
-| 7 | Filepath | Column type + data (FK → JSON) |
-| 8 | AdaptedTypes | Code + column comments |
+| Phase | What | Changes | Risk |
+|-------|------|---------|------|
+| 1 | Settings | Config files | None |
+| 2 | Code & Definitions | Python code, table definitions | None |
+| 3 | Numeric Types | Column comments | None |
+| 4 | Internal Blobs | Column comments | None |
+| 5 | Lineage Table | Create `~lineage` table | None |
+| 6 | External Storage | Add new JSON columns | **Data** |
+| 7 | Filepath | Add new JSON columns | **Data** |
+| 8 | AdaptedTypes | Code + column comments | None |
 
-**Phase 1**: Update settings first and verify connection before proceeding.
+**Phases 1-5, 8**: No risk of data loss. Only modify code, config, and column comments.
 
-**Phases 2-5, 8**: Modify code and column comments. Data unchanged.
-
-**Phases 6-7**: Convert external storage references from hidden tables to JSON.
-Requires matching store configuration to preserve path compatibility.
+**Phases 6-7**: Risk of data loss. These phases add **new columns** alongside existing
+ones, allowing 0.x and 2.0 to coexist during migration. After verification, drop the
+old columns.
 
 **Process each schema in topological order** (dependencies before dependents).
 
@@ -311,9 +310,11 @@ Process schemas in order: [list schemas]
 
 ## Phase 6: External Storage (Database)
 
-Convert external blob/attachment references from hidden tables to JSON.
+Migrate external blob/attachment references from hidden tables to JSON.
 
-**This changes column types and data format.**
+**This is the only phase with risk of data loss.** The migration adds new columns
+alongside existing ones, allowing 0.x and 2.0 to coexist until you verify the
+migration succeeded.
 
 **Process each schema in topological order.**
 
@@ -328,6 +329,32 @@ Convert external blob/attachment references from hidden tables to JSON.
 - Column type: `JSON`
 - Column comment: `:blob@store: description`
 - JSON value: `{"url": "...", "size": ..., "hash": "..."}`
+
+### Migration Strategy: New Columns
+
+Instead of modifying existing columns (risking data loss), the migration:
+
+1. **Adds a new column** `<name>_v2` with JSON type for 2.0
+2. **Copies data** from the old column to the new column, converting format
+3. **Verifies** all data is accessible via 2.0
+4. **After verification**, you rename columns and drop the old one
+
+This allows rolling back if issues are discovered.
+
+### Using the Migration Module
+
+```python
+from datajoint.migrate import migrate_external
+
+# Preview what will be migrated
+migrate_external(schema, dry_run=True)
+
+# Run migration (adds new columns, copies data)
+migrate_external(schema)
+
+# After verification, finalize (rename columns, drop old)
+migrate_external(schema, finalize=True)
+```
 
 ### 0.x Comment Patterns
 
@@ -355,29 +382,16 @@ print(external.fetch(limit=5))  # Note the filepath structure
 ```
 Migrate external storage for each schema in topological order.
 
-WARNING: This changes column types. Back up first.
+Use the datajoint.migrate module:
 
-For schema [schema_name]:
+from datajoint.migrate import migrate_external
 
-1. Find external columns:
-   - DATA_TYPE = 'binary', length = 16
-   - COMMENT matches ':external:' or ':external-*:'
+For each schema:
+1. migrate_external(schema, dry_run=True)  # Preview
+2. migrate_external(schema)                 # Add new columns, copy data
+3. Verify data accessible via DataJoint 2.0
+4. migrate_external(schema, finalize=True)  # Rename and drop old columns
 
-2. For each external column:
-   a. Identify store name from comment
-   b. Query ~external_<store> for all referenced hashes
-   c. Build JSON objects:
-      {"url": "<protocol>://<location>/<filepath>", "size": N, "hash": "..."}
-   d. For attachments, include "filename" field
-
-3. ALTER column type to JSON:
-   ALTER TABLE `t` MODIFY COLUMN `c` JSON COMMENT ':blob@store: desc';
-
-4. UPDATE each row with JSON value
-
-5. Verify data accessible through DataJoint 2.0
-
-Show migration plan with row counts before executing.
 Process schemas in order: [list schemas]
 ```
 
@@ -385,21 +399,39 @@ Process schemas in order: [list schemas]
 
 ## Phase 7: Filepath (Database)
 
-Convert filepath references to JSON format. Similar to Phase 6.
+Migrate filepath references to JSON format. Same strategy as Phase 6.
 
 **Process each schema in topological order.**
+
+### Using the Migration Module
+
+```python
+from datajoint.migrate import migrate_filepath
+
+# Preview what will be migrated
+migrate_filepath(schema, dry_run=True)
+
+# Run migration (adds new columns, copies data)
+migrate_filepath(schema)
+
+# After verification, finalize (rename columns, drop old)
+migrate_filepath(schema, finalize=True)
+```
 
 ### AI Prompt: Filepath Migration
 
 ```
 Migrate filepath columns for each schema in topological order.
 
-For schema [schema_name]:
+Use the datajoint.migrate module:
 
-1. Find filepath columns (comment contains :filepath:)
-2. Convert paths to JSON with URL format
-3. ALTER column type to JSON
-4. Verify file accessibility
+from datajoint.migrate import migrate_filepath
+
+For each schema:
+1. migrate_filepath(schema, dry_run=True)  # Preview
+2. migrate_filepath(schema)                 # Add new columns, copy data
+3. Verify files accessible via DataJoint 2.0
+4. migrate_filepath(schema, finalize=True)  # Rename and drop old columns
 
 Process schemas in order: [list schemas]
 ```
