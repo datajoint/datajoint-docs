@@ -26,6 +26,70 @@ Most users only need Phases 1-4.
 
 ---
 
+## AI-Assisted Migration Setup
+
+We recommend using an AI coding assistant for migration. Here's how to set up
+context for effective assistance.
+
+### Provide Documentation Context
+
+Create a `CLAUDE.md` or similar context file in your project root:
+
+```markdown
+# DataJoint Migration Context
+
+## Migration Documentation
+Read the migration guide: https://datajoint.com/docs/how-to/migrate-from-0x/
+Read the migration spec: https://datajoint.com/docs/reference/specs/migration-2.0/
+
+## Database Connection
+- Host: [your-host]
+- User: [your-user]
+- Schema(s): [schema1, schema2, ...]
+
+## Project Structure
+- Pipeline code: src/pipeline/
+- Table definitions: src/pipeline/schema.py
+- Custom adapters: src/pipeline/adapters.py (if any)
+
+## Migration Status
+- [ ] Phase 1: Code migration
+- [ ] Phase 2: Settings
+- [ ] Phase 3: Numeric types
+- [ ] Phase 4: Internal blobs
+- [ ] Phase 5: External blobs (if used)
+- [ ] Phase 6: Filepath (if used)
+- [ ] Phase 7: AdaptedTypes (if used)
+```
+
+### Start the Migration
+
+Use this prompt to begin:
+
+```
+I need to migrate my DataJoint pipeline from 0.x to 2.0.
+
+First, fetch and read these documentation pages:
+- https://datajoint.com/docs/how-to/migrate-from-0x/
+- https://datajoint.com/docs/reference/specs/migration-2.0/
+
+Then analyze my codebase and create a migration plan specific to my project.
+Identify which phases apply to my pipeline.
+```
+
+### Per-Phase Prompts
+
+For each phase, provide specific context:
+
+```
+Continue with Phase [N] of the DataJoint migration.
+
+Reference the migration docs you already read.
+Show me what changes are needed before making them.
+```
+
+---
+
 ## Phase 1: Code Migration
 
 Update Python code. No database changes.
