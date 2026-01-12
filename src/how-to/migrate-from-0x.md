@@ -12,6 +12,7 @@ Upgrade existing pipelines from DataJoint 0.x to DataJoint 2.0.
 | 4. Blob/Attach (Internal) | Internal blob columns | Column comments | 100% |
 | 5. External Blob/Attach | External storage columns | FK → JSON | Yes |
 | 6. Filepath | Filepath columns | FK → JSON | Yes |
+| 7. AdaptedTypes | Custom AttributeAdapter classes | Code + column comments | 100% |
 
 **Phases 1-4** are trivial. Phases 3-4 only modify column comments—the actual
 data and column types are unchanged. You can return to DataJoint 0.x at any
@@ -289,11 +290,112 @@ migrate_filepath(schema)                 # Apply
 
 ---
 
+## Phase 7: AdaptedTypes to Codecs
+
+Migrate custom `AttributeAdapter` classes to user-defined codecs.
+
+**This phase requires updating Python code and column comments.**
+
+### Background
+
+DataJoint 0.x used `dj.AttributeAdapter` subclasses to define custom attribute
+types. In 2.0, this is replaced by the more powerful `dj.Codec` system.
+
+### Definition Changes
+
+```python
+# 0.x — AttributeAdapter
+@schema
+class MyAdapter(dj.AttributeAdapter):
+    attribute_type = 'filepath@store'  # underlying type
+
+    def put(self, filepath):
+        # transform on insert
+        return filepath
+
+    def get(self, filepath):
+        # transform on fetch
+        return pathlib.Path(filepath)
+
+# Usage in 0.x
+my_adapter = MyAdapter()
+schema.spawn_missing_classes(context={..., 'adapted': my_adapter})
+
+@schema
+class MyTable(dj.Manual):
+    definition = '''
+    id : int
+    ---
+    path : <adapted>
+    '''
+
+# 2.0 — Codec
+class PathCodec(dj.Codec):
+    name = "path"
+
+    def get_dtype(self, is_external: bool) -> str:
+        return "<filepath>"  # underlying storage
+
+    def encode(self, value, *, key=None, store_name=None):
+        return str(value)
+
+    def decode(self, stored, *, key=None):
+        return pathlib.Path(stored)
+
+# Usage in 2.0 — codec auto-registers when class is defined
+@schema
+class MyTable(dj.Manual):
+    definition = '''
+    id : int32
+    ---
+    path : <path@store>
+    '''
+```
+
+### Key Differences
+
+| 0.x AttributeAdapter | 2.0 Codec |
+|---------------------|-----------|
+| `attribute_type` property | `get_dtype(is_external)` method |
+| `put()` method | `encode()` method |
+| `get()` method | `decode()` method |
+| Manual registration via context | Auto-registration on class definition |
+| Instance-based | Class-based with singleton instance |
+
+### Migration Steps
+
+1. **Identify all AttributeAdapter subclasses** in your codebase
+
+2. **Convert each to a Codec class**:
+   - Rename `put()` → `encode()`
+   - Rename `get()` → `decode()`
+   - Replace `attribute_type` with `get_dtype()` method
+   - Add `name` class attribute
+
+3. **Update table definitions**:
+   - Replace adapter references with codec names
+   - Update column comments if needed
+
+4. **Remove adapter registration** from `spawn_missing_classes()` calls
+
+### Apply
+
+```python
+from datajoint.migrate import migrate_adapted_types
+
+migrate_adapted_types(schema, dry_run=True)  # Preview
+migrate_adapted_types(schema)                 # Apply
+```
+
+**Safe:** Only modifies column comments. Data unchanged. Requires code changes.
+
+---
+
 ## Quick Reference
 
-### Safe Phases (1-4)
+### Safe Phases (1-4, 7)
 
-Phases 3-4 only modify column comments. Return to 0.x anytime.
+Phases 3-4 and 7 only modify column comments. Return to 0.x anytime.
 
 | 0.x | 2.0 |
 |-----|-----|
@@ -320,6 +422,15 @@ Convert FK references to JSON. Verify path compatibility first.
 | `.fetch('KEY')` | `.keys()` |
 | `.fetch(as_dict=True)` | `.to_dicts()` |
 
+### AdaptedTypes (Phase 7)
+
+| 0.x | 2.0 |
+|-----|-----|
+| `dj.AttributeAdapter` | `dj.Codec` |
+| `put()` method | `encode()` method |
+| `get()` method | `decode()` method |
+| `attribute_type` | `get_dtype()` method |
+
 ---
 
 ## Troubleshooting
@@ -337,10 +448,21 @@ Run Phase 4 (blob/attach).
 Phase 5/6: Store paths don't match legacy external table paths.
 Verify configuration with `verify_external_paths()`.
 
+### "Unknown codec" after Phase 7
+
+Ensure your new Codec class is imported before table definitions.
+Codecs auto-register when the class is defined.
+
+### AttributeAdapter still referenced
+
+Remove old adapter instances from `spawn_missing_classes()` context dicts.
+Update table definitions to use new codec names.
+
 ---
 
 ## See Also
 
 - [What's New in 2.0](../explanation/whats-new-2.md)
 - [Type System](../explanation/type-system.md)
+- [Codec API](../reference/specs/codec-api.md)
 - [Configure Storage](configure-storage.md)

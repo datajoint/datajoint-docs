@@ -82,15 +82,16 @@ DataJoint 2.0 introduces a unified type system with explicit codecs for object s
 | 3 | Internal Attachments | Convert attachment columns to `<attach>` codec | Yes |
 | 4 | External Objects | Convert external blobs/attachments to `<blob@>` / `<attach@>` codecs | **No** |
 | 5 | Filepaths | Convert filepath columns to `<filepath@>` codec | **No** |
+| 6 | AdaptedTypes | Convert `AttributeAdapter` classes to `Codec` classes | Yes |
 
 ### Safety and Reversibility
 
 **Safe to run repeatedly (idempotent):** All steps check current state before making changes and skip already-migrated items. Re-running any step will not corrupt data.
 
-**Reversible steps (0-3):**
-- Only modify column comments (metadata)
+**Reversible steps (0-3, 6):**
+- Only modify column comments (metadata) and Python code
 - Original data remains unchanged
-- Can revert by restoring original comments
+- Can revert by restoring original comments and code
 - DataJoint 0.14 continues to work after these steps
 
 **Irreversible steps (4-5):**
@@ -102,11 +103,12 @@ DataJoint 2.0 introduces a unified type system with explicit codecs for object s
 
 **Recommended approach:**
 1. Run steps 0-3 first (safe, reversible)
-2. Validate that DataJoint 2.0 works with internal data
-3. Create full backup
-4. Run steps 4-5 (irreversible)
-5. Validate external data access
-6. Update all pipeline code to DataJoint 2.0
+2. Run step 6 if using custom AttributeAdapters (safe, reversible)
+3. Validate that DataJoint 2.0 works with internal data
+4. Create full backup
+5. Run steps 4-5 (irreversible)
+6. Validate external data access
+7. Update all pipeline code to DataJoint 2.0
 
 ---
 
@@ -382,6 +384,165 @@ file_path JSON COMMENT ':filepath@store: data file'
 
 ---
 
+## Step 6: AdaptedTypes to Codecs
+
+DataJoint 0.x provided `dj.AttributeAdapter` for custom attribute types. DataJoint 2.0 replaces this with the more powerful `dj.Codec` system.
+
+### Background
+
+In 0.x, users created adapter instances and registered them via `spawn_missing_classes()`:
+
+```python
+# 0.x AttributeAdapter pattern
+class ImageAdapter(dj.AttributeAdapter):
+    attribute_type = 'longblob'
+
+    def put(self, img):
+        # Called on INSERT
+        return cv2.imencode('.png', img)[1].tobytes()
+
+    def get(self, data):
+        # Called on FETCH
+        return cv2.imdecode(np.frombuffer(data, np.uint8), cv2.IMREAD_COLOR)
+
+# Registration
+image_adapter = ImageAdapter()
+schema.spawn_missing_classes(context={..., 'image': image_adapter})
+```
+
+In 2.0, codecs are class-based and auto-register:
+
+```python
+# 2.0 Codec pattern
+class ImageCodec(dj.Codec):
+    name = "image"  # Use as <image> in definitions
+
+    def get_dtype(self, is_external: bool) -> str:
+        return "<blob>"  # Underlying storage type
+
+    def encode(self, img, *, key=None, store_name=None):
+        return cv2.imencode('.png', img)[1].tobytes()
+
+    def decode(self, data, *, key=None):
+        return cv2.imdecode(np.frombuffer(data, np.uint8), cv2.IMREAD_COLOR)
+
+# No registration needed—Codec auto-registers when class is defined
+```
+
+### Key Changes
+
+| 0.x `AttributeAdapter` | 2.0 `Codec` |
+|------------------------|-------------|
+| `attribute_type` property | `get_dtype(is_external)` method |
+| `put(value)` method | `encode(value, *, key=None, store_name=None)` method |
+| `get(data)` method | `decode(data, *, key=None)` method |
+| Instance-based, manual registration | Class-based, auto-registration |
+| Single underlying type | Can vary based on `is_external` parameter |
+
+### New Capabilities in Codecs
+
+The 2.0 Codec system provides features not available in 0.x:
+
+1. **Context-aware encoding**: `key` parameter provides primary key values
+2. **Store-aware encoding**: `store_name` parameter for external storage
+3. **Conditional storage**: `get_dtype()` can return different types for internal vs external
+4. **Validation hook**: Optional `validate()` method for pre-insertion checks
+5. **Entry point plugins**: Codecs can be distributed as installable packages
+
+### Migration Actions
+
+1. **Identify all `AttributeAdapter` subclasses** in your codebase:
+   ```bash
+   grep -rn "class.*AttributeAdapter" --include="*.py"
+   grep -rn "dj.AttributeAdapter" --include="*.py"
+   ```
+
+2. **Convert each adapter to a Codec**:
+   - Add `name` class attribute (the name used in `<name>` syntax)
+   - Rename `attribute_type` → `get_dtype()` method
+   - Rename `put()` → `encode()` with new signature
+   - Rename `get()` → `decode()` with new signature
+   - Optionally add `validate()` method
+
+3. **Update table definitions**:
+   - Change type references if adapter names changed
+   - Ensure column comments use 2.0 format
+
+4. **Remove adapter registration**:
+   - Remove adapter instances from `spawn_missing_classes()` context
+   - Ensure codec module is imported before table definitions
+
+5. **Update column comments** (database):
+   ```sql
+   -- Update comment to reflect new codec name if changed
+   ALTER TABLE `schema`.`table`
+   MODIFY COLUMN `column` LONGBLOB COMMENT ':newcodec: description';
+   ```
+
+### Reversibility
+
+This step is **reversible**:
+- Codec classes can coexist with AttributeAdapter classes during transition
+- Column comments can be reverted to 0.x format
+- Data is unchanged (only serialization interface changes)
+- DataJoint 0.x continues to work if adapters are restored
+
+### Example Migration
+
+**Before (0.x):**
+```python
+# adapters.py
+class GraphAdapter(dj.AttributeAdapter):
+    attribute_type = 'longblob'
+
+    def put(self, graph):
+        return pickle.dumps(graph)
+
+    def get(self, data):
+        return pickle.loads(data)
+
+# schema.py
+graph_adapter = GraphAdapter()
+schema.spawn_missing_classes(context={'graph': graph_adapter})
+
+@schema
+class Networks(dj.Manual):
+    definition = '''
+    network_id : int
+    ---
+    topology : <graph>
+    '''
+```
+
+**After (2.0):**
+```python
+# codecs.py
+class GraphCodec(dj.Codec):
+    name = "graph"
+
+    def get_dtype(self, is_external: bool) -> str:
+        return "<blob>"
+
+    def encode(self, graph, *, key=None, store_name=None):
+        return pickle.dumps(graph)
+
+    def decode(self, data, *, key=None):
+        return pickle.loads(data)
+
+# schema.py
+import codecs  # Ensure codec is registered before table definition
+
+@schema
+class Networks(dj.Manual):
+    definition = '''
+    network_id : int32
+    ---
+    topology : <graph>
+    '''
+```
+
+---
+
 ## AI-Assisted Migration
 
 The migration process is optimized for execution by AI coding assistants (Claude Code, Cursor, GitHub Copilot, etc.). This section provides detailed prompts for each phase of the migration.
@@ -393,7 +554,7 @@ All prompts are designed with safety in mind:
 - **Dry-run by default:** Analysis phases (1-2) make no changes
 - **Confirmation required:** All modification phases show changes before executing
 - **Idempotent:** Safe to re-run any phase; already-migrated items are skipped
-- **Staged execution:** Reversible steps (0-3) can run separately from irreversible steps (4-5)
+- **Staged execution:** Reversible steps (0-3, 6) can run separately from irreversible steps (4-5)
 - **Backup verification:** Phase 2 explicitly verifies backups before any changes
 
 ### Getting Started
@@ -786,7 +947,102 @@ Re-running this phase will skip already-migrated columns and rows.
 
 ---
 
-### Phase 7: Validation
+### Phase 7: AdaptedTypes Migration
+
+Convert custom AttributeAdapter classes to Codecs:
+
+```
+Migrate AttributeAdapter classes to Codecs for this project.
+
+This phase is IDEMPOTENT - safe to run multiple times.
+This phase requires CODE CHANGES in addition to database changes.
+
+1. IDENTIFY ATTRIBUTEADAPTERS
+   Search for all AttributeAdapter subclasses:
+
+   grep -rn "class.*AttributeAdapter" --include="*.py"
+   grep -rn "dj.AttributeAdapter" --include="*.py"
+
+   For each adapter found, document:
+   - Class name
+   - attribute_type value
+   - put() implementation
+   - get() implementation
+   - Where it's registered (spawn_missing_classes calls)
+
+2. CREATE EQUIVALENT CODEC CLASSES
+   For each AttributeAdapter, create a Codec class:
+
+   # Original adapter
+   class MyAdapter(dj.AttributeAdapter):
+       attribute_type = 'longblob'
+       def put(self, value): ...
+       def get(self, data): ...
+
+   # Equivalent codec
+   class MyCodec(dj.Codec):
+       name = "myadapter"  # Same name used in <myadapter> syntax
+
+       def get_dtype(self, is_external: bool) -> str:
+           return "<blob>"  # Map attribute_type to 2.0 type
+
+       def encode(self, value, *, key=None, store_name=None):
+           # Same logic as put()
+           ...
+
+       def decode(self, data, *, key=None):
+           # Same logic as get()
+           ...
+
+3. TYPE MAPPING FOR get_dtype()
+   Convert attribute_type to 2.0 return values:
+
+   | 0.x attribute_type | 2.0 get_dtype() return |
+   |--------------------|------------------------|
+   | 'longblob'         | '<blob>'               |
+   | 'blob'             | '<blob>'               |
+   | 'attach'           | '<attach>'             |
+   | 'blob@store'       | '<blob>' (+ @store)    |
+   | 'attach@store'     | '<attach>' (+ @store)  |
+   | 'filepath@store'   | '<filepath>'           |
+   | 'varchar(N)'       | 'varchar(N)'           |
+   | 'json'             | 'json'                 |
+
+4. UPDATE TABLE DEFINITIONS
+   - Ensure codec name matches what's used in table definitions
+   - Update any type references if names changed
+   - Update numeric types (int -> int32, etc.)
+
+5. UPDATE SCHEMA MODULES
+   - Remove adapter instances from spawn_missing_classes() context
+   - Import codec module before table definitions
+   - Verify codecs auto-register when class is defined
+
+6. UPDATE COLUMN COMMENTS (if codec name changed)
+   If the adapter name differs from the new codec name:
+
+   ALTER TABLE `schema`.`table`
+   MODIFY COLUMN `column` LONGBLOB COMMENT ':newcodec: description';
+
+7. TEST ROUND-TRIP
+   For each migrated codec:
+   - Insert a test row with codec data
+   - Fetch the row and verify data matches
+   - Delete test row
+
+8. SUMMARY REPORT
+   - Adapters found: X
+   - Codecs created: Y
+   - Tables updated: Z
+   - Column comments modified: N
+
+Show the adapter-to-codec mapping before making changes.
+Test each codec round-trip before proceeding to next.
+```
+
+---
+
+### Phase 8: Validation
 
 Verify the migration was successful:
 
@@ -872,13 +1128,15 @@ Run the post-migration checklist for schema [schema_name]:
 1. [ ] All tables accessible via DataJoint 2.0
 2. [ ] All blob data deserializes correctly
 3. [ ] All external data retrieves correctly
-4. [ ] Computed tables can populate new data
-5. [ ] Job tables functioning (if used)
-6. [ ] All team members updated to DataJoint 2.0
-7. [ ] CI/CD pipelines updated
-8. [ ] Documentation updated with new connection info
-9. [ ] Old dj_local_conf.json archived/removed
-10. [ ] Monitoring in place for any issues
+4. [ ] All custom codecs working (if migrated from AttributeAdapters)
+5. [ ] Computed tables can populate new data
+6. [ ] Job tables functioning (if used)
+7. [ ] All team members updated to DataJoint 2.0
+8. [ ] CI/CD pipelines updated
+9. [ ] Documentation updated with new connection info
+10. [ ] Old dj_local_conf.json archived/removed
+11. [ ] Old AttributeAdapter code archived/removed (if applicable)
+12. [ ] Monitoring in place for any issues
 
 Mark each item as verified.
 ```
@@ -909,9 +1167,9 @@ migrate_schema('my_schema', dry_run=False)
 
 ## Rollback
 
-### Reversible Steps (0-3): Safe Rollback
+### Reversible Steps (0-3, 6): Safe Rollback
 
-If you need to revert steps 0-3 (settings, core types, internal blobs, internal attachments):
+If you need to revert steps 0-3 or 6 (settings, core types, internal blobs, internal attachments, adapted types):
 
 **Step 0 (Settings):**
 ```bash
@@ -946,6 +1204,22 @@ For each table, query current column comments and remove 2.0 type labels:
 Generate ALTER statements to restore original comments.
 Execute only after confirmation.
 ```
+
+**Step 6 (AdaptedTypes to Codecs):**
+To revert adapter-to-codec migration:
+
+1. **Restore AttributeAdapter classes** from version control
+2. **Re-register adapters** in `spawn_missing_classes()` context
+3. **Revert column comments** if codec names changed:
+   ```sql
+   ALTER TABLE `schema`.`table`
+   MODIFY COLUMN `column` LONGBLOB COMMENT ':oldadapter: description';
+   ```
+4. **Remove Codec classes** or keep both (they can coexist)
+
+Note: Data is unchanged during Step 6. The only changes are:
+- Python code (adapters ↔ codecs)
+- Column comments (adapter name ↔ codec name)
 
 ### Irreversible Steps (4-5): Backup Required
 
