@@ -102,6 +102,52 @@ Update Python code. No database changes.
 | `.fetch(as_dict=True)` | `.to_dicts()` |
 | `.fetch(format='frame')` | `.to_pandas()` |
 
+### Table Definition Types
+
+Update type names in your table definitions to use DataJoint core types:
+
+```python
+# 0.x — native database types
+@schema
+class Session(dj.Manual):
+    definition = """
+    session_id : int unsigned
+    ---
+    subject_id : int
+    weight : float
+    age_days : smallint unsigned
+    is_active : tinyint(1)
+    """
+
+# 2.0 — DataJoint core types
+@schema
+class Session(dj.Manual):
+    definition = """
+    session_id : uint32
+    ---
+    subject_id : int32
+    weight : float64
+    age_days : uint16
+    is_active : bool
+    """
+```
+
+| 0.x (native) | 2.0 (core type) |
+|--------------|-----------------|
+| `int` | `int32` |
+| `int unsigned` | `uint32` |
+| `smallint` | `int16` |
+| `smallint unsigned` | `uint16` |
+| `tinyint` | `int8` |
+| `tinyint unsigned` | `uint8` |
+| `bigint` | `int64` |
+| `bigint unsigned` | `uint64` |
+| `float` | `float32` |
+| `double` | `float64` |
+| `tinyint(1)` | `bool` |
+| `longblob` | `<blob>` |
+| `blob@store` | `<blob@store>` |
+
 ### AI-Assisted Code Conversion
 
 We recommend using an AI coding assistant (Claude Code, Cursor, GitHub Copilot)
@@ -114,7 +160,9 @@ Search for:
 1. .fetch('KEY') calls — replace with .keys()
 2. .fetch(as_dict=True) calls — replace with .to_dicts()
 3. .fetch(format='frame') calls — replace with .to_pandas()
-4. Any other deprecated fetch patterns
+4. Table definitions using native types (int, float, smallint, etc.)
+   — replace with core types (int32, float64, int16, etc.)
+5. Any other deprecated patterns
 
 For each file, show me the changes needed before applying them.
 ```
@@ -125,6 +173,7 @@ For each file, show me the changes needed before applying them.
 grep -rn "\.fetch('KEY')" --include="*.py"
 grep -rn "fetch(as_dict=True)" --include="*.py"
 grep -rn "fetch(format=" --include="*.py"
+grep -rn "definition\s*=" --include="*.py" -A 20 | grep -E ":\s*(int|float|smallint|tinyint|bigint|double)"
 ```
 
 **Rollback:** `git checkout` to revert code.
