@@ -362,6 +362,7 @@ for schema in schemas_in_order:
 ```
 
 This migrates all column types:
+
 - Numeric: `int unsigned` → `:uint32:`, `smallint` → `:int16:`, etc.
 - Blobs: `longblob` → `:<blob>:`
 - Attachments: `longblob` with attach comment → `:<attach>:`
