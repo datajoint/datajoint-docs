@@ -1,5 +1,8 @@
 # DataJoint Documentation
 
+> **DataJoint 2.0 is a major breaking release.** Existing pipelines require migration.
+> See the [Migration Guide](how-to/migrate-from-0x.md) for upgrade instructions.
+
 **DataJoint** is a framework for scientific data pipelines built on the [Relational Workflow Model](explanation/relational-workflow-model.md)—a paradigm where your database schema is an executable specification of your workflow.
 
 Unlike traditional databases that merely store data, DataJoint pipelines **process** data: tables represent workflow steps, foreign keys encode computational dependencies, and the schema itself defines what computations exist and how they relate. Combined with [Object-Augmented Schemas](explanation/data-pipelines.md#object-augmented-schemas) for seamless large-data handling, DataJoint delivers reproducible, scalable scientific computing with full provenance tracking.

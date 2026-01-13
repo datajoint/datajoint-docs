@@ -65,6 +65,22 @@ with mkdocs_gen_files.open("api/index.md", "w") as f:
 
 nav[("index.md",)] = "index.md"
 
+# Generate datajoint submodule index page
+# This prevents section-index from using 'admin' as the section landing page
+with mkdocs_gen_files.open("api/datajoint/index.md", "w") as f:
+    f.write("# datajoint\n\n")
+    f.write("DataJoint Python library modules.\n\n")
+    f.write("## Submodules\n\n")
+    f.write("| Module | Description |\n")
+    f.write("|--------|-------------|\n")
+    for module in PUBLIC_MODULES:
+        if module.startswith("datajoint.") and module in MODULE_INFO:
+            name, desc = MODULE_INFO[module]
+            submodule = module.split(".")[-1]
+            f.write(f"| [{name}]({submodule}.md) | {desc} |\n")
+
+nav[("datajoint", "index.md")] = "datajoint/index.md"
+
 # Generate page for each module
 for module in PUBLIC_MODULES:
     module_path = module.replace(".", "/")

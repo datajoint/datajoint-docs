@@ -15,7 +15,7 @@ they assume you understand the basics and focus on getting things done.
 ## Schema Design
 
 - [Define Tables](define-tables.md) — Table definition syntax
-- [Model Relationships](model-relationships.md) — Foreign key patterns
+- [Model Relationships](model-relationships.ipynb) — Foreign key patterns
 - [Design Primary Keys](design-primary-keys.md) — Key selection strategies
 
 ## Project Management

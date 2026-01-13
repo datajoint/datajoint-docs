@@ -315,6 +315,10 @@ def make(self, key):
     combined = (TableA * TableB & key).to_dicts()
 ```
 
+**Upstream-only convention:** Inside `make()`, fetch only from tables that are strictly upstream in the pipeline—tables referenced by foreign keys in the definition, their ancestors, and their part tables. This ensures reproducibility: computed results depend only on their declared dependencies.
+
+This convention is not currently enforced programmatically but is critical for pipeline integrity. Some pipelines violate this rule for operational reasons, which makes them non-reproducible. A future release may programmatically enforce upstream-only fetches inside `make()`.
+
 ### 4.4 Tripartite Make Pattern
 
 For long-running computations, use the tripartite pattern to separate fetch, compute, and insert phases. This enables better transaction management for jobs that take minutes or hours.
@@ -389,6 +393,13 @@ class ConfigurableAnalysis(dj.Computed):
 ConfigurableAnalysis.populate(make_kwargs={'threshold': 0.8})
 ```
 
+**Anti-pattern warning:** Passing arguments that affect the computed result breaks reproducibility—all inputs should come from `fetch` calls inside `make()`. If a parameter affects results, it should be stored in a lookup table and referenced via foreign key.
+
+**Acceptable use:** Directives that don't affect results, such as:
+- `verbose=True` for logging
+- `gpu_id=0` for device selection
+- `n_workers=4` for parallelization
+
 ---
 
 ## 5. Transaction Management
@@ -438,18 +449,19 @@ BEGIN TRANSACTION
 COMMIT
 ```
 
-**Tripartite make (two transactions):**
+**Tripartite make (single transaction):**
 ```
-BEGIN TRANSACTION 1
-  └── make_fetch(key) or yield point 1
-COMMIT
+[No transaction]
+  ├── make_fetch(key)           # Fetch source data
+  └── make_compute(key, data)   # Long-running computation
 
-[No transaction - computation runs here]
-
-BEGIN TRANSACTION 2
-  └── make_insert(key, result) or yield point 2
+BEGIN TRANSACTION
+  ├── make_fetch(key)           # Repeat fetch, verify unchanged
+  └── make_insert(key, result)  # Insert computed result
 COMMIT
 ```
+
+This pattern allows long computations without holding database locks, while ensuring data consistency by verifying the source data hasn't changed before inserting.
 
 ### 5.4 Nested Operations
 
@@ -680,9 +692,41 @@ version : varchar(255)              # Code version
 |--------|-------------|
 | `pending` | Queued and ready to process |
 | `reserved` | Currently being processed by a worker |
-| `success` | Completed successfully (optional retention) |
+| `success` | Completed successfully (when `jobs.keep_completed=True`) |
 | `error` | Failed with error details |
 | `ignore` | Manually marked to skip |
+
+```mermaid
+stateDiagram-v2
+    state "(none)" as none1
+    state "(none)" as none2
+    none1 --> pending : refresh()
+    none1 --> ignore : ignore()
+    pending --> reserved : reserve()
+    reserved --> none2 : complete()
+    reserved --> success : complete()*
+    reserved --> error : error()
+    success --> pending : refresh()*
+    error --> none2 : delete()
+    success --> none2 : delete()
+    ignore --> none2 : delete()
+```
+
+**Transitions:**
+
+| Method | Description |
+|--------|-------------|
+| `refresh()` | Adds new jobs as `pending`; re-pends `success` jobs if key is in `key_source` but not in target |
+| `ignore()` | Marks a key as `ignore` (can be called on keys not yet in jobs table) |
+| `reserve()` | Marks a `pending` job as `reserved` before calling `make()` |
+| `complete()` | Deletes job (default) or marks as `success` (when `jobs.keep_completed=True`) |
+| `error()` | Marks `reserved` job as `error` with message and stack trace |
+| `delete()` | Removes job entry; use `(jobs & condition).delete()` pattern |
+
+**Notes:**
+
+- `ignore` is set manually via `jobs.ignore(key)` and skipped by `populate()` and `refresh()`
+- To reset an ignored job: `jobs.ignored.delete(); jobs.refresh()`
 
 ### 9.4 Jobs API
 
@@ -875,28 +919,9 @@ slow = Analysis & '_job_duration > 3600'
 
 ---
 
-## 15. Migration from Earlier Versions
+## 15. Migration from Legacy DataJoint
 
-### 15.1 Changes from DataJoint 1.x
-
-DataJoint 2.0 replaces the schema-level `~jobs` table with per-table jobs:
-
-| Feature | 1.x | 2.0 |
-|---------|-----|-----|
-| Jobs table | Schema-level `~jobs` | Per-table `~~table_name` |
-| Key storage | Hashed | Native (readable) |
-| Statuses | `reserved`, `error`, `ignore` | + `pending`, `success` |
-
-### 15.2 Migration Steps
-
-1. Complete or clear pending work in the old system
-2. Export error records if needed for reference
-3. Use new system: `populate(reserve_jobs=True)` creates new jobs tables
-
-```python
-# New system auto-creates jobs tables
-Analysis.populate(reserve_jobs=True)
-```
+DataJoint 2.0 replaces the schema-level `~jobs` table with per-table `~~table_name` jobs tables. See the [Migration Guide](../../how-to/migrate-from-0x.md#autopopulate-20) for details.
 
 ---
 

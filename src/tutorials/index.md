@@ -22,6 +22,8 @@ Core concepts for getting started with DataJoint:
 Complete pipelines demonstrating DataJoint patterns:
 
 - [University Database](examples/university.ipynb) — Academic records with students, courses, and grades
+- [Hotel Reservations](examples/hotel-reservations.ipynb) — Booking system with rooms, guests, and reservations
+- [Languages & Proficiency](examples/languages.ipynb) — Language skills tracking with many-to-many relationships
 - [Fractal Pipeline](examples/fractal-pipeline.ipynb) — Iterative computation and parameter sweeps
 - [Blob Detection](examples/blob-detection.ipynb) — Image processing with automated computation
 

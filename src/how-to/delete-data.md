@@ -191,6 +191,6 @@ print(f"Deleted {count} subjects")
 
 ## See Also
 
-- [Model Relationships](model-relationships.md) — Foreign key patterns
+- [Model Relationships](model-relationships.ipynb) — Foreign key patterns
 - [Insert Data](insert-data.md) — Adding data to tables
 - [Run Computations](run-computations.md) — Recomputing after changes

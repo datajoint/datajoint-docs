@@ -76,6 +76,7 @@ Standardized, scientist-friendly types that work identically across backends.
 |------|-------------|
 | `char(n)` | Fixed-length string |
 | `varchar(n)` | Variable-length string |
+| `enum(...)` | Enumeration of string labels |
 
 ### Other Types
 
@@ -86,7 +87,6 @@ Standardized, scientist-friendly types that work identically across backends.
 | `datetime` | Date and time (UTC) |
 | `json` | JSON document |
 | `uuid` | Universally unique identifier |
-| `enum(...)` | Enumeration |
 | `bytes` | Raw binary |
 
 ## Layer 3: Codec Types

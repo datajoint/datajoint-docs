@@ -6,6 +6,8 @@ If your work uses DataJoint or DataJoint Elements, please cite the respective
 
 ## 2025
 
++ Bae, J. A., Baptiste, M., Bodor, A. L., Brittain, D., Buchanan, J., Bumbarger, D. J., Castro, M. A., Celii, B., Cobos, E., Collman, F., ... (2025). [Functional connectomics spanning multiple areas of mouse visual cortex](https://doi.org/10.1038/s41586-025-08790-w). *Nature*, 640(8058), 435-447.
+
 + Celii, B., Papadopoulos, S., Ding, Z., Fahey, P. G., Wang, E., Papadopoulos, C., ... & Reimer, J. (2025). [NEURD offers automated proofreading and feature extraction for connectomics](https://doi.org/10.1038/s41586-025-08660-5). *Nature*, 640(8058), 487-496.
 
 + Ding, Z., Fahey, P.G., Papadopoulos, S., Wang, E.Y., Celii, B., Papadopoulos, C., Chang, A., Kunin, A.B., Tran, D., Fu, J. ... & Tolias, A. S. (2025). [Functional connectomics reveals general wiring rule in mouse visual cortex](https://doi.org/10.1038/s41586-025-08840-3). *Nature*, 640(8058), 459-469.
@@ -18,6 +20,8 @@ If your work uses DataJoint or DataJoint Elements, please cite the respective
 
 + Huang, J.Y., Hess, M., Bajpai, A., Li, X., Hobson, L.N., Xu, A.J., Barton, S.J. and Lu, H.C.(2025). [From initial formation to developmental refinement: GABAergic inputs shape neuronal subnetworks in the primary somatosensory cortex](https://doi.org/10.1016/j.isci.2025.112104). *iScience*, 28(3).
 
++ Lee, K. H., Denovellis, E. L., Ly, R., Magland, J., Soules, J., Comrie, A. E., Gramling, D. P., Guidera, J. A., Nevers, R., Adenekan, P., Brozdowski, C., Bray, S. R., Monroe, E., Bak, J. H., Coulter, M. E., Sun, X., Broyles, E., Shin, D., Chiang, S., Holobetz, C., ... Frank, L. M. (2025). [Spyglass: a data analysis framework for reproducible and shareable neuroscience research](https://elifesciences.org/reviewed-preprints/108089). *eLife*.
+
 + Lees, R.M., Bianco, I.H., Campbell, R.A.A., Orlova, N., Peterka, D.S., Pichler, B., Smith, S.L., Yatsenko, D., Yu, C.H. & Packer, A.M. (2025). [Standardized measurements for monitoring and comparing multiphoton microscope systems](https://doi.org/10.1038/s41596-024-01120-w). *Nature Protocols*, 20, 2171–2208.
 
 + Schmors, L., Kotkat, A.H., Bauer, Y., Huang, Z., Crombie, D., Meyerolbersleben, L.S., Sokoloski, S., Berens, P. & Busse, L. (2025). [Effects of corticothalamic feedback depend on visual responsiveness and stimulus type](https://doi.org/10.1016/j.isci.2025.112481). *iScience*, 28, 112481.
@@ -28,11 +32,9 @@ If your work uses DataJoint or DataJoint Elements, please cite the respective
 
 + Chen, S., Liu, Y., Wang, Z. A., Colonell, J., Liu, L. D., Hou, H., ... & Svoboda, K. (2024). [Brain-wide neural activity underlying memory-guided movement](https://www.cell.com/cell/pdf/S0092-8674(23)01445-9.pdf). *Cell*, 187(3), 676-691.
 
-+ Korympidou, M.M., Strauss, S., Schubert, T., Franke, K., Berens, P., Euler, T. & Vlasits, A.L. (2024). [GABAergic amacrine cells balance biased chromatic information in the mouse retina](https://doi.org/10.1016/j.celrep.2024.114953). *Cell Reports*, 43(11), 114953.
-
 + Gonzalo Cogno, S., Obenhaus, H. A., Lautrup, A., Jacobsen, R. I., Clopath, C., Andersson, S. O., ... & Moser, E. I. (2024). [Minute-scale oscillatory sequences in medial entorhinal cortex](https://www.nature.com/articles/s41586-023-06864-1). *Nature*, 625(7994), 338-344.
 
-+ Lee, K. H., Denovellis, E. L., Ly, R., Magland, J., Soules, J., Comrie, A. E., Gramling, D. P., Guidera, J. A., Nevers, R., Adenekan, P., Brozdowski, C., Bray, S. R., Monroe, E., Bak, J. H., Coulter, M. E., Sun, X., Broyles, E., Shin, D., Chiang, S., Holobetz, C., ... Frank, L. M. (2024). [Spyglass: a framework for reproducible and shareable neuroscience research](https://doi.org/10.1101/2024.01.25.577295). *bioRxiv* 2024.01.25.577295.
++ Korympidou, M.M., Strauss, S., Schubert, T., Franke, K., Berens, P., Euler, T. & Vlasits, A.L. (2024). [GABAergic amacrine cells balance biased chromatic information in the mouse retina](https://doi.org/10.1016/j.celrep.2024.114953). *Cell Reports*, 43(11), 114953.
 
 + Mosberger, A.C., Sibener, L.J., Chen, T.X., Rodrigues, H.F., Hormigo, R., Ingram, J.N., Athalye, V.R., Tabachnik, T., Wolpert, D.M., Murray, J.M. and Costa, R.M. (2024). [Exploration biases forelimb reaching strategies](https://www.cell.com/cell-reports/fulltext/S2211-1247(24)00286-9). *Cell Reports*, 43(4).
 
@@ -63,8 +65,6 @@ If your work uses DataJoint or DataJoint Elements, please cite the respective
 + Zong, W., Obenhaus, H.A., Skytoen, E.R., Eneqvist, H., de Jong, N.L., Vale, R., Jorge, M.R., Moser, M.B. and Moser, E.I. (2022). [Large-scale two-photon calcium imaging in freely moving mice](https://www.sciencedirect.com/science/article/pii/S0092867422001970). *Cell*, 185(7), 1240-1256.
 
 ## 2021
-
-+ Bae, J. A., Baptiste, M., Bodor, A. L., Brittain, D., Buchanan, J., Bumbarger, D. J., Castro, M. A., Celii, B., Cobos, E., Collman, F., ... (2021). [Functional connectomics spanning multiple areas of mouse visual cortex](https://doi.org/10.1101/2021.07.28.454025). *bioRxiv*.
 
 + Dennis, E.J., El Hady, A., Michaiel, A., Clemens, A., Tervo, D.R.G., Voigts, J. & Datta, S.R. (2021). [Systems Neuroscience of Natural Behaviors in Rodents](https://doi.org/10.1523/JNEUROSCI.1877-20.2020). *Journal of Neuroscience*, 41(5), 911-919.
 

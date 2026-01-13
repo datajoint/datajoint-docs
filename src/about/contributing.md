@@ -102,15 +102,9 @@ mkdocs serve
 
 ## Testing
 
-```bash
-# Run unit tests
-pytest tests/unit
-
-# Run integration tests (requires Docker)
-DOCKER_HOST=unix:///path/to/docker.sock pytest tests/
-```
+See the [Developer Guide](https://github.com/datajoint/datajoint-python/blob/main/CONTRIBUTING.md)
+for current testing instructions using `pixi` and `testcontainers`.
 
 ## Questions?
 
 - Open a [GitHub Discussion](https://github.com/datajoint/datajoint-python/discussions)
-- Join the [DataJoint Slack](https://datajoint.slack.com)

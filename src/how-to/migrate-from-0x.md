@@ -1,580 +1,907 @@
-# Migrate from 0.x
+# Migrate to DataJoint 2.0
 
-Upgrade existing pipelines from DataJoint 0.x to DataJoint 2.0.
+Upgrade existing pipelines from legacy DataJoint (pre-2.0) to DataJoint 2.0.
 
 > **This guide is optimized for AI coding assistants.** Point your AI agent at this
-> URL and it will execute the migration with your oversight.
+> document and it will execute the migration with your oversight.
 
-## Quick Start
+## Overview
 
-Create a `CLAUDE.md` (or similar) file in your project:
+| Phase | Code Changes | Schema Changes | Legacy Works? |
+|-------|--------------|----------------|---------------|
+| 1 | Settings, fetch API, queries | None | Yes |
+| 2 | Table definitions | Column comments, `~lineage` | Yes |
+| 3 | — | Add `_v2` columns for external storage | Yes |
+| 4 | — | Remove legacy external columns | **No** |
+| 5 | Adopt new features | Optional | No |
+| 6 | — | Drop `~log`, `~jobs`, `~external_*` | No |
 
-```markdown
-# DataJoint Migration
+**After Phase 1:** Simple queries work. Blobs and complex queries may not work until Phase 2.
 
-Read the migration guide: https://datajoint.com/docs/how-to/migrate-from-0x/
-
-Schemas in topological order (dependencies first):
-1. lab
-2. subject
-3. session
-4. ephys
-```
-
-Then tell your AI assistant:
-
-```
-Migrate my DataJoint pipeline from 0.x to 2.0.
-Fetch the migration guide and create a plan for my project.
-```
+**Most users stop after Phase 2.** Phases 3-4 only apply to schemas using legacy external storage (`external-*`, `attach@*`, `filepath@*`). Phase 6 is optional cleanup.
 
 ---
 
-## Migration Phases
+## What's New in 2.0
 
-| Phase | What | Changes | Risk |
-|-------|------|---------|------|
-| 1 | Settings | Config files | None |
-| 2 | Code & Definitions | Python code, table definitions | None |
-| 3 | Numeric Types | Column comments | None |
-| 4 | Internal Blobs | Column comments | None |
-| 5 | Lineage Table | Create `~lineage` table | None |
-| 6 | External Storage | Add new JSON columns | **Data** |
-| 7 | Filepath | Add new JSON columns | **Data** |
-| 8 | AdaptedTypes | Code + column comments | None |
+### 3-Tier Column Type System
 
-**Phases 1-5, 8**: No risk of data loss. Only modify code, config, and column comments.
+DataJoint 2.0 introduces a unified type system with three tiers:
 
-**Phases 6-7**: Risk of data loss. These phases add **new columns** alongside existing
-ones, allowing 0.x and 2.0 to coexist during migration. After verification, drop the
-old columns.
+| Tier | Description | Examples | Migration |
+|------|-------------|----------|-----------|
+| **Native** | Raw MySQL types | `int unsigned`, `tinyint` | Auto-converted to core types |
+| **Core** | Standardized portable types | `uint32`, `float64`, `varchar(100)`, `json` | Column comment only |
+| **Codec** | Serialization to blob or external store | `<blob>`, `<blob@store>`, `<attach@store>` | Varies (see below) |
 
-**Process each schema in topological order** (dependencies before dependents).
+**Migration:** Phase 2 converts most native types to corresponding core types automatically (e.g., `int unsigned` → `uint32`). Warnings are only emitted when declaring *new* tables with native types—use core types for portability and clarity.
 
-Most pipelines only need Phases 1-5.
+**Learn more:** [Type System Concept](../explanation/type-system.md) · [Type System Reference](../reference/specs/type-system.md)
 
----
+### Codecs
 
-## Phase 1: Settings
+Codecs handle serialization for non-native data types:
 
-Update configuration files first, then verify the connection works.
+| Codec | Description | Store | Compatibility |
+|-------|-------------|-------|---------------|
+| `<blob>` | DataJoint serialization of Python objects | In-table (was `longblob`) | Column comment only |
+| `<blob@store>` | Large blobs, deduplicated by hash | Hash-addressed | Requires migration |
+| `<attach@store>` | File attachments, deduplicated by hash | Hash-addressed | Requires migration |
+| `<filepath@store>` | Managed file paths | Schema-addressed | Requires migration |
+| `<object@store>` | Python objects, path from primary key | Schema-addressed | New in 2.0 |
+| `<npy@store>` | NumPy arrays, path from primary key | Schema-addressed | New in 2.0 |
+| `<zarr@store>` | Zarr arrays (plugin, coming soon) | Schema-addressed | New in 2.0 |
+| `<tiff@store>` | TIFF images (plugin, coming soon) | Schema-addressed | New in 2.0 |
+| Custom | User-defined serialization | Any | New feature |
 
-### 0.x Configuration
+**Legacy AdaptedTypes:** Replaced by custom codecs. Users who implemented AdaptedTypes can convert them to the new codec API.
+
+**Learn more:** [Codec API Reference](../reference/specs/codec-api.md) · [Custom Codecs Concept](../explanation/custom-codecs.md) · [Create Custom Codec](create-custom-codec.md)
+
+### AutoPopulate 2.0
+
+Per-table job management replaces the schema-level `~jobs` table:
+
+| Aspect | Legacy (`~jobs`) | 2.0 (`~~table_name`) |
+|--------|------------------|----------------------|
+| Scope | One table per schema | One table per Computed/Imported |
+| Table name | `~jobs` | `~~analysis`, `~~spike_sorting`, etc. |
+| Key storage | Hashed (opaque) | Native primary key (readable) |
+| Statuses | `reserved`, `error`, `ignore` | + `pending`, `success` |
+| Priority | Not supported | `priority` column (lower = more urgent) |
+| Scheduling | Not supported | `scheduled_time` for delayed jobs |
+| Job metadata | Not supported | `_job_start_time`, `_job_duration`, `_job_version` |
+| Semantic matching | Not supported | `~lineage` table for join validation |
+
+**Migration:** Legacy `~jobs` continues to work. New `~~table_name` tables are created automatically when using `populate(reserve_jobs=True)`. Drop `~jobs` in Phase 4.
+
+**Learn more:** [AutoPopulate Reference](../reference/specs/autopopulate.md) · [Computation Tutorial](../tutorials/basics/05-computation.ipynb)
+
+### Fetch API Changes
+
+The `fetch()` method is replaced with explicit output methods:
+
+| Legacy | 2.0 | Returns |
+|--------|-----|---------|
+| `table.fetch()` | `table.to_arrays()` | NumPy record array |
+| `table.fetch('a', 'b')` | `table.to_arrays('a', 'b')` | Tuple of arrays |
+| `table.fetch(as_dict=True)` | `table.to_dicts()` | List of dicts |
+| `table.fetch(format='frame')` | `table.to_pandas()` | DataFrame |
+| `(table.proj()).fetch()[dj.key]` | `table.keys()` | List of primary key dicts |
+| `table.fetch1()` | `table.fetch1()` | Single dict (unchanged) |
+| `table.fetch1('a', 'b')` | `table.fetch1('a', 'b')` | Tuple of values (unchanged) |
+
+**For AI agents:** Apply these substitutions mechanically. The conversion is straightforward.
+
+### Semantic Matching
+
+DataJoint 2.0 validates that join operands share common lineage before allowing binary operations (`*`, `&`, `-`). This prevents accidental joins between unrelated tables.
+
+**Impact:** A small number of existing queries may fail if they join tables without a common foreign key ancestor. Phase 2 builds the `~lineage` table that tracks these relationships.
+
+**If a query fails:** Use `semantic_check=False` to bypass:
 
 ```python
-dj.config['database.host'] = 'localhost'
-dj.config['database.user'] = 'root'
-dj.config['database.password'] = 'secret'
-dj.config['stores'] = {'external': {'protocol': 'file', 'location': '/data'}}
+# Legacy query that may fail semantic check
+result = TableA * TableB
+
+# 2.0 equivalent with check disabled
+result = TableA.join(TableB, semantic_check=False)
 ```
 
-### 2.0 Configuration
+**Learn more:** [Query Algebra](../explanation/query-algebra.md)
 
-**datajoint.json:**
-```json
-{
-  "database.host": "localhost",
-  "stores": {
-    "external": {
-      "protocol": "file",
-      "location": "/data"
-    }
-  }
-}
+---
+
+## Phase 1: Run DataJoint 2.0 on Existing Databases
+
+**Goal:** Get DataJoint 2.0 Python code working with existing legacy databases without any schema modifications.
+
+### 1.1 Configure and Verify Settings
+
+**First step:** Migrate configuration from `dj_local_conf.json` to 2.0 format.
+
+#### Configuration File Migration
+
+```bash
+# legacy location
+dj_local_conf.json
+
+# 2.0 locations (priority order)
+.secrets/              # Credentials (gitignored)
+datajoint.json         # Non-sensitive settings
+environment variables  # DJ_HOST, DJ_USER, etc.
 ```
 
-**.secrets/database.password:**
-```
-secret
+#### Migration Steps
+
+```python
+import datajoint as dj
+
+# Step 1: Create template configuration
+dj.config.save_template()  # Creates datajoint.json template
+
+# Step 2: Move credentials to .secrets/
+# Create .secrets/datajoint.json with:
+# {
+#   "database.host": "your-host",
+#   "database.user": "your-user",
+#   "database.password": "your-password"
+# }
+
+# Step 3: Verify connection
+dj.conn()  # Should connect successfully
+
+# Step 4: Verify store configuration (if using external storage)
+from datajoint.migrate import check_store_configuration
+check_store_configuration(schema)
 ```
 
-### AI Prompt: Settings Migration
+#### AI Agent Prompt (Phase 1 - Configuration)
 
 ```
-Migrate DataJoint configuration to 2.0 format.
+You are setting up DataJoint 2.0 configuration for an existing project.
 
-1. Read existing dj_local_conf.json or dj.config settings
+TASK: Migrate from dj_local_conf.json to 2.0 configuration format.
+
+STEPS:
+1. Read existing dj_local_conf.json (if present)
 2. Create datajoint.json with non-sensitive settings
-3. Create .secrets/ directory with credentials (chmod 600)
-4. Add .secrets/ and datajoint.json to .gitignore
-5. Test connection with DataJoint 2.0:
-   import datajoint as dj
-   dj.conn()  # Should connect successfully
+3. Create .secrets/datajoint.json with credentials
+4. Add .secrets/ to .gitignore if not present
+5. Verify connection: dj.conn()
+6. If external stores configured, verify: check_store_configuration(schema)
 
-Verify connection works before proceeding to Phase 2.
+CONFIGURATION MAPPING:
+- database.host → .secrets/datajoint.json or DJ_HOST env var
+- database.user → .secrets/datajoint.json or DJ_USER env var
+- database.password → .secrets/datajoint.json or DJ_PASS env var
+- stores.* → datajoint.json (paths) + .secrets/ (credentials)
+
+VERIFICATION:
+- dj.conn() succeeds
+- dj.config shows expected values
+- External stores accessible (if configured)
+
+DO NOT commit credentials to version control.
+```
+
+### 1.2 Breaking API Changes
+
+The following legacy patterns must be updated in Python code:
+
+#### Fetch API (Removed)
+
+```python
+# legacy (REMOVED)
+data = table.fetch()
+data = table.fetch('attr1', 'attr2')
+data = table.fetch(as_dict=True)
+row = table.fetch1()
+
+# 2.0 Replacements
+data = table.to_arrays()                    # recarray-like
+data = table.to_arrays('attr1', 'attr2')    # tuple of arrays
+data = table.to_dicts()                     # list of dicts
+row = table.fetch1()                        # unchanged for single row
+keys = table.keys()                         # primary keys as dicts
+df = table.to_pandas()                      # NEW: DataFrame output
+```
+
+#### Update Method (Removed)
+
+```python
+# legacy (REMOVED)
+(table & key)._update('attr', value)
+
+# 2.0 Replacement
+table.update1({**key, 'attr': value})
+```
+
+#### Join Operators (Changed)
+
+```python
+# legacy (REMOVED)
+result = table1 @ table2           # natural join without semantic check
+result = dj.U('attr') * table      # universal set multiplication
+
+# 2.0 Replacements
+result = table1.join(table2, semantic_check=False)
+result = dj.U('attr') & table      # use restriction instead
+```
+
+### 1.3 Code Migration Checklist
+
+For each Python module using DataJoint:
+
+- [ ] Replace all `.fetch()` calls with appropriate 2.0 method
+- [ ] Replace `._update()` with `.update1()`
+- [ ] Replace `@` operator with `.join(..., semantic_check=False)`
+- [ ] Replace `dj.U() * expr` with `dj.U() & expr`
+- [ ] Update imports if using deprecated modules
+
+### 1.4 AI Agent Prompt (Phase 1 - Code Migration)
+
+```
+You are migrating DataJoint code from legacy to 2.0.
+
+TASK: Update Python code to use 2.0 API patterns.
+
+CHANGES REQUIRED:
+1. Replace table.fetch() → table.to_arrays() or table.to_dicts()
+2. Replace table.fetch(as_dict=True) → table.to_dicts()
+3. Replace table.fetch('a', 'b') → table.to_arrays('a', 'b')
+4. Replace (table & key)._update('attr', val) → table.update1({**key, 'attr': val})
+5. Replace table1 @ table2 → table1.join(table2, semantic_check=False)
+6. Replace dj.U('x') * table → dj.U('x') & table
+
+DO NOT modify table definitions or database schema.
 ```
 
 ---
 
-## Phase 2: Code & Definitions
+## Phase 2: Schema Metadata Updates
 
-Update Python code and table definitions. No database changes.
+**Goal:** Update database metadata (column comments) to enable 2.0 type recognition while maintaining full legacy compatibility.
 
-**Process each schema module in topological order** (dependencies first).
+### 2.1 Column Type Labels
 
-### API Changes
+DataJoint 2.0 uses column comments to identify types. Migration adds type labels to:
 
-| 0.x | 2.0 |
-|-----|-----|
-| `.fetch('KEY')` | `.keys()` |
-| `.fetch(as_dict=True)` | `.to_dicts()` |
-| `.fetch(format='frame')` | `.to_pandas()` |
+**Numeric columns:**
+```sql
+-- legacy
+COLUMN_TYPE = 'smallint unsigned'
+COLUMN_COMMENT = 'trial number'
 
-### Type Names in Definitions
-
-```python
-# 0.x
-@schema
-class Session(dj.Manual):
-    definition = """
-    session_id : int unsigned
-    ---
-    weight : float
-    data : longblob
-    """
-
-# 2.0
-@schema
-class Session(dj.Manual):
-    definition = """
-    session_id : uint32
-    ---
-    weight : float64
-    data : <blob>
-    """
+-- 2.0: Comment prefixed with core type
+COLUMN_TYPE = 'smallint unsigned'
+COLUMN_COMMENT = ':uint16:trial number'
 ```
 
-### Complete Type Mapping
+**Blob columns:**
+```sql
+-- legacy
+COLUMN_TYPE = 'longblob'
+COLUMN_COMMENT = 'neural waveform data'
 
-| 0.x (native) | 2.0 (core type) |
-|--------------|-----------------|
-| `int` | `int32` |
+-- 2.0: Comment prefixed with codec
+COLUMN_TYPE = 'longblob'
+COLUMN_COMMENT = ':<blob>:neural waveform data'
+```
+
+**Why safe:** Legacy clients ignore the `:type:` prefix in comments—they read the MySQL column type directly.
+
+### 2.2 Migration Commands
+
+```python
+import datajoint as dj
+from datajoint.migrate import analyze_columns, migrate_columns
+
+schema = dj.schema('my_database')
+
+# Step 1: Analyze what needs migration
+result = analyze_columns(schema)
+for col in result['needs_migration']:
+    print(f"{col['table']}.{col['column']}: {col['native_type']} → {col['core_type']}")
+
+# Step 2: Preview changes
+migrate_columns(schema, dry_run=True)
+
+# Step 3: Apply migration (adds type labels to column comments)
+result = migrate_columns(schema, dry_run=False)
+print(f"Migrated {result['columns_migrated']} columns")
+
+# Step 4: Build lineage table
+schema.rebuild_lineage()
+```
+
+**Important:** When migrating multiple schemas, process them in **topological order** (upstream schemas first). If you process out of order, `rebuild_lineage()` raises a `DataJointError` identifying the missing upstream schema:
+
+```
+DataJointError: Cannot rebuild lineage for `session`.`session`:
+referenced attribute `subject`.`subject`.`subject_id` has no lineage.
+Rebuild lineage for schema `subject` first.
+```
+
+**Recovery:** Simply re-run in correct order—each `rebuild_lineage()` clears and rebuilds, so it's safe to retry.
+
+```python
+# Example: multi-schema pipeline
+schemas_in_order = [
+    dj.schema('lab'),           # No dependencies
+    dj.schema('subject'),       # Depends on lab
+    dj.schema('session'),       # Depends on subject
+    dj.schema('ephys'),         # Depends on session
+]
+
+for schema in schemas_in_order:
+    migrate_columns(schema, dry_run=False)
+    schema.rebuild_lineage()
+```
+
+This migrates all column types:
+- Numeric: `int unsigned` → `:uint32:`, `smallint` → `:int16:`, etc.
+- Blobs: `longblob` → `:<blob>:`
+- Attachments: `longblob` with attach comment → `:<attach>:`
+
+External storage columns (`external-*`, `attach@*`, `filepath@*`) are **not** migrated here—they require Phase 3-4.
+
+### 2.3 AI Agent Prompt (Phase 2)
+
+```
+You are migrating a DataJoint schema from legacy to 2.0.
+
+TASK: Add type labels to column comments and build lineage table.
+
+IMPORTANT: For multi-schema pipelines, process schemas in TOPOLOGICAL ORDER
+(upstream first). Each rebuild_lineage() assumes upstream schemas are done.
+
+STEPS:
+1. Identify all schemas and their dependencies (upstream → downstream)
+2. For each schema in topological order:
+   a. Connect: schema = dj.schema('database_name')
+   b. Analyze: result = analyze_columns(schema)
+   c. Review columns needing migration
+   d. Apply: migrate_columns(schema, dry_run=False)
+   e. Build lineage: schema.rebuild_lineage()
+
+TYPE LABEL MAPPING (native → core):
+- tinyint unsigned → uint8
+- smallint unsigned → uint16
+- int unsigned → uint32
+- bigint unsigned → uint64
+- tinyint → int8
+- smallint → int16
+- int → int32
+- bigint → int64
+- float → float32
+- double → float64
+- longblob → <blob>
+- longblob (attach) → <attach>
+
+VERIFICATION:
+- 2.0 client recognizes all types correctly
+- Legacy clients still work (ignore comment prefixes)
+- ~lineage table exists
+```
+
+### 2.4 Validation
+
+After Phase 2:
+
+- [ ] Legacy clients can still read/write all data
+- [ ] 2.0 clients recognize all column types correctly
+- [ ] `~lineage` table exists and is populated for each schema
+- [ ] No data format changes occurred
+
+**Why safe:** Legacy ignores `~lineage` tables (prefixed with `~`).
+
+---
+
+## Phase 3: External Storage Migration
+
+**Goal:** Create dual attributes for external storage columns, enabling both APIs to coexist safely during cross-testing.
+
+**Skip this phase** if your schema does not use legacy external storage (`external-*`, `attach@*`, `filepath@*`).
+
+### 3.1 Create Per-Table Job Tables (Optional)
+
+Jobs 2.0 uses per-table job tracking. These are created automatically when using `populate(reserve_jobs=True)`, but you can create them explicitly:
+
+```python
+# For each Computed/Imported table
+MyComputedTable.jobs.refresh()  # Creates ~~my_computed_table if missing
+```
+
+**Why safe:** Legacy ignores tables prefixed with `~~`. The legacy `~jobs` table remains functional.
+
+### 3.2 Add Job Metadata Columns (Optional)
+
+```python
+from datajoint.migrate import add_job_metadata_columns
+
+# Preview
+result = add_job_metadata_columns(schema, dry_run=True)
+
+# Apply (adds _job_start_time, _job_duration, _job_version)
+result = add_job_metadata_columns(schema, dry_run=False)
+```
+
+**Why safe:** legacy ignores columns prefixed with `_` (hidden attributes).
+
+### 3.3 Dual Attributes for External Storage
+
+For tables with external blob/attach/filepath attributes, create **duplicate attributes** that support the 2.0 API while preserving the original for legacy compatibility.
+
+#### Naming Convention
+
+```
+Original attribute:  signal        (legacy API - BINARY(16) with :external:)
+New attribute:       signal_v2     (2.0 API - JSON with metadata)
+```
+
+#### How It Works
+
+1. **Idempotent migration script** scans for columns with `:external*:` in comments
+2. For each legacy external attribute, adds a new `<name>_v2` attribute with JSON type
+3. Copies data from the `~external_<store>` table into the new JSON field
+4. Both attributes coexist - legacy reads `signal`, 2.0 reads `signal_v2`
+
+#### Migration Commands
+
+```python
+from datajoint.migrate import migrate_external
+
+# Step 1: Preview what will be created
+result = migrate_external(schema, dry_run=True)
+for col in result['details']:
+    print(f"{col['table']}.{col['column']} → {col['column']}_v2")
+
+# Step 2: Create dual attributes (idempotent - safe to run multiple times)
+result = migrate_external(schema, dry_run=False)
+print(f"Migrated {result['columns_migrated']} columns")
+print(f"Copied {result['rows_migrated']} rows")
+
+# Step 3: Verify data accessible via both APIs
+# Legacy: table.fetch('signal')   → reads from BINARY(16) column
+# 2.0:    table.fetch1('signal_v2') → reads from JSON column
+```
+
+#### Schema Change Example
+
+```sql
+-- Before (legacy only)
+CREATE TABLE recording (
+    recording_id INT UNSIGNED NOT NULL,
+    signal BINARY(16) COMMENT ':external-raw:neural signal data',
+    PRIMARY KEY (recording_id)
+);
+
+-- After Phase 3 (both APIs supported)
+CREATE TABLE recording (
+    recording_id INT UNSIGNED NOT NULL,
+    signal BINARY(16) COMMENT ':external-raw:neural signal data',
+    signal_v2 JSON COMMENT ':blob@raw: neural signal data',
+    PRIMARY KEY (recording_id)
+);
+```
+
+#### Table Definition Update (Recommended)
+
+Update Python table definitions to declare both attributes:
+
+```python
+@schema
+class Recording(dj.Manual):
+    definition = '''
+    recording_id : int unsigned
+    ---
+    signal : external-raw          # Legacy API
+    signal_v2 : <blob@raw>         # 2.0 API
+    '''
+```
+
+**Why safe:**
+
+- Legacy reads `signal` (original column)
+- 2.0 reads `signal_v2` (new column)
+- Each API uses its own column—no interference
+- Rollback: simply drop the `*_v2` columns
+
+**Cross-testing:** During this phase, test your pipeline with both APIs to verify data consistency before Phase 4.
+
+### 3.4 AI Agent Prompt (Phase 3)
+
+```
+You are creating dual attributes for external storage migration.
+
+TASK: Add _v2 columns for external storage to enable cross-testing.
+
+PREREQUISITE: Phase 2 must be complete (~lineage tables exist).
+
+STEPS:
+1. Connect to schema: schema = dj.schema('database_name')
+2. Create dual external attributes:
+   - from datajoint.migrate import migrate_external
+   - result = migrate_external(schema, dry_run=False)
+3. Optionally create job tables:
+   - TableClass.jobs.refresh() for Computed/Imported tables
+
+VERIFICATION:
+- Fetch from original attribute with LEGACY client → works
+- Fetch from *_v2 attribute with 2.0 client → works
+- Compare data from both APIs for consistency
+
+REPORT:
+- List all *_v2 columns created
+- Row counts migrated per column
+- Any data mismatches found during cross-testing
+```
+
+### 3.5 Phase 3 Checklist
+
+- [ ] Run `migrate_external()` for each schema with external storage
+- [ ] Optionally run `Table.jobs.refresh()` for Computed/Imported tables
+- [ ] Optionally run `add_job_metadata_columns()`
+- [ ] Verify legacy clients can read original external attributes
+- [ ] Verify 2.0 clients can read new `*_v2` attributes
+- [ ] Cross-test: compare data from both APIs for consistency
+- [ ] Update table definitions to declare both attributes
+
+---
+
+## Phase 4: Point of No Return
+
+**WARNING:** After Phase 4, legacy clients will no longer work with the database.
+
+### 4.1 Pre-Flight Checklist
+
+Before proceeding:
+
+- [ ] **All clients upgraded:** Confirm no legacy processes running
+- [ ] **Database backup:** Full backup with tested restore procedure
+- [ ] **Dual attributes verified:** All `*_v2` attributes have valid data (from Phase 3)
+- [ ] **Pipeline quiesced:** No active populate jobs
+- [ ] **Team confirmation:** All users aware of cutover
+
+### 4.2 Finalize External Storage Migration
+
+Phase 3 created dual attributes (`signal` + `signal_v2`). Now remove the legacy attributes.
+
+```python
+from datajoint.migrate import migrate_external
+
+# Step 1: Verify all *_v2 attributes have data
+result = migrate_external(schema, dry_run=True, finalize=True)
+for col in result['details']:
+    print(f"{col['table']}: {col['column']} → finalize")
+    print(f"  Rows migrated: {col['rows']}")
+
+# Step 2: Finalize (renames legacy → _v1, renames _v2 → original name)
+result = migrate_external(schema, dry_run=False, finalize=True)
+
+# After finalization:
+# - signal renamed to signal_v1 (legacy backup)
+# - signal_v2 renamed to signal
+# - ~external_* tables can be dropped
+```
+
+**Breaking:** Legacy clients cannot read the new JSON-format columns.
+
+### 4.3 Cleanup Legacy Tables
+
+```python
+# Drop legacy jobs table (after confirming Jobs 2.0 working)
+schema.connection.query(f"DROP TABLE IF EXISTS `{schema.database}`.`~jobs`")
+
+# Drop legacy external tracking tables (after external migration finalized)
+for store in ['external', 'external_raw', ...]:  # your store names
+    schema.connection.query(f"DROP TABLE IF EXISTS `{schema.database}`.`~external_{store}`")
+```
+
+### 4.4 Update Table Definitions
+
+Update Python source code to use 2.0 type syntax (remove dual attributes):
+
+```python
+# Phase 3 syntax (dual attributes)
+definition = '''
+    recording_id : int unsigned
+    ---
+    signal : external-raw          # Legacy API
+    signal_v2 : <blob@raw>         # 2.0 API
+'''
+
+# Phase 4 syntax (2.0 only)
+definition = '''
+    recording_id : uint32
+    ---
+    signal : <blob@raw>            # Single attribute, 2.0 format
+'''
+```
+
+#### Type Syntax Updates
+
+| Legacy Syntax | 2.0 Syntax |
+|---------------|------------|
 | `int unsigned` | `uint32` |
-| `smallint` | `int16` |
+| `int` | `int32` |
 | `smallint unsigned` | `uint16` |
-| `tinyint` | `int8` |
 | `tinyint unsigned` | `uint8` |
-| `bigint` | `int64` |
-| `bigint unsigned` | `uint64` |
 | `float` | `float32` |
 | `double` | `float64` |
-| `tinyint(1)` | `bool` |
 | `longblob` | `<blob>` |
-| `attach` | `<attach>` |
-| `blob@store` | `<blob@store>` |
+| `external-store` | `<blob@store>` |
 | `attach@store` | `<attach@store>` |
 | `filepath@store` | `<filepath@store>` |
 
-### AI Prompt: Code Migration
+### 4.5 AI Agent Prompt (Phase 4 - Pre-Flight)
 
 ```
-Migrate Python code for DataJoint 2.0.
+You are preparing for the point-of-no-return migration phase.
 
-Process schema modules in topological order (dependencies first).
+TASK: Verify all prerequisites before breaking legacy compatibility.
 
-For each module:
-1. .fetch('KEY') → replace with .keys()
-2. .fetch(as_dict=True) → replace with .to_dicts()
-3. .fetch(format='frame') → replace with .to_pandas()
-4. Table definitions with native types (int, float, smallint, etc.)
-   → replace with core types (int32, float64, int16, etc.)
-5. Table definitions with longblob → replace with <blob>
+PRE-FLIGHT CHECKS:
+1. Database backup exists and restore tested
+2. No legacy client processes running (check SHOW PROCESSLIST)
+3. All *_v2 dual attributes have complete data (from Phase 3)
+4. No pending populate jobs
+5. Team notified of cutover
 
-Show changes before applying.
+VERIFICATION COMMANDS:
+- schema.connection.query("SHOW PROCESSLIST") - check for old clients
+- from datajoint.migrate import check_migration_status
+- status = check_migration_status(schema) - verify Phase 2-3 complete
+- from datajoint.migrate import migrate_external
+- result = migrate_external(schema, dry_run=True, finalize=True) - verify data
+
+REPORT FORMAT:
+- Backup status: [confirmed/missing]
+- Active clients: [list any legacy processes]
+- Dual attributes: [all complete/rows missing]
+- Migration status: [ready/blockers]
+
+DO NOT proceed if any blockers found. Report issues to user.
+```
+
+### 4.6 AI Agent Prompt (Phase 4 - Execution)
+
+```
+You are finalizing DataJoint 2.0 migration. Legacy support is being removed.
+
+TASK: Finalize external storage and update table definitions.
+
+STEPS:
+1. Finalize external migration:
+   - from datajoint.migrate import migrate_external
+   - migrate_external(schema, dry_run=False, finalize=True)
+
+2. Drop legacy tables:
+   - DROP TABLE IF EXISTS `schema`.`~jobs`
+   - DROP TABLE IF EXISTS `schema`.`~external_*`
+
+3. Update table definitions to 2.0 syntax:
+   - Remove dual attributes (keep only *_v2 version, rename to original)
+   - Update type syntax (see TYPE REPLACEMENTS below)
+
+TYPE REPLACEMENTS:
+- int unsigned → uint32
+- int → int32
+- smallint unsigned → uint16
+- tinyint unsigned → uint8
+- float → float32
+- double → float64
+- longblob → <blob>
+- external-store → <blob@store>
+- attach@store → <attach@store>
+- filepath@store → <filepath@store>
+
+VERIFICATION:
+- All tables accessible via 2.0 client
+- All external data fetchable
+- No legacy tables remaining
+```
+
+### 4.7 Phase 4 Checklist
+
+- [ ] Pre-flight checks passed
+- [ ] Database backup verified
+- [ ] `migrate_external(finalize=True)` executed successfully
+- [ ] Legacy `~jobs` table dropped
+- [ ] Legacy `~external_*` tables dropped
+- [ ] Table definitions updated to 2.0 syntax
+- [ ] All dual attributes consolidated
+- [ ] Full functionality verified with 2.0 client only
+
+---
+
+## Phase 5: Adopt New Features
+
+### 5.1 Feature Adoption Order
+
+Recommended order from simplest to most complex:
+
+| Order | Feature | Complexity | Tutorial |
+|-------|---------|------------|----------|
+| 1 | dj.Top operator | Low | [Queries Tutorial](../tutorials/basics/05-queries.ipynb) |
+| 2 | Core types (uint32, float64) | Low | [Schema Design](schema-design/) |
+| 3 | Configuration system | Low | [Configuration Guide](setup/configuration.md) |
+| 4 | Semantic matching | Medium | [Semantic Matching](../explanation/data-model/semantic-matching.md) |
+| 5 | Jobs 2.0 | Medium | [Distributed Computing](../tutorials/advanced/distributed-computing.ipynb) |
+| 6 | Custom codecs | Medium | [Custom Codecs](../tutorials/advanced/custom-codecs.ipynb) |
+| 7 | Object storage | High | [Object Storage Tutorial](../tutorials/basics/06-object-storage.ipynb) |
+
+### 5.2 AI Agent Prompt (Phase 5 - Learning)
+
+```
+You are helping a user learn DataJoint 2.0 features after migration.
+
+TASK: Guide adoption of new features based on user's needs.
+
+FEATURE PRIORITY:
+1. dj.Top - If user has pagination/ordering queries
+2. Semantic matching - If user has complex joins across schemas
+3. Jobs 2.0 - If user runs distributed computations
+4. Custom codecs - If user has domain-specific data types
+5. Object storage - If user has large arrays or files
+
+FOR EACH FEATURE:
+1. Assess current usage patterns in user's code
+2. Identify where new feature would help
+3. Provide minimal example from their codebase context
+4. Link to appropriate tutorial document
+
+DO NOT introduce all features at once. Focus on immediate value.
+```
+
+### 5.3 Learning Resources
+
+- **Basics**: `tutorials/basics/` - Start here for core concepts
+- **Advanced**: `tutorials/advanced/` - Codecs, distributed computing
+- **How-To**: `how-to/` - Task-oriented guides
+- **Concepts**: `explanation/` - Why things work the way they do
+- **Reference**: `reference/` - Complete API and specification
+
+---
+
+## Helper Functions in datajoint.migrate
+
+The migration module focuses on **integrity checks**, **rebuild/restore** utilities, and **idempotent migration scripts**.
+
+### Column Type Migration (Phase 2)
+
+```python
+analyze_columns(schema) -> dict
+```
+
+Identifies columns needing type labels. Returns dict with:
+
+- `needs_migration`: columns needing type labels (`table`, `column`, `native_type`, `core_type`)
+- `already_migrated`: columns with existing type labels
+- `external_storage`: columns requiring Phase 3-4 (not migrated here)
+
+```python
+migrate_columns(schema, dry_run=True) -> dict
+```
+
+Adds type labels to column comments. Migrates numeric types, `<blob>`, `<attach>`. Skips external storage (`external-*`, `attach@*`, `filepath@*`).
+
+### External Storage Migration (Phase 3-4)
+
+```python
+# Analysis (internal)
+_find_external_columns(schema) -> list[dict]
+_find_filepath_columns(schema) -> list[dict]
+
+# Migration (idempotent)
+migrate_external(schema, dry_run=True, finalize=False) -> dict
+migrate_filepath(schema, dry_run=True, finalize=False) -> dict
+```
+
+Use `dry_run=True` to preview, `dry_run=False` to execute.
+Use `finalize=True` in Phase 4 to complete the migration.
+
+### Job Metadata
+
+```python
+add_job_metadata_columns(target, dry_run=True) -> dict
+```
+
+### Integrity & Rebuild Functions
+
+```python
+def check_store_configuration(schema) -> dict:
+    """
+    Verify external stores are properly configured.
+
+    Returns dict with:
+
+    - stores_configured: list of store names with valid config
+    - stores_missing: list of stores referenced but not configured
+    - stores_unreachable: list of stores that failed connection test
+    """
+
+def rebuild_lineage(schema, dry_run=True) -> dict:
+    """
+    Rebuild ~lineage table from current table definitions.
+    Use after schema changes or to repair corrupted lineage data.
+    """
+
+def verify_external_integrity(schema, store_name=None) -> dict:
+    """
+    Check that all external references point to existing files.
+
+    Returns dict with:
+
+    - total_references: count of external entries
+    - valid: count with accessible files
+    - missing: list of entries with inaccessible files
+    - stores_checked: list of store names checked
+    """
 ```
 
 ---
 
-## Phase 3: Numeric Types (Database)
+## Verification Commands
 
-Add type labels to column comments. Data and column types unchanged.
-
-**Process each schema in topological order.**
-
-### How It Works
-
-DataJoint 2.0 stores type information in column comments:
-
-```sql
--- 0.x: No type label
-column_name INT COMMENT 'session number'
-
--- 2.0: Type label prefix
-column_name INT COMMENT ':int32: session number'
-```
-
-### AI Prompt: Numeric Type Migration
-
-```
-Migrate numeric types for each schema in topological order.
-
-For schema [schema_name]:
-
-1. Query INFORMATION_SCHEMA.COLUMNS for all tables
-2. For each numeric column without type label:
-   - TINYINT → :int8: (or :uint8: if unsigned)
-   - SMALLINT → :int16: (or :uint16: if unsigned)
-   - INT → :int32: (or :uint32: if unsigned)
-   - BIGINT → :int64: (or :uint64: if unsigned)
-   - FLOAT → :float32:
-   - DOUBLE → :float64:
-   - TINYINT(1) → :bool:
-
-3. Generate ALTER TABLE statements:
-   ALTER TABLE `schema`.`table`
-   MODIFY COLUMN `col` INT COMMENT ':int32: original comment';
-
-4. Show all statements before executing
-5. Skip columns that already have type labels
-
-Process schemas in order: [list schemas]
-```
-
----
-
-## Phase 4: Internal Blobs (Database)
-
-Add codec labels to blob columns. Data unchanged.
-
-**Process each schema in topological order.**
-
-### How It Works
-
-```sql
--- 0.x: No codec label
-data_col LONGBLOB COMMENT 'neural data'
-
--- 2.0: Codec label prefix
-data_col LONGBLOB COMMENT ':blob: neural data'
-```
-
-### AI Prompt: Blob Migration
-
-```
-Migrate internal blob columns for each schema in topological order.
-
-For schema [schema_name]:
-
-1. Find LONGBLOB columns without codec labels:
-   - Skip if comment starts with :blob:, :attach:, :blob@, :attach@
-
-2. Generate ALTER statements:
-   ALTER TABLE `schema`.`table`
-   MODIFY COLUMN `col` LONGBLOB COMMENT ':blob: original comment';
-
-3. Show all statements before executing
-
-Process schemas in order: [list schemas]
-```
-
----
-
-## Phase 5: Lineage Table
-
-Create the `~lineage` table to track data provenance in each schema.
-
-**Process each schema in topological order.**
-
-### What It Does
-
-DataJoint 2.0 uses a `~lineage` table to track which rows in parent tables
-contributed to each row in child tables. This enables precise dependency
-tracking for deletions and recomputation.
-
-### Using rebuild_lineage()
+### Per-Phase Verification
 
 ```python
 import datajoint as dj
+from datajoint.migrate import check_migration_status, analyze_blob_columns
 
-schema = dj.Schema('my_schema')
-schema.rebuild_lineage()
+schema = dj.schema('my_database')
+
+# Phase 1: Code works (manual testing)
+# - Run existing queries with 2.0 client
+# - Verify data readable
+
+# Phase 2: Blob comments migrated
+status = check_migration_status(schema)
+print(f"Blob migration: {status['migrated']}/{status['total_blob_columns']}")
+
+# Phase 3: Hidden tables exist
+has_lineage = schema.connection.query(
+    "SELECT COUNT(*) FROM information_schema.TABLES "
+    "WHERE TABLE_SCHEMA=%s AND TABLE_NAME='~lineage'",
+    args=(schema.database,)
+).fetchone()[0] > 0
+print(f"Lineage table: {'present' if has_lineage else 'missing'}")
+
+# Phase 4: External storage migrated
+from datajoint.migrate import _find_external_columns
+external = _find_external_columns(schema)
+print(f"External columns remaining: {len(external)}")  # Should be 0
+
+# Phase 5: Feature adoption (per-feature testing)
 ```
 
-This creates the `~lineage` table if it doesn't exist and populates it by
-scanning foreign key relationships in all tables.
-
-### AI Prompt: Lineage Table Creation
-
-```
-Create lineage tables for each schema in topological order.
-
-For each schema:
-
-import datajoint as dj
-
-schema = dj.Schema('schema_name')
-schema.rebuild_lineage()
-
-Process schemas in order: [list schemas]
-```
-
----
-
-## Phase 6: External Storage (Database)
-
-Migrate external blob/attachment references from hidden tables to JSON.
-
-**This is the only phase with risk of data loss.** The migration adds new columns
-alongside existing ones, allowing 0.x and 2.0 to coexist until you verify the
-migration succeeded.
-
-**Process each schema in topological order.**
-
-### 0.x Architecture
-
-- Column type: `BINARY(16)` storing UUID hash
-- Column comment: `description :external:` or `:external-storename:`
-- Hidden table `~external_<store>` maps hash → filepath, size, timestamp
-
-### 2.0 Architecture
-
-- Column type: `JSON`
-- Column comment: `:blob@store: description`
-- JSON value: `{"url": "...", "size": ..., "hash": "..."}`
-
-### Migration Strategy: New Columns
-
-Instead of modifying existing columns (risking data loss), the migration:
-
-1. **Adds a new column** `<name>_v2` with JSON type for 2.0
-2. **Copies data** from the old column to the new column, converting format
-3. **Verifies** all data is accessible via 2.0
-4. **After verification**, you rename columns and drop the old one
-
-This allows rolling back if issues are discovered.
-
-### Using the Migration Module
+### Overall Migration Status
 
 ```python
-from datajoint.migrate import migrate_external
-
-# Preview what will be migrated
-migrate_external(schema, dry_run=True)
-
-# Run migration (adds new columns, copies data)
-migrate_external(schema)
-
-# After verification, finalize (rename columns, drop old)
-migrate_external(schema, finalize=True)
-```
-
-### 0.x Comment Patterns
-
-| Pattern | Meaning |
-|---------|---------|
-| `:external:` | External blob, default store |
-| `:external-storename:` | External blob, named store |
-| `:external-attach:` | External attachment, default store |
-| `:external-attach-storename:` | External attachment, named store |
-
-### Critical: Path Compatibility
-
-The 2.0 store configuration must generate the **same paths** as stored in the
-legacy `~external_*` tables. Verify before migrating:
-
-```python
-# Check existing paths in hidden table
-from your_pipeline import schema
-external = schema.external['store']
-print(external.fetch(limit=5))  # Note the filepath structure
-```
-
-### AI Prompt: External Storage Migration
-
-```
-Migrate external storage for each schema in topological order.
-
-Use the datajoint.migrate module:
-
-from datajoint.migrate import migrate_external
-
-For each schema:
-1. migrate_external(schema, dry_run=True)  # Preview
-2. migrate_external(schema)                 # Add new columns, copy data
-3. Verify data accessible via DataJoint 2.0
-4. migrate_external(schema, finalize=True)  # Rename and drop old columns
-
-Process schemas in order: [list schemas]
-```
-
----
-
-## Phase 7: Filepath (Database)
-
-Migrate filepath references to JSON format. Same strategy as Phase 6.
-
-**Process each schema in topological order.**
-
-### Using the Migration Module
-
-```python
-from datajoint.migrate import migrate_filepath
-
-# Preview what will be migrated
-migrate_filepath(schema, dry_run=True)
-
-# Run migration (adds new columns, copies data)
-migrate_filepath(schema)
-
-# After verification, finalize (rename columns, drop old)
-migrate_filepath(schema, finalize=True)
-```
-
-### AI Prompt: Filepath Migration
-
-```
-Migrate filepath columns for each schema in topological order.
-
-Use the datajoint.migrate module:
-
-from datajoint.migrate import migrate_filepath
-
-For each schema:
-1. migrate_filepath(schema, dry_run=True)  # Preview
-2. migrate_filepath(schema)                 # Add new columns, copy data
-3. Verify files accessible via DataJoint 2.0
-4. migrate_filepath(schema, finalize=True)  # Rename and drop old columns
-
-Process schemas in order: [list schemas]
-```
-
----
-
-## Phase 8: AdaptedTypes to Codecs
-
-Convert custom `AttributeAdapter` classes to `Codec` classes.
-
-### 0.x AttributeAdapter
-
-```python
-class ImageAdapter(dj.AttributeAdapter):
-    attribute_type = 'longblob'
-
-    def put(self, img):
-        return cv2.imencode('.png', img)[1].tobytes()
-
-    def get(self, data):
-        return cv2.imdecode(np.frombuffer(data, np.uint8), cv2.IMREAD_COLOR)
-
-# Registration required
-image_adapter = ImageAdapter()
-schema.make_classes(into={'image': image_adapter})
-```
-
-### 2.0 Codec
-
-```python
-class ImageCodec(dj.Codec):
-    name = "image"  # Use as <image> in definitions
-
-    def get_dtype(self, is_external: bool) -> str:
-        return "<blob>"
-
-    def encode(self, img, *, key=None, store_name=None):
-        return cv2.imencode('.png', img)[1].tobytes()
-
-    def decode(self, data, *, key=None):
-        return cv2.imdecode(np.frombuffer(data, np.uint8), cv2.IMREAD_COLOR)
-
-# Auto-registers when class is defined
-```
-
-### Conversion Table
-
-| 0.x | 2.0 |
-|-----|-----|
-| `attribute_type` property | `get_dtype(is_external)` method |
-| `put(value)` | `encode(value, *, key=None, store_name=None)` |
-| `get(data)` | `decode(data, *, key=None)` |
-| Manual registration | Auto-registration |
-
-### attribute_type to get_dtype() Mapping
-
-| 0.x `attribute_type` | 2.0 `get_dtype()` return |
-|----------------------|--------------------------|
-| `'longblob'` | `'<blob>'` |
-| `'blob@store'` | `'<blob>'` (with @store in definition) |
-| `'attach'` | `'<attach>'` |
-| `'filepath@store'` | `'<filepath>'` |
-| `'varchar(N)'` | `'varchar(N)'` |
-| `'json'` | `'json'` |
-
-### AI Prompt: AdaptedTypes Migration
-
-```
-Migrate AttributeAdapter classes to Codecs.
-
-1. Search for AttributeAdapter subclasses:
-   grep -rn "AttributeAdapter" --include="*.py"
-
-2. For each adapter:
-   - Create equivalent Codec class
-   - Rename put() → encode(), get() → decode()
-   - Replace attribute_type with get_dtype() method
-   - Add name class attribute
-
-3. Update table definitions if type names changed
-
-4. Remove make_classes() adapter registrations
-
-5. Ensure codec module is imported before table definitions
-
-6. Test round-trip: insert, fetch, verify data matches
-```
-
----
-
-## Validation
-
-After migration, verify everything works:
-
-```python
-import datajoint as dj
-
-schema = dj.Schema('my_schema')
-
-# Check all tables
-for name in schema.list_tables():
-    table = schema(name)
-    print(f"{name}: {len(table)} rows")
-    if len(table) > 0:
-        table.to_dicts(limit=1)  # Verify fetch works
-```
-
-### AI Prompt: Validation
-
-```
-Validate DataJoint 2.0 migration for each schema in topological order.
-
-For schema [schema_name]:
-
-1. Connect with DataJoint 2.0
-2. For each table:
-   - Verify heading loads without errors
-   - Fetch sample rows
-   - For blob columns: verify deserialization
-   - For external columns: verify file retrieval
-3. Verify ~lineage table exists
-4. Test populate() on computed tables
-5. Report any errors
-
-Process schemas in order: [list schemas]
-```
-
----
-
-## Post-Migration Checklist
-
-```
-[ ] All tables accessible via DataJoint 2.0
-[ ] Blob data deserializes correctly
-[ ] External data retrieves correctly
-[ ] Lineage tables created in all schemas
-[ ] Custom codecs working (if applicable)
-[ ] Computed tables can populate
-[ ] Team updated to DataJoint 2.0
-[ ] CI/CD pipelines updated
-[ ] Old config files archived
+def get_migration_phase(schema):
+    """Determine current migration phase."""
+    from datajoint.migrate import check_migration_status, _find_external_columns
+
+    blob_status = check_migration_status(schema)
+    external = _find_external_columns(schema)
+
+    # Check lineage table
+    has_lineage = schema.connection.query(
+        "SELECT COUNT(*) FROM information_schema.TABLES "
+        "WHERE TABLE_SCHEMA=%s AND TABLE_NAME='~lineage'",
+        args=(schema.database,)
+    ).fetchone()[0] > 0
+
+    if blob_status['pending'] > 0:
+        return 1  # Need Phase 2
+    if not has_lineage:
+        return 2  # Need Phase 3
+    if len(external) > 0:
+        return 3  # Need Phase 4
+    return 5  # Ready for feature adoption
 ```
 
 ---
@@ -583,26 +910,26 @@ Process schemas in order: [list schemas]
 
 ### "Native type 'int' is used"
 
-Run Phase 3 to add type labels to numeric columns.
+Run Phase 2 to add type labels to numeric columns.
 
 ### "No codec registered"
 
-Run Phase 4 to add codec labels to blob columns.
+Run Phase 2 to add codec labels to blob columns.
 
 ### External data not found
 
-Phase 6/7: Store paths don't match legacy paths. Check:
+Phase 3/4: Store paths don't match legacy paths. Check:
+
 1. Store location in datajoint.json matches original
 2. Path structure matches what's in `~external_*` table
 
-### "Unknown codec"
-
-Ensure Codec class is imported before table definitions.
-Codecs auto-register when the class is defined.
-
 ### Missing ~lineage table
 
-Run Phase 5 to create the lineage table.
+Run Phase 3 to create the lineage table with `schema.rebuild_lineage()`.
+
+### Dual attributes out of sync
+
+Re-run `migrate_external()` - it's idempotent and will update any missing rows.
 
 ---
 
@@ -610,5 +937,4 @@ Run Phase 5 to create the lineage table.
 
 - [What's New in 2.0](../explanation/whats-new-2.md)
 - [Type System](../explanation/type-system.md)
-- [Codec API](../reference/specs/codec-api.md)
-- [Configure Storage](configure-storage.md)
+- [Configuration Guide](setup/configuration.md)

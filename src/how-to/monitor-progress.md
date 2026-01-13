@@ -115,15 +115,32 @@ import time
 from my_pipeline import ProcessedData
 
 while True:
-    remaining = len(ProcessedData.key_source - ProcessedData)
-    progress = ProcessedData.jobs.progress()
+    remaining, total = ProcessedData.progress()
 
-    print(f"\rRemaining: {remaining} | "
-          f"Pending: {progress.get('pending', 0)} | "
-          f"Running: {progress.get('reserved', 0)} | "
-          f"Errors: {progress.get('error', 0)}", end='')
+    print(f"\rProgress: {total - remaining}/{total} ({(total - remaining) / total:.0%})", end='')
 
     if remaining == 0:
+        print("\nDone!")
+        break
+
+    time.sleep(10)
+```
+
+For distributed mode with job tracking:
+
+```python
+import time
+from my_pipeline import ProcessedData
+
+while True:
+    status = ProcessedData.jobs.progress()
+
+    print(f"\rPending: {status.get('pending', 0)} | "
+          f"Running: {status.get('reserved', 0)} | "
+          f"Done: {status.get('success', 0)} | "
+          f"Errors: {status.get('error', 0)}", end='')
+
+    if status.get('pending', 0) == 0 and status.get('reserved', 0) == 0:
         print("\nDone!")
         break
 

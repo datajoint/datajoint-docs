@@ -181,4 +181,4 @@ class Scan(dj.Manual):
 ## See Also
 
 - [Define Tables](define-tables.md) — Table definition syntax
-- [Model Relationships](model-relationships.md) — Foreign key patterns
+- [Model Relationships](model-relationships.ipynb) — Foreign key patterns

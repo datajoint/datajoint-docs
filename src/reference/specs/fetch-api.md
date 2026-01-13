@@ -28,6 +28,9 @@ DataJoint 2.0 replaces the complex `fetch()` method with a set of explicit, comp
 | `keys()` | `list[dict]` | Primary key values only |
 | `fetch1()` | `dict` | Single row as dict (raises if not exactly 1) |
 | `fetch1('a', 'b')` | `tuple` | Single row attribute values |
+| `head(limit=25)` | `list[dict]` | Preview first N entries |
+| `tail(limit=25)` | `list[dict]` | Preview last N entries |
+| `cursor(as_dict=False)` | `cursor` | Raw database cursor for manual iteration |
 
 ### Common Parameters
 
