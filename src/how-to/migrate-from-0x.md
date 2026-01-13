@@ -313,7 +313,33 @@ COLUMN_COMMENT = ':<blob>:neural waveform data'
 
 **Why safe:** Legacy clients ignore the `:type:` prefix in comments—they read the MySQL column type directly.
 
-### 2.2 Migration Commands
+### 2.2 Lineage Tables
+
+DataJoint 2.0 tracks **attribute lineage**—the origin of each attribute through foreign key relationships. This enables:
+
+- **Semantic matching:** Validates that join operands share common ancestors before allowing binary operations (`*`, `&`, `-`)
+- **Query optimization:** Uses lineage to determine optimal join paths
+- **Data provenance:** Traces how derived data relates to source data
+
+Lineage is stored in a hidden `~lineage` table in each schema. The migration builds this table by analyzing foreign key relationships.
+
+```sql
+-- ~lineage table structure (simplified)
+CREATE TABLE `~lineage` (
+    table_name VARCHAR(64),
+    attribute_name VARCHAR(64),
+    origin_schema VARCHAR(64),
+    origin_table VARCHAR(64),
+    origin_attribute VARCHAR(64),
+    PRIMARY KEY (table_name, attribute_name, origin_schema, origin_table, origin_attribute)
+);
+```
+
+**Why safe:** Legacy clients ignore tables prefixed with `~`.
+
+**Learn more:** [Lineage Specification](../reference/specs/lineage.md) · [Semantic Matching Concept](../explanation/semantic-matching.md)
+
+### 2.3 Migration Commands
 
 ```python
 import datajoint as dj
@@ -369,7 +395,7 @@ This migrates all column types:
 
 External storage columns (`external-*`, `attach@*`, `filepath@*`) are **not** migrated here—they require Phase 3-4.
 
-### 2.3 AI Agent Prompt (Phase 2)
+### 2.4 AI Agent Prompt (Phase 2)
 
 ```
 You are migrating a DataJoint schema from legacy to 2.0.
@@ -408,7 +434,7 @@ VERIFICATION:
 - ~lineage table exists
 ```
 
-### 2.4 Validation
+### 2.5 Validation
 
 After Phase 2:
 
