@@ -9,6 +9,7 @@ The `<npy@>` codec stores NumPy arrays as portable `.npy` files in object storag
 **Key benefits:**
 - Access shape, dtype, size without I/O
 - Lazy loading - download only when needed
+- Memory mapping - random access to large arrays
 - Safe bulk fetch - inspect before downloading
 - Portable `.npy` format
 
@@ -116,6 +117,27 @@ first_row = ref[0]
 snippet = ref[100:200, :]
 ```
 
+### Memory Mapping
+
+For large arrays, use `mmap_mode` to access data without loading it all into memory:
+
+```python
+# Memory-mapped loading (random access)
+arr = ref.load(mmap_mode='r')
+
+# Only reads the portion you access
+slice = arr[1000:2000, :]  # Efficient for large arrays
+```
+
+**Modes:**
+- `'r'` - Read-only (recommended)
+- `'r+'` - Read-write
+- `'c'` - Copy-on-write (changes not saved)
+
+**Performance:**
+- Local filesystem stores: mmaps directly (no copy)
+- Remote stores (S3): downloads to cache first, then mmaps
+
 ## Common Patterns
 
 ### Bulk Fetch with Filtering
@@ -175,6 +197,7 @@ for key in Recording.keys():
 |--------|----------|----------|
 | **On fetch** | NpyRef (lazy) | Array (eager) |
 | **Metadata access** | Without download | Must download |
+| **Memory mapping** | Yes, via `mmap_mode` | No |
 | **Addressing** | Schema-addressed | Hash-addressed |
 | **Deduplication** | No | Yes |
 | **Format** | `.npy` (portable) | DJ blob (Python) |
@@ -186,6 +209,7 @@ for key in Recording.keys():
 - Arrays are large (> 10 MB)
 - You need to inspect shape/dtype before loading
 - Fetching many rows but processing few
+- Random access to slices of very large arrays (memory mapping)
 - Interoperability matters (non-Python tools)
 
 **Use `<blob@>` when:**
@@ -239,13 +263,16 @@ data : <npy@mystore>
 
 ### Memory issues with large arrays
 
-Use lazy loading to control memory:
+Use lazy loading or memory mapping to control memory:
 
 ```python
 # Check size before loading
 if ref.nbytes > available_memory:
-    # Process in chunks or skip
-    pass
+    # Use memory mapping for random access
+    arr = ref.load(mmap_mode='r')
+    # Process in chunks
+    for i in range(0, len(arr), chunk_size):
+        process(arr[i:i+chunk_size])
 else:
     arr = ref.load()
 ```

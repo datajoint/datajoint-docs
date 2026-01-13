@@ -96,6 +96,33 @@ first_row = ref[0]      # Loads then indexes
 subset = ref[100:200]   # Loads then slices
 ```
 
+### Memory Mapping
+
+For very large arrays, use `mmap_mode` to access data without loading it all:
+
+```python
+# Memory-mapped loading (random access)
+arr = ref.load(mmap_mode='r')
+
+# Efficient random access - only reads needed portions
+slice = arr[1000:2000, :]
+chunk = arr[::100]
+```
+
+**Modes:**
+- `'r'` - Read-only (recommended)
+- `'r+'` - Read-write (modifications persist)
+- `'c'` - Copy-on-write (changes not saved)
+
+**Performance characteristics:**
+- Local filesystem stores: memory-maps the file directly (zero-copy)
+- Remote stores (S3, GCS): downloads to local cache first, then memory-maps
+
+**When to use:**
+- Arrays too large to fit in memory
+- Only need random access to portions of the array
+- Processing data in chunks
+
 ### Safe Bulk Fetch
 
 The lazy design protects against accidental mass downloads:
@@ -218,12 +245,12 @@ arr = np.load('/path/to/store/my_schema/recording/recording_id=1/waveform.npy')
 
 ## Comparison with Other Codecs
 
-| Codec | Format | Addressing | Lazy | Metadata | Portability |
-|-------|--------|------------|------|----------|-------------|
-| `<npy@>` | `.npy` | Schema | Yes (NpyRef) | shape, dtype | High (numpy, MATLAB) |
-| `<object@>` | varies | Schema | Yes (ObjectRef) | size, is_dir | Depends on content |
-| `<blob@>` | pickle | Hash | No | None | Python only |
-| `<hash@>` | raw bytes | Hash | No | size | N/A |
+| Codec | Format | Addressing | Lazy | Memory Map | Portability |
+|-------|--------|------------|------|------------|-------------|
+| `<npy@>` | `.npy` | Schema | Yes (NpyRef) | Yes | High (numpy, MATLAB) |
+| `<object@>` | varies | Schema | Yes (ObjectRef) | No | Depends on content |
+| `<blob@>` | pickle | Hash | No | No | Python only |
+| `<hash@>` | raw bytes | Hash | No | No | N/A |
 
 **Addressing schemes:**
 - **Schema-addressed**: Path mirrors database structure. Browsable, one location per entity.
@@ -236,6 +263,7 @@ arr = np.load('/path/to/store/my_schema/recording/recording_id=1/waveform.npy')
 - Interoperability matters (non-Python tools)
 - You want lazy loading with metadata inspection
 - Fetching many rows where not all arrays are needed
+- Random access to large arrays via memory mapping
 - Browsable object store organization is valuable
 
 **Use `<blob@>` when:**
