@@ -6,6 +6,8 @@ If your work uses DataJoint or DataJoint Elements, please cite the respective
 
 ## 2025
 
++ Celii, B., Papadopoulos, S., Ding, Z., Fahey, P. G., Wang, E., Papadopoulos, C., ... & Reimer, J. (2025). [NEURD offers automated proofreading and feature extraction for connectomics](https://doi.org/10.1038/s41586-025-08660-5). *Nature*, 640(8058), 487-496.
+
 + Ding, Z., Fahey, P.G., Papadopoulos, S., Wang, E.Y., Celii, B., Papadopoulos, C., Chang, A., Kunin, A.B., Tran, D., Fu, J. ... & Tolias, A. S. (2025). [Functional connectomics reveals general wiring rule in mouse visual cortex](https://doi.org/10.1038/s41586-025-08840-3). *Nature*, 640(8058), 459-469.
 
 + Dyszkant, N., Oesterle, J., Qiu, Y., Harrer, M., Schubert, T., Gonschorek, D. & Euler, T. (2025). [Photoreceptor degeneration has heterogeneous effects on functional retinal ganglion cell types](https://doi.org/10.1113/JP287643). *The Journal of Physiology*, 603(21), 6599-6621.
@@ -37,8 +39,6 @@ If your work uses DataJoint or DataJoint Elements, please cite the respective
 + Reimer, M. L., Kauer, S. D., Benson, C. A., King, J. F., Patwa, S., Feng, S., Estacion, M. A., Bangalore, L., Waxman, S. G., & Tan, A. M. (2024). [A FAIR, open-source virtual reality platform for dendritic spine analysis](https://www.cell.com/patterns/pdf/S2666-3899(24)00183-1.pdf). *Patterns*, 5(9).
 
 ## 2023
-
-+ Celii, B., Papadopoulos, S., Ding, Z., Fahey, P. G., Wang, E., Papadopoulos, C., ... & Reimer, J. (2023). [NEURD: automated proofreading and feature extraction for connectomics](https://doi.org/10.1101/2023.03.14.532674). *bioRxiv*. 2023-03.
 
 + Willeke, K.F., Restivo, K., Franke, K., Nix, A.F., Cadena, S.A., Shinn, T., Nealley, C., Rodriguez, G., Patel, S., Ecker, A.S., Sinz, F.H. & Tolias, A.S. (2023). [Deep learning-driven characterization of single cell tuning in primate visual area V4 supports topological organization](https://doi.org/10.1101/2023.05.12.540591). *bioRxiv*.
 

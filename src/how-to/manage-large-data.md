@@ -7,8 +7,8 @@ Work effectively with blobs and object storage.
 | Data Size | Recommended | Syntax |
 |-----------|-------------|--------|
 | < 1 MB | Database | `<blob>` |
-| 1 MB - 1 GB | Object storage | `<blob@>` |
-| > 1 GB | Path-addressed | `<object@>` |
+| 1 MB - 1 GB | Hash-addressed | `<blob@>` |
+| > 1 GB | Schema-addressed | `<object@>`, `<npy@>` |
 
 ## Streaming Large Results
 
@@ -90,7 +90,7 @@ with dj.conn().transaction:
 
 ## Content Deduplication
 
-`<blob@>` and `<attach@>` automatically deduplicate:
+`<blob@>` and `<attach@>` automatically deduplicate within each schema:
 
 ```python
 # Same array inserted twice
@@ -98,20 +98,32 @@ data = np.random.randn(1000, 1000)
 Table.insert1({'id': 1, 'data': data})
 Table.insert1({'id': 2, 'data': data})  # References same storage
 
-# Only one copy exists in object storage
+# Only one copy exists in object storage (per schema)
 ```
+
+Deduplication is per-schema—identical content in different schemas is stored separately.
+This enables independent garbage collection per schema.
 
 ## Storage Cleanup
 
-Remove orphaned objects after deletes:
+External storage items are not automatically deleted with rows. Run garbage
+collection periodically:
 
 ```python
+import datajoint as dj
+
 # Objects are NOT automatically deleted with rows
 (MyTable & old_data).delete()
 
-# Run garbage collection periodically
-# (Implementation depends on your storage backend)
+# Scan for orphaned items
+stats = dj.gc.scan(my_schema)
+print(dj.gc.format_stats(stats))
+
+# Remove orphaned items
+stats = dj.gc.collect(my_schema, dry_run=False)
 ```
+
+See [Clean Up External Storage](garbage-collection.md) for details.
 
 ## Monitor Storage Usage
 

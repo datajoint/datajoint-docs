@@ -147,6 +147,56 @@ print(spec)
 | `secure` | No | Use HTTPS (default: true) |
 | `access_key` | S3 | Access key ID |
 | `secret_key` | S3 | Secret access key |
+| `subfolding` | No | Directory hierarchy pattern (e.g., `[2, 2]`) |
+
+## Subfolding
+
+Hash-addressed storage (used by `<blob@>`, `<attach@>`, and `<hash@>` types) stores content
+using a Base32-encoded hash as the filename. By default, all files are stored in a flat
+directory structure:
+
+```
+_hash/{schema}/abcdefghijklmnopqrstuvwxyz
+```
+
+Some filesystems perform poorly with large directories (thousands of files). Subfolding
+creates a directory hierarchy to distribute files:
+
+```json
+{
+  "object_storage": {
+    "project_name": "my_project",
+    "protocol": "file",
+    "location": "/data/store",
+    "subfolding": [2, 2]
+  }
+}
+```
+
+With `[2, 2]` subfolding, paths become:
+
+```
+_hash/{schema}/ab/cd/abcdefghijklmnopqrstuvwxyz
+```
+
+### Filesystem Recommendations
+
+| Filesystem | Subfolding Needed | Notes |
+|------------|-------------------|-------|
+| ext3 | Yes | Limited directory indexing |
+| FAT32/exFAT | Yes | Linear directory scans |
+| NFS | Yes | Network latency amplifies directory lookups |
+| CIFS/SMB | Yes | Windows network shares |
+| ext4 | No | HTree indexing handles large directories |
+| XFS | No | B+ tree directories scale well |
+| ZFS | No | Efficient directory handling |
+| Btrfs | No | B-tree based |
+| S3/MinIO | No | Object storage uses hash-based lookups |
+| GCS | No | Object storage |
+| Azure Blob | No | Object storage |
+
+**Recommendation:** Use `[2, 2]` for network-mounted filesystems and legacy systems.
+Modern local filesystems and cloud object storage work well without subfolding.
 
 ## URL Representation
 

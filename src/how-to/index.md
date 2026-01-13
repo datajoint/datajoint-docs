@@ -40,7 +40,8 @@ they assume you understand the basics and focus on getting things done.
 
 - [Use Object Storage](use-object-storage.md) — When and how
 - [Create Custom Codecs](create-custom-codec.md) — Domain-specific types
-- [Manage Large Data](manage-large-data.md) — Blobs, objects, garbage collection
+- [Manage Large Data](manage-large-data.md) — Blobs, streaming, efficiency
+- [Clean Up External Storage](garbage-collection.md) — Garbage collection
 
 ## Maintenance
 
