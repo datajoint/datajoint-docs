@@ -230,6 +230,23 @@ result = table1.join(table2, semantic_check=False)
 result = dj.U('attr') & table      # use restriction instead
 ```
 
+#### Insert Method (Changed)
+
+```python
+# legacy (DEPRECATED) - positional insert
+table.insert1((1, 'subject_name', '2024-01-15'))
+table.insert([(1, 'name1', '2024-01-15'), (2, 'name2', '2024-01-16')])
+
+# 2.0 - key-value maps required
+table.insert1({'subject_id': 1, 'name': 'subject_name', 'dob': '2024-01-15'})
+table.insert([
+    {'subject_id': 1, 'name': 'name1', 'dob': '2024-01-15'},
+    {'subject_id': 2, 'name': 'name2', 'dob': '2024-01-16'},
+])
+```
+
+**Why:** Positional inserts are fragile—they break silently when columns are added or reordered. Key-value maps are explicit and self-documenting.
+
 ### 1.3 Code Migration Checklist
 
 For each Python module using DataJoint:
@@ -238,6 +255,7 @@ For each Python module using DataJoint:
 - [ ] Replace `._update()` with `.update1()`
 - [ ] Replace `@` operator with `.join(..., semantic_check=False)`
 - [ ] Replace `dj.U() * expr` with `dj.U() & expr`
+- [ ] Replace positional inserts with key-value dicts
 - [ ] Update imports if using deprecated modules
 
 ### 1.4 AI Agent Prompt (Phase 1 - Code Migration)
@@ -254,6 +272,9 @@ CHANGES REQUIRED:
 4. Replace (table & key)._update('attr', val) → table.update1({**key, 'attr': val})
 5. Replace table1 @ table2 → table1.join(table2, semantic_check=False)
 6. Replace dj.U('x') * table → dj.U('x') & table
+7. Replace positional inserts with key-value dicts:
+   - table.insert1((val1, val2)) → table.insert1({'col1': val1, 'col2': val2})
+   - table.insert([(v1, v2), ...]) → table.insert([{'c1': v1, 'c2': v2}, ...])
 
 DO NOT modify table definitions or database schema.
 ```
