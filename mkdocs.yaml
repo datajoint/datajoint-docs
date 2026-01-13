@@ -1,7 +1,7 @@
 # ---------------------- PROJECT SPECIFIC ---------------------------
 
 site_name: DataJoint Documentation
-site_url: https://docs.datajoint.com/  # Trailing slash required for mike
+site_url: https://docs.datajoint.com/
 repo_name: datajoint/datajoint-docs
 repo_url: https://github.com/datajoint/datajoint-docs
 nav:
@@ -101,11 +101,13 @@ nav:
       - Definition Syntax: reference/definition-syntax.md
       - Errors: reference/errors.md
   - API: api/  # Auto-generated via gen-files + literate-nav
+  - Elements: elements/index.md
   - About:
       - about/index.md
       - History: about/history.md
       - Platform: about/platform.md
       - Citation: about/citation.md
+      - Publications: about/publications.md
       - Contributing: about/contributing.md
 
 # ---------------------------- STANDARD -----------------------------
@@ -202,9 +204,6 @@ markdown_extensions:
 extra:
   generator: false # Disable watermark
   datajoint_version: "2.0"  # DataJoint Python version this documentation covers
-  version:
-    provider: mike
-    default: stable
   social:
     - icon: main/company-logo
       link: https://www.datajoint.com
