@@ -7,6 +7,24 @@ seamlessly with other Elements and custom DataJoint pipelines.
 For comprehensive documentation, tutorials, and API reference for each Element,
 visit the Element's repository.
 
+## Background
+
+DataJoint Elements was developed as part of an NIH [BRAIN Initiative](https://braininitiative.nih.gov/)
+project to disseminate open-source data management tools for neuroscience research.
+
+- **Grant:** [U24 NS116470](https://reporter.nih.gov/project-details/10891663) — DataJoint Pipelines for Neurophysiology
+- **Institute:** National Institute of Neurological Disorders and Stroke (NINDS)
+- **Period:** September 2020 -- August 2025
+- **PI:** Dimitri Yatsenko, DataJoint
+
+The project compiled and systematized data pipeline designs from leading neuroscience
+laboratories into a library of reusable modules. These modules automate data ingestion
+and processing for common experimental modalities including extracellular electrophysiology,
+calcium imaging, pose estimation, and optogenetics.
+
+DataJoint Elements is listed in the [BRAIN Initiative Alliance Resource Catalog](https://www.braininitiative.org/toolmakers/resources/datajoint-elements/)
+(SciCrunch ID: [SCR_021894](https://scicrunch.org/resolver/SCR_021894)).
+
 ## Neurophysiology
 
 <div class="grid cards" markdown>

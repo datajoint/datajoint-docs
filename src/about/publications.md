@@ -8,13 +8,25 @@ If your work uses DataJoint or DataJoint Elements, please cite the respective
 
 + Ding, Z., Fahey, P.G., Papadopoulos, S., Wang, E.Y., Celii, B., Papadopoulos, C., Chang, A., Kunin, A.B., Tran, D., Fu, J. ... & Tolias, A. S. (2025). [Functional connectomics reveals general wiring rule in mouse visual cortex](https://doi.org/10.1038/s41586-025-08840-3). *Nature*, 640(8058), 459-469.
 
++ Dyszkant, N., Oesterle, J., Qiu, Y., Harrer, M., Schubert, T., Gonschorek, D. & Euler, T. (2025). [Photoreceptor degeneration has heterogeneous effects on functional retinal ganglion cell types](https://doi.org/10.1113/JP287643). *The Journal of Physiology*, 603(21), 6599-6621.
+
++ Finkelstein, A., Daie, K., Rózsa, M., Darshan, R. & Svoboda, K. (2025). [Connectivity underlying motor cortex activity during goal-directed behaviour](https://doi.org/10.1038/s41586-025-09758-6). *Nature*.
+
 + Gillon, C.J., Baker, C., Ly, R., Balzani, E., Brunton, B.W., Schottdorf, M., Ghosh, S. and Dehghani, N.(2025). [Open data in neurophysiology: Advancements, solutions & challenges](https://doi.org/10.1523/ENEURO.0486-24.2025). *eNeuro*, 12(11).
 
 + Huang, J.Y., Hess, M., Bajpai, A., Li, X., Hobson, L.N., Xu, A.J., Barton, S.J. and Lu, H.C.(2025). [From initial formation to developmental refinement: GABAergic inputs shape neuronal subnetworks in the primary somatosensory cortex](https://doi.org/10.1016/j.isci.2025.112104). *iScience*, 28(3).
 
++ Lees, R.M., Bianco, I.H., Campbell, R.A.A., Orlova, N., Peterka, D.S., Pichler, B., Smith, S.L., Yatsenko, D., Yu, C.H. & Packer, A.M. (2025). [Standardized measurements for monitoring and comparing multiphoton microscope systems](https://doi.org/10.1038/s41596-024-01120-w). *Nature Protocols*, 20, 2171–2208.
+
++ Schmors, L., Kotkat, A.H., Bauer, Y., Huang, Z., Crombie, D., Meyerolbersleben, L.S., Sokoloski, S., Berens, P. & Busse, L. (2025). [Effects of corticothalamic feedback depend on visual responsiveness and stimulus type](https://doi.org/10.1016/j.isci.2025.112481). *iScience*, 28, 112481.
+
++ Sibener, L.J., Mosberger, A.C., Chen, T.X., Athalye, V.R., Murray, J.M. & Costa, R.M. (2025). [Dissociable roles of distinct thalamic circuits in learning reaches to spatial targets](https://doi.org/10.1038/s41467-025-58143-4). *Nature Communications*, 16, 2962.
+
 ## 2024
 
 + Chen, S., Liu, Y., Wang, Z. A., Colonell, J., Liu, L. D., Hou, H., ... & Svoboda, K. (2024). [Brain-wide neural activity underlying memory-guided movement](https://www.cell.com/cell/pdf/S0092-8674(23)01445-9.pdf). *Cell*, 187(3), 676-691.
+
++ Korympidou, M.M., Strauss, S., Schubert, T., Franke, K., Berens, P., Euler, T. & Vlasits, A.L. (2024). [GABAergic amacrine cells balance biased chromatic information in the mouse retina](https://doi.org/10.1016/j.celrep.2024.114953). *Cell Reports*, 43(11), 114953.
 
 + Gonzalo Cogno, S., Obenhaus, H. A., Lautrup, A., Jacobsen, R. I., Clopath, C., Andersson, S. O., ... & Moser, E. I. (2024). [Minute-scale oscillatory sequences in medial entorhinal cortex](https://www.nature.com/articles/s41586-023-06864-1). *Nature*, 625(7994), 338-344.
 
@@ -28,11 +40,15 @@ If your work uses DataJoint or DataJoint Elements, please cite the respective
 
 + Celii, B., Papadopoulos, S., Ding, Z., Fahey, P. G., Wang, E., Papadopoulos, C., ... & Reimer, J. (2023). [NEURD: automated proofreading and feature extraction for connectomics](https://doi.org/10.1101/2023.03.14.532674). *bioRxiv*. 2023-03.
 
++ Willeke, K.F., Restivo, K., Franke, K., Nix, A.F., Cadena, S.A., Shinn, T., Nealley, C., Rodriguez, G., Patel, S., Ecker, A.S., Sinz, F.H. & Tolias, A.S. (2023). [Deep learning-driven characterization of single cell tuning in primate visual area V4 supports topological organization](https://doi.org/10.1101/2023.05.12.540591). *bioRxiv*.
+
 + Laboratory, I. B., Bonacchi, N., Chapuis, G. A., Churchland, A. K., DeWitt, E. E., Faulkner, M., ... & Wells, M. J. (2023). [A modular architecture for organizing, processing and sharing neurophysiology data](https://doi.org/10.1038/s41592-022-01742-6). *Nature Methods*. 1-5.
 
 ## 2022
 
-+ Franke, K., Willeke, K. F., Ponder, K., Galdamez, M., Zhou, N., Muhammad, T., ... & Tolias, A. S. (2022). [State-dependent pupil dilation rapidly shifts visual feature selectivity](https://www.nature.com/articles/s41586-022-05270-3). *Nature*, 1-7.
++ Franke, K., Willeke, K. F., Ponder, K., Galdamez, M., Zhou, N., Muhammad, T., ... & Tolias, A. S. (2022). [State-dependent pupil dilation rapidly shifts visual feature selectivity](https://www.nature.com/articles/s41586-022-05270-3). *Nature*, 610(7930), 128-134.
+
++ Wang, Y., Chiola, S., Yang, G., Russell, C., Armstrong, C.J., Wu, Y., ... & Shcheglovitov, A. (2022). [Modeling human telencephalic development and autism-associated SHANK3 deficiency using organoids generated from single neural rosettes](https://doi.org/10.1038/s41467-022-33364-z). *Nature Communications*, 13, 5688.
 
 + Goetz, J., Jessen, Z. F., Jacobi, A., Mani, A., Cooler, S., Greer, D., ... & Schwartz, G. W. (2022). [Unified classification of mouse retinal ganglion cells using function, morphology, and gene expression](https://doi.org/10.1016/j.celrep.2022.111040). *Cell Reports*, 40(2), 111040.
 
@@ -49,6 +65,8 @@ If your work uses DataJoint or DataJoint Elements, please cite the respective
 ## 2021
 
 + Bae, J. A., Baptiste, M., Bodor, A. L., Brittain, D., Buchanan, J., Bumbarger, D. J., Castro, M. A., Celii, B., Cobos, E., Collman, F., ... (2021). [Functional connectomics spanning multiple areas of mouse visual cortex](https://doi.org/10.1101/2021.07.28.454025). *bioRxiv*.
+
++ Dennis, E.J., El Hady, A., Michaiel, A., Clemens, A., Tervo, D.R.G., Voigts, J. & Datta, S.R. (2021). [Systems Neuroscience of Natural Behaviors in Rodents](https://doi.org/10.1523/JNEUROSCI.1877-20.2020). *Journal of Neuroscience*, 41(5), 911-919.
 
 + Born, G., Schneider-Soupiadis, F. A., Erisken, S., Vaiceliunaite, A., Lao, C. L., Mobarhan, M. H., Spacek, M. A., Einevoll, G. T., & Busse, L. (2021). [Corticothalamic feedback sculpts visual spatial integration in mouse thalamus](https://doi.org/10.1038/s41593-021-00943-0). *Nature Neuroscience*, 24(12), 1711-1720.
 
