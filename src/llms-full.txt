@@ -1149,15 +1149,15 @@ detection.
 
 ### Dimensions and Attribute Lineage
 
-Every primary key attribute traces back to the dimension where it was first
+Every foreign key attribute traces back to the dimension where it was first
 defined. This is called **attribute lineage**:
 
 ```
 Subject.subject_id      → myschema.subject.subject_id (origin)
-Session.subject_id      → myschema.subject.subject_id (inherited)
+Session.subject_id      → myschema.subject.subject_id (inherited via foreign key)
 Session.session_idx     → myschema.session.session_idx (origin)
-Trial.subject_id        → myschema.subject.subject_id (inherited)
-Trial.session_idx       → myschema.session.session_idx (inherited)
+Trial.subject_id        → myschema.subject.subject_id (inherited via foreign key)
+Trial.session_idx       → myschema.session.session_idx (inherited via foreign key)
 Trial.trial_idx         → myschema.trial.trial_idx (origin)
 ```
 
