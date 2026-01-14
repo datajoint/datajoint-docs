@@ -924,6 +924,77 @@ DO NOT introduce all features at once. Focus on immediate value.
 
 ---
 
+## Phase 6: Cleanup Legacy Tables (Optional)
+
+**Goal:** Remove legacy hidden tables that are no longer needed after full migration to 2.0.
+
+### 6.1 Tables to Remove
+
+| Table | Purpose | When to Drop |
+|-------|---------|--------------|
+| `~log` | Schema change log | After confirming no tools depend on it |
+| `~jobs` | Legacy job reservation | After confirming Jobs 2.0 (`~~table_name`) is working |
+| `~external_*` | Legacy external storage tracking | After Phase 4 (external migration finalized) |
+
+### 6.2 Cleanup Commands
+
+```python
+import datajoint as dj
+
+schema = dj.schema('my_database')
+conn = schema.connection
+
+# Step 1: Verify no legacy processes are using these tables
+# Check that all clients are on 2.0
+
+# Step 2: Drop legacy log table
+conn.query(f"DROP TABLE IF EXISTS `{schema.database}`.`~log`")
+
+# Step 3: Drop legacy jobs table (after Jobs 2.0 is working)
+conn.query(f"DROP TABLE IF EXISTS `{schema.database}`.`~jobs`")
+
+# Step 4: Drop legacy external tracking tables
+# List your store names
+for store in ['external', 'external_raw', 'external_analysis']:
+    conn.query(f"DROP TABLE IF EXISTS `{schema.database}`.`~external_{store}`")
+```
+
+### 6.3 Pre-Cleanup Checklist
+
+- [ ] All clients upgraded to DataJoint 2.0
+- [ ] No legacy processes running
+- [ ] Jobs 2.0 (`~~table_name` tables) working correctly
+- [ ] External storage migration finalized (Phase 4 complete)
+- [ ] Database backup taken
+
+### 6.4 AI Agent Prompt (Phase 6)
+
+```
+You are cleaning up legacy tables after DataJoint 2.0 migration.
+
+TASK: Remove legacy hidden tables that are no longer needed.
+
+PREREQUISITES:
+- Phase 4 must be complete (no legacy clients)
+- Jobs 2.0 must be working
+- Database backup must exist
+
+TABLES TO DROP:
+- ~log: Schema change log (rarely used)
+- ~jobs: Legacy job reservation table
+- ~external_*: Legacy external storage tracking
+
+STEPS:
+1. Verify no legacy processes: SHOW PROCESSLIST
+2. Verify Jobs 2.0 working: check ~~table_name tables exist
+3. Drop tables using: DROP TABLE IF EXISTS `schema`.`~table_name`
+4. Verify cleanup complete
+
+DO NOT drop tables if any legacy clients are still running.
+```
+
+---
+
 ## Helper Functions in datajoint.migrate
 
 The migration module focuses on **integrity checks**, **rebuild/restore** utilities, and **idempotent migration scripts**.
