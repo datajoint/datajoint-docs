@@ -377,12 +377,12 @@ Convert ALL types and codecs in Phase I:
 | `date` | Unchanged | Core type |
 | `enum('a', 'b')` | Unchanged | Core type |
 | `bool`, `boolean` | `bool` | Core type (MySQL stores as tinyint(1)) |
-| `datetime` | `datetime` | Core type; UTC only in 2.0 |
-| `timestamp` | `datetime` | **Convert:** 2.0 uses UTC-only datetime |
+| `datetime` | `datetime` | Core type; UTC standard in 2.0 |
+| `timestamp` | `datetime` | **Ask user:** Review timezone convention, convert to UTC datetime |
 | `json` | `json` | Core type (was available but underdocumented) |
 | `uuid` | `uuid` | Core type (widely used in legacy) |
 | `text` | `varchar(N)` or keep as native | **Native type:** Consider migrating to `varchar(n)` |
-| `time` | Keep as native | **Native type:** No core equivalent |
+| `time` | `datetime` or keep as native | **Native type:** Consider using `datetime` |
 | `tinyint(1)` | `bool` or `uint8` | **Ask user:** was this boolean or small integer? |
 
 **Codecs:**
@@ -399,7 +399,7 @@ Convert ALL types and codecs in Phase I:
 
 - **Core vs Native Types:** DataJoint 2.0 distinguishes **core types** (portable, standardized) from **native types** (backend-specific). Core types are preferred. Native types like `text` and `time` are allowed but discouraged—they may generate warnings and lack portability guarantees.
 
-- **Datetime/Timestamp:** DataJoint 2.0 stores all times as `datetime` in **UTC without timezone information**. The database stores UTC; timezones are handled by application front-ends and client APIs. Convert `timestamp` to `datetime` and ensure your application stores times in UTC.
+- **Datetime/Timestamp:** DataJoint 2.0 adopts **UTC as the standard for all datetime storage**. The database stores UTC; timezones are handled by application front-ends and client APIs. For `timestamp` columns, review your existing timezone convention—you may need data conversion. We recommend adopting UTC throughout your pipeline and converting `timestamp` to `datetime`.
 
 - **Bool:** Legacy DataJoint supported `bool` and `boolean` types (MySQL stores as `tinyint(1)`). Keep as `bool` in 2.0. Only explicit `tinyint(1)` declarations need review:
   - If used for boolean semantics (yes/no, active/inactive) → `bool`
@@ -407,7 +407,7 @@ Convert ALL types and codecs in Phase I:
 
 - **Text Type:** `text` is a native MySQL type, not a core type. Consider migrating to `varchar(n)` with appropriate length. If your text truly needs unlimited length, you can keep `text` as a native type (will generate a warning).
 
-- **Time Type:** `time` is a native MySQL type with no core equivalent. Keep as native type if needed (will generate a warning).
+- **Time Type:** `time` is a native MySQL type with no core equivalent. We recommend migrating to `datetime` (which can represent both date and time components). If you only need time-of-day without date, you can keep `time` as a native type (will generate a warning).
 
 - **JSON:** Core type that was available in pre-2.0 but underdocumented. Many users serialized JSON into blobs. If you have custom JSON serialization in blobs, you can migrate to native `json` type (optional).
 
@@ -476,7 +476,7 @@ Core Types (Structured Data):
 
 Native Types (Discouraged but Allowed):
   text → Consider varchar(N) with appropriate length, or keep as native type
-  time → Keep as native type (no core equivalent)
+  time → Consider datetime (can represent date+time), or keep as native type
 
 Special Cases - REQUIRE USER REVIEW:
 
@@ -489,37 +489,54 @@ Special Cases - REQUIRE USER REVIEW:
       priority : tinyint(1)   # 0-10 scale → uint8
       has_data : bool         # Already bool → keep as bool
 
-  timestamp → datetime  # ALWAYS CONVERT
-    - DataJoint 2.0 standard: store all times in UTC without timezone info
-    - Database stores UTC; timezones are handled by application front-ends and client APIs
+  timestamp → ASK USER about timezone convention, then convert to datetime
     Example:
-      created_at : timestamp  # pre-2.0
-      created_at : datetime   # 2.0 (stores UTC)
+      created_at : timestamp  # pre-2.0 (UNKNOWN timezone convention)
+      created_at : datetime   # 2.0 (UTC standard)
 
 IMPORTANT - Datetime and Timestamp Conversion:
 
-DataJoint 2.0 stores all times as datetime in UTC WITHOUT timezone information.
-The database stores UTC; timezones are handled by application front-ends and client APIs, not the database.
+DataJoint 2.0 adopts UTC as the standard for all datetime storage (no timezone information).
+The database stores UTC; timezones are handled by application front-ends and client APIs.
 
 Conversion rules:
-- datetime → Keep as datetime (UTC assumed, core type)
-- timestamp → ALWAYS convert to datetime (core type)
+- datetime → Keep as datetime (assume UTC, core type)
+- timestamp → ASK USER about timezone convention, then convert to datetime
 - date → Keep as date (core type)
-- time → Keep as time (native type, no core equivalent)
+- time → ASK USER: recommend datetime (core type) or keep as time (native type)
 
-For timestamp columns:
-1. Convert type to datetime
-2. Ensure application logic stores times in UTC
-3. Handle timezone conversion in application front-ends and client APIs
+For EACH timestamp column, ASK THE USER:
+
+1. "What timezone convention was used for [column_name]?"
+   - UTC (no conversion needed)
+   - Server local time (requires conversion to UTC)
+   - Application local time (requires conversion to UTC)
+   - Mixed/unknown (requires data audit)
+
+2. "Does this use MySQL's auto-update behavior (ON UPDATE CURRENT_TIMESTAMP)?"
+   - If yes, may need to update table schema
+   - If no, application controls the value
+
+3. After clarifying, recommend:
+   - Convert type: timestamp → datetime
+   - If not already UTC: Add data conversion script to Phase III
+   - Update application code to store UTC times
+   - Handle timezone display in application front-ends and client APIs
+
+Example conversation:
+  AI: "I found timestamp column 'session_time'. What timezone was used?"
+  User: "Server time (US/Eastern)"
+  AI: "I recommend converting to UTC. I'll convert the type to datetime and add a
+       data conversion step in Phase III to convert US/Eastern times to UTC."
 
 Example:
   # pre-2.0
-  session_time : timestamp    # May have used MySQL auto-update
-  event_time : timestamp      # Application-managed
+  session_time : timestamp    # Was storing US/Eastern
+  event_time : timestamp      # Already UTC
 
-  # 2.0
-  session_time : datetime     # Database stores UTC; timezones handled by client APIs
-  event_time : datetime       # Database stores UTC; timezones handled by client APIs
+  # 2.0 (after user confirmation)
+  session_time : datetime     # Converted to UTC in Phase III
+  event_time : datetime       # No data conversion needed
 
 IMPORTANT - Bool Type:
 
@@ -570,23 +587,27 @@ IMPORTANT - Native Types (text and time):
 text and time are NATIVE MySQL types, NOT core types. They are allowed but discouraged.
 
 For text:
-- Consider migrating to varchar(n) with appropriate length (core type)
+- ASK USER: What is the maximum expected length?
+- Recommend migrating to varchar(n) with appropriate length (core type)
 - Or keep as text (native type, will generate warning)
 
 For time:
-- Keep as time (native type, no core equivalent, will generate warning)
+- ASK USER: Is this time-of-day only, or is date also relevant?
+- Recommend migrating to datetime (core type, can represent date+time)
+- Or keep as time (native type, will generate warning)
 
 Example:
   # pre-2.0
   description : text           # Native type
-  session_start : time         # Native type
+  session_start : time         # Native type (time-of-day)
 
   # 2.0 (recommended)
-  description : varchar(1000)  # Core type (if length constraint acceptable)
+  description : varchar(1000)  # Core type (after asking user about max length)
+  session_start : datetime     # Core type (if date is also relevant)
 
   # 2.0 (alternative - keep native)
-  description : text           # Native type (if unlimited length needed)
-  session_start : time         # Native type (no core equivalent)
+  description : text           # Native type (if truly unlimited length needed)
+  session_start : time         # Native type (if only time-of-day needed)
 
 In-Table Codecs:
   longblob → <blob>
