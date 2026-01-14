@@ -348,6 +348,8 @@ Update table definitions in topological order (tables before their dependents).
 
 Convert ALL types and codecs in Phase I:
 
+**Integer and Float Types:**
+
 | pre-2.0 | 2.0 | Category |
 |--------|-----|----------|
 | `int unsigned` | `uint32` | Core type |
@@ -357,13 +359,36 @@ Convert ALL types and codecs in Phase I:
 | `bigint unsigned` | `uint64` | Core type |
 | `float` | `float32` | Core type |
 | `double` | `float64` | Core type |
+
+**String, Date, and Structured Types:**
+
+| pre-2.0 | 2.0 | Notes |
+|--------|-----|-------|
+| `varchar(N)`, `char(N)`, `text` | Unchanged | No conversion needed |
+| `date`, `time` | Unchanged | No conversion needed |
+| `enum('a', 'b')` | Unchanged | Core type in 2.0 |
+| `datetime` | `datetime` | UTC only in 2.0 |
+| `timestamp` | `datetime` | **Convert:** 2.0 uses UTC-only datetime |
+| `json` | `json` | NEW in 2.0 (optional adoption) |
+| `uuid` | `uuid` | NEW in 2.0 (optional adoption) |
+| `tinyint(1)` | `bool` or `uint8` | **Ask user:** boolean or small integer? |
+
+**Codecs:**
+
+| pre-2.0 | 2.0 | Category |
+|--------|-----|----------|
 | `longblob` | `<blob>` | Codec (in-table) |
 | `attach` | `<attach>` | Codec (in-table) |
 | `blob@store` | `<blob@store>` | Codec (in-store) |
 | `attach@store` | `<attach@store>` | Codec (in-store) |
 | `filepath@store` | `<filepath@store>` | Codec (in-store) |
 
-**Note:** Code for in-store codecs is converted in Phase I using test stores. Production data migration happens in Phase III.
+**Important Notes:**
+
+- **Datetime/Timestamp:** DataJoint 2.0 supports `datetime` with **UTC only**—no timezone support. Convert `timestamp` to `datetime` and review timezone handling.
+- **JSON:** New core type. If you have custom JSON serialization in blobs, you can migrate to native `json` type (optional).
+- **Enum:** Already a core type—no changes needed.
+- **In-store codecs:** Code is converted in Phase I using test stores. Production data migration happens in Phase III.
 
 **Learn more:** [Type System Reference](../reference/specs/type-system.md) · [Definition Syntax](../reference/definition-syntax.md)
 
@@ -398,7 +423,7 @@ SCOPE - PHASE I:
 
 TYPE CONVERSIONS:
 
-Core Types:
+Core Types (Integer and Float):
   int unsigned → uint32
   int → int32
   smallint unsigned → uint16
@@ -410,6 +435,59 @@ Core Types:
   float → float32
   double → float64
   decimal(M,D) → decimal(M,D)  # unchanged
+
+Core Types (String and Date):
+  varchar(N) → varchar(N)  # unchanged
+  char(N) → char(N)  # unchanged
+  text → text  # unchanged
+  date → date  # unchanged
+  time → time  # unchanged
+  enum('a', 'b') → enum('a', 'b')  # unchanged
+
+Core Types (Structured Data):
+  json → json  # NEW in 2.0, unchanged if already present
+  uuid → uuid  # NEW in 2.0, unchanged if already present
+
+Special Cases:
+  tinyint(1) → Ask user: bool (boolean) or uint8 (0-255 integer)?
+  timestamp → datetime  # Review: DataJoint 2.0 uses UTC-only datetime
+
+IMPORTANT - Datetime and Timestamp:
+
+DataJoint 2.0 supports datetime with UTC only—no timezone support.
+
+- datetime → Keep as datetime (UTC assumed)
+- timestamp → Convert to datetime (review timezone handling)
+- date → Keep as date (no change)
+- time → Keep as time (no change)
+
+For timestamp columns, ask the user:
+- Was this storing UTC times? → Convert to datetime
+- Was this using MySQL's auto-update behavior? → Review application logic
+
+Example:
+  # pre-2.0
+  created_at : timestamp    # Review timezone handling
+
+  # 2.0
+  created_at : datetime     # UTC assumed
+
+IMPORTANT - Enum Types:
+
+enum is a core type in DataJoint 2.0—no changes required.
+
+Example:
+  # No change needed
+  sex : enum('M', 'F', 'U')
+
+IMPORTANT - JSON Type:
+
+json is a new core type in DataJoint 2.0. If you have custom JSON serialization
+in blobs, you may want to migrate to native json type, but this is optional.
+
+Example:
+  # Can now use native JSON
+  parameters : json
 
 In-Table Codecs:
   longblob → <blob>
@@ -426,14 +504,6 @@ IMPORTANT - Do NOT use these during migration (NEW in 2.0):
   # These have NO legacy equivalent
   # Adopt in Phase IV AFTER migration is complete
   # Do NOT convert existing attributes to these codecs
-
-String/Date Types (unchanged):
-  varchar(N) → varchar(N)
-  date → date
-  datetime → datetime
-  time → time
-  timestamp → timestamp
-  enum(...) → enum(...)
 
 SCHEMA DECLARATIONS:
   OLD: schema = dj.schema('my_pipeline')
