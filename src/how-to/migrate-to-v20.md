@@ -367,11 +367,12 @@ Convert ALL types and codecs in Phase I:
 | `varchar(N)`, `char(N)`, `text` | Unchanged | No conversion needed |
 | `date`, `time` | Unchanged | No conversion needed |
 | `enum('a', 'b')` | Unchanged | Core type |
+| `bool`, `boolean` | `bool` | Core type (MySQL stores as tinyint(1)) |
 | `datetime` | `datetime` | UTC only in 2.0 |
 | `timestamp` | `datetime` | **Convert:** 2.0 uses UTC-only datetime |
 | `json` | `json` | Unchanged (was available but underdocumented) |
 | `uuid` | `uuid` | Unchanged (widely used in legacy) |
-| `tinyint(1)` | `bool` or `uint8` | **Ask user:** boolean or small integer? |
+| `tinyint(1)` | `bool` or `uint8` | **Ask user:** was this boolean or small integer? |
 
 **Codecs:**
 
@@ -387,9 +388,9 @@ Convert ALL types and codecs in Phase I:
 
 - **Datetime/Timestamp:** DataJoint 2.0 stores all times as `datetime` in **UTC without timezone information**. Timezones are handled by application frontends. Convert `timestamp` to `datetime` and ensure your application stores times in UTC.
 
-- **Bool vs tinyint(1):** MySQL's `tinyint(1)` can represent either booleans (true/false) or small integers (0-255). DataJoint 2.0 has a distinct `bool` type. Review each `tinyint(1)` column and decide:
-  - Boolean semantics (yes/no, active/inactive) → `bool`
-  - Small integer (counts, indices) → `uint8`
+- **Bool:** Legacy DataJoint supported `bool` and `boolean` types (MySQL stores as `tinyint(1)`). Keep as `bool` in 2.0. Only explicit `tinyint(1)` declarations need review:
+  - If used for boolean semantics (yes/no, active/inactive) → `bool`
+  - If used for small integers (counts, indices 0-255) → `uint8`
 
 - **JSON:** Was available in pre-2.0 but underdocumented. Many users serialized JSON into blobs. If you have custom JSON serialization in blobs, you can migrate to native `json` type (optional).
 
@@ -450,6 +451,8 @@ Core Types (String and Date):
   date → date  # unchanged
   time → time  # unchanged
   enum('a', 'b') → enum('a', 'b')  # unchanged
+  bool → bool  # unchanged (legacy supported, MySQL stores as tinyint(1))
+  boolean → bool  # unchanged (legacy supported, MySQL stores as tinyint(1))
 
 Core Types (Structured Data):
   json → json  # unchanged (was available but underdocumented in pre-2.0)
@@ -458,11 +461,13 @@ Core Types (Structured Data):
 Special Cases - REQUIRE USER REVIEW:
 
   tinyint(1) → ASK USER: bool or uint8?
+    Note: Legacy DataJoint had bool/boolean types. Only explicit tinyint(1) needs review.
     - Boolean semantics (yes/no, active/inactive) → bool
-    - Small integer (counts, indices) → uint8
+    - Small integer (counts, indices 0-255) → uint8
     Example:
-      is_active : tinyint(1)  # Boolean → bool
+      is_active : tinyint(1)  # Boolean semantics → bool
       priority : tinyint(1)   # 0-10 scale → uint8
+      has_data : bool         # Already bool → keep as bool
 
   timestamp → datetime  # ALWAYS CONVERT
     - DataJoint 2.0 standard: store all times in UTC without timezone info
@@ -496,22 +501,31 @@ Example:
   session_time : datetime     # Store UTC, handle timezone in frontend
   event_time : datetime       # Store UTC, handle timezone in frontend
 
-IMPORTANT - Bool Type (New Distinct Type):
+IMPORTANT - Bool Type:
 
-MySQL's tinyint(1) can mean boolean OR small integer. DataJoint 2.0 has distinct bool type.
+Legacy DataJoint already supported bool and boolean types (MySQL stores as tinyint(1)).
 
-Review EACH tinyint(1) column and ask the user:
-- Boolean (true/false, yes/no, on/off) → bool
-- Small integer (0-255 range) → uint8
+Conversion rules:
+- bool → Keep as bool (no change)
+- boolean → Keep as bool (no change)
+- tinyint(1) → ASK USER: was this boolean or small integer?
+
+Only explicit tinyint(1) declarations need review because:
+- Legacy had bool/boolean for true/false values
+- Some users explicitly used tinyint(1) for small integers (0-255)
 
 Example:
   # pre-2.0
-  is_active : tinyint(1)      # Boolean semantics
-  n_retries : tinyint(1)      # Small integer
+  is_active : bool           # Already bool → no change
+  enabled : boolean          # Already boolean → bool
+  is_valid : tinyint(1)      # ASK: Boolean semantics? → bool
+  n_retries : tinyint(1)     # ASK: Small integer? → uint8
 
   # 2.0
-  is_active : bool            # Explicit boolean
-  n_retries : uint8           # Explicit small integer
+  is_active : bool           # Unchanged
+  enabled : bool             # boolean → bool
+  is_valid : bool            # Boolean semantics
+  n_retries : uint8          # Small integer
 
 IMPORTANT - Enum Types:
 
