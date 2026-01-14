@@ -39,6 +39,7 @@ they assume you understand the basics and focus on getting things done.
 
 ## Object Storage
 
+- [Choose a Storage Type](choose-storage-type.md) — Decision guide for codecs
 - [Use Object Storage](use-object-storage.md) — When and how
 - [Create Custom Codecs](create-custom-codec.md) — Domain-specific types
 - [Manage Large Data](manage-large-data.md) — Blobs, streaming, efficiency
