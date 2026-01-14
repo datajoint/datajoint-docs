@@ -48,23 +48,34 @@ DataJoint 2.0 introduces a unified type system with three tiers:
 
 ### Codecs
 
-Codecs handle serialization for non-native data types:
+DataJoint 2.0 makes serialization **explicit** with codecs. In 0.14.x, `longblob` automatically serialized Python objects; in 2.0, you explicitly choose `<blob>`.
 
-| Codec | Description | Storage | Legacy Format | Migration |
-|-------|-------------|---------|---------------|-----------|
-| `<blob>` | Python object serialization | In-table | `longblob` | Phase I code, Phase III data |
-| `<attach>` | Inline file attachments | In-table | `attach` | Phase I code, Phase III data |
-| `<blob@store>` | Large blobs, hash-addressed | In-store (hash) | `external-store`, `blob@store` | Phase I code, Phase III data |
-| `<attach@store>` | File attachments, hash-addressed | In-store (hash) | `attach@store` | Phase I code, Phase III data |
-| `<filepath@store>` | Managed file paths | In-store (filepath) | `filepath@store` | Phase I code, Phase III data |
-| `<npy@store>` | NumPy arrays with lazy loading | In-store (schema) | **New in 2.0** | Phase IV adoption |
-| `<object@store>` | Object storage (zarr, HDF5, custom) | In-store (schema) | **New in 2.0** | Phase IV adoption |
+#### Migration: Legacy → 2.0
+
+| 0.14.x (Implicit) | 2.0 (Explicit) | Storage | Migration |
+|-------------------|----------------|---------|-----------|
+| `longblob` | `<blob>` | In-table | Phase I code, Phase III data |
+| `mediumblob` | `<blob>` | In-table | Phase I code, Phase III data |
+| `attach` | `<attach>` | In-table | Phase I code, Phase III data |
+| `external-store` | `<blob@store>` | In-store (hash) | Phase I code, Phase III data |
+| `blob@store` | `<blob@store>` | In-store (hash) | Phase I code, Phase III data |
+| `attach@store` | `<attach@store>` | In-store (hash) | Phase I code, Phase III data |
+| `filepath@store` | `<filepath@store>` | In-store (filepath) | Phase I code, Phase III data |
+
+#### New in 2.0: Schema-Addressed Storage
+
+These codecs are NEW—there's no legacy equivalent to migrate:
+
+| Codec | Description | Storage | Adoption |
+|-------|-------------|---------|----------|
+| `<npy@store>` | NumPy arrays with lazy loading | In-store (schema) | Phase IV (optional) |
+| `<object@store>` | Zarr, HDF5, custom formats | In-store (schema) | Phase IV (optional) |
 
 **Key principles:**
 
-- All codec conversions (in-table and legacy in-store) are implemented in Phase I using test stores
-- Production data migration happens in Phase III
-- Schema-addressed storage (`<npy@>`, `<object@>`) is new in 2.0 - adopt in Phase IV, no migration needed
+- All **legacy codec** conversions happen in Phase I (code) and Phase III (data)
+- **New codecs** (`<npy@>`, `<object@>`) are adopted in Phase IV for new features or enhanced workflows
+- Schema-addressed storage organizes data by table structure—no migration needed, just new functionality
 
 **Learn more:** [Codec API Reference](../reference/specs/codec-api.md) · [Custom Codecs](../explanation/custom-codecs.md)
 
@@ -237,17 +248,39 @@ conn = dj.conn()
 print(f"Connected to {conn.conn_info['host']}")
 ```
 
-### Step 4: Configure Test Object Stores
+### Step 4: Configure Test Object Stores (If Applicable)
 
-**Important:** Configure TEST stores for Phase I development and testing. Production stores will be configured in Phase III.
+**Skip this step if:** Your legacy pipeline uses only in-table storage (`longblob`, `mediumblob`, `blob`). You can skip to Step 5.
 
-If your pipeline uses in-store codecs (`<blob@>`, `<attach@>`, `<filepath@>`, `<npy@>`, `<object@>`), you'll convert ALL in-store code in Phase I. Set up test stores now for development.
+**Configure test stores if:** Your legacy pipeline uses 0.14.x in-store formats:
+
+- `external-store` (legacy 0.14.x format)
+- `blob@store` (legacy hash-addressed)
+- `attach@store` (legacy hash-addressed)
+- `filepath@store` (legacy filepath references)
+
+**Note:** `<npy@>` and `<object@>` are NEW in 2.0 (schema-addressed storage). They have no legacy equivalent and don't need migration. Adopt them in Phase IV for new features.
+
+#### Background: 0.14.x Implicit vs 2.0 Explicit Codecs
+
+**0.14.x implicit serialization:**
+
+- `longblob` → automatic Python object serialization (pickle)
+- `mediumblob` → automatic Python object serialization (pickle)
+- `blob` → automatic Python object serialization (pickle)
+- No explicit codec choice - serialization was built-in
+
+**2.0 explicit codecs:**
+
+- `<blob>` → explicit Python object serialization (same behavior, now explicit)
+- `<attach>` → explicit file attachment (was separate feature)
+- Legacy in-store formats converted to explicit `<blob@>`, `<attach@>`, `<filepath@>` syntax
 
 #### Background: Unified Stores
 
 2.0 uses **unified stores** configuration:
 
-- Single `stores.*` config for all storage types
+- Single `stores.*` config for all storage types (hash-addressed + schema-addressed + filepath)
 - Named stores with `default` pointer
 - Supports multiple stores with different backends
 
@@ -358,11 +391,12 @@ CONTEXT:
 SCOPE - PHASE I:
 1. Update schema declarations (add _v2 suffix)
 2. Convert ALL type syntax to 2.0 core types
-3. Convert ALL codecs (in-table AND in-store)
-   - In-table: longblob → <blob>, attach → <attach>
-   - In-store: blob@store → <blob@store>, filepath@store → <filepath@store>, etc.
+3. Convert ALL legacy codecs (in-table AND in-store)
+   - In-table: longblob → <blob>, mediumblob → <blob>, attach → <attach>
+   - In-store (legacy only): external-store → <blob@store>, blob@store → <blob@store>, etc.
 4. Code will use TEST stores configured in datajoint.json
-5. Production data migration happens in Phase III (code is complete after Phase I)
+5. Do NOT add new 2.0 codecs (<npy@>, <object@>) - these are for Phase IV adoption
+6. Production data migration happens in Phase III (code is complete after Phase I)
 
 TYPE CONVERSIONS:
 
@@ -383,17 +417,18 @@ In-Table Codecs:
   longblob → <blob>
   attach → <attach>
 
-In-Store Codecs (convert legacy formats):
+In-Store Codecs (LEGACY formats only - convert these):
   external-store → <blob@store>  # Legacy 0.14.x format
   blob@store → <blob@store>  # Already correct syntax
   attach@store → <attach@store>
   filepath@store → <filepath@store>
 
-NEW in 2.0 (optional adoption, not migration):
-  <npy@store>  # NumPy arrays with lazy loading
-  <object@store>  # Zarr, HDF5, or custom object formats
-  # Use these for NEW attributes or to replace custom AdaptedTypes
-  # No legacy equivalent - adopt in Phase IV after migration complete
+IMPORTANT - Do NOT use these during migration (NEW in 2.0):
+  <npy@store>  # Schema-addressed storage - NEW feature
+  <object@store>  # Schema-addressed storage - NEW feature
+  # These have NO legacy equivalent
+  # Adopt in Phase IV AFTER migration is complete
+  # Do NOT convert existing attributes to these codecs
 
 String/Date Types (unchanged):
   varchar(N) → varchar(N)
@@ -456,16 +491,13 @@ class Recording(dj.Manual):
     metadata : <blob>  # Migrated from longblob
     """
 
-# Optional Phase IV: Adopt schema-addressed storage for new features
-@schema
-class RecordingEnhanced(dj.Manual):
-    definition = """
-    recording_id : uint32
-    ---
-    sampling_rate : float32
-    signal : <npy@raw>  # NEW: NumPy with lazy loading (adopt in Phase IV)
-    metadata : <blob>
-    """
+# Phase I: Only convert existing legacy formats
+# Do NOT add new codecs like <npy@> during migration
+
+# If you want to adopt <npy@> later (Phase IV), that's a separate step:
+# - After migration is complete
+# - For new features or performance improvements
+# - Not required for migration
 
 REPORT:
 - Schemas converted: [list with _v2 suffix]
