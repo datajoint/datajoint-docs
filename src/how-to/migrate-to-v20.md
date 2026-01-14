@@ -2217,8 +2217,8 @@ Use per-table job management:
 # Monitor job progress
 Analysis.jobs.progress()
 
-# Priority-based populate
-Analysis.populate(order='priority DESC')
+# Priority-based populate (processes jobs at priority ≥ 50)
+Analysis.populate(priority=50)
 
 # Job tables: ~~analysis
 ```
