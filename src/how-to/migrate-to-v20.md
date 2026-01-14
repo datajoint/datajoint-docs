@@ -127,7 +127,8 @@ DataJoint 2.0 replaces `external.*` with unified `stores.*` configuration:
 | `(table & key)._update('attr', val)` | `table.update1({**key, 'attr': val})` | I |
 | `table1 @ table2` | `table1 * table2` (natural join with semantic checks) | I |
 | `a.join(b, left=True)` | Consider `a.extend(b)` | I |
-| `dj.U('attr') * table` | `table` (no longer necessary) | I |
+| `dj.U('attr') & table` | Unchanged (correct pattern) | — |
+| `dj.U('attr') * table` | Refactor (was a hack to change primary key) | I |
 | `dj.ERD(schema)` | `dj.Diagram(schema)` | I |
 
 **Learn more:** [Fetch API Reference](../reference/specs/fetch-api.md) · [Query Operators Reference](../reference/operators.md)
@@ -741,7 +742,10 @@ Update all DataJoint API calls to 2.0 patterns.
 **Join Operators:**
 - `table1 @ table2` → `table1 * table2` (natural join with semantic checks enabled)
 - `a.join(b, left=True)` → Consider `a.extend(b)`
-- `dj.U('attr') * table` → `table` (no longer necessary)
+
+**Universal Set:**
+- `dj.U('attr') & table` → Unchanged (correct pattern for projecting attributes)
+- `dj.U('attr') * table` → Refactor (was a hack to change primary key)
 
 **Visualization:**
 - `dj.ERD(schema)` → `dj.Diagram(schema)` (ERD deprecated)
@@ -804,9 +808,14 @@ API CONVERSIONS:
    OLD: result = a.join(b, left=True)
    NEW: result = a.extend(b)  # Consider using extend for left joins
 
-4. Universal Set (REMOVE - no longer necessary):
-   OLD: result = dj.U('attr') * table
-   NEW: result = table  # dj.U() is no longer necessary
+4. Universal Set (CHECK - distinguish correct from hack):
+   CORRECT (unchanged):
+   result = dj.U('attr') & table  # Projects specific attributes, keeps as is
+
+   HACK (refactor):
+   result = dj.U('attr') * table  # Was used to change primary key, needs refactoring
+
+   Note: The * operator with dj.U() was a hack. Ask user about intent and suggest proper refactoring.
 
 5. Insert/Delete (unchanged):
    table.insert(data)  # unchanged
@@ -823,7 +832,8 @@ PROCESS:
    d. Replace with update1()
    e. Search for @ operator (replace with * for natural join)
    f. Search for .join(x, left=True) patterns (consider .extend(x))
-   g. Search for dj.U() * patterns (remove, replace with just table)
+   g. Search for dj.U() * patterns (identify as hack, ask user to refactor)
+   h. Verify dj.U() & patterns remain unchanged
 3. Run syntax checks
 4. Run existing tests if available
 5. If semantic checks fail after @ → * conversion, investigate schema/data
@@ -834,7 +844,8 @@ VERIFICATION:
 - No .fetch1('KEY') calls remaining (replaced with .keys())
 - No ._update() calls remaining
 - No @ operator between tables
-- No dj.U() * patterns (removed)
+- dj.U() * patterns identified and flagged for refactoring
+- dj.U() & patterns remain unchanged
 - All tests pass (if available)
 - Semantic check failures investigated and resolved
 
@@ -876,31 +887,41 @@ Pattern 9: Left join
 OLD: result = Session.join(Experiment, left=True)
 NEW: result = Session.extend(Experiment)  # Consider using extend
 
-Pattern 10: Universal set (REMOVE)
-OLD: all_dates = dj.U('session_date') * Session
-NEW: all_dates = Session  # dj.U() no longer necessary
+Pattern 10: Universal set (distinguish correct from hack)
+CORRECT (unchanged):
+OLD: all_dates = dj.U('session_date') & Session
+NEW: all_dates = dj.U('session_date') & Session  # Unchanged, correct pattern
+
+HACK (needs refactoring):
+OLD: result = dj.U('new_pk') * Session  # Hack to change primary key
+NEW: [Refactor - ask user about intent]
 
 REPORT:
 
 - Files modified: [list]
 - fetch() → to_arrays/to_dicts: [count]
+- fetch(..., format="frame") → to_pandas(): [count]
 - fetch1('KEY') → keys(): [count]
 - _update() → update1(): [count]
 - @ → * (natural join): [count]
 - .join(x, left=True) → .extend(x): [count]
-- dj.U() * table → table (removed): [count]
+- dj.U() * table patterns flagged for refactoring: [count]
+- dj.U() & table patterns (unchanged): [count]
+- dj.ERD() → dj.Diagram(): [count]
 - Semantic check failures: [count and resolution]
 - Tests passed: [yes/no]
 
 COMMIT MESSAGE FORMAT:
 "feat(phase-i): convert query and insert code to 2.0 API
 
-- Replace fetch() with to_arrays()/to_dicts()
+- Replace fetch() with to_arrays()/to_dicts()/to_pandas()
 - Replace fetch1('KEY') with keys()
 - Replace _update() with update1()
 - Replace @ operator with * (enables semantic checks)
 - Replace .join(x, left=True) with .extend(x)
-- Remove dj.U() * table patterns (no longer necessary)
+- Replace dj.ERD() with dj.Diagram()
+- Flag dj.U() * table patterns as hacks needing refactoring
+- Keep dj.U() & table patterns unchanged (correct)
 - Investigate and resolve semantic check failures
 
 API conversions: X fetch, Y update, Z join"
@@ -1024,7 +1045,8 @@ Tables updated: X Computed, Y Imported"
 - [ ] All `fetch1('KEY')` converted to `keys()`
 - [ ] All `._update()` calls converted
 - [ ] All `@` operators converted to `*`
-- [ ] All `dj.U() * table` patterns removed (replace with `table`)
+- [ ] All `dj.U() * table` patterns flagged for refactoring (was a hack)
+- [ ] All `dj.U() & table` patterns verified as unchanged (correct)
 - [ ] All `dj.ERD()` calls converted to `dj.Diagram()`
 - [ ] All populate methods updated
 - [ ] No syntax errors
