@@ -6,6 +6,73 @@ These tutorials guide you through building data pipelines step by step. Each tut
 is a Jupyter notebook that you can run interactively. Start with the basics and
 progress to domain-specific and advanced topics.
 
+## Quick Start
+
+Install DataJoint:
+
+```bash
+pip install datajoint
+```
+
+Configure database credentials in your project (see [Configuration](../reference/configuration.md)):
+
+```bash
+# Create datajoint.json for non-sensitive settings
+echo '{"database": {"host": "localhost", "port": 3306}}' > datajoint.json
+
+# Create secrets directory for credentials
+mkdir -p .secrets
+echo "root" > .secrets/database.user
+echo "password" > .secrets/database.password
+```
+
+Define and populate a simple pipeline:
+
+```python
+import datajoint as dj
+
+schema = dj.Schema('my_pipeline')
+
+@schema
+class Subject(dj.Manual):
+    definition = """
+    subject_id : uint16
+    ---
+    name : varchar(100)
+    date_of_birth : date
+    """
+
+@schema
+class Session(dj.Manual):
+    definition = """
+    -> Subject
+    session_idx : uint8
+    ---
+    session_date : date
+    """
+
+@schema
+class SessionAnalysis(dj.Computed):
+    definition = """
+    -> Session
+    ---
+    result : float64
+    """
+
+    def make(self, key):
+        # Compute result for this session
+        self.insert1({**key, 'result': 42.0})
+
+# Insert data
+Subject.insert1({'subject_id': 1, 'name': 'M001', 'date_of_birth': '2026-01-15'})
+Session.insert1({'subject_id': 1, 'session_idx': 1, 'session_date': '2026-01-06'})
+
+# Run computations
+SessionAnalysis.populate()
+```
+
+Continue learning with the structured tutorials below.
+
 ## Basics
 
 Core concepts for getting started with DataJoint:

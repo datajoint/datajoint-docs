@@ -39,6 +39,23 @@ No action required—the new license is more permissive.
 
 DataJoint 2.0 introduces portable type aliases (`uint32`, `float64`, etc.) that prepare the codebase for **PostgreSQL backend compatibility** in a future release. Migration to core types ensures your schemas will work seamlessly when Postgres support is available.
 
+### Before You Start: Testing Recommendation
+
+**⚡ Want AI agents to automate Phases I-II for you?**
+
+Create unit and integration tests for your pipeline against a QA database before
+starting migration. This enables AI agents to perform most migration work
+automatically, reducing manual effort by 50-80%.
+
+→ **See [Recommendation: Create Tests Before Migration](#recommendation-create-tests-before-migration)** for details.
+
+**Why this matters:**
+
+- **With tests:** Agents migrate code → run tests → fix failures → verify automatically
+- **Without tests:** Manual verification at every step, higher risk, more time
+
+Tests provide immediate ROI during migration and ongoing value for development.
+
 ---
 
 ## What's New in 2.0
@@ -128,10 +145,11 @@ DataJoint 2.0 replaces `external.*` with unified `stores.*` configuration:
 | `table1 @ table2` | `table1 * table2` (natural join with semantic checks) | I |
 | `a.join(b, left=True)` | Consider `a.extend(b)` | I |
 | `dj.U('attr') & table` | Unchanged (correct pattern) | — |
-| `dj.U('attr') * table` | Refactor (was a hack to change primary key) | I |
+| `dj.U('attr') * table` | `table` (was a hack to change primary key) | I |
 | `dj.ERD(schema)` | `dj.Diagram(schema)` | I |
+| `table.insert([(1, 'a'), (2, 'b')])` | Must use dicts/DataFrames (no positional tuples) | I |
 
-**Learn more:** [Fetch API Reference](../reference/specs/fetch-api.md) · [Query Operators Reference](../reference/operators.md)
+**Learn more:** [Fetch API Reference](../reference/specs/fetch-api.md) · [Query Operators Reference](../reference/operators.md) · [Semantic Matching](../reference/specs/semantic-matching.md)
 
 ---
 
@@ -156,6 +174,207 @@ DataJoint 2.0 replaces `external.*` with unified `stores.*` configuration:
 - **Phase II:** ~1-2 days
 - **Phase III:** ~1-7 days (depends on data size and option chosen)
 - **Phase IV:** Ongoing feature adoption
+
+---
+
+## Recommendation: Create Tests Before Migration
+
+**Highly recommended for automated, agent-driven migration.**
+
+If you create unit and integration tests for your pipeline before starting
+Phase I, AI coding agents can perform most of the migration work automatically,
+substantially reducing manual effort.
+
+### Why Tests Enable Automated Migration
+
+**With tests:**
+
+1. **Phase I automation** - Agent can:
+   - Migrate code to 2.0 API
+   - Run tests to verify correctness
+   - Fix failures iteratively
+   - Complete migration with high confidence
+
+2. **Phase II automation** - Agent can:
+   - Populate `_v2` schemas with test data
+   - Run tests against both legacy and v2 pipelines
+   - Verify equivalence automatically
+   - Generate validation reports
+
+3. **Phase III guidance** - Agent can:
+   - Run tests after data migration
+   - Catch issues immediately
+   - Guide production cutover with confidence
+
+**Without tests:**
+
+- Manual verification at each step
+- Higher risk of missed issues
+- More time-intensive validation
+- Uncertainty about correctness
+
+### What Tests to Create
+
+Create tests against a **QA database and object store** (separate from
+production):
+
+**Unit tests:**
+
+- Table definitions compile correctly
+- Schema relationships are valid
+- Populate methods work for individual tables
+- Query patterns return expected results
+
+**Integration tests:**
+
+- End-to-end pipeline execution
+- Data flows through computed tables correctly
+- External file references work (if using `<filepath@>`)
+- Object storage operations work (if using in-store codecs)
+
+**Example test structure:**
+
+```python
+# tests/test_tables.py
+import pytest
+import datajoint as dj
+from my_pipeline import Mouse, Session, Neuron
+
+@pytest.fixture
+def test_schema():
+    """Use QA database for testing."""
+    dj.config['database.host'] = 'qa-db.example.com'
+    schema = dj.schema('test_pipeline')
+    yield schema
+    schema.drop()  # Cleanup after test
+
+def test_mouse_insert(test_schema):
+    """Test manual table insertion."""
+    Mouse.insert1({'mouse_id': 0, 'dob': '2024-01-01', 'sex': 'M'})
+    assert len(Mouse()) == 1
+
+def test_session_populate(test_schema):
+    """Test session insertion and relationships."""
+    Mouse.insert1({'mouse_id': 0, 'dob': '2024-01-01', 'sex': 'M'})
+    Session.insert1({
+        'mouse_id': 0,
+        'session_date': '2024-06-01',
+        'experimenter': 'Alice'
+    })
+    assert len(Session() & 'mouse_id=0') == 1
+
+def test_neuron_computation(test_schema):
+    """Test computed table populate."""
+    # Insert upstream data
+    Mouse.insert1({'mouse_id': 0, 'dob': '2024-01-01', 'sex': 'M'})
+    Session.insert1({
+        'mouse_id': 0,
+        'session_date': '2024-06-01',
+        'experimenter': 'Alice'
+    })
+
+    # Populate computed table
+    Neuron.populate()
+
+    # Verify results
+    assert len(Neuron()) > 0
+
+def test_query_patterns(test_schema):
+    """Test common query patterns."""
+    # Setup data
+    Mouse.insert1({'mouse_id': 0, 'dob': '2024-01-01', 'sex': 'M'})
+
+    # Test fetch
+    mice = Mouse.fetch(as_dict=True)
+    assert len(mice) == 1
+
+    # Test restriction
+    male_mice = Mouse & 'sex="M"'
+    assert len(male_mice) == 1
+```
+
+**Integration test example:**
+
+```python
+# tests/test_pipeline.py
+def test_full_pipeline(test_schema):
+    """Test complete pipeline execution."""
+    # 1. Insert manual data
+    Mouse.insert([
+        {'mouse_id': 0, 'dob': '2024-01-01', 'sex': 'M'},
+        {'mouse_id': 1, 'dob': '2024-01-15', 'sex': 'F'},
+    ])
+
+    Session.insert([
+        {'mouse_id': 0, 'session_date': '2024-06-01', 'experimenter': 'Alice'},
+        {'mouse_id': 1, 'session_date': '2024-06-03', 'experimenter': 'Bob'},
+    ])
+
+    # 2. Populate computed tables
+    Neuron.populate()
+    Analysis.populate()
+
+    # 3. Verify data flows correctly
+    assert len(Mouse()) == 2
+    assert len(Session()) == 2
+    assert len(Neuron()) > 0
+    assert len(Analysis()) > 0
+
+    # 4. Test queries work
+    alice_sessions = Session & 'experimenter="Alice"'
+    assert len(alice_sessions) == 1
+```
+
+### How to Use Tests with AI Agents
+
+Once tests are created, an AI agent can:
+
+```bash
+# Agent workflow for Phase I
+1. git checkout -b pre/v2.0
+2. Update schema declarations to _v2
+3. Convert table definitions to 2.0 syntax
+4. Convert API calls (fetch → to_dicts, etc.)
+5. Run: pytest tests/
+6. Fix any failures iteratively
+7. Repeat 5-6 until all tests pass
+8. Phase I complete automatically!
+
+# Agent workflow for Phase II
+1. Populate _v2 schemas with test data
+2. Run tests against _v2 schemas
+3. Compare with legacy results
+4. Generate validation report
+5. Phase II complete automatically!
+```
+
+### Investment vs. Return
+
+**Time investment:**
+
+- Creating tests: ~1-3 days
+- QA database setup: ~1-2 hours
+
+**Time saved:**
+
+- Phase I: ~50-75% reduction (mostly automated)
+- Phase II: ~80% reduction (fully automated validation)
+- Phase III: Higher confidence, faster debugging
+
+**Net benefit:** Tests pay for themselves during migration and provide ongoing
+value for future development.
+
+### When to Skip Tests
+
+Skip test creation if:
+
+- Pipeline is very simple (few tables, no computation)
+- One-time migration with no ongoing development
+- Team has extensive manual testing procedures already
+- Time pressure requires starting migration immediately
+
+**Note:** Even minimal tests (just table insertion and populate) provide
+significant value for automated migration.
 
 ---
 
@@ -206,9 +425,163 @@ git add requirements.txt
 git commit -m "chore: upgrade to datajoint 2.0"
 ```
 
-### Step 3: Configure DataJoint 2.0
+### Step 3: Update Schema Declarations
+
+**Critical early step:** Update all `dj.schema()` calls to use `_v2` suffix
+for parallel testing and validation.
+
+**Why do this first:**
+
+- Creates parallel schemas alongside production (e.g., `my_pipeline_v2`)
+- Allows testing 2.0 code without affecting production schemas
+- Enables side-by-side validation in Phase II
+- Production schemas remain untouched on `main` branch
+
+#### Find All Schema Declarations
+
+```bash
+# Find all schema() calls in your codebase
+grep -rn "dj.schema\|dj.Schema" --include="*.py" .
+
+# Example output:
+# pipeline/session.py:5:schema = dj.schema('my_pipeline')
+# pipeline/analysis.py:8:schema = dj.schema('my_pipeline')
+# pipeline/ephys.py:3:schema = dj.schema('ephys_pipeline')
+```
+
+#### Update Schema Names
+
+**For each schema declaration, add `_v2` suffix:**
+
+```python
+# BEFORE (production, on main branch)
+schema = dj.schema('my_pipeline')
+
+# AFTER (testing, on pre/v2.0 branch)
+schema = dj.schema('my_pipeline_v2')
+```
+
+**Multiple schemas example:**
+
+```python
+# BEFORE
+session_schema = dj.schema('sessions')
+analysis_schema = dj.schema('analysis')
+ephys_schema = dj.schema('ephys')
+
+# AFTER
+session_schema = dj.schema('sessions_v2')
+analysis_schema = dj.schema('analysis_v2')
+ephys_schema = dj.schema('ephys_v2')
+```
+
+#### AI Agent Prompt: Update Schema Declarations
+
+---
+
+**🤖 AI Agent Prompt: Phase I - Update Schema Declarations with _v2
+Suffix**
+
+```
+You are updating DataJoint schema declarations for 2.0 migration testing.
+
+TASK: Add _v2 suffix to all dj.schema() calls for parallel testing.
+
+CONTEXT:
+- Branch: pre/v2.0 (just created)
+- Production schemas on main branch remain unchanged
+- _v2 schemas will be empty until table definitions are converted
+- This enables side-by-side testing without affecting production
+
+STEPS:
+
+1. Find all schema declarations:
+   grep -rn "dj.schema\|dj.Schema" --include="*.py" .
+
+2. For EACH schema declaration, add _v2 suffix:
+   OLD: schema = dj.schema('my_pipeline')
+   NEW: schema = dj.schema('my_pipeline_v2')
+
+3. Preserve all other arguments:
+   OLD: schema = dj.schema('sessions', locals())
+   NEW: schema = dj.schema('sessions_v2', locals())
+
+   OLD: schema = dj.schema('analysis', create_schema=True)
+   NEW: schema = dj.schema('analysis_v2', create_schema=True)
+
+4. Update any string references to schema names:
+   OLD: conn.query("USE my_pipeline")
+   NEW: conn.query("USE my_pipeline_v2")
+
+   OLD: if schema_name == 'my_pipeline':
+   NEW: if schema_name == 'my_pipeline_v2':
+
+NAMING CONVENTION:
+
+- my_pipeline → my_pipeline_v2
+- sessions → sessions_v2
+- ephys_pipeline → ephys_pipeline_v2
+- lab.mouse → lab.mouse_v2
+
+VERIFICATION:
+
+After updating, verify:
+- All dj.schema() calls have _v2 suffix
+- No hard-coded schema names without _v2 suffix
+- No duplicate schema names (each should be unique)
+
+COMMIT:
+
+git add -A
+git commit -m "feat(phase-i): add _v2 suffix to all schema declarations
+
+- Update all dj.schema() calls to use _v2 suffix
+- Enables parallel testing without affecting production schemas
+- Production schemas on main branch remain unchanged
+
+Schemas updated:
+- my_pipeline → my_pipeline_v2
+- [list other schemas...]"
+```
+
+---
+
+#### Verify Schema Name Changes
+
+```python
+import datajoint as dj
+
+# Test connection (should work before any tables created)
+conn = dj.conn()
+print("✓ Connected to database")
+
+# At this point, _v2 schemas don't exist yet
+# They will be created in Step 5 when table definitions are applied
+```
+
+#### Commit Schema Declaration Changes
+
+```bash
+git add -A
+git commit -m "feat(phase-i): add _v2 suffix to all schema declarations
+
+- Update all dj.schema() calls to use _v2 suffix
+- Enables parallel testing without affecting production schemas
+- Next: configure stores and convert table definitions"
+```
+
+**Next steps:**
+
+- Step 4: Configure object stores (if applicable)
+- Step 5: Convert table definitions to 2.0 syntax
+- When table definitions are applied, `_v2` schemas will be created
+
+### Step 4: Configure DataJoint 2.0
 
 Create new configuration files for 2.0.
+
+**Note:** Schema declarations already updated in Step 3 with `_v2` suffix.
+Now configure database connection and stores.
 
 #### Background: Configuration Changes
 
@@ -261,9 +634,9 @@ conn = dj.conn()
 print(f"Connected to {conn.conn_info['host']}")
 ```
 
-### Step 4: Configure Test Object Stores (If Applicable)
+### Step 5: Configure Test Object Stores (If Applicable)
 
-**Skip this step if:** Your legacy pipeline uses only in-table storage (`longblob`, `mediumblob`, `blob`, `attach`). You can skip to Step 5.
+**Skip this step if:** Your legacy pipeline uses only in-table storage (`longblob`, `mediumblob`, `blob`, `attach`). You can skip to Step 6.
 
 **Configure test stores if:** Your legacy pipeline uses pre-2.0 in-store formats:
 
@@ -348,15 +721,251 @@ print(f"Connected to {conn.conn_info['host']}")
 }
 ```
 
-**Store credentials in `.secrets/stores.s3_store.access_key` and `.secrets/stores.s3_store.secret_key`:**
+**Store credentials in `.secrets/stores.s3_store.access_key` and
+`.secrets/stores.s3_store.secret_key`:**
 ```bash
 echo "YOUR_ACCESS_KEY" > .secrets/stores.s3_store.access_key
 echo "YOUR_SECRET_KEY" > .secrets/stores.s3_store.secret_key
 ```
 
-### Step 5: Convert Table Definitions
+#### AI Agent Prompt: Configure and Test Stores
+
+---
+
+**🤖 AI Agent Prompt: Phase I - Configure Test Stores and Verify Codecs**
+
+```
+You are configuring test object stores for DataJoint 2.0 migration.
+
+TASK: Set up test stores and verify all in-store codecs work correctly
+before migrating production data.
+
+CONTEXT:
+- Phase I uses TEST stores (separate from production)
+- Testing verifies codecs work with legacy schema structure
+- File organization must match expectations
+- Production data migration happens in Phase III
+
+STEPS:
+
+1. Configure test stores in datajoint.json:
+   - Use test locations (e.g., /data/v2_test_stores/)
+   - For cloud: use test bucket or prefix (e.g., "v2-test")
+   - Configure hash_prefix, schema_prefix, filepath_prefix if needed
+
+2. Store credentials in .secrets/ directory:
+   - Create .secrets/stores.<name>.access_key (S3/GCS/Azure)
+   - Create .secrets/stores.<name>.secret_key (S3)
+   - Verify .secrets/ is gitignored
+
+3. Test ALL in-store codecs from legacy schema:
+   - <blob@store> (hash-addressed blob storage)
+   - <attach@store> (hash-addressed attachments)
+   - <filepath@store> (filepath references)
+
+4. Create test table with all three codecs:
+   ```python
+   @schema
+   class StoreTest(dj.Manual):
+       definition = """
+       test_id : int
+       ---
+       blob_data : <blob@>
+       attach_data : <attach@>
+       filepath_data : <filepath@>
+       """
+   ```
+
+5. Insert test data and verify:
+   - Insert sample data for each codec
+   - Fetch data back successfully
+   - Verify files appear at expected paths
+
+6. Understand hash-addressed storage structure:
+   {location}/{hash_prefix}/{schema_name}/{hash}[.ext]
+
+   With subfolding [2, 2]:
+   {location}/{hash_prefix}/{schema_name}/{h1}{h2}/{h3}{h4}/{hash}[.ext]
+
+   Properties:
+   - Immutable (content-addressed)
+   - Deduplicated (same content → same path)
+   - Integrity (hash validates content)
+
+7. Verify file organization meets expectations:
+   - Check files exist at {location}/{hash_prefix}/{schema}/
+   - Verify subfolding structure if configured
+   - Confirm filepath references work correctly
+
+8. Clean up test:
+   - Delete test data
+   - Drop test schema
+   - Verify no errors during cleanup
+
+HASH-ADDRESSED STORAGE:
+
+Understanding the hash-addressed section is critical for migration:
+
+- Path format: {location}/{hash_prefix}/{schema}/{hash}
+- Hash computed from serialized content (Blake2b)
+- Hash encoded as base32 (lowercase, no padding)
+- Subfolding splits hash into directory levels
+- Same content always produces same path (deduplication)
+
+Example with hash_prefix="_hash", subfolding=[2,2]:
+  /data/store/_hash/my_schema/ab/cd/abcdef123456...
+
+Learn more: Object Store Configuration Spec
+(../reference/specs/object-store-configuration.md#hash-addressed-storage)
+
+VERIFICATION:
+
+- [ ] Test stores configured in datajoint.json
+- [ ] Credentials stored in .secrets/ (not committed)
+- [ ] Connection to test stores successful
+- [ ] <blob@> codec tested and working
+- [ ] <attach@> codec tested and working
+- [ ] <filepath@> codec tested and working
+- [ ] Files appear at expected locations
+- [ ] Hash-addressed structure understood
+- [ ] Test cleanup successful
+
+REPORT:
+
+Test results for store configuration:
+- Store names: [list configured stores]
+- Store protocol: [file/s3/gcs/azure]
+- Store location: [test path/bucket]
+- Hash prefix: [configured value]
+- Codecs tested: [blob@, attach@, filepath@]
+- Files verified at: [example paths]
+- Issues found: [any errors or unexpected behavior]
+
+COMMIT MESSAGE:
+"feat(phase-i): configure test stores and verify codecs
+
+- Configure test stores with [protocol] at [location]
+- Store credentials in .secrets/ directory
+- Test all in-store codecs: blob@, attach@, filepath@
+- Verify hash-addressed file organization
+- Confirm codecs work with legacy schema structure
+
+Test stores ready for table definition conversion."
+```
+
+---
+
+#### Test In-Store Codecs
+
+After configuring test stores, verify that in-store codecs work correctly
+and understand the file organization.
+
+**Create test table with all in-store codecs:**
+
+```python
+import datajoint as dj
+import numpy as np
+
+# Create test schema
+schema = dj.schema('test_stores_v2')
+
+@schema
+class StoreTest(dj.Manual):
+    definition = """
+    test_id : int
+    ---
+    blob_data : <blob@>          # Hash-addressed blob
+    attach_data : <attach@>      # Hash-addressed attachment
+    filepath_data : <filepath@>  # Filepath reference
+    """
+
+# Test data
+test_blob = {'key': 'value', 'array': [1, 2, 3]}
+test_attach = {'metadata': 'test attachment'}
+
+# For filepath, create test file first
+import tempfile
+import os
+temp_dir = tempfile.gettempdir()
+test_file_path = 'test_data/sample.txt'
+full_path = os.path.join(
+    dj.config['stores']['default']['location'],
+    test_file_path
+)
+os.makedirs(os.path.dirname(full_path), exist_ok=True)
+with open(full_path, 'w') as f:
+    f.write('test content')
+
+# Insert test data
+StoreTest.insert1({
+    'test_id': 1,
+    'blob_data': test_blob,
+    'attach_data': test_attach,
+    'filepath_data': test_file_path
+})
+
+print("✓ Test data inserted successfully")
+```
+
+**Verify file organization:**
+
+```python
+# Fetch and verify
+result = (StoreTest & {'test_id': 1}).fetch1()
+print(f"✓ blob_data: {result['blob_data']}")
+print(f"✓ attach_data: {result['attach_data']}")
+print(f"✓ filepath_data: {result['filepath_data']}")
+
+# Inspect hash-addressed file organization
+store_spec = dj.config.get_store_spec()
+hash_prefix = store_spec.get('hash_prefix', '_hash')
+location = store_spec['location']
+
+print(f"\nStore organization:")
+print(f"  Location: {location}")
+print(f"  Hash prefix: {hash_prefix}/")
+print(f"  Expected structure: {hash_prefix}/{{schema}}/{{hash}}")
+print(f"\nVerify files exist at:")
+print(f"  {location}/{hash_prefix}/test_stores_v2/")
+```
+
+**Review hash-addressed storage structure:**
+
+Hash-addressed storage (`<blob@>`, `<attach@>`) uses content-based paths:
+
+```
+{location}/{hash_prefix}/{schema_name}/{hash}[.ext]
+```
+
+With subfolding enabled (e.g., `[2, 2]`):
+
+```
+{location}/{hash_prefix}/{schema_name}/{h1}{h2}/{h3}{h4}/{hash}[.ext]
+```
+
+**Properties:**
+
+- **Immutable**: Content defines path, cannot be changed
+- **Deduplicated**: Identical content stored once
+- **Integrity**: Hash validates content on retrieval
+
+**Learn more:** [Object Store Configuration — Hash-Addressed Storage]
+(../reference/specs/object-store-configuration.md#hash-addressed-storage)
+
+**Cleanup test:**
+
+```python
+# Remove test data
+(StoreTest & {'test_id': 1}).delete()
+schema.drop()
+print("✓ Test cleanup complete")
+```
+
+### Step 6: Convert Table Definitions
 
 Update table definitions in topological order (tables before their dependents).
+
+**Note:** Schema declarations already updated to `_v2` suffix in Step 3.
 
 #### Background: Type Syntax Changes
 
@@ -439,19 +1048,19 @@ CONTEXT:
 
 - We are on branch: pre/v2.0
 - Production (main branch) remains on pre-2.0
-- All schemas will use _v2 suffix (e.g., my_pipeline → my_pipeline_v2)
-- Schemas will be created empty for now
+- Schema declarations ALREADY updated with _v2 suffix (Step 3)
+- Now converting table definitions to match
+- Schemas will be created empty when definitions are applied
 
 SCOPE - PHASE I:
 
-1. Update schema declarations (add _v2 suffix)
-2. Convert ALL type syntax to 2.0 core types
-3. Convert ALL legacy codecs (in-table AND in-store)
+1. Convert ALL type syntax to 2.0 core types
+2. Convert ALL legacy codecs (in-table AND in-store)
    - In-table: longblob → <blob>, mediumblob → <blob>, attach → <attach>
    - In-store (legacy only): blob@store → <blob@store>, attach@store → <attach@store>, filepath@store → <filepath@store>
-4. Code will use TEST stores configured in datajoint.json
-5. Do NOT add new 2.0 codecs (<npy@>, <object@>) - these are for Phase IV adoption
-6. Production data migration happens in Phase III (code is complete after Phase I)
+3. Code will use TEST stores configured in datajoint.json
+4. Do NOT add new 2.0 codecs (<npy@>, <object@>) - these are for Phase IV adoption
+5. Production data migration happens in Phase III (code is complete after Phase I)
 
 TYPE CONVERSIONS:
 
@@ -724,30 +1333,35 @@ Codecs converted: Y (in-table: Z, in-store: W)"
 
 ---
 
-### Step 6: Convert Query and Insert Code
+### Step 7: Convert Query and Insert Code
 
 Update all DataJoint API calls to 2.0 patterns.
 
 #### Background: API Changes
 
 **Fetch API:**
+
 - `fetch()` → `to_arrays()` (recarray-like) or `to_dicts()` (list of dicts)
 - `fetch(..., format="frame")` → `to_pandas()` (pandas DataFrame)
 - `fetch('attr1', 'attr2')` → `to_arrays('attr1', 'attr2')` (returns tuple)
 - `fetch1()` → unchanged (still returns dict for single row)
 
 **Update Method:**
+
 - `(table & key)._update('attr', val)` → `table.update1({**key, 'attr': val})`
 
 **Join Operators:**
+
 - `table1 @ table2` → `table1 * table2` (natural join with semantic checks enabled)
 - `a.join(b, left=True)` → Consider `a.extend(b)`
 
 **Universal Set:**
+
 - `dj.U('attr') & table` → Unchanged (correct pattern for projecting attributes)
-- `dj.U('attr') * table` → Refactor (was a hack to change primary key)
+- `dj.U('attr') * table` → `table` (was a hack to change primary key)
 
 **Visualization:**
+
 - `dj.ERD(schema)` → `dj.Diagram(schema)` (ERD deprecated)
 
 **Learn more:** [Fetch API Reference](../reference/specs/fetch-api.md) · [Query Operators](../reference/operators.md)
@@ -761,7 +1375,12 @@ Update all DataJoint API calls to 2.0 patterns.
 ```
 You are converting DataJoint pre-2.0 query and insert code to 2.0 API.
 
-TASK: Update all query, fetch, and insert code to use DataJoint 2.0 API patterns.
+TASK: Update all query, fetch, and insert code to use DataJoint 2.0 API
+patterns.
+
+LEARN MORE: See Fetch API Reference (../reference/specs/fetch-api.md),
+Query Operators (../reference/operators.md), and Semantic Matching
+(../reference/specs/semantic-matching.md).
 
 CONTEXT:
 - Branch: pre/v2.0
@@ -791,7 +1410,8 @@ API CONVERSIONS:
    NEW: keys = table.keys()  # Returns list of dicts with primary key values
 
    OLD: keys, a, b = table.fetch("KEY", "a", "b")
-   NEW: a, b = table.to_arrays('a', 'b', include_key=True)  # Returns tuple with keys included
+   NEW: a, b = table.to_arrays('a', 'b', include_key=True)
+   # Returns tuple with keys included
 
 2. Update Method (always convert):
    OLD: (table & key)._update('attr', value)
@@ -801,8 +1421,9 @@ API CONVERSIONS:
    OLD: result = table1 @ table2
    NEW: result = table1 * table2  # Natural join WITH semantic checks
 
-   IMPORTANT: The @ operator bypassed semantic checks. The * operator enables semantic checks by default.
-   If semantic checks fail, INVESTIGATE—this may reveal errors in your schema or data.
+   IMPORTANT: The @ operator bypassed semantic checks. The * operator
+   enables semantic checks by default. If semantic checks fail,
+   INVESTIGATE—this may reveal errors in your schema or data.
 
    For left joins:
    OLD: result = a.join(b, left=True)
@@ -810,16 +1431,27 @@ API CONVERSIONS:
 
 4. Universal Set (CHECK - distinguish correct from hack):
    CORRECT (unchanged):
-   result = dj.U('attr') & table  # Projects specific attributes, keeps as is
+   result = dj.U('attr') & table  # Projects specific attributes, unchanged
 
-   HACK (refactor):
-   result = dj.U('attr') * table  # Was used to change primary key, needs refactoring
+   HACK (always refactor):
+   OLD: result = dj.U('attr') * table  # Was hack to change primary key
+   NEW: result = table  # Simply use table directly
 
-   Note: The * operator with dj.U() was a hack. Ask user about intent and suggest proper refactoring.
+   Note: The * operator with dj.U() was a hack. Replace with just table.
 
-5. Insert/Delete (unchanged):
-   table.insert(data)  # unchanged
-   table.insert1(row)  # unchanged
+5. Insert (CHANGED - requires named keys):
+   OLD: table.insert([(1, 'Alice'), (2, 'Bob')])  # Positional tuples
+   NEW: table.insert([{'id': 1, 'name': 'Alice'},
+                      {'id': 2, 'name': 'Bob'}])  # Dicts
+
+   DataJoint 2.0 requires named key-value mappings for insert:
+   - Dicts (most common)
+   - DataFrames
+   - Other DataJoint queries
+
+   Positional tuples/lists are NO LONGER SUPPORTED.
+
+6. Delete (unchanged):
    (table & key).delete()  # unchanged
    (table & restriction).delete()  # unchanged
 
@@ -832,7 +1464,7 @@ PROCESS:
    d. Replace with update1()
    e. Search for @ operator (replace with * for natural join)
    f. Search for .join(x, left=True) patterns (consider .extend(x))
-   g. Search for dj.U() * patterns (identify as hack, ask user to refactor)
+   g. Search for dj.U() * patterns (replace with just table)
    h. Verify dj.U() & patterns remain unchanged
 3. Run syntax checks
 4. Run existing tests if available
@@ -844,7 +1476,7 @@ VERIFICATION:
 - No .fetch1('KEY') calls remaining (replaced with .keys())
 - No ._update() calls remaining
 - No @ operator between tables
-- dj.U() * patterns identified and flagged for refactoring
+- dj.U() * patterns replaced with just table
 - dj.U() & patterns remain unchanged
 - All tests pass (if available)
 - Semantic check failures investigated and resolved
@@ -881,7 +1513,8 @@ NEW: weights, ages = Mouse.to_arrays('weight', 'age', include_key=True)
 
 Pattern 8: Natural join (now WITH semantic checks)
 OLD: result = Neuron @ Session
-NEW: result = Neuron * Session  # Semantic checks enabled—may reveal schema errors
+NEW: result = Neuron * Session
+# Semantic checks enabled—may reveal schema errors
 
 Pattern 9: Left join
 OLD: result = Session.join(Experiment, left=True)
@@ -890,11 +1523,11 @@ NEW: result = Session.extend(Experiment)  # Consider using extend
 Pattern 10: Universal set (distinguish correct from hack)
 CORRECT (unchanged):
 OLD: all_dates = dj.U('session_date') & Session
-NEW: all_dates = dj.U('session_date') & Session  # Unchanged, correct pattern
+NEW: all_dates = dj.U('session_date') & Session  # Unchanged, correct
 
-HACK (needs refactoring):
+HACK (always replace):
 OLD: result = dj.U('new_pk') * Session  # Hack to change primary key
-NEW: [Refactor - ask user about intent]
+NEW: result = Session  # Simply use table directly
 
 REPORT:
 
@@ -905,7 +1538,7 @@ REPORT:
 - _update() → update1(): [count]
 - @ → * (natural join): [count]
 - .join(x, left=True) → .extend(x): [count]
-- dj.U() * table patterns flagged for refactoring: [count]
+- dj.U() * table → table: [count]
 - dj.U() & table patterns (unchanged): [count]
 - dj.ERD() → dj.Diagram(): [count]
 - Semantic check failures: [count and resolution]
@@ -920,7 +1553,7 @@ COMMIT MESSAGE FORMAT:
 - Replace @ operator with * (enables semantic checks)
 - Replace .join(x, left=True) with .extend(x)
 - Replace dj.ERD() with dj.Diagram()
-- Flag dj.U() * table patterns as hacks needing refactoring
+- Replace dj.U() * table with just table (was hack)
 - Keep dj.U() & table patterns unchanged (correct)
 - Investigate and resolve semantic check failures
 
@@ -929,123 +1562,65 @@ API conversions: X fetch, Y update, Z join"
 
 ---
 
-### Step 7: Convert Populate Methods
+### Step 8: Update Populate Methods
 
-Update `make()` methods in Computed and Imported tables.
+`make()` methods in Computed and Imported tables use the same API patterns covered in Steps 6-7.
 
-#### AI Agent Prompt: Convert Populate Methods
+**Apply the following conversions to all `make()` methods:**
 
----
+1. **Fetch API conversions** (from Step 7)
 
-**🤖 AI Agent Prompt: Phase I - Populate Method Conversion**
+   - `fetch()` → `to_arrays()` or `to_dicts()`
+   - `fetch(..., format="frame")` → `to_pandas()`
+   - `fetch1('KEY')` → `keys()`
+   - All other fetch patterns
 
-```
-You are converting populate/make methods in Computed and Imported tables.
+2. **Join conversions** (from Step 7)
 
-TASK: Update make() methods to use 2.0 API patterns.
+   - `@` → `*` (enables semantic checks)
+   - `a.join(b, left=True)` → `a.extend(b)`
+   - `dj.U() * table` → `table` (was a hack)
 
-CONTEXT:
+3. **Insert conversions** (NEW REQUIREMENT)
 
-- Focus on dj.Computed and dj.Imported tables
-- make() methods contain computation logic
-- Often use fetch, insert, and query operations
+   - Positional tuples NO LONGER SUPPORTED
+   - Must use named key-value mappings:
+     ```python
+     # OLD (no longer works)
+     self.insert1((key['id'], computed_value, timestamp))
 
-CONVERSIONS NEEDED:
+     # NEW (required)
+     self.insert1({
+         **key,
+         'computed_value': computed_value,
+         'timestamp': timestamp
+     })
+     ```
 
-1. Apply all fetch API conversions from previous step
-2. Apply all update conversions
-3. Apply all join conversions
-4. No changes to insert operations
-
-COMMON PATTERNS IN make():
-
-Pattern 1: Fetch dependency data
-OLD:
-def make(self, key):
-    data = (DependencyTable & key).fetch(as_dict=True)
-
-NEW:
-def make(self, key):
-    data = (DependencyTable & key).to_dicts()
-
-Pattern 2: Fetch arrays for computation
-OLD:
-def make(self, key):
-    signal = (Recording & key).fetch1('signal')
-
-NEW:
-def make(self, key):
-    signal = (Recording & key).fetch1('signal')  # unchanged for single attr
-
-Pattern 3: Fetch multiple attributes
-OLD:
-def make(self, key):
-    signals, rates = (Recording & key).fetch('signal', 'sampling_rate')
-
-NEW:
-def make(self, key):
-    signals, rates = (Recording & key).to_arrays('signal', 'sampling_rate')
-
-Pattern 4: Join dependencies
-OLD:
-def make(self, key):
-    data = (Neuron @ Session & key).fetch()
-
-NEW:
-def make(self, key):
-    data = (Neuron * Session & key).to_arrays()  # Semantic checks now enabled
-
-PROCESS:
-1. Find all dj.Computed and dj.Imported classes
-2. For each class with make() method:
-   a. Apply API conversions
-   b. Verify logic unchanged
-   c. Test if possible
-3. Commit changes by module or table
-
-VERIFICATION:
-
-- All make() methods use 2.0 API
-- Computation logic unchanged
-- Insert logic unchanged
-- No syntax errors
-
-REPORT:
-
-- Computed tables updated: [count]
-- Imported tables updated: [count]
-- make() methods converted: [count]
-
-COMMIT MESSAGE FORMAT:
-"feat(phase-i): convert populate methods to 2.0 API
-
-- Update make() methods in Computed tables
-- Update make() methods in Imported tables
-- Apply fetch/join API conversions
-
-Tables updated: X Computed, Y Imported"
-```
+**Note:** Since these are the same conversions from Step 7, you can apply them in a single pass. The only additional consideration is ensuring insert statements use dicts.
 
 ---
 
-### Step 8: Verify Phase I Complete
+### Step 9: Verify Phase I Complete
 
 #### Checklist
 
 - [ ] `pre/v2.0` branch created
 - [ ] DataJoint 2.0 installed (`pip list | grep datajoint`)
 - [ ] Configuration files created (`.secrets/`, `datajoint.json`)
-- [ ] Stores configured (if using in-store codecs)
+- [ ] Test stores configured (if using in-store codecs)
+- [ ] In-store codecs tested (`<blob@>`, `<attach@>`, `<filepath@>`)
+- [ ] Hash-addressed file organization verified and understood
 - [ ] All schema declarations use `_v2` suffix
 - [ ] All table definitions use 2.0 type syntax
 - [ ] All in-table codecs converted (`<blob>`, `<attach>`)
-- [ ] All in-store codecs converted (`<blob@>`, `<npy@>`, `<filepath@>`)
+- [ ] All in-store codecs converted (`<blob@>`, `<attach@>`, `<filepath@>`)
 - [ ] All `fetch()` calls converted (except `fetch1()`)
 - [ ] All `fetch(..., format="frame")` converted to `to_pandas()`
 - [ ] All `fetch1('KEY')` converted to `keys()`
 - [ ] All `._update()` calls converted
 - [ ] All `@` operators converted to `*`
-- [ ] All `dj.U() * table` patterns flagged for refactoring (was a hack)
+- [ ] All `dj.U() * table` patterns replaced with just `table` (was a hack)
 - [ ] All `dj.U() & table` patterns verified as unchanged (correct)
 - [ ] All `dj.ERD()` calls converted to `dj.Diagram()`
 - [ ] All populate methods updated
@@ -1105,6 +1680,7 @@ git push origin pre/v2.0
 ✅ **Phase I Complete!**
 
 **You now have:**
+
 - 2.0-compatible code on `pre/v2.0` branch
 - Empty `_v2` schemas ready for testing
 - Production still running on `main` branch with pre-2.0
@@ -1126,82 +1702,33 @@ git push origin pre/v2.0
 
 **Key principle:** Test with identical data in both legacy and v2 schemas to verify equivalence.
 
-### Step 1: Insert Test Data
+### Step 1: Run Your Regular Workflow
+
+Use your existing data entry and populate processes on the `_v2` schemas:
 
 ```python
-from your_pipeline_v2 import schema, Mouse, Session, Neuron
+# Import your v2 pipeline
+from your_pipeline_v2 import schema  # Points to my_pipeline_v2
 
-# Insert manual tables
-Mouse.insert([
-    {'mouse_id': 0, 'dob': '2024-01-01', 'sex': 'M'},
-    {'mouse_id': 1, 'dob': '2024-01-15', 'sex': 'F'},
-])
+# Follow your normal workflow:
+# 1. Insert test data into manual tables (same process as usual)
+# 2. Run populate on computed/imported tables (same process as usual)
+# 3. Run any queries or analysis scripts (using 2.0 API)
 
-Session.insert([
-    {'mouse_id': 0, 'session_date': '2024-06-01', 'experimenter': 'Alice'},
-    {'mouse_id': 0, 'session_date': '2024-06-05', 'experimenter': 'Alice'},
-    {'mouse_id': 1, 'session_date': '2024-06-03', 'experimenter': 'Bob'},
-])
-
-# Verify
-print(f"Inserted {len(Mouse())} mice")
-print(f"Inserted {len(Session())} sessions")
+# Example (adapt to your pipeline):
+# YourManualTable.insert([...])  # Your usual insert process
+# YourComputedTable.populate(display_progress=True)  # Your usual populate
 ```
 
-### Step 2: Test Populate
+**Key points:**
 
-```python
-# Populate imported/computed tables
-Neuron.populate(display_progress=True)
+- Use a **representative subset** of data (not full production dataset)
+- Follow your **existing workflow** - don't create artificial examples
+- Populate computed tables using your **normal populate process**
+- Run any **existing analysis or query scripts** you have
+- Test that everything works with the 2.0 API
 
-# Verify
-print(f"Generated {len(Neuron())} neurons")
-```
-
-### Step 3: Test Queries
-
-```python
-# Test basic queries
-mice = Mouse.to_dicts()
-print(f"Fetched {len(mice)} mice")
-
-# Test joins
-neurons_with_sessions = Neuron.join(Session, semantic_check=False)
-print(f"Join result: {len(neurons_with_sessions)} rows")
-
-# Test restrictions
-alice_sessions = Session & 'experimenter="Alice"'
-print(f"Alice's sessions: {len(alice_sessions)}")
-
-# Test fetch variants
-mouse_ids, dobs = Mouse.to_arrays('mouse_id', 'dob')
-print(f"Arrays: {len(mouse_ids)} ids, {len(dobs)} dobs")
-```
-
-### Step 4: Test New Features (Optional)
-
-If you converted any tables to use new codecs:
-
-```python
-# Test object storage (if using <npy@> or <object@>)
-from your_pipeline_v2 import Recording
-
-# Insert with object storage
-Recording.insert1({
-    'recording_id': 0,
-    'signal': np.random.randn(1000, 64),  # Stored in object store
-})
-
-# Fetch with lazy loading
-ref = (Recording & {'recording_id': 0}).fetch1('signal')
-print(f"NpyRef: shape={ref.shape}, loaded={ref.is_loaded}")
-
-# Load when needed
-signal = ref.load()
-print(f"Loaded: shape={signal.shape}")
-```
-
-### Step 5: Compare with Legacy Schema (Equivalence Testing)
+### Step 2: Compare with Legacy Schema (Equivalence Testing)
 
 **Critical:** Run identical data through both legacy and v2 pipelines to verify equivalence.
 
@@ -1312,7 +1839,7 @@ else:
         print(f"  {disc}")
 ```
 
-### Step 6: Run Existing Tests
+### Step 3: Run Existing Tests
 
 If you have a test suite:
 
@@ -1325,131 +1852,27 @@ pytest tests/test_queries.py -v
 pytest tests/test_populate.py -v
 ```
 
-### Step 7: Validate Results
+### Step 4: Document Test Results
 
-Create a validation script:
+Document your testing process and results:
 
-```python
-# validate_v2.py
-import datajoint as dj
-from your_pipeline_v2 import schema
+**What to document:**
 
-def validate_phase_ii():
-    """Validate Phase II migration."""
+- Date of testing
+- Test data used (subset, size, representative samples)
+- Tables tested and row counts
+- Populate results (did computed tables generate expected rows?)
+- Equivalence test results (if comparing with legacy)
+- Any issues found and how they were resolved
+- Test suite results (if you have automated tests)
 
-    issues = []
-
-    # Check schemas exist
-    conn = dj.conn()
-    schemas_v2 = conn.query("SHOW DATABASES LIKE '%_v2'").fetchall()
-
-    if not schemas_v2:
-        issues.append("No _v2 schemas found")
-        return issues
-
-    print(f"✓ Found {len(schemas_v2)} _v2 schemas")
-
-    # Check tables populated
-    for schema_name in [s[0] for s in schemas_v2]:
-        tables = conn.query(
-            f"SELECT TABLE_NAME FROM information_schema.TABLES "
-            f"WHERE TABLE_SCHEMA='{schema_name}' AND TABLE_NAME NOT LIKE '~%'"
-        ).fetchall()
-
-        for table in tables:
-            table_name = table[0]
-            count = conn.query(
-                f"SELECT COUNT(*) FROM `{schema_name}`.`{table_name}`"
-            ).fetchone()[0]
-
-            if count > 0:
-                print(f"  ✓ {schema_name}.{table_name}: {count} rows")
-            else:
-                print(f"  ○ {schema_name}.{table_name}: empty (may be expected)")
-
-    # Test basic operations
-    try:
-        # Test fetch
-        data = schema.connection.query(
-            f"SELECT * FROM {schema.database} LIMIT 1"
-        ).fetchall()
-        print("✓ Fetch operations work")
-    except Exception as e:
-        issues.append(f"Fetch error: {e}")
-
-    return issues
-
-if __name__ == '__main__':
-    issues = validate_phase_ii()
-
-    if issues:
-        print("\n✗ Validation issues found:")
-        for issue in issues:
-            print(f"  - {issue}")
-    else:
-        print("\n✓ Phase II validation passed!")
-```
-
-Run validation:
-
-```bash
-python validate_v2.py
-```
-
-### Step 7: Document Test Results
-
-Create a test report:
-
-```bash
-# test_report.md
-cat > test_report.md << 'EOF'
-# Phase II Test Report
-
-## Test Date
-2025-01-14
-
-## Summary
-- Schemas tested: X
-- Tables populated: Y
-- Tests passed: Z
-
-## Manual Tables
-- Mouse: N rows
-- Session: M rows
-
-## Computed Tables
-- Neuron: K rows
-- Analysis: J rows
-
-## Query Tests
-- Basic fetch: ✓
-- Joins: ✓
-- Restrictions: ✓
-- Aggregations: ✓
-
-## Populate Tests
-- Imported tables: ✓
-- Computed tables: ✓
-- Error handling: ✓
-
-## New Features Tested
-- Object storage: ✓
-- Lazy loading: ✓
-
-## Issues Found
-- None
-
-## Conclusion
-Phase II completed successfully. Ready for Phase III.
-EOF
-
-git add test_report.md
-git commit -m "docs: Phase II test report"
-```
+**Purpose:** Creates a record of validation for your team and future reference.
+Useful when planning production migration in Phase III.
 
 ✅ **Phase II Complete!**
 
 **You now have:**
+
 - Validated 2.0 pipeline with sample data
 - Confidence in code migration
 - Test report documenting success
@@ -1629,6 +2052,7 @@ else:
 #### 6. Schedule Cutover
 
 **Pre-cutover checklist:**
+
 - [ ] Full backup verified
 - [ ] All data copied
 - [ ] All computed tables populated
@@ -1694,7 +2118,7 @@ DROP DATABASE `my_pipeline_old`;
 from datajoint.migrate import migrate_schema_in_place
 
 # Backup first
-backup_schema('my_pipeline', 'my_pipeline_backup_20250114')
+backup_schema('my_pipeline', 'my_pipeline_backup_20260114')
 
 # Migrate in place
 result = migrate_schema_in_place(
@@ -1758,6 +2182,7 @@ class Recording(dj.Manual):
 ```
 
 **Both APIs work:**
+
 - pre-2.0 clients use `signal`
 - 2.0 clients use `signal_v2`
 
@@ -1779,102 +2204,58 @@ ALTER TABLE `my_pipeline`.`recording`
 
 ## Phase IV: Adopt New Features
 
-After successful migration, adopt DataJoint 2.0 features:
+After successful migration, adopt DataJoint 2.0 features incrementally based
+on your needs. Migration is complete - these are optional enhancements.
 
-### 1. Object Storage with Lazy Loading
+### New Features Overview
 
-Replace `<blob>` with `<npy@>` for large arrays:
+**Schema-addressed storage** (`<npy@>`, `<object@>`)
+- Lazy-loading arrays with fsspec integration
+- Hierarchical organization by primary key
+- Mutable objects with streaming access
+- See: [Object Storage Tutorial](../tutorials/basics/06-object-storage.ipynb)
 
-```python
-# Before
-@schema
-class Recording(dj.Manual):
-    definition = """
-    recording_id : uint32
-    ---
-    signal : <blob>  # Stored in table
-    """
+**Semantic matching**
+- Lineage-based join validation (enabled by default with `*` operator)
+- Catches errors from incompatible data combinations
+- See: [Semantic Matching Spec](../reference/specs/semantic-matching.md)
 
-# After
-@schema
-class Recording(dj.Manual):
-    definition = """
-    recording_id : uint32
-    ---
-    signal : <npy@>  # Lazy-loading from object store
-    """
+**Jobs 2.0**
+- Per-table job tracking (`~~table_name`)
+- Priority-based populate (with `reserve_jobs=True`)
+- Improved distributed computing coordination
+- See: [Distributed Computing Tutorial](../tutorials/advanced/distributed.ipynb)
 
-# Usage
-ref = (Recording & key).fetch1('signal')
-print(f"Shape: {ref.shape}, dtype: {ref.dtype}")  # No download!
-signal = ref.load()  # Download when ready
-```
+**Custom codecs**
+- Domain-specific data types
+- Extensible type system
+- See: [Custom Codecs Tutorial](../tutorials/advanced/custom-codecs.ipynb)
 
-**Learn more:** [Object Storage Tutorial](../tutorials/basics/06-object-storage.ipynb) · [NPY Codec Spec](../reference/specs/npy-codec.md)
+### Learning Path
 
-### 2. Partition Patterns
+**Start here:**
 
-Organize object storage by experimental hierarchy:
+1. [Object Storage Tutorial](../tutorials/basics/06-object-storage.ipynb) -
+   Learn `<npy@>` and `<object@>` for large arrays
+2. [Distributed Computing Tutorial](../tutorials/advanced/distributed.ipynb) -
+   Jobs 2.0 with priority-based populate
+3. [Custom Codecs Tutorial](../tutorials/advanced/custom-codecs.ipynb) -
+   Create domain-specific types
 
-```python
-# Configure partitioning
-dj.config['stores.main.partition_pattern'] = '{mouse_id}/{session_date}'
+**Reference documentation:**
 
-# Storage structure:
-# {store}/mouse_id=0/session_date=2024-06-01/{schema}/{table}/file.npy
-```
+- [Object Store Configuration](../reference/specs/object-store-configuration.md)
+- [NPY Codec Spec](../reference/specs/npy-codec.md)
+- [Codec API](../reference/specs/codec-api.md)
+- [Semantic Matching Spec](../reference/specs/semantic-matching.md)
+- [AutoPopulate Spec](../reference/specs/autopopulate.md)
 
-**Learn more:** [Object Store Configuration](../reference/specs/object-store-configuration.md)
+**Adopt features incrementally:**
 
-### 3. Semantic Matching
-
-Enable lineage-based join validation:
-
-```python
-# Validates lineage compatibility
-result = Neuron.join(Session, semantic_check=True)
-
-# Raises error if lineage incompatible
-```
-
-**Learn more:** [Semantic Matching Spec](../reference/specs/semantic-matching.md)
-
-### 4. Custom Codecs
-
-Create domain-specific types:
-
-```python
-from datajoint.codecs import Codec
-
-class SpikeTrainCodec(Codec):
-    """Custom codec for spike trains."""
-
-    def encode(self, obj, context):
-        # Compress spike times
-        return compressed_data
-
-    def decode(self, blob, context):
-        # Decompress spike times
-        return spike_times
-```
-
-**Learn more:** [Custom Codecs Tutorial](../tutorials/advanced/custom-codecs.ipynb) · [Codec API](../reference/specs/codec-api.md)
-
-### 5. Jobs 2.0
-
-Use per-table job management:
-
-```python
-# Monitor job progress
-Analysis.jobs.progress()
-
-# Priority-based populate
-Analysis.populate(order='priority DESC')
-
-# Job tables: ~~analysis
-```
-
-**Learn more:** [Distributed Computing](../tutorials/advanced/distributed.ipynb) · [AutoPopulate Spec](../reference/specs/autopopulate.md)
+- Start with one table using `<npy@>` for large arrays
+- Test performance and workflow improvements
+- Expand to other tables as needed
+- No need to adopt all features at once
 
 ---
 
@@ -1967,17 +2348,20 @@ print(get_store_spec('main'))
 ## See Also
 
 **Core Documentation:**
+
 - [Type System Concept](../explanation/type-system.md)
 - [Configuration Reference](../reference/configuration.md)
 - [Definition Syntax](../reference/definition-syntax.md)
 - [Fetch API Reference](../reference/specs/fetch-api.md)
 
 **Tutorials:**
+
 - [Object Storage](../tutorials/basics/06-object-storage.ipynb)
 - [Custom Codecs](../tutorials/advanced/custom-codecs.ipynb)
 - [Distributed Computing](../tutorials/advanced/distributed.ipynb)
 
 **Specifications:**
+
 - [Type System Spec](../reference/specs/type-system.md)
 - [Codec API Spec](../reference/specs/codec-api.md)
 - [Object Store Configuration](../reference/specs/object-store-configuration.md)
