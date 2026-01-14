@@ -366,11 +366,11 @@ Convert ALL types and codecs in Phase I:
 |--------|-----|-------|
 | `varchar(N)`, `char(N)`, `text` | Unchanged | No conversion needed |
 | `date`, `time` | Unchanged | No conversion needed |
-| `enum('a', 'b')` | Unchanged | Core type in 2.0 |
+| `enum('a', 'b')` | Unchanged | Core type |
 | `datetime` | `datetime` | UTC only in 2.0 |
 | `timestamp` | `datetime` | **Convert:** 2.0 uses UTC-only datetime |
-| `json` | `json` | NEW in 2.0 (optional adoption) |
-| `uuid` | `uuid` | NEW in 2.0 (optional adoption) |
+| `json` | `json` | Unchanged (was available but underdocumented) |
+| `uuid` | `uuid` | Unchanged (widely used in legacy) |
 | `tinyint(1)` | `bool` or `uint8` | **Ask user:** boolean or small integer? |
 
 **Codecs:**
@@ -385,9 +385,16 @@ Convert ALL types and codecs in Phase I:
 
 **Important Notes:**
 
-- **Datetime/Timestamp:** DataJoint 2.0 supports `datetime` with **UTC only**—no timezone support. Convert `timestamp` to `datetime` and review timezone handling.
-- **JSON:** New core type. If you have custom JSON serialization in blobs, you can migrate to native `json` type (optional).
+- **Datetime/Timestamp:** DataJoint 2.0 stores all times as `datetime` in **UTC without timezone information**. Timezones are handled by application frontends. Convert `timestamp` to `datetime` and ensure your application stores times in UTC.
+
+- **Bool vs tinyint(1):** MySQL's `tinyint(1)` can represent either booleans (true/false) or small integers (0-255). DataJoint 2.0 has a distinct `bool` type. Review each `tinyint(1)` column and decide:
+  - Boolean semantics (yes/no, active/inactive) → `bool`
+  - Small integer (counts, indices) → `uint8`
+
+- **JSON:** Was available in pre-2.0 but underdocumented. Many users serialized JSON into blobs. If you have custom JSON serialization in blobs, you can migrate to native `json` type (optional).
+
 - **Enum:** Already a core type—no changes needed.
+
 - **In-store codecs:** Code is converted in Phase I using test stores. Production data migration happens in Phase III.
 
 **Learn more:** [Type System Reference](../reference/specs/type-system.md) · [Definition Syntax](../reference/definition-syntax.md)
@@ -445,49 +452,84 @@ Core Types (String and Date):
   enum('a', 'b') → enum('a', 'b')  # unchanged
 
 Core Types (Structured Data):
-  json → json  # NEW in 2.0, unchanged if already present
-  uuid → uuid  # NEW in 2.0, unchanged if already present
+  json → json  # unchanged (was available but underdocumented in pre-2.0)
+  uuid → uuid  # unchanged (widely used in pre-2.0)
 
-Special Cases:
-  tinyint(1) → Ask user: bool (boolean) or uint8 (0-255 integer)?
-  timestamp → datetime  # Review: DataJoint 2.0 uses UTC-only datetime
+Special Cases - REQUIRE USER REVIEW:
 
-IMPORTANT - Datetime and Timestamp:
+  tinyint(1) → ASK USER: bool or uint8?
+    - Boolean semantics (yes/no, active/inactive) → bool
+    - Small integer (counts, indices) → uint8
+    Example:
+      is_active : tinyint(1)  # Boolean → bool
+      priority : tinyint(1)   # 0-10 scale → uint8
 
-DataJoint 2.0 supports datetime with UTC only—no timezone support.
+  timestamp → datetime  # ALWAYS CONVERT
+    - DataJoint 2.0 standard: store all times in UTC without timezone info
+    - Timezones are handled by application frontends
+    Example:
+      created_at : timestamp  # pre-2.0
+      created_at : datetime   # 2.0 (stores UTC)
 
+IMPORTANT - Datetime and Timestamp Conversion:
+
+DataJoint 2.0 stores all times as datetime in UTC WITHOUT timezone information.
+Timezones are handled by application frontends, not the database.
+
+Conversion rules:
 - datetime → Keep as datetime (UTC assumed)
-- timestamp → Convert to datetime (review timezone handling)
+- timestamp → ALWAYS convert to datetime
 - date → Keep as date (no change)
 - time → Keep as time (no change)
 
-For timestamp columns, ask the user:
-- Was this storing UTC times? → Convert to datetime
-- Was this using MySQL's auto-update behavior? → Review application logic
+For timestamp columns:
+1. Convert type to datetime
+2. Ensure application logic stores times in UTC
+3. Handle timezone conversion in frontend display code
 
 Example:
   # pre-2.0
-  created_at : timestamp    # Review timezone handling
+  session_time : timestamp    # May have used MySQL auto-update
+  event_time : timestamp      # Application-managed
 
   # 2.0
-  created_at : datetime     # UTC assumed
+  session_time : datetime     # Store UTC, handle timezone in frontend
+  event_time : datetime       # Store UTC, handle timezone in frontend
+
+IMPORTANT - Bool Type (New Distinct Type):
+
+MySQL's tinyint(1) can mean boolean OR small integer. DataJoint 2.0 has distinct bool type.
+
+Review EACH tinyint(1) column and ask the user:
+- Boolean (true/false, yes/no, on/off) → bool
+- Small integer (0-255 range) → uint8
+
+Example:
+  # pre-2.0
+  is_active : tinyint(1)      # Boolean semantics
+  n_retries : tinyint(1)      # Small integer
+
+  # 2.0
+  is_active : bool            # Explicit boolean
+  n_retries : uint8           # Explicit small integer
 
 IMPORTANT - Enum Types:
 
-enum is a core type in DataJoint 2.0—no changes required.
+enum is a core type—no changes required.
 
 Example:
-  # No change needed
-  sex : enum('M', 'F', 'U')
+  sex : enum('M', 'F', 'U')  # No change needed
 
 IMPORTANT - JSON Type:
 
-json is a new core type in DataJoint 2.0. If you have custom JSON serialization
-in blobs, you may want to migrate to native json type, but this is optional.
+json was available in pre-2.0 but underdocumented. Many users serialized JSON
+into blobs. If you have custom JSON serialization in blobs, you can migrate to
+native json type (optional migration, not required).
 
 Example:
-  # Can now use native JSON
-  parameters : json
+  # Optional: migrate blob with JSON to native json
+  config : longblob  # Contains serialized JSON
+  config : json      # Native JSON type (optional improvement)
 
 In-Table Codecs:
   longblob → <blob>
