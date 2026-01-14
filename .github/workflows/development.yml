@@ -12,9 +12,14 @@ jobs:
       DJBOT_GH_TOKEN: ${{secrets.djbot_gh_token}}
     steps:
       - uses: actions/checkout@v2
+      - name: Checkout datajoint-python
+        uses: actions/checkout@v2
+        with:
+          repository: datajoint/datajoint-python
+          path: datajoint-python
       - name: Compile docs static artifacts
         run: |
-          BOT_PAT=$DJBOT_GH_TOKEN MODE=BUILD HOST_UID=$(id -u) docker compose up --exit-code-from docs --build
+          BOT_PAT=$DJBOT_GH_TOKEN MODE=BUILD DJ_PYTHON_PATH=./datajoint-python HOST_UID=$(id -u) docker compose up --exit-code-from docs --build
       - name: Commit documentation changes
         run: |
           git clone https://github.com/${GITHUB_REPOSITORY}.git \

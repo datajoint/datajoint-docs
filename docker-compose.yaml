@@ -47,7 +47,7 @@ services:
       - DJ_PASS=tutorial
     volumes:
       - .:/main
-      - ../datajoint-python:/datajoint-python
+      - ${DJ_PYTHON_PATH:-../datajoint-python}:/datajoint-python
     ports:
       - 8000:8000
     depends_on:
@@ -58,11 +58,14 @@ services:
       - -c
       - |
         set -e
-        pip install -e /datajoint-python
-        pip install scikit-image pooch
         if echo "$${MODE}" | grep -i live &>/dev/null; then
+            # LIVE mode: install datajoint and notebook dependencies for interactive development
+            pip install -e /datajoint-python
+            pip install scikit-image pooch
             mkdocs serve --config-file ./mkdocs.yaml -a 0.0.0.0:8000
         elif echo "$${MODE}" | grep -i build &>/dev/null; then
+            # BUILD mode: just build static site from pre-executed notebooks
+            # datajoint-python source is mounted for mkdocstrings API doc generation
             mkdocs build --config-file ./mkdocs.yaml
         else
             echo "Unexpected mode..."
