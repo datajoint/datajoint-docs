@@ -30,13 +30,63 @@ Start: What type of data are you storing?
 
 ## Storage Types Overview
 
-| Codec | Location | Addressing | Dedup | Best For |
-|-------|----------|------------|-------|----------|
-| `<blob>` | In-table (database) | Row-based | No | Small objects (typically < 1-10 MB) |
-| `<blob@>` | Object store | Content hash | Yes | Large blobs, attachments (with dedup) |
-| `<npy@>` | Object store | Schema + key | No | NumPy arrays (lazy load, navigable) |
-| `<object@>` | Object store | Schema + key | No | Zarr, HDF5 (browsable, streaming) |
-| `<filepath@>` | Object store | User path | No | External file references |
+| Codec | Location | Addressing | Python Objects | Dedup | Best For |
+|-------|----------|------------|----------------|-------|----------|
+| `<blob>` | In-table (database) | Row-based | ✅ Yes | No | Small objects (typically < 1-10 MB) |
+| `<blob@>` | Object store | Content hash | ✅ Yes | Yes | Large blobs, attachments (with dedup) |
+| `<npy@>` | Object store | Schema + key | ✅ Yes (arrays) | No | NumPy arrays (lazy load, navigable) |
+| `<object@>` | Object store | Schema + key | ❌ No (you manage format) | No | Zarr, HDF5 (browsable, streaming) |
+| `<filepath@>` | Object store | User path | ❌ No (you manage format) | No | External file references |
+
+## Key Usability: Python Object Convenience
+
+**Major advantage of `<blob>`, `<blob@>`, and `<npy@>`:** You work with Python objects directly. No manual serialization, file handling, or IO management.
+
+```python
+# <blob> and <blob@>: Insert Python objects, get Python objects back
+@schema
+class Analysis(dj.Computed):
+    definition = """
+    -> Experiment
+    ---
+    results : <blob@>         # Any Python object: dicts, lists, arrays
+    """
+
+    def make(self, key):
+        # Insert nested Python structures directly
+        results = {
+            'accuracy': 0.95,
+            'confusion_matrix': np.array([[10, 2], [1, 15]]),
+            'metadata': {'method': 'SVM', 'params': [1, 2, 3]}
+        }
+        self.insert1({**key, 'results': results})
+
+# Fetch: Get Python object back (no manual unpickling)
+data = (Analysis & key).fetch1('results')
+print(data['accuracy'])           # 0.95
+print(data['confusion_matrix'])   # numpy array
+```
+
+```python
+# <npy@>: Insert array-like objects, get array-like objects back
+@schema
+class Recording(dj.Manual):
+    definition = """
+    recording_id : uuid
+    ---
+    traces : <npy@>           # NumPy arrays (no manual .npy files)
+    """
+
+# Insert: Just pass the array
+Recording.insert1({'recording_id': uuid.uuid4(), 'traces': np.random.randn(1000, 32)})
+
+# Fetch: Get array-like object (NpyRef with lazy loading)
+ref = (Recording & key).fetch1('traces')
+print(ref.shape)              # (1000, 32) - metadata without download
+subset = ref[:100, :]         # Lazy slicing
+```
+
+**Contrast with `<object@>` and `<filepath@>`:** You manage the format (Zarr, HDF5, etc.) and handle file IO yourself. More flexible, but requires format knowledge.
 
 ## Detailed Decision Criteria
 
@@ -244,6 +294,7 @@ small_data : <blob>
 - ✅ Transactional consistency
 - ✅ Automatic backup
 - ✅ No store configuration needed
+- ✅ **Python object convenience**: Insert/fetch dicts, lists, arrays directly (no manual IO)
 - ✅ Automatic serialization + gzip compression
 - ✅ Technical limit: 4 GiB (MySQL), unlimited (PostgreSQL)
 - ❌ Practical limit: Keep under ~1-10 MB for performance
@@ -251,10 +302,10 @@ small_data : <blob>
 - ❌ Database bloat for large data
 
 **Best for:**
-- Configuration JSON
+- Configuration JSON (dicts/lists)
 - Small arrays/matrices
 - Thumbnails
-- Metadata blobs
+- Nested data structures
 
 ---
 
@@ -270,6 +321,7 @@ file : <attach@>            # File attachments
 ```
 
 **Characteristics:**
+- ✅ **Python object convenience**: Insert/fetch dicts, lists, arrays directly (no manual IO)
 - ✅ Content deduplication (identical data stored once)
 - ✅ Automatic serialization + gzip compression
 - ✅ Garbage collection
@@ -280,14 +332,14 @@ file : <attach@>            # File attachments
 - ❌ Storage path not browsable (hash-based)
 
 **Best for:**
-- Neural waveforms
-- Processed images
-- PDF/document attachments
+- Neural waveforms (NumPy arrays)
+- Processed results (dicts/arrays)
+- Large nested data structures
 - Any write-once data with duplicates
 
 **Difference `<blob@>` vs `<attach@>`:**
-- `<blob@>`: Stores Python objects (serialized + gzip)
-- `<attach@>`: Stores files as-is (preserves original format)
+- `<blob@>`: Stores Python objects (serialized + gzip) - get Python objects back
+- `<attach@>`: Stores files as-is (preserves original format) - get file content back
 
 ---
 
@@ -311,18 +363,21 @@ dataset : <object@>         # Zarr, HDF5, custom
 - ❌ No deduplication
 - ❌ One file per field per row
 
-**Key advantage:** Schema-addressed storage can be navigated and accessed by a variety of tools (Zarr viewers, HDF5 utilities, direct filesystem access), not just through DataJoint. This makes data more discoverable and interoperable.
+**Key advantages:**
+- **Schema-addressed storage is browsable** - can be navigated and accessed by external tools (Zarr viewers, HDF5 utilities, direct filesystem access), not just through DataJoint
+- **`<npy@>` provides array convenience** - insert/fetch array-like objects directly (no manual .npy file handling)
+- **`<object@>` provides flexibility** - you manage the format (Zarr, HDF5, custom), DataJoint provides storage and references
 
 **Best for:**
-- Zarr arrays (multi-dimensional data)
-- HDF5 datasets
+- `<npy@>`: NumPy arrays with lazy loading (no manual IO)
+- `<object@>`: Zarr arrays, HDF5 datasets, custom formats (you manage format)
 - Large video files
 - Multi-file experimental outputs
 - Data that needs to be accessed by non-DataJoint tools
 
 **Difference `<npy@>` vs `<object@>`:**
-- `<npy@>`: Optimized for NumPy (lazy loading, slicing)
-- `<object@>`: General purpose (Zarr, HDF5, custom formats)
+- `<npy@>`: Insert/fetch array-like objects (like `<blob>` but lazy) - no manual .npy handling
+- `<object@>`: You manage format and IO (Zarr, HDF5, custom) - more flexible but requires format knowledge
 
 ---
 
