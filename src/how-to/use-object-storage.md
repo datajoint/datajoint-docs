@@ -13,7 +13,7 @@ OAS supports two addressing schemes:
 | **Hash-addressed** | Object store | Content hash (MD5) | Blobs, attachments (with deduplication) |
 | **Schema-addressed** | Object store | Schema structure | NumPy arrays, Zarr, HDF5 (browsable paths) |
 
-Data can also be stored **inline** directly in the database column (no `@` modifier).
+Data can also be stored **in-table** directly in the database column (no `@` modifier).
 
 For complete details, see the [Type System specification](../reference/specs/type-system.md).
 
@@ -26,7 +26,7 @@ Use the `@` modifier for:
 - Zarr arrays and HDF5 files
 - Any data too large for efficient database storage
 
-## Inline vs Object Store
+## In-Table vs Object Store
 
 ```python
 @schema
@@ -34,7 +34,7 @@ class Recording(dj.Manual):
     definition = """
     recording_id : uuid
     ---
-    metadata : <blob>           # Inline: stored in database column
+    metadata : <blob>           # In-table: stored in database column
     raw_data : <blob@>          # Object store: hash-addressed
     waveforms : <npy@>          # Object store: schema-addressed (lazy)
     """

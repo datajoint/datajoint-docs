@@ -19,7 +19,7 @@ Codec types resolve through core types to native types: `<blob>` → `bytes` →
 **Syntax distinction:**
 - Core types: `int32`, `float64`, `varchar(255)` - no brackets
 - Codec types: `<blob>`, `<object@store>`, `<filepath@main>` - angle brackets
-- The `@` character indicates store (object storage vs inline in database)
+- The `@` character indicates store (object storage vs in-table)
 
 ### OAS Addressing Schemes
 
@@ -215,9 +215,9 @@ composable and can be built-in or user-defined.
 
 ### Storage Mode: `@` Convention
 
-The `@` character in codec syntax indicates **object store** (vs inline in database):
+The `@` character in codec syntax indicates **object store** (vs in-table):
 
-- **No `@`**: Inline storage (database column) - e.g., `<blob>`, `<attach>`
+- **No `@`**: In-table storage (database column) - e.g., `<blob>`, `<attach>`
 - **`@` present**: Object store - e.g., `<blob@>`, `<attach@store>`
 - **`@` alone**: Use default store - e.g., `<blob@>`
 - **`@name`**: Use named store - e.g., `<blob@cold>`
