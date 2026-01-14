@@ -122,8 +122,10 @@ DataJoint 2.0 replaces `external.*` with unified `stores.*` configuration:
 |--------|-----|-------|
 | `table.fetch()` | `table.to_arrays()` or `table.to_dicts()` | I |
 | `table.fetch1()` | `table.fetch1()` (unchanged) | — |
+| `table.fetch1('KEY')` | `table.keys()` | I |
 | `(table & key)._update('attr', val)` | `table.update1({**key, 'attr': val})` | I |
-| `table1 @ table2` | `table1.join(table2, semantic_check=False)` | I |
+| `table1 @ table2` | `table1 * table2` (natural join with semantic checks) | I |
+| `a.join(b, left=True)` | Consider `a.extend(b)` | I |
 | `dj.U('attr') * table` | `dj.U('attr') & table` | I |
 
 **Learn more:** [Fetch API Reference](../reference/specs/fetch-api.md) · [Query Operators Reference](../reference/operators.md)
@@ -734,7 +736,8 @@ Update all DataJoint API calls to 2.0 patterns.
 - `(table & key)._update('attr', val)` → `table.update1({**key, 'attr': val})`
 
 **Join Operators:**
-- `table1 @ table2` → `table1.join(table2, semantic_check=False)`
+- `table1 @ table2` → `table1 * table2` (natural join with semantic checks enabled)
+- `a.join(b, left=True)` → Consider `a.extend(b)`
 - `dj.U('attr') * table` → `dj.U('attr') & table`
 
 **Learn more:** [Fetch API Reference](../reference/specs/fetch-api.md) · [Query Operators](../reference/operators.md)
@@ -771,8 +774,11 @@ API CONVERSIONS:
    OLD: row = table.fetch1()
    NEW: row = table.fetch1()  # UNCHANGED
 
-   OLD: key = table.fetch1('KEY')
-   NEW: key = table.fetch1('KEY')  # UNCHANGED
+   OLD: keys = table.fetch1('KEY')
+   NEW: keys = table.keys()  # Returns list of dicts with primary key values
+
+   OLD: keys, a, b = table.fetch("KEY", "a", "b")
+   NEW: a, b = table.to_arrays('a', 'b', include_key=True)  # Returns tuple with keys included
 
 2. Update Method (always convert):
    OLD: (table & key)._update('attr', value)
@@ -780,10 +786,14 @@ API CONVERSIONS:
 
 3. Join Operator (always convert):
    OLD: result = table1 @ table2
-   NEW: result = table1.join(table2, semantic_check=False)
+   NEW: result = table1 * table2  # Natural join WITH semantic checks
 
-   Note: semantic_check=False maintains legacy behavior
-         semantic_check=True enables lineage validation (new in 2.0)
+   IMPORTANT: The @ operator bypassed semantic checks. The * operator enables semantic checks by default.
+   If semantic checks fail, INVESTIGATE—this may reveal errors in your schema or data.
+
+   For left joins:
+   OLD: result = a.join(b, left=True)
+   NEW: result = a.extend(b)  # Consider using extend for left joins
 
 4. Universal Set (always convert):
    OLD: result = dj.U('attr') * table
@@ -802,18 +812,22 @@ PROCESS:
    b. Replace with 2.0 equivalents
    c. Search for update patterns
    d. Replace with update1()
-   e. Search for @ and dj.U() * patterns
-   f. Replace with join() and & operators
+   e. Search for @ operator (replace with * for natural join)
+   f. Search for .join(x, left=True) patterns (consider .extend(x))
+   g. Search for dj.U() * patterns (replace with dj.U() &)
 3. Run syntax checks
 4. Run existing tests if available
+5. If semantic checks fail after @ → * conversion, investigate schema/data
 
 VERIFICATION:
 
 - No .fetch() calls remaining (except fetch1)
+- No .fetch1('KEY') calls remaining (replaced with .keys())
 - No ._update() calls remaining
 - No @ operator between tables
 - No dj.U() * patterns
 - All tests pass (if available)
+- Semantic check failures investigated and resolved
 
 COMMON PATTERNS:
 
@@ -833,11 +847,23 @@ Pattern 4: Update attribute
 OLD: (Session & key)._update('experimenter', 'Alice')
 NEW: Session.update1({**key, 'experimenter': 'Alice'})
 
-Pattern 5: Natural join without semantic check
-OLD: result = Neuron @ Session
-NEW: result = Neuron.join(Session, semantic_check=False)
+Pattern 5: Fetch primary keys
+OLD: keys = Mouse.fetch1('KEY')
+NEW: keys = Mouse.keys()
 
-Pattern 6: Universal set
+Pattern 5b: Fetch with keys included
+OLD: keys, weights, ages = Mouse.fetch("KEY", "weight", "age")
+NEW: weights, ages = Mouse.to_arrays('weight', 'age', include_key=True)
+
+Pattern 6: Natural join (now WITH semantic checks)
+OLD: result = Neuron @ Session
+NEW: result = Neuron * Session  # Semantic checks enabled—may reveal schema errors
+
+Pattern 7: Left join
+OLD: result = Session.join(Experiment, left=True)
+NEW: result = Session.extend(Experiment)  # Consider using extend
+
+Pattern 8: Universal set
 OLD: all_dates = dj.U('session_date') * Session
 NEW: all_dates = dj.U('session_date') & Session
 
@@ -845,18 +871,24 @@ REPORT:
 
 - Files modified: [list]
 - fetch() → to_arrays/to_dicts: [count]
+- fetch1('KEY') → keys(): [count]
 - _update() → update1(): [count]
-- @ → join(): [count]
+- @ → * (natural join): [count]
+- .join(x, left=True) → .extend(x): [count]
 - U() * → U() &: [count]
+- Semantic check failures: [count and resolution]
 - Tests passed: [yes/no]
 
 COMMIT MESSAGE FORMAT:
 "feat(phase-i): convert query and insert code to 2.0 API
 
 - Replace fetch() with to_arrays()/to_dicts()
+- Replace fetch1('KEY') with keys()
 - Replace _update() with update1()
-- Replace @ operator with join()
+- Replace @ operator with * (enables semantic checks)
+- Replace .join(x, left=True) with .extend(x)
 - Replace dj.U() * with dj.U() &
+- Investigate and resolve semantic check failures
 
 API conversions: X fetch, Y update, Z join"
 ```
@@ -927,7 +959,7 @@ def make(self, key):
 
 NEW:
 def make(self, key):
-    data = (Neuron.join(Session, semantic_check=False) & key).to_arrays()
+    data = (Neuron * Session & key).to_arrays()  # Semantic checks now enabled
 
 PROCESS:
 1. Find all dj.Computed and dj.Imported classes
@@ -1190,7 +1222,7 @@ def compare_populate():
     print(f"✓ Populate generated same number of rows: {v2_count}")
 
     # Compare computed values (if numeric)
-    for key in (legacy.Neuron & 'neuron_id=0').fetch1('KEY'):
+    for key in (legacy.Neuron & 'neuron_id=0').keys():
         leg_val = (legacy.Neuron & key).fetch1('activity')
         v2_val = (v2.Neuron & key).fetch1('activity')
 
