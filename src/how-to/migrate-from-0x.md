@@ -47,7 +47,7 @@ DataJoint 2.0 introduces portable type aliases (`uint32`, `float64`, etc.) that 
 
 **After Phase 2:** 2.0 clients can use all column types except legacy external storage and AdaptedTypes.
 
-**Most users stop after Phase 2.** Phases 3-4 only apply to schemas using legacy external storage (`external`, `external-attach`, `filepath`) or AdaptedTypes. Phase 6 is optional cleanup.
+**Most users stop after Phase 2.** Phases 3-4 only apply to schemas using legacy external storage (`blob@store`, `attach@store`, `filepath@store`) or AdaptedTypes. Phase 6 is optional cleanup.
 
 ---
 
@@ -538,7 +538,7 @@ The database migration updates these column types:
 - Blobs: `longblob` → `:<blob>:`
 - Attachments: `longblob` with attach comment → `:<attach>:`
 
-External storage columns (`external`, `external-attach`, `filepath`) are **not** migrated here—they require Phase 3-4.
+External storage columns (`blob@store`, `attach@store`, `filepath@store`) are **not** migrated here—they require Phase 3-4.
 
 After the database migration for each schema, update the corresponding Python module(s) to use core types (see section 2.4).
 
@@ -732,7 +732,7 @@ After Phase 2:
 
 - [ ] Legacy clients can still read/write all data
 - [ ] 2.0 clients recognize all column types except:
-  - Legacy external storage (`external`, `external-attach`, `filepath`) - requires Phase 3-4
+  - Legacy external storage (`blob@store`, `attach@store`, `filepath@store`) - requires Phase 3-4
   - Legacy AdaptedTypes - requires Phase 3 conversion to Codecs
 - [ ] `~lineage` table exists and is populated for each schema
 - [ ] Python definition strings updated to use core types
@@ -748,7 +748,7 @@ After Phase 2:
 
 **Goal:** Create dual attributes for external storage columns, enabling both APIs to coexist safely during cross-testing.
 
-**Skip this phase** if your schema does not use legacy external storage (`external`, `external-attach`, `filepath`).
+**Skip this phase** if your schema does not use legacy external storage (`blob@store`, `attach@store`, `filepath@store`).
 
 ### 3.1 Create Per-Table Job Tables (Optional)
 
@@ -844,7 +844,7 @@ For tables with external blob/attach/filepath attributes, create **duplicate att
 #### Naming Convention
 
 ```
-Original attribute:  signal        (legacy API - BINARY(16) with :external:)
+Original attribute:  signal        (legacy API - BINARY(16) with :blob@store:)
 New attribute:       signal_v2     (2.0 API - JSON with metadata)
 ```
 
@@ -861,7 +861,7 @@ Two functions handle different external storage types:
 
 | Function | Handles |
 |----------|---------|
-| `migrate_external()` | Legacy `external` and `external-attach` columns |
+| `migrate_external()` | Legacy `blob@store` and `attach@store` columns |
 | `migrate_filepath()` | Legacy `filepath` columns |
 
 ```python
@@ -892,14 +892,14 @@ migrate_filepath(schema, dry_run=False)
 -- Before (legacy only)
 CREATE TABLE recording (
     recording_id INT UNSIGNED NOT NULL,
-    signal BINARY(16) COMMENT ':external-raw:neural signal data',
+    signal BINARY(16) COMMENT ':blob@raw:neural signal data',
     PRIMARY KEY (recording_id)
 );
 
 -- After Phase 3 (both APIs supported)
 CREATE TABLE recording (
     recording_id INT UNSIGNED NOT NULL,
-    signal BINARY(16) COMMENT ':external-raw:neural signal data',
+    signal BINARY(16) COMMENT ':blob@raw:neural signal data',
     signal_v2 JSON COMMENT ':blob@raw: neural signal data',
     PRIMARY KEY (recording_id)
 );
@@ -915,7 +915,7 @@ class Recording(dj.Manual):
     definition = '''
     recording_id : int unsigned
     ---
-    signal : external-raw          # Legacy API
+    signal : blob@raw              # Legacy API
     signal_v2 : <blob@raw>         # 2.0 API
     '''
 ```
@@ -1028,7 +1028,7 @@ Update Python source code to use 2.0 type syntax (remove dual attributes):
 definition = '''
     recording_id : int unsigned
     ---
-    signal : external-raw          # Legacy API
+    signal : blob@raw              # Legacy API
     signal_v2 : <blob@raw>         # 2.0 API
 '''
 
@@ -1051,9 +1051,9 @@ definition = '''
 | `float` | `float32` |
 | `double` | `float64` |
 | `longblob` | `<blob>` |
-| `external-store` | `<blob@store>` |
-| `external-attach-store` | `<attach@store>` |
-| `filepath-store` | `<filepath@store>` |
+| `blob@store` | `<blob@store>` |
+| `attach@store` | `<attach@store>` |
+| `filepath@store` | `<filepath@store>` |
 
 ### 4.5 AI Agent Prompt (Phase 4 - Pre-Flight)
 
@@ -1113,9 +1113,9 @@ TYPE REPLACEMENTS:
 - float → float32
 - double → float64
 - longblob → <blob>
-- external-store → <blob@store>
-- external-attach-store → <attach@store>
-- filepath-store → <filepath@store>
+- blob@store → <blob@store>
+- attach@store → <attach@store>
+- filepath@store → <filepath@store>
 
 VERIFICATION:
 - All tables accessible via 2.0 client
@@ -1272,7 +1272,7 @@ Analyzes and migrates column type labels. Returns dict with:
 - `columns_migrated`: count of columns updated (0 if dry_run=True)
 - `external_storage`: columns requiring Phase 3-4 (not migrated here)
 
-Use `dry_run=True` to preview, `dry_run=False` to apply. Migrates numeric types, `<blob>`, `<attach>`. Skips external storage (`external`, `external-attach`, `filepath`).
+Use `dry_run=True` to preview, `dry_run=False` to apply. Migrates numeric types, `<blob>`, `<attach>`. Skips external storage (`blob@store`, `attach@store`, `filepath@store`).
 
 ### External Storage Migration (Phase 3-4)
 
