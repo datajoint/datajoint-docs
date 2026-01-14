@@ -772,7 +772,7 @@ result = migrate_external(schema, dry_run=False, finalize=True)
 ### 4.3 Cleanup Legacy Tables
 
 ```python
-# Drop legacy jobs table (after confirming Jobs 2.0 working)
+# Drop legacy jobs table (after confirming populate(reserve_jobs=True) works)
 schema.connection.query(f"DROP TABLE IF EXISTS `{schema.database}`.`~jobs`")
 
 # Drop legacy external tracking tables (after external migration finalized)
@@ -955,7 +955,7 @@ DO NOT introduce all features at once. Focus on immediate value.
 | Table | Purpose | When to Drop |
 |-------|---------|--------------|
 | `~log` | Schema change log | After confirming no tools depend on it |
-| `~jobs` | Legacy job reservation | After confirming Jobs 2.0 (`~~table_name`) is working |
+| `~jobs` | Legacy job reservation | After confirming `populate(reserve_jobs=True)` works |
 | `~external_*` | Legacy external storage tracking | After Phase 4 (external migration finalized) |
 
 ### 6.2 Cleanup Commands
@@ -972,7 +972,7 @@ conn = schema.connection
 # Step 2: Drop legacy log table
 conn.query(f"DROP TABLE IF EXISTS `{schema.database}`.`~log`")
 
-# Step 3: Drop legacy jobs table (after Jobs 2.0 is working)
+# Step 3: Drop legacy jobs table (after populate(reserve_jobs=True) works)
 conn.query(f"DROP TABLE IF EXISTS `{schema.database}`.`~jobs`")
 
 # Step 4: Drop legacy external tracking tables
@@ -985,7 +985,7 @@ for store in ['external', 'external_raw', 'external_analysis']:
 
 - [ ] All clients upgraded to DataJoint 2.0
 - [ ] No legacy processes running
-- [ ] Jobs 2.0 (`~~table_name` tables) working correctly
+- [ ] `populate(reserve_jobs=True)` works correctly
 - [ ] External storage migration finalized (Phase 4 complete)
 - [ ] Database backup taken
 
@@ -998,7 +998,7 @@ TASK: Remove legacy hidden tables that are no longer needed.
 
 PREREQUISITES:
 - Phase 4 must be complete (no legacy clients)
-- Jobs 2.0 must be working
+- populate(reserve_jobs=True) must work
 - Database backup must exist
 
 TABLES TO DROP:
@@ -1008,7 +1008,7 @@ TABLES TO DROP:
 
 STEPS:
 1. Verify no legacy processes: SHOW PROCESSLIST
-2. Verify Jobs 2.0 working: check ~~table_name tables exist
+2. Verify job reservation works: test populate(reserve_jobs=True)
 3. Drop tables using: DROP TABLE IF EXISTS `schema`.`~table_name`
 4. Verify cleanup complete
 
