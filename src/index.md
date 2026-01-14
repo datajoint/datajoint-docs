@@ -1,30 +1,8 @@
 # DataJoint Documentation
 
-!!! warning "DataJoint 2.0+ Documentation"
+!!! info "Documentation for DataJoint 2.0+"
 
-    This documentation is for **DataJoint 2.0 and later**. All code examples use 2.0 syntax and APIs.
-
-    **Upgrading from pre-2.0 (0.14.x)?** Follow the [Migration Guide](how-to/migrate-to-v20.md) for step-by-step upgrade instructions.
-
-    **Legacy documentation:** For DataJoint 0.x documentation, visit [datajoint.github.io/datajoint-python](https://datajoint.github.io/datajoint-python).
-
-## Which Version Am I Using?
-
-??? question "How do I check my DataJoint version?"
-
-    ```python
-    import datajoint as dj
-    print(dj.__version__)
-    ```
-
-    - **Version 2.0 or higher:** You're on the current version ✓
-    - **Version 0.14.x or lower:** You're on legacy DataJoint
-
-    **What should I do?**
-
-    - **Learning DataJoint:** Use this documentation (2.0+)
-    - **Existing pipeline on 0.x:** Follow the [Migration Guide](how-to/migrate-to-v20.md)
-    - **Need 0.x documentation:** Visit [legacy docs](https://datajoint.github.io/datajoint-python)
+    Python code examples in this documentation use DataJoint 2.0 syntax. If you're using DataJoint pre-2.0, see the [Migration Guide](how-to/migrate-to-v20.md) or visit [legacy docs](https://datajoint.github.io/datajoint-python).
 
 ## About DataJoint
 
