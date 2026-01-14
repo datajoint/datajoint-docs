@@ -1103,32 +1103,6 @@ print(f"External columns remaining: {len(external)}")  # Should be 0
 # Phase 5: Feature adoption (per-feature testing)
 ```
 
-### Overall Migration Status
-
-```python
-def get_migration_phase(schema):
-    """Determine current migration phase."""
-    from datajoint.migrate import migrate_columns, _find_external_columns
-
-    column_status = migrate_columns(schema, dry_run=True)
-    external = _find_external_columns(schema)
-
-    # Check lineage table
-    has_lineage = schema.connection.query(
-        "SELECT COUNT(*) FROM information_schema.TABLES "
-        "WHERE TABLE_SCHEMA=%s AND TABLE_NAME='~lineage'",
-        args=(schema.database,)
-    ).fetchone()[0] > 0
-
-    if len(column_status['columns']) > 0:
-        return 1  # Need Phase 2
-    if not has_lineage:
-        return 2  # Need Phase 3
-    if len(external) > 0:
-        return 3  # Need Phase 4
-    return 5  # Ready for feature adoption
-```
-
 ---
 
 ## Troubleshooting
