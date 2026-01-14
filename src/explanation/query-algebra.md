@@ -99,19 +99,39 @@ SpikeTime.extend(Neuron)  # Adds cell_type, depth to SpikeTime
 
 **How it differs from join:**
 
-- **Join (`*`)**: Returns only matching entities (inner join)
-- **Extend**: Returns all entities from the left side (left join)
+- **Join (`*`)**: Returns only matching entities (inner join), primary key is the union of both PKs
+- **Extend**: Returns all entities from the left side (left join), primary key stays as the left side's PK
 
-**Requirement:** The left side must **determine** the right side. This means all primary key attributes from the right side must exist in the left side.
+**Primary key formation:**
+
+```python
+# Join: PK is union of both primary keys
+result = Session * Trial
+# PK: (session_id, trial_num)
+
+# Extend: PK stays as left side's PK
+result = Trial.extend(Session)
+# PK: (session_id, trial_num) - same as Trial
+# session_date is added as a non-primary attribute
+```
+
+**Requirement:** The left side must **determine** the right side. This means all primary key attributes from the right side must exist in the left side. This requirement ensures:
+
+1. Every entity in the left side can match at most one entity in the right side
+2. The left side's primary key uniquely identifies entities in the result
+3. No NULL values appear in the result's primary key
 
 ```python
 # Valid: Trial determines Session
 # (session_id is in Trial's primary key)
 Trial.extend(Session)  ✓
+# Each trial belongs to exactly one session
+# Result PK: (session_id, trial_num)
 
 # Invalid: Session does NOT determine Trial
 # (trial_num is not in Session)
 Session.extend(Trial)  ✗  # Error: trial_num not in Session
+# A session has multiple trials - PK would be ambiguous
 ```
 
 **Why use extend?**
