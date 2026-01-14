@@ -59,7 +59,7 @@ class Connectivity(dj.Manual):
     definition = '''
     conn_id : int
     ---
-    network : <graph>      # inline storage
+    network : <graph>      # in-table storage
     network_ext : <graph@>  # object store
     '''
 ```
@@ -203,7 +203,7 @@ Examples:
 def get_dtype(self, is_store: bool) -> str:
     return "bytes"
 
-# Different behavior for inline/store
+# Different behavior for in-table/store
 def get_dtype(self, is_store: bool) -> str:
     return "<hash>" if is_store else "bytes"
 

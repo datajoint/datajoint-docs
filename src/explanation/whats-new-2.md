@@ -64,7 +64,7 @@ zarr_array : <object@store> # Path-addressed for Zarr/HDF5
 ### What Changed
 
 Legacy DataJoint overloaded MySQL types with implicit conversions:
-- `longblob` could be blob serialization OR inline attachment
+- `longblob` could be blob serialization OR in-table attachment
 - `attach` was implicitly converted to longblob
 - `uuid` was used internally for external storage
 
