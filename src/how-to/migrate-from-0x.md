@@ -718,21 +718,32 @@ New attribute:       signal_v2     (2.0 API - JSON with metadata)
 
 #### Migration Commands
 
-```python
-from datajoint.migrate import migrate_external
+Two functions handle different external storage types:
 
-# Step 1: Preview what will be created
+| Function | Handles |
+|----------|---------|
+| `migrate_external()` | `external-*` blobs and `attach@*` attachments |
+| `migrate_filepath()` | `filepath@*` managed file paths |
+
+```python
+from datajoint.migrate import migrate_external, migrate_filepath
+
+# Step 1: Preview external blobs/attachments
 result = migrate_external(schema, dry_run=True)
 for col in result['details']:
     print(f"{col['table']}.{col['column']} → {col['column']}_v2")
 
-# Step 2: Create dual attributes (idempotent - safe to run multiple times)
-result = migrate_external(schema, dry_run=False)
-print(f"Migrated {result['columns_migrated']} columns")
-print(f"Copied {result['rows_migrated']} rows")
+# Step 2: Preview filepaths
+result = migrate_filepath(schema, dry_run=True)
+for col in result['details']:
+    print(f"{col['table']}.{col['column']} → {col['column']}_v2")
 
-# Step 3: Verify data accessible via both APIs
-# Legacy: table.fetch('signal')   → reads from BINARY(16) column
+# Step 3: Create dual attributes (idempotent - safe to run multiple times)
+migrate_external(schema, dry_run=False)
+migrate_filepath(schema, dry_run=False)
+
+# Step 4: Verify data accessible via both APIs
+# Legacy: table.fetch('signal')     → reads from BINARY(16) column
 # 2.0:    table.fetch1('signal_v2') → reads from JSON column
 ```
 
