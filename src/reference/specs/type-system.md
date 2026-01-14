@@ -698,8 +698,7 @@ Content-addressed storage uses **MD5** (128-bit, 32-char hex) rather than SHA256
    The new system changes only the storage format (hex string in JSON vs binary UUID),
    not the underlying hash algorithm. This simplifies migration.
 
-5. **Consistency with existing codebase**: The `dj.hash` module already uses MD5 for
-   `key_hash()` (job reservation) and `uuid_from_buffer()` (query caching).
+5. **Consistency with existing codebase**: Internal functions use MD5 for query caching.
 
 **Why not SHA256?**
 
