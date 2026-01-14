@@ -172,15 +172,13 @@ referential integrity and workflow dependency.
 
 ## Schema Dimensions
 
-A **dimension** is an independent axis of variation in your data, introduced by
-a table that defines new primary key attributes. Dimensions are the fundamental
-building blocks of schema design.
+A **dimension** is an independent axis of variation in your data. The fundamental principle:
 
-### Dimension-Introducing Tables
+> **Any table that introduces a new primary key attribute introduces a new dimension.**
 
-A table **introduces a dimension** when it defines primary key attributes that
-don't come from a foreign key. In schema diagrams, these tables have
-**underlined names**.
+This is true whether the table has only new attributes or also inherits attributes from foreign keys. The key is simply: new primary key attribute = new dimension.
+
+### Tables That Introduce Dimensions
 
 ```python
 @schema
@@ -192,52 +190,49 @@ class Subject(dj.Manual):
     """
 
 @schema
-class Modality(dj.Lookup):
+class Session(dj.Manual):
     definition = """
-    modality : varchar(32)     # NEW dimension: modality
+    -> Subject                 # Inherits subject_id
+    session_idx : uint16       # NEW dimension: session_idx
     ---
-    description : varchar(255)
+    session_date : date
+    """
+
+@schema
+class Trial(dj.Manual):
+    definition = """
+    -> Session                 # Inherits subject_id, session_idx
+    trial_idx : uint16         # NEW dimension: trial_idx
+    ---
+    outcome : enum('success', 'fail')
     """
 ```
 
-Both `Subject` and `Modality` are dimension-introducing tables—they create new
-axes along which data varies.
+**All three tables introduce dimensions:**
 
-### Dimension-Inheriting Tables
+- `Subject` introduces `subject_id` dimension
+- `Session` introduces `session_idx` dimension (even though it also inherits `subject_id`)
+- `Trial` introduces `trial_idx` dimension (even though it also inherits `subject_id`, `session_idx`)
 
-A table **inherits dimensions** when its entire primary key comes from foreign
-keys. In schema diagrams, these tables have **non-underlined names**.
+In schema diagrams, tables that introduce at least one new dimension have **underlined names**.
+
+### Tables That Don't Introduce Dimensions
+
+A table introduces **no dimensions** when its entire primary key comes from foreign keys:
 
 ```python
 @schema
 class SubjectProfile(dj.Manual):
     definition = """
-    -> Subject                 # Inherits subject_id dimension
+    -> Subject                 # Inherits subject_id only
     ---
     weight : float32
     """
 ```
 
-`SubjectProfile` doesn't introduce a new dimension—it extends the `Subject`
-dimension with additional attributes. There's exactly one profile per subject.
+`SubjectProfile` doesn't introduce any new primary key attribute—it extends the `Subject` dimension with additional attributes. There's exactly one profile per subject.
 
-### Mixed Tables
-
-Most tables both inherit and introduce dimensions:
-
-```python
-@schema
-class Session(dj.Manual):
-    definition = """
-    -> Subject                 # Inherits subject_id dimension
-    session_idx : uint16       # NEW dimension within subject
-    ---
-    session_date : date
-    """
-```
-
-`Session` inherits the subject dimension but introduces a new dimension
-(`session_idx`) within each subject. This creates a hierarchical structure.
+In schema diagrams, these tables have **non-underlined names**.
 
 ### Computed Tables and Dimensions
 
