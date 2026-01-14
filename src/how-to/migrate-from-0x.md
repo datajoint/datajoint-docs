@@ -392,12 +392,68 @@ This migrates all column types:
 
 External storage columns (`external-*`, `attach@*`, `filepath@*`) are **not** migrated here—they require Phase 3-4.
 
-### 2.4 AI Agent Prompt (Phase 2)
+### 2.4 Update Table Definitions
+
+Update Python table definition strings to use core types instead of native MySQL types. This is a code change (like the fetch API updates in Phase 1) that should be done manually or by AI agents.
+
+#### Type Replacements
+
+| Native Type (Legacy) | Core Type (2.0) |
+|---------------------|-----------------|
+| `tinyint` | `int8` |
+| `tinyint unsigned` | `uint8` |
+| `smallint` | `int16` |
+| `smallint unsigned` | `uint16` |
+| `int` | `int32` |
+| `int unsigned` | `uint32` |
+| `bigint` | `int64` |
+| `bigint unsigned` | `uint64` |
+| `float` | `float32` |
+| `double` | `float64` |
+| `longblob` | `<blob>` |
+
+#### Example
+
+```python
+# Legacy definition
+@schema
+class Trial(dj.Manual):
+    definition = """
+    -> Session
+    trial_num : smallint unsigned   # trial number
+    ---
+    start_time : float              # seconds
+    duration : float                # seconds
+    stimulus : longblob             # stimulus parameters
+    """
+
+# 2.0 definition
+@schema
+class Trial(dj.Manual):
+    definition = """
+    -> Session
+    trial_num : uint16              # trial number
+    ---
+    start_time : float32            # seconds
+    duration : float32              # seconds
+    stimulus : <blob>               # stimulus parameters
+    """
+```
+
+**Why update definitions?**
+
+- **Clarity:** Core types are explicit about size and signedness
+- **Portability:** Core types map consistently across database backends
+- **Forward compatibility:** New tables should use core types; updating existing definitions maintains consistency
+
+**Note:** The database schema is unchanged—`migrate_columns()` already added type labels to column comments. Updating definition strings keeps your Python code consistent with the database state.
+
+### 2.5 AI Agent Prompt (Phase 2)
 
 ```
 You are migrating a DataJoint schema from legacy to 2.0.
 
-TASK: Add type labels to column comments and build lineage table.
+TASK: Update database metadata and Python definition strings.
 
 IMPORTANT: For multi-schema pipelines, process schemas in TOPOLOGICAL ORDER
 (upstream first). Each rebuild_lineage() assumes upstream schemas are done.
@@ -410,37 +466,37 @@ STEPS:
    c. Review columns needing migration
    d. Apply: migrate_columns(schema, dry_run=False)
    e. Build lineage: schema.rebuild_lineage()
-
-TYPE LABEL MAPPING (native → core):
-- tinyint unsigned → uint8
-- smallint unsigned → uint16
-- int unsigned → uint32
-- bigint unsigned → uint64
-- tinyint → int8
-- smallint → int16
-- int → int32
-- bigint → int64
-- float → float32
-- double → float64
-- longblob → <blob>
-- longblob (attach) → <attach>
+3. Update Python table definition strings to use core types:
+   - tinyint unsigned → uint8
+   - smallint unsigned → uint16
+   - int unsigned → uint32
+   - bigint unsigned → uint64
+   - tinyint → int8
+   - smallint → int16
+   - int → int32
+   - bigint → int64
+   - float → float32
+   - double → float64
+   - longblob → <blob>
 
 VERIFICATION:
 - 2.0 client recognizes all types correctly
 - Legacy clients still work (ignore comment prefixes)
 - ~lineage table exists
+- Python definition strings use core types
 ```
 
-### 2.5 Validation
+### 2.6 Validation
 
 After Phase 2:
 
 - [ ] Legacy clients can still read/write all data
 - [ ] 2.0 clients recognize all column types correctly
 - [ ] `~lineage` table exists and is populated for each schema
+- [ ] Python definition strings updated to use core types
 - [ ] No data format changes occurred
 
-**Why safe:** Legacy ignores `~lineage` tables (prefixed with `~`).
+**Why safe:** Legacy ignores `~lineage` tables (prefixed with `~`). Definition string changes don't affect the database.
 
 ---
 
