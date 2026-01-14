@@ -883,11 +883,11 @@ Recommended order from simplest to most complex:
 
 | Order | Feature | Complexity | Tutorial |
 |-------|---------|------------|----------|
-| 1 | dj.Top operator | Low | [Queries Tutorial](../tutorials/basics/05-queries.ipynb) |
-| 2 | Core types (uint32, float64) | Low | [Schema Design](schema-design/) |
-| 3 | Configuration system | Low | [Configuration Guide](setup/configuration.md) |
-| 4 | Semantic matching | Medium | [Semantic Matching](../explanation/data-model/semantic-matching.md) |
-| 5 | Jobs 2.0 | Medium | [Distributed Computing](../tutorials/advanced/distributed-computing.ipynb) |
+| 1 | dj.Top operator | Low | [Queries Tutorial](../tutorials/basics/04-queries.ipynb) |
+| 2 | Core types (uint32, float64) | Low | [Define Tables](define-tables.md) |
+| 3 | Configuration system | Low | [Configuration Reference](../reference/configuration.md) |
+| 4 | Semantic matching | Medium | [Semantic Matching Spec](../reference/specs/semantic-matching.md) |
+| 5 | Jobs 2.0 | Medium | [Distributed Computing](../tutorials/advanced/distributed.ipynb) |
 | 6 | Custom codecs | Medium | [Custom Codecs](../tutorials/advanced/custom-codecs.ipynb) |
 | 7 | Object storage | High | [Object Storage Tutorial](../tutorials/basics/06-object-storage.ipynb) |
 
@@ -916,11 +916,11 @@ DO NOT introduce all features at once. Focus on immediate value.
 
 ### 5.3 Learning Resources
 
-- **Basics**: `tutorials/basics/` - Start here for core concepts
-- **Advanced**: `tutorials/advanced/` - Codecs, distributed computing
-- **How-To**: `how-to/` - Task-oriented guides
-- **Concepts**: `explanation/` - Why things work the way they do
-- **Reference**: `reference/` - Complete API and specification
+- **Basics**: [Tutorials](../tutorials/index.md) - Start here for core concepts
+- **Advanced**: [Advanced Tutorials](../tutorials/advanced/custom-codecs.ipynb) - Codecs, distributed computing
+- **How-To**: [How-To Guides](index.md) - Task-oriented guides
+- **Concepts**: [Explanation](../explanation/index.md) - Why things work the way they do
+- **Reference**: [Reference](../reference/index.md) - Complete API and specification
 
 ---
 
@@ -1162,4 +1162,4 @@ Re-run `migrate_external()` - it's idempotent and will update any missing rows.
 
 - [What's New in 2.0](../explanation/whats-new-2.md)
 - [Type System](../explanation/type-system.md)
-- [Configuration Guide](setup/configuration.md)
+- [Configuration Reference](../reference/configuration.md)
