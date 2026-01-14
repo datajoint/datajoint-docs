@@ -1,7 +1,7 @@
 # DataJoint Documentation
 
 > **DataJoint 2.0 is a major breaking release.** Existing pipelines require migration.
-> See the [Migration Guide](how-to/migrate-from-0x.md) for upgrade instructions.
+> See the [Migration Guide](how-to/migrate-to-v20.md) for upgrade instructions.
 > For pre-2.0 documentation, visit [datajoint.github.io/datajoint-python](https://datajoint.github.io/datajoint-python).
 
 ![pipeline](images/pipeline-illustration.png){: style="height:300px;"}
@@ -51,6 +51,14 @@ Unlike traditional databases that merely store data, DataJoint pipelines **proce
     Reusable pipeline modules for neurophysiology experiments
 
     [:octicons-arrow-right-24: Explore Elements](elements/index.md)
+
+-   :material-cloud: **DataJoint Platform**
+
+    ---
+
+    A cloud platform for automated analysis workflows. It relies on DataJoint Python and DataJoint Elements.
+
+    [:octicons-arrow-right-24: Learn more](https://datajoint.com/){:target="_blank"} | [Sign-in](https://works.datajoint.com){:target="_blank"}
 
 </div>
 
