@@ -112,6 +112,33 @@
     </div>
     <div data-md-component="announce">
       
+        <aside class="md-banner">
+          <div class="md-banner__inner md-grid md-typeset">
+            
+              <button class="md-banner__button md-icon" aria-label="Don't show this again">
+                
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+              </button>
+            
+            
+  <div class="md-banner">
+    <div class="md-banner__inner md-grid md-typeset">
+      <p>
+        📖 You are viewing documentation for <strong>DataJoint 2.0+</strong>
+        ·
+        <a href="https://docs.datajoint.com/how-to/migrate-to-v20/">
+          Migration guide for legacy users (pre-2.0)
+        </a>
+      </p>
+    </div>
+  </div>
+
+          </div>
+          
+            <script>var el=document.querySelector("[data-md-component=announce]");if(el){var content=el.querySelector(".md-typeset");__md_hash(content.innerHTML)===__md_get("__announce")&&(el.hidden=!0)}</script>
+          
+        </aside>
+      
     </div>
     
     
@@ -4827,6 +4854,8 @@
       
         
       
+        
+      
     
     
     
@@ -4894,6 +4923,34 @@
     
   
     History
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../about/versioning/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Documentation Versioning
   
 
     
@@ -5229,6 +5286,11 @@
 
 <h1 id="installation">Installation<a class="headerlink" href="#installation" title="Permanent link">&para;</a></h1>
 <p>Install DataJoint Python and set up your environment.</p>
+<div class="admonition warning">
+<p class="admonition-title">DataJoint 2.0+ Required</p>
+<p>This documentation is for <strong>DataJoint 2.0 and later</strong>. The PyPI and conda releases for DataJoint 2.0 are currently in preparation.</p>
+<p><strong>If you install now, you may get an older version (0.14.x).</strong> After installation, verify you have version 2.0 or later before following the tutorials and guides.</p>
+</div>
 <h2 id="basic-installation">Basic Installation<a class="headerlink" href="#basic-installation" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>datajoint
 </code></pre></div>
@@ -5243,14 +5305,27 @@ pip<span class="w"> </span>install<span class="w"> </span>datajoint<span class="
 pip<span class="w"> </span>install<span class="w"> </span>datajoint<span class="o">[</span>all<span class="o">]</span>
 </code></pre></div>
 <h2 id="development-installation">Development Installation<a class="headerlink" href="#development-installation" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/datajoint/datajoint-python.git
+<p>To install the latest pre-release version:</p>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>clone<span class="w"> </span>-b<span class="w"> </span>pre/v2.0<span class="w"> </span>https://github.com/datajoint/datajoint-python.git
 <span class="nb">cd</span><span class="w"> </span>datajoint-python
 pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;.[dev]&quot;</span>
 </code></pre></div>
 <h2 id="verify-installation">Verify Installation<a class="headerlink" href="#verify-installation" title="Permanent link">&para;</a></h2>
+<p><strong>Important:</strong> Check that you have DataJoint 2.0 or later:</p>
 <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">datajoint</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dj</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">__version__</span><span class="p">)</span>
 </code></pre></div>
+<p><strong>Expected output:</strong> <code>2.0.0</code> or higher</p>
+<div class="admonition danger">
+<p class="admonition-title">Version Mismatch</p>
+<p>If you see version <code>0.14.x</code> or lower, you have the legacy version of DataJoint. This documentation will not match your installed version.</p>
+<p><strong>Options:</strong></p>
+<ol>
+<li><strong>Upgrade to 2.0 (pre-release):</strong> Install from the <code>pre/v2.0</code> branch (see Development Installation above)</li>
+<li><strong>Use legacy documentation:</strong> Visit <a href="https://datajoint.github.io/datajoint-python">datajoint.github.io/datajoint-python</a></li>
+<li><strong>Migrate existing pipeline:</strong> Follow the <a href="../migrate-to-v20/">Migration Guide</a></li>
+</ol>
+</div>
 <h2 id="database-server">Database Server<a class="headerlink" href="#database-server" title="Permanent link">&para;</a></h2>
 <p>DataJoint requires a MySQL-compatible database server:</p>
 <h3 id="local-development-docker">Local Development (Docker)<a class="headerlink" href="#local-development-docker" title="Permanent link">&para;</a></h3>

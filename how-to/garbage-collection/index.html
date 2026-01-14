@@ -112,6 +112,33 @@
     </div>
     <div data-md-component="announce">
       
+        <aside class="md-banner">
+          <div class="md-banner__inner md-grid md-typeset">
+            
+              <button class="md-banner__button md-icon" aria-label="Don't show this again">
+                
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+              </button>
+            
+            
+  <div class="md-banner">
+    <div class="md-banner__inner md-grid md-typeset">
+      <p>
+        📖 You are viewing documentation for <strong>DataJoint 2.0+</strong>
+        ·
+        <a href="https://docs.datajoint.com/how-to/migrate-to-v20/">
+          Migration guide for legacy users (pre-2.0)
+        </a>
+      </p>
+    </div>
+  </div>
+
+          </div>
+          
+            <script>var el=document.querySelector("[data-md-component=announce]");if(el){var content=el.querySelector(".md-typeset");__md_hash(content.innerHTML)===__md_get("__announce")&&(el.hidden=!0)}</script>
+          
+        </aside>
+      
     </div>
     
     
@@ -4871,6 +4898,8 @@
       
         
       
+        
+      
     
     
     
@@ -4938,6 +4967,34 @@
     
   
     History
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../about/versioning/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Documentation Versioning
   
 
     
@@ -5368,10 +5425,12 @@ remain. This is by design:</p>
     <span class="n">dry_run</span><span class="o">=</span><span class="kc">False</span>
 <span class="p">)</span>
 </code></pre></div>
-<p>!!! note "Per-schema deduplication"
-    Hash-addressed storage is deduplicated <strong>within</strong> each schema. Different
-    schemas have independent storage, so you only need to scan schemas that
-    share the same database.</p>
+<div class="admonition note">
+<p class="admonition-title">Per-schema deduplication</p>
+<p>Hash-addressed storage is deduplicated <strong>within</strong> each schema. Different
+schemas have independent storage, so you only need to scan schemas that
+share the same database.</p>
+</div>
 <h2 id="named-stores">Named Stores<a class="headerlink" href="#named-stores" title="Permanent link">&para;</a></h2>
 <p>If you use multiple named stores, specify which to clean:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Clean specific store</span>

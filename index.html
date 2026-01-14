@@ -110,6 +110,33 @@
     </div>
     <div data-md-component="announce">
       
+        <aside class="md-banner">
+          <div class="md-banner__inner md-grid md-typeset">
+            
+              <button class="md-banner__button md-icon" aria-label="Don't show this again">
+                
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+              </button>
+            
+            
+  <div class="md-banner">
+    <div class="md-banner__inner md-grid md-typeset">
+      <p>
+        📖 You are viewing documentation for <strong>DataJoint 2.0+</strong>
+        ·
+        <a href="https://docs.datajoint.com/how-to/migrate-to-v20/">
+          Migration guide for legacy users (pre-2.0)
+        </a>
+      </p>
+    </div>
+  </div>
+
+          </div>
+          
+            <script>var el=document.querySelector("[data-md-component=announce]");if(el){var content=el.querySelector(".md-typeset");__md_hash(content.innerHTML)===__md_get("__announce")&&(el.hidden=!0)}</script>
+          
+        </aside>
+      
     </div>
     
     
@@ -314,6 +341,24 @@
         
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="." class="md-nav__link md-nav__link--active">
         
   
@@ -330,6 +375,36 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#about-datajoint" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        About DataJoint
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -4629,6 +4704,8 @@
       
         
       
+        
+      
     
     
     
@@ -4696,6 +4773,34 @@
     
   
     History
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="about/versioning/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Documentation Versioning
   
 
     
@@ -4848,6 +4953,25 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#about-datajoint" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        About DataJoint
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -4867,11 +4991,11 @@
 
 
 <h1 id="datajoint-documentation">DataJoint Documentation<a class="headerlink" href="#datajoint-documentation" title="Permanent link">&para;</a></h1>
-<blockquote>
-<p><strong>DataJoint 2.0 is a major release.</strong> Existing pipelines require migration.
-See the <a href="how-to/migrate-to-v20/">Migration Guide</a> for upgrade instructions.
-For pre-2.0 documentation, visit <a href="https://datajoint.github.io/datajoint-python">datajoint.github.io/datajoint-python</a>.</p>
-</blockquote>
+<div class="admonition info">
+<p class="admonition-title">Documentation for DataJoint 2.0+</p>
+<p>Python code examples in this documentation use DataJoint 2.0 syntax. If you're using DataJoint pre-2.0, see the <a href="how-to/migrate-to-v20/">Migration Guide</a> or visit <a href="https://datajoint.github.io/datajoint-python">legacy docs</a>.</p>
+</div>
+<h2 id="about-datajoint">About DataJoint<a class="headerlink" href="#about-datajoint" title="Permanent link">&para;</a></h2>
 <p><strong>DataJoint</strong> is a framework for scientific data pipelines built on the <a href="explanation/relational-workflow-model/">Relational Workflow Model</a>—a paradigm where your database schema is an executable specification of your workflow.</p>
 <p><img alt="pipeline" src="images/pipeline.png" style="height:300px;" /></p>
 <p>Unlike traditional databases that merely store data, DataJoint pipelines <strong>process</strong> data: tables represent workflow steps, foreign keys encode computational dependencies, and the schema itself defines what computations exist and how they relate. Combined with <a href="explanation/data-pipelines/#object-augmented-schemas">Object-Augmented Schemas</a> for seamless large-data handling, DataJoint delivers reproducible, scalable scientific computing with full provenance tracking.</p>

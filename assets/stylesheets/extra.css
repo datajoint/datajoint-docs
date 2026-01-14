@@ -1,123 +1,134 @@
-:root {
-    --dj-primary: #00a0df;
-    --dj-secondary: #ff5113;
-    --dj-background: #808285;
-    --dj-black: #000000;
-    --dj-white: #ffffff;
+/* ===================================================================
+   DataJoint Documentation Custom Styles
+   =================================================================== */
+
+/* -------------------------------------------------------------------
+   Version Banner (Site-wide)
+   ------------------------------------------------------------------- */
+
+.md-banner {
+  background-color: var(--md-primary-fg-color);
+  color: var(--md-primary-bg-color);
+  font-size: 0.7rem;
+  padding: 0.4rem 0;
+  text-align: center;
 }
 
-/* footer previous/next navigation */
-.md-footer__inner:not([hidden]) {
-    display: none
+.md-banner__inner {
+  padding: 0;
 }
 
-/* left navigation title */
-.md-nav__title {
-    visibility: hidden;
-}
-.md-nav__title:after {
-    visibility: hidden;
-    content: 'DataJoint Documentation';
-    display: block;
- }
-
-.md-typeset figure img {
-    display: inline;
+.md-banner p {
+  margin: 0;
+  padding: 0;
 }
 
-/* footer social icons */
-html a[title="DataJoint"].md-social__link svg {
-    color: var(--dj-primary);
-}
-html a[title="LinkedIn"].md-social__link svg {
-    color: var(--dj-primary);
-}
-html a[title="Twitter"].md-social__link svg {
-    color: var(--dj-primary);
-}
-html a[title="GitHub"].md-social__link svg {
-    color: var(--dj-primary);
-}
-html a[title="DockerHub"].md-social__link svg {
-    color: var(--dj-primary);
-}
-html a[title="PyPI"].md-social__link svg {
-    color: var(--dj-primary);
-}
-html a[title="StackOverflow"].md-social__link svg {
-    color: var(--dj-primary);
-}
-html a[title="YouTube"].md-social__link svg {
-    color: var(--dj-primary);
+.md-banner a {
+  color: var(--md-primary-bg-color);
+  text-decoration: underline;
+  font-weight: 500;
 }
 
-[data-md-color-scheme="datajoint"] {
-    /* ribbon */
-    /* ribbon + markdown heading expansion */
-    --md-primary-fg-color: var(--dj-black);
-    /* ribbon text */
-    --md-primary-bg-color: var(--dj-primary);
-
-    /* navigation */
-    /* navigation header + links */
-    --md-typeset-a-color: var(--dj-primary);
-    /* navigation on hover + diagram outline */
-    --md-accent-fg-color: var(--dj-secondary);
-
-    /* main */
-    /* main header + already viewed*/
-    --md-default-fg-color--light: var(--dj-background);
-    /* primary text */
-    --md-typeset-color: var(--dj-black);
-    /* code comments + diagram text */
-    --md-code-fg-color: var(--dj-primary);
-
-    /* footer */
-    /* previous/next text */
-    /* --md-footer-fg-color: var(--dj-primary); */
+.md-banner a:hover {
+  text-decoration: none;
 }
 
-[data-md-color-scheme="slate"] {
-    /* ribbon */
-    /* ribbon + markdown heading expansion */
-    --md-primary-fg-color: var(--dj-primary);
-    /* ribbon text */
-    --md-primary-bg-color: var(--dj-white);
+/* -------------------------------------------------------------------
+   Version Admonitions
+   ------------------------------------------------------------------- */
 
-    /* navigation */
-    /* navigation header + links */
-    --md-typeset-a-color: var(--dj-primary);
-    /* navigation on hover + diagram outline */
-    --md-accent-fg-color: var(--dj-secondary);
-
-    /* main */
-    /* main header + already viewed*/
-    /* --md-default-fg-color--light: var(--dj-background); */
-    /* primary text */
-    --md-typeset-color: var(--dj-white);
-    /* code comments + diagram text */
-    --md-code-fg-color: var(--dj-primary);
-
-    /* footer */
-    /* previous/next text */
-    /* --md-footer-fg-color: var(--dj-white); */
+/* New in version X.Y */
+.admonition.version-added {
+  border-left-color: #00c853;
 }
 
-/* DataJoint query result tables - make them smaller */
-.jp-OutputArea-output table,
-.jp-RenderedHTMLCommon table {
-    font-size: 0.75rem;
+.admonition.version-added > .admonition-title {
+  background-color: rgba(0, 200, 83, 0.1);
 }
 
-.jp-OutputArea-output table td,
-.jp-OutputArea-output table th,
-.jp-RenderedHTMLCommon table td,
-.jp-RenderedHTMLCommon table th {
-    padding: 0.25rem 0.5rem;
+.admonition.version-added > .admonition-title::before {
+  background-color: #00c853;
+  content: "✨";
 }
 
-/* Reduce monospace font size in notebook outputs */
-.jp-OutputArea-output pre,
-.jp-OutputArea-output code {
-    font-size: 0.8rem;
+/* Changed in version X.Y */
+.admonition.version-changed {
+  border-left-color: #ff9800;
+}
+
+.admonition.version-changed > .admonition-title {
+  background-color: rgba(255, 152, 0, 0.1);
+}
+
+.admonition.version-changed > .admonition-title::before {
+  background-color: #ff9800;
+  content: "🔄";
+}
+
+/* Deprecated since version X.Y */
+.admonition.version-deprecated {
+  border-left-color: #f44336;
+}
+
+.admonition.version-deprecated > .admonition-title {
+  background-color: rgba(244, 67, 54, 0.1);
+}
+
+.admonition.version-deprecated > .admonition-title::before {
+  background-color: #f44336;
+  content: "⚠️";
+}
+
+/* -------------------------------------------------------------------
+   Inline Version Badges
+   ------------------------------------------------------------------- */
+
+.version-badge {
+  font-size: 0.7em;
+  padding: 0.2em 0.5em;
+  background-color: #2196F3;
+  color: white;
+  border-radius: 3px;
+  font-weight: 500;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+.version-badge.deprecated {
+  background-color: #f44336;
+}
+
+.version-badge.new {
+  background-color: #00c853;
+}
+
+.version-badge.changed {
+  background-color: #ff9800;
+}
+
+/* -------------------------------------------------------------------
+   Code Block Enhancements
+   ------------------------------------------------------------------- */
+
+/* Add subtle visual distinction for code comparisons */
+.version-comparison {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin: 1rem 0;
+}
+
+.version-comparison > div {
+  padding: 0.5rem;
+  border-radius: 0.2rem;
+}
+
+.version-comparison .legacy {
+  background-color: rgba(244, 67, 54, 0.05);
+  border-left: 3px solid #f44336;
+}
+
+.version-comparison .current {
+  background-color: rgba(0, 200, 83, 0.05);
+  border-left: 3px solid #00c853;
 }
