@@ -38,6 +38,7 @@ they assume you understand the basics and focus on getting things done.
 
 ## Object Storage
 
+- [Object Storage Overview](object-storage-overview.md) — Navigation guide for all storage docs
 - [Use Object Storage](use-object-storage.md) — When and how
 - [Create Custom Codecs](create-custom-codec.md) — Domain-specific types
 - [Manage Large Data](manage-large-data.md) — Blobs, streaming, efficiency
