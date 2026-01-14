@@ -120,6 +120,32 @@ The `fetch()` method is replaced with explicit output methods:
 
 **For AI agents:** Apply these substitutions mechanically. The conversion is straightforward.
 
+### Removed API Components
+
+The following legacy API components have been removed in 2.0:
+
+| Legacy | Replacement | Notes |
+|--------|-------------|-------|
+| `dj.schema(...)` | `dj.Schema(...)` | Use capitalized class name |
+| `dj.ERD(...)` | `dj.Diagram(...)` | ERD alias removed |
+| `dj.Di(...)` | `dj.Diagram(...)` | Di alias removed |
+| `dj.key` | `table.keys()` | Use keys() method instead |
+| `dj.key_hash(...)` | — | Removed (was for legacy job debugging) |
+
+**For AI agents:** Search and replace these patterns:
+
+```python
+# Schema alias
+dj.schema(  →  dj.Schema(
+
+# Diagram aliases
+dj.ERD(  →  dj.Diagram(
+dj.Di(   →  dj.Diagram(
+
+# Key access (context-dependent)
+fetch()[dj.key]  →  keys()
+```
+
 ### Semantic Matching
 
 DataJoint 2.0 validates that join operands share common lineage before allowing binary operations (`*`, `&`, `-`). This prevents accidental joins between unrelated tables.
@@ -313,17 +339,29 @@ You are migrating DataJoint code from legacy to 2.0.
 TASK: Update Python code to use 2.0 API patterns.
 
 CHANGES REQUIRED:
+
+Fetch API:
 1. Replace table.fetch() → table.to_arrays() or table.to_dicts()
 2. Replace table.fetch(as_dict=True) → table.to_dicts()
 3. Replace table.fetch('a', 'b') → table.to_arrays('a', 'b')
-4. Replace (table & key)._update('attr', val) → table.update1({**key, 'attr': val})
-5. Replace table1 @ table2 → table1.join(table2, semantic_check=False)
-6. Replace dj.U('x') * table → dj.U('x') & table
-7. Replace positional inserts with key-value dicts:
-   - table.insert1((val1, val2)) → table.insert1({'col1': val1, 'col2': val2})
-   - table.insert([(v1, v2), ...]) → table.insert([{'c1': v1, 'c2': v2}, ...])
-8. Replace download_path parameter with config override:
-   - fetch('col', download_path='/path') → with dj.config.override(download_path='/path'): to_arrays('col')
+4. Replace fetch('col', download_path='/path') → with dj.config.override(download_path='/path'): to_arrays('col')
+
+Removed API:
+5. Replace dj.schema( → dj.Schema(
+6. Replace dj.ERD( → dj.Diagram(
+7. Replace dj.Di( → dj.Diagram(
+8. Remove dj.key_hash() calls (no replacement needed)
+9. Replace fetch()[dj.key] → keys()
+
+Query operators:
+10. Replace (table & key)._update('attr', val) → table.update1({**key, 'attr': val})
+11. Replace table1 @ table2 → table1.join(table2, semantic_check=False)
+12. Replace dj.U('x') * table → dj.U('x') & table
+
+Insert patterns:
+13. Replace positional inserts with key-value dicts:
+    - table.insert1((val1, val2)) → table.insert1({'col1': val1, 'col2': val2})
+    - table.insert([(v1, v2), ...]) → table.insert([{'c1': v1, 'c2': v2}, ...])
 
 DO NOT modify table definitions or database schema.
 ```
