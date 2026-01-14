@@ -4,7 +4,7 @@ DataJoint 2.0 is a major release that establishes DataJoint as a mature framewor
 
 > **📘 Upgrading from legacy DataJoint (pre-2.0)?**
 >
-> This page summarizes new features and concepts. For step-by-step migration instructions, see the **[Migration Guide](../how-to/migrate-from-0x.md)**.
+> This page summarizes new features and concepts. For step-by-step migration instructions, see the **[Migration Guide](../how-to/migrate-to-v20.md)**.
 
 ## Overview
 
@@ -27,7 +27,7 @@ If you're upgrading from legacy DataJoint, these changes require code updates:
 | **Type syntax** | `longblob`, `int unsigned` | `<blob>`, `uint32` |
 | **Jobs** | `~jobs` table | Per-table `~~table_name` |
 
-See the [Migration Guide](../how-to/migrate-from-0x.md) for complete upgrade steps.
+See the [Migration Guide](../how-to/migrate-to-v20.md) for complete upgrade steps.
 
 ## Object-Augmented Schema (OAS)
 
@@ -228,7 +228,7 @@ DataJoint 2.0 is licensed under the **Apache License 2.0** (previously LGPL-2.1)
 
 ## Migration Path
 
-→ **[Complete Migration Guide](../how-to/migrate-from-0x.md)**
+→ **[Complete Migration Guide](../how-to/migrate-to-v20.md)**
 
 Upgrading from DataJoint 0.x is a **phased process** designed to minimize risk:
 
@@ -272,7 +272,7 @@ Most users complete Phases 1-2 in a single session. Phases 3-4 only apply if you
 ## See Also
 
 ### Migration
-- **[Migration Guide](../how-to/migrate-from-0x.md)** — Complete upgrade instructions
+- **[Migration Guide](../how-to/migrate-to-v20.md)** — Complete upgrade instructions
 - [Configuration](../how-to/configure-database.md) — Setup new configuration system
 
 ### Core Concepts
