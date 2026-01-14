@@ -29,26 +29,54 @@ Configuration is loaded in priority order:
 | `connection.init_function` | `None` | SQL function to run on connect |
 | `connection.charset` | `""` | Character set (pymysql default) |
 
-## External Storage Credentials
-
-| Setting | Environment | Default | Description |
-|---------|-------------|---------|-------------|
-| `external.aws_access_key_id` | `DJ_AWS_ACCESS_KEY_ID` | — | AWS access key |
-| `external.aws_secret_access_key` | `DJ_AWS_SECRET_ACCESS_KEY` | — | AWS secret key |
-
 ## Stores Configuration
 
-| Setting | Default | Description |
-|---------|---------|-------------|
-| `stores.<name>.protocol` | — | Storage protocol: `file`, `s3`, `gcs`, `azure` |
-| `stores.<name>.location` | — | Base path or prefix |
-| `stores.<name>.endpoint` | — | S3-compatible endpoint URL |
-| `stores.<name>.bucket` | — | Bucket name (S3, GCS) |
-| `stores.<name>.container` | — | Container name (Azure) |
-| `stores.<name>.access_key` | — | Access key for cloud storage |
-| `stores.<name>.secret_key` | — | Secret key for cloud storage |
-| `stores.<name>.secure` | `True` | Use HTTPS |
-| `stores.<name>.subfolding` | `(2, 2)` | Directory nesting for hash-addressed files |
+Hash-addressed storage for `<blob@store>`, `<attach@store>`, `<filepath@store>`.
+
+**Common settings (all protocols):**
+
+| Setting | Required | Description |
+|---------|----------|-------------|
+| `stores.<name>.protocol` | Yes | Storage protocol: `file`, `s3`, `gcs`, `azure` |
+| `stores.<name>.location` | Yes | Base path or prefix |
+| `stores.<name>.subfolding` | No | Directory nesting tuple, e.g., `[2, 2]` for `ab/cd/abcd...` |
+
+**S3-specific settings:**
+
+| Setting | Required | Description |
+|---------|----------|-------------|
+| `stores.<name>.endpoint` | Yes | S3 endpoint URL (e.g., `s3.amazonaws.com`) |
+| `stores.<name>.bucket` | Yes | Bucket name |
+| `stores.<name>.access_key` | Yes | S3 access key ID |
+| `stores.<name>.secret_key` | Yes | S3 secret access key |
+| `stores.<name>.secure` | No | Use HTTPS (default: `True`) |
+
+**GCS-specific settings:**
+
+| Setting | Required | Description |
+|---------|----------|-------------|
+| `stores.<name>.bucket` | Yes | GCS bucket name |
+| `stores.<name>.token` | Yes | Authentication token path |
+| `stores.<name>.project` | No | GCS project ID |
+
+**Azure-specific settings:**
+
+| Setting | Required | Description |
+|---------|----------|-------------|
+| `stores.<name>.container` | Yes | Azure container name |
+| `stores.<name>.account_name` | Yes | Storage account name |
+| `stores.<name>.account_key` | Yes | Storage account key |
+| `stores.<name>.connection_string` | No | Alternative to account_name + account_key |
+
+**Credentials should be stored in secrets:**
+
+```
+.secrets/
+├── stores.main.access_key
+├── stores.main.secret_key
+├── stores.archive.access_key
+└── stores.archive.secret_key
+```
 
 ## Object Storage Settings
 
@@ -69,7 +97,15 @@ For schema-addressed object storage (`<object@>`, `<npy@>`):
 | `object_storage.token_length` | — | `8` | Random suffix length for filenames |
 | `object_storage.default_store` | — | — | Default store name when not specified |
 
-Named object stores can be configured under `object_storage.stores.<name>.*`.
+**Named object stores** can be configured under `object_storage.stores.<name>.*` with the same settings as above.
+
+**Credentials** can be stored in `.secrets/` as an alternative to environment variables:
+
+```
+.secrets/
+├── object_storage.access_key
+└── object_storage.secret_key
+```
 
 ## Jobs Settings
 
@@ -104,7 +140,7 @@ Named object stores can be configured under `object_storage.stores.<name>.*`.
 
 ## Example Configuration
 
-### datajoint.json
+### datajoint.json (Non-sensitive settings)
 
 ```json
 {
@@ -114,8 +150,22 @@ Named object stores can be configured under `object_storage.stores.<name>.*`.
         "main": {
             "protocol": "s3",
             "endpoint": "s3.amazonaws.com",
-            "bucket": "my-data-bucket"
+            "bucket": "my-data-bucket",
+            "location": "datajoint/main"
+        },
+        "archive": {
+            "protocol": "s3",
+            "endpoint": "s3.amazonaws.com",
+            "bucket": "archive-bucket",
+            "location": "datajoint/archive"
         }
+    },
+    "object_storage": {
+        "project_name": "neuroscience_lab",
+        "protocol": "s3",
+        "endpoint": "s3.amazonaws.com",
+        "bucket": "objects-bucket",
+        "location": "datajoint/objects"
     },
     "jobs": {
         "add_job_metadata": true
@@ -123,22 +173,40 @@ Named object stores can be configured under `object_storage.stores.<name>.*`.
 }
 ```
 
-### Environment Variables
-
-```bash
-export DJ_HOST=mysql.example.com
-export DJ_USER=analyst
-export DJ_PASS=secret
-```
-
-### Secrets Directory
+### .secrets/ (Credentials - never commit!)
 
 ```
 .secrets/
-├── database.user      # Contains: analyst
-├── database.password  # Contains: secret
-└── aws.access_key_id  # Contains: AKIA...
+├── database.user                      # analyst
+├── database.password                  # dbpass123
+├── stores.main.access_key             # AKIAIOSFODNN7EXAMPLE
+├── stores.main.secret_key             # wJalrXUtnFEMI/K7MDENG...
+├── stores.archive.access_key          # AKIAIOSFODNN8EXAMPLE
+├── stores.archive.secret_key          # xKbmsYVuoGFNJ/L8NEOH...
+├── object_storage.access_key          # AKIAIOSFODNN9EXAMPLE
+└── object_storage.secret_key          # yLcntZWvpHGOK/M9OFPI...
 ```
+
+Add `.secrets/` to `.gitignore`:
+
+```bash
+echo ".secrets/" >> .gitignore
+```
+
+### Environment Variables (Alternative to .secrets/)
+
+```bash
+# Database
+export DJ_HOST=mysql.example.com
+export DJ_USER=analyst
+export DJ_PASS=secret
+
+# Object Storage (for <object@>, <npy@>)
+export DJ_OBJECT_STORAGE_ACCESS_KEY=AKIAIOSFODNN9EXAMPLE
+export DJ_OBJECT_STORAGE_SECRET_KEY=yLcntZWvpHGOK/M9OFPI...
+```
+
+**Note:** Per-store credentials (for `<blob@>`, `<attach@>`) must be configured in `datajoint.json` or `.secrets/` — environment variable overrides are not supported for nested store configurations.
 
 ## API Reference
 
