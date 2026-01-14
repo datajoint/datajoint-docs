@@ -670,7 +670,7 @@ class MyAdapter(dj.AttributeAdapter):
 # 2.0 Codec (see Codec API Spec for full details)
 @dj.codec('my_type')
 class MyCodec:
-    dtype = '<blob>'
+    dtype = 'bytes'  # Use bytes since pickle already serializes
 
     def encode(self, obj):
         return pickle.dumps(obj)
