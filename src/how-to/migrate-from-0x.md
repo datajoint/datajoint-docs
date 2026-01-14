@@ -114,7 +114,8 @@ The `fetch()` method is replaced with explicit output methods:
 | `table.fetch('a', 'b')` | `table.to_arrays('a', 'b')` | Tuple of arrays |
 | `table.fetch(as_dict=True)` | `table.to_dicts()` | List of dicts |
 | `table.fetch(format='frame')` | `table.to_pandas()` | DataFrame |
-| `(table.proj()).fetch()[dj.key]` | `table.keys()` | List of primary key dicts |
+| `table.fetch("KEY")` | `table.keys()` | List of primary key dicts |
+| `table.fetch(dj.key)` | `table.keys()` | List of primary key dicts |
 | `table.fetch1()` | `table.fetch1()` | Single dict (unchanged) |
 | `table.fetch1('a', 'b')` | `table.fetch1('a', 'b')` | Tuple of values (unchanged) |
 
@@ -142,8 +143,9 @@ dj.schema(  →  dj.Schema(
 dj.ERD(  →  dj.Diagram(
 dj.Di(   →  dj.Diagram(
 
-# Key access (context-dependent)
-fetch()[dj.key]  →  keys()
+# Key access (magic string and constant)
+.fetch("KEY")   →  .keys()
+.fetch(dj.key)  →  .keys()
 ```
 
 ### Semantic Matching
@@ -344,22 +346,23 @@ Fetch API:
 1. Replace table.fetch() → table.to_arrays() or table.to_dicts()
 2. Replace table.fetch(as_dict=True) → table.to_dicts()
 3. Replace table.fetch('a', 'b') → table.to_arrays('a', 'b')
-4. Replace fetch('col', download_path='/path') → with dj.config.override(download_path='/path'): to_arrays('col')
+4. Replace table.fetch("KEY") → table.keys()
+5. Replace table.fetch(dj.key) → table.keys()
+6. Replace fetch('col', download_path='/path') → with dj.config.override(download_path='/path'): to_arrays('col')
 
 Removed API:
-5. Replace dj.schema( → dj.Schema(
-6. Replace dj.ERD( → dj.Diagram(
-7. Replace dj.Di( → dj.Diagram(
-8. Remove dj.key_hash() calls (no replacement needed)
-9. Replace fetch()[dj.key] → keys()
+7. Replace dj.schema( → dj.Schema(
+8. Replace dj.ERD( → dj.Diagram(
+9. Replace dj.Di( → dj.Diagram(
+10. Remove dj.key_hash() calls (no replacement needed)
 
 Query operators:
-10. Replace (table & key)._update('attr', val) → table.update1({**key, 'attr': val})
-11. Replace table1 @ table2 → table1.join(table2, semantic_check=False)
-12. Replace dj.U('x') * table → dj.U('x') & table
+11. Replace (table & key)._update('attr', val) → table.update1({**key, 'attr': val})
+12. Replace table1 @ table2 → table1.join(table2, semantic_check=False)
+13. Replace dj.U('x') * table → dj.U('x') & table
 
 Insert patterns:
-13. Replace positional inserts with key-value dicts:
+14. Replace positional inserts with key-value dicts:
     - table.insert1((val1, val2)) → table.insert1({'col1': val1, 'col2': val2})
     - table.insert([(v1, v2), ...]) → table.insert([{'c1': v1, 'c2': v2}, ...])
 
