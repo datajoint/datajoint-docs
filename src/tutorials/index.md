@@ -82,6 +82,7 @@ Choose your learning path based on your goals:
 **Goal:** Understand core concepts and build your first pipeline
 
 **Path:**
+
 1. [First Pipeline](basics/01-first-pipeline.ipynb) — 30 min — Tables, queries, four core operations
 2. [Schema Design](basics/02-schema-design.ipynb) — 45 min — Primary keys, relationships, table tiers
 3. [Data Entry](basics/03-data-entry.ipynb) — 30 min — Inserting and managing data
@@ -99,12 +100,14 @@ Choose your learning path based on your goals:
 **Prerequisites:** Complete basics above or have equivalent experience
 
 **Path:**
+
 1. [Computation](basics/05-computation.ipynb) — Automated processing with Imported/Computed tables
 2. [Object Storage](basics/06-object-storage.ipynb) — Handle large data (arrays, files, images)
 3. [Distributed Computing](advanced/distributed.ipynb) — Multi-worker parallel execution
 4. Practice: [Fractal Pipeline](examples/fractal-pipeline.ipynb) or [Blob Detection](examples/blob-detection.ipynb)
 
 **Next:**
+
 - [Run Computations](../how-to/run-computations.md) — populate() usage patterns
 - [Distributed Computing](../how-to/distributed-computing.md) — Cluster deployment
 - [Handle Errors](../how-to/handle-errors.md) — Job management and recovery
@@ -118,11 +121,13 @@ Choose your learning path based on your goals:
 **Prerequisites:** Complete basics, understand computation model
 
 **Neuroscience:**
+
 - [Calcium Imaging](domain/calcium-imaging/calcium-imaging.ipynb) — Import movies, segment cells, extract traces
 - [Electrophysiology](domain/electrophysiology/electrophysiology.ipynb) — Import recordings, spike detection, waveforms
 - [Allen CCF](domain/allen-ccf/allen-ccf.ipynb) — Hierarchical brain atlas ontology
 
 **General patterns:**
+
 - [Hotel Reservations](examples/hotel-reservations.ipynb) — Booking systems with resource management
 - [Languages & Proficiency](examples/languages.ipynb) — Many-to-many relationships
 
@@ -137,11 +142,13 @@ Choose your learning path based on your goals:
 **Prerequisites:** Proficient with basics and production pipelines
 
 **Path:**
+
 1. [Custom Codecs](advanced/custom-codecs.ipynb) — Create domain-specific data types
 2. [JSON Data Type](advanced/json-type.ipynb) — Semi-structured data patterns
 3. [SQL Comparison](advanced/sql-comparison.ipynb) — Understand DataJoint's query algebra
 
 **Next:**
+
 - [Codec API](../reference/specs/codec-api.md) — Complete codec specification
 - [Create Custom Codec](../how-to/create-custom-codec.md) — Step-by-step codec development
 
