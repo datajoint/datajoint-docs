@@ -57,7 +57,6 @@ DataJoint 2.0 makes serialization **explicit** with codecs. In 0.14.x, `longblob
 | `longblob` | `<blob>` | In-table | Phase I code, Phase III data |
 | `mediumblob` | `<blob>` | In-table | Phase I code, Phase III data |
 | `attach` | `<attach>` | In-table | Phase I code, Phase III data |
-| `external-store` | `<blob@store>` | In-store (hash) | Phase I code, Phase III data |
 | `blob@store` | `<blob@store>` | In-store (hash) | Phase I code, Phase III data |
 | `attach@store` | `<attach@store>` | In-store (hash) | Phase I code, Phase III data |
 | `filepath@store` | `<filepath@store>` | In-store (filepath) | Phase I code, Phase III data |
@@ -250,14 +249,13 @@ print(f"Connected to {conn.conn_info['host']}")
 
 ### Step 4: Configure Test Object Stores (If Applicable)
 
-**Skip this step if:** Your legacy pipeline uses only in-table storage (`longblob`, `mediumblob`, `blob`). You can skip to Step 5.
+**Skip this step if:** Your legacy pipeline uses only in-table storage (`longblob`, `mediumblob`, `blob`, `attach`). You can skip to Step 5.
 
 **Configure test stores if:** Your legacy pipeline uses 0.14.x in-store formats:
 
-- `external-store` (legacy 0.14.x format)
-- `blob@store` (legacy hash-addressed)
-- `attach@store` (legacy hash-addressed)
-- `filepath@store` (legacy filepath references)
+- `blob@store` (hash-addressed blobs in object store)
+- `attach@store` (hash-addressed attachments in object store)
+- `filepath@store` (filepath references to external files)
 
 **Note:** `<npy@>` and `<object@>` are NEW in 2.0 (schema-addressed storage). They have no legacy equivalent and don't need migration. Adopt them in Phase IV for new features.
 
@@ -361,7 +359,7 @@ Convert ALL types and codecs in Phase I:
 | `double` | `float64` | Core type |
 | `longblob` | `<blob>` | Codec (in-table) |
 | `attach` | `<attach>` | Codec (in-table) |
-| `external-store` / `blob@store` | `<blob@store>` | Codec (in-store) |
+| `blob@store` | `<blob@store>` | Codec (in-store) |
 | `attach@store` | `<attach@store>` | Codec (in-store) |
 | `filepath@store` | `<filepath@store>` | Codec (in-store) |
 
@@ -393,7 +391,7 @@ SCOPE - PHASE I:
 2. Convert ALL type syntax to 2.0 core types
 3. Convert ALL legacy codecs (in-table AND in-store)
    - In-table: longblob → <blob>, mediumblob → <blob>, attach → <attach>
-   - In-store (legacy only): external-store → <blob@store>, blob@store → <blob@store>, etc.
+   - In-store (legacy only): blob@store → <blob@store>, attach@store → <attach@store>, filepath@store → <filepath@store>
 4. Code will use TEST stores configured in datajoint.json
 5. Do NOT add new 2.0 codecs (<npy@>, <object@>) - these are for Phase IV adoption
 6. Production data migration happens in Phase III (code is complete after Phase I)
@@ -418,10 +416,9 @@ In-Table Codecs:
   attach → <attach>
 
 In-Store Codecs (LEGACY formats only - convert these):
-  external-store → <blob@store>  # Legacy 0.14.x format
-  blob@store → <blob@store>  # Already correct syntax
-  attach@store → <attach@store>
-  filepath@store → <filepath@store>
+  blob@store → <blob@store>  # Add angle brackets
+  attach@store → <attach@store>  # Add angle brackets
+  filepath@store → <filepath@store>  # Add angle brackets
 
 IMPORTANT - Do NOT use these during migration (NEW in 2.0):
   <npy@store>  # Schema-addressed storage - NEW feature
@@ -472,9 +469,9 @@ class Recording(dj.Manual):
     recording_id : int unsigned
     ---
     sampling_rate : float
-    signal : external-raw  # Legacy 0.14.x in-store format
+    signal : blob@raw  # 0.14.x in-store syntax
     waveforms : blob@raw  # 0.14.x in-store syntax
-    metadata : longblob
+    metadata : longblob  # 0.14.x in-table
     """
 
 # 2.0 (Phase I with test stores)
@@ -486,9 +483,9 @@ class Recording(dj.Manual):
     recording_id : uint32
     ---
     sampling_rate : float32
-    signal : <blob@raw>  # Migrated from external-raw
-    waveforms : <blob@raw>  # Migrated from blob@raw
-    metadata : <blob>  # Migrated from longblob
+    signal : <blob@raw>  # Converted: blob@raw → <blob@raw>
+    waveforms : <blob@raw>  # Converted: blob@raw → <blob@raw>
+    metadata : <blob>  # Converted: longblob → <blob>
     """
 
 # Phase I: Only convert existing legacy formats
@@ -1306,7 +1303,7 @@ result = migrate_external_pointers_v2(
     schema='my_pipeline_v2',
     table='recording',
     attribute='signal',
-    source_store='external-raw',  # Legacy 0.14.x store name
+    source_store='raw',  # Legacy 0.14.x store name
     dest_store='raw',  # 2.0 store name (from datajoint.json)
     copy_files=False,  # Keep files in place (recommended)
 )
@@ -1464,7 +1461,7 @@ result = populate_v2_columns(
     table='recording',
     attribute='signal',
     v2_attribute='signal_v2',
-    source_store='external-raw',
+    source_store='raw',
     dest_store='raw',
 )
 
