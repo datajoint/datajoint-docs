@@ -536,10 +536,10 @@ schema.rebuild_lineage()
 The database migration makes all type conversions explicit:
 
 - Numeric: `int unsigned` → `:uint32:`, `smallint` → `:int16:`, etc. (MySQL native types)
-- Blobs: `longblob` → `:<blob>:` (was implicit serialization)
+- Blobs: `tinyblob`, `blob`, `mediumblob`, `longblob` → `:<blob>:` (was implicit serialization)
 - Inline attachments: `attach` → `:<attach>:` (was implicit conversion to longblob)
 
-**Why this matters:** Legacy DataJoint overloaded `longblob` and `attach` with implicit conversions. In 2.0, all serialization is explicit through codecs.
+**Why this matters:** Legacy DataJoint overloaded all blob types and `attach` with implicit conversions. In 2.0, all serialization is explicit through codecs.
 
 External storage columns (`blob@store`, `attach@store`, `filepath@store`) are **not** migrated here—they require Phase 3-4.
 
@@ -567,7 +567,7 @@ Replace legacy syntax with explicit 2.0 codecs:
 | `bigint unsigned` | `uint64` |
 | `float` | `float32` |
 | `double` | `float64` |
-| `longblob` | `<blob>` |
+| `tinyblob`, `blob`, `mediumblob`, `longblob` | `<blob>` |
 | `attach` | `<attach>` |
 
 #### Special Cases
@@ -702,8 +702,8 @@ TYPE MAPPING (for Python definition strings):
 - bigint → int64
 - float → float32
 - double → float64
-- longblob → <blob>
-- enum → enum (no change)
+- tinyblob, blob, mediumblob, longblob → <blob>
+- attach → <attach>
 
 SPECIAL CASES (ask user to confirm):
 - tinyint(1) / bool / boolean: Infer intent from context.
@@ -1058,7 +1058,7 @@ Replace legacy syntax with explicit 2.0 codecs:
 | `tinyint unsigned` | `uint8` |
 | `float` | `float32` |
 | `double` | `float64` |
-| `longblob` | `<blob>` |
+| `tinyblob`, `blob`, `mediumblob`, `longblob` | `<blob>` |
 | `attach` | `<attach>` |
 | `blob@store` | `<blob@store>` |
 | `attach@store` | `<attach@store>` |
@@ -1121,7 +1121,7 @@ TYPE REPLACEMENTS (legacy implicit conversions → explicit codecs):
 - tinyint unsigned → uint8
 - float → float32
 - double → float64
-- longblob → <blob>
+- tinyblob, blob, mediumblob, longblob → <blob>
 - attach → <attach>
 - blob@store → <blob@store>
 - attach@store → <attach@store>
