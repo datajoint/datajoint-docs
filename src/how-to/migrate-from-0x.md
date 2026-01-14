@@ -247,6 +247,25 @@ table.insert([
 
 **Why:** Positional inserts are fragile—they break silently when columns are added or reordered. Key-value maps are explicit and self-documenting.
 
+#### Download Path for External Storage (Changed)
+
+```python
+# legacy - download_path parameter in fetch
+data = table.fetch('attachment_col', download_path='/data/downloads')
+filepath = (table & key).fetch1('filepath_col', download_path='/data/downloads')
+
+# 2.0 - use configuration context manager
+with dj.config.override(download_path='/data/downloads'):
+    data = table.to_arrays('attachment_col')
+    filepath = (table & key).fetch1('filepath_col')
+
+# Or set globally
+dj.config['download_path'] = '/data/downloads'
+data = table.to_arrays('attachment_col')
+```
+
+**Why:** Separating download location from fetch calls simplifies the API and allows consistent configuration across multiple fetches.
+
 ### 1.3 Code Migration Checklist
 
 For each Python module using DataJoint:
@@ -256,6 +275,7 @@ For each Python module using DataJoint:
 - [ ] Replace `@` operator with `.join(..., semantic_check=False)`
 - [ ] Replace `dj.U() * expr` with `dj.U() & expr`
 - [ ] Replace positional inserts with key-value dicts
+- [ ] Replace `download_path=` parameter with `dj.config.override()`
 - [ ] Update imports if using deprecated modules
 
 ### 1.4 AI Agent Prompt (Phase 1 - Code Migration)
@@ -275,6 +295,8 @@ CHANGES REQUIRED:
 7. Replace positional inserts with key-value dicts:
    - table.insert1((val1, val2)) → table.insert1({'col1': val1, 'col2': val2})
    - table.insert([(v1, v2), ...]) → table.insert([{'c1': v1, 'c2': v2}, ...])
+8. Replace download_path parameter with config override:
+   - fetch('col', download_path='/path') → with dj.config.override(download_path='/path'): to_arrays('col')
 
 DO NOT modify table definitions or database schema.
 ```
