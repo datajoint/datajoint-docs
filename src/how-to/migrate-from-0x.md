@@ -343,23 +343,20 @@ The `lineage` column stores the origin as a dot-separated string: `schema.table.
 
 ```python
 import datajoint as dj
-from datajoint.migrate import analyze_columns, migrate_columns
+from datajoint.migrate import migrate_columns
 
 schema = dj.schema('my_database')
 
-# Step 1: Analyze what needs migration
-result = analyze_columns(schema)
-for col in result['needs_migration']:
+# Step 1: Preview what needs migration
+result = migrate_columns(schema, dry_run=True)
+for col in result['columns']:
     print(f"{col['table']}.{col['column']}: {col['native_type']} → {col['core_type']}")
 
-# Step 2: Preview changes
-migrate_columns(schema, dry_run=True)
-
-# Step 3: Apply migration (adds type labels to column comments)
+# Step 2: Apply migration (adds type labels to column comments)
 result = migrate_columns(schema, dry_run=False)
 print(f"Migrated {result['columns_migrated']} columns")
 
-# Step 4: Build lineage table
+# Step 3: Build lineage table
 schema.rebuild_lineage()
 ```
 
@@ -409,7 +406,7 @@ STEPS:
 1. Identify all schemas and their dependencies (upstream → downstream)
 2. For each schema in topological order:
    a. Connect: schema = dj.schema('database_name')
-   b. Analyze: result = analyze_columns(schema)
+   b. Preview: result = migrate_columns(schema, dry_run=True)
    c. Review columns needing migration
    d. Apply: migrate_columns(schema, dry_run=False)
    e. Build lineage: schema.rebuild_lineage()
@@ -700,10 +697,10 @@ PRE-FLIGHT CHECKS:
 
 VERIFICATION COMMANDS:
 - schema.connection.query("SHOW PROCESSLIST") - check for old clients
-- from datajoint.migrate import check_migration_status
-- status = check_migration_status(schema) - verify Phase 2-3 complete
+- from datajoint.migrate import migrate_columns
+- result = migrate_columns(schema, dry_run=True) - verify Phase 2 complete (columns should be empty)
 - from datajoint.migrate import migrate_external
-- result = migrate_external(schema, dry_run=True, finalize=True) - verify data
+- result = migrate_external(schema, dry_run=True, finalize=True) - verify Phase 3 data complete
 
 REPORT FORMAT:
 - Backup status: [confirmed/missing]
@@ -821,20 +818,16 @@ The migration module focuses on **integrity checks**, **rebuild/restore** utilit
 ### Column Type Migration (Phase 2)
 
 ```python
-analyze_columns(schema) -> dict
-```
-
-Identifies columns needing type labels. Returns dict with:
-
-- `needs_migration`: columns needing type labels (`table`, `column`, `native_type`, `core_type`)
-- `already_migrated`: columns with existing type labels
-- `external_storage`: columns requiring Phase 3-4 (not migrated here)
-
-```python
 migrate_columns(schema, dry_run=True) -> dict
 ```
 
-Adds type labels to column comments. Migrates numeric types, `<blob>`, `<attach>`. Skips external storage (`external-*`, `attach@*`, `filepath@*`).
+Analyzes and migrates column type labels. Returns dict with:
+
+- `columns`: list of columns to migrate (`table`, `column`, `native_type`, `core_type`)
+- `columns_migrated`: count of columns updated (0 if dry_run=True)
+- `external_storage`: columns requiring Phase 3-4 (not migrated here)
+
+Use `dry_run=True` to preview, `dry_run=False` to apply. Migrates numeric types, `<blob>`, `<attach>`. Skips external storage (`external-*`, `attach@*`, `filepath@*`).
 
 ### External Storage Migration (Phase 3-4)
 
@@ -898,7 +891,7 @@ def verify_external_integrity(schema, store_name=None) -> dict:
 
 ```python
 import datajoint as dj
-from datajoint.migrate import check_migration_status, analyze_blob_columns
+from datajoint.migrate import migrate_columns
 
 schema = dj.schema('my_database')
 
@@ -906,9 +899,9 @@ schema = dj.schema('my_database')
 # - Run existing queries with 2.0 client
 # - Verify data readable
 
-# Phase 2: Blob comments migrated
-status = check_migration_status(schema)
-print(f"Blob migration: {status['migrated']}/{status['total_blob_columns']}")
+# Phase 2: Column type labels migrated
+result = migrate_columns(schema, dry_run=True)
+print(f"Columns to migrate: {len(result['columns'])}")
 
 # Phase 3: Hidden tables exist
 has_lineage = schema.connection.query(
@@ -931,9 +924,9 @@ print(f"External columns remaining: {len(external)}")  # Should be 0
 ```python
 def get_migration_phase(schema):
     """Determine current migration phase."""
-    from datajoint.migrate import check_migration_status, _find_external_columns
+    from datajoint.migrate import migrate_columns, _find_external_columns
 
-    blob_status = check_migration_status(schema)
+    column_status = migrate_columns(schema, dry_run=True)
     external = _find_external_columns(schema)
 
     # Check lineage table
@@ -943,7 +936,7 @@ def get_migration_phase(schema):
         args=(schema.database,)
     ).fetchone()[0] > 0
 
-    if blob_status['pending'] > 0:
+    if len(column_status['columns']) > 0:
         return 1  # Need Phase 2
     if not has_lineage:
         return 2  # Need Phase 3
