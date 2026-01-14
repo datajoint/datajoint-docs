@@ -39,6 +39,23 @@ No action required—the new license is more permissive.
 
 DataJoint 2.0 introduces portable type aliases (`uint32`, `float64`, etc.) that prepare the codebase for **PostgreSQL backend compatibility** in a future release. Migration to core types ensures your schemas will work seamlessly when Postgres support is available.
 
+### Before You Start: Testing Recommendation
+
+**⚡ Want AI agents to automate Phases I-II for you?**
+
+Create unit and integration tests for your pipeline against a QA database before
+starting migration. This enables AI agents to perform most migration work
+automatically, reducing manual effort by 50-80%.
+
+→ **See [Recommendation: Create Tests Before Migration](#recommendation-create-tests-before-migration)** for details.
+
+**Why this matters:**
+
+- **With tests:** Agents migrate code → run tests → fix failures → verify automatically
+- **Without tests:** Manual verification at every step, higher risk, more time
+
+Tests provide immediate ROI during migration and ongoing value for development.
+
 ---
 
 ## What's New in 2.0
@@ -157,6 +174,207 @@ DataJoint 2.0 replaces `external.*` with unified `stores.*` configuration:
 - **Phase II:** ~1-2 days
 - **Phase III:** ~1-7 days (depends on data size and option chosen)
 - **Phase IV:** Ongoing feature adoption
+
+---
+
+## Recommendation: Create Tests Before Migration
+
+**Highly recommended for automated, agent-driven migration.**
+
+If you create unit and integration tests for your pipeline before starting
+Phase I, AI coding agents can perform most of the migration work automatically,
+substantially reducing manual effort.
+
+### Why Tests Enable Automated Migration
+
+**With tests:**
+
+1. **Phase I automation** - Agent can:
+   - Migrate code to 2.0 API
+   - Run tests to verify correctness
+   - Fix failures iteratively
+   - Complete migration with high confidence
+
+2. **Phase II automation** - Agent can:
+   - Populate `_v2` schemas with test data
+   - Run tests against both legacy and v2 pipelines
+   - Verify equivalence automatically
+   - Generate validation reports
+
+3. **Phase III guidance** - Agent can:
+   - Run tests after data migration
+   - Catch issues immediately
+   - Guide production cutover with confidence
+
+**Without tests:**
+
+- Manual verification at each step
+- Higher risk of missed issues
+- More time-intensive validation
+- Uncertainty about correctness
+
+### What Tests to Create
+
+Create tests against a **QA database and object store** (separate from
+production):
+
+**Unit tests:**
+
+- Table definitions compile correctly
+- Schema relationships are valid
+- Populate methods work for individual tables
+- Query patterns return expected results
+
+**Integration tests:**
+
+- End-to-end pipeline execution
+- Data flows through computed tables correctly
+- External file references work (if using `<filepath@>`)
+- Object storage operations work (if using in-store codecs)
+
+**Example test structure:**
+
+```python
+# tests/test_tables.py
+import pytest
+import datajoint as dj
+from my_pipeline import Mouse, Session, Neuron
+
+@pytest.fixture
+def test_schema():
+    """Use QA database for testing."""
+    dj.config['database.host'] = 'qa-db.example.com'
+    schema = dj.schema('test_pipeline')
+    yield schema
+    schema.drop()  # Cleanup after test
+
+def test_mouse_insert(test_schema):
+    """Test manual table insertion."""
+    Mouse.insert1({'mouse_id': 0, 'dob': '2024-01-01', 'sex': 'M'})
+    assert len(Mouse()) == 1
+
+def test_session_populate(test_schema):
+    """Test session insertion and relationships."""
+    Mouse.insert1({'mouse_id': 0, 'dob': '2024-01-01', 'sex': 'M'})
+    Session.insert1({
+        'mouse_id': 0,
+        'session_date': '2024-06-01',
+        'experimenter': 'Alice'
+    })
+    assert len(Session() & 'mouse_id=0') == 1
+
+def test_neuron_computation(test_schema):
+    """Test computed table populate."""
+    # Insert upstream data
+    Mouse.insert1({'mouse_id': 0, 'dob': '2024-01-01', 'sex': 'M'})
+    Session.insert1({
+        'mouse_id': 0,
+        'session_date': '2024-06-01',
+        'experimenter': 'Alice'
+    })
+
+    # Populate computed table
+    Neuron.populate()
+
+    # Verify results
+    assert len(Neuron()) > 0
+
+def test_query_patterns(test_schema):
+    """Test common query patterns."""
+    # Setup data
+    Mouse.insert1({'mouse_id': 0, 'dob': '2024-01-01', 'sex': 'M'})
+
+    # Test fetch
+    mice = Mouse.fetch(as_dict=True)
+    assert len(mice) == 1
+
+    # Test restriction
+    male_mice = Mouse & 'sex="M"'
+    assert len(male_mice) == 1
+```
+
+**Integration test example:**
+
+```python
+# tests/test_pipeline.py
+def test_full_pipeline(test_schema):
+    """Test complete pipeline execution."""
+    # 1. Insert manual data
+    Mouse.insert([
+        {'mouse_id': 0, 'dob': '2024-01-01', 'sex': 'M'},
+        {'mouse_id': 1, 'dob': '2024-01-15', 'sex': 'F'},
+    ])
+
+    Session.insert([
+        {'mouse_id': 0, 'session_date': '2024-06-01', 'experimenter': 'Alice'},
+        {'mouse_id': 1, 'session_date': '2024-06-03', 'experimenter': 'Bob'},
+    ])
+
+    # 2. Populate computed tables
+    Neuron.populate()
+    Analysis.populate()
+
+    # 3. Verify data flows correctly
+    assert len(Mouse()) == 2
+    assert len(Session()) == 2
+    assert len(Neuron()) > 0
+    assert len(Analysis()) > 0
+
+    # 4. Test queries work
+    alice_sessions = Session & 'experimenter="Alice"'
+    assert len(alice_sessions) == 1
+```
+
+### How to Use Tests with AI Agents
+
+Once tests are created, an AI agent can:
+
+```bash
+# Agent workflow for Phase I
+1. git checkout -b pre/v2.0
+2. Update schema declarations to _v2
+3. Convert table definitions to 2.0 syntax
+4. Convert API calls (fetch → to_dicts, etc.)
+5. Run: pytest tests/
+6. Fix any failures iteratively
+7. Repeat 5-6 until all tests pass
+8. Phase I complete automatically!
+
+# Agent workflow for Phase II
+1. Populate _v2 schemas with test data
+2. Run tests against _v2 schemas
+3. Compare with legacy results
+4. Generate validation report
+5. Phase II complete automatically!
+```
+
+### Investment vs. Return
+
+**Time investment:**
+
+- Creating tests: ~1-3 days
+- QA database setup: ~1-2 hours
+
+**Time saved:**
+
+- Phase I: ~50-75% reduction (mostly automated)
+- Phase II: ~80% reduction (fully automated validation)
+- Phase III: Higher confidence, faster debugging
+
+**Net benefit:** Tests pay for themselves during migration and provide ongoing
+value for future development.
+
+### When to Skip Tests
+
+Skip test creation if:
+
+- Pipeline is very simple (few tables, no computation)
+- One-time migration with no ongoing development
+- Team has extensive manual testing procedures already
+- Time pressure requires starting migration immediately
+
+**Note:** Even minimal tests (just table insertion and populate) provide
+significant value for automated migration.
 
 ---
 
