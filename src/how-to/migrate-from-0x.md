@@ -324,16 +324,16 @@ DataJoint 2.0 tracks **attribute lineage**—the origin of each attribute throug
 Lineage is stored in a hidden `~lineage` table in each schema. The migration builds this table by analyzing foreign key relationships.
 
 ```sql
--- ~lineage table structure (simplified)
+-- ~lineage table structure
 CREATE TABLE `~lineage` (
-    table_name VARCHAR(64),
-    attribute_name VARCHAR(64),
-    origin_schema VARCHAR(64),
-    origin_table VARCHAR(64),
-    origin_attribute VARCHAR(64),
-    PRIMARY KEY (table_name, attribute_name, origin_schema, origin_table, origin_attribute)
+    table_name VARCHAR(64) NOT NULL COMMENT 'table name within the schema',
+    attribute_name VARCHAR(64) NOT NULL COMMENT 'attribute name',
+    lineage VARCHAR(255) NOT NULL COMMENT 'origin: schema.table.attribute',
+    PRIMARY KEY (table_name, attribute_name)
 );
 ```
+
+The `lineage` column stores the origin as a dot-separated string: `schema.table.attribute`. For example, `subject.subject.subject_id` indicates the attribute originated in the `subject` table of the `subject` schema.
 
 **Why safe:** Legacy clients ignore tables prefixed with `~`.
 
