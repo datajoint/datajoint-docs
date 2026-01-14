@@ -213,6 +213,7 @@ git commit -m "chore: upgrade to datajoint 2.0"
 for parallel testing and validation.
 
 **Why do this first:**
+
 - Creates parallel schemas alongside production (e.g., `my_pipeline_v2`)
 - Allows testing 2.0 code without affecting production schemas
 - Enables side-by-side validation in Phase II
@@ -352,6 +353,7 @@ git commit -m "feat(phase-i): add _v2 suffix to all schema declarations
 ```
 
 **Next steps:**
+
 - Step 4: Configure object stores (if applicable)
 - Step 5: Convert table definitions to 2.0 syntax
 - When table definitions are applied, `_v2` schemas will be created
@@ -724,6 +726,7 @@ With subfolding enabled (e.g., `[2, 2]`):
 ```
 
 **Properties:**
+
 - **Immutable**: Content defines path, cannot be changed
 - **Deduplicated**: Identical content stored once
 - **Integrity**: Hash validates content on retrieval
@@ -1119,23 +1122,28 @@ Update all DataJoint API calls to 2.0 patterns.
 #### Background: API Changes
 
 **Fetch API:**
+
 - `fetch()` → `to_arrays()` (recarray-like) or `to_dicts()` (list of dicts)
 - `fetch(..., format="frame")` → `to_pandas()` (pandas DataFrame)
 - `fetch('attr1', 'attr2')` → `to_arrays('attr1', 'attr2')` (returns tuple)
 - `fetch1()` → unchanged (still returns dict for single row)
 
 **Update Method:**
+
 - `(table & key)._update('attr', val)` → `table.update1({**key, 'attr': val})`
 
 **Join Operators:**
+
 - `table1 @ table2` → `table1 * table2` (natural join with semantic checks enabled)
 - `a.join(b, left=True)` → Consider `a.extend(b)`
 
 **Universal Set:**
+
 - `dj.U('attr') & table` → Unchanged (correct pattern for projecting attributes)
 - `dj.U('attr') * table` → `table` (was a hack to change primary key)
 
 **Visualization:**
+
 - `dj.ERD(schema)` → `dj.Diagram(schema)` (ERD deprecated)
 
 **Learn more:** [Fetch API Reference](../reference/specs/fetch-api.md) · [Query Operators](../reference/operators.md)
@@ -1454,6 +1462,7 @@ git push origin pre/v2.0
 ✅ **Phase I Complete!**
 
 **You now have:**
+
 - 2.0-compatible code on `pre/v2.0` branch
 - Empty `_v2` schemas ready for testing
 - Production still running on `main` branch with pre-2.0
@@ -1799,6 +1808,7 @@ git commit -m "docs: Phase II test report"
 ✅ **Phase II Complete!**
 
 **You now have:**
+
 - Validated 2.0 pipeline with sample data
 - Confidence in code migration
 - Test report documenting success
@@ -1978,6 +1988,7 @@ else:
 #### 6. Schedule Cutover
 
 **Pre-cutover checklist:**
+
 - [ ] Full backup verified
 - [ ] All data copied
 - [ ] All computed tables populated
@@ -2107,6 +2118,7 @@ class Recording(dj.Manual):
 ```
 
 **Both APIs work:**
+
 - pre-2.0 clients use `signal`
 - 2.0 clients use `signal_v2`
 
@@ -2175,6 +2187,7 @@ on your needs. Migration is complete - these are optional enhancements.
 - [AutoPopulate Spec](../reference/specs/autopopulate.md)
 
 **Adopt features incrementally:**
+
 - Start with one table using `<npy@>` for large arrays
 - Test performance and workflow improvements
 - Expand to other tables as needed
@@ -2271,17 +2284,20 @@ print(get_store_spec('main'))
 ## See Also
 
 **Core Documentation:**
+
 - [Type System Concept](../explanation/type-system.md)
 - [Configuration Reference](../reference/configuration.md)
 - [Definition Syntax](../reference/definition-syntax.md)
 - [Fetch API Reference](../reference/specs/fetch-api.md)
 
 **Tutorials:**
+
 - [Object Storage](../tutorials/basics/06-object-storage.ipynb)
 - [Custom Codecs](../tutorials/advanced/custom-codecs.ipynb)
 - [Distributed Computing](../tutorials/advanced/distributed.ipynb)
 
 **Specifications:**
+
 - [Type System Spec](../reference/specs/type-system.md)
 - [Codec API Spec](../reference/specs/codec-api.md)
 - [Object Store Configuration](../reference/specs/object-store-configuration.md)
