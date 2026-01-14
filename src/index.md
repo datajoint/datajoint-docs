@@ -2,6 +2,9 @@
 
 > **DataJoint 2.0 is a major breaking release.** Existing pipelines require migration.
 > See the [Migration Guide](how-to/migrate-from-0x.md) for upgrade instructions.
+> For pre-2.0 documentation, visit [docs.datajoint.com/python-0.x](https://docs.datajoint.com/python-0.x/).
+
+![pipeline](images/pipeline-illustration.png){: style="height:300px;"}
 
 **DataJoint** is a framework for scientific data pipelines built on the [Relational Workflow Model](explanation/relational-workflow-model.md)—a paradigm where your database schema is an executable specification of your workflow.
 
@@ -40,6 +43,14 @@ Unlike traditional databases that merely store data, DataJoint pipelines **proce
     Specifications, API documentation, and technical details
 
     [:octicons-arrow-right-24: Look it up](reference/index.md)
+
+-   :material-puzzle: **DataJoint Elements**
+
+    ---
+
+    Reusable pipeline modules for neurophysiology experiments
+
+    [:octicons-arrow-right-24: Explore Elements](elements/index.md)
 
 </div>
 
