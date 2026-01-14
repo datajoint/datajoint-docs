@@ -1484,82 +1484,33 @@ git push origin pre/v2.0
 
 **Key principle:** Test with identical data in both legacy and v2 schemas to verify equivalence.
 
-### Step 1: Insert Test Data
+### Step 1: Run Your Regular Workflow
+
+Use your existing data entry and populate processes on the `_v2` schemas:
 
 ```python
-from your_pipeline_v2 import schema, Mouse, Session, Neuron
+# Import your v2 pipeline
+from your_pipeline_v2 import schema  # Points to my_pipeline_v2
 
-# Insert manual tables
-Mouse.insert([
-    {'mouse_id': 0, 'dob': '2024-01-01', 'sex': 'M'},
-    {'mouse_id': 1, 'dob': '2024-01-15', 'sex': 'F'},
-])
+# Follow your normal workflow:
+# 1. Insert test data into manual tables (same process as usual)
+# 2. Run populate on computed/imported tables (same process as usual)
+# 3. Run any queries or analysis scripts (using 2.0 API)
 
-Session.insert([
-    {'mouse_id': 0, 'session_date': '2024-06-01', 'experimenter': 'Alice'},
-    {'mouse_id': 0, 'session_date': '2024-06-05', 'experimenter': 'Alice'},
-    {'mouse_id': 1, 'session_date': '2024-06-03', 'experimenter': 'Bob'},
-])
-
-# Verify
-print(f"Inserted {len(Mouse())} mice")
-print(f"Inserted {len(Session())} sessions")
+# Example (adapt to your pipeline):
+# YourManualTable.insert([...])  # Your usual insert process
+# YourComputedTable.populate(display_progress=True)  # Your usual populate
 ```
 
-### Step 2: Test Populate
+**Key points:**
 
-```python
-# Populate imported/computed tables
-Neuron.populate(display_progress=True)
+- Use a **representative subset** of data (not full production dataset)
+- Follow your **existing workflow** - don't create artificial examples
+- Populate computed tables using your **normal populate process**
+- Run any **existing analysis or query scripts** you have
+- Test that everything works with the 2.0 API
 
-# Verify
-print(f"Generated {len(Neuron())} neurons")
-```
-
-### Step 3: Test Queries
-
-```python
-# Test basic queries
-mice = Mouse.to_dicts()
-print(f"Fetched {len(mice)} mice")
-
-# Test joins
-neurons_with_sessions = Neuron.join(Session, semantic_check=False)
-print(f"Join result: {len(neurons_with_sessions)} rows")
-
-# Test restrictions
-alice_sessions = Session & 'experimenter="Alice"'
-print(f"Alice's sessions: {len(alice_sessions)}")
-
-# Test fetch variants
-mouse_ids, dobs = Mouse.to_arrays('mouse_id', 'dob')
-print(f"Arrays: {len(mouse_ids)} ids, {len(dobs)} dobs")
-```
-
-### Step 4: Test New Features (Optional)
-
-If you converted any tables to use new codecs:
-
-```python
-# Test object storage (if using <npy@> or <object@>)
-from your_pipeline_v2 import Recording
-
-# Insert with object storage
-Recording.insert1({
-    'recording_id': 0,
-    'signal': np.random.randn(1000, 64),  # Stored in object store
-})
-
-# Fetch with lazy loading
-ref = (Recording & {'recording_id': 0}).fetch1('signal')
-print(f"NpyRef: shape={ref.shape}, loaded={ref.is_loaded}")
-
-# Load when needed
-signal = ref.load()
-print(f"Loaded: shape={signal.shape}")
-```
-
-### Step 5: Compare with Legacy Schema (Equivalence Testing)
+### Step 2: Compare with Legacy Schema (Equivalence Testing)
 
 **Critical:** Run identical data through both legacy and v2 pipelines to verify equivalence.
 
@@ -1670,7 +1621,7 @@ else:
         print(f"  {disc}")
 ```
 
-### Step 6: Run Existing Tests
+### Step 3: Run Existing Tests
 
 If you have a test suite:
 
@@ -1683,127 +1634,22 @@ pytest tests/test_queries.py -v
 pytest tests/test_populate.py -v
 ```
 
-### Step 7: Validate Results
+### Step 4: Document Test Results
 
-Create a validation script:
+Document your testing process and results:
 
-```python
-# validate_v2.py
-import datajoint as dj
-from your_pipeline_v2 import schema
+**What to document:**
 
-def validate_phase_ii():
-    """Validate Phase II migration."""
+- Date of testing
+- Test data used (subset, size, representative samples)
+- Tables tested and row counts
+- Populate results (did computed tables generate expected rows?)
+- Equivalence test results (if comparing with legacy)
+- Any issues found and how they were resolved
+- Test suite results (if you have automated tests)
 
-    issues = []
-
-    # Check schemas exist
-    conn = dj.conn()
-    schemas_v2 = conn.query("SHOW DATABASES LIKE '%_v2'").fetchall()
-
-    if not schemas_v2:
-        issues.append("No _v2 schemas found")
-        return issues
-
-    print(f"✓ Found {len(schemas_v2)} _v2 schemas")
-
-    # Check tables populated
-    for schema_name in [s[0] for s in schemas_v2]:
-        tables = conn.query(
-            f"SELECT TABLE_NAME FROM information_schema.TABLES "
-            f"WHERE TABLE_SCHEMA='{schema_name}' AND TABLE_NAME NOT LIKE '~%'"
-        ).fetchall()
-
-        for table in tables:
-            table_name = table[0]
-            count = conn.query(
-                f"SELECT COUNT(*) FROM `{schema_name}`.`{table_name}`"
-            ).fetchone()[0]
-
-            if count > 0:
-                print(f"  ✓ {schema_name}.{table_name}: {count} rows")
-            else:
-                print(f"  ○ {schema_name}.{table_name}: empty (may be expected)")
-
-    # Test basic operations
-    try:
-        # Test fetch
-        data = schema.connection.query(
-            f"SELECT * FROM {schema.database} LIMIT 1"
-        ).fetchall()
-        print("✓ Fetch operations work")
-    except Exception as e:
-        issues.append(f"Fetch error: {e}")
-
-    return issues
-
-if __name__ == '__main__':
-    issues = validate_phase_ii()
-
-    if issues:
-        print("\n✗ Validation issues found:")
-        for issue in issues:
-            print(f"  - {issue}")
-    else:
-        print("\n✓ Phase II validation passed!")
-```
-
-Run validation:
-
-```bash
-python validate_v2.py
-```
-
-### Step 7: Document Test Results
-
-Create a test report:
-
-```bash
-# test_report.md
-cat > test_report.md << 'EOF'
-# Phase II Test Report
-
-## Test Date
-2026-01-14
-
-## Summary
-- Schemas tested: X
-- Tables populated: Y
-- Tests passed: Z
-
-## Manual Tables
-- Mouse: N rows
-- Session: M rows
-
-## Computed Tables
-- Neuron: K rows
-- Analysis: J rows
-
-## Query Tests
-- Basic fetch: ✓
-- Joins: ✓
-- Restrictions: ✓
-- Aggregations: ✓
-
-## Populate Tests
-- Imported tables: ✓
-- Computed tables: ✓
-- Error handling: ✓
-
-## New Features Tested
-- Object storage: ✓
-- Lazy loading: ✓
-
-## Issues Found
-- None
-
-## Conclusion
-Phase II completed successfully. Ready for Phase III.
-EOF
-
-git add test_report.md
-git commit -m "docs: Phase II test report"
-```
+**Purpose:** Creates a record of validation for your team and future reference.
+Useful when planning production migration in Phase III.
 
 ✅ **Phase II Complete!**
 
