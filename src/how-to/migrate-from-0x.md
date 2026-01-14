@@ -154,17 +154,20 @@ DataJoint 2.0 validates that join operands share common lineage before allowing 
 
 **Impact:** A small number of existing queries may fail if they join tables without a common foreign key ancestor. Phase 2 builds the `~lineage` table that tracks these relationships.
 
-**If a query fails:** Use `semantic_check=False` to bypass:
+**If a query fails semantic checking:** This indicates the join is likely malformed. Review the query to ensure:
+
+- The tables being joined have a logical relationship through foreign keys
+- You're joining tables that should semantically be joined
+- The query isn't accidentally joining unrelated data
+
+If the join is intentional (e.g., Cartesian product for specific analysis), you can bypass the check:
 
 ```python
-# Legacy query that may fail semantic check
-result = TableA * TableB
-
-# 2.0 equivalent with check disabled
+# Only if the cross-schema join is intentionally unrelated
 result = TableA.join(TableB, semantic_check=False)
 ```
 
-**Learn more:** [Query Algebra](../explanation/query-algebra.md)
+**Learn more:** [Semantic Matching Specification](../reference/specs/semantic-matching.md) · [Query Algebra](../explanation/query-algebra.md)
 
 ---
 
@@ -281,7 +284,11 @@ result = table1 @ table2           # natural join without semantic check
 result = dj.U('attr') * table      # universal set multiplication
 
 # 2.0 Replacements
+result = table1 * table2           # try natural join first (with semantic check)
+# If semantic check fails, review the join - it may be malformed
+# Only use semantic_check=False if the bypass is truly needed:
 result = table1.join(table2, semantic_check=False)
+
 result = dj.U('attr') & table      # use restriction instead
 ```
 
@@ -327,7 +334,7 @@ For each Python module using DataJoint:
 
 - [ ] Replace all `.fetch()` calls with appropriate 2.0 method
 - [ ] Replace `._update()` with `.update1()`
-- [ ] Replace `@` operator with `.join(..., semantic_check=False)`
+- [ ] Replace `@` operator with `*` (review if semantic check fails)
 - [ ] Replace `dj.U() * expr` with `dj.U() & expr`
 - [ ] Replace positional inserts with key-value dicts
 - [ ] Replace `download_path=` parameter with `dj.config.override()`
@@ -358,7 +365,7 @@ Removed API:
 
 Query operators:
 11. Replace (table & key)._update('attr', val) → table.update1({**key, 'attr': val})
-12. Replace table1 @ table2 → table1.join(table2, semantic_check=False)
+12. Replace table1 @ table2 → table1 * table2 (if semantic check fails, review join)
 13. Replace dj.U('x') * table → dj.U('x') & table
 
 Insert patterns:
