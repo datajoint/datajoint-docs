@@ -39,6 +39,7 @@ they assume you understand the basics and focus on getting things done.
 
 ## Object Storage
 
+- [Object Storage Overview](object-storage-overview.md) — Navigation guide for all storage docs
 - [Choose a Storage Type](choose-storage-type.md) — Decision guide for codecs
 - [Use Object Storage](use-object-storage.md) — When and how
 - [Create Custom Codecs](create-custom-codec.md) — Domain-specific types
