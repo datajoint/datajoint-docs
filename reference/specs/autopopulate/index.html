@@ -1,0 +1,4263 @@
+
+<!DOCTYPE html>
+
+<html class="no-js" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<link href="https://docs.datajoint.com/reference/specs/autopopulate/" rel="canonical"/>
+<link href="../data-manipulation/" rel="prev"/>
+<link href="../job-metadata/" rel="next"/>
+<link href="../../../assets/images/company-logo-blue.png" rel="icon"/>
+<meta content="mkdocs-1.6.1, mkdocs-material-9.7.1" name="generator"/>
+<title>AutoPopulate - DataJoint Documentation</title>
+<link href="../../../assets/stylesheets/main.484c7ddc.min.css" rel="stylesheet"/>
+<link href="../../../assets/stylesheets/palette.ab4e12ef.min.css" rel="stylesheet"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css?family=Roboto+Slab:300,300i,400,400i,700,700i%7CSource+Code+Pro:400,400i,700,700i&amp;display=fallback" rel="stylesheet"/>
+<style>:root{--md-text-font:"Roboto Slab";--md-code-font:"Source Code Pro"}</style>
+<link href="../../../assets/_mkdocstrings.css" rel="stylesheet"/>
+<link href="../../../assets/stylesheets/extra.css" rel="stylesheet"/>
+<script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+<script src="https://www.datadoghq-browser-agent.com/us1/v4/datadog-rum.js" type="text/javascript">
+</script>
+<script>
+		window.DD_RUM && window.DD_RUM.init({
+			clientToken: 'pub10d7870188992f8c006cf7ba1f160a3f',
+			applicationId: '36a4de35-5eaa-435a-8c56-048c1b4d5d8c',
+			site: 'datadoghq.com',
+			service: 'datajoint-docs',
+			env: 'production',
+			sessionSampleRate: 100,
+			sessionReplaySampleRate: 100,
+			trackUserInteractions: true,
+			trackResources: true,
+			trackLongTasks: true,
+			defaultPrivacyLevel: 'mask-user-input',
+		});
+
+		window.DD_RUM &&
+		window.DD_RUM.startSessionReplayRecording();
+	</script>
+<!-- Add scripts that need to run afterwards here -->
+</head>
+<body data-md-color-accent="indigo" data-md-color-primary="indigo" data-md-color-scheme="datajoint" dir="ltr">
+<input autocomplete="off" class="md-toggle" data-md-toggle="drawer" id="__drawer" type="checkbox"/>
+<input autocomplete="off" class="md-toggle" data-md-toggle="search" id="__search" type="checkbox"/>
+<label class="md-overlay" for="__drawer"></label>
+<div data-md-component="skip">
+<a class="md-skip" href="#autopopulate-specification">
+          Skip to content
+        </a>
+</div>
+<div data-md-component="announce">
+</div>
+<header class="md-header md-header--shadow" data-md-component="header">
+<nav aria-label="Header" class="md-header__inner md-grid">
+<a aria-label="DataJoint Documentation" class="md-header__button md-logo" data-md-component="logo" href="../../.." title="DataJoint Documentation">
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 15.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+
+<svg enable-background="new 0 0 260.479 365.463" height="365.463px" id="Layer_1" version="1.1" viewbox="0 0 260.479 365.463" width="260.479px" x="0px" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" y="0px">
+<g>
+<path d="M4.638,361.434c0,0,124.071-124.072,135.896-357.434c0,0,29.555,189.053,115.266,256.988
+		C255.799,260.988,173.038,249.174,4.638,361.434z"></path>
+</g>
+</svg>
+</a>
+<label class="md-header__button md-icon" for="__drawer">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"></path></svg>
+</label>
+<div class="md-header__title" data-md-component="header-title">
+<div class="md-header__ellipsis">
+<div class="md-header__topic">
+<span class="md-ellipsis">
+            DataJoint Documentation
+          </span>
+</div>
+<div class="md-header__topic" data-md-component="header-topic">
+<span class="md-ellipsis">
+            
+              AutoPopulate
+            
+          </span>
+</div>
+</div>
+</div>
+<form class="md-header__option" data-md-component="palette">
+<input aria-label="Switch to dark mode" class="md-option" data-md-color-accent="indigo" data-md-color-media="(prefers-color-scheme: light)" data-md-color-primary="indigo" data-md-color-scheme="datajoint" id="__palette_0" name="__palette" type="radio"/>
+<label class="md-header__button md-icon" for="__palette_1" hidden="" title="Switch to dark mode">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+</label>
+<input aria-label="Switch to light mode" class="md-option" data-md-color-accent="indigo" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-primary="indigo" data-md-color-scheme="slate" id="__palette_1" name="__palette" type="radio"/>
+<label class="md-header__button md-icon" for="__palette_0" hidden="" title="Switch to light mode">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+</label>
+</form>
+<script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+<label class="md-header__button md-icon" for="__search">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+</label>
+<div class="md-search" data-md-component="search" role="dialog">
+<label class="md-search__overlay" for="__search"></label>
+<div class="md-search__inner" role="search">
+<form class="md-search__form" name="search">
+<input aria-label="Search" autocapitalize="off" autocomplete="off" autocorrect="off" class="md-search__input" data-md-component="search-query" name="query" placeholder="Search" required="" spellcheck="false" type="text"/>
+<label class="md-search__icon md-icon" for="__search">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+</label>
+<nav aria-label="Search" class="md-search__options">
+<button aria-label="Clear" class="md-search__icon md-icon" tabindex="-1" title="Clear" type="reset">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>
+</button>
+</nav>
+</form>
+<div class="md-search__output">
+<div class="md-search__scrollwrap" data-md-scrollfix="" tabindex="0">
+<div class="md-search-result" data-md-component="search-result">
+<div class="md-search-result__meta">
+            Initializing search
+          </div>
+<ol class="md-search-result__list" role="presentation"></ol>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="md-header__source">
+<a class="md-source" data-md-component="source" href="https://github.com/datajoint/datajoint-docs" title="Go to repository">
+<div class="md-source__icon md-icon">
+<svg viewbox="0 0 448 512" xmlns="http://www.w3.org/2000/svg"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"></path></svg>
+</div>
+<div class="md-source__repository">
+    datajoint/datajoint-docs
+  </div>
+</a>
+</div>
+</nav>
+</header>
+<div class="md-container" data-md-component="container">
+<main class="md-main" data-md-component="main">
+<div class="md-main__inner md-grid">
+<div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
+<div class="md-sidebar__scrollwrap">
+<div class="md-sidebar__inner">
+<nav aria-label="Navigation" class="md-nav md-nav--primary" data-md-level="0">
+<label class="md-nav__title" for="__drawer">
+<a aria-label="DataJoint Documentation" class="md-nav__button md-logo" data-md-component="logo" href="../../.." title="DataJoint Documentation">
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 15.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+
+<svg enable-background="new 0 0 260.479 365.463" height="365.463px" id="Layer_1" version="1.1" viewbox="0 0 260.479 365.463" width="260.479px" x="0px" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" y="0px">
+<g>
+<path d="M4.638,361.434c0,0,124.071-124.072,135.896-357.434c0,0,29.555,189.053,115.266,256.988
+		C255.799,260.988,173.038,249.174,4.638,361.434z"></path>
+</g>
+</svg>
+</a>
+    DataJoint Documentation
+  </label>
+<div class="md-nav__source">
+<a class="md-source" data-md-component="source" href="https://github.com/datajoint/datajoint-docs" title="Go to repository">
+<div class="md-source__icon md-icon">
+<svg viewbox="0 0 448 512" xmlns="http://www.w3.org/2000/svg"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"></path></svg>
+</div>
+<div class="md-source__repository">
+    datajoint/datajoint-docs
+  </div>
+</a>
+</div>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../..">
+<span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item md-nav__item--section md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_2" type="checkbox"/>
+<div class="md-nav__link md-nav__container">
+<a class="md-nav__link" href="../../../explanation/">
+<span class="md-ellipsis">
+    
+  
+    Concepts
+  
+
+    
+  </span>
+</a>
+<label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+<span class="md-nav__icon md-icon"></span>
+</label>
+</div>
+<nav aria-expanded="false" aria-labelledby="__nav_2_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_2">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Concepts
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_2_1" type="checkbox"/>
+<label class="md-nav__link" for="__nav_2_1" id="__nav_2_1_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_2_1_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_2_1">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Overview
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../explanation/data-pipelines/">
+<span class="md-ellipsis">
+    
+  
+    Data Pipelines
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../explanation/whats-new-2/">
+<span class="md-ellipsis">
+    
+  
+    What's New in 2.0
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../explanation/faq/">
+<span class="md-ellipsis">
+    
+  
+    FAQ
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_2_2" type="checkbox"/>
+<label class="md-nav__link" for="__nav_2_2" id="__nav_2_2_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    Data Model
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_2_2_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_2_2">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Data Model
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../explanation/relational-workflow-model/">
+<span class="md-ellipsis">
+    
+  
+    Relational Workflow Model
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../explanation/entity-integrity/">
+<span class="md-ellipsis">
+    
+  
+    Entity Integrity
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../explanation/normalization/">
+<span class="md-ellipsis">
+    
+  
+    Normalization
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../explanation/computation-model/">
+<span class="md-ellipsis">
+    
+  
+    Computation Model
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_2_3" type="checkbox"/>
+<label class="md-nav__link" for="__nav_2_3" id="__nav_2_3_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    Queries
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_2_3_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_2_3">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Queries
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../explanation/query-algebra/">
+<span class="md-ellipsis">
+    
+  
+    Query Algebra
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_2_4" type="checkbox"/>
+<label class="md-nav__link" for="__nav_2_4" id="__nav_2_4_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    Storage
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_2_4_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_2_4">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Storage
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../explanation/type-system/">
+<span class="md-ellipsis">
+    
+  
+    Type System
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../explanation/custom-codecs/">
+<span class="md-ellipsis">
+    
+  
+    Custom Codecs
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--section md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_3" type="checkbox"/>
+<div class="md-nav__link md-nav__container">
+<a class="md-nav__link" href="../../../tutorials/">
+<span class="md-ellipsis">
+    
+  
+    Tutorials
+  
+
+    
+  </span>
+</a>
+<label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+<span class="md-nav__icon md-icon"></span>
+</label>
+</div>
+<nav aria-expanded="false" aria-labelledby="__nav_3_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_3">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Tutorials
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_3_1" type="checkbox"/>
+<label class="md-nav__link" for="__nav_3_1" id="__nav_3_1_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    Basics
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_3_1_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_3_1">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Basics
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../tutorials/basics/01-first-pipeline/">
+<span class="md-ellipsis">
+    
+  
+    A Simple Pipeline
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../tutorials/basics/02-schema-design/">
+<span class="md-ellipsis">
+    
+  
+    Schema Design
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../tutorials/basics/03-data-entry/">
+<span class="md-ellipsis">
+    
+  
+    Data Entry
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../tutorials/basics/04-queries/">
+<span class="md-ellipsis">
+    
+  
+    Queries
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../tutorials/basics/05-computation/">
+<span class="md-ellipsis">
+    
+  
+    Computation
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../tutorials/basics/06-object-storage/">
+<span class="md-ellipsis">
+    
+  
+    Object-Augmented Schemas
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_3_2" type="checkbox"/>
+<label class="md-nav__link" for="__nav_3_2" id="__nav_3_2_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    Examples
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_3_2_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_3_2">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Examples
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../tutorials/examples/university/">
+<span class="md-ellipsis">
+    
+  
+    University Database
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../tutorials/examples/hotel-reservations/">
+<span class="md-ellipsis">
+    
+  
+    Hotel Reservation System
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../tutorials/examples/languages/">
+<span class="md-ellipsis">
+    
+  
+    Languages and Proficiency
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../tutorials/examples/fractal-pipeline/">
+<span class="md-ellipsis">
+    
+  
+    Fractal Image Pipeline
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../tutorials/examples/blob-detection/">
+<span class="md-ellipsis">
+    
+  
+    Blob Detection Pipeline
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_3_3" type="checkbox"/>
+<label class="md-nav__link" for="__nav_3_3" id="__nav_3_3_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    Domain
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_3_3_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_3_3">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Domain
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../tutorials/domain/calcium-imaging/calcium-imaging/">
+<span class="md-ellipsis">
+    
+  
+    Calcium Imaging Pipeline
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../tutorials/domain/electrophysiology/electrophysiology/">
+<span class="md-ellipsis">
+    
+  
+    Electrophysiology Pipeline
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../tutorials/domain/electrophysiology/ephys-with-npy/">
+<span class="md-ellipsis">
+    
+  
+    Electrophysiology Pipeline with Object Storage
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../tutorials/domain/allen-ccf/allen-ccf/">
+<span class="md-ellipsis">
+    
+  
+    Allen Common Coordinate Framework (CCF)
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_3_4" type="checkbox"/>
+<label class="md-nav__link" for="__nav_3_4" id="__nav_3_4_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    Advanced
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_3_4_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_3_4">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Advanced
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../tutorials/advanced/sql-comparison/">
+<span class="md-ellipsis">
+    
+  
+    DataJoint for SQL Users
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../tutorials/advanced/json-type/">
+<span class="md-ellipsis">
+    
+  
+    JSON Data Type
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../tutorials/advanced/distributed/">
+<span class="md-ellipsis">
+    
+  
+    Distributed Computing
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../tutorials/advanced/custom-codecs/">
+<span class="md-ellipsis">
+    
+  
+    Custom Codecs
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--section md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_4" type="checkbox"/>
+<div class="md-nav__link md-nav__container">
+<a class="md-nav__link" href="../../../how-to/">
+<span class="md-ellipsis">
+    
+  
+    How-To
+  
+
+    
+  </span>
+</a>
+<label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+<span class="md-nav__icon md-icon"></span>
+</label>
+</div>
+<nav aria-expanded="false" aria-labelledby="__nav_4_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_4">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    How-To
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_4_1" type="checkbox"/>
+<label class="md-nav__link" for="__nav_4_1" id="__nav_4_1_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    Setup
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_4_1_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_4_1">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Setup
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../how-to/installation/">
+<span class="md-ellipsis">
+    
+  
+    Installation
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../how-to/configure-database/">
+<span class="md-ellipsis">
+    
+  
+    Configure Database
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../how-to/configure-storage/">
+<span class="md-ellipsis">
+    
+  
+    Configure Object Storage
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../how-to/use-cli/">
+<span class="md-ellipsis">
+    
+  
+    Command-Line Interface
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_4_2" type="checkbox"/>
+<label class="md-nav__link" for="__nav_4_2" id="__nav_4_2_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    Schema Design
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_4_2_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_4_2">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Schema Design
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../how-to/define-tables/">
+<span class="md-ellipsis">
+    
+  
+    Define Tables
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../how-to/model-relationships/">
+<span class="md-ellipsis">
+    
+  
+    Model Relationships
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../how-to/design-primary-keys/">
+<span class="md-ellipsis">
+    
+  
+    Design Primary Keys
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../how-to/read-diagrams/">
+<span class="md-ellipsis">
+    
+  
+    Read Schema Diagrams
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_4_3" type="checkbox"/>
+<label class="md-nav__link" for="__nav_4_3" id="__nav_4_3_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    Project Management
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_4_3_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_4_3">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Project Management
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../how-to/manage-pipeline-project/">
+<span class="md-ellipsis">
+    
+  
+    Manage Pipeline Project
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_4_4" type="checkbox"/>
+<label class="md-nav__link" for="__nav_4_4" id="__nav_4_4_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    Data Operations
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_4_4_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_4_4">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Data Operations
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../how-to/insert-data/">
+<span class="md-ellipsis">
+    
+  
+    Insert Data
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../how-to/query-data/">
+<span class="md-ellipsis">
+    
+  
+    Query Data
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../how-to/fetch-results/">
+<span class="md-ellipsis">
+    
+  
+    Fetch Results
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../how-to/delete-data/">
+<span class="md-ellipsis">
+    
+  
+    Delete Data
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_4_5" type="checkbox"/>
+<label class="md-nav__link" for="__nav_4_5" id="__nav_4_5_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    Computation
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_4_5_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_4_5">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Computation
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../how-to/run-computations/">
+<span class="md-ellipsis">
+    
+  
+    Run Computations
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../how-to/distributed-computing/">
+<span class="md-ellipsis">
+    
+  
+    Distributed Computing
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../how-to/handle-errors/">
+<span class="md-ellipsis">
+    
+  
+    Handle Errors
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../how-to/monitor-progress/">
+<span class="md-ellipsis">
+    
+  
+    Monitor Progress
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_4_6" type="checkbox"/>
+<label class="md-nav__link" for="__nav_4_6" id="__nav_4_6_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    Object Storage
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_4_6_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_4_6">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Object Storage
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../how-to/use-object-storage/">
+<span class="md-ellipsis">
+    
+  
+    Use Object Storage
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../how-to/use-npy-codec/">
+<span class="md-ellipsis">
+    
+  
+    Use NPY Codec
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../how-to/create-custom-codec/">
+<span class="md-ellipsis">
+    
+  
+    Create Custom Codecs
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../how-to/manage-large-data/">
+<span class="md-ellipsis">
+    
+  
+    Manage Large Data
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../how-to/garbage-collection/">
+<span class="md-ellipsis">
+    
+  
+    Clean Up Storage
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_4_7" type="checkbox"/>
+<label class="md-nav__link" for="__nav_4_7" id="__nav_4_7_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    Maintenance
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_4_7_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_4_7">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Maintenance
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../how-to/migrate-to-v20/">
+<span class="md-ellipsis">
+    
+  
+    Migrate to 2.0
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../how-to/alter-tables/">
+<span class="md-ellipsis">
+    
+  
+    Alter Tables
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../how-to/backup-restore/">
+<span class="md-ellipsis">
+    
+  
+    Backup and Restore
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+<input checked="" class="md-nav__toggle md-toggle" id="__nav_5" type="checkbox"/>
+<div class="md-nav__link md-nav__container">
+<a class="md-nav__link" href="../../">
+<span class="md-ellipsis">
+    
+  
+    Reference
+  
+
+    
+  </span>
+</a>
+<label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+<span class="md-nav__icon md-icon"></span>
+</label>
+</div>
+<nav aria-expanded="true" aria-labelledby="__nav_5_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_5">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Reference
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item md-nav__item--active md-nav__item--nested">
+<input checked="" class="md-nav__toggle md-toggle" id="__nav_5_1" type="checkbox"/>
+<div class="md-nav__link md-nav__container">
+<a class="md-nav__link" href="../">
+<span class="md-ellipsis">
+    
+  
+    Specifications
+  
+
+    
+  </span>
+</a>
+<label class="md-nav__link" for="__nav_5_1" id="__nav_5_1_label" tabindex="0">
+<span class="md-nav__icon md-icon"></span>
+</label>
+</div>
+<nav aria-expanded="true" aria-labelledby="__nav_5_1_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_5_1">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Specifications
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_5_1_1" type="checkbox"/>
+<label class="md-nav__link" for="__nav_5_1_1" id="__nav_5_1_1_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    Schema Definition
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_5_1_1_label" class="md-nav" data-md-level="3">
+<label class="md-nav__title" for="__nav_5_1_1">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Schema Definition
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../table-declaration/">
+<span class="md-ellipsis">
+    
+  
+    Table Declaration
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../master-part/">
+<span class="md-ellipsis">
+    
+  
+    Master-Part
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../virtual-schemas/">
+<span class="md-ellipsis">
+    
+  
+    Virtual Schemas
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_5_1_2" type="checkbox"/>
+<label class="md-nav__link" for="__nav_5_1_2" id="__nav_5_1_2_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    Query Algebra
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_5_1_2_label" class="md-nav" data-md-level="3">
+<label class="md-nav__title" for="__nav_5_1_2">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Query Algebra
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../query-algebra/">
+<span class="md-ellipsis">
+    
+  
+    Query Operators
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../semantic-matching/">
+<span class="md-ellipsis">
+    
+  
+    Semantic Matching
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../primary-keys/">
+<span class="md-ellipsis">
+    
+  
+    Primary Keys
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../fetch-api/">
+<span class="md-ellipsis">
+    
+  
+    Fetch API
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_5_1_3" type="checkbox"/>
+<label class="md-nav__link" for="__nav_5_1_3" id="__nav_5_1_3_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    Type System
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_5_1_3_label" class="md-nav" data-md-level="3">
+<label class="md-nav__title" for="__nav_5_1_3">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Type System
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../type-system/">
+<span class="md-ellipsis">
+    
+  
+    Types
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../codec-api/">
+<span class="md-ellipsis">
+    
+  
+    Codec API
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../npy-codec/">
+<span class="md-ellipsis">
+    
+  
+    NPY Codec
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--active md-nav__item--nested">
+<input checked="" class="md-nav__toggle md-toggle" id="__nav_5_1_4" type="checkbox"/>
+<label class="md-nav__link" for="__nav_5_1_4" id="__nav_5_1_4_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    Data Operations
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="true" aria-labelledby="__nav_5_1_4_label" class="md-nav" data-md-level="3">
+<label class="md-nav__title" for="__nav_5_1_4">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Data Operations
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../data-manipulation/">
+<span class="md-ellipsis">
+    
+  
+    Data Manipulation
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item md-nav__item--active">
+<input class="md-nav__toggle md-toggle" id="__toc" type="checkbox"/>
+<label class="md-nav__link md-nav__link--active" for="__toc">
+<span class="md-ellipsis">
+    
+  
+    AutoPopulate
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<a class="md-nav__link md-nav__link--active" href="./">
+<span class="md-ellipsis">
+    
+  
+    AutoPopulate
+  
+
+    
+  </span>
+</a>
+<nav aria-label="Table of contents" class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">
+<span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#overview">
+<span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#1-auto-populated-tables">
+<span class="md-ellipsis">
+      
+        1. Auto-Populated Tables
+      
+    </span>
+</a>
+<nav aria-label="1. Auto-Populated Tables" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#11-table-types">
+<span class="md-ellipsis">
+      
+        1.1 Table Types
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#12-basic-structure">
+<span class="md-ellipsis">
+      
+        1.2 Basic Structure
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#13-primary-key-constraint">
+<span class="md-ellipsis">
+      
+        1.3 Primary Key Constraint
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#2-key-source-calculation">
+<span class="md-ellipsis">
+      
+        2. Key Source Calculation
+      
+    </span>
+</a>
+<nav aria-label="2. Key Source Calculation" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#21-definition">
+<span class="md-ellipsis">
+      
+        2.1 Definition
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#22-automatic-key-source">
+<span class="md-ellipsis">
+      
+        2.2 Automatic Key Source
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#23-custom-key-source">
+<span class="md-ellipsis">
+      
+        2.3 Custom Key Source
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#24-pending-entries">
+<span class="md-ellipsis">
+      
+        2.4 Pending Entries
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#3-the-populate-process">
+<span class="md-ellipsis">
+      
+        3. The Populate Process
+      
+    </span>
+</a>
+<nav aria-label="3. The Populate Process" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#31-basic-populate">
+<span class="md-ellipsis">
+      
+        3.1 Basic Populate
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#32-method-signature">
+<span class="md-ellipsis">
+      
+        3.2 Method Signature
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#33-parameters">
+<span class="md-ellipsis">
+      
+        3.3 Parameters
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#34-common-usage-patterns">
+<span class="md-ellipsis">
+      
+        3.4 Common Usage Patterns
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#35-return-value">
+<span class="md-ellipsis">
+      
+        3.5 Return Value
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#4-the-make-method">
+<span class="md-ellipsis">
+      
+        4. The make() Method
+      
+    </span>
+</a>
+<nav aria-label="4. The make() Method" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#41-basic-pattern">
+<span class="md-ellipsis">
+      
+        4.1 Basic Pattern
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#42-requirements">
+<span class="md-ellipsis">
+      
+        4.2 Requirements
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#43-accessing-source-data">
+<span class="md-ellipsis">
+      
+        4.3 Accessing Source Data
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#44-tripartite-make-pattern">
+<span class="md-ellipsis">
+      
+        4.4 Tripartite Make Pattern
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#45-additional-make-arguments">
+<span class="md-ellipsis">
+      
+        4.5 Additional make() Arguments
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#5-transaction-management">
+<span class="md-ellipsis">
+      
+        5. Transaction Management
+      
+    </span>
+</a>
+<nav aria-label="5. Transaction Management" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#51-automatic-transactions">
+<span class="md-ellipsis">
+      
+        5.1 Automatic Transactions
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#52-atomicity-guarantees">
+<span class="md-ellipsis">
+      
+        5.2 Atomicity Guarantees
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#53-transaction-scope">
+<span class="md-ellipsis">
+      
+        5.3 Transaction Scope
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#54-nested-operations">
+<span class="md-ellipsis">
+      
+        5.4 Nested Operations
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#55-manual-transaction-control">
+<span class="md-ellipsis">
+      
+        5.5 Manual Transaction Control
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#6-part-tables">
+<span class="md-ellipsis">
+      
+        6. Part Tables
+      
+    </span>
+</a>
+<nav aria-label="6. Part Tables" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#61-part-tables-in-computed-tables">
+<span class="md-ellipsis">
+      
+        6.1 Part Tables in Computed Tables
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#62-transaction-behavior">
+<span class="md-ellipsis">
+      
+        6.2 Transaction Behavior
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#63-fetching-part-data">
+<span class="md-ellipsis">
+      
+        6.3 Fetching Part Data
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#64-key-source-with-parts">
+<span class="md-ellipsis">
+      
+        6.4 Key Source with Parts
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#65-deleting-computed-parts">
+<span class="md-ellipsis">
+      
+        6.5 Deleting Computed Parts
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#7-progress-and-monitoring">
+<span class="md-ellipsis">
+      
+        7. Progress and Monitoring
+      
+    </span>
+</a>
+<nav aria-label="7. Progress and Monitoring" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#71-progress-method">
+<span class="md-ellipsis">
+      
+        7.1 Progress Method
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#72-display-progress-during-populate">
+<span class="md-ellipsis">
+      
+        7.2 Display Progress During Populate
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#8-direct-mode-vs-distributed-mode">
+<span class="md-ellipsis">
+      
+        8. Direct Mode vs Distributed Mode
+      
+    </span>
+</a>
+<nav aria-label="8. Direct Mode vs Distributed Mode" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#81-direct-mode-default">
+<span class="md-ellipsis">
+      
+        8.1 Direct Mode (Default)
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#82-distributed-mode">
+<span class="md-ellipsis">
+      
+        8.2 Distributed Mode
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#9-per-table-jobs-system">
+<span class="md-ellipsis">
+      
+        9. Per-Table Jobs System
+      
+    </span>
+</a>
+<nav aria-label="9. Per-Table Jobs System" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#91-jobs-table">
+<span class="md-ellipsis">
+      
+        9.1 Jobs Table
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#92-jobs-table-structure">
+<span class="md-ellipsis">
+      
+        9.2 Jobs Table Structure
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#93-job-statuses">
+<span class="md-ellipsis">
+      
+        9.3 Job Statuses
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#94-jobs-api">
+<span class="md-ellipsis">
+      
+        9.4 Jobs API
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#10-priority-and-scheduling">
+<span class="md-ellipsis">
+      
+        10. Priority and Scheduling
+      
+    </span>
+</a>
+<nav aria-label="10. Priority and Scheduling" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#101-priority">
+<span class="md-ellipsis">
+      
+        10.1 Priority
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#102-scheduling">
+<span class="md-ellipsis">
+      
+        10.2 Scheduling
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#11-distributed-computing">
+<span class="md-ellipsis">
+      
+        11. Distributed Computing
+      
+    </span>
+</a>
+<nav aria-label="11. Distributed Computing" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#111-basic-pattern">
+<span class="md-ellipsis">
+      
+        11.1 Basic Pattern
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#112-execution-flow-distributed">
+<span class="md-ellipsis">
+      
+        11.2 Execution Flow (Distributed)
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#113-conflict-resolution">
+<span class="md-ellipsis">
+      
+        11.3 Conflict Resolution
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#12-error-handling">
+<span class="md-ellipsis">
+      
+        12. Error Handling
+      
+    </span>
+</a>
+<nav aria-label="12. Error Handling" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#121-default-behavior">
+<span class="md-ellipsis">
+      
+        12.1 Default Behavior
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#122-suppressing-errors">
+<span class="md-ellipsis">
+      
+        12.2 Suppressing Errors
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#123-error-recovery-distributed-mode">
+<span class="md-ellipsis">
+      
+        12.3 Error Recovery (Distributed Mode)
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#124-stale-and-orphaned-jobs">
+<span class="md-ellipsis">
+      
+        12.4 Stale and Orphaned Jobs
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#13-configuration">
+<span class="md-ellipsis">
+      
+        13. Configuration
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#14-hidden-job-metadata">
+<span class="md-ellipsis">
+      
+        14. Hidden Job Metadata
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#15-migration-from-legacy-datajoint">
+<span class="md-ellipsis">
+      
+        15. Migration from Legacy DataJoint
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#16-quick-reference">
+<span class="md-ellipsis">
+      
+        16. Quick Reference
+      
+    </span>
+</a>
+<nav aria-label="16. Quick Reference" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#161-common-operations">
+<span class="md-ellipsis">
+      
+        16.1 Common Operations
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#162-make-patterns">
+<span class="md-ellipsis">
+      
+        16.2 make() Patterns
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../job-metadata/">
+<span class="md-ellipsis">
+    
+  
+    Job Metadata
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../configuration/">
+<span class="md-ellipsis">
+    
+  
+    Configuration
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../definition-syntax/">
+<span class="md-ellipsis">
+    
+  
+    Definition Syntax
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../operators/">
+<span class="md-ellipsis">
+    
+  
+    Operators
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../errors/">
+<span class="md-ellipsis">
+    
+  
+    Errors
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../elements/">
+<span class="md-ellipsis">
+    
+  
+    Elements
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--section md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_6" type="checkbox"/>
+<div class="md-nav__link md-nav__container">
+<a class="md-nav__link" href="../../../api/">
+<span class="md-ellipsis">
+    
+  
+    API
+  
+
+    
+  </span>
+</a>
+<label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
+<span class="md-nav__icon md-icon"></span>
+</label>
+</div>
+<nav aria-expanded="false" aria-labelledby="__nav_6_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_6">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    API
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../api/datajoint/">
+<span class="md-ellipsis">
+    
+  
+    Package
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_6_2" type="checkbox"/>
+<div class="md-nav__link md-nav__container">
+<a class="md-nav__link" href="../../../api/datajoint/">
+<span class="md-ellipsis">
+    
+  
+    Datajoint
+  
+
+    
+  </span>
+</a>
+<label class="md-nav__link" for="__nav_6_2" id="__nav_6_2_label" tabindex="0">
+<span class="md-nav__icon md-icon"></span>
+</label>
+</div>
+<nav aria-expanded="false" aria-labelledby="__nav_6_2_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_6_2">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Datajoint
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../api/datajoint/admin/">
+<span class="md-ellipsis">
+    
+  
+    Admin
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../api/datajoint/blob/">
+<span class="md-ellipsis">
+    
+  
+    Blob
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../api/datajoint/codecs/">
+<span class="md-ellipsis">
+    
+  
+    Codecs
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../api/datajoint/connection/">
+<span class="md-ellipsis">
+    
+  
+    Connection
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../api/datajoint/diagram/">
+<span class="md-ellipsis">
+    
+  
+    Diagram
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../api/datajoint/errors/">
+<span class="md-ellipsis">
+    
+  
+    Errors
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../api/datajoint/expression/">
+<span class="md-ellipsis">
+    
+  
+    Expressions
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../api/datajoint/hash_registry/">
+<span class="md-ellipsis">
+    
+  
+    Hash Registry
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../api/datajoint/heading/">
+<span class="md-ellipsis">
+    
+  
+    Heading
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../api/datajoint/jobs/">
+<span class="md-ellipsis">
+    
+  
+    Jobs
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../api/datajoint/migrate/">
+<span class="md-ellipsis">
+    
+  
+    Migrate
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../api/datajoint/schemas/">
+<span class="md-ellipsis">
+    
+  
+    Schema
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../api/datajoint/settings/">
+<span class="md-ellipsis">
+    
+  
+    Settings
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../api/datajoint/table/">
+<span class="md-ellipsis">
+    
+  
+    Table
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../api/datajoint/user_tables/">
+<span class="md-ellipsis">
+    
+  
+    Table Types
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--section md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_7" type="checkbox"/>
+<div class="md-nav__link md-nav__container">
+<a class="md-nav__link" href="../../../about/">
+<span class="md-ellipsis">
+    
+  
+    About
+  
+
+    
+  </span>
+</a>
+<label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="">
+<span class="md-nav__icon md-icon"></span>
+</label>
+</div>
+<nav aria-expanded="false" aria-labelledby="__nav_7_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_7">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    About
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../about/history/">
+<span class="md-ellipsis">
+    
+  
+    History
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="https://www.datajoint.com/sign-up">
+<span class="md-ellipsis">
+    
+  
+    Platform
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../about/citation/">
+<span class="md-ellipsis">
+    
+  
+    Citation
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../about/publications/">
+<span class="md-ellipsis">
+    
+  
+    Publications
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../about/contributing/">
+<span class="md-ellipsis">
+    
+  
+    Contributing
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</div>
+</div>
+</div>
+<div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc">
+<div class="md-sidebar__scrollwrap">
+<div class="md-sidebar__inner">
+<nav aria-label="Table of contents" class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">
+<span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#overview">
+<span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#1-auto-populated-tables">
+<span class="md-ellipsis">
+      
+        1. Auto-Populated Tables
+      
+    </span>
+</a>
+<nav aria-label="1. Auto-Populated Tables" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#11-table-types">
+<span class="md-ellipsis">
+      
+        1.1 Table Types
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#12-basic-structure">
+<span class="md-ellipsis">
+      
+        1.2 Basic Structure
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#13-primary-key-constraint">
+<span class="md-ellipsis">
+      
+        1.3 Primary Key Constraint
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#2-key-source-calculation">
+<span class="md-ellipsis">
+      
+        2. Key Source Calculation
+      
+    </span>
+</a>
+<nav aria-label="2. Key Source Calculation" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#21-definition">
+<span class="md-ellipsis">
+      
+        2.1 Definition
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#22-automatic-key-source">
+<span class="md-ellipsis">
+      
+        2.2 Automatic Key Source
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#23-custom-key-source">
+<span class="md-ellipsis">
+      
+        2.3 Custom Key Source
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#24-pending-entries">
+<span class="md-ellipsis">
+      
+        2.4 Pending Entries
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#3-the-populate-process">
+<span class="md-ellipsis">
+      
+        3. The Populate Process
+      
+    </span>
+</a>
+<nav aria-label="3. The Populate Process" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#31-basic-populate">
+<span class="md-ellipsis">
+      
+        3.1 Basic Populate
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#32-method-signature">
+<span class="md-ellipsis">
+      
+        3.2 Method Signature
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#33-parameters">
+<span class="md-ellipsis">
+      
+        3.3 Parameters
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#34-common-usage-patterns">
+<span class="md-ellipsis">
+      
+        3.4 Common Usage Patterns
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#35-return-value">
+<span class="md-ellipsis">
+      
+        3.5 Return Value
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#4-the-make-method">
+<span class="md-ellipsis">
+      
+        4. The make() Method
+      
+    </span>
+</a>
+<nav aria-label="4. The make() Method" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#41-basic-pattern">
+<span class="md-ellipsis">
+      
+        4.1 Basic Pattern
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#42-requirements">
+<span class="md-ellipsis">
+      
+        4.2 Requirements
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#43-accessing-source-data">
+<span class="md-ellipsis">
+      
+        4.3 Accessing Source Data
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#44-tripartite-make-pattern">
+<span class="md-ellipsis">
+      
+        4.4 Tripartite Make Pattern
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#45-additional-make-arguments">
+<span class="md-ellipsis">
+      
+        4.5 Additional make() Arguments
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#5-transaction-management">
+<span class="md-ellipsis">
+      
+        5. Transaction Management
+      
+    </span>
+</a>
+<nav aria-label="5. Transaction Management" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#51-automatic-transactions">
+<span class="md-ellipsis">
+      
+        5.1 Automatic Transactions
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#52-atomicity-guarantees">
+<span class="md-ellipsis">
+      
+        5.2 Atomicity Guarantees
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#53-transaction-scope">
+<span class="md-ellipsis">
+      
+        5.3 Transaction Scope
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#54-nested-operations">
+<span class="md-ellipsis">
+      
+        5.4 Nested Operations
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#55-manual-transaction-control">
+<span class="md-ellipsis">
+      
+        5.5 Manual Transaction Control
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#6-part-tables">
+<span class="md-ellipsis">
+      
+        6. Part Tables
+      
+    </span>
+</a>
+<nav aria-label="6. Part Tables" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#61-part-tables-in-computed-tables">
+<span class="md-ellipsis">
+      
+        6.1 Part Tables in Computed Tables
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#62-transaction-behavior">
+<span class="md-ellipsis">
+      
+        6.2 Transaction Behavior
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#63-fetching-part-data">
+<span class="md-ellipsis">
+      
+        6.3 Fetching Part Data
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#64-key-source-with-parts">
+<span class="md-ellipsis">
+      
+        6.4 Key Source with Parts
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#65-deleting-computed-parts">
+<span class="md-ellipsis">
+      
+        6.5 Deleting Computed Parts
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#7-progress-and-monitoring">
+<span class="md-ellipsis">
+      
+        7. Progress and Monitoring
+      
+    </span>
+</a>
+<nav aria-label="7. Progress and Monitoring" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#71-progress-method">
+<span class="md-ellipsis">
+      
+        7.1 Progress Method
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#72-display-progress-during-populate">
+<span class="md-ellipsis">
+      
+        7.2 Display Progress During Populate
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#8-direct-mode-vs-distributed-mode">
+<span class="md-ellipsis">
+      
+        8. Direct Mode vs Distributed Mode
+      
+    </span>
+</a>
+<nav aria-label="8. Direct Mode vs Distributed Mode" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#81-direct-mode-default">
+<span class="md-ellipsis">
+      
+        8.1 Direct Mode (Default)
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#82-distributed-mode">
+<span class="md-ellipsis">
+      
+        8.2 Distributed Mode
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#9-per-table-jobs-system">
+<span class="md-ellipsis">
+      
+        9. Per-Table Jobs System
+      
+    </span>
+</a>
+<nav aria-label="9. Per-Table Jobs System" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#91-jobs-table">
+<span class="md-ellipsis">
+      
+        9.1 Jobs Table
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#92-jobs-table-structure">
+<span class="md-ellipsis">
+      
+        9.2 Jobs Table Structure
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#93-job-statuses">
+<span class="md-ellipsis">
+      
+        9.3 Job Statuses
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#94-jobs-api">
+<span class="md-ellipsis">
+      
+        9.4 Jobs API
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#10-priority-and-scheduling">
+<span class="md-ellipsis">
+      
+        10. Priority and Scheduling
+      
+    </span>
+</a>
+<nav aria-label="10. Priority and Scheduling" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#101-priority">
+<span class="md-ellipsis">
+      
+        10.1 Priority
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#102-scheduling">
+<span class="md-ellipsis">
+      
+        10.2 Scheduling
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#11-distributed-computing">
+<span class="md-ellipsis">
+      
+        11. Distributed Computing
+      
+    </span>
+</a>
+<nav aria-label="11. Distributed Computing" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#111-basic-pattern">
+<span class="md-ellipsis">
+      
+        11.1 Basic Pattern
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#112-execution-flow-distributed">
+<span class="md-ellipsis">
+      
+        11.2 Execution Flow (Distributed)
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#113-conflict-resolution">
+<span class="md-ellipsis">
+      
+        11.3 Conflict Resolution
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#12-error-handling">
+<span class="md-ellipsis">
+      
+        12. Error Handling
+      
+    </span>
+</a>
+<nav aria-label="12. Error Handling" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#121-default-behavior">
+<span class="md-ellipsis">
+      
+        12.1 Default Behavior
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#122-suppressing-errors">
+<span class="md-ellipsis">
+      
+        12.2 Suppressing Errors
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#123-error-recovery-distributed-mode">
+<span class="md-ellipsis">
+      
+        12.3 Error Recovery (Distributed Mode)
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#124-stale-and-orphaned-jobs">
+<span class="md-ellipsis">
+      
+        12.4 Stale and Orphaned Jobs
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#13-configuration">
+<span class="md-ellipsis">
+      
+        13. Configuration
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#14-hidden-job-metadata">
+<span class="md-ellipsis">
+      
+        14. Hidden Job Metadata
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#15-migration-from-legacy-datajoint">
+<span class="md-ellipsis">
+      
+        15. Migration from Legacy DataJoint
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#16-quick-reference">
+<span class="md-ellipsis">
+      
+        16. Quick Reference
+      
+    </span>
+</a>
+<nav aria-label="16. Quick Reference" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#161-common-operations">
+<span class="md-ellipsis">
+      
+        16.1 Common Operations
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#162-make-patterns">
+<span class="md-ellipsis">
+      
+        16.2 make() Patterns
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</div>
+</div>
+</div>
+<div class="md-content" data-md-component="content">
+<article class="md-content__inner md-typeset">
+<h1 id="autopopulate-specification">AutoPopulate Specification<a class="headerlink" href="#autopopulate-specification" title="Permanent link">¶</a></h1>
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">¶</a></h2>
+<p>AutoPopulate is DataJoint's mechanism for automated computation. Tables that inherit from <code>dj.Computed</code> or <code>dj.Imported</code> automatically populate themselves by executing a <code>make()</code> method for each entry defined by their dependencies.</p>
+<p>This specification covers:
+- The populate process and key source calculation
+- Transaction management and atomicity
+- The <code>make()</code> method and tripartite pattern
+- Part tables in computed results
+- Distributed computing with job reservation</p>
+<hr/>
+<h2 id="1-auto-populated-tables">1. Auto-Populated Tables<a class="headerlink" href="#1-auto-populated-tables" title="Permanent link">¶</a></h2>
+<h3 id="11-table-types">1.1 Table Types<a class="headerlink" href="#11-table-types" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Base Class</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Computed</td>
+<td><code>dj.Computed</code></td>
+<td>Results derived from other DataJoint tables</td>
+</tr>
+<tr>
+<td>Imported</td>
+<td><code>dj.Imported</code></td>
+<td>Data ingested from external sources (files, instruments)</td>
+</tr>
+</tbody>
+</table>
+<p>Both types share the same AutoPopulate mechanism. The distinction is semantic—<code>Imported</code> indicates external data sources while <code>Computed</code> indicates derivation from existing tables.</p>
+<h3 id="12-basic-structure">1.2 Basic Structure<a class="headerlink" href="#12-basic-structure" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><span class="nd">@schema</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">FilteredImage</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Computed</span><span class="p">):</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
+<span class="s2">    -&gt; RawImage</span>
+<span class="s2">    ---</span>
+<span class="s2">    filtered : &lt;blob&gt;</span>
+<span class="s2">    """</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">make</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+        <span class="c1"># Fetch source data</span>
+        <span class="n">raw</span> <span class="o">=</span> <span class="p">(</span><span class="n">RawImage</span> <span class="o">&amp;</span> <span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">fetch1</span><span class="p">(</span><span class="s1">'image'</span><span class="p">)</span>
+
+        <span class="c1"># Compute result</span>
+        <span class="n">filtered</span> <span class="o">=</span> <span class="n">apply_filter</span><span class="p">(</span><span class="n">raw</span><span class="p">)</span>
+
+        <span class="c1"># Insert result</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="o">**</span><span class="n">key</span><span class="p">,</span> <span class="s1">'filtered'</span><span class="p">:</span> <span class="n">filtered</span><span class="p">})</span>
+</code></pre></div>
+<h3 id="13-primary-key-constraint">1.3 Primary Key Constraint<a class="headerlink" href="#13-primary-key-constraint" title="Permanent link">¶</a></h3>
+<p>Auto-populated tables must have primary keys composed entirely of foreign key references:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Correct: all PK attributes from foreign keys</span>
+<span class="nd">@schema</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Analysis</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Computed</span><span class="p">):</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
+<span class="s2">    -&gt; Session</span>
+<span class="s2">    -&gt; AnalysisMethod</span>
+<span class="s2">    ---</span>
+<span class="s2">    result : float64</span>
+<span class="s2">    """</span>
+
+<span class="c1"># Error: non-FK primary key attribute</span>
+<span class="nd">@schema</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Analysis</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Computed</span><span class="p">):</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
+<span class="s2">    -&gt; Session</span>
+<span class="s2">    method : varchar(32)   # Not allowed - use FK to lookup table</span>
+<span class="s2">    ---</span>
+<span class="s2">    result : float64</span>
+<span class="s2">    """</span>
+</code></pre></div>
+<p><strong>Rationale:</strong> This ensures each computed entry is uniquely determined by its upstream dependencies, enabling automatic key source calculation and precise job tracking.</p>
+<hr/>
+<h2 id="2-key-source-calculation">2. Key Source Calculation<a class="headerlink" href="#2-key-source-calculation" title="Permanent link">¶</a></h2>
+<h3 id="21-definition">2.1 Definition<a class="headerlink" href="#21-definition" title="Permanent link">¶</a></h3>
+<p>The <code>key_source</code> property defines which entries should exist in the table—the complete set of primary keys that <code>make()</code> should be called with.</p>
+<h3 id="22-automatic-key-source">2.2 Automatic Key Source<a class="headerlink" href="#22-automatic-key-source" title="Permanent link">¶</a></h3>
+<p>By default, DataJoint automatically calculates <code>key_source</code> as the join of all tables referenced by foreign keys in the primary key:</p>
+<div class="highlight"><pre><span></span><code><span class="nd">@schema</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">SpikeDetection</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Computed</span><span class="p">):</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
+<span class="s2">    -&gt; Recording</span>
+<span class="s2">    -&gt; DetectionMethod</span>
+<span class="s2">    ---</span>
+<span class="s2">    spike_times : &lt;blob&gt;</span>
+<span class="s2">    """</span>
+    <span class="c1"># Automatic key_source = Recording * DetectionMethod</span>
+</code></pre></div>
+<p><strong>Calculation rules:</strong>
+1. Identify all foreign keys in the primary key section
+2. Join the referenced tables: <code>Parent1 * Parent2 * ...</code>
+3. Project to primary key attributes only</p>
+<p>For a table with definition:
+<div class="highlight"><pre><span></span><code><span class="o">-&gt;</span> <span class="n">Session</span>
+<span class="o">-&gt;</span> <span class="n">Probe</span>
+<span class="o">-&gt;</span> <span class="n">SortingMethod</span>
+<span class="o">---</span>
+<span class="n">units</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">blob</span><span class="o">&gt;</span>
+</code></pre></div></p>
+<p>The automatic <code>key_source</code> is:
+<div class="highlight"><pre><span></span><code><span class="n">Session</span> <span class="o">*</span> <span class="n">Probe</span> <span class="o">*</span> <span class="n">SortingMethod</span>
+</code></pre></div></p>
+<p>This produces all valid combinations of (session, probe, method) that could be computed.</p>
+<h3 id="23-custom-key-source">2.3 Custom Key Source<a class="headerlink" href="#23-custom-key-source" title="Permanent link">¶</a></h3>
+<p>Override <code>key_source</code> to customize which entries to compute:</p>
+<div class="highlight"><pre><span></span><code><span class="nd">@schema</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">QualityAnalysis</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Computed</span><span class="p">):</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
+<span class="s2">    -&gt; Session</span>
+<span class="s2">    ---</span>
+<span class="s2">    score : float64</span>
+<span class="s2">    """</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">key_source</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># Only process sessions marked as 'good'</span>
+        <span class="k">return</span> <span class="n">Session</span> <span class="o">&amp;</span> <span class="s2">"quality = 'good'"</span>
+</code></pre></div>
+<p><strong>Common customizations:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Filter by condition</span>
+<span class="nd">@property</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">key_source</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">Session</span> <span class="o">&amp;</span> <span class="s2">"status = 'complete'"</span>
+
+<span class="c1"># Restrict to specific combinations</span>
+<span class="nd">@property</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">key_source</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">Recording</span> <span class="o">*</span> <span class="n">Method</span> <span class="o">&amp;</span> <span class="s2">"method_name != 'deprecated'"</span>
+
+<span class="c1"># Add complex logic</span>
+<span class="nd">@property</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">key_source</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="c1"># Only sessions with enough trials</span>
+    <span class="n">good_sessions</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">U</span><span class="p">(</span><span class="s1">'session_id'</span><span class="p">)</span><span class="o">.</span><span class="n">aggr</span><span class="p">(</span>
+        <span class="n">Trial</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="s1">'count(*)'</span><span class="p">)</span> <span class="o">&amp;</span> <span class="s1">'n &gt;= 100'</span>
+    <span class="k">return</span> <span class="n">Session</span> <span class="o">&amp;</span> <span class="n">good_sessions</span>
+</code></pre></div>
+<h3 id="24-pending-entries">2.4 Pending Entries<a class="headerlink" href="#24-pending-entries" title="Permanent link">¶</a></h3>
+<p>Entries to be computed = <code>key_source - self</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Entries that should exist but don't yet</span>
+<span class="n">pending</span> <span class="o">=</span> <span class="n">table</span><span class="o">.</span><span class="n">key_source</span> <span class="o">-</span> <span class="n">table</span>
+
+<span class="c1"># Check how many entries need computing</span>
+<span class="n">n_pending</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">table</span><span class="o">.</span><span class="n">key_source</span> <span class="o">-</span> <span class="n">table</span><span class="p">)</span>
+</code></pre></div>
+<hr/>
+<h2 id="3-the-populate-process">3. The Populate Process<a class="headerlink" href="#3-the-populate-process" title="Permanent link">¶</a></h2>
+<h3 id="31-basic-populate">3.1 Basic Populate<a class="headerlink" href="#31-basic-populate" title="Permanent link">¶</a></h3>
+<p>The <code>populate()</code> method iterates through pending entries and calls <code>make()</code> for each:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Populate all pending entries</span>
+<span class="n">FilteredImage</span><span class="o">.</span><span class="n">populate</span><span class="p">()</span>
+</code></pre></div>
+<p><strong>Execution flow (direct mode):</strong></p>
+<div class="highlight"><pre><span></span><code>1. Calculate pending keys: key_source - self
+2. Apply restrictions: pending &amp; restrictions
+3. For each key in pending:
+   a. Start transaction
+   b. Call make(key)
+   c. Commit transaction (or rollback on error)
+4. Return summary
+</code></pre></div>
+<h3 id="32-method-signature">3.2 Method Signature<a class="headerlink" href="#32-method-signature" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">populate</span><span class="p">(</span>
+    <span class="bp">self</span><span class="p">,</span>
+    <span class="o">*</span><span class="n">restrictions</span><span class="p">,</span>
+    <span class="n">suppress_errors</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">return_exception_objects</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">reserve_jobs</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">max_calls</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">display_progress</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">processes</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="n">make_kwargs</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">priority</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">refresh</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span>
+</code></pre></div>
+<h3 id="33-parameters">3.3 Parameters<a class="headerlink" href="#33-parameters" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>*restrictions</code></td>
+<td>—</td>
+<td>Filter <code>key_source</code> to subset of entries</td>
+</tr>
+<tr>
+<td><code>suppress_errors</code></td>
+<td><code>False</code></td>
+<td>Continue on errors instead of raising</td>
+</tr>
+<tr>
+<td><code>return_exception_objects</code></td>
+<td><code>False</code></td>
+<td>Return exception objects vs strings</td>
+</tr>
+<tr>
+<td><code>reserve_jobs</code></td>
+<td><code>False</code></td>
+<td>Enable job reservation for distributed computing</td>
+</tr>
+<tr>
+<td><code>max_calls</code></td>
+<td><code>None</code></td>
+<td>Maximum number of <code>make()</code> calls</td>
+</tr>
+<tr>
+<td><code>display_progress</code></td>
+<td><code>False</code></td>
+<td>Show progress bar</td>
+</tr>
+<tr>
+<td><code>processes</code></td>
+<td><code>1</code></td>
+<td>Number of parallel worker processes</td>
+</tr>
+<tr>
+<td><code>make_kwargs</code></td>
+<td><code>None</code></td>
+<td>Additional kwargs passed to <code>make()</code></td>
+</tr>
+<tr>
+<td><code>priority</code></td>
+<td><code>None</code></td>
+<td>Process only jobs at this priority or more urgent</td>
+</tr>
+<tr>
+<td><code>refresh</code></td>
+<td><code>None</code></td>
+<td>Refresh jobs queue before processing</td>
+</tr>
+</tbody>
+</table>
+<h3 id="34-common-usage-patterns">3.4 Common Usage Patterns<a class="headerlink" href="#34-common-usage-patterns" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Populate everything</span>
+<span class="n">Analysis</span><span class="o">.</span><span class="n">populate</span><span class="p">()</span>
+
+<span class="c1"># Populate specific subjects</span>
+<span class="n">Analysis</span><span class="o">.</span><span class="n">populate</span><span class="p">(</span><span class="n">Subject</span> <span class="o">&amp;</span> <span class="s2">"subject_id &lt; 10"</span><span class="p">)</span>
+
+<span class="c1"># Populate with progress bar</span>
+<span class="n">Analysis</span><span class="o">.</span><span class="n">populate</span><span class="p">(</span><span class="n">display_progress</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># Populate limited batch</span>
+<span class="n">Analysis</span><span class="o">.</span><span class="n">populate</span><span class="p">(</span><span class="n">max_calls</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+
+<span class="c1"># Populate with error collection</span>
+<span class="n">errors</span> <span class="o">=</span> <span class="n">Analysis</span><span class="o">.</span><span class="n">populate</span><span class="p">(</span><span class="n">suppress_errors</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># Parallel populate (single machine)</span>
+<span class="n">Analysis</span><span class="o">.</span><span class="n">populate</span><span class="p">(</span><span class="n">processes</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="35-return-value">3.5 Return Value<a class="headerlink" href="#35-return-value" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><span class="n">result</span> <span class="o">=</span> <span class="n">Analysis</span><span class="o">.</span><span class="n">populate</span><span class="p">()</span>
+<span class="c1"># {</span>
+<span class="c1">#     'success': 150,    # Entries successfully computed</span>
+<span class="c1">#     'error': 3,        # Entries that failed</span>
+<span class="c1">#     'skip': 0,         # Entries skipped (already exist)</span>
+<span class="c1"># }</span>
+</code></pre></div>
+<hr/>
+<h2 id="4-the-make-method">4. The make() Method<a class="headerlink" href="#4-the-make-method" title="Permanent link">¶</a></h2>
+<h3 id="41-basic-pattern">4.1 Basic Pattern<a class="headerlink" href="#41-basic-pattern" title="Permanent link">¶</a></h3>
+<p>The <code>make()</code> method computes and inserts one entry:</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">make</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Compute and insert one entry.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    key : dict</span>
+<span class="sd">        Primary key values identifying which entry to compute.</span>
+<span class="sd">    """</span>
+    <span class="c1"># 1. Fetch source data</span>
+    <span class="n">source_data</span> <span class="o">=</span> <span class="p">(</span><span class="n">SourceTable</span> <span class="o">&amp;</span> <span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">fetch1</span><span class="p">()</span>
+
+    <span class="c1"># 2. Compute result</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">compute</span><span class="p">(</span><span class="n">source_data</span><span class="p">)</span>
+
+    <span class="c1"># 3. Insert result</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="o">**</span><span class="n">key</span><span class="p">,</span> <span class="o">**</span><span class="n">result</span><span class="p">})</span>
+</code></pre></div>
+<h3 id="42-requirements">4.2 Requirements<a class="headerlink" href="#42-requirements" title="Permanent link">¶</a></h3>
+<ul>
+<li><strong>Must insert</strong>: <code>make()</code> must insert exactly one row matching the key</li>
+<li><strong>Idempotent</strong>: Same input should produce same output</li>
+<li><strong>Atomic</strong>: Runs within a transaction—all or nothing</li>
+<li><strong>Self-contained</strong>: Should not depend on external state that changes</li>
+</ul>
+<h3 id="43-accessing-source-data">4.3 Accessing Source Data<a class="headerlink" href="#43-accessing-source-data" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">make</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+    <span class="c1"># Fetch single row</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="n">SourceTable</span> <span class="o">&amp;</span> <span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">fetch1</span><span class="p">()</span>
+
+    <span class="c1"># Fetch specific attributes</span>
+    <span class="n">image</span><span class="p">,</span> <span class="n">timestamp</span> <span class="o">=</span> <span class="p">(</span><span class="n">Recording</span> <span class="o">&amp;</span> <span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">fetch1</span><span class="p">(</span><span class="s1">'image'</span><span class="p">,</span> <span class="s1">'timestamp'</span><span class="p">)</span>
+
+    <span class="c1"># Fetch multiple rows (e.g., trials for a session)</span>
+    <span class="n">trials</span> <span class="o">=</span> <span class="p">(</span><span class="n">Trial</span> <span class="o">&amp;</span> <span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">to_dicts</span><span class="p">()</span>
+
+    <span class="c1"># Join multiple sources</span>
+    <span class="n">combined</span> <span class="o">=</span> <span class="p">(</span><span class="n">TableA</span> <span class="o">*</span> <span class="n">TableB</span> <span class="o">&amp;</span> <span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">to_dicts</span><span class="p">()</span>
+</code></pre></div>
+<p><strong>Upstream-only convention:</strong> Inside <code>make()</code>, fetch only from tables that are strictly upstream in the pipeline—tables referenced by foreign keys in the definition, their ancestors, and their part tables. This ensures reproducibility: computed results depend only on their declared dependencies.</p>
+<p>This convention is not currently enforced programmatically but is critical for pipeline integrity. Some pipelines violate this rule for operational reasons, which makes them non-reproducible. A future release may programmatically enforce upstream-only fetches inside <code>make()</code>.</p>
+<h3 id="44-tripartite-make-pattern">4.4 Tripartite Make Pattern<a class="headerlink" href="#44-tripartite-make-pattern" title="Permanent link">¶</a></h3>
+<p>For long-running computations, use the tripartite pattern to separate fetch, compute, and insert phases. This enables better transaction management for jobs that take minutes or hours.</p>
+<p><strong>Method-based tripartite:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="nd">@schema</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">HeavyComputation</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Computed</span><span class="p">):</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
+<span class="s2">    -&gt; Recording</span>
+<span class="s2">    ---</span>
+<span class="s2">    result : &lt;blob&gt;</span>
+<span class="s2">    """</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">make_fetch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Fetch all required data (runs in transaction)."""</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">Recording</span> <span class="o">&amp;</span> <span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">fetch1</span><span class="p">(</span><span class="s1">'raw_data'</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">make_compute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Perform computation (runs outside transaction)."""</span>
+        <span class="c1"># Long-running computation - no database locks held</span>
+        <span class="k">return</span> <span class="n">heavy_algorithm</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">make_insert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">result</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Insert results (runs in transaction)."""</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="o">**</span><span class="n">key</span><span class="p">,</span> <span class="s1">'result'</span><span class="p">:</span> <span class="n">result</span><span class="p">})</span>
+</code></pre></div>
+<p><strong>Generator-based tripartite:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">make</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+    <span class="c1"># Phase 1: Fetch (in transaction)</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="n">Recording</span> <span class="o">&amp;</span> <span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">fetch1</span><span class="p">(</span><span class="s1">'raw_data'</span><span class="p">)</span>
+
+    <span class="k">yield</span>  <span class="c1"># Exit transaction, release locks</span>
+
+    <span class="c1"># Phase 2: Compute (outside transaction)</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">heavy_algorithm</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>  <span class="c1"># May take hours</span>
+
+    <span class="k">yield</span>  <span class="c1"># Re-enter transaction</span>
+
+    <span class="c1"># Phase 3: Insert (in transaction)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="o">**</span><span class="n">key</span><span class="p">,</span> <span class="s1">'result'</span><span class="p">:</span> <span class="n">result</span><span class="p">})</span>
+</code></pre></div>
+<p><strong>When to use tripartite:</strong>
+- Computation takes more than a few seconds
+- You want to avoid holding database locks during computation
+- Working with external resources (files, APIs) that may be slow</p>
+<h3 id="45-additional-make-arguments">4.5 Additional make() Arguments<a class="headerlink" href="#45-additional-make-arguments" title="Permanent link">¶</a></h3>
+<p>Pass extra arguments via <code>make_kwargs</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="nd">@schema</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ConfigurableAnalysis</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Computed</span><span class="p">):</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
+<span class="s2">    -&gt; Session</span>
+<span class="s2">    ---</span>
+<span class="s2">    result : float64</span>
+<span class="s2">    """</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">make</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">threshold</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">'default'</span><span class="p">):</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="n">Session</span> <span class="o">&amp;</span> <span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">fetch1</span><span class="p">(</span><span class="s1">'data'</span><span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">analyze</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">threshold</span><span class="o">=</span><span class="n">threshold</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="n">method</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="o">**</span><span class="n">key</span><span class="p">,</span> <span class="s1">'result'</span><span class="p">:</span> <span class="n">result</span><span class="p">})</span>
+
+<span class="c1"># Call with custom parameters</span>
+<span class="n">ConfigurableAnalysis</span><span class="o">.</span><span class="n">populate</span><span class="p">(</span><span class="n">make_kwargs</span><span class="o">=</span><span class="p">{</span><span class="s1">'threshold'</span><span class="p">:</span> <span class="mf">0.8</span><span class="p">})</span>
+</code></pre></div>
+<p><strong>Anti-pattern warning:</strong> Passing arguments that affect the computed result breaks reproducibility—all inputs should come from <code>fetch</code> calls inside <code>make()</code>. If a parameter affects results, it should be stored in a lookup table and referenced via foreign key.</p>
+<p><strong>Acceptable use:</strong> Directives that don't affect results, such as:
+- <code>verbose=True</code> for logging
+- <code>gpu_id=0</code> for device selection
+- <code>n_workers=4</code> for parallelization</p>
+<hr/>
+<h2 id="5-transaction-management">5. Transaction Management<a class="headerlink" href="#5-transaction-management" title="Permanent link">¶</a></h2>
+<h3 id="51-automatic-transactions">5.1 Automatic Transactions<a class="headerlink" href="#51-automatic-transactions" title="Permanent link">¶</a></h3>
+<p>Each <code>make()</code> call runs within an automatic transaction:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Pseudocode for populate loop</span>
+<span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">pending_keys</span><span class="p">:</span>
+    <span class="n">connection</span><span class="o">.</span><span class="n">start_transaction</span><span class="p">()</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+        <span class="n">connection</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+        <span class="n">connection</span><span class="o">.</span><span class="n">rollback</span><span class="p">()</span>
+        <span class="k">raise</span>  <span class="c1"># or log if suppress_errors=True</span>
+</code></pre></div>
+<h3 id="52-atomicity-guarantees">5.2 Atomicity Guarantees<a class="headerlink" href="#52-atomicity-guarantees" title="Permanent link">¶</a></h3>
+<ul>
+<li><strong>All or nothing</strong>: If <code>make()</code> fails, no partial data is inserted</li>
+<li><strong>Isolation</strong>: Concurrent workers see consistent state</li>
+<li><strong>Rollback on error</strong>: Any exception rolls back the transaction</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">make</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+    <span class="c1"># If this succeeds...</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="o">**</span><span class="n">key</span><span class="p">,</span> <span class="s1">'step1'</span><span class="p">:</span> <span class="n">result1</span><span class="p">})</span>
+
+    <span class="c1"># But this fails...</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">Part</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">part_data</span><span class="p">)</span>  <span class="c1"># Raises exception</span>
+
+    <span class="c1"># Both inserts are rolled back - table unchanged</span>
+</code></pre></div>
+<h3 id="53-transaction-scope">5.3 Transaction Scope<a class="headerlink" href="#53-transaction-scope" title="Permanent link">¶</a></h3>
+<p><strong>Simple make (single transaction):</strong>
+<div class="highlight"><pre><span></span><code>BEGIN TRANSACTION
+  └── make(key)
+       ├── fetch source data
+       ├── compute
+       └── insert result
+COMMIT
+</code></pre></div></p>
+<p><strong>Tripartite make (single transaction):</strong>
+<div class="highlight"><pre><span></span><code>[No transaction]
+  ├── make_fetch(key)           # Fetch source data
+  └── make_compute(key, data)   # Long-running computation
+
+BEGIN TRANSACTION
+  ├── make_fetch(key)           # Repeat fetch, verify unchanged
+  └── make_insert(key, result)  # Insert computed result
+COMMIT
+</code></pre></div></p>
+<p>This pattern allows long computations without holding database locks, while ensuring data consistency by verifying the source data hasn't changed before inserting.</p>
+<h3 id="54-nested-operations">5.4 Nested Operations<a class="headerlink" href="#54-nested-operations" title="Permanent link">¶</a></h3>
+<p>Inserts within <code>make()</code> share the same transaction:</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">make</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+    <span class="c1"># Main table insert</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="o">**</span><span class="n">key</span><span class="p">,</span> <span class="s1">'summary'</span><span class="p">:</span> <span class="n">summary</span><span class="p">})</span>
+
+    <span class="c1"># Part table inserts - same transaction</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">Part1</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">part1_data</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">Part2</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">part2_data</span><span class="p">)</span>
+
+    <span class="c1"># All three inserts commit together or roll back together</span>
+</code></pre></div>
+<h3 id="55-manual-transaction-control">5.5 Manual Transaction Control<a class="headerlink" href="#55-manual-transaction-control" title="Permanent link">¶</a></h3>
+<p>For complex scenarios, use explicit transactions:</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">make</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+    <span class="c1"># Fetch outside transaction</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="n">Source</span> <span class="o">&amp;</span> <span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">to_dicts</span><span class="p">()</span>
+
+    <span class="c1"># Explicit transaction for insert</span>
+    <span class="k">with</span> <span class="n">dj</span><span class="o">.</span><span class="n">conn</span><span class="p">()</span><span class="o">.</span><span class="n">transaction</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="o">**</span><span class="n">key</span><span class="p">,</span> <span class="s1">'result'</span><span class="p">:</span> <span class="n">compute</span><span class="p">(</span><span class="n">data</span><span class="p">)})</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Part</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">parts</span><span class="p">)</span>
+</code></pre></div>
+<hr/>
+<h2 id="6-part-tables">6. Part Tables<a class="headerlink" href="#6-part-tables" title="Permanent link">¶</a></h2>
+<h3 id="61-part-tables-in-computed-tables">6.1 Part Tables in Computed Tables<a class="headerlink" href="#61-part-tables-in-computed-tables" title="Permanent link">¶</a></h3>
+<p>Computed tables can have Part tables for detailed results:</p>
+<div class="highlight"><pre><span></span><code><span class="nd">@schema</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">SpikeSorting</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Computed</span><span class="p">):</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
+<span class="s2">    -&gt; Recording</span>
+<span class="s2">    ---</span>
+<span class="s2">    n_units : int</span>
+<span class="s2">    """</span>
+
+    <span class="k">class</span><span class="w"> </span><span class="nc">Unit</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Part</span><span class="p">):</span>
+        <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
+<span class="s2">        -&gt; master</span>
+<span class="s2">        unit_id : int</span>
+<span class="s2">        ---</span>
+<span class="s2">        waveform : &lt;blob&gt;</span>
+<span class="s2">        spike_times : &lt;blob&gt;</span>
+<span class="s2">        """</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">make</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+        <span class="c1"># Compute spike sorting</span>
+        <span class="n">units</span> <span class="o">=</span> <span class="n">sort_spikes</span><span class="p">((</span><span class="n">Recording</span> <span class="o">&amp;</span> <span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">fetch1</span><span class="p">(</span><span class="s1">'data'</span><span class="p">))</span>
+
+        <span class="c1"># Insert master entry</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="o">**</span><span class="n">key</span><span class="p">,</span> <span class="s1">'n_units'</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">units</span><span class="p">)})</span>
+
+        <span class="c1"># Insert part entries</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Unit</span><span class="o">.</span><span class="n">insert</span><span class="p">([</span>
+            <span class="p">{</span><span class="o">**</span><span class="n">key</span><span class="p">,</span> <span class="s1">'unit_id'</span><span class="p">:</span> <span class="n">i</span><span class="p">,</span> <span class="o">**</span><span class="n">unit</span><span class="p">}</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">unit</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">units</span><span class="p">)</span>
+        <span class="p">])</span>
+</code></pre></div>
+<h3 id="62-transaction-behavior">6.2 Transaction Behavior<a class="headerlink" href="#62-transaction-behavior" title="Permanent link">¶</a></h3>
+<p>Master and part inserts share the same transaction:</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">make</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="o">**</span><span class="n">key</span><span class="p">,</span> <span class="s1">'summary'</span><span class="p">:</span> <span class="n">s</span><span class="p">})</span>  <span class="c1"># Master</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">Part</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">parts</span><span class="p">)</span>               <span class="c1"># Parts</span>
+
+    <span class="c1"># If Part.insert fails, master insert is also rolled back</span>
+</code></pre></div>
+<h3 id="63-fetching-part-data">6.3 Fetching Part Data<a class="headerlink" href="#63-fetching-part-data" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Fetch master with parts</span>
+<span class="n">master</span> <span class="o">=</span> <span class="p">(</span><span class="n">SpikeSorting</span> <span class="o">&amp;</span> <span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">fetch1</span><span class="p">()</span>
+<span class="n">parts</span> <span class="o">=</span> <span class="p">(</span><span class="n">SpikeSorting</span><span class="o">.</span><span class="n">Unit</span> <span class="o">&amp;</span> <span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">to_dicts</span><span class="p">()</span>
+
+<span class="c1"># Join master and parts</span>
+<span class="n">combined</span> <span class="o">=</span> <span class="p">(</span><span class="n">SpikeSorting</span> <span class="o">*</span> <span class="n">SpikeSorting</span><span class="o">.</span><span class="n">Unit</span> <span class="o">&amp;</span> <span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">to_dicts</span><span class="p">()</span>
+</code></pre></div>
+<h3 id="64-key-source-with-parts">6.4 Key Source with Parts<a class="headerlink" href="#64-key-source-with-parts" title="Permanent link">¶</a></h3>
+<p>The key source is based on the master table's primary key only:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># key_source returns master keys, not part keys</span>
+<span class="n">SpikeSorting</span><span class="o">.</span><span class="n">key_source</span>  <span class="c1"># Recording keys</span>
+</code></pre></div>
+<h3 id="65-deleting-computed-parts">6.5 Deleting Computed Parts<a class="headerlink" href="#65-deleting-computed-parts" title="Permanent link">¶</a></h3>
+<p>Deleting master entries cascades to parts:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Deletes SpikeSorting entry AND all SpikeSorting.Unit entries</span>
+<span class="p">(</span><span class="n">SpikeSorting</span> <span class="o">&amp;</span> <span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
+</code></pre></div>
+<hr/>
+<h2 id="7-progress-and-monitoring">7. Progress and Monitoring<a class="headerlink" href="#7-progress-and-monitoring" title="Permanent link">¶</a></h2>
+<h3 id="71-progress-method">7.1 Progress Method<a class="headerlink" href="#71-progress-method" title="Permanent link">¶</a></h3>
+<p>Check computation progress:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Simple progress</span>
+<span class="n">remaining</span><span class="p">,</span> <span class="n">total</span> <span class="o">=</span> <span class="n">Analysis</span><span class="o">.</span><span class="n">progress</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">remaining</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">total</span><span class="si">}</span><span class="s2"> entries remaining"</span><span class="p">)</span>
+
+<span class="c1"># With display</span>
+<span class="n">Analysis</span><span class="o">.</span><span class="n">progress</span><span class="p">(</span><span class="n">display</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="c1"># Analysis: 150/200 (75%) [===========&gt;    ]</span>
+</code></pre></div>
+<h3 id="72-display-progress-during-populate">7.2 Display Progress During Populate<a class="headerlink" href="#72-display-progress-during-populate" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><span class="n">Analysis</span><span class="o">.</span><span class="n">populate</span><span class="p">(</span><span class="n">display_progress</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="c1"># [################----] 80% 160/200 [00:15&lt;00:04]</span>
+</code></pre></div>
+<hr/>
+<h2 id="8-direct-mode-vs-distributed-mode">8. Direct Mode vs Distributed Mode<a class="headerlink" href="#8-direct-mode-vs-distributed-mode" title="Permanent link">¶</a></h2>
+<h3 id="81-direct-mode-default">8.1 Direct Mode (Default)<a class="headerlink" href="#81-direct-mode-default" title="Permanent link">¶</a></h3>
+<p>When <code>reserve_jobs=False</code> (default):</p>
+<div class="highlight"><pre><span></span><code><span class="n">Analysis</span><span class="o">.</span><span class="n">populate</span><span class="p">()</span>  <span class="c1"># Direct mode</span>
+</code></pre></div>
+<p><strong>Characteristics:</strong>
+- Calculates <code>key_source - self</code> on each call
+- No job tracking or status persistence
+- Simple and efficient for single-worker scenarios
+- No coordination overhead</p>
+<p><strong>Best for:</strong>
+- Interactive development
+- Single-worker pipelines
+- Small to medium datasets</p>
+<h3 id="82-distributed-mode">8.2 Distributed Mode<a class="headerlink" href="#82-distributed-mode" title="Permanent link">¶</a></h3>
+<p>When <code>reserve_jobs=True</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="n">Analysis</span><span class="o">.</span><span class="n">populate</span><span class="p">(</span><span class="n">reserve_jobs</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  <span class="c1"># Distributed mode</span>
+</code></pre></div>
+<p><strong>Characteristics:</strong>
+- Uses per-table jobs queue for coordination
+- Workers reserve jobs before processing
+- Full status tracking (pending, reserved, error, success)
+- Enables monitoring and recovery</p>
+<p><strong>Best for:</strong>
+- Multi-worker distributed computing
+- Long-running pipelines
+- Production environments with monitoring needs</p>
+<hr/>
+<h2 id="9-per-table-jobs-system">9. Per-Table Jobs System<a class="headerlink" href="#9-per-table-jobs-system" title="Permanent link">¶</a></h2>
+<h3 id="91-jobs-table">9.1 Jobs Table<a class="headerlink" href="#91-jobs-table" title="Permanent link">¶</a></h3>
+<p>Each auto-populated table has an associated jobs table:</p>
+<div class="highlight"><pre><span></span><code>Table: Analysis
+Jobs:  ~~analysis
+</code></pre></div>
+<p>Access via the <code>.jobs</code> property:</p>
+<div class="highlight"><pre><span></span><code><span class="n">Analysis</span><span class="o">.</span><span class="n">jobs</span>              <span class="c1"># Jobs table</span>
+<span class="n">Analysis</span><span class="o">.</span><span class="n">jobs</span><span class="o">.</span><span class="n">pending</span>      <span class="c1"># Pending jobs</span>
+<span class="n">Analysis</span><span class="o">.</span><span class="n">jobs</span><span class="o">.</span><span class="n">errors</span>       <span class="c1"># Failed jobs</span>
+<span class="n">Analysis</span><span class="o">.</span><span class="n">jobs</span><span class="o">.</span><span class="n">progress</span><span class="p">()</span>   <span class="c1"># Status summary</span>
+</code></pre></div>
+<h3 id="92-jobs-table-structure">9.2 Jobs Table Structure<a class="headerlink" href="#92-jobs-table-structure" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code># Job queue for Analysis
+&lt;primary key attributes from FK references&gt;
+---
+status : enum('pending', 'reserved', 'success', 'error', 'ignore')
+priority : uint8                    # Lower = more urgent (0 = highest)
+created_time : timestamp
+scheduled_time : timestamp          # Process on or after this time
+reserved_time : timestamp           # When reserved
+completed_time : timestamp          # When completed
+duration : float64                  # Execution time in seconds
+error_message : varchar(2047)       # Truncated error
+error_stack : &lt;blob&gt;                # Full traceback
+user : varchar(255)                 # Database user
+host : varchar(255)                 # Worker hostname
+pid : uint32                        # Process ID
+connection_id : uint64              # MySQL connection ID
+version : varchar(255)              # Code version
+</code></pre></div>
+<h3 id="93-job-statuses">9.3 Job Statuses<a class="headerlink" href="#93-job-statuses" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Status</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>pending</code></td>
+<td>Queued and ready to process</td>
+</tr>
+<tr>
+<td><code>reserved</code></td>
+<td>Currently being processed by a worker</td>
+</tr>
+<tr>
+<td><code>success</code></td>
+<td>Completed successfully (when <code>jobs.keep_completed=True</code>)</td>
+</tr>
+<tr>
+<td><code>error</code></td>
+<td>Failed with error details</td>
+</tr>
+<tr>
+<td><code>ignore</code></td>
+<td>Manually marked to skip</td>
+</tr>
+</tbody>
+</table>
+<pre class="mermaid"><code>stateDiagram-v2
+    state "(none)" as none1
+    state "(none)" as none2
+    none1 --&gt; pending : refresh()
+    none1 --&gt; ignore : ignore()
+    pending --&gt; reserved : reserve()
+    reserved --&gt; none2 : complete()
+    reserved --&gt; success : complete()*
+    reserved --&gt; error : error()
+    success --&gt; pending : refresh()*
+    error --&gt; none2 : delete()
+    success --&gt; none2 : delete()
+    ignore --&gt; none2 : delete()
+</code></pre>
+<p><strong>Transitions:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>refresh()</code></td>
+<td>Adds new jobs as <code>pending</code>; re-pends <code>success</code> jobs if key is in <code>key_source</code> but not in target</td>
+</tr>
+<tr>
+<td><code>ignore()</code></td>
+<td>Marks a key as <code>ignore</code> (can be called on keys not yet in jobs table)</td>
+</tr>
+<tr>
+<td><code>reserve()</code></td>
+<td>Marks a <code>pending</code> job as <code>reserved</code> before calling <code>make()</code></td>
+</tr>
+<tr>
+<td><code>complete()</code></td>
+<td>Deletes job (default) or marks as <code>success</code> (when <code>jobs.keep_completed=True</code>)</td>
+</tr>
+<tr>
+<td><code>error()</code></td>
+<td>Marks <code>reserved</code> job as <code>error</code> with message and stack trace</td>
+</tr>
+<tr>
+<td><code>delete()</code></td>
+<td>Removes job entry; use <code>(jobs &amp; condition).delete()</code> pattern</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Notes:</strong></p>
+<ul>
+<li><code>ignore</code> is set manually via <code>jobs.ignore(key)</code> and skipped by <code>populate()</code> and <code>refresh()</code></li>
+<li>To reset an ignored job: <code>jobs.ignored.delete(); jobs.refresh()</code></li>
+</ul>
+<h3 id="94-jobs-api">9.4 Jobs API<a class="headerlink" href="#94-jobs-api" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Refresh job queue (sync with key_source)</span>
+<span class="n">Analysis</span><span class="o">.</span><span class="n">jobs</span><span class="o">.</span><span class="n">refresh</span><span class="p">()</span>
+
+<span class="c1"># Status queries</span>
+<span class="n">Analysis</span><span class="o">.</span><span class="n">jobs</span><span class="o">.</span><span class="n">pending</span>       <span class="c1"># Pending jobs</span>
+<span class="n">Analysis</span><span class="o">.</span><span class="n">jobs</span><span class="o">.</span><span class="n">reserved</span>      <span class="c1"># Currently processing</span>
+<span class="n">Analysis</span><span class="o">.</span><span class="n">jobs</span><span class="o">.</span><span class="n">errors</span>        <span class="c1"># Failed jobs</span>
+<span class="n">Analysis</span><span class="o">.</span><span class="n">jobs</span><span class="o">.</span><span class="n">ignored</span>       <span class="c1"># Skipped jobs</span>
+<span class="n">Analysis</span><span class="o">.</span><span class="n">jobs</span><span class="o">.</span><span class="n">completed</span>     <span class="c1"># Success jobs (if kept)</span>
+
+<span class="c1"># Progress summary</span>
+<span class="n">Analysis</span><span class="o">.</span><span class="n">jobs</span><span class="o">.</span><span class="n">progress</span><span class="p">()</span>
+<span class="c1"># {'pending': 150, 'reserved': 3, 'success': 847, 'error': 12, 'total': 1012}</span>
+
+<span class="c1"># Manual control</span>
+<span class="n">Analysis</span><span class="o">.</span><span class="n">jobs</span><span class="o">.</span><span class="n">ignore</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>                    <span class="c1"># Skip a job</span>
+<span class="p">(</span><span class="n">Analysis</span><span class="o">.</span><span class="n">jobs</span> <span class="o">&amp;</span> <span class="n">condition</span><span class="p">)</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>         <span class="c1"># Remove jobs</span>
+<span class="n">Analysis</span><span class="o">.</span><span class="n">jobs</span><span class="o">.</span><span class="n">errors</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>                <span class="c1"># Clear errors</span>
+</code></pre></div>
+<hr/>
+<h2 id="10-priority-and-scheduling">10. Priority and Scheduling<a class="headerlink" href="#10-priority-and-scheduling" title="Permanent link">¶</a></h2>
+<h3 id="101-priority">10.1 Priority<a class="headerlink" href="#101-priority" title="Permanent link">¶</a></h3>
+<p>Lower values = higher priority (0 is most urgent):</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Urgent jobs (priority 0)</span>
+<span class="n">Analysis</span><span class="o">.</span><span class="n">jobs</span><span class="o">.</span><span class="n">refresh</span><span class="p">(</span><span class="n">priority</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="c1"># Normal jobs (default priority 5)</span>
+<span class="n">Analysis</span><span class="o">.</span><span class="n">jobs</span><span class="o">.</span><span class="n">refresh</span><span class="p">()</span>
+
+<span class="c1"># Background jobs (priority 10)</span>
+<span class="n">Analysis</span><span class="o">.</span><span class="n">jobs</span><span class="o">.</span><span class="n">refresh</span><span class="p">(</span><span class="n">priority</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+
+<span class="c1"># Urgent jobs for specific data</span>
+<span class="n">Analysis</span><span class="o">.</span><span class="n">jobs</span><span class="o">.</span><span class="n">refresh</span><span class="p">(</span><span class="n">Subject</span> <span class="o">&amp;</span> <span class="s2">"priority='urgent'"</span><span class="p">,</span> <span class="n">priority</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="102-scheduling">10.2 Scheduling<a class="headerlink" href="#102-scheduling" title="Permanent link">¶</a></h3>
+<p>Delay job availability using server time:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Available in 2 hours</span>
+<span class="n">Analysis</span><span class="o">.</span><span class="n">jobs</span><span class="o">.</span><span class="n">refresh</span><span class="p">(</span><span class="n">delay</span><span class="o">=</span><span class="mi">2</span><span class="o">*</span><span class="mi">60</span><span class="o">*</span><span class="mi">60</span><span class="p">)</span>
+
+<span class="c1"># Available tomorrow</span>
+<span class="n">Analysis</span><span class="o">.</span><span class="n">jobs</span><span class="o">.</span><span class="n">refresh</span><span class="p">(</span><span class="n">delay</span><span class="o">=</span><span class="mi">24</span><span class="o">*</span><span class="mi">60</span><span class="o">*</span><span class="mi">60</span><span class="p">)</span>
+</code></pre></div>
+<p>Jobs with <code>scheduled_time &gt; now</code> are not processed by <code>populate()</code>.</p>
+<hr/>
+<h2 id="11-distributed-computing">11. Distributed Computing<a class="headerlink" href="#11-distributed-computing" title="Permanent link">¶</a></h2>
+<h3 id="111-basic-pattern">11.1 Basic Pattern<a class="headerlink" href="#111-basic-pattern" title="Permanent link">¶</a></h3>
+<p>Multiple workers can run simultaneously:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Worker 1</span>
+<span class="n">Analysis</span><span class="o">.</span><span class="n">populate</span><span class="p">(</span><span class="n">reserve_jobs</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># Worker 2 (different machine/process)</span>
+<span class="n">Analysis</span><span class="o">.</span><span class="n">populate</span><span class="p">(</span><span class="n">reserve_jobs</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># Worker 3</span>
+<span class="n">Analysis</span><span class="o">.</span><span class="n">populate</span><span class="p">(</span><span class="n">reserve_jobs</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="112-execution-flow-distributed">11.2 Execution Flow (Distributed)<a class="headerlink" href="#112-execution-flow-distributed" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code>1. Refresh jobs queue (if auto_refresh=True)
+2. Fetch pending jobs ordered by (priority, scheduled_time)
+3. For each job:
+   a. Mark as 'reserved'
+   b. Start transaction
+   c. Call make(key)
+   d. Commit transaction
+   e. Mark as 'success' or delete job
+   f. On error: mark as 'error' with details
+</code></pre></div>
+<h3 id="113-conflict-resolution">11.3 Conflict Resolution<a class="headerlink" href="#113-conflict-resolution" title="Permanent link">¶</a></h3>
+<p>When two workers reserve the same job simultaneously:</p>
+<ol>
+<li>Both reservations succeed (optimistic, no locking)</li>
+<li>Both call <code>make()</code> for the same key</li>
+<li>First worker's transaction commits</li>
+<li>Second worker gets duplicate key error (silently ignored)</li>
+<li>First worker marks job complete</li>
+</ol>
+<p>This is acceptable because:
+- The <code>make()</code> transaction guarantees data integrity
+- Conflicts are rare with job reservation
+- Wasted computation is minimal vs locking overhead</p>
+<hr/>
+<h2 id="12-error-handling">12. Error Handling<a class="headerlink" href="#12-error-handling" title="Permanent link">¶</a></h2>
+<h3 id="121-default-behavior">12.1 Default Behavior<a class="headerlink" href="#121-default-behavior" title="Permanent link">¶</a></h3>
+<p>Errors stop populate and raise the exception:</p>
+<div class="highlight"><pre><span></span><code><span class="n">Analysis</span><span class="o">.</span><span class="n">populate</span><span class="p">()</span>  <span class="c1"># Stops on first error</span>
+</code></pre></div>
+<h3 id="122-suppressing-errors">12.2 Suppressing Errors<a class="headerlink" href="#122-suppressing-errors" title="Permanent link">¶</a></h3>
+<p>Continue processing despite errors:</p>
+<div class="highlight"><pre><span></span><code><span class="n">errors</span> <span class="o">=</span> <span class="n">Analysis</span><span class="o">.</span><span class="n">populate</span><span class="p">(</span>
+    <span class="n">suppress_errors</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">return_exception_objects</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">)</span>
+<span class="c1"># errors contains list of (key, exception) tuples</span>
+</code></pre></div>
+<h3 id="123-error-recovery-distributed-mode">12.3 Error Recovery (Distributed Mode)<a class="headerlink" href="#123-error-recovery-distributed-mode" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># View errors</span>
+<span class="k">for</span> <span class="n">err</span> <span class="ow">in</span> <span class="n">Analysis</span><span class="o">.</span><span class="n">jobs</span><span class="o">.</span><span class="n">errors</span><span class="o">.</span><span class="n">to_dicts</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Key: </span><span class="si">{</span><span class="n">err</span><span class="si">}</span><span class="s2">, Error: </span><span class="si">{</span><span class="n">err</span><span class="p">[</span><span class="s1">'error_message'</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+
+<span class="c1"># Clear and retry</span>
+<span class="n">Analysis</span><span class="o">.</span><span class="n">jobs</span><span class="o">.</span><span class="n">errors</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
+<span class="n">Analysis</span><span class="o">.</span><span class="n">jobs</span><span class="o">.</span><span class="n">refresh</span><span class="p">()</span>
+<span class="n">Analysis</span><span class="o">.</span><span class="n">populate</span><span class="p">(</span><span class="n">reserve_jobs</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="124-stale-and-orphaned-jobs">12.4 Stale and Orphaned Jobs<a class="headerlink" href="#124-stale-and-orphaned-jobs" title="Permanent link">¶</a></h3>
+<p><strong>Stale jobs</strong>: Keys no longer in <code>key_source</code> (upstream deleted)
+<div class="highlight"><pre><span></span><code><span class="n">Analysis</span><span class="o">.</span><span class="n">jobs</span><span class="o">.</span><span class="n">refresh</span><span class="p">(</span><span class="n">stale_timeout</span><span class="o">=</span><span class="mi">3600</span><span class="p">)</span>  <span class="c1"># Clean up after 1 hour</span>
+</code></pre></div></p>
+<p><strong>Orphaned jobs</strong>: Reserved jobs whose worker crashed
+<div class="highlight"><pre><span></span><code><span class="n">Analysis</span><span class="o">.</span><span class="n">jobs</span><span class="o">.</span><span class="n">refresh</span><span class="p">(</span><span class="n">orphan_timeout</span><span class="o">=</span><span class="mi">3600</span><span class="p">)</span>  <span class="c1"># Reset after 1 hour</span>
+</code></pre></div></p>
+<hr/>
+<h2 id="13-configuration">13. Configuration<a class="headerlink" href="#13-configuration" title="Permanent link">¶</a></h2>
+<div class="highlight"><pre><span></span><code><span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">'jobs.auto_refresh'</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>       <span class="c1"># Auto-refresh on populate</span>
+<span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">'jobs.keep_completed'</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>    <span class="c1"># Retain success records</span>
+<span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">'jobs.stale_timeout'</span><span class="p">]</span> <span class="o">=</span> <span class="mi">3600</span>      <span class="c1"># Seconds before stale cleanup</span>
+<span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">'jobs.default_priority'</span><span class="p">]</span> <span class="o">=</span> <span class="mi">5</span>      <span class="c1"># Default priority (lower=urgent)</span>
+<span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">'jobs.version'</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>            <span class="c1"># Version string ('git' for auto)</span>
+<span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">'jobs.add_job_metadata'</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>  <span class="c1"># Add hidden metadata columns</span>
+</code></pre></div>
+<hr/>
+<h2 id="14-hidden-job-metadata">14. Hidden Job Metadata<a class="headerlink" href="#14-hidden-job-metadata" title="Permanent link">¶</a></h2>
+<p>When <code>config['jobs.add_job_metadata'] = True</code>, auto-populated tables receive hidden columns:</p>
+<table>
+<thead>
+<tr>
+<th>Column</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>_job_start_time</code></td>
+<td><code>datetime(3)</code></td>
+<td>When computation began</td>
+</tr>
+<tr>
+<td><code>_job_duration</code></td>
+<td><code>float64</code></td>
+<td>Duration in seconds</td>
+</tr>
+<tr>
+<td><code>_job_version</code></td>
+<td><code>varchar(64)</code></td>
+<td>Code version</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code><span class="c1"># Fetch with job metadata</span>
+<span class="n">Analysis</span><span class="p">()</span><span class="o">.</span><span class="n">to_arrays</span><span class="p">(</span><span class="s1">'result'</span><span class="p">,</span> <span class="s1">'_job_duration'</span><span class="p">)</span>
+
+<span class="c1"># Query slow computations</span>
+<span class="n">slow</span> <span class="o">=</span> <span class="n">Analysis</span> <span class="o">&amp;</span> <span class="s1">'_job_duration &gt; 3600'</span>
+</code></pre></div>
+<hr/>
+<h2 id="15-migration-from-legacy-datajoint">15. Migration from Legacy DataJoint<a class="headerlink" href="#15-migration-from-legacy-datajoint" title="Permanent link">¶</a></h2>
+<p>DataJoint 2.0 replaces the schema-level <code>~jobs</code> table with per-table <code>~~table_name</code> jobs tables. See the <a href="../../how-to/migrate-from-0x.md#autopopulate-20">Migration Guide</a> for details.</p>
+<hr/>
+<h2 id="16-quick-reference">16. Quick Reference<a class="headerlink" href="#16-quick-reference" title="Permanent link">¶</a></h2>
+<h3 id="161-common-operations">16.1 Common Operations<a class="headerlink" href="#161-common-operations" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Basic populate (direct mode)</span>
+<span class="n">Table</span><span class="o">.</span><span class="n">populate</span><span class="p">()</span>
+<span class="n">Table</span><span class="o">.</span><span class="n">populate</span><span class="p">(</span><span class="n">restriction</span><span class="p">)</span>
+<span class="n">Table</span><span class="o">.</span><span class="n">populate</span><span class="p">(</span><span class="n">max_calls</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">display_progress</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># Distributed populate</span>
+<span class="n">Table</span><span class="o">.</span><span class="n">populate</span><span class="p">(</span><span class="n">reserve_jobs</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># Check progress</span>
+<span class="n">remaining</span><span class="p">,</span> <span class="n">total</span> <span class="o">=</span> <span class="n">Table</span><span class="o">.</span><span class="n">progress</span><span class="p">()</span>
+<span class="n">Table</span><span class="o">.</span><span class="n">jobs</span><span class="o">.</span><span class="n">progress</span><span class="p">()</span>  <span class="c1"># Detailed status</span>
+
+<span class="c1"># Error handling</span>
+<span class="n">Table</span><span class="o">.</span><span class="n">populate</span><span class="p">(</span><span class="n">suppress_errors</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">Table</span><span class="o">.</span><span class="n">jobs</span><span class="o">.</span><span class="n">errors</span><span class="o">.</span><span class="n">to_dicts</span><span class="p">()</span>
+<span class="n">Table</span><span class="o">.</span><span class="n">jobs</span><span class="o">.</span><span class="n">errors</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
+
+<span class="c1"># Priority control</span>
+<span class="n">Table</span><span class="o">.</span><span class="n">jobs</span><span class="o">.</span><span class="n">refresh</span><span class="p">(</span><span class="n">priority</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>  <span class="c1"># Urgent</span>
+<span class="n">Table</span><span class="o">.</span><span class="n">jobs</span><span class="o">.</span><span class="n">refresh</span><span class="p">(</span><span class="n">delay</span><span class="o">=</span><span class="mi">3600</span><span class="p">)</span>  <span class="c1"># Scheduled</span>
+</code></pre></div>
+<h3 id="162-make-patterns">16.2 make() Patterns<a class="headerlink" href="#162-make-patterns" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Simple make</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">make</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="n">Source</span> <span class="o">&amp;</span> <span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">fetch1</span><span class="p">()</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="o">**</span><span class="n">key</span><span class="p">,</span> <span class="s1">'result'</span><span class="p">:</span> <span class="n">compute</span><span class="p">(</span><span class="n">data</span><span class="p">)})</span>
+
+<span class="c1"># With parts</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">make</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="o">**</span><span class="n">key</span><span class="p">,</span> <span class="s1">'summary'</span><span class="p">:</span> <span class="n">s</span><span class="p">})</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">Part</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">parts</span><span class="p">)</span>
+
+<span class="c1"># Tripartite (generator)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">make</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="n">Source</span> <span class="o">&amp;</span> <span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">fetch1</span><span class="p">()</span>
+    <span class="k">yield</span>  <span class="c1"># Release transaction</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">heavy_compute</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+    <span class="k">yield</span>  <span class="c1"># Re-acquire transaction</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="o">**</span><span class="n">key</span><span class="p">,</span> <span class="s1">'result'</span><span class="p">:</span> <span class="n">result</span><span class="p">})</span>
+
+<span class="c1"># Tripartite (methods)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">make_fetch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span> <span class="k">return</span> <span class="n">data</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">make_compute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span> <span class="k">return</span> <span class="n">result</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">make_insert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">result</span><span class="p">):</span> <span class="bp">self</span><span class="o">.</span><span class="n">insert1</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+</code></pre></div>
+</article>
+</div>
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+</div>
+</main>
+<footer class="md-footer">
+<div class="md-footer-meta md-typeset">
+<div class="md-footer-meta__inner md-grid">
+<div class="md-copyright">
+</div>
+<div class="md-social">
+<a class="md-social__link" href="https://www.datajoint.com" rel="noopener" target="_blank" title="DataJoint">
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 15.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+
+<svg enable-background="new 0 0 260.479 365.463" height="365.463px" id="Layer_1" version="1.1" viewbox="0 0 260.479 365.463" width="260.479px" x="0px" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" y="0px">
+<g>
+<path d="M4.638,361.434c0,0,124.071-124.072,135.896-357.434c0,0,29.555,189.053,115.266,256.988
+		C255.799,260.988,173.038,249.174,4.638,361.434z"></path>
+</g>
+</svg>
+</a>
+<a class="md-social__link" href="https://docs.datajoint.com" rel="noopener" target="_blank" title="DataJoint Documentation">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 21.5c-1.35-.85-3.8-1.5-5.5-1.5-1.65 0-3.35.3-4.75 1.05-.1.05-.15.05-.25.05-.25 0-.5-.25-.5-.5V6c.6-.45 1.25-.75 2-1 1.11-.35 2.33-.5 3.5-.5 1.95 0 4.05.4 5.5 1.5 1.45-1.1 3.55-1.5 5.5-1.5 1.17 0 2.39.15 3.5.5.75.25 1.4.55 2 1v14.6c0 .25-.25.5-.5.5-.1 0-.15 0-.25-.05-1.4-.75-3.1-1.05-4.75-1.05-1.7 0-4.15.65-5.5 1.5M12 8v11.5c1.35-.85 3.8-1.5 5.5-1.5 1.2 0 2.4.15 3.5.5V7c-1.1-.35-2.3-.5-3.5-.5-1.7 0-4.15.65-5.5 1.5m1 3.5c1.11-.68 2.6-1 4.5-1 .91 0 1.76.09 2.5.28V9.23c-.87-.15-1.71-.23-2.5-.23q-2.655 0-4.5.84zm4.5.17c-1.71 0-3.21.26-4.5.79v1.69c1.11-.65 2.6-.99 4.5-.99 1.04 0 1.88.08 2.5.24v-1.5c-.87-.16-1.71-.23-2.5-.23m2.5 2.9c-.87-.16-1.71-.24-2.5-.24-1.83 0-3.33.27-4.5.8v1.69c1.11-.66 2.6-.99 4.5-.99 1.04 0 1.88.08 2.5.24z"></path></svg>
+</a>
+<a class="md-social__link" href="https://github.com/datajoint/datajoint-python/discussions" rel="noopener" target="_blank" title="Discussions">
+<svg viewbox="0 0 576 512" xmlns="http://www.w3.org/2000/svg"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M384 144c0 97.2-86 176-192 176-26.7 0-52.1-5-75.2-14l-81.6 43.2c-9.3 4.9-20.7 3.2-28.2-4.2s-9.2-18.9-4.2-28.2l35.6-67.2C14.3 220.2 0 183.6 0 144 0 46.8 86-32 192-32s192 78.8 192 176m0 368c-94.1 0-172.4-62.1-188.8-144 120-1.5 224.3-86.9 235.8-202.7 83.3 19.2 145 88.3 145 170.7 0 39.6-14.3 76.2-38.4 105.6l35.6 67.2c4.9 9.3 3.2 20.7-4.2 28.2s-18.9 9.2-28.2 4.2L459.2 498c-23.1 9-48.5 14-75.2 14"></path></svg>
+</a>
+<a class="md-social__link" href="https://www.linkedin.com/company/datajoint" rel="noopener" target="_blank" title="LinkedIn">
+<svg viewbox="0 0 448 512" xmlns="http://www.w3.org/2000/svg"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M416 32H31.9C14.3 32 0 46.5 0 64.3v383.4C0 465.5 14.3 480 31.9 480H416c17.6 0 32-14.5 32-32.3V64.3c0-17.8-14.4-32.3-32-32.3M135.4 416H69V202.2h66.5V416zM102.2 96a38.5 38.5 0 1 1 0 77 38.5 38.5 0 1 1 0-77m282.1 320h-66.4V312c0-24.8-.5-56.7-34.5-56.7-34.6 0-39.9 27-39.9 54.9V416h-66.4V202.2h63.7v29.2h.9c8.9-16.8 30.6-34.5 62.9-34.5 67.2 0 79.7 44.3 79.7 101.9z"></path></svg>
+</a>
+<a class="md-social__link" href="https://twitter.com/datajoint" rel="noopener" target="_blank" title="Twitter">
+<svg viewbox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M459.4 151.7c.3 4.5.3 9.1.3 13.6 0 138.7-105.6 298.6-298.6 298.6-59.5 0-114.7-17.2-161.1-47.1 8.4 1 16.6 1.3 25.3 1.3 49.1 0 94.2-16.6 130.3-44.8-46.1-1-84.8-31.2-98.1-72.8 6.5 1 13 1.6 19.8 1.6 9.4 0 18.8-1.3 27.6-3.6-48.1-9.7-84.1-52-84.1-103v-1.3c14 7.8 30.2 12.7 47.4 13.3-28.3-18.8-46.8-51-46.8-87.4 0-19.5 5.2-37.4 14.3-53C87.4 130.8 165 172.4 252.1 176.9c-1.6-7.8-2.6-15.9-2.6-24C249.5 95.1 296.3 48 354.4 48c30.2 0 57.5 12.7 76.7 33.1 23.7-4.5 46.5-13.3 66.6-25.3-7.8 24.4-24.4 44.8-46.1 57.8 21.1-2.3 41.6-8.1 60.4-16.2-14.3 20.8-32.2 39.3-52.6 54.3"></path></svg>
+</a>
+<a class="md-social__link" href="https://github.com/datajoint" rel="noopener" target="_blank" title="GitHub">
+<svg viewbox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"></path></svg>
+</a>
+<a class="md-social__link" href="https://hub.docker.com/u/datajoint" rel="noopener" target="_blank" title="DockerHub">
+<svg viewbox="0 0 640 512" xmlns="http://www.w3.org/2000/svg"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M349.9 236.3h-66.1v-59.4h66.1zm0-204.3h-66.1v60.7h66.1zm78.2 144.8H362v59.4h66.1zm-156.3-72.1h-66.1v60.1h66.1zm78.1 0h-66.1v60.1h66.1zm276.8 100c-14.4-9.7-47.6-13.2-73.1-8.4-3.3-24-16.7-44.9-41.1-63.7l-14-9.3-9.3 14c-18.4 27.8-23.4 73.6-3.7 103.8-8.7 4.7-25.8 11.1-48.4 10.7H2.4c-8.7 50.8 5.8 116.8 44 162.1 37.1 43.9 92.7 66.2 165.4 66.2 157.4 0 273.9-72.5 328.4-204.2 21.4.4 67.6.1 91.3-45.2 1.5-2.5 6.6-13.2 8.5-17.1zm-511.1-27.9h-66v59.4h66.1v-59.4zm78.1 0h-66.1v59.4h66.1zm78.1 0h-66.1v59.4h66.1zm-78.1-72.1h-66.1v60.1h66.1z"></path></svg>
+</a>
+<a class="md-social__link" href="https://pypi.org/user/datajointbot" rel="noopener" target="_blank" title="PyPI">
+<svg viewbox="0 0 448 512" xmlns="http://www.w3.org/2000/svg"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.8 200.5c-7.7-30.9-22.3-54.2-53.4-54.2h-40.1v47.4c0 36.8-31.2 67.8-66.8 67.8H172.7c-29.2 0-53.4 25-53.4 54.3v101.8c0 29 25.2 46 53.4 54.3 33.8 9.9 66.3 11.7 106.8 0 26.9-7.8 53.4-23.5 53.4-54.3v-40.7H226.2v-13.6h160.2c31.1 0 42.6-21.7 53.4-54.2 11.2-33.5 10.7-65.7 0-108.6M286.2 444.7a20.4 20.4 0 1 1 0-40.7 20.4 20.4 0 1 1 0 40.7M167.8 248.1h106.8c29.7 0 53.4-24.5 53.4-54.3V91.9c0-29-24.4-50.7-53.4-55.6-35.8-5.9-74.7-5.6-106.8.1-45.2 8-53.4 24.7-53.4 55.6v40.7h106.9v13.6h-147c-31.1 0-58.3 18.7-66.8 54.2-9.8 40.7-10.2 66.1 0 108.6 7.6 31.6 25.7 54.2 56.8 54.2H101v-48.8c0-35.3 30.5-66.4 66.8-66.4m-6.6-183.4a20.4 20.4 0 1 1 0 40.8 20.4 20.4 0 1 1 0-40.8"></path></svg>
+</a>
+<a class="md-social__link" href="https://stackoverflow.com/questions/tagged/datajoint" rel="noopener" target="_blank" title="StackOverflow">
+<svg viewbox="0 0 384 512" xmlns="http://www.w3.org/2000/svg"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M291 311 95.3 269.7 87.1 309l195.7 41zm51-87L188.5 95.7 163 126.5l153.5 128.3zm-31.2 39.7L129.5 179l-16.7 36.5L294 300zM262.3 32l-32 24 119.3 160.3 32-24zm20.5 328h-200v39.7h200zm39.7 80H43V320H3v160h359.5V320h-40z"></path></svg>
+</a>
+<a class="md-social__link" href="https://www.youtube.com/@datajoint" rel="noopener" target="_blank" title="YouTube">
+<svg viewbox="0 0 576 512" xmlns="http://www.w3.org/2000/svg"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M549.7 124.1c-6.2-23.7-24.8-42.3-48.3-48.6C458.9 64 288.1 64 288.1 64S117.3 64 74.7 75.5c-23.5 6.3-42 24.9-48.3 48.6C15 167 15 256.4 15 256.4s0 89.4 11.4 132.3c6.3 23.6 24.8 41.5 48.3 47.8C117.3 448 288.1 448 288.1 448s170.8 0 213.4-11.5c23.5-6.3 42-24.2 48.3-47.8 11.4-42.9 11.4-132.3 11.4-132.3s0-89.4-11.4-132.3zM232.2 337.6V175.2l142.7 81.2z"></path></svg>
+</a>
+</div>
+</div>
+</div>
+</footer>
+</div>
+<div class="md-dialog" data-md-component="dialog">
+<div class="md-dialog__inner md-typeset"></div>
+</div>
+<script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.sections", "navigation.indexes", "toc.follow", "announce.dismiss"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+<script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+<script src="../../../javascripts/mathjax.js"></script>
+<script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
+<script src="https://js-na1.hs-scripts.com/23133402.js"></script>
+<script type="module">import mermaid from "https://unpkg.com/mermaid@10.4.0/dist/mermaid.esm.min.mjs";
+window.mermaidConfig = {default: {
+    startOnLoad: false
+}};</script></body>
+</html>

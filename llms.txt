@@ -1,0 +1,85 @@
+# DataJoint Documentation
+
+> DataJoint is a Python framework for building scientific data pipelines with automated computation, integrity constraints, and seamless integration of relational databases with object storage. This documentation covers DataJoint 2.0.
+
+## Concepts
+
+- [What's New in 2.0](/explanation/whats-new-2.md): Major changes and new features in DataJoint 2.0
+- [Relational Workflow Model](/explanation/relational-workflow-model.md): Core data model concepts
+- [Entity Integrity](/explanation/entity-integrity.md): How DataJoint ensures data consistency
+- [Normalization](/explanation/normalization.md): Database normalization principles
+- [Query Algebra](/explanation/query-algebra.md): Operators for combining and filtering data
+- [Type System](/explanation/type-system.md): Data types and codecs
+- [Computation Model](/explanation/computation-model.md): Automated computation with populate()
+- [Custom Codecs](/explanation/custom-codecs.md): Extending the type system
+
+## Tutorials (Basics)
+
+- [First Pipeline](/tutorials/basics/01-first-pipeline.ipynb): Your first DataJoint pipeline
+- [Schema Design](/tutorials/basics/02-schema-design.ipynb): Tables, keys, and relationships
+- [Data Entry](/tutorials/basics/03-data-entry.ipynb): Inserting and managing data
+- [Queries](/tutorials/basics/04-queries.ipynb): Operators and fetching results
+- [Computation](/tutorials/basics/05-computation.ipynb): Imported and Computed tables
+- [Object Storage](/tutorials/basics/06-object-storage.ipynb): Blobs, attachments, and object storage
+
+## Tutorials (Examples)
+
+- [University Database](/tutorials/examples/university.ipynb): Complete example with students, courses, grades
+- [Fractal Pipeline](/tutorials/examples/fractal-pipeline.ipynb): Iterative computation patterns
+- [Blob Detection](/tutorials/examples/blob-detection.ipynb): Image processing with automated computation
+
+## Tutorials (Domain)
+
+- [Calcium Imaging](/tutorials/domain/calcium-imaging/calcium-imaging.ipynb): Import TIFF movies, segment cells, extract traces
+- [Electrophysiology](/tutorials/domain/electrophysiology/electrophysiology.ipynb): Import recordings, detect spikes, extract waveforms
+- [Allen CCF](/tutorials/domain/allen-ccf/allen-ccf.ipynb): Brain atlas with hierarchical region ontology
+
+## Tutorials (Advanced)
+
+- [SQL Comparison](/tutorials/advanced/sql-comparison.ipynb): DataJoint for SQL users
+- [JSON Data Type](/tutorials/advanced/json-type.ipynb): Semi-structured data in tables
+- [Distributed Computing](/tutorials/advanced/distributed.ipynb): Multi-process and cluster workflows
+- [Custom Codecs](/tutorials/advanced/custom-codecs.ipynb): Extending the type system
+
+## How-To Guides
+
+- [Installation](/how-to/installation.md): Install DataJoint
+- [Configure Database](/how-to/configure-database.md): Database connection setup
+- [Configure Object Storage](/how-to/configure-storage.md): S3 and filesystem storage
+- [Define Tables](/how-to/define-tables.md): Table definitions
+- [Model Relationships](/how-to/model-relationships.ipynb): Foreign keys and dependencies
+- [Design Primary Keys](/how-to/design-primary-keys.md): Key selection best practices
+- [Insert Data](/how-to/insert-data.md): Adding data to tables
+- [Query Data](/how-to/query-data.md): Filtering and combining tables
+- [Fetch Results](/how-to/fetch-results.md): Retrieving data
+- [Delete Data](/how-to/delete-data.md): Removing data safely
+- [Run Computations](/how-to/run-computations.md): Using populate()
+- [Distributed Computing](/how-to/distributed-computing.md): Multi-worker execution
+- [Handle Errors](/how-to/handle-errors.md): Error handling in pipelines
+- [Monitor Progress](/how-to/monitor-progress.md): Tracking computation status
+- [Use Object Storage](/how-to/use-object-storage.md): External storage integration
+- [Create Custom Codecs](/how-to/create-custom-codec.md): Custom data types
+- [Manage Large Data](/how-to/manage-large-data.md): Scaling strategies
+- [Migrate from 0.x](/how-to/migrate-from-0x.md): Upgrading from DataJoint 0.14
+- [Alter Tables](/how-to/alter-tables.md): Schema modifications
+- [Backup and Restore](/how-to/backup-restore.md): Data backup strategies
+
+## Reference
+
+- [Table Declaration](/reference/specs/table-declaration.md): Table definition syntax
+- [Query Algebra](/reference/specs/query-algebra.md): Query operator reference
+- [Data Manipulation](/reference/specs/data-manipulation.md): Insert, update, delete operations
+- [Primary Keys](/reference/specs/primary-keys.md): Key constraints specification
+- [Semantic Matching](/reference/specs/semantic-matching.md): Join and restriction rules
+- [Type System](/reference/specs/type-system.md): Data type specification
+- [Codec API](/reference/specs/codec-api.md): Custom codec interface
+- [AutoPopulate](/reference/specs/autopopulate.md): Computation engine specification
+- [Fetch API](/reference/specs/fetch-api.md): Data retrieval methods
+- [Job Metadata](/reference/specs/job-metadata.md): Job management tables
+
+## Optional
+
+- [API Reference](/api/): Auto-generated Python API documentation
+- [Configuration](/reference/configuration.md): All configuration options
+- [Definition Syntax](/reference/definition-syntax.md): Table definition grammar
+- [Errors](/reference/errors.md): Error types and handling

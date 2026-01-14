@@ -1,0 +1,7379 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://docs.datajoint.com/reference/specs/type-system/">
+      
+      
+        <link rel="prev" href="../fetch-api/">
+      
+      
+        <link rel="next" href="../codec-api/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../assets/images/company-logo-blue.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+    
+    
+      
+        <title>Types - DataJoint Documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Slab:300,300i,400,400i,700,700i%7CSource+Code+Pro:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto Slab";--md-code-font:"Source Code Pro"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/_mkdocstrings.css">
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+	<script
+		src="https://www.datadoghq-browser-agent.com/us1/v4/datadog-rum.js"
+		type="text/javascript">
+	</script>
+	<script>
+		window.DD_RUM && window.DD_RUM.init({
+			clientToken: 'pub10d7870188992f8c006cf7ba1f160a3f',
+			applicationId: '36a4de35-5eaa-435a-8c56-048c1b4d5d8c',
+			site: 'datadoghq.com',
+			service: 'datajoint-docs',
+			env: 'production',
+			sessionSampleRate: 100,
+			sessionReplaySampleRate: 100,
+			trackUserInteractions: true,
+			trackResources: true,
+			trackLongTasks: true,
+			defaultPrivacyLevel: 'mask-user-input',
+		});
+
+		window.DD_RUM &&
+		window.DD_RUM.startSessionReplayRecording();
+	</script>
+  
+  <!-- Add scripts that need to run afterwards here -->
+
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="datajoint" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#storage-types-redesign-spec" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="DataJoint Documentation" class="md-header__button md-logo" aria-label="DataJoint Documentation" data-md-component="logo">
+      
+  
+  <?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 15.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="260.479px" height="365.463px" viewBox="0 0 260.479 365.463" enable-background="new 0 0 260.479 365.463"
+	 xml:space="preserve">
+<g>
+	<path d="M4.638,361.434c0,0,124.071-124.072,135.896-357.434c0,0,29.555,189.053,115.266,256.988
+		C255.799,260.988,173.038,249.174,4.638,361.434z"/>
+</g>
+</svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            DataJoint Documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Types
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="datajoint" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/datajoint/datajoint-docs" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    datajoint/datajoint-docs
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="DataJoint Documentation" class="md-nav__button md-logo" aria-label="DataJoint Documentation" data-md-component="logo">
+      
+  
+  <?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 15.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="260.479px" height="365.463px" viewBox="0 0 260.479 365.463" enable-background="new 0 0 260.479 365.463"
+	 xml:space="preserve">
+<g>
+	<path d="M4.638,361.434c0,0,124.071-124.072,135.896-357.434c0,0,29.555,189.053,115.266,256.988
+		C255.799,260.988,173.038,249.174,4.638,361.434z"/>
+</g>
+</svg>
+
+    </a>
+    DataJoint Documentation
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/datajoint/datajoint-docs" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    datajoint/datajoint-docs
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../explanation/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Concepts
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2" id="__nav_2_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Concepts
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_1" id="__nav_2_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Overview
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../explanation/data-pipelines/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Data Pipelines
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../explanation/whats-new-2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    What's New in 2.0
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../explanation/faq/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    FAQ
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2" id="__nav_2_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Data Model
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Data Model
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../explanation/relational-workflow-model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Relational Workflow Model
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../explanation/entity-integrity/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Entity Integrity
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../explanation/normalization/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Normalization
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../explanation/computation-model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Computation Model
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_3" id="__nav_2_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Queries
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Queries
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../explanation/query-algebra/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Query Algebra
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_4" id="__nav_2_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Storage
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Storage
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../explanation/type-system/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Type System
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../explanation/custom-codecs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Custom Codecs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../tutorials/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorials
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tutorials
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_1" id="__nav_3_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Basics
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Basics
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tutorials/basics/01-first-pipeline/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    A Simple Pipeline
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tutorials/basics/02-schema-design/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Schema Design
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tutorials/basics/03-data-entry/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Data Entry
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tutorials/basics/04-queries/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Queries
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tutorials/basics/05-computation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Computation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tutorials/basics/06-object-storage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Object-Augmented Schemas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_2" id="__nav_3_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Examples
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Examples
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tutorials/examples/university/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    University Database
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tutorials/examples/hotel-reservations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hotel Reservation System
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tutorials/examples/languages/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Languages and Proficiency
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tutorials/examples/fractal-pipeline/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fractal Image Pipeline
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tutorials/examples/blob-detection/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Blob Detection Pipeline
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_3" id="__nav_3_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Domain
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Domain
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tutorials/domain/calcium-imaging/calcium-imaging/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Calcium Imaging Pipeline
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tutorials/domain/electrophysiology/electrophysiology/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Electrophysiology Pipeline
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tutorials/domain/electrophysiology/ephys-with-npy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Electrophysiology Pipeline with Object Storage
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tutorials/domain/allen-ccf/allen-ccf/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Allen Common Coordinate Framework (CCF)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_4" id="__nav_3_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Advanced
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Advanced
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tutorials/advanced/sql-comparison/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DataJoint for SQL Users
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tutorials/advanced/json-type/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    JSON Data Type
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tutorials/advanced/distributed/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Distributed Computing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tutorials/advanced/custom-codecs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Custom Codecs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../how-to/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    How-To
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    How-To
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_1" id="__nav_4_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Setup
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Setup
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../how-to/installation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../how-to/configure-database/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configure Database
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../how-to/configure-storage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configure Object Storage
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../how-to/use-cli/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Command-Line Interface
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_2" id="__nav_4_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Schema Design
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Schema Design
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../how-to/define-tables/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Define Tables
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../how-to/model-relationships/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Model Relationships
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../how-to/design-primary-keys/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Design Primary Keys
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../how-to/read-diagrams/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Read Schema Diagrams
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_3" id="__nav_4_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Project Management
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Project Management
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../how-to/manage-pipeline-project/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Manage Pipeline Project
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_4" id="__nav_4_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Data Operations
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Data Operations
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../how-to/insert-data/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Insert Data
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../how-to/query-data/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Query Data
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../how-to/fetch-results/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fetch Results
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../how-to/delete-data/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Delete Data
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_5" id="__nav_4_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Computation
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Computation
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../how-to/run-computations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Run Computations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../how-to/distributed-computing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Distributed Computing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../how-to/handle-errors/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Handle Errors
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../how-to/monitor-progress/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Monitor Progress
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_6" id="__nav_4_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Object Storage
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Object Storage
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../how-to/use-object-storage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Use Object Storage
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../how-to/use-npy-codec/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Use NPY Codec
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../how-to/create-custom-codec/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Create Custom Codecs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../how-to/manage-large-data/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Manage Large Data
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../how-to/garbage-collection/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Clean Up Storage
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_7" id="__nav_4_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Maintenance
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Maintenance
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../how-to/migrate-to-v20/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Migrate to 2.0
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../how-to/alter-tables/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Alter Tables
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../how-to/backup-restore/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Backup and Restore
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reference
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_5" id="__nav_5_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_1" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Specifications
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_5_1" id="__nav_5_1_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_1_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Specifications
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_1_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_1_1" id="__nav_5_1_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Schema Definition
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_5_1_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_1_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Schema Definition
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../table-declaration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Table Declaration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../master-part/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Master-Part
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../virtual-schemas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Virtual Schemas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_1_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_1_2" id="__nav_5_1_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Query Algebra
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_5_1_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_1_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Query Algebra
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../query-algebra/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Query Operators
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../semantic-matching/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Semantic Matching
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../primary-keys/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Primary Keys
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../fetch-api/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fetch API
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_1_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_5_1_3" id="__nav_5_1_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Type System
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_5_1_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5_1_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Type System
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Types
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Types
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Overview">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#oas-addressing-schemes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        OAS Addressing Schemes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#url-representation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        URL Representation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#store-references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Store References
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#core-datajoint-types-layer-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Core DataJoint Types (Layer 2)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Core DataJoint Types (Layer 2)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#numeric-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Numeric Types
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#string-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        String Types
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#boolean" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Boolean
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#datetime-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Date/Time Types
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#binary-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Binary Types
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#other-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Other Types
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#native-passthrough-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Native Passthrough Types
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#type-modifiers-policy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Type Modifiers Policy
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#encoding-and-collation-policy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Encoding and Collation Policy
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#codec-types-layer-3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Codec Types (Layer 3)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Codec Types (Layer 3)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#storage-mode-convention" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Storage Mode: @ Convention
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#codec-base-class" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Codec Base Class
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#codec-resolution-and-chaining" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Codec Resolution and Chaining
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#object-objectstore-schema-addressed-storage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        &lt;object@&gt; / &lt;object@store&gt; - Schema-Addressed Storage
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="&lt;object@&gt; / &lt;object@store&gt; - Schema-Addressed Storage">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#implementation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Implementation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hash-hashstore-hash-addressed-storage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        &lt;hash@&gt; / &lt;hash@store&gt; - Hash-Addressed Storage
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="&lt;hash@&gt; / &lt;hash@store&gt; - Hash-Addressed Storage">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#implementation_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Implementation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#database-column" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Database Column
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#filepathstore-portable-external-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        &lt;filepath@store&gt; - Portable External Reference
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="&lt;filepath@store&gt; - Portable External Reference">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#when-to-use-filepathstore-vs-varchar" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When to Use &lt;filepath@store&gt; vs varchar
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#implementation_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Implementation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#database-column_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Database Column
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#key-differences-from-legacy-filepathstore-now-filepathstore" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Differences from Legacy filepath@store (now &lt;filepath@store&gt;)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#database-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Database Types
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Database Types">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#json-cross-database-json-type" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        json - Cross-Database JSON Type
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#built-in-codecs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Built-in Codecs
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Built-in Codecs">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#blob-blob-serialized-python-objects" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        &lt;blob&gt; / &lt;blob@&gt; - Serialized Python Objects
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#attach-attach-file-attachments" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        &lt;attach&gt; / &lt;attach@&gt; - File Attachments
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#user-defined-codecs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        User-Defined Codecs
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#storage-comparison" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Storage Comparison
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#garbage-collection-for-hash-storage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Garbage Collection for Hash Storage
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#built-in-codec-comparison" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Built-in Codec Comparison
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#key-design-decisions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Design Decisions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Key Design Decisions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#hash-algorithm-choice" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Hash Algorithm Choice
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#migration-from-legacy-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Migration from Legacy Types
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Migration from Legacy Types">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#migration-from-legacy-external_-stores" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Migration from Legacy ~external_* Stores
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#open-questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Open Questions
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../codec-api/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Codec API
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../npy-codec/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    NPY Codec
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_1_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_1_4" id="__nav_5_1_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Data Operations
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_5_1_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_1_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Data Operations
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../data-manipulation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Data Manipulation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../autopopulate/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AutoPopulate
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../job-metadata/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Job Metadata
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../configuration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../definition-syntax/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Definition Syntax
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../operators/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Operators
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../errors/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Errors
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../elements/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Elements
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../api/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_6" id="__nav_6_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    API
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../api/datajoint/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Package
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_2" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../api/datajoint/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Datajoint
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_6_2" id="__nav_6_2_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Datajoint
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../api/datajoint/admin/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Admin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../api/datajoint/blob/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Blob
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../api/datajoint/codecs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Codecs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../api/datajoint/connection/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Connection
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../api/datajoint/diagram/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Diagram
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../api/datajoint/errors/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Errors
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../api/datajoint/expression/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Expressions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../api/datajoint/hash_registry/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hash Registry
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../api/datajoint/heading/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Heading
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../api/datajoint/jobs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Jobs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../api/datajoint/migrate/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Migrate
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../api/datajoint/schemas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Schema
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../api/datajoint/settings/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Settings
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../api/datajoint/table/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Table
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../api/datajoint/user_tables/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Table Types
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../about/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    About
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_7" id="__nav_7_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    About
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../about/history/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    History
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="https://www.datajoint.com/sign-up" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Platform
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../about/citation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Citation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../about/publications/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Publications
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../about/contributing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contributing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Overview">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#oas-addressing-schemes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        OAS Addressing Schemes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#url-representation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        URL Representation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#store-references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Store References
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#core-datajoint-types-layer-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Core DataJoint Types (Layer 2)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Core DataJoint Types (Layer 2)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#numeric-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Numeric Types
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#string-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        String Types
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#boolean" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Boolean
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#datetime-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Date/Time Types
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#binary-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Binary Types
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#other-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Other Types
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#native-passthrough-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Native Passthrough Types
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#type-modifiers-policy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Type Modifiers Policy
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#encoding-and-collation-policy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Encoding and Collation Policy
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#codec-types-layer-3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Codec Types (Layer 3)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Codec Types (Layer 3)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#storage-mode-convention" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Storage Mode: @ Convention
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#codec-base-class" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Codec Base Class
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#codec-resolution-and-chaining" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Codec Resolution and Chaining
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#object-objectstore-schema-addressed-storage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        &lt;object@&gt; / &lt;object@store&gt; - Schema-Addressed Storage
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="&lt;object@&gt; / &lt;object@store&gt; - Schema-Addressed Storage">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#implementation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Implementation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hash-hashstore-hash-addressed-storage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        &lt;hash@&gt; / &lt;hash@store&gt; - Hash-Addressed Storage
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="&lt;hash@&gt; / &lt;hash@store&gt; - Hash-Addressed Storage">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#implementation_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Implementation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#database-column" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Database Column
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#filepathstore-portable-external-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        &lt;filepath@store&gt; - Portable External Reference
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="&lt;filepath@store&gt; - Portable External Reference">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#when-to-use-filepathstore-vs-varchar" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When to Use &lt;filepath@store&gt; vs varchar
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#implementation_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Implementation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#database-column_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Database Column
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#key-differences-from-legacy-filepathstore-now-filepathstore" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Differences from Legacy filepath@store (now &lt;filepath@store&gt;)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#database-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Database Types
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Database Types">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#json-cross-database-json-type" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        json - Cross-Database JSON Type
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#built-in-codecs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Built-in Codecs
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Built-in Codecs">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#blob-blob-serialized-python-objects" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        &lt;blob&gt; / &lt;blob@&gt; - Serialized Python Objects
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#attach-attach-file-attachments" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        &lt;attach&gt; / &lt;attach@&gt; - File Attachments
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#user-defined-codecs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        User-Defined Codecs
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#storage-comparison" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Storage Comparison
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#garbage-collection-for-hash-storage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Garbage Collection for Hash Storage
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#built-in-codec-comparison" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Built-in Codec Comparison
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#key-design-decisions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Design Decisions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Key Design Decisions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#hash-algorithm-choice" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Hash Algorithm Choice
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#migration-from-legacy-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Migration from Legacy Types
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Migration from Legacy Types">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#migration-from-legacy-external_-stores" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Migration from Legacy ~external_* Stores
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#open-questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Open Questions
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="storage-types-redesign-spec">Storage Types Redesign Spec<a class="headerlink" href="#storage-types-redesign-spec" title="Permanent link">&para;</a></h1>
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>This document defines a three-layer type architecture:</p>
+<ol>
+<li><strong>Native database types</strong> - Backend-specific (<code>FLOAT</code>, <code>TINYINT UNSIGNED</code>, <code>LONGBLOB</code>). Discouraged for direct use.</li>
+<li><strong>Core DataJoint types</strong> - Standardized across backends, scientist-friendly (<code>float32</code>, <code>uint8</code>, <code>bool</code>, <code>json</code>).</li>
+<li><strong>Codec Types</strong> - Programmatic types with <code>encode()</code>/<code>decode()</code> semantics. Composable.</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>Layer</th>
+<th>Description</th>
+<th>Examples</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>3. Codec Types</strong></td>
+<td>Programmatic types with <code>encode()</code>/<code>decode()</code> semantics</td>
+<td><code>&lt;blob&gt;</code>, <code>&lt;attach&gt;</code>, <code>&lt;object@&gt;</code>, <code>&lt;hash@&gt;</code>, <code>&lt;filepath@&gt;</code>, user-defined</td>
+</tr>
+<tr>
+<td><strong>2. Core DataJoint</strong></td>
+<td>Standardized, scientist-friendly types (preferred)</td>
+<td><code>int32</code>, <code>float64</code>, <code>varchar(n)</code>, <code>bool</code>, <code>datetime</code>, <code>json</code>, <code>bytes</code></td>
+</tr>
+<tr>
+<td><strong>1. Native Database</strong></td>
+<td>Backend-specific types (discouraged)</td>
+<td><code>INT</code>, <code>FLOAT</code>, <code>TINYINT UNSIGNED</code>, <code>LONGBLOB</code></td>
+</tr>
+</tbody>
+</table>
+<p>Codec types resolve through core types to native types: <code>&lt;blob&gt;</code> → <code>bytes</code> → <code>LONGBLOB</code>.</p>
+<p><strong>Syntax distinction:</strong>
+- Core types: <code>int32</code>, <code>float64</code>, <code>varchar(255)</code> - no brackets
+- Codec types: <code>&lt;blob&gt;</code>, <code>&lt;object@store&gt;</code>, <code>&lt;filepath@main&gt;</code> - angle brackets
+- The <code>@</code> character indicates store (object storage vs inline in database)</p>
+<h3 id="oas-addressing-schemes">OAS Addressing Schemes<a class="headerlink" href="#oas-addressing-schemes" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Scheme</th>
+<th>Path Pattern</th>
+<th>Description</th>
+<th>Use Case</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Schema-addressed</strong></td>
+<td><code>{schema}/{table}/{pk}/</code></td>
+<td>Path mirrors database structure</td>
+<td>Large objects, Zarr, HDF5, numpy arrays</td>
+</tr>
+<tr>
+<td><strong>Hash-addressed</strong></td>
+<td><code>_hash/{hash}</code></td>
+<td>Path from content hash (MD5)</td>
+<td>Deduplicated blobs/attachments</td>
+</tr>
+</tbody>
+</table>
+<h3 id="url-representation">URL Representation<a class="headerlink" href="#url-representation" title="Permanent link">&para;</a></h3>
+<p>DataJoint uses consistent URL representation for all storage backends:</p>
+<table>
+<thead>
+<tr>
+<th>Protocol</th>
+<th>URL Format</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Local filesystem</td>
+<td><code>file://</code></td>
+<td><code>file:///data/objects/file.dat</code></td>
+</tr>
+<tr>
+<td>Amazon S3</td>
+<td><code>s3://</code></td>
+<td><code>s3://bucket/path/file.dat</code></td>
+</tr>
+<tr>
+<td>Google Cloud</td>
+<td><code>gs://</code></td>
+<td><code>gs://bucket/path/file.dat</code></td>
+</tr>
+<tr>
+<td>Azure Blob</td>
+<td><code>az://</code></td>
+<td><code>az://container/path/file.dat</code></td>
+</tr>
+</tbody>
+</table>
+<p>This unified approach treats all storage backends uniformly via fsspec, enabling:
+- Consistent path handling across local and cloud storage
+- Transparent switching between storage backends
+- Streaming access to any storage type</p>
+<h3 id="store-references">Store References<a class="headerlink" href="#store-references" title="Permanent link">&para;</a></h3>
+<p><code>&lt;filepath@store&gt;</code> provides portable relative paths within configured stores with lazy ObjectRef access.
+For arbitrary URLs that don't need ObjectRef semantics, use <code>varchar</code> instead.</p>
+<h2 id="core-datajoint-types-layer-2">Core DataJoint Types (Layer 2)<a class="headerlink" href="#core-datajoint-types-layer-2" title="Permanent link">&para;</a></h2>
+<p>Core types provide a standardized, scientist-friendly interface that works identically across
+MySQL and PostgreSQL backends. Users should prefer these over native database types.</p>
+<p><strong>All core types are recorded in field comments using <code>:type:</code> syntax for reconstruction.</strong></p>
+<h3 id="numeric-types">Numeric Types<a class="headerlink" href="#numeric-types" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Core Type</th>
+<th>Description</th>
+<th>MySQL</th>
+<th>PostgreSQL</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>int8</code></td>
+<td>8-bit signed</td>
+<td><code>TINYINT</code></td>
+<td><code>SMALLINT</code></td>
+</tr>
+<tr>
+<td><code>int16</code></td>
+<td>16-bit signed</td>
+<td><code>SMALLINT</code></td>
+<td><code>SMALLINT</code></td>
+</tr>
+<tr>
+<td><code>int32</code></td>
+<td>32-bit signed</td>
+<td><code>INT</code></td>
+<td><code>INTEGER</code></td>
+</tr>
+<tr>
+<td><code>int64</code></td>
+<td>64-bit signed</td>
+<td><code>BIGINT</code></td>
+<td><code>BIGINT</code></td>
+</tr>
+<tr>
+<td><code>uint8</code></td>
+<td>8-bit unsigned</td>
+<td><code>TINYINT UNSIGNED</code></td>
+<td><code>SMALLINT</code></td>
+</tr>
+<tr>
+<td><code>uint16</code></td>
+<td>16-bit unsigned</td>
+<td><code>SMALLINT UNSIGNED</code></td>
+<td><code>INTEGER</code></td>
+</tr>
+<tr>
+<td><code>uint32</code></td>
+<td>32-bit unsigned</td>
+<td><code>INT UNSIGNED</code></td>
+<td><code>BIGINT</code></td>
+</tr>
+<tr>
+<td><code>uint64</code></td>
+<td>64-bit unsigned</td>
+<td><code>BIGINT UNSIGNED</code></td>
+<td><code>NUMERIC(20)</code></td>
+</tr>
+<tr>
+<td><code>float32</code></td>
+<td>32-bit float</td>
+<td><code>FLOAT</code></td>
+<td><code>REAL</code></td>
+</tr>
+<tr>
+<td><code>float64</code></td>
+<td>64-bit float</td>
+<td><code>DOUBLE</code></td>
+<td><code>DOUBLE PRECISION</code></td>
+</tr>
+<tr>
+<td><code>decimal(n,f)</code></td>
+<td>Fixed-point</td>
+<td><code>DECIMAL(n,f)</code></td>
+<td><code>NUMERIC(n,f)</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="string-types">String Types<a class="headerlink" href="#string-types" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Core Type</th>
+<th>Description</th>
+<th>MySQL</th>
+<th>PostgreSQL</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>char(n)</code></td>
+<td>Fixed-length</td>
+<td><code>CHAR(n)</code></td>
+<td><code>CHAR(n)</code></td>
+</tr>
+<tr>
+<td><code>varchar(n)</code></td>
+<td>Variable-length</td>
+<td><code>VARCHAR(n)</code></td>
+<td><code>VARCHAR(n)</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Encoding:</strong> All strings use UTF-8 (<code>utf8mb4</code> in MySQL, <code>UTF8</code> in PostgreSQL).
+See <a href="#encoding-and-collation-policy">Encoding and Collation Policy</a> for details.</p>
+<h3 id="boolean">Boolean<a class="headerlink" href="#boolean" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Core Type</th>
+<th>Description</th>
+<th>MySQL</th>
+<th>PostgreSQL</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>bool</code></td>
+<td>True/False</td>
+<td><code>TINYINT</code></td>
+<td><code>BOOLEAN</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="datetime-types">Date/Time Types<a class="headerlink" href="#datetime-types" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Core Type</th>
+<th>Description</th>
+<th>MySQL</th>
+<th>PostgreSQL</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>date</code></td>
+<td>Date only</td>
+<td><code>DATE</code></td>
+<td><code>DATE</code></td>
+</tr>
+<tr>
+<td><code>datetime</code></td>
+<td>Date and time</td>
+<td><code>DATETIME</code></td>
+<td><code>TIMESTAMP</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Timezone policy:</strong> All <code>datetime</code> values should be stored as <strong>UTC</strong>. Timezone conversion is a
+presentation concern handled by the application layer, not the database. This ensures:
+- Reproducible computations regardless of server or client timezone settings
+- Simple arithmetic on temporal values (no DST ambiguity)
+- Portable data across systems and regions</p>
+<p>Use <code>CURRENT_TIMESTAMP</code> for auto-populated creation times:
+<div class="highlight"><pre><span></span><code>created_at : datetime = CURRENT_TIMESTAMP
+</code></pre></div></p>
+<h3 id="binary-types">Binary Types<a class="headerlink" href="#binary-types" title="Permanent link">&para;</a></h3>
+<p>The core <code>bytes</code> type stores raw bytes without any serialization. Use the <code>&lt;blob&gt;</code> codec
+for serialized Python objects.</p>
+<table>
+<thead>
+<tr>
+<th>Core Type</th>
+<th>Description</th>
+<th>MySQL</th>
+<th>PostgreSQL</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>bytes</code></td>
+<td>Raw bytes</td>
+<td><code>LONGBLOB</code></td>
+<td><code>BYTEA</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="other-types">Other Types<a class="headerlink" href="#other-types" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Core Type</th>
+<th>Description</th>
+<th>MySQL</th>
+<th>PostgreSQL</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>json</code></td>
+<td>JSON document</td>
+<td><code>JSON</code></td>
+<td><code>JSONB</code></td>
+</tr>
+<tr>
+<td><code>uuid</code></td>
+<td>UUID</td>
+<td><code>BINARY(16)</code></td>
+<td><code>UUID</code></td>
+</tr>
+<tr>
+<td><code>enum(...)</code></td>
+<td>Enumeration</td>
+<td><code>ENUM(...)</code></td>
+<td><code>CREATE TYPE ... AS ENUM</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="native-passthrough-types">Native Passthrough Types<a class="headerlink" href="#native-passthrough-types" title="Permanent link">&para;</a></h3>
+<p>Users may use native database types directly (e.g., <code>int</code>, <code>float</code>, <code>mediumint</code>, <code>tinyblob</code>),
+but these are discouraged and will generate a warning. Native types lack explicit size
+information, are not recorded in field comments, and may have portability issues across
+database backends.</p>
+<p><strong>Prefer core DataJoint types over native types:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Native (discouraged)</th>
+<th>Core DataJoint (preferred)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>int</code></td>
+<td><code>int32</code></td>
+</tr>
+<tr>
+<td><code>float</code></td>
+<td><code>float32</code> or <code>float64</code></td>
+</tr>
+<tr>
+<td><code>double</code></td>
+<td><code>float64</code></td>
+</tr>
+<tr>
+<td><code>tinyint</code></td>
+<td><code>int8</code></td>
+</tr>
+<tr>
+<td><code>tinyint unsigned</code></td>
+<td><code>uint8</code></td>
+</tr>
+<tr>
+<td><code>smallint</code></td>
+<td><code>int16</code></td>
+</tr>
+<tr>
+<td><code>bigint</code></td>
+<td><code>int64</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="type-modifiers-policy">Type Modifiers Policy<a class="headerlink" href="#type-modifiers-policy" title="Permanent link">&para;</a></h3>
+<p>DataJoint table definitions have their own syntax for constraints and metadata. SQL type
+modifiers are <strong>not allowed</strong> in type specifications because they conflict with DataJoint's
+declarative syntax:</p>
+<table>
+<thead>
+<tr>
+<th>Modifier</th>
+<th>Status</th>
+<th>DataJoint Alternative</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>NOT NULL</code> / <code>NULL</code></td>
+<td>❌ Not allowed</td>
+<td>Use <code>= NULL</code> for nullable; omit default for required</td>
+</tr>
+<tr>
+<td><code>DEFAULT value</code></td>
+<td>❌ Not allowed</td>
+<td>Use <code>= value</code> syntax before the type</td>
+</tr>
+<tr>
+<td><code>PRIMARY KEY</code></td>
+<td>❌ Not allowed</td>
+<td>Position above <code>---</code> line</td>
+</tr>
+<tr>
+<td><code>UNIQUE</code></td>
+<td>❌ Not allowed</td>
+<td>Use DataJoint index syntax</td>
+</tr>
+<tr>
+<td><code>COMMENT 'text'</code></td>
+<td>❌ Not allowed</td>
+<td>Use <code># comment</code> syntax</td>
+</tr>
+<tr>
+<td><code>CHARACTER SET</code></td>
+<td>❌ Not allowed</td>
+<td>Database-level configuration</td>
+</tr>
+<tr>
+<td><code>COLLATE</code></td>
+<td>❌ Not allowed</td>
+<td>Database-level configuration</td>
+</tr>
+<tr>
+<td><code>AUTO_INCREMENT</code></td>
+<td>⚠️ Discouraged</td>
+<td>Allowed with native types only, generates warning</td>
+</tr>
+<tr>
+<td><code>UNSIGNED</code></td>
+<td>✅ Allowed</td>
+<td>Part of type semantics (use <code>uint*</code> core types)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Nullability and defaults:</strong> DataJoint handles nullability through the default value syntax.
+An attribute is nullable if and only if its default is <code>NULL</code>:</p>
+<div class="highlight"><pre><span></span><code># Required (NOT NULL, no default)
+name : varchar(100)
+
+# Nullable (default is NULL)
+nickname = NULL : varchar(100)
+
+# Required with default value
+status = &quot;active&quot; : varchar(20)
+</code></pre></div>
+<p><strong>Auto-increment policy:</strong> DataJoint discourages <code>AUTO_INCREMENT</code> / <code>SERIAL</code> because:
+- Breaks reproducibility (IDs depend on insertion order)
+- Makes pipelines non-deterministic
+- Complicates data migration and replication
+- Primary keys should be meaningful, not arbitrary</p>
+<p>If required, use native types: <code>int auto_increment</code> or <code>serial</code> (with warning).</p>
+<h3 id="encoding-and-collation-policy">Encoding and Collation Policy<a class="headerlink" href="#encoding-and-collation-policy" title="Permanent link">&para;</a></h3>
+<p>Character encoding and collation are <strong>database-level configuration</strong>, not part of type
+definitions. This ensures consistent behavior across all tables and simplifies portability.</p>
+<p><strong>Configuration</strong> (in <code>dj.config</code> or <code>datajoint.json</code>):
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;database.charset&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;utf8mb4&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;database.collation&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;utf8mb4_bin&quot;</span>
+<span class="p">}</span>
+</code></pre></div></p>
+<p><strong>Defaults:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Setting</th>
+<th>MySQL</th>
+<th>PostgreSQL</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Charset</td>
+<td><code>utf8mb4</code></td>
+<td><code>UTF8</code></td>
+</tr>
+<tr>
+<td>Collation</td>
+<td><code>utf8mb4_bin</code></td>
+<td><code>C</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Policy:</strong>
+- <strong>UTF-8 required</strong>: DataJoint validates charset is UTF-8 compatible at connection time
+- <strong>Case-sensitive by default</strong>: Binary collation (<code>utf8mb4_bin</code> / <code>C</code>) ensures predictable comparisons
+- <strong>No per-column overrides</strong>: <code>CHARACTER SET</code> and <code>COLLATE</code> are rejected in type definitions
+- <strong>Like timezone</strong>: Encoding is infrastructure configuration, not part of the data model</p>
+<h2 id="codec-types-layer-3">Codec Types (Layer 3)<a class="headerlink" href="#codec-types-layer-3" title="Permanent link">&para;</a></h2>
+<p>Codec types provide <code>encode()</code>/<code>decode()</code> semantics on top of core types. They are
+composable and can be built-in or user-defined.</p>
+<h3 id="storage-mode-convention">Storage Mode: <code>@</code> Convention<a class="headerlink" href="#storage-mode-convention" title="Permanent link">&para;</a></h3>
+<p>The <code>@</code> character in codec syntax indicates <strong>object store</strong> (vs inline in database):</p>
+<ul>
+<li><strong>No <code>@</code></strong>: Inline storage (database column) - e.g., <code>&lt;blob&gt;</code>, <code>&lt;attach&gt;</code></li>
+<li><strong><code>@</code> present</strong>: Object store - e.g., <code>&lt;blob@&gt;</code>, <code>&lt;attach@store&gt;</code></li>
+<li><strong><code>@</code> alone</strong>: Use default store - e.g., <code>&lt;blob@&gt;</code></li>
+<li><strong><code>@name</code></strong>: Use named store - e.g., <code>&lt;blob@cold&gt;</code></li>
+</ul>
+<p>Some codecs support both modes (<code>&lt;blob&gt;</code>, <code>&lt;attach&gt;</code>), others are store-only (<code>&lt;object@&gt;</code>, <code>&lt;npy@&gt;</code>, <code>&lt;hash@&gt;</code>, <code>&lt;filepath@&gt;</code>).</p>
+<h3 id="codec-base-class">Codec Base Class<a class="headerlink" href="#codec-base-class" title="Permanent link">&para;</a></h3>
+<p>Codecs inherit from <code>dj.Codec</code> and auto-register when their class is defined. See the <a href="../codec-api/">Codec API Specification</a> for complete details on creating custom codecs.</p>
+<div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">GraphCodec</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Codec</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Auto-registered as &lt;graph&gt;.&quot;&quot;&quot;</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;graph&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_dtype</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">is_store</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">&quot;&lt;blob&gt;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">encode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">graph</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">store_name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;nodes&#39;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="n">graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">()),</span> <span class="s1">&#39;edges&#39;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="n">graph</span><span class="o">.</span><span class="n">edges</span><span class="p">())}</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">decode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stored</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="kn">import</span><span class="w"> </span><span class="nn">networkx</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">nx</span>
+        <span class="n">G</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">()</span>
+        <span class="n">G</span><span class="o">.</span><span class="n">add_nodes_from</span><span class="p">(</span><span class="n">stored</span><span class="p">[</span><span class="s1">&#39;nodes&#39;</span><span class="p">])</span>
+        <span class="n">G</span><span class="o">.</span><span class="n">add_edges_from</span><span class="p">(</span><span class="n">stored</span><span class="p">[</span><span class="s1">&#39;edges&#39;</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">G</span>
+</code></pre></div>
+<h3 id="codec-resolution-and-chaining">Codec Resolution and Chaining<a class="headerlink" href="#codec-resolution-and-chaining" title="Permanent link">&para;</a></h3>
+<p>Codecs resolve to core types through chaining. The <code>get_dtype(is_store)</code> method
+returns the appropriate dtype based on storage mode:</p>
+<table>
+<thead>
+<tr>
+<th>Codec</th>
+<th><code>is_store</code></th>
+<th>Resolution Chain</th>
+<th>SQL Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>&lt;blob&gt;</code></td>
+<td><code>False</code></td>
+<td><code>"bytes"</code></td>
+<td><code>LONGBLOB</code>/<code>BYTEA</code></td>
+</tr>
+<tr>
+<td><code>&lt;blob@&gt;</code></td>
+<td><code>True</code></td>
+<td><code>"&lt;hash&gt;"</code> → <code>"json"</code></td>
+<td><code>JSON</code>/<code>JSONB</code></td>
+</tr>
+<tr>
+<td><code>&lt;blob@cold&gt;</code></td>
+<td><code>True</code></td>
+<td><code>"&lt;hash&gt;"</code> → <code>"json"</code> (store=cold)</td>
+<td><code>JSON</code>/<code>JSONB</code></td>
+</tr>
+<tr>
+<td><code>&lt;attach&gt;</code></td>
+<td><code>False</code></td>
+<td><code>"bytes"</code></td>
+<td><code>LONGBLOB</code>/<code>BYTEA</code></td>
+</tr>
+<tr>
+<td><code>&lt;attach@&gt;</code></td>
+<td><code>True</code></td>
+<td><code>"&lt;hash&gt;"</code> → <code>"json"</code></td>
+<td><code>JSON</code>/<code>JSONB</code></td>
+</tr>
+<tr>
+<td><code>&lt;object@&gt;</code></td>
+<td><code>True</code></td>
+<td><code>"json"</code></td>
+<td><code>JSON</code>/<code>JSONB</code></td>
+</tr>
+<tr>
+<td><code>&lt;npy@&gt;</code></td>
+<td><code>True</code></td>
+<td><code>"json"</code></td>
+<td><code>JSON</code>/<code>JSONB</code></td>
+</tr>
+<tr>
+<td><code>&lt;object&gt;</code></td>
+<td><code>False</code></td>
+<td>ERROR (store only)</td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>&lt;npy&gt;</code></td>
+<td><code>False</code></td>
+<td>ERROR (store only)</td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>&lt;hash@&gt;</code></td>
+<td><code>True</code></td>
+<td><code>"json"</code></td>
+<td><code>JSON</code>/<code>JSONB</code></td>
+</tr>
+<tr>
+<td><code>&lt;filepath@&gt;</code></td>
+<td><code>True</code></td>
+<td><code>"json"</code></td>
+<td><code>JSON</code>/<code>JSONB</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="object-objectstore-schema-addressed-storage"><code>&lt;object@&gt;</code> / <code>&lt;object@store&gt;</code> - Schema-Addressed Storage<a class="headerlink" href="#object-objectstore-schema-addressed-storage" title="Permanent link">&para;</a></h3>
+<p><strong>Built-in codec. Store only.</strong></p>
+<p>Schema-addressed OAS storage for files and folders:</p>
+<ul>
+<li><strong>Schema-addressed</strong>: Path mirrors database structure: <code>{schema}/{table}/{pk}/{attribute}/</code></li>
+<li>One-to-one relationship with table row</li>
+<li>Deleted when row is deleted</li>
+<li>Returns <code>ObjectRef</code> for lazy access</li>
+<li>Supports direct writes (Zarr, HDF5) via fsspec</li>
+<li><strong>dtype</strong>: <code>json</code> (stores path, store name, metadata)</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">Analysis</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Computed</span><span class="p">):</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">    -&gt; Recording</span>
+<span class="s2">    ---</span>
+<span class="s2">    results : &lt;object@&gt;         # default store</span>
+<span class="s2">    archive : &lt;object@cold&gt;     # specific store</span>
+<span class="s2">    &quot;&quot;&quot;</span>
+</code></pre></div>
+<h4 id="implementation">Implementation<a class="headerlink" href="#implementation" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">ObjectCodec</span><span class="p">(</span><span class="n">SchemaCodec</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Schema-addressed OAS storage. Store only.&quot;&quot;&quot;</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;object&quot;</span>
+
+    <span class="c1"># get_dtype inherited from SchemaCodec</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">encode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">store_name</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+        <span class="n">schema</span><span class="p">,</span> <span class="n">table</span><span class="p">,</span> <span class="n">field</span><span class="p">,</span> <span class="n">pk</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_extract_context</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+        <span class="n">path</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_build_path</span><span class="p">(</span><span class="n">schema</span><span class="p">,</span> <span class="n">table</span><span class="p">,</span> <span class="n">field</span><span class="p">,</span> <span class="n">pk</span><span class="p">)</span>
+        <span class="n">backend</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_backend</span><span class="p">(</span><span class="n">store_name</span><span class="p">)</span>
+        <span class="n">backend</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;path&quot;</span><span class="p">:</span> <span class="n">path</span><span class="p">,</span> <span class="s2">&quot;store&quot;</span><span class="p">:</span> <span class="n">store_name</span><span class="p">,</span> <span class="o">...</span><span class="p">}</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">decode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stored</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ObjectRef</span><span class="p">:</span>
+        <span class="n">backend</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_backend</span><span class="p">(</span><span class="n">stored</span><span class="p">[</span><span class="s2">&quot;store&quot;</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">ObjectRef</span><span class="o">.</span><span class="n">from_json</span><span class="p">(</span><span class="n">stored</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="n">backend</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="hash-hashstore-hash-addressed-storage"><code>&lt;hash@&gt;</code> / <code>&lt;hash@store&gt;</code> - Hash-Addressed Storage<a class="headerlink" href="#hash-hashstore-hash-addressed-storage" title="Permanent link">&para;</a></h3>
+<p><strong>Built-in codec. Store only.</strong></p>
+<p>Hash-addressed storage with deduplication:</p>
+<ul>
+<li><strong>Hash-addressed</strong>: Path derived from content hash: <code>_hash/{hash[:2]}/{hash[2:4]}/{hash}</code></li>
+<li><strong>Single blob only</strong>: stores a single file or serialized object (not folders)</li>
+<li><strong>Per-project scope</strong>: content is shared across all schemas in a project (not per-schema)</li>
+<li>Many-to-one: multiple rows (even across schemas) can reference same content</li>
+<li>Reference counted for garbage collection</li>
+<li>Deduplication: identical content stored once across the entire project</li>
+<li>For folders/complex objects, use <code>&lt;object@&gt;</code> instead</li>
+<li><strong>dtype</strong>: <code>json</code> (stores hash, store name, size, metadata)</li>
+</ul>
+<div class="highlight"><pre><span></span><code>store_root/
+├── {schema}/{table}/{pk}/     # schema-addressed storage
+│   └── {attribute}/
+│
+└── _hash/                     # hash-addressed storage
+    └── {hash[:2]}/{hash[2:4]}/{hash}
+</code></pre></div>
+<h4 id="implementation_1">Implementation<a class="headerlink" href="#implementation_1" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">HashCodec</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Codec</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Hash-addressed storage. Store only.&quot;&quot;&quot;</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;hash&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_dtype</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">is_store</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">is_store</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">DataJointError</span><span class="p">(</span><span class="s2">&quot;&lt;hash&gt; requires @ (store only)&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="s2">&quot;json&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">encode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">store_name</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Store content, return metadata as JSON.&quot;&quot;&quot;</span>
+        <span class="n">hash_id</span> <span class="o">=</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">md5</span><span class="p">(</span><span class="n">data</span><span class="p">)</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()</span>  <span class="c1"># 32-char hex</span>
+        <span class="n">store</span> <span class="o">=</span> <span class="n">get_store</span><span class="p">(</span><span class="n">store_name</span> <span class="ow">or</span> <span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;stores&#39;</span><span class="p">][</span><span class="s1">&#39;default&#39;</span><span class="p">])</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;_hash/</span><span class="si">{</span><span class="n">hash_id</span><span class="p">[:</span><span class="mi">2</span><span class="p">]</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">hash_id</span><span class="p">[</span><span class="mi">2</span><span class="p">:</span><span class="mi">4</span><span class="p">]</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">hash_id</span><span class="si">}</span><span class="s2">&quot;</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">store</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+            <span class="n">store</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+
+        <span class="c1"># Metadata stored in JSON column (no separate registry)</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;hash&quot;</span><span class="p">:</span> <span class="n">hash_id</span><span class="p">,</span> <span class="s2">&quot;store&quot;</span><span class="p">:</span> <span class="n">store_name</span><span class="p">,</span> <span class="s2">&quot;size&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)}</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">decode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stored</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Retrieve content by hash.&quot;&quot;&quot;</span>
+        <span class="n">store</span> <span class="o">=</span> <span class="n">get_store</span><span class="p">(</span><span class="n">stored</span><span class="p">[</span><span class="s2">&quot;store&quot;</span><span class="p">])</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;_hash/</span><span class="si">{</span><span class="n">stored</span><span class="p">[</span><span class="s1">&#39;hash&#39;</span><span class="p">][:</span><span class="mi">2</span><span class="p">]</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">stored</span><span class="p">[</span><span class="s1">&#39;hash&#39;</span><span class="p">][</span><span class="mi">2</span><span class="p">:</span><span class="mi">4</span><span class="p">]</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">stored</span><span class="p">[</span><span class="s1">&#39;hash&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="k">return</span> <span class="n">store</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+</code></pre></div>
+<h4 id="database-column">Database Column<a class="headerlink" href="#database-column" title="Permanent link">&para;</a></h4>
+<p>The <code>&lt;hash@&gt;</code> type stores JSON metadata:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">-- content column (MySQL)</span>
+<span class="n">features</span><span class="w"> </span><span class="n">JSON</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span>
+<span class="c1">-- Contains: {&quot;hash&quot;: &quot;abc123...&quot;, &quot;store&quot;: &quot;main&quot;, &quot;size&quot;: 12345}</span>
+
+<span class="c1">-- content column (PostgreSQL)</span>
+<span class="n">features</span><span class="w"> </span><span class="n">JSONB</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span>
+</code></pre></div>
+<h3 id="filepathstore-portable-external-reference"><code>&lt;filepath@store&gt;</code> - Portable External Reference<a class="headerlink" href="#filepathstore-portable-external-reference" title="Permanent link">&para;</a></h3>
+<p><strong>Built-in codec. External only (store required).</strong></p>
+<p>Relative path references within configured stores:</p>
+<ul>
+<li><strong>Relative paths</strong>: paths within a configured store (portable across environments)</li>
+<li><strong>Store-aware</strong>: resolves paths against configured store backend</li>
+<li>Returns <code>ObjectRef</code> for lazy access via fsspec</li>
+<li>Stores optional checksum for verification</li>
+<li><strong>dtype</strong>: <code>json</code> (stores path, store name, checksum, metadata)</li>
+</ul>
+<p><strong>Key benefit</strong>: Portability. The path is relative to the store, so pipelines can be moved
+between environments (dev → prod, cloud → local) by changing store configuration without
+updating data.</p>
+<div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">RawData</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">    session_id : int32</span>
+<span class="s2">    ---</span>
+<span class="s2">    recording : &lt;filepath@main&gt;      # relative path within &#39;main&#39; store</span>
+<span class="s2">    &quot;&quot;&quot;</span>
+
+<span class="c1"># Insert - user provides relative path within the store</span>
+<span class="n">table</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span>
+    <span class="s1">&#39;session_id&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s1">&#39;recording&#39;</span><span class="p">:</span> <span class="s1">&#39;experiment_001/data.nwb&#39;</span>  <span class="c1"># relative to main store root</span>
+<span class="p">})</span>
+
+<span class="c1"># Fetch - returns ObjectRef (lazy)</span>
+<span class="n">row</span> <span class="o">=</span> <span class="p">(</span><span class="n">table</span> <span class="o">&amp;</span> <span class="s1">&#39;session_id=1&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">fetch1</span><span class="p">()</span>
+<span class="n">ref</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;recording&#39;</span><span class="p">]</span>           <span class="c1"># ObjectRef</span>
+<span class="n">ref</span><span class="o">.</span><span class="n">download</span><span class="p">(</span><span class="s1">&#39;/local/path&#39;</span><span class="p">)</span>      <span class="c1"># explicit download</span>
+<span class="n">ref</span><span class="o">.</span><span class="n">open</span><span class="p">()</span>                       <span class="c1"># fsspec streaming access</span>
+</code></pre></div>
+<h4 id="when-to-use-filepathstore-vs-varchar">When to Use <code>&lt;filepath@store&gt;</code> vs <code>varchar</code><a class="headerlink" href="#when-to-use-filepathstore-vs-varchar" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th>Use Case</th>
+<th>Recommended Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Need ObjectRef/lazy access</td>
+<td><code>&lt;filepath@store&gt;</code></td>
+</tr>
+<tr>
+<td>Need portability (relative paths)</td>
+<td><code>&lt;filepath@store&gt;</code></td>
+</tr>
+<tr>
+<td>Want checksum verification</td>
+<td><code>&lt;filepath@store&gt;</code></td>
+</tr>
+<tr>
+<td>Just storing a URL string</td>
+<td><code>varchar</code></td>
+</tr>
+<tr>
+<td>External URLs you don't control</td>
+<td><code>varchar</code></td>
+</tr>
+</tbody>
+</table>
+<p>For arbitrary URLs (S3, HTTP, etc.) where you don't need ObjectRef semantics,
+just use <code>varchar</code>. A string is simpler and more transparent.</p>
+<h4 id="implementation_2">Implementation<a class="headerlink" href="#implementation_2" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">FilepathCodec</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Codec</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Store-relative file references. External only.&quot;&quot;&quot;</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;filepath&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_dtype</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">is_external</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">is_external</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">DataJointError</span><span class="p">(</span><span class="s2">&quot;&lt;filepath&gt; requires @store&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="s2">&quot;json&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">encode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">relative_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">store_name</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Register reference to file in store.&quot;&quot;&quot;</span>
+        <span class="n">store</span> <span class="o">=</span> <span class="n">get_store</span><span class="p">(</span><span class="n">store_name</span><span class="p">)</span>  <span class="c1"># store_name required for filepath</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;path&#39;</span><span class="p">:</span> <span class="n">relative_path</span><span class="p">,</span> <span class="s1">&#39;store&#39;</span><span class="p">:</span> <span class="n">store_name</span><span class="p">}</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">decode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stored</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ObjectRef</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return ObjectRef for lazy access.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">ObjectRef</span><span class="p">(</span><span class="n">store</span><span class="o">=</span><span class="n">get_store</span><span class="p">(</span><span class="n">stored</span><span class="p">[</span><span class="s1">&#39;store&#39;</span><span class="p">]),</span> <span class="n">path</span><span class="o">=</span><span class="n">stored</span><span class="p">[</span><span class="s1">&#39;path&#39;</span><span class="p">])</span>
+</code></pre></div>
+<h4 id="database-column_1">Database Column<a class="headerlink" href="#database-column_1" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><span class="c1">-- filepath column (MySQL)</span>
+<span class="n">recording</span><span class="w"> </span><span class="n">JSON</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span>
+<span class="c1">-- Contains: {&quot;path&quot;: &quot;experiment_001/data.nwb&quot;, &quot;store&quot;: &quot;main&quot;, &quot;checksum&quot;: &quot;...&quot;, &quot;size&quot;: ...}</span>
+
+<span class="c1">-- filepath column (PostgreSQL)</span>
+<span class="n">recording</span><span class="w"> </span><span class="n">JSONB</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span>
+</code></pre></div>
+<h4 id="key-differences-from-legacy-filepathstore-now-filepathstore">Key Differences from Legacy <code>filepath@store</code> (now <code>&lt;filepath@store&gt;</code>)<a class="headerlink" href="#key-differences-from-legacy-filepathstore-now-filepathstore" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Legacy</th>
+<th>New</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Access</td>
+<td>Copy to local stage</td>
+<td>ObjectRef (lazy)</td>
+</tr>
+<tr>
+<td>Copying</td>
+<td>Automatic</td>
+<td>Explicit via <code>ref.download()</code></td>
+</tr>
+<tr>
+<td>Streaming</td>
+<td>No</td>
+<td>Yes via <code>ref.open()</code></td>
+</tr>
+<tr>
+<td>Paths</td>
+<td>Relative</td>
+<td>Relative (unchanged)</td>
+</tr>
+<tr>
+<td>Store param</td>
+<td>Required (<code>@store</code>)</td>
+<td>Required (<code>@store</code>)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="database-types">Database Types<a class="headerlink" href="#database-types" title="Permanent link">&para;</a></h2>
+<h3 id="json-cross-database-json-type"><code>json</code> - Cross-Database JSON Type<a class="headerlink" href="#json-cross-database-json-type" title="Permanent link">&para;</a></h3>
+<p>JSON storage compatible across MySQL and PostgreSQL:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">-- MySQL</span>
+<span class="k">column_name</span><span class="w"> </span><span class="n">JSON</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span>
+
+<span class="c1">-- PostgreSQL (uses JSONB for better indexing)</span>
+<span class="k">column_name</span><span class="w"> </span><span class="n">JSONB</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span>
+</code></pre></div>
+<p>The <code>json</code> database type:
+- Used as dtype by built-in codecs (<code>&lt;object@&gt;</code>, <code>&lt;hash@&gt;</code>, <code>&lt;filepath@store&gt;</code>)
+- Stores arbitrary JSON-serializable data
+- Automatically uses appropriate type for database backend
+- Supports JSON path queries where available</p>
+<h2 id="built-in-codecs">Built-in Codecs<a class="headerlink" href="#built-in-codecs" title="Permanent link">&para;</a></h2>
+<h3 id="blob-blob-serialized-python-objects"><code>&lt;blob&gt;</code> / <code>&lt;blob@&gt;</code> - Serialized Python Objects<a class="headerlink" href="#blob-blob-serialized-python-objects" title="Permanent link">&para;</a></h3>
+<p><strong>Supports both internal and external storage.</strong></p>
+<p>Serializes Python objects (NumPy arrays, dicts, lists, etc.) using DataJoint's
+blob format. Compatible with MATLAB.</p>
+<ul>
+<li><strong><code>&lt;blob&gt;</code></strong>: Stored in database (<code>bytes</code> → <code>LONGBLOB</code>/<code>BYTEA</code>)</li>
+<li><strong><code>&lt;blob@&gt;</code></strong>: Stored externally via <code>&lt;hash@&gt;</code> with deduplication</li>
+<li><strong><code>&lt;blob@store&gt;</code></strong>: Stored in specific named store</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">BlobCodec</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Codec</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Serialized Python objects. Supports internal and external.&quot;&quot;&quot;</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;blob&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_dtype</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">is_external</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">&quot;&lt;hash&gt;&quot;</span> <span class="k">if</span> <span class="n">is_external</span> <span class="k">else</span> <span class="s2">&quot;bytes&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">encode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">store_name</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">.</span><span class="w"> </span><span class="kn">import</span> <span class="n">blob</span>
+        <span class="k">return</span> <span class="n">blob</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">compress</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">decode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stored</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">.</span><span class="w"> </span><span class="kn">import</span> <span class="n">blob</span>
+        <span class="k">return</span> <span class="n">blob</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="n">stored</span><span class="p">)</span>
+</code></pre></div>
+<p>Usage:
+<div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">ProcessedData</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Computed</span><span class="p">):</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">    -&gt; RawData</span>
+<span class="s2">    ---</span>
+<span class="s2">    small_result : &lt;blob&gt;          # internal (in database)</span>
+<span class="s2">    large_result : &lt;blob@&gt;         # external (default store)</span>
+<span class="s2">    archive_result : &lt;blob@cold&gt;   # external (specific store)</span>
+<span class="s2">    &quot;&quot;&quot;</span>
+</code></pre></div></p>
+<h3 id="attach-attach-file-attachments"><code>&lt;attach&gt;</code> / <code>&lt;attach@&gt;</code> - File Attachments<a class="headerlink" href="#attach-attach-file-attachments" title="Permanent link">&para;</a></h3>
+<p><strong>Supports both internal and external storage.</strong></p>
+<p>Stores files with filename preserved. On fetch, extracts to configured download path.</p>
+<ul>
+<li><strong><code>&lt;attach&gt;</code></strong>: Stored in database (<code>bytes</code> → <code>LONGBLOB</code>/<code>BYTEA</code>)</li>
+<li><strong><code>&lt;attach@&gt;</code></strong>: Stored externally via <code>&lt;hash@&gt;</code> with deduplication</li>
+<li><strong><code>&lt;attach@store&gt;</code></strong>: Stored in specific named store</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">AttachCodec</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Codec</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;File attachment with filename. Supports internal and external.&quot;&quot;&quot;</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;attach&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_dtype</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">is_external</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">&quot;&lt;hash&gt;&quot;</span> <span class="k">if</span> <span class="n">is_external</span> <span class="k">else</span> <span class="s2">&quot;bytes&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">encode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filepath</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">store_name</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">filepath</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">path</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">encode</span><span class="p">()</span> <span class="o">+</span> <span class="sa">b</span><span class="s2">&quot;</span><span class="se">\0</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="n">path</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">decode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stored</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="n">filename</span><span class="p">,</span> <span class="n">contents</span> <span class="o">=</span> <span class="n">stored</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="sa">b</span><span class="s2">&quot;</span><span class="se">\0</span><span class="s2">&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">filename</span> <span class="o">=</span> <span class="n">filename</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
+        <span class="n">download_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;download_path&#39;</span><span class="p">])</span> <span class="o">/</span> <span class="n">filename</span>
+        <span class="n">download_path</span><span class="o">.</span><span class="n">write_bytes</span><span class="p">(</span><span class="n">contents</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">download_path</span><span class="p">)</span>
+</code></pre></div>
+<p>Usage:
+<div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">Attachments</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">    attachment_id : int32</span>
+<span class="s2">    ---</span>
+<span class="s2">    config : &lt;attach&gt;           # internal (small file in DB)</span>
+<span class="s2">    data_file : &lt;attach@&gt;       # external (default store)</span>
+<span class="s2">    archive : &lt;attach@cold&gt;     # external (specific store)</span>
+<span class="s2">    &quot;&quot;&quot;</span>
+</code></pre></div></p>
+<h2 id="user-defined-codecs">User-Defined Codecs<a class="headerlink" href="#user-defined-codecs" title="Permanent link">&para;</a></h2>
+<p>Users can define custom codecs for domain-specific data. See the <a href="../codec-api/">Codec API Specification</a> for complete examples including:</p>
+<ul>
+<li>Simple serialization codecs</li>
+<li>External storage codecs</li>
+<li>JSON with schema validation</li>
+<li>Context-dependent encoding</li>
+<li>External-only codecs (Zarr, HDF5)</li>
+</ul>
+<h2 id="storage-comparison">Storage Comparison<a class="headerlink" href="#storage-comparison" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>get_dtype</th>
+<th>Resolves To</th>
+<th>Storage Location</th>
+<th>Dedup</th>
+<th>Returns</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>&lt;blob&gt;</code></td>
+<td><code>bytes</code></td>
+<td><code>LONGBLOB</code>/<code>BYTEA</code></td>
+<td>Database</td>
+<td>No</td>
+<td>Python object</td>
+</tr>
+<tr>
+<td><code>&lt;blob@&gt;</code></td>
+<td><code>&lt;hash&gt;</code></td>
+<td><code>json</code></td>
+<td><code>_hash/{hash}</code></td>
+<td>Yes</td>
+<td>Python object</td>
+</tr>
+<tr>
+<td><code>&lt;blob@s&gt;</code></td>
+<td><code>&lt;hash&gt;</code></td>
+<td><code>json</code></td>
+<td><code>_hash/{hash}</code></td>
+<td>Yes</td>
+<td>Python object</td>
+</tr>
+<tr>
+<td><code>&lt;attach&gt;</code></td>
+<td><code>bytes</code></td>
+<td><code>LONGBLOB</code>/<code>BYTEA</code></td>
+<td>Database</td>
+<td>No</td>
+<td>Local file path</td>
+</tr>
+<tr>
+<td><code>&lt;attach@&gt;</code></td>
+<td><code>&lt;hash&gt;</code></td>
+<td><code>json</code></td>
+<td><code>_hash/{hash}</code></td>
+<td>Yes</td>
+<td>Local file path</td>
+</tr>
+<tr>
+<td><code>&lt;attach@s&gt;</code></td>
+<td><code>&lt;hash&gt;</code></td>
+<td><code>json</code></td>
+<td><code>_hash/{hash}</code></td>
+<td>Yes</td>
+<td>Local file path</td>
+</tr>
+<tr>
+<td><code>&lt;object@&gt;</code></td>
+<td><code>json</code></td>
+<td><code>JSON</code>/<code>JSONB</code></td>
+<td><code>{schema}/{table}/{pk}/</code></td>
+<td>No</td>
+<td>ObjectRef</td>
+</tr>
+<tr>
+<td><code>&lt;object@s&gt;</code></td>
+<td><code>json</code></td>
+<td><code>JSON</code>/<code>JSONB</code></td>
+<td><code>{schema}/{table}/{pk}/</code></td>
+<td>No</td>
+<td>ObjectRef</td>
+</tr>
+<tr>
+<td><code>&lt;hash@&gt;</code></td>
+<td><code>json</code></td>
+<td><code>JSON</code>/<code>JSONB</code></td>
+<td><code>_hash/{hash}</code></td>
+<td>Yes</td>
+<td>bytes</td>
+</tr>
+<tr>
+<td><code>&lt;hash@s&gt;</code></td>
+<td><code>json</code></td>
+<td><code>JSON</code>/<code>JSONB</code></td>
+<td><code>_hash/{hash}</code></td>
+<td>Yes</td>
+<td>bytes</td>
+</tr>
+<tr>
+<td><code>&lt;filepath@s&gt;</code></td>
+<td><code>json</code></td>
+<td><code>JSON</code>/<code>JSONB</code></td>
+<td>Configured store</td>
+<td>No</td>
+<td>ObjectRef</td>
+</tr>
+</tbody>
+</table>
+<h2 id="garbage-collection-for-hash-storage">Garbage Collection for Hash Storage<a class="headerlink" href="#garbage-collection-for-hash-storage" title="Permanent link">&para;</a></h2>
+<p>Hash metadata (hash, store, size) is stored directly in each table's JSON column - no separate
+registry table is needed. Garbage collection scans all tables to find referenced hashes:</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">garbage_collect</span><span class="p">(</span><span class="n">store_name</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Remove hash-addressed data not referenced by any table.&quot;&quot;&quot;</span>
+    <span class="c1"># Scan store for all hash files</span>
+    <span class="n">store</span> <span class="o">=</span> <span class="n">get_store</span><span class="p">(</span><span class="n">store_name</span><span class="p">)</span>
+    <span class="n">all_hashes</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">store</span><span class="o">.</span><span class="n">list_hashes</span><span class="p">())</span>  <span class="c1"># from _hash/ directory</span>
+
+    <span class="c1"># Scan all tables for referenced hashes</span>
+    <span class="n">referenced</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">schema</span> <span class="ow">in</span> <span class="n">project</span><span class="o">.</span><span class="n">schemas</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">table</span> <span class="ow">in</span> <span class="n">schema</span><span class="o">.</span><span class="n">tables</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">attr</span> <span class="ow">in</span> <span class="n">table</span><span class="o">.</span><span class="n">heading</span><span class="o">.</span><span class="n">attributes</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">uses_hash_storage</span><span class="p">(</span><span class="n">attr</span><span class="p">):</span>  <span class="c1"># &lt;blob@&gt;, &lt;attach@&gt;, &lt;hash@&gt;</span>
+                    <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">table</span><span class="p">:</span>
+                        <span class="n">val</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">attr</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+                        <span class="k">if</span> <span class="n">val</span> <span class="ow">and</span> <span class="n">val</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;store&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="n">store_name</span><span class="p">:</span>
+                            <span class="n">referenced</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">val</span><span class="p">[</span><span class="s1">&#39;hash&#39;</span><span class="p">])</span>
+
+    <span class="c1"># Delete orphaned files</span>
+    <span class="k">for</span> <span class="n">hash_id</span> <span class="ow">in</span> <span class="p">(</span><span class="n">all_hashes</span> <span class="o">-</span> <span class="n">referenced</span><span class="p">):</span>
+        <span class="n">store</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">hash_path</span><span class="p">(</span><span class="n">hash_id</span><span class="p">))</span>
+</code></pre></div>
+<h2 id="built-in-codec-comparison">Built-in Codec Comparison<a class="headerlink" href="#built-in-codec-comparison" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th><code>&lt;blob&gt;</code></th>
+<th><code>&lt;attach&gt;</code></th>
+<th><code>&lt;object@&gt;</code></th>
+<th><code>&lt;hash@&gt;</code></th>
+<th><code>&lt;filepath@&gt;</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Storage modes</td>
+<td>Both</td>
+<td>Both</td>
+<td>External only</td>
+<td>External only</td>
+<td>External only</td>
+</tr>
+<tr>
+<td>Internal dtype</td>
+<td><code>bytes</code></td>
+<td><code>bytes</code></td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>External dtype</td>
+<td><code>&lt;hash&gt;</code></td>
+<td><code>&lt;hash&gt;</code></td>
+<td><code>json</code></td>
+<td><code>json</code></td>
+<td><code>json</code></td>
+</tr>
+<tr>
+<td>Addressing</td>
+<td>Hash</td>
+<td>Hash</td>
+<td>Primary key</td>
+<td>Hash</td>
+<td>Relative path</td>
+</tr>
+<tr>
+<td>Deduplication</td>
+<td>Yes (external)</td>
+<td>Yes (external)</td>
+<td>No</td>
+<td>Yes</td>
+<td>No</td>
+</tr>
+<tr>
+<td>Structure</td>
+<td>Single blob</td>
+<td>Single file</td>
+<td>Files, folders</td>
+<td>Single blob</td>
+<td>Any</td>
+</tr>
+<tr>
+<td>Returns</td>
+<td>Python object</td>
+<td>Local path</td>
+<td>ObjectRef</td>
+<td>bytes</td>
+<td>ObjectRef</td>
+</tr>
+<tr>
+<td>GC</td>
+<td>Ref counted</td>
+<td>Ref counted</td>
+<td>With row</td>
+<td>Ref counted</td>
+<td>User managed</td>
+</tr>
+</tbody>
+</table>
+<p><strong>When to use each:</strong>
+- <strong><code>&lt;blob&gt;</code></strong>: Serialized Python objects (NumPy arrays, dicts). Use <code>&lt;blob@&gt;</code> for large/duplicated data
+- <strong><code>&lt;attach&gt;</code></strong>: File attachments with filename preserved. Use <code>&lt;attach@&gt;</code> for large files
+- <strong><code>&lt;object@&gt;</code></strong>: Large/complex file structures (Zarr, HDF5) where DataJoint controls organization
+- <strong><code>&lt;hash@&gt;</code></strong>: Raw bytes with deduplication (typically used via <code>&lt;blob@&gt;</code> or <code>&lt;attach@&gt;</code>)
+- <strong><code>&lt;filepath@store&gt;</code></strong>: Portable references to externally-managed files
+- <strong><code>varchar</code></strong>: Arbitrary URLs/paths where ObjectRef semantics aren't needed</p>
+<h2 id="key-design-decisions">Key Design Decisions<a class="headerlink" href="#key-design-decisions" title="Permanent link">&para;</a></h2>
+<ol>
+<li><strong>Three-layer architecture</strong>:<ul>
+<li>Layer 1: Native database types (backend-specific, discouraged)</li>
+<li>Layer 2: Core DataJoint types (standardized, scientist-friendly)</li>
+<li>Layer 3: Codec types (encode/decode, composable)</li>
+</ul>
+</li>
+<li><strong>Core types are scientist-friendly</strong>: <code>float32</code>, <code>uint8</code>, <code>bool</code>, <code>bytes</code> instead of <code>FLOAT</code>, <code>TINYINT UNSIGNED</code>, <code>LONGBLOB</code></li>
+<li><strong>Codecs use angle brackets</strong>: <code>&lt;blob&gt;</code>, <code>&lt;object@store&gt;</code>, <code>&lt;filepath@main&gt;</code> - distinguishes from core types</li>
+<li><strong><code>@</code> indicates external storage</strong>: No <code>@</code> = database, <code>@</code> present = object store</li>
+<li><strong><code>get_dtype(is_external)</code> method</strong>: Codecs resolve dtype at declaration time based on storage mode</li>
+<li><strong>Codecs are composable</strong>: <code>&lt;blob@&gt;</code> uses <code>&lt;hash@&gt;</code>, which uses <code>json</code></li>
+<li><strong>Built-in external codecs use JSON dtype</strong>: Stores metadata (path, hash, store name, etc.)</li>
+<li><strong>Two OAS regions</strong>: object (PK-addressed) and hash (hash-addressed) within managed stores</li>
+<li><strong>Filepath for portability</strong>: <code>&lt;filepath@store&gt;</code> uses relative paths within stores for environment portability</li>
+<li><strong>No <code>uri</code> type</strong>: For arbitrary URLs, use <code>varchar</code>—simpler and more transparent</li>
+<li><strong>Naming conventions</strong>:
+    - <code>@</code> = external storage (object store)
+    - No <code>@</code> = internal storage (database)
+    - <code>@</code> alone = default store
+    - <code>@name</code> = named store</li>
+<li><strong>Dual-mode codecs</strong>: <code>&lt;blob&gt;</code> and <code>&lt;attach&gt;</code> support both internal and external storage</li>
+<li><strong>External-only codecs</strong>: <code>&lt;object@&gt;</code>, <code>&lt;hash@&gt;</code>, <code>&lt;filepath@&gt;</code> require <code>@</code></li>
+<li><strong>Transparent access</strong>: Codecs return Python objects or file paths</li>
+<li><strong>Lazy access</strong>: <code>&lt;object@&gt;</code> and <code>&lt;filepath@store&gt;</code> return ObjectRef</li>
+<li><strong>MD5 for content hashing</strong>: See <a href="#hash-algorithm-choice">Hash Algorithm Choice</a> below</li>
+<li><strong>No separate registry</strong>: Hash metadata stored in JSON columns, not a separate table</li>
+<li><strong>Auto-registration via <code>__init_subclass__</code></strong>: Codecs register automatically when subclassed—no decorator needed. Use <code>register=False</code> for abstract bases. Requires Python 3.10+.</li>
+</ol>
+<h3 id="hash-algorithm-choice">Hash Algorithm Choice<a class="headerlink" href="#hash-algorithm-choice" title="Permanent link">&para;</a></h3>
+<p>Content-addressed storage uses <strong>MD5</strong> (128-bit, 32-char hex) rather than SHA256 (256-bit, 64-char hex).</p>
+<p><strong>Rationale:</strong></p>
+<ol>
+<li>
+<p><strong>Practical collision resistance is sufficient</strong>: The birthday bound for MD5 is ~2^64 operations
+   before 50% collision probability. No scientific project will store anywhere near 10^19 files.
+   For content deduplication (not cryptographic verification), MD5 provides adequate uniqueness.</p>
+</li>
+<li>
+<p><strong>Storage efficiency</strong>: 32-char hashes vs 64-char hashes in every JSON metadata field.
+   With millions of records, this halves the storage overhead for hash identifiers.</p>
+</li>
+<li>
+<p><strong>Performance</strong>: MD5 is ~2-3x faster than SHA256 for large files. While both are fast,
+   the difference is measurable when hashing large scientific datasets.</p>
+</li>
+<li>
+<p><strong>Legacy compatibility</strong>: DataJoint's existing <code>uuid_from_buffer()</code> function uses MD5.
+   The new system changes only the storage format (hex string in JSON vs binary UUID),
+   not the underlying hash algorithm. This simplifies migration.</p>
+</li>
+<li>
+<p><strong>Consistency with existing codebase</strong>: Internal functions use MD5 for query caching.</p>
+</li>
+</ol>
+<p><strong>Why not SHA256?</strong></p>
+<p>SHA256 is the modern standard for content-addressable storage (Git, Docker, IPFS). However:
+- These systems prioritize cryptographic security against adversarial collision attacks
+- Scientific data pipelines face no adversarial threat model
+- The practical benefits (storage, speed, compatibility) outweigh theoretical security gains</p>
+<p><strong>Note</strong>: If cryptographic verification is ever needed (e.g., for compliance or reproducibility
+audits), SHA256 checksums can be computed on-demand without changing the storage addressing scheme.</p>
+<h2 id="migration-from-legacy-types">Migration from Legacy Types<a class="headerlink" href="#migration-from-legacy-types" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Legacy</th>
+<th>New Equivalent</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>longblob</code> (auto-serialized)</td>
+<td><code>&lt;blob&gt;</code></td>
+</tr>
+<tr>
+<td><code>blob@store</code></td>
+<td><code>&lt;blob@store&gt;</code></td>
+</tr>
+<tr>
+<td><code>attach</code></td>
+<td><code>&lt;attach&gt;</code></td>
+</tr>
+<tr>
+<td><code>attach@store</code></td>
+<td><code>&lt;attach@store&gt;</code></td>
+</tr>
+<tr>
+<td><code>filepath@store</code> (copy-based)</td>
+<td><code>&lt;filepath@store&gt;</code> (ObjectRef-based)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="migration-from-legacy-external_-stores">Migration from Legacy <code>~external_*</code> Stores<a class="headerlink" href="#migration-from-legacy-external_-stores" title="Permanent link">&para;</a></h3>
+<p>Legacy external storage used per-schema <code>~external_{store}</code> tables with UUID references.
+Migration to the new JSON-based hash storage requires:</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">migrate_external_store</span><span class="p">(</span><span class="n">schema</span><span class="p">,</span> <span class="n">store_name</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Migrate legacy ~external_{store} to new HashRegistry.</span>
+
+<span class="sd">    1. Read all entries from ~external_{store}</span>
+<span class="sd">    2. For each entry:</span>
+<span class="sd">       - Fetch content from legacy location</span>
+<span class="sd">       - Compute MD5 hash</span>
+<span class="sd">       - Copy to _hash/{hash}/ if not exists</span>
+<span class="sd">       - Update table column to new hash format</span>
+<span class="sd">    3. After all schemas migrated, drop ~external_{store} tables</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">external_table</span> <span class="o">=</span> <span class="n">schema</span><span class="o">.</span><span class="n">external</span><span class="p">[</span><span class="n">store_name</span><span class="p">]</span>
+
+    <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">external_table</span><span class="p">:</span>
+        <span class="n">legacy_uuid</span> <span class="o">=</span> <span class="n">entry</span><span class="p">[</span><span class="s1">&#39;hash&#39;</span><span class="p">]</span>
+
+        <span class="c1"># Fetch content from legacy location</span>
+        <span class="n">content</span> <span class="o">=</span> <span class="n">external_table</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">legacy_uuid</span><span class="p">)</span>
+
+        <span class="c1"># Compute new content hash</span>
+        <span class="n">hash_id</span> <span class="o">=</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">md5</span><span class="p">(</span><span class="n">content</span><span class="p">)</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()</span>
+
+        <span class="c1"># Store in new location if not exists</span>
+        <span class="n">new_path</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;_hash/</span><span class="si">{</span><span class="n">hash_id</span><span class="p">[:</span><span class="mi">2</span><span class="p">]</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">hash_id</span><span class="p">[</span><span class="mi">2</span><span class="p">:</span><span class="mi">4</span><span class="p">]</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">hash_id</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="n">store</span> <span class="o">=</span> <span class="n">get_store</span><span class="p">(</span><span class="n">store_name</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">store</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">new_path</span><span class="p">):</span>
+            <span class="n">store</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">new_path</span><span class="p">,</span> <span class="n">content</span><span class="p">)</span>
+
+        <span class="c1"># Update referencing tables: convert UUID column to JSON with hash metadata</span>
+        <span class="c1"># The JSON column stores {&quot;hash&quot;: hash_id, &quot;store&quot;: store_name, &quot;size&quot;: len(content)}</span>
+        <span class="c1"># ... update all tables that reference this UUID ...</span>
+
+    <span class="c1"># After migration complete for all schemas:</span>
+    <span class="c1"># DROP TABLE `{schema}`.`~external_{store}`</span>
+</code></pre></div>
+<p><strong>Migration considerations:</strong>
+- Legacy UUIDs were based on MD5 content hash stored as <code>binary(16)</code> (UUID format)
+- New system uses <code>char(32)</code> MD5 hex strings stored in JSON
+- The hash algorithm is unchanged (MD5), only the storage format differs
+- Migration can be done incrementally per schema
+- Backward compatibility layer can read both formats during transition</p>
+<h2 id="open-questions">Open Questions<a class="headerlink" href="#open-questions" title="Permanent link">&para;</a></h2>
+<ol>
+<li>How long should the backward compatibility layer support legacy <code>~external_*</code> format?</li>
+<li>Should <code>&lt;hash@&gt;</code> (without store name) use a default store or require explicit store name?</li>
+</ol>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+    <a href="https://www.datajoint.com" target="_blank" rel="noopener" title="DataJoint" class="md-social__link">
+      <?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 15.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="260.479px" height="365.463px" viewBox="0 0 260.479 365.463" enable-background="new 0 0 260.479 365.463"
+	 xml:space="preserve">
+<g>
+	<path d="M4.638,361.434c0,0,124.071-124.072,135.896-357.434c0,0,29.555,189.053,115.266,256.988
+		C255.799,260.988,173.038,249.174,4.638,361.434z"/>
+</g>
+</svg>
+    </a>
+  
+    
+    
+    
+    
+    <a href="https://docs.datajoint.com" target="_blank" rel="noopener" title="DataJoint Documentation" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 21.5c-1.35-.85-3.8-1.5-5.5-1.5-1.65 0-3.35.3-4.75 1.05-.1.05-.15.05-.25.05-.25 0-.5-.25-.5-.5V6c.6-.45 1.25-.75 2-1 1.11-.35 2.33-.5 3.5-.5 1.95 0 4.05.4 5.5 1.5 1.45-1.1 3.55-1.5 5.5-1.5 1.17 0 2.39.15 3.5.5.75.25 1.4.55 2 1v14.6c0 .25-.25.5-.5.5-.1 0-.15 0-.25-.05-1.4-.75-3.1-1.05-4.75-1.05-1.7 0-4.15.65-5.5 1.5M12 8v11.5c1.35-.85 3.8-1.5 5.5-1.5 1.2 0 2.4.15 3.5.5V7c-1.1-.35-2.3-.5-3.5-.5-1.7 0-4.15.65-5.5 1.5m1 3.5c1.11-.68 2.6-1 4.5-1 .91 0 1.76.09 2.5.28V9.23c-.87-.15-1.71-.23-2.5-.23q-2.655 0-4.5.84zm4.5.17c-1.71 0-3.21.26-4.5.79v1.69c1.11-.65 2.6-.99 4.5-.99 1.04 0 1.88.08 2.5.24v-1.5c-.87-.16-1.71-.23-2.5-.23m2.5 2.9c-.87-.16-1.71-.24-2.5-.24-1.83 0-3.33.27-4.5.8v1.69c1.11-.66 2.6-.99 4.5-.99 1.04 0 1.88.08 2.5.24z"/></svg>
+    </a>
+  
+    
+    
+    
+    
+    <a href="https://github.com/datajoint/datajoint-python/discussions" target="_blank" rel="noopener" title="Discussions" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M384 144c0 97.2-86 176-192 176-26.7 0-52.1-5-75.2-14l-81.6 43.2c-9.3 4.9-20.7 3.2-28.2-4.2s-9.2-18.9-4.2-28.2l35.6-67.2C14.3 220.2 0 183.6 0 144 0 46.8 86-32 192-32s192 78.8 192 176m0 368c-94.1 0-172.4-62.1-188.8-144 120-1.5 224.3-86.9 235.8-202.7 83.3 19.2 145 88.3 145 170.7 0 39.6-14.3 76.2-38.4 105.6l35.6 67.2c4.9 9.3 3.2 20.7-4.2 28.2s-18.9 9.2-28.2 4.2L459.2 498c-23.1 9-48.5 14-75.2 14"/></svg>
+    </a>
+  
+    
+    
+    
+    
+    <a href="https://www.linkedin.com/company/datajoint" target="_blank" rel="noopener" title="LinkedIn" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M416 32H31.9C14.3 32 0 46.5 0 64.3v383.4C0 465.5 14.3 480 31.9 480H416c17.6 0 32-14.5 32-32.3V64.3c0-17.8-14.4-32.3-32-32.3M135.4 416H69V202.2h66.5V416zM102.2 96a38.5 38.5 0 1 1 0 77 38.5 38.5 0 1 1 0-77m282.1 320h-66.4V312c0-24.8-.5-56.7-34.5-56.7-34.6 0-39.9 27-39.9 54.9V416h-66.4V202.2h63.7v29.2h.9c8.9-16.8 30.6-34.5 62.9-34.5 67.2 0 79.7 44.3 79.7 101.9z"/></svg>
+    </a>
+  
+    
+    
+    
+    
+    <a href="https://twitter.com/datajoint" target="_blank" rel="noopener" title="Twitter" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M459.4 151.7c.3 4.5.3 9.1.3 13.6 0 138.7-105.6 298.6-298.6 298.6-59.5 0-114.7-17.2-161.1-47.1 8.4 1 16.6 1.3 25.3 1.3 49.1 0 94.2-16.6 130.3-44.8-46.1-1-84.8-31.2-98.1-72.8 6.5 1 13 1.6 19.8 1.6 9.4 0 18.8-1.3 27.6-3.6-48.1-9.7-84.1-52-84.1-103v-1.3c14 7.8 30.2 12.7 47.4 13.3-28.3-18.8-46.8-51-46.8-87.4 0-19.5 5.2-37.4 14.3-53C87.4 130.8 165 172.4 252.1 176.9c-1.6-7.8-2.6-15.9-2.6-24C249.5 95.1 296.3 48 354.4 48c30.2 0 57.5 12.7 76.7 33.1 23.7-4.5 46.5-13.3 66.6-25.3-7.8 24.4-24.4 44.8-46.1 57.8 21.1-2.3 41.6-8.1 60.4-16.2-14.3 20.8-32.2 39.3-52.6 54.3"/></svg>
+    </a>
+  
+    
+    
+    
+    
+    <a href="https://github.com/datajoint" target="_blank" rel="noopener" title="GitHub" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+    
+    
+    
+    
+    <a href="https://hub.docker.com/u/datajoint" target="_blank" rel="noopener" title="DockerHub" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M349.9 236.3h-66.1v-59.4h66.1zm0-204.3h-66.1v60.7h66.1zm78.2 144.8H362v59.4h66.1zm-156.3-72.1h-66.1v60.1h66.1zm78.1 0h-66.1v60.1h66.1zm276.8 100c-14.4-9.7-47.6-13.2-73.1-8.4-3.3-24-16.7-44.9-41.1-63.7l-14-9.3-9.3 14c-18.4 27.8-23.4 73.6-3.7 103.8-8.7 4.7-25.8 11.1-48.4 10.7H2.4c-8.7 50.8 5.8 116.8 44 162.1 37.1 43.9 92.7 66.2 165.4 66.2 157.4 0 273.9-72.5 328.4-204.2 21.4.4 67.6.1 91.3-45.2 1.5-2.5 6.6-13.2 8.5-17.1zm-511.1-27.9h-66v59.4h66.1v-59.4zm78.1 0h-66.1v59.4h66.1zm78.1 0h-66.1v59.4h66.1zm-78.1-72.1h-66.1v60.1h66.1z"/></svg>
+    </a>
+  
+    
+    
+    
+    
+    <a href="https://pypi.org/user/datajointbot" target="_blank" rel="noopener" title="PyPI" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.8 200.5c-7.7-30.9-22.3-54.2-53.4-54.2h-40.1v47.4c0 36.8-31.2 67.8-66.8 67.8H172.7c-29.2 0-53.4 25-53.4 54.3v101.8c0 29 25.2 46 53.4 54.3 33.8 9.9 66.3 11.7 106.8 0 26.9-7.8 53.4-23.5 53.4-54.3v-40.7H226.2v-13.6h160.2c31.1 0 42.6-21.7 53.4-54.2 11.2-33.5 10.7-65.7 0-108.6M286.2 444.7a20.4 20.4 0 1 1 0-40.7 20.4 20.4 0 1 1 0 40.7M167.8 248.1h106.8c29.7 0 53.4-24.5 53.4-54.3V91.9c0-29-24.4-50.7-53.4-55.6-35.8-5.9-74.7-5.6-106.8.1-45.2 8-53.4 24.7-53.4 55.6v40.7h106.9v13.6h-147c-31.1 0-58.3 18.7-66.8 54.2-9.8 40.7-10.2 66.1 0 108.6 7.6 31.6 25.7 54.2 56.8 54.2H101v-48.8c0-35.3 30.5-66.4 66.8-66.4m-6.6-183.4a20.4 20.4 0 1 1 0 40.8 20.4 20.4 0 1 1 0-40.8"/></svg>
+    </a>
+  
+    
+    
+    
+    
+    <a href="https://stackoverflow.com/questions/tagged/datajoint" target="_blank" rel="noopener" title="StackOverflow" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M291 311 95.3 269.7 87.1 309l195.7 41zm51-87L188.5 95.7 163 126.5l153.5 128.3zm-31.2 39.7L129.5 179l-16.7 36.5L294 300zM262.3 32l-32 24 119.3 160.3 32-24zm20.5 328h-200v39.7h200zm39.7 80H43V320H3v160h359.5V320h-40z"/></svg>
+    </a>
+  
+    
+    
+    
+    
+    <a href="https://www.youtube.com/@datajoint" target="_blank" rel="noopener" title="YouTube" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M549.7 124.1c-6.2-23.7-24.8-42.3-48.3-48.6C458.9 64 288.1 64 288.1 64S117.3 64 74.7 75.5c-23.5 6.3-42 24.9-48.3 48.6C15 167 15 256.4 15 256.4s0 89.4 11.4 132.3c6.3 23.6 24.8 41.5 48.3 47.8C117.3 448 288.1 448 288.1 448s170.8 0 213.4-11.5c23.5-6.3 42-24.2 48.3-47.8 11.4-42.9 11.4-132.3 11.4-132.3s0-89.4-11.4-132.3zM232.2 337.6V175.2l142.7 81.2z"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.sections", "navigation.indexes", "toc.follow", "announce.dismiss"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="../../../javascripts/mathjax.js"></script>
+      
+        <script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+        <script src="https://js-na1.hs-scripts.com/23133402.js"></script>
+      
+    
+  </body>
+</html>
