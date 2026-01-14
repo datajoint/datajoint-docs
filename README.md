@@ -6,7 +6,7 @@ an open-source framework for building scientific data pipelines.
 **Live site:** https://docs.datajoint.com
 
 > **📘 Upgrading from legacy DataJoint (pre-2.0)?**
-> See the **[Migration Guide](https://docs.datajoint.com/how-to/migrate-from-0x/)** for a step-by-step upgrade path.
+> See the **[Migration Guide](https://docs.datajoint.com/how-to/migrate-to-v20/)** for a step-by-step upgrade path.
 
 ## What is DataJoint?
 
@@ -143,7 +143,7 @@ This documentation follows the [Diátaxis](https://diataxis.fr/) framework:
 | **Reference** | Specifications and API documentation | [src/reference/](src/reference/) |
 
 Key pages:
-- **[Migration Guide](src/how-to/migrate-from-0x.md)** — Upgrade from legacy DataJoint (pre-2.0)
+- **[Migration Guide](src/how-to/migrate-to-v20.md)** — Upgrade from legacy DataJoint (pre-2.0)
 - **[What's New in 2.0](src/explanation/whats-new-2.md)** — Major changes and improvements
 
 ## Local Development with Docker (Recommended)
