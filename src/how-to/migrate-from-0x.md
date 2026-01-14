@@ -634,9 +634,71 @@ result = add_job_metadata_columns(schema, dry_run=True)
 result = add_job_metadata_columns(schema, dry_run=False)
 ```
 
-**Why safe:** legacy ignores columns prefixed with `_` (hidden attributes).
+**Why safe:** Legacy ignores columns prefixed with `_` (hidden attributes).
 
-### 3.3 Dual Attributes for External Storage
+### 3.3 Migrate Legacy AdaptedAttributes
+
+**Skip this section** if you did not create custom `dj.AttributeAdapter` subclasses.
+
+Legacy DataJoint allowed advanced users to define custom column types via `AttributeAdapter`. In DataJoint 2.0, this is replaced by the **Codec API**.
+
+#### Migration Steps
+
+1. **Identify existing adapters** in your codebase:
+   ```bash
+   grep -r "AttributeAdapter\|dj.AttributeAdapter" --include="*.py" .
+   ```
+
+2. **For each adapter found**, point your AI agent to the [Codec API Specification](../reference/specs/codec-api.md) to rewrite it as a codec.
+
+3. **Update table definitions** to use the new codec syntax instead of adapter type names.
+
+#### Example Transformation
+
+```python
+# Legacy AttributeAdapter
+@schema
+class MyAdapter(dj.AttributeAdapter):
+    attribute_type = 'longblob'
+
+    def put(self, obj):
+        return pickle.dumps(obj)
+
+    def get(self, value):
+        return pickle.loads(value)
+
+# 2.0 Codec (see Codec API Spec for full details)
+@dj.codec('my_type')
+class MyCodec:
+    dtype = '<blob>'
+
+    def encode(self, obj):
+        return pickle.dumps(obj)
+
+    def decode(self, value):
+        return pickle.loads(value)
+```
+
+#### AI Agent Prompt (AdaptedAttribute Migration)
+
+```
+You are migrating a legacy DataJoint AttributeAdapter to the 2.0 Codec API.
+
+REFERENCE: Read the Codec API Specification for the full codec interface.
+
+TASK:
+1. Identify the AttributeAdapter subclass and its put/get methods
+2. Create a new codec class with encode/decode methods
+3. Register it with @dj.codec('type_name') decorator
+4. Update table definitions to use the new codec type
+
+The user will point you to their adapter code. Ask clarifying questions
+if the adapter behavior is unclear.
+```
+
+**Note:** Existing data stored via AttributeAdapter remains readable—the underlying blob format is unchanged. Only the Python interface changes.
+
+### 3.4 Dual Attributes for External Storage
 
 For tables with external blob/attach/filepath attributes, create **duplicate attributes** that support the 2.0 API while preserving the original for legacy compatibility.
 
@@ -717,7 +779,7 @@ class Recording(dj.Manual):
 
 **Cross-testing:** During this phase, test your pipeline with both APIs to verify data consistency before Phase 4.
 
-### 3.4 AI Agent Prompt (Phase 3)
+### 3.5 AI Agent Prompt (Phase 3)
 
 ```
 You are creating dual attributes for external storage migration.
@@ -745,8 +807,9 @@ REPORT:
 - Any data mismatches found during cross-testing
 ```
 
-### 3.5 Phase 3 Checklist
+### 3.6 Phase 3 Checklist
 
+- [ ] Migrate any `AttributeAdapter` subclasses to Codec API
 - [ ] Run `migrate_external()` for each schema with external storage
 - [ ] Optionally run `Table.jobs.refresh()` for Computed/Imported tables
 - [ ] Optionally run `add_job_metadata_columns()`
