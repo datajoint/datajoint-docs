@@ -46,8 +46,10 @@ class Recording(dj.Manual):
 
 | Syntax | Storage | Best For |
 |--------|---------|----------|
-| `<blob>` | Database | Small objects (typically < 1-10 MB) |
-| `<blob@>` | Default store | Large objects (hash-addressed, with dedup) |
+| `<blob>` | Database | Small Python objects (typically < 1-10 MB) |
+| `<attach>` | Database | Small files with filename (typically < 1-10 MB) |
+| `<blob@>` | Default store | Large Python objects (hash-addressed, with dedup) |
+| `<attach@>` | Default store | Large files with filename (hash-addressed, with dedup) |
 | `<npy@>` | Default store | NumPy arrays (schema-addressed, lazy, navigable) |
 | `<blob@store>` | Named store | Specific storage tier |
 
@@ -304,8 +306,8 @@ local_path = ref.download('/tmp/data')
 | Data Type | Codec | Addressing | Lazy | Best For |
 |-----------|-------|------------|------|----------|
 | NumPy arrays | `<npy@>` | Schema | Yes | Arrays needing lazy load, metadata inspection |
-| Python objects | `<blob@>` | Hash | No | Dicts, lists, small arrays (with dedup) |
-| File attachments | `<attach@>` | Hash | No | Files with original filename preserved |
+| Python objects | `<blob>` or `<blob@>` | In-table or Hash | No | Dicts, lists, arrays (use `@` for large/dedup) |
+| File attachments | `<attach>` or `<attach@>` | In-table or Hash | No | Files with filename preserved (use `@` for large/dedup) |
 | Zarr/HDF5 | `<object@>` | Schema | Yes | Chunked arrays, streaming access |
 | File references | `<filepath@>` | External | Yes | References to external files |
 

@@ -8,8 +8,8 @@ Select the right storage codec for your data based on size, access patterns, and
 Start: What type of data are you storing?
 
 ├─ Small data (typically < 1-10 MB per row)?
-│  └─ YES → Consider <blob> (in-table storage)
-│  └─ NO  → Continue...
+│  ├─ Python objects (dicts, arrays)? → Use <blob> (in-table)
+│  └─ Files with filename? → Use <attach> (in-table)
 │
 ├─ Externally managed files?
 │  └─ YES → Use <filepath@> (reference only)
@@ -25,15 +25,21 @@ Start: What type of data are you storing?
 │
 ├─ NumPy arrays that benefit from lazy loading?
 │  └─ YES → Use <npy@> (optimized NumPy storage)
-│  └─ NO  → Use <blob@> (hash-addressed, general purpose)
+│  └─ NO  → Continue...
+│
+├─ Python objects (dicts, arrays)?
+│  └─ YES → Use <blob@> (hash-addressed)
+│  └─ NO  → Use <attach@> (files with filename preserved)
 ```
 
 ## Storage Types Overview
 
 | Codec | Location | Addressing | Python Objects | Dedup | Best For |
 |-------|----------|------------|----------------|-------|----------|
-| `<blob>` | In-table (database) | Row-based | ✅ Yes | No | Small objects (typically < 1-10 MB) |
-| `<blob@>` | Object store | Content hash | ✅ Yes | Yes | Large blobs, attachments (with dedup) |
+| `<blob>` | In-table (database) | Row-based | ✅ Yes | No | Small Python objects (typically < 1-10 MB) |
+| `<attach>` | In-table (database) | Row-based | ❌ No (file path) | No | Small files with filename preserved |
+| `<blob@>` | Object store | Content hash | ✅ Yes | Yes | Large Python objects (with dedup) |
+| `<attach@>` | Object store | Content hash | ❌ No (file path) | Yes | Large files with filename preserved |
 | `<npy@>` | Object store | Schema + key | ✅ Yes (arrays) | No | NumPy arrays (lazy load, navigable) |
 | `<object@>` | Object store | Schema + key | ❌ No (you manage format) | No | Zarr, HDF5 (browsable, streaming) |
 | `<filepath@>` | Object store | User path | ❌ No (you manage format) | No | External file references |
@@ -309,6 +315,39 @@ small_data : <blob>
 
 ---
 
+### In-Table: `<attach>`
+
+**Storage:** Database column (LONGBLOB)
+
+**Syntax:**
+```python
+config_file : <attach>
+```
+
+**Characteristics:**
+- ✅ Fast access (in database)
+- ✅ Transactional consistency
+- ✅ Automatic backup
+- ✅ No store configuration needed
+- ✅ **Filename preserved**: Original filename stored with content
+- ✅ Automatic gzip compression
+- ✅ Technical limit: 4 GiB (MySQL), unlimited (PostgreSQL)
+- ❌ Practical limit: Keep under ~1-10 MB for performance
+- ❌ No deduplication
+- ❌ Returns file path (extracts to download directory), not Python object
+
+**Best for:**
+- Small configuration files
+- Document attachments (< 10 MB)
+- Files where original filename matters
+- When you need the file extracted to disk
+
+**Difference from `<blob>`:**
+- `<blob>`: Stores Python objects (dicts, arrays) → returns Python object
+- `<attach>`: Stores files with filename → returns local file path
+
+---
+
 ### Hash-Addressed: `<blob@>` or `<attach@>`
 
 **Storage:** Object store at `{store}/_hash/{schema}/{hash}`
@@ -320,10 +359,9 @@ data : <blob@mystore>       # Named store
 file : <attach@>            # File attachments
 ```
 
-**Characteristics:**
-- ✅ **Python object convenience**: Insert/fetch dicts, lists, arrays directly (no manual IO)
+**Characteristics (both):**
 - ✅ Content deduplication (identical data stored once)
-- ✅ Automatic serialization + gzip compression
+- ✅ Automatic gzip compression
 - ✅ Garbage collection
 - ✅ Transaction safety
 - ✅ Referential integrity
@@ -331,15 +369,27 @@ file : <attach@>            # File attachments
 - ❌ Full download on fetch (no streaming)
 - ❌ Storage path not browsable (hash-based)
 
-**Best for:**
-- Neural waveforms (NumPy arrays)
-- Processed results (dicts/arrays)
-- Large nested data structures
-- Any write-once data with duplicates
+**`<blob@>` specific:**
+- ✅ **Python object convenience**: Insert/fetch dicts, lists, arrays directly (no manual IO)
+- Returns: Python objects
 
-**Difference `<blob@>` vs `<attach@>`:**
-- `<blob@>`: Stores Python objects (serialized + gzip) - get Python objects back
-- `<attach@>`: Stores files as-is (preserves original format) - get file content back
+**`<attach@>` specific:**
+- ✅ **Filename preserved**: Original filename stored with content
+- Returns: Local file path (extracts to download directory)
+
+**Best for `<blob@>`:**
+- Large Python objects (NumPy arrays, dicts)
+- Processed results (nested structures)
+- Any Python data with duplicates
+
+**Best for `<attach@>`:**
+- PDF/document files
+- Images, videos
+- Files where original filename/format matters
+
+**Key difference:**
+- `<blob@>`: Python objects in, Python objects out (no file handling)
+- `<attach@>`: Files in, file paths out (preserves filename)
 
 ---
 
