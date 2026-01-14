@@ -349,10 +349,243 @@ print(f"Connected to {conn.conn_info['host']}")
 }
 ```
 
-**Store credentials in `.secrets/stores.s3_store.access_key` and `.secrets/stores.s3_store.secret_key`:**
+**Store credentials in `.secrets/stores.s3_store.access_key` and
+`.secrets/stores.s3_store.secret_key`:**
 ```bash
 echo "YOUR_ACCESS_KEY" > .secrets/stores.s3_store.access_key
 echo "YOUR_SECRET_KEY" > .secrets/stores.s3_store.secret_key
+```
+
+#### AI Agent Prompt: Configure and Test Stores
+
+---
+
+**🤖 AI Agent Prompt: Phase I - Configure Test Stores and Verify Codecs**
+
+```
+You are configuring test object stores for DataJoint 2.0 migration.
+
+TASK: Set up test stores and verify all in-store codecs work correctly
+before migrating production data.
+
+CONTEXT:
+- Phase I uses TEST stores (separate from production)
+- Testing verifies codecs work with legacy schema structure
+- File organization must match expectations
+- Production data migration happens in Phase III
+
+STEPS:
+
+1. Configure test stores in datajoint.json:
+   - Use test locations (e.g., /data/v2_test_stores/)
+   - For cloud: use test bucket or prefix (e.g., "v2-test")
+   - Configure hash_prefix, schema_prefix, filepath_prefix if needed
+
+2. Store credentials in .secrets/ directory:
+   - Create .secrets/stores.<name>.access_key (S3/GCS/Azure)
+   - Create .secrets/stores.<name>.secret_key (S3)
+   - Verify .secrets/ is gitignored
+
+3. Test ALL in-store codecs from legacy schema:
+   - <blob@store> (hash-addressed blob storage)
+   - <attach@store> (hash-addressed attachments)
+   - <filepath@store> (filepath references)
+
+4. Create test table with all three codecs:
+   ```python
+   @schema
+   class StoreTest(dj.Manual):
+       definition = """
+       test_id : int
+       ---
+       blob_data : <blob@>
+       attach_data : <attach@>
+       filepath_data : <filepath@>
+       """
+   ```
+
+5. Insert test data and verify:
+   - Insert sample data for each codec
+   - Fetch data back successfully
+   - Verify files appear at expected paths
+
+6. Understand hash-addressed storage structure:
+   {location}/{hash_prefix}/{schema_name}/{hash}[.ext]
+
+   With subfolding [2, 2]:
+   {location}/{hash_prefix}/{schema_name}/{h1}{h2}/{h3}{h4}/{hash}[.ext]
+
+   Properties:
+   - Immutable (content-addressed)
+   - Deduplicated (same content → same path)
+   - Integrity (hash validates content)
+
+7. Verify file organization meets expectations:
+   - Check files exist at {location}/{hash_prefix}/{schema}/
+   - Verify subfolding structure if configured
+   - Confirm filepath references work correctly
+
+8. Clean up test:
+   - Delete test data
+   - Drop test schema
+   - Verify no errors during cleanup
+
+HASH-ADDRESSED STORAGE:
+
+Understanding the hash-addressed section is critical for migration:
+
+- Path format: {location}/{hash_prefix}/{schema}/{hash}
+- Hash computed from serialized content (Blake2b)
+- Hash encoded as base32 (lowercase, no padding)
+- Subfolding splits hash into directory levels
+- Same content always produces same path (deduplication)
+
+Example with hash_prefix="_hash", subfolding=[2,2]:
+  /data/store/_hash/my_schema/ab/cd/abcdef123456...
+
+Learn more: Object Store Configuration Spec
+(../reference/specs/object-store-configuration.md#hash-addressed-storage)
+
+VERIFICATION:
+
+- [ ] Test stores configured in datajoint.json
+- [ ] Credentials stored in .secrets/ (not committed)
+- [ ] Connection to test stores successful
+- [ ] <blob@> codec tested and working
+- [ ] <attach@> codec tested and working
+- [ ] <filepath@> codec tested and working
+- [ ] Files appear at expected locations
+- [ ] Hash-addressed structure understood
+- [ ] Test cleanup successful
+
+REPORT:
+
+Test results for store configuration:
+- Store names: [list configured stores]
+- Store protocol: [file/s3/gcs/azure]
+- Store location: [test path/bucket]
+- Hash prefix: [configured value]
+- Codecs tested: [blob@, attach@, filepath@]
+- Files verified at: [example paths]
+- Issues found: [any errors or unexpected behavior]
+
+COMMIT MESSAGE:
+"feat(phase-i): configure test stores and verify codecs
+
+- Configure test stores with [protocol] at [location]
+- Store credentials in .secrets/ directory
+- Test all in-store codecs: blob@, attach@, filepath@
+- Verify hash-addressed file organization
+- Confirm codecs work with legacy schema structure
+
+Test stores ready for table definition conversion."
+```
+
+---
+
+#### Test In-Store Codecs
+
+After configuring test stores, verify that in-store codecs work correctly
+and understand the file organization.
+
+**Create test table with all in-store codecs:**
+
+```python
+import datajoint as dj
+import numpy as np
+
+# Create test schema
+schema = dj.schema('test_stores_v2')
+
+@schema
+class StoreTest(dj.Manual):
+    definition = """
+    test_id : int
+    ---
+    blob_data : <blob@>          # Hash-addressed blob
+    attach_data : <attach@>      # Hash-addressed attachment
+    filepath_data : <filepath@>  # Filepath reference
+    """
+
+# Test data
+test_blob = {'key': 'value', 'array': [1, 2, 3]}
+test_attach = {'metadata': 'test attachment'}
+
+# For filepath, create test file first
+import tempfile
+import os
+temp_dir = tempfile.gettempdir()
+test_file_path = 'test_data/sample.txt'
+full_path = os.path.join(
+    dj.config['stores']['default']['location'],
+    test_file_path
+)
+os.makedirs(os.path.dirname(full_path), exist_ok=True)
+with open(full_path, 'w') as f:
+    f.write('test content')
+
+# Insert test data
+StoreTest.insert1({
+    'test_id': 1,
+    'blob_data': test_blob,
+    'attach_data': test_attach,
+    'filepath_data': test_file_path
+})
+
+print("✓ Test data inserted successfully")
+```
+
+**Verify file organization:**
+
+```python
+# Fetch and verify
+result = (StoreTest & {'test_id': 1}).fetch1()
+print(f"✓ blob_data: {result['blob_data']}")
+print(f"✓ attach_data: {result['attach_data']}")
+print(f"✓ filepath_data: {result['filepath_data']}")
+
+# Inspect hash-addressed file organization
+store_spec = dj.config.get_store_spec()
+hash_prefix = store_spec.get('hash_prefix', '_hash')
+location = store_spec['location']
+
+print(f"\nStore organization:")
+print(f"  Location: {location}")
+print(f"  Hash prefix: {hash_prefix}/")
+print(f"  Expected structure: {hash_prefix}/{{schema}}/{{hash}}")
+print(f"\nVerify files exist at:")
+print(f"  {location}/{hash_prefix}/test_stores_v2/")
+```
+
+**Review hash-addressed storage structure:**
+
+Hash-addressed storage (`<blob@>`, `<attach@>`) uses content-based paths:
+
+```
+{location}/{hash_prefix}/{schema_name}/{hash}[.ext]
+```
+
+With subfolding enabled (e.g., `[2, 2]`):
+
+```
+{location}/{hash_prefix}/{schema_name}/{h1}{h2}/{h3}{h4}/{hash}[.ext]
+```
+
+**Properties:**
+- **Immutable**: Content defines path, cannot be changed
+- **Deduplicated**: Identical content stored once
+- **Integrity**: Hash validates content on retrieval
+
+**Learn more:** [Object Store Configuration — Hash-Addressed Storage]
+(../reference/specs/object-store-configuration.md#hash-addressed-storage)
+
+**Cleanup test:**
+
+```python
+# Remove test data
+(StoreTest & {'test_id': 1}).delete()
+schema.drop()
+print("✓ Test cleanup complete")
 ```
 
 ### Step 5: Convert Table Definitions
@@ -995,11 +1228,13 @@ API conversions: X fetch, Y update, Z join"
 - [ ] `pre/v2.0` branch created
 - [ ] DataJoint 2.0 installed (`pip list | grep datajoint`)
 - [ ] Configuration files created (`.secrets/`, `datajoint.json`)
-- [ ] Stores configured (if using in-store codecs)
+- [ ] Test stores configured (if using in-store codecs)
+- [ ] In-store codecs tested (`<blob@>`, `<attach@>`, `<filepath@>`)
+- [ ] Hash-addressed file organization verified and understood
 - [ ] All schema declarations use `_v2` suffix
 - [ ] All table definitions use 2.0 type syntax
 - [ ] All in-table codecs converted (`<blob>`, `<attach>`)
-- [ ] All in-store codecs converted (`<blob@>`, `<npy@>`, `<filepath@>`)
+- [ ] All in-store codecs converted (`<blob@>`, `<attach@>`, `<filepath@>`)
 - [ ] All `fetch()` calls converted (except `fetch1()`)
 - [ ] All `fetch(..., format="frame")` converted to `to_pandas()`
 - [ ] All `fetch1('KEY')` converted to `keys()`
