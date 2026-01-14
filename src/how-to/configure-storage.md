@@ -11,7 +11,7 @@ DataJoint's Object-Augmented Schema (OAS) integrates relational tables with exte
 Storage is configured per-project using named stores. Each store can be used for:
 - **Hash-addressed storage** (`<blob@>`, `<attach@>`) — content-addressed with deduplication using `_hash/` section
 - **Schema-addressed storage** (`<object@>`, `<npy@>`) — key-based paths with streaming access using `_schema/` section
-- **Filepath storage** (`<filepath@>`) — user-managed paths (handled separately)
+- **Filepath storage** (`<filepath@>`) — user-managed paths anywhere in the store **except** `_hash/` and `_schema/` (reserved for DataJoint)
 
 Multiple stores can be configured for different data types or storage tiers. One store is designated as the default.
 
@@ -271,6 +271,43 @@ This unified approach enables:
 - **Consistent internal handling** across all storage types
 - **Seamless switching** between local and cloud storage
 - **Integration with fsspec** for streaming access
+
+## Reserved Sections and Filepath Storage
+
+DataJoint reserves two sections within each store for managed storage:
+
+- **`_hash/`** — Hash-addressed storage for `<blob@>` and `<attach@>` with content deduplication
+- **`_schema/`** — Schema-addressed storage for `<object@>` and `<npy@>` with key-based paths
+
+### User-Managed Filepath Storage
+
+The `<filepath@>` codec allows you to reference existing files anywhere in the store **except** these reserved sections. This gives you maximum freedom to organize files while reusing DataJoint's store configuration:
+
+```python
+@schema
+class RawData(dj.Manual):
+    definition = """
+    session_id : int
+    ---
+    recording : <filepath@acquisition>  # Reference existing file
+    """
+
+# Valid paths (user-managed)
+table.insert1({'session_id': 1, 'recording': 'subject01/session001/data.bin'})
+table.insert1({'session_id': 2, 'recording': 'raw/experiment_2024/data.nwb'})
+
+# Invalid paths (reserved for DataJoint - will raise ValueError)
+table.insert1({'session_id': 3, 'recording': '_hash/abc123...'})      # Error!
+table.insert1({'session_id': 4, 'recording': '_schema/myschema/...'}) # Error!
+```
+
+**Key characteristics of `<filepath@>`:**
+- References existing files (no copying)
+- User controls file organization
+- User manages file lifecycle (DataJoint never deletes)
+- Returns ObjectRef for lazy access on fetch
+- Validates file exists on insert
+- Cannot use reserved `_hash/` or `_schema/` sections
 
 ## See Also
 

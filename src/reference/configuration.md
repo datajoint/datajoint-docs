@@ -80,9 +80,9 @@ Unified storage configuration for all external storage types (`<blob@>`, `<attac
 
 - **Hash-addressed** (`<blob@>`, `<attach@>`): `{location}/_hash/{schema}/{hash}` with optional subfolding
 - **Schema-addressed** (`<object@>`, `<npy@>`): `{location}/_schema/{partition}/{schema}/{table}/{key}/{field}.{token}.{ext}` with optional partitioning
-- **Filepath** (`<filepath@>`): User-managed paths (handled separately)
+- **Filepath** (`<filepath@>`): `{location}/{user_path}` (user-managed, cannot use `_hash/` or `_schema/`)
 
-Both methods share the same stores and default store, using `_hash` and `_schema` sections within each store.
+All storage methods share the same stores and default store. DataJoint reserves `_hash/` and `_schema/` sections for managed storage; `<filepath@>` references can use any other paths.
 
 **Path structure examples:**
 
