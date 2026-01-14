@@ -307,6 +307,32 @@ DO NOT modify table definitions or database schema.
 
 **Goal:** Update database metadata (column comments) to enable 2.0 type recognition while maintaining full legacy compatibility.
 
+### 2.0 Backup Before Schema Changes
+
+**Create a full database backup before proceeding.** Phase 2 modifies column comments and creates hidden tables. While these changes are designed to be backward-compatible, a backup ensures you can recover if anything goes wrong.
+
+```bash
+# Full database dump (all schemas)
+mysqldump -u root -p --all-databases --routines --triggers > backup_pre_phase2.sql
+
+# Or specific schemas
+mysqldump -u root -p --databases lab subject session ephys > backup_pre_phase2.sql
+
+# Compressed backup for large databases
+mysqldump -u root -p --all-databases | gzip > backup_pre_phase2.sql.gz
+```
+
+**For managed databases (AWS RDS, Azure, etc.):** Use your cloud provider's snapshot feature.
+
+**Verify your backup** before proceeding:
+```bash
+# Check backup file size (should be non-trivial)
+ls -lh backup_pre_phase2.sql*
+
+# Optionally restore to a test database to verify
+mysql -u root -p test_restore < backup_pre_phase2.sql
+```
+
 ### 2.1 Column Type Labels
 
 DataJoint 2.0 uses column comments to identify types. Migration adds type labels to:
