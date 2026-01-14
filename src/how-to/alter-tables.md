@@ -237,4 +237,4 @@ test_schema = dj.Schema('test_' + schema.database)
 ## See Also
 
 - [Define Tables](define-tables.md) — Table definition syntax
-- [Migrate from 0.x](migrate-from-0x.md) — Version migration
+- [Migrate to v2.0](migrate-to-v20.md) — Version migration
