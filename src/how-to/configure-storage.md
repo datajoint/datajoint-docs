@@ -8,9 +8,10 @@ Set up S3, MinIO, or filesystem storage for hash-addressed and path-addressed ex
 
 DataJoint's Object-Augmented Schema (OAS) integrates relational tables with external storage as a single system. Large data objects (arrays, files, Zarr datasets) are stored externally while maintaining full referential integrity with the relational database.
 
-Storage is configured per-project using named stores. Each store can be used for both:
-- **Hash-addressed storage** (`<blob@>`, `<attach@>`, `<filepath@>`) — content-addressed with deduplication
-- **Path-addressed storage** (`<object@>`, `<npy@>`) — schema-addressed with streaming access
+Storage is configured per-project using named stores. Each store can be used for:
+- **Hash-addressed storage** (`<blob@>`, `<attach@>`) — content-addressed with deduplication using `_hash/` section
+- **Schema-addressed storage** (`<object@>`, `<npy@>`) — key-based paths with streaming access using `_schema/` section
+- **Filepath storage** (`<filepath@>`) — user-managed paths (handled separately)
 
 Multiple stores can be configured for different data types or storage tiers. One store is designated as the default.
 
@@ -35,12 +36,15 @@ For local or network-mounted storage:
     "default": "main",
     "main": {
       "protocol": "file",
-      "location": "/data/datajoint-store",
-      "project_name": "my_project"
+      "location": "/data/my-project/production"
     }
   }
 }
 ```
+
+Paths will be:
+- Hash: `/data/my-project/production/_hash/{schema}/{hash}`
+- Schema: `/data/my-project/production/_schema/{schema}/{table}/{key}/`
 
 ### S3 Store
 
@@ -54,8 +58,7 @@ For Amazon S3 or S3-compatible storage:
       "protocol": "s3",
       "endpoint": "s3.amazonaws.com",
       "bucket": "my-bucket",
-      "location": "datajoint",
-      "project_name": "my_project",
+      "location": "my-project/production",
       "secure": true
     }
   }
@@ -70,6 +73,10 @@ Store credentials separately in `.secrets/`:
 └── stores.main.secret_key
 ```
 
+Paths will be:
+- Hash: `s3://my-bucket/my-project/production/_hash/{schema}/{hash}`
+- Schema: `s3://my-bucket/my-project/production/_schema/{schema}/{table}/{key}/`
+
 ### MinIO Store
 
 MinIO uses the S3 protocol with a custom endpoint:
@@ -83,7 +90,6 @@ MinIO uses the S3 protocol with a custom endpoint:
       "endpoint": "minio.example.com:9000",
       "bucket": "datajoint",
       "location": "lab-data",
-      "project_name": "my_project",
       "secure": false
     }
   }
@@ -100,21 +106,19 @@ Define multiple stores for different data types or storage tiers:
     "default": "main",
     "main": {
       "protocol": "file",
-      "location": "/data/main",
-      "project_name": "my_project"
+      "location": "/data/my-project/main",
+      "partition_pattern": "subject_id/session_date"
     },
     "raw": {
       "protocol": "file",
-      "location": "/data/raw",
-      "project_name": "my_project",
+      "location": "/data/my-project/raw",
       "subfolding": [2, 2]
     },
     "archive": {
       "protocol": "s3",
       "endpoint": "s3.amazonaws.com",
       "bucket": "archive-bucket",
-      "location": "long-term",
-      "project_name": "my_project"
+      "location": "my-project/long-term"
     }
   }
 }
@@ -136,14 +140,26 @@ class Recording(dj.Manual):
     definition = """
     recording_id : uuid
     ---
-    raw_data : <blob@raw>         # Hash-addressed in 'raw' store
-    zarr_scan : <object@raw>      # Path-addressed in 'raw' store
+    raw_data : <blob@raw>         # Hash: _hash/{schema}/{hash}
+    zarr_scan : <object@raw>      # Schema: _schema/{schema}/{table}/{key}/
     summary : <blob@>             # Uses default store (main)
-    old_data : <blob@archive>     # Hash-addressed in 'archive' store
+    old_data : <blob@archive>     # Archive store, hash-addressed
     """
 ```
 
-Notice that `<blob@raw>` and `<object@raw>` both use the "raw" store, just different sections within it.
+Notice that `<blob@raw>` and `<object@raw>` both use the "raw" store, just different `_hash` and `_schema` sections.
+
+**Example paths with partitioning:**
+
+For a Recording with `subject_id=042`, `session_date=2024-01-15` in the main store:
+```
+/data/my-project/main/_schema/subject_id=042/session_date=2024-01-15/experiment/Recording/recording_id=uuid-value/zarr_scan.x8f2a9b1.zarr
+```
+
+Without those attributes, it follows normal structure:
+```
+/data/my-project/main/_schema/experiment/Recording/recording_id=uuid-value/zarr_scan.x8f2a9b1.zarr
+```
 
 ## Verify Configuration
 
@@ -168,18 +184,19 @@ print(dj.config.stores.keys())
 |--------|----------|-------------|
 | `stores.default` | Yes | Name of the default store |
 | `stores.<name>.protocol` | Yes | `file`, `s3`, `gcs`, or `azure` |
-| `stores.<name>.location` | Yes | Base path or prefix within bucket |
-| `stores.<name>.project_name` | Yes | Unique project identifier |
+| `stores.<name>.location` | Yes | Base path or prefix (includes project context) |
 | `stores.<name>.bucket` | S3/GCS | Bucket name |
 | `stores.<name>.endpoint` | S3 | S3 endpoint URL |
 | `stores.<name>.secure` | No | Use HTTPS (default: true) |
 | `stores.<name>.access_key` | S3 | Access key ID (store in `.secrets/`) |
 | `stores.<name>.secret_key` | S3 | Secret access key (store in `.secrets/`) |
 | `stores.<name>.subfolding` | No | Hash-addressed hierarchy: `[2, 2]` for 2-level nesting (default: no subfolding) |
+| `stores.<name>.partition_pattern` | No | Schema-addressed path partitioning: `"subject_id/session_date"` (default: no partitioning) |
+| `stores.<name>.token_length` | No | Random token length for schema-addressed filenames (default: `8`) |
 
 ## Subfolding (Hash-Addressed Storage Only)
 
-Hash-addressed storage (`<blob@>`, `<attach@>`, `<filepath@>`) stores content using a Base32-encoded hash as the filename. By default, all files are stored in a flat directory structure:
+Hash-addressed storage (`<blob@>`, `<attach@>`) stores content using a Base32-encoded hash as the filename. By default, all files are stored in a flat directory structure:
 
 ```
 _hash/{schema}/abcdefghijklmnopqrstuvwxyz
@@ -207,10 +224,10 @@ With `[2, 2]` subfolding, hash-addressed paths become:
 _hash/{schema}/ab/cd/abcdefghijklmnopqrstuvwxyz
 ```
 
-Path-addressed storage (`<object@>`, `<npy@>`) does not use subfolding—it uses schema-based paths:
+Schema-addressed storage (`<object@>`, `<npy@>`) does not use subfolding—it uses key-based paths:
 
 ```
-{project_name}/{schema}/{table}/{key}/filename
+{location}/_schema/{partition}/{schema}/{table}/{key}/{field_name}.{token}.{ext}
 ```
 
 ### Filesystem Recommendations

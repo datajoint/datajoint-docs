@@ -44,9 +44,10 @@ Unified storage configuration for all external storage types (`<blob@>`, `<attac
 | Setting | Required | Description |
 |---------|----------|-------------|
 | `stores.<name>.protocol` | Yes | Storage protocol: `file`, `s3`, `gcs`, `azure` |
-| `stores.<name>.location` | Yes | Base path or prefix |
-| `stores.<name>.project_name` | Yes | Unique project identifier (for path-addressed storage) |
-| `stores.<name>.subfolding` | No | Directory nesting tuple for hash-addressed storage, e.g., `[2, 2]` (default: no subfolding) |
+| `stores.<name>.location` | Yes | Base path or prefix (includes project context) |
+| `stores.<name>.subfolding` | No | Directory nesting for hash-addressed storage, e.g., `[2, 2]` (default: no subfolding) |
+| `stores.<name>.partition_pattern` | No | Path partitioning for schema-addressed storage, e.g., `"subject_id/session_date"` (default: no partitioning) |
+| `stores.<name>.token_length` | No | Random token length for schema-addressed filenames (default: `8`) |
 
 **S3-specific settings:**
 
@@ -77,10 +78,26 @@ Unified storage configuration for all external storage types (`<blob@>`, `<attac
 
 **How storage methods use stores:**
 
-- **Hash-addressed** (`<blob@>`, `<attach@>`, `<filepath@>`): Uses `_hash/{schema}/{hash}` paths with optional subfolding
-- **Path-addressed** (`<object@>`, `<npy@>`): Uses `{project_name}/{schema}/{table}/{key}/` paths
+- **Hash-addressed** (`<blob@>`, `<attach@>`): `{location}/_hash/{schema}/{hash}` with optional subfolding
+- **Schema-addressed** (`<object@>`, `<npy@>`): `{location}/_schema/{partition}/{schema}/{table}/{key}/{field}.{token}.{ext}` with optional partitioning
+- **Filepath** (`<filepath@>`): User-managed paths (handled separately)
 
-Both methods share the same stores and default store, just use different designated sections within each store.
+Both methods share the same stores and default store, using `_hash` and `_schema` sections within each store.
+
+**Path structure examples:**
+
+Without partitioning:
+```
+{location}/_hash/{schema}/ab/cd/abcd1234...                    # hash-addressed with subfolding
+{location}/_schema/{schema}/{table}/{key}/data.x8f2a9b1.zarr   # schema-addressed, no partitioning
+```
+
+With `partition_pattern: "subject_id/session_date"`:
+```
+{location}/_schema/subject_id=042/session_date=2024-01-15/{schema}/{table}/{remaining_key}/data.x8f2a9b1.zarr
+```
+
+If table lacks partition attributes, it follows normal path structure.
 
 **Credentials should be stored in secrets:**
 
@@ -137,15 +154,15 @@ Both methods share the same stores and default store, just use different designa
             "protocol": "s3",
             "endpoint": "s3.amazonaws.com",
             "bucket": "datajoint-bucket",
-            "location": "lab-data",
-            "project_name": "neuroscience_lab"
+            "location": "neuroscience-lab/production",
+            "partition_pattern": "subject_id/session_date",
+            "token_length": 8
         },
         "archive": {
             "protocol": "s3",
             "endpoint": "s3.amazonaws.com",
             "bucket": "archive-bucket",
-            "location": "long-term",
-            "project_name": "neuroscience_lab",
+            "location": "neuroscience-lab/long-term",
             "subfolding": [2, 2]
         }
     },
