@@ -7,12 +7,16 @@ Select the right storage codec for your data based on size, access patterns, and
 ```
 Start: What type of data are you storing?
 
-├─ Small data (< 1 MB per row)?
-│  └─ YES → Use <blob> (in-table storage)
+├─ Small data (typically < 1-10 MB per row)?
+│  └─ YES → Consider <blob> (in-table storage)
 │  └─ NO  → Continue...
 │
 ├─ Externally managed files?
 │  └─ YES → Use <filepath@> (reference only)
+│  └─ NO  → Continue...
+│
+├─ Need browsable storage or access by external tools?
+│  └─ YES → Use <object@> or <npy@> (schema-addressed)
 │  └─ NO  → Continue...
 │
 ├─ Need streaming or partial reads?
@@ -28,17 +32,32 @@ Start: What type of data are you storing?
 
 | Codec | Location | Addressing | Dedup | Best For |
 |-------|----------|------------|-------|----------|
-| `<blob>` | In-table (database) | Row-based | No | Small objects < 1 MB |
-| `<blob@>` | Object store | Content hash | Yes | Large blobs, attachments |
-| `<npy@>` | Object store | Schema + key | No | NumPy arrays (lazy load) |
-| `<object@>` | Object store | Schema + key | No | Zarr, HDF5, streaming |
+| `<blob>` | In-table (database) | Row-based | No | Small objects (typically < 1-10 MB) |
+| `<blob@>` | Object store | Content hash | Yes | Large blobs, attachments (with dedup) |
+| `<npy@>` | Object store | Schema + key | No | NumPy arrays (lazy load, navigable) |
+| `<object@>` | Object store | Schema + key | No | Zarr, HDF5 (browsable, streaming) |
 | `<filepath@>` | Object store | User path | No | External file references |
 
 ## Detailed Decision Criteria
 
-### Size Guidelines
+### Size and Storage Location
 
-**< 1 MB: In-Table Storage**
+**Technical Limits:**
+- **MySQL**: In-table blobs up to 4 GiB (`LONGBLOB`)
+- **PostgreSQL**: In-table blobs unlimited (`BYTEA`)
+- **Object stores**: Effectively unlimited (S3, file systems, etc.)
+
+**Practical Guidance:**
+
+The choice between in-table (`<blob>`) and object storage (`<blob@>`, `<npy@>`, `<object@>`) is a complex decision involving:
+
+- **Accessibility**: How fast do you need to access the data?
+- **Cost**: Database storage vs object storage pricing
+- **Performance**: Query speed, backup time, replication overhead
+
+**General recommendations:**
+
+Try to keep in-table blobs under ~1-10 MB, but this depends on your specific use case:
 
 ```python
 @schema
@@ -46,75 +65,31 @@ class Experiment(dj.Manual):
     definition = """
     experiment_id : uuid
     ---
-    metadata : <blob>         # JSON, small arrays, parameters
-    thumbnail : <blob>        # Small preview images
+    metadata : <blob>         # Small: config, parameters (< 1 MB)
+    thumbnail : <blob>        # Medium: preview images (< 10 MB)
+    raw_data : <blob@>        # Large: raw recordings (> 10 MB)
     """
 ```
 
-**Why:**
-- Fast access (no external fetch)
-- Transactional consistency
-- Automatic backup with database
-- No storage configuration needed
+**When to use in-table storage (`<blob>`):**
+- Fast access needed (no external fetch)
+- Data frequently queried alongside other columns
+- Transactional consistency critical
+- Automatic backup with database important
+- No object storage configuration available
 
-**Examples:**
-- Configuration JSON (< 100 KB)
-- Small parameter arrays (< 1 MB)
-- Thumbnails (< 500 KB)
-- Text data, metadata
+**When to use object storage (`<blob@>`, `<npy@>`, `<object@>`):**
+- Data larger than ~10 MB
+- Infrequent access patterns
+- Need deduplication (hash-addressed types)
+- Need browsable structure (schema-addressed types)
+- Want to separate hot data (DB) from cold data (object store)
 
----
-
-**1 MB - 100 MB: Hash-Addressed Storage**
-
-```python
-@schema
-class Recording(dj.Manual):
-    definition = """
-    recording_id : uuid
-    ---
-    waveform : <blob@>        # 10 MB array
-    notes : <attach@>         # PDF attachments
-    """
-```
-
-**Why:**
-- Content deduplication (saves space)
-- Suitable for moderate-sized data
-- Simple storage management
-- Good for write-once data
-
-**Examples:**
-- Neural waveforms (1-50 MB)
-- Image files (1-20 MB)
-- PDF attachments
-- Processed results
-
----
-
-**> 100 MB: Schema-Addressed Storage**
-
-```python
-@schema
-class ScanVolume(dj.Manual):
-    definition = """
-    scan_id : uuid
-    ---
-    volume : <object@>        # 5 GB Zarr array
-    """
-```
-
-**Why:**
-- Streaming access (don't download full dataset)
-- Partial reads (fetch only needed chunks)
-- Browsable storage structure
-- Better for very large files
-
-**Examples:**
-- Zarr arrays (> 100 MB)
-- HDF5 datasets
-- Large video files (> 1 GB)
-- Multi-file datasets
+**Examples by size:**
+- **< 1 MB**: Configuration JSON, metadata, small parameter arrays → `<blob>`
+- **1-10 MB**: Thumbnails, processed features, small waveforms → `<blob>` or `<blob@>` depending on access pattern
+- **10-100 MB**: Neural recordings, images, PDFs → `<blob@>` or `<attach@>`
+- **> 100 MB**: Zarr arrays, HDF5 datasets, large videos → `<object@>` or `<npy@>`
 
 ### Access Pattern Guidelines
 
@@ -269,7 +244,9 @@ small_data : <blob>
 - ✅ Transactional consistency
 - ✅ Automatic backup
 - ✅ No store configuration needed
-- ❌ Size limit (~1 MB practical)
+- ✅ Automatic serialization + gzip compression
+- ✅ Technical limit: 4 GiB (MySQL), unlimited (PostgreSQL)
+- ❌ Practical limit: Keep under ~1-10 MB for performance
 - ❌ No deduplication
 - ❌ Database bloat for large data
 
@@ -294,12 +271,13 @@ file : <attach@>            # File attachments
 
 **Characteristics:**
 - ✅ Content deduplication (identical data stored once)
+- ✅ Automatic serialization + gzip compression
 - ✅ Garbage collection
 - ✅ Transaction safety
 - ✅ Referential integrity
 - ✅ Moderate to large files (1 MB - 100 GB)
 - ❌ Full download on fetch (no streaming)
-- ❌ Storage path not browsable
+- ❌ Storage path not browsable (hash-based)
 
 **Best for:**
 - Neural waveforms
@@ -308,8 +286,8 @@ file : <attach@>            # File attachments
 - Any write-once data with duplicates
 
 **Difference `<blob@>` vs `<attach@>`:**
-- `<blob@>`: Stores Python objects (pickled)
-- `<attach@>`: Stores files as-is (preserves format)
+- `<blob@>`: Stores Python objects (serialized + gzip)
+- `<attach@>`: Stores files as-is (preserves original format)
 
 ---
 
@@ -327,16 +305,20 @@ dataset : <object@>         # Zarr, HDF5, custom
 - ✅ Streaming access (no full download)
 - ✅ Partial reads (fetch chunks)
 - ✅ Browsable paths (organized by key)
+- ✅ Accessible by external tools (not just DataJoint)
 - ✅ Very large files (100 MB - TB+)
-- ✅ Multi-file datasets
+- ✅ Multi-file datasets (e.g., Zarr directory structures)
 - ❌ No deduplication
 - ❌ One file per field per row
+
+**Key advantage:** Schema-addressed storage can be navigated and accessed by a variety of tools (Zarr viewers, HDF5 utilities, direct filesystem access), not just through DataJoint. This makes data more discoverable and interoperable.
 
 **Best for:**
 - Zarr arrays (multi-dimensional data)
 - HDF5 datasets
 - Large video files
 - Multi-file experimental outputs
+- Data that needs to be accessed by non-DataJoint tools
 
 **Difference `<npy@>` vs `<object@>`:**
 - `<npy@>`: Optimized for NumPy (lazy loading, slicing)
@@ -584,9 +566,9 @@ backup : <blob@archive>         # Uses named store (archive)
 
 | Codec | Deduplication | Compression | Overhead |
 |-------|---------------|-------------|----------|
-| `<blob>` | ❌ No | ❌ No | Low |
-| `<blob@>` | ✅ Yes | ⚠️ Can add | Medium |
-| `<npy@>` | ❌ No | ⚠️ External | Low |
+| `<blob>` | ❌ No | ✅ gzip (automatic) | Low |
+| `<blob@>` | ✅ Yes | ✅ gzip (automatic) | Medium |
+| `<npy@>` | ❌ No | ⚠️ Format-specific | Low |
 | `<object@>` | ❌ No | ⚠️ Format-specific | Low |
 | `<filepath@>` | ❌ No | User-managed | Minimal |
 

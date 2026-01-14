@@ -46,9 +46,9 @@ class Recording(dj.Manual):
 
 | Syntax | Storage | Best For |
 |--------|---------|----------|
-| `<blob>` | Database | Small objects (< 1 MB) |
-| `<blob@>` | Default store | Large objects (hash-addressed) |
-| `<npy@>` | Default store | NumPy arrays (schema-addressed, lazy) |
+| `<blob>` | Database | Small objects (typically < 1-10 MB) |
+| `<blob@>` | Default store | Large objects (hash-addressed, with dedup) |
+| `<npy@>` | Default store | NumPy arrays (schema-addressed, lazy, navigable) |
 | `<blob@store>` | Named store | Specific storage tier |
 
 ## Store Data
@@ -311,9 +311,14 @@ local_path = ref.download('/tmp/data')
 
 ### Size Guidelines
 
-- **< 1 MB**: Inline storage (`<blob>`) is fine
-- **1 MB - 1 GB**: Object store (`<npy@>` or `<blob@>`)
-- **> 1 GB**: Schema-addressed (`<npy@>`, `<object@>`) for lazy loading
+**Technical limits:**
+- **MySQL**: In-table blobs up to 4 GiB (`LONGBLOB`)
+- **PostgreSQL**: In-table blobs unlimited (`BYTEA`)
+
+**Practical recommendations** (consider accessibility, cost, performance):
+- **< 1-10 MB**: In-table storage (`<blob>`) often sufficient
+- **10-100 MB**: Object store (`<blob@>` with dedup, or `<npy@>` for arrays)
+- **> 100 MB**: Schema-addressed (`<npy@>`, `<object@>`) for streaming and lazy loading
 
 ### Store Tiers
 
