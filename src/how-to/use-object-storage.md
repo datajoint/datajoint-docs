@@ -91,10 +91,17 @@ Configure stores in `datajoint.json`:
 
 ```json
 {
-  "object_storage": {
-    "stores": {
-      "raw": {"protocol": "file", "location": "/fast/storage"},
-      "archive": {"protocol": "s3", "bucket": "archive", ...}
+  "stores": {
+    "default": "raw",
+    "raw": {
+      "protocol": "file",
+      "location": "/fast/storage"
+    },
+    "archive": {
+      "protocol": "s3",
+      "endpoint": "s3.amazonaws.com",
+      "bucket": "archive",
+      "location": "project-data"
     }
   }
 }
@@ -310,11 +317,23 @@ Configure stores for different access patterns:
 
 ```json
 {
-  "object_storage": {
-    "stores": {
-      "hot": {"protocol": "file", "location": "/ssd/data"},
-      "warm": {"protocol": "s3", "bucket": "project-data"},
-      "cold": {"protocol": "s3", "bucket": "archive", ...}
+  "stores": {
+    "default": "hot",
+    "hot": {
+      "protocol": "file",
+      "location": "/ssd/data"
+    },
+    "warm": {
+      "protocol": "s3",
+      "endpoint": "s3.amazonaws.com",
+      "bucket": "project-data",
+      "location": "active"
+    },
+    "cold": {
+      "protocol": "s3",
+      "endpoint": "s3.amazonaws.com",
+      "bucket": "archive",
+      "location": "long-term"
     }
   }
 }

@@ -33,11 +33,16 @@ Configuration is loaded in priority order:
 
 Unified storage configuration for all external storage types (`<blob@>`, `<attach@>`, `<filepath@>`, `<object@>`, `<npy@>`).
 
-**Default store:**
+**Default stores:**
+
+DataJoint uses two default settings to reflect the architectural distinction between integrated and reference storage:
 
 | Setting | Default | Description |
 |---------|---------|-------------|
-| `stores.default` | — | Name of the default store (used by `<blob@>`, `<object@>`, etc.) |
+| `stores.default` | — | Default store for integrated storage (`<blob@>`, `<attach@>`, `<object@>`, `<npy@>`) |
+| `stores.filepath_default` | — | Default store for filepath references (`<filepath@>`) — often different from `stores.default` |
+
+**Why separate defaults?** Hash and schema-addressed storage are integrated into the Object-Augmented Schema (OAS)—DataJoint manages paths, lifecycle, and integrity. Filepath storage is user-managed references to existing files—DataJoint only stores the path. These are architecturally distinct and often use different storage locations.
 
 **Common settings (all protocols):**
 
@@ -177,6 +182,7 @@ If table lacks partition attributes, it follows normal path structure.
     "database.port": 3306,
     "stores": {
         "default": "main",
+        "filepath_default": "raw_data",
         "main": {
             "protocol": "s3",
             "endpoint": "s3.amazonaws.com",
@@ -191,6 +197,11 @@ If table lacks partition attributes, it follows normal path structure.
             "bucket": "archive-bucket",
             "location": "neuroscience-lab/long-term",
             "subfolding": [2, 2]
+        },
+        "raw_data": {
+            "protocol": "file",
+            "location": "/mnt/acquisition",
+            "filepath_prefix": "recordings"
         }
     },
     "jobs": {
