@@ -485,7 +485,9 @@ print(f"Migrated {result['columns_migrated']} columns")
 schema.rebuild_lineage()
 ```
 
-**Important:** When migrating multiple schemas, process them in **topological order** (upstream schemas first). If you process out of order, `rebuild_lineage()` raises a `DataJointError` identifying the missing upstream schema:
+**Important:** When migrating multiple schemas, process them in **topological order** (upstream schemas first). For each schema, complete both database migration AND Python code updates before moving to the next schema.
+
+If you process out of order, `rebuild_lineage()` raises a `DataJointError` identifying the missing upstream schema:
 
 ```
 DataJointError: Cannot rebuild lineage for `session`.`session`:
@@ -497,19 +499,34 @@ Rebuild lineage for schema `subject` first.
 
 ```python
 # Example: multi-schema pipeline
-schemas_in_order = [
-    dj.Schema('lab'),           # No dependencies
-    dj.Schema('subject'),       # Depends on lab
-    dj.Schema('session'),       # Depends on subject
-    dj.Schema('ephys'),         # Depends on session
-]
+# Process each schema fully before moving to the next
 
-for schema in schemas_in_order:
-    migrate_columns(schema, dry_run=False)
-    schema.rebuild_lineage()
+# Schema 1: lab (no dependencies)
+schema = dj.Schema('lab')
+migrate_columns(schema, dry_run=False)
+schema.rebuild_lineage()
+# Now update src/pipeline/lab.py table definitions → core types
+
+# Schema 2: subject (depends on lab)
+schema = dj.Schema('subject')
+migrate_columns(schema, dry_run=False)
+schema.rebuild_lineage()
+# Now update src/pipeline/subject.py table definitions → core types
+
+# Schema 3: session (depends on subject)
+schema = dj.Schema('session')
+migrate_columns(schema, dry_run=False)
+schema.rebuild_lineage()
+# Now update src/pipeline/session.py table definitions → core types
+
+# Schema 4: ephys (depends on session)
+schema = dj.Schema('ephys')
+migrate_columns(schema, dry_run=False)
+schema.rebuild_lineage()
+# Now update src/pipeline/ephys.py table definitions → core types
 ```
 
-This migrates all column types:
+The database migration updates these column types:
 
 - Numeric: `int unsigned` → `:uint32:`, `smallint` → `:int16:`, etc.
 - Blobs: `longblob` → `:<blob>:`
@@ -517,9 +534,13 @@ This migrates all column types:
 
 External storage columns (`external-*`, `attach@*`, `filepath@*`) are **not** migrated here—they require Phase 3-4.
 
+After the database migration for each schema, update the corresponding Python module(s) to use core types (see section 2.4).
+
 ### 2.4 Update Table Definitions
 
-Update Python table definition strings to use core types instead of native MySQL types. This is a code change (like the fetch API updates in Phase 1) that should be done manually or by AI agents.
+After migrating each schema's database metadata (section 2.3), update the corresponding Python module(s) to use core types instead of native MySQL types.
+
+**Important:** Do this for each schema immediately after its database migration, maintaining topological order. This keeps the Python code in sync with the database as you progress through the pipeline.
 
 #### Type Replacements
 
@@ -628,32 +649,49 @@ class Trial(dj.Manual):
 ```
 You are migrating a DataJoint schema from legacy to 2.0.
 
-TASK: Update database metadata and Python definition strings.
+TASK: Update database metadata AND corresponding Python module code.
 
-IMPORTANT: For multi-schema pipelines, process schemas in TOPOLOGICAL ORDER
+CRITICAL: For multi-schema pipelines, process schemas in TOPOLOGICAL ORDER
 (upstream first). Each rebuild_lineage() assumes upstream schemas are done.
+For EACH schema, you must migrate both the database AND the Python code before
+moving to the next schema.
 
-STEPS:
+WORKFLOW:
 1. Identify all schemas and their dependencies (upstream → downstream)
 2. For each schema in topological order:
-   a. Connect: schema = dj.Schema('database_name')
-   b. Preview: result = migrate_columns(schema, dry_run=True)
-   c. Review columns needing migration
-   d. Apply: migrate_columns(schema, dry_run=False)
-   e. Build lineage: schema.rebuild_lineage()
-3. Update Python table definition strings to use core types:
-   - tinyint unsigned → uint8
-   - smallint unsigned → uint16
-   - int unsigned → uint32
-   - bigint unsigned → uint64
-   - tinyint → int8
-   - smallint → int16
-   - int → int32
-   - bigint → int64
-   - float → float32
-   - double → float64
-   - longblob → <blob>
-   - enum → enum (no change)
+
+   A. MIGRATE DATABASE:
+      a. Connect: schema = dj.Schema('database_name')
+      b. Preview: result = migrate_columns(schema, dry_run=True)
+      c. Review columns needing migration
+      d. Apply: migrate_columns(schema, dry_run=False)
+      e. Build lineage: schema.rebuild_lineage()
+
+   B. UPDATE PYTHON CODE:
+      a. Identify Python module(s) defining this schema's tables
+         (Look for @schema decorator or schema.context references)
+      b. Open each module file
+      c. Update table definition strings to use core types (see TYPE MAPPING below)
+      d. Save and commit changes
+
+   C. VERIFY before proceeding to next schema:
+      - schema.rebuild_lineage() succeeded
+      - Python code uses core types
+      - Can import and instantiate tables with 2.0 client
+
+TYPE MAPPING (for Python definition strings):
+- tinyint unsigned → uint8
+- smallint unsigned → uint16
+- int unsigned → uint32
+- bigint unsigned → uint64
+- tinyint → int8
+- smallint → int16
+- int → int32
+- bigint → int64
+- float → float32
+- double → float64
+- longblob → <blob>
+- enum → enum (no change)
 
 SPECIAL CASES (ask user to confirm):
 - tinyint(1) / bool / boolean: Infer intent from context.
@@ -661,11 +699,25 @@ SPECIAL CASES (ask user to confirm):
 - timestamp: Convert to datetime. DataJoint 2.0 uses UTC only.
   Ask user about timezone handling if unclear.
 
-VERIFICATION:
-- 2.0 client recognizes all types correctly
+EXAMPLE WORKFLOW:
+Schema: lab (no dependencies)
+  → migrate_columns('lab')
+  → rebuild_lineage()
+  → Update src/pipeline/lab.py table definitions
+  → Verify: import lab; lab.User()
+
+Schema: subject (depends on lab)
+  → migrate_columns('subject')
+  → rebuild_lineage()
+  → Update src/pipeline/subject.py table definitions
+  → Verify: import subject; subject.Subject()
+
+FINAL VERIFICATION:
+- All schemas migrated in topological order
+- All Python modules updated
 - Legacy clients still work (ignore comment prefixes)
-- ~lineage table exists
-- Python definition strings use core types
+- 2.0 client recognizes all types correctly
+- All ~lineage tables exist
 ```
 
 ### 2.6 Validation
