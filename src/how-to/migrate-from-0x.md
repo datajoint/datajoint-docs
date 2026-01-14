@@ -45,7 +45,9 @@ DataJoint 2.0 introduces portable type aliases (`uint32`, `float64`, etc.) that 
 
 **After Phase 1:** Simple queries work. Blobs and complex queries may not work until Phase 2.
 
-**Most users stop after Phase 2.** Phases 3-4 only apply to schemas using legacy external storage (`external-*`, `attach@*`, `filepath@*`). Phase 6 is optional cleanup.
+**After Phase 2:** 2.0 clients can use all column types except legacy external storage and AdaptedTypes.
+
+**Most users stop after Phase 2.** Phases 3-4 only apply to schemas using legacy external storage (`external-*`, `attach@*`, `filepath@*`) or AdaptedTypes. Phase 6 is optional cleanup.
 
 ---
 
@@ -720,7 +722,7 @@ FINAL VERIFICATION:
 - All schemas migrated in topological order
 - All Python modules updated
 - Legacy clients still work (ignore comment prefixes)
-- 2.0 client recognizes all types correctly
+- 2.0 client recognizes all types (except legacy external storage and AdaptedTypes - see Phase 3)
 - All ~lineage tables exist
 ```
 
@@ -729,12 +731,16 @@ FINAL VERIFICATION:
 After Phase 2:
 
 - [ ] Legacy clients can still read/write all data
-- [ ] 2.0 clients recognize all column types correctly
+- [ ] 2.0 clients recognize all column types except:
+  - Legacy external storage (`external-*`, `attach@*`, `filepath@*`) - requires Phase 3-4
+  - Legacy AdaptedTypes - requires Phase 3 conversion to Codecs
 - [ ] `~lineage` table exists and is populated for each schema
 - [ ] Python definition strings updated to use core types
 - [ ] No data format changes occurred
 
 **Why safe:** Legacy ignores `~lineage` tables (prefixed with `~`). Definition string changes don't affect the database.
+
+**Next steps:** If your schema uses legacy external storage or AdaptedTypes, proceed to Phase 3. Otherwise, your migration is complete and you can skip to Phase 5 to learn about new features.
 
 ---
 
