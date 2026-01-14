@@ -121,12 +121,14 @@ DataJoint 2.0 replaces `external.*` with unified `stores.*` configuration:
 | pre-2.0 | 2.0 | Phase |
 |--------|-----|-------|
 | `table.fetch()` | `table.to_arrays()` or `table.to_dicts()` | I |
+| `table.fetch(..., format="frame")` | `table.to_pandas(...)` | I |
 | `table.fetch1()` | `table.fetch1()` (unchanged) | — |
 | `table.fetch1('KEY')` | `table.keys()` | I |
 | `(table & key)._update('attr', val)` | `table.update1({**key, 'attr': val})` | I |
 | `table1 @ table2` | `table1 * table2` (natural join with semantic checks) | I |
 | `a.join(b, left=True)` | Consider `a.extend(b)` | I |
-| `dj.U('attr') * table` | `dj.U('attr') & table` | I |
+| `dj.U('attr') * table` | `table` (no longer necessary) | I |
+| `dj.ERD(schema)` | `dj.Diagram(schema)` | I |
 
 **Learn more:** [Fetch API Reference](../reference/specs/fetch-api.md) · [Query Operators Reference](../reference/operators.md)
 
@@ -729,6 +731,7 @@ Update all DataJoint API calls to 2.0 patterns.
 
 **Fetch API:**
 - `fetch()` → `to_arrays()` (recarray-like) or `to_dicts()` (list of dicts)
+- `fetch(..., format="frame")` → `to_pandas()` (pandas DataFrame)
 - `fetch('attr1', 'attr2')` → `to_arrays('attr1', 'attr2')` (returns tuple)
 - `fetch1()` → unchanged (still returns dict for single row)
 
@@ -738,7 +741,10 @@ Update all DataJoint API calls to 2.0 patterns.
 **Join Operators:**
 - `table1 @ table2` → `table1 * table2` (natural join with semantic checks enabled)
 - `a.join(b, left=True)` → Consider `a.extend(b)`
-- `dj.U('attr') * table` → `dj.U('attr') & table`
+- `dj.U('attr') * table` → `table` (no longer necessary)
+
+**Visualization:**
+- `dj.ERD(schema)` → `dj.Diagram(schema)` (ERD deprecated)
 
 **Learn more:** [Fetch API Reference](../reference/specs/fetch-api.md) · [Query Operators](../reference/operators.md)
 
@@ -768,6 +774,9 @@ API CONVERSIONS:
    OLD: data = table.fetch(as_dict=True)
    NEW: data = table.to_dicts()  # list of dicts
 
+   OLD: data = table.fetch(format="frame")
+   NEW: data = table.to_pandas()  # pandas DataFrame
+
    OLD: data = table.fetch('attr1', 'attr2')
    NEW: data = table.to_arrays('attr1', 'attr2')  # returns tuple
 
@@ -795,9 +804,9 @@ API CONVERSIONS:
    OLD: result = a.join(b, left=True)
    NEW: result = a.extend(b)  # Consider using extend for left joins
 
-4. Universal Set (always convert):
+4. Universal Set (REMOVE - no longer necessary):
    OLD: result = dj.U('attr') * table
-   NEW: result = dj.U('attr') & table
+   NEW: result = table  # dj.U() is no longer necessary
 
 5. Insert/Delete (unchanged):
    table.insert(data)  # unchanged
@@ -814,7 +823,7 @@ PROCESS:
    d. Replace with update1()
    e. Search for @ operator (replace with * for natural join)
    f. Search for .join(x, left=True) patterns (consider .extend(x))
-   g. Search for dj.U() * patterns (replace with dj.U() &)
+   g. Search for dj.U() * patterns (remove, replace with just table)
 3. Run syntax checks
 4. Run existing tests if available
 5. If semantic checks fail after @ → * conversion, investigate schema/data
@@ -825,7 +834,7 @@ VERIFICATION:
 - No .fetch1('KEY') calls remaining (replaced with .keys())
 - No ._update() calls remaining
 - No @ operator between tables
-- No dj.U() * patterns
+- No dj.U() * patterns (removed)
 - All tests pass (if available)
 - Semantic check failures investigated and resolved
 
@@ -839,33 +848,37 @@ Pattern 2: Fetch specific attributes
 OLD: mouse_ids, dobs = Mouse.fetch('mouse_id', 'dob')
 NEW: mouse_ids, dobs = Mouse.to_arrays('mouse_id', 'dob')
 
-Pattern 3: Fetch single row
+Pattern 3: Fetch as pandas DataFrame
+OLD: df = Mouse.fetch(format="frame")
+NEW: df = Mouse.to_pandas()
+
+Pattern 4: Fetch single row
 OLD: row = (Mouse & key).fetch1()  # unchanged
 NEW: row = (Mouse & key).fetch1()  # unchanged
 
-Pattern 4: Update attribute
+Pattern 5: Update attribute
 OLD: (Session & key)._update('experimenter', 'Alice')
 NEW: Session.update1({**key, 'experimenter': 'Alice'})
 
-Pattern 5: Fetch primary keys
+Pattern 6: Fetch primary keys
 OLD: keys = Mouse.fetch1('KEY')
 NEW: keys = Mouse.keys()
 
-Pattern 5b: Fetch with keys included
+Pattern 7: Fetch with keys included
 OLD: keys, weights, ages = Mouse.fetch("KEY", "weight", "age")
 NEW: weights, ages = Mouse.to_arrays('weight', 'age', include_key=True)
 
-Pattern 6: Natural join (now WITH semantic checks)
+Pattern 8: Natural join (now WITH semantic checks)
 OLD: result = Neuron @ Session
 NEW: result = Neuron * Session  # Semantic checks enabled—may reveal schema errors
 
-Pattern 7: Left join
+Pattern 9: Left join
 OLD: result = Session.join(Experiment, left=True)
 NEW: result = Session.extend(Experiment)  # Consider using extend
 
-Pattern 8: Universal set
+Pattern 10: Universal set (REMOVE)
 OLD: all_dates = dj.U('session_date') * Session
-NEW: all_dates = dj.U('session_date') & Session
+NEW: all_dates = Session  # dj.U() no longer necessary
 
 REPORT:
 
@@ -875,7 +888,7 @@ REPORT:
 - _update() → update1(): [count]
 - @ → * (natural join): [count]
 - .join(x, left=True) → .extend(x): [count]
-- U() * → U() &: [count]
+- dj.U() * table → table (removed): [count]
 - Semantic check failures: [count and resolution]
 - Tests passed: [yes/no]
 
@@ -887,7 +900,7 @@ COMMIT MESSAGE FORMAT:
 - Replace _update() with update1()
 - Replace @ operator with * (enables semantic checks)
 - Replace .join(x, left=True) with .extend(x)
-- Replace dj.U() * with dj.U() &
+- Remove dj.U() * table patterns (no longer necessary)
 - Investigate and resolve semantic check failures
 
 API conversions: X fetch, Y update, Z join"
@@ -1007,9 +1020,12 @@ Tables updated: X Computed, Y Imported"
 - [ ] All in-table codecs converted (`<blob>`, `<attach>`)
 - [ ] All in-store codecs converted (`<blob@>`, `<npy@>`, `<filepath@>`)
 - [ ] All `fetch()` calls converted (except `fetch1()`)
+- [ ] All `fetch(..., format="frame")` converted to `to_pandas()`
+- [ ] All `fetch1('KEY')` converted to `keys()`
 - [ ] All `._update()` calls converted
-- [ ] All `@` operators converted
-- [ ] All `dj.U() *` patterns converted
+- [ ] All `@` operators converted to `*`
+- [ ] All `dj.U() * table` patterns removed (replace with `table`)
+- [ ] All `dj.ERD()` calls converted to `dj.Diagram()`
 - [ ] All populate methods updated
 - [ ] No syntax errors
 - [ ] All `_v2` schemas created (empty)
