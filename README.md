@@ -27,11 +27,15 @@ This repository contains the source for the DataJoint documentation, organized u
 # Clone repositories
 git clone https://github.com/datajoint/datajoint-docs.git
 cd datajoint-docs
-cd .. && git clone -b pre/v2.0 https://github.com/datajoint/datajoint-python.git
+cd ..
+git clone -b pre/v2.0 https://github.com/datajoint/datajoint-python.git
 cd datajoint-docs
 
 # Start live preview at http://localhost:8000
 MODE="LIVE" docker compose up --build
+
+# Build static site (optional)
+# MODE="BUILD" docker compose up --build
 ```
 
 The Docker environment includes MySQL, MinIO, and all dependencies.
@@ -44,13 +48,14 @@ The Docker environment includes MySQL, MinIO, and all dependencies.
 # Setup
 git clone https://github.com/datajoint/datajoint-docs.git
 cd datajoint-docs
-python -m venv .venv && source .venv/bin/activate
+python -m venv .venv && source .venv/bin/activate  # Windows: .venv\Scripts\activate
 pip install -r pip_requirements.txt
 
 # Configure credentials
 mkdir -p .secrets
-echo "username" > .secrets/database.user
-echo "password" > .secrets/database.password
+echo "your_username" > .secrets/database.user
+echo "your_password" > .secrets/database.password
+chmod 600 .secrets/*
 
 # Start live preview at http://localhost:8000
 mkdocs serve
@@ -78,7 +83,7 @@ docker compose exec docs jupyter nbconvert --to notebook --execute --inplace \
 
 > Yatsenko D, Walker EY, Tolias AS. DataJoint: A Simpler Relational Data Model. arXiv:2303.00102. 2023. doi: [10.48550/arXiv.2303.00102](https://doi.org/10.48550/arXiv.2303.00102)
 
-Full citation information: [docs.datajoint.com/about/citation](https://docs.datajoint.com/about/citation/)
+Full citation information: [docs.datajoint.com/about/citation/](https://docs.datajoint.com/about/citation/)
 
 ## License
 
