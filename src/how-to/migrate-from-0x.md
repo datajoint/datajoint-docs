@@ -498,8 +498,6 @@ class Trial(dj.Manual):
 - **Portability:** Core types map consistently across database backends
 - **Forward compatibility:** New tables should use core types; updating existing definitions maintains consistency
 
-**Note:** The database schema is unchanged—`migrate_columns()` already added type labels to column comments. Updating definition strings keeps your Python code consistent with the database state.
-
 ### 2.5 AI Agent Prompt (Phase 2)
 
 ```
