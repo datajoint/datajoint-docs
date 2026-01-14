@@ -2128,102 +2128,57 @@ ALTER TABLE `my_pipeline`.`recording`
 
 ## Phase IV: Adopt New Features
 
-After successful migration, adopt DataJoint 2.0 features:
+After successful migration, adopt DataJoint 2.0 features incrementally based
+on your needs. Migration is complete - these are optional enhancements.
 
-### 1. Object Storage with Lazy Loading
+### New Features Overview
 
-Replace `<blob>` with `<npy@>` for large arrays:
+**Schema-addressed storage** (`<npy@>`, `<object@>`)
+- Lazy-loading arrays with fsspec integration
+- Hierarchical organization by primary key
+- Mutable objects with streaming access
+- See: [Object Storage Tutorial](../tutorials/basics/06-object-storage.ipynb)
 
-```python
-# Before
-@schema
-class Recording(dj.Manual):
-    definition = """
-    recording_id : uint32
-    ---
-    signal : <blob>  # Stored in table
-    """
+**Semantic matching**
+- Lineage-based join validation (enabled by default with `*` operator)
+- Catches errors from incompatible data combinations
+- See: [Semantic Matching Spec](../reference/specs/semantic-matching.md)
 
-# After
-@schema
-class Recording(dj.Manual):
-    definition = """
-    recording_id : uint32
-    ---
-    signal : <npy@>  # Lazy-loading from object store
-    """
+**Jobs 2.0**
+- Per-table job tracking (`~~table_name`)
+- Priority-based populate (with `reserve_jobs=True`)
+- Improved distributed computing coordination
+- See: [Distributed Computing Tutorial](../tutorials/advanced/distributed.ipynb)
 
-# Usage
-ref = (Recording & key).fetch1('signal')
-print(f"Shape: {ref.shape}, dtype: {ref.dtype}")  # No download!
-signal = ref.load()  # Download when ready
-```
+**Custom codecs**
+- Domain-specific data types
+- Extensible type system
+- See: [Custom Codecs Tutorial](../tutorials/advanced/custom-codecs.ipynb)
 
-**Learn more:** [Object Storage Tutorial](../tutorials/basics/06-object-storage.ipynb) · [NPY Codec Spec](../reference/specs/npy-codec.md)
+### Learning Path
 
-### 2. Partition Patterns
+**Start here:**
 
-Organize object storage by experimental hierarchy:
+1. [Object Storage Tutorial](../tutorials/basics/06-object-storage.ipynb) -
+   Learn `<npy@>` and `<object@>` for large arrays
+2. [Distributed Computing Tutorial](../tutorials/advanced/distributed.ipynb) -
+   Jobs 2.0 with priority-based populate
+3. [Custom Codecs Tutorial](../tutorials/advanced/custom-codecs.ipynb) -
+   Create domain-specific types
 
-```python
-# Configure partitioning
-dj.config['stores.main.partition_pattern'] = '{mouse_id}/{session_date}'
+**Reference documentation:**
 
-# Storage structure:
-# {store}/mouse_id=0/session_date=2024-06-01/{schema}/{table}/file.npy
-```
+- [Object Store Configuration](../reference/specs/object-store-configuration.md)
+- [NPY Codec Spec](../reference/specs/npy-codec.md)
+- [Codec API](../reference/specs/codec-api.md)
+- [Semantic Matching Spec](../reference/specs/semantic-matching.md)
+- [AutoPopulate Spec](../reference/specs/autopopulate.md)
 
-**Learn more:** [Object Store Configuration](../reference/specs/object-store-configuration.md)
-
-### 3. Semantic Matching
-
-Enable lineage-based join validation:
-
-```python
-# Validates lineage compatibility
-result = Neuron.join(Session, semantic_check=True)
-
-# Raises error if lineage incompatible
-```
-
-**Learn more:** [Semantic Matching Spec](../reference/specs/semantic-matching.md)
-
-### 4. Custom Codecs
-
-Create domain-specific types:
-
-```python
-from datajoint.codecs import Codec
-
-class SpikeTrainCodec(Codec):
-    """Custom codec for spike trains."""
-
-    def encode(self, obj, context):
-        # Compress spike times
-        return compressed_data
-
-    def decode(self, blob, context):
-        # Decompress spike times
-        return spike_times
-```
-
-**Learn more:** [Custom Codecs Tutorial](../tutorials/advanced/custom-codecs.ipynb) · [Codec API](../reference/specs/codec-api.md)
-
-### 5. Jobs 2.0
-
-Use per-table job management:
-
-```python
-# Monitor job progress
-Analysis.jobs.progress()
-
-# Priority-based populate (processes jobs at priority ≥ 50)
-Analysis.populate(priority=50)
-
-# Job tables: ~~analysis
-```
-
-**Learn more:** [Distributed Computing](../tutorials/advanced/distributed.ipynb) · [AutoPopulate Spec](../reference/specs/autopopulate.md)
+**Adopt features incrementally:**
+- Start with one table using `<npy@>` for large arrays
+- Test performance and workflow improvements
+- Expand to other tables as needed
+- No need to adopt all features at once
 
 ---
 
