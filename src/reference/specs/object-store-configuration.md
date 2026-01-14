@@ -14,11 +14,11 @@ DataJoint 2.0 supports three storage models, all sharing the same store configur
 |-------|------------|----------------|-------------|----------|
 | **Hash-addressed** | `<blob@store>`, `<attach@store>` | Content-addressed by hash | **Integrated** (OAS) | Immutable data, automatic deduplication |
 | **Schema-addressed** | `<object@store>`, `<npy@store>` | Key-based hierarchical paths | **Integrated** (OAS) | Mutable data, streaming access, arrays |
-| **Filepath** | `<filepath@store>` | User-managed paths | **Reference** | Existing files, external workflows |
+| **Filepath** | `<filepath@store>` | User-managed paths | **Reference** | User-managed files (no lifecycle management) |
 
 **Key distinction:**
-- **Hash-addressed** and **schema-addressed** storage are **integrated** into the Object-Augmented Schema. DataJoint manages their lifecycle, paths, and integrity.
-- **Filepath** storage provides **references** to externally-managed files. Users control file organization and lifecycle.
+- **Hash-addressed** and **schema-addressed** storage are **integrated** into the Object-Augmented Schema. DataJoint manages their lifecycle, paths, integrity, garbage collection, transaction safety, and deduplication.
+- **Filepath** storage stores only the path string. DataJoint provides no lifecycle management, garbage collection, transaction safety, or deduplication. Users control file creation, organization, and lifecycle.
 
 **Legacy note:** DataJoint 0.14.x only supported hash-addressed (called "external") and filepath storage. Schema-addressed storage is new in 2.0.
 
@@ -82,7 +82,7 @@ recording : <filepath@raw_data>  # Explicitly names store
 
 **Why separate defaults?**
 
-Integrated storage (hash, schema) is managed by DataJoint as part of the Object-Augmented Schema—DataJoint controls paths, lifecycle, and integrity. Filepath storage is user-managed references to existing files—DataJoint only stores the path. These are architecturally distinct, so they often use different storage locations and require separate defaults.
+Integrated storage (hash, schema) is managed by DataJoint as part of the Object-Augmented Schema—DataJoint controls paths, lifecycle, integrity, garbage collection, transaction safety, and deduplication. Filepath storage is user-managed—DataJoint only stores the path string and provides no lifecycle management, garbage collection, transaction safety, or deduplication. These are architecturally distinct, so they often use different storage locations and require separate defaults.
 
 ### Complete Store Configuration
 
@@ -482,10 +482,11 @@ Or if `filepath_prefix = null`:
 6. No file copying occurs
 
 **Properties:**
-- **Reference-only**: No data movement
-- **User-managed**: User controls file organization and lifecycle
+- **Path-only storage**: DataJoint stores path string, no file management
+- **No lifecycle management**: No garbage collection, transaction safety, or deduplication
+- **User-managed**: User controls file creation, organization, and lifecycle
 - **Collision-prone**: **User responsible for avoiding name collisions**
-- **Flexible**: Can reference existing files from external workflows
+- **Flexible**: Can reference existing files or create new ones
 
 **Collision handling:**
 

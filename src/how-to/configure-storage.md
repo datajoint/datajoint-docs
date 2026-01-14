@@ -10,8 +10,8 @@ DataJoint's Object-Augmented Schema (OAS) integrates relational tables with obje
 
 **Storage models:**
 
-- **Hash-addressed** and **schema-addressed** storage are **integrated** into the OAS. DataJoint manages paths, lifecycle, and integrity.
-- **Filepath** storage provides **references** to externally-managed files. Users control organization and lifecycle.
+- **Hash-addressed** and **schema-addressed** storage are **integrated** into the OAS. DataJoint manages paths, lifecycle, integrity, garbage collection, transaction safety, and deduplication.
+- **Filepath** storage stores only path strings. DataJoint provides no lifecycle management, garbage collection, transaction safety, or deduplication. Users control file creation, organization, and lifecycle.
 
 Storage is configured per-project using named stores. Each store can be used for:
 
@@ -337,7 +337,7 @@ DataJoint reserves sections within each store for managed storage based on the c
 
 ### User-Managed Filepath Storage
 
-The `<filepath@>` codec allows you to reference existing files anywhere in the store **except** these reserved sections. This gives you maximum freedom to organize files while reusing DataJoint's store configuration:
+The `<filepath@>` codec stores paths to files that you manage. DataJoint does not manage lifecycle (no garbage collection), integrity (no transaction safety), or deduplication for filepath storage. You can reference existing files or create new ones—DataJoint simply stores the path string. Files can be anywhere in the store **except** the reserved sections:
 
 ```python
 @schema
@@ -345,12 +345,12 @@ class RawData(dj.Manual):
     definition = """
     session_id : int
     ---
-    recording : <filepath@acquisition>  # Reference existing file
+    recording : <filepath@acquisition>  # User-managed file path
     """
 
 # Valid paths (user-managed)
-table.insert1({'session_id': 1, 'recording': 'subject01/session001/data.bin'})
-table.insert1({'session_id': 2, 'recording': 'raw/experiment_2024/data.nwb'})
+table.insert1({'session_id': 1, 'recording': 'subject01/session001/data.bin'})  # Existing or new file
+table.insert1({'session_id': 2, 'recording': 'raw/experiment_2024/data.nwb'})  # Existing or new file
 
 # Invalid paths (reserved for DataJoint - will raise ValueError)
 # These use the default prefixes (_hash and _schema)
@@ -363,9 +363,10 @@ table.insert1({'session_id': 4, 'recording': '_schema/myschema/...'}) # Error!
 
 **Key characteristics of `<filepath@>`:**
 
-- References existing files (no copying)
-- User controls file organization
-- User manages file lifecycle (DataJoint never deletes)
+- Stores path string only (DataJoint does not manage the files)
+- No lifecycle management: no garbage collection, no transaction safety, no deduplication
+- User controls file creation, organization, and deletion
+- Can reference existing files or create new ones
 - Returns ObjectRef for lazy access on fetch
 - Validates file exists on insert
 - Cannot use reserved sections (configured by `hash_prefix` and `schema_prefix`)
