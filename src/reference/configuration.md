@@ -45,9 +45,36 @@ Unified storage configuration for all external storage types (`<blob@>`, `<attac
 |---------|----------|-------------|
 | `stores.<name>.protocol` | Yes | Storage protocol: `file`, `s3`, `gcs`, `azure` |
 | `stores.<name>.location` | Yes | Base path or prefix (includes project context) |
+| `stores.<name>.hash_prefix` | No | Prefix for hash-addressed storage (default: `"_hash"`) |
+| `stores.<name>.schema_prefix` | No | Prefix for schema-addressed storage (default: `"_schema"`) |
+| `stores.<name>.filepath_prefix` | No | Required prefix for filepath storage, or `null` for unrestricted (default: `null`) |
 | `stores.<name>.subfolding` | No | Directory nesting for hash-addressed storage, e.g., `[2, 2]` (default: no subfolding) |
 | `stores.<name>.partition_pattern` | No | Path partitioning for schema-addressed storage, e.g., `"subject_id/session_date"` (default: no partitioning) |
 | `stores.<name>.token_length` | No | Random token length for schema-addressed filenames (default: `8`) |
+
+**Prefix configuration:**
+
+The three prefix settings control where each storage type places data within the store:
+
+- **`hash_prefix`**: Section for hash-addressed storage (`<blob@>`, `<attach@>`)
+- **`schema_prefix`**: Section for schema-addressed storage (`<object@>`, `<npy@>`)
+- **`filepath_prefix`**: Optional restriction for filepath storage (`<filepath@>`)
+
+Prefixes must be mutually exclusive (no prefix can be a parent/child of another). This allows mapping DataJoint to existing storage layouts:
+
+```json
+{
+  "stores": {
+    "legacy": {
+      "protocol": "file",
+      "location": "/data/existing_storage",
+      "hash_prefix": "content_addressed",      // Instead of _hash
+      "schema_prefix": "structured_data",       // Instead of _schema
+      "filepath_prefix": "raw_files"            // Restrict filepaths
+    }
+  }
+}
+```
 
 **S3-specific settings:**
 
@@ -78,11 +105,11 @@ Unified storage configuration for all external storage types (`<blob@>`, `<attac
 
 **How storage methods use stores:**
 
-- **Hash-addressed** (`<blob@>`, `<attach@>`): `{location}/_hash/{schema}/{hash}` with optional subfolding
-- **Schema-addressed** (`<object@>`, `<npy@>`): `{location}/_schema/{partition}/{schema}/{table}/{key}/{field}.{token}.{ext}` with optional partitioning
-- **Filepath** (`<filepath@>`): `{location}/{user_path}` (user-managed, cannot use `_hash/` or `_schema/`)
+- **Hash-addressed** (`<blob@>`, `<attach@>`): `{location}/{hash_prefix}/{schema}/{hash}` with optional subfolding
+- **Schema-addressed** (`<object@>`, `<npy@>`): `{location}/{schema_prefix}/{partition}/{schema}/{table}/{key}/{field}.{token}.{ext}` with optional partitioning
+- **Filepath** (`<filepath@>`): `{location}/{filepath_prefix}/{user_path}` (user-managed, cannot use hash or schema prefixes)
 
-All storage methods share the same stores and default store. DataJoint reserves `_hash/` and `_schema/` sections for managed storage; `<filepath@>` references can use any other paths.
+All storage methods share the same stores and default store. DataJoint reserves the configured `hash_prefix` and `schema_prefix` sections for managed storage; `<filepath@>` references can use any other paths (unless `filepath_prefix` is configured to restrict them).
 
 **Path structure examples:**
 

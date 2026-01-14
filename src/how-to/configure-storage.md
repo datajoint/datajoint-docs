@@ -272,12 +272,58 @@ This unified approach enables:
 - **Seamless switching** between local and cloud storage
 - **Integration with fsspec** for streaming access
 
+## Customizing Storage Prefixes
+
+By default, DataJoint uses `_hash/` and `_schema/` prefixes for managed storage. You can customize these prefixes to map DataJoint to existing storage layouts:
+
+```json
+{
+  "stores": {
+    "legacy": {
+      "protocol": "file",
+      "location": "/data/existing_storage",
+      "hash_prefix": "content_addressed",
+      "schema_prefix": "structured_data",
+      "filepath_prefix": "raw_files"
+    }
+  }
+}
+```
+
+**Prefix requirements:**
+- Prefixes must be mutually exclusive (no nesting)
+- `hash_prefix` and `schema_prefix` are reserved for DataJoint
+- `filepath_prefix` is optional (null = unrestricted)
+
+**Example with hierarchical layout:**
+
+```json
+{
+  "stores": {
+    "organized": {
+      "protocol": "s3",
+      "endpoint": "s3.amazonaws.com",
+      "bucket": "neuroscience-data",
+      "location": "lab-project-2024",
+      "hash_prefix": "managed/blobs",
+      "schema_prefix": "managed/arrays",
+      "filepath_prefix": "imported"
+    }
+  }
+}
+```
+
+Paths become:
+- Hash: `s3://neuroscience-data/lab-project-2024/managed/blobs/{schema}/{hash}`
+- Schema: `s3://neuroscience-data/lab-project-2024/managed/arrays/{schema}/{table}/{key}/`
+- Filepath: `s3://neuroscience-data/lab-project-2024/imported/{user_path}`
+
 ## Reserved Sections and Filepath Storage
 
-DataJoint reserves two sections within each store for managed storage:
+DataJoint reserves sections within each store for managed storage based on the configured prefixes:
 
-- **`_hash/`** — Hash-addressed storage for `<blob@>` and `<attach@>` with content deduplication
-- **`_schema/`** — Schema-addressed storage for `<object@>` and `<npy@>` with key-based paths
+- **`hash_prefix`** (default: `_hash/`) — Hash-addressed storage for `<blob@>` and `<attach@>` with content deduplication
+- **`schema_prefix`** (default: `_schema/`) — Schema-addressed storage for `<object@>` and `<npy@>` with key-based paths
 
 ### User-Managed Filepath Storage
 
@@ -297,8 +343,12 @@ table.insert1({'session_id': 1, 'recording': 'subject01/session001/data.bin'})
 table.insert1({'session_id': 2, 'recording': 'raw/experiment_2024/data.nwb'})
 
 # Invalid paths (reserved for DataJoint - will raise ValueError)
+# These use the default prefixes (_hash and _schema)
 table.insert1({'session_id': 3, 'recording': '_hash/abc123...'})      # Error!
 table.insert1({'session_id': 4, 'recording': '_schema/myschema/...'}) # Error!
+
+# If you configured custom prefixes like "content_addressed", those would also be blocked
+# table.insert1({'session_id': 5, 'recording': 'content_addressed/file.dat'})  # Error!
 ```
 
 **Key characteristics of `<filepath@>`:**
@@ -307,7 +357,8 @@ table.insert1({'session_id': 4, 'recording': '_schema/myschema/...'}) # Error!
 - User manages file lifecycle (DataJoint never deletes)
 - Returns ObjectRef for lazy access on fetch
 - Validates file exists on insert
-- Cannot use reserved `_hash/` or `_schema/` sections
+- Cannot use reserved sections (configured by `hash_prefix` and `schema_prefix`)
+- Can be restricted to specific prefix using `filepath_prefix` configuration
 
 ## See Also
 
