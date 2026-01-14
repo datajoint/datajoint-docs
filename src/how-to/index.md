@@ -8,6 +8,7 @@ they assume you understand the basics and focus on getting things done.
 ## Setup
 
 - [Installation](installation.md) — Installing DataJoint
+- [Manage Secrets and Credentials](manage-secrets.md) — Secure configuration management
 - [Configure Database Connection](configure-database.md) — Connection settings
 - [Configure Object Storage](configure-storage.md) — S3, MinIO, file stores
 - [Use the Command-Line Interface](use-cli.md) — Interactive REPL
