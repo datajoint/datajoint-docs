@@ -4,9 +4,9 @@
 > See the [Migration Guide](how-to/migrate-to-v20.md) for upgrade instructions.
 > For pre-2.0 documentation, visit [datajoint.github.io/datajoint-python](https://datajoint.github.io/datajoint-python).
 
-![pipeline](https://raw.githubusercontent.com/datajoint/datajoint-python/master/images/pipeline.png){: style="height:300px;"}
-
 **DataJoint** is a framework for scientific data pipelines built on the [Relational Workflow Model](explanation/relational-workflow-model.md)—a paradigm where your database schema is an executable specification of your workflow.
+
+![pipeline](images/pipeline.png){: style="height:300px;"}
 
 Unlike traditional databases that merely store data, DataJoint pipelines **process** data: tables represent workflow steps, foreign keys encode computational dependencies, and the schema itself defines what computations exist and how they relate. Combined with [Object-Augmented Schemas](explanation/data-pipelines.md#object-augmented-schemas) for seamless large-data handling, DataJoint delivers reproducible, scalable scientific computing with full provenance tracking.
 
