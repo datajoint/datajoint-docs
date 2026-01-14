@@ -1,527 +1,386 @@
 # Migrate from DataJoint 0.14.6 to 2.0
 
-This guide shows how to safely migrate existing DataJoint 0.14.6 pipelines to DataJoint 2.0 using **parallel schemas**. Production remains completely untouched until the final cutover.
+This guide shows how to safely migrate existing DataJoint 0.14.6 pipelines to DataJoint 2.0 using **git branches** and **parallel schemas**.
 
 ## Migration Strategy
 
+Use git branches to separate legacy and 2.0 code:
+
 ```
-Production (0.14.6):     my_pipeline        → runs unchanged
-Testing (2.0):           my_pipeline_v20    → test migration here
-                              ↓
-                         validate everything
-                              ↓
-Final Cutover:          rename/migrate schemas (one-time event)
+main branch (0.14.6):      my_pipeline     → production (pinned to dj 0.14.6)
+migration branch (2.0):    my_pipeline_v2  → testing (uses dj 2.0)
+                                ↓
+                           validate & test
+                                ↓
+                           merge to main
 ```
 
-### Key Principle: Zero Production Risk
+### Key Principles
 
-Your production schemas are never modified until you've thoroughly tested the migration in parallel `_v20` schemas. This approach:
-
-- **Eliminates risk** - production continues unchanged during testing
-- **Enables practice** - run migration multiple times until perfect
-- **Simplifies rollback** - just drop `_v20` schemas, no data loss
-- **Allows validation** - compare old vs new side-by-side
+1. **Standard git workflow** - branch, test, merge
+2. **Parallel schemas** - `_v2` schemas for testing
+3. **Agentic code migration** - ~1 hour with AI assistance
+4. **Deferred external storage** - migrate later if needed
+5. **Flexible data approach** - fresh data or copy from production
 
 ## Prerequisites
 
-- DataJoint 0.14.6 currently running in production
-- Disk space for schema copies (recommended: 2x current database size)
-- Database backup capabilities
-- Access to create new schemas on production database
+- Git repository for your pipeline
+- Python 3.10+ (DataJoint 2.0 requirement)
+- MySQL 8.0+ (recommended)
+- Database access to create schemas
 
-## Phase 1: Setup Parallel Schemas
+## Phase 1: Code Migration (~1 hour)
 
-Create `_v20` copies of your schemas for testing without touching production.
+Migrate your Python codebase to DataJoint 2.0 API using AI assistance.
 
-### Install DataJoint 2.0
+### Step 1: Pin Legacy DataJoint on Main
+
+On your `main` branch, pin the legacy version:
 
 ```bash
-# Create separate environment (keep 0.14.6 for production)
-conda create -n dj20 python=3.12
-conda activate dj20
-pip install datajoint==2.0.0  # or latest 2.0 version
+git checkout main
+
+# Update requirements.txt or pyproject.toml
+echo "datajoint==0.14.6" >> requirements.txt
+
+git add requirements.txt
+git commit -m "chore: pin datajoint 0.14.6 for legacy support"
+git push origin main
 ```
 
-### Configure 2.0 Client
+### Step 2: Create Migration Branch
 
-Create configuration for testing:
+```bash
+# Create new branch for migration
+git checkout -b migrate-to-v2
+
+# Install DataJoint 2.0
+pip install datajoint==2.0.0  # or latest 2.0.x
+
+# Update requirements
+echo "datajoint>=2.0.0" > requirements.txt
+
+git add requirements.txt
+git commit -m "chore: upgrade to datajoint 2.0"
+```
+
+### Step 3: Agentic Code Migration
+
+Use AI assistance to migrate your code. Provide this prompt to your AI agent:
+
+---
+
+#### 🤖 AI Agent Prompt: DataJoint 2.0 Code Migration
+
+```
+You are migrating a DataJoint 0.14.6 pipeline to 2.0.
+
+TASK: Update all Python files in this repository to use DataJoint 2.0 API.
+
+PHASE 1 SCOPE:
+- Update schema connections (add _v2 suffix)
+- Update API patterns (fetch → to_dicts/to_arrays, etc.)
+- Update type syntax in definitions
+- Do NOT migrate external storage yet (blob@, attach@, filepath@)
+
+CHANGES REQUIRED:
+
+1. Schema Declarations (add _v2 suffix):
+   OLD: schema = dj.schema('my_pipeline')
+   NEW: schema = dj.schema('my_pipeline_v2')
+
+2. Fetch API:
+   OLD: data = table.fetch()
+   OLD: data = table.fetch(as_dict=True)
+   OLD: data = table.fetch('attr1', 'attr2')
+   OLD: row = table.fetch1()
+
+   NEW: data = table.to_arrays()
+   NEW: data = table.to_dicts()
+   NEW: data = table.to_arrays('attr1', 'attr2')
+   NEW: row = table.fetch1()  # unchanged
+
+3. Update Method:
+   OLD: (table & key)._update('attr', value)
+   NEW: table.update1({**key, 'attr': value})
+
+4. Join Operator:
+   OLD: result = table1 @ table2
+   NEW: result = table1.join(table2, semantic_check=False)
+
+5. Universal Set:
+   OLD: result = dj.U('attr') * table
+   NEW: result = dj.U('attr') & table
+
+6. Type Syntax in Table Definitions:
+   OLD: int unsigned → NEW: uint32
+   OLD: int → NEW: int32
+   OLD: smallint unsigned → NEW: uint16
+   OLD: tinyint unsigned → NEW: uint8
+   OLD: float → NEW: float32
+   OLD: double → NEW: float64
+   OLD: longblob → NEW: <blob>
+
+   DEFER (Phase 2):
+   - Do NOT change: blob@store, attach@store, filepath@store
+   - Leave these for Phase 2 external storage migration
+
+PROCESS:
+1. Find all Python files with DataJoint code
+2. For each file:
+   - Update schema declarations
+   - Replace deprecated API patterns
+   - Update type syntax
+   - Run syntax check
+3. Create git commit for each file or module
+4. Report summary of changes
+
+VERIFICATION:
+- All imports work
+- No syntax errors
+- Schema connections use _v2 suffix
+- All fetch() calls replaced
+- All type syntax updated (except external)
+
+REPORT:
+- Files modified: [list]
+- API patterns replaced: [counts]
+- Type syntax updates: [counts]
+- Remaining issues: [list]
+
+Time estimate: ~1 hour with agentic assistance.
+```
+
+---
+
+### Step 4: Test the Migration
+
+```bash
+# Run your tests
+pytest tests/
+
+# Or manually test key functionality
+python -c "from my_pipeline_v2 import schema; print(schema.list_tables())"
+
+# Commit the changes
+git add .
+git commit -m "feat: migrate pipeline to datajoint 2.0
+
+- Updated schema connections to *_v2
+- Replaced fetch() with to_arrays()/to_dicts()
+- Updated type syntax to 2.0 conventions
+- External storage migration deferred to Phase 2"
+
+git push origin migrate-to-v2
+```
+
+### Step 5: Configuration for 2.0
+
+Update your configuration (optional, for new stores):
 
 ```python
+# config_v2.py
 import datajoint as dj
-
-# Point to same database, different schemas
-dj.config['database.host'] = 'production-host'
-dj.config['database.user'] = 'migration-user'
 
 # Configure unified stores (2.0 format)
-dj.config['stores.default'] = 'test_store'
-dj.config['stores.test_store'] = {
+dj.config['stores.default'] = 'main'
+dj.config['stores.main'] = {
     'protocol': 'file',
-    'location': '/data/migration_test',
+    'location': '/data/v2_stores',
 }
 
-# Save configuration
-dj.config.save('.secrets/datajoint_v20.json')
+# Save
+dj.config.save('.secrets/datajoint_v2.json')
 ```
 
-### Create Parallel Schema
+✅ **Phase 1 Complete** - You now have 2.0-compatible code on the `migrate-to-v2` branch.
 
-For each production schema, create a `_v20` copy:
+## Phase 2: Testing & Data Migration
+
+Choose one of two approaches:
+
+### Option A: Fresh Data (Recommended for Initial Testing)
+
+Test the pipeline with fresh data to validate the 2.0 migration:
 
 ```python
-from datajoint.migrate import create_parallel_schema
+# On migrate-to-v2 branch
+from my_pipeline_v2 import schema, Mouse, Session, Neuron
 
-# Production schema: my_pipeline (0.14.6)
-# Test schema:       my_pipeline_v20 (2.0)
+# Insert test data
+Mouse.insert([
+    {'mouse_id': 0, 'dob': '2024-01-01', 'sex': 'M'},
+])
 
-result = create_parallel_schema(
-    source='my_pipeline',
-    dest='my_pipeline_v20',
-    copy_data=False  # Just structure, no data yet
-)
+Session.insert([
+    {'mouse_id': 0, 'session_date': '2024-06-01', 'experimenter': 'Test'},
+])
 
-print(f"Created {result['tables_created']} tables")
+# Populate computed tables
+Neuron.populate()
+
+# Test new OAS features (if using <npy@> or <object@>)
+# Your new code can use modern object storage features
 ```
 
-### Verify
+**Advantages:**
+- No production data at risk
+- Test new OAS features immediately
+- Fast iteration
 
-```python
-# Check production is untouched
-import datajoint as dj
+**Next:** Once validated, proceed to Option B to migrate production data.
 
-conn = dj.conn()
+### Option B: Copy Production Data
 
-# Count production tables
-prod_tables = conn.query(
-    "SELECT COUNT(*) FROM information_schema.TABLES "
-    "WHERE TABLE_SCHEMA='my_pipeline'"
-).fetchone()[0]
+Copy data from production (`my_pipeline`) to test (`my_pipeline_v2`):
 
-# Count test tables
-test_tables = conn.query(
-    "SELECT COUNT(*) FROM information_schema.TABLES "
-    "WHERE TABLE_SCHEMA='my_pipeline_v20'"
-).fetchone()[0]
-
-print(f"Production: {prod_tables} tables")
-print(f"Test copy: {test_tables} tables")
-assert prod_tables == test_tables, "Schema copy incomplete"
-```
-
-✅ **Production remains completely untouched**
-
-## Phase 2: Update Code for 2.0
-
-Modify Python code to use 2.0 API patterns and point to `_v20` schemas.
-
-### Schema Connection
-
-Update schema declarations:
-
-```python
-# OLD (0.14.6 production code)
-schema = dj.schema('my_pipeline')
-
-# NEW (2.0 test code)
-schema = dj.schema('my_pipeline_v20')  # Point to test schema
-```
-
-### API Updates
-
-#### Fetch API
-
-```python
-# 0.14.6
-data = table.fetch()
-data = table.fetch(as_dict=True)
-data = table.fetch('attr1', 'attr2')
-
-# 2.0
-data = table.to_arrays()
-data = table.to_dicts()
-data = table.to_arrays('attr1', 'attr2')
-```
-
-#### Update Method
-
-```python
-# 0.14.6
-(table & key)._update('attr', value)
-
-# 2.0
-table.update1({**key, 'attr': value})
-```
-
-#### Join Operator
-
-```python
-# 0.14.6
-result = table1 @ table2
-
-# 2.0
-result = table1.join(table2, semantic_check=False)
-```
-
-### Table Definitions
-
-Update type syntax:
-
-```python
-# 0.14.6
-@schema
-class Recording(dj.Manual):
-    definition = """
-    recording_id : int unsigned
-    ---
-    signal : external-raw
-    sampling_rate : float
-    """
-
-# 2.0
-@schema
-class Recording(dj.Manual):
-    definition = """
-    recording_id : uint32
-    ---
-    signal : <blob@raw>
-    sampling_rate : float32
-    """
-```
-
-### Type Syntax Reference
-
-| 0.14.6 | 2.0 |
-|--------|-----|
-| `int unsigned` | `uint32` |
-| `int` | `int32` |
-| `smallint unsigned` | `uint16` |
-| `tinyint unsigned` | `uint8` |
-| `float` | `float32` |
-| `double` | `float64` |
-| `longblob` | `<blob>` |
-| `external-store` | `<blob@store>` |
-| `attach@store` | `<attach@store>` |
-| `filepath@store` | `<filepath@store>` |
-
-### Configuration
-
-```python
-# 0.14.6 (production)
-{
-  "external": {
-    "protocol": "file",
-    "location": "/data/external"
-  }
-}
-
-# 2.0 (test)
-{
-  "stores": {
-    "default": "main",
-    "main": {
-      "protocol": "file",
-      "location": "/data/migration_test"
-    }
-  }
-}
-```
-
-See [Configuration Guide](../reference/configuration.md) for details.
-
-✅ **Production code still uses 0.14.6 - continues working**
-
-## Phase 3: Migrate Test Data
-
-Copy data from production to `_v20` schemas for testing.
-
-### Choose Migration Scope
-
-**Option A: Full Copy** (recommended for small/medium pipelines)
-- Copy all data
-- Best validation coverage
-
-**Option B: Sample Copy** (for large pipelines)
-- Copy representative subset
-- Faster testing
-
-**Option C: Minimal Copy** (for very large pipelines)
-- Copy just enough to test all code paths
-- Requires careful selection
-
-### Copy Manual Tables
+#### Copy Manual Tables
 
 ```python
 from datajoint.migrate import copy_table_data
 
-# Copy all data
-result = copy_table_data(
+# Copy manual tables (no external attributes)
+copy_table_data(
     source_schema='my_pipeline',
-    dest_schema='my_pipeline_v20',
-    table='Mouse',
-    limit=None  # Copy all
+    dest_schema='my_pipeline_v2',
+    table='mouse',
 )
 
-print(f"Copied {result['rows_copied']} rows")
-
-# Or copy sample
-result = copy_table_data(
+copy_table_data(
     source_schema='my_pipeline',
-    dest_schema='my_pipeline_v20',
-    table='Session',
-    limit=100,
-    where_clause="session_date >= '2024-01-01'"
+    dest_schema='my_pipeline_v2',
+    table='session',
 )
 ```
 
-### Migrate External Storage
+#### Migrate External Storage Pointers (If Needed)
 
-For tables with external attributes:
+If you have tables with `blob@`, `attach@`, or `filepath@`:
 
 ```python
-from datajoint.migrate import migrate_external_to_v20
+from datajoint.migrate import migrate_external_pointers_v2
 
-# Convert BINARY(16) UUID → JSON metadata
-result = migrate_external_to_v20(
-    schema='my_pipeline_v20',
-    table='Recording',
+# This migrates metadata WITHOUT moving blob files
+# Old BINARY(16) UUID → New JSON metadata pointing to same files
+result = migrate_external_pointers_v2(
+    schema='my_pipeline_v2',
+    table='recording',
     attribute='signal',
-    source_store='external-raw',  # 0.14.6 store
-    dest_store='raw',  # 2.0 store
-    copy_files=True
+    source_store='external-raw',  # 0.14.6 store name
+    dest_store='raw',  # 2.0 store name
+    copy_files=False,  # Keep files in place
 )
 
-print(f"Migrated {result['rows_migrated']} external attributes")
-print(f"Copied {result['files_copied']} files")
+print(f"Migrated {result['rows_migrated']} pointers")
 ```
 
-### Populate Computed Tables
+#### Populate Computed Tables
 
 ```python
-# Load _v20 schema with 2.0 code
-from my_pipeline_v20 import ActivityStats
+# Use your 2.0 code to populate
+from my_pipeline_v2 import Neuron, ActivityStats
 
 # Populate using 2.0 code
 ActivityStats.populate(display_progress=True)
-
-# Verify counts
-print(f"Rows: {len(ActivityStats())}")
 ```
 
-✅ **Production data remains read-only**
-
-## Phase 4: Validate Side-by-Side
-
-Compare production and test to verify correctness.
-
-### Query Comparison
+#### Validate Results
 
 ```python
-# Production query (0.14.6)
-prod_result = dj.schema('my_pipeline').connection.query(
-    "SELECT * FROM my_pipeline.neuron WHERE mouse_id=0"
-).fetchall()
-
-# Test query (2.0)
-from my_pipeline_v20 import Neuron
-test_result = (Neuron & 'mouse_id=0').to_dicts()
-
-# Compare
-assert len(prod_result) == len(test_result)
-print(f"✓ Query results match ({len(prod_result)} rows)")
-```
-
-### Computation Validation
-
-```python
-# Compare computed values
 from datajoint.migrate import compare_query_results
 
+# Compare results between production and test
 result = compare_query_results(
     prod_schema='my_pipeline',
-    test_schema='my_pipeline_v20',
+    test_schema='my_pipeline_v2',
     table='activity_stats',
-    tolerance=1e-6
+    tolerance=1e-6,
 )
 
 if result['match']:
-    print(f"✓ All {result['row_count']} rows match")
+    print(f"✓ All {result['row_count']} rows match!")
 else:
-    print(f"✗ Found {len(result['discrepancies'])} discrepancies")
+    print("✗ Discrepancies found:")
     for disc in result['discrepancies']:
         print(f"  {disc}")
 ```
 
-### External Storage
+## Phase 3: Production Cutover
 
-```python
-from my_pipeline_v20 import Recording
+Once testing is complete, choose a cutover strategy:
 
-# Verify external data accessible
-signal = (Recording & {'recording_id': 1}).fetch1('signal')
-assert signal.shape == (1000,), f"Wrong shape: {signal.shape}"
-print("✓ External data accessible")
+### Option A: Merge Branch & Rename Schemas
+
+**Recommended for most pipelines.**
+
+```bash
+# 1. Backup production database
+mysqldump my_pipeline > my_pipeline_backup_$(date +%Y%m%d).sql
+
+# 2. Merge migration branch to main
+git checkout main
+git merge migrate-to-v2
+git push origin main
+
+# 3. Rename schemas in production
+mysql -e "
+  RENAME TABLE my_pipeline TO my_pipeline_old,
+               my_pipeline_v2 TO my_pipeline;
+"
+
+# 4. Deploy updated code
+# Now all code points to my_pipeline (which has 2.0 structure)
+
+# 5. Keep my_pipeline_old for 1-2 weeks as safety net
+# Then drop: DROP DATABASE my_pipeline_old;
 ```
 
-### Validation Checklist
+### Option B: Update Main Branch to Use _v2 Schemas
 
-- [ ] All queries return same results
-- [ ] Computed values match (within tolerance)
-- [ ] External data accessible and correct
-- [ ] Performance acceptable (< 2x slowdown)
-- [ ] No errors in logs
-- [ ] Team trained on 2.0 API
+**Alternative: Keep _v2 suffix permanently.**
 
-✅ **When all checks pass, you're ready for cutover**
+```bash
+# On main branch, update to use _v2 schemas
+git checkout main
+git merge migrate-to-v2
 
-## Phase 5: Production Cutover
+# Update schema declarations
+sed -i '' 's/my_pipeline_v2/my_pipeline/g' **/*.py
 
-**CRITICAL: This is the only phase that modifies production.**
+# OR: Keep _v2 suffix and update production to use it
+# (just deploy migrate-to-v2 branch as-is)
+```
 
-### Pre-Cutover Checklist
+### Option C: In-Place Migration (For Large Databases)
 
-**Do not proceed until ALL items checked:**
-
-- [ ] Phase 4 validation 100% successful
-- [ ] Full database backup completed **and tested**
-- [ ] Rollback procedure documented and rehearsed
-- [ ] All 0.14.6 clients stopped (verify no processes running)
-- [ ] Maintenance window scheduled
-- [ ] Team notified and standing by
-
-### Backup Production
+**Use only if renaming is impractical due to size.**
 
 ```python
-from datajoint.migrate import backup_schema
+from datajoint.migrate import migrate_schema_in_place
 
-# Create timestamped backup
-result = backup_schema(
+# WARNING: Modifies production schema directly
+result = migrate_schema_in_place(
     schema='my_pipeline',
-    backup_name='my_pipeline_backup_20250114'
+    backup=True,  # Creates backup first
+    steps=[
+        'update_blob_comments',
+        'migrate_external_storage',
+        'add_lineage_table',
+    ]
 )
-
-print(f"Backed up {result['tables_backed_up']} tables")
-print(f"Location: {result['backup_location']}")
-
-# Test restore procedure (on different schema)
-restore_schema(
-    backup='my_pipeline_backup_20250114',
-    dest='my_pipeline_restore_test'
-)
-# If successful, drop test: DROP DATABASE my_pipeline_restore_test
 ```
 
-### Cutover Option A: Rename Schemas (Fastest)
+## Phase 4: Adopt New Features
+
+After successful migration, gradually adopt 2.0 features:
+
+### 1. Object Storage for Large Arrays
+
+Replace `<blob>` with `<npy@>` for efficient array storage:
 
 ```python
-import datajoint as dj
-
-conn = dj.conn()
-
-# Rename production → backup
-conn.query("RENAME TABLE `my_pipeline` TO `my_pipeline_old`;")
-
-# Rename test → production
-conn.query("RENAME TABLE `my_pipeline_v20` TO `my_pipeline`;")
-
-print("✓ Schema renamed")
-```
-
-**Pros:** Fast, all data already migrated
-**Cons:** Must continue (schemas altered)
-
-### Cutover Option B: Drop and Recreate (Safer)
-
-```python
-# 1. Drop production schema
-schema = dj.schema('my_pipeline')
-schema.drop(prompt=False)
-
-# 2. Recreate with 2.0 code
-from my_pipeline_v20 import *  # Import all table classes
-
-# 3. Copy data from _v20
-from datajoint.migrate import copy_all_data
-copy_all_data(source='my_pipeline_v20', dest='my_pipeline')
-```
-
-**Pros:** Can restore from backup easily
-**Cons:** Slower, more steps
-
-### Update Production Code
-
-Point production code to migrated schema:
-
-```python
-# my_pipeline.py (production code)
-import datajoint as dj
-
-# Now uses production schema (with 2.0 structure)
-schema = dj.schema('my_pipeline')
-
-# Use 2.0 API patterns
-@schema
-class Recording(dj.Manual):
-    definition = """
-    recording_id : uint32
-    ---
-    signal : <blob@raw>
-    sampling_rate : float32
-    """
-```
-
-### Verify Cutover
-
-```python
-from datajoint.migrate import verify_schema_v20
-
-result = verify_schema_v20('my_pipeline')
-
-if result['compatible']:
-    print("✓ Schema fully migrated to 2.0")
-else:
-    print("✗ Issues found:")
-    for issue in result['issues']:
-        print(f"  {issue}")
-```
-
-### Rollback (If Needed)
-
-If something goes wrong:
-
-```python
-# Restore from backup
-from datajoint.migrate import restore_schema
-
-restore_schema(
-    backup='my_pipeline_backup_20250114',
-    dest='my_pipeline'
-)
-
-# Restart 0.14.6 clients
-```
-
-✅ **Production now running on DataJoint 2.0**
-
-## Phase 6: Adopt New Features
-
-Now that you're on 2.0, gradually adopt new features:
-
-### Feature Priorities
-
-| Feature | Complexity | Benefit |
-|---------|------------|---------|
-| Unified stores config | Low | Cleaner setup |
-| Core types (`uint32`) | Low | Type safety |
-| `dj.Top` operator | Low | Simpler queries |
-| Semantic matching | Medium | Safer joins |
-| Jobs 2.0 | Medium | Better scaling |
-| Object storage (`<npy@>`) | High | Large data |
-| Custom codecs | High | Domain types |
-
-### Example: Object Storage
-
-```python
-# Before: Blob in database
+# Before
 @schema
 class Recording(dj.Manual):
     definition = """
@@ -530,122 +389,258 @@ class Recording(dj.Manual):
     signal : <blob>  # In database
     """
 
-# After: Lazy-loading from object store
+# After
 @schema
 class Recording(dj.Manual):
     definition = """
     recording_id : uint32
     ---
-    signal : <npy@>  # In object store
+    signal : <npy@>  # Lazy-loading from object store
     """
 
-# Usage
+# Usage with lazy loading
 signal_ref = (Recording & key).fetch1('signal')
-print(f"Shape: {signal_ref.shape}")  # No download
-signal = signal_ref.load()  # Download when needed
+print(f"Shape: {signal_ref.shape}")  # No download!
+signal = signal_ref.load()  # Download when ready
 ```
 
-See tutorials:
-- [Object Storage Tutorial](../tutorials/basics/06-object-storage.md)
-- [Custom Codecs](../tutorials/advanced/custom-codecs.md)
-- [Distributed Computing](../tutorials/advanced/distributed.md)
+See [Object Storage Tutorial](../tutorials/basics/06-object-storage.md).
+
+### 2. Semantic Matching
+
+Enable automatic join validation:
+
+```python
+# Validates lineage compatibility
+result = Neuron.join(Session, semantic_check=True)
+```
+
+See [Semantic Matching Spec](../reference/specs/semantic-matching.md).
+
+### 3. Jobs 2.0
+
+Better distributed computing with priority queues:
+
+```python
+# Monitor per-table job progress
+ActivityStats.jobs.progress()
+
+# Priority-based populate
+ActivityStats.populate(order='priority DESC')
+```
+
+See [Distributed Computing Tutorial](../tutorials/advanced/distributed.ipynb).
+
+### 4. Custom Codecs
+
+Create domain-specific types:
+
+```python
+from datajoint.codecs import Codec
+
+class SpikesCodec(Codec):
+    """Custom codec for spike train data."""
+
+    def encode(self, obj, context):
+        # Custom serialization
+        pass
+
+    def decode(self, blob, context):
+        # Custom deserialization
+        pass
+```
+
+See [Custom Codecs Tutorial](../tutorials/advanced/custom-codecs.ipynb).
 
 ## Migration Timeline
 
-### Small Pipeline (< 100 GB)
+### Small Pipeline (< 50 files, < 100 GB)
 
-- Phase 1: Setup - **1 day**
-- Phase 2: Code - **1 week**
-- Phase 3: Data - **1 day**
-- Phase 4: Validate - **1 week**
-- Phase 5: Cutover - **4 hours**
-- **Total: ~3 weeks**
+- **Phase 1**: Code migration - **1 hour** (with AI)
+- **Phase 2**: Testing with fresh data - **1 day**
+- **Phase 3**: Production cutover - **2 hours**
+- **Total: ~2 days**
 
-### Large Pipeline (> 1 TB)
+### Medium Pipeline (50-200 files, 100 GB - 1 TB)
 
-- Phase 1: Setup - **1 week**
-- Phase 2: Code - **2 weeks**
-- Phase 3: Data - **3 days** (sample)
-- Phase 4: Validate - **2 weeks**
-- Phase 5: Cutover - **1-2 days**
-- **Total: ~6 weeks**
+- **Phase 1**: Code migration - **2-3 hours** (with AI)
+- **Phase 2**: Data migration & validation - **3-5 days**
+- **Phase 3**: Production cutover - **4-8 hours**
+- **Total: ~1 week**
+
+### Large Pipeline (200+ files, > 1 TB)
+
+- **Phase 1**: Code migration - **1 day** (with AI)
+- **Phase 2**: Sample testing - **1 week**
+- **Phase 3**: Production cutover - **1-2 days**
+- **Total: ~2 weeks**
+
+## Type Syntax Reference
+
+| 0.14.6 | 2.0 | Notes |
+|--------|-----|-------|
+| `int unsigned` | `uint32` | 32-bit unsigned |
+| `int` | `int32` | 32-bit signed |
+| `smallint unsigned` | `uint16` | 16-bit unsigned |
+| `tinyint unsigned` | `uint8` | 8-bit unsigned |
+| `bigint unsigned` | `uint64` | 64-bit unsigned |
+| `float` | `float32` | Single precision |
+| `double` | `float64` | Double precision |
+| `longblob` | `<blob>` | Binary data |
+| `blob@store` | `<blob@store>` | **Phase 2** - deferred |
+| `attach@store` | `<attach@store>` | **Phase 2** - deferred |
+| `filepath@store` | `<filepath@store>` | **Phase 2** - deferred |
+
+## Configuration Migration
+
+### 0.14.6 Configuration
+
+```json
+{
+  "database.host": "localhost",
+  "database.user": "root",
+  "external": {
+    "protocol": "file",
+    "location": "/data/external"
+  }
+}
+```
+
+### 2.0 Configuration (Unified Stores)
+
+```json
+{
+  "database.host": "localhost",
+  "database.user": "root",
+  "stores": {
+    "default": "main",
+    "main": {
+      "protocol": "file",
+      "location": "/data/stores/main"
+    }
+  }
+}
+```
+
+**Key changes:**
+- `external.*` → `stores.*`
+- Named stores with `default` pointer
+- Supports multiple stores
+
+See [Configuration Reference](../reference/configuration.md).
 
 ## Troubleshooting
 
-### Issue: Disk Space Insufficient
+### Issue: Import Errors After Migration
 
-**Solution:** Use sample copy (Phase 3 Option B):
+**Cause:** Some imports changed in 2.0.
 
+**Solution:**
 ```python
-# Copy only recent data
-copy_table_data(
-    source_schema='my_pipeline',
-    dest_schema='my_pipeline_v20',
-    table='Session',
-    where_clause="session_date >= '2024-01-01'",
-    limit=1000
-)
+# All core functionality is in datajoint namespace
+import datajoint as dj
+
+# These work in both versions
+from datajoint import schema, Manual, Computed, Imported
 ```
 
-### Issue: External Storage Migration Slow
+### Issue: Schema Not Found
 
-**Solution:** Skip file copying initially, validate metadata only:
+**Cause:** Forgot to update schema name to `_v2`.
 
+**Solution:**
 ```python
-migrate_external_to_v20(
-    schema='my_pipeline_v20',
-    table='Recording',
-    attribute='signal',
-    source_store='external-raw',
-    dest_store='raw',
-    copy_files=False  # Skip file copy
-)
-
-# Copy files in parallel later
+# Check your schema declaration
+schema = dj.schema('my_pipeline_v2')  # Must have _v2 suffix
 ```
 
-### Issue: Query Results Don't Match
+### Issue: Performance Regression
 
-**Solution:** Check for floating-point precision issues:
+**Cause:** Missing indexes after schema copy.
 
-```python
-compare_query_results(
-    prod_schema='my_pipeline',
-    test_schema='my_pipeline_v20',
-    table='activity_stats',
-    tolerance=1e-5  # Increase tolerance
-)
-```
-
-### Issue: Performance Degradation
-
-**Solution:** Check for missing indexes:
-
+**Solution:**
 ```sql
--- Compare indexes between schemas
-SELECT TABLE_NAME, INDEX_NAME
-FROM information_schema.STATISTICS
-WHERE TABLE_SCHEMA='my_pipeline';
+-- Check indexes
+SHOW INDEX FROM my_pipeline_v2.neuron;
 
-SELECT TABLE_NAME, INDEX_NAME
-FROM information_schema.STATISTICS
-WHERE TABLE_SCHEMA='my_pipeline_v20';
+-- Recreate if missing
+CREATE INDEX idx_mouse_session
+  ON my_pipeline_v2.neuron (mouse_id, session_date);
 ```
+
+### Issue: External Storage Not Accessible
+
+**Cause:** Store configuration not updated.
+
+**Solution:**
+```python
+# Verify stores configured
+print(dj.config['stores'])
+
+# Point to existing external files
+dj.config['stores.main.location'] = '/data/external'  # Same as 0.14.6
+```
+
+## Rollback Procedures
+
+### Before Cutover (Phase 1-2)
+
+**Easy:** Just switch branches
+
+```bash
+# Return to legacy code
+git checkout main
+pip install -r requirements.txt  # Reinstalls dj 0.14.6
+```
+
+### After Cutover (Phase 3)
+
+**Restore from backup:**
+
+```bash
+# Drop current production
+mysql -e "DROP DATABASE my_pipeline;"
+
+# Restore backup
+mysql my_pipeline < my_pipeline_backup_20250114.sql
+
+# Revert code
+git checkout main
+git reset --hard <pre-merge-commit>
+git push --force origin main
+```
+
+## Best Practices
+
+1. **Test with AI first** - Let AI agents do the code migration (saves hours)
+2. **Start with fresh data** - Validate 2.0 features before production data
+3. **Keep legacy branch** - Maintain `main` on 0.14.6 during testing
+4. **Incremental merge** - Merge migration branch only after full validation
+5. **Backup before cutover** - Always have a tested restore procedure
+6. **Monitor after deployment** - Watch for errors in first 24-48 hours
 
 ## Summary
 
-The parallel schema approach provides:
+**Git Branch Workflow:**
+1. Pin 0.14.6 on `main`
+2. Create `migrate-to-v2` branch with DataJoint 2.0
+3. Use AI to migrate code (~1 hour)
+4. Test with fresh or copied data
+5. Merge to `main` and cutover production
 
-1. ✅ **Zero risk** to production during testing
-2. ✅ **Unlimited practice** runs
-3. ✅ **Easy rollback** at every phase
-4. ✅ **Side-by-side validation**
-5. ✅ **Independent module migration**
+**Advantages:**
+- Standard git workflow
+- No production risk during testing
+- Easy rollback (switch branches)
+- Fast AI-assisted migration
+- Flexible data migration options
 
-The key insight: **testing migrations is cheap, production failures are expensive**. Take your time with Phases 1-4, then execute Phase 5 confidently.
+The key insight: **Use git branches to separate legacy and modern code**, then merge when confident.
 
 ## See Also
 
 - [Configuration Reference](../reference/configuration.md)
 - [Object Storage Tutorial](../tutorials/basics/06-object-storage.md)
+- [Custom Codecs](../tutorials/advanced/custom-codecs.ipynb)
 - [API Reference](../reference/api/index.md)
+- [Example Migration Script](../../examples/migrate_pipeline_v20.py)
