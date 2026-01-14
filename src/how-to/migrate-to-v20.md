@@ -128,10 +128,11 @@ DataJoint 2.0 replaces `external.*` with unified `stores.*` configuration:
 | `table1 @ table2` | `table1 * table2` (natural join with semantic checks) | I |
 | `a.join(b, left=True)` | Consider `a.extend(b)` | I |
 | `dj.U('attr') & table` | Unchanged (correct pattern) | — |
-| `dj.U('attr') * table` | Refactor (was a hack to change primary key) | I |
+| `dj.U('attr') * table` | `table` (was a hack to change primary key) | I |
 | `dj.ERD(schema)` | `dj.Diagram(schema)` | I |
+| `table.insert([(1, 'a'), (2, 'b')])` | Must use dicts/DataFrames (no positional tuples) | I |
 
-**Learn more:** [Fetch API Reference](../reference/specs/fetch-api.md) · [Query Operators Reference](../reference/operators.md)
+**Learn more:** [Fetch API Reference](../reference/specs/fetch-api.md) · [Query Operators Reference](../reference/operators.md) · [Semantic Matching](../reference/specs/semantic-matching.md)
 
 ---
 
@@ -745,7 +746,7 @@ Update all DataJoint API calls to 2.0 patterns.
 
 **Universal Set:**
 - `dj.U('attr') & table` → Unchanged (correct pattern for projecting attributes)
-- `dj.U('attr') * table` → Refactor (was a hack to change primary key)
+- `dj.U('attr') * table` → `table` (was a hack to change primary key)
 
 **Visualization:**
 - `dj.ERD(schema)` → `dj.Diagram(schema)` (ERD deprecated)
@@ -761,7 +762,12 @@ Update all DataJoint API calls to 2.0 patterns.
 ```
 You are converting DataJoint pre-2.0 query and insert code to 2.0 API.
 
-TASK: Update all query, fetch, and insert code to use DataJoint 2.0 API patterns.
+TASK: Update all query, fetch, and insert code to use DataJoint 2.0 API
+patterns.
+
+LEARN MORE: See Fetch API Reference (../reference/specs/fetch-api.md),
+Query Operators (../reference/operators.md), and Semantic Matching
+(../reference/specs/semantic-matching.md).
 
 CONTEXT:
 - Branch: pre/v2.0
@@ -791,7 +797,8 @@ API CONVERSIONS:
    NEW: keys = table.keys()  # Returns list of dicts with primary key values
 
    OLD: keys, a, b = table.fetch("KEY", "a", "b")
-   NEW: a, b = table.to_arrays('a', 'b', include_key=True)  # Returns tuple with keys included
+   NEW: a, b = table.to_arrays('a', 'b', include_key=True)
+   # Returns tuple with keys included
 
 2. Update Method (always convert):
    OLD: (table & key)._update('attr', value)
@@ -801,8 +808,9 @@ API CONVERSIONS:
    OLD: result = table1 @ table2
    NEW: result = table1 * table2  # Natural join WITH semantic checks
 
-   IMPORTANT: The @ operator bypassed semantic checks. The * operator enables semantic checks by default.
-   If semantic checks fail, INVESTIGATE—this may reveal errors in your schema or data.
+   IMPORTANT: The @ operator bypassed semantic checks. The * operator
+   enables semantic checks by default. If semantic checks fail,
+   INVESTIGATE—this may reveal errors in your schema or data.
 
    For left joins:
    OLD: result = a.join(b, left=True)
@@ -810,16 +818,27 @@ API CONVERSIONS:
 
 4. Universal Set (CHECK - distinguish correct from hack):
    CORRECT (unchanged):
-   result = dj.U('attr') & table  # Projects specific attributes, keeps as is
+   result = dj.U('attr') & table  # Projects specific attributes, unchanged
 
-   HACK (refactor):
-   result = dj.U('attr') * table  # Was used to change primary key, needs refactoring
+   HACK (always refactor):
+   OLD: result = dj.U('attr') * table  # Was hack to change primary key
+   NEW: result = table  # Simply use table directly
 
-   Note: The * operator with dj.U() was a hack. Ask user about intent and suggest proper refactoring.
+   Note: The * operator with dj.U() was a hack. Replace with just table.
 
-5. Insert/Delete (unchanged):
-   table.insert(data)  # unchanged
-   table.insert1(row)  # unchanged
+5. Insert (CHANGED - requires named keys):
+   OLD: table.insert([(1, 'Alice'), (2, 'Bob')])  # Positional tuples
+   NEW: table.insert([{'id': 1, 'name': 'Alice'},
+                      {'id': 2, 'name': 'Bob'}])  # Dicts
+
+   DataJoint 2.0 requires named key-value mappings for insert:
+   - Dicts (most common)
+   - DataFrames
+   - Other DataJoint queries
+
+   Positional tuples/lists are NO LONGER SUPPORTED.
+
+6. Delete (unchanged):
    (table & key).delete()  # unchanged
    (table & restriction).delete()  # unchanged
 
@@ -832,7 +851,7 @@ PROCESS:
    d. Replace with update1()
    e. Search for @ operator (replace with * for natural join)
    f. Search for .join(x, left=True) patterns (consider .extend(x))
-   g. Search for dj.U() * patterns (identify as hack, ask user to refactor)
+   g. Search for dj.U() * patterns (replace with just table)
    h. Verify dj.U() & patterns remain unchanged
 3. Run syntax checks
 4. Run existing tests if available
@@ -844,7 +863,7 @@ VERIFICATION:
 - No .fetch1('KEY') calls remaining (replaced with .keys())
 - No ._update() calls remaining
 - No @ operator between tables
-- dj.U() * patterns identified and flagged for refactoring
+- dj.U() * patterns replaced with just table
 - dj.U() & patterns remain unchanged
 - All tests pass (if available)
 - Semantic check failures investigated and resolved
@@ -881,7 +900,8 @@ NEW: weights, ages = Mouse.to_arrays('weight', 'age', include_key=True)
 
 Pattern 8: Natural join (now WITH semantic checks)
 OLD: result = Neuron @ Session
-NEW: result = Neuron * Session  # Semantic checks enabled—may reveal schema errors
+NEW: result = Neuron * Session
+# Semantic checks enabled—may reveal schema errors
 
 Pattern 9: Left join
 OLD: result = Session.join(Experiment, left=True)
@@ -890,11 +910,11 @@ NEW: result = Session.extend(Experiment)  # Consider using extend
 Pattern 10: Universal set (distinguish correct from hack)
 CORRECT (unchanged):
 OLD: all_dates = dj.U('session_date') & Session
-NEW: all_dates = dj.U('session_date') & Session  # Unchanged, correct pattern
+NEW: all_dates = dj.U('session_date') & Session  # Unchanged, correct
 
-HACK (needs refactoring):
+HACK (always replace):
 OLD: result = dj.U('new_pk') * Session  # Hack to change primary key
-NEW: [Refactor - ask user about intent]
+NEW: result = Session  # Simply use table directly
 
 REPORT:
 
@@ -905,7 +925,7 @@ REPORT:
 - _update() → update1(): [count]
 - @ → * (natural join): [count]
 - .join(x, left=True) → .extend(x): [count]
-- dj.U() * table patterns flagged for refactoring: [count]
+- dj.U() * table → table: [count]
 - dj.U() & table patterns (unchanged): [count]
 - dj.ERD() → dj.Diagram(): [count]
 - Semantic check failures: [count and resolution]
@@ -920,7 +940,7 @@ COMMIT MESSAGE FORMAT:
 - Replace @ operator with * (enables semantic checks)
 - Replace .join(x, left=True) with .extend(x)
 - Replace dj.ERD() with dj.Diagram()
-- Flag dj.U() * table patterns as hacks needing refactoring
+- Replace dj.U() * table with just table (was hack)
 - Keep dj.U() & table patterns unchanged (correct)
 - Investigate and resolve semantic check failures
 
@@ -929,102 +949,42 @@ API conversions: X fetch, Y update, Z join"
 
 ---
 
-### Step 7: Convert Populate Methods
+### Step 7: Update Populate Methods
 
-Update `make()` methods in Computed and Imported tables.
+`make()` methods in Computed and Imported tables use the same API patterns covered in Steps 5-6.
 
-#### AI Agent Prompt: Convert Populate Methods
+**Apply the following conversions to all `make()` methods:**
 
----
+1. **Fetch API conversions** (from Step 5)
 
-**🤖 AI Agent Prompt: Phase I - Populate Method Conversion**
+   - `fetch()` → `to_arrays()` or `to_dicts()`
+   - `fetch(..., format="frame")` → `to_pandas()`
+   - `fetch1('KEY')` → `keys()`
+   - All other fetch patterns
 
-```
-You are converting populate/make methods in Computed and Imported tables.
+2. **Join conversions** (from Step 6)
 
-TASK: Update make() methods to use 2.0 API patterns.
+   - `@` → `*` (enables semantic checks)
+   - `a.join(b, left=True)` → `a.extend(b)`
+   - `dj.U() * table` → `table` (was a hack)
 
-CONTEXT:
+3. **Insert conversions** (NEW REQUIREMENT)
 
-- Focus on dj.Computed and dj.Imported tables
-- make() methods contain computation logic
-- Often use fetch, insert, and query operations
+   - Positional tuples NO LONGER SUPPORTED
+   - Must use named key-value mappings:
+     ```python
+     # OLD (no longer works)
+     self.insert1((key['id'], computed_value, timestamp))
 
-CONVERSIONS NEEDED:
+     # NEW (required)
+     self.insert1({
+         **key,
+         'computed_value': computed_value,
+         'timestamp': timestamp
+     })
+     ```
 
-1. Apply all fetch API conversions from previous step
-2. Apply all update conversions
-3. Apply all join conversions
-4. No changes to insert operations
-
-COMMON PATTERNS IN make():
-
-Pattern 1: Fetch dependency data
-OLD:
-def make(self, key):
-    data = (DependencyTable & key).fetch(as_dict=True)
-
-NEW:
-def make(self, key):
-    data = (DependencyTable & key).to_dicts()
-
-Pattern 2: Fetch arrays for computation
-OLD:
-def make(self, key):
-    signal = (Recording & key).fetch1('signal')
-
-NEW:
-def make(self, key):
-    signal = (Recording & key).fetch1('signal')  # unchanged for single attr
-
-Pattern 3: Fetch multiple attributes
-OLD:
-def make(self, key):
-    signals, rates = (Recording & key).fetch('signal', 'sampling_rate')
-
-NEW:
-def make(self, key):
-    signals, rates = (Recording & key).to_arrays('signal', 'sampling_rate')
-
-Pattern 4: Join dependencies
-OLD:
-def make(self, key):
-    data = (Neuron @ Session & key).fetch()
-
-NEW:
-def make(self, key):
-    data = (Neuron * Session & key).to_arrays()  # Semantic checks now enabled
-
-PROCESS:
-1. Find all dj.Computed and dj.Imported classes
-2. For each class with make() method:
-   a. Apply API conversions
-   b. Verify logic unchanged
-   c. Test if possible
-3. Commit changes by module or table
-
-VERIFICATION:
-
-- All make() methods use 2.0 API
-- Computation logic unchanged
-- Insert logic unchanged
-- No syntax errors
-
-REPORT:
-
-- Computed tables updated: [count]
-- Imported tables updated: [count]
-- make() methods converted: [count]
-
-COMMIT MESSAGE FORMAT:
-"feat(phase-i): convert populate methods to 2.0 API
-
-- Update make() methods in Computed tables
-- Update make() methods in Imported tables
-- Apply fetch/join API conversions
-
-Tables updated: X Computed, Y Imported"
-```
+**Note:** Since these are the same conversions from Steps 5-6, you can apply them in a single pass. The only additional consideration is ensuring insert statements use dicts.
 
 ---
 
@@ -1045,7 +1005,7 @@ Tables updated: X Computed, Y Imported"
 - [ ] All `fetch1('KEY')` converted to `keys()`
 - [ ] All `._update()` calls converted
 - [ ] All `@` operators converted to `*`
-- [ ] All `dj.U() * table` patterns flagged for refactoring (was a hack)
+- [ ] All `dj.U() * table` patterns replaced with just `table` (was a hack)
 - [ ] All `dj.U() & table` patterns verified as unchanged (correct)
 - [ ] All `dj.ERD()` calls converted to `dj.Diagram()`
 - [ ] All populate methods updated
