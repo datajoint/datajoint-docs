@@ -431,12 +431,14 @@ You are converting DataJoint pre-2.0 table definitions to 2.0 syntax.
 TASK: Update all table definitions in this repository to DataJoint 2.0 type syntax.
 
 CONTEXT:
+
 - We are on branch: pre/v2.0
 - Production (main branch) remains on pre-2.0
 - All schemas will use _v2 suffix (e.g., my_pipeline → my_pipeline_v2)
 - Schemas will be created empty for now
 
 SCOPE - PHASE I:
+
 1. Update schema declarations (add _v2 suffix)
 2. Convert ALL type syntax to 2.0 core types
 3. Convert ALL legacy codecs (in-table AND in-store)
@@ -500,6 +502,7 @@ DataJoint 2.0 adopts UTC as the standard for all datetime storage (no timezone i
 The database stores UTC; timezones are handled by application front-ends and client APIs.
 
 Conversion rules:
+
 - datetime → Keep as datetime (assume UTC, core type)
 - timestamp → ASK USER about timezone convention, then convert to datetime
 - date → Keep as date (core type)
@@ -543,11 +546,13 @@ IMPORTANT - Bool Type:
 Legacy DataJoint already supported bool and boolean types (MySQL stores as tinyint(1)).
 
 Conversion rules:
+
 - bool → Keep as bool (no change)
 - boolean → Keep as bool (no change)
 - tinyint(1) → ASK USER: was this boolean or small integer?
 
 Only explicit tinyint(1) declarations need review because:
+
 - Legacy had bool/boolean for true/false values
 - Some users explicitly used tinyint(1) for small integers (0-255)
 
@@ -587,11 +592,13 @@ IMPORTANT - Native Types (text and time):
 text and time are NATIVE MySQL types, NOT core types. They are allowed but discouraged.
 
 For text:
+
 - ASK USER: What is the maximum expected length?
 - Recommend migrating to varchar(n) with appropriate length (core type)
 - Or keep as text (native type, will generate warning)
 
 For time:
+
 - ASK USER: Is this time-of-day only, or is date also relevant?
 - Recommend migrating to datetime (core type, can represent date+time)
 - Or keep as time (native type, will generate warning)
@@ -641,6 +648,7 @@ PROCESS:
 5. Verify in-store codecs work with test stores
 
 VERIFICATION:
+
 - All schema declarations use _v2 suffix
 - All native types converted to core types
 - All codecs converted (in-table AND in-store)
@@ -687,6 +695,7 @@ class Recording(dj.Manual):
 # - Not required for migration
 
 REPORT:
+
 - Schemas converted: [list with _v2 suffix]
 - Tables converted: [count by schema]
 - Type conversions: [count by type]
@@ -799,6 +808,7 @@ PROCESS:
 4. Run existing tests if available
 
 VERIFICATION:
+
 - No .fetch() calls remaining (except fetch1)
 - No ._update() calls remaining
 - No @ operator between tables
@@ -832,6 +842,7 @@ OLD: all_dates = dj.U('session_date') * Session
 NEW: all_dates = dj.U('session_date') & Session
 
 REPORT:
+
 - Files modified: [list]
 - fetch() → to_arrays/to_dicts: [count]
 - _update() → update1(): [count]
@@ -868,11 +879,13 @@ You are converting populate/make methods in Computed and Imported tables.
 TASK: Update make() methods to use 2.0 API patterns.
 
 CONTEXT:
+
 - Focus on dj.Computed and dj.Imported tables
 - make() methods contain computation logic
 - Often use fetch, insert, and query operations
 
 CONVERSIONS NEEDED:
+
 1. Apply all fetch API conversions from previous step
 2. Apply all update conversions
 3. Apply all join conversions
@@ -925,12 +938,14 @@ PROCESS:
 3. Commit changes by module or table
 
 VERIFICATION:
+
 - All make() methods use 2.0 API
 - Computation logic unchanged
 - Insert logic unchanged
 - No syntax errors
 
 REPORT:
+
 - Computed tables updated: [count]
 - Imported tables updated: [count]
 - make() methods converted: [count]
