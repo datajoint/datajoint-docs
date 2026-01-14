@@ -1,8 +1,6 @@
 # Query Algebra
 
-DataJoint provides a powerful query algebra with just five operators. These
-operators work on **entity sets** (query expressions) and always return entity
-sets, enabling arbitrary composition.
+DataJoint provides a powerful query algebra built on five core operators: restriction, join, projection, aggregation, and union. These operators work on **entity sets** (query expressions) and always return entity sets, enabling arbitrary composition.
 
 ## Algebraic Closure
 
@@ -10,17 +8,19 @@ A fundamental property of DataJoint's query algebra is **algebraic closure**: ev
 
 This means operators can be chained indefinitely — the output of any operation is a valid input to any other operation. See [Primary Keys](../reference/specs/primary-keys.md) for the precise rules.
 
-## The Five Operators
+## Core Operators
 
 ```mermaid
 graph LR
     A[Entity Set] --> R[Restriction &]
     A --> J[Join *]
+    A --> E[Extend .extend]
     A --> P[Projection .proj]
     A --> G[Aggregation .aggr]
     A --> U[Union +]
     R --> B[Entity Set]
     J --> B
+    E --> B
     P --> B
     G --> B
     U --> B
@@ -84,6 +84,43 @@ DataJoint joins are **natural joins** that:
 - Match on attributes with the same name **and** lineage
 - Respect declared dependencies (no accidental matches)
 - Produce the intersection of matching entities
+
+### Extend (`.extend()`)
+
+Add attributes from another entity set while preserving all entities in the original set.
+
+```python
+# Add session info to each trial
+Trial.extend(Session)  # Adds session_date, subject_id to Trial
+
+# Add neuron properties to spike times
+SpikeTime.extend(Neuron)  # Adds cell_type, depth to SpikeTime
+```
+
+**How it differs from join:**
+
+- **Join (`*`)**: Returns only matching entities (inner join)
+- **Extend**: Returns all entities from the left side (left join)
+
+**Requirement:** The left side must **determine** the right side. This means all primary key attributes from the right side must exist in the left side.
+
+```python
+# Valid: Trial determines Session
+# (session_id is in Trial's primary key)
+Trial.extend(Session)  ✓
+
+# Invalid: Session does NOT determine Trial
+# (trial_num is not in Session)
+Session.extend(Trial)  ✗  # Error: trial_num not in Session
+```
+
+**Why use extend?**
+
+1. **Preserve all entities**: When you need attributes from a parent but want to keep all children (even orphans)
+2. **Clear intent**: Expresses "add attributes" rather than "combine entity sets"
+3. **No filtering**: Guarantees the same number of entities in the result
+
+Think of extend as projection-like: it adds attributes to existing entities without changing which entities are present.
 
 ## Projection (`.proj()`)
 
@@ -205,13 +242,14 @@ row = (query & key).fetch1()
 
 ## Summary
 
-| Operator | Symbol | Purpose |
-|----------|--------|---------|
+| Operator | Symbol/Method | Purpose |
+|----------|---------------|---------|
 | Restriction | `&`, `-` | Filter entities |
-| Join | `*` | Combine entity sets |
+| Join | `*` | Combine entity sets (inner join) |
+| Extend | `.extend()` | Add attributes (left join) |
 | Projection | `.proj()` | Select/transform attributes |
 | Aggregation | `.aggr()` | Summarize groups |
 | Union | `+` | Combine parallel sets |
 
-These five operators, combined with workflow-aware join semantics, provide
+These core operators, combined with workflow-aware join semantics, provide
 complete query capability for scientific data pipelines.
