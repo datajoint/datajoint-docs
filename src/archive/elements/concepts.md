@@ -14,7 +14,7 @@ reference the database schema.
 
     ```python
     import datajoint as dj
-    schema = dj.schema('<schema_name>')
+    schema = dj.Schema('<schema_name>')
     ```
 
     We follow the convention of having only one schema defined per Python module. Then
@@ -71,7 +71,7 @@ Thus, Element modules begin with:
 
 ```python
 import datajoint as dj
-schema = dj.schema()
+schema = dj.Schema()
 
 def activate(schema_name):
 schema.activate(schema_name)

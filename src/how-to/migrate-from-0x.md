@@ -393,7 +393,7 @@ The `lineage` column stores the origin as a dot-separated string: `schema.table.
 import datajoint as dj
 from datajoint.migrate import migrate_columns
 
-schema = dj.schema('my_database')
+schema = dj.Schema('my_database')
 
 # Step 1: Preview what needs migration
 result = migrate_columns(schema, dry_run=True)
@@ -421,10 +421,10 @@ Rebuild lineage for schema `subject` first.
 ```python
 # Example: multi-schema pipeline
 schemas_in_order = [
-    dj.schema('lab'),           # No dependencies
-    dj.schema('subject'),       # Depends on lab
-    dj.schema('session'),       # Depends on subject
-    dj.schema('ephys'),         # Depends on session
+    dj.Schema('lab'),           # No dependencies
+    dj.Schema('subject'),       # Depends on lab
+    dj.Schema('session'),       # Depends on subject
+    dj.Schema('ephys'),         # Depends on session
 ]
 
 for schema in schemas_in_order:
@@ -559,7 +559,7 @@ IMPORTANT: For multi-schema pipelines, process schemas in TOPOLOGICAL ORDER
 STEPS:
 1. Identify all schemas and their dependencies (upstream → downstream)
 2. For each schema in topological order:
-   a. Connect: schema = dj.schema('database_name')
+   a. Connect: schema = dj.Schema('database_name')
    b. Preview: result = migrate_columns(schema, dry_run=True)
    c. Review columns needing migration
    d. Apply: migrate_columns(schema, dry_run=False)
@@ -800,7 +800,7 @@ TASK: Add _v2 columns for external storage to enable cross-testing.
 PREREQUISITE: Phase 2 must be complete (~lineage tables exist).
 
 STEPS:
-1. Connect to schema: schema = dj.schema('database_name')
+1. Connect to schema: schema = dj.Schema('database_name')
 2. Create dual external attributes:
    - from datajoint.migrate import migrate_external
    - result = migrate_external(schema, dry_run=False)
@@ -1063,7 +1063,7 @@ DO NOT introduce all features at once. Focus on immediate value.
 ```python
 import datajoint as dj
 
-schema = dj.schema('my_database')
+schema = dj.Schema('my_database')
 conn = schema.connection
 
 # Step 1: Verify no legacy processes are using these tables
@@ -1199,7 +1199,7 @@ def verify_external_integrity(schema, store_name=None) -> dict:
 import datajoint as dj
 from datajoint.migrate import migrate_columns
 
-schema = dj.schema('my_database')
+schema = dj.Schema('my_database')
 
 # Phase 1: Code works (manual testing)
 # - Run existing queries with 2.0 client

@@ -151,7 +151,7 @@ For serverless environments (AWS Lambda, Cloud Functions) or when you need expli
 import datajoint as dj
 
 with dj.Connection(host, user, password) as conn:
-    schema = dj.schema('my_schema', connection=conn)
+    schema = dj.Schema('my_schema', connection=conn)
     MyTable().insert(data)
 # Connection automatically closed when exiting the block
 ```
@@ -161,7 +161,7 @@ The connection closes automatically even if an exception occurs:
 ```python
 try:
     with dj.Connection(**creds) as conn:
-        schema = dj.schema('my_schema', connection=conn)
+        schema = dj.Schema('my_schema', connection=conn)
         MyTable().insert(data)
         raise SomeError()
 except SomeError:
