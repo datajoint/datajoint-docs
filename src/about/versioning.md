@@ -16,8 +16,6 @@ If you're using legacy DataJoint (version 0.14.x or earlier), please visit the [
 
 **Site-wide banner:** Every page displays a banner indicating you're viewing documentation for DataJoint 2.0+, with a link to the migration guide for legacy users.
 
-**Footer:** The footer shows which version of DataJoint this documentation covers.
-
 ### Feature-Level Indicators
 
 Version admonitions are used for features introduced **after 2.0** (i.e., version 2.1 and later):
