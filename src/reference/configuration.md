@@ -31,7 +31,13 @@ Configuration is loaded in priority order:
 
 ## Stores Configuration
 
-Hash-addressed storage for `<blob@store>`, `<attach@store>`, `<filepath@store>`.
+Unified storage configuration for all external storage types (`<blob@>`, `<attach@>`, `<filepath@>`, `<object@>`, `<npy@>`).
+
+**Default store:**
+
+| Setting | Default | Description |
+|---------|---------|-------------|
+| `stores.default` | — | Name of the default store (used by `<blob@>`, `<object@>`, etc.) |
 
 **Common settings (all protocols):**
 
@@ -39,7 +45,8 @@ Hash-addressed storage for `<blob@store>`, `<attach@store>`, `<filepath@store>`.
 |---------|----------|-------------|
 | `stores.<name>.protocol` | Yes | Storage protocol: `file`, `s3`, `gcs`, `azure` |
 | `stores.<name>.location` | Yes | Base path or prefix |
-| `stores.<name>.subfolding` | No | Directory nesting tuple, e.g., `[2, 2]` for `ab/cd/abcd...` |
+| `stores.<name>.project_name` | Yes | Unique project identifier (for path-addressed storage) |
+| `stores.<name>.subfolding` | No | Directory nesting tuple for hash-addressed storage, e.g., `[2, 2]` (default: no subfolding) |
 
 **S3-specific settings:**
 
@@ -68,6 +75,13 @@ Hash-addressed storage for `<blob@store>`, `<attach@store>`, `<filepath@store>`.
 | `stores.<name>.account_key` | Yes | Storage account key |
 | `stores.<name>.connection_string` | No | Alternative to account_name + account_key |
 
+**How storage methods use stores:**
+
+- **Hash-addressed** (`<blob@>`, `<attach@>`, `<filepath@>`): Uses `_hash/{schema}/{hash}` paths with optional subfolding
+- **Path-addressed** (`<object@>`, `<npy@>`): Uses `{project_name}/{schema}/{table}/{key}/` paths
+
+Both methods share the same stores and default store, just use different designated sections within each store.
+
 **Credentials should be stored in secrets:**
 
 ```
@@ -76,35 +90,6 @@ Hash-addressed storage for `<blob@store>`, `<attach@store>`, `<filepath@store>`.
 ├── stores.main.secret_key
 ├── stores.archive.access_key
 └── stores.archive.secret_key
-```
-
-## Object Storage Settings
-
-For schema-addressed object storage (`<object@>`, `<npy@>`):
-
-| Setting | Environment | Default | Description |
-|---------|-------------|---------|-------------|
-| `object_storage.project_name` | `DJ_OBJECT_STORAGE_PROJECT_NAME` | — | Unique project identifier (required) |
-| `object_storage.protocol` | `DJ_OBJECT_STORAGE_PROTOCOL` | — | Storage protocol: `file`, `s3`, `gcs`, `azure` |
-| `object_storage.location` | `DJ_OBJECT_STORAGE_LOCATION` | — | Base path or bucket prefix |
-| `object_storage.bucket` | `DJ_OBJECT_STORAGE_BUCKET` | — | Bucket name (S3, GCS) |
-| `object_storage.container` | `DJ_OBJECT_STORAGE_CONTAINER` | — | Container name (Azure) |
-| `object_storage.endpoint` | `DJ_OBJECT_STORAGE_ENDPOINT` | — | S3 endpoint URL |
-| `object_storage.access_key` | `DJ_OBJECT_STORAGE_ACCESS_KEY` | — | Access key |
-| `object_storage.secret_key` | `DJ_OBJECT_STORAGE_SECRET_KEY` | — | Secret key |
-| `object_storage.secure` | `DJ_OBJECT_STORAGE_SECURE` | `True` | Use HTTPS |
-| `object_storage.partition_pattern` | — | — | Path pattern with `{attribute}` placeholders |
-| `object_storage.token_length` | — | `8` | Random suffix length for filenames |
-| `object_storage.default_store` | — | — | Default store name when not specified |
-
-**Named object stores** can be configured under `object_storage.stores.<name>.*` with the same settings as above.
-
-**Credentials** can be stored in `.secrets/` as an alternative to environment variables:
-
-```
-.secrets/
-├── object_storage.access_key
-└── object_storage.secret_key
 ```
 
 ## Jobs Settings
@@ -147,25 +132,22 @@ For schema-addressed object storage (`<object@>`, `<npy@>`):
     "database.host": "mysql.example.com",
     "database.port": 3306,
     "stores": {
+        "default": "main",
         "main": {
             "protocol": "s3",
             "endpoint": "s3.amazonaws.com",
-            "bucket": "my-data-bucket",
-            "location": "datajoint/main"
+            "bucket": "datajoint-bucket",
+            "location": "lab-data",
+            "project_name": "neuroscience_lab"
         },
         "archive": {
             "protocol": "s3",
             "endpoint": "s3.amazonaws.com",
             "bucket": "archive-bucket",
-            "location": "datajoint/archive"
+            "location": "long-term",
+            "project_name": "neuroscience_lab",
+            "subfolding": [2, 2]
         }
-    },
-    "object_storage": {
-        "project_name": "neuroscience_lab",
-        "protocol": "s3",
-        "endpoint": "s3.amazonaws.com",
-        "bucket": "objects-bucket",
-        "location": "datajoint/objects"
     },
     "jobs": {
         "add_job_metadata": true
@@ -182,9 +164,7 @@ For schema-addressed object storage (`<object@>`, `<npy@>`):
 ├── stores.main.access_key             # AKIAIOSFODNN7EXAMPLE
 ├── stores.main.secret_key             # wJalrXUtnFEMI/K7MDENG...
 ├── stores.archive.access_key          # AKIAIOSFODNN8EXAMPLE
-├── stores.archive.secret_key          # xKbmsYVuoGFNJ/L8NEOH...
-├── object_storage.access_key          # AKIAIOSFODNN9EXAMPLE
-└── object_storage.secret_key          # yLcntZWvpHGOK/M9OFPI...
+└── stores.archive.secret_key          # xKbmsYVuoGFNJ/L8NEOH...
 ```
 
 Add `.secrets/` to `.gitignore`:
@@ -200,13 +180,9 @@ echo ".secrets/" >> .gitignore
 export DJ_HOST=mysql.example.com
 export DJ_USER=analyst
 export DJ_PASS=secret
-
-# Object Storage (for <object@>, <npy@>)
-export DJ_OBJECT_STORAGE_ACCESS_KEY=AKIAIOSFODNN9EXAMPLE
-export DJ_OBJECT_STORAGE_SECRET_KEY=yLcntZWvpHGOK/M9OFPI...
 ```
 
-**Note:** Per-store credentials (for `<blob@>`, `<attach@>`) must be configured in `datajoint.json` or `.secrets/` — environment variable overrides are not supported for nested store configurations.
+**Note:** Per-store credentials must be configured in `datajoint.json` or `.secrets/` — environment variable overrides are not supported for nested store configurations.
 
 ## API Reference
 
