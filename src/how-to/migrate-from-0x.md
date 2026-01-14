@@ -5,6 +5,33 @@ Upgrade existing pipelines from legacy DataJoint (pre-2.0) to DataJoint 2.0.
 > **This guide is optimized for AI coding assistants.** Point your AI agent at this
 > document and it will execute the migration with your oversight.
 
+## Requirements
+
+### System Requirements
+
+| Component | Legacy (0.14.x) | DataJoint 2.0 |
+|-----------|-----------------|---------------|
+| **Python** | 3.8+ | **3.10+** |
+| **MySQL** | 5.7+ | **8.0+** |
+
+**Action required:** Upgrade your Python environment and MySQL server before installing DataJoint 2.0.
+
+### License Change
+
+DataJoint 2.0 is licensed under **Apache 2.0** (previously LGPL-2.1).
+
+- More permissive for commercial and academic use
+- Compatible with broader ecosystem of tools
+- Clearer patent grant provisions
+
+No action required—the new license is more permissive.
+
+### Future Backend Support
+
+DataJoint 2.0 introduces portable type aliases (`uint32`, `float64`, etc.) that prepare the codebase for **PostgreSQL backend compatibility** in a future release. Migration to core types (Phase 2) ensures your schemas will work seamlessly when Postgres support is available.
+
+---
+
 ## Overview
 
 | Phase | Code Changes | Schema Changes | Legacy Works? |
