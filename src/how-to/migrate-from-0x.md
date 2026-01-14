@@ -63,7 +63,7 @@ DataJoint 2.0 introduces a unified type system with three tiers:
 | **Core** | Standardized portable types | `uint32`, `float64`, `varchar(100)`, `json` | Column comment only |
 | **Codec** | Serialization to blob or external store | `<blob>`, `<blob@store>`, `<attach@store>` | Varies (see below) |
 
-**Migration:** Phase 2 converts most native types to corresponding core types automatically (e.g., `int unsigned` → `uint32`). Warnings are only emitted when declaring *new* tables with native types—use core types for portability and clarity.
+**Migration:** Phase 2 makes all type conversions explicit. This includes native types (e.g., `int unsigned` → `uint32`) and types with implicit serialization (e.g., `longblob` → `<blob>`, `attach` → `<attach>`). Legacy DataJoint overloaded some types with implicit conversions; 2.0 makes these explicit through codecs.
 
 **Learn more:** [Type System Concept](../explanation/type-system.md) · [Type System Reference](../reference/specs/type-system.md)
 
@@ -74,6 +74,7 @@ Codecs handle serialization for non-native data types:
 | Codec | Description | Store | Compatibility |
 |-------|-------------|-------|---------------|
 | `<blob>` | DataJoint serialization of Python objects | In-table (was `longblob`) | Column comment only |
+| `<attach>` | Inline file attachments | In-table (was `attach`) | Column comment only |
 | `<blob@store>` | Large blobs, deduplicated by hash | Hash-addressed | Requires migration |
 | `<attach@store>` | File attachments, deduplicated by hash | Hash-addressed | Requires migration |
 | `<filepath@store>` | Managed file paths | Schema-addressed | Requires migration |
@@ -532,15 +533,17 @@ schema.rebuild_lineage()
 # Now update src/pipeline/ephys.py table definitions → core types
 ```
 
-The database migration updates these column types:
+The database migration makes all type conversions explicit:
 
-- Numeric: `int unsigned` → `:uint32:`, `smallint` → `:int16:`, etc.
-- Blobs: `longblob` → `:<blob>:`
-- Attachments: `longblob` with attach comment → `:<attach>:`
+- Numeric: `int unsigned` → `:uint32:`, `smallint` → `:int16:`, etc. (MySQL native types)
+- Blobs: `longblob` → `:<blob>:` (was implicit serialization)
+- Inline attachments: `attach` → `:<attach>:` (was implicit conversion to longblob)
+
+**Why this matters:** Legacy DataJoint overloaded `longblob` and `attach` with implicit conversions. In 2.0, all serialization is explicit through codecs.
 
 External storage columns (`blob@store`, `attach@store`, `filepath@store`) are **not** migrated here—they require Phase 3-4.
 
-After the database migration for each schema, update the corresponding Python module(s) to use core types (see section 2.4).
+After the database migration for each schema, update the corresponding Python module(s) to use explicit type syntax (see section 2.4).
 
 ### 2.4 Update Table Definitions
 
@@ -550,8 +553,10 @@ After migrating each schema's database metadata (section 2.3), update the corres
 
 #### Type Replacements
 
-| Native Type (Legacy) | Core Type (2.0) |
-|---------------------|-----------------|
+Replace legacy syntax with explicit 2.0 codecs:
+
+| Legacy Syntax | 2.0 Explicit Syntax |
+|---------------|---------------------|
 | `tinyint` | `int8` |
 | `tinyint unsigned` | `uint8` |
 | `smallint` | `int16` |
@@ -563,6 +568,7 @@ After migrating each schema's database metadata (section 2.3), update the corres
 | `float` | `float32` |
 | `double` | `float64` |
 | `longblob` | `<blob>` |
+| `attach` | `<attach>` |
 
 #### Special Cases
 
@@ -1042,8 +1048,10 @@ definition = '''
 
 #### Type Syntax Updates
 
-| Legacy Syntax | 2.0 Syntax |
-|---------------|------------|
+Replace legacy syntax with explicit 2.0 codecs:
+
+| Legacy Syntax | 2.0 Explicit Syntax |
+|---------------|---------------------|
 | `int unsigned` | `uint32` |
 | `int` | `int32` |
 | `smallint unsigned` | `uint16` |
@@ -1051,6 +1059,7 @@ definition = '''
 | `float` | `float32` |
 | `double` | `float64` |
 | `longblob` | `<blob>` |
+| `attach` | `<attach>` |
 | `blob@store` | `<blob@store>` |
 | `attach@store` | `<attach@store>` |
 | `filepath@store` | `<filepath@store>` |
@@ -1105,7 +1114,7 @@ STEPS:
    - Remove dual attributes (keep only *_v2 version, rename to original)
    - Update type syntax (see TYPE REPLACEMENTS below)
 
-TYPE REPLACEMENTS:
+TYPE REPLACEMENTS (legacy implicit conversions → explicit codecs):
 - int unsigned → uint32
 - int → int32
 - smallint unsigned → uint16
@@ -1113,6 +1122,7 @@ TYPE REPLACEMENTS:
 - float → float32
 - double → float64
 - longblob → <blob>
+- attach → <attach>
 - blob@store → <blob@store>
 - attach@store → <attach@store>
 - filepath@store → <filepath@store>
