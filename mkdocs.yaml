@@ -1,47 +1,120 @@
 # ---------------------- PROJECT SPECIFIC ---------------------------
 
 site_name: DataJoint Documentation
-site_url: https://docs.datajoint.com
+site_url: https://docs.datajoint.com/
 repo_name: datajoint/datajoint-docs
 repo_url: https://github.com/datajoint/datajoint-docs
 nav:
-  - Welcome: index.md
-  # relative site url, not pointing to any docs in the repo
-  # it's for reverse proxy to proxy datajoint-python docs
-  - DataJoint Python: core/datajoint-python/
-  - DataJoint Elements:
-      - elements/index.md
-      - Concepts: elements/concepts.md
-      - User Guide: elements/user-guide.md
-      - Developer Guide: elements/developer-guide.md
-      - Management:
-          - Plan: elements/management/plan.md
-          - Governance: elements/management/governance.md
-          - Selection: elements/management/selection.md
-          - Quality Assurance: elements/management/quality-assurance.md
-          - Outreach: elements/management/outreach.md
-          - Dissemination: elements/management/dissemination.md
-          - Adoption: elements/management/adoption.md
-  - Additional Resources: additional-resources.md
-  - Project Showcase:
-      - projects/index.md
-      - Catalog: https://catalog.datajoint.io
-      - Teams: projects/teams.md
-      - Publications: projects/publications.md
-  - Support & Events: support-events.md
-  - Partnerships:
-      - DANDI: partnerships/dandi.md
-      - Facemap: partnerships/facemap.md
-      - INCF: partnerships/incf.md
-      - NWB: partnerships/nwb.md
-      - Open Ephys GUI: partnerships/openephysgui.md
-      - Suite2p: partnerships/suite2p.md
+  - Home: index.md
+  - Concepts:
+      - explanation/index.md
+      - Overview:
+          - Data Pipelines: explanation/data-pipelines.md
+          - What's New in 2.0: explanation/whats-new-2.md
+          - FAQ: explanation/faq.md
+      - Data Model:
+          - Relational Workflow Model: explanation/relational-workflow-model.md
+          - Entity Integrity: explanation/entity-integrity.md
+          - Normalization: explanation/normalization.md
+          - Computation Model: explanation/computation-model.md
+      - Queries:
+          - Query Algebra: explanation/query-algebra.md
+      - Storage:
+          - Type System: explanation/type-system.md
+          - Custom Codecs: explanation/custom-codecs.md
+  - Tutorials:
+      - tutorials/index.md
+      - Basics:
+          - First Pipeline: tutorials/basics/01-first-pipeline.ipynb
+          - Schema Design: tutorials/basics/02-schema-design.ipynb
+          - Data Entry: tutorials/basics/03-data-entry.ipynb
+          - Queries: tutorials/basics/04-queries.ipynb
+          - Computation: tutorials/basics/05-computation.ipynb
+          - Object Storage: tutorials/basics/06-object-storage.ipynb
+      - Examples:
+          - University Database: tutorials/examples/university.ipynb
+          - Hotel Reservations: tutorials/examples/hotel-reservations.ipynb
+          - Languages & Proficiency: tutorials/examples/languages.ipynb
+          - Fractal Pipeline: tutorials/examples/fractal-pipeline.ipynb
+          - Blob Detection: tutorials/examples/blob-detection.ipynb
+      - Domain:
+          - Calcium Imaging: tutorials/domain/calcium-imaging/calcium-imaging.ipynb
+          - Electrophysiology: tutorials/domain/electrophysiology/electrophysiology.ipynb
+          - Ephys with Object Storage: tutorials/domain/electrophysiology/ephys-with-npy.ipynb
+          - Allen CCF: tutorials/domain/allen-ccf/allen-ccf.ipynb
+      - Advanced:
+          - SQL Comparison: tutorials/advanced/sql-comparison.ipynb
+          - JSON Data Type: tutorials/advanced/json-type.ipynb
+          - Distributed Computing: tutorials/advanced/distributed.ipynb
+          - Custom Codecs: tutorials/advanced/custom-codecs.ipynb
+  - How-To:
+      - how-to/index.md
+      - Setup:
+          - Installation: how-to/installation.md
+          - Configure Database: how-to/configure-database.md
+          - Configure Object Storage: how-to/configure-storage.md
+          - Command-Line Interface: how-to/use-cli.md
+      - Schema Design:
+          - Define Tables: how-to/define-tables.md
+          - Model Relationships: how-to/model-relationships.ipynb
+          - Design Primary Keys: how-to/design-primary-keys.md
+          - Read Diagrams: how-to/read-diagrams.ipynb
+      - Project Management:
+          - Manage Pipeline Project: how-to/manage-pipeline-project.md
+      - Data Operations:
+          - Insert Data: how-to/insert-data.md
+          - Query Data: how-to/query-data.md
+          - Fetch Results: how-to/fetch-results.md
+          - Delete Data: how-to/delete-data.md
+      - Computation:
+          - Run Computations: how-to/run-computations.md
+          - Distributed Computing: how-to/distributed-computing.md
+          - Handle Errors: how-to/handle-errors.md
+          - Monitor Progress: how-to/monitor-progress.md
+      - Object Storage:
+          - Use Object Storage: how-to/use-object-storage.md
+          - Use NPY Codec: how-to/use-npy-codec.md
+          - Create Custom Codecs: how-to/create-custom-codec.md
+          - Manage Large Data: how-to/manage-large-data.md
+          - Clean Up Storage: how-to/garbage-collection.md
+      - Maintenance:
+          - Migrate to 2.0: how-to/migrate-to-v20.md
+          - Alter Tables: how-to/alter-tables.md
+          - Backup and Restore: how-to/backup-restore.md
+  - Reference:
+      - reference/index.md
+      - Specifications:
+          - reference/specs/index.md
+          - Schema Definition:
+              - Table Declaration: reference/specs/table-declaration.md
+              - Master-Part: reference/specs/master-part.md
+              - Virtual Schemas: reference/specs/virtual-schemas.md
+          - Query Algebra:
+              - Query Operators: reference/specs/query-algebra.md
+              - Semantic Matching: reference/specs/semantic-matching.md
+              - Primary Keys: reference/specs/primary-keys.md
+              - Fetch API: reference/specs/fetch-api.md
+          - Type System:
+              - Types: reference/specs/type-system.md
+              - Codec API: reference/specs/codec-api.md
+              - NPY Codec: reference/specs/npy-codec.md
+          - Data Operations:
+              - Data Manipulation: reference/specs/data-manipulation.md
+              - AutoPopulate: reference/specs/autopopulate.md
+              - Job Metadata: reference/specs/job-metadata.md
+      - Configuration: reference/configuration.md
+      - Definition Syntax: reference/definition-syntax.md
+      - Operators: reference/operators.md
+      - Errors: reference/errors.md
+      - Elements: elements/index.md
+  - API: api/  # Auto-generated via gen-files + literate-nav
   - About:
-      - About: about/about.md
+      - about/index.md
       - History: about/history.md
-      - Team: about/datajoint-team.md
-      - Citation Guidelines: about/citation.md
-      - Contribution Guidelines: about/contribute.md
+      - Platform: about/platform.md
+      - Citation: about/citation.md
+      - Publications: about/publications.md
+      - Contributing: about/contributing.md
 
 # ---------------------------- STANDARD -----------------------------
 
@@ -57,7 +130,10 @@ theme:
     logo: main/company-logo
   favicon: assets/images/company-logo-blue.png
   features:
-    - toc.integrate
+    - navigation.sections
+    - navigation.indexes
+    - toc.follow
+    - announce.dismiss
   palette:
     - media: "(prefers-color-scheme: light)"
       scheme: datajoint
@@ -73,14 +149,36 @@ plugins:
   - search
   - mermaid2
   - section-index
-  # There is no welcome.md anymore
-  # - redirects:
-  #     redirect_maps:
-  #       "index.md": "welcome.md"
+  - autorefs
+  - mkdocstrings:
+      default_handler: python
+      handlers:
+        python:
+          paths:
+            - /datajoint-python/src  # Path to datajoint-python source (mounted in Docker)
+          options:
+            docstring_style: numpy
+            members_order: source
+            group_by_category: false
+            show_source: false
+            show_root_heading: true
+            show_root_full_path: false
+            separate_signature: true
+            line_length: 88
+            filters:
+              - "!^_"  # Exclude private members
+  - gen-files:
+      scripts:
+        - scripts/gen_api_pages.py
+  - literate-nav:
+      nav_file: SUMMARY.md
+  - mkdocs-jupyter:
+      include_source: true
+      execute: false  # Don't execute notebooks during build
   - exclude:
       glob:
-        - archive/*
         - images/*md
+        - "*/SUMMARY.md"
 markdown_extensions:
   - attr_list
   - md_in_html
@@ -106,21 +204,21 @@ markdown_extensions:
   - pymdownx.magiclink # Displays bare URLs as links
   - pymdownx.tasklist: # Renders check boxes in tasks lists
       custom_checkbox: true
+  - pymdownx.arithmatex: # LaTeX math support
+      generic: true
 extra:
   generator: false # Disable watermark
-  # There is no version for this doc
-  # version:
-  #   provider: mike
+  datajoint_version: "2.0"  # DataJoint Python version this documentation covers
   social:
     - icon: main/company-logo
       link: https://www.datajoint.com
       name: DataJoint
-    - icon: main/company-logo
+    - icon: material/book-open-variant
       link: https://docs.datajoint.com
       name: DataJoint Documentation
-    - icon: fontawesome/brands/slack
-      link: https://datajoint.slack.com
-      name: Slack
+    - icon: fontawesome/solid/comments
+      link: https://github.com/datajoint/datajoint-python/discussions
+      name: Discussions
     - icon: fontawesome/brands/linkedin
       link: https://www.linkedin.com/company/datajoint
       name: LinkedIn
@@ -145,4 +243,6 @@ extra:
 extra_css:
   - assets/stylesheets/extra.css
 extra_javascript:
+  - javascripts/mathjax.js
+  - https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js
   - https://js-na1.hs-scripts.com/23133402.js # HubSpot chatbot

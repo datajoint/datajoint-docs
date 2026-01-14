@@ -1,0 +1,57 @@
+<svg id="ephys-npy-svg" width="100%" xmlns="http://www.w3.org/2000/svg" class="flowchart" style="max-width: 700px; background-color: transparent;" viewBox="0 0 700 194">
+  <style>
+    #ephys-npy-svg { font-family: "trebuchet ms", verdana, arial, sans-serif; font-size: 16px; fill: #000; }
+    #ephys-npy-svg text { fill: #000; }
+    #ephys-npy-svg .node rect { stroke: #333; stroke-width: 1px; }
+    #ephys-npy-svg .link { stroke: #666; stroke-width: 2px; fill: none; }
+    #ephys-npy-svg .arrowhead { fill: #333; }
+  </style>
+  <defs>
+    <marker id="ephys-npy-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" class="arrowhead"/>
+    </marker>
+  </defs>
+
+  <!-- Edges -->
+  <path d="M104,45 L150,45" class="link" marker-end="url(#ephys-npy-arrow)"/>
+  <path d="M261,45 L307,45" class="link" marker-end="url(#ephys-npy-arrow)"/>
+  <path d="M418,38 L478,35" class="link" marker-end="url(#ephys-npy-arrow)"/>
+  <path d="M418,58 L478,115" class="link" marker-end="url(#ephys-npy-arrow)"/>
+  <path d="M418,159 L478,145" class="link" marker-end="url(#ephys-npy-arrow)"/>
+
+  <!-- Mouse (Manual - green) -->
+  <g transform="translate(52, 45)">
+    <rect style="fill:#7eca9c" x="-52" y="-27" width="104" height="54"/>
+    <text text-anchor="middle" y="6">Mouse</text>
+  </g>
+
+  <!-- Session (Manual - green) -->
+  <g transform="translate(205, 45)">
+    <rect style="fill:#7eca9c" x="-55" y="-27" width="110" height="54"/>
+    <text text-anchor="middle" y="6">Session</text>
+  </g>
+
+  <!-- Neuron (Imported - blue) -->
+  <g transform="translate(362, 45)">
+    <rect style="fill:#7eb6ca" x="-55" y="-27" width="110" height="54"/>
+    <text text-anchor="middle" y="6">Neuron</text>
+  </g>
+
+  <!-- ActivityStats (Computed - red) -->
+  <g transform="translate(555, 35)">
+    <rect style="fill:#ca7e7e" x="-75" y="-27" width="150" height="54"/>
+    <text text-anchor="middle" y="6">ActivityStats</text>
+  </g>
+
+  <!-- Spikes (Computed - red) -->
+  <g transform="translate(555, 139)">
+    <rect style="fill:#ca7e7e" x="-75" y="-27" width="150" height="54"/>
+    <text text-anchor="middle" y="6">Spikes</text>
+  </g>
+
+  <!-- SpikeParams (Lookup - gray) -->
+  <g transform="translate(362, 159)">
+    <rect style="fill:#d3d3d3" x="-74" y="-27" width="148" height="54"/>
+    <text text-anchor="middle" y="6">SpikeParams</text>
+  </g>
+</svg>

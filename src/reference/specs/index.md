@@ -1,0 +1,64 @@
+# Specifications
+
+Formal specifications of DataJoint's data model and behavior.
+
+These documents define how DataJoint works at a detailed level. They serve as
+authoritative references for:
+
+- Understanding exact behavior of operations
+- Implementing compatible tools and extensions
+- Debugging complex scenarios
+
+## Document Structure
+
+Each specification follows a consistent structure:
+
+1. **Overview** — What this specifies
+2. **User Guide** — Practical usage
+3. **API Reference** — Methods and signatures
+4. **Concepts** — Definitions and rules
+5. **Implementation Details** — Internal behavior
+6. **Examples** — Concrete code samples
+7. **Best Practices** — Recommendations
+
+## Specifications
+
+### Schema Definition
+
+| Specification | Description |
+|---------------|-------------|
+| [Table Declaration](table-declaration.md) | Table definition syntax, tiers, foreign keys, and indexes |
+| [Master-Part Relationships](master-part.md) | Compositional data modeling, integrity, and cascading operations |
+| [Virtual Schemas](virtual-schemas.md) | Accessing schemas without Python source, introspection API |
+
+### Query Algebra
+
+| Specification | Description |
+|---------------|-------------|
+| [Query Operators](query-algebra.md) | Operators: restrict, proj, join, aggr, extend, union, U() |
+| [Semantic Matching](semantic-matching.md) | Attribute lineage and join compatibility |
+| [Primary Keys](primary-keys.md) | How primary keys propagate through query operators |
+| [Fetch API](fetch-api.md) | Data retrieval methods and formats |
+
+### Type System
+
+| Specification | Description |
+|---------------|-------------|
+| [Type System](type-system.md) | Three-layer type architecture: native, core, and codec types |
+| [Codec API](codec-api.md) | Custom type implementation with encode/decode semantics |
+| [`<npy>` Codec](npy-codec.md) | Store numpy arrays as portable `.npy` files |
+
+### Object Store Configuration
+
+| Specification | Description |
+|---------------|-------------|
+| [Object Store Configuration](object-store-configuration.md) | Store configuration, path generation, and storage models: hash-addressed (integrated), schema-addressed (integrated), and filepath (reference) |
+
+### Data Operations
+
+| Specification | Description |
+|---------------|-------------|
+| [Data Manipulation](data-manipulation.md) | Insert, update1, delete operations and workflow normalization |
+| [AutoPopulate](autopopulate.md) | Jobs 2.0 system for automated computation |
+| [Job Metadata](job-metadata.md) | Hidden columns for job tracking |
+
