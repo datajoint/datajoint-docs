@@ -13,8 +13,17 @@ Upgrade existing pipelines from legacy DataJoint (pre-2.0) to DataJoint 2.0.
 |-----------|-----------------|---------------|
 | **Python** | 3.8+ | **3.10+** |
 | **MySQL** | 5.7+ | **8.0+** |
+| **Character encoding** | (varies) | **UTF-8 (utf8mb4)** |
+| **Collation** | (varies) | **utf8mb4_bin** |
 
 **Action required:** Upgrade your Python environment and MySQL server before installing DataJoint 2.0.
+
+**Character encoding and collation:** DataJoint 2.0 standardizes on UTF-8 encoding with binary collation (case-sensitive comparisons). This is configured **server-wide** and is assumed by DataJoint:
+
+- **MySQL:** `utf8mb4` character set with `utf8mb4_bin` collation
+- **PostgreSQL (future):** `UTF8` encoding with `C` collation
+
+Like timezone handling, encoding is infrastructure configuration, not part of the data model. Ensure your MySQL server is configured with these defaults before migration.
 
 ### License Change
 
@@ -386,7 +395,7 @@ Convert ALL types and codecs in Phase I:
 
 **Important Notes:**
 
-- **Datetime/Timestamp:** DataJoint 2.0 stores all times as `datetime` in **UTC without timezone information**. Timezones are handled by application frontends. Convert `timestamp` to `datetime` and ensure your application stores times in UTC.
+- **Datetime/Timestamp:** DataJoint 2.0 stores all times as `datetime` in **UTC without timezone information**. The database stores UTC; timezones are handled by application front-ends and client APIs. Convert `timestamp` to `datetime` and ensure your application stores times in UTC.
 
 - **Bool:** Legacy DataJoint supported `bool` and `boolean` types (MySQL stores as `tinyint(1)`). Keep as `bool` in 2.0. Only explicit `tinyint(1)` declarations need review:
   - If used for boolean semantics (yes/no, active/inactive) → `bool`
@@ -471,7 +480,7 @@ Special Cases - REQUIRE USER REVIEW:
 
   timestamp → datetime  # ALWAYS CONVERT
     - DataJoint 2.0 standard: store all times in UTC without timezone info
-    - Timezones are handled by application frontends
+    - Database stores UTC; timezones are handled by application front-ends and client APIs
     Example:
       created_at : timestamp  # pre-2.0
       created_at : datetime   # 2.0 (stores UTC)
@@ -479,7 +488,7 @@ Special Cases - REQUIRE USER REVIEW:
 IMPORTANT - Datetime and Timestamp Conversion:
 
 DataJoint 2.0 stores all times as datetime in UTC WITHOUT timezone information.
-Timezones are handled by application frontends, not the database.
+The database stores UTC; timezones are handled by application front-ends and client APIs, not the database.
 
 Conversion rules:
 - datetime → Keep as datetime (UTC assumed)
@@ -490,7 +499,7 @@ Conversion rules:
 For timestamp columns:
 1. Convert type to datetime
 2. Ensure application logic stores times in UTC
-3. Handle timezone conversion in frontend display code
+3. Handle timezone conversion in application front-ends and client APIs
 
 Example:
   # pre-2.0
@@ -498,8 +507,8 @@ Example:
   event_time : timestamp      # Application-managed
 
   # 2.0
-  session_time : datetime     # Store UTC, handle timezone in frontend
-  event_time : datetime       # Store UTC, handle timezone in frontend
+  session_time : datetime     # Database stores UTC; timezones handled by client APIs
+  event_time : datetime       # Database stores UTC; timezones handled by client APIs
 
 IMPORTANT - Bool Type:
 
