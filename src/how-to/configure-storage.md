@@ -47,6 +47,7 @@ For local or network-mounted storage:
 ```
 
 Paths will be:
+
 - Hash: `/data/my-project/production/_hash/{schema}/{hash}`
 - Schema: `/data/my-project/production/_schema/{schema}/{table}/{key}/`
 
@@ -78,6 +79,7 @@ Store credentials separately in `.secrets/`:
 ```
 
 Paths will be:
+
 - Hash: `s3://my-bucket/my-project/production/_hash/{schema}/{hash}`
 - Schema: `s3://my-bucket/my-project/production/_schema/{schema}/{table}/{key}/`
 
@@ -295,6 +297,7 @@ By default, DataJoint uses `_hash/` and `_schema/` prefixes for managed storage.
 ```
 
 **Prefix requirements:**
+
 - Prefixes must be mutually exclusive (no nesting)
 - `hash_prefix` and `schema_prefix` are reserved for DataJoint
 - `filepath_prefix` is optional (null = unrestricted)
@@ -318,6 +321,7 @@ By default, DataJoint uses `_hash/` and `_schema/` prefixes for managed storage.
 ```
 
 Paths become:
+
 - Hash: `s3://neuroscience-data/lab-project-2024/managed/blobs/{schema}/{hash}`
 - Schema: `s3://neuroscience-data/lab-project-2024/managed/arrays/{schema}/{table}/{key}/`
 - Filepath: `s3://neuroscience-data/lab-project-2024/imported/{user_path}`
@@ -356,6 +360,7 @@ table.insert1({'session_id': 4, 'recording': '_schema/myschema/...'}) # Error!
 ```
 
 **Key characteristics of `<filepath@>`:**
+
 - References existing files (no copying)
 - User controls file organization
 - User manages file lifecycle (DataJoint never deletes)
