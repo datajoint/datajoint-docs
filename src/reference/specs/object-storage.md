@@ -1,22 +1,26 @@
-# External Storage Specification
+# Object Storage Specification
 
-This specification defines DataJoint's unified external storage system, including store configuration, path generation algorithms, and the three storage models.
+This specification defines DataJoint's unified object storage system, including store configuration, path generation algorithms, and the three storage models.
 
 ## Overview
 
-DataJoint's Object-Augmented Schema (OAS) integrates relational tables with external storage as a single coherent system. Large data objects are stored externally while maintaining full referential integrity with the relational database.
+DataJoint's Object-Augmented Schema (OAS) integrates relational tables with object storage as a single coherent system. Large data objects are stored in file systems or cloud storage while maintaining full referential integrity with the relational database.
 
 ### Storage Models
 
 DataJoint 2.0 supports three storage models, all sharing the same store configuration:
 
-| Model | Data Types | Path Structure | Use Case |
-|-------|------------|----------------|----------|
-| **Hash-addressed** | `<blob@store>`, `<attach@store>` | Content-addressed by hash | Immutable data, automatic deduplication |
-| **Schema-addressed** | `<object@store>`, `<npy@store>` | Key-based hierarchical paths | Mutable data, streaming access, arrays |
-| **Filepath** | `<filepath@store>` | User-managed paths | Existing files, external workflows |
+| Model | Data Types | Path Structure | Integration | Use Case |
+|-------|------------|----------------|-------------|----------|
+| **Hash-addressed** | `<blob@store>`, `<attach@store>` | Content-addressed by hash | **Integrated** (OAS) | Immutable data, automatic deduplication |
+| **Schema-addressed** | `<object@store>`, `<npy@store>` | Key-based hierarchical paths | **Integrated** (OAS) | Mutable data, streaming access, arrays |
+| **Filepath** | `<filepath@store>` | User-managed paths | **Reference** | Existing files, external workflows |
 
-**Legacy note:** DataJoint 0.14.x only supported hash-addressed (`external`) and filepath (`filepath@`) storage. Schema-addressed storage is new in 2.0.
+**Key distinction:**
+- **Hash-addressed** and **schema-addressed** storage are **integrated** into the Object-Augmented Schema. DataJoint manages their lifecycle, paths, and integrity.
+- **Filepath** storage provides **references** to externally-managed files. Users control file organization and lifecycle.
+
+**Legacy note:** DataJoint 0.14.x only supported hash-addressed (called "external") and filepath storage. Schema-addressed storage is new in 2.0.
 
 ## Store Configuration
 
@@ -607,7 +611,7 @@ RawRecording.insert1({
 
 DataJoint 0.14.x used separate configuration systems:
 
-### Legacy External Storage (Hash-addressed)
+### Legacy "External" Storage (Hash-addressed Integrated)
 
 ```python
 # 0.14.x config
@@ -747,6 +751,6 @@ if spec['protocol'] == 'file':
 ## See Also
 
 - [Configuration Reference](../configuration.md) — All configuration options
-- [Configure External Storage](../../how-to/configure-storage.md) — Setup guide
+- [Configure Object Storage](../../how-to/configure-storage.md) — Setup guide
 - [Type System Specification](type-system.md) — Data type definitions
 - [Codec API Specification](codec-api.md) — Codec implementation details
