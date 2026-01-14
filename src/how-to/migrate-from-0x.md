@@ -412,6 +412,58 @@ Update Python table definition strings to use core types instead of native MySQL
 | `double` | `float64` |
 | `longblob` | `<blob>` |
 
+#### Special Cases
+
+**Boolean attributes:**
+
+Legacy DataJoint allowed `bool` or `boolean` in definitions, but MySQL converted these to `tinyint(1)`. DataJoint 2.0 has an explicit `bool` core type.
+
+When migrating, the agent should infer intent from context:
+- If the attribute stores true/false values → use `bool`
+- If it stores small integers (0-255) → use `uint8`
+
+```python
+# Legacy: was this meant to be boolean or integer?
+is_valid : tinyint(1)     # Likely boolean → bool
+error_code : tinyint(1)   # Likely integer → uint8
+
+# Ask user to confirm ambiguous cases
+```
+
+**Datetime and timestamp attributes:**
+
+DataJoint 2.0 supports `datetime` with UTC only—no timezone support. Existing `timestamp` columns need review:
+
+| Legacy Type | 2.0 Handling |
+|-------------|--------------|
+| `datetime` | Keep as `datetime` (UTC assumed) |
+| `timestamp` | Convert to `datetime` (review timezone handling) |
+| `date` | Keep as `date` (no change) |
+| `time` | Keep as `time` (no change) |
+
+For `timestamp` columns, the agent should ask the user:
+- Was this storing UTC times? → Convert to `datetime`
+- Was this using MySQL's auto-update behavior? → Review application logic
+
+```python
+# Legacy
+created_at : timestamp    # Review: convert to datetime?
+session_date : date       # No change needed
+
+# 2.0
+created_at : datetime     # UTC assumed
+session_date : date       # Unchanged
+```
+
+**Enum attributes:**
+
+`enum` is a core type in DataJoint 2.0—no changes required.
+
+```python
+# No change needed
+sex : enum('M', 'F', 'U')
+```
+
 #### Example
 
 ```python
@@ -478,6 +530,13 @@ STEPS:
    - float → float32
    - double → float64
    - longblob → <blob>
+   - enum → enum (no change)
+
+SPECIAL CASES (ask user to confirm):
+- tinyint(1) / bool / boolean: Infer intent from context.
+  If stores true/false → bool. If stores integers → uint8.
+- timestamp: Convert to datetime. DataJoint 2.0 uses UTC only.
+  Ask user about timezone handling if unclear.
 
 VERIFICATION:
 - 2.0 client recognizes all types correctly
