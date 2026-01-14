@@ -1,9 +1,12 @@
 # DataJoint Documentation
 
-Official documentation for [DataJoint](https://github.com/datajoint/datajoint-python),
+Official documentation for [DataJoint](https://github.com/datajoint/datajoint-python) 2.0,
 an open-source framework for building scientific data pipelines.
 
 **Live site:** https://docs.datajoint.com
+
+> **📘 Upgrading from legacy DataJoint (pre-2.0)?**
+> See the **[Migration Guide](https://docs.datajoint.com/how-to/migrate-from-0x/)** for a step-by-step upgrade path.
 
 ## What is DataJoint?
 
@@ -132,12 +135,16 @@ ProcessedData.populate()
 
 This documentation follows the [Diátaxis](https://diataxis.fr/) framework:
 
-| Section | Purpose |
-|---------|---------|
-| [Concepts](src/explanation/) | Understand the principles behind DataJoint |
-| [Tutorials](src/tutorials/) | Learn by building real pipelines (Jupyter notebooks) |
-| [How-To](src/how-to/) | Practical guides for common tasks |
-| [Reference](src/reference/) | Specifications and API documentation |
+| Section | Purpose | Link |
+|---------|---------|------|
+| **Tutorials** | Learn by building real pipelines | [src/tutorials/](src/tutorials/) |
+| **How-To Guides** | Practical guides for common tasks | [src/how-to/](src/how-to/) |
+| **Explanation** | Understand the principles behind DataJoint | [src/explanation/](src/explanation/) |
+| **Reference** | Specifications and API documentation | [src/reference/](src/reference/) |
+
+Key pages:
+- **[Migration Guide](src/how-to/migrate-from-0x.md)** — Upgrade from legacy DataJoint (pre-2.0)
+- **[What's New in 2.0](src/explanation/whats-new-2.md)** — Major changes and improvements
 
 ## Local Development with Docker (Recommended)
 
@@ -274,16 +281,22 @@ docker compose exec docs jupyter nbconvert \
 
 ## Related Repositories
 
-- [datajoint-python](https://github.com/datajoint/datajoint-python) — Core DataJoint library
-- [DataJoint Elements](https://docs.datajoint.com/elements/) — Neuroscience pipeline elements
+- **[datajoint-python](https://github.com/datajoint/datajoint-python)** — Core DataJoint library
+- **[DataJoint Elements](https://datajoint.com/docs/elements/)** — Neuroscience pipeline elements
+- **[DataJoint Works](https://datajoint.com)** — Company and commercial support
 
 ## Citation
 
 If you use DataJoint in your research, please cite:
 
+> Yatsenko D, Walker EY, Tolias AS. DataJoint: A Simpler Relational Data Model.
+> arXiv:2303.00102. 2023. doi: [10.48550/arXiv.2303.00102](https://doi.org/10.48550/arXiv.2303.00102)
+
+Earlier publication:
+
 > Yatsenko D, Reimer J, Ecker AS, Walker EY, Sinz F, Berens P, Hoenselaar A,
 > Cotton RJ, Siapas AS, Tolias AS. DataJoint: managing big scientific data
-> using MATLAB or Python. bioRxiv. 2015:031658. doi: [10.1101/031658](https://doi.org/10.1101/031658)
+> using MATLAB or Python. bioRxiv. 2015. doi: [10.1101/031658](https://doi.org/10.1101/031658)
 
 ## License
 
