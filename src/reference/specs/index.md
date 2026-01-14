@@ -48,11 +48,11 @@ Each specification follows a consistent structure:
 | [Codec API](codec-api.md) | Custom type implementation with encode/decode semantics |
 | [`<npy>` Codec](npy-codec.md) | Store numpy arrays as portable `.npy` files |
 
-### Object Storage
+### Object Store Configuration
 
 | Specification | Description |
 |---------------|-------------|
-| [Object Storage](object-storage.md) | Store configuration, path generation, and storage models: hash-addressed (integrated), schema-addressed (integrated), and filepath (reference) |
+| [Object Store Configuration](object-store-configuration.md) | Store configuration, path generation, and storage models: hash-addressed (integrated), schema-addressed (integrated), and filepath (reference) |
 
 ### Data Operations
 

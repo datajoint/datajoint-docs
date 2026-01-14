@@ -1,8 +1,8 @@
-# Configure Object Storage
+# Configure Object Stores
 
 Set up S3, MinIO, or filesystem storage for DataJoint's Object-Augmented Schema (OAS).
 
-> **Tip:** [DataJoint.com](https://datajoint.com) provides pre-configured object storage integrated with your database—no setup required.
+> **Tip:** [DataJoint.com](https://datajoint.com) provides pre-configured object stores integrated with your database—no setup required.
 
 ## Overview
 

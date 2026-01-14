@@ -1,6 +1,6 @@
-# Object Storage Specification
+# Object Store Configuration Specification
 
-This specification defines DataJoint's unified object storage system, including store configuration, path generation algorithms, and the three storage models.
+This specification defines DataJoint's unified object store system, including store configuration, path generation algorithms, and storage models.
 
 ## Overview
 
@@ -751,6 +751,6 @@ if spec['protocol'] == 'file':
 ## See Also
 
 - [Configuration Reference](../configuration.md) — All configuration options
-- [Configure Object Storage](../../how-to/configure-storage.md) — Setup guide
+- [Configure Object Stores](../../how-to/configure-storage.md) — Setup guide
 - [Type System Specification](type-system.md) — Data type definitions
 - [Codec API Specification](codec-api.md) — Codec implementation details
