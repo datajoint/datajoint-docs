@@ -14129,34 +14129,19 @@ if Subject.validate(rows):
 
 Install DataJoint Python and set up your environment.
 
-!!! warning "DataJoint 2.0+ Required"
+!!! warning "Pre-Release Documentation"
 
-    This documentation is for **DataJoint 2.0 and later**. The PyPI and conda releases for DataJoint 2.0 are currently in preparation.
+    This documentation covers **DataJoint 2.0**, which is currently in pre-release.
 
-    **If you install now, you may get an older version (0.14.x).** After installation, verify you have version 2.0 or later before following the tutorials and guides.
+    - **For production use:** Install the stable version (0.14.x) and use [legacy docs](https://datajoint.github.io/datajoint-python)
+    - **For testing 2.0:** Follow the pre-release installation instructions below
+    - **For migration:** See the [Migration Guide](migrate-to-v20.md)
 
-## Basic Installation
+## Choose Your Installation
 
-```bash
-pip install datajoint
-```
+### Pre-Release (2.0) — For Testing and Development
 
-## With Optional Dependencies
-
-```bash
-# For polars DataFrame support
-pip install datajoint[polars]
-
-# For PyArrow support
-pip install datajoint[arrow]
-
-# For all optional dependencies
-pip install datajoint[all]
-```
-
-## Development Installation
-
-To install the latest pre-release version:
+**Note:** DataJoint 2.0 is not yet on PyPI/conda. Install from the pre-release branch:
 
 ```bash
 git clone -b pre/v2.0 https://github.com/datajoint/datajoint-python.git
@@ -14164,26 +14149,44 @@ cd datajoint-python
 pip install -e ".[dev]"
 ```
 
+**With optional dependencies:**
+
+```bash
+# For polars DataFrame support
+pip install -e ".[polars]"
+
+# For all optional dependencies
+pip install -e ".[all]"
+```
+
+### Stable (0.14.x) — For Production Use
+
+```bash
+pip install datajoint
+```
+
+**Note:** This installs DataJoint 0.14.x. The tutorials and guides in this documentation are written for 2.0 and will not match the stable API. Use [legacy documentation](https://datajoint.github.io/datajoint-python) instead.
+
 ## Verify Installation
 
-**Important:** Check that you have DataJoint 2.0 or later:
+Check your installed version:
 
 ```python
 import datajoint as dj
 print(dj.__version__)
 ```
 
-**Expected output:** `2.0.0` or higher
+**Expected output for this documentation:**
+- `2.0.0` or higher — You're ready to follow this documentation
+- `0.14.x` or lower — You have the stable version, use [legacy docs](https://datajoint.github.io/datajoint-python) instead
 
-!!! danger "Version Mismatch"
+### If You Have the Wrong Version
 
-    If you see version `0.14.x` or lower, you have the legacy version of DataJoint. This documentation will not match your installed version.
-
-    **Options:**
-
-    1. **Upgrade to 2.0 (pre-release):** Install from the `pre/v2.0` branch (see Development Installation above)
-    2. **Use legacy documentation:** Visit [datajoint.github.io/datajoint-python](https://datajoint.github.io/datajoint-python)
-    3. **Migrate existing pipeline:** Follow the [Migration Guide](migrate-to-v20.md)
+| Your Situation | Action |
+|----------------|--------|
+| Installed 0.14.x but want to test 2.0 | Follow pre-release installation above |
+| Installed 2.0 but need production stability | `pip uninstall datajoint && pip install datajoint` |
+| Have existing 0.14.x pipeline to upgrade | Follow [Migration Guide](migrate-to-v20.md) |
 
 ## Database Server
 
