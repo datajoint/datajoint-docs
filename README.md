@@ -83,4 +83,4 @@ Full citation information: [docs.datajoint.com/about/citation](https://docs.data
 ## License
 
 - Documentation: [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)
-- DataJoint software: [Apache 2.0](https://github.com/datajoint/datajoint-python/blob/master/LICENSE)
+- DataJoint software: [Apache 2.0](https://github.com/datajoint/datajoint-python/blob/master/LICENSE) (LGPLv2.1 prior to v2.0)
