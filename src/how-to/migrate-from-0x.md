@@ -291,7 +291,7 @@ result = table1 * table2           # try natural join first (with semantic check
 # Only use semantic_check=False if the bypass is truly needed:
 result = table1.join(table2, semantic_check=False)
 
-result = dj.U('attr') & table      # use restriction instead
+result = table                     # U(...) * table is just table
 ```
 
 #### Insert Method (Changed)
@@ -337,7 +337,7 @@ For each Python module using DataJoint:
 - [ ] Replace all `.fetch()` calls with appropriate 2.0 method
 - [ ] Replace `._update()` with `.update1()`
 - [ ] Replace `@` operator with `*` (review if semantic check fails)
-- [ ] Replace `dj.U() * expr` with `dj.U() & expr`
+- [ ] Replace `dj.U(...) * table` with just `table`
 - [ ] Replace positional inserts with key-value dicts
 - [ ] Replace `download_path=` parameter with `dj.config.override()`
 - [ ] Update imports if using deprecated modules
@@ -368,7 +368,7 @@ Removed API:
 Query operators:
 11. Replace (table & key)._update('attr', val) → table.update1({**key, 'attr': val})
 12. Replace table1 @ table2 → table1 * table2 (if semantic check fails, review join)
-13. Replace dj.U('x') * table → dj.U('x') & table
+13. Replace dj.U(...) * table → table (universal set * table is just table)
 
 Insert patterns:
 14. Replace positional inserts with key-value dicts:
