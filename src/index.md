@@ -1,8 +1,12 @@
 # DataJoint Documentation
 
-!!! info "Documentation for DataJoint 2.0+"
+!!! info "Documentation for DataJoint 2.0 (Pre-Release)"
 
-    Python code examples in this documentation use DataJoint 2.0 syntax. If you're using DataJoint pre-2.0, see the [Migration Guide](how-to/migrate-to-v20.md) or visit [legacy docs](https://datajoint.github.io/datajoint-python).
+    This documentation covers **DataJoint 2.0**, currently in pre-release.
+
+    - **Using stable 0.14.x?** Visit [legacy docs](https://datajoint.github.io/datajoint-python)
+    - **Want to test 2.0?** See [Installation Guide](how-to/installation.md)
+    - **Migrating a pipeline?** Follow the [Migration Guide](how-to/migrate-to-v20.md)
 
 ## About DataJoint
 
