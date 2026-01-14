@@ -207,9 +207,161 @@ git add requirements.txt
 git commit -m "chore: upgrade to datajoint 2.0"
 ```
 
-### Step 3: Configure DataJoint 2.0
+### Step 3: Update Schema Declarations
+
+**Critical early step:** Update all `dj.schema()` calls to use `_v2` suffix
+for parallel testing and validation.
+
+**Why do this first:**
+- Creates parallel schemas alongside production (e.g., `my_pipeline_v2`)
+- Allows testing 2.0 code without affecting production schemas
+- Enables side-by-side validation in Phase II
+- Production schemas remain untouched on `main` branch
+
+#### Find All Schema Declarations
+
+```bash
+# Find all schema() calls in your codebase
+grep -rn "dj.schema\|dj.Schema" --include="*.py" .
+
+# Example output:
+# pipeline/session.py:5:schema = dj.schema('my_pipeline')
+# pipeline/analysis.py:8:schema = dj.schema('my_pipeline')
+# pipeline/ephys.py:3:schema = dj.schema('ephys_pipeline')
+```
+
+#### Update Schema Names
+
+**For each schema declaration, add `_v2` suffix:**
+
+```python
+# BEFORE (production, on main branch)
+schema = dj.schema('my_pipeline')
+
+# AFTER (testing, on pre/v2.0 branch)
+schema = dj.schema('my_pipeline_v2')
+```
+
+**Multiple schemas example:**
+
+```python
+# BEFORE
+session_schema = dj.schema('sessions')
+analysis_schema = dj.schema('analysis')
+ephys_schema = dj.schema('ephys')
+
+# AFTER
+session_schema = dj.schema('sessions_v2')
+analysis_schema = dj.schema('analysis_v2')
+ephys_schema = dj.schema('ephys_v2')
+```
+
+#### AI Agent Prompt: Update Schema Declarations
+
+---
+
+**🤖 AI Agent Prompt: Phase I - Update Schema Declarations with _v2
+Suffix**
+
+```
+You are updating DataJoint schema declarations for 2.0 migration testing.
+
+TASK: Add _v2 suffix to all dj.schema() calls for parallel testing.
+
+CONTEXT:
+- Branch: pre/v2.0 (just created)
+- Production schemas on main branch remain unchanged
+- _v2 schemas will be empty until table definitions are converted
+- This enables side-by-side testing without affecting production
+
+STEPS:
+
+1. Find all schema declarations:
+   grep -rn "dj.schema\|dj.Schema" --include="*.py" .
+
+2. For EACH schema declaration, add _v2 suffix:
+   OLD: schema = dj.schema('my_pipeline')
+   NEW: schema = dj.schema('my_pipeline_v2')
+
+3. Preserve all other arguments:
+   OLD: schema = dj.schema('sessions', locals())
+   NEW: schema = dj.schema('sessions_v2', locals())
+
+   OLD: schema = dj.schema('analysis', create_schema=True)
+   NEW: schema = dj.schema('analysis_v2', create_schema=True)
+
+4. Update any string references to schema names:
+   OLD: conn.query("USE my_pipeline")
+   NEW: conn.query("USE my_pipeline_v2")
+
+   OLD: if schema_name == 'my_pipeline':
+   NEW: if schema_name == 'my_pipeline_v2':
+
+NAMING CONVENTION:
+
+- my_pipeline → my_pipeline_v2
+- sessions → sessions_v2
+- ephys_pipeline → ephys_pipeline_v2
+- lab.mouse → lab.mouse_v2
+
+VERIFICATION:
+
+After updating, verify:
+- All dj.schema() calls have _v2 suffix
+- No hard-coded schema names without _v2 suffix
+- No duplicate schema names (each should be unique)
+
+COMMIT:
+
+git add -A
+git commit -m "feat(phase-i): add _v2 suffix to all schema declarations
+
+- Update all dj.schema() calls to use _v2 suffix
+- Enables parallel testing without affecting production schemas
+- Production schemas on main branch remain unchanged
+
+Schemas updated:
+- my_pipeline → my_pipeline_v2
+- [list other schemas...]"
+```
+
+---
+
+#### Verify Schema Name Changes
+
+```python
+import datajoint as dj
+
+# Test connection (should work before any tables created)
+conn = dj.conn()
+print("✓ Connected to database")
+
+# At this point, _v2 schemas don't exist yet
+# They will be created in Step 5 when table definitions are applied
+```
+
+#### Commit Schema Declaration Changes
+
+```bash
+git add -A
+git commit -m "feat(phase-i): add _v2 suffix to all schema declarations
+
+- Update all dj.schema() calls to use _v2 suffix
+- Enables parallel testing without affecting production schemas
+- Next: configure stores and convert table definitions"
+```
+
+**Next steps:**
+- Step 4: Configure object stores (if applicable)
+- Step 5: Convert table definitions to 2.0 syntax
+- When table definitions are applied, `_v2` schemas will be created
+
+### Step 4: Configure DataJoint 2.0
 
 Create new configuration files for 2.0.
+
+**Note:** Schema declarations already updated in Step 3 with `_v2` suffix.
+Now configure database connection and stores.
 
 #### Background: Configuration Changes
 
@@ -262,9 +414,9 @@ conn = dj.conn()
 print(f"Connected to {conn.conn_info['host']}")
 ```
 
-### Step 4: Configure Test Object Stores (If Applicable)
+### Step 5: Configure Test Object Stores (If Applicable)
 
-**Skip this step if:** Your legacy pipeline uses only in-table storage (`longblob`, `mediumblob`, `blob`, `attach`). You can skip to Step 5.
+**Skip this step if:** Your legacy pipeline uses only in-table storage (`longblob`, `mediumblob`, `blob`, `attach`). You can skip to Step 6.
 
 **Configure test stores if:** Your legacy pipeline uses pre-2.0 in-store formats:
 
@@ -588,9 +740,11 @@ schema.drop()
 print("✓ Test cleanup complete")
 ```
 
-### Step 5: Convert Table Definitions
+### Step 6: Convert Table Definitions
 
 Update table definitions in topological order (tables before their dependents).
+
+**Note:** Schema declarations already updated to `_v2` suffix in Step 3.
 
 #### Background: Type Syntax Changes
 
@@ -673,19 +827,19 @@ CONTEXT:
 
 - We are on branch: pre/v2.0
 - Production (main branch) remains on pre-2.0
-- All schemas will use _v2 suffix (e.g., my_pipeline → my_pipeline_v2)
-- Schemas will be created empty for now
+- Schema declarations ALREADY updated with _v2 suffix (Step 3)
+- Now converting table definitions to match
+- Schemas will be created empty when definitions are applied
 
 SCOPE - PHASE I:
 
-1. Update schema declarations (add _v2 suffix)
-2. Convert ALL type syntax to 2.0 core types
-3. Convert ALL legacy codecs (in-table AND in-store)
+1. Convert ALL type syntax to 2.0 core types
+2. Convert ALL legacy codecs (in-table AND in-store)
    - In-table: longblob → <blob>, mediumblob → <blob>, attach → <attach>
    - In-store (legacy only): blob@store → <blob@store>, attach@store → <attach@store>, filepath@store → <filepath@store>
-4. Code will use TEST stores configured in datajoint.json
-5. Do NOT add new 2.0 codecs (<npy@>, <object@>) - these are for Phase IV adoption
-6. Production data migration happens in Phase III (code is complete after Phase I)
+3. Code will use TEST stores configured in datajoint.json
+4. Do NOT add new 2.0 codecs (<npy@>, <object@>) - these are for Phase IV adoption
+5. Production data migration happens in Phase III (code is complete after Phase I)
 
 TYPE CONVERSIONS:
 
@@ -958,7 +1112,7 @@ Codecs converted: Y (in-table: Z, in-store: W)"
 
 ---
 
-### Step 6: Convert Query and Insert Code
+### Step 7: Convert Query and Insert Code
 
 Update all DataJoint API calls to 2.0 patterns.
 
@@ -1182,20 +1336,20 @@ API conversions: X fetch, Y update, Z join"
 
 ---
 
-### Step 7: Update Populate Methods
+### Step 8: Update Populate Methods
 
-`make()` methods in Computed and Imported tables use the same API patterns covered in Steps 5-6.
+`make()` methods in Computed and Imported tables use the same API patterns covered in Steps 6-7.
 
 **Apply the following conversions to all `make()` methods:**
 
-1. **Fetch API conversions** (from Step 5)
+1. **Fetch API conversions** (from Step 7)
 
    - `fetch()` → `to_arrays()` or `to_dicts()`
    - `fetch(..., format="frame")` → `to_pandas()`
    - `fetch1('KEY')` → `keys()`
    - All other fetch patterns
 
-2. **Join conversions** (from Step 6)
+2. **Join conversions** (from Step 7)
 
    - `@` → `*` (enables semantic checks)
    - `a.join(b, left=True)` → `a.extend(b)`
@@ -1217,11 +1371,11 @@ API conversions: X fetch, Y update, Z join"
      })
      ```
 
-**Note:** Since these are the same conversions from Steps 5-6, you can apply them in a single pass. The only additional consideration is ensuring insert statements use dicts.
+**Note:** Since these are the same conversions from Step 7, you can apply them in a single pass. The only additional consideration is ensuring insert statements use dicts.
 
 ---
 
-### Step 8: Verify Phase I Complete
+### Step 9: Verify Phase I Complete
 
 #### Checklist
 
