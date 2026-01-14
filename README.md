@@ -154,8 +154,13 @@ dependencies needed to build documentation and execute tutorial notebooks.
 ### Start the Environment
 
 ```bash
-# Clone the repository
+# Clone the documentation repository
 git clone https://github.com/datajoint/datajoint-docs.git
+cd datajoint-docs
+
+# Clone datajoint-python pre-release branch (required for API docs)
+cd ..
+git clone -b pre/v2.0 https://github.com/datajoint/datajoint-python.git
 cd datajoint-docs
 
 # Start all services (MySQL, MinIO, docs server)
