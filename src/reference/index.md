@@ -10,6 +10,7 @@ Detailed specifications of DataJoint's behavior and semantics.
 - [Semantic Matching](specs/semantic-matching.md) — Attribute lineage and homologous matching
 - [Type System](specs/type-system.md) — Core types, codecs, and storage modes
 - [Codec API](specs/codec-api.md) — Creating custom attribute types
+- [External Storage](specs/external-storage.md) — Store configuration, path generation, and storage models
 - [AutoPopulate](specs/autopopulate.md) — Jobs 2.0 specification
 - [Fetch API](specs/fetch-api.md) — Data retrieval methods
 - [Job Metadata](specs/job-metadata.md) — Hidden job tracking columns
