@@ -9,7 +9,7 @@ Upgrade existing pipelines from legacy DataJoint (pre-2.0) to DataJoint 2.0.
 
 ### System Requirements
 
-| Component | Legacy (0.14.x) | DataJoint 2.0 |
+| Component | Legacy (pre-2.0) | DataJoint 2.0 |
 |-----------|-----------------|---------------|
 | **Python** | 3.8+ | **3.10+** |
 | **MySQL** | 5.7+ | **8.0+** |
@@ -48,11 +48,11 @@ DataJoint 2.0 introduces a unified type system with three tiers:
 
 ### Codecs
 
-DataJoint 2.0 makes serialization **explicit** with codecs. In 0.14.x, `longblob` automatically serialized Python objects; in 2.0, you explicitly choose `<blob>`.
+DataJoint 2.0 makes serialization **explicit** with codecs. In pre-2.0, `longblob` automatically serialized Python objects; in 2.0, you explicitly choose `<blob>`.
 
 #### Migration: Legacy → 2.0
 
-| 0.14.x (Implicit) | 2.0 (Explicit) | Storage | Migration |
+| pre-2.0 (Implicit) | 2.0 (Explicit) | Storage | Migration |
 |-------------------|----------------|---------|-----------|
 | `longblob` | `<blob>` | In-table | Phase I code, Phase III data |
 | `mediumblob` | `<blob>` | In-table | Phase I code, Phase III data |
@@ -82,7 +82,7 @@ These codecs are NEW—there's no legacy equivalent to migrate:
 
 DataJoint 2.0 replaces `external.*` with unified `stores.*` configuration:
 
-**0.14.x (legacy):**
+**pre-2.0 (legacy):**
 ```json
 {
   "external": {
@@ -109,7 +109,7 @@ DataJoint 2.0 replaces `external.*` with unified `stores.*` configuration:
 
 ### Query API Changes
 
-| 0.14.x | 2.0 | Phase |
+| pre-2.0 | 2.0 | Phase |
 |--------|-----|-------|
 | `table.fetch()` | `table.to_arrays()` or `table.to_dicts()` | I |
 | `table.fetch1()` | `table.fetch1()` (unchanged) | — |
@@ -133,7 +133,7 @@ DataJoint 2.0 replaces `external.*` with unified `stores.*` configuration:
 **Key principles:**
 
 - Phase I implements ALL code changes including in-store codecs (using test stores)
-- Production runs on 0.14.x undisturbed through Phase II
+- Production runs on pre-2.0 undisturbed through Phase II
 - Phase III is data migration only—the code is already complete
 
 **Timeline:**
@@ -154,22 +154,22 @@ DataJoint 2.0 replaces `external.*` with unified `stores.*` configuration:
 - All Python code uses 2.0 API patterns (fetch, types, codecs)
 - All codecs implemented (in-table `<blob>`, `<attach>` AND in-store `<blob@>`, legacy only)
 - Code points to `schema_v2` databases (empty) and test object stores
-- Production continues on main branch with 0.14.x undisturbed
+- Production continues on main branch with pre-2.0 undisturbed
 
 **What's NOT migrated yet:** Production data and production stores (Phase III)
 
 ### Step 1: Pin Legacy DataJoint on Main Branch
 
-Ensure production code stays on 0.14.x:
+Ensure production code stays on pre-2.0:
 
 ```bash
 git checkout main
 
 # Pin legacy version in requirements
-echo "datajoint==0.14.6" > requirements.txt
+echo "datajoint<2.0.0" > requirements.txt
 
 git add requirements.txt
-git commit -m "chore: pin datajoint 0.14.6 for production"
+git commit -m "chore: pin legacy datajoint for production"
 git push origin main
 ```
 
@@ -251,7 +251,7 @@ print(f"Connected to {conn.conn_info['host']}")
 
 **Skip this step if:** Your legacy pipeline uses only in-table storage (`longblob`, `mediumblob`, `blob`, `attach`). You can skip to Step 5.
 
-**Configure test stores if:** Your legacy pipeline uses 0.14.x in-store formats:
+**Configure test stores if:** Your legacy pipeline uses pre-2.0 in-store formats:
 
 - `blob@store` (hash-addressed blobs in object store)
 - `attach@store` (hash-addressed attachments in object store)
@@ -259,9 +259,9 @@ print(f"Connected to {conn.conn_info['host']}")
 
 **Note:** `<npy@>` and `<object@>` are NEW in 2.0 (schema-addressed storage). They have no legacy equivalent and don't need migration. Adopt them in Phase IV for new features.
 
-#### Background: 0.14.x Implicit vs 2.0 Explicit Codecs
+#### Background: pre-2.0 Implicit vs 2.0 Explicit Codecs
 
-**0.14.x implicit serialization:**
+**pre-2.0 implicit serialization:**
 
 - `longblob` → automatic Python object serialization (pickle)
 - `mediumblob` → automatic Python object serialization (pickle)
@@ -348,7 +348,7 @@ Update table definitions in topological order (tables before their dependents).
 
 Convert ALL types and codecs in Phase I:
 
-| 0.14.x | 2.0 | Category |
+| pre-2.0 | 2.0 | Category |
 |--------|-----|----------|
 | `int unsigned` | `uint32` | Core type |
 | `int` | `int32` | Core type |
@@ -376,13 +376,13 @@ Use this prompt with your AI coding assistant:
 **🤖 AI Agent Prompt: Phase I - Table Definition Conversion**
 
 ```
-You are converting DataJoint 0.14.x table definitions to 2.0 syntax.
+You are converting DataJoint pre-2.0 table definitions to 2.0 syntax.
 
 TASK: Update all table definitions in this repository to DataJoint 2.0 type syntax.
 
 CONTEXT:
 - We are on branch: pre/v2.0
-- Production (main branch) remains on 0.14.x
+- Production (main branch) remains on pre-2.0
 - All schemas will use _v2 suffix (e.g., my_pipeline → my_pipeline_v2)
 - Schemas will be created empty for now
 
@@ -460,7 +460,7 @@ VERIFICATION:
 
 EXAMPLE CONVERSION:
 
-# 0.14.x
+# pre-2.0
 schema = dj.schema('neuroscience_pipeline')
 
 @schema
@@ -469,9 +469,9 @@ class Recording(dj.Manual):
     recording_id : int unsigned
     ---
     sampling_rate : float
-    signal : blob@raw  # 0.14.x in-store syntax
-    waveforms : blob@raw  # 0.14.x in-store syntax
-    metadata : longblob  # 0.14.x in-table
+    signal : blob@raw  # pre-2.0 in-store syntax
+    waveforms : blob@raw  # pre-2.0 in-store syntax
+    metadata : longblob  # pre-2.0 in-table
     """
 
 # 2.0 (Phase I with test stores)
@@ -547,7 +547,7 @@ Update all DataJoint API calls to 2.0 patterns.
 **🤖 AI Agent Prompt: Phase I - Query and Insert Code Conversion**
 
 ```
-You are converting DataJoint 0.14.x query and insert code to 2.0 API.
+You are converting DataJoint pre-2.0 query and insert code to 2.0 API.
 
 TASK: Update all query, fetch, and insert code to use DataJoint 2.0 API patterns.
 
@@ -832,7 +832,7 @@ git push origin pre/v2.0
 **You now have:**
 - 2.0-compatible code on `pre/v2.0` branch
 - Empty `_v2` schemas ready for testing
-- Production still running on `main` branch with 0.14.x
+- Production still running on `main` branch with pre-2.0
 
 **Next:** Phase II - Test with sample data
 
@@ -938,7 +938,7 @@ import datajoint as dj
 import numpy as np
 
 # Import both legacy and v2 modules
-import your_pipeline as legacy  # 0.14.x on main branch (checkout to test)
+import your_pipeline as legacy  # pre-2.0 on main branch (checkout to test)
 import your_pipeline_v2 as v2  # 2.0 on pre/v2.0 branch
 
 def compare_results():
@@ -954,7 +954,7 @@ def compare_results():
     v2.Mouse.insert(test_data, skip_duplicates=True)
 
     # Compare query results
-    legacy_mice = legacy.Mouse.fetch(as_dict=True)  # 0.14.x syntax
+    legacy_mice = legacy.Mouse.fetch(as_dict=True)  # pre-2.0 syntax
     v2_mice = v2.Mouse.to_dicts()  # 2.0 syntax
 
     assert len(legacy_mice) == len(v2_mice), "Row count mismatch!"
@@ -1242,7 +1242,7 @@ Update `datajoint.json` to point to production stores (not test stores):
 
 **For in-store data migration:** You can either:
 
-- **Keep files in place** (recommended): Point to existing 0.14.x store locations
+- **Keep files in place** (recommended): Point to existing pre-2.0 store locations
 - **Copy to new location**: Configure new production stores and copy files
 
 **Commit this change:**
@@ -1303,7 +1303,7 @@ result = migrate_external_pointers_v2(
     schema='my_pipeline_v2',
     table='recording',
     attribute='signal',
-    source_store='raw',  # Legacy 0.14.x store name
+    source_store='raw',  # Legacy pre-2.0 store name
     dest_store='raw',  # 2.0 store name (from datajoint.json)
     copy_files=False,  # Keep files in place (recommended)
 )
@@ -1360,7 +1360,7 @@ else:
 - [ ] Validation passed
 - [ ] Team notified
 - [ ] Maintenance window scheduled
-- [ ] All 0.14.x clients stopped
+- [ ] All pre-2.0 clients stopped
 
 **Execute cutover:**
 
@@ -1437,7 +1437,7 @@ print(f"Migrated {result['steps_completed']} steps")
 
 ### Option C: Gradual Migration with Legacy Compatibility
 
-**Best for:** Pipelines that must support both 0.14.x and 2.0 clients simultaneously
+**Best for:** Pipelines that must support both pre-2.0 and 2.0 clients simultaneously
 
 **Strategy:** Create dual columns for in-store codecs
 
@@ -1477,13 +1477,13 @@ class Recording(dj.Manual):
     definition = """
     recording_id : uint32
     ---
-    signal : blob@raw  # Legacy (0.14.x clients)
+    signal : blob@raw  # Legacy (pre-2.0 clients)
     signal_v2 : <blob@raw>  # 2.0 clients
     """
 ```
 
 **Both APIs work:**
-- 0.14.x clients use `signal`
+- pre-2.0 clients use `signal`
 - 2.0 clients use `signal_v2`
 
 #### 4. Final Cutover
