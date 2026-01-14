@@ -1647,7 +1647,7 @@ print(f"Shape: {ref.shape}, dtype: {ref.dtype}")  # No download!
 signal = ref.load()  # Download when ready
 ```
 
-**Learn more:** [Object Storage Tutorial](../tutorials/basics/06-object-storage.md) · [NPY Codec Spec](../reference/specs/npy-codec.md)
+**Learn more:** [Object Storage Tutorial](../tutorials/basics/06-object-storage.ipynb) · [NPY Codec Spec](../reference/specs/npy-codec.md)
 
 ### 2. Partition Patterns
 
@@ -1810,7 +1810,7 @@ print(get_store_spec('main'))
 - [Fetch API Reference](../reference/specs/fetch-api.md)
 
 **Tutorials:**
-- [Object Storage](../tutorials/basics/06-object-storage.md)
+- [Object Storage](../tutorials/basics/06-object-storage.ipynb)
 - [Custom Codecs](../tutorials/advanced/custom-codecs.ipynb)
 - [Distributed Computing](../tutorials/advanced/distributed.ipynb)
 
