@@ -8,10 +8,14 @@ An **Object-Augmented Schema** extends relational tables with object storage as 
 
 OAS supports two addressing schemes:
 
-| Addressing | Location | Path Derived From | Use Case |
-|------------|----------|-------------------|----------|
-| **Hash-addressed** | Object store | Content hash (MD5) | Blobs, attachments (with deduplication) |
-| **Schema-addressed** | Object store | Schema structure | NumPy arrays, Zarr, HDF5 (browsable paths) |
+| Addressing | Location | Path Derived From | Object Type | Use Case |
+|------------|----------|-------------------|-------------|----------|
+| **Hash-addressed** | Object store | Content hash (MD5) | Individual/atomic | Single blobs, single files, attachments (with deduplication) |
+| **Schema-addressed** | Object store | Schema structure | Complex/multi-part | Zarr arrays, HDF5 datasets, multi-file objects (browsable paths) |
+
+**Key distinction:**
+- **Hash-addressed** (`<blob@>`, `<attach@>`) stores individual, atomic objects - one object per field
+- **Schema-addressed** (`<npy@>`, `<object@>`) can store complex, multi-part objects like Zarr (directory structures with multiple files)
 
 Data can also be stored **in-table** directly in the database column (no `@` modifier).
 
