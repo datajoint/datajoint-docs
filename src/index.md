@@ -1,6 +1,6 @@
 # DataJoint Documentation
 
-> **DataJoint 2.0 is a major breaking release.** Existing pipelines require migration.
+> **DataJoint 2.0 is a major release.** Existing pipelines require migration.
 > See the [Migration Guide](how-to/migrate-to-v20.md) for upgrade instructions.
 > For pre-2.0 documentation, visit [datajoint.github.io/datajoint-python](https://datajoint.github.io/datajoint-python).
 
