@@ -23027,6 +23027,59 @@ authoritative references for:
 - Implementing compatible tools and extensions
 - Debugging complex scenarios
 
+## How to Use These Specifications
+
+**If you're new to DataJoint:**
+Start with the [tutorials](../../tutorials/index.md) and [how-to guides](../../how-to/index.md) before diving into specifications. Specs are technical references, not learning materials.
+
+**If you're implementing features:**
+Use specs as authoritative sources for behavior. Start with dependencies (see below) and work up to your target specification.
+
+**If you're debugging:**
+Specs clarify exact behavior when documentation or examples are ambiguous.
+
+## Reading Order
+
+### Foundation (Start Here)
+
+1. [Table Declaration](table-declaration.md) — How to define tables
+2. [Primary Keys](primary-keys.md) — Key propagation rules
+3. [Type System](type-system.md) — Three-layer type architecture
+
+**Next:** Choose based on your needs:
+- **Working with data?** → Data Operations
+- **Building queries?** → Query Algebra
+- **Using large data?** → Object Storage
+
+### Query Algebra
+
+**Prerequisites:** Table Declaration, Primary Keys
+
+1. [Query Operators](query-algebra.md) — Restrict, proj, join, aggr, union
+2. [Semantic Matching](semantic-matching.md) — Attribute lineage
+3. [Fetch API](fetch-api.md) — Data retrieval
+
+### Data Operations
+
+**Prerequisites:** Table Declaration
+
+1. [Data Manipulation](data-manipulation.md) — Insert, update, delete
+2. [AutoPopulate](autopopulate.md) — Jobs 2.0 system
+3. [Job Metadata](job-metadata.md) — Hidden job tracking columns
+
+### Object Storage
+
+**Prerequisites:** Type System
+
+1. [Object Store Configuration](object-store-configuration.md) — Store setup
+2. [Codec API](codec-api.md) — Custom type implementation
+3. [`<npy>` Codec](npy-codec.md) — NumPy array storage
+
+### Advanced Topics
+
+1. [Master-Part Relationships](master-part.md) — Compositional modeling
+2. [Virtual Schemas](virtual-schemas.md) — Schema introspection without source
+
 ## Document Structure
 
 Each specification follows a consistent structure:
@@ -23039,46 +23092,64 @@ Each specification follows a consistent structure:
 6. **Examples** — Concrete code samples
 7. **Best Practices** — Recommendations
 
-## Specifications
+## Specifications by Topic
 
 ### Schema Definition
 
-| Specification | Description |
-|---------------|-------------|
-| [Table Declaration](table-declaration.md) | Table definition syntax, tiers, foreign keys, and indexes |
-| [Master-Part Relationships](master-part.md) | Compositional data modeling, integrity, and cascading operations |
-| [Virtual Schemas](virtual-schemas.md) | Accessing schemas without Python source, introspection API |
+| Specification | Prerequisites | Related How-To | Related Explanation |
+|---------------|---------------|----------------|---------------------|
+| [Table Declaration](table-declaration.md) | None | [Define Tables](../../how-to/define-tables.md) | [Relational Workflow Model](../../explanation/relational-workflow-model.md) |
+| [Master-Part Relationships](master-part.md) | Table Declaration | [Model Relationships](../../how-to/model-relationships.ipynb) | [Data Pipelines](../../explanation/data-pipelines.md) |
+| [Virtual Schemas](virtual-schemas.md) | Table Declaration | — | — |
+
+**Key concepts:** Table tiers (Manual, Lookup, Imported, Computed, Part), foreign keys, dependency graphs, compositional modeling
+
+---
 
 ### Query Algebra
 
-| Specification | Description |
-|---------------|-------------|
-| [Query Operators](query-algebra.md) | Operators: restrict, proj, join, aggr, extend, union, U() |
-| [Semantic Matching](semantic-matching.md) | Attribute lineage and join compatibility |
-| [Primary Keys](primary-keys.md) | How primary keys propagate through query operators |
-| [Fetch API](fetch-api.md) | Data retrieval methods and formats |
+| Specification | Prerequisites | Related How-To | Related Explanation |
+|---------------|---------------|----------------|---------------------|
+| [Query Operators](query-algebra.md) | Table Declaration, Primary Keys | [Query Data](../../how-to/query-data.md) | [Query Algebra](../../explanation/query-algebra.md) |
+| [Semantic Matching](semantic-matching.md) | Query Operators | [Model Relationships](../../how-to/model-relationships.ipynb) | [Query Algebra](../../explanation/query-algebra.md) |
+| [Primary Keys](primary-keys.md) | Table Declaration | [Design Primary Keys](../../how-to/design-primary-keys.md) | [Entity Integrity](../../explanation/entity-integrity.md) |
+| [Fetch API](fetch-api.md) | Query Operators | [Fetch Results](../../how-to/fetch-results.md) | — |
+
+**Key concepts:** Restriction (`&`, `-`), projection (`.proj()`), join (`*`), aggregation (`.aggr()`), union, universal set (`U()`), attribute lineage
+
+---
 
 ### Type System
 
-| Specification | Description |
-|---------------|-------------|
-| [Type System](type-system.md) | Three-layer type architecture: native, core, and codec types |
-| [Codec API](codec-api.md) | Custom type implementation with encode/decode semantics |
-| [`<npy>` Codec](npy-codec.md) | Store numpy arrays as portable `.npy` files |
+| Specification | Prerequisites | Related How-To | Related Explanation |
+|---------------|---------------|----------------|---------------------|
+| [Type System](type-system.md) | None | [Choose a Storage Type](../../how-to/choose-storage-type.md) | [Type System](../../explanation/type-system.md) |
+| [Codec API](codec-api.md) | Type System | [Create Custom Codec](../../how-to/create-custom-codec.md) | [Custom Codecs](../../explanation/custom-codecs.md) |
+| [`<npy>` Codec](npy-codec.md) | Type System | [Use Object Storage](../../how-to/use-object-storage.md) | — |
 
-### Object Store Configuration
+**Key concepts:** Native types (MySQL), core types (portable), codec types (Python objects), in-table vs object storage, addressing schemes
 
-| Specification | Description |
-|---------------|-------------|
-| [Object Store Configuration](object-store-configuration.md) | Store configuration, path generation, and storage models: hash-addressed (integrated), schema-addressed (integrated), and filepath (reference) |
+---
+
+### Object Storage
+
+| Specification | Prerequisites | Related How-To | Related Explanation |
+|---------------|---------------|----------------|---------------------|
+| [Object Store Configuration](object-store-configuration.md) | Type System | [Configure Object Storage](../../how-to/configure-storage.md) | [Data Pipelines (OAS)](../../explanation/data-pipelines.md#object-augmented-schemas) |
+
+**Key concepts:** Hash-addressed storage (deduplication), schema-addressed storage (browsable paths), filepath storage (user-managed), store configuration, path generation
+
+---
 
 ### Data Operations
 
-| Specification | Description |
-|---------------|-------------|
-| [Data Manipulation](data-manipulation.md) | Insert, update1, delete operations and workflow normalization |
-| [AutoPopulate](autopopulate.md) | Jobs 2.0 system for automated computation |
-| [Job Metadata](job-metadata.md) | Hidden columns for job tracking |
+| Specification | Prerequisites | Related How-To | Related Explanation |
+|---------------|---------------|----------------|---------------------|
+| [Data Manipulation](data-manipulation.md) | Table Declaration | [Insert Data](../../how-to/insert-data.md) | [Normalization](../../explanation/normalization.md) |
+| [AutoPopulate](autopopulate.md) | Table Declaration, Data Manipulation | [Run Computations](../../how-to/run-computations.md), [Distributed Computing](../../how-to/distributed-computing.md) | [Computation Model](../../explanation/computation-model.md) |
+| [Job Metadata](job-metadata.md) | AutoPopulate | [Handle Errors](../../how-to/handle-errors.md) | [Computation Model](../../explanation/computation-model.md) |
+
+**Key concepts:** Insert patterns, transactional integrity, workflow normalization, Jobs 2.0, job coordination, populate(), make() method, job states
 
 
 
@@ -28710,71 +28781,6 @@ Copyright 2024 DataJoint Inc. and contributors.
 
 
 ---
-## File: about/platform.md
-
-# DataJoint Platform
-
-The **DataJoint Platform** extends the open-source DataJoint library with managed infrastructure and tools for team-based data operations.
-
-## Architecture
-
-The platform builds on the open-source core—relational database, code repository, and object storage—with functional extensions organized into four categories:
-
-### Interactions
-
-Tools for different users and tasks:
-
-- **Pipeline Navigator** — Visual exploration of schema diagrams, table contents, and data dependencies
-- **Electronic Lab Notebook** — Integration with laboratory documentation for manual data entry and experimental notes
-- **Development Environment** — Support for Jupyter notebooks, VS Code, and other scientific programming tools
-- **Visualization Dashboard** — Interactive exploration of results and pipeline status
-
-### Infrastructure
-
-Managed computing resources:
-
-- **Security** — Access control integrated with institutional identity management
-- **Deployment** — Cloud platforms (AWS, GCP, Azure) and hybrid configurations
-- **Compute Resources** — Integration with HPC clusters, GPU resources, and cloud compute
-
-### Automation
-
-Intelligent workflow execution:
-
-- **Automated Population** — The `populate()` mechanism identifies and executes missing computations
-- **Job Orchestration** — Integration with workflow schedulers (Airflow, SLURM, Kubernetes)
-- **AI Pipeline Agent** — Emerging capabilities for AI-assisted pipeline development and operation
-
-### Orchestration
-
-Coordination across the data lifecycle:
-
-- **Data Ingest** — Tools for importing data from instruments and external systems
-- **Collaboration** — Shared database access with coordinated permissions
-- **Export & Integration** — Capabilities for delivering results to downstream systems
-
-## Open-Source vs Platform
-
-| Capability | Open-Source | Platform |
-|------------|-------------|----------|
-| Core library | ✅ | ✅ |
-| Schema definition | ✅ | ✅ |
-| Query algebra | ✅ | ✅ |
-| AutoPopulate | ✅ | ✅ |
-| Object storage | ✅ | ✅ Managed |
-| Database hosting | Self-managed | ✅ Managed |
-| User management | Self-managed | ✅ Managed |
-| Visual tools | — | ✅ |
-| Job orchestration | Self-managed | ✅ Managed |
-| Support | Community | ✅ Enterprise |
-
-## Learn More
-
-- [Request a Platform account](https://www.datajoint.com/sign-up)
-- [DataJoint website](https://www.datajoint.com)
-
-
----
 ## File: about/publications.md
 
 # Publications
@@ -28912,8 +28918,6 @@ If you're using legacy DataJoint (version 0.14.x or earlier), please visit the [
 ### Global Indicators
 
 **Site-wide banner:** Every page displays a banner indicating you're viewing documentation for DataJoint 2.0+, with a link to the migration guide for legacy users.
-
-**Footer:** The footer shows which version of DataJoint this documentation covers.
 
 ### Feature-Level Indicators
 
