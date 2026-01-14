@@ -6,6 +6,8 @@ This page explains how version information is indicated throughout the DataJoint
 
 **This documentation covers DataJoint 2.0 and later.** All code examples and tutorials use DataJoint 2.0+ syntax and APIs.
 
+**DataJoint 2.0 is the baseline.** Features and APIs introduced in 2.0 are documented without version markers, as they are the standard for this documentation.
+
 If you're using legacy DataJoint (version 0.14.x or earlier), please visit the [legacy documentation](https://datajoint.github.io/datajoint-python) or follow the [Migration Guide](../how-to/migrate-to-v20.md) to upgrade.
 
 ## Version Indicators
@@ -18,53 +20,58 @@ If you're using legacy DataJoint (version 0.14.x or earlier), please visit the [
 
 ### Feature-Level Indicators
 
-For specific features, you'll see version admonitions:
+Version admonitions are used for features introduced **after 2.0** (i.e., version 2.1 and later):
 
 #### New Features
 
-!!! version-added "New in 2.0"
+!!! version-added "New in 2.1"
 
-    This indicates a feature that was introduced in DataJoint 2.0.
+    This indicates a feature that was introduced after the 2.0 baseline.
 
-**Example from documentation:**
+**Example usage:**
 
-!!! version-added "New in 2.0"
+!!! version-added "New in 2.1"
 
-    Semantic matching validates joins based on lineage tracking. This feature was introduced in DataJoint 2.0.
+    The `dj.Top` operator with ordering support was introduced in DataJoint 2.1.
+
+**Note:** Features present in DataJoint 2.0 (the baseline) are not marked with version indicators.
 
 #### Changed Behavior
 
-!!! version-changed "Changed in 2.0"
+!!! version-changed "Changed in 2.1"
 
-    This indicates behavior that changed from previous versions.
+    This indicates behavior that changed in a post-2.0 release.
 
-**Example from documentation:**
+**Example usage:**
 
-!!! version-changed "Changed in 2.0"
+!!! version-changed "Changed in 2.1"
 
-    The fetch API was redesigned in 2.0. Use `to_dicts()` or `to_arrays()` instead of `fetch()`.
+    The `populate()` method now supports priority-based scheduling by default.
 
-    **Legacy (pre-2.0):** `data = table.fetch()`
-    **Current (2.0+):** `data = table.to_dicts()`
+    Use `priority=50` to control execution order when using `reserve_jobs=True`.
 
 #### Deprecated Features
 
-!!! version-deprecated "Deprecated in 2.0, removed in 3.0"
+!!! version-deprecated "Deprecated in 2.1, removed in 3.0"
 
     This indicates features that are deprecated and will be removed in future versions.
 
-**Example from documentation:**
+**Example usage:**
 
-!!! version-deprecated "Deprecated in 2.0, removed in 3.0"
+!!! version-deprecated "Deprecated in 2.1, removed in 3.0"
 
-    The `external` storage type is deprecated. Use unified stores with `<blob@store>` syntax instead.
+    The `allow_direct_insert` parameter is deprecated. Use `dj.config['safemode']` instead.
+
+**Note:** Features deprecated at the 2.0 baseline (coming from pre-2.0) are documented in the [Migration Guide](../how-to/migrate-to-v20.md) rather than with admonitions, since this documentation assumes 2.0 as the baseline.
 
 ### Inline Version Badges
 
-In API reference documentation, you may see inline version badges:
+For features introduced **after 2.0**, inline version badges may appear in API reference:
 
-- `to_dicts()` <span class="version-badge">v2.0+</span> - Retrieve as list of dicts
-- `fetch()` <span class="version-badge deprecated">deprecated</span> - Legacy fetch API
+- `dj.Top()` <span class="version-badge">v2.1+</span> - Top N restriction with ordering
+- `some_method()` <span class="version-badge deprecated">deprecated</span> - Legacy method
+
+**Note:** Methods and features present in DataJoint 2.0 (the baseline) do not have version badges.
 
 ## Checking Your Version
 
