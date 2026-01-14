@@ -280,9 +280,9 @@ This unified approach enables:
 - **Seamless switching** between local and cloud storage
 - **Integration with fsspec** for streaming access
 
-## Customizing Storage Prefixes
+## Customizing Storage Sections
 
-By default, DataJoint uses `_hash/` and `_schema/` prefixes for managed storage. You can customize these prefixes to map DataJoint to existing storage layouts:
+Each store is divided into sections for different storage types. By default, DataJoint uses `_hash/` for hash-addressed storage and `_schema/` for schema-addressed storage. You can customize the path prefix for each section using the `*_prefix` configuration parameters to map DataJoint to existing storage layouts:
 
 ```json
 {
@@ -298,11 +298,11 @@ By default, DataJoint uses `_hash/` and `_schema/` prefixes for managed storage.
 }
 ```
 
-**Prefix requirements:**
+**Requirements:**
 
-- Prefixes must be mutually exclusive (no nesting)
-- `hash_prefix` and `schema_prefix` are reserved for DataJoint
-- `filepath_prefix` is optional (null = unrestricted)
+- Sections must be mutually exclusive (path prefixes cannot nest)
+- The `hash_prefix` and `schema_prefix` sections are reserved for DataJoint-managed storage
+- The `filepath_prefix` is optional (`null` = unrestricted, or set a required prefix)
 
 **Example with hierarchical layout:**
 
@@ -314,15 +314,15 @@ By default, DataJoint uses `_hash/` and `_schema/` prefixes for managed storage.
       "endpoint": "s3.amazonaws.com",
       "bucket": "neuroscience-data",
       "location": "lab-project-2024",
-      "hash_prefix": "managed/blobs",
-      "schema_prefix": "managed/arrays",
-      "filepath_prefix": "imported"
+      "hash_prefix": "managed/blobs",      // Path prefix for hash section
+      "schema_prefix": "managed/arrays",    // Path prefix for schema section
+      "filepath_prefix": "imported"         // Path prefix for filepath section
     }
   }
 }
 ```
 
-Paths become:
+Storage section paths become:
 
 - Hash: `s3://neuroscience-data/lab-project-2024/managed/blobs/{schema}/{hash}`
 - Schema: `s3://neuroscience-data/lab-project-2024/managed/arrays/{schema}/{table}/{key}/`
@@ -330,10 +330,10 @@ Paths become:
 
 ## Reserved Sections and Filepath Storage
 
-DataJoint reserves sections within each store for managed storage based on the configured prefixes:
+DataJoint reserves sections within each store for managed storage. These sections are defined by prefix configuration parameters:
 
-- **`hash_prefix`** (default: `_hash/`) — Hash-addressed storage for `<blob@>` and `<attach@>` with content deduplication
-- **`schema_prefix`** (default: `_schema/`) — Schema-addressed storage for `<object@>` and `<npy@>` with key-based paths
+- **Hash-addressed section** (configured via `hash_prefix`, default: `_hash/`) — Content-addressed storage for `<blob@>` and `<attach@>` with deduplication
+- **Schema-addressed section** (configured via `schema_prefix`, default: `_schema/`) — Key-based storage for `<object@>` and `<npy@>` with streaming access
 
 ### User-Managed Filepath Storage
 

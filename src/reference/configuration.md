@@ -50,20 +50,20 @@ DataJoint uses two default settings to reflect the architectural distinction bet
 |---------|----------|-------------|
 | `stores.<name>.protocol` | Yes | Storage protocol: `file`, `s3`, `gcs`, `azure` |
 | `stores.<name>.location` | Yes | Base path or prefix (includes project context) |
-| `stores.<name>.hash_prefix` | No | Prefix for hash-addressed storage (default: `"_hash"`) |
-| `stores.<name>.schema_prefix` | No | Prefix for schema-addressed storage (default: `"_schema"`) |
-| `stores.<name>.filepath_prefix` | No | Required prefix for filepath storage, or `null` for unrestricted (default: `null`) |
+| `stores.<name>.hash_prefix` | No | Path prefix for hash-addressed section (default: `"_hash"`) |
+| `stores.<name>.schema_prefix` | No | Path prefix for schema-addressed section (default: `"_schema"`) |
+| `stores.<name>.filepath_prefix` | No | Required path prefix for filepath section, or `null` for unrestricted (default: `null`) |
 | `stores.<name>.subfolding` | No | Directory nesting for hash-addressed storage, e.g., `[2, 2]` (default: no subfolding) |
 | `stores.<name>.partition_pattern` | No | Path partitioning for schema-addressed storage, e.g., `"subject_id/session_date"` (default: no partitioning) |
 | `stores.<name>.token_length` | No | Random token length for schema-addressed filenames (default: `8`) |
 
-**Prefix configuration:**
+**Storage sections:**
 
-The three prefix settings control where each storage type places data within the store:
+Each store is divided into sections defined by prefix configuration. The `*_prefix` parameters set the path prefix for each storage section:
 
-- **`hash_prefix`**: Section for hash-addressed storage (`<blob@>`, `<attach@>`)
-- **`schema_prefix`**: Section for schema-addressed storage (`<object@>`, `<npy@>`)
-- **`filepath_prefix`**: Optional restriction for filepath storage (`<filepath@>`)
+- **`hash_prefix`**: Defines the hash-addressed section for `<blob@>` and `<attach@>` (default: `"_hash"`)
+- **`schema_prefix`**: Defines the schema-addressed section for `<object@>` and `<npy@>` (default: `"_schema"`)
+- **`filepath_prefix`**: Optionally restricts the filepath section for `<filepath@>` (default: `null` = unrestricted)
 
 Prefixes must be mutually exclusive (no prefix can be a parent/child of another). This allows mapping DataJoint to existing storage layouts:
 
@@ -73,9 +73,9 @@ Prefixes must be mutually exclusive (no prefix can be a parent/child of another)
     "legacy": {
       "protocol": "file",
       "location": "/data/existing_storage",
-      "hash_prefix": "content_addressed",      // Instead of _hash
-      "schema_prefix": "structured_data",       // Instead of _schema
-      "filepath_prefix": "raw_files"            // Restrict filepaths
+      "hash_prefix": "content_addressed",      // Path prefix for hash section
+      "schema_prefix": "structured_data",       // Path prefix for schema section
+      "filepath_prefix": "raw_files"            // Path prefix for filepath section
     }
   }
 }

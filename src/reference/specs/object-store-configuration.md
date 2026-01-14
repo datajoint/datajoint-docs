@@ -112,13 +112,13 @@ A fully configured store specifying all sections:
 
 ### Section Prefixes
 
-Each store is divided into sections controlled by prefix configuration:
+Each store is divided into sections controlled by prefix configuration. The `*_prefix` parameters define the path prefix for each storage section:
 
-| Prefix | Default | Controls | Used By |
-|--------|---------|----------|---------|
-| `hash_prefix` | `"_hash"` | Hash-addressed storage | `<blob@>`, `<attach@>` |
-| `schema_prefix` | `"_schema"` | Schema-addressed storage | `<object@>`, `<npy@>` |
-| `filepath_prefix` | `null` | Optional filepath restriction | `<filepath@>` |
+| Configuration Parameter | Default | Storage Section | Used By |
+|------------------------|---------|-----------------|---------|
+| `hash_prefix` | `"_hash"` | Hash-addressed section | `<blob@>`, `<attach@>` |
+| `schema_prefix` | `"_schema"` | Schema-addressed section | `<object@>`, `<npy@>` |
+| `filepath_prefix` | `null` | Filepath section (optional) | `<filepath@>` |
 
 **Validation rules:**
 1. All prefixes must be mutually exclusive (no nesting)
