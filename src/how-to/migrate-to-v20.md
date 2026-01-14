@@ -50,15 +50,17 @@ DataJoint 2.0 introduces a unified type system with three tiers:
 
 Codecs handle serialization for non-native data types:
 
-| Codec | Description | Store | Migration Phase |
-|-------|-------------|-------|----------------|
-| `<blob>` | Python object serialization | In-table | I |
-| `<attach>` | Inline file attachments | In-table | I |
-| `<blob@store>` | Large blobs, hash-addressed | External | III |
-| `<attach@store>` | File attachments, hash-addressed | External | III |
-| `<filepath@store>` | Managed file paths | External | III |
-| `<object@store>` | Object storage (zarr, HDF5, custom) | External | **New in 2.0** |
-| `<npy@store>` | NumPy arrays with lazy loading | External | **New in 2.0** |
+| Codec | Description | Store | Code Migration | Data Migration |
+|-------|-------------|-------|----------------|----------------|
+| `<blob>` | Python object serialization | In-table | Phase I | Phase III |
+| `<attach>` | Inline file attachments | In-table | Phase I | Phase III |
+| `<blob@store>` | Large blobs, hash-addressed | External | Phase I | Phase III |
+| `<attach@store>` | File attachments, hash-addressed | External | Phase I | Phase III |
+| `<filepath@store>` | Managed file paths | External | Phase I | Phase III |
+| `<object@store>` | Object storage (zarr, HDF5, custom) | External | Phase I | Phase III |
+| `<npy@store>` | NumPy arrays with lazy loading | External | Phase I | Phase III |
+
+**Key principle:** All codec conversions (including external storage) are implemented in Phase I using test stores. Production data migration happens in Phase III.
 
 **Learn more:** [Codec API Reference](../reference/specs/codec-api.md) · [Custom Codecs](../explanation/custom-codecs.md)
 
@@ -107,14 +109,17 @@ DataJoint 2.0 replaces `external.*` with unified `stores.*` configuration:
 
 ## Migration Overview
 
-| Phase | Goal | Code Changes | Schema Changes | Production Impact |
-|-------|------|--------------|----------------|-------------------|
-| **I** | Branch & code migration | All API updates, type syntax | None (empty `_v2` schemas) | **None** |
-| **II** | Test with sample data | — | Populate `_v2` schemas | **None** |
-| **III** | Migrate production data | — | Multiple options | **Varies** |
+| Phase | Goal | Code Changes | Schema/Store Changes | Production Impact |
+|-------|------|--------------|----------------------|-------------------|
+| **I** | Branch & code migration | All API updates, type syntax, **all codecs** (including external storage) | Empty `_v2` schemas + test stores | **None** |
+| **II** | Test compatibility | — | Populate `_v2` schemas with sample data, test equivalence | **None** |
+| **III** | Migrate production data | — | Multiple migration options | **Varies** |
 | **IV** | Adopt new features | Optional enhancements | Optional | Running on 2.0 |
 
-**Key principle:** Production runs on 0.14.x undisturbed through Phase II.
+**Key principles:**
+- Phase I implements ALL code changes including external storage codecs (using test stores)
+- Production runs on 0.14.x undisturbed through Phase II
+- Phase III is data migration only—the code is already complete
 
 **Timeline:**
 - **Phase I:** ~1-4 hours (with AI assistance)
@@ -126,9 +131,15 @@ DataJoint 2.0 replaces `external.*` with unified `stores.*` configuration:
 
 ## Phase I: Branch and Code Migration
 
-**Goal:** Create a 2.0-compatible version of your pipeline on a new branch with empty `_v2` schemas.
+**Goal:** Implement complete 2.0 API in code using test schemas and test stores.
 
-**End state:** All Python code uses 2.0 API patterns, points to `schema_v2` databases. Schemas are created but empty. Production continues on main branch with 0.14.x.
+**End state:**
+- All Python code uses 2.0 API patterns (fetch, types, codecs)
+- All codecs implemented (in-table `<blob>`, `<attach>` AND external `<blob@>`, `<npy@>`, etc.)
+- Code points to `schema_v2` databases (empty) and test object stores
+- Production continues on main branch with 0.14.x undisturbed
+
+**What's NOT migrated yet:** Production data and production stores (Phase III)
 
 ### Step 1: Pin Legacy DataJoint on Main Branch
 
@@ -218,9 +229,11 @@ conn = dj.conn()
 print(f"Connected to {conn.conn_info['host']}")
 ```
 
-### Step 4: Configure Object Storage (If Needed)
+### Step 4: Configure Test Object Stores
 
-If your pipeline uses external storage (`blob@`, `attach@`, `filepath@`), configure stores.
+**Important:** Configure TEST stores for Phase I development and testing. Production stores will be configured in Phase III.
+
+If your pipeline uses external storage (`blob@`, `attach@`, `filepath@`), you'll convert ALL external storage code in Phase I. Set up test stores now for development.
 
 #### Background: Unified Stores
 
@@ -231,22 +244,24 @@ If your pipeline uses external storage (`blob@`, `attach@`, `filepath@`), config
 
 **Learn more:** [Configure Object Storage](configure-storage.md) · [Object Store Configuration Spec](../reference/specs/object-store-configuration.md)
 
-#### Configure Stores
+#### Configure Test Stores
 
-**Edit `datajoint.json`:**
+**Edit `datajoint.json` to use test directories:**
 ```json
 {
   "stores": {
     "default": "main",
     "main": {
       "protocol": "file",
-      "location": "/data/v2_stores/main"
+      "location": "/data/v2_test_stores/main"
     }
   }
 }
 ```
 
-**For multiple stores:**
+**Note:** Use separate test locations (e.g., `/data/v2_test_stores/`) to avoid conflicts with production stores.
+
+**For multiple test stores:**
 ```json
 {
   "stores": {
@@ -254,17 +269,17 @@ If your pipeline uses external storage (`blob@`, `attach@`, `filepath@`), config
     "filepath_default": "raw_data",
     "main": {
       "protocol": "file",
-      "location": "/data/v2_stores/main"
+      "location": "/data/v2_test_stores/main"
     },
     "raw_data": {
       "protocol": "file",
-      "location": "/data/acquisition"
+      "location": "/data/v2_test_stores/raw"
     }
   }
 }
 ```
 
-**For cloud storage:**
+**For cloud storage (using test bucket/prefix):**
 ```json
 {
   "stores": {
@@ -272,8 +287,8 @@ If your pipeline uses external storage (`blob@`, `attach@`, `filepath@`), config
     "s3_store": {
       "protocol": "s3",
       "endpoint": "s3.amazonaws.com",
-      "bucket": "my-datajoint-bucket",
-      "location": "my-pipeline"
+      "bucket": "my-datajoint-test-bucket",
+      "location": "v2-test"
     }
   }
 }
@@ -291,6 +306,8 @@ Update table definitions in topological order (tables before their dependents).
 
 #### Background: Type Syntax Changes
 
+Convert ALL types and codecs in Phase I:
+
 | 0.14.x | 2.0 | Category |
 |--------|-----|----------|
 | `int unsigned` | `uint32` | Core type |
@@ -302,9 +319,11 @@ Update table definitions in topological order (tables before their dependents).
 | `double` | `float64` | Core type |
 | `longblob` | `<blob>` | Codec (in-table) |
 | `attach` | `<attach>` | Codec (in-table) |
-| `blob@store` | `<blob@store>` | Codec (external) - deferred to Phase III |
-| `attach@store` | `<attach@store>` | Codec (external) - deferred to Phase III |
-| `filepath@store` | `<filepath@store>` | Codec (external) - deferred to Phase III |
+| `external-store` / `blob@store` | `<blob@store>` | Codec (external) |
+| `attach@store` | `<attach@store>` | Codec (external) |
+| `filepath@store` | `<filepath@store>` | Codec (external) |
+
+**Note:** Code for external storage is converted in Phase I using test stores. Production data migration happens in Phase III.
 
 **Learn more:** [Type System Reference](../reference/specs/type-system.md) · [Definition Syntax](../reference/definition-syntax.md)
 
@@ -329,15 +348,16 @@ CONTEXT:
 
 SCOPE - PHASE I:
 1. Update schema declarations (add _v2 suffix)
-2. Convert type syntax to 2.0 core types
-3. Convert in-table codecs (longblob, attach)
-4. DEFER external storage (blob@, attach@, filepath@) to Phase III
-   - Leave these unchanged for now
-   - Add comment: # TODO Phase III: migrate to <blob@store>
+2. Convert ALL type syntax to 2.0 core types
+3. Convert ALL codecs (in-table AND external)
+   - In-table: longblob → <blob>, attach → <attach>
+   - External: blob@store → <blob@store>, filepath@store → <filepath@store>, etc.
+4. Code will use TEST stores configured in datajoint.json
+5. Production data migration happens in Phase III (code is complete after Phase I)
 
 TYPE CONVERSIONS:
 
-Core Types (always convert):
+Core Types:
   int unsigned → uint32
   int → int32
   smallint unsigned → uint16
@@ -350,14 +370,18 @@ Core Types (always convert):
   double → float64
   decimal(M,D) → decimal(M,D)  # unchanged
 
-In-Table Codecs (convert now):
+In-Table Codecs:
   longblob → <blob>
   attach → <attach>
 
-External Storage (DEFER to Phase III):
-  blob@store → blob@store  # Leave unchanged, add TODO comment
-  attach@store → attach@store  # Leave unchanged, add TODO comment
-  filepath@store → filepath@store  # Leave unchanged, add TODO comment
+External Storage Codecs (convert now using test stores):
+  external-store → <blob@store>  # Legacy 0.14.x format
+  blob@store → <blob@store>  # Already correct syntax
+  attach@store → <attach@store>
+  filepath@store → <filepath@store>
+  # New 2.0 codecs (if migrating from custom AdaptedTypes):
+  → <npy@store>  # For NumPy arrays
+  → <object@store>  # For zarr, HDF5, custom formats
 
 String/Date Types (unchanged):
   varchar(N) → varchar(N)
@@ -377,16 +401,16 @@ PROCESS:
    a. Update schema declaration (add _v2 suffix)
    b. Create schema on database (empty for now)
 3. For each table definition in TOPOLOGICAL ORDER:
-   a. Convert type syntax
-   b. Add TODO comments for external storage if present
-   c. Verify syntax is valid
+   a. Convert ALL type syntax (core types + all codecs)
+   b. Verify syntax is valid
 4. Test that all tables can be declared (run file to create tables)
+5. Verify external storage codecs work with test stores
 
 VERIFICATION:
 - All schema declarations use _v2 suffix
 - All native types converted to core types
-- All in-table codecs converted
-- External storage types have TODO comments
+- All codecs converted (in-table AND external)
+- Test stores configured and accessible
 - No syntax errors
 - All tables create successfully (empty)
 
@@ -401,11 +425,12 @@ class Recording(dj.Manual):
     recording_id : int unsigned
     ---
     sampling_rate : float
-    signal : blob@raw  # External storage
+    signal : external-raw  # Legacy external storage
+    waveforms : blob@raw  # 0.14.x external syntax
     metadata : longblob
     """
 
-# 2.0
+# 2.0 (Phase I with test stores)
 schema = dj.schema('neuroscience_pipeline_v2')
 
 @schema
@@ -414,7 +439,8 @@ class Recording(dj.Manual):
     recording_id : uint32
     ---
     sampling_rate : float32
-    signal : blob@raw  # TODO Phase III: migrate to <blob@raw>
+    signal : <blob@raw>  # Converted to 2.0 external storage
+    waveforms : <npy@raw>  # Upgraded to npy codec for better performance
     metadata : <blob>
     """
 
@@ -422,19 +448,22 @@ REPORT:
 - Schemas converted: [list with _v2 suffix]
 - Tables converted: [count by schema]
 - Type conversions: [count by type]
-- External storage deferred: [count]
+- Codecs converted:
+  - In-table: [count of <blob>, <attach>]
+  - External: [count of <blob@>, <npy@>, <filepath@>]
 - Tables created successfully: [list]
+- Test stores configured: [list store names]
 
 COMMIT MESSAGE FORMAT:
 "feat(phase-i): convert table definitions to 2.0 syntax
 
 - Update schema declarations to *_v2
 - Convert native types to core types (uint32, float64, etc.)
-- Convert longblob → <blob>, attach → <attach>
-- Defer external storage migration to Phase III
+- Convert all codecs (in-table + external storage)
+- Configure test stores for development/testing
 
 Tables converted: X
-Type conversions: Y"
+Codecs converted: Y (in-table: Z, external: W)"
 ```
 
 ---
@@ -757,11 +786,17 @@ git push origin pre/v2.0
 
 ---
 
-## Phase II: Test with Sample Data
+## Phase II: Test Compatibility and Equivalence
 
-**Goal:** Validate Phase I migration by running pipeline with sample data in `_v2` schemas.
+**Goal:** Validate that the 2.0 pipeline produces equivalent results to the legacy pipeline.
 
-**End state:** Pipeline works correctly with 2.0 code. All functionality validated. Production still untouched.
+**End state:**
+- 2.0 pipeline runs correctly with sample data in `_v2` schemas and test stores
+- Results are equivalent to running legacy pipeline on same data
+- Confidence that migration is correct before touching production
+- Production still untouched
+
+**Key principle:** Test with identical data in both legacy and v2 schemas to verify equivalence.
 
 ### Step 1: Insert Test Data
 
@@ -838,7 +873,118 @@ signal = ref.load()
 print(f"Loaded: shape={signal.shape}")
 ```
 
-### Step 5: Run Existing Tests
+### Step 5: Compare with Legacy Schema (Equivalence Testing)
+
+**Critical:** Run identical data through both legacy and v2 pipelines to verify equivalence.
+
+#### Option A: Side-by-Side Comparison
+
+```python
+# compare_legacy_v2.py
+import datajoint as dj
+import numpy as np
+
+# Import both legacy and v2 modules
+import your_pipeline as legacy  # 0.14.x on main branch (checkout to test)
+import your_pipeline_v2 as v2  # 2.0 on pre/v2.0 branch
+
+def compare_results():
+    """Compare query results between legacy and v2."""
+
+    # Insert same data into both schemas
+    test_data = [
+        {'mouse_id': 0, 'dob': '2024-01-01', 'sex': 'M'},
+        {'mouse_id': 1, 'dob': '2024-01-15', 'sex': 'F'},
+    ]
+
+    legacy.Mouse.insert(test_data, skip_duplicates=True)
+    v2.Mouse.insert(test_data, skip_duplicates=True)
+
+    # Compare query results
+    legacy_mice = legacy.Mouse.fetch(as_dict=True)  # 0.14.x syntax
+    v2_mice = v2.Mouse.to_dicts()  # 2.0 syntax
+
+    assert len(legacy_mice) == len(v2_mice), "Row count mismatch!"
+
+    # Compare values (excluding fetch-specific artifacts)
+    for leg, v2_row in zip(legacy_mice, v2_mice):
+        for key in leg.keys():
+            if leg[key] != v2_row[key]:
+                print(f"MISMATCH: {key}: {leg[key]} != {v2_row[key]}")
+                return False
+
+    print("✓ Query results are equivalent!")
+    return True
+
+def compare_populate():
+    """Compare populate results."""
+
+    # Populate both
+    legacy.Neuron.populate(display_progress=True)
+    v2.Neuron.populate(display_progress=True)
+
+    # Compare counts
+    legacy_count = len(legacy.Neuron())
+    v2_count = len(v2.Neuron())
+
+    assert legacy_count == v2_count, f"Count mismatch: {legacy_count} != {v2_count}"
+
+    print(f"✓ Populate generated same number of rows: {v2_count}")
+
+    # Compare computed values (if numeric)
+    for key in (legacy.Neuron & 'neuron_id=0').fetch1('KEY'):
+        leg_val = (legacy.Neuron & key).fetch1('activity')
+        v2_val = (v2.Neuron & key).fetch1('activity')
+
+        if isinstance(leg_val, np.ndarray):
+            assert np.allclose(leg_val, v2_val, rtol=1e-9), "Array values differ!"
+        else:
+            assert leg_val == v2_val, f"Value mismatch: {leg_val} != {v2_val}"
+
+    print("✓ Populate results are equivalent!")
+    return True
+
+if __name__ == '__main__':
+    print("Comparing legacy and v2 pipelines...")
+    compare_results()
+    compare_populate()
+    print("\n✓ All equivalence tests passed!")
+```
+
+Run comparison:
+
+```bash
+python compare_legacy_v2.py
+```
+
+#### Option B: Data Copy and Validation
+
+If you can't easily import both modules:
+
+1. Copy sample data from production to both legacy test schema and `_v2` schema
+2. Run populate on both
+3. Use helper to compare:
+
+```python
+from datajoint.migrate import compare_query_results
+
+# Compare table contents
+result = compare_query_results(
+    prod_schema='my_pipeline',
+    test_schema='my_pipeline_v2',
+    table='neuron',
+    tolerance=1e-6,
+)
+
+if result['match']:
+    print(f"✓ {result['row_count']} rows match")
+else:
+    print(f"✗ Discrepancies found:")
+    for disc in result['discrepancies']:
+        print(f"  {disc}")
+```
+
+### Step 6: Run Existing Tests
 
 If you have a test suite:
 
@@ -851,7 +997,7 @@ pytest tests/test_queries.py -v
 pytest tests/test_populate.py -v
 ```
 
-### Step 6: Validate Results
+### Step 7: Validate Results
 
 Create a validation script:
 
@@ -987,10 +1133,24 @@ git commit -m "docs: Phase II test report"
 
 ## Phase III: Migrate Production Data
 
-**Goal:** Move existing data from production schemas to `_v2` schemas.
+**Goal:** Migrate production data and configure production stores. Code is complete from Phase I.
+
+**End state:**
+- Production data migrated to `_v2` schemas
+- Production stores configured (replacing test stores)
+- External storage metadata updated (UUID → JSON)
+- Ready to switch production to 2.0
+
+**Key principle:** All code changes were completed in Phase I. This phase is DATA migration only.
+
+**Prerequisites:**
+- Phase I complete (all code migrated)
+- Phase II complete (equivalence validated)
+- Production backup created
+- Production workloads quiesced
 
 **Options:**
-- **Option A:** Copy data, rename schemas (recommended)
+- **Option A:** Copy data, rename schemas (recommended - safest)
 - **Option B:** In-place migration (for very large databases)
 - **Option C:** Gradual migration with legacy compatibility
 
@@ -1006,6 +1166,32 @@ Choose the option that best fits your needs.
 - Can practice multiple times
 
 **Process:**
+
+#### 0. Configure Production Stores
+
+Update `datajoint.json` to point to production stores (not test stores):
+
+```json
+{
+  "stores": {
+    "default": "main",
+    "main": {
+      "protocol": "file",
+      "location": "/data/production_stores/main"  # Production location
+    }
+  }
+}
+```
+
+**For external storage migration:** You can either:
+- **Keep files in place** (recommended): Point to existing 0.14.x store locations
+- **Copy to new location**: Configure new production stores and copy files
+
+**Commit this change:**
+```bash
+git add datajoint.json
+git commit -m "config: update stores to production locations"
+```
 
 #### 1. Backup Production
 
@@ -1044,27 +1230,36 @@ Neuron.populate(display_progress=True)
 Analysis.populate(display_progress=True)
 ```
 
-#### 4. Migrate External Storage (If Needed)
+#### 4. Migrate External Storage Metadata
 
-If you have tables using `blob@`, `attach@`, or `filepath@`:
+**Important:** Your code already handles external storage (converted in Phase I). This step just updates metadata format.
+
+If you have tables using `<blob@>`, `<attach@>`, or `<filepath@>` codecs, migrate the storage metadata from legacy BINARY(16) UUID format to 2.0 JSON format:
 
 ```python
 from datajoint.migrate import migrate_external_pointers_v2
 
-# Migrate external pointers without moving files
+# Update metadata format (UUID → JSON)
+# This does NOT move files—just updates database pointers
 result = migrate_external_pointers_v2(
     schema='my_pipeline_v2',
     table='recording',
     attribute='signal',
-    source_store='external-raw',
-    dest_store='raw',
-    copy_files=False,  # Keep files in place
+    source_store='external-raw',  # Legacy 0.14.x store name
+    dest_store='raw',  # 2.0 store name (from datajoint.json)
+    copy_files=False,  # Keep files in place (recommended)
 )
 
 print(f"Migrated {result['rows_migrated']} pointers")
 ```
 
-**Note:** This creates JSON metadata pointing to existing files. No file copying needed.
+**What this does:**
+- Reads legacy BINARY(16) UUID pointers from `~external_*` hidden tables
+- Creates new JSON metadata with file path, store name, hash
+- Writes JSON to the `<blob@store>` column (code written in Phase I)
+- Does NOT copy files (unless `copy_files=True`)
+
+**Result:** Files stay in place, but 2.0 code can now access them via the new codec system.
 
 #### 5. Validate Data Integrity
 
