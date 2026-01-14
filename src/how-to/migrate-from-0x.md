@@ -75,8 +75,8 @@ Codecs handle serialization for non-native data types:
 | `<blob@store>` | Large blobs, deduplicated by hash | Hash-addressed | Requires migration |
 | `<attach@store>` | File attachments, deduplicated by hash | Hash-addressed | Requires migration |
 | `<filepath@store>` | Managed file paths | Schema-addressed | Requires migration |
-| `<object@store>` | Python objects, path from primary key | Schema-addressed | New in 2.0 |
-| `<npy@store>` | NumPy arrays, path from primary key | Schema-addressed | New in 2.0 |
+| `<object@store>` | General object storage interface (zarr, HDF5, custom) | Schema-addressed | New in 2.0 |
+| `<npy@store>` | NumPy arrays via object storage | Schema-addressed | New in 2.0 |
 | `<zarr@store>` | Zarr arrays (plugin, coming soon) | Schema-addressed | New in 2.0 |
 | `<tiff@store>` | TIFF images (plugin, coming soon) | Schema-addressed | New in 2.0 |
 | Custom | User-defined serialization | Any | New feature |
