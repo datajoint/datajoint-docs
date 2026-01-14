@@ -150,20 +150,22 @@ dj.Di(   →  dj.Diagram(
 
 ### Semantic Matching
 
-DataJoint 2.0 validates that join operands share common lineage before allowing binary operations (`*`, `&`, `-`). This prevents accidental joins between unrelated tables.
+DataJoint 2.0 uses **semantic matching** for joins instead of classic natural joins. Rather than matching attributes solely by name, DataJoint validates that attributes share common lineage (origin) before allowing binary operations (`*`, `&`, `-`).
 
-**Impact:** A small number of existing queries may fail if they join tables without a common foreign key ancestor. Phase 2 builds the `~lineage` table that tracks these relationships.
+**Why this matters:** In classic natural joins, two attributes named `session_id` would be matched even if they refer to different entities. Semantic matching prevents this by ensuring attributes have the same semantic meaning through their foreign key relationships.
+
+**Impact:** A small number of existing queries may fail if they join tables on attributes that have the same name but different origins. Phase 2 builds the `~lineage` table that tracks attribute origins through foreign key relationships.
 
 **If a query fails semantic checking:** This indicates the join is likely malformed. Review the query to ensure:
 
-- The tables being joined have a logical relationship through foreign keys
-- You're joining tables that should semantically be joined
-- The query isn't accidentally joining unrelated data
+- Attributes being matched represent the same entity (share lineage)
+- You're not accidentally joining on attributes that happen to have the same name
+- The tables have a logical relationship through foreign keys
 
-If the join is intentional (e.g., Cartesian product for specific analysis), you can bypass the check:
+If you genuinely need to join on attributes with the same name but different lineage (rare), you can bypass the check:
 
 ```python
-# Only if the cross-schema join is intentionally unrelated
+# Only if intentionally joining on name-matched but semantically unrelated attributes
 result = TableA.join(TableB, semantic_check=False)
 ```
 
