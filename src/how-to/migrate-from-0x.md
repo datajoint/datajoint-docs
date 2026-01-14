@@ -337,7 +337,7 @@ The `lineage` column stores the origin as a dot-separated string: `schema.table.
 
 **Why safe:** Legacy clients ignore tables prefixed with `~`.
 
-**Learn more:** [Lineage Specification](../reference/specs/lineage.md) · [Semantic Matching Concept](../explanation/semantic-matching.md)
+**Learn more:** [Semantic Matching Specification](../reference/specs/semantic-matching.md) · [Entity Integrity Concept](../explanation/entity-integrity.md)
 
 ### 2.3 Migration Commands
 
