@@ -50,17 +50,17 @@ DataJoint 2.0 introduces a unified type system with three tiers:
 
 Codecs handle serialization for non-native data types:
 
-| Codec | Description | Store | Code Migration | Data Migration |
-|-------|-------------|-------|----------------|----------------|
+| Codec | Description | Storage | Code Migration | Data Migration |
+|-------|-------------|---------|----------------|----------------|
 | `<blob>` | Python object serialization | In-table | Phase I | Phase III |
 | `<attach>` | Inline file attachments | In-table | Phase I | Phase III |
-| `<blob@store>` | Large blobs, hash-addressed | External | Phase I | Phase III |
-| `<attach@store>` | File attachments, hash-addressed | External | Phase I | Phase III |
-| `<filepath@store>` | Managed file paths | External | Phase I | Phase III |
-| `<object@store>` | Object storage (zarr, HDF5, custom) | External | Phase I | Phase III |
-| `<npy@store>` | NumPy arrays with lazy loading | External | Phase I | Phase III |
+| `<blob@store>` | Large blobs, hash-addressed | In-store | Phase I | Phase III |
+| `<attach@store>` | File attachments, hash-addressed | In-store | Phase I | Phase III |
+| `<filepath@store>` | Managed file paths | In-store | Phase I | Phase III |
+| `<object@store>` | Object storage (zarr, HDF5, custom) | In-store | Phase I | Phase III |
+| `<npy@store>` | NumPy arrays with lazy loading | In-store | Phase I | Phase III |
 
-**Key principle:** All codec conversions (including external storage) are implemented in Phase I using test stores. Production data migration happens in Phase III.
+**Key principle:** All codec conversions (in-table and in-store) are implemented in Phase I using test stores. Production data migration happens in Phase III.
 
 **Learn more:** [Codec API Reference](../reference/specs/codec-api.md) · [Custom Codecs](../explanation/custom-codecs.md)
 
@@ -111,13 +111,13 @@ DataJoint 2.0 replaces `external.*` with unified `stores.*` configuration:
 
 | Phase | Goal | Code Changes | Schema/Store Changes | Production Impact |
 |-------|------|--------------|----------------------|-------------------|
-| **I** | Branch & code migration | All API updates, type syntax, **all codecs** (including external storage) | Empty `_v2` schemas + test stores | **None** |
+| **I** | Branch & code migration | All API updates, type syntax, **all codecs** (in-table and in-store) | Empty `_v2` schemas + test stores | **None** |
 | **II** | Test compatibility | — | Populate `_v2` schemas with sample data, test equivalence | **None** |
 | **III** | Migrate production data | — | Multiple migration options | **Varies** |
 | **IV** | Adopt new features | Optional enhancements | Optional | Running on 2.0 |
 
 **Key principles:**
-- Phase I implements ALL code changes including external storage codecs (using test stores)
+- Phase I implements ALL code changes including in-store codecs (using test stores)
 - Production runs on 0.14.x undisturbed through Phase II
 - Phase III is data migration only—the code is already complete
 
@@ -233,7 +233,7 @@ print(f"Connected to {conn.conn_info['host']}")
 
 **Important:** Configure TEST stores for Phase I development and testing. Production stores will be configured in Phase III.
 
-If your pipeline uses external storage (`blob@`, `attach@`, `filepath@`), you'll convert ALL external storage code in Phase I. Set up test stores now for development.
+If your pipeline uses in-store codecs (`<blob@>`, `<attach@>`, `<filepath@>`, `<npy@>`, `<object@>`), you'll convert ALL in-store code in Phase I. Set up test stores now for development.
 
 #### Background: Unified Stores
 
@@ -319,11 +319,11 @@ Convert ALL types and codecs in Phase I:
 | `double` | `float64` | Core type |
 | `longblob` | `<blob>` | Codec (in-table) |
 | `attach` | `<attach>` | Codec (in-table) |
-| `external-store` / `blob@store` | `<blob@store>` | Codec (external) |
-| `attach@store` | `<attach@store>` | Codec (external) |
-| `filepath@store` | `<filepath@store>` | Codec (external) |
+| `external-store` / `blob@store` | `<blob@store>` | Codec (in-store) |
+| `attach@store` | `<attach@store>` | Codec (in-store) |
+| `filepath@store` | `<filepath@store>` | Codec (in-store) |
 
-**Note:** Code for external storage is converted in Phase I using test stores. Production data migration happens in Phase III.
+**Note:** Code for in-store codecs is converted in Phase I using test stores. Production data migration happens in Phase III.
 
 **Learn more:** [Type System Reference](../reference/specs/type-system.md) · [Definition Syntax](../reference/definition-syntax.md)
 
@@ -349,9 +349,9 @@ CONTEXT:
 SCOPE - PHASE I:
 1. Update schema declarations (add _v2 suffix)
 2. Convert ALL type syntax to 2.0 core types
-3. Convert ALL codecs (in-table AND external)
+3. Convert ALL codecs (in-table AND in-store)
    - In-table: longblob → <blob>, attach → <attach>
-   - External: blob@store → <blob@store>, filepath@store → <filepath@store>, etc.
+   - In-store: blob@store → <blob@store>, filepath@store → <filepath@store>, etc.
 4. Code will use TEST stores configured in datajoint.json
 5. Production data migration happens in Phase III (code is complete after Phase I)
 
@@ -374,7 +374,7 @@ In-Table Codecs:
   longblob → <blob>
   attach → <attach>
 
-External Storage Codecs (convert now using test stores):
+In-Store Codecs (convert now using test stores):
   external-store → <blob@store>  # Legacy 0.14.x format
   blob@store → <blob@store>  # Already correct syntax
   attach@store → <attach@store>
@@ -404,12 +404,12 @@ PROCESS:
    a. Convert ALL type syntax (core types + all codecs)
    b. Verify syntax is valid
 4. Test that all tables can be declared (run file to create tables)
-5. Verify external storage codecs work with test stores
+5. Verify in-store codecs work with test stores
 
 VERIFICATION:
 - All schema declarations use _v2 suffix
 - All native types converted to core types
-- All codecs converted (in-table AND external)
+- All codecs converted (in-table AND in-store)
 - Test stores configured and accessible
 - No syntax errors
 - All tables create successfully (empty)
@@ -425,8 +425,8 @@ class Recording(dj.Manual):
     recording_id : int unsigned
     ---
     sampling_rate : float
-    signal : external-raw  # Legacy external storage
-    waveforms : blob@raw  # 0.14.x external syntax
+    signal : external-raw  # Legacy 0.14.x in-store format
+    waveforms : blob@raw  # 0.14.x in-store syntax
     metadata : longblob
     """
 
@@ -439,9 +439,9 @@ class Recording(dj.Manual):
     recording_id : uint32
     ---
     sampling_rate : float32
-    signal : <blob@raw>  # Converted to 2.0 external storage
+    signal : <blob@raw>  # Converted to 2.0 in-store codec
     waveforms : <npy@raw>  # Upgraded to npy codec for better performance
-    metadata : <blob>
+    metadata : <blob>  # In-table codec
     """
 
 REPORT:
@@ -450,7 +450,7 @@ REPORT:
 - Type conversions: [count by type]
 - Codecs converted:
   - In-table: [count of <blob>, <attach>]
-  - External: [count of <blob@>, <npy@>, <filepath@>]
+  - In-store: [count of <blob@>, <npy@>, <filepath@>]
 - Tables created successfully: [list]
 - Test stores configured: [list store names]
 
@@ -459,11 +459,11 @@ COMMIT MESSAGE FORMAT:
 
 - Update schema declarations to *_v2
 - Convert native types to core types (uint32, float64, etc.)
-- Convert all codecs (in-table + external storage)
+- Convert all codecs (in-table + in-store)
 - Configure test stores for development/testing
 
 Tables converted: X
-Codecs converted: Y (in-table: Z, external: W)"
+Codecs converted: Y (in-table: Z, in-store: W)"
 ```
 
 ---
@@ -712,11 +712,11 @@ Tables updated: X Computed, Y Imported"
 - [ ] `pre/v2.0` branch created
 - [ ] DataJoint 2.0 installed (`pip list | grep datajoint`)
 - [ ] Configuration files created (`.secrets/`, `datajoint.json`)
-- [ ] Stores configured (if using external storage)
+- [ ] Stores configured (if using in-store codecs)
 - [ ] All schema declarations use `_v2` suffix
 - [ ] All table definitions use 2.0 type syntax
 - [ ] All in-table codecs converted (`<blob>`, `<attach>`)
-- [ ] External storage marked with TODO comments
+- [ ] All in-store codecs converted (`<blob@>`, `<npy@>`, `<filepath@>`)
 - [ ] All `fetch()` calls converted (except `fetch1()`)
 - [ ] All `._update()` calls converted
 - [ ] All `@` operators converted
@@ -765,8 +765,8 @@ Summary:
 - Converted all table definitions to 2.0 syntax
 - Converted all query/insert code to 2.0 API
 - Converted all populate methods
-- Configured stores for external storage
-- External storage migration deferred to Phase III
+- Configured test stores for in-store codecs
+- Production data migration deferred to Phase III
 
 Schemas: X
 Tables: Y
@@ -1138,7 +1138,7 @@ git commit -m "docs: Phase II test report"
 **End state:**
 - Production data migrated to `_v2` schemas
 - Production stores configured (replacing test stores)
-- External storage metadata updated (UUID → JSON)
+- In-store metadata updated (UUID → JSON)
 - Ready to switch production to 2.0
 
 **Key principle:** All code changes were completed in Phase I. This phase is DATA migration only.
@@ -1183,7 +1183,7 @@ Update `datajoint.json` to point to production stores (not test stores):
 }
 ```
 
-**For external storage migration:** You can either:
+**For in-store data migration:** You can either:
 - **Keep files in place** (recommended): Point to existing 0.14.x store locations
 - **Copy to new location**: Configure new production stores and copy files
 
@@ -1230,9 +1230,9 @@ Neuron.populate(display_progress=True)
 Analysis.populate(display_progress=True)
 ```
 
-#### 4. Migrate External Storage Metadata
+#### 4. Migrate In-Store Metadata
 
-**Important:** Your code already handles external storage (converted in Phase I). This step just updates metadata format.
+**Important:** Your code already handles in-store codecs (converted in Phase I). This step just updates metadata format.
 
 If you have tables using `<blob@>`, `<attach@>`, or `<filepath@>` codecs, migrate the storage metadata from legacy BINARY(16) UUID format to 2.0 JSON format:
 
@@ -1380,14 +1380,14 @@ print(f"Migrated {result['steps_completed']} steps")
 
 **Best for:** Pipelines that must support both 0.14.x and 2.0 clients simultaneously
 
-**Strategy:** Create dual columns for external storage
+**Strategy:** Create dual columns for in-store codecs
 
 #### 1. Add `_v2` Columns
 
-For each external storage attribute, add a corresponding `_v2` column:
+For each in-store attribute, add a corresponding `_v2` column:
 
 ```sql
--- Add _v2 column for external storage
+-- Add _v2 column for in-store codec
 ALTER TABLE `my_pipeline`.`recording`
   ADD COLUMN `signal_v2` JSON COMMENT ':<blob@raw>:signal data';
 ```
