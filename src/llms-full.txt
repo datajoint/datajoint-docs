@@ -18882,12 +18882,16 @@ An **Object-Augmented Schema** extends relational tables with object storage as 
 
 OAS supports two addressing schemes:
 
-| Addressing | Location | Path Derived From | Use Case |
-|------------|----------|-------------------|----------|
-| **Hash-addressed** | Object store | Content hash (MD5) | Blobs, attachments (with deduplication) |
-| **Schema-addressed** | Object store | Schema structure | NumPy arrays, Zarr, HDF5 (browsable paths) |
+| Addressing | Location | Path Derived From | Object Type | Use Case |
+|------------|----------|-------------------|-------------|----------|
+| **Hash-addressed** | Object store | Content hash (MD5) | Individual/atomic | Single blobs, single files, attachments (with deduplication) |
+| **Schema-addressed** | Object store | Schema structure | Complex/multi-part | Zarr arrays, HDF5 datasets, multi-file objects (browsable paths) |
 
-Data can also be stored **inline** directly in the database column (no `@` modifier).
+**Key distinction:**
+- **Hash-addressed** (`<blob@>`, `<attach@>`) stores individual, atomic objects - one object per field
+- **Schema-addressed** (`<npy@>`, `<object@>`) can store complex, multi-part objects like Zarr (directory structures with multiple files)
+
+Data can also be stored **in-table** directly in the database column (no `@` modifier).
 
 For complete details, see the [Type System specification](../reference/specs/type-system.md).
 
@@ -27624,9 +27628,10 @@ returns the appropriate dtype based on storage mode:
 
 **Built-in codec. Store only.**
 
-Schema-addressed OAS storage for files and folders:
+Schema-addressed OAS storage for complex, multi-part objects (files, folders, Zarr arrays, HDF5):
 
 - **Schema-addressed**: Path mirrors database structure: `{schema}/{table}/{pk}/{attribute}/`
+- **Complex objects**: Can store directory structures with multiple files (e.g., Zarr arrays)
 - One-to-one relationship with table row
 - Deleted when row is deleted
 - Returns `ObjectRef` for lazy access
@@ -27668,15 +27673,15 @@ class ObjectCodec(SchemaCodec):
 
 **Built-in codec. Store only.**
 
-Hash-addressed storage with deduplication:
+Hash-addressed storage with deduplication for individual, atomic objects:
 
 - **Hash-addressed**: Path derived from content hash: `_hash/{hash[:2]}/{hash[2:4]}/{hash}`
-- **Single blob only**: stores a single file or serialized object (not folders)
+- **Individual/atomic objects only**: Stores single files or serialized blobs (not directory structures)
+- Cannot handle complex multi-part objects like Zarr arrays—use `<object@>` for those
 - **Per-project scope**: content is shared across all schemas in a project (not per-schema)
 - Many-to-one: multiple rows (even across schemas) can reference same content
 - Reference counted for garbage collection
 - Deduplication: identical content stored once across the entire project
-- For folders/complex objects, use `<object@>` instead
 - **dtype**: `json` (stores hash, store name, size, metadata)
 
 ```
@@ -28710,71 +28715,6 @@ Copyright 2024 DataJoint Inc. and contributors.
 
 
 ---
-## File: about/platform.md
-
-# DataJoint Platform
-
-The **DataJoint Platform** extends the open-source DataJoint library with managed infrastructure and tools for team-based data operations.
-
-## Architecture
-
-The platform builds on the open-source core—relational database, code repository, and object storage—with functional extensions organized into four categories:
-
-### Interactions
-
-Tools for different users and tasks:
-
-- **Pipeline Navigator** — Visual exploration of schema diagrams, table contents, and data dependencies
-- **Electronic Lab Notebook** — Integration with laboratory documentation for manual data entry and experimental notes
-- **Development Environment** — Support for Jupyter notebooks, VS Code, and other scientific programming tools
-- **Visualization Dashboard** — Interactive exploration of results and pipeline status
-
-### Infrastructure
-
-Managed computing resources:
-
-- **Security** — Access control integrated with institutional identity management
-- **Deployment** — Cloud platforms (AWS, GCP, Azure) and hybrid configurations
-- **Compute Resources** — Integration with HPC clusters, GPU resources, and cloud compute
-
-### Automation
-
-Intelligent workflow execution:
-
-- **Automated Population** — The `populate()` mechanism identifies and executes missing computations
-- **Job Orchestration** — Integration with workflow schedulers (Airflow, SLURM, Kubernetes)
-- **AI Pipeline Agent** — Emerging capabilities for AI-assisted pipeline development and operation
-
-### Orchestration
-
-Coordination across the data lifecycle:
-
-- **Data Ingest** — Tools for importing data from instruments and external systems
-- **Collaboration** — Shared database access with coordinated permissions
-- **Export & Integration** — Capabilities for delivering results to downstream systems
-
-## Open-Source vs Platform
-
-| Capability | Open-Source | Platform |
-|------------|-------------|----------|
-| Core library | ✅ | ✅ |
-| Schema definition | ✅ | ✅ |
-| Query algebra | ✅ | ✅ |
-| AutoPopulate | ✅ | ✅ |
-| Object storage | ✅ | ✅ Managed |
-| Database hosting | Self-managed | ✅ Managed |
-| User management | Self-managed | ✅ Managed |
-| Visual tools | — | ✅ |
-| Job orchestration | Self-managed | ✅ Managed |
-| Support | Community | ✅ Enterprise |
-
-## Learn More
-
-- [Request a Platform account](https://www.datajoint.com/sign-up)
-- [DataJoint website](https://www.datajoint.com)
-
-
----
 ## File: about/publications.md
 
 # Publications
@@ -28912,8 +28852,6 @@ If you're using legacy DataJoint (version 0.14.x or earlier), please visit the [
 ### Global Indicators
 
 **Site-wide banner:** Every page displays a banner indicating you're viewing documentation for DataJoint 2.0+, with a link to the migration guide for legacy users.
-
-**Footer:** The footer shows which version of DataJoint this documentation covers.
 
 ### Feature-Level Indicators
 
