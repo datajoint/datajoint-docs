@@ -9,10 +9,12 @@ Set up S3, MinIO, or filesystem storage for DataJoint's Object-Augmented Schema 
 DataJoint's Object-Augmented Schema (OAS) integrates relational tables with object storage as a single coherent system. Large data objects (arrays, files, Zarr datasets) are stored in file systems or cloud storage while maintaining full referential integrity with the relational database.
 
 **Storage models:**
+
 - **Hash-addressed** and **schema-addressed** storage are **integrated** into the OAS. DataJoint manages paths, lifecycle, and integrity.
 - **Filepath** storage provides **references** to externally-managed files. Users control organization and lifecycle.
 
 Storage is configured per-project using named stores. Each store can be used for:
+
 - **Hash-addressed storage** (`<blob@>`, `<attach@>`) — content-addressed with deduplication using `_hash/` section
 - **Schema-addressed storage** (`<object@>`, `<npy@>`) — key-based paths with streaming access using `_schema/` section
 - **Filepath storage** (`<filepath@>`) — user-managed paths anywhere in the store **except** `_hash/` and `_schema/` (reserved for DataJoint)
