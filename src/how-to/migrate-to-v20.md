@@ -1755,7 +1755,7 @@ cat > test_report.md << 'EOF'
 # Phase II Test Report
 
 ## Test Date
-2025-01-14
+2026-01-14
 
 ## Summary
 - Schemas tested: X
@@ -2043,7 +2043,7 @@ DROP DATABASE `my_pipeline_old`;
 from datajoint.migrate import migrate_schema_in_place
 
 # Backup first
-backup_schema('my_pipeline', 'my_pipeline_backup_20250114')
+backup_schema('my_pipeline', 'my_pipeline_backup_20260114')
 
 # Migrate in place
 result = migrate_schema_in_place(
