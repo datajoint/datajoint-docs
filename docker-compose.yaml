@@ -64,8 +64,9 @@ services:
             pip install scikit-image pooch
             mkdocs serve --config-file ./mkdocs.yaml -a 0.0.0.0:8000
         elif echo "$${MODE}" | grep -i build &>/dev/null; then
-            # BUILD mode: just build static site from pre-executed notebooks
-            # datajoint-python source is mounted for mkdocstrings API doc generation
+            # BUILD mode: build static site from pre-executed notebooks
+            # Install datajoint-python for mkdocstrings (needs to import for API docs)
+            pip install -e /datajoint-python
             mkdocs build --config-file ./mkdocs.yaml
         else
             echo "Unexpected mode..."
