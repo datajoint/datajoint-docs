@@ -373,14 +373,16 @@ Convert ALL types and codecs in Phase I:
 
 | pre-2.0 | 2.0 | Notes |
 |--------|-----|-------|
-| `varchar(N)`, `char(N)`, `text` | Unchanged | No conversion needed |
-| `date`, `time` | Unchanged | No conversion needed |
+| `varchar(N)`, `char(N)` | Unchanged | Core types |
+| `date` | Unchanged | Core type |
 | `enum('a', 'b')` | Unchanged | Core type |
 | `bool`, `boolean` | `bool` | Core type (MySQL stores as tinyint(1)) |
-| `datetime` | `datetime` | UTC only in 2.0 |
+| `datetime` | `datetime` | Core type; UTC only in 2.0 |
 | `timestamp` | `datetime` | **Convert:** 2.0 uses UTC-only datetime |
-| `json` | `json` | Unchanged (was available but underdocumented) |
-| `uuid` | `uuid` | Unchanged (widely used in legacy) |
+| `json` | `json` | Core type (was available but underdocumented) |
+| `uuid` | `uuid` | Core type (widely used in legacy) |
+| `text` | `varchar(N)` or keep as native | **Native type:** Consider migrating to `varchar(n)` |
+| `time` | Keep as native | **Native type:** No core equivalent |
 | `tinyint(1)` | `bool` or `uint8` | **Ask user:** was this boolean or small integer? |
 
 **Codecs:**
@@ -395,15 +397,21 @@ Convert ALL types and codecs in Phase I:
 
 **Important Notes:**
 
+- **Core vs Native Types:** DataJoint 2.0 distinguishes **core types** (portable, standardized) from **native types** (backend-specific). Core types are preferred. Native types like `text` and `time` are allowed but discouraged—they may generate warnings and lack portability guarantees.
+
 - **Datetime/Timestamp:** DataJoint 2.0 stores all times as `datetime` in **UTC without timezone information**. The database stores UTC; timezones are handled by application front-ends and client APIs. Convert `timestamp` to `datetime` and ensure your application stores times in UTC.
 
 - **Bool:** Legacy DataJoint supported `bool` and `boolean` types (MySQL stores as `tinyint(1)`). Keep as `bool` in 2.0. Only explicit `tinyint(1)` declarations need review:
   - If used for boolean semantics (yes/no, active/inactive) → `bool`
   - If used for small integers (counts, indices 0-255) → `uint8`
 
-- **JSON:** Was available in pre-2.0 but underdocumented. Many users serialized JSON into blobs. If you have custom JSON serialization in blobs, you can migrate to native `json` type (optional).
+- **Text Type:** `text` is a native MySQL type, not a core type. Consider migrating to `varchar(n)` with appropriate length. If your text truly needs unlimited length, you can keep `text` as a native type (will generate a warning).
 
-- **Enum:** Already a core type—no changes needed.
+- **Time Type:** `time` is a native MySQL type with no core equivalent. Keep as native type if needed (will generate a warning).
+
+- **JSON:** Core type that was available in pre-2.0 but underdocumented. Many users serialized JSON into blobs. If you have custom JSON serialization in blobs, you can migrate to native `json` type (optional).
+
+- **Enum:** Core type—no changes needed.
 
 - **In-store codecs:** Code is converted in Phase I using test stores. Production data migration happens in Phase III.
 
@@ -454,18 +462,21 @@ Core Types (Integer and Float):
   decimal(M,D) → decimal(M,D)  # unchanged
 
 Core Types (String and Date):
-  varchar(N) → varchar(N)  # unchanged
-  char(N) → char(N)  # unchanged
-  text → text  # unchanged
-  date → date  # unchanged
-  time → time  # unchanged
-  enum('a', 'b') → enum('a', 'b')  # unchanged
-  bool → bool  # unchanged (legacy supported, MySQL stores as tinyint(1))
-  boolean → bool  # unchanged (legacy supported, MySQL stores as tinyint(1))
+  varchar(N) → varchar(N)  # unchanged (core type)
+  char(N) → char(N)  # unchanged (core type)
+  date → date  # unchanged (core type)
+  enum('a', 'b') → enum('a', 'b')  # unchanged (core type)
+  bool → bool  # unchanged (core type, MySQL stores as tinyint(1))
+  boolean → bool  # unchanged (core type, MySQL stores as tinyint(1))
+  datetime → datetime  # unchanged (core type)
 
 Core Types (Structured Data):
-  json → json  # unchanged (was available but underdocumented in pre-2.0)
-  uuid → uuid  # unchanged (widely used in pre-2.0)
+  json → json  # unchanged (core type, was available but underdocumented in pre-2.0)
+  uuid → uuid  # unchanged (core type, widely used in pre-2.0)
+
+Native Types (Discouraged but Allowed):
+  text → Consider varchar(N) with appropriate length, or keep as native type
+  time → Keep as native type (no core equivalent)
 
 Special Cases - REQUIRE USER REVIEW:
 
@@ -491,10 +502,10 @@ DataJoint 2.0 stores all times as datetime in UTC WITHOUT timezone information.
 The database stores UTC; timezones are handled by application front-ends and client APIs, not the database.
 
 Conversion rules:
-- datetime → Keep as datetime (UTC assumed)
-- timestamp → ALWAYS convert to datetime
-- date → Keep as date (no change)
-- time → Keep as time (no change)
+- datetime → Keep as datetime (UTC assumed, core type)
+- timestamp → ALWAYS convert to datetime (core type)
+- date → Keep as date (core type)
+- time → Keep as time (native type, no core equivalent)
 
 For timestamp columns:
 1. Convert type to datetime
@@ -545,14 +556,37 @@ Example:
 
 IMPORTANT - JSON Type:
 
-json was available in pre-2.0 but underdocumented. Many users serialized JSON
-into blobs. If you have custom JSON serialization in blobs, you can migrate to
-native json type (optional migration, not required).
+json is a core type that was available in pre-2.0 but underdocumented. Many users
+serialized JSON into blobs. If you have custom JSON serialization in blobs, you can
+migrate to native json type (optional migration, not required).
 
 Example:
   # Optional: migrate blob with JSON to native json
   config : longblob  # Contains serialized JSON
-  config : json      # Native JSON type (optional improvement)
+  config : json      # Core JSON type (optional improvement)
+
+IMPORTANT - Native Types (text and time):
+
+text and time are NATIVE MySQL types, NOT core types. They are allowed but discouraged.
+
+For text:
+- Consider migrating to varchar(n) with appropriate length (core type)
+- Or keep as text (native type, will generate warning)
+
+For time:
+- Keep as time (native type, no core equivalent, will generate warning)
+
+Example:
+  # pre-2.0
+  description : text           # Native type
+  session_start : time         # Native type
+
+  # 2.0 (recommended)
+  description : varchar(1000)  # Core type (if length constraint acceptable)
+
+  # 2.0 (alternative - keep native)
+  description : text           # Native type (if unlimited length needed)
+  session_start : time         # Native type (no core equivalent)
 
 In-Table Codecs:
   longblob → <blob>
