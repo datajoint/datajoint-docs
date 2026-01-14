@@ -1,8 +1,10 @@
 # DataJoint Documentation
 
-> **DataJoint 2.0 is a major release.** Existing pipelines require migration.
-> See the [Migration Guide](how-to/migrate-to-v20.md) for upgrade instructions.
-> For pre-2.0 documentation, visit [datajoint.github.io/datajoint-python](https://datajoint.github.io/datajoint-python).
+!!! info "Documentation for DataJoint 2.0+"
+
+    Python code examples in this documentation use DataJoint 2.0 syntax. If you're using DataJoint pre-2.0, see the [Migration Guide](how-to/migrate-to-v20.md) or visit [legacy docs](https://datajoint.github.io/datajoint-python).
+
+## About DataJoint
 
 **DataJoint** is a framework for scientific data pipelines built on the [Relational Workflow Model](explanation/relational-workflow-model.md)—a paradigm where your database schema is an executable specification of your workflow.
 
