@@ -1,0 +1,134 @@
+/* ===================================================================
+   DataJoint Documentation Custom Styles
+   =================================================================== */
+
+/* -------------------------------------------------------------------
+   Version Banner (Site-wide)
+   ------------------------------------------------------------------- */
+
+.md-banner {
+  background-color: var(--md-primary-fg-color);
+  color: var(--md-primary-bg-color);
+  font-size: 0.7rem;
+  padding: 0.4rem 0;
+  text-align: center;
+}
+
+.md-banner__inner {
+  padding: 0;
+}
+
+.md-banner p {
+  margin: 0;
+  padding: 0;
+}
+
+.md-banner a {
+  color: var(--md-primary-bg-color);
+  text-decoration: underline;
+  font-weight: 500;
+}
+
+.md-banner a:hover {
+  text-decoration: none;
+}
+
+/* -------------------------------------------------------------------
+   Version Admonitions
+   ------------------------------------------------------------------- */
+
+/* New in version X.Y */
+.admonition.version-added {
+  border-left-color: #00c853;
+}
+
+.admonition.version-added > .admonition-title {
+  background-color: rgba(0, 200, 83, 0.1);
+}
+
+.admonition.version-added > .admonition-title::before {
+  background-color: #00c853;
+  content: "✨";
+}
+
+/* Changed in version X.Y */
+.admonition.version-changed {
+  border-left-color: #ff9800;
+}
+
+.admonition.version-changed > .admonition-title {
+  background-color: rgba(255, 152, 0, 0.1);
+}
+
+.admonition.version-changed > .admonition-title::before {
+  background-color: #ff9800;
+  content: "🔄";
+}
+
+/* Deprecated since version X.Y */
+.admonition.version-deprecated {
+  border-left-color: #f44336;
+}
+
+.admonition.version-deprecated > .admonition-title {
+  background-color: rgba(244, 67, 54, 0.1);
+}
+
+.admonition.version-deprecated > .admonition-title::before {
+  background-color: #f44336;
+  content: "⚠️";
+}
+
+/* -------------------------------------------------------------------
+   Inline Version Badges
+   ------------------------------------------------------------------- */
+
+.version-badge {
+  font-size: 0.7em;
+  padding: 0.2em 0.5em;
+  background-color: #2196F3;
+  color: white;
+  border-radius: 3px;
+  font-weight: 500;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+.version-badge.deprecated {
+  background-color: #f44336;
+}
+
+.version-badge.new {
+  background-color: #00c853;
+}
+
+.version-badge.changed {
+  background-color: #ff9800;
+}
+
+/* -------------------------------------------------------------------
+   Code Block Enhancements
+   ------------------------------------------------------------------- */
+
+/* Add subtle visual distinction for code comparisons */
+.version-comparison {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin: 1rem 0;
+}
+
+.version-comparison > div {
+  padding: 0.5rem;
+  border-radius: 0.2rem;
+}
+
+.version-comparison .legacy {
+  background-color: rgba(244, 67, 54, 0.05);
+  border-left: 3px solid #f44336;
+}
+
+.version-comparison .current {
+  background-color: rgba(0, 200, 83, 0.05);
+  border-left: 3px solid #00c853;
+}
