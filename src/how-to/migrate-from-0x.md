@@ -295,6 +295,8 @@ result = table1.join(table2, semantic_check=False)
 result = table                     # U(...) * table is just table
 ```
 
+**Learn more:** [Query Algebra](../explanation/query-algebra.md) · [Query Algebra Specification](../reference/specs/query-algebra.md)
+
 #### Insert Method (Changed)
 
 ```python
@@ -464,7 +466,7 @@ The `lineage` column stores the origin as a dot-separated string: `schema.table.
 
 **Why safe:** Legacy clients ignore tables prefixed with `~`.
 
-**Learn more:** [Semantic Matching Specification](../reference/specs/semantic-matching.md) · [Entity Integrity Concept](../explanation/entity-integrity.md)
+**Learn more:** [Semantic Matching Specification](../reference/specs/semantic-matching.md) · [Query Algebra](../explanation/query-algebra.md) · [Entity Integrity Concept](../explanation/entity-integrity.md)
 
 ### 2.3 Migration Commands
 
@@ -1136,10 +1138,10 @@ Recommended order from simplest to most complex:
 
 | Order | Feature | Complexity | Tutorial |
 |-------|---------|------------|----------|
-| 1 | dj.Top operator | Low | [Queries Tutorial](../tutorials/basics/04-queries.ipynb) |
+| 1 | dj.Top operator | Low | [Query Algebra](../explanation/query-algebra.md) · [Queries Tutorial](../tutorials/basics/04-queries.ipynb) |
 | 2 | Core types (uint32, float64) | Low | [Define Tables](define-tables.md) |
 | 3 | Configuration system | Low | [Configuration Reference](../reference/configuration.md) |
-| 4 | Semantic matching | Medium | [Semantic Matching Spec](../reference/specs/semantic-matching.md) |
+| 4 | Semantic matching | Medium | [Query Algebra](../explanation/query-algebra.md) · [Semantic Matching Spec](../reference/specs/semantic-matching.md) |
 | 5 | Jobs 2.0 | Medium | [Distributed Computing](../tutorials/advanced/distributed.ipynb) |
 | 6 | Custom codecs | Medium | [Custom Codecs](../tutorials/advanced/custom-codecs.ipynb) |
 | 7 | Object storage | High | [Object Storage Tutorial](../tutorials/basics/06-object-storage.ipynb) |
