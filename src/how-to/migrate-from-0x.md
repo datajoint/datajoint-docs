@@ -640,7 +640,7 @@ result = add_job_metadata_columns(schema, dry_run=False)
 
 **Skip this section** if you did not create custom `dj.AttributeAdapter` subclasses.
 
-Legacy DataJoint allowed advanced users to define custom column types via `AttributeAdapter`. In DataJoint 2.0, this is replaced by the **Codec API**.
+Legacy DataJoint allowed advanced users to define custom column types via `AttributeAdapter`. In DataJoint 2.0, this is replaced by the **[Codec API](../reference/specs/codec-api.md)**.
 
 #### Migration Steps
 
