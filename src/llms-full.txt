@@ -18330,14 +18330,107 @@ failed.delete()
 ProcessedData.populate()
 ```
 
+## When to Use Distributed Mode
+
+Choose your populate strategy based on your workload and infrastructure:
+
+### Use `populate()` (Default) When:
+
+✅ **Single worker** - Only one process computing at a time
+✅ **Fast computations** - Each make() completes in < 1 minute
+✅ **Small job count** - Processing < 100 entries
+✅ **Development/testing** - Iterating on make() logic
+
+**Advantages:**
+- Simplest approach (no job management overhead)
+- Immediate execution (no reservation delay)
+- Easy debugging (errors stop execution)
+
+**Example:**
+```python
+# Simple, direct execution
+ProcessedData.populate()
+```
+
+---
+
+### Use `populate(reserve_jobs=True)` When:
+
+✅ **Multiple workers** - Running on multiple machines or processes
+✅ **Long computations** - Each make() takes > 1 minute
+✅ **Production pipelines** - Need fault tolerance and monitoring
+✅ **Worker crashes expected** - Jobs can be resumed
+
+**Advantages:**
+- Prevents duplicate work between workers
+- Fault tolerance (crashed jobs can be retried)
+- Job status tracking (`ProcessedData.jobs`)
+- Error isolation (one failure doesn't stop others)
+
+**Example:**
+```python
+# Distributed mode with job coordination
+ProcessedData.populate(reserve_jobs=True)
+```
+
+**Job reservation overhead:** ~100ms per job
+**Worth it when:** Computations take > 10 seconds each
+
+---
+
+### Use `populate(reserve_jobs=True, processes=N)` When:
+
+✅ **Multi-core machine** - Want to use all CPU cores
+✅ **CPU-bound tasks** - Computations are CPU-intensive, not I/O
+✅ **Independent computations** - No shared state between jobs
+
+**Advantages:**
+- Parallel execution on single machine
+- No network coordination needed
+- Combines job safety with parallelism
+
+**Example:**
+```python
+# Use 4 CPU cores
+ProcessedData.populate(reserve_jobs=True, processes=4)
+```
+
+**Caution:** Don't use more processes than CPU cores (causes context switching overhead)
+
+---
+
+## Decision Tree
+
+```
+How many workers?
+├─ One → populate()
+└─ Multiple → Continue...
+
+How long per computation?
+├─ < 1 minute → populate() (overhead not worth it)
+└─ > 1 minute → Continue...
+
+Need fault tolerance?
+├─ Yes → populate(reserve_jobs=True)
+└─ No → populate() (simpler)
+
+Multiple cores on one machine?
+└─ Yes → populate(reserve_jobs=True, processes=N)
+```
+
 ## Distributed Computing
 
+For multi-worker coordination:
+
 ```python
-# Reserve jobs to prevent conflicts between workers
+# Worker 1 (on machine A)
 ProcessedData.populate(reserve_jobs=True)
 
-# Run on multiple machines/processes simultaneously
-# Each worker reserves and processes different keys
+# Worker 2 (on machine B)
+ProcessedData.populate(reserve_jobs=True)
+
+# Workers coordinate automatically via database
+# Each reserves different keys, no duplicates
 ```
 
 ## Check Progress
@@ -28710,71 +28803,6 @@ Copyright 2024 DataJoint Inc. and contributors.
 
 
 ---
-## File: about/platform.md
-
-# DataJoint Platform
-
-The **DataJoint Platform** extends the open-source DataJoint library with managed infrastructure and tools for team-based data operations.
-
-## Architecture
-
-The platform builds on the open-source core—relational database, code repository, and object storage—with functional extensions organized into four categories:
-
-### Interactions
-
-Tools for different users and tasks:
-
-- **Pipeline Navigator** — Visual exploration of schema diagrams, table contents, and data dependencies
-- **Electronic Lab Notebook** — Integration with laboratory documentation for manual data entry and experimental notes
-- **Development Environment** — Support for Jupyter notebooks, VS Code, and other scientific programming tools
-- **Visualization Dashboard** — Interactive exploration of results and pipeline status
-
-### Infrastructure
-
-Managed computing resources:
-
-- **Security** — Access control integrated with institutional identity management
-- **Deployment** — Cloud platforms (AWS, GCP, Azure) and hybrid configurations
-- **Compute Resources** — Integration with HPC clusters, GPU resources, and cloud compute
-
-### Automation
-
-Intelligent workflow execution:
-
-- **Automated Population** — The `populate()` mechanism identifies and executes missing computations
-- **Job Orchestration** — Integration with workflow schedulers (Airflow, SLURM, Kubernetes)
-- **AI Pipeline Agent** — Emerging capabilities for AI-assisted pipeline development and operation
-
-### Orchestration
-
-Coordination across the data lifecycle:
-
-- **Data Ingest** — Tools for importing data from instruments and external systems
-- **Collaboration** — Shared database access with coordinated permissions
-- **Export & Integration** — Capabilities for delivering results to downstream systems
-
-## Open-Source vs Platform
-
-| Capability | Open-Source | Platform |
-|------------|-------------|----------|
-| Core library | ✅ | ✅ |
-| Schema definition | ✅ | ✅ |
-| Query algebra | ✅ | ✅ |
-| AutoPopulate | ✅ | ✅ |
-| Object storage | ✅ | ✅ Managed |
-| Database hosting | Self-managed | ✅ Managed |
-| User management | Self-managed | ✅ Managed |
-| Visual tools | — | ✅ |
-| Job orchestration | Self-managed | ✅ Managed |
-| Support | Community | ✅ Enterprise |
-
-## Learn More
-
-- [Request a Platform account](https://www.datajoint.com/sign-up)
-- [DataJoint website](https://www.datajoint.com)
-
-
----
 ## File: about/publications.md
 
 # Publications
@@ -28912,8 +28940,6 @@ If you're using legacy DataJoint (version 0.14.x or earlier), please visit the [
 ### Global Indicators
 
 **Site-wide banner:** Every page displays a banner indicating you're viewing documentation for DataJoint 2.0+, with a link to the migration guide for legacy users.
-
-**Footer:** The footer shows which version of DataJoint this documentation covers.
 
 ### Feature-Level Indicators
 
