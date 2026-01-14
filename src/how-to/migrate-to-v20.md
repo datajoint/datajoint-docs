@@ -50,17 +50,21 @@ DataJoint 2.0 introduces a unified type system with three tiers:
 
 Codecs handle serialization for non-native data types:
 
-| Codec | Description | Storage | Code Migration | Data Migration |
-|-------|-------------|---------|----------------|----------------|
-| `<blob>` | Python object serialization | In-table | Phase I | Phase III |
-| `<attach>` | Inline file attachments | In-table | Phase I | Phase III |
-| `<blob@store>` | Large blobs, hash-addressed | In-store | Phase I | Phase III |
-| `<attach@store>` | File attachments, hash-addressed | In-store | Phase I | Phase III |
-| `<filepath@store>` | Managed file paths | In-store | Phase I | Phase III |
-| `<object@store>` | Object storage (zarr, HDF5, custom) | In-store | Phase I | Phase III |
-| `<npy@store>` | NumPy arrays with lazy loading | In-store | Phase I | Phase III |
+| Codec | Description | Storage | Legacy Format | Migration |
+|-------|-------------|---------|---------------|-----------|
+| `<blob>` | Python object serialization | In-table | `longblob` | Phase I code, Phase III data |
+| `<attach>` | Inline file attachments | In-table | `attach` | Phase I code, Phase III data |
+| `<blob@store>` | Large blobs, hash-addressed | In-store (hash) | `external-store`, `blob@store` | Phase I code, Phase III data |
+| `<attach@store>` | File attachments, hash-addressed | In-store (hash) | `attach@store` | Phase I code, Phase III data |
+| `<filepath@store>` | Managed file paths | In-store (filepath) | `filepath@store` | Phase I code, Phase III data |
+| `<npy@store>` | NumPy arrays with lazy loading | In-store (schema) | **New in 2.0** | Phase IV adoption |
+| `<object@store>` | Object storage (zarr, HDF5, custom) | In-store (schema) | **New in 2.0** | Phase IV adoption |
 
-**Key principle:** All codec conversions (in-table and in-store) are implemented in Phase I using test stores. Production data migration happens in Phase III.
+**Key principles:**
+
+- All codec conversions (in-table and legacy in-store) are implemented in Phase I using test stores
+- Production data migration happens in Phase III
+- Schema-addressed storage (`<npy@>`, `<object@>`) is new in 2.0 - adopt in Phase IV, no migration needed
 
 **Learn more:** [Codec API Reference](../reference/specs/codec-api.md) · [Custom Codecs](../explanation/custom-codecs.md)
 
@@ -117,11 +121,13 @@ DataJoint 2.0 replaces `external.*` with unified `stores.*` configuration:
 | **IV** | Adopt new features | Optional enhancements | Optional | Running on 2.0 |
 
 **Key principles:**
+
 - Phase I implements ALL code changes including in-store codecs (using test stores)
 - Production runs on 0.14.x undisturbed through Phase II
 - Phase III is data migration only—the code is already complete
 
 **Timeline:**
+
 - **Phase I:** ~1-4 hours (with AI assistance)
 - **Phase II:** ~1-2 days
 - **Phase III:** ~1-7 days (depends on data size and option chosen)
@@ -134,8 +140,9 @@ DataJoint 2.0 replaces `external.*` with unified `stores.*` configuration:
 **Goal:** Implement complete 2.0 API in code using test schemas and test stores.
 
 **End state:**
+
 - All Python code uses 2.0 API patterns (fetch, types, codecs)
-- All codecs implemented (in-table `<blob>`, `<attach>` AND external `<blob@>`, `<npy@>`, etc.)
+- All codecs implemented (in-table `<blob>`, `<attach>` AND in-store `<blob@>`, legacy only)
 - Code points to `schema_v2` databases (empty) and test object stores
 - Production continues on main branch with 0.14.x undisturbed
 
@@ -182,6 +189,7 @@ Create new configuration files for 2.0.
 #### Background: Configuration Changes
 
 DataJoint 2.0 uses:
+
 - **`.secrets/datajoint.json`** for credentials (gitignored)
 - **`datajoint.json`** for non-sensitive settings (checked in)
 - **`stores.*`** instead of `external.*`
@@ -238,6 +246,7 @@ If your pipeline uses in-store codecs (`<blob@>`, `<attach@>`, `<filepath@>`, `<
 #### Background: Unified Stores
 
 2.0 uses **unified stores** configuration:
+
 - Single `stores.*` config for all storage types
 - Named stores with `default` pointer
 - Supports multiple stores with different backends
@@ -374,14 +383,17 @@ In-Table Codecs:
   longblob → <blob>
   attach → <attach>
 
-In-Store Codecs (convert now using test stores):
+In-Store Codecs (convert legacy formats):
   external-store → <blob@store>  # Legacy 0.14.x format
   blob@store → <blob@store>  # Already correct syntax
   attach@store → <attach@store>
   filepath@store → <filepath@store>
-  # New 2.0 codecs (if migrating from custom AdaptedTypes):
-  → <npy@store>  # For NumPy arrays
-  → <object@store>  # For zarr, HDF5, custom formats
+
+NEW in 2.0 (optional adoption, not migration):
+  <npy@store>  # NumPy arrays with lazy loading
+  <object@store>  # Zarr, HDF5, or custom object formats
+  # Use these for NEW attributes or to replace custom AdaptedTypes
+  # No legacy equivalent - adopt in Phase IV after migration complete
 
 String/Date Types (unchanged):
   varchar(N) → varchar(N)
@@ -439,9 +451,20 @@ class Recording(dj.Manual):
     recording_id : uint32
     ---
     sampling_rate : float32
-    signal : <blob@raw>  # Converted to 2.0 in-store codec
-    waveforms : <npy@raw>  # Upgraded to npy codec for better performance
-    metadata : <blob>  # In-table codec
+    signal : <blob@raw>  # Migrated from external-raw
+    waveforms : <blob@raw>  # Migrated from blob@raw
+    metadata : <blob>  # Migrated from longblob
+    """
+
+# Optional Phase IV: Adopt schema-addressed storage for new features
+@schema
+class RecordingEnhanced(dj.Manual):
+    definition = """
+    recording_id : uint32
+    ---
+    sampling_rate : float32
+    signal : <npy@raw>  # NEW: NumPy with lazy loading (adopt in Phase IV)
+    metadata : <blob>
     """
 
 REPORT:
@@ -791,6 +814,7 @@ git push origin pre/v2.0
 **Goal:** Validate that the 2.0 pipeline produces equivalent results to the legacy pipeline.
 
 **End state:**
+
 - 2.0 pipeline runs correctly with sample data in `_v2` schemas and test stores
 - Results are equivalent to running legacy pipeline on same data
 - Confidence that migration is correct before touching production
@@ -1136,6 +1160,7 @@ git commit -m "docs: Phase II test report"
 **Goal:** Migrate production data and configure production stores. Code is complete from Phase I.
 
 **End state:**
+
 - Production data migrated to `_v2` schemas
 - Production stores configured (replacing test stores)
 - In-store metadata updated (UUID → JSON)
@@ -1144,12 +1169,14 @@ git commit -m "docs: Phase II test report"
 **Key principle:** All code changes were completed in Phase I. This phase is DATA migration only.
 
 **Prerequisites:**
+
 - Phase I complete (all code migrated)
 - Phase II complete (equivalence validated)
 - Production backup created
 - Production workloads quiesced
 
 **Options:**
+
 - **Option A:** Copy data, rename schemas (recommended - safest)
 - **Option B:** In-place migration (for very large databases)
 - **Option C:** Gradual migration with legacy compatibility
@@ -1161,6 +1188,7 @@ Choose the option that best fits your needs.
 **Best for:** Most pipelines, especially < 1 TB
 
 **Advantages:**
+
 - Safe - production unchanged until final step
 - Easy rollback
 - Can practice multiple times
@@ -1184,6 +1212,7 @@ Update `datajoint.json` to point to production stores (not test stores):
 ```
 
 **For in-store data migration:** You can either:
+
 - **Keep files in place** (recommended): Point to existing 0.14.x store locations
 - **Copy to new location**: Configure new production stores and copy files
 
@@ -1254,6 +1283,7 @@ print(f"Migrated {result['rows_migrated']} pointers")
 ```
 
 **What this does:**
+
 - Reads legacy BINARY(16) UUID pointers from `~external_*` hidden tables
 - Creates new JSON metadata with file path, store name, hash
 - Writes JSON to the `<blob@store>` column (code written in Phase I)
