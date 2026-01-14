@@ -44,18 +44,45 @@ This creates a store named `main` and designates it as the default.
 
 ### Default Store
 
-The `stores.default` setting determines which store is used when no store is specified:
+DataJoint uses two default settings to reflect the architectural distinction between integrated and reference storage:
+
+#### stores.default — Integrated Storage (OAS)
+
+The `stores.default` setting determines which store is used for **integrated storage** (hash-addressed and schema-addressed) when no store is specified:
 
 ```python
 # These are equivalent when stores.default = "main"
-signal : <blob>           # Uses default store
+signal : <blob>           # Uses stores.default
 signal : <blob@main>      # Explicitly names store
+
+arrays : <object>         # Uses stores.default
+arrays : <object@main>    # Explicitly names store
 ```
 
-**Default store rules:**
+**Rules:**
 - `stores.default` must be a string naming a configured store
-- Required for codecs without explicit `@store` specification
-- Each project typically uses one primary store
+- Required for `<blob>`, `<attach>`, `<object>`, `<npy>` without explicit `@store`
+- Each project typically uses one primary store for integrated data
+
+#### stores.filepath_default — Filepath References
+
+The `stores.filepath_default` setting determines which store is used for **filepath references** when no store is specified:
+
+```python
+# These are equivalent when stores.filepath_default = "raw_data"
+recording : <filepath@>          # Uses stores.filepath_default
+recording : <filepath@raw_data>  # Explicitly names store
+```
+
+**Rules:**
+- `stores.filepath_default` must be a string naming a configured store
+- Required for `<filepath@>` without explicit store name
+- Often configured differently from `stores.default` because filepath references are not part of OAS
+- Users manage file lifecycle and organization
+
+**Why separate defaults?**
+
+Integrated storage (hash, schema) is managed by DataJoint as part of the Object-Augmented Schema—DataJoint controls paths, lifecycle, and integrity. Filepath storage is user-managed references to existing files—DataJoint only stores the path. These are architecturally distinct, so they often use different storage locations and require separate defaults.
 
 ### Complete Store Configuration
 
@@ -123,6 +150,7 @@ Configure multiple stores for different data types or storage tiers:
 {
   "stores": {
     "default": "main",
+    "filepath_default": "raw_data",
     "main": {
       "protocol": "file",
       "location": "/data/fast-storage",
