@@ -672,6 +672,15 @@
     </span>
 </a>
 </li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#before-creating-your-own">
+<span class="md-ellipsis">
+      
+        Before Creating Your Own
+      
+    </span>
+</a>
+</li>
 </ul>
 </nav>
 </li>
@@ -1445,6 +1454,18 @@
     
   
     Use NPY Codec
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../how-to/use-plugin-codecs/">
+<span class="md-ellipsis">
+    
+  
+    Use Plugin Codecs
   
 
     
@@ -2520,6 +2541,15 @@
     </span>
 </a>
 </li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#before-creating-your-own">
+<span class="md-ellipsis">
+      
+        Before Creating Your Own
+      
+    </span>
+</a>
+</li>
 </ul>
 </nav>
 </div>
@@ -2840,6 +2870,13 @@ with native data structures while DataJoint handles storage transparently.</p>
 </ol>
 <p>The codec system makes DataJoint extensible to any scientific domain without
 modifying the core framework.</p>
+<h2 id="before-creating-your-own">Before Creating Your Own<a class="headerlink" href="#before-creating-your-own" title="Permanent link">¶</a></h2>
+<p>Check for existing plugin codecs that may already solve your needs:</p>
+<ul>
+<li><strong><a href="https://github.com/datajoint/dj-zarr-codecs">dj-zarr-codecs</a></strong> — General numpy arrays with Zarr storage</li>
+<li><strong><a href="https://github.com/datajoint/dj-photon-codecs">dj-photon-codecs</a></strong> — Photon-limited movies with Anscombe transformation and compression</li>
+</ul>
+<p>See the <a href="../../how-to/use-plugin-codecs/">Use Plugin Codecs</a> guide for installation and usage of existing codec packages. Creating a custom codec is straightforward, but reusing existing ones saves time and ensures compatibility.</p>
 </article>
 </div>
 <script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>

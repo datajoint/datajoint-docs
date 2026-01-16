@@ -8,13 +8,13 @@
       
       
       
-        <link rel="canonical" href="https://docs.datajoint.com/how-to/alter-tables/">
+        <link rel="canonical" href="https://docs.datajoint.com/how-to/use-plugin-codecs/">
       
       
-        <link rel="prev" href="../migrate-to-v20/">
+        <link rel="prev" href="../use-npy-codec/">
       
       
-        <link rel="next" href="../backup-restore/">
+        <link rel="next" href="../create-custom-codec/">
       
       
         
@@ -25,7 +25,7 @@
     
     
       
-        <title>Alter Tables - DataJoint Documentation</title>
+        <title>Use Plugin Codecs - DataJoint Documentation</title>
       
     
     
@@ -105,7 +105,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#alter-tables" class="md-skip">
+        <a href="#use-plugin-codecs" class="md-skip">
           Skip to content
         </a>
       
@@ -178,7 +178,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Alter Tables
+              Use Plugin Codecs
             
           </span>
         </div>
@@ -2734,8 +2734,10 @@
                 
   
   
+    
   
   
+  
     
     
       
@@ -2757,11 +2759,11 @@
       
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_6" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_6" checked>
         
           
           <label class="md-nav__link" for="__nav_4_6" id="__nav_4_6_label" tabindex="0">
@@ -2782,7 +2784,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_6_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_6_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_4_6">
             <span class="md-nav__icon md-icon"></span>
             
@@ -2853,10 +2855,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../use-plugin-codecs/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Use Plugin Codecs
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -2872,6 +2901,469 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quick-start" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Start
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Quick Start">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-install-the-codec-package" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Install the Codec Package
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-use-in-table-definitions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Use in Table Definitions
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#example-zarr-array-storage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example: Zarr Array Storage
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Example: Zarr Array Storage">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#installation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Installation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#basic-usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Basic Usage
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#storage-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Storage Structure
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#when-to-use-zarr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When to Use &lt;zarr@&gt;
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#finding-plugin-codecs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Finding Plugin Codecs
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Finding Plugin Codecs">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#datajoint-maintained-codecs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DataJoint-Maintained Codecs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#community-codecs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Community Codecs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#domain-specific-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Domain-Specific Examples
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verifying-installation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verifying Installation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-auto-registration-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How Auto-Registration Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Troubleshooting">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#unknown-codec-zarr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        "Unknown codec: \&lt;zarr>"
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#codec-not-found-after-installation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Codec Not Found After Installation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#version-conflicts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Version Conflicts
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#versioning-and-backward-compatibility" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Versioning and Backward Compatibility
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Versioning and Backward Compatibility">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#built-in-vs-plugin-codec-versioning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Built-in vs Plugin Codec Versioning
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#version-strategy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Version Strategy
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#implementing-versioning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Implementing Versioning
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#when-to-bump-versions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When to Bump Versions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#backward-compatibility-patterns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Backward Compatibility Patterns
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#migration-strategies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Migration Strategies
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#real-world-example-dj-photon-codecs-evolution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Real-World Example: dj-photon-codecs Evolution
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#testing-version-compatibility" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Testing Version Compatibility
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#package-version-guidelines" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Package Version Guidelines
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#creating-your-own-codecs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Creating Your Own Codecs
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Best Practices
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Best Practices">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-install-codecs-with-your-project" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Install Codecs with Your Project
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-document-codec-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Document Codec Requirements
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-pin-versions-for-reproducibility" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Pin Versions for Reproducibility
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-test-codec-availability" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Test Codec Availability
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#see-also" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        See Also
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -2973,10 +3465,8 @@
                 
   
   
-    
   
   
-  
     
     
       
@@ -2992,11 +3482,11 @@
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_7" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_7" >
         
           
           <label class="md-nav__link" for="__nav_4_7" id="__nav_4_7_label" tabindex="0">
@@ -3017,7 +3507,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_7_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_7_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_4_7">
             <span class="md-nav__icon md-icon"></span>
             
@@ -3060,37 +3550,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Alter Tables
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../alter-tables/" class="md-nav__link">
         
   
   
@@ -3106,247 +3569,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#basic-alter" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Basic Alter
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#what-can-be-altered" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        What Can Be Altered
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#add-a-column" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Add a Column
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#drop-a-column" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Drop a Column
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#modify-column-type" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Modify Column Type
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#rename-a-column" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Rename a Column
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#skip-confirmation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Skip Confirmation
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#view-pending-changes" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        View Pending Changes
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#unsupported-changes" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Unsupported Changes
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Unsupported Changes">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#primary-key-changes" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Primary Key Changes
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#foreign-key-changes" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Foreign Key Changes
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#index-changes" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Index Changes
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#migration-pattern" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Migration Pattern
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#add-job-metadata-columns" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Add Job Metadata Columns
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#best-practices" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Best Practices
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Best Practices">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#plan-schema-carefully" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Plan Schema Carefully
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#use-migrations-for-production" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Use Migrations for Production
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#test-in-development-first" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Test in Development First
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#see-also" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        See Also
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -5236,10 +5458,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#basic-alter" class="md-nav__link">
+  <a href="#overview" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Basic Alter
+        Overview
       
     </span>
   </a>
@@ -5247,99 +5469,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#what-can-be-altered" class="md-nav__link">
+  <a href="#quick-start" class="md-nav__link">
     <span class="md-ellipsis">
       
-        What Can Be Altered
+        Quick Start
       
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#add-a-column" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Add a Column
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#drop-a-column" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Drop a Column
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#modify-column-type" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Modify Column Type
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#rename-a-column" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Rename a Column
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#skip-confirmation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Skip Confirmation
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#view-pending-changes" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        View Pending Changes
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#unsupported-changes" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Unsupported Changes
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Unsupported Changes">
+    <nav class="md-nav" aria-label="Quick Start">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#primary-key-changes" class="md-nav__link">
+  <a href="#1-install-the-codec-package" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Primary Key Changes
+        1. Install the Codec Package
       
     </span>
   </a>
@@ -5347,21 +5492,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#foreign-key-changes" class="md-nav__link">
+  <a href="#2-use-in-table-definitions" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Foreign Key Changes
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#index-changes" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Index Changes
+        2. Use in Table Definitions
       
     </span>
   </a>
@@ -5374,10 +5508,132 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#migration-pattern" class="md-nav__link">
+  <a href="#example-zarr-array-storage" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Migration Pattern
+        Example: Zarr Array Storage
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Example: Zarr Array Storage">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#installation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Installation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#basic-usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Basic Usage
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#storage-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Storage Structure
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#when-to-use-zarr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When to Use &lt;zarr@&gt;
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#finding-plugin-codecs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Finding Plugin Codecs
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Finding Plugin Codecs">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#datajoint-maintained-codecs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DataJoint-Maintained Codecs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#community-codecs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Community Codecs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#domain-specific-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Domain-Specific Examples
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verifying-installation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verifying Installation
       
     </span>
   </a>
@@ -5385,10 +5641,187 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#add-job-metadata-columns" class="md-nav__link">
+  <a href="#how-auto-registration-works" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Add Job Metadata Columns
+        How Auto-Registration Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Troubleshooting">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#unknown-codec-zarr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        "Unknown codec: \&lt;zarr>"
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#codec-not-found-after-installation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Codec Not Found After Installation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#version-conflicts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Version Conflicts
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#versioning-and-backward-compatibility" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Versioning and Backward Compatibility
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Versioning and Backward Compatibility">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#built-in-vs-plugin-codec-versioning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Built-in vs Plugin Codec Versioning
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#version-strategy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Version Strategy
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#implementing-versioning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Implementing Versioning
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#when-to-bump-versions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When to Bump Versions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#backward-compatibility-patterns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Backward Compatibility Patterns
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#migration-strategies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Migration Strategies
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#real-world-example-dj-photon-codecs-evolution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Real-World Example: dj-photon-codecs Evolution
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#testing-version-compatibility" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Testing Version Compatibility
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#package-version-guidelines" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Package Version Guidelines
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#creating-your-own-codecs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Creating Your Own Codecs
       
     </span>
   </a>
@@ -5408,10 +5841,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#plan-schema-carefully" class="md-nav__link">
+  <a href="#1-install-codecs-with-your-project" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Plan Schema Carefully
+        1. Install Codecs with Your Project
       
     </span>
   </a>
@@ -5419,10 +5852,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#use-migrations-for-production" class="md-nav__link">
+  <a href="#2-document-codec-requirements" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Use Migrations for Production
+        2. Document Codec Requirements
       
     </span>
   </a>
@@ -5430,10 +5863,21 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#test-in-development-first" class="md-nav__link">
+  <a href="#3-pin-versions-for-reproducibility" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Test in Development First
+        3. Pin Versions for Reproducibility
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-test-codec-availability" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Test Codec Availability
       
     </span>
   </a>
@@ -5476,217 +5920,484 @@
   
 
 
-<h1 id="alter-tables">Alter Tables<a class="headerlink" href="#alter-tables" title="Permanent link">&para;</a></h1>
-<p>Modify existing table structures for schema evolution.</p>
-<h2 id="basic-alter">Basic Alter<a class="headerlink" href="#basic-alter" title="Permanent link">&para;</a></h2>
-<p>Sync table definition with code:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Update definition in code, then:</span>
-<span class="n">MyTable</span><span class="o">.</span><span class="n">alter</span><span class="p">()</span>
+<h1 id="use-plugin-codecs">Use Plugin Codecs<a class="headerlink" href="#use-plugin-codecs" title="Permanent link">&para;</a></h1>
+<p>Install and use plugin codec packages to extend DataJoint's type system.</p>
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>Plugin codecs are distributed as separate Python packages that extend DataJoint's type system. They add support for domain-specific data types without modifying DataJoint itself. Once installed, they register automatically via Python's entry point system and work seamlessly with DataJoint.</p>
+<p><strong>Benefits:</strong>
+- Automatic registration via entry points - no code changes needed
+- Domain-specific types maintained independently
+- Clean separation of core framework from specialized formats
+- Easy to share across projects and teams</p>
+<h2 id="quick-start">Quick Start<a class="headerlink" href="#quick-start" title="Permanent link">&para;</a></h2>
+<h3 id="1-install-the-codec-package">1. Install the Codec Package<a class="headerlink" href="#1-install-the-codec-package" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>dj-zarr-codecs
 </code></pre></div>
-<p>This compares the current code definition with the database and generates <code>ALTER TABLE</code> statements.</p>
-<h2 id="what-can-be-altered">What Can Be Altered<a class="headerlink" href="#what-can-be-altered" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Change</th>
-<th>Supported</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Add columns</td>
-<td>Yes</td>
-</tr>
-<tr>
-<td>Drop columns</td>
-<td>Yes</td>
-</tr>
-<tr>
-<td>Modify column types</td>
-<td>Yes</td>
-</tr>
-<tr>
-<td>Rename columns</td>
-<td>Yes</td>
-</tr>
-<tr>
-<td>Change defaults</td>
-<td>Yes</td>
-</tr>
-<tr>
-<td>Update table comment</td>
-<td>Yes</td>
-</tr>
-<tr>
-<td><strong>Modify primary key</strong></td>
-<td><strong>No</strong></td>
-</tr>
-<tr>
-<td><strong>Add/remove foreign keys</strong></td>
-<td><strong>No</strong></td>
-</tr>
-<tr>
-<td><strong>Modify indexes</strong></td>
-<td><strong>No</strong></td>
-</tr>
-</tbody>
-</table>
-<h2 id="add-a-column">Add a Column<a class="headerlink" href="#add-a-column" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><span class="c1"># Original</span>
+<h3 id="2-use-in-table-definitions">2. Use in Table Definitions<a class="headerlink" href="#2-use-in-table-definitions" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">datajoint</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dj</span>
+
+<span class="n">schema</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">Schema</span><span class="p">(</span><span class="s1">&#39;my_schema&#39;</span><span class="p">)</span>
+
 <span class="nd">@schema</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">Subject</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Recording</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
     <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
-<span class="s2">    subject_id : varchar(16)</span>
+<span class="s2">    recording_id : int</span>
 <span class="s2">    ---</span>
-<span class="s2">    species : varchar(32)</span>
+<span class="s2">    waveform : &lt;zarr@&gt;  # Automatically available after install</span>
+<span class="s2">    &quot;&quot;&quot;</span>
+</code></pre></div>
+<p>That's it! No imports or registration needed. The codec is automatically discovered via Python's entry point system.</p>
+<h2 id="example-zarr-array-storage">Example: Zarr Array Storage<a class="headerlink" href="#example-zarr-array-storage" title="Permanent link">&para;</a></h2>
+<p>The <code>dj-zarr-codecs</code> package adds support for storing NumPy arrays in Zarr format with schema-addressed paths.</p>
+<h3 id="installation">Installation<a class="headerlink" href="#installation" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>dj-zarr-codecs
+</code></pre></div>
+<h3 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">&para;</a></h3>
+<p>Configure object storage for external data:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">datajoint</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dj</span>
+
+<span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;stores&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;mystore&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s1">&#39;protocol&#39;</span><span class="p">:</span> <span class="s1">&#39;s3&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;endpoint&#39;</span><span class="p">:</span> <span class="s1">&#39;s3.amazonaws.com&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;bucket&#39;</span><span class="p">:</span> <span class="s1">&#39;my-bucket&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;location&#39;</span><span class="p">:</span> <span class="s1">&#39;data&#39;</span><span class="p">,</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3 id="basic-usage">Basic Usage<a class="headerlink" href="#basic-usage" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="n">schema</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">Schema</span><span class="p">(</span><span class="s1">&#39;neuroscience&#39;</span><span class="p">)</span>
+
+<span class="nd">@schema</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Recording</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">    recording_id : int</span>
+<span class="s2">    ---</span>
+<span class="s2">    waveform : &lt;zarr@mystore&gt;  # Store as Zarr array</span>
 <span class="s2">    &quot;&quot;&quot;</span>
 
-<span class="c1"># Updated - add column</span>
-<span class="nd">@schema</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">Subject</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
-<span class="s2">    subject_id : varchar(16)</span>
-<span class="s2">    ---</span>
-<span class="s2">    species : varchar(32)</span>
-<span class="s2">    weight = null : float32      # New column</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="c1"># Insert NumPy array</span>
+<span class="n">Recording</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span>
+    <span class="s1">&#39;recording_id&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s1">&#39;waveform&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span> <span class="mi">32</span><span class="p">),</span>
+<span class="p">})</span>
 
-<span class="c1"># Apply change</span>
-<span class="n">Subject</span><span class="o">.</span><span class="n">alter</span><span class="p">()</span>
-</code></pre></div>
-<h2 id="drop-a-column">Drop a Column<a class="headerlink" href="#drop-a-column" title="Permanent link">&para;</a></h2>
-<p>Remove from definition and alter:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Column &#39;old_field&#39; removed from definition</span>
-<span class="n">Subject</span><span class="o">.</span><span class="n">alter</span><span class="p">()</span>
-</code></pre></div>
-<h2 id="modify-column-type">Modify Column Type<a class="headerlink" href="#modify-column-type" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><span class="c1"># Change varchar(32) to varchar(100)</span>
-<span class="nd">@schema</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">Subject</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
-<span class="s2">    subject_id : varchar(16)</span>
-<span class="s2">    ---</span>
-<span class="s2">    species : varchar(100)       # Was varchar(32)</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="c1"># Fetch returns zarr.Array (read-only)</span>
+<span class="n">zarr_array</span> <span class="o">=</span> <span class="p">(</span><span class="n">Recording</span> <span class="o">&amp;</span> <span class="p">{</span><span class="s1">&#39;recording_id&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">})</span><span class="o">.</span><span class="n">fetch1</span><span class="p">(</span><span class="s1">&#39;waveform&#39;</span><span class="p">)</span>
 
-<span class="n">Subject</span><span class="o">.</span><span class="n">alter</span><span class="p">()</span>
-</code></pre></div>
-<h2 id="rename-a-column">Rename a Column<a class="headerlink" href="#rename-a-column" title="Permanent link">&para;</a></h2>
-<p>DataJoint tracks renames via comment metadata:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Original: species</span>
-<span class="c1"># Renamed to: species_name</span>
-<span class="nd">@schema</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">Subject</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
-<span class="s2">    subject_id : varchar(16)</span>
-<span class="s2">    ---</span>
-<span class="s2">    species_name : varchar(32)   # Renamed from &#39;species&#39;</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="c1"># Use with NumPy</span>
+<span class="n">mean_waveform</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">zarr_array</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
-<span class="n">Subject</span><span class="o">.</span><span class="n">alter</span><span class="p">()</span>
+<span class="c1"># Access Zarr features</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">zarr_array</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>   <span class="c1"># (1000, 32)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">zarr_array</span><span class="o">.</span><span class="n">chunks</span><span class="p">)</span>  <span class="c1"># Zarr chunking info</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">zarr_array</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>   <span class="c1"># float64</span>
 </code></pre></div>
-<h2 id="skip-confirmation">Skip Confirmation<a class="headerlink" href="#skip-confirmation" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><span class="c1"># Apply without prompting</span>
-<span class="n">Subject</span><span class="o">.</span><span class="n">alter</span><span class="p">(</span><span class="n">prompt</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<h3 id="storage-structure">Storage Structure<a class="headerlink" href="#storage-structure" title="Permanent link">&para;</a></h3>
+<p>Zarr arrays are stored with schema-addressed paths that mirror your database structure:</p>
+<div class="highlight"><pre><span></span><code>s3://my-bucket/data/
+└── neuroscience/           # Schema name
+    └── recording/          # Table name
+        └── recording_id=1/ # Primary key
+            └── waveform.zarr/  # Field name + .zarr extension
+                ├── .zarray
+                └── 0.0
 </code></pre></div>
-<h2 id="view-pending-changes">View Pending Changes<a class="headerlink" href="#view-pending-changes" title="Permanent link">&para;</a></h2>
-<p>Check what would change without applying:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Show current definition</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">Subject</span><span class="o">.</span><span class="n">describe</span><span class="p">())</span>
+<p>This organization makes external storage browsable and self-documenting.</p>
+<h3 id="when-to-use-zarr">When to Use <code>&lt;zarr@&gt;</code><a class="headerlink" href="#when-to-use-zarr" title="Permanent link">&para;</a></h3>
+<p><strong>Use <code>&lt;zarr@&gt;</code> when:</strong>
+- Arrays are large (&gt; 10 MB)
+- You need chunked access patterns
+- Compression is beneficial
+- Cross-language compatibility matters (any Zarr library can read)
+- You want browsable, organized storage paths</p>
+<p><strong>Use <code>&lt;npy@&gt;</code> instead when:</strong>
+- You need lazy loading with metadata inspection before download
+- Memory mapping is important
+- Storage format simplicity is preferred</p>
+<p><strong>Use <code>&lt;blob@&gt;</code> instead when:</strong>
+- Arrays are small (&lt; 10 MB)
+- Deduplication of repeated values is important
+- Storing mixed Python objects (not just arrays)</p>
+<h2 id="finding-plugin-codecs">Finding Plugin Codecs<a class="headerlink" href="#finding-plugin-codecs" title="Permanent link">&para;</a></h2>
+<h3 id="datajoint-maintained-codecs">DataJoint-Maintained Codecs<a class="headerlink" href="#datajoint-maintained-codecs" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong><a href="https://github.com/datajoint/dj-zarr-codecs">dj-zarr-codecs</a></strong> — Zarr array storage for general numpy arrays</li>
+<li><strong><a href="https://github.com/datajoint/dj-photon-codecs">dj-photon-codecs</a></strong> — Photon-limited movies with Anscombe transformation and compression</li>
+</ul>
+<h3 id="community-codecs">Community Codecs<a class="headerlink" href="#community-codecs" title="Permanent link">&para;</a></h3>
+<p>Check PyPI for packages with the <code>datajoint</code> keyword:</p>
+<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>search<span class="w"> </span>datajoint<span class="w"> </span>codec
+</code></pre></div>
+<p>Or browse GitHub: <a href="https://github.com/topics/datajoint">https://github.com/topics/datajoint</a></p>
+<h3 id="domain-specific-examples">Domain-Specific Examples<a class="headerlink" href="#domain-specific-examples" title="Permanent link">&para;</a></h3>
+<p><strong>Neuroscience:</strong>
+- Spike train formats (NEO, NWB)
+- Neural network models
+- Connectivity matrices</p>
+<p><strong>Imaging:</strong>
+- Photon-limited movies (calcium imaging, low-light microscopy)
+- OME-TIFF, OME-ZARR
+- DICOM medical images
+- Point cloud data</p>
+<p><strong>Genomics:</strong>
+- BAM/SAM alignments
+- VCF variant calls
+- Phylogenetic trees</p>
+<h2 id="verifying-installation">Verifying Installation<a class="headerlink" href="#verifying-installation" title="Permanent link">&para;</a></h2>
+<p>Check that a codec is registered:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">datajoint</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dj</span>
 
-<span class="c1"># Compare with code definition</span>
-<span class="c1"># (alter() shows diff before prompting)</span>
-</code></pre></div>
-<h2 id="unsupported-changes">Unsupported Changes<a class="headerlink" href="#unsupported-changes" title="Permanent link">&para;</a></h2>
-<h3 id="primary-key-changes">Primary Key Changes<a class="headerlink" href="#primary-key-changes" title="Permanent link">&para;</a></h3>
-<p>Cannot modify primary key attributes:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># This will raise NotImplementedError</span>
-<span class="nd">@schema</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">Subject</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
-<span class="s2">    new_id : uuid               # Changed primary key</span>
-<span class="s2">    ---</span>
-<span class="s2">    species : varchar(32)</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="c1"># List all available codecs</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">list_codecs</span><span class="p">())</span>
+<span class="c1"># [&#39;blob&#39;, &#39;attach&#39;, &#39;hash&#39;, &#39;object&#39;, &#39;npy&#39;, &#39;filepath&#39;, &#39;zarr&#39;, ...]</span>
 
-<span class="n">Subject</span><span class="o">.</span><span class="n">alter</span><span class="p">()</span>  <span class="c1"># Error!</span>
+<span class="c1"># Check specific codec</span>
+<span class="k">assert</span> <span class="s1">&#39;zarr&#39;</span> <span class="ow">in</span> <span class="n">dj</span><span class="o">.</span><span class="n">list_codecs</span><span class="p">()</span>
 </code></pre></div>
-<p><strong>Workaround</strong>: Create new table, migrate data, drop old table.</p>
-<h3 id="foreign-key-changes">Foreign Key Changes<a class="headerlink" href="#foreign-key-changes" title="Permanent link">&para;</a></h3>
-<p>Cannot add or remove foreign key references:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Cannot add new FK via alter()</span>
-<span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
-<span class="s2">subject_id : varchar(16)</span>
-<span class="s2">---</span>
-<span class="s2">-&gt; NewReference              # Cannot add via alter</span>
-<span class="s2">species : varchar(32)</span>
-<span class="s2">&quot;&quot;&quot;</span>
+<h2 id="how-auto-registration-works">How Auto-Registration Works<a class="headerlink" href="#how-auto-registration-works" title="Permanent link">&para;</a></h2>
+<p>Plugin codecs use Python's entry point system for automatic discovery. When you install a codec package, it registers itself via <code>pyproject.toml</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="k">[project.entry-points.</span><span class="s2">&quot;datajoint.codecs&quot;</span><span class="k">]</span>
+<span class="n">zarr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;dj_zarr_codecs:ZarrCodec&quot;</span>
 </code></pre></div>
-<p><strong>Workaround</strong>: Drop dependent tables, recreate with new structure.</p>
-<h3 id="index-changes">Index Changes<a class="headerlink" href="#index-changes" title="Permanent link">&para;</a></h3>
-<p>Cannot modify indexes via alter:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Cannot add/remove indexes via alter()</span>
-<span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
-<span class="s2">subject_id : varchar(16)</span>
-<span class="s2">---</span>
-<span class="s2">index(species)               # Cannot add via alter</span>
-<span class="s2">species : varchar(32)</span>
-<span class="s2">&quot;&quot;&quot;</span>
+<p>DataJoint discovers these entry points at import time, so the codec is immediately available after <code>pip install</code>.</p>
+<p><strong>No manual registration needed</strong> — unlike DataJoint 0.x which required <code>dj.register_codec()</code>.</p>
+<h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
+<h3 id="unknown-codec-zarr">"Unknown codec: \&lt;zarr&gt;"<a class="headerlink" href="#unknown-codec-zarr" title="Permanent link">&para;</a></h3>
+<p>The codec package is not installed or not found. Verify installation:</p>
+<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>dj-zarr-codecs
 </code></pre></div>
-<h2 id="migration-pattern">Migration Pattern<a class="headerlink" href="#migration-pattern" title="Permanent link">&para;</a></h2>
-<p>For unsupported changes, use this pattern:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># 1. Create new table with desired structure</span>
-<span class="nd">@schema</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">SubjectNew</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
-<span class="s2">    subject_id : uuid            # New primary key type</span>
-<span class="s2">    ---</span>
-<span class="s2">    species : varchar(32)</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<p>If installed but not working:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Force entry point reload</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">importlib.metadata</span>
+<span class="n">importlib</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">entry_points</span><span class="p">()</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">group</span><span class="o">=</span><span class="s1">&#39;datajoint.codecs&#39;</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="codec-not-found-after-installation">Codec Not Found After Installation<a class="headerlink" href="#codec-not-found-after-installation" title="Permanent link">&para;</a></h3>
+<p>Restart your Python session or kernel. Entry points are discovered at import time:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Restart kernel, then:</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">datajoint</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dj</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;zarr&#39;</span> <span class="ow">in</span> <span class="n">dj</span><span class="o">.</span><span class="n">list_codecs</span><span class="p">())</span>  <span class="c1"># Should be True</span>
+</code></pre></div>
+<h3 id="version-conflicts">Version Conflicts<a class="headerlink" href="#version-conflicts" title="Permanent link">&para;</a></h3>
+<p>Check compatibility with your DataJoint version:</p>
+<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>show<span class="w"> </span>dj-zarr-codecs
+<span class="c1"># Requires: datajoint&gt;=2.0.0a22</span>
+</code></pre></div>
+<p>Upgrade DataJoint if needed:</p>
+<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>--upgrade<span class="w"> </span>datajoint
+</code></pre></div>
+<h2 id="versioning-and-backward-compatibility">Versioning and Backward Compatibility<a class="headerlink" href="#versioning-and-backward-compatibility" title="Permanent link">&para;</a></h2>
+<p>Plugin codecs evolve over time. Following versioning best practices ensures your data remains accessible across codec updates.</p>
+<h3 id="built-in-vs-plugin-codec-versioning">Built-in vs Plugin Codec Versioning<a class="headerlink" href="#built-in-vs-plugin-codec-versioning" title="Permanent link">&para;</a></h3>
+<p><strong>Built-in codecs</strong> (<code>&lt;blob&gt;</code>, <code>&lt;npy@&gt;</code>, <code>&lt;object@&gt;</code>, etc.) are versioned with DataJoint:
+- ✅ Shipped with datajoint-python
+- ✅ Versioned by DataJoint release (2.0.0, 2.1.0, 3.0.0)
+- ✅ Upgraded when you upgrade DataJoint
+- ✅ Stability guaranteed by DataJoint's semantic versioning
+- ❌ <strong>No explicit codec_version field needed</strong> - DataJoint version is the codec version</p>
+<p><strong>Plugin codecs</strong> (dj-zarr-codecs, dj-photon-codecs, etc.) have independent lifecycles:
+- ✅ Installed separately from DataJoint
+- ✅ Independent version numbers (0.1.0 → 1.0.0 → 2.0.0)
+- ✅ Users choose when to upgrade
+- ✅ <strong>Must include explicit codec_version field</strong> for backward compatibility</p>
+<p><strong>Why the difference?</strong></p>
+<p>Plugin codecs evolve independently and need to handle data encoded by different plugin versions. Built-in codecs are part of DataJoint's API surface and evolve with the framework itself. When you upgrade DataJoint 2.0 → 3.0, you expect potential breaking changes. When you upgrade a plugin 1.0 → 2.0 while keeping DataJoint 2.0, backward compatibility is critical.</p>
+<p><strong>How built-in codecs handle versioning:</strong></p>
+<p>Built-in formats have <strong>intrinsic versioning</strong> - the format version is embedded in the data itself:</p>
+<ul>
+<li><code>&lt;blob&gt;</code> — Protocol header (<code>mYm\0</code> or <code>dj0\0</code>) at start of blob</li>
+<li><code>&lt;npy@&gt;</code> — NumPy format version in <code>.npy</code> file header</li>
+<li><code>&lt;object@&gt;</code> — Self-describing directory structure</li>
+<li><code>&lt;attach&gt;</code> — Filename + content (format-agnostic)</li>
+</ul>
+<p>When DataJoint needs to change a built-in codec's format, it can detect the old format from the embedded version information and handle migration transparently. This is why built-in codecs don't need an explicit <code>codec_version</code> field in database metadata.</p>
+<h3 id="version-strategy">Version Strategy<a class="headerlink" href="#version-strategy" title="Permanent link">&para;</a></h3>
+<p><strong>Two version numbers matter for plugin codecs:</strong></p>
+<ol>
+<li>
+<p><strong>Package version</strong> (semantic versioning: <code>0.1.0</code>, <code>1.0.0</code>, <code>2.0.0</code>)</p>
+<ul>
+<li>For codec package releases</li>
+<li>Follows standard semantic versioning</li>
+</ul>
+</li>
+<li>
+<p><strong>Data format version</strong> (stored with each encoded value)</p>
+<ul>
+<li>Tracks storage format changes</li>
+<li>Enables decode() to handle multiple formats</li>
+</ul>
+</li>
+</ol>
+<h3 id="implementing-versioning">Implementing Versioning<a class="headerlink" href="#implementing-versioning" title="Permanent link">&para;</a></h3>
+<p><strong>Include version in encoded metadata:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">encode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">store_name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="c1"># ... encoding logic ...</span>
 
-<span class="c1"># 2. Migrate data</span>
-<span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">Subject</span><span class="p">()</span><span class="o">.</span><span class="n">to_dicts</span><span class="p">():</span>
-    <span class="n">SubjectNew</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span>
-        <span class="s1">&#39;subject_id&#39;</span><span class="p">:</span> <span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">(),</span>  <span class="c1"># Generate new keys</span>
-        <span class="s1">&#39;species&#39;</span><span class="p">:</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;species&#39;</span><span class="p">]</span>
-    <span class="p">})</span>
-
-<span class="c1"># 3. Update dependent tables</span>
-<span class="c1"># 4. Drop old table</span>
-<span class="c1"># 5. Rename new table (if needed, via SQL)</span>
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s2">&quot;path&quot;</span><span class="p">:</span> <span class="n">path</span><span class="p">,</span>
+        <span class="s2">&quot;store&quot;</span><span class="p">:</span> <span class="n">store_name</span><span class="p">,</span>
+        <span class="s2">&quot;codec_version&quot;</span><span class="p">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">,</span>  <span class="c1"># Data format version</span>
+        <span class="s2">&quot;shape&quot;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="n">value</span><span class="o">.</span><span class="n">shape</span><span class="p">),</span>
+        <span class="s2">&quot;dtype&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">value</span><span class="o">.</span><span class="n">dtype</span><span class="p">),</span>
+    <span class="p">}</span>
 </code></pre></div>
-<h2 id="add-job-metadata-columns">Add Job Metadata Columns<a class="headerlink" href="#add-job-metadata-columns" title="Permanent link">&para;</a></h2>
-<p>For tables created before enabling job metadata:</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">datajoint.migrate</span><span class="w"> </span><span class="kn">import</span> <span class="n">add_job_metadata_columns</span>
+<p><strong>Handle multiple versions in decode:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">decode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stored</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="n">version</span> <span class="o">=</span> <span class="n">stored</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;codec_version&quot;</span><span class="p">,</span> <span class="s2">&quot;1.0&quot;</span><span class="p">)</span>  <span class="c1"># Default for old data</span>
 
-<span class="c1"># Dry run</span>
-<span class="n">add_job_metadata_columns</span><span class="p">(</span><span class="n">ProcessedData</span><span class="p">,</span> <span class="n">dry_run</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-
-<span class="c1"># Apply</span>
-<span class="n">add_job_metadata_columns</span><span class="p">(</span><span class="n">ProcessedData</span><span class="p">,</span> <span class="n">dry_run</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">version</span> <span class="o">==</span> <span class="s2">&quot;2.0&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_decode_v2</span><span class="p">(</span><span class="n">stored</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">version</span> <span class="o">==</span> <span class="s2">&quot;1.0&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_decode_v1</span><span class="p">(</span><span class="n">stored</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">DataJointError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unsupported codec version: </span><span class="si">{</span><span class="n">version</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </code></pre></div>
+<h3 id="when-to-bump-versions">When to Bump Versions<a class="headerlink" href="#when-to-bump-versions" title="Permanent link">&para;</a></h3>
+<p><strong>Bump data format version when:</strong>
+- ✅ Changing storage structure or encoding algorithm
+- ✅ Modifying metadata schema
+- ✅ Changing compression parameters that affect decode</p>
+<p><strong>Don't bump for:</strong>
+- ❌ Bug fixes that don't affect stored data format
+- ❌ Performance improvements to encode/decode logic
+- ❌ Adding new optional features (store version in attributes instead)</p>
+<h3 id="backward-compatibility-patterns">Backward Compatibility Patterns<a class="headerlink" href="#backward-compatibility-patterns" title="Permanent link">&para;</a></h3>
+<p><strong>Pattern 1: Version dispatch in decode()</strong></p>
+<div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">MyCodec</span><span class="p">(</span><span class="n">SchemaCodec</span><span class="p">):</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;mycodec&quot;</span>
+    <span class="n">CURRENT_VERSION</span> <span class="o">=</span> <span class="s2">&quot;2.0&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">encode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">store_name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="c1"># Always encode with current version</span>
+        <span class="n">metadata</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;codec_version&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">CURRENT_VERSION</span><span class="p">,</span>
+            <span class="c1"># ... other metadata ...</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="n">metadata</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">decode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stored</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">version</span> <span class="o">=</span> <span class="n">stored</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;codec_version&quot;</span><span class="p">,</span> <span class="s2">&quot;1.0&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">version</span> <span class="o">==</span> <span class="s2">&quot;2.0&quot;</span><span class="p">:</span>
+            <span class="c1"># Current version - optimized path</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_decode_current</span><span class="p">(</span><span class="n">stored</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">version</span> <span class="o">==</span> <span class="s2">&quot;1.0&quot;</span><span class="p">:</span>
+            <span class="c1"># Legacy version - compatibility path</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_decode_legacy_v1</span><span class="p">(</span><span class="n">stored</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">DataJointError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Cannot decode </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> version </span><span class="si">{</span><span class="n">version</span><span class="si">}</span><span class="s2">. &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;Upgrade codec package or migrate data.&quot;</span>
+            <span class="p">)</span>
+</code></pre></div>
+<p><strong>Pattern 2: Zarr attributes for feature versions</strong></p>
+<p>For codecs using Zarr (like dj-zarr-codecs, dj-photon-codecs):</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">encode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">store_name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="c1"># ... write to Zarr ...</span>
+
+    <span class="n">z</span> <span class="o">=</span> <span class="n">zarr</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">store_map</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;r+&quot;</span><span class="p">)</span>
+    <span class="n">z</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;codec_version&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;2.0&quot;</span>
+    <span class="n">z</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;codec_name&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span>
+    <span class="n">z</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;feature_flags&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;compression&quot;</span><span class="p">,</span> <span class="s2">&quot;chunking&quot;</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s2">&quot;path&quot;</span><span class="p">:</span> <span class="n">path</span><span class="p">,</span>
+        <span class="s2">&quot;store&quot;</span><span class="p">:</span> <span class="n">store_name</span><span class="p">,</span>
+        <span class="s2">&quot;codec_version&quot;</span><span class="p">:</span> <span class="s2">&quot;2.0&quot;</span><span class="p">,</span>  <span class="c1"># Also in DB for quick access</span>
+    <span class="p">}</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">decode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stored</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="n">z</span> <span class="o">=</span> <span class="n">zarr</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">store_map</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">)</span>
+    <span class="n">version</span> <span class="o">=</span> <span class="n">z</span><span class="o">.</span><span class="n">attrs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;codec_version&quot;</span><span class="p">,</span> <span class="s2">&quot;1.0&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Handle version-specific decoding</span>
+    <span class="k">if</span> <span class="n">version</span> <span class="o">==</span> <span class="s2">&quot;2.0&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">z</span>  <span class="c1"># Return Zarr array directly</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_migrate_v1_to_v2</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="migration-strategies">Migration Strategies<a class="headerlink" href="#migration-strategies" title="Permanent link">&para;</a></h3>
+<p><strong>Strategy 1: Lazy migration (recommended)</strong></p>
+<p>Old data is migrated when accessed:</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">decode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stored</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="n">version</span> <span class="o">=</span> <span class="n">stored</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;codec_version&quot;</span><span class="p">,</span> <span class="s2">&quot;1.0&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">version</span> <span class="o">==</span> <span class="s2">&quot;1.0&quot;</span><span class="p">:</span>
+        <span class="c1"># Decode old format</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_decode_v1</span><span class="p">(</span><span class="n">stored</span><span class="p">)</span>
+
+        <span class="c1"># Optionally: re-encode to new format in background</span>
+        <span class="c1"># (requires database write access)</span>
+        <span class="k">return</span> <span class="n">data</span>
+
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_decode_current</span><span class="p">(</span><span class="n">stored</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>Strategy 2: Explicit migration script</strong></p>
+<p>For breaking changes, provide migration tools:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># migration_tool.py</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">migrate_table_to_v2</span><span class="p">(</span><span class="n">table</span><span class="p">,</span> <span class="n">field_name</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Migrate all rows to codec version 2.0.&quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">table</span><span class="o">.</span><span class="n">fetch</span><span class="p">(</span><span class="s2">&quot;KEY&quot;</span><span class="p">):</span>
+        <span class="c1"># Fetch with old codec</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="n">table</span> <span class="o">&amp;</span> <span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">fetch1</span><span class="p">(</span><span class="n">field_name</span><span class="p">)</span>
+
+        <span class="c1"># Re-insert with new codec (triggers encode)</span>
+        <span class="n">table</span><span class="o">.</span><span class="n">update1</span><span class="p">({</span><span class="o">**</span><span class="n">key</span><span class="p">,</span> <span class="n">field_name</span><span class="p">:</span> <span class="n">data</span><span class="p">})</span>
+</code></pre></div>
+<p><strong>Strategy 3: Deprecation warnings</strong></p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">decode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stored</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="n">version</span> <span class="o">=</span> <span class="n">stored</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;codec_version&quot;</span><span class="p">,</span> <span class="s2">&quot;1.0&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">version</span> <span class="o">==</span> <span class="s2">&quot;1.0&quot;</span><span class="p">:</span>
+        <span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Reading </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> v1.0 data. Support will be removed in v3.0. &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;Please migrate: pip install </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">-migrate &amp;&amp; migrate-data&quot;</span><span class="p">,</span>
+            <span class="ne">DeprecationWarning</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_decode_v1</span><span class="p">(</span><span class="n">stored</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="real-world-example-dj-photon-codecs-evolution">Real-World Example: dj-photon-codecs Evolution<a class="headerlink" href="#real-world-example-dj-photon-codecs-evolution" title="Permanent link">&para;</a></h3>
+<p><strong>Version 1.0</strong> (current):
+- Stores Anscombe-transformed data
+- Fixed compression (Blosc zstd level 5)
+- Fixed chunking (100 frames)</p>
+<p><strong>Hypothetical Version 2.0</strong> (backward compatible):
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">encode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">store_name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="c1"># New: configurable compression</span>
+    <span class="n">compression_level</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;compression_level&#39;</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+
+    <span class="n">zarr</span><span class="o">.</span><span class="n">save_array</span><span class="p">(</span>
+        <span class="n">store_map</span><span class="p">,</span>
+        <span class="n">transformed</span><span class="p">,</span>
+        <span class="n">compressor</span><span class="o">=</span><span class="n">zarr</span><span class="o">.</span><span class="n">Blosc</span><span class="p">(</span><span class="n">cname</span><span class="o">=</span><span class="s2">&quot;zstd&quot;</span><span class="p">,</span> <span class="n">clevel</span><span class="o">=</span><span class="n">compression_level</span><span class="p">),</span>
+    <span class="p">)</span>
+
+    <span class="n">z</span> <span class="o">=</span> <span class="n">zarr</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">store_map</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;r+&quot;</span><span class="p">)</span>
+    <span class="n">z</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;codec_version&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;2.0&quot;</span>
+    <span class="n">z</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;compression_level&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">compression_level</span>
+
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s2">&quot;path&quot;</span><span class="p">:</span> <span class="n">path</span><span class="p">,</span>
+        <span class="s2">&quot;codec_version&quot;</span><span class="p">:</span> <span class="s2">&quot;2.0&quot;</span><span class="p">,</span>  <span class="c1"># &lt;-- NEW</span>
+        <span class="c1"># ... rest same ...</span>
+    <span class="p">}</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">decode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stored</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="n">z</span> <span class="o">=</span> <span class="n">zarr</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">store_map</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">)</span>
+    <span class="n">version</span> <span class="o">=</span> <span class="n">z</span><span class="o">.</span><span class="n">attrs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;codec_version&quot;</span><span class="p">,</span> <span class="s2">&quot;1.0&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Both versions return zarr.Array - fully compatible!</span>
+    <span class="k">if</span> <span class="n">version</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;1.0&quot;</span><span class="p">,</span> <span class="s2">&quot;2.0&quot;</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">z</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">DataJointError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unsupported version: </span><span class="si">{</span><span class="n">version</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div></p>
+<h3 id="testing-version-compatibility">Testing Version Compatibility<a class="headerlink" href="#testing-version-compatibility" title="Permanent link">&para;</a></h3>
+<p>Include tests for version compatibility:</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_decode_v1_data</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Ensure new codec can read old data.&quot;&quot;&quot;</span>
+    <span class="c1"># Load fixture with v1.0 data</span>
+    <span class="n">old_data</span> <span class="o">=</span> <span class="n">load_v1_fixture</span><span class="p">()</span>
+
+    <span class="c1"># Decode with current codec</span>
+    <span class="n">codec</span> <span class="o">=</span> <span class="n">PhotonCodec</span><span class="p">()</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">codec</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="n">old_data</span><span class="p">)</span>
+
+    <span class="k">assert</span> <span class="n">result</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="p">(</span><span class="mi">1000</span><span class="p">,</span> <span class="mi">512</span><span class="p">,</span> <span class="mi">512</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">result</span><span class="o">.</span><span class="n">dtype</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span>
+</code></pre></div>
+<h3 id="package-version-guidelines">Package Version Guidelines<a class="headerlink" href="#package-version-guidelines" title="Permanent link">&para;</a></h3>
+<p>Follow semantic versioning for codec packages:</p>
+<ul>
+<li><strong>Patch (0.1.0 → 0.1.1)</strong>: Bug fixes, no data format changes</li>
+<li><strong>Minor (0.1.0 → 0.2.0)</strong>: New features, backward compatible</li>
+<li><strong>Major (0.1.0 → 1.0.0)</strong>: Breaking changes (may require migration)</li>
+</ul>
+<p><strong>Example changelog:</strong></p>
+<div class="highlight"><pre><span></span><code>v2.0.0 (2026-02-01) - BREAKING
+  - Changed default compression from zstd-5 to zstd-3
+  - Data format v2.0 (can still read v1.0)
+  - Migration guide: docs/migration-v2.md
+
+v1.1.0 (2026-01-15)
+  - Added configurable chunk sizes (backward compatible)
+  - Data format still v1.0
+
+v1.0.1 (2026-01-10)
+  - Fixed edge case in Anscombe inverse transform
+  - Data format unchanged (v1.0)
+</code></pre></div>
+<h2 id="creating-your-own-codecs">Creating Your Own Codecs<a class="headerlink" href="#creating-your-own-codecs" title="Permanent link">&para;</a></h2>
+<p>If you need a codec that doesn't exist yet, see:</p>
+<ul>
+<li><a href="../create-custom-codec/">Create Custom Codecs</a> — Step-by-step guide</li>
+<li><a href="../../reference/specs/codec-api/">Codec API Specification</a> — Technical reference</li>
+<li><a href="../../explanation/custom-codecs/">Custom Codecs Explanation</a> — Design concepts</li>
+</ul>
+<p>Consider publishing your codec as a package so others can benefit!</p>
 <h2 id="best-practices">Best Practices<a class="headerlink" href="#best-practices" title="Permanent link">&para;</a></h2>
-<h3 id="plan-schema-carefully">Plan Schema Carefully<a class="headerlink" href="#plan-schema-carefully" title="Permanent link">&para;</a></h3>
-<p>Primary keys and foreign keys cannot be changed easily. Design carefully upfront.</p>
-<h3 id="use-migrations-for-production">Use Migrations for Production<a class="headerlink" href="#use-migrations-for-production" title="Permanent link">&para;</a></h3>
-<p>For production systems, use versioned migration scripts:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># migrations/001_add_weight_column.py</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">upgrade</span><span class="p">():</span>
-    <span class="n">Subject</span><span class="o">.</span><span class="n">alter</span><span class="p">(</span><span class="n">prompt</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<h3 id="1-install-codecs-with-your-project">1. Install Codecs with Your Project<a class="headerlink" href="#1-install-codecs-with-your-project" title="Permanent link">&para;</a></h3>
+<p>Add plugin codecs to your project dependencies:</p>
+<p><strong>requirements.txt:</strong>
+<div class="highlight"><pre><span></span><code>datajoint&gt;=2.0.0a22
+dj-zarr-codecs&gt;=0.1.0
+</code></pre></div></p>
+<p><strong>pyproject.toml:</strong>
+<div class="highlight"><pre><span></span><code><span class="n">dependencies</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="s2">&quot;datajoint&gt;=2.0.0a22&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;dj-zarr-codecs&gt;=0.1.0&quot;</span><span class="p">,</span>
+<span class="p">]</span>
+</code></pre></div></p>
+<h3 id="2-document-codec-requirements">2. Document Codec Requirements<a class="headerlink" href="#2-document-codec-requirements" title="Permanent link">&para;</a></h3>
+<p>In your pipeline documentation, specify required codecs:</p>
+<div class="highlight"><pre><span></span><code><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">My Pipeline</span>
+<span class="sd">===========</span>
 
-<span class="k">def</span><span class="w"> </span><span class="nf">downgrade</span><span class="p">():</span>
-    <span class="c1"># Reverse the change</span>
-    <span class="k">pass</span>
+<span class="sd">Requirements:</span>
+<span class="sd">- datajoint&gt;=2.0.0a22</span>
+<span class="sd">- dj-zarr-codecs&gt;=0.1.0  # For waveform storage</span>
+
+<span class="sd">Install:</span>
+<span class="sd">    pip install datajoint dj-zarr-codecs</span>
+<span class="sd">&quot;&quot;&quot;</span>
 </code></pre></div>
-<h3 id="test-in-development-first">Test in Development First<a class="headerlink" href="#test-in-development-first" title="Permanent link">&para;</a></h3>
-<p>Always test schema changes on a copy:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Clone schema for testing</span>
-<span class="n">test_schema</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">Schema</span><span class="p">(</span><span class="s1">&#39;test_&#39;</span> <span class="o">+</span> <span class="n">schema</span><span class="o">.</span><span class="n">database</span><span class="p">)</span>
+<h3 id="3-pin-versions-for-reproducibility">3. Pin Versions for Reproducibility<a class="headerlink" href="#3-pin-versions-for-reproducibility" title="Permanent link">&para;</a></h3>
+<p>Use exact versions in production:</p>
+<div class="highlight"><pre><span></span><code>dj-zarr-codecs==0.1.0  # Exact version
+</code></pre></div>
+<p>Use minimum versions in libraries:</p>
+<div class="highlight"><pre><span></span><code>dj-zarr-codecs&gt;=0.1.0  # Minimum version
+</code></pre></div>
+<h3 id="4-test-codec-availability">4. Test Codec Availability<a class="headerlink" href="#4-test-codec-availability" title="Permanent link">&para;</a></h3>
+<p>Add checks in your pipeline setup:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">datajoint</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dj</span>
+
+<span class="n">REQUIRED_CODECS</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;zarr&#39;</span><span class="p">]</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">check_requirements</span><span class="p">():</span>
+    <span class="n">available</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">list_codecs</span><span class="p">()</span>
+    <span class="n">missing</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">REQUIRED_CODECS</span> <span class="k">if</span> <span class="n">c</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">available</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="n">missing</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Missing required codecs: </span><span class="si">{</span><span class="n">missing</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;Install with: pip install dj-zarr-codecs&quot;</span>
+        <span class="p">)</span>
+
+<span class="n">check_requirements</span><span class="p">()</span>
 </code></pre></div>
 <h2 id="see-also">See Also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
 <ul>
-<li><a href="../define-tables/">Define Tables</a> — Table definition syntax</li>
-<li><a href="../migrate-to-v20/">Migrate to v2.0</a> — Version migration</li>
+<li><a href="../use-object-storage/">Use Object Storage</a> — Object storage configuration</li>
+<li><a href="../create-custom-codec/">Create Custom Codecs</a> — Build your own codecs</li>
+<li><a href="../../reference/specs/type-system/">Type System</a> — Complete type reference</li>
+<li><a href="https://github.com/datajoint/dj-zarr-codecs">dj-zarr-codecs Repository</a> — General Zarr array storage</li>
+<li><a href="https://github.com/datajoint/dj-photon-codecs">dj-photon-codecs Repository</a> — Photon-limited movies with compression</li>
 </ul>
 
 

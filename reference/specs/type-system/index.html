@@ -2747,6 +2747,8 @@
       
         
       
+        
+      
     
     
     
@@ -2832,6 +2834,34 @@
     
   
     Use NPY Codec
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../how-to/use-plugin-codecs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Use Plugin Codecs
   
 
     
@@ -6878,11 +6908,41 @@ just use <code>varchar</code>. A string is simpler and more transparent.</p>
 <h2 id="built-in-codecs">Built-in Codecs<a class="headerlink" href="#built-in-codecs" title="Permanent link">&para;</a></h2>
 <h3 id="blob-blob-serialized-python-objects"><code>&lt;blob&gt;</code> / <code>&lt;blob@&gt;</code> - Serialized Python Objects<a class="headerlink" href="#blob-blob-serialized-python-objects" title="Permanent link">&para;</a></h3>
 <p><strong>Supports both internal and external storage.</strong></p>
-<p>Serializes Python objects (NumPy arrays, dicts, lists, etc.) using DataJoint's
-blob format. Compatible with MATLAB.</p>
+<p>Serializes Python objects using DataJoint's custom binary serialization format. The format uses protocol headers and type-specific encoding to serialize complex Python objects efficiently.</p>
+<p><strong>Serialization format:</strong></p>
+<ul>
+<li><strong>Protocol headers</strong>:<ul>
+<li><code>mYm</code> — Original MATLAB-compatible format for numeric arrays, structs, cells (see <a href="https://www.mathworks.com/matlabcentral/fileexchange/81208-mym">mYm on MATLAB FileExchange</a> and <a href="https://github.com/datajoint/mym">mym on GitHub</a>)</li>
+<li><code>dj0</code> — Extended format supporting Python-specific types (UUID, Decimal, datetime, etc.)</li>
+</ul>
+</li>
+<li><strong>Compression</strong>: Automatic zlib compression for data &gt; 1KB</li>
+<li><strong>Type codes</strong>: Each Python type has a specific serialization code:<ul>
+<li><code>'A'</code> — NumPy arrays (numeric)</li>
+<li><code>'F'</code> — NumPy recarrays (structured arrays with fields)</li>
+<li><code>'\x01'</code> — Tuples</li>
+<li><code>'\x02'</code> — Lists</li>
+<li><code>'\x03'</code> — Sets</li>
+<li><code>'\x04'</code> — Dicts</li>
+<li><code>'\x05'</code> — Strings (UTF-8)</li>
+<li><code>'\x06'</code> — Bytes</li>
+<li><code>'\x0a'</code> — Unbounded integers</li>
+<li><code>'\x0b'</code> — Booleans</li>
+<li><code>'\x0c'</code> — Complex numbers</li>
+<li><code>'\x0d'</code> — Floats</li>
+<li><code>'d'</code> — Decimal</li>
+<li><code>'t'</code> — Datetime/date/time</li>
+<li><code>'u'</code> — UUID</li>
+<li><code>'S'</code> — MATLAB structs</li>
+<li><code>'C'</code> — MATLAB cell arrays</li>
+</ul>
+</li>
+</ul>
+<p><strong>Version detection</strong>: The protocol header (<code>mYm\0</code> or <code>dj0\0</code>) is embedded at the start of the blob, enabling automatic format detection and backward compatibility.</p>
+<p><strong>Storage modes:</strong></p>
 <ul>
 <li><strong><code>&lt;blob&gt;</code></strong>: Stored in database (<code>bytes</code> → <code>LONGBLOB</code>/<code>BYTEA</code>)</li>
-<li><strong><code>&lt;blob@&gt;</code></strong>: Stored externally via <code>&lt;hash@&gt;</code> with deduplication</li>
+<li><strong><code>&lt;blob@&gt;</code></strong>: Stored externally via <code>&lt;hash@&gt;</code> with MD5 deduplication</li>
 <li><strong><code>&lt;blob@store&gt;</code></strong>: Stored in specific named store</li>
 </ul>
 <div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">BlobCodec</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Codec</span><span class="p">):</span>
@@ -7113,8 +7173,8 @@ registry table is needed. Garbage collection scans all tables to find referenced
 </tr>
 <tr>
 <td>External dtype</td>
-<td><code>&lt;hash&gt;</code></td>
-<td><code>&lt;hash&gt;</code></td>
+<td><code>&lt;hash@&gt;</code></td>
+<td><code>&lt;hash@&gt;</code></td>
 <td><code>json</code></td>
 <td><code>json</code></td>
 <td><code>json</code></td>
