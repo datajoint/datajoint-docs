@@ -5380,15 +5380,15 @@
 </ul>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_dtype</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">is_store</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
     <span class="k">if</span> <span class="n">is_store</span><span class="p">:</span>
-        <span class="k">return</span> <span class="s2">&quot;&lt;hash&gt;&quot;</span>  <span class="c1"># Hash-addressed storage</span>
-    <span class="k">return</span> <span class="s2">&quot;bytes&quot;</span>       <span class="c1"># Inline database blob</span>
+        <span class="k">return</span> <span class="s2">&quot;&lt;blob@&gt;&quot;</span>  <span class="c1"># Blob in object storage</span>
+    <span class="k">return</span> <span class="s2">&quot;bytes&quot;</span>        <span class="c1"># Inline database blob</span>
 </code></pre></div>
 <p>Common return values:</p>
 <ul>
 <li><code>"bytes"</code> — Binary in database</li>
 <li><code>"json"</code> — JSON in database</li>
-<li><code>"&lt;blob&gt;"</code> — Chain to blob codec (hash-addressed when <code>@</code>)</li>
-<li><code>"&lt;hash&gt;"</code> — Hash-addressed storage</li>
+<li><code>"&lt;blob&gt;"</code> — Chain to blob codec (internal storage)</li>
+<li><code>"&lt;blob@&gt;"</code> — Blob in object storage</li>
 </ul>
 <h3 id="encodevalue-keynone-store_namenone"><code>encode(value, *, key=None, store_name=None)</code><a class="headerlink" href="#encodevalue-keynone-store_namenone" title="Permanent link">&para;</a></h3>
 <p>Convert Python object to storable format:</p>
@@ -5437,7 +5437,7 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">get_dtype</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">is_store</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">is_store</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">DataJointError</span><span class="p">(</span><span class="s2">&quot;&lt;zarr&gt; requires @ (store only)&quot;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="s2">&quot;&lt;object&gt;&quot;</span>  <span class="c1"># Schema-addressed storage</span>
+        <span class="k">return</span> <span class="s2">&quot;&lt;object@&gt;&quot;</span>  <span class="c1"># Schema-addressed storage</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">encode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">store_name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">path</span>  <span class="c1"># Path to zarr directory</span>

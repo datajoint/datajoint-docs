@@ -5691,7 +5691,7 @@ class MyTable(dj.Manual):
             </td>
             <td>
               <div class="doc-md-description">
-                <p>Target store name for external storage.</p>
+                <p>Target store name for object storage.</p>
               </div>
             </td>
             <td>
@@ -6606,7 +6606,7 @@ May include store parameter (e.g., <code>"&lt;blob@cold&gt;"</code>).</p>
 <p>This is the central decode function used by all fetch methods. It handles:
 - Codec chains (e.g., <a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#98;&#108;&#111;&#98;&#64;&#115;&#116;&#111;&#114;&#101;">&#98;&#108;&#111;&#98;&#64;&#115;&#116;&#111;&#114;&#101;</a> → <hash> → bytes)
 - Native type conversions (JSON, UUID)
-- External storage downloads (via config["download_path"])</p>
+- Object storage downloads (via config["download_path"])</p>
 <p>Args:
     attr: Attribute from the table's heading.
     data: Raw value fetched from the database.

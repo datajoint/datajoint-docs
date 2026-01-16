@@ -4368,7 +4368,7 @@ Subject &amp; alice_sessions</div>
 <span class="c1"># Restriction: filters Session to rows matching the Subject query  </span>
 <span class="n">Session</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">Subject</span> <span class="o">&amp;</span> <span class="p">{</span><span class="s1">'species'</span><span class="p">:</span> <span class="s1">'mouse'</span><span class="p">})</span>
 
-<span class="c1"># Antijoin: Session rows NOT matching any Subject (none here, all subjects exist)</span>
+<span class="c1"># Anti-restriction: Session rows NOT matching any Subject (none here, all subjects exist)</span>
 <span class="n">Session</span> <span class="o">-</span> <span class="n">Subject</span>
 </pre></div>
 <div class="clipboard-copy-txt" id="cell-10"># All these operations use semantic matching on subject_id:
@@ -4379,7 +4379,7 @@ Session * Subject
 # Restriction: filters Session to rows matching the Subject query  
 Session &amp; (Subject &amp; {'species': 'mouse'})
 
-# Antijoin: Session rows NOT matching any Subject (none here, all subjects exist)
+# Anti-restriction: Session rows NOT matching any Subject (none here, all subjects exist)
 Session - Subject</div>
 </div>
 </div>
@@ -5924,7 +5924,7 @@ Researcher.aggr(
 <tr>
 <td><code>NOT IN (subquery)</code></td>
 <td><code>Table1 - Table2</code></td>
-<td>Antijoin</td>
+<td>Anti-restriction</td>
 </tr>
 <tr>
 <td><code>UNION</code></td>

@@ -6492,7 +6492,7 @@ value = table.fetch1('a')       # returns single value
 :param offset: number of rows to skip
 :param squeeze: if True, remove extra dimensions from arrays
 :return: list of dictionaries, one per row</p>
-<p>For external storage types (attachments, filepaths), files are downloaded
+<p>For object storage types (attachments, filepaths), files are downloaded
 to config["download_path"]. Use config.override() to change::</p>
 <pre><code>with dj.config.override(download_path="/data"):
     data = table.to_dicts()

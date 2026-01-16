@@ -2609,7 +2609,7 @@ with native data structures while DataJoint handles storage transparently.</p>
 <span class="w">    </span><span class="sd">"""Store custom objects."""</span>
     <span class="n">name</span> <span class="o">=</span> <span class="s2">"mytype"</span>  <span class="c1"># Used as &lt;mytype&gt; in definitions</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_dtype</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">is_external</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_dtype</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">is_store</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""Return storage type."""</span>
         <span class="k">return</span> <span class="s2">"&lt;blob&gt;"</span>  <span class="c1"># Chain to blob serialization</span>
 
@@ -2638,9 +2638,9 @@ with native data structures while DataJoint handles storage transparently.</p>
 <span class="w">    </span><span class="sd">"""Store NetworkX graphs as adjacency data."""</span>
     <span class="n">name</span> <span class="o">=</span> <span class="s2">"graph"</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_dtype</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">is_external</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="c1"># Store as blob (internal) or hash-addressed (external)</span>
-        <span class="k">return</span> <span class="s2">"&lt;hash&gt;"</span> <span class="k">if</span> <span class="n">is_external</span> <span class="k">else</span> <span class="s2">"&lt;blob&gt;"</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_dtype</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">is_store</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="c1"># Store as blob (internal) or blob@ (external)</span>
+        <span class="k">return</span> <span class="s2">"&lt;blob@&gt;"</span> <span class="k">if</span> <span class="n">is_store</span> <span class="k">else</span> <span class="s2">"&lt;blob&gt;"</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">encode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">graph</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">store_name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">"""Serialize graph to dict."""</span>
@@ -2689,10 +2689,10 @@ with native data structures while DataJoint handles storage transparently.</p>
 <span class="w">    </span><span class="sd">"""Store BAM alignments."""</span>
     <span class="n">name</span> <span class="o">=</span> <span class="s2">"bam"</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_dtype</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">is_external</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">is_external</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_dtype</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">is_store</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">is_store</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">dj</span><span class="o">.</span><span class="n">DataJointError</span><span class="p">(</span><span class="s2">"&lt;bam&gt; requires external storage: use &lt;bam@&gt;"</span><span class="p">)</span>
-        <span class="k">return</span> <span class="s2">"&lt;object&gt;"</span>  <span class="c1"># Path-addressed storage for file structure</span>
+        <span class="k">return</span> <span class="s2">"&lt;object@&gt;"</span>  <span class="c1"># Path-addressed storage for file structure</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">encode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">alignments</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">store_name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">"""Write alignments to BAM format."""</span>
@@ -2712,8 +2712,8 @@ with native data structures while DataJoint handles storage transparently.</p>
 <span class="w">    </span><span class="sd">"""Store medical images with metadata."""</span>
     <span class="n">name</span> <span class="o">=</span> <span class="s2">"medimg"</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_dtype</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">is_external</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="k">return</span> <span class="s2">"&lt;hash&gt;"</span> <span class="k">if</span> <span class="n">is_external</span> <span class="k">else</span> <span class="s2">"&lt;blob&gt;"</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_dtype</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">is_store</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">"&lt;blob@&gt;"</span> <span class="k">if</span> <span class="n">is_store</span> <span class="k">else</span> <span class="s2">"&lt;blob&gt;"</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">encode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">image</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">store_name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">"""Serialize SimpleITK image."""</span>
@@ -2741,7 +2741,7 @@ with native data structures while DataJoint handles storage transparently.</p>
 <div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">CompressedGraphCodec</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Codec</span><span class="p">):</span>
     <span class="n">name</span> <span class="o">=</span> <span class="s2">"cgraph"</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_dtype</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">is_external</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_dtype</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">is_store</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="k">return</span> <span class="s2">"&lt;graph&gt;"</span>  <span class="c1"># Chain to graph codec</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">encode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">graph</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">store_name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
@@ -2756,8 +2756,8 @@ with native data structures while DataJoint handles storage transparently.</p>
 <div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">SmallDataCodec</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Codec</span><span class="p">):</span>
     <span class="n">name</span> <span class="o">=</span> <span class="s2">"small"</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_dtype</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">is_external</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">is_external</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_dtype</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">is_store</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">is_store</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">dj</span><span class="o">.</span><span class="n">DataJointError</span><span class="p">(</span><span class="s2">"&lt;small&gt; is internal-only"</span><span class="p">)</span>
         <span class="k">return</span> <span class="s2">"json"</span>
 </code></pre></div>
@@ -2765,17 +2765,17 @@ with native data structures while DataJoint handles storage transparently.</p>
 <div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">LargeDataCodec</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Codec</span><span class="p">):</span>
     <span class="n">name</span> <span class="o">=</span> <span class="s2">"large"</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_dtype</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">is_external</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">is_external</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_dtype</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">is_store</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">is_store</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">dj</span><span class="o">.</span><span class="n">DataJointError</span><span class="p">(</span><span class="s2">"&lt;large&gt; requires @: use &lt;large@&gt;"</span><span class="p">)</span>
-        <span class="k">return</span> <span class="s2">"&lt;object&gt;"</span>
+        <span class="k">return</span> <span class="s2">"&lt;object@&gt;"</span>
 </code></pre></div>
 <h3 id="both-modes">Both Modes<a class="headerlink" href="#both-modes" title="Permanent link">¶</a></h3>
 <div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">FlexibleCodec</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Codec</span><span class="p">):</span>
     <span class="n">name</span> <span class="o">=</span> <span class="s2">"flex"</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_dtype</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">is_external</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="k">return</span> <span class="s2">"&lt;hash&gt;"</span> <span class="k">if</span> <span class="n">is_external</span> <span class="k">else</span> <span class="s2">"&lt;blob&gt;"</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_dtype</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">is_store</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">"&lt;blob@&gt;"</span> <span class="k">if</span> <span class="n">is_store</span> <span class="k">else</span> <span class="s2">"&lt;blob&gt;"</span>
 </code></pre></div>
 <h2 id="validation">Validation<a class="headerlink" href="#validation" title="Permanent link">¶</a></h2>
 <p>Add validation to catch errors early:</p>

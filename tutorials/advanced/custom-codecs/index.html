@@ -2782,7 +2782,7 @@ class GraphCodec(dj.Codec):
 <div class="highlight-ipynb hl-python"><pre><span></span><span class="nd">@schema</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Connectivity</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
     <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
-<span class="s2">    conn_id : int</span>
+<span class="s2">    conn_id : uint16</span>
 <span class="s2">    ---</span>
 <span class="s2">    network : &lt;graph&gt;</span>
 <span class="s2">    """</span>
@@ -2790,7 +2790,7 @@ class GraphCodec(dj.Codec):
 <div class="clipboard-copy-txt" id="cell-3">@schema
 class Connectivity(dj.Manual):
     definition = """
-    conn_id : int
+    conn_id : uint16
     ---
     network : <graph>
     """</graph></div>
@@ -2990,7 +2990,7 @@ class SpikeTrainCodec(dj.Codec):
 <div class="highlight-ipynb hl-python"><pre><span></span><span class="nd">@schema</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Unit</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
     <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
-<span class="s2">    unit_id : int</span>
+<span class="s2">    unit_id : uint16</span>
 <span class="s2">    ---</span>
 <span class="s2">    spikes : &lt;spike_train&gt;</span>
 <span class="s2">    """</span>
@@ -3004,7 +3004,7 @@ class SpikeTrainCodec(dj.Codec):
 <div class="clipboard-copy-txt" id="cell-6">@schema
 class Unit(dj.Manual):
     definition = """
-    unit_id : int
+    unit_id : uint16
     ---
     spikes : <spike_train>
     """
