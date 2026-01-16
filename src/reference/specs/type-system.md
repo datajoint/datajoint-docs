@@ -503,7 +503,7 @@ Serializes Python objects using DataJoint's custom binary serialization format. 
 **Serialization format:**
 
 - **Protocol headers**:
-  - `mYm` — Original MATLAB-compatible format for numeric arrays, structs, cells
+  - `mYm` — Original MATLAB-compatible format for numeric arrays, structs, cells (see [mYm on MATLAB FileExchange](https://www.mathworks.com/matlabcentral/fileexchange/81208-mym) and [mym on GitHub](https://github.com/datajoint/mym))
   - `dj0` — Extended format supporting Python-specific types (UUID, Decimal, datetime, etc.)
 - **Compression**: Automatic zlib compression for data > 1KB
 - **Type codes**: Each Python type has a specific serialization code:

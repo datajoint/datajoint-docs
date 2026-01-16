@@ -262,6 +262,17 @@ Plugin codecs evolve over time. Following versioning best practices ensures your
 
 Plugin codecs evolve independently and need to handle data encoded by different plugin versions. Built-in codecs are part of DataJoint's API surface and evolve with the framework itself. When you upgrade DataJoint 2.0 → 3.0, you expect potential breaking changes. When you upgrade a plugin 1.0 → 2.0 while keeping DataJoint 2.0, backward compatibility is critical.
 
+**How built-in codecs handle versioning:**
+
+Built-in formats have **intrinsic versioning** - the format version is embedded in the data itself:
+
+- `<blob>` — Protocol header (`mYm\0` or `dj0\0`) at start of blob
+- `<npy@>` — NumPy format version in `.npy` file header
+- `<object@>` — Self-describing directory structure
+- `<attach>` — Filename + content (format-agnostic)
+
+When DataJoint needs to change a built-in codec's format, it can detect the old format from the embedded version information and handle migration transparently. This is why built-in codecs don't need an explicit `codec_version` field in database metadata.
+
 ### Version Strategy
 
 **Two version numbers matter for plugin codecs:**

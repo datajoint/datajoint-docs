@@ -114,7 +114,9 @@ Codecs provide `encode()`/`decode()` semantics for complex Python objects.
 Stores NumPy arrays, dicts, lists, and other Python objects using DataJoint's custom binary serialization format.
 
 **Serialization format:**
-- **Protocol headers**: `mYm` (MATLAB-compatible) or `dj0` (Python-extended)
+- **Protocol headers**:
+  - `mYm` — MATLAB-compatible format (see [mYm on MATLAB FileExchange](https://www.mathworks.com/matlabcentral/fileexchange/81208-mym) and [mym on GitHub](https://github.com/datajoint/mym))
+  - `dj0` — Python-extended format supporting additional types
 - **Optional compression**: zlib compression for data > 1KB
 - **Type-specific encoding**: Each Python type has a specific serialization code
 - **Version detection**: Protocol header embedded in blob enables format detection
