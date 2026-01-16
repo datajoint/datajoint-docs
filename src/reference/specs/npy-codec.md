@@ -281,7 +281,7 @@ arr = np.load('/path/to/store/my_schema/recording/recording_id=1/waveform.npy')
 1. **Single array only**: For multiple arrays, use separate attributes or `<object@>` with `.npz`
 2. **No compression**: For compressed storage, use a custom codec with `numpy.savez_compressed`
 3. **No object dtype**: Arrays containing arbitrary Python objects are not supported
-4. **Store only**: Cannot store inline in the database column
+4. **Store only**: Cannot store in-table (database column)
 
 ## See Also
 

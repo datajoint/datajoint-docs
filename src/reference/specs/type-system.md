@@ -19,7 +19,7 @@ Codec types resolve through core types to native types: `<blob>` → `bytes` →
 **Syntax distinction:**
 - Core types: `int32`, `float64`, `varchar(255)` - no brackets
 - Codec types: `<blob>`, `<object@store>`, `<filepath@main>` - angle brackets
-- The `@` character indicates store (object storage vs inline in database)
+- The `@` character indicates store (object storage vs in-table)
 
 ### OAS Addressing Schemes
 
@@ -215,9 +215,9 @@ composable and can be built-in or user-defined.
 
 ### Storage Mode: `@` Convention
 
-The `@` character in codec syntax indicates **object store** (vs inline in database):
+The `@` character in codec syntax indicates **object store** (vs in-table):
 
-- **No `@`**: Inline storage (database column) - e.g., `<blob>`, `<attach>`
+- **No `@`**: In-table storage (database column) - e.g., `<blob>`, `<attach>`
 - **`@` present**: Object store - e.g., `<blob@>`, `<attach@store>`
 - **`@` alone**: Use default store - e.g., `<blob@>`
 - **`@name`**: Use named store - e.g., `<blob@cold>`
@@ -270,9 +270,10 @@ returns the appropriate dtype based on storage mode:
 
 **Built-in codec. Store only.**
 
-Schema-addressed OAS storage for files and folders:
+Schema-addressed OAS storage for complex, multi-part objects (files, folders, Zarr arrays, HDF5):
 
 - **Schema-addressed**: Path mirrors database structure: `{schema}/{table}/{pk}/{attribute}/`
+- **Complex objects**: Can store directory structures with multiple files (e.g., Zarr arrays)
 - One-to-one relationship with table row
 - Deleted when row is deleted
 - Returns `ObjectRef` for lazy access
@@ -314,15 +315,15 @@ class ObjectCodec(SchemaCodec):
 
 **Built-in codec. Store only.**
 
-Hash-addressed storage with deduplication:
+Hash-addressed storage with deduplication for individual, atomic objects:
 
 - **Hash-addressed**: Path derived from content hash: `_hash/{hash[:2]}/{hash[2:4]}/{hash}`
-- **Single blob only**: stores a single file or serialized object (not folders)
+- **Individual/atomic objects only**: Stores single files or serialized blobs (not directory structures)
+- Cannot handle complex multi-part objects like Zarr arrays—use `<object@>` for those
 - **Per-project scope**: content is shared across all schemas in a project (not per-schema)
 - Many-to-one: multiple rows (even across schemas) can reference same content
 - Reference counted for garbage collection
 - Deduplication: identical content stored once across the entire project
-- For folders/complex objects, use `<object@>` instead
 - **dtype**: `json` (stores hash, store name, size, metadata)
 
 ```

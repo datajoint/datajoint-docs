@@ -8,12 +8,16 @@ An **Object-Augmented Schema** extends relational tables with object storage as 
 
 OAS supports two addressing schemes:
 
-| Addressing | Location | Path Derived From | Use Case |
-|------------|----------|-------------------|----------|
-| **Hash-addressed** | Object store | Content hash (MD5) | Blobs, attachments (with deduplication) |
-| **Schema-addressed** | Object store | Schema structure | NumPy arrays, Zarr, HDF5 (browsable paths) |
+| Addressing | Location | Path Derived From | Object Type | Use Case |
+|------------|----------|-------------------|-------------|----------|
+| **Hash-addressed** | Object store | Content hash (MD5) | Individual/atomic | Single blobs, single files, attachments (with deduplication) |
+| **Schema-addressed** | Object store | Schema structure | Complex/multi-part | Zarr arrays, HDF5 datasets, multi-file objects (browsable paths) |
 
-Data can also be stored **inline** directly in the database column (no `@` modifier).
+**Key distinction:**
+- **Hash-addressed** (`<blob@>`, `<attach@>`) stores individual, atomic objects - one object per field
+- **Schema-addressed** (`<npy@>`, `<object@>`) can store complex, multi-part objects like Zarr (directory structures with multiple files)
+
+Data can also be stored **in-table** directly in the database column (no `@` modifier).
 
 For complete details, see the [Type System specification](../reference/specs/type-system.md).
 
@@ -26,7 +30,7 @@ Use the `@` modifier for:
 - Zarr arrays and HDF5 files
 - Any data too large for efficient database storage
 
-## Inline vs Object Store
+## In-Table vs Object Store
 
 ```python
 @schema
@@ -34,7 +38,7 @@ class Recording(dj.Manual):
     definition = """
     recording_id : uuid
     ---
-    metadata : <blob>           # Inline: stored in database column
+    metadata : <blob>           # In-table: stored in database column
     raw_data : <blob@>          # Object store: hash-addressed
     waveforms : <npy@>          # Object store: schema-addressed (lazy)
     """
@@ -42,9 +46,11 @@ class Recording(dj.Manual):
 
 | Syntax | Storage | Best For |
 |--------|---------|----------|
-| `<blob>` | Database | Small objects (< 1 MB) |
-| `<blob@>` | Default store | Large objects (hash-addressed) |
-| `<npy@>` | Default store | NumPy arrays (schema-addressed, lazy) |
+| `<blob>` | Database | Small Python objects (typically < 1-10 MB) |
+| `<attach>` | Database | Small files with filename (typically < 1-10 MB) |
+| `<blob@>` | Default store | Large Python objects (hash-addressed, with dedup) |
+| `<attach@>` | Default store | Large files with filename (hash-addressed, with dedup) |
+| `<npy@>` | Default store | NumPy arrays (schema-addressed, lazy, navigable) |
 | `<blob@store>` | Named store | Specific storage tier |
 
 ## Store Data
@@ -300,16 +306,21 @@ local_path = ref.download('/tmp/data')
 | Data Type | Codec | Addressing | Lazy | Best For |
 |-----------|-------|------------|------|----------|
 | NumPy arrays | `<npy@>` | Schema | Yes | Arrays needing lazy load, metadata inspection |
-| Python objects | `<blob@>` | Hash | No | Dicts, lists, small arrays (with dedup) |
-| File attachments | `<attach@>` | Hash | No | Files with original filename preserved |
+| Python objects | `<blob>` or `<blob@>` | In-table or Hash | No | Dicts, lists, arrays (use `@` for large/dedup) |
+| File attachments | `<attach>` or `<attach@>` | In-table or Hash | No | Files with filename preserved (use `@` for large/dedup) |
 | Zarr/HDF5 | `<object@>` | Schema | Yes | Chunked arrays, streaming access |
 | File references | `<filepath@>` | External | Yes | References to external files |
 
 ### Size Guidelines
 
-- **< 1 MB**: Inline storage (`<blob>`) is fine
-- **1 MB - 1 GB**: Object store (`<npy@>` or `<blob@>`)
-- **> 1 GB**: Schema-addressed (`<npy@>`, `<object@>`) for lazy loading
+**Technical limits:**
+- **MySQL**: In-table blobs up to 4 GiB (`LONGBLOB`)
+- **PostgreSQL**: In-table blobs unlimited (`BYTEA`)
+
+**Practical recommendations** (consider accessibility, cost, performance):
+- **< 1-10 MB**: In-table storage (`<blob>`) often sufficient
+- **10-100 MB**: Object store (`<blob@>` with dedup, or `<npy@>` for arrays)
+- **> 100 MB**: Schema-addressed (`<npy@>`, `<object@>`) for streaming and lazy loading
 
 ### Store Tiers
 

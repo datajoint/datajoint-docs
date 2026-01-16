@@ -47,14 +47,107 @@ failed.delete()
 ProcessedData.populate()
 ```
 
+## When to Use Distributed Mode
+
+Choose your populate strategy based on your workload and infrastructure:
+
+### Use `populate()` (Default) When:
+
+✅ **Single worker** - Only one process computing at a time
+✅ **Fast computations** - Each make() completes in < 1 minute
+✅ **Small job count** - Processing < 100 entries
+✅ **Development/testing** - Iterating on make() logic
+
+**Advantages:**
+- Simplest approach (no job management overhead)
+- Immediate execution (no reservation delay)
+- Easy debugging (errors stop execution)
+
+**Example:**
+```python
+# Simple, direct execution
+ProcessedData.populate()
+```
+
+---
+
+### Use `populate(reserve_jobs=True)` When:
+
+✅ **Multiple workers** - Running on multiple machines or processes
+✅ **Long computations** - Each make() takes > 1 minute
+✅ **Production pipelines** - Need fault tolerance and monitoring
+✅ **Worker crashes expected** - Jobs can be resumed
+
+**Advantages:**
+- Prevents duplicate work between workers
+- Fault tolerance (crashed jobs can be retried)
+- Job status tracking (`ProcessedData.jobs`)
+- Error isolation (one failure doesn't stop others)
+
+**Example:**
+```python
+# Distributed mode with job coordination
+ProcessedData.populate(reserve_jobs=True)
+```
+
+**Job reservation overhead:** ~100ms per job
+**Worth it when:** Computations take > 10 seconds each
+
+---
+
+### Use `populate(reserve_jobs=True, processes=N)` When:
+
+✅ **Multi-core machine** - Want to use all CPU cores
+✅ **CPU-bound tasks** - Computations are CPU-intensive, not I/O
+✅ **Independent computations** - No shared state between jobs
+
+**Advantages:**
+- Parallel execution on single machine
+- No network coordination needed
+- Combines job safety with parallelism
+
+**Example:**
+```python
+# Use 4 CPU cores
+ProcessedData.populate(reserve_jobs=True, processes=4)
+```
+
+**Caution:** Don't use more processes than CPU cores (causes context switching overhead)
+
+---
+
+## Decision Tree
+
+```
+How many workers?
+├─ One → populate()
+└─ Multiple → Continue...
+
+How long per computation?
+├─ < 1 minute → populate() (overhead not worth it)
+└─ > 1 minute → Continue...
+
+Need fault tolerance?
+├─ Yes → populate(reserve_jobs=True)
+└─ No → populate() (simpler)
+
+Multiple cores on one machine?
+└─ Yes → populate(reserve_jobs=True, processes=N)
+```
+
 ## Distributed Computing
 
+For multi-worker coordination:
+
 ```python
-# Reserve jobs to prevent conflicts between workers
+# Worker 1 (on machine A)
 ProcessedData.populate(reserve_jobs=True)
 
-# Run on multiple machines/processes simultaneously
-# Each worker reserves and processes different keys
+# Worker 2 (on machine B)
+ProcessedData.populate(reserve_jobs=True)
+
+# Workers coordinate automatically via database
+# Each reserves different keys, no duplicates
 ```
 
 ## Check Progress
