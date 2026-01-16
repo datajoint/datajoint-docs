@@ -239,6 +239,264 @@ Upgrade DataJoint if needed:
 pip install --upgrade datajoint
 ```
 
+## Versioning and Backward Compatibility
+
+Plugin codecs evolve over time. Following versioning best practices ensures your data remains accessible across codec updates.
+
+### Version Strategy
+
+**Two version numbers matter:**
+
+1. **Package version** (semantic versioning: `0.1.0`, `1.0.0`, `2.0.0`)
+   - For codec package releases
+   - Follows standard semantic versioning
+
+2. **Data format version** (stored with each encoded value)
+   - Tracks storage format changes
+   - Enables decode() to handle multiple formats
+
+### Implementing Versioning
+
+**Include version in encoded metadata:**
+
+```python
+def encode(self, value, *, key=None, store_name=None):
+    # ... encoding logic ...
+
+    return {
+        "path": path,
+        "store": store_name,
+        "codec_version": "1.0",  # Data format version
+        "shape": list(value.shape),
+        "dtype": str(value.dtype),
+    }
+```
+
+**Handle multiple versions in decode:**
+
+```python
+def decode(self, stored, *, key=None):
+    version = stored.get("codec_version", "1.0")  # Default for old data
+
+    if version == "2.0":
+        return self._decode_v2(stored)
+    elif version == "1.0":
+        return self._decode_v1(stored)
+    else:
+        raise DataJointError(f"Unsupported codec version: {version}")
+```
+
+### When to Bump Versions
+
+**Bump data format version when:**
+- ✅ Changing storage structure or encoding algorithm
+- ✅ Modifying metadata schema
+- ✅ Changing compression parameters that affect decode
+
+**Don't bump for:**
+- ❌ Bug fixes that don't affect stored data format
+- ❌ Performance improvements to encode/decode logic
+- ❌ Adding new optional features (store version in attributes instead)
+
+### Backward Compatibility Patterns
+
+**Pattern 1: Version dispatch in decode()**
+
+```python
+class MyCodec(SchemaCodec):
+    name = "mycodec"
+    CURRENT_VERSION = "2.0"
+
+    def encode(self, value, *, key=None, store_name=None):
+        # Always encode with current version
+        metadata = {
+            "codec_version": self.CURRENT_VERSION,
+            # ... other metadata ...
+        }
+        return metadata
+
+    def decode(self, stored, *, key=None):
+        version = stored.get("codec_version", "1.0")
+
+        if version == "2.0":
+            # Current version - optimized path
+            return self._decode_current(stored)
+        elif version == "1.0":
+            # Legacy version - compatibility path
+            return self._decode_legacy_v1(stored)
+        else:
+            raise DataJointError(
+                f"Cannot decode {self.name} version {version}. "
+                f"Upgrade codec package or migrate data."
+            )
+```
+
+**Pattern 2: Zarr attributes for feature versions**
+
+For codecs using Zarr (like dj-zarr-codecs, dj-photon-codecs):
+
+```python
+def encode(self, value, *, key=None, store_name=None):
+    # ... write to Zarr ...
+
+    z = zarr.open(store_map, mode="r+")
+    z.attrs["codec_version"] = "2.0"
+    z.attrs["codec_name"] = self.name
+    z.attrs["feature_flags"] = ["compression", "chunking"]
+
+    return {
+        "path": path,
+        "store": store_name,
+        "codec_version": "2.0",  # Also in DB for quick access
+    }
+
+def decode(self, stored, *, key=None):
+    z = zarr.open(store_map, mode="r")
+    version = z.attrs.get("codec_version", "1.0")
+
+    # Handle version-specific decoding
+    if version == "2.0":
+        return z  # Return Zarr array directly
+    else:
+        return self._migrate_v1_to_v2(z)
+```
+
+### Migration Strategies
+
+**Strategy 1: Lazy migration (recommended)**
+
+Old data is migrated when accessed:
+
+```python
+def decode(self, stored, *, key=None):
+    version = stored.get("codec_version", "1.0")
+
+    if version == "1.0":
+        # Decode old format
+        data = self._decode_v1(stored)
+
+        # Optionally: re-encode to new format in background
+        # (requires database write access)
+        return data
+
+    return self._decode_current(stored)
+```
+
+**Strategy 2: Explicit migration script**
+
+For breaking changes, provide migration tools:
+
+```python
+# migration_tool.py
+def migrate_table_to_v2(table, field_name):
+    """Migrate all rows to codec version 2.0."""
+    for key in table.fetch("KEY"):
+        # Fetch with old codec
+        data = (table & key).fetch1(field_name)
+
+        # Re-insert with new codec (triggers encode)
+        table.update1({**key, field_name: data})
+```
+
+**Strategy 3: Deprecation warnings**
+
+```python
+def decode(self, stored, *, key=None):
+    version = stored.get("codec_version", "1.0")
+
+    if version == "1.0":
+        import warnings
+        warnings.warn(
+            f"Reading {self.name} v1.0 data. Support will be removed in v3.0. "
+            f"Please migrate: pip install {self.name}-migrate && migrate-data",
+            DeprecationWarning
+        )
+        return self._decode_v1(stored)
+```
+
+### Real-World Example: dj-photon-codecs Evolution
+
+**Version 1.0** (current):
+- Stores Anscombe-transformed data
+- Fixed compression (Blosc zstd level 5)
+- Fixed chunking (100 frames)
+
+**Hypothetical Version 2.0** (backward compatible):
+```python
+def encode(self, value, *, key=None, store_name=None):
+    # New: configurable compression
+    compression_level = getattr(self, 'compression_level', 5)
+
+    zarr.save_array(
+        store_map,
+        transformed,
+        compressor=zarr.Blosc(cname="zstd", clevel=compression_level),
+    )
+
+    z = zarr.open(store_map, mode="r+")
+    z.attrs["codec_version"] = "2.0"
+    z.attrs["compression_level"] = compression_level
+
+    return {
+        "path": path,
+        "codec_version": "2.0",  # <-- NEW
+        # ... rest same ...
+    }
+
+def decode(self, stored, *, key=None):
+    z = zarr.open(store_map, mode="r")
+    version = z.attrs.get("codec_version", "1.0")
+
+    # Both versions return zarr.Array - fully compatible!
+    if version in ("1.0", "2.0"):
+        return z
+    else:
+        raise DataJointError(f"Unsupported version: {version}")
+```
+
+### Testing Version Compatibility
+
+Include tests for version compatibility:
+
+```python
+def test_decode_v1_data():
+    """Ensure new codec can read old data."""
+    # Load fixture with v1.0 data
+    old_data = load_v1_fixture()
+
+    # Decode with current codec
+    codec = PhotonCodec()
+    result = codec.decode(old_data)
+
+    assert result.shape == (1000, 512, 512)
+    assert result.dtype == np.float64
+```
+
+### Package Version Guidelines
+
+Follow semantic versioning for codec packages:
+
+- **Patch (0.1.0 → 0.1.1)**: Bug fixes, no data format changes
+- **Minor (0.1.0 → 0.2.0)**: New features, backward compatible
+- **Major (0.1.0 → 1.0.0)**: Breaking changes (may require migration)
+
+**Example changelog:**
+
+```
+v2.0.0 (2026-02-01) - BREAKING
+  - Changed default compression from zstd-5 to zstd-3
+  - Data format v2.0 (can still read v1.0)
+  - Migration guide: docs/migration-v2.md
+
+v1.1.0 (2026-01-15)
+  - Added configurable chunk sizes (backward compatible)
+  - Data format still v1.0
+
+v1.0.1 (2026-01-10)
+  - Fixed edge case in Anscombe inverse transform
+  - Data format unchanged (v1.0)
+```
+
 ## Creating Your Own Codecs
 
 If you need a codec that doesn't exist yet, see:
