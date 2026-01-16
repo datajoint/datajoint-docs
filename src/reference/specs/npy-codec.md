@@ -287,4 +287,4 @@ arr = np.load('/path/to/store/my_schema/recording/recording_id=1/waveform.npy')
 
 - [Type System Specification](type-system.md) - Complete type system overview
 - [Codec API](codec-api.md) - Creating custom codecs
-- [Object Storage](type-system.md#object--path-addressed-storage) - Path-addressed storage details
+- [Schema-Addressed Storage](type-system.md#objectobjectstore-schema-addressed-storage) - Path-addressed storage details
