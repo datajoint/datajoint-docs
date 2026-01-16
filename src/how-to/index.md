@@ -39,6 +39,7 @@ they assume you understand the basics and focus on getting things done.
 ## Object Storage
 
 - [Use Object Storage](use-object-storage.md) — When and how
+- [Use Plugin Codecs](use-plugin-codecs.md) — Install codec packages via entry points
 - [Create Custom Codecs](create-custom-codec.md) — Domain-specific types
 - [Manage Large Data](manage-large-data.md) — Blobs, streaming, efficiency
 - [Clean Up External Storage](garbage-collection.md) — Garbage collection
