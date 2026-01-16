@@ -67,6 +67,8 @@ services:
             # BUILD mode: build static site from pre-executed notebooks
             # Install datajoint-python for mkdocstrings (needs to import for API docs)
             pip install -e /datajoint-python
+            # Generate llms-full.txt with current git info
+            python scripts/gen_llms_full.py
             mkdocs build --config-file ./mkdocs.yaml
         else
             echo "Unexpected mode..."

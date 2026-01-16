@@ -4,9 +4,14 @@ Generate llms-full.txt from documentation sources.
 
 This script concatenates all markdown documentation into a single file
 optimized for LLM consumption.
+
+The generated file is NOT committed to git - it's auto-generated during
+the build process with current version metadata.
 """
 
 import json
+import subprocess
+from datetime import datetime, timezone
 from pathlib import Path
 
 # Documentation root
@@ -24,6 +29,10 @@ SECTIONS = [
 
 HEADER = """# DataJoint Documentation (Full)
 
+Generated: {timestamp}
+Commit: {commit}
+Branch: {branch}
+
 > DataJoint is a Python framework for building scientific data pipelines with automated computation, integrity constraints, and seamless integration of relational databases with object storage. This documentation covers DataJoint 2.0.
 
 > This file contains the complete documentation for LLM consumption. For an index with links, see /llms.txt
@@ -31,6 +40,35 @@ HEADER = """# DataJoint Documentation (Full)
 ---
 
 """
+
+
+def get_git_info() -> dict[str, str]:
+    """Get current git commit hash and branch name."""
+    try:
+        commit = subprocess.check_output(
+            ["git", "rev-parse", "--short", "HEAD"],
+            cwd=Path(__file__).parent.parent,
+            stderr=subprocess.DEVNULL,
+        ).decode().strip()
+    except (subprocess.CalledProcessError, FileNotFoundError):
+        commit = "unknown"
+
+    try:
+        branch = subprocess.check_output(
+            ["git", "rev-parse", "--abbrev-ref", "HEAD"],
+            cwd=Path(__file__).parent.parent,
+            stderr=subprocess.DEVNULL,
+        ).decode().strip()
+    except (subprocess.CalledProcessError, FileNotFoundError):
+        branch = "unknown"
+
+    timestamp = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S UTC")
+
+    return {
+        "timestamp": timestamp,
+        "commit": commit,
+        "branch": branch,
+    }
 
 
 def read_markdown_file(filepath: Path) -> str:
@@ -79,7 +117,10 @@ def get_doc_files(directory: Path) -> list[Path]:
 
 def generate_llms_full():
     """Generate the llms-full.txt file."""
-    content_parts = [HEADER]
+    # Get current git info for version metadata
+    git_info = get_git_info()
+    header = HEADER.format(**git_info)
+    content_parts = [header]
 
     for section_name, section_dir in SECTIONS:
         section_path = DOCS_DIR / section_dir
