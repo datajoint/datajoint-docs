@@ -635,7 +635,7 @@ def garbage_collect(store_name):
 |---------|----------|------------|-------------|--------------|---------------|
 | Storage modes | Both | Both | External only | External only | External only |
 | Internal dtype | `bytes` | `bytes` | N/A | N/A | N/A |
-| External dtype | `<hash>` | `<hash>` | `json` | `json` | `json` |
+| External dtype | `<hash@>` | `<hash@>` | `json` | `json` | `json` |
 | Addressing | Hash | Hash | Primary key | Hash | Relative path |
 | Deduplication | Yes (external) | Yes (external) | No | Yes | No |
 | Structure | Single blob | Single file | Files, folders | Single blob | Any |
