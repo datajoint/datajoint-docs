@@ -58,16 +58,16 @@ Return the storage type:
 ```python
 def get_dtype(self, is_store: bool) -> str:
     if is_store:
-        return "<hash>"  # Hash-addressed storage
-    return "bytes"       # Inline database blob
+        return "<blob@>"  # Blob in object storage
+    return "bytes"        # Inline database blob
 ```
 
 Common return values:
 
 - `"bytes"` — Binary in database
 - `"json"` — JSON in database
-- `"<blob>"` — Chain to blob codec (hash-addressed when `@`)
-- `"<hash>"` — Hash-addressed storage
+- `"<blob>"` — Chain to blob codec (internal storage)
+- `"<blob@>"` — Blob in object storage
 
 ### `encode(value, *, key=None, store_name=None)`
 
@@ -135,7 +135,7 @@ class ZarrCodec(dj.Codec):
     def get_dtype(self, is_store: bool) -> str:
         if not is_store:
             raise DataJointError("<zarr> requires @ (store only)")
-        return "<object>"  # Schema-addressed storage
+        return "<object@>"  # Schema-addressed storage
 
     def encode(self, path, *, key=None, store_name=None):
         return path  # Path to zarr directory
