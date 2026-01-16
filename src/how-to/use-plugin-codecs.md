@@ -243,9 +243,28 @@ pip install --upgrade datajoint
 
 Plugin codecs evolve over time. Following versioning best practices ensures your data remains accessible across codec updates.
 
+### Built-in vs Plugin Codec Versioning
+
+**Built-in codecs** (`<blob>`, `<npy@>`, `<object@>`, etc.) are versioned with DataJoint:
+- ✅ Shipped with datajoint-python
+- ✅ Versioned by DataJoint release (2.0.0, 2.1.0, 3.0.0)
+- ✅ Upgraded when you upgrade DataJoint
+- ✅ Stability guaranteed by DataJoint's semantic versioning
+- ❌ **No explicit codec_version field needed** - DataJoint version is the codec version
+
+**Plugin codecs** (dj-zarr-codecs, dj-photon-codecs, etc.) have independent lifecycles:
+- ✅ Installed separately from DataJoint
+- ✅ Independent version numbers (0.1.0 → 1.0.0 → 2.0.0)
+- ✅ Users choose when to upgrade
+- ✅ **Must include explicit codec_version field** for backward compatibility
+
+**Why the difference?**
+
+Plugin codecs evolve independently and need to handle data encoded by different plugin versions. Built-in codecs are part of DataJoint's API surface and evolve with the framework itself. When you upgrade DataJoint 2.0 → 3.0, you expect potential breaking changes. When you upgrade a plugin 1.0 → 2.0 while keeping DataJoint 2.0, backward compatibility is critical.
+
 ### Version Strategy
 
-**Two version numbers matter:**
+**Two version numbers matter for plugin codecs:**
 
 1. **Package version** (semantic versioning: `0.1.0`, `1.0.0`, `2.0.0`)
    - For codec package releases
