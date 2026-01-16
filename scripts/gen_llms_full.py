@@ -4,9 +4,13 @@ Generate llms-full.txt from documentation sources.
 
 This script concatenates all markdown documentation into a single file
 optimized for LLM consumption.
+
+Note: llms-full.txt is auto-generated during build and not committed to git.
 """
 
 import json
+import subprocess
+from datetime import datetime, timezone
 from pathlib import Path
 
 # Documentation root
@@ -22,7 +26,30 @@ SECTIONS = [
     ("About", "about"),
 ]
 
+
+def get_git_info():
+    """Get current git commit hash and branch name."""
+    try:
+        commit = subprocess.check_output(
+            ["git", "rev-parse", "--short", "HEAD"],
+            stderr=subprocess.DEVNULL,
+            cwd=Path(__file__).parent.parent,
+        ).decode().strip()
+        branch = subprocess.check_output(
+            ["git", "rev-parse", "--abbrev-ref", "HEAD"],
+            stderr=subprocess.DEVNULL,
+            cwd=Path(__file__).parent.parent,
+        ).decode().strip()
+        return commit, branch
+    except Exception:
+        return "unknown", "unknown"
+
+
 HEADER = """# DataJoint Documentation (Full)
+
+Generated: {timestamp}
+Commit: {commit}
+Branch: {branch}
 
 > DataJoint is a Python framework for building scientific data pipelines with automated computation, integrity constraints, and seamless integration of relational databases with object storage. This documentation covers DataJoint 2.0.
 
@@ -79,7 +106,16 @@ def get_doc_files(directory: Path) -> list[Path]:
 
 def generate_llms_full():
     """Generate the llms-full.txt file."""
-    content_parts = [HEADER]
+    # Get current build metadata
+    commit, branch = get_git_info()
+    timestamp = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S UTC")
+
+    # Format header with metadata
+    content_parts = [HEADER.format(
+        timestamp=timestamp,
+        commit=commit,
+        branch=branch
+    )]
 
     for section_name, section_dir in SECTIONS:
         section_path = DOCS_DIR / section_dir

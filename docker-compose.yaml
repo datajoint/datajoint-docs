@@ -63,6 +63,8 @@ services:
         if echo "$${MODE}" | grep -i live &>/dev/null; then
             mkdocs serve --config-file ./mkdocs.yaml -a 0.0.0.0:8000
         elif echo "$${MODE}" | grep -i build &>/dev/null; then
+            # Generate llms-full.txt with current git info
+            python scripts/gen_llms_full.py
             mkdocs build --config-file ./mkdocs.yaml
         else
             echo "Unexpected mode..."
