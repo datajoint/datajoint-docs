@@ -334,3 +334,12 @@ Custom codecs enable:
 
 The codec system makes DataJoint extensible to any scientific domain without
 modifying the core framework.
+
+## Before Creating Your Own
+
+Check for existing plugin codecs that may already solve your needs:
+
+- **[dj-zarr-codecs](https://github.com/datajoint/dj-zarr-codecs)** — General numpy arrays with Zarr storage
+- **[dj-photon-codecs](https://github.com/datajoint/dj-photon-codecs)** — Photon-limited movies with Anscombe transformation and compression
+
+See the [Use Plugin Codecs](../how-to/use-plugin-codecs.md) guide for installation and usage of existing codec packages. Creating a custom codec is straightforward, but reusing existing ones saves time and ensures compatibility.

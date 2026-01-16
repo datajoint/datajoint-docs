@@ -111,7 +111,22 @@ Codecs provide `encode()`/`decode()` semantics for complex Python objects.
 
 ### `<blob>` — Serialized Python Objects
 
-Stores NumPy arrays, dicts, lists, and other Python objects.
+Stores NumPy arrays, dicts, lists, and other Python objects using DataJoint's custom binary serialization format.
+
+**Serialization format:**
+- **Protocol headers**:
+  - `mYm` — MATLAB-compatible format (see [mYm on MATLAB FileExchange](https://www.mathworks.com/matlabcentral/fileexchange/81208-mym) and [mym on GitHub](https://github.com/datajoint/mym))
+  - `dj0` — Python-extended format supporting additional types
+- **Optional compression**: zlib compression for data > 1KB
+- **Type-specific encoding**: Each Python type has a specific serialization code
+- **Version detection**: Protocol header embedded in blob enables format detection
+
+**Supported types:**
+- NumPy arrays (numeric, structured, recarrays)
+- Collections (dict, list, tuple, set)
+- Scalars (int, float, bool, complex, str, bytes)
+- Date/time objects (datetime, date, time)
+- UUID, Decimal
 
 ```python
 class Results(dj.Computed):
@@ -123,6 +138,10 @@ class Results(dj.Computed):
     raw_data : <blob@archive>   # External, 'archive' store
     """
 ```
+
+**Storage modes:**
+- `<blob>` — Stored in database as LONGBLOB (up to ~1GB depending on MySQL config)
+- `<blob@>` — Stored externally via `<hash@>` with MD5 deduplication
 
 ### `<attach>` — File Attachments
 

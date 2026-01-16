@@ -498,11 +498,39 @@ The `json` database type:
 
 **Supports both internal and external storage.**
 
-Serializes Python objects (NumPy arrays, dicts, lists, etc.) using DataJoint's
-blob format. Compatible with MATLAB.
+Serializes Python objects using DataJoint's custom binary serialization format. The format uses protocol headers and type-specific encoding to serialize complex Python objects efficiently.
+
+**Serialization format:**
+
+- **Protocol headers**:
+  - `mYm` — Original MATLAB-compatible format for numeric arrays, structs, cells (see [mYm on MATLAB FileExchange](https://www.mathworks.com/matlabcentral/fileexchange/81208-mym) and [mym on GitHub](https://github.com/datajoint/mym))
+  - `dj0` — Extended format supporting Python-specific types (UUID, Decimal, datetime, etc.)
+- **Compression**: Automatic zlib compression for data > 1KB
+- **Type codes**: Each Python type has a specific serialization code:
+  - `'A'` — NumPy arrays (numeric)
+  - `'F'` — NumPy recarrays (structured arrays with fields)
+  - `'\x01'` — Tuples
+  - `'\x02'` — Lists
+  - `'\x03'` — Sets
+  - `'\x04'` — Dicts
+  - `'\x05'` — Strings (UTF-8)
+  - `'\x06'` — Bytes
+  - `'\x0a'` — Unbounded integers
+  - `'\x0b'` — Booleans
+  - `'\x0c'` — Complex numbers
+  - `'\x0d'` — Floats
+  - `'d'` — Decimal
+  - `'t'` — Datetime/date/time
+  - `'u'` — UUID
+  - `'S'` — MATLAB structs
+  - `'C'` — MATLAB cell arrays
+
+**Version detection**: The protocol header (`mYm\0` or `dj0\0`) is embedded at the start of the blob, enabling automatic format detection and backward compatibility.
+
+**Storage modes:**
 
 - **`<blob>`**: Stored in database (`bytes` → `LONGBLOB`/`BYTEA`)
-- **`<blob@>`**: Stored externally via `<hash@>` with deduplication
+- **`<blob@>`**: Stored externally via `<hash@>` with MD5 deduplication
 - **`<blob@store>`**: Stored in specific named store
 
 ```python
@@ -636,7 +664,7 @@ def garbage_collect(store_name):
 |---------|----------|------------|-------------|--------------|---------------|
 | Storage modes | Both | Both | External only | External only | External only |
 | Internal dtype | `bytes` | `bytes` | N/A | N/A | N/A |
-| External dtype | `<hash>` | `<hash>` | `json` | `json` | `json` |
+| External dtype | `<hash@>` | `<hash@>` | `json` | `json` | `json` |
 | Addressing | Hash | Hash | Primary key | Hash | Relative path |
 | Deduplication | Yes (external) | Yes (external) | No | Yes | No |
 | Structure | Single blob | Single file | Files, folders | Single blob | Any |
