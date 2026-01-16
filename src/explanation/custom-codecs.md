@@ -42,7 +42,7 @@ class MyCodec(dj.Codec):
     """Store custom objects."""
     name = "mytype"  # Used as <mytype> in definitions
 
-    def get_dtype(self, is_external: bool) -> str:
+    def get_dtype(self, is_store: bool) -> str:
         """Return storage type."""
         return "<blob>"  # Chain to blob serialization
 
@@ -78,9 +78,9 @@ class GraphCodec(dj.Codec):
     """Store NetworkX graphs as adjacency data."""
     name = "graph"
 
-    def get_dtype(self, is_external: bool) -> str:
-        # Store as blob (internal) or hash-addressed (external)
-        return "<hash>" if is_external else "<blob>"
+    def get_dtype(self, is_store: bool) -> str:
+        # Store as blob (internal) or blob@ (external)
+        return "<blob@>" if is_store else "<blob>"
 
     def encode(self, graph, *, key=None, store_name=None):
         """Serialize graph to dict."""
@@ -136,10 +136,10 @@ class BamCodec(dj.Codec):
     """Store BAM alignments."""
     name = "bam"
 
-    def get_dtype(self, is_external: bool) -> str:
-        if not is_external:
+    def get_dtype(self, is_store: bool) -> str:
+        if not is_store:
             raise dj.DataJointError("<bam> requires external storage: use <bam@>")
-        return "<object>"  # Path-addressed storage for file structure
+        return "<object@>"  # Path-addressed storage for file structure
 
     def encode(self, alignments, *, key=None, store_name=None):
         """Write alignments to BAM format."""
@@ -162,8 +162,8 @@ class MedicalImageCodec(dj.Codec):
     """Store medical images with metadata."""
     name = "medimg"
 
-    def get_dtype(self, is_external: bool) -> str:
-        return "<hash>" if is_external else "<blob>"
+    def get_dtype(self, is_store: bool) -> str:
+        return "<blob@>" if is_store else "<blob>"
 
     def encode(self, image, *, key=None, store_name=None):
         """Serialize SimpleITK image."""
@@ -197,7 +197,7 @@ graph LR
 class CompressedGraphCodec(dj.Codec):
     name = "cgraph"
 
-    def get_dtype(self, is_external: bool) -> str:
+    def get_dtype(self, is_store: bool) -> str:
         return "<graph>"  # Chain to graph codec
 
     def encode(self, graph, *, key=None, store_name=None):
@@ -216,8 +216,8 @@ class CompressedGraphCodec(dj.Codec):
 class SmallDataCodec(dj.Codec):
     name = "small"
 
-    def get_dtype(self, is_external: bool) -> str:
-        if is_external:
+    def get_dtype(self, is_store: bool) -> str:
+        if is_store:
             raise dj.DataJointError("<small> is internal-only")
         return "json"
 ```
@@ -228,10 +228,10 @@ class SmallDataCodec(dj.Codec):
 class LargeDataCodec(dj.Codec):
     name = "large"
 
-    def get_dtype(self, is_external: bool) -> str:
-        if not is_external:
+    def get_dtype(self, is_store: bool) -> str:
+        if not is_store:
             raise dj.DataJointError("<large> requires @: use <large@>")
-        return "<object>"
+        return "<object@>"
 ```
 
 ### Both Modes
@@ -240,8 +240,8 @@ class LargeDataCodec(dj.Codec):
 class FlexibleCodec(dj.Codec):
     name = "flex"
 
-    def get_dtype(self, is_external: bool) -> str:
-        return "<hash>" if is_external else "<blob>"
+    def get_dtype(self, is_store: bool) -> str:
+        return "<blob@>" if is_store else "<blob>"
 ```
 
 ## Validation
