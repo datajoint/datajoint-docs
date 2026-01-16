@@ -2723,6 +2723,67 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#when-to-use-distributed-mode" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When to Use Distributed Mode
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="When to Use Distributed Mode">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#use-populate-default-when" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use populate() (Default) When:
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#use-populatereserve_jobstrue-when" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use populate(reserve_jobs=True) When:
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#use-populatereserve_jobstrue-processesn-when" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use populate(reserve_jobs=True, processes=N) When:
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#decision-tree" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Decision Tree
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#distributed-computing" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -5150,6 +5211,67 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#when-to-use-distributed-mode" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When to Use Distributed Mode
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="When to Use Distributed Mode">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#use-populate-default-when" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use populate() (Default) When:
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#use-populatereserve_jobstrue-when" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use populate(reserve_jobs=True) When:
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#use-populatereserve_jobstrue-processesn-when" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use populate(reserve_jobs=True, processes=N) When:
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#decision-tree" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Decision Tree
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#distributed-computing" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -5281,12 +5403,79 @@
 <span class="n">failed</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
 <span class="n">ProcessedData</span><span class="o">.</span><span class="n">populate</span><span class="p">()</span>
 </code></pre></div>
+<h2 id="when-to-use-distributed-mode">When to Use Distributed Mode<a class="headerlink" href="#when-to-use-distributed-mode" title="Permanent link">&para;</a></h2>
+<p>Choose your populate strategy based on your workload and infrastructure:</p>
+<h3 id="use-populate-default-when">Use <code>populate()</code> (Default) When:<a class="headerlink" href="#use-populate-default-when" title="Permanent link">&para;</a></h3>
+<p>✅ <strong>Single worker</strong> - Only one process computing at a time
+✅ <strong>Fast computations</strong> - Each make() completes in &lt; 1 minute
+✅ <strong>Small job count</strong> - Processing &lt; 100 entries
+✅ <strong>Development/testing</strong> - Iterating on make() logic</p>
+<p><strong>Advantages:</strong>
+- Simplest approach (no job management overhead)
+- Immediate execution (no reservation delay)
+- Easy debugging (errors stop execution)</p>
+<p><strong>Example:</strong>
+<div class="highlight"><pre><span></span><code><span class="c1"># Simple, direct execution</span>
+<span class="n">ProcessedData</span><span class="o">.</span><span class="n">populate</span><span class="p">()</span>
+</code></pre></div></p>
+<hr />
+<h3 id="use-populatereserve_jobstrue-when">Use <code>populate(reserve_jobs=True)</code> When:<a class="headerlink" href="#use-populatereserve_jobstrue-when" title="Permanent link">&para;</a></h3>
+<p>✅ <strong>Multiple workers</strong> - Running on multiple machines or processes
+✅ <strong>Long computations</strong> - Each make() takes &gt; 1 minute
+✅ <strong>Production pipelines</strong> - Need fault tolerance and monitoring
+✅ <strong>Worker crashes expected</strong> - Jobs can be resumed</p>
+<p><strong>Advantages:</strong>
+- Prevents duplicate work between workers
+- Fault tolerance (crashed jobs can be retried)
+- Job status tracking (<code>ProcessedData.jobs</code>)
+- Error isolation (one failure doesn't stop others)</p>
+<p><strong>Example:</strong>
+<div class="highlight"><pre><span></span><code><span class="c1"># Distributed mode with job coordination</span>
+<span class="n">ProcessedData</span><span class="o">.</span><span class="n">populate</span><span class="p">(</span><span class="n">reserve_jobs</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</code></pre></div></p>
+<p><strong>Job reservation overhead:</strong> ~100ms per job
+<strong>Worth it when:</strong> Computations take &gt; 10 seconds each</p>
+<hr />
+<h3 id="use-populatereserve_jobstrue-processesn-when">Use <code>populate(reserve_jobs=True, processes=N)</code> When:<a class="headerlink" href="#use-populatereserve_jobstrue-processesn-when" title="Permanent link">&para;</a></h3>
+<p>✅ <strong>Multi-core machine</strong> - Want to use all CPU cores
+✅ <strong>CPU-bound tasks</strong> - Computations are CPU-intensive, not I/O
+✅ <strong>Independent computations</strong> - No shared state between jobs</p>
+<p><strong>Advantages:</strong>
+- Parallel execution on single machine
+- No network coordination needed
+- Combines job safety with parallelism</p>
+<p><strong>Example:</strong>
+<div class="highlight"><pre><span></span><code><span class="c1"># Use 4 CPU cores</span>
+<span class="n">ProcessedData</span><span class="o">.</span><span class="n">populate</span><span class="p">(</span><span class="n">reserve_jobs</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">processes</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+</code></pre></div></p>
+<p><strong>Caution:</strong> Don't use more processes than CPU cores (causes context switching overhead)</p>
+<hr />
+<h2 id="decision-tree">Decision Tree<a class="headerlink" href="#decision-tree" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>How many workers?
+├─ One → populate()
+└─ Multiple → Continue...
+
+How long per computation?
+├─ &lt; 1 minute → populate() (overhead not worth it)
+└─ &gt; 1 minute → Continue...
+
+Need fault tolerance?
+├─ Yes → populate(reserve_jobs=True)
+└─ No → populate() (simpler)
+
+Multiple cores on one machine?
+└─ Yes → populate(reserve_jobs=True, processes=N)
+</code></pre></div>
 <h2 id="distributed-computing">Distributed Computing<a class="headerlink" href="#distributed-computing" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><span class="c1"># Reserve jobs to prevent conflicts between workers</span>
+<p>For multi-worker coordination:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Worker 1 (on machine A)</span>
 <span class="n">ProcessedData</span><span class="o">.</span><span class="n">populate</span><span class="p">(</span><span class="n">reserve_jobs</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-<span class="c1"># Run on multiple machines/processes simultaneously</span>
-<span class="c1"># Each worker reserves and processes different keys</span>
+<span class="c1"># Worker 2 (on machine B)</span>
+<span class="n">ProcessedData</span><span class="o">.</span><span class="n">populate</span><span class="p">(</span><span class="n">reserve_jobs</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># Workers coordinate automatically via database</span>
+<span class="c1"># Each reserves different keys, no duplicates</span>
 </code></pre></div>
 <h2 id="check-progress">Check Progress<a class="headerlink" href="#check-progress" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><span class="c1"># What&#39;s left to compute</span>

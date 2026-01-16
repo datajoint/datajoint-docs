@@ -4938,6 +4938,89 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#how-to-use-these-specifications" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How to Use These Specifications
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reading-order" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reading Order
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Reading Order">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#foundation-start-here" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Foundation (Start Here)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#query-algebra" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Query Algebra
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#data-operations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data Operations
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#object-storage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Object Storage
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#advanced-topics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Advanced Topics
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#document-structure" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4949,15 +5032,15 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#specifications_1" class="md-nav__link">
+  <a href="#specifications-by-topic" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Specifications
+        Specifications by Topic
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Specifications">
+    <nav class="md-nav" aria-label="Specifications by Topic">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -4972,7 +5055,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#query-algebra" class="md-nav__link">
+  <a href="#query-algebra_1" class="md-nav__link">
     <span class="md-ellipsis">
       
         Query Algebra
@@ -4994,10 +5077,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#object-store-configuration" class="md-nav__link">
+  <a href="#object-storage_1" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Object Store Configuration
+        Object Storage
       
     </span>
   </a>
@@ -5005,7 +5088,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#data-operations" class="md-nav__link">
+  <a href="#data-operations_1" class="md-nav__link">
     <span class="md-ellipsis">
       
         Data Operations
@@ -5049,6 +5132,50 @@ authoritative references for:</p>
 <li>Implementing compatible tools and extensions</li>
 <li>Debugging complex scenarios</li>
 </ul>
+<h2 id="how-to-use-these-specifications">How to Use These Specifications<a class="headerlink" href="#how-to-use-these-specifications" title="Permanent link">&para;</a></h2>
+<p><strong>If you're new to DataJoint:</strong>
+Start with the <a href="../../tutorials/">tutorials</a> and <a href="../../how-to/">how-to guides</a> before diving into specifications. Specs are technical references, not learning materials.</p>
+<p><strong>If you're implementing features:</strong>
+Use specs as authoritative sources for behavior. Start with dependencies (see below) and work up to your target specification.</p>
+<p><strong>If you're debugging:</strong>
+Specs clarify exact behavior when documentation or examples are ambiguous.</p>
+<h2 id="reading-order">Reading Order<a class="headerlink" href="#reading-order" title="Permanent link">&para;</a></h2>
+<h3 id="foundation-start-here">Foundation (Start Here)<a class="headerlink" href="#foundation-start-here" title="Permanent link">&para;</a></h3>
+<ol>
+<li><a href="table-declaration/">Table Declaration</a> — How to define tables</li>
+<li><a href="primary-keys/">Primary Keys</a> — Key propagation rules</li>
+<li><a href="type-system/">Type System</a> — Three-layer type architecture</li>
+</ol>
+<p><strong>Next:</strong> Choose based on your needs:
+- <strong>Working with data?</strong> → Data Operations
+- <strong>Building queries?</strong> → Query Algebra
+- <strong>Using large data?</strong> → Object Storage</p>
+<h3 id="query-algebra">Query Algebra<a class="headerlink" href="#query-algebra" title="Permanent link">&para;</a></h3>
+<p><strong>Prerequisites:</strong> Table Declaration, Primary Keys</p>
+<ol>
+<li><a href="query-algebra/">Query Operators</a> — Restrict, proj, join, aggr, union</li>
+<li><a href="semantic-matching/">Semantic Matching</a> — Attribute lineage</li>
+<li><a href="fetch-api/">Fetch API</a> — Data retrieval</li>
+</ol>
+<h3 id="data-operations">Data Operations<a class="headerlink" href="#data-operations" title="Permanent link">&para;</a></h3>
+<p><strong>Prerequisites:</strong> Table Declaration</p>
+<ol>
+<li><a href="data-manipulation/">Data Manipulation</a> — Insert, update, delete</li>
+<li><a href="autopopulate/">AutoPopulate</a> — Jobs 2.0 system</li>
+<li><a href="job-metadata/">Job Metadata</a> — Hidden job tracking columns</li>
+</ol>
+<h3 id="object-storage">Object Storage<a class="headerlink" href="#object-storage" title="Permanent link">&para;</a></h3>
+<p><strong>Prerequisites:</strong> Type System</p>
+<ol>
+<li><a href="object-store-configuration/">Object Store Configuration</a> — Store setup</li>
+<li><a href="codec-api/">Codec API</a> — Custom type implementation</li>
+<li><a href="npy-codec/"><code>&lt;npy&gt;</code> Codec</a> — NumPy array storage</li>
+</ol>
+<h3 id="advanced-topics">Advanced Topics<a class="headerlink" href="#advanced-topics" title="Permanent link">&para;</a></h3>
+<ol>
+<li><a href="master-part/">Master-Part Relationships</a> — Compositional modeling</li>
+<li><a href="virtual-schemas/">Virtual Schemas</a> — Schema introspection without source</li>
+</ol>
 <h2 id="document-structure">Document Structure<a class="headerlink" href="#document-structure" title="Permanent link">&para;</a></h2>
 <p>Each specification follows a consistent structure:</p>
 <ol>
@@ -5060,118 +5187,165 @@ authoritative references for:</p>
 <li><strong>Examples</strong> — Concrete code samples</li>
 <li><strong>Best Practices</strong> — Recommendations</li>
 </ol>
-<h2 id="specifications_1">Specifications<a class="headerlink" href="#specifications_1" title="Permanent link">&para;</a></h2>
+<h2 id="specifications-by-topic">Specifications by Topic<a class="headerlink" href="#specifications-by-topic" title="Permanent link">&para;</a></h2>
 <h3 id="schema-definition">Schema Definition<a class="headerlink" href="#schema-definition" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
 <th>Specification</th>
-<th>Description</th>
+<th>Prerequisites</th>
+<th>Related How-To</th>
+<th>Related Explanation</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><a href="table-declaration/">Table Declaration</a></td>
-<td>Table definition syntax, tiers, foreign keys, and indexes</td>
+<td>None</td>
+<td><a href="../../how-to/define-tables/">Define Tables</a></td>
+<td><a href="../../explanation/relational-workflow-model/">Relational Workflow Model</a></td>
 </tr>
 <tr>
 <td><a href="master-part/">Master-Part Relationships</a></td>
-<td>Compositional data modeling, integrity, and cascading operations</td>
+<td>Table Declaration</td>
+<td><a href="../../how-to/model-relationships/">Model Relationships</a></td>
+<td><a href="../../explanation/data-pipelines/">Data Pipelines</a></td>
 </tr>
 <tr>
 <td><a href="virtual-schemas/">Virtual Schemas</a></td>
-<td>Accessing schemas without Python source, introspection API</td>
+<td>Table Declaration</td>
+<td>—</td>
+<td>—</td>
 </tr>
 </tbody>
 </table>
-<h3 id="query-algebra">Query Algebra<a class="headerlink" href="#query-algebra" title="Permanent link">&para;</a></h3>
+<p><strong>Key concepts:</strong> Table tiers (Manual, Lookup, Imported, Computed, Part), foreign keys, dependency graphs, compositional modeling</p>
+<hr />
+<h3 id="query-algebra_1">Query Algebra<a class="headerlink" href="#query-algebra_1" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
 <th>Specification</th>
-<th>Description</th>
+<th>Prerequisites</th>
+<th>Related How-To</th>
+<th>Related Explanation</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><a href="query-algebra/">Query Operators</a></td>
-<td>Operators: restrict, proj, join, aggr, extend, union, U()</td>
+<td>Table Declaration, Primary Keys</td>
+<td><a href="../../how-to/query-data/">Query Data</a></td>
+<td><a href="../../explanation/query-algebra/">Query Algebra</a></td>
 </tr>
 <tr>
 <td><a href="semantic-matching/">Semantic Matching</a></td>
-<td>Attribute lineage and join compatibility</td>
+<td>Query Operators</td>
+<td><a href="../../how-to/model-relationships/">Model Relationships</a></td>
+<td><a href="../../explanation/query-algebra/">Query Algebra</a></td>
 </tr>
 <tr>
 <td><a href="primary-keys/">Primary Keys</a></td>
-<td>How primary keys propagate through query operators</td>
+<td>Table Declaration</td>
+<td><a href="../../how-to/design-primary-keys/">Design Primary Keys</a></td>
+<td><a href="../../explanation/entity-integrity/">Entity Integrity</a></td>
 </tr>
 <tr>
 <td><a href="fetch-api/">Fetch API</a></td>
-<td>Data retrieval methods and formats</td>
+<td>Query Operators</td>
+<td><a href="../../how-to/fetch-results/">Fetch Results</a></td>
+<td>—</td>
 </tr>
 </tbody>
 </table>
+<p><strong>Key concepts:</strong> Restriction (<code>&amp;</code>, <code>-</code>), projection (<code>.proj()</code>), join (<code>*</code>), aggregation (<code>.aggr()</code>), union, universal set (<code>U()</code>), attribute lineage</p>
+<hr />
 <h3 id="type-system">Type System<a class="headerlink" href="#type-system" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
 <th>Specification</th>
-<th>Description</th>
+<th>Prerequisites</th>
+<th>Related How-To</th>
+<th>Related Explanation</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><a href="type-system/">Type System</a></td>
-<td>Three-layer type architecture: native, core, and codec types</td>
+<td>None</td>
+<td><a href="../../how-to/choose-storage-type/">Choose a Storage Type</a></td>
+<td><a href="../../explanation/type-system/">Type System</a></td>
 </tr>
 <tr>
 <td><a href="codec-api/">Codec API</a></td>
-<td>Custom type implementation with encode/decode semantics</td>
+<td>Type System</td>
+<td><a href="../../how-to/create-custom-codec/">Create Custom Codec</a></td>
+<td><a href="../../explanation/custom-codecs/">Custom Codecs</a></td>
 </tr>
 <tr>
 <td><a href="npy-codec/"><code>&lt;npy&gt;</code> Codec</a></td>
-<td>Store numpy arrays as portable <code>.npy</code> files</td>
+<td>Type System</td>
+<td><a href="../../how-to/use-object-storage/">Use Object Storage</a></td>
+<td>—</td>
 </tr>
 </tbody>
 </table>
-<h3 id="object-store-configuration">Object Store Configuration<a class="headerlink" href="#object-store-configuration" title="Permanent link">&para;</a></h3>
+<p><strong>Key concepts:</strong> Native types (MySQL), core types (portable), codec types (Python objects), in-table vs object storage, addressing schemes</p>
+<hr />
+<h3 id="object-storage_1">Object Storage<a class="headerlink" href="#object-storage_1" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
 <th>Specification</th>
-<th>Description</th>
+<th>Prerequisites</th>
+<th>Related How-To</th>
+<th>Related Explanation</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><a href="object-store-configuration/">Object Store Configuration</a></td>
-<td>Store configuration, path generation, and storage models: hash-addressed (integrated), schema-addressed (integrated), and filepath (reference)</td>
+<td>Type System</td>
+<td><a href="../../how-to/configure-storage/">Configure Object Storage</a></td>
+<td><a href="../../explanation/data-pipelines/#object-augmented-schemas">Data Pipelines (OAS)</a></td>
 </tr>
 </tbody>
 </table>
-<h3 id="data-operations">Data Operations<a class="headerlink" href="#data-operations" title="Permanent link">&para;</a></h3>
+<p><strong>Key concepts:</strong> Hash-addressed storage (deduplication), schema-addressed storage (browsable paths), filepath storage (user-managed), store configuration, path generation</p>
+<hr />
+<h3 id="data-operations_1">Data Operations<a class="headerlink" href="#data-operations_1" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
 <th>Specification</th>
-<th>Description</th>
+<th>Prerequisites</th>
+<th>Related How-To</th>
+<th>Related Explanation</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><a href="data-manipulation/">Data Manipulation</a></td>
-<td>Insert, update1, delete operations and workflow normalization</td>
+<td>Table Declaration</td>
+<td><a href="../../how-to/insert-data/">Insert Data</a></td>
+<td><a href="../../explanation/normalization/">Normalization</a></td>
 </tr>
 <tr>
 <td><a href="autopopulate/">AutoPopulate</a></td>
-<td>Jobs 2.0 system for automated computation</td>
+<td>Table Declaration, Data Manipulation</td>
+<td><a href="../../how-to/run-computations/">Run Computations</a>, <a href="../../how-to/distributed-computing/">Distributed Computing</a></td>
+<td><a href="../../explanation/computation-model/">Computation Model</a></td>
 </tr>
 <tr>
 <td><a href="job-metadata/">Job Metadata</a></td>
-<td>Hidden columns for job tracking</td>
+<td>AutoPopulate</td>
+<td><a href="../../how-to/handle-errors/">Handle Errors</a></td>
+<td><a href="../../explanation/computation-model/">Computation Model</a></td>
 </tr>
 </tbody>
 </table>
+<p><strong>Key concepts:</strong> Insert patterns, transactional integrity, workflow normalization, Jobs 2.0, job coordination, populate(), make() method, job states</p>
 
 
 

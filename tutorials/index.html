@@ -4947,6 +4947,67 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#learning-paths" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Learning Paths
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Learning Paths">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#new-to-datajoint" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🌱 New to DataJoint
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#building-production-pipelines" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🚀 Building Production Pipelines
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#domain-specific-applications" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🧪 Domain-Specific Applications
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#extending-datajoint" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🔧 Extending DataJoint
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#basics" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -5082,6 +5143,69 @@ mkdir<span class="w"> </span>-p<span class="w"> </span>.secrets
 <span class="n">SessionAnalysis</span><span class="o">.</span><span class="n">populate</span><span class="p">()</span>
 </code></pre></div>
 <p>Continue learning with the structured tutorials below.</p>
+<h2 id="learning-paths">Learning Paths<a class="headerlink" href="#learning-paths" title="Permanent link">&para;</a></h2>
+<p>Choose your learning path based on your goals:</p>
+<h3 id="new-to-datajoint">🌱 New to DataJoint<a class="headerlink" href="#new-to-datajoint" title="Permanent link">&para;</a></h3>
+<p><strong>Goal:</strong> Understand core concepts and build your first pipeline</p>
+<p><strong>Path:</strong></p>
+<ol>
+<li><a href="basics/01-first-pipeline/">First Pipeline</a> — 30 min — Tables, queries, four core operations</li>
+<li><a href="basics/02-schema-design/">Schema Design</a> — 45 min — Primary keys, relationships, table tiers</li>
+<li><a href="basics/03-data-entry/">Data Entry</a> — 30 min — Inserting and managing data</li>
+<li><a href="basics/04-queries/">Queries</a> — 45 min — Operators, restrictions, projections</li>
+<li>Try an example: <a href="examples/university/">University Database</a> — Complete pipeline with realistic data</li>
+</ol>
+<p><strong>Next:</strong> Read <a href="../explanation/relational-workflow-model/">Relational Workflow Model</a> to understand the conceptual foundation.</p>
+<hr />
+<h3 id="building-production-pipelines">🚀 Building Production Pipelines<a class="headerlink" href="#building-production-pipelines" title="Permanent link">&para;</a></h3>
+<p><strong>Goal:</strong> Create automated, scalable data processing workflows</p>
+<p><strong>Prerequisites:</strong> Complete basics above or have equivalent experience</p>
+<p><strong>Path:</strong></p>
+<ol>
+<li><a href="basics/05-computation/">Computation</a> — Automated processing with Imported/Computed tables</li>
+<li><a href="basics/06-object-storage/">Object Storage</a> — Handle large data (arrays, files, images)</li>
+<li><a href="advanced/distributed/">Distributed Computing</a> — Multi-worker parallel execution</li>
+<li>Practice: <a href="examples/fractal-pipeline/">Fractal Pipeline</a> or <a href="examples/blob-detection/">Blob Detection</a></li>
+</ol>
+<p><strong>Next:</strong></p>
+<ul>
+<li><a href="../how-to/run-computations/">Run Computations</a> — populate() usage patterns</li>
+<li><a href="../how-to/distributed-computing/">Distributed Computing</a> — Cluster deployment</li>
+<li><a href="../how-to/handle-errors/">Handle Errors</a> — Job management and recovery</li>
+</ul>
+<hr />
+<h3 id="domain-specific-applications">🧪 Domain-Specific Applications<a class="headerlink" href="#domain-specific-applications" title="Permanent link">&para;</a></h3>
+<p><strong>Goal:</strong> Build scientific data pipelines for your field</p>
+<p><strong>Prerequisites:</strong> Complete basics, understand computation model</p>
+<p><strong>Production Software: <a href="https://datajoint.com/docs/elements/">DataJoint Elements</a></strong></p>
+<p>Standard pipelines for neurophysiology experiments, actively used in many labs worldwide. These are not tutorials—they are production-ready modular pipelines for calcium imaging, electrophysiology, array ephys, optogenetics, and more.</p>
+<p><strong>Learning tutorials (neuroscience):</strong></p>
+<ul>
+<li><a href="domain/calcium-imaging/calcium-imaging/">Calcium Imaging</a> — Import movies, segment cells, extract traces</li>
+<li><a href="domain/electrophysiology/electrophysiology/">Electrophysiology</a> — Import recordings, spike detection, waveforms</li>
+<li><a href="domain/allen-ccf/allen-ccf/">Allen CCF</a> — Hierarchical brain atlas ontology</li>
+</ul>
+<p><strong>General patterns:</strong></p>
+<ul>
+<li><a href="examples/hotel-reservations/">Hotel Reservations</a> — Booking systems with resource management</li>
+<li><a href="examples/languages/">Languages &amp; Proficiency</a> — Many-to-many relationships</li>
+</ul>
+<hr />
+<h3 id="extending-datajoint">🔧 Extending DataJoint<a class="headerlink" href="#extending-datajoint" title="Permanent link">&para;</a></h3>
+<p><strong>Goal:</strong> Customize DataJoint for specialized needs</p>
+<p><strong>Prerequisites:</strong> Proficient with basics and production pipelines</p>
+<p><strong>Path:</strong></p>
+<ol>
+<li><a href="advanced/custom-codecs/">Custom Codecs</a> — Create domain-specific data types</li>
+<li><a href="advanced/json-type/">JSON Data Type</a> — Semi-structured data patterns</li>
+<li><a href="advanced/sql-comparison/">SQL Comparison</a> — Understand DataJoint's query algebra</li>
+</ol>
+<p><strong>Next:</strong></p>
+<ul>
+<li><a href="../reference/specs/codec-api/">Codec API</a> — Complete codec specification</li>
+<li><a href="../how-to/create-custom-codec/">Create Custom Codec</a> — Step-by-step codec development</li>
+</ul>
+<hr />
 <h2 id="basics">Basics<a class="headerlink" href="#basics" title="Permanent link">&para;</a></h2>
 <p>Core concepts for getting started with DataJoint:</p>
 <ol>

@@ -886,10 +886,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#dimension-introducing-tables" class="md-nav__link">
+  <a href="#tables-that-introduce-dimensions" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Dimension-Introducing Tables
+        Tables That Introduce Dimensions
       
     </span>
   </a>
@@ -897,21 +897,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#dimension-inheriting-tables" class="md-nav__link">
+  <a href="#tables-that-dont-introduce-dimensions" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Dimension-Inheriting Tables
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#mixed-tables" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Mixed Tables
+        Tables That Don't Introduce Dimensions
       
     </span>
   </a>
@@ -5451,10 +5440,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#dimension-introducing-tables" class="md-nav__link">
+  <a href="#tables-that-introduce-dimensions" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Dimension-Introducing Tables
+        Tables That Introduce Dimensions
       
     </span>
   </a>
@@ -5462,21 +5451,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#dimension-inheriting-tables" class="md-nav__link">
+  <a href="#tables-that-dont-introduce-dimensions" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Dimension-Inheriting Tables
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#mixed-tables" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Mixed Tables
+        Tables That Don't Introduce Dimensions
       
     </span>
   </a>
@@ -5792,13 +5770,12 @@ Neither alone would be unique.</p>
 <p>The arrow <code>-&gt;</code> inherits the primary key from <code>Scan</code> and establishes both
 referential integrity and workflow dependency.</p>
 <h2 id="schema-dimensions">Schema Dimensions<a class="headerlink" href="#schema-dimensions" title="Permanent link">&para;</a></h2>
-<p>A <strong>dimension</strong> is an independent axis of variation in your data, introduced by
-a table that defines new primary key attributes. Dimensions are the fundamental
-building blocks of schema design.</p>
-<h3 id="dimension-introducing-tables">Dimension-Introducing Tables<a class="headerlink" href="#dimension-introducing-tables" title="Permanent link">&para;</a></h3>
-<p>A table <strong>introduces a dimension</strong> when it defines primary key attributes that
-don't come from a foreign key. In schema diagrams, these tables have
-<strong>underlined names</strong>.</p>
+<p>A <strong>dimension</strong> is an independent axis of variation in your data. The fundamental principle:</p>
+<blockquote>
+<p><strong>Any table that introduces a new primary key attribute introduces a new dimension.</strong></p>
+</blockquote>
+<p>This is true whether the table has only new attributes or also inherits attributes from foreign keys. The key is simply: new primary key attribute = new dimension.</p>
+<h3 id="tables-that-introduce-dimensions">Tables That Introduce Dimensions<a class="headerlink" href="#tables-that-introduce-dimensions" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="nd">@schema</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Subject</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
     <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
@@ -5808,41 +5785,42 @@ don't come from a foreign key. In schema diagrams, these tables have
 <span class="s2">    &quot;&quot;&quot;</span>
 
 <span class="nd">@schema</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">Modality</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Lookup</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Session</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
     <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
-<span class="s2">    modality : varchar(32)     # NEW dimension: modality</span>
+<span class="s2">    -&gt; Subject                 # Inherits subject_id</span>
+<span class="s2">    session_idx : uint16       # NEW dimension: session_idx</span>
 <span class="s2">    ---</span>
-<span class="s2">    description : varchar(255)</span>
+<span class="s2">    session_date : date</span>
+<span class="s2">    &quot;&quot;&quot;</span>
+
+<span class="nd">@schema</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Trial</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">    -&gt; Session                 # Inherits subject_id, session_idx</span>
+<span class="s2">    trial_idx : uint16         # NEW dimension: trial_idx</span>
+<span class="s2">    ---</span>
+<span class="s2">    outcome : enum(&#39;success&#39;, &#39;fail&#39;)</span>
 <span class="s2">    &quot;&quot;&quot;</span>
 </code></pre></div>
-<p>Both <code>Subject</code> and <code>Modality</code> are dimension-introducing tables—they create new
-axes along which data varies.</p>
-<h3 id="dimension-inheriting-tables">Dimension-Inheriting Tables<a class="headerlink" href="#dimension-inheriting-tables" title="Permanent link">&para;</a></h3>
-<p>A table <strong>inherits dimensions</strong> when its entire primary key comes from foreign
-keys. In schema diagrams, these tables have <strong>non-underlined names</strong>.</p>
+<p><strong>All three tables introduce dimensions:</strong></p>
+<ul>
+<li><code>Subject</code> introduces <code>subject_id</code> dimension</li>
+<li><code>Session</code> introduces <code>session_idx</code> dimension (even though it also inherits <code>subject_id</code>)</li>
+<li><code>Trial</code> introduces <code>trial_idx</code> dimension (even though it also inherits <code>subject_id</code>, <code>session_idx</code>)</li>
+</ul>
+<p>In schema diagrams, tables that introduce at least one new dimension have <strong>underlined names</strong>.</p>
+<h3 id="tables-that-dont-introduce-dimensions">Tables That Don't Introduce Dimensions<a class="headerlink" href="#tables-that-dont-introduce-dimensions" title="Permanent link">&para;</a></h3>
+<p>A table introduces <strong>no dimensions</strong> when its entire primary key comes from foreign keys:</p>
 <div class="highlight"><pre><span></span><code><span class="nd">@schema</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">SubjectProfile</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
     <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
-<span class="s2">    -&gt; Subject                 # Inherits subject_id dimension</span>
+<span class="s2">    -&gt; Subject                 # Inherits subject_id only</span>
 <span class="s2">    ---</span>
 <span class="s2">    weight : float32</span>
 <span class="s2">    &quot;&quot;&quot;</span>
 </code></pre></div>
-<p><code>SubjectProfile</code> doesn't introduce a new dimension—it extends the <code>Subject</code>
-dimension with additional attributes. There's exactly one profile per subject.</p>
-<h3 id="mixed-tables">Mixed Tables<a class="headerlink" href="#mixed-tables" title="Permanent link">&para;</a></h3>
-<p>Most tables both inherit and introduce dimensions:</p>
-<div class="highlight"><pre><span></span><code><span class="nd">@schema</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">Session</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
-<span class="s2">    -&gt; Subject                 # Inherits subject_id dimension</span>
-<span class="s2">    session_idx : uint16       # NEW dimension within subject</span>
-<span class="s2">    ---</span>
-<span class="s2">    session_date : date</span>
-<span class="s2">    &quot;&quot;&quot;</span>
-</code></pre></div>
-<p><code>Session</code> inherits the subject dimension but introduces a new dimension
-(<code>session_idx</code>) within each subject. This creates a hierarchical structure.</p>
+<p><code>SubjectProfile</code> doesn't introduce any new primary key attribute—it extends the <code>Subject</code> dimension with additional attributes. There's exactly one profile per subject.</p>
+<p>In schema diagrams, these tables have <strong>non-underlined names</strong>.</p>
 <h3 id="computed-tables-and-dimensions">Computed Tables and Dimensions<a class="headerlink" href="#computed-tables-and-dimensions" title="Permanent link">&para;</a></h3>
 <p><strong>Computed tables never introduce dimensions.</strong> Their primary key is entirely
 inherited from their dependencies:</p>
@@ -5881,13 +5859,13 @@ than introducing new ones.</p>
 introduces a new dimension (<code>blob_idx</code>) for individual blobs within each
 detection.</p>
 <h3 id="dimensions-and-attribute-lineage">Dimensions and Attribute Lineage<a class="headerlink" href="#dimensions-and-attribute-lineage" title="Permanent link">&para;</a></h3>
-<p>Every primary key attribute traces back to the dimension where it was first
+<p>Every foreign key attribute traces back to the dimension where it was first
 defined. This is called <strong>attribute lineage</strong>:</p>
 <div class="highlight"><pre><span></span><code>Subject.subject_id      → myschema.subject.subject_id (origin)
-Session.subject_id      → myschema.subject.subject_id (inherited)
+Session.subject_id      → myschema.subject.subject_id (inherited via foreign key)
 Session.session_idx     → myschema.session.session_idx (origin)
-Trial.subject_id        → myschema.subject.subject_id (inherited)
-Trial.session_idx       → myschema.session.session_idx (inherited)
+Trial.subject_id        → myschema.subject.subject_id (inherited via foreign key)
+Trial.session_idx       → myschema.session.session_idx (inherited via foreign key)
 Trial.trial_idx         → myschema.trial.trial_idx (origin)
 </code></pre></div>
 <p>Lineage enables <strong>semantic matching</strong>—DataJoint only joins attributes that

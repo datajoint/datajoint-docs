@@ -2882,10 +2882,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#inline-vs-object-store" class="md-nav__link">
+  <a href="#in-table-vs-object-store" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Inline vs Object Store
+        In-Table vs Object Store
       
     </span>
   </a>
@@ -5228,10 +5228,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#inline-vs-object-store" class="md-nav__link">
+  <a href="#in-table-vs-object-store" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Inline vs Object Store
+        In-Table vs Object Store
       
     </span>
   </a>
@@ -5457,6 +5457,7 @@
 <th>Addressing</th>
 <th>Location</th>
 <th>Path Derived From</th>
+<th>Object Type</th>
 <th>Use Case</th>
 </tr>
 </thead>
@@ -5465,17 +5466,22 @@
 <td><strong>Hash-addressed</strong></td>
 <td>Object store</td>
 <td>Content hash (MD5)</td>
-<td>Blobs, attachments (with deduplication)</td>
+<td>Individual/atomic</td>
+<td>Single blobs, single files, attachments (with deduplication)</td>
 </tr>
 <tr>
 <td><strong>Schema-addressed</strong></td>
 <td>Object store</td>
 <td>Schema structure</td>
-<td>NumPy arrays, Zarr, HDF5 (browsable paths)</td>
+<td>Complex/multi-part</td>
+<td>Zarr arrays, HDF5 datasets, multi-file objects (browsable paths)</td>
 </tr>
 </tbody>
 </table>
-<p>Data can also be stored <strong>inline</strong> directly in the database column (no <code>@</code> modifier).</p>
+<p><strong>Key distinction:</strong>
+- <strong>Hash-addressed</strong> (<code>&lt;blob@&gt;</code>, <code>&lt;attach@&gt;</code>) stores individual, atomic objects - one object per field
+- <strong>Schema-addressed</strong> (<code>&lt;npy@&gt;</code>, <code>&lt;object@&gt;</code>) can store complex, multi-part objects like Zarr (directory structures with multiple files)</p>
+<p>Data can also be stored <strong>in-table</strong> directly in the database column (no <code>@</code> modifier).</p>
 <p>For complete details, see the <a href="../../reference/specs/type-system/">Type System specification</a>.</p>
 <h2 id="when-to-use-object-storage">When to Use Object Storage<a class="headerlink" href="#when-to-use-object-storage" title="Permanent link">&para;</a></h2>
 <p>Use the <code>@</code> modifier for:</p>
@@ -5485,13 +5491,13 @@
 <li>Zarr arrays and HDF5 files</li>
 <li>Any data too large for efficient database storage</li>
 </ul>
-<h2 id="inline-vs-object-store">Inline vs Object Store<a class="headerlink" href="#inline-vs-object-store" title="Permanent link">&para;</a></h2>
+<h2 id="in-table-vs-object-store">In-Table vs Object Store<a class="headerlink" href="#in-table-vs-object-store" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><span class="nd">@schema</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Recording</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
     <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
 <span class="s2">    recording_id : uuid</span>
 <span class="s2">    ---</span>
-<span class="s2">    metadata : &lt;blob&gt;           # Inline: stored in database column</span>
+<span class="s2">    metadata : &lt;blob&gt;           # In-table: stored in database column</span>
 <span class="s2">    raw_data : &lt;blob@&gt;          # Object store: hash-addressed</span>
 <span class="s2">    waveforms : &lt;npy@&gt;          # Object store: schema-addressed (lazy)</span>
 <span class="s2">    &quot;&quot;&quot;</span>
@@ -5508,17 +5514,27 @@
 <tr>
 <td><code>&lt;blob&gt;</code></td>
 <td>Database</td>
-<td>Small objects (&lt; 1 MB)</td>
+<td>Small Python objects (typically &lt; 1-10 MB)</td>
+</tr>
+<tr>
+<td><code>&lt;attach&gt;</code></td>
+<td>Database</td>
+<td>Small files with filename (typically &lt; 1-10 MB)</td>
 </tr>
 <tr>
 <td><code>&lt;blob@&gt;</code></td>
 <td>Default store</td>
-<td>Large objects (hash-addressed)</td>
+<td>Large Python objects (hash-addressed, with dedup)</td>
+</tr>
+<tr>
+<td><code>&lt;attach@&gt;</code></td>
+<td>Default store</td>
+<td>Large files with filename (hash-addressed, with dedup)</td>
 </tr>
 <tr>
 <td><code>&lt;npy@&gt;</code></td>
 <td>Default store</td>
-<td>NumPy arrays (schema-addressed, lazy)</td>
+<td>NumPy arrays (schema-addressed, lazy, navigable)</td>
 </tr>
 <tr>
 <td><code>&lt;blob@store&gt;</code></td>
@@ -5748,17 +5764,17 @@
 </tr>
 <tr>
 <td>Python objects</td>
-<td><code>&lt;blob@&gt;</code></td>
-<td>Hash</td>
+<td><code>&lt;blob&gt;</code> or <code>&lt;blob@&gt;</code></td>
+<td>In-table or Hash</td>
 <td>No</td>
-<td>Dicts, lists, small arrays (with dedup)</td>
+<td>Dicts, lists, arrays (use <code>@</code> for large/dedup)</td>
 </tr>
 <tr>
 <td>File attachments</td>
-<td><code>&lt;attach@&gt;</code></td>
-<td>Hash</td>
+<td><code>&lt;attach&gt;</code> or <code>&lt;attach@&gt;</code></td>
+<td>In-table or Hash</td>
 <td>No</td>
-<td>Files with original filename preserved</td>
+<td>Files with filename preserved (use <code>@</code> for large/dedup)</td>
 </tr>
 <tr>
 <td>Zarr/HDF5</td>
@@ -5777,11 +5793,13 @@
 </tbody>
 </table>
 <h3 id="size-guidelines">Size Guidelines<a class="headerlink" href="#size-guidelines" title="Permanent link">&para;</a></h3>
-<ul>
-<li><strong>&lt; 1 MB</strong>: Inline storage (<code>&lt;blob&gt;</code>) is fine</li>
-<li><strong>1 MB - 1 GB</strong>: Object store (<code>&lt;npy@&gt;</code> or <code>&lt;blob@&gt;</code>)</li>
-<li><strong>&gt; 1 GB</strong>: Schema-addressed (<code>&lt;npy@&gt;</code>, <code>&lt;object@&gt;</code>) for lazy loading</li>
-</ul>
+<p><strong>Technical limits:</strong>
+- <strong>MySQL</strong>: In-table blobs up to 4 GiB (<code>LONGBLOB</code>)
+- <strong>PostgreSQL</strong>: In-table blobs unlimited (<code>BYTEA</code>)</p>
+<p><strong>Practical recommendations</strong> (consider accessibility, cost, performance):
+- <strong>&lt; 1-10 MB</strong>: In-table storage (<code>&lt;blob&gt;</code>) often sufficient
+- <strong>10-100 MB</strong>: Object store (<code>&lt;blob@&gt;</code> with dedup, or <code>&lt;npy@&gt;</code> for arrays)
+- <strong>&gt; 100 MB</strong>: Schema-addressed (<code>&lt;npy@&gt;</code>, <code>&lt;object@&gt;</code>) for streaming and lazy loading</p>
 <h3 id="store-tiers">Store Tiers<a class="headerlink" href="#store-tiers" title="Permanent link">&para;</a></h3>
 <p>Configure stores for different access patterns:</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>

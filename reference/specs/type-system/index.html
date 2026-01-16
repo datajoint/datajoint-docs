@@ -6088,7 +6088,7 @@
 <p><strong>Syntax distinction:</strong>
 - Core types: <code>int32</code>, <code>float64</code>, <code>varchar(255)</code> - no brackets
 - Codec types: <code>&lt;blob&gt;</code>, <code>&lt;object@store&gt;</code>, <code>&lt;filepath@main&gt;</code> - angle brackets
-- The <code>@</code> character indicates store (object storage vs inline in database)</p>
+- The <code>@</code> character indicates store (object storage vs in-table)</p>
 <h3 id="oas-addressing-schemes">OAS Addressing Schemes<a class="headerlink" href="#oas-addressing-schemes" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -6529,9 +6529,9 @@ definitions. This ensures consistent behavior across all tables and simplifies p
 <p>Codec types provide <code>encode()</code>/<code>decode()</code> semantics on top of core types. They are
 composable and can be built-in or user-defined.</p>
 <h3 id="storage-mode-convention">Storage Mode: <code>@</code> Convention<a class="headerlink" href="#storage-mode-convention" title="Permanent link">&para;</a></h3>
-<p>The <code>@</code> character in codec syntax indicates <strong>object store</strong> (vs inline in database):</p>
+<p>The <code>@</code> character in codec syntax indicates <strong>object store</strong> (vs in-table):</p>
 <ul>
-<li><strong>No <code>@</code></strong>: Inline storage (database column) - e.g., <code>&lt;blob&gt;</code>, <code>&lt;attach&gt;</code></li>
+<li><strong>No <code>@</code></strong>: In-table storage (database column) - e.g., <code>&lt;blob&gt;</code>, <code>&lt;attach&gt;</code></li>
 <li><strong><code>@</code> present</strong>: Object store - e.g., <code>&lt;blob@&gt;</code>, <code>&lt;attach@store&gt;</code></li>
 <li><strong><code>@</code> alone</strong>: Use default store - e.g., <code>&lt;blob@&gt;</code></li>
 <li><strong><code>@name</code></strong>: Use named store - e.g., <code>&lt;blob@cold&gt;</code></li>
@@ -6639,9 +6639,10 @@ returns the appropriate dtype based on storage mode:</p>
 </table>
 <h3 id="object-objectstore-schema-addressed-storage"><code>&lt;object@&gt;</code> / <code>&lt;object@store&gt;</code> - Schema-Addressed Storage<a class="headerlink" href="#object-objectstore-schema-addressed-storage" title="Permanent link">&para;</a></h3>
 <p><strong>Built-in codec. Store only.</strong></p>
-<p>Schema-addressed OAS storage for files and folders:</p>
+<p>Schema-addressed OAS storage for complex, multi-part objects (files, folders, Zarr arrays, HDF5):</p>
 <ul>
 <li><strong>Schema-addressed</strong>: Path mirrors database structure: <code>{schema}/{table}/{pk}/{attribute}/</code></li>
+<li><strong>Complex objects</strong>: Can store directory structures with multiple files (e.g., Zarr arrays)</li>
 <li>One-to-one relationship with table row</li>
 <li>Deleted when row is deleted</li>
 <li>Returns <code>ObjectRef</code> for lazy access</li>
@@ -6676,15 +6677,15 @@ returns the appropriate dtype based on storage mode:</p>
 </code></pre></div>
 <h3 id="hash-hashstore-hash-addressed-storage"><code>&lt;hash@&gt;</code> / <code>&lt;hash@store&gt;</code> - Hash-Addressed Storage<a class="headerlink" href="#hash-hashstore-hash-addressed-storage" title="Permanent link">&para;</a></h3>
 <p><strong>Built-in codec. Store only.</strong></p>
-<p>Hash-addressed storage with deduplication:</p>
+<p>Hash-addressed storage with deduplication for individual, atomic objects:</p>
 <ul>
 <li><strong>Hash-addressed</strong>: Path derived from content hash: <code>_hash/{hash[:2]}/{hash[2:4]}/{hash}</code></li>
-<li><strong>Single blob only</strong>: stores a single file or serialized object (not folders)</li>
+<li><strong>Individual/atomic objects only</strong>: Stores single files or serialized blobs (not directory structures)</li>
+<li>Cannot handle complex multi-part objects like Zarr arrays—use <code>&lt;object@&gt;</code> for those</li>
 <li><strong>Per-project scope</strong>: content is shared across all schemas in a project (not per-schema)</li>
 <li>Many-to-one: multiple rows (even across schemas) can reference same content</li>
 <li>Reference counted for garbage collection</li>
 <li>Deduplication: identical content stored once across the entire project</li>
-<li>For folders/complex objects, use <code>&lt;object@&gt;</code> instead</li>
 <li><strong>dtype</strong>: <code>json</code> (stores hash, store name, size, metadata)</li>
 </ul>
 <div class="highlight"><pre><span></span><code>store_root/

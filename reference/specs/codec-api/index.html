@@ -3065,7 +3065,7 @@ maintaining DataJoint's query capabilities.</p>
     <span class="n">definition</span> <span class="o">=</span> <span class="s1">'''</span>
 <span class="s1">    conn_id : int</span>
 <span class="s1">    ---</span>
-<span class="s1">    network : &lt;graph&gt;      # inline storage</span>
+<span class="s1">    network : &lt;graph&gt;      # in-table storage</span>
 <span class="s1">    network_ext : &lt;graph@&gt;  # object store</span>
 <span class="s1">    '''</span>
 </code></pre></div>
@@ -3184,7 +3184,7 @@ the <code>@</code> modifier is present in the table definition:</p>
 <span class="k">def</span><span class="w"> </span><span class="nf">get_dtype</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">is_store</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
     <span class="k">return</span> <span class="s2">"bytes"</span>
 
-<span class="c1"># Different behavior for inline/store</span>
+<span class="c1"># Different behavior for in-table/store</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">get_dtype</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">is_store</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
     <span class="k">return</span> <span class="s2">"&lt;hash&gt;"</span> <span class="k">if</span> <span class="n">is_store</span> <span class="k">else</span> <span class="s2">"bytes"</span>
 
