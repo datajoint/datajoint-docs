@@ -137,8 +137,9 @@ This organization makes external storage browsable and self-documenting.
 
 ### DataJoint-Maintained Codecs
 
-- **[dj-zarr-codecs](https://github.com/datajoint/dj-zarr-codecs)** — Zarr array storage
-- **[anscombe-transform](https://github.com/datajoint/anscombe-transform)** — Anscombe variance stabilization for imaging
+- **[dj-zarr-codecs](https://github.com/datajoint/dj-zarr-codecs)** — Zarr array storage for general numpy arrays
+- **[dj-photon-codecs](https://github.com/datajoint/dj-photon-codecs)** — Photon-limited movies with Anscombe transformation and compression
+- **[anscombe-transform](https://github.com/datajoint/anscombe-transform)** — Anscombe variance stabilization (Zarr/Numcodecs integration)
 
 ### Community Codecs
 
@@ -158,6 +159,7 @@ Or browse GitHub: https://github.com/topics/datajoint
 - Connectivity matrices
 
 **Imaging:**
+- Photon-limited movies (calcium imaging, low-light microscopy)
 - OME-TIFF, OME-ZARR
 - DICOM medical images
 - Point cloud data
@@ -327,4 +329,5 @@ check_requirements()
 - [Use Object Storage](use-object-storage.md) — Object storage configuration
 - [Create Custom Codecs](create-custom-codec.md) — Build your own codecs
 - [Type System](../reference/specs/type-system.md) — Complete type reference
-- [dj-zarr-codecs Repository](https://github.com/datajoint/dj-zarr-codecs) — Example implementation
+- [dj-zarr-codecs Repository](https://github.com/datajoint/dj-zarr-codecs) — General Zarr array storage
+- [dj-photon-codecs Repository](https://github.com/datajoint/dj-photon-codecs) — Photon-limited movies with compression
