@@ -139,7 +139,6 @@ This organization makes external storage browsable and self-documenting.
 
 - **[dj-zarr-codecs](https://github.com/datajoint/dj-zarr-codecs)** — Zarr array storage for general numpy arrays
 - **[dj-photon-codecs](https://github.com/datajoint/dj-photon-codecs)** — Photon-limited movies with Anscombe transformation and compression
-- **[anscombe-transform](https://github.com/datajoint/anscombe-transform)** — Anscombe variance stabilization (Zarr/Numcodecs integration)
 
 ### Community Codecs
 
