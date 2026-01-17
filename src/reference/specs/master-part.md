@@ -17,7 +17,7 @@ Any table class (`Manual`, `Lookup`, `Imported`, `Computed`) can serve as a mast
 class Session(dj.Manual):
     definition = """
     subject_id : varchar(16)
-    session_idx : uint8
+    session_idx : int16
     ---
     session_date : date
     """
@@ -32,7 +32,7 @@ Part tables are nested classes inheriting from `dj.Part`:
 class Session(dj.Manual):
     definition = """
     subject_id : varchar(16)
-    session_idx : uint8
+    session_idx : int16
     ---
     session_date : date
     """
@@ -40,7 +40,7 @@ class Session(dj.Manual):
     class Trial(dj.Part):
         definition = """
         -> master
-        trial_idx : uint16
+        trial_idx : int32
         ---
         stimulus : varchar(32)
         response : varchar(32)
@@ -136,7 +136,7 @@ class ProcessedSession(dj.Computed):
     definition = """
     -> Session
     ---
-    n_trials : uint16
+    n_trials : int32
     """
 
     class TrialResult(dj.Part):
@@ -336,7 +336,7 @@ Include minimal additional keys beyond master reference:
 ```python
 class Session(dj.Manual):
     definition = """
-    session_id : uint32
+    session_id : int64
     ---
     ...
     """
@@ -344,7 +344,7 @@ class Session(dj.Manual):
     class Trial(dj.Part):
         definition = """
         -> master
-        trial_idx : uint16      # Only trial-specific key
+        trial_idx : int32      # Only trial-specific key
         ---
         ...
         """
@@ -366,7 +366,7 @@ class Session(dj.Manual):
 class TrialEvent(dj.Manual):  # Not a Part, but references Trial
     definition = """
     -> Session.Trial
-    event_idx : uint8
+    event_idx : int16
     ---
     event_time : float32
     """

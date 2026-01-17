@@ -144,13 +144,13 @@ Scientist-friendly type names with guaranteed semantics:
 | Type | SQL Mapping | Size | Description |
 |------|-------------|------|-------------|
 | `int8` | `tinyint` | 1 byte | 8-bit signed integer |
-| `uint8` | `tinyint unsigned` | 1 byte | 8-bit unsigned integer |
+| `int16` | `tinyint unsigned` | 1 byte | 8-bit unsigned integer |
 | `int16` | `smallint` | 2 bytes | 16-bit signed integer |
-| `uint16` | `smallint unsigned` | 2 bytes | 16-bit unsigned integer |
+| `int32` | `smallint unsigned` | 2 bytes | 16-bit unsigned integer |
 | `int32` | `int` | 4 bytes | 32-bit signed integer |
-| `uint32` | `int unsigned` | 4 bytes | 32-bit unsigned integer |
+| `int64` | `int unsigned` | 4 bytes | 32-bit unsigned integer |
 | `int64` | `bigint` | 8 bytes | 64-bit signed integer |
-| `uint64` | `bigint unsigned` | 8 bytes | 64-bit unsigned integer |
+| `int64` | `bigint unsigned` | 8 bytes | 64-bit unsigned integer |
 | `float32` | `float` | 4 bytes | 32-bit IEEE 754 float |
 | `float64` | `double` | 8 bytes | 64-bit IEEE 754 float |
 | `bool` | `tinyint` | 1 byte | Boolean (0 or 1) |

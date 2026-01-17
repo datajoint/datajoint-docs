@@ -5,7 +5,7 @@
 This document defines a three-layer type architecture:
 
 1. **Native database types** - Backend-specific (`FLOAT`, `TINYINT UNSIGNED`, `LONGBLOB`). Discouraged for direct use.
-2. **Core DataJoint types** - Standardized across backends, scientist-friendly (`float32`, `uint8`, `bool`, `json`).
+2. **Core DataJoint types** - Standardized across backends, scientist-friendly (`int32`, `float32`, `bool`, `json`).
 3. **Codec Types** - Programmatic types with `encode()`/`decode()` semantics. Composable.
 
 | Layer | Description | Examples |
@@ -64,10 +64,6 @@ MySQL and PostgreSQL backends. Users should prefer these over native database ty
 | `int16` | 16-bit signed | `SMALLINT` | `SMALLINT` |
 | `int32` | 32-bit signed | `INT` | `INTEGER` |
 | `int64` | 64-bit signed | `BIGINT` | `BIGINT` |
-| `uint8` | 8-bit unsigned | `TINYINT UNSIGNED` | `SMALLINT` |
-| `uint16` | 16-bit unsigned | `SMALLINT UNSIGNED` | `INTEGER` |
-| `uint32` | 32-bit unsigned | `INT UNSIGNED` | `BIGINT` |
-| `uint64` | 64-bit unsigned | `BIGINT UNSIGNED` | `NUMERIC(20)` |
 | `float32` | 32-bit float | `FLOAT` | `REAL` |
 | `float64` | 64-bit float | `DOUBLE` | `DOUBLE PRECISION` |
 | `decimal(n,f)` | Fixed-point | `DECIMAL(n,f)` | `NUMERIC(n,f)` |
@@ -138,9 +134,12 @@ database backends.
 | `float` | `float32` or `float64` |
 | `double` | `float64` |
 | `tinyint` | `int8` |
-| `tinyint unsigned` | `uint8` |
 | `smallint` | `int16` |
 | `bigint` | `int64` |
+| `tinyint unsigned` | `int16` (use larger signed type) |
+| `smallint unsigned` | `int32` (use larger signed type) |
+| `int unsigned` | `int64` (use larger signed type) |
+| `bigint unsigned` | `decimal(20,0)` (use decimal for full range) |
 
 ### Type Modifiers Policy
 
@@ -158,7 +157,7 @@ declarative syntax:
 | `CHARACTER SET` | ❌ Not allowed | Database-level configuration |
 | `COLLATE` | ❌ Not allowed | Database-level configuration |
 | `AUTO_INCREMENT` | ⚠️ Discouraged | Allowed with native types only, generates warning |
-| `UNSIGNED` | ✅ Allowed | Part of type semantics (use `uint*` core types) |
+| `UNSIGNED` | ⚠️ Discouraged | MySQL-specific, not portable (use larger signed type) |
 
 **Nullability and defaults:** DataJoint handles nullability through the default value syntax.
 An attribute is nullable if and only if its default is `NULL`:
@@ -685,7 +684,7 @@ def garbage_collect(store_name):
    - Layer 1: Native database types (backend-specific, discouraged)
    - Layer 2: Core DataJoint types (standardized, scientist-friendly)
    - Layer 3: Codec types (encode/decode, composable)
-2. **Core types are scientist-friendly**: `float32`, `uint8`, `bool`, `bytes` instead of `FLOAT`, `TINYINT UNSIGNED`, `LONGBLOB`
+2. **Core types are scientist-friendly**: `float32`, `int8`, `bool`, `bytes` instead of `FLOAT`, `TINYINT`, `LONGBLOB`
 3. **Codecs use angle brackets**: `<blob>`, `<object@store>`, `<filepath@main>` - distinguishes from core types
 4. **`@` indicates external storage**: No `@` = database, `@` present = object store
 5. **`get_dtype(is_external)` method**: Codecs resolve dtype at declaration time based on storage mode

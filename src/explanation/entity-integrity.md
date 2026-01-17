@@ -141,7 +141,7 @@ attributes:
 class Recording(dj.Manual):
     definition = """
     -> Session
-    recording_idx : uint16   # Recording number within session
+    recording_idx : int32   # Recording number within session
     ---
     duration : float32       # seconds
     """
@@ -163,7 +163,7 @@ class Segmentation(dj.Computed):
     definition = """
     -> Scan           # Depends on Scan
     ---
-    num_cells : uint32
+    num_cells : int64
     """
 ```
 
@@ -193,7 +193,7 @@ class Subject(dj.Manual):
 class Session(dj.Manual):
     definition = """
     -> Subject                 # Inherits subject_id
-    session_idx : uint16       # NEW dimension: session_idx
+    session_idx : int32       # NEW dimension: session_idx
     ---
     session_date : date
     """
@@ -202,7 +202,7 @@ class Session(dj.Manual):
 class Trial(dj.Manual):
     definition = """
     -> Session                 # Inherits subject_id, session_idx
-    trial_idx : uint16         # NEW dimension: trial_idx
+    trial_idx : int32         # NEW dimension: trial_idx
     ---
     outcome : enum('success', 'fail')
     """
@@ -245,7 +245,7 @@ class SessionSummary(dj.Computed):
     definition = """
     -> Session                 # PK = (subject_id, session_idx)
     ---
-    num_trials : uint32
+    num_trials : int64
     accuracy : float32
     """
 ```
@@ -264,13 +264,13 @@ class Detection(dj.Computed):
     -> Image                   # Inherits image_id
     -> DetectionParams         # Inherits params_id
     ---
-    num_blobs : uint32
+    num_blobs : int64
     """
 
     class Blob(dj.Part):
         definition = """
         -> master              # Inherits (image_id, params_id)
-        blob_idx : uint16      # NEW dimension within detection
+        blob_idx : int32      # NEW dimension within detection
         ---
         x : float32
         y : float32
@@ -339,9 +339,9 @@ experimental structure and ensures correct joins through semantic matching.
 # Wrong: experiment_id alone isn't unique
 class Trial(dj.Manual):
     definition = """
-    experiment_id : uint32
+    experiment_id : int64
     ---
-    trial_number : uint16   # Should be part of key!
+    trial_number : int32   # Should be part of key!
     result : float32
     """
 ```
@@ -352,7 +352,7 @@ class Trial(dj.Manual):
 # Wrong: timestamp makes every row unique, losing entity semantics
 class Measurement(dj.Manual):
     definition = """
-    subject_id : uint32
+    subject_id : int64
     timestamp : datetime(6)   # Microsecond precision
     ---
     value : float32

@@ -523,7 +523,7 @@ class SpikeWaveforms(dj.Computed):
     """Extracted spike shapes"""
     definition = """
     -> ContinuousData
-    unit_id : uint32
+    unit_id : int64
     ---
     waveforms : <npy@>                   # 20 MB array, lazy load
     """
@@ -571,7 +571,7 @@ class FluorescenceTraces(dj.Computed):
     """Extracted time series"""
     definition = """
     -> SegmentedCells
-    cell_id : uint32
+    cell_id : int64
     ---
     trace : <blob@>                      # 500 KB per cell, deduplicated
     """

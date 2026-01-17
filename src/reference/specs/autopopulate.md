@@ -671,7 +671,7 @@ Analysis.jobs.progress()   # Status summary
 <primary key attributes from FK references>
 ---
 status : enum('pending', 'reserved', 'success', 'error', 'ignore')
-priority : uint8                    # Lower = more urgent (0 = highest)
+priority : int16                    # Lower = more urgent (0 = highest)
 created_time : timestamp
 scheduled_time : timestamp          # Process on or after this time
 reserved_time : timestamp           # When reserved
@@ -681,8 +681,8 @@ error_message : varchar(2047)       # Truncated error
 error_stack : <blob>                # Full traceback
 user : varchar(255)                 # Database user
 host : varchar(255)                 # Worker hostname
-pid : uint32                        # Process ID
-connection_id : uint64              # MySQL connection ID
+pid : int64                        # Process ID
+connection_id : int64              # MySQL connection ID
 version : varchar(255)              # Code version
 ```
 

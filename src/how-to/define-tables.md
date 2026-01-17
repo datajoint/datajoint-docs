@@ -41,7 +41,7 @@ class MyTable(dj.Manual):
 ```python
 definition = """
 subject_id : varchar(16)      # Subject identifier
-session_idx : uint16          # Session number
+session_idx : int32          # Session number
 ---
 ...
 """
@@ -137,7 +137,7 @@ See [Design Primary Keys](design-primary-keys.md) for detailed guidance on key s
 |------|-------------|
 | `bool` | Boolean (true/false) |
 | `int8`, `int16`, `int32`, `int64` | Signed integers |
-| `uint8`, `uint16`, `uint32`, `uint64` | Unsigned integers |
+| `int16`, `int32`, `int64`, `int64` | Unsigned integers |
 | `float32`, `float64` | Floating point |
 | `decimal(m,n)` | Fixed precision decimal |
 | `varchar(n)` | Variable-length string |
@@ -196,7 +196,7 @@ Native types are flagged with a warning at declaration time but are allowed. Cor
 class Session(dj.Manual):
     definition = """
     -> Subject                # References Subject table
-    session_idx : uint16
+    session_idx : int32
     ---
     session_date : date
     """
@@ -227,7 +227,7 @@ class TaskType(dj.Lookup):
 class Session(dj.Manual):
     definition = """
     -> Subject
-    session_idx : uint16
+    session_idx : int32
     ---
     session_date : date
     """
@@ -235,7 +235,7 @@ class Session(dj.Manual):
     class Trial(dj.Part):
         definition = """
         -> master
-        trial_idx : uint16
+        trial_idx : int32
         ---
         outcome : enum('hit', 'miss')
         reaction_time : float32
@@ -250,7 +250,7 @@ class SessionStats(dj.Computed):
     definition = """
     -> Session
     ---
-    n_trials : uint32
+    n_trials : int64
     hit_rate : float32
     """
 
@@ -270,7 +270,7 @@ Declare indexes at the end of the definition, after all attributes:
 ```python
 definition = """
 subject_id : varchar(16)
-session_idx : uint16
+session_idx : int32
 ---
 session_date : date
 experimenter : varchar(50)
@@ -288,7 +288,7 @@ Tables are declared in the database when the `@schema` decorator applies to the 
 @schema  # Table is declared here
 class Session(dj.Manual):
     definition = """
-    session_id : uint16
+    session_id : int32
     ---
     session_date : date
     """
