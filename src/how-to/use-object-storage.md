@@ -183,7 +183,7 @@ with ImagingSession.staged_insert1 as staged:
 
     # 3. Write directly (no local copy)
     z = zarr.open(store, mode='w', shape=(1000, 512, 512),
-                  chunks=(10, 512, 512), dtype='uint16')
+                  chunks=(10, 512, 512), dtype='int32')
     for i in range(1000):
         z[i] = acquire_frame()  # Write frame-by-frame
 

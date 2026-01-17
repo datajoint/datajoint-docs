@@ -36,7 +36,7 @@ schema = dj.Schema('my_pipeline')
 @schema
 class Subject(dj.Manual):
     definition = """
-    subject_id : uint16
+    subject_id : int32
     ---
     name : varchar(100)
     date_of_birth : date
@@ -46,7 +46,7 @@ class Subject(dj.Manual):
 class Session(dj.Manual):
     definition = """
     -> Subject
-    session_idx : uint8
+    session_idx : int16
     ---
     session_date : date
     """

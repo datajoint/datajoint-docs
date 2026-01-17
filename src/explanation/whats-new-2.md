@@ -24,7 +24,7 @@ If you're upgrading from legacy DataJoint, these changes require code updates:
 | **Fetch API** | `table.fetch()` | `table.to_dicts()` or `.to_arrays()` |
 | **Update** | `(table & key)._update('attr', val)` | `table.update1({**key, 'attr': val})` |
 | **Join** | `table1 @ table2` | `table1 * table2` (with semantic check) |
-| **Type syntax** | `longblob`, `int unsigned` | `<blob>`, `uint32` |
+| **Type syntax** | `longblob`, `int unsigned` | `<blob>`, `int64` |
 | **Jobs** | `~jobs` table | Per-table `~~table_name` |
 
 See the [Migration Guide](../how-to/migrate-to-v20.md) for complete upgrade steps.
@@ -75,7 +75,7 @@ Legacy DataJoint overloaded MySQL types with implicit conversions:
 | `longblob` | `<blob>` |
 | `attach` | `<attach>` |
 | `blob@store` | `<blob@store>` |
-| `int unsigned` | `uint32` |
+| `int unsigned` | `int64` |
 
 ### Three-Tier Architecture
 
@@ -207,7 +207,7 @@ This enables efficient access to large datasets stored in Zarr, HDF5, or custom 
 ### Deprecated Features
 
 - **AdaptedTypes**: Replaced by codec system (still works but migration recommended)
-- **Native type syntax**: `int unsigned` → `uint32` (warnings on new tables)
+- **Native type syntax**: `int unsigned` → `int64` (warnings on new tables)
 - **Legacy external storage** (`blob@store`): Replaced by `<blob@store>` codec syntax
 
 ### Legacy Support
@@ -238,7 +238,7 @@ Upgrading from DataJoint 0.x is a **phased process** designed to minimize risk:
 - **No database changes** — legacy clients still work
 
 ### Phase 2: Type Migration (Reversible)
-- Update database column comments to use core types (`:uint32:`, `:<blob>:`)
+- Update database column comments to use core types (`:int64:`, `:<blob>:`)
 - Rebuild `~lineage` tables for semantic matching
 - Update Python table definitions
 - **Legacy clients still work** — only metadata changed

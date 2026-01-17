@@ -14,7 +14,7 @@ class Segmentation(dj.Computed):
     definition = """
     -> Scan
     ---
-    num_cells : uint32
+    num_cells : int64
     cell_masks : <blob@>
     """
 

@@ -39,7 +39,7 @@ Combine attributes when a single attribute isn't unique:
 class Session(dj.Manual):
     definition = """
     -> Subject
-    session_idx : uint16        # Session number within subject
+    session_idx : int32        # Session number within subject
     ---
     session_date : date
     """
@@ -100,7 +100,7 @@ Foreign keys above the `---` become part of the primary key:
 class Trial(dj.Manual):
     definition = """
     -> Session                  # In primary key
-    trial_idx : uint16          # In primary key
+    trial_idx : int32          # In primary key
     ---
     -> Stimulus                  # NOT in primary key
     outcome : enum('hit', 'miss')
@@ -111,11 +111,11 @@ class Trial(dj.Manual):
 
 ### Keep Keys Small
 
-Prefer `uint16` over `int64` when the range allows:
+Prefer `int32` over `int64` when the range allows:
 
 ```python
 # Good: Appropriate size
-session_idx : uint16     # Max 65,535 sessions per subject
+session_idx : int32     # Max 65,535 sessions per subject
 
 # Avoid: Unnecessarily large
 session_idx : int64      # Wastes space, slower joins
@@ -145,7 +145,7 @@ session_date : date
 
 # Good: Add a sequence number
 -> Subject
-session_idx : uint16
+session_idx : int32
 ---
 session_date : date
 ```
@@ -172,7 +172,7 @@ Once a table has data, primary keys cannot be changed. Plan carefully:
 class Scan(dj.Manual):
     definition = """
     -> Session
-    scan_idx : uint8           # Might need uint16 for high-throughput
+    scan_idx : int16           # Might need int32 for high-throughput
     ---
     ...
     """

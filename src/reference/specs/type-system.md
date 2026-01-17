@@ -684,7 +684,7 @@ def garbage_collect(store_name):
    - Layer 1: Native database types (backend-specific, discouraged)
    - Layer 2: Core DataJoint types (standardized, scientist-friendly)
    - Layer 3: Codec types (encode/decode, composable)
-2. **Core types are scientist-friendly**: `float32`, `uint8`, `bool`, `bytes` instead of `FLOAT`, `TINYINT UNSIGNED`, `LONGBLOB`
+2. **Core types are scientist-friendly**: `float32`, `int8`, `bool`, `bytes` instead of `FLOAT`, `TINYINT`, `LONGBLOB`
 3. **Codecs use angle brackets**: `<blob>`, `<object@store>`, `<filepath@main>` - distinguishes from core types
 4. **`@` indicates external storage**: No `@` = database, `@` present = object store
 5. **`get_dtype(is_external)` method**: Codecs resolve dtype at declaration time based on storage mode
