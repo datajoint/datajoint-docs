@@ -5776,7 +5776,7 @@ attributes:</p>
 <span class="k">class</span><span class="w"> </span><span class="nc">Recording</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
     <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
 <span class="s2">    -&gt; Session</span>
-<span class="s2">    recording_idx : uint16   # Recording number within session</span>
+<span class="s2">    recording_idx : int32   # Recording number within session</span>
 <span class="s2">    ---</span>
 <span class="s2">    duration : float32       # seconds</span>
 <span class="s2">    &quot;&quot;&quot;</span>
@@ -5794,7 +5794,7 @@ Neither alone would be unique.</p>
     <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
 <span class="s2">    -&gt; Scan           # Depends on Scan</span>
 <span class="s2">    ---</span>
-<span class="s2">    num_cells : uint32</span>
+<span class="s2">    num_cells : int64</span>
 <span class="s2">    &quot;&quot;&quot;</span>
 </code></pre></div>
 <p>The arrow <code>-&gt;</code> inherits the primary key from <code>Scan</code> and establishes both
@@ -5818,7 +5818,7 @@ referential integrity and workflow dependency.</p>
 <span class="k">class</span><span class="w"> </span><span class="nc">Session</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
     <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
 <span class="s2">    -&gt; Subject                 # Inherits subject_id</span>
-<span class="s2">    session_idx : uint16       # NEW dimension: session_idx</span>
+<span class="s2">    session_idx : int32       # NEW dimension: session_idx</span>
 <span class="s2">    ---</span>
 <span class="s2">    session_date : date</span>
 <span class="s2">    &quot;&quot;&quot;</span>
@@ -5827,7 +5827,7 @@ referential integrity and workflow dependency.</p>
 <span class="k">class</span><span class="w"> </span><span class="nc">Trial</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
     <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
 <span class="s2">    -&gt; Session                 # Inherits subject_id, session_idx</span>
-<span class="s2">    trial_idx : uint16         # NEW dimension: trial_idx</span>
+<span class="s2">    trial_idx : int32         # NEW dimension: trial_idx</span>
 <span class="s2">    ---</span>
 <span class="s2">    outcome : enum(&#39;success&#39;, &#39;fail&#39;)</span>
 <span class="s2">    &quot;&quot;&quot;</span>
@@ -5859,7 +5859,7 @@ inherited from their dependencies:</p>
     <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
 <span class="s2">    -&gt; Session                 # PK = (subject_id, session_idx)</span>
 <span class="s2">    ---</span>
-<span class="s2">    num_trials : uint32</span>
+<span class="s2">    num_trials : int64</span>
 <span class="s2">    accuracy : float32</span>
 <span class="s2">    &quot;&quot;&quot;</span>
 </code></pre></div>
@@ -5873,13 +5873,13 @@ than introducing new ones.</p>
 <span class="s2">    -&gt; Image                   # Inherits image_id</span>
 <span class="s2">    -&gt; DetectionParams         # Inherits params_id</span>
 <span class="s2">    ---</span>
-<span class="s2">    num_blobs : uint32</span>
+<span class="s2">    num_blobs : int64</span>
 <span class="s2">    &quot;&quot;&quot;</span>
 
     <span class="k">class</span><span class="w"> </span><span class="nc">Blob</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Part</span><span class="p">):</span>
         <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
 <span class="s2">        -&gt; master              # Inherits (image_id, params_id)</span>
-<span class="s2">        blob_idx : uint16      # NEW dimension within detection</span>
+<span class="s2">        blob_idx : int32      # NEW dimension within detection</span>
 <span class="s2">        ---</span>
 <span class="s2">        x : float32</span>
 <span class="s2">        y : float32</span>
@@ -5953,9 +5953,9 @@ experimental structure and ensures correct joins through semantic matching.</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Wrong: experiment_id alone isn&#39;t unique</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Trial</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
     <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
-<span class="s2">    experiment_id : uint32</span>
+<span class="s2">    experiment_id : int64</span>
 <span class="s2">    ---</span>
-<span class="s2">    trial_number : uint16   # Should be part of key!</span>
+<span class="s2">    trial_number : int32   # Should be part of key!</span>
 <span class="s2">    result : float32</span>
 <span class="s2">    &quot;&quot;&quot;</span>
 </code></pre></div>
@@ -5963,7 +5963,7 @@ experimental structure and ensures correct joins through semantic matching.</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Wrong: timestamp makes every row unique, losing entity semantics</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Measurement</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
     <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
-<span class="s2">    subject_id : uint32</span>
+<span class="s2">    subject_id : int64</span>
 <span class="s2">    timestamp : datetime(6)   # Microsecond precision</span>
 <span class="s2">    ---</span>
 <span class="s2">    value : float32</span>

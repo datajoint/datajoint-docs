@@ -1,6 +1,6 @@
 # DataJoint Documentation (Full)
 
-Generated: 2026-01-16 23:19:58 UTC
+Generated: 2026-01-19 15:35:55 UTC
 Commit: unknown
 Branch: unknown
 
@@ -35,7 +35,7 @@ class Segmentation(dj.Computed):
     definition = """
     -> Scan
     ---
-    num_cells : uint32
+    num_cells : int64
     cell_masks : <blob@>
     """
 
@@ -1020,7 +1020,7 @@ attributes:
 class Recording(dj.Manual):
     definition = """
     -> Session
-    recording_idx : uint16   # Recording number within session
+    recording_idx : int32   # Recording number within session
     ---
     duration : float32       # seconds
     """
@@ -1042,7 +1042,7 @@ class Segmentation(dj.Computed):
     definition = """
     -> Scan           # Depends on Scan
     ---
-    num_cells : uint32
+    num_cells : int64
     """
 ```
 
@@ -1072,7 +1072,7 @@ class Subject(dj.Manual):
 class Session(dj.Manual):
     definition = """
     -> Subject                 # Inherits subject_id
-    session_idx : uint16       # NEW dimension: session_idx
+    session_idx : int32       # NEW dimension: session_idx
     ---
     session_date : date
     """
@@ -1081,7 +1081,7 @@ class Session(dj.Manual):
 class Trial(dj.Manual):
     definition = """
     -> Session                 # Inherits subject_id, session_idx
-    trial_idx : uint16         # NEW dimension: trial_idx
+    trial_idx : int32         # NEW dimension: trial_idx
     ---
     outcome : enum('success', 'fail')
     """
@@ -1124,7 +1124,7 @@ class SessionSummary(dj.Computed):
     definition = """
     -> Session                 # PK = (subject_id, session_idx)
     ---
-    num_trials : uint32
+    num_trials : int64
     accuracy : float32
     """
 ```
@@ -1143,13 +1143,13 @@ class Detection(dj.Computed):
     -> Image                   # Inherits image_id
     -> DetectionParams         # Inherits params_id
     ---
-    num_blobs : uint32
+    num_blobs : int64
     """
 
     class Blob(dj.Part):
         definition = """
         -> master              # Inherits (image_id, params_id)
-        blob_idx : uint16      # NEW dimension within detection
+        blob_idx : int32      # NEW dimension within detection
         ---
         x : float32
         y : float32
@@ -1218,9 +1218,9 @@ experimental structure and ensures correct joins through semantic matching.
 # Wrong: experiment_id alone isn't unique
 class Trial(dj.Manual):
     definition = """
-    experiment_id : uint32
+    experiment_id : int64
     ---
-    trial_number : uint16   # Should be part of key!
+    trial_number : int32   # Should be part of key!
     result : float32
     """
 ```
@@ -1231,7 +1231,7 @@ class Trial(dj.Manual):
 # Wrong: timestamp makes every row unique, losing entity semantics
 class Measurement(dj.Manual):
     definition = """
-    subject_id : uint32
+    subject_id : int64
     timestamp : datetime(6)   # Microsecond precision
     ---
     value : float32
@@ -2397,10 +2397,10 @@ Standardized, scientist-friendly types that work identically across backends.
 | `int16` | 16-bit signed | -32,768 to 32,767 |
 | `int32` | 32-bit signed | ±2 billion |
 | `int64` | 64-bit signed | ±9 quintillion |
-| `uint8` | 8-bit unsigned | 0 to 255 |
-| `uint16` | 16-bit unsigned | 0 to 65,535 |
-| `uint32` | 32-bit unsigned | 0 to 4 billion |
-| `uint64` | 64-bit unsigned | 0 to 18 quintillion |
+| `int16` | 8-bit unsigned | 0 to 255 |
+| `int32` | 16-bit unsigned | 0 to 65,535 |
+| `int64` | 32-bit unsigned | 0 to 4 billion |
+| `int64` | 64-bit unsigned | 0 to 18 quintillion |
 | `float32` | 32-bit float | ~7 significant digits |
 | `float64` | 64-bit float | ~15 significant digits |
 | `decimal(n,f)` | Fixed-point | Exact decimal |
@@ -2614,7 +2614,7 @@ If you're upgrading from legacy DataJoint, these changes require code updates:
 | **Fetch API** | `table.fetch()` | `table.to_dicts()` or `.to_arrays()` |
 | **Update** | `(table & key)._update('attr', val)` | `table.update1({**key, 'attr': val})` |
 | **Join** | `table1 @ table2` | `table1 * table2` (with semantic check) |
-| **Type syntax** | `longblob`, `int unsigned` | `<blob>`, `uint32` |
+| **Type syntax** | `longblob`, `int unsigned` | `<blob>`, `int64` |
 | **Jobs** | `~jobs` table | Per-table `~~table_name` |
 
 See the [Migration Guide](../how-to/migrate-to-v20.md) for complete upgrade steps.
@@ -2665,7 +2665,7 @@ Legacy DataJoint overloaded MySQL types with implicit conversions:
 | `longblob` | `<blob>` |
 | `attach` | `<attach>` |
 | `blob@store` | `<blob@store>` |
-| `int unsigned` | `uint32` |
+| `int unsigned` | `int64` |
 
 ### Three-Tier Architecture
 
@@ -2797,7 +2797,7 @@ This enables efficient access to large datasets stored in Zarr, HDF5, or custom 
 ### Deprecated Features
 
 - **AdaptedTypes**: Replaced by codec system (still works but migration recommended)
-- **Native type syntax**: `int unsigned` → `uint32` (warnings on new tables)
+- **Native type syntax**: `int unsigned` → `int64` (warnings on new tables)
 - **Legacy external storage** (`blob@store`): Replaced by `<blob@store>` codec syntax
 
 ### Legacy Support
@@ -2828,7 +2828,7 @@ Upgrading from DataJoint 0.x is a **phased process** designed to minimize risk:
 - **No database changes** — legacy clients still work
 
 ### Phase 2: Type Migration (Reversible)
-- Update database column comments to use core types (`:uint32:`, `:<blob>:`)
+- Update database column comments to use core types (`:int64:`, `:<blob>:`)
 - Rebuild `~lineage` tables for semantic matching
 - Update Python table definitions
 - **Legacy clients still work** — only metadata changed
@@ -2939,7 +2939,7 @@ class GraphCodec(dj.Codec):
 @schema
 class Connectivity(dj.Manual):
     definition = """
-    conn_id : uint16
+    conn_id : int32
     ---
     network : <graph>
     """
@@ -3010,7 +3010,7 @@ class SpikeTrainCodec(dj.Codec):
 @schema
 class Unit(dj.Manual):
     definition = """
-    unit_id : uint16
+    unit_id : int32
     ---
     spikes : <spike_train>
     """
@@ -4428,7 +4428,7 @@ class Session(dj.Manual):
     definition = """
     # Experimental session
     -> Subject
-    session_idx : uint16            # session number for this subject
+    session_idx : int32            # session number for this subject
     ---
     -> TaskType
     -> SessionStatus
@@ -4441,7 +4441,7 @@ class Session(dj.Manual):
         definition = """
         # Individual trial within a session
         -> master
-        trial_idx : uint16
+        trial_idx : int32
         ---
         stimulus : varchar(50)
         response : varchar(50)
@@ -4565,8 +4565,8 @@ class SessionSummary(dj.Computed):
     # Summary statistics for a session
     -> Session
     ---
-    num_trials : uint16
-    num_correct : uint16
+    num_trials : int32
+    num_correct : int32
     accuracy : float32
     mean_reaction_time : float32
     """
@@ -4750,7 +4750,7 @@ DataJoint has a three-layer type architecture (see [Type System Specification](.
 
 | Type | Description | Example |
 |------|-------------|---------|
-| `uint8`, `uint16`, `int32` | Sized integers | `session_idx : uint16` |
+| `int16`, `int32`, `int32` | Sized integers | `session_idx : int32` |
 | `float32`, `float64` | Sized floats | `reaction_time : float32` |
 | `varchar(n)` | Variable-length string | `name : varchar(100)` |
 | `bool` | Boolean | `correct : bool` |
@@ -4848,7 +4848,7 @@ class Subject(dj.Manual):
 class Session(dj.Manual):
     definition = """
     -> Subject
-    session_idx : uint16
+    session_idx : int32
     ---
     session_date : date
     duration : float32            # minutes
@@ -4857,7 +4857,7 @@ class Session(dj.Manual):
     class Trial(dj.Part):
         definition = """
         -> master
-        trial_idx : uint16
+        trial_idx : int32
         ---
         outcome : enum('hit', 'miss', 'false_alarm', 'correct_reject')
         reaction_time : float32   # seconds
@@ -5449,7 +5449,7 @@ class Experimenter(dj.Manual):
 class Session(dj.Manual):
     definition = """
     -> Subject
-    session_idx : uint16
+    session_idx : int32
     ---
     -> Experimenter
     session_date : date
@@ -5459,7 +5459,7 @@ class Session(dj.Manual):
     class Trial(dj.Part):
         definition = """
         -> master
-        trial_idx : uint16
+        trial_idx : int32
         ---
         stimulus : varchar(50)
         response : varchar(50)
@@ -6144,7 +6144,7 @@ class Subject(dj.Manual):
 class Session(dj.Manual):
     definition = """
     -> Subject
-    session_idx : uint16
+    session_idx : int32
     ---
     session_date : date
     """
@@ -6152,7 +6152,7 @@ class Session(dj.Manual):
     class Trial(dj.Part):
         definition = """
         -> master
-        trial_idx : uint16
+        trial_idx : int32
         ---
         stimulus : varchar(50)
         response : varchar(50)
@@ -6226,8 +6226,8 @@ class SessionSummary(dj.Computed):
     # Summary statistics for each session
     -> Session
     ---
-    n_trials : uint16
-    n_correct : uint16
+    n_trials : int32
+    n_correct : int32
     accuracy : float32
     mean_rt : float32               # mean reaction time (seconds)
     """
@@ -6337,13 +6337,13 @@ class TrialAnalysis(dj.Computed):
     # Per-trial analysis results
     -> Session
     ---
-    n_analyzed : uint16
+    n_analyzed : int32
     """
 
     class TrialResult(dj.Part):
         definition = """
         -> master
-        trial_idx : uint16
+        trial_idx : int32
         ---
         rt_percentile : float32     # reaction time percentile within session
         is_fast : bool              # below median reaction time
@@ -6403,8 +6403,8 @@ class SubjectSummary(dj.Computed):
     # Summary across all sessions for a subject
     -> Subject
     ---
-    n_sessions : uint16
-    total_trials : uint32
+    n_sessions : int32
+    total_trials : int64
     overall_accuracy : float32
     """
 
@@ -6699,7 +6699,7 @@ Use `<blob>` to store arbitrary Python objects:
 @schema
 class Recording(dj.Manual):
     definition = """
-    recording_id : uint16
+    recording_id : int32
     ---
     metadata : <blob>         # Dict, stored in database
     waveform : <blob>         # NumPy array, stored in database
@@ -6746,7 +6746,7 @@ The `<blob>` codec handles:
 @schema
 class AnalysisResult(dj.Manual):
     definition = """
-    result_id : uint16
+    result_id : int32
     ---
     arrays : <blob>
     nested_data : <blob>
@@ -6802,7 +6802,7 @@ print(f"Store configured at: {store_path}")
 @schema
 class LargeRecording(dj.Manual):
     definition = """
-    recording_id : uint16
+    recording_id : int32
     ---
     small_data : <blob>            # In database (small)
     large_data : <blob@tutorial>   # In object storage (large)
@@ -6926,11 +6926,11 @@ with ImagingSession.staged_insert1 as staged:
     
     # Create Zarr array directly in object storage
     z = zarr.open(store, mode='w', shape=(n_frames, height, width),
-                  chunks=(10, height, width), dtype='uint16')
+                  chunks=(10, height, width), dtype='int32')
     
     # Write frames as they are "acquired"
     for i in range(n_frames):
-        frame = np.random.randint(0, 4096, (height, width), dtype='uint16')
+        frame = np.random.randint(0, 4096, (height, width), dtype='int32')
         z[i] = frame
     
     # Set remaining attributes
@@ -6978,7 +6978,7 @@ Use `<attach>` to store files with their original names preserved:
 @schema
 class Document(dj.Manual):
     definition = """
-    doc_id : uint16
+    doc_id : int32
     ---
     report : <attach@tutorial>
     """
@@ -7125,12 +7125,12 @@ archived_data : <blob@archive>
 @schema
 class Experiment(dj.Manual):
     definition = """
-    exp_id : uint16
+    exp_id : int32
     ---
     # Queryable metadata
     date : date
     duration : float32
-    n_trials : uint16
+    n_trials : int32
     # Large data
     raw_data : <blob@>
     """
@@ -8768,7 +8768,7 @@ class Spikes(dj.Computed):
     -> SpikeParams
     ---
     spike_times : <npy@ephys>    # indices of detected spikes
-    spike_count : uint32         # total number of spikes
+    spike_count : int64         # total number of spikes
     waveforms : <npy@ephys>      # all waveforms stacked (n_spikes x window_size)
     """
 
@@ -9184,7 +9184,7 @@ The `definition` string specifies:
 class Image(dj.Manual):
     definition = """
     # Images for blob detection
-    image_id : uint8
+    image_id : int16
     ---
     image_name : varchar(100)
     image : <blob>              # serialized numpy array
@@ -9232,7 +9232,7 @@ For blob detection, we'll try different parameter combinations to find what work
 class DetectionParams(dj.Lookup):
     definition = """
     # Blob detection parameter sets
-    params_id : uint8
+    params_id : int16
     ---
     min_sigma : float32         # minimum blob size
     max_sigma : float32         # maximum blob size  
@@ -9279,14 +9279,14 @@ class Detection(dj.Computed):
     -> Image                    # depends on Image
     -> DetectionParams          # depends on DetectionParams
     ---
-    num_blobs : uint16          # number of blobs detected
+    num_blobs : int32          # number of blobs detected
     """
     
     class Blob(dj.Part):
         definition = """
         # Individual detected blobs
         -> master
-        blob_idx : uint16
+        blob_idx : int32
         ---
         x : float32             # x coordinate
         y : float32             # y coordinate  
@@ -9533,7 +9533,7 @@ After defining all tables, we'll visualize the schema with `dj.Diagram(schema)`.
 class JuliaSpec(dj.Manual):
     """Parameters for generating Julia fractals."""
     definition = """
-    spec_id : uint8
+    spec_id : int16
     ---
     c_real : float64          # Real part of c
     c_imag : float64          # Imaginary part of c  
@@ -9570,7 +9570,7 @@ from skimage.morphology import disk
 class DenoiseMethod(dj.Lookup):
     """Image denoising algorithms."""
     definition = """
-    method_id : uint8
+    method_id : int16
     ---
     method_name : varchar(20)
     params : <blob>
@@ -9772,7 +9772,7 @@ Each arrow represents a foreign key dependency. You cannot insert a child record
 class Room(dj.Lookup):
     definition = """
     # Hotel rooms
-    room : uint8                    # room number
+    room : int16                    # room number
     ---
     room_type : enum('Deluxe', 'Suite')
     """
@@ -9803,7 +9803,7 @@ class RoomAvailable(dj.Manual):
 class Guest(dj.Manual):
     definition = """
     # Hotel guests
-    guest_id : uint32               # auto-assigned guest ID
+    guest_id : int64               # auto-assigned guest ID
     ---
     guest_name : varchar(60)
     index(guest_name)
@@ -10556,7 +10556,7 @@ Our university schema models:
 @schema
 class Student(dj.Manual):
     definition = """
-    student_id : uint32           # university-wide ID
+    student_id : int64           # university-wide ID
     ---
     first_name : varchar(40)
     last_name : varchar(40)
@@ -10599,7 +10599,7 @@ class StudentMajor(dj.Manual):
 class Course(dj.Manual):
     definition = """
     -> Department
-    course : uint32               # course number, e.g. 1010
+    course : int64               # course number, e.g. 1010
     ---
     course_name : varchar(200)
     credits : decimal(3,1)
@@ -11221,7 +11221,7 @@ schema = dj.Schema('my_pipeline')
 @schema
 class Subject(dj.Manual):
     definition = """
-    subject_id : uint16
+    subject_id : int32
     ---
     name : varchar(100)
     date_of_birth : date
@@ -11231,7 +11231,7 @@ class Subject(dj.Manual):
 class Session(dj.Manual):
     definition = """
     -> Subject
-    session_idx : uint8
+    session_idx : int16
     ---
     session_date : date
     """
@@ -12382,7 +12382,7 @@ class SpikeWaveforms(dj.Computed):
     """Extracted spike shapes"""
     definition = """
     -> ContinuousData
-    unit_id : uint32
+    unit_id : int64
     ---
     waveforms : <npy@>                   # 20 MB array, lazy load
     """
@@ -12430,7 +12430,7 @@ class FluorescenceTraces(dj.Computed):
     """Extracted time series"""
     definition = """
     -> SegmentedCells
-    cell_id : uint32
+    cell_id : int64
     ---
     trace : <blob@>                      # 500 KB per cell, deduplicated
     """
@@ -13508,7 +13508,7 @@ class MyTable(dj.Manual):
 ```python
 definition = """
 subject_id : varchar(16)      # Subject identifier
-session_idx : uint16          # Session number
+session_idx : int32          # Session number
 ---
 ...
 """
@@ -13604,7 +13604,7 @@ See [Design Primary Keys](design-primary-keys.md) for detailed guidance on key s
 |------|-------------|
 | `bool` | Boolean (true/false) |
 | `int8`, `int16`, `int32`, `int64` | Signed integers |
-| `uint8`, `uint16`, `uint32`, `uint64` | Unsigned integers |
+| `int16`, `int32`, `int64`, `int64` | Unsigned integers |
 | `float32`, `float64` | Floating point |
 | `decimal(m,n)` | Fixed precision decimal |
 | `varchar(n)` | Variable-length string |
@@ -13663,7 +13663,7 @@ Native types are flagged with a warning at declaration time but are allowed. Cor
 class Session(dj.Manual):
     definition = """
     -> Subject                # References Subject table
-    session_idx : uint16
+    session_idx : int32
     ---
     session_date : date
     """
@@ -13694,7 +13694,7 @@ class TaskType(dj.Lookup):
 class Session(dj.Manual):
     definition = """
     -> Subject
-    session_idx : uint16
+    session_idx : int32
     ---
     session_date : date
     """
@@ -13702,7 +13702,7 @@ class Session(dj.Manual):
     class Trial(dj.Part):
         definition = """
         -> master
-        trial_idx : uint16
+        trial_idx : int32
         ---
         outcome : enum('hit', 'miss')
         reaction_time : float32
@@ -13717,7 +13717,7 @@ class SessionStats(dj.Computed):
     definition = """
     -> Session
     ---
-    n_trials : uint32
+    n_trials : int64
     hit_rate : float32
     """
 
@@ -13737,7 +13737,7 @@ Declare indexes at the end of the definition, after all attributes:
 ```python
 definition = """
 subject_id : varchar(16)
-session_idx : uint16
+session_idx : int32
 ---
 session_date : date
 experimenter : varchar(50)
@@ -13755,7 +13755,7 @@ Tables are declared in the database when the `@schema` decorator applies to the 
 @schema  # Table is declared here
 class Session(dj.Manual):
     definition = """
-    session_id : uint16
+    session_id : int32
     ---
     session_date : date
     """
@@ -14033,7 +14033,7 @@ Combine attributes when a single attribute isn't unique:
 class Session(dj.Manual):
     definition = """
     -> Subject
-    session_idx : uint16        # Session number within subject
+    session_idx : int32        # Session number within subject
     ---
     session_date : date
     """
@@ -14094,7 +14094,7 @@ Foreign keys above the `---` become part of the primary key:
 class Trial(dj.Manual):
     definition = """
     -> Session                  # In primary key
-    trial_idx : uint16          # In primary key
+    trial_idx : int32          # In primary key
     ---
     -> Stimulus                  # NOT in primary key
     outcome : enum('hit', 'miss')
@@ -14105,11 +14105,11 @@ class Trial(dj.Manual):
 
 ### Keep Keys Small
 
-Prefer `uint16` over `int64` when the range allows:
+Prefer `int32` over `int64` when the range allows:
 
 ```python
 # Good: Appropriate size
-session_idx : uint16     # Max 65,535 sessions per subject
+session_idx : int32     # Max 65,535 sessions per subject
 
 # Avoid: Unnecessarily large
 session_idx : int64      # Wastes space, slower joins
@@ -14139,7 +14139,7 @@ session_date : date
 
 # Good: Add a sequence number
 -> Subject
-session_idx : uint16
+session_idx : int32
 ---
 session_date : date
 ```
@@ -14166,7 +14166,7 @@ Once a table has data, primary keys cannot be changed. Plan carefully:
 class Scan(dj.Manual):
     definition = """
     -> Session
-    scan_idx : uint8           # Might need uint16 for high-throughput
+    scan_idx : int16           # Might need int32 for high-throughput
     ---
     ...
     """
@@ -15525,7 +15525,7 @@ class Probe(dj.Lookup):
     definition = """
     probe_type : varchar(32)
     ---
-    num_channels : uint16
+    num_channels : int32
     """
 
 @schema
@@ -16366,7 +16366,7 @@ No action required—the new license is more permissive.
 
 ### Future Backend Support
 
-DataJoint 2.0 introduces portable type aliases (`uint32`, `float64`, etc.) that prepare the codebase for **PostgreSQL backend compatibility** in a future release. Migration to core types ensures your schemas will work seamlessly when Postgres support is available.
+DataJoint 2.0 introduces portable type aliases (`int64`, `float64`, etc.) that prepare the codebase for **PostgreSQL backend compatibility** in a future release. Migration to core types ensures your schemas will work seamlessly when Postgres support is available.
 
 ### Before You Start: Testing Recommendation
 
@@ -16396,7 +16396,7 @@ DataJoint 2.0 introduces a unified type system with three tiers:
 | Tier | Description | Examples | Migration |
 |------|-------------|----------|-----------|
 | **Native** | Raw MySQL types | `int unsigned`, `tinyint` | Auto-converted to core types |
-| **Core** | Standardized portable types | `uint32`, `float64`, `varchar(100)`, `json` | Phase I |
+| **Core** | Standardized portable types | `int64`, `float64`, `varchar(100)`, `json` | Phase I |
 | **Codec** | Serialization to blob or storage | `<blob>`, `<blob@store>`, `<npy@>` | Phase I-III |
 
 **Learn more:** [Type System Concept](../explanation/type-system.md) · [Type System Reference](../reference/specs/type-system.md)
@@ -17304,11 +17304,11 @@ Convert ALL types and codecs in Phase I:
 
 | pre-2.0 | 2.0 | Category |
 |--------|-----|----------|
-| `int unsigned` | `uint32` | Core type |
+| `int unsigned` | `int64` | Core type |
 | `int` | `int32` | Core type |
-| `smallint unsigned` | `uint16` | Core type |
-| `tinyint unsigned` | `uint8` | Core type |
-| `bigint unsigned` | `uint64` | Core type |
+| `smallint unsigned` | `int32` | Core type |
+| `tinyint unsigned` | `int16` | Core type |
+| `bigint unsigned` | `int64` | Core type |
 | `float` | `float32` | Core type |
 | `double` | `float64` | Core type |
 
@@ -17326,7 +17326,7 @@ Convert ALL types and codecs in Phase I:
 | `uuid` | `uuid` | Core type (widely used in legacy) |
 | `text` | `varchar(N)` or keep as native | **Native type:** Consider migrating to `varchar(n)` |
 | `time` | `datetime` or keep as native | **Native type:** Consider using `datetime` |
-| `tinyint(1)` | `bool` or `uint8` | **Ask user:** was this boolean or small integer? |
+| `tinyint(1)` | `bool` or `int16` | **Ask user:** was this boolean or small integer? |
 
 **Codecs:**
 
@@ -17346,7 +17346,7 @@ Convert ALL types and codecs in Phase I:
 
 - **Bool:** Legacy DataJoint supported `bool` and `boolean` types (MySQL stores as `tinyint(1)`). Keep as `bool` in 2.0. Only explicit `tinyint(1)` declarations need review:
   - If used for boolean semantics (yes/no, active/inactive) → `bool`
-  - If used for small integers (counts, indices 0-255) → `uint8`
+  - If used for small integers (counts, indices 0-255) → `int16`
 
 - **Text Type:** `text` is a native MySQL type, not a core type. Consider migrating to `varchar(n)` with appropriate length. If your text truly needs unlimited length, you can keep `text` as a native type (will generate a warning).
 
@@ -17394,13 +17394,13 @@ SCOPE - PHASE I:
 TYPE CONVERSIONS:
 
 Core Types (Integer and Float):
-  int unsigned → uint32
+  int unsigned → int64
   int → int32
-  smallint unsigned → uint16
+  smallint unsigned → int32
   smallint → int16
-  tinyint unsigned → uint8
+  tinyint unsigned → int16
   tinyint → int8
-  bigint unsigned → uint64
+  bigint unsigned → int64
   bigint → int64
   float → float32
   double → float64
@@ -17425,13 +17425,13 @@ Native Types (Discouraged but Allowed):
 
 Special Cases - REQUIRE USER REVIEW:
 
-  tinyint(1) → ASK USER: bool or uint8?
+  tinyint(1) → ASK USER: bool or int16?
     Note: Legacy DataJoint had bool/boolean types. Only explicit tinyint(1) needs review.
     - Boolean semantics (yes/no, active/inactive) → bool
-    - Small integer (counts, indices 0-255) → uint8
+    - Small integer (counts, indices 0-255) → int16
     Example:
       is_active : tinyint(1)  # Boolean semantics → bool
-      priority : tinyint(1)   # 0-10 scale → uint8
+      priority : tinyint(1)   # 0-10 scale → int16
       has_data : bool         # Already bool → keep as bool
 
   timestamp → ASK USER about timezone convention, then convert to datetime
@@ -17504,13 +17504,13 @@ Example:
   is_active : bool           # Already bool → no change
   enabled : boolean          # Already boolean → bool
   is_valid : tinyint(1)      # ASK: Boolean semantics? → bool
-  n_retries : tinyint(1)     # ASK: Small integer? → uint8
+  n_retries : tinyint(1)     # ASK: Small integer? → int16
 
   # 2.0
   is_active : bool           # Unchanged
   enabled : bool             # boolean → bool
   is_valid : bool            # Boolean semantics
-  n_retries : uint8          # Small integer
+  n_retries : int16          # Small integer
 
 IMPORTANT - Enum Types:
 
@@ -17621,7 +17621,7 @@ schema = dj.schema('neuroscience_pipeline_v2')
 @schema
 class Recording(dj.Manual):
     definition = """
-    recording_id : uint32
+    recording_id : int64
     ---
     sampling_rate : float32
     signal : <blob@raw>  # Converted: blob@raw → <blob@raw>
@@ -17652,7 +17652,7 @@ COMMIT MESSAGE FORMAT:
 "feat(phase-i): convert table definitions to 2.0 syntax
 
 - Update schema declarations to *_v2
-- Convert native types to core types (uint32, float64, etc.)
+- Convert native types to core types (int64, float64, etc.)
 - Convert all codecs (in-table + in-store)
 - Configure test stores for development/testing
 
@@ -18503,7 +18503,7 @@ print(f"Populated {result['rows']} _v2 columns")
 @schema
 class Recording(dj.Manual):
     definition = """
-    recording_id : uint32
+    recording_id : int64
     ---
     signal : blob@raw  # Legacy (pre-2.0 clients)
     signal_v2 : <blob@raw>  # 2.0 clients
@@ -18625,7 +18625,7 @@ id : int unsigned
 
 # Correct
 definition = """
-id : uint32
+id : int64
 """
 ```
 
@@ -18732,7 +18732,7 @@ class Subject(dj.Manual):
 class Session(dj.Manual):
     definition = """
     -> Subject
-    session_idx : uint16
+    session_idx : int32
     ---
     session_date : date
     """
@@ -18768,7 +18768,7 @@ Foreign key as **part of** the primary key (above `---`):
 class Trial(dj.Manual):
     definition = """
     -> Session              # Part of primary key
-    trial_idx : uint16      # Additional PK attribute
+    trial_idx : int32      # Additional PK attribute
     ---
     outcome : varchar(20)
     """
@@ -18877,7 +18877,7 @@ Enforce one-to-one on a secondary FK with `[unique]`:
 @schema
 class Employee(dj.Manual):
     definition = """
-    employee_id : uint32
+    employee_id : int64
     ---
     name : varchar(60)
     """
@@ -18885,7 +18885,7 @@ class Employee(dj.Manual):
 @schema
 class ParkingSpot(dj.Manual):
     definition = """
-    spot_id : uint32
+    spot_id : int64
     ---
     -> [unique] Employee     # Each employee has at most one spot
     location : varchar(30)
@@ -18958,7 +18958,7 @@ Part tables use the `-> master` alias to reference their enclosing table:
 class Scan(dj.Manual):
     definition = """
     -> Session
-    scan_idx : uint16
+    scan_idx : int32
     ---
     depth : float32
     """
@@ -18966,7 +18966,7 @@ class Scan(dj.Manual):
     class ROI(dj.Part):
         definition = """
         -> master               # References Scan's primary key
-        roi_idx : uint16        # Additional dimension
+        roi_idx : int32        # Additional dimension
         ---
         x : float32
         y : float32
@@ -19750,7 +19750,7 @@ The foreign key **is** the entire primary key. The child extends the parent.
 @schema
 class Customer(dj.Manual):
     definition = """
-    customer_id : uint32
+    customer_id : int64
     ---
     name : varchar(60)
     """
@@ -19786,7 +19786,7 @@ The foreign key is **part of** the primary key, with additional fields.
 class Account(dj.Manual):
     definition = """
     -> Customer               # Part of PK
-    account_num : uint16      # Additional PK field
+    account_num : int32      # Additional PK field
     ---
     balance : decimal(10,2)
     """
@@ -19812,7 +19812,7 @@ The foreign key is a **secondary attribute** (below the `---` line).
 @schema
 class Department(dj.Manual):
     definition = """
-    dept_id : uint16
+    dept_id : int32
     ---
     dept_name : varchar(60)
     """
@@ -19820,7 +19820,7 @@ class Department(dj.Manual):
 @schema
 class Employee(dj.Manual):
     definition = """
-    employee_id : uint32      # Own independent PK
+    employee_id : int64      # Own independent PK
     ---
     -> Department             # Secondary attribute
     employee_name : varchar(60)
@@ -19865,7 +19865,7 @@ class Subject(dj.Manual):
 class Session(dj.Manual):
     definition = """
     -> Subject                # Inherits subject_id
-    session_idx : uint16      # NEW dimension
+    session_idx : int32      # NEW dimension
     ---
     session_date : date
     """
@@ -19900,7 +19900,7 @@ Many-to-many relationships appear as tables with multiple solid lines converging
 @schema
 class Student(dj.Manual):
     definition = """
-    student_id : uint32
+    student_id : int64
     ---
     name : varchar(60)
     """
@@ -19943,7 +19943,7 @@ When referencing the same table multiple times, use `.proj()` to rename. **Orang
 @schema
 class Person(dj.Manual):
     definition = """
-    person_id : uint32
+    person_id : int64
     ---
     name : varchar(60)
     """
@@ -19951,7 +19951,7 @@ class Person(dj.Manual):
 @schema
 class Marriage(dj.Manual):
     definition = """
-    marriage_id : uint32
+    marriage_id : int64
     ---
     -> Person.proj(spouse1='person_id')
     -> Person.proj(spouse2='person_id')
@@ -20935,7 +20935,7 @@ with ImagingSession.staged_insert1 as staged:
 
     # 3. Write directly (no local copy)
     z = zarr.open(store, mode='w', shape=(1000, 512, 512),
-                  chunks=(10, 512, 512), dtype='uint16')
+                  chunks=(10, 512, 512), dtype='int32')
     for i in range(1000):
         z[i] = acquire_frame()  # Write frame-by-frame
 
@@ -23381,7 +23381,7 @@ Analysis.jobs.progress()   # Status summary
 <primary key attributes from FK references>
 ---
 status : enum('pending', 'reserved', 'success', 'error', 'ignore')
-priority : uint8                    # Lower = more urgent (0 = highest)
+priority : int16                    # Lower = more urgent (0 = highest)
 created_time : timestamp
 scheduled_time : timestamp          # Process on or after this time
 reserved_time : timestamp           # When reserved
@@ -23391,8 +23391,8 @@ error_message : varchar(2047)       # Truncated error
 error_stack : <blob>                # Full traceback
 user : varchar(255)                 # Database user
 host : varchar(255)                 # Worker hostname
-pid : uint32                        # Process ID
-connection_id : uint64              # MySQL connection ID
+pid : int64                        # Process ID
+connection_id : int64              # MySQL connection ID
 version : varchar(255)              # Code version
 ```
 
@@ -26049,7 +26049,7 @@ Any table class (`Manual`, `Lookup`, `Imported`, `Computed`) can serve as a mast
 class Session(dj.Manual):
     definition = """
     subject_id : varchar(16)
-    session_idx : uint8
+    session_idx : int16
     ---
     session_date : date
     """
@@ -26064,7 +26064,7 @@ Part tables are nested classes inheriting from `dj.Part`:
 class Session(dj.Manual):
     definition = """
     subject_id : varchar(16)
-    session_idx : uint8
+    session_idx : int16
     ---
     session_date : date
     """
@@ -26072,7 +26072,7 @@ class Session(dj.Manual):
     class Trial(dj.Part):
         definition = """
         -> master
-        trial_idx : uint16
+        trial_idx : int32
         ---
         stimulus : varchar(32)
         response : varchar(32)
@@ -26168,7 +26168,7 @@ class ProcessedSession(dj.Computed):
     definition = """
     -> Session
     ---
-    n_trials : uint16
+    n_trials : int32
     """
 
     class TrialResult(dj.Part):
@@ -26368,7 +26368,7 @@ Include minimal additional keys beyond master reference:
 ```python
 class Session(dj.Manual):
     definition = """
-    session_id : uint32
+    session_id : int64
     ---
     ...
     """
@@ -26376,7 +26376,7 @@ class Session(dj.Manual):
     class Trial(dj.Part):
         definition = """
         -> master
-        trial_idx : uint16      # Only trial-specific key
+        trial_idx : int32      # Only trial-specific key
         ---
         ...
         """
@@ -26398,7 +26398,7 @@ class Session(dj.Manual):
 class TrialEvent(dj.Manual):  # Not a Part, but references Trial
     definition = """
     -> Session.Trial
-    event_idx : uint8
+    event_idx : int16
     ---
     event_time : float32
     """
@@ -28830,14 +28830,14 @@ Semantic matching is enabled by default in DataJoint 2.0. For most well-designed
 # Two tables with generic 'id' attribute
 class Student(dj.Manual):
     definition = """
-    id : uint32
+    id : int64
     ---
     name : varchar(100)
     """
 
 class Course(dj.Manual):
     definition = """
-    id : uint32
+    id : int64
     ---
     title : varchar(100)
     """
@@ -28862,7 +28862,7 @@ Student().join(Course(), semantic_check=False)  # OK, but be careful!
 ```python
 class Student(dj.Manual):
     definition = """
-    student_id : uint32
+    student_id : int64
     ---
     name : varchar(100)
     """
@@ -29057,7 +29057,7 @@ schema_name.table_name.attribute_name
 ```python
 class Session(dj.Manual):         # table: session
     definition = """
-    session_id : uint32
+    session_id : int64
     ---
     session_date : date
     """
@@ -29065,7 +29065,7 @@ class Session(dj.Manual):         # table: session
 class Trial(dj.Manual):           # table: trial
     definition = """
     -> Session
-    trial_num : uint16
+    trial_num : int32
     ---
     stimulus : varchar(100)
     """
@@ -29207,7 +29207,7 @@ run schema.rebuild_lineage() on this schema to correct the lineage.
 ```python
 class Student(dj.Manual):
     definition = """
-    student_id : uint32
+    student_id : int64
     ---
     name : varchar(100)
     """
@@ -29229,14 +29229,14 @@ Student() * Enrollment()
 ```python
 class TableA(dj.Manual):
     definition = """
-    id : uint32
+    id : int64
     ---
     value_a : int32
     """
 
 class TableB(dj.Manual):
     definition = """
-    id : uint32
+    id : int64
     ---
     value_b : int32
     """
@@ -29256,7 +29256,7 @@ TableA().join(TableB(), semantic_check=False)
 ```python
 class Session(dj.Manual):
     definition = """
-    session_id : uint32
+    session_id : int64
     ---
     session_date : date
     """
@@ -29264,7 +29264,7 @@ class Session(dj.Manual):
 class Trial(dj.Manual):
     definition = """
     -> Session
-    trial_num : uint16
+    trial_num : int32
     """
 
 class Response(dj.Computed):
@@ -29496,13 +29496,13 @@ Scientist-friendly type names with guaranteed semantics:
 | Type | SQL Mapping | Size | Description |
 |------|-------------|------|-------------|
 | `int8` | `tinyint` | 1 byte | 8-bit signed integer |
-| `uint8` | `tinyint unsigned` | 1 byte | 8-bit unsigned integer |
+| `int16` | `tinyint unsigned` | 1 byte | 8-bit unsigned integer |
 | `int16` | `smallint` | 2 bytes | 16-bit signed integer |
-| `uint16` | `smallint unsigned` | 2 bytes | 16-bit unsigned integer |
+| `int32` | `smallint unsigned` | 2 bytes | 16-bit unsigned integer |
 | `int32` | `int` | 4 bytes | 32-bit signed integer |
-| `uint32` | `int unsigned` | 4 bytes | 32-bit unsigned integer |
+| `int64` | `int unsigned` | 4 bytes | 32-bit unsigned integer |
 | `int64` | `bigint` | 8 bytes | 64-bit signed integer |
-| `uint64` | `bigint unsigned` | 8 bytes | 64-bit unsigned integer |
+| `int64` | `bigint unsigned` | 8 bytes | 64-bit unsigned integer |
 | `float32` | `float` | 4 bytes | 32-bit IEEE 754 float |
 | `float64` | `double` | 8 bytes | 64-bit IEEE 754 float |
 | `bool` | `tinyint` | 1 byte | Boolean (0 or 1) |
@@ -29944,7 +29944,7 @@ Potential improvements identified for the declaration system:
 This document defines a three-layer type architecture:
 
 1. **Native database types** - Backend-specific (`FLOAT`, `TINYINT UNSIGNED`, `LONGBLOB`). Discouraged for direct use.
-2. **Core DataJoint types** - Standardized across backends, scientist-friendly (`float32`, `uint8`, `bool`, `json`).
+2. **Core DataJoint types** - Standardized across backends, scientist-friendly (`int32`, `float32`, `bool`, `json`).
 3. **Codec Types** - Programmatic types with `encode()`/`decode()` semantics. Composable.
 
 | Layer | Description | Examples |
@@ -30003,10 +30003,6 @@ MySQL and PostgreSQL backends. Users should prefer these over native database ty
 | `int16` | 16-bit signed | `SMALLINT` | `SMALLINT` |
 | `int32` | 32-bit signed | `INT` | `INTEGER` |
 | `int64` | 64-bit signed | `BIGINT` | `BIGINT` |
-| `uint8` | 8-bit unsigned | `TINYINT UNSIGNED` | `SMALLINT` |
-| `uint16` | 16-bit unsigned | `SMALLINT UNSIGNED` | `INTEGER` |
-| `uint32` | 32-bit unsigned | `INT UNSIGNED` | `BIGINT` |
-| `uint64` | 64-bit unsigned | `BIGINT UNSIGNED` | `NUMERIC(20)` |
 | `float32` | 32-bit float | `FLOAT` | `REAL` |
 | `float64` | 64-bit float | `DOUBLE` | `DOUBLE PRECISION` |
 | `decimal(n,f)` | Fixed-point | `DECIMAL(n,f)` | `NUMERIC(n,f)` |
@@ -30077,9 +30073,12 @@ database backends.
 | `float` | `float32` or `float64` |
 | `double` | `float64` |
 | `tinyint` | `int8` |
-| `tinyint unsigned` | `uint8` |
 | `smallint` | `int16` |
 | `bigint` | `int64` |
+| `tinyint unsigned` | `int16` (use larger signed type) |
+| `smallint unsigned` | `int32` (use larger signed type) |
+| `int unsigned` | `int64` (use larger signed type) |
+| `bigint unsigned` | `decimal(20,0)` (use decimal for full range) |
 
 ### Type Modifiers Policy
 
@@ -30097,7 +30096,7 @@ declarative syntax:
 | `CHARACTER SET` | ❌ Not allowed | Database-level configuration |
 | `COLLATE` | ❌ Not allowed | Database-level configuration |
 | `AUTO_INCREMENT` | ⚠️ Discouraged | Allowed with native types only, generates warning |
-| `UNSIGNED` | ✅ Allowed | Part of type semantics (use `uint*` core types) |
+| `UNSIGNED` | ⚠️ Discouraged | MySQL-specific, not portable (use larger signed type) |
 
 **Nullability and defaults:** DataJoint handles nullability through the default value syntax.
 An attribute is nullable if and only if its default is `NULL`:
@@ -30624,7 +30623,7 @@ def garbage_collect(store_name):
    - Layer 1: Native database types (backend-specific, discouraged)
    - Layer 2: Core DataJoint types (standardized, scientist-friendly)
    - Layer 3: Codec types (encode/decode, composable)
-2. **Core types are scientist-friendly**: `float32`, `uint8`, `bool`, `bytes` instead of `FLOAT`, `TINYINT UNSIGNED`, `LONGBLOB`
+2. **Core types are scientist-friendly**: `float32`, `int8`, `bool`, `bytes` instead of `FLOAT`, `TINYINT`, `LONGBLOB`
 3. **Codecs use angle brackets**: `<blob>`, `<object@store>`, `<filepath@main>` - distinguishes from core types
 4. **`@` indicates external storage**: No `@` = database, `@` present = object store
 5. **`get_dtype(is_external)` method**: Codecs resolve dtype at declaration time based on storage mode

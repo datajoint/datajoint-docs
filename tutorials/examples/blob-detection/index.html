@@ -2891,7 +2891,7 @@ schema = dj.Schema('tutorial_blobs')</div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>[2026-01-14 01:35:04,638][INFO]: DataJoint 2.0.0a22 connected to root@127.0.0.1:3306
+<pre>[2026-01-17 00:49:33,912][INFO]: DataJoint 2.0.0a22 connected to root@127.0.0.1:3306
 </pre>
 </div>
 </div>
@@ -2937,7 +2937,7 @@ schema = dj.Schema('tutorial_blobs')</div>
 <span class="k">class</span><span class="w"> </span><span class="nc">Image</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
     <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    # Images for blob detection</span>
-<span class="s2">    image_id : uint8</span>
+<span class="s2">    image_id : int16</span>
 <span class="s2">    ---</span>
 <span class="s2">    image_name : varchar(100)</span>
 <span class="s2">    image : &lt;blob&gt;              # serialized numpy array</span>
@@ -2947,7 +2947,7 @@ schema = dj.Schema('tutorial_blobs')</div>
 class Image(dj.Manual):
     definition = """
     # Images for blob detection
-    image_id : uint8
+    image_id : int16
     ---
     image_name : varchar(100)
     image : <blob>              # serialized numpy array
@@ -3208,7 +3208,7 @@ plt.tight_layout()</div>
 <span class="k">class</span><span class="w"> </span><span class="nc">DetectionParams</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Lookup</span><span class="p">):</span>
     <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    # Blob detection parameter sets</span>
-<span class="s2">    params_id : uint8</span>
+<span class="s2">    params_id : int16</span>
 <span class="s2">    ---</span>
 <span class="s2">    min_sigma : float32         # minimum blob size</span>
 <span class="s2">    max_sigma : float32         # maximum blob size  </span>
@@ -3228,7 +3228,7 @@ plt.tight_layout()</div>
 class DetectionParams(dj.Lookup):
     definition = """
     # Blob detection parameter sets
-    params_id : uint8
+    params_id : int16
     ---
     min_sigma : float32         # minimum blob size
     max_sigma : float32         # maximum blob size  
@@ -3420,14 +3420,14 @@ DetectionParams()</div>
 <span class="s2">    -&gt; Image                    # depends on Image</span>
 <span class="s2">    -&gt; DetectionParams          # depends on DetectionParams</span>
 <span class="s2">    ---</span>
-<span class="s2">    num_blobs : uint16          # number of blobs detected</span>
+<span class="s2">    num_blobs : int32          # number of blobs detected</span>
 <span class="s2">    """</span>
     
     <span class="k">class</span><span class="w"> </span><span class="nc">Blob</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Part</span><span class="p">):</span>
         <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">        # Individual detected blobs</span>
 <span class="s2">        -&gt; master</span>
-<span class="s2">        blob_idx : uint16</span>
+<span class="s2">        blob_idx : int32</span>
 <span class="s2">        ---</span>
 <span class="s2">        x : float32             # x coordinate</span>
 <span class="s2">        y : float32             # y coordinate  </span>
@@ -3463,14 +3463,14 @@ class Detection(dj.Computed):
     -&gt; Image                    # depends on Image
     -&gt; DetectionParams          # depends on DetectionParams
     ---
-    num_blobs : uint16          # number of blobs detected
+    num_blobs : int32          # number of blobs detected
     """
     
     class Blob(dj.Part):
         definition = """
         # Individual detected blobs
         -&gt; master
-        blob_idx : uint16
+        blob_idx : int32
         ---
         x : float32             # x coordinate
         y : float32             # y coordinate  
@@ -3622,43 +3622,43 @@ Detection.populate(display_progress=True)</div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>Detection:  17%|█▋        | 1/6 [00:00&lt;00:01,  3.88it/s]</pre>
+<pre>Detection:  17%|█▋        | 1/6 [00:00&lt;00:01,  4.25it/s]</pre>
 </div>
 </div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>Detection:  33%|███▎      | 2/6 [00:01&lt;00:02,  1.80it/s]</pre>
+<pre>Detection:  33%|███▎      | 2/6 [00:00&lt;00:02,  1.98it/s]</pre>
 </div>
 </div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>Detection:  50%|█████     | 3/6 [00:01&lt;00:01,  2.53it/s]</pre>
+<pre>Detection:  50%|█████     | 3/6 [00:01&lt;00:01,  2.79it/s]</pre>
 </div>
 </div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>Detection:  67%|██████▋   | 4/6 [00:01&lt;00:00,  2.39it/s]</pre>
+<pre>Detection:  67%|██████▋   | 4/6 [00:01&lt;00:00,  2.62it/s]</pre>
 </div>
 </div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>Detection:  83%|████████▎ | 5/6 [00:01&lt;00:00,  3.05it/s]</pre>
+<pre>Detection:  83%|████████▎ | 5/6 [00:01&lt;00:00,  3.32it/s]</pre>
 </div>
 </div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>Detection: 100%|██████████| 6/6 [00:02&lt;00:00,  3.09it/s]</pre>
+<pre>Detection: 100%|██████████| 6/6 [00:01&lt;00:00,  3.35it/s]</pre>
 </div>
 </div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>Detection: 100%|██████████| 6/6 [00:02&lt;00:00,  2.77it/s]</pre>
+<pre>Detection: 100%|██████████| 6/6 [00:01&lt;00:00,  3.03it/s]</pre>
 </div>
 </div>
 <div class="jp-OutputArea-child">

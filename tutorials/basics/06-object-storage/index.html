@@ -3215,7 +3215,7 @@ block-beta
 <div class="highlight-ipynb hl-python"><pre><span></span><span class="nd">@schema</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Recording</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
     <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
-<span class="s2">    recording_id : uint16</span>
+<span class="s2">    recording_id : int32</span>
 <span class="s2">    ---</span>
 <span class="s2">    metadata : &lt;blob&gt;         # Dict, stored in database</span>
 <span class="s2">    waveform : &lt;blob&gt;         # NumPy array, stored in database</span>
@@ -3224,7 +3224,7 @@ block-beta
 <div class="clipboard-copy-txt" id="cell-2">@schema
 class Recording(dj.Manual):
     definition = """
-    recording_id : uint16
+    recording_id : int32
     ---
     metadata : <blob>         # Dict, stored in database
     waveform : <blob>         # NumPy array, stored in database
@@ -3472,7 +3472,7 @@ Waveform shape: (32, 30000)
 <div class="highlight-ipynb hl-python"><pre><span></span><span class="nd">@schema</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">AnalysisResult</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
     <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
-<span class="s2">    result_id : uint16</span>
+<span class="s2">    result_id : int32</span>
 <span class="s2">    ---</span>
 <span class="s2">    arrays : &lt;blob&gt;</span>
 <span class="s2">    nested_data : &lt;blob&gt;</span>
@@ -3496,7 +3496,7 @@ Waveform shape: (32, 30000)
 <div class="clipboard-copy-txt" id="cell-5">@schema
 class AnalysisResult(dj.Manual):
     definition = """
-    result_id : uint16
+    result_id : int32
     ---
     arrays : <blob>
     nested_data : <blob>
@@ -3644,7 +3644,7 @@ print(f"Store configured at: {store_path}")</div>
 <div class="highlight-ipynb hl-python"><pre><span></span><span class="nd">@schema</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">LargeRecording</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
     <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
-<span class="s2">    recording_id : uint16</span>
+<span class="s2">    recording_id : int32</span>
 <span class="s2">    ---</span>
 <span class="s2">    small_data : &lt;blob&gt;            # In database (small)</span>
 <span class="s2">    large_data : &lt;blob@tutorial&gt;   # In object storage (large)</span>
@@ -3653,7 +3653,7 @@ print(f"Store configured at: {store_path}")</div>
 <div class="clipboard-copy-txt" id="cell-7">@schema
 class LargeRecording(dj.Manual):
     definition = """
-    recording_id : uint16
+    recording_id : int32
     ---
     small_data : <blob>            # In database (small)
     large_data : <blob@tutorial>   # In object storage (large)
@@ -4137,11 +4137,11 @@ class ImagingSession(dj.Manual):
     
     <span class="c1"># Create Zarr array directly in object storage</span>
     <span class="n">z</span> <span class="o">=</span> <span class="n">zarr</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">store</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">'w'</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">n_frames</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">width</span><span class="p">),</span>
-                  <span class="n">chunks</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">width</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">'uint16'</span><span class="p">)</span>
+                  <span class="n">chunks</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">width</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">'int32'</span><span class="p">)</span>
     
     <span class="c1"># Write frames as they are "acquired"</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_frames</span><span class="p">):</span>
-        <span class="n">frame</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">4096</span><span class="p">,</span> <span class="p">(</span><span class="n">height</span><span class="p">,</span> <span class="n">width</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">'uint16'</span><span class="p">)</span>
+        <span class="n">frame</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">4096</span><span class="p">,</span> <span class="p">(</span><span class="n">height</span><span class="p">,</span> <span class="n">width</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">'int32'</span><span class="p">)</span>
         <span class="n">z</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">frame</span>
     
     <span class="c1"># Set remaining attributes</span>
@@ -4167,11 +4167,11 @@ with ImagingSession.staged_insert1 as staged:
     
     # Create Zarr array directly in object storage
     z = zarr.open(store, mode='w', shape=(n_frames, height, width),
-                  chunks=(10, height, width), dtype='uint16')
+                  chunks=(10, height, width), dtype='int32')
     
     # Write frames as they are "acquired"
     for i in range(n_frames):
-        frame = np.random.randint(0, 4096, (height, width), dtype='uint16')
+        frame = np.random.randint(0, 4096, (height, width), dtype='int32')
         z[i] = frame
     
     # Set remaining attributes
@@ -4419,7 +4419,7 @@ First frame mean: 2051.6
 <div class="highlight-ipynb hl-python"><pre><span></span><span class="nd">@schema</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Document</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
     <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
-<span class="s2">    doc_id : uint16</span>
+<span class="s2">    doc_id : int32</span>
 <span class="s2">    ---</span>
 <span class="s2">    report : &lt;attach@tutorial&gt;</span>
 <span class="s2">    """</span>
@@ -4427,7 +4427,7 @@ First frame mean: 2051.6
 <div class="clipboard-copy-txt" id="cell-15">@schema
 class Document(dj.Manual):
     definition = """
-    doc_id : uint16
+    doc_id : int32
     ---
     report : <attach@tutorial>
     """</attach@tutorial></div>
@@ -5226,12 +5226,12 @@ result</div>
 <h3 id="3-separate-queryable-metadata-from-large-data">3. Separate Queryable Metadata from Large Data<a class="anchor-link" href="#3-separate-queryable-metadata-from-large-data">¶</a></h3><div class="highlight"><pre><span></span><span class="nd">@schema</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Experiment</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
     <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
-<span class="s2">    exp_id : uint16</span>
+<span class="s2">    exp_id : int32</span>
 <span class="s2">    ---</span>
 <span class="s2">    # Queryable metadata</span>
 <span class="s2">    date : date</span>
 <span class="s2">    duration : float32</span>
-<span class="s2">    n_trials : uint16</span>
+<span class="s2">    n_trials : int32</span>
 <span class="s2">    # Large data</span>
 <span class="s2">    raw_data : &lt;blob@&gt;</span>
 <span class="s2">    """</span>

@@ -3042,7 +3042,7 @@ schema = dj.Schema('tutorial_computation')</div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>[2026-01-14 01:33:53,817][INFO]: DataJoint 2.0.0a22 connected to root@127.0.0.1:3306
+<pre>[2026-01-17 00:47:33,263][INFO]: DataJoint 2.0.0a22 connected to root@127.0.0.1:3306
 </pre>
 </div>
 </div>
@@ -3091,7 +3091,7 @@ schema = dj.Schema('tutorial_computation')</div>
 <span class="k">class</span><span class="w"> </span><span class="nc">Session</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
     <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    -&gt; Subject</span>
-<span class="s2">    session_idx : uint16</span>
+<span class="s2">    session_idx : int32</span>
 <span class="s2">    ---</span>
 <span class="s2">    session_date : date</span>
 <span class="s2">    """</span>
@@ -3099,7 +3099,7 @@ schema = dj.Schema('tutorial_computation')</div>
     <span class="k">class</span><span class="w"> </span><span class="nc">Trial</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Part</span><span class="p">):</span>
         <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">        -&gt; master</span>
-<span class="s2">        trial_idx : uint16</span>
+<span class="s2">        trial_idx : int32</span>
 <span class="s2">        ---</span>
 <span class="s2">        stimulus : varchar(50)</span>
 <span class="s2">        response : varchar(50)</span>
@@ -3131,7 +3131,7 @@ class Subject(dj.Manual):
 class Session(dj.Manual):
     definition = """
     -&gt; Subject
-    session_idx : uint16
+    session_idx : int32
     ---
     session_date : date
     """
@@ -3139,7 +3139,7 @@ class Session(dj.Manual):
     class Trial(dj.Part):
         definition = """
         -&gt; master
-        trial_idx : uint16
+        trial_idx : int32
         ---
         stimulus : varchar(50)
         response : varchar(50)
@@ -3304,8 +3304,8 @@ print(f"Subjects: {len(Subject())}, Sessions: {len(Session())}, "
 <span class="s2">    # Summary statistics for each session</span>
 <span class="s2">    -&gt; Session</span>
 <span class="s2">    ---</span>
-<span class="s2">    n_trials : uint16</span>
-<span class="s2">    n_correct : uint16</span>
+<span class="s2">    n_trials : int32</span>
+<span class="s2">    n_correct : int32</span>
 <span class="s2">    accuracy : float32</span>
 <span class="s2">    mean_rt : float32               # mean reaction time (seconds)</span>
 <span class="s2">    """</span>
@@ -3332,8 +3332,8 @@ class SessionSummary(dj.Computed):
     # Summary statistics for each session
     -&gt; Session
     ---
-    n_trials : uint16
-    n_correct : uint16
+    n_trials : int32
+    n_correct : int32
     accuracy : float32
     mean_rt : float32               # mean reaction time (seconds)
     """
@@ -3429,7 +3429,7 @@ SessionSummary()</div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>SessionSummary: 100%|██████████| 3/3 [00:00&lt;00:00, 255.55it/s]</pre>
+<pre>SessionSummary: 100%|██████████| 3/3 [00:00&lt;00:00, 232.97it/s]</pre>
 </div>
 </div>
 <div class="jp-OutputArea-child">
@@ -3867,7 +3867,7 @@ SessionAnalysis()</div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>SessionAnalysis: 100%|██████████| 6/6 [00:00&lt;00:00, 412.28it/s]</pre>
+<pre>SessionAnalysis: 100%|██████████| 6/6 [00:00&lt;00:00, 316.34it/s]</pre>
 </div>
 </div>
 <div class="jp-OutputArea-child">
@@ -4038,13 +4038,13 @@ SessionAnalysis()</div>
 <span class="s2">    # Per-trial analysis results</span>
 <span class="s2">    -&gt; Session</span>
 <span class="s2">    ---</span>
-<span class="s2">    n_analyzed : uint16</span>
+<span class="s2">    n_analyzed : int32</span>
 <span class="s2">    """</span>
 
     <span class="k">class</span><span class="w"> </span><span class="nc">TrialResult</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Part</span><span class="p">):</span>
         <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">        -&gt; master</span>
-<span class="s2">        trial_idx : uint16</span>
+<span class="s2">        trial_idx : int32</span>
 <span class="s2">        ---</span>
 <span class="s2">        rt_percentile : float32     # reaction time percentile within session</span>
 <span class="s2">        is_fast : bool              # below median reaction time</span>
@@ -4084,13 +4084,13 @@ class TrialAnalysis(dj.Computed):
     # Per-trial analysis results
     -&gt; Session
     ---
-    n_analyzed : uint16
+    n_analyzed : int32
     """
 
     class TrialResult(dj.Part):
         definition = """
         -&gt; master
-        trial_idx : uint16
+        trial_idx : int32
         ---
         rt_percentile : float32     # reaction time percentile within session
         is_fast : bool              # below median reaction time
@@ -4179,7 +4179,14 @@ print((TrialAnalysis.TrialResult &amp; {'subject_id': 'M001', 'session_idx': 1})
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>TrialAnalysis: 100%|██████████| 3/3 [00:00&lt;00:00, 151.84it/s]</pre>
+<pre>TrialAnalysis: 100%|██████████| 3/3 [00:00&lt;00:00, 92.01it/s]</pre>
+</div>
+</div>
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
+<pre>
+</pre>
 </div>
 </div>
 <div class="jp-OutputArea-child">
@@ -4212,13 +4219,6 @@ M001           1              12            93.3333        0
    ...
  (Total: 15)
 
-</pre>
-</div>
-</div>
-<div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>
 </pre>
 </div>
 </div>
@@ -4261,8 +4261,8 @@ M001           1              12            93.3333        0
 <span class="s2">    # Summary across all sessions for a subject</span>
 <span class="s2">    -&gt; Subject</span>
 <span class="s2">    ---</span>
-<span class="s2">    n_sessions : uint16</span>
-<span class="s2">    total_trials : uint32</span>
+<span class="s2">    n_sessions : int32</span>
+<span class="s2">    total_trials : int64</span>
 <span class="s2">    overall_accuracy : float32</span>
 <span class="s2">    """</span>
 
@@ -4287,8 +4287,8 @@ class SubjectSummary(dj.Computed):
     # Summary across all sessions for a subject
     -&gt; Subject
     ---
-    n_sessions : uint16
-    total_trials : uint32
+    n_sessions : int32
+    total_trials : int64
     overall_accuracy : float32
     """
 
@@ -4354,7 +4354,7 @@ SubjectSummary()</div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>SubjectSummary: 100%|██████████| 2/2 [00:00&lt;00:00, 354.04it/s]</pre>
+<pre>SubjectSummary: 100%|██████████| 2/2 [00:00&lt;00:00, 327.65it/s]</pre>
 </div>
 </div>
 <div class="jp-OutputArea-child">
@@ -4628,7 +4628,7 @@ SubjectSummary()</div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>SessionSummary: 100%|██████████| 1/1 [00:00&lt;00:00, 326.58it/s]</pre>
+<pre>SessionSummary: 100%|██████████| 1/1 [00:00&lt;00:00, 251.52it/s]</pre>
 </div>
 </div>
 <div class="jp-OutputArea-child">
@@ -4647,14 +4647,14 @@ SubjectSummary()</div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>TrialAnalysis: 100%|██████████| 1/1 [00:00&lt;00:00, 234.19it/s]</pre>
+<pre>TrialAnalysis: 100%|██████████| 1/1 [00:00&lt;00:00, 181.02it/s]</pre>
 </div>
 </div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
 <pre>
-[2026-01-14 01:33:54,621][INFO]: Deleting 1 rows from `tutorial_computation`.`__subject_summary`
+[2026-01-17 00:47:34,143][INFO]: Deleting 1 rows from `tutorial_computation`.`__subject_summary`
 </pre>
 </div>
 </div>
@@ -4667,7 +4667,7 @@ SubjectSummary()</div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>SubjectSummary: 100%|██████████| 1/1 [00:00&lt;00:00, 335.79it/s]</pre>
+<pre>SubjectSummary: 100%|██████████| 1/1 [00:00&lt;00:00, 290.63it/s]</pre>
 </div>
 </div>
 <div class="jp-OutputArea-child">
@@ -5146,7 +5146,7 @@ QualityCheck()</div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>QualityCheck: 100%|██████████| 4/4 [00:00&lt;00:00, 476.83it/s]</pre>
+<pre>QualityCheck: 100%|██████████| 4/4 [00:00&lt;00:00, 360.68it/s]</pre>
 </div>
 </div>
 <div class="jp-OutputArea-child">

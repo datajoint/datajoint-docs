@@ -5843,7 +5843,7 @@
 <tr>
 <td><strong>Type syntax</strong></td>
 <td><code>longblob</code>, <code>int unsigned</code></td>
-<td><code>&lt;blob&gt;</code>, <code>uint32</code></td>
+<td><code>&lt;blob&gt;</code>, <code>int64</code></td>
 </tr>
 <tr>
 <td><strong>Jobs</strong></td>
@@ -5923,7 +5923,7 @@
 </tr>
 <tr>
 <td><code>int unsigned</code></td>
-<td><code>uint32</code></td>
+<td><code>int64</code></td>
 </tr>
 </tbody>
 </table>
@@ -6046,7 +6046,7 @@
 <h3 id="deprecated-features">Deprecated Features<a class="headerlink" href="#deprecated-features" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>AdaptedTypes</strong>: Replaced by codec system (still works but migration recommended)</li>
-<li><strong>Native type syntax</strong>: <code>int unsigned</code> → <code>uint32</code> (warnings on new tables)</li>
+<li><strong>Native type syntax</strong>: <code>int unsigned</code> → <code>int64</code> (warnings on new tables)</li>
 <li><strong>Legacy external storage</strong> (<code>blob@store</code>): Replaced by <code>&lt;blob@store&gt;</code> codec syntax</li>
 </ul>
 <h3 id="legacy-support">Legacy Support<a class="headerlink" href="#legacy-support" title="Permanent link">&para;</a></h3>
@@ -6071,7 +6071,7 @@
 </ul>
 <h3 id="phase-2-type-migration-reversible">Phase 2: Type Migration (Reversible)<a class="headerlink" href="#phase-2-type-migration-reversible" title="Permanent link">&para;</a></h3>
 <ul>
-<li>Update database column comments to use core types (<code>:uint32:</code>, <code>:&lt;blob&gt;:</code>)</li>
+<li>Update database column comments to use core types (<code>:int64:</code>, <code>:&lt;blob&gt;:</code>)</li>
 <li>Rebuild <code>~lineage</code> tables for semantic matching</li>
 <li>Update Python table definitions</li>
 <li><strong>Legacy clients still work</strong> — only metadata changed</li>

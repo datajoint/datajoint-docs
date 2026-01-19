@@ -3129,7 +3129,7 @@ schema = dj.Schema('tutorial_data_entry')</div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>[2026-01-14 01:33:47,086][INFO]: DataJoint 2.0.0a22 connected to root@127.0.0.1:3306
+<pre>[2026-01-17 00:47:26,496][INFO]: DataJoint 2.0.0a22 connected to root@127.0.0.1:3306
 </pre>
 </div>
 </div>
@@ -3179,7 +3179,7 @@ schema = dj.Schema('tutorial_data_entry')</div>
 <span class="k">class</span><span class="w"> </span><span class="nc">Session</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
     <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    -&gt; Subject</span>
-<span class="s2">    session_idx : uint16</span>
+<span class="s2">    session_idx : int32</span>
 <span class="s2">    ---</span>
 <span class="s2">    session_date : date</span>
 <span class="s2">    duration : float32            # minutes</span>
@@ -3188,7 +3188,7 @@ schema = dj.Schema('tutorial_data_entry')</div>
     <span class="k">class</span><span class="w"> </span><span class="nc">Trial</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Part</span><span class="p">):</span>
         <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">        -&gt; master</span>
-<span class="s2">        trial_idx : uint16</span>
+<span class="s2">        trial_idx : int32</span>
 <span class="s2">        ---</span>
 <span class="s2">        outcome : enum('hit', 'miss', 'false_alarm', 'correct_reject')</span>
 <span class="s2">        reaction_time : float32   # seconds</span>
@@ -3232,7 +3232,7 @@ class Subject(dj.Manual):
 class Session(dj.Manual):
     definition = """
     -&gt; Subject
-    session_idx : uint16
+    session_idx : int32
     ---
     session_date : date
     duration : float32            # minutes
@@ -3241,7 +3241,7 @@ class Session(dj.Manual):
     class Trial(dj.Part):
         definition = """
         -&gt; master
-        trial_idx : uint16
+        trial_idx : int32
         ---
         outcome : enum('hit', 'miss', 'false_alarm', 'correct_reject')
         reaction_time : float32   # seconds
@@ -4621,21 +4621,21 @@ print(f"ProcessedData: {len(ProcessedData())}")</div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>[2026-01-14 01:33:47,322][INFO]: Deleting 1 rows from `tutorial_data_entry`.`__processed_data`
+<pre>[2026-01-17 00:47:26,797][INFO]: Deleting 1 rows from `tutorial_data_entry`.`__processed_data`
 </pre>
 </div>
 </div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>[2026-01-14 01:33:47,327][INFO]: Deleting 5 rows from `tutorial_data_entry`.`session__trial`
+<pre>[2026-01-17 00:47:26,805][INFO]: Deleting 5 rows from `tutorial_data_entry`.`session__trial`
 </pre>
 </div>
 </div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>[2026-01-14 01:33:47,328][INFO]: Deleting 1 rows from `tutorial_data_entry`.`session`
+<pre>[2026-01-17 00:47:26,807][INFO]: Deleting 1 rows from `tutorial_data_entry`.`session`
 </pre>
 </div>
 </div>
@@ -4737,14 +4737,14 @@ with dj.conn().transaction:
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>[2026-01-14 01:33:47,343][INFO]: Deleting 2 rows from `tutorial_data_entry`.`session__trial`
+<pre>[2026-01-17 00:47:26,826][INFO]: Deleting 2 rows from `tutorial_data_entry`.`session__trial`
 </pre>
 </div>
 </div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>[2026-01-14 01:33:47,344][INFO]: Deleting 1 rows from `tutorial_data_entry`.`session`
+<pre>[2026-01-17 00:47:26,828][INFO]: Deleting 1 rows from `tutorial_data_entry`.`session`
 </pre>
 </div>
 </div>
@@ -4915,21 +4915,21 @@ print("After correction:", ProcessedData.fetch1())</div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>[2026-01-14 01:33:47,369][INFO]: Deleting 1 rows from `tutorial_data_entry`.`__processed_data`
+<pre>[2026-01-17 00:47:26,859][INFO]: Deleting 1 rows from `tutorial_data_entry`.`__processed_data`
 </pre>
 </div>
 </div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>[2026-01-14 01:33:47,373][INFO]: Deleting 2 rows from `tutorial_data_entry`.`session__trial`
+<pre>[2026-01-17 00:47:26,866][INFO]: Deleting 2 rows from `tutorial_data_entry`.`session__trial`
 </pre>
 </div>
 </div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>[2026-01-14 01:33:47,374][INFO]: Deleting 1 rows from `tutorial_data_entry`.`session`
+<pre>[2026-01-17 00:47:26,867][INFO]: Deleting 1 rows from `tutorial_data_entry`.`session`
 </pre>
 </div>
 </div>

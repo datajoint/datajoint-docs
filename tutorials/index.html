@@ -5138,7 +5138,7 @@ mkdir<span class="w"> </span>-p<span class="w"> </span>.secrets
 <span class="nd">@schema</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Subject</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
     <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
-<span class="s2">    subject_id : uint16</span>
+<span class="s2">    subject_id : int32</span>
 <span class="s2">    ---</span>
 <span class="s2">    name : varchar(100)</span>
 <span class="s2">    date_of_birth : date</span>
@@ -5148,7 +5148,7 @@ mkdir<span class="w"> </span>-p<span class="w"> </span>.secrets
 <span class="k">class</span><span class="w"> </span><span class="nc">Session</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
     <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
 <span class="s2">    -&gt; Subject</span>
-<span class="s2">    session_idx : uint8</span>
+<span class="s2">    session_idx : int16</span>
 <span class="s2">    ---</span>
 <span class="s2">    session_date : date</span>
 <span class="s2">    &quot;&quot;&quot;</span>

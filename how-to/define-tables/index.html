@@ -5489,7 +5489,7 @@
 <h2 id="primary-key-above-">Primary Key (Above <code>---</code>)<a class="headerlink" href="#primary-key-above-" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
 <span class="s2">subject_id : varchar(16)      # Subject identifier</span>
-<span class="s2">session_idx : uint16          # Session number</span>
+<span class="s2">session_idx : int32          # Session number</span>
 <span class="s2">---</span>
 <span class="s2">...</span>
 <span class="s2">&quot;&quot;&quot;</span>
@@ -5576,7 +5576,7 @@
 <td>Signed integers</td>
 </tr>
 <tr>
-<td><code>uint8</code>, <code>uint16</code>, <code>uint32</code>, <code>uint64</code></td>
+<td><code>int16</code>, <code>int32</code>, <code>int64</code>, <code>int64</code></td>
 <td>Unsigned integers</td>
 </tr>
 <tr>
@@ -5684,7 +5684,7 @@
 <span class="k">class</span><span class="w"> </span><span class="nc">Session</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
     <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
 <span class="s2">    -&gt; Subject                # References Subject table</span>
-<span class="s2">    session_idx : uint16</span>
+<span class="s2">    session_idx : int32</span>
 <span class="s2">    ---</span>
 <span class="s2">    session_date : date</span>
 <span class="s2">    &quot;&quot;&quot;</span>
@@ -5708,7 +5708,7 @@
 <span class="k">class</span><span class="w"> </span><span class="nc">Session</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
     <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
 <span class="s2">    -&gt; Subject</span>
-<span class="s2">    session_idx : uint16</span>
+<span class="s2">    session_idx : int32</span>
 <span class="s2">    ---</span>
 <span class="s2">    session_date : date</span>
 <span class="s2">    &quot;&quot;&quot;</span>
@@ -5716,7 +5716,7 @@
     <span class="k">class</span><span class="w"> </span><span class="nc">Trial</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Part</span><span class="p">):</span>
         <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
 <span class="s2">        -&gt; master</span>
-<span class="s2">        trial_idx : uint16</span>
+<span class="s2">        trial_idx : int32</span>
 <span class="s2">        ---</span>
 <span class="s2">        outcome : enum(&#39;hit&#39;, &#39;miss&#39;)</span>
 <span class="s2">        reaction_time : float32</span>
@@ -5728,7 +5728,7 @@
     <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
 <span class="s2">    -&gt; Session</span>
 <span class="s2">    ---</span>
-<span class="s2">    n_trials : uint32</span>
+<span class="s2">    n_trials : int64</span>
 <span class="s2">    hit_rate : float32</span>
 <span class="s2">    &quot;&quot;&quot;</span>
 
@@ -5744,7 +5744,7 @@
 <p>Declare indexes at the end of the definition, after all attributes:</p>
 <div class="highlight"><pre><span></span><code><span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
 <span class="s2">subject_id : varchar(16)</span>
-<span class="s2">session_idx : uint16</span>
+<span class="s2">session_idx : int32</span>
 <span class="s2">---</span>
 <span class="s2">session_date : date</span>
 <span class="s2">experimenter : varchar(50)</span>
@@ -5758,7 +5758,7 @@
 <div class="highlight"><pre><span></span><code><span class="nd">@schema</span>  <span class="c1"># Table is declared here</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Session</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
     <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
-<span class="s2">    session_id : uint16</span>
+<span class="s2">    session_id : int32</span>
 <span class="s2">    ---</span>
 <span class="s2">    session_date : date</span>
 <span class="s2">    &quot;&quot;&quot;</span>

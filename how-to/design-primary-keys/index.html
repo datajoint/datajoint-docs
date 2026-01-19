@@ -5362,7 +5362,7 @@
 <span class="k">class</span><span class="w"> </span><span class="nc">Session</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
     <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
 <span class="s2">    -&gt; Subject</span>
-<span class="s2">    session_idx : uint16        # Session number within subject</span>
+<span class="s2">    session_idx : int32        # Session number within subject</span>
 <span class="s2">    ---</span>
 <span class="s2">    session_date : date</span>
 <span class="s2">    &quot;&quot;&quot;</span>
@@ -5415,7 +5415,7 @@
 <span class="k">class</span><span class="w"> </span><span class="nc">Trial</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
     <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
 <span class="s2">    -&gt; Session                  # In primary key</span>
-<span class="s2">    trial_idx : uint16          # In primary key</span>
+<span class="s2">    trial_idx : int32          # In primary key</span>
 <span class="s2">    ---</span>
 <span class="s2">    -&gt; Stimulus                  # NOT in primary key</span>
 <span class="s2">    outcome : enum(&#39;hit&#39;, &#39;miss&#39;)</span>
@@ -5423,9 +5423,9 @@
 </code></pre></div>
 <h2 id="key-design-guidelines">Key Design Guidelines<a class="headerlink" href="#key-design-guidelines" title="Permanent link">&para;</a></h2>
 <h3 id="keep-keys-small">Keep Keys Small<a class="headerlink" href="#keep-keys-small" title="Permanent link">&para;</a></h3>
-<p>Prefer <code>uint16</code> over <code>int64</code> when the range allows:</p>
+<p>Prefer <code>int32</code> over <code>int64</code> when the range allows:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Good: Appropriate size</span>
-<span class="n">session_idx</span> <span class="p">:</span> <span class="n">uint16</span>     <span class="c1"># Max 65,535 sessions per subject</span>
+<span class="n">session_idx</span> <span class="p">:</span> <span class="n">int32</span>     <span class="c1"># Max 65,535 sessions per subject</span>
 
 <span class="c1"># Avoid: Unnecessarily large</span>
 <span class="n">session_idx</span> <span class="p">:</span> <span class="n">int64</span>      <span class="c1"># Wastes space, slower joins</span>
@@ -5447,7 +5447,7 @@
 
 <span class="c1"># Good: Add a sequence number</span>
 <span class="o">-&gt;</span> <span class="n">Subject</span>
-<span class="n">session_idx</span> <span class="p">:</span> <span class="n">uint16</span>
+<span class="n">session_idx</span> <span class="p">:</span> <span class="n">int32</span>
 <span class="o">---</span>
 <span class="n">session_date</span> <span class="p">:</span> <span class="n">date</span>
 </code></pre></div>
@@ -5466,7 +5466,7 @@
 <span class="k">class</span><span class="w"> </span><span class="nc">Scan</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
     <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
 <span class="s2">    -&gt; Session</span>
-<span class="s2">    scan_idx : uint8           # Might need uint16 for high-throughput</span>
+<span class="s2">    scan_idx : int16           # Might need int32 for high-throughput</span>
 <span class="s2">    ---</span>
 <span class="s2">    ...</span>
 <span class="s2">    &quot;&quot;&quot;</span>

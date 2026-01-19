@@ -7131,7 +7131,7 @@ document and it will execute the migration with your oversight.</p>
 </ul>
 <p>No action required—the new license is more permissive.</p>
 <h3 id="future-backend-support">Future Backend Support<a class="headerlink" href="#future-backend-support" title="Permanent link">&para;</a></h3>
-<p>DataJoint 2.0 introduces portable type aliases (<code>uint32</code>, <code>float64</code>, etc.) that prepare the codebase for <strong>PostgreSQL backend compatibility</strong> in a future release. Migration to core types ensures your schemas will work seamlessly when Postgres support is available.</p>
+<p>DataJoint 2.0 introduces portable type aliases (<code>int64</code>, <code>float64</code>, etc.) that prepare the codebase for <strong>PostgreSQL backend compatibility</strong> in a future release. Migration to core types ensures your schemas will work seamlessly when Postgres support is available.</p>
 <h3 id="before-you-start-testing-recommendation">Before You Start: Testing Recommendation<a class="headerlink" href="#before-you-start-testing-recommendation" title="Permanent link">&para;</a></h3>
 <p><strong>⚡ Want AI agents to automate Phases I-II for you?</strong></p>
 <p>Create unit and integration tests for your pipeline against a QA database before
@@ -7167,7 +7167,7 @@ automatically, reducing manual effort by 50-80%.</p>
 <tr>
 <td><strong>Core</strong></td>
 <td>Standardized portable types</td>
-<td><code>uint32</code>, <code>float64</code>, <code>varchar(100)</code>, <code>json</code></td>
+<td><code>int64</code>, <code>float64</code>, <code>varchar(100)</code>, <code>json</code></td>
 <td>Phase I</td>
 </tr>
 <tr>
@@ -8109,7 +8109,7 @@ and understand the file organization.</p>
 <tbody>
 <tr>
 <td><code>int unsigned</code></td>
-<td><code>uint32</code></td>
+<td><code>int64</code></td>
 <td>Core type</td>
 </tr>
 <tr>
@@ -8119,17 +8119,17 @@ and understand the file organization.</p>
 </tr>
 <tr>
 <td><code>smallint unsigned</code></td>
-<td><code>uint16</code></td>
+<td><code>int32</code></td>
 <td>Core type</td>
 </tr>
 <tr>
 <td><code>tinyint unsigned</code></td>
-<td><code>uint8</code></td>
+<td><code>int16</code></td>
 <td>Core type</td>
 </tr>
 <tr>
 <td><code>bigint unsigned</code></td>
-<td><code>uint64</code></td>
+<td><code>int64</code></td>
 <td>Core type</td>
 </tr>
 <tr>
@@ -8206,7 +8206,7 @@ and understand the file organization.</p>
 </tr>
 <tr>
 <td><code>tinyint(1)</code></td>
-<td><code>bool</code> or <code>uint8</code></td>
+<td><code>bool</code> or <code>int16</code></td>
 <td><strong>Ask user:</strong> was this boolean or small integer?</td>
 </tr>
 </tbody>
@@ -8258,7 +8258,7 @@ and understand the file organization.</p>
 <ul>
 <li><strong>Bool:</strong> Legacy DataJoint supported <code>bool</code> and <code>boolean</code> types (MySQL stores as <code>tinyint(1)</code>). Keep as <code>bool</code> in 2.0. Only explicit <code>tinyint(1)</code> declarations need review:<ul>
 <li>If used for boolean semantics (yes/no, active/inactive) → <code>bool</code></li>
-<li>If used for small integers (counts, indices 0-255) → <code>uint8</code></li>
+<li>If used for small integers (counts, indices 0-255) → <code>int16</code></li>
 </ul>
 </li>
 </ul>
@@ -8307,13 +8307,13 @@ SCOPE - PHASE I:
 TYPE CONVERSIONS:
 
 Core Types (Integer and Float):
-  int unsigned → uint32
+  int unsigned → int64
   int → int32
-  smallint unsigned → uint16
+  smallint unsigned → int32
   smallint → int16
-  tinyint unsigned → uint8
+  tinyint unsigned → int16
   tinyint → int8
-  bigint unsigned → uint64
+  bigint unsigned → int64
   bigint → int64
   float → float32
   double → float64
@@ -8338,13 +8338,13 @@ Native Types (Discouraged but Allowed):
 
 Special Cases - REQUIRE USER REVIEW:
 
-  tinyint(1) → ASK USER: bool or uint8?
+  tinyint(1) → ASK USER: bool or int16?
     Note: Legacy DataJoint had bool/boolean types. Only explicit tinyint(1) needs review.
     - Boolean semantics (yes/no, active/inactive) → bool
-    - Small integer (counts, indices 0-255) → uint8
+    - Small integer (counts, indices 0-255) → int16
     Example:
       is_active : tinyint(1)  # Boolean semantics → bool
-      priority : tinyint(1)   # 0-10 scale → uint8
+      priority : tinyint(1)   # 0-10 scale → int16
       has_data : bool         # Already bool → keep as bool
 
   timestamp → ASK USER about timezone convention, then convert to datetime
@@ -8417,13 +8417,13 @@ Example:
   is_active : bool           # Already bool → no change
   enabled : boolean          # Already boolean → bool
   is_valid : tinyint(1)      # ASK: Boolean semantics? → bool
-  n_retries : tinyint(1)     # ASK: Small integer? → uint8
+  n_retries : tinyint(1)     # ASK: Small integer? → int16
 
   # 2.0
   is_active : bool           # Unchanged
   enabled : bool             # boolean → bool
   is_valid : bool            # Boolean semantics
-  n_retries : uint8          # Small integer
+  n_retries : int16          # Small integer
 
 IMPORTANT - Enum Types:
 
@@ -8534,7 +8534,7 @@ schema = dj.schema(&#39;neuroscience_pipeline_v2&#39;)
 @schema
 class Recording(dj.Manual):
     definition = &quot;&quot;&quot;
-    recording_id : uint32
+    recording_id : int64
     ---
     sampling_rate : float32
     signal : &lt;blob@raw&gt;  # Converted: blob@raw → &lt;blob@raw&gt;
@@ -8565,7 +8565,7 @@ COMMIT MESSAGE FORMAT:
 &quot;feat(phase-i): convert table definitions to 2.0 syntax
 
 - Update schema declarations to *_v2
-- Convert native types to core types (uint32, float64, etc.)
+- Convert native types to core types (int64, float64, etc.)
 - Convert all codecs (in-table + in-store)
 - Configure test stores for development/testing
 
@@ -9307,7 +9307,7 @@ git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </
 <span class="nd">@schema</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Recording</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
     <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
-<span class="s2">    recording_id : uint32</span>
+<span class="s2">    recording_id : int64</span>
 <span class="s2">    ---</span>
 <span class="s2">    signal : blob@raw  # Legacy (pre-2.0 clients)</span>
 <span class="s2">    signal_v2 : &lt;blob@raw&gt;  # 2.0 clients</span>
@@ -9402,7 +9402,7 @@ on your needs. Migration is complete - these are optional enhancements.</p>
 
 <span class="c1"># Correct</span>
 <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
-<span class="s2">id : uint32</span>
+<span class="s2">id : int64</span>
 <span class="s2">&quot;&quot;&quot;</span>
 </code></pre></div></p>
 <h3 id="external-storage-not-found">External Storage Not Found<a class="headerlink" href="#external-storage-not-found" title="Permanent link">&para;</a></h3>

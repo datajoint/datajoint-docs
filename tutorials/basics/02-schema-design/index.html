@@ -3091,7 +3091,7 @@ schema = dj.Schema('tutorial_design')</div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>[2026-01-14 01:33:40,922][INFO]: DataJoint 2.0.0a22 connected to root@127.0.0.1:3306
+<pre>[2026-01-17 00:47:08,573][INFO]: DataJoint 2.0.0a22 connected to root@127.0.0.1:3306
 </pre>
 </div>
 </div>
@@ -3487,7 +3487,7 @@ TaskType()</div>
     <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    # Experimental session</span>
 <span class="s2">    -&gt; Subject</span>
-<span class="s2">    session_idx : uint16            # session number for this subject</span>
+<span class="s2">    session_idx : int32            # session number for this subject</span>
 <span class="s2">    ---</span>
 <span class="s2">    -&gt; TaskType</span>
 <span class="s2">    -&gt; SessionStatus</span>
@@ -3500,7 +3500,7 @@ TaskType()</div>
         <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">        # Individual trial within a session</span>
 <span class="s2">        -&gt; master</span>
-<span class="s2">        trial_idx : uint16</span>
+<span class="s2">        trial_idx : int32</span>
 <span class="s2">        ---</span>
 <span class="s2">        stimulus : varchar(50)</span>
 <span class="s2">        response : varchar(50)</span>
@@ -3513,7 +3513,7 @@ class Session(dj.Manual):
     definition = """
     # Experimental session
     -&gt; Subject
-    session_idx : uint16            # session number for this subject
+    session_idx : int32            # session number for this subject
     ---
     -&gt; TaskType
     -&gt; SessionStatus
@@ -3526,7 +3526,7 @@ class Session(dj.Manual):
         definition = """
         # Individual trial within a session
         -&gt; master
-        trial_idx : uint16
+        trial_idx : int32
         ---
         stimulus : varchar(50)
         response : varchar(50)
@@ -4200,8 +4200,8 @@ Session.Trial()</div>
 <span class="s2">    # Summary statistics for a session</span>
 <span class="s2">    -&gt; Session</span>
 <span class="s2">    ---</span>
-<span class="s2">    num_trials : uint16</span>
-<span class="s2">    num_correct : uint16</span>
+<span class="s2">    num_trials : int32</span>
+<span class="s2">    num_correct : int32</span>
 <span class="s2">    accuracy : float32</span>
 <span class="s2">    mean_reaction_time : float32</span>
 <span class="s2">    """</span>
@@ -4225,8 +4225,8 @@ class SessionSummary(dj.Computed):
     # Summary statistics for a session
     -&gt; Session
     ---
-    num_trials : uint16
-    num_correct : uint16
+    num_trials : int32
+    num_correct : int32
     accuracy : float32
     mean_reaction_time : float32
     """
@@ -4656,7 +4656,7 @@ SessionSummary()</div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>SessionSummary: 100%|██████████| 3/3 [00:00&lt;00:00, 248.80it/s]</pre>
+<pre>SessionSummary: 100%|██████████| 3/3 [00:00&lt;00:00, 204.81it/s]</pre>
 </div>
 </div>
 <div class="jp-OutputArea-child">
@@ -4836,9 +4836,9 @@ SessionSummary()</div>
 </thead>
 <tbody>
 <tr>
-<td><code>uint8</code>, <code>uint16</code>, <code>int32</code></td>
+<td><code>int16</code>, <code>int32</code>, <code>int32</code></td>
 <td>Sized integers</td>
-<td><code>session_idx : uint16</code></td>
+<td><code>session_idx : int32</code></td>
 </tr>
 <tr>
 <td><code>float32</code>, <code>float64</code></td>

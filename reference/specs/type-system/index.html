@@ -6085,7 +6085,7 @@
 <p>This document defines a three-layer type architecture:</p>
 <ol>
 <li><strong>Native database types</strong> - Backend-specific (<code>FLOAT</code>, <code>TINYINT UNSIGNED</code>, <code>LONGBLOB</code>). Discouraged for direct use.</li>
-<li><strong>Core DataJoint types</strong> - Standardized across backends, scientist-friendly (<code>float32</code>, <code>uint8</code>, <code>bool</code>, <code>json</code>).</li>
+<li><strong>Core DataJoint types</strong> - Standardized across backends, scientist-friendly (<code>int32</code>, <code>float32</code>, <code>bool</code>, <code>json</code>).</li>
 <li><strong>Codec Types</strong> - Programmatic types with <code>encode()</code>/<code>decode()</code> semantics. Composable.</li>
 </ol>
 <table>
@@ -6222,30 +6222,6 @@ MySQL and PostgreSQL backends. Users should prefer these over native database ty
 <td>64-bit signed</td>
 <td><code>BIGINT</code></td>
 <td><code>BIGINT</code></td>
-</tr>
-<tr>
-<td><code>uint8</code></td>
-<td>8-bit unsigned</td>
-<td><code>TINYINT UNSIGNED</code></td>
-<td><code>SMALLINT</code></td>
-</tr>
-<tr>
-<td><code>uint16</code></td>
-<td>16-bit unsigned</td>
-<td><code>SMALLINT UNSIGNED</code></td>
-<td><code>INTEGER</code></td>
-</tr>
-<tr>
-<td><code>uint32</code></td>
-<td>32-bit unsigned</td>
-<td><code>INT UNSIGNED</code></td>
-<td><code>BIGINT</code></td>
-</tr>
-<tr>
-<td><code>uint64</code></td>
-<td>64-bit unsigned</td>
-<td><code>BIGINT UNSIGNED</code></td>
-<td><code>NUMERIC(20)</code></td>
 </tr>
 <tr>
 <td><code>float32</code></td>
@@ -6429,16 +6405,28 @@ database backends.</p>
 <td><code>int8</code></td>
 </tr>
 <tr>
-<td><code>tinyint unsigned</code></td>
-<td><code>uint8</code></td>
-</tr>
-<tr>
 <td><code>smallint</code></td>
 <td><code>int16</code></td>
 </tr>
 <tr>
 <td><code>bigint</code></td>
 <td><code>int64</code></td>
+</tr>
+<tr>
+<td><code>tinyint unsigned</code></td>
+<td><code>int16</code> (use larger signed type)</td>
+</tr>
+<tr>
+<td><code>smallint unsigned</code></td>
+<td><code>int32</code> (use larger signed type)</td>
+</tr>
+<tr>
+<td><code>int unsigned</code></td>
+<td><code>int64</code> (use larger signed type)</td>
+</tr>
+<tr>
+<td><code>bigint unsigned</code></td>
+<td><code>decimal(20,0)</code> (use decimal for full range)</td>
 </tr>
 </tbody>
 </table>
@@ -6497,8 +6485,8 @@ declarative syntax:</p>
 </tr>
 <tr>
 <td><code>UNSIGNED</code></td>
-<td>✅ Allowed</td>
-<td>Part of type semantics (use <code>uint*</code> core types)</td>
+<td>⚠️ Discouraged</td>
+<td>MySQL-specific, not portable (use larger signed type)</td>
 </tr>
 </tbody>
 </table>
@@ -7236,7 +7224,7 @@ registry table is needed. Garbage collection scans all tables to find referenced
 <li>Layer 3: Codec types (encode/decode, composable)</li>
 </ul>
 </li>
-<li><strong>Core types are scientist-friendly</strong>: <code>float32</code>, <code>uint8</code>, <code>bool</code>, <code>bytes</code> instead of <code>FLOAT</code>, <code>TINYINT UNSIGNED</code>, <code>LONGBLOB</code></li>
+<li><strong>Core types are scientist-friendly</strong>: <code>float32</code>, <code>int8</code>, <code>bool</code>, <code>bytes</code> instead of <code>FLOAT</code>, <code>TINYINT</code>, <code>LONGBLOB</code></li>
 <li><strong>Codecs use angle brackets</strong>: <code>&lt;blob&gt;</code>, <code>&lt;object@store&gt;</code>, <code>&lt;filepath@main&gt;</code> - distinguishes from core types</li>
 <li><strong><code>@</code> indicates external storage</strong>: No <code>@</code> = database, <code>@</code> present = object store</li>
 <li><strong><code>get_dtype(is_external)</code> method</strong>: Codecs resolve dtype at declaration time based on storage mode</li>

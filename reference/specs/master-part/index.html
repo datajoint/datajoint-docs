@@ -5901,7 +5901,7 @@
 <span class="k">class</span><span class="w"> </span><span class="nc">Session</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
     <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
 <span class="s2">    subject_id : varchar(16)</span>
-<span class="s2">    session_idx : uint8</span>
+<span class="s2">    session_idx : int16</span>
 <span class="s2">    ---</span>
 <span class="s2">    session_date : date</span>
 <span class="s2">    &quot;&quot;&quot;</span>
@@ -5912,7 +5912,7 @@
 <span class="k">class</span><span class="w"> </span><span class="nc">Session</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
     <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
 <span class="s2">    subject_id : varchar(16)</span>
-<span class="s2">    session_idx : uint8</span>
+<span class="s2">    session_idx : int16</span>
 <span class="s2">    ---</span>
 <span class="s2">    session_date : date</span>
 <span class="s2">    &quot;&quot;&quot;</span>
@@ -5920,7 +5920,7 @@
     <span class="k">class</span><span class="w"> </span><span class="nc">Trial</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Part</span><span class="p">):</span>
         <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
 <span class="s2">        -&gt; master</span>
-<span class="s2">        trial_idx : uint16</span>
+<span class="s2">        trial_idx : int32</span>
 <span class="s2">        ---</span>
 <span class="s2">        stimulus : varchar(32)</span>
 <span class="s2">        response : varchar(32)</span>
@@ -6000,7 +6000,7 @@
     <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
 <span class="s2">    -&gt; Session</span>
 <span class="s2">    ---</span>
-<span class="s2">    n_trials : uint16</span>
+<span class="s2">    n_trials : int32</span>
 <span class="s2">    &quot;&quot;&quot;</span>
 
     <span class="k">class</span><span class="w"> </span><span class="nc">TrialResult</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Part</span><span class="p">):</span>
@@ -6174,7 +6174,7 @@
 <p>Include minimal additional keys beyond master reference:</p>
 <div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">Session</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
     <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
-<span class="s2">    session_id : uint32</span>
+<span class="s2">    session_id : int64</span>
 <span class="s2">    ---</span>
 <span class="s2">    ...</span>
 <span class="s2">    &quot;&quot;&quot;</span>
@@ -6182,7 +6182,7 @@
     <span class="k">class</span><span class="w"> </span><span class="nc">Trial</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Part</span><span class="p">):</span>
         <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
 <span class="s2">        -&gt; master</span>
-<span class="s2">        trial_idx : uint16      # Only trial-specific key</span>
+<span class="s2">        trial_idx : int32      # Only trial-specific key</span>
 <span class="s2">        ---</span>
 <span class="s2">        ...</span>
 <span class="s2">        &quot;&quot;&quot;</span>
@@ -6200,7 +6200,7 @@
 <span class="k">class</span><span class="w"> </span><span class="nc">TrialEvent</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>  <span class="c1"># Not a Part, but references Trial</span>
     <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
 <span class="s2">    -&gt; Session.Trial</span>
-<span class="s2">    event_idx : uint8</span>
+<span class="s2">    event_idx : int16</span>
 <span class="s2">    ---</span>
 <span class="s2">    event_time : float32</span>
 <span class="s2">    &quot;&quot;&quot;</span>

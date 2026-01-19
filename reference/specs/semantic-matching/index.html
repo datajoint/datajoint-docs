@@ -6422,14 +6422,14 @@
 <div class="highlight"><pre><span></span><code><span class="c1"># Two tables with generic &#39;id&#39; attribute</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Student</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
     <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
-<span class="s2">    id : uint32</span>
+<span class="s2">    id : int64</span>
 <span class="s2">    ---</span>
 <span class="s2">    name : varchar(100)</span>
 <span class="s2">    &quot;&quot;&quot;</span>
 
 <span class="k">class</span><span class="w"> </span><span class="nc">Course</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
     <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
-<span class="s2">    id : uint32</span>
+<span class="s2">    id : int64</span>
 <span class="s2">    ---</span>
 <span class="s2">    title : varchar(100)</span>
 <span class="s2">    &quot;&quot;&quot;</span>
@@ -6447,7 +6447,7 @@
 <p><strong>Option 3: Use descriptive names (best practice)</strong>
 <div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">Student</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
     <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
-<span class="s2">    student_id : uint32</span>
+<span class="s2">    student_id : int64</span>
 <span class="s2">    ---</span>
 <span class="s2">    name : varchar(100)</span>
 <span class="s2">    &quot;&quot;&quot;</span>
@@ -6601,7 +6601,7 @@
 <h4 id="example">Example<a class="headerlink" href="#example" title="Permanent link">&para;</a></h4>
 <div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">Session</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>         <span class="c1"># table: session</span>
     <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
-<span class="s2">    session_id : uint32</span>
+<span class="s2">    session_id : int64</span>
 <span class="s2">    ---</span>
 <span class="s2">    session_date : date</span>
 <span class="s2">    &quot;&quot;&quot;</span>
@@ -6609,7 +6609,7 @@
 <span class="k">class</span><span class="w"> </span><span class="nc">Trial</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>           <span class="c1"># table: trial</span>
     <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
 <span class="s2">    -&gt; Session</span>
-<span class="s2">    trial_num : uint16</span>
+<span class="s2">    trial_num : int32</span>
 <span class="s2">    ---</span>
 <span class="s2">    stimulus : varchar(100)</span>
 <span class="s2">    &quot;&quot;&quot;</span>
@@ -6747,7 +6747,7 @@ run schema.rebuild_lineage() on this schema to correct the lineage.
 <h3 id="example-1-valid-join-shared-lineage">Example 1: Valid Join (Shared Lineage)<a class="headerlink" href="#example-1-valid-join-shared-lineage" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">Student</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
     <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
-<span class="s2">    student_id : uint32</span>
+<span class="s2">    student_id : int64</span>
 <span class="s2">    ---</span>
 <span class="s2">    name : varchar(100)</span>
 <span class="s2">    &quot;&quot;&quot;</span>
@@ -6766,14 +6766,14 @@ run schema.rebuild_lineage() on this schema to correct the lineage.
 <h3 id="example-2-invalid-join-different-lineage">Example 2: Invalid Join (Different Lineage)<a class="headerlink" href="#example-2-invalid-join-different-lineage" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">TableA</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
     <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
-<span class="s2">    id : uint32</span>
+<span class="s2">    id : int64</span>
 <span class="s2">    ---</span>
 <span class="s2">    value_a : int32</span>
 <span class="s2">    &quot;&quot;&quot;</span>
 
 <span class="k">class</span><span class="w"> </span><span class="nc">TableB</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
     <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
-<span class="s2">    id : uint32</span>
+<span class="s2">    id : int64</span>
 <span class="s2">    ---</span>
 <span class="s2">    value_b : int32</span>
 <span class="s2">    &quot;&quot;&quot;</span>
@@ -6790,7 +6790,7 @@ run schema.rebuild_lineage() on this schema to correct the lineage.
 <h3 id="example-3-multi-hop-fk-inheritance">Example 3: Multi-hop FK Inheritance<a class="headerlink" href="#example-3-multi-hop-fk-inheritance" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">Session</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
     <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
-<span class="s2">    session_id : uint32</span>
+<span class="s2">    session_id : int64</span>
 <span class="s2">    ---</span>
 <span class="s2">    session_date : date</span>
 <span class="s2">    &quot;&quot;&quot;</span>
@@ -6798,7 +6798,7 @@ run schema.rebuild_lineage() on this schema to correct the lineage.
 <span class="k">class</span><span class="w"> </span><span class="nc">Trial</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
     <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
 <span class="s2">    -&gt; Session</span>
-<span class="s2">    trial_num : uint16</span>
+<span class="s2">    trial_num : int32</span>
 <span class="s2">    &quot;&quot;&quot;</span>
 
 <span class="k">class</span><span class="w"> </span><span class="nc">Response</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Computed</span><span class="p">):</span>

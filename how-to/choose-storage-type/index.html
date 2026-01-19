@@ -5858,7 +5858,7 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Extracted spike shapes&quot;&quot;&quot;</span>
     <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
 <span class="s2">    -&gt; ContinuousData</span>
-<span class="s2">    unit_id : uint32</span>
+<span class="s2">    unit_id : int64</span>
 <span class="s2">    ---</span>
 <span class="s2">    waveforms : &lt;npy@&gt;                   # 20 MB array, lazy load</span>
 <span class="s2">    &quot;&quot;&quot;</span>
@@ -5901,7 +5901,7 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Extracted time series&quot;&quot;&quot;</span>
     <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
 <span class="s2">    -&gt; SegmentedCells</span>
-<span class="s2">    cell_id : uint32</span>
+<span class="s2">    cell_id : int64</span>
 <span class="s2">    ---</span>
 <span class="s2">    trace : &lt;blob@&gt;                      # 500 KB per cell, deduplicated</span>
 <span class="s2">    &quot;&quot;&quot;</span>

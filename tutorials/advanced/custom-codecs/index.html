@@ -2673,7 +2673,7 @@ schema = dj.Schema('tutorial_codecs')</div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>[2026-01-14 01:34:15,376][INFO]: DataJoint 2.0.0a22 connected to root@127.0.0.1:3306
+<pre>[2026-01-17 00:49:01,696][INFO]: DataJoint 2.0.0a22 connected to root@127.0.0.1:3306
 </pre>
 </div>
 </div>
@@ -2760,8 +2760,8 @@ class GraphCodec(dj.Codec):
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=cell-4">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=cell-4">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -2782,7 +2782,7 @@ class GraphCodec(dj.Codec):
 <div class="highlight-ipynb hl-python"><pre><span></span><span class="nd">@schema</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Connectivity</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
     <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
-<span class="s2">    conn_id : uint16</span>
+<span class="s2">    conn_id : int32</span>
 <span class="s2">    ---</span>
 <span class="s2">    network : &lt;graph&gt;</span>
 <span class="s2">    """</span>
@@ -2790,23 +2790,10 @@ class GraphCodec(dj.Codec):
 <div class="clipboard-copy-txt" id="cell-3">@schema
 class Connectivity(dj.Manual):
     definition = """
-    conn_id : uint16
+    conn_id : int32
     ---
     network : <graph>
     """</graph></div>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell-outputWrapper">
-<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
-</div>
-<div class="jp-OutputArea jp-Cell-outputArea">
-<div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>[2026-01-14 01:34:15,391][WARNING]: Native type 'int' is used in attribute 'conn_id'. Consider using a core DataJoint type for better portability.
-</pre>
 </div>
 </div>
 </div>
@@ -2990,7 +2977,7 @@ class SpikeTrainCodec(dj.Codec):
 <div class="highlight-ipynb hl-python"><pre><span></span><span class="nd">@schema</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Unit</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
     <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
-<span class="s2">    unit_id : uint16</span>
+<span class="s2">    unit_id : int32</span>
 <span class="s2">    ---</span>
 <span class="s2">    spikes : &lt;spike_train&gt;</span>
 <span class="s2">    """</span>
@@ -3004,7 +2991,7 @@ class SpikeTrainCodec(dj.Codec):
 <div class="clipboard-copy-txt" id="cell-6">@schema
 class Unit(dj.Manual):
     definition = """
-    unit_id : uint16
+    unit_id : int32
     ---
     spikes : <spike_train>
     """
@@ -3022,13 +3009,6 @@ print(f"Type: {type(result)}, Spikes: {len(result.times)}")</spike_train></div>
 <div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
 </div>
 <div class="jp-OutputArea jp-Cell-outputArea">
-<div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>[2026-01-14 01:34:15,436][WARNING]: Native type 'int' is used in attribute 'unit_id'. Consider using a core DataJoint type for better portability.
-</pre>
-</div>
-</div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">

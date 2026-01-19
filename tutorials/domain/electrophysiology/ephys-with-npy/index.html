@@ -4534,7 +4534,7 @@ SpikeParams()</div>
 <span class="s2">    -&gt; SpikeParams</span>
 <span class="s2">    ---</span>
 <span class="s2">    spike_times : &lt;npy@ephys&gt;    # indices of detected spikes</span>
-<span class="s2">    spike_count : uint32         # total number of spikes</span>
+<span class="s2">    spike_count : int64         # total number of spikes</span>
 <span class="s2">    waveforms : &lt;npy@ephys&gt;      # all waveforms stacked (n_spikes x window_size)</span>
 <span class="s2">    """</span>
 
@@ -4578,7 +4578,7 @@ class Spikes(dj.Computed):
     -&gt; SpikeParams
     ---
     spike_times : <npy@ephys>    # indices of detected spikes
-    spike_count : uint32         # total number of spikes
+    spike_count : int64         # total number of spikes
     waveforms : <npy@ephys>      # all waveforms stacked (n_spikes x window_size)
     """
 
