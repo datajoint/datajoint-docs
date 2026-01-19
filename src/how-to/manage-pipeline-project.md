@@ -61,7 +61,7 @@ class Probe(dj.Lookup):
     definition = """
     probe_type : varchar(32)
     ---
-    num_channels : uint16
+    num_channels : int32
     """
 
 @schema

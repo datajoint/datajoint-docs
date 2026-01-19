@@ -37,7 +37,7 @@ No action required—the new license is more permissive.
 
 ### Future Backend Support
 
-DataJoint 2.0 introduces portable type aliases (`uint32`, `float64`, etc.) that prepare the codebase for **PostgreSQL backend compatibility** in a future release. Migration to core types ensures your schemas will work seamlessly when Postgres support is available.
+DataJoint 2.0 introduces portable type aliases (`int64`, `float64`, etc.) that prepare the codebase for **PostgreSQL backend compatibility** in a future release. Migration to core types ensures your schemas will work seamlessly when Postgres support is available.
 
 ### Before You Start: Testing Recommendation
 
@@ -67,7 +67,7 @@ DataJoint 2.0 introduces a unified type system with three tiers:
 | Tier | Description | Examples | Migration |
 |------|-------------|----------|-----------|
 | **Native** | Raw MySQL types | `int unsigned`, `tinyint` | Auto-converted to core types |
-| **Core** | Standardized portable types | `uint32`, `float64`, `varchar(100)`, `json` | Phase I |
+| **Core** | Standardized portable types | `int64`, `float64`, `varchar(100)`, `json` | Phase I |
 | **Codec** | Serialization to blob or storage | `<blob>`, `<blob@store>`, `<npy@>` | Phase I-III |
 
 **Learn more:** [Type System Concept](../explanation/type-system.md) · [Type System Reference](../reference/specs/type-system.md)
@@ -975,11 +975,11 @@ Convert ALL types and codecs in Phase I:
 
 | pre-2.0 | 2.0 | Category |
 |--------|-----|----------|
-| `int unsigned` | `uint32` | Core type |
+| `int unsigned` | `int64` | Core type |
 | `int` | `int32` | Core type |
-| `smallint unsigned` | `uint16` | Core type |
-| `tinyint unsigned` | `uint8` | Core type |
-| `bigint unsigned` | `uint64` | Core type |
+| `smallint unsigned` | `int32` | Core type |
+| `tinyint unsigned` | `int16` | Core type |
+| `bigint unsigned` | `int64` | Core type |
 | `float` | `float32` | Core type |
 | `double` | `float64` | Core type |
 
@@ -997,7 +997,7 @@ Convert ALL types and codecs in Phase I:
 | `uuid` | `uuid` | Core type (widely used in legacy) |
 | `text` | `varchar(N)` or keep as native | **Native type:** Consider migrating to `varchar(n)` |
 | `time` | `datetime` or keep as native | **Native type:** Consider using `datetime` |
-| `tinyint(1)` | `bool` or `uint8` | **Ask user:** was this boolean or small integer? |
+| `tinyint(1)` | `bool` or `int16` | **Ask user:** was this boolean or small integer? |
 
 **Codecs:**
 
@@ -1017,7 +1017,7 @@ Convert ALL types and codecs in Phase I:
 
 - **Bool:** Legacy DataJoint supported `bool` and `boolean` types (MySQL stores as `tinyint(1)`). Keep as `bool` in 2.0. Only explicit `tinyint(1)` declarations need review:
   - If used for boolean semantics (yes/no, active/inactive) → `bool`
-  - If used for small integers (counts, indices 0-255) → `uint8`
+  - If used for small integers (counts, indices 0-255) → `int16`
 
 - **Text Type:** `text` is a native MySQL type, not a core type. Consider migrating to `varchar(n)` with appropriate length. If your text truly needs unlimited length, you can keep `text` as a native type (will generate a warning).
 
@@ -1065,13 +1065,13 @@ SCOPE - PHASE I:
 TYPE CONVERSIONS:
 
 Core Types (Integer and Float):
-  int unsigned → uint32
+  int unsigned → int64
   int → int32
-  smallint unsigned → uint16
+  smallint unsigned → int32
   smallint → int16
-  tinyint unsigned → uint8
+  tinyint unsigned → int16
   tinyint → int8
-  bigint unsigned → uint64
+  bigint unsigned → int64
   bigint → int64
   float → float32
   double → float64
@@ -1096,13 +1096,13 @@ Native Types (Discouraged but Allowed):
 
 Special Cases - REQUIRE USER REVIEW:
 
-  tinyint(1) → ASK USER: bool or uint8?
+  tinyint(1) → ASK USER: bool or int16?
     Note: Legacy DataJoint had bool/boolean types. Only explicit tinyint(1) needs review.
     - Boolean semantics (yes/no, active/inactive) → bool
-    - Small integer (counts, indices 0-255) → uint8
+    - Small integer (counts, indices 0-255) → int16
     Example:
       is_active : tinyint(1)  # Boolean semantics → bool
-      priority : tinyint(1)   # 0-10 scale → uint8
+      priority : tinyint(1)   # 0-10 scale → int16
       has_data : bool         # Already bool → keep as bool
 
   timestamp → ASK USER about timezone convention, then convert to datetime
@@ -1175,13 +1175,13 @@ Example:
   is_active : bool           # Already bool → no change
   enabled : boolean          # Already boolean → bool
   is_valid : tinyint(1)      # ASK: Boolean semantics? → bool
-  n_retries : tinyint(1)     # ASK: Small integer? → uint8
+  n_retries : tinyint(1)     # ASK: Small integer? → int16
 
   # 2.0
   is_active : bool           # Unchanged
   enabled : bool             # boolean → bool
   is_valid : bool            # Boolean semantics
-  n_retries : uint8          # Small integer
+  n_retries : int16          # Small integer
 
 IMPORTANT - Enum Types:
 
@@ -1292,7 +1292,7 @@ schema = dj.schema('neuroscience_pipeline_v2')
 @schema
 class Recording(dj.Manual):
     definition = """
-    recording_id : uint32
+    recording_id : int64
     ---
     sampling_rate : float32
     signal : <blob@raw>  # Converted: blob@raw → <blob@raw>
@@ -1323,7 +1323,7 @@ COMMIT MESSAGE FORMAT:
 "feat(phase-i): convert table definitions to 2.0 syntax
 
 - Update schema declarations to *_v2
-- Convert native types to core types (uint32, float64, etc.)
+- Convert native types to core types (int64, float64, etc.)
 - Convert all codecs (in-table + in-store)
 - Configure test stores for development/testing
 
@@ -2174,7 +2174,7 @@ print(f"Populated {result['rows']} _v2 columns")
 @schema
 class Recording(dj.Manual):
     definition = """
-    recording_id : uint32
+    recording_id : int64
     ---
     signal : blob@raw  # Legacy (pre-2.0 clients)
     signal_v2 : <blob@raw>  # 2.0 clients
@@ -2296,7 +2296,7 @@ id : int unsigned
 
 # Correct
 definition = """
-id : uint32
+id : int64
 """
 ```
 

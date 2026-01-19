@@ -25,14 +25,14 @@ Semantic matching is enabled by default in DataJoint 2.0. For most well-designed
 # Two tables with generic 'id' attribute
 class Student(dj.Manual):
     definition = """
-    id : uint32
+    id : int64
     ---
     name : varchar(100)
     """
 
 class Course(dj.Manual):
     definition = """
-    id : uint32
+    id : int64
     ---
     title : varchar(100)
     """
@@ -57,7 +57,7 @@ Student().join(Course(), semantic_check=False)  # OK, but be careful!
 ```python
 class Student(dj.Manual):
     definition = """
-    student_id : uint32
+    student_id : int64
     ---
     name : varchar(100)
     """
@@ -252,7 +252,7 @@ schema_name.table_name.attribute_name
 ```python
 class Session(dj.Manual):         # table: session
     definition = """
-    session_id : uint32
+    session_id : int64
     ---
     session_date : date
     """
@@ -260,7 +260,7 @@ class Session(dj.Manual):         # table: session
 class Trial(dj.Manual):           # table: trial
     definition = """
     -> Session
-    trial_num : uint16
+    trial_num : int32
     ---
     stimulus : varchar(100)
     """
@@ -402,7 +402,7 @@ run schema.rebuild_lineage() on this schema to correct the lineage.
 ```python
 class Student(dj.Manual):
     definition = """
-    student_id : uint32
+    student_id : int64
     ---
     name : varchar(100)
     """
@@ -424,14 +424,14 @@ Student() * Enrollment()
 ```python
 class TableA(dj.Manual):
     definition = """
-    id : uint32
+    id : int64
     ---
     value_a : int32
     """
 
 class TableB(dj.Manual):
     definition = """
-    id : uint32
+    id : int64
     ---
     value_b : int32
     """
@@ -451,7 +451,7 @@ TableA().join(TableB(), semantic_check=False)
 ```python
 class Session(dj.Manual):
     definition = """
-    session_id : uint32
+    session_id : int64
     ---
     session_date : date
     """
@@ -459,7 +459,7 @@ class Session(dj.Manual):
 class Trial(dj.Manual):
     definition = """
     -> Session
-    trial_num : uint16
+    trial_num : int32
     """
 
 class Response(dj.Computed):
