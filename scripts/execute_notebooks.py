@@ -42,12 +42,14 @@ def setup_backend(backend: str) -> dict:
         env["DJ_USER"] = "postgres"
         env["DJ_PASS"] = "tutorial"
         env["DJ_PORT"] = "5432"
+        env["DJ_USE_TLS"] = "false"  # Tutorial containers don't use SSL
     else:  # mysql (default)
         env["DJ_BACKEND"] = "mysql"
         env["DJ_HOST"] = env.get("DJ_HOST", "127.0.0.1")
         env["DJ_USER"] = "root"
         env["DJ_PASS"] = "tutorial"
         env["DJ_PORT"] = "3306"
+        env["DJ_USE_TLS"] = "false"  # Tutorial containers don't use SSL
 
     return env
 
