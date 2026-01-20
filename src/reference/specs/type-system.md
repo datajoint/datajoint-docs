@@ -2,6 +2,9 @@
 
 ## Overview
 
+!!! version-added "New in 2.1"
+    PostgreSQL type mappings were added in DataJoint 2.1. See [Database Backends](database-backends.md) for backend configuration.
+
 This document defines a three-layer type architecture:
 
 1. **Native database types** - Backend-specific (`FLOAT`, `TINYINT UNSIGNED`, `LONGBLOB`). Discouraged for direct use.
