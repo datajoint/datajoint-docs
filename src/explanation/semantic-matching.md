@@ -29,7 +29,7 @@ In each case, DataJoint verifies that any common attribute names between the two
 
 These concepts were first introduced in Yatsenko et al., 2018[^1].
 
-[^1]: Yatsenko D, Walker EY, Tolias AS (2018). DataJoint Elements: Data Workflows for Neurophysiology. [arXiv:1807.11104](https://doi.org/10.48550/arXiv.1807.11104)
+[^1]: Yatsenko D, Walker EY, Tolias AS (2018). DataJoint: A Simpler Relational Data Model. [arXiv:1807.11104](https://doi.org/10.48550/arXiv.1807.11104)
 
 ## Why Semantic Matching?
 
