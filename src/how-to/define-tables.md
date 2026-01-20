@@ -137,7 +137,6 @@ See [Design Primary Keys](design-primary-keys.md) for detailed guidance on key s
 |------|-------------|
 | `bool` | Boolean (true/false) |
 | `int8`, `int16`, `int32`, `int64` | Signed integers |
-| `int16`, `int32`, `int64`, `int64` | Unsigned integers |
 | `float32`, `float64` | Floating point |
 | `decimal(m,n)` | Fixed precision decimal |
 | `varchar(n)` | Variable-length string |

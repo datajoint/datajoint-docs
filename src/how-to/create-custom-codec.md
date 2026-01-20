@@ -66,7 +66,7 @@ Common return values:
 
 - `"bytes"` — Binary in database
 - `"json"` — JSON in database
-- `"<blob>"` — Chain to blob codec (internal storage)
+- `"<blob>"` — Chain to blob codec (in-table storage)
 - `"<blob@>"` — Blob in object storage
 
 ### `encode(value, *, key=None, store_name=None)`

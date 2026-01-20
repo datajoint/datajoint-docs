@@ -69,7 +69,7 @@ Standardized, scientist-friendly types that work identically across backends.
 | `float64` | 64-bit float | ~15 significant digits |
 | `decimal(n,f)` | Fixed-point | Exact decimal |
 
-For unsigned values, use the next larger signed type (e.g., `int16` for 8-bit unsigned, `int32` for 16-bit unsigned). See [Type System Reference](../reference/specs/type-system.md) for details.
+Unsigned integer types are not provided. Choose a signed type with sufficient range for your data.
 
 ### String Types
 
