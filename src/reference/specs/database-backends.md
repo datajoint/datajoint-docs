@@ -33,23 +33,24 @@ export DJ_BACKEND=postgresql
 
 DataJoint uses database adapters to generate backend-specific SQL while maintaining a consistent API.
 
-```
-┌─────────────────────────────────────┐
-│         DataJoint API               │
-│   (Tables, Queries, Schemas)        │
-└──────────────┬──────────────────────┘
-               │
-┌──────────────▼──────────────────────┐
-│       Database Adapter              │
-│   (SQL Generation, Type Mapping)    │
-└──────────────┬──────────────────────┘
-               │
-       ┌───────┴───────┐
-       ▼               ▼
-┌─────────────┐ ┌─────────────┐
-│   MySQL     │ │ PostgreSQL  │
-│   Adapter   │ │   Adapter   │
-└─────────────┘ └─────────────┘
+```mermaid
+flowchart TB
+    subgraph api[DataJoint API]
+        tables[Tables, Queries, Schemas]
+    end
+
+    subgraph adapter[Database Adapter]
+        gen[SQL Generation, Type Mapping]
+    end
+
+    subgraph backends[Backend Adapters]
+        mysql[MySQL Adapter]
+        postgres[PostgreSQL Adapter]
+    end
+
+    api --> adapter
+    adapter --> mysql
+    adapter --> postgres
 ```
 
 ## Backend Compatibility
@@ -75,6 +76,46 @@ The following features work identically across all backends:
 | JSON operators | `->`, `->>` | `->`, `->>` |
 | BLOB storage | `LONGBLOB` | `BYTEA` |
 | Boolean type | `TINYINT(1)` | `BOOLEAN` |
+
+### String Quoting
+
+MySQL and PostgreSQL handle quotes differently in SQL:
+
+| Quote Type | MySQL | PostgreSQL |
+|------------|-------|------------|
+| Single quotes `'...'` | String literals | String literals |
+| Double quotes `"..."` | String literals | **Identifiers** (column names) |
+| Backticks `` `...` `` | Identifiers | Not supported |
+
+This affects restriction strings. MySQL accepts both quote styles for string values, but PostgreSQL interprets double quotes as identifier (column) references.
+
+```python
+# MySQL only - double quotes work as string literals
+Table & 'name = "Alice"'
+
+# Both backends - single quotes for string literals
+Table & "name = 'Alice'"
+```
+
+**PostgreSQL migration:** Replace double quotes with single quotes inside SQL restriction strings:
+
+```python
+# Before (MySQL)
+Table & 'strain = "C57BL/6"'
+Table & 'date > "2024-01-01"'
+
+# After (PostgreSQL compatible)
+Table & "strain = 'C57BL/6'"
+Table & "date > '2024-01-01'"
+```
+
+Dictionary restrictions handle quoting automatically but only support equality:
+
+```python
+Table & {'name': 'Alice'}  # Equality only - backend-agnostic
+```
+
+For range comparisons (`>`, `<`, `LIKE`, etc.), use string restrictions with single-quoted values.
 
 ## Type Mapping
 

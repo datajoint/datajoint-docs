@@ -38,13 +38,13 @@ def setup_backend(backend: str) -> dict:
 
     if backend == "postgresql":
         env["DJ_BACKEND"] = "postgresql"
-        env["DJ_HOST"] = "postgres"
+        env["DJ_HOST"] = env.get("DJ_HOST", "127.0.0.1")
         env["DJ_USER"] = "postgres"
         env["DJ_PASS"] = "tutorial"
         env["DJ_PORT"] = "5432"
     else:  # mysql (default)
         env["DJ_BACKEND"] = "mysql"
-        env["DJ_HOST"] = "mysql"
+        env["DJ_HOST"] = env.get("DJ_HOST", "127.0.0.1")
         env["DJ_USER"] = "root"
         env["DJ_PASS"] = "tutorial"
         env["DJ_PORT"] = "3306"

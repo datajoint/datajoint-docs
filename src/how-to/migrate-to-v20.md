@@ -39,6 +39,20 @@ No action required—the new license is more permissive.
 
 DataJoint 2.0 introduces portable type aliases (`int64`, `float64`, etc.) that prepare the codebase for **PostgreSQL backend compatibility** in a future release. Migration to core types ensures your schemas will work seamlessly when Postgres support is available.
 
+**String quoting in restrictions:** MySQL and PostgreSQL handle quotes differently. MySQL allows both single and double quotes for string literals, but PostgreSQL interprets double quotes as identifier (column) references. For PostgreSQL compatibility, replace double quotes with single quotes inside SQL restriction strings:
+
+```python
+# Before (MySQL only)
+Table & 'name = "Alice"'
+Table & 'date > "2024-01-01"'
+
+# After (PostgreSQL compatible)
+Table & "name = 'Alice'"
+Table & "date > '2024-01-01'"
+```
+
+See [Database Backends Specification](../reference/specs/database-backends.md#string-quoting) for details.
+
 ### Before You Start: Testing Recommendation
 
 **⚡ Want AI agents to automate Phases I-II for you?**
@@ -1455,6 +1469,24 @@ API CONVERSIONS:
    (table & key).delete()  # unchanged
    (table & restriction).delete()  # unchanged
 
+7. String Quoting in Restrictions (PostgreSQL compatibility):
+   Replace double quotes with single quotes for string literals in SQL restrictions.
+
+   MySQL allows both quote styles, but PostgreSQL interprets double quotes as
+   identifier (column) references, causing errors.
+
+   OLD: Table & 'name = "Alice"'
+   OLD: Table & 'date > "2024-01-01"'
+   OLD: Table & 'strain = "C57BL/6"'
+
+   NEW: Table & "name = 'Alice'"
+   NEW: Table & "date > '2024-01-01'"
+   NEW: Table & "strain = 'C57BL/6'"
+
+   Note: Dictionary restrictions handle quoting automatically but only support
+   equality comparisons. For range comparisons (>, <, LIKE, etc.), use string
+   restrictions with single-quoted values.
+
 PROCESS:
 1. Find all Python files with DataJoint code
 2. For each file:
@@ -1466,6 +1498,8 @@ PROCESS:
    f. Search for .join(x, left=True) patterns (consider .extend(x))
    g. Search for dj.U() * patterns (replace with just table)
    h. Verify dj.U() & patterns remain unchanged
+   i. Search for string restrictions with double-quoted values
+   j. Replace double quotes with single quotes inside SQL strings
 3. Run syntax checks
 4. Run existing tests if available
 5. If semantic checks fail after @ → * conversion, investigate schema/data
@@ -1478,6 +1512,7 @@ VERIFICATION:
 - No @ operator between tables
 - dj.U() * patterns replaced with just table
 - dj.U() & patterns remain unchanged
+- No double-quoted string literals in SQL restrictions
 - All tests pass (if available)
 - Semantic check failures investigated and resolved
 

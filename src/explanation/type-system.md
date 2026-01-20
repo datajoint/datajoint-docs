@@ -65,13 +65,11 @@ Standardized, scientist-friendly types that work identically across backends.
 | `int16` | 16-bit signed | -32,768 to 32,767 |
 | `int32` | 32-bit signed | ±2 billion |
 | `int64` | 64-bit signed | ±9 quintillion |
-| `int16` | 8-bit unsigned | 0 to 255 |
-| `int32` | 16-bit unsigned | 0 to 65,535 |
-| `int64` | 32-bit unsigned | 0 to 4 billion |
-| `int64` | 64-bit unsigned | 0 to 18 quintillion |
 | `float32` | 32-bit float | ~7 significant digits |
 | `float64` | 64-bit float | ~15 significant digits |
 | `decimal(n,f)` | Fixed-point | Exact decimal |
+
+For unsigned values, use the next larger signed type (e.g., `int16` for 8-bit unsigned, `int32` for 16-bit unsigned). See [Type System Reference](../reference/specs/type-system.md) for details.
 
 ### String Types
 

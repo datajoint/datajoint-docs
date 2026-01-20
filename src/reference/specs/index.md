@@ -22,7 +22,7 @@ Specs clarify exact behavior when documentation or examples are ambiguous.
 
 ## Reading Order
 
-### Foundation (Start Here)
+### Start Here
 
 1. [Database Backends](database-backends.md) — Supported databases (MySQL, PostgreSQL)
 2. [Table Declaration](table-declaration.md) — How to define tables
