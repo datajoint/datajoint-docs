@@ -42,7 +42,7 @@ class Connectivity(dj.Manual):
     conn_id : int
     ---
     network : <graph>           # Uses GraphCodec
-    network_large : <graph@>    # External storage
+    network_large : <graph@>    # In-store
     """
 ```
 

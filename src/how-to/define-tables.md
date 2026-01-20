@@ -204,6 +204,38 @@ class Session(dj.Manual):
 
 The `->` inherits primary key attributes from the referenced table.
 
+### Foreign Key Modifiers
+
+Use modifiers in brackets to change foreign key behavior:
+
+| Modifier | Effect |
+|----------|--------|
+| `[nullable]` | Makes FK attributes nullable (optional relationship) |
+| `[unique]` | Creates UNIQUE INDEX on FK attributes (one-to-one) |
+| `[nullable, unique]` | Both: optional one-to-one relationship |
+
+```python
+@schema
+class SessionAnnotation(dj.Manual):
+    definition = """
+    -> Session
+    ---
+    -> [nullable] Experimenter     # Optional: experimenter may be unknown
+    -> [unique] Protocol           # Unique: each protocol used at most once
+    -> [nullable, unique] Reviewer # Optional & unique
+    """
+```
+
+**Placement rules:**
+
+- `[nullable]` only allowed in secondary position (below `---`)
+- `[unique]` allowed in both primary and secondary positions
+- Primary key FKs cannot be nullable
+
+**Nullable unique behavior:**
+
+Multiple rows can have NULL in a `[nullable, unique]` FK because SQL's UNIQUE constraint does not consider NULLs equal. This enables optional one-to-one relationships.
+
 ## Lookup Tables with Contents
 
 ```python

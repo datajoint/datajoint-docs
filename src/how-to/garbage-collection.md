@@ -1,11 +1,11 @@
-# Clean Up External Storage
+# Clean Up Object Storage
 
 Remove orphaned data from object storage after deleting database rows.
 
 ## Why Garbage Collection?
 
-When you delete rows from tables with external storage (`<blob@>`, `<attach@>`,
-`<object@>`, `<npy@>`), the database records are removed but the external files
+When you delete rows from tables with in-store types (`<blob@>`, `<attach@>`,
+`<object@>`, `<npy@>`), the database records are removed but the stored objects
 remain. This is by design:
 
 - **Hash-addressed storage** (`<blob@>`, `<attach@>`) uses deduplication—the

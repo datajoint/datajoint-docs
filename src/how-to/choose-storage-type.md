@@ -99,6 +99,7 @@ subset = ref[:100, :]         # Lazy slicing
 ### Size and Storage Location
 
 **Technical Limits:**
+
 - **MySQL**: In-table blobs up to 4 GiB (`LONGBLOB`)
 - **PostgreSQL**: In-table blobs unlimited (`BYTEA`)
 - **Object stores**: Effectively unlimited (S3, file systems, etc.)

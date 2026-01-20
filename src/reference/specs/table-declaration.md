@@ -195,15 +195,15 @@ These SQL types are accepted but generate a warning recommending core types:
 
 Format: `<codec_name>` or `<codec_name@store>`
 
-| Codec | Internal dtype | External dtype | Purpose |
+| Codec | In-table dtype | In-store dtype | Purpose |
 |-------|---------------|----------------|---------|
 | `<blob>` | `bytes` | `<hash>` | Serialized Python objects |
-| `<hash>` | N/A (external only) | `json` | Hash-addressed deduped storage |
+| `<hash>` | N/A (in-store only) | `json` | Hash-addressed deduped storage |
 | `<attach>` | `bytes` | `<hash>` | File attachments with filename |
-| `<filepath>` | N/A (external only) | `json` | Reference to managed file |
-| `<object>` | N/A (external only) | `json` | Object storage (Zarr, HDF5) |
+| `<filepath>` | N/A (in-store only) | `json` | Reference to managed file |
+| `<object>` | N/A (in-store only) | `json` | Object storage (Zarr, HDF5) |
 
-External storage syntax:
+In-store storage syntax:
 - `<blob@>` - default store
 - `<blob@store_name>` - named store
 
@@ -335,7 +335,18 @@ class Session(dj.Manual):
 - Creates UNIQUE INDEX on inherited attributes
 - Enforces one-to-one relationship from child perspective
 
-### 6.7 Projections in Foreign Keys
+### 6.7 Nullable Unique Foreign Keys
+
+```
+-> [nullable, unique] ParentTable
+```
+
+- Combines nullable and unique constraints
+- Multiple rows **can** have NULL values (SQL standard: NULLs are not considered equal in UNIQUE constraints)
+- At most one row per non-NULL parent reference
+- Use case: optional one-to-one relationships where the child may not reference any parent
+
+### 6.8 Projections in Foreign Keys
 
 ```
 -> Parent.proj(alias='original_name')
@@ -549,7 +560,7 @@ Core types and codecs are preserved in comments:
 ```sql
 `value` float NOT NULL COMMENT ":float32:measurement value"
 `data` longblob DEFAULT NULL COMMENT ":<blob>:serialized data"
-`archive` json DEFAULT NULL COMMENT ":<blob@cold>:external storage"
+`archive` json DEFAULT NULL COMMENT ":<blob@cold>:in-store data"
 ```
 
 ---
