@@ -117,6 +117,28 @@ Table & {'name': 'Alice'}  # Equality only - backend-agnostic
 
 For range comparisons (`>`, `<`, `LIKE`, etc.), use string restrictions with single-quoted values.
 
+### SQL Function Translation
+
+DataJoint automatically translates certain SQL functions between backends, allowing portable code:
+
+| Function | MySQL | PostgreSQL |
+|----------|-------|------------|
+| String aggregation | `GROUP_CONCAT(col)` | `STRING_AGG(col, ',')` |
+| String aggregation with separator | `GROUP_CONCAT(col SEPARATOR ';')` | `STRING_AGG(col, ';')` |
+
+You can use either syntax in your code—DataJoint translates to the appropriate form:
+
+```python
+# Both work on both backends
+Person.aggr(Proficiency, languages='GROUP_CONCAT(lang_code)')
+Person.aggr(Proficiency, languages="STRING_AGG(lang_code, ',')")
+```
+
+The translation is bidirectional:
+
+- **On PostgreSQL**: `GROUP_CONCAT(col)` → `STRING_AGG(col::text, ',')`
+- **On MySQL**: `STRING_AGG(col, ',')` → `GROUP_CONCAT(col)`
+
 ## Type Mapping
 
 DataJoint core types map to native database types:
