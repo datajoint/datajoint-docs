@@ -18,7 +18,7 @@ graph TB
         npy["‹npy@›"]
         object["‹object@›"]
         hash["‹hash@›"]
-        custom["‹custom›"]
+        plugin["‹plugin›"]
     end
     subgraph "Layer 2: Core Types"
         int32
