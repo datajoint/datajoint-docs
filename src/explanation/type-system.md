@@ -133,7 +133,7 @@ Codec types use angle bracket notation:
 | `<npy@>` | ❌ | ✅ | Schema | NpyRef (lazy) |
 | `<object@>` | ❌ | ✅ | Schema | ObjectRef |
 | `<hash@>` | ❌ | ✅ | Hash | bytes |
-| `<filepath@>` | ❌ | ✅ | — | ObjectRef |
+| `<filepath@>` | ❌ | ✅ | User-managed | ObjectRef |
 
 ### Plugin Codecs
 
