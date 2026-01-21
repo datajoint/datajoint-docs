@@ -1,13 +1,13 @@
-# Semantic Matching for Joins - Specification
+# Semantic Matching - Specification
 
 ## Overview
 
-This document specifies **semantic matching** for joins in DataJoint 2.0, replacing the current name-based matching rules. Semantic matching ensures that attributes are only matched when they share both the same name and the same **lineage** (origin), preventing accidental joins on unrelated attributes that happen to share names.
+This document specifies **semantic matching** for binary operators in DataJoint 2.0. Semantic matching ensures that attributes are only matched when they share both the same name and the same **lineage** (origin), preventing accidental matches on unrelated attributes that happen to share names. This replaces the name-based matching rules from pre-2.0 versions.
 
 ### Goals
 
-1. **Prevent incorrect joins** on attributes that share names but represent different entities
-2. **Enable valid joins** that are currently blocked due to overly restrictive rules
+1. **Prevent incorrect matches** on attributes that share names but represent different entities
+2. **Enable valid operations** that were previously blocked due to overly restrictive rules
 3. **Maintain backward compatibility** for well-designed schemas
 4. **Provide clear error messages** when semantic conflicts are detected
 

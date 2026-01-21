@@ -3,6 +3,9 @@
 DataJoint's type system provides a three-layer architecture that balances
 database efficiency with Python convenience.
 
+!!! version-added "New in 2.1"
+    PostgreSQL support was added in DataJoint 2.1. Core types work identically on both MySQL and PostgreSQL backends.
+
 ## Three-Layer Architecture
 
 ```mermaid
