@@ -364,3 +364,21 @@ class Network(dj.Computed):
 2. **`<blob>`** for Python objects — NumPy arrays, dicts
 3. **`@` suffix** for object store — `<blob@>`, `<object@>`
 4. **Custom codecs** for domain-specific types
+
+## See Also
+
+**How-to Guides:**
+
+- [Choose a Storage Type](../how-to/choose-storage-type.md) — Decision guide for selecting the right type
+- [Configure Object Storage](../how-to/configure-storage.md) — Setting up stores for external data
+- [Use Object Storage](../how-to/use-object-storage.md) — Working with `<blob@>`, `<attach@>`, `<object@>`
+- [Use the npy Codec](../how-to/use-npy-codec.md) — Storing NumPy arrays as `.npy` files
+- [Use Plugin Codecs](../how-to/use-plugin-codecs.md) — Installing and using third-party codecs
+- [Create a Custom Codec](../how-to/create-custom-codec.md) — Building your own codec
+
+**Reference:**
+
+- [Type System Specification](../reference/specs/type-system.md) — Complete type reference
+- [Codec API](../reference/specs/codec-api.md) — Codec class interface
+- [npy Codec Specification](../reference/specs/npy-codec.md) — NpyRef and NpyCodec details
+- [Object Store Configuration](../reference/specs/object-store-configuration.md) — Store settings reference
