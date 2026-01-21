@@ -590,10 +590,10 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#object-path-addressed-storage">
+<a class="md-nav__link" href="#object-schema-addressed-storage">
 <span class="md-ellipsis">
       
-        &lt;object@&gt; — Path-Addressed Storage
+        &lt;object@&gt; — Schema-Addressed Storage
       
     </span>
 </a>
@@ -2448,10 +2448,10 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#object-path-addressed-storage">
+<a class="md-nav__link" href="#object-schema-addressed-storage">
 <span class="md-ellipsis">
       
-        &lt;object@&gt; — Path-Addressed Storage
+        &lt;object@&gt; — Schema-Addressed Storage
       
     </span>
 </a>
@@ -2522,11 +2522,14 @@ database efficiency with Python convenience.</p>
 <pre class="mermaid"><code>graph TB
     subgraph "Layer 3: Codecs"
         blob["‹blob›"]
+        blob_at["‹blob@›"]
         attach["‹attach›"]
+        attach_at["‹attach@›"]
         npy["‹npy@›"]
         object["‹object@›"]
+        filepath["‹filepath@›"]
         hash["‹hash@›"]
-        custom["‹custom›"]
+        plugin["‹plugin›"]
     end
     subgraph "Layer 2: Core Types"
         int32
@@ -2534,32 +2537,72 @@ database efficiency with Python convenience.</p>
         varchar
         json
         bytes
+        uuid
     end
-    subgraph "Layer 1: Native"
-        INT["INT"]
-        DOUBLE["DOUBLE"]
-        VARCHAR["VARCHAR"]
+    subgraph "Layer 1: Native Types (MySQL / PostgreSQL)"
+        INT["INT / INTEGER"]
+        DOUBLE["DOUBLE / DOUBLE PRECISION"]
+        VARCHAR_N["VARCHAR"]
         JSON_N["JSON"]
-        BLOB["LONGBLOB"]
+        BYTES_N["LONGBLOB / BYTEA"]
+        UUID_N["BINARY(16) / UUID"]
     end
 
     blob --&gt; bytes
+    blob_at --&gt; hash
     attach --&gt; bytes
+    attach_at --&gt; hash
+    hash --&gt; json
     npy --&gt; json
     object --&gt; json
-    hash --&gt; json
-    bytes --&gt; BLOB
+    filepath --&gt; json
+
+    bytes --&gt; BYTES_N
     json --&gt; JSON_N
     int32 --&gt; INT
     float64 --&gt; DOUBLE
-    varchar --&gt; VARCHAR
+    varchar --&gt; VARCHAR_N
+    uuid --&gt; UUID_N
 </code></pre>
+<p>Core types provide <strong>portability</strong> — the same table definition works on both MySQL and PostgreSQL. For example, <code>bytes</code> maps to <code>LONGBLOB</code> on MySQL but <code>BYTEA</code> on PostgreSQL; <code>uuid</code> maps to <code>BINARY(16)</code> on MySQL but native <code>UUID</code> on PostgreSQL. Native types can be used directly but sacrifice cross-backend compatibility.</p>
 <h2 id="layer-1-native-database-types">Layer 1: Native Database Types<a class="headerlink" href="#layer-1-native-database-types" title="Permanent link">¶</a></h2>
-<p>Backend-specific types (MySQL, PostgreSQL). <strong>Discouraged for direct use.</strong></p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Native types (avoid)</span>
-<span class="n">column</span> <span class="p">:</span> <span class="n">TINYINT</span> <span class="n">UNSIGNED</span>
-<span class="n">column</span> <span class="p">:</span> <span class="n">MEDIUMBLOB</span>
+<p>Backend-specific types. <strong>Can be used directly at the cost of portability.</strong></p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Native types — work but not portable</span>
+<span class="n">column</span> <span class="p">:</span> <span class="n">TINYINT</span> <span class="n">UNSIGNED</span>   <span class="c1"># MySQL only</span>
+<span class="n">column</span> <span class="p">:</span> <span class="n">MEDIUMBLOB</span>         <span class="c1"># MySQL only (use BYTEA on PostgreSQL)</span>
+<span class="n">column</span> <span class="p">:</span> <span class="n">SERIAL</span>             <span class="c1"># PostgreSQL only</span>
 </code></pre></div>
+<table>
+<thead>
+<tr>
+<th>MySQL</th>
+<th>PostgreSQL</th>
+<th>Portable Alternative</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>LONGBLOB</code></td>
+<td><code>BYTEA</code></td>
+<td><code>bytes</code></td>
+</tr>
+<tr>
+<td><code>BINARY(16)</code></td>
+<td><code>UUID</code></td>
+<td><code>uuid</code></td>
+</tr>
+<tr>
+<td><code>SMALLINT</code></td>
+<td><code>SMALLINT</code></td>
+<td><code>int16</code></td>
+</tr>
+<tr>
+<td><code>DOUBLE</code></td>
+<td><code>DOUBLE PRECISION</code></td>
+<td><code>float64</code></td>
+</tr>
+</tbody>
+</table>
 <h2 id="layer-2-core-datajoint-types">Layer 2: Core DataJoint Types<a class="headerlink" href="#layer-2-core-datajoint-types" title="Permanent link">¶</a></h2>
 <p>Standardized, scientist-friendly types that work identically across backends.</p>
 <h3 id="numeric-types">Numeric Types<a class="headerlink" href="#numeric-types" title="Permanent link">¶</a></h3>
@@ -2684,6 +2727,7 @@ database efficiency with Python convenience.</p>
 <th>Codec</th>
 <th>Database</th>
 <th>Object Store</th>
+<th>Addressing</th>
 <th>Returns</th>
 </tr>
 </thead>
@@ -2692,42 +2736,48 @@ database efficiency with Python convenience.</p>
 <td><code>&lt;blob&gt;</code></td>
 <td>✅</td>
 <td>✅ <code>&lt;blob@&gt;</code></td>
+<td>Hash</td>
 <td>Python object</td>
 </tr>
 <tr>
 <td><code>&lt;attach&gt;</code></td>
 <td>✅</td>
 <td>✅ <code>&lt;attach@&gt;</code></td>
+<td>Hash</td>
 <td>Local file path</td>
 </tr>
 <tr>
 <td><code>&lt;npy@&gt;</code></td>
 <td>❌</td>
 <td>✅</td>
+<td>Schema</td>
 <td>NpyRef (lazy)</td>
 </tr>
 <tr>
 <td><code>&lt;object@&gt;</code></td>
 <td>❌</td>
 <td>✅</td>
+<td>Schema</td>
 <td>ObjectRef</td>
 </tr>
 <tr>
 <td><code>&lt;hash@&gt;</code></td>
 <td>❌</td>
 <td>✅</td>
+<td>Hash</td>
 <td>bytes</td>
 </tr>
 <tr>
 <td><code>&lt;filepath@&gt;</code></td>
 <td>❌</td>
 <td>✅</td>
+<td>—</td>
 <td>ObjectRef</td>
 </tr>
 </tbody>
 </table>
 <h3 id="plugin-codecs">Plugin Codecs<a class="headerlink" href="#plugin-codecs" title="Permanent link">¶</a></h3>
-<p>Additional codecs are available as separately installed packages. This ecosystem is actively expanding—new codecs are added as community needs arise.</p>
+<p>Additional schema-addressed codecs are available as separately installed packages. This ecosystem is actively expanding—new codecs are added as community needs arise.</p>
 <table>
 <thead>
 <tr>
@@ -2741,19 +2791,19 @@ database efficiency with Python convenience.</p>
 <tr>
 <td><code>dj-zarr-codecs</code></td>
 <td><code>&lt;zarr@&gt;</code></td>
-<td>Zarr arrays with lazy chunked access</td>
+<td>Schema-addressed Zarr arrays with lazy chunked access</td>
 <td><a href="https://github.com/datajoint/dj-zarr-codecs">datajoint/dj-zarr-codecs</a></td>
 </tr>
 <tr>
 <td><code>dj-figpack-codecs</code></td>
 <td><code>&lt;figpack@&gt;</code></td>
-<td>Interactive browser visualizations</td>
+<td>Schema-addressed interactive browser visualizations</td>
 <td><a href="https://github.com/datajoint/dj-figpack-codecs">datajoint/dj-figpack-codecs</a></td>
 </tr>
 <tr>
 <td><code>dj-photon-codecs</code></td>
 <td><code>&lt;photon@&gt;</code></td>
-<td>Photon imaging data formats</td>
+<td>Schema-addressed photon imaging data formats</td>
 <td><a href="https://github.com/datajoint/dj-photon-codecs">datajoint/dj-photon-codecs</a></td>
 </tr>
 </tbody>
@@ -2824,7 +2874,7 @@ database efficiency with Python convenience.</p>
 <span class="s2">    """</span>
 </code></pre></div>
 <h3 id="npy-numpy-arrays-as-npy-files"><code>&lt;npy@&gt;</code> — NumPy Arrays as .npy Files<a class="headerlink" href="#npy-numpy-arrays-as-npy-files" title="Permanent link">¶</a></h3>
-<p>Stores NumPy arrays as standard <code>.npy</code> files with lazy loading. Returns <code>NpyRef</code> which provides metadata access (shape, dtype) without downloading.</p>
+<p>Schema-addressed storage for NumPy arrays as standard <code>.npy</code> files. Returns <code>NpyRef</code> which provides metadata access (shape, dtype) without downloading.</p>
 <div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">Recording</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Computed</span><span class="p">):</span>
     <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    -&gt; Session</span>
@@ -2851,15 +2901,16 @@ database efficiency with Python convenience.</p>
 <li><strong>Safe bulk fetch</strong>: Fetching many rows doesn't download until needed</li>
 <li><strong>Memory mapping</strong>: <code>ref.load(mmap_mode='r')</code> for random access to large arrays</li>
 </ul>
-<h3 id="object-path-addressed-storage"><code>&lt;object@&gt;</code> — Path-Addressed Storage<a class="headerlink" href="#object-path-addressed-storage" title="Permanent link">¶</a></h3>
-<p>For large/complex file structures (Zarr, HDF5). Path derived from primary key.</p>
+<h3 id="object-schema-addressed-storage"><code>&lt;object@&gt;</code> — Schema-Addressed Storage<a class="headerlink" href="#object-schema-addressed-storage" title="Permanent link">¶</a></h3>
+<p>Schema-addressed storage for files and folders. Path mirrors the database structure: <code>{schema}/{table}/{pk}/{attribute}</code>.</p>
 <div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">ProcessedData</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Computed</span><span class="p">):</span>
     <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    -&gt; Recording</span>
 <span class="s2">    ---</span>
-<span class="s2">    zarr_data : &lt;object@&gt;       # Stored at </span><span class="si">{schema}</span><span class="s2">/</span><span class="si">{table}</span><span class="s2">/</span><span class="si">{pk}</span><span class="s2">/</span>
+<span class="s2">    results : &lt;object@&gt;       # Stored at </span><span class="si">{schema}</span><span class="s2">/</span><span class="si">{table}</span><span class="s2">/</span><span class="si">{pk}</span><span class="s2">/results/</span>
 <span class="s2">    """</span>
 </code></pre></div>
+<p>Accepts files, folders, or bytes. Returns <code>ObjectRef</code> for lazy access.</p>
 <h3 id="filepathstore-portable-references"><code>&lt;filepath@store&gt;</code> — Portable References<a class="headerlink" href="#filepathstore-portable-references" title="Permanent link">¶</a></h3>
 <p>References to independently-managed files with portable paths.</p>
 <div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">RawData</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
@@ -2870,12 +2921,16 @@ database efficiency with Python convenience.</p>
 <span class="s2">    """</span>
 </code></pre></div>
 <h2 id="storage-modes">Storage Modes<a class="headerlink" href="#storage-modes" title="Permanent link">¶</a></h2>
+<p>Object store codecs use one of two addressing schemes:</p>
+<p><strong>Hash-addressed</strong> — Path derived from content hash (e.g., <code>_hash/ab/cd/abcd1234...</code>). Provides automatic deduplication—identical content stored once. Used by <code>&lt;blob@&gt;</code>, <code>&lt;attach@&gt;</code>, <code>&lt;hash@&gt;</code>.</p>
+<p><strong>Schema-addressed</strong> — Path mirrors database structure: <code>{schema}/{table}/{pk}/{attribute}</code>. Human-readable, browsable paths that reflect your data organization. No deduplication. Used by <code>&lt;object@&gt;</code>, <code>&lt;npy@&gt;</code>, and plugin codecs (<code>&lt;zarr@&gt;</code>, <code>&lt;figpack@&gt;</code>, <code>&lt;photon@&gt;</code>).</p>
 <table>
 <thead>
 <tr>
 <th>Mode</th>
 <th>Database</th>
 <th>Object Store</th>
+<th>Deduplication</th>
 <th>Use Case</th>
 </tr>
 </thead>
@@ -2884,19 +2939,22 @@ database efficiency with Python convenience.</p>
 <td>Database</td>
 <td>Data</td>
 <td>—</td>
+<td>—</td>
 <td>Small data</td>
 </tr>
 <tr>
 <td>Hash-addressed</td>
 <td>Metadata</td>
-<td>Deduplicated</td>
+<td>Content hash path</td>
+<td>✅ Automatic</td>
 <td>Large/repeated data</td>
 </tr>
 <tr>
-<td>Path-addressed</td>
+<td>Schema-addressed</td>
 <td>Metadata</td>
-<td>PK-based path</td>
-<td>Complex files</td>
+<td>Schema-mirrored path</td>
+<td>❌ None</td>
+<td>Complex files, browsable storage</td>
 </tr>
 </tbody>
 </table>
