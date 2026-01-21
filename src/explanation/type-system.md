@@ -17,6 +17,7 @@ graph TB
         attach_at["‹attach@›"]
         npy["‹npy@›"]
         object["‹object@›"]
+        filepath["‹filepath@›"]
         hash["‹hash@›"]
         plugin["‹plugin›"]
     end
@@ -44,6 +45,7 @@ graph TB
     hash --> json
     npy --> json
     object --> json
+    filepath --> json
 
     bytes --> BYTES_N
     json --> JSON_N
