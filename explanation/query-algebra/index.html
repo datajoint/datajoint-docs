@@ -7,7 +7,7 @@
 <meta content="width=device-width,initial-scale=1" name="viewport"/>
 <link href="https://docs.datajoint.com/explanation/query-algebra/" rel="canonical"/>
 <link href="../computation-model/" rel="prev"/>
-<link href="../type-system/" rel="next"/>
+<link href="../semantic-matching/" rel="next"/>
 <link href="../../assets/images/company-logo-blue.png" rel="icon"/>
 <meta content="mkdocs-1.6.1, mkdocs-material-9.7.1" name="generator"/>
 <title>Query Algebra - DataJoint Documentation</title>
@@ -565,10 +565,10 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#workflow-aware-joins">
+<a class="md-nav__link" href="#semantic-matching">
 <span class="md-ellipsis">
       
-        Workflow-Aware Joins
+        Semantic Matching
       
     </span>
 </a>
@@ -593,6 +593,18 @@
 </li>
 </ul>
 </nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../semantic-matching/">
+<span class="md-ellipsis">
+    
+  
+    Semantic Matching
+  
+
+    
+  </span>
+</a>
 </li>
 </ul>
 </nav>
@@ -2444,10 +2456,10 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#workflow-aware-joins">
+<a class="md-nav__link" href="#semantic-matching">
 <span class="md-ellipsis">
       
-        Workflow-Aware Joins
+        Semantic Matching
       
     </span>
 </a>
@@ -2650,14 +2662,11 @@
     <span class="o">&amp;</span> <span class="s1">'depth &gt; 200'</span>                  <span class="c1"># Filter by depth</span>
 <span class="p">)</span>
 </code></pre></div>
-<h2 id="workflow-aware-joins">Workflow-Aware Joins<a class="headerlink" href="#workflow-aware-joins" title="Permanent link">¶</a></h2>
-<p>Unlike SQL's natural joins that match on <strong>any</strong> shared column name, DataJoint
-joins match on <strong>semantic lineage</strong>. Two attributes match only if they:</p>
-<ol>
-<li>Have the same name</li>
-<li>Trace back to the same source definition</li>
-</ol>
-<p>This prevents accidental joins on coincidentally-named columns.</p>
+<h2 id="semantic-matching">Semantic Matching<a class="headerlink" href="#semantic-matching" title="Permanent link">¶</a></h2>
+<p>All binary operators in DataJoint rely on <strong>semantic matching</strong> of attributes. Unlike SQL's natural joins that match on any shared column name, DataJoint verifies that namesake attributes (those with the same name) are <strong>homologous</strong>—they trace back to the same original definition.</p>
+<p>This prevents accidental matches on coincidentally-named columns, a pitfall that has been understood since the Entity-Relationship Model was introduced in the 1970s but was never addressed in SQL or traditional RDBMS implementations.</p>
+<p>See <a href="../semantic-matching/">Semantic Matching</a> for details.</p>
+<p>These concepts were first introduced in Yatsenko et al., 2018<sup id="fnref:1"><a class="footnote-ref" href="#fn:1">1</a></sup>.</p>
 <h2 id="fetching-results">Fetching Results<a class="headerlink" href="#fetching-results" title="Permanent link">¶</a></h2>
 <p>Query expressions are lazy—they build SQL but don't execute until you fetch:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Fetch as NumPy recarray</span>
@@ -2719,6 +2728,14 @@ joins match on <strong>semantic lineage</strong>. Two attributes match only if t
 </table>
 <p>These core operators, combined with workflow-aware join semantics, provide
 complete query capability for scientific data pipelines.</p>
+<div class="footnote">
+<hr/>
+<ol>
+<li id="fn:1">
+<p>Yatsenko D, Walker EY, Tolias AS (2018). DataJoint Elements: Data Workflows for Neurophysiology. <a href="https://doi.org/10.48550/arXiv.1807.11104">arXiv:1807.11104</a> <a class="footnote-backref" href="#fnref:1" title="Jump back to footnote 1 in the text">↩</a></p>
+</li>
+</ol>
+</div>
 </article>
 </div>
 <script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>

@@ -762,6 +762,8 @@
       
         
       
+        
+      
     
     
     
@@ -819,6 +821,34 @@
     
   
     Query Algebra
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/semantic-matching/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Semantic Matching
   
 
     
@@ -5419,7 +5449,7 @@
 <p>Deduplication is per-schema—identical content in different schemas is stored separately.
 This enables independent garbage collection per schema.</p>
 <h2 id="storage-cleanup">Storage Cleanup<a class="headerlink" href="#storage-cleanup" title="Permanent link">&para;</a></h2>
-<p>External storage items are not automatically deleted with rows. Run garbage
+<p>Object storage items are not automatically deleted with rows. Run garbage
 collection periodically:</p>
 <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">datajoint</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dj</span>
 
@@ -5433,7 +5463,7 @@ collection periodically:</p>
 <span class="c1"># Remove orphaned items</span>
 <span class="n">stats</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">gc</span><span class="o">.</span><span class="n">collect</span><span class="p">(</span><span class="n">my_schema</span><span class="p">,</span> <span class="n">dry_run</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 </code></pre></div>
-<p>See <a href="../garbage-collection/">Clean Up External Storage</a> for details.</p>
+<p>See <a href="../garbage-collection/">Clean Up Object Storage</a> for details.</p>
 <h2 id="monitor-storage-usage">Monitor Storage Usage<a class="headerlink" href="#monitor-storage-usage" title="Permanent link">&para;</a></h2>
 <p>Check object store size:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Get store configuration</span>

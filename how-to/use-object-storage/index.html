@@ -762,6 +762,8 @@
       
         
       
+        
+      
     
     
     
@@ -819,6 +821,34 @@
     
   
     Query Algebra
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/semantic-matching/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Semantic Matching
   
 
     
@@ -5508,9 +5538,11 @@
 </tr>
 </tbody>
 </table>
-<p><strong>Key distinction:</strong>
-- <strong>Hash-addressed</strong> (<code>&lt;blob@&gt;</code>, <code>&lt;attach@&gt;</code>) stores individual, atomic objects - one object per field
-- <strong>Schema-addressed</strong> (<code>&lt;npy@&gt;</code>, <code>&lt;object@&gt;</code>) can store complex, multi-part objects like Zarr (directory structures with multiple files)</p>
+<p><strong>Key distinction:</strong></p>
+<ul>
+<li><strong>Hash-addressed</strong> (<code>&lt;blob@&gt;</code>, <code>&lt;attach@&gt;</code>) stores individual, atomic objects - one object per field</li>
+<li><strong>Schema-addressed</strong> (<code>&lt;npy@&gt;</code>, <code>&lt;object@&gt;</code>) can store complex, multi-part objects like Zarr (directory structures with multiple files)</li>
+</ul>
 <p>Data can also be stored <strong>in-table</strong> directly in the database column (no <code>@</code> modifier).</p>
 <p>For complete details, see the <a href="../../reference/specs/type-system/">Type System specification</a>.</p>
 <h2 id="when-to-use-object-storage">When to Use Object Storage<a class="headerlink" href="#when-to-use-object-storage" title="Permanent link">&para;</a></h2>

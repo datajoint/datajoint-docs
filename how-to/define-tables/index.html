@@ -762,6 +762,8 @@
       
         
       
+        
+      
     
     
     
@@ -819,6 +821,34 @@
     
   
     Query Algebra
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/semantic-matching/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Semantic Matching
   
 
     
@@ -2349,6 +2379,23 @@
       
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="Foreign Keys">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#foreign-key-modifiers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Foreign Key Modifiers
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -5331,6 +5378,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Foreign Keys">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#foreign-key-modifiers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Foreign Key Modifiers
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -5576,10 +5640,6 @@
 <td>Signed integers</td>
 </tr>
 <tr>
-<td><code>int16</code>, <code>int32</code>, <code>int64</code>, <code>int64</code></td>
-<td>Unsigned integers</td>
-</tr>
-<tr>
 <td><code>float32</code>, <code>float64</code></td>
 <td>Floating point</td>
 </tr>
@@ -5690,6 +5750,48 @@
 <span class="s2">    &quot;&quot;&quot;</span>
 </code></pre></div>
 <p>The <code>-&gt;</code> inherits primary key attributes from the referenced table.</p>
+<h3 id="foreign-key-modifiers">Foreign Key Modifiers<a class="headerlink" href="#foreign-key-modifiers" title="Permanent link">&para;</a></h3>
+<p>Use modifiers in brackets to change foreign key behavior:</p>
+<table>
+<thead>
+<tr>
+<th>Modifier</th>
+<th>Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>[nullable]</code></td>
+<td>Makes FK attributes nullable (optional relationship)</td>
+</tr>
+<tr>
+<td><code>[unique]</code></td>
+<td>Creates UNIQUE INDEX on FK attributes (one-to-one)</td>
+</tr>
+<tr>
+<td><code>[nullable, unique]</code></td>
+<td>Both: optional one-to-one relationship</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code><span class="nd">@schema</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">SessionAnnotation</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">    -&gt; Session</span>
+<span class="s2">    ---</span>
+<span class="s2">    -&gt; [nullable] Experimenter     # Optional: experimenter may be unknown</span>
+<span class="s2">    -&gt; [unique] Protocol           # Unique: each protocol used at most once</span>
+<span class="s2">    -&gt; [nullable, unique] Reviewer # Optional &amp; unique</span>
+<span class="s2">    &quot;&quot;&quot;</span>
+</code></pre></div>
+<p><strong>Placement rules:</strong></p>
+<ul>
+<li><code>[nullable]</code> only allowed in secondary position (below <code>---</code>)</li>
+<li><code>[unique]</code> allowed in both primary and secondary positions</li>
+<li>Primary key FKs cannot be nullable</li>
+</ul>
+<p><strong>Nullable unique behavior:</strong></p>
+<p>Multiple rows can have NULL in a <code>[nullable, unique]</code> FK because SQL's UNIQUE constraint does not consider NULLs equal. This enables optional one-to-one relationships.</p>
 <h2 id="lookup-tables-with-contents">Lookup Tables with Contents<a class="headerlink" href="#lookup-tables-with-contents" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><span class="nd">@schema</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">TaskType</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Lookup</span><span class="p">):</span>

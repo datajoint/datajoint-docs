@@ -762,6 +762,8 @@
       
         
       
+        
+      
     
     
     
@@ -819,6 +821,34 @@
     
   
     Query Algebra
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../explanation/semantic-matching/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Semantic Matching
   
 
     
@@ -3757,6 +3787,56 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Bypassing the Left Join Constraint">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-allow_nullable_pk-parameter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The allow_nullable_pk Parameter
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-the-constraint-exists" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why the Constraint Exists
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-allow_nullable_pktrue-does" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What allow_nullable_pk=True Does
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#when-to-use-it" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When to Use It
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
         
           <li class="md-nav__item">
@@ -5402,6 +5482,56 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Bypassing the Left Join Constraint">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-allow_nullable_pk-parameter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The allow_nullable_pk Parameter
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-the-constraint-exists" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why the Constraint Exists
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-allow_nullable_pktrue-does" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What allow_nullable_pk=True Does
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#when-to-use-it" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When to Use It
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
         
           <li class="md-nav__item">
@@ -5495,24 +5625,30 @@
 <h2 id="general-principle">General Principle<a class="headerlink" href="#general-principle" title="Permanent link">&para;</a></h2>
 <p>The primary key of a query result identifies unique entities in that result. For most operators, the primary key is preserved from the left operand. For joins, the primary key depends on the functional dependencies between the operands.</p>
 <h2 id="integration-with-semantic-matching">Integration with Semantic Matching<a class="headerlink" href="#integration-with-semantic-matching" title="Permanent link">&para;</a></h2>
-<p>Primary key determination is applied <strong>after</strong> semantic compatibility is verified. The evaluation order is:</p>
+<p>Primary key determination is applied <strong>after</strong> <a href="../semantic-matching/">semantic compatibility</a> is verified. The evaluation order is:</p>
 <ol>
 <li><strong>Semantic Check</strong>: <code>assert_join_compatibility()</code> ensures all namesakes are homologous (same lineage)</li>
-<li><strong>PK Determination</strong>: The "determines" relationship is computed using attribute names</li>
+<li><strong>PK Determination</strong>: The functional dependency relationship is computed using attribute names</li>
 <li><strong>Left Join Validation</strong>: If <code>left=True</code>, verify A → B</li>
 </ol>
-<p>This ordering is important because:
-- After semantic matching passes, namesakes represent semantically equivalent attributes
-- The name-based "determines" check is therefore semantically valid
-- Attribute names in the context of a semantically-valid join represent the same entity</p>
-<p>The "determines" relationship uses attribute <strong>names</strong> (not lineages directly) because:
-- Lineage ensures namesakes are homologous
-- Once verified, checking by name is equivalent to checking by semantic identity
-- Aliased attributes (same lineage, different names) don't participate in natural joins anyway</p>
+<p>This ordering is important because:</p>
+<ul>
+<li>After semantic matching passes, namesakes represent semantically equivalent attributes</li>
+<li>The name-based functional dependency check is therefore semantically valid</li>
+<li>Attribute names in the context of a semantically-valid join represent the same entity</li>
+</ul>
+<p>The functional dependency relationship is derived from the structure of primary keys and secondary attributes and their names in the two operands:</p>
+<ul>
+<li><code>A → B</code> holds when every attribute in PK(B) appears (by name) somewhere in A (either as a primary key or secondary attribute)</li>
+<li>After semantic matching passes, namesakes represent semantically equivalent attributes, so checking by name is valid</li>
+<li>Aliased attributes (same lineage, different names) don't participate in natural joins</li>
+</ul>
 <h2 id="notation">Notation<a class="headerlink" href="#notation" title="Permanent link">&para;</a></h2>
-<p>In the examples below, <code>*</code> marks primary key attributes:
-- <code>A(x*, y*, z)</code> means A has primary key <code>{x, y}</code> and secondary attribute <code>z</code>
-- <code>A → B</code> means "A determines B" (defined below)</p>
+<p>In the examples below, <code>*</code> marks primary key attributes:</p>
+<ul>
+<li><code>A(x*, y*, z)</code> means A has primary key <code>{x, y}</code> and secondary attribute <code>z</code></li>
+<li><code>A → B</code> means "A functionally determines B" (defined below)</li>
+</ul>
 <h3 id="rules-by-operator">Rules by Operator<a class="headerlink" href="#rules-by-operator" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -5551,12 +5687,12 @@
 <h3 id="join-primary-key-rule">Join Primary Key Rule<a class="headerlink" href="#join-primary-key-rule" title="Permanent link">&para;</a></h3>
 <p>The join operator requires special handling because it combines two entity sets. The primary key of <code>A * B</code> depends on the <strong>functional dependency relationship</strong> between the operands.</p>
 <h4 id="definitions">Definitions<a class="headerlink" href="#definitions" title="Permanent link">&para;</a></h4>
-<p><strong>A determines B</strong> (written <code>A → B</code>): Every attribute in PK(B) is in A.</p>
+<p><strong>A → B (A functionally determines B)</strong>: Every attribute in PK(B) is in A.</p>
 <div class="highlight"><pre><span></span><code>A → B  iff  ∀b ∈ PK(B): b ∈ A
 </code></pre></div>
 <p>Since <code>PK(A) ∪ secondary(A) = all attributes in A</code>, this is equivalent to saying every attribute in B's primary key exists somewhere in A (as either a primary key or secondary attribute).</p>
 <p>Intuitively, <code>A → B</code> means that knowing A's primary key is sufficient to determine B's primary key through the functional dependencies implied by A's structure.</p>
-<p><strong>B determines A</strong> (written <code>B → A</code>): Every attribute in PK(A) is in B.</p>
+<p><strong>B → A (B functionally determines A)</strong>: Every attribute in PK(A) is in B.</p>
 <div class="highlight"><pre><span></span><code>B → A  iff  ∀a ∈ PK(A): a ∈ B
 </code></pre></div>
 <h4 id="join-primary-key-algorithm">Join Primary Key Algorithm<a class="headerlink" href="#join-primary-key-algorithm" title="Permanent link">&para;</a></h4>
@@ -5592,56 +5728,72 @@
 <p><strong>Example 1: B → A</strong>
 <div class="highlight"><pre><span></span><code>A: x*, y*
 B: x*, z*, y    (y is secondary in B, so z → y)
-</code></pre></div>
-- A → B? PK(B) = {x, z}. Is z in PK(A) or secondary in A? No (z not in A). <strong>No.</strong>
-- B → A? PK(A) = {x, y}. Is y in PK(B) or secondary in B? Yes (secondary). <strong>Yes.</strong>
-- Result: <strong>PK(A * B) = {x, z}</strong> with B's attributes first.</p>
+</code></pre></div></p>
+<ul>
+<li>A → B? PK(B) = {x, z}. Is z in PK(A) or secondary in A? No (z not in A). <strong>No.</strong></li>
+<li>B → A? PK(A) = {x, y}. Is y in PK(B) or secondary in B? Yes (secondary). <strong>Yes.</strong></li>
+<li>Result: <strong>PK(A * B) = {x, z}</strong> with B's attributes first.</li>
+</ul>
 <p><strong>Example 2: Both directions (bijection-like)</strong>
 <div class="highlight"><pre><span></span><code>A: x*, y*, z    (z is secondary in A)
 B: y*, z*, x    (x is secondary in B)
-</code></pre></div>
-- A → B? PK(B) = {y, z}. Is z in PK(A) or secondary in A? Yes (secondary). <strong>Yes.</strong>
-- B → A? PK(A) = {x, y}. Is x in PK(B) or secondary in B? Yes (secondary). <strong>Yes.</strong>
-- Both hold, prefer left operand: <strong>PK(A * B) = {x, y}</strong> with A's attributes first.</p>
+</code></pre></div></p>
+<ul>
+<li>A → B? PK(B) = {y, z}. Is z in PK(A) or secondary in A? Yes (secondary). <strong>Yes.</strong></li>
+<li>B → A? PK(A) = {x, y}. Is x in PK(B) or secondary in B? Yes (secondary). <strong>Yes.</strong></li>
+<li>Both hold, prefer left operand: <strong>PK(A * B) = {x, y}</strong> with A's attributes first.</li>
+</ul>
 <p><strong>Example 3: Neither direction</strong>
 <div class="highlight"><pre><span></span><code>A: x*, y*
 B: z*, x    (x is secondary in B)
-</code></pre></div>
-- A → B? PK(B) = {z}. Is z in PK(A) or secondary in A? No. <strong>No.</strong>
-- B → A? PK(A) = {x, y}. Is y in PK(B) or secondary in B? No (y not in B). <strong>No.</strong>
-- Result: <strong>PK(A * B) = {x, y, z}</strong> (union) with A's attributes first.</p>
+</code></pre></div></p>
+<ul>
+<li>A → B? PK(B) = {z}. Is z in PK(A) or secondary in A? No. <strong>No.</strong></li>
+<li>B → A? PK(A) = {x, y}. Is y in PK(B) or secondary in B? No (y not in B). <strong>No.</strong></li>
+<li>Result: <strong>PK(A * B) = {x, y, z}</strong> (union) with A's attributes first.</li>
+</ul>
 <p><strong>Example 4: A → B (subordinate relationship)</strong>
 <div class="highlight"><pre><span></span><code>Session: session_id*
 Trial: session_id*, trial_num*    (references Session)
-</code></pre></div>
-- A → B? PK(Trial) = {session_id, trial_num}. Is trial_num in PK(Session) or secondary? No. <strong>No.</strong>
-- B → A? PK(Session) = {session_id}. Is session_id in PK(Trial)? Yes. <strong>Yes.</strong>
-- Result: <strong>PK(Session * Trial) = {session_id, trial_num}</strong> with Trial's attributes first.</p>
-<p><strong>Join primary key determination</strong>:
-   - <code>A * B</code> where <code>A → B</code>: result has PK(A)
-   - <code>A * B</code> where <code>B → A</code> (not <code>A → B</code>): result has PK(B), B's attributes first
-   - <code>A * B</code> where both <code>A → B</code> and <code>B → A</code>: result has PK(A) (left preference)
-   - <code>A * B</code> where neither direction: result has PK(A) ∪ PK(B)
-   - Verify attribute ordering matches primary key source
-   - Verify non-commutativity: <code>A * B</code> vs <code>B * A</code> may differ in PK and order</p>
+</code></pre></div></p>
+<ul>
+<li>A → B? PK(Trial) = {session_id, trial_num}. Is trial_num in PK(Session) or secondary? No. <strong>No.</strong></li>
+<li>B → A? PK(Session) = {session_id}. Is session_id in PK(Trial)? Yes. <strong>Yes.</strong></li>
+<li>Result: <strong>PK(Session * Trial) = {session_id, trial_num}</strong> with Trial's attributes first.</li>
+</ul>
+<p><strong>Join primary key determination</strong>:</p>
+<ul>
+<li><code>A * B</code> where <code>A → B</code>: result has PK(A)</li>
+<li><code>A * B</code> where <code>B → A</code> (not <code>A → B</code>): result has PK(B), B's attributes first</li>
+<li><code>A * B</code> where both <code>A → B</code> and <code>B → A</code>: result has PK(A) (left preference)</li>
+<li><code>A * B</code> where neither direction: result has PK(A) ∪ PK(B)</li>
+<li>Verify attribute ordering matches primary key source</li>
+<li>Verify non-commutativity: <code>A * B</code> vs <code>B * A</code> may differ in PK and order</li>
+</ul>
 <h3 id="design-tradeoff-predictability-vs-minimality">Design Tradeoff: Predictability vs. Minimality<a class="headerlink" href="#design-tradeoff-predictability-vs-minimality" title="Permanent link">&para;</a></h3>
 <p>The join primary key rule prioritizes <strong>predictability</strong> over <strong>minimality</strong>. In some cases, the resulting primary key may not be minimal (i.e., it may contain functionally redundant attributes).</p>
 <p><strong>Example of non-minimal result:</strong>
 <div class="highlight"><pre><span></span><code>A: x*, y*
 B: z*, x    (x is secondary in B, so z → x)
 </code></pre></div></p>
-<p>The mathematically minimal primary key for <code>A * B</code> would be <code>{y, z}</code> because:
-- <code>z → x</code> (from B's structure)
-- <code>{y, z} → {x, y, z}</code> (z gives us x, and we have y)</p>
-<p>However, <code>{y, z}</code> is problematic:
-- It is <strong>not the primary key of either operand</strong> (A has <code>{x, y}</code>, B has <code>{z}</code>)
-- It is <strong>not the union</strong> of the primary keys
-- It represents a <strong>novel entity type</strong> that doesn't correspond to A, B, or their natural pairing</p>
+<p>The mathematically minimal primary key for <code>A * B</code> would be <code>{y, z}</code> because:</p>
+<ul>
+<li><code>z → x</code> (from B's structure)</li>
+<li><code>{y, z} → {x, y, z}</code> (z gives us x, and we have y)</li>
+</ul>
+<p>However, <code>{y, z}</code> is problematic:</p>
+<ul>
+<li>It is <strong>not the primary key of either operand</strong> (A has <code>{x, y}</code>, B has <code>{z}</code>)</li>
+<li>It is <strong>not the union</strong> of the primary keys</li>
+<li>It represents a <strong>novel entity type</strong> that doesn't correspond to A, B, or their natural pairing</li>
+</ul>
 <p>This creates confusion: what kind of entity does <code>{y, z}</code> identify?</p>
-<p><strong>The simplified rule produces <code>{x, y, z}</code></strong> (the union), which:
-- Is immediately recognizable as "one A entity paired with one B entity"
-- Contains A's full primary key and B's full primary key
-- May have redundancy (<code>x</code> is determined by <code>z</code>) but is semantically clear</p>
+<p><strong>The simplified rule produces <code>{x, y, z}</code></strong> (the union), which:</p>
+<ul>
+<li>Is immediately recognizable as "one A entity paired with one B entity"</li>
+<li>Contains A's full primary key and B's full primary key</li>
+<li>May have redundancy (<code>x</code> is determined by <code>z</code>) but is semantically clear</li>
+</ul>
 <p><strong>Rationale:</strong> Users can always project away redundant attributes if they need the minimal key. But starting with a predictable, interpretable primary key reduces confusion and errors.</p>
 <h3 id="attribute-ordering">Attribute Ordering<a class="headerlink" href="#attribute-ordering" title="Permanent link">&para;</a></h3>
 <p>The primary key attributes always appear <strong>first</strong> in the result's attribute list, followed by secondary attributes. When <code>B → A</code> (and not <code>A → B</code>), the join is conceptually reordered as <code>B * A</code> to maintain this invariant:</p>
@@ -5651,9 +5803,11 @@ B: z*, x    (x is secondary in B, so z → x)
 <li>If PK = PK(A) ∪ PK(B): PK(A) attributes first, then PK(B) − PK(A), then secondaries</li>
 </ul>
 <h3 id="non-commutativity">Non-Commutativity<a class="headerlink" href="#non-commutativity" title="Permanent link">&para;</a></h3>
-<p>With these rules, join is <strong>not commutative</strong> in terms of:
-1. <strong>Primary key selection</strong>: <code>A * B</code> may have a different PK than <code>B * A</code> when one direction determines but not the other
-2. <strong>Attribute ordering</strong>: The left operand's attributes appear first (unless B → A)</p>
+<p>With these rules, join is <strong>not commutative</strong> in terms of:</p>
+<ol>
+<li><strong>Primary key selection</strong>: <code>A * B</code> may have a different PK than <code>B * A</code> when functional dependency holds in one direction but not the other</li>
+<li><strong>Attribute ordering</strong>: The left operand's attributes appear first (unless B → A)</li>
+</ol>
 <p>The <strong>result set</strong> (the actual rows returned) remains the same regardless of order, but the <strong>schema</strong> (primary key and attribute order) may differ.</p>
 <h3 id="left-join-constraint">Left Join Constraint<a class="headerlink" href="#left-join-constraint" title="Permanent link">&para;</a></h3>
 <p>For left joins (<code>A.join(B, left=True)</code>), the functional dependency <strong>A → B is required</strong>.</p>
@@ -5738,36 +5892,63 @@ the left operand: [&#39;z&#39;]. Use an inner join or restructure the query.
 </tbody>
 </table>
 <p><strong>The extension perspective:</strong></p>
-<p>The operation <code>A.join(B, left=True)</code> when <code>A → B</code> is closer to <strong>projection</strong> than to <strong>join</strong>:
-- It adds new attributes to A (like <code>A.proj(..., new_attr=...)</code>)
-- It preserves all rows of A
-- It preserves A's primary key
-- It lacks the Cartesian product aspect that defines joins</p>
+<p>The operation <code>A.join(B, left=True)</code> when <code>A → B</code> is closer to <strong>projection</strong> than to <strong>join</strong>:</p>
+<ul>
+<li>It adds new attributes to A (like <code>A.proj(..., new_attr=...)</code>)</li>
+<li>It preserves all rows of A</li>
+<li>It preserves A's primary key</li>
+<li>It lacks the Cartesian product aspect that defines joins</li>
+</ul>
 <p>DataJoint provides an explicit <code>extend()</code> method for this pattern:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># These are equivalent when A → B:</span>
 <span class="n">A</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">B</span><span class="p">,</span> <span class="n">left</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="n">A</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">B</span><span class="p">)</span>           <span class="c1"># clearer intent: extend A with B&#39;s attributes</span>
 </code></pre></div>
-<p>The <code>extend()</code> method:
-- Requires <code>A → B</code> (raises <code>DataJointError</code> otherwise)
-- Does not expose <code>allow_nullable_pk</code> (that's an internal mechanism)
-- Expresses the semantic intent: "add B's attributes to A's entities"</p>
+<p>The <code>extend()</code> method:</p>
+<ul>
+<li>Requires <code>A → B</code> (raises <code>DataJointError</code> otherwise)</li>
+<li>Does not expose <code>allow_nullable_pk</code> (that's an internal mechanism)</li>
+<li>Expresses the semantic intent: "add B's attributes to A's entities"</li>
+</ul>
 <p><strong>Relationship to aggregation:</strong></p>
-<p>A similar argument applies to <code>A.aggr(B, ...)</code>:
-- It preserves A's primary key
-- It adds computed attributes derived from B
-- It's conceptually a variation of projection with grouping</p>
+<p>A similar argument applies to <code>A.aggr(B, ...)</code>:</p>
+<ul>
+<li>It preserves A's primary key</li>
+<li>It adds computed attributes derived from B</li>
+<li>It's conceptually a variation of projection with grouping</li>
+</ul>
 <p>Both <code>A.join(B, left=True)</code> (when A → B) and <code>A.aggr(B, ...)</code> can be viewed as <strong>projection-like operations</strong> that extend A's attributes while preserving its entity identity.</p>
 <h3 id="bypassing-the-left-join-constraint">Bypassing the Left Join Constraint<a class="headerlink" href="#bypassing-the-left-join-constraint" title="Permanent link">&para;</a></h3>
-<p>For special cases where the user takes responsibility for handling the potentially nullable primary key, the constraint can be bypassed using <code>allow_nullable_pk=True</code>:</p>
+<h4 id="the-allow_nullable_pk-parameter">The <code>allow_nullable_pk</code> Parameter<a class="headerlink" href="#the-allow_nullable_pk-parameter" title="Permanent link">&para;</a></h4>
+<p>The <code>join()</code> method accepts an <code>allow_nullable_pk</code> parameter that bypasses the <code>A → B</code> requirement for left joins:</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">join</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">,</span> <span class="n">semantic_check</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">left</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">allow_nullable_pk</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="o">...</span>
+</code></pre></div>
+<h4 id="why-the-constraint-exists">Why the Constraint Exists<a class="headerlink" href="#why-the-constraint-exists" title="Permanent link">&para;</a></h4>
+<p>In a left join, unmatched rows from A have NULL values for all of B's attributes. If B's primary key attributes are part of the result's primary key, those NULLs violate entity integrity—primary keys must not contain NULLs.</p>
+<p>The <code>A → B</code> requirement guarantees the result's primary key is <code>PK(A)</code>, which contains only A's attributes. Since A is the left operand in a left join, all its rows are retained with their original values, so the primary key cannot contain NULLs.</p>
+<h4 id="what-allow_nullable_pktrue-does">What <code>allow_nullable_pk=True</code> Does<a class="headerlink" href="#what-allow_nullable_pktrue-does" title="Permanent link">&para;</a></h4>
+<p>When the constraint is bypassed:</p>
+<ol>
+<li>The <code>A → B</code> check is skipped</li>
+<li>The result's primary key becomes <code>PK(A) ∪ PK(B)</code> (union of both)</li>
+<li>Primary key attributes from B may be NULL for unmatched rows</li>
+</ol>
 <div class="highlight"><pre><span></span><code><span class="c1"># Normally blocked - A does not determine B</span>
 <span class="n">A</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">B</span><span class="p">,</span> <span class="n">left</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  <span class="c1"># Error: A → B not satisfied</span>
 
-<span class="c1"># Bypass the constraint - user takes responsibility</span>
-<span class="n">A</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">B</span><span class="p">,</span> <span class="n">left</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">allow_nullable_pk</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  <span class="c1"># Allowed, PK = PK(A) ∪ PK(B)</span>
+<span class="c1"># Bypass the constraint</span>
+<span class="n">A</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">B</span><span class="p">,</span> <span class="n">left</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">allow_nullable_pk</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  <span class="c1"># PK = PK(A) ∪ PK(B)</span>
 </code></pre></div>
-<p>When bypassed, the resulting primary key is the union of both operands' primary keys (PK(A) ∪ PK(B)). The user must ensure that subsequent operations (such as <code>GROUP BY</code> or projection) establish a valid primary key. The parameter name <code>allow_nullable_pk</code> reflects the specific issue: primary key attributes from the right operand could be NULL for unmatched rows.</p>
-<p>This mechanism is used internally by aggregation (<code>aggr</code>) when <code>exclude_nonmatching=False</code> (the default), which resets the primary key via the <code>GROUP BY</code> clause.</p>
+<h4 id="when-to-use-it">When to Use It<a class="headerlink" href="#when-to-use-it" title="Permanent link">&para;</a></h4>
+<p>This parameter is primarily <strong>internal</strong>. It exists because aggregation (<code>aggr</code>) needs a left join but has the opposite functional dependency requirement (<code>B → A</code> instead of <code>A → B</code>). The bypass is safe in aggregation because the <code>GROUP BY</code> clause resets the primary key to <code>PK(A)</code>.</p>
+<p>Users should generally avoid this parameter. If you need left join behavior without <code>A → B</code>:</p>
+<ul>
+<li>Use <code>extend()</code> if A should determine B (restructure your query)</li>
+<li>Use <code>aggr()</code> if you're computing aggregates</li>
+<li>Reconsider whether a left join is appropriate for your use case</li>
+</ul>
+<p>If you do use <code>allow_nullable_pk=True</code>, you must ensure subsequent operations (such as <code>GROUP BY</code> or projection) establish a valid, non-nullable primary key.</p>
 <h3 id="aggregation-exception">Aggregation Exception<a class="headerlink" href="#aggregation-exception" title="Permanent link">&para;</a></h3>
 <p><code>A.aggr(B)</code> (with default <code>exclude_nonmatching=False</code>) uses a left join internally but has the <strong>opposite requirement</strong>: <strong>B → A</strong> (the group expression B must have all of A's primary key attributes).</p>
 <p>This apparent contradiction is resolved by the <code>GROUP BY</code> clause:</p>

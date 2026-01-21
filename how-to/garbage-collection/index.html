@@ -105,7 +105,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#clean-up-external-storage" class="md-skip">
+        <a href="#clean-up-object-storage" class="md-skip">
           Skip to content
         </a>
       
@@ -762,6 +762,8 @@
       
         
       
+        
+      
     
     
     
@@ -819,6 +821,34 @@
     
   
     Query Algebra
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/semantic-matching/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Semantic Matching
   
 
     
@@ -5432,11 +5462,11 @@
   
 
 
-<h1 id="clean-up-external-storage">Clean Up External Storage<a class="headerlink" href="#clean-up-external-storage" title="Permanent link">&para;</a></h1>
+<h1 id="clean-up-object-storage">Clean Up Object Storage<a class="headerlink" href="#clean-up-object-storage" title="Permanent link">&para;</a></h1>
 <p>Remove orphaned data from object storage after deleting database rows.</p>
 <h2 id="why-garbage-collection">Why Garbage Collection?<a class="headerlink" href="#why-garbage-collection" title="Permanent link">&para;</a></h2>
-<p>When you delete rows from tables with external storage (<code>&lt;blob@&gt;</code>, <code>&lt;attach@&gt;</code>,
-<code>&lt;object@&gt;</code>, <code>&lt;npy@&gt;</code>), the database records are removed but the external files
+<p>When you delete rows from tables with in-store types (<code>&lt;blob@&gt;</code>, <code>&lt;attach@&gt;</code>,
+<code>&lt;object@&gt;</code>, <code>&lt;npy@&gt;</code>), the database records are removed but the stored objects
 remain. This is by design:</p>
 <ul>
 <li><strong>Hash-addressed storage</strong> (<code>&lt;blob@&gt;</code>, <code>&lt;attach@&gt;</code>) uses deduplication—the

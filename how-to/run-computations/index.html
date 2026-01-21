@@ -762,6 +762,8 @@
       
         
       
+        
+      
     
     
     
@@ -819,6 +821,34 @@
     
   
     Query Algebra
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/semantic-matching/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Semantic Matching
   
 
     
@@ -5436,44 +5466,56 @@
 <h2 id="when-to-use-distributed-mode">When to Use Distributed Mode<a class="headerlink" href="#when-to-use-distributed-mode" title="Permanent link">&para;</a></h2>
 <p>Choose your populate strategy based on your workload and infrastructure:</p>
 <h3 id="use-populate-default-when">Use <code>populate()</code> (Default) When:<a class="headerlink" href="#use-populate-default-when" title="Permanent link">&para;</a></h3>
-<p>✅ <strong>Single worker</strong> - Only one process computing at a time
-✅ <strong>Fast computations</strong> - Each make() completes in &lt; 1 minute
-✅ <strong>Small job count</strong> - Processing &lt; 100 entries
-✅ <strong>Development/testing</strong> - Iterating on make() logic</p>
-<p><strong>Advantages:</strong>
-- Simplest approach (no job management overhead)
-- Immediate execution (no reservation delay)
-- Easy debugging (errors stop execution)</p>
+<ul>
+<li>✅ <strong>Single worker</strong> - Only one process computing at a time</li>
+<li>✅ <strong>Very fast computations</strong> - Each make() completes in &lt; 1 second</li>
+<li>✅ <strong>Small job count</strong> - Processing &lt; 100 entries</li>
+<li>✅ <strong>Development/testing</strong> - Iterating on make() logic</li>
+</ul>
+<p><strong>Advantages:</strong></p>
+<ul>
+<li>Simplest approach (no job management overhead)</li>
+<li>Immediate execution (no reservation delay)</li>
+<li>Easy debugging (errors stop execution)</li>
+</ul>
 <p><strong>Example:</strong>
 <div class="highlight"><pre><span></span><code><span class="c1"># Simple, direct execution</span>
 <span class="n">ProcessedData</span><span class="o">.</span><span class="n">populate</span><span class="p">()</span>
 </code></pre></div></p>
 <hr />
 <h3 id="use-populatereserve_jobstrue-when">Use <code>populate(reserve_jobs=True)</code> When:<a class="headerlink" href="#use-populatereserve_jobstrue-when" title="Permanent link">&para;</a></h3>
-<p>✅ <strong>Multiple workers</strong> - Running on multiple machines or processes
-✅ <strong>Long computations</strong> - Each make() takes &gt; 1 minute
-✅ <strong>Production pipelines</strong> - Need fault tolerance and monitoring
-✅ <strong>Worker crashes expected</strong> - Jobs can be resumed</p>
-<p><strong>Advantages:</strong>
-- Prevents duplicate work between workers
-- Fault tolerance (crashed jobs can be retried)
-- Job status tracking (<code>ProcessedData.jobs</code>)
-- Error isolation (one failure doesn't stop others)</p>
+<ul>
+<li>✅ <strong>Multiple workers</strong> - Running on multiple machines or processes</li>
+<li>✅ <strong>Computations &gt; 1 second</strong> - Job reservation overhead (~100ms) becomes negligible</li>
+<li>✅ <strong>Production pipelines</strong> - Need fault tolerance and monitoring</li>
+<li>✅ <strong>Worker crashes expected</strong> - Jobs can be resumed</li>
+</ul>
+<p><strong>Advantages:</strong></p>
+<ul>
+<li>Prevents duplicate work between workers</li>
+<li>Fault tolerance (crashed jobs can be retried)</li>
+<li>Job status tracking (<code>ProcessedData.jobs</code>)</li>
+<li>Error isolation (one failure doesn't stop others)</li>
+</ul>
 <p><strong>Example:</strong>
 <div class="highlight"><pre><span></span><code><span class="c1"># Distributed mode with job coordination</span>
 <span class="n">ProcessedData</span><span class="o">.</span><span class="n">populate</span><span class="p">(</span><span class="n">reserve_jobs</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </code></pre></div></p>
 <p><strong>Job reservation overhead:</strong> ~100ms per job
-<strong>Worth it when:</strong> Computations take &gt; 10 seconds each</p>
+<strong>Worth it when:</strong> Computations take &gt; 1 second (overhead becomes &lt; 10%)</p>
 <hr />
 <h3 id="use-populatereserve_jobstrue-processesn-when">Use <code>populate(reserve_jobs=True, processes=N)</code> When:<a class="headerlink" href="#use-populatereserve_jobstrue-processesn-when" title="Permanent link">&para;</a></h3>
-<p>✅ <strong>Multi-core machine</strong> - Want to use all CPU cores
-✅ <strong>CPU-bound tasks</strong> - Computations are CPU-intensive, not I/O
-✅ <strong>Independent computations</strong> - No shared state between jobs</p>
-<p><strong>Advantages:</strong>
-- Parallel execution on single machine
-- No network coordination needed
-- Combines job safety with parallelism</p>
+<ul>
+<li>✅ <strong>Multi-core machine</strong> - Want to use all CPU cores</li>
+<li>✅ <strong>CPU-bound tasks</strong> - Computations are CPU-intensive, not I/O</li>
+<li>✅ <strong>Independent computations</strong> - No shared state between jobs</li>
+</ul>
+<p><strong>Advantages:</strong></p>
+<ul>
+<li>Parallel execution on single machine</li>
+<li>No network coordination needed</li>
+<li>Combines job safety with parallelism</li>
+</ul>
 <p><strong>Example:</strong>
 <div class="highlight"><pre><span></span><code><span class="c1"># Use 4 CPU cores</span>
 <span class="n">ProcessedData</span><span class="o">.</span><span class="n">populate</span><span class="p">(</span><span class="n">reserve_jobs</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">processes</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
@@ -5486,8 +5528,8 @@
 └─ Multiple → Continue...
 
 How long per computation?
-├─ &lt; 1 minute → populate() (overhead not worth it)
-└─ &gt; 1 minute → Continue...
+├─ &lt; 1 second → populate() (overhead not worth it)
+└─ &gt; 1 second → Continue...
 
 Need fault tolerance?
 ├─ Yes → populate(reserve_jobs=True)

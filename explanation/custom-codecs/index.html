@@ -400,6 +400,18 @@
   </span>
 </a>
 </li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../semantic-matching/">
+<span class="md-ellipsis">
+    
+  
+    Semantic Matching
+  
+
+    
+  </span>
+</a>
+</li>
 </ul>
 </nav>
 </li>
@@ -2691,7 +2703,7 @@ with native data structures while DataJoint handles storage transparently.</p>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">get_dtype</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">is_store</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">is_store</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">dj</span><span class="o">.</span><span class="n">DataJointError</span><span class="p">(</span><span class="s2">"&lt;bam&gt; requires external storage: use &lt;bam@&gt;"</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">dj</span><span class="o">.</span><span class="n">DataJointError</span><span class="p">(</span><span class="s2">"&lt;bam&gt; requires in-store storage: use &lt;bam@&gt;"</span><span class="p">)</span>
         <span class="k">return</span> <span class="s2">"&lt;object@&gt;"</span>  <span class="c1"># Path-addressed storage for file structure</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">encode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">alignments</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">store_name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
@@ -2845,7 +2857,7 @@ with native data structures while DataJoint handles storage transparently.</p>
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Store XYZ data structures.</span>
 
-<span class="sd">    Supports both internal (&lt;xyz&gt;) and external (&lt;xyz@&gt;) storage.</span>
+<span class="sd">    Supports both in-table (&lt;xyz&gt;) and in-store (&lt;xyz@&gt;) storage.</span>
 
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>

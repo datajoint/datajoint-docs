@@ -762,6 +762,8 @@
       
         
       
+        
+      
     
     
     
@@ -819,6 +821,34 @@
     
   
     Query Algebra
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/semantic-matching/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Semantic Matching
   
 
     
@@ -4053,6 +4083,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Foreign Keys">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#modifiers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Modifiers
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -5181,6 +5228,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Foreign Keys">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#modifiers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Modifiers
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -5328,7 +5392,9 @@ pk_section     = attribute_line+
 secondary_section = attribute_line*
 
 attribute_line = [foreign_key | attribute]
-foreign_key    = &quot;-&gt;&quot; table_reference [alias]
+foreign_key    = &quot;-&gt;&quot; [modifiers] table_reference [alias]
+modifiers      = &quot;[&quot; modifier (&quot;,&quot; modifier)* &quot;]&quot;
+modifier       = &quot;nullable&quot; | &quot;unique&quot;
 attribute      = [default &quot;=&quot;] name &quot;:&quot; type [# comment]
 
 default        = NULL | literal | CURRENT_TIMESTAMP
@@ -5339,7 +5405,38 @@ codec_type     = &quot;&lt;&quot; name [&quot;@&quot; [store]] &quot;&gt;&quot;
 <h2 id="foreign-keys">Foreign Keys<a class="headerlink" href="#foreign-keys" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><span class="o">-&gt;</span> <span class="n">ParentTable</span>                    <span class="c1"># Inherit all PK attributes</span>
 <span class="o">-&gt;</span> <span class="n">ParentTable</span><span class="o">.</span><span class="n">proj</span><span class="p">(</span><span class="n">new</span><span class="o">=</span><span class="s1">&#39;old&#39;</span><span class="p">)</span>    <span class="c1"># Rename attributes</span>
+<span class="o">-&gt;</span> <span class="p">[</span><span class="n">nullable</span><span class="p">]</span> <span class="n">ParentTable</span>         <span class="c1"># Optional reference (secondary only)</span>
+<span class="o">-&gt;</span> <span class="p">[</span><span class="n">unique</span><span class="p">]</span> <span class="n">ParentTable</span>           <span class="c1"># One-to-one constraint</span>
+<span class="o">-&gt;</span> <span class="p">[</span><span class="n">nullable</span><span class="p">,</span> <span class="n">unique</span><span class="p">]</span> <span class="n">ParentTable</span> <span class="c1"># Optional one-to-one</span>
 </code></pre></div>
+<h3 id="modifiers">Modifiers<a class="headerlink" href="#modifiers" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Modifier</th>
+<th>Effect</th>
+<th>Position</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>[nullable]</code></td>
+<td>FK attributes can be NULL</td>
+<td>Secondary only</td>
+</tr>
+<tr>
+<td><code>[unique]</code></td>
+<td>Creates UNIQUE INDEX on FK</td>
+<td>Primary or secondary</td>
+</tr>
+<tr>
+<td><code>[nullable, unique]</code></td>
+<td>Optional one-to-one</td>
+<td>Secondary only</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Note:</strong> Multiple rows can have NULL in a <code>[nullable, unique]</code> FK because SQL's UNIQUE constraint does not consider NULLs equal.</p>
 <h2 id="attribute-types">Attribute Types<a class="headerlink" href="#attribute-types" title="Permanent link">&para;</a></h2>
 <h3 id="core-types">Core Types<a class="headerlink" href="#core-types" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="n">mouse_id</span> <span class="p">:</span> <span class="n">int32</span>                  <span class="c1"># 32-bit integer</span>
@@ -5392,6 +5489,7 @@ default rather than <code>NULL</code>.</p>
 <span class="s2">    ---</span>
 <span class="s2">    session_date : date           # Date of session</span>
 <span class="s2">    -&gt; [nullable] Experimenter    # Optional experimenter</span>
+<span class="s2">    -&gt; [unique] Protocol          # Each protocol used at most once per session</span>
 <span class="s2">    notes = &#39;&#39; : varchar(1000)    # Session notes</span>
 <span class="s2">    start_time : datetime         # Session start</span>
 <span class="s2">    duration : float64            # Duration in minutes</span>

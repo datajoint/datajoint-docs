@@ -762,6 +762,8 @@
       
         
       
+        
+      
     
     
     
@@ -819,6 +821,34 @@
     
   
     Query Algebra
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/semantic-matching/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Semantic Matching
   
 
     
@@ -5924,11 +5954,13 @@
 <p>Install and use plugin codec packages to extend DataJoint's type system.</p>
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
 <p>Plugin codecs are distributed as separate Python packages that extend DataJoint's type system. They add support for domain-specific data types without modifying DataJoint itself. Once installed, they register automatically via Python's entry point system and work seamlessly with DataJoint.</p>
-<p><strong>Benefits:</strong>
-- Automatic registration via entry points - no code changes needed
-- Domain-specific types maintained independently
-- Clean separation of core framework from specialized formats
-- Easy to share across projects and teams</p>
+<p><strong>Benefits:</strong></p>
+<ul>
+<li>Automatic registration via entry points - no code changes needed</li>
+<li>Domain-specific types maintained independently</li>
+<li>Clean separation of core framework from specialized formats</li>
+<li>Easy to share across projects and teams</li>
+</ul>
 <h2 id="quick-start">Quick Start<a class="headerlink" href="#quick-start" title="Permanent link">&para;</a></h2>
 <h3 id="1-install-the-codec-package">1. Install the Codec Package<a class="headerlink" href="#1-install-the-codec-package" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>dj-zarr-codecs
@@ -6005,22 +6037,28 @@
                 ├── .zarray
                 └── 0.0
 </code></pre></div>
-<p>This organization makes external storage browsable and self-documenting.</p>
+<p>This organization makes object storage browsable and self-documenting.</p>
 <h3 id="when-to-use-zarr">When to Use <code>&lt;zarr@&gt;</code><a class="headerlink" href="#when-to-use-zarr" title="Permanent link">&para;</a></h3>
-<p><strong>Use <code>&lt;zarr@&gt;</code> when:</strong>
-- Arrays are large (&gt; 10 MB)
-- You need chunked access patterns
-- Compression is beneficial
-- Cross-language compatibility matters (any Zarr library can read)
-- You want browsable, organized storage paths</p>
-<p><strong>Use <code>&lt;npy@&gt;</code> instead when:</strong>
-- You need lazy loading with metadata inspection before download
-- Memory mapping is important
-- Storage format simplicity is preferred</p>
-<p><strong>Use <code>&lt;blob@&gt;</code> instead when:</strong>
-- Arrays are small (&lt; 10 MB)
-- Deduplication of repeated values is important
-- Storing mixed Python objects (not just arrays)</p>
+<p><strong>Use <code>&lt;zarr@&gt;</code> when:</strong></p>
+<ul>
+<li>Arrays are large (&gt; 10 MB)</li>
+<li>You need chunked access patterns</li>
+<li>Compression is beneficial</li>
+<li>Cross-language compatibility matters (any Zarr library can read)</li>
+<li>You want browsable, organized storage paths</li>
+</ul>
+<p><strong>Use <code>&lt;npy@&gt;</code> instead when:</strong></p>
+<ul>
+<li>You need lazy loading with metadata inspection before download</li>
+<li>Memory mapping is important</li>
+<li>Storage format simplicity is preferred</li>
+</ul>
+<p><strong>Use <code>&lt;blob@&gt;</code> instead when:</strong></p>
+<ul>
+<li>Arrays are small (&lt; 10 MB)</li>
+<li>Deduplication of repeated values is important</li>
+<li>Storing mixed Python objects (not just arrays)</li>
+</ul>
 <h2 id="finding-plugin-codecs">Finding Plugin Codecs<a class="headerlink" href="#finding-plugin-codecs" title="Permanent link">&para;</a></h2>
 <h3 id="datajoint-maintained-codecs">DataJoint-Maintained Codecs<a class="headerlink" href="#datajoint-maintained-codecs" title="Permanent link">&para;</a></h3>
 <ul>
@@ -6033,19 +6071,25 @@
 </code></pre></div>
 <p>Or browse GitHub: <a href="https://github.com/topics/datajoint">https://github.com/topics/datajoint</a></p>
 <h3 id="domain-specific-examples">Domain-Specific Examples<a class="headerlink" href="#domain-specific-examples" title="Permanent link">&para;</a></h3>
-<p><strong>Neuroscience:</strong>
-- Spike train formats (NEO, NWB)
-- Neural network models
-- Connectivity matrices</p>
-<p><strong>Imaging:</strong>
-- Photon-limited movies (calcium imaging, low-light microscopy)
-- OME-TIFF, OME-ZARR
-- DICOM medical images
-- Point cloud data</p>
-<p><strong>Genomics:</strong>
-- BAM/SAM alignments
-- VCF variant calls
-- Phylogenetic trees</p>
+<p><strong>Neuroscience:</strong></p>
+<ul>
+<li>Spike train formats (NEO, NWB)</li>
+<li>Neural network models</li>
+<li>Connectivity matrices</li>
+</ul>
+<p><strong>Imaging:</strong></p>
+<ul>
+<li>Photon-limited movies (calcium imaging, low-light microscopy)</li>
+<li>OME-TIFF, OME-ZARR</li>
+<li>DICOM medical images</li>
+<li>Point cloud data</li>
+</ul>
+<p><strong>Genomics:</strong></p>
+<ul>
+<li>BAM/SAM alignments</li>
+<li>VCF variant calls</li>
+<li>Phylogenetic trees</li>
+</ul>
 <h2 id="verifying-installation">Verifying Installation<a class="headerlink" href="#verifying-installation" title="Permanent link">&para;</a></h2>
 <p>Check that a codec is registered:</p>
 <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">datajoint</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dj</span>

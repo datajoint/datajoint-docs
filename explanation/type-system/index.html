@@ -6,7 +6,7 @@
 <meta charset="utf-8"/>
 <meta content="width=device-width,initial-scale=1" name="viewport"/>
 <link href="https://docs.datajoint.com/explanation/type-system/" rel="canonical"/>
-<link href="../query-algebra/" rel="prev"/>
+<link href="../semantic-matching/" rel="prev"/>
 <link href="../custom-codecs/" rel="next"/>
 <link href="../../assets/images/company-logo-blue.png" rel="icon"/>
 <meta content="mkdocs-1.6.1, mkdocs-material-9.7.1" name="generator"/>
@@ -394,6 +394,18 @@
     
   
     Query Algebra
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../semantic-matching/">
+<span class="md-ellipsis">
+    
+  
+    Semantic Matching
   
 
     
@@ -2527,26 +2539,6 @@ database efficiency with Python convenience.</p>
 <td>±9 quintillion</td>
 </tr>
 <tr>
-<td><code>int16</code></td>
-<td>8-bit unsigned</td>
-<td>0 to 255</td>
-</tr>
-<tr>
-<td><code>int32</code></td>
-<td>16-bit unsigned</td>
-<td>0 to 65,535</td>
-</tr>
-<tr>
-<td><code>int64</code></td>
-<td>32-bit unsigned</td>
-<td>0 to 4 billion</td>
-</tr>
-<tr>
-<td><code>int64</code></td>
-<td>64-bit unsigned</td>
-<td>0 to 18 quintillion</td>
-</tr>
-<tr>
 <td><code>float32</code></td>
 <td>32-bit float</td>
 <td>~7 significant digits</td>
@@ -2563,6 +2555,7 @@ database efficiency with Python convenience.</p>
 </tr>
 </tbody>
 </table>
+<p>Unsigned integer types are not provided. Choose a signed type with sufficient range for your data.</p>
 <h3 id="string-types">String Types<a class="headerlink" href="#string-types" title="Permanent link">¶</a></h3>
 <table>
 <thead>
@@ -2624,9 +2617,10 @@ database efficiency with Python convenience.</p>
 <h2 id="layer-3-codec-types">Layer 3: Codec Types<a class="headerlink" href="#layer-3-codec-types" title="Permanent link">¶</a></h2>
 <p>Codecs provide <code>encode()</code>/<code>decode()</code> semantics for complex Python objects.</p>
 <h3 id="syntax">Syntax<a class="headerlink" href="#syntax" title="Permanent link">¶</a></h3>
+<p>Codec types use angle bracket notation:</p>
 <ul>
 <li><strong>Angle brackets</strong>: <code>&lt;blob&gt;</code>, <code>&lt;attach&gt;</code>, <code>&lt;object@store&gt;</code></li>
-<li><strong><code>@</code> indicates external storage</strong>: <code>&lt;blob@&gt;</code> stores externally</li>
+<li><strong><code>@</code> indicates object store</strong>: <code>&lt;blob@&gt;</code> stores in the object store</li>
 <li><strong>Store name</strong>: <code>&lt;blob@cold&gt;</code> uses named store "cold"</li>
 </ul>
 <h3 id="built-in-codecs">Built-in Codecs<a class="headerlink" href="#built-in-codecs" title="Permanent link">¶</a></h3>
@@ -2634,8 +2628,8 @@ database efficiency with Python convenience.</p>
 <thead>
 <tr>
 <th>Codec</th>
-<th>Internal</th>
-<th>External</th>
+<th>Database</th>
+<th>Object Store</th>
 <th>Returns</th>
 </tr>
 </thead>
@@ -2674,39 +2668,47 @@ database efficiency with Python convenience.</p>
 </table>
 <h3 id="blob-serialized-python-objects"><code>&lt;blob&gt;</code> — Serialized Python Objects<a class="headerlink" href="#blob-serialized-python-objects" title="Permanent link">¶</a></h3>
 <p>Stores NumPy arrays, dicts, lists, and other Python objects using DataJoint's custom binary serialization format.</p>
-<p><strong>Serialization format:</strong>
-- <strong>Protocol headers</strong>:
-  - <code>mYm</code> — MATLAB-compatible format (see <a href="https://www.mathworks.com/matlabcentral/fileexchange/81208-mym">mYm on MATLAB FileExchange</a> and <a href="https://github.com/datajoint/mym">mym on GitHub</a>)
-  - <code>dj0</code> — Python-extended format supporting additional types
-- <strong>Optional compression</strong>: zlib compression for data &gt; 1KB
-- <strong>Type-specific encoding</strong>: Each Python type has a specific serialization code
-- <strong>Version detection</strong>: Protocol header embedded in blob enables format detection</p>
-<p><strong>Supported types:</strong>
-- NumPy arrays (numeric, structured, recarrays)
-- Collections (dict, list, tuple, set)
-- Scalars (int, float, bool, complex, str, bytes)
-- Date/time objects (datetime, date, time)
-- UUID, Decimal</p>
+<p><strong>Serialization format:</strong></p>
+<ul>
+<li><strong>Protocol headers</strong>:<ul>
+<li><code>mYm</code> — MATLAB-compatible format (see <a href="https://www.mathworks.com/matlabcentral/fileexchange/81208-mym">mYm on MATLAB FileExchange</a> and <a href="https://github.com/datajoint/mym">mym on GitHub</a>)</li>
+<li><code>dj0</code> — Python-extended format supporting additional types</li>
+</ul>
+</li>
+<li><strong>Optional compression</strong>: zlib compression for data &gt; 1KB</li>
+<li><strong>Type-specific encoding</strong>: Each Python type has a specific serialization code</li>
+<li><strong>Version detection</strong>: Protocol header embedded in blob enables format detection</li>
+</ul>
+<p><strong>Supported types:</strong></p>
+<ul>
+<li>NumPy arrays (numeric, structured, recarrays)</li>
+<li>Collections (dict, list, tuple, set)</li>
+<li>Scalars (int, float, bool, complex, str, bytes)</li>
+<li>Date/time objects (datetime, date, time)</li>
+<li>UUID, Decimal</li>
+</ul>
 <div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">Results</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Computed</span><span class="p">):</span>
     <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    -&gt; Analysis</span>
 <span class="s2">    ---</span>
 <span class="s2">    spike_times : &lt;blob&gt;        # In database</span>
-<span class="s2">    waveforms : &lt;blob@&gt;         # External, default store</span>
-<span class="s2">    raw_data : &lt;blob@archive&gt;   # External, 'archive' store</span>
+<span class="s2">    waveforms : &lt;blob@&gt;         # Object store, default store</span>
+<span class="s2">    raw_data : &lt;blob@archive&gt;   # Object store, 'archive' store</span>
 <span class="s2">    """</span>
 </code></pre></div>
-<p><strong>Storage modes:</strong>
-- <code>&lt;blob&gt;</code> — Stored in database as LONGBLOB (up to ~1GB depending on MySQL config)
-- <code>&lt;blob@&gt;</code> — Stored externally via <code>&lt;hash@&gt;</code> with MD5 deduplication</p>
+<p><strong>Storage modes:</strong></p>
+<ul>
+<li><code>&lt;blob&gt;</code> — Stored in database as LONGBLOB (up to ~1GB depending on MySQL config)</li>
+<li><code>&lt;blob@&gt;</code> — Stored in object store via <code>&lt;hash@&gt;</code> with MD5 deduplication</li>
+</ul>
 <h3 id="attach-file-attachments"><code>&lt;attach&gt;</code> — File Attachments<a class="headerlink" href="#attach-file-attachments" title="Permanent link">¶</a></h3>
 <p>Stores files with filename preserved.</p>
 <div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">Config</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
     <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    config_id : int</span>
 <span class="s2">    ---</span>
-<span class="s2">    settings : &lt;attach&gt;         # Small config file</span>
-<span class="s2">    data_file : &lt;attach@&gt;       # Large file, external</span>
+<span class="s2">    settings : &lt;attach&gt;         # Small config file in database</span>
+<span class="s2">    data_file : &lt;attach@&gt;       # Large file in object store</span>
 <span class="s2">    """</span>
 </code></pre></div>
 <h3 id="object-path-addressed-storage"><code>&lt;object@&gt;</code> — Path-Addressed Storage<a class="headerlink" href="#object-path-addressed-storage" title="Permanent link">¶</a></h3>
@@ -2719,7 +2721,7 @@ database efficiency with Python convenience.</p>
 <span class="s2">    """</span>
 </code></pre></div>
 <h3 id="filepathstore-portable-references"><code>&lt;filepath@store&gt;</code> — Portable References<a class="headerlink" href="#filepathstore-portable-references" title="Permanent link">¶</a></h3>
-<p>References to externally-managed files with portable paths.</p>
+<p>References to independently-managed files with portable paths.</p>
 <div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">RawData</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
     <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    session_id : int</span>
@@ -2732,33 +2734,27 @@ database efficiency with Python convenience.</p>
 <thead>
 <tr>
 <th>Mode</th>
-<th>Database Storage</th>
-<th>External Storage</th>
+<th>Database</th>
+<th>Object Store</th>
 <th>Use Case</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Internal</td>
-<td>Yes</td>
-<td>No</td>
+<td>Database</td>
+<td>Data</td>
+<td>—</td>
 <td>Small data</td>
 </tr>
 <tr>
-<td>External</td>
-<td>Metadata only</td>
-<td>Yes</td>
-<td>Large data</td>
-</tr>
-<tr>
 <td>Hash-addressed</td>
-<td>Metadata only</td>
+<td>Metadata</td>
 <td>Deduplicated</td>
-<td>Repeated data</td>
+<td>Large/repeated data</td>
 </tr>
 <tr>
 <td>Path-addressed</td>
-<td>Metadata only</td>
+<td>Metadata</td>
 <td>PK-based path</td>
 <td>Complex files</td>
 </tr>
@@ -2828,7 +2824,7 @@ database efficiency with Python convenience.</p>
 <td><code>&lt;object@&gt;</code></td>
 </tr>
 <tr>
-<td>External file refs</td>
+<td>File references (in-store)</td>
 <td><code>&lt;filepath@store&gt;</code></td>
 </tr>
 <tr>
@@ -2841,7 +2837,7 @@ database efficiency with Python convenience.</p>
 <ol>
 <li><strong>Core types</strong> for simple data — <code>int32</code>, <code>varchar</code>, <code>datetime</code></li>
 <li><strong><code>&lt;blob&gt;</code></strong> for Python objects — NumPy arrays, dicts</li>
-<li><strong><code>@</code> suffix</strong> for external storage — <code>&lt;blob@&gt;</code>, <code>&lt;object@&gt;</code></li>
+<li><strong><code>@</code> suffix</strong> for object store — <code>&lt;blob@&gt;</code>, <code>&lt;object@&gt;</code></li>
 <li><strong>Custom codecs</strong> for domain-specific types</li>
 </ol>
 </article>

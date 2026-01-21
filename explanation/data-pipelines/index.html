@@ -946,6 +946,8 @@
       
         
       
+        
+      
     
     
     
@@ -1003,6 +1005,34 @@
     
   
     Query Algebra
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../semantic-matching/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Semantic Matching
   
 
     
@@ -5384,7 +5414,7 @@
 <h3 id="the-oas-philosophy">The OAS Philosophy<a class="headerlink" href="#the-oas-philosophy" title="Permanent link">&para;</a></h3>
 <p><strong>1. The database remains the system of record.</strong></p>
 <p>All metadata, relationships, and query logic live in the relational database. The schema defines what data exists, how entities relate, and what computations produce them. Queries operate on the relational structure; results are consistent and reproducible.</p>
-<p><strong>2. Large objects live in external stores.</strong></p>
+<p><strong>2. Large objects live in object stores.</strong></p>
 <p>Object storage (filesystems, S3, GCS, Azure Blob, MinIO) holds the actual bytes—arrays, images, files. The database stores only lightweight references (paths, checksums, metadata). This separation lets the database stay fast while data scales to terabytes.</p>
 <p><strong>3. Transparent access through codecs.</strong></p>
 <p>DataJoint's <a href="../type-system/">type system</a> provides codec types that bridge Python objects and storage:</p>
@@ -5402,7 +5432,7 @@
 </tr>
 <tr>
 <td><code>&lt;blob@store&gt;</code></td>
-<td>Same, but stored externally</td>
+<td>Same, but stored in object store</td>
 </tr>
 <tr>
 <td><code>&lt;attach&gt;</code></td>
@@ -5414,13 +5444,13 @@
 </tr>
 <tr>
 <td><code>&lt;filepath@store&gt;</code></td>
-<td>References to externally-managed files</td>
+<td>References to user-managed files</td>
 </tr>
 </tbody>
 </table>
 <p>Users work with native Python objects; serialization and storage routing are invisible.</p>
 <p><strong>4. Referential integrity extends to objects.</strong></p>
-<p>When a database row is deleted, its associated external objects are garbage-collected. Foreign key cascades work correctly—delete upstream data and downstream results (including their objects) disappear. The database and object store remain synchronized without manual cleanup.</p>
+<p>When a database row is deleted, its associated stored objects are garbage-collected. Foreign key cascades work correctly—delete upstream data and downstream results (including their objects) disappear. The database and object store remain synchronized without manual cleanup.</p>
 <p><strong>5. Multiple storage tiers support diverse access patterns.</strong></p>
 <p>Different attributes can route to different stores:</p>
 <div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">Recording</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Imported</span><span class="p">):</span>

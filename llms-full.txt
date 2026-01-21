@@ -1,6 +1,6 @@
 # DataJoint Documentation (Full)
 
-Generated: 2026-01-19 15:35:55 UTC
+Generated: 2026-01-21 14:13:45 UTC
 Commit: unknown
 Branch: unknown
 
@@ -484,7 +484,7 @@ class BamCodec(dj.Codec):
 
     def get_dtype(self, is_store: bool) -> str:
         if not is_store:
-            raise dj.DataJointError("<bam> requires external storage: use <bam@>")
+            raise dj.DataJointError("<bam> requires in-store storage: use <bam@>")
         return "<object@>"  # Path-addressed storage for file structure
 
     def encode(self, alignments, *, key=None, store_name=None):
@@ -653,7 +653,7 @@ class WellDocumentedCodec(dj.Codec):
     """
     Store XYZ data structures.
 
-    Supports both internal (<xyz>) and external (<xyz@>) storage.
+    Supports both in-table (<xyz>) and in-store (<xyz@>) storage.
 
     Examples
     --------
@@ -786,7 +786,7 @@ Scientific data often includes large objects—images, recordings, time series, 
 
 All metadata, relationships, and query logic live in the relational database. The schema defines what data exists, how entities relate, and what computations produce them. Queries operate on the relational structure; results are consistent and reproducible.
 
-**2. Large objects live in external stores.**
+**2. Large objects live in object stores.**
 
 Object storage (filesystems, S3, GCS, Azure Blob, MinIO) holds the actual bytes—arrays, images, files. The database stores only lightweight references (paths, checksums, metadata). This separation lets the database stay fast while data scales to terabytes.
 
@@ -797,16 +797,16 @@ DataJoint's [type system](type-system.md) provides codec types that bridge Pytho
 | Codec | Purpose |
 |-------|---------|
 | `<blob>` | Serialize Python objects (NumPy arrays, dicts) |
-| `<blob@store>` | Same, but stored externally |
+| `<blob@store>` | Same, but stored in object store |
 | `<attach>` | Store files with preserved filenames |
 | `<object@store>` | Path-addressed storage for complex structures (Zarr, HDF5) |
-| `<filepath@store>` | References to externally-managed files |
+| `<filepath@store>` | References to user-managed files |
 
 Users work with native Python objects; serialization and storage routing are invisible.
 
 **4. Referential integrity extends to objects.**
 
-When a database row is deleted, its associated external objects are garbage-collected. Foreign key cascades work correctly—delete upstream data and downstream results (including their objects) disappear. The database and object store remain synchronized without manual cleanup.
+When a database row is deleted, its associated stored objects are garbage-collected. Foreign key cascades work correctly—delete upstream data and downstream results (including their objects) disappear. The database and object store remain synchronized without manual cleanup.
 
 **5. Multiple storage tiers support diverse access patterns.**
 
@@ -1342,6 +1342,7 @@ The definition string **is** the specification — a declarative language that d
 ### Why Custom Query Algebra?
 
 DataJoint's operators implement **[semantic matching](../reference/specs/semantic-matching.md)** — joins and restrictions match only on attributes connected through the foreign key graph, not arbitrary columns that happen to share a name. This prevents:
+
 - Accidental Cartesian products
 - Joins on unrelated columns
 - Silent incorrect results
@@ -1532,8 +1533,8 @@ and scalable.
 
 -   :material-code-tags: **[Type System](type-system.md)**
 
-    Three-layer architecture: native, core, and codec types. Internal and
-    external storage modes.
+    Three-layer architecture: native, core, and codec types. In-table and
+    in-store storage modes.
 
 -   :material-cog-play: **[Computation Model](computation-model.md)**
 
@@ -2066,15 +2067,17 @@ result = (
 )
 ```
 
-## Workflow-Aware Joins
+## Semantic Matching
 
-Unlike SQL's natural joins that match on **any** shared column name, DataJoint
-joins match on **semantic lineage**. Two attributes match only if they:
+All binary operators in DataJoint rely on **semantic matching** of attributes. Unlike SQL's natural joins that match on any shared column name, DataJoint verifies that namesake attributes (those with the same name) are **homologous**—they trace back to the same original definition.
 
-1. Have the same name
-2. Trace back to the same source definition
+This prevents accidental matches on coincidentally-named columns, a pitfall that has been understood since the Entity-Relationship Model was introduced in the 1970s but was never addressed in SQL or traditional RDBMS implementations.
 
-This prevents accidental joins on coincidentally-named columns.
+See [Semantic Matching](semantic-matching.md) for details.
+
+These concepts were first introduced in Yatsenko et al., 2018[^1].
+
+[^1]: Yatsenko D, Walker EY, Tolias AS (2018). DataJoint Elements: Data Workflows for Neurophysiology. [arXiv:1807.11104](https://doi.org/10.48550/arXiv.1807.11104)
 
 ## Fetching Results
 
@@ -2331,6 +2334,299 @@ computational workflows.
 
 
 ---
+## File: explanation/semantic-matching.md
+
+# Semantic Matching
+
+Semantic matching ensures that attributes are only matched in joins when they share both the same name and the same **lineage** (origin). This prevents accidental joins on unrelated attributes that happen to share names.
+
+## Relationship to Natural Joins
+
+DataJoint's join operator (`*`) performs a **natural join**—the standard relational operation that matches tuples on all common attribute names. If you're familiar with SQL's `NATURAL JOIN` or relational algebra, DataJoint's join works the same way.
+
+**Semantic matching adds a safety check** on top of the natural join. Before performing the join, DataJoint verifies that all common attributes (namesakes) actually represent the same thing by checking their lineage. If two attributes share a name but have different origins, the join is rejected rather than silently producing incorrect results.
+
+In other words: **semantic matching is a natural join that rejects common pitfalls of joining on unrelated attributes.**
+
+Two attributes are **homologous** if they share the same lineage—that is, they trace back to the same original definition. Attributes with the same name are called **namesakes**. Semantic matching requires that all namesakes be homologous.
+
+### All Binary Operators Use Semantic Matching
+
+Semantic matching applies to **all binary operators** that combine two query expressions, not just join:
+
+| Operator | Syntax | Semantic Check |
+|----------|--------|----------------|
+| Join | `A * B` | Namesakes must be homologous |
+| Restriction | `A & B` | Namesakes must be homologous |
+| Anti-restriction | `A - B` | Namesakes must be homologous |
+| Aggregation | `A.aggr(B, ...)` | Namesakes must be homologous |
+| Extension | `A.extend(B)` | Namesakes must be homologous |
+| Union | `A + B` | Namesakes must be homologous |
+
+In each case, DataJoint verifies that any common attribute names between the two operands share the same lineage before proceeding with the operation.
+
+These concepts were first introduced in Yatsenko et al., 2018[^1].
+
+[^1]: Yatsenko D, Walker EY, Tolias AS (2018). DataJoint: A Simpler Relational Data Model. [arXiv:1807.11104](https://doi.org/10.48550/arXiv.1807.11104)
+
+## Why Semantic Matching?
+
+The natural join is elegant and powerful, but it has a well-known weakness: it relies entirely on naming conventions. If two tables happen to have columns with the same name but different meanings, a natural join silently produces a Cartesian product filtered on unrelated values—a subtle bug that can go undetected.
+
+```python
+# Classic natural join pitfall
+class Student(dj.Manual):
+    definition = """
+    id : int64  # student ID
+    ---
+    name : varchar(100)
+    """
+
+class Course(dj.Manual):
+    definition = """
+    id : int64  # course ID
+    ---
+    title : varchar(100)
+    """
+
+# Natural join would match on 'id', but these are unrelated!
+# Student #5 paired with Course #5 is meaningless.
+```
+
+DataJoint's semantic matching solves this by tracking the **lineage** of each attribute—where it was originally defined. Attributes only match if they have the same lineage, ensuring that joins always combine semantically related data.
+
+## Attribute Lineage
+
+Lineage identifies the **origin** of an attribute—the **dimension** where it was first defined. A dimension is an independent axis of variation introduced by a table that defines new primary key attributes. See [Schema Dimensions](entity-integrity.md#schema-dimensions) for details.
+
+Lineage is represented as a string:
+
+```
+schema_name.table_name.attribute_name
+```
+
+### Lineage Assignment Rules
+
+| Attribute Type | Lineage Value |
+|----------------|---------------|
+| Native primary key | `this_schema.this_table.attr_name` |
+| FK-inherited (primary or secondary) | Traced to original definition |
+| Native secondary | `None` |
+| Computed (in projection) | `None` |
+
+### Example
+
+```python
+class Session(dj.Manual):         # table: session
+    definition = """
+    session_id : int64
+    ---
+    session_date : date
+    """
+
+class Trial(dj.Manual):           # table: trial
+    definition = """
+    -> Session
+    trial_num : int32
+    ---
+    stimulus : varchar(100)
+    """
+```
+
+Lineages:
+
+- `Session.session_id` → `myschema.session.session_id` (native PK)
+- `Session.session_date` → `None` (native secondary)
+- `Trial.session_id` → `myschema.session.session_id` (inherited via FK)
+- `Trial.trial_num` → `myschema.trial.trial_num` (native PK)
+- `Trial.stimulus` → `None` (native secondary)
+
+Notice that `Trial.session_id` has the same lineage as `Session.session_id` because it was inherited through the foreign key reference. This allows `Session * Trial` to work correctly—both `session_id` attributes are **homologous**.
+
+## Terminology
+
+| Term | Definition |
+|------|------------|
+| **Lineage** | The origin of an attribute: `schema.table.attribute` |
+| **Homologous attributes** | Attributes with the same lineage |
+| **Namesake attributes** | Attributes with the same name |
+| **Homologous namesakes** | Same name AND same lineage — used for join matching |
+| **Non-homologous namesakes** | Same name BUT different lineage — cause join errors |
+
+## Semantic Matching Rules
+
+When two expressions are joined, DataJoint checks all namesake attributes (attributes with the same name):
+
+| Scenario | Action |
+|----------|--------|
+| Same name, same lineage (both non-null) | **Match** — attributes are joined |
+| Same name, different lineage | **Error** — non-homologous namesakes |
+| Same name, either lineage is null | **Error** — cannot verify homology |
+| Different names | **No match** — attributes kept separate |
+
+## When Semantic Matching Fails
+
+If you see an error like:
+
+```
+DataJointError: Cannot join on attribute `id`: different lineages
+(university.student.id vs university.course.id).
+Use .proj() to rename one of the attributes.
+```
+
+This means you're trying to join tables that have a namesake attribute (`id`) with different lineages. The solutions are:
+
+1. **Rename one attribute** using projection:
+   ```python
+   Student() * Course().proj(course_id='id')
+   ```
+
+2. **Bypass semantic checking** (use with caution):
+   ```python
+   Student().join(Course(), semantic_check=False)
+   ```
+
+3. **Use descriptive names** in your schema design (best practice):
+   ```python
+   class Student(dj.Manual):
+       definition = """
+       student_id : int64  # not just 'id'
+       ---
+       name : varchar(100)
+       """
+   ```
+
+## Examples
+
+### Valid Join (Shared Lineage)
+
+```python
+class Student(dj.Manual):
+    definition = """
+    student_id : int64
+    ---
+    name : varchar(100)
+    """
+
+class Enrollment(dj.Manual):
+    definition = """
+    -> Student
+    -> Course
+    ---
+    grade : varchar(2)
+    """
+
+# Works: student_id has same lineage in both
+Student() * Enrollment()
+```
+
+### Multi-hop FK Inheritance
+
+Lineage is preserved through multiple levels of foreign key inheritance:
+
+```python
+class Session(dj.Manual):
+    definition = """
+    session_id : int64
+    ---
+    session_date : date
+    """
+
+class Trial(dj.Manual):
+    definition = """
+    -> Session
+    trial_num : int32
+    """
+
+class Response(dj.Computed):
+    definition = """
+    -> Trial
+    ---
+    response_time : float64
+    """
+
+# All work: session_id traces back to Session in all tables
+Session() * Trial()
+Session() * Response()
+Trial() * Response()
+```
+
+### Secondary FK Attribute
+
+Lineage works for secondary (non-primary-key) foreign key attributes too:
+
+```python
+class Course(dj.Manual):
+    definition = """
+    course_id : int unsigned
+    ---
+    title : varchar(100)
+    """
+
+class FavoriteCourse(dj.Manual):
+    definition = """
+    student_id : int unsigned
+    ---
+    -> Course
+    """
+
+class RequiredCourse(dj.Manual):
+    definition = """
+    major_id : int unsigned
+    ---
+    -> Course
+    """
+
+# Works: course_id is secondary in both, but has same lineage
+FavoriteCourse() * RequiredCourse()
+```
+
+### Aliased Foreign Key
+
+When you alias a foreign key, the new name gets the same lineage as the original:
+
+```python
+class Person(dj.Manual):
+    definition = """
+    person_id : int unsigned
+    ---
+    full_name : varchar(100)
+    """
+
+class Marriage(dj.Manual):
+    definition = """
+    -> Person.proj(husband='person_id')
+    -> Person.proj(wife='person_id')
+    ---
+    marriage_date : date
+    """
+
+# husband and wife both have lineage: schema.person.person_id
+# They are homologous (same lineage) but have different names
+```
+
+## Best Practices
+
+1. **Use descriptive attribute names**: Prefer `student_id` over generic `id`
+
+2. **Leverage foreign keys**: Inherited attributes maintain lineage automatically
+
+3. **Rebuild lineage for legacy schemas**: Run `schema.rebuild_lineage()` once
+
+4. **Rebuild upstream schemas first**: For cross-schema FKs, rebuild parent schemas before child schemas
+
+5. **Restart after rebuilding**: Restart Python kernel to pick up new lineage information
+
+6. **Use `semantic_check=False` sparingly**: Only when you're certain the natural join is correct
+
+## Design Rationale
+
+Semantic matching reflects a core DataJoint principle: **schema design should encode meaning**. When you create a foreign key reference, you're declaring that two attributes represent the same concept. DataJoint tracks this through lineage, allowing safe joins without relying on naming conventions alone.
+
+This is especially valuable in large, collaborative projects where different teams might independently choose similar attribute names for unrelated concepts.
+
+
+---
 ## File: explanation/type-system.md
 
 # Type System
@@ -2397,13 +2693,11 @@ Standardized, scientist-friendly types that work identically across backends.
 | `int16` | 16-bit signed | -32,768 to 32,767 |
 | `int32` | 32-bit signed | ±2 billion |
 | `int64` | 64-bit signed | ±9 quintillion |
-| `int16` | 8-bit unsigned | 0 to 255 |
-| `int32` | 16-bit unsigned | 0 to 65,535 |
-| `int64` | 32-bit unsigned | 0 to 4 billion |
-| `int64` | 64-bit unsigned | 0 to 18 quintillion |
 | `float32` | 32-bit float | ~7 significant digits |
 | `float64` | 64-bit float | ~15 significant digits |
 | `decimal(n,f)` | Fixed-point | Exact decimal |
+
+Unsigned integer types are not provided. Choose a signed type with sufficient range for your data.
 
 ### String Types
 
@@ -2430,14 +2724,16 @@ Codecs provide `encode()`/`decode()` semantics for complex Python objects.
 
 ### Syntax
 
+Codec types use angle bracket notation:
+
 - **Angle brackets**: `<blob>`, `<attach>`, `<object@store>`
-- **`@` indicates external storage**: `<blob@>` stores externally
+- **`@` indicates object store**: `<blob@>` stores in the object store
 - **Store name**: `<blob@cold>` uses named store "cold"
 
 ### Built-in Codecs
 
-| Codec | Internal | External | Returns |
-|-------|----------|----------|---------|
+| Codec | Database | Object Store | Returns |
+|-------|----------|--------------|---------|
 | `<blob>` | ✅ | ✅ `<blob@>` | Python object |
 | `<attach>` | ✅ | ✅ `<attach@>` | Local file path |
 | `<object@>` | ❌ | ✅ | ObjectRef |
@@ -2449,6 +2745,7 @@ Codecs provide `encode()`/`decode()` semantics for complex Python objects.
 Stores NumPy arrays, dicts, lists, and other Python objects using DataJoint's custom binary serialization format.
 
 **Serialization format:**
+
 - **Protocol headers**:
   - `mYm` — MATLAB-compatible format (see [mYm on MATLAB FileExchange](https://www.mathworks.com/matlabcentral/fileexchange/81208-mym) and [mym on GitHub](https://github.com/datajoint/mym))
   - `dj0` — Python-extended format supporting additional types
@@ -2457,6 +2754,7 @@ Stores NumPy arrays, dicts, lists, and other Python objects using DataJoint's cu
 - **Version detection**: Protocol header embedded in blob enables format detection
 
 **Supported types:**
+
 - NumPy arrays (numeric, structured, recarrays)
 - Collections (dict, list, tuple, set)
 - Scalars (int, float, bool, complex, str, bytes)
@@ -2469,14 +2767,15 @@ class Results(dj.Computed):
     -> Analysis
     ---
     spike_times : <blob>        # In database
-    waveforms : <blob@>         # External, default store
-    raw_data : <blob@archive>   # External, 'archive' store
+    waveforms : <blob@>         # Object store, default store
+    raw_data : <blob@archive>   # Object store, 'archive' store
     """
 ```
 
 **Storage modes:**
+
 - `<blob>` — Stored in database as LONGBLOB (up to ~1GB depending on MySQL config)
-- `<blob@>` — Stored externally via `<hash@>` with MD5 deduplication
+- `<blob@>` — Stored in object store via `<hash@>` with MD5 deduplication
 
 ### `<attach>` — File Attachments
 
@@ -2487,8 +2786,8 @@ class Config(dj.Manual):
     definition = """
     config_id : int
     ---
-    settings : <attach>         # Small config file
-    data_file : <attach@>       # Large file, external
+    settings : <attach>         # Small config file in database
+    data_file : <attach@>       # Large file in object store
     """
 ```
 
@@ -2507,7 +2806,7 @@ class ProcessedData(dj.Computed):
 
 ### `<filepath@store>` — Portable References
 
-References to externally-managed files with portable paths.
+References to independently-managed files with portable paths.
 
 ```python
 class RawData(dj.Manual):
@@ -2520,12 +2819,11 @@ class RawData(dj.Manual):
 
 ## Storage Modes
 
-| Mode | Database Storage | External Storage | Use Case |
-|------|------------------|------------------|----------|
-| Internal | Yes | No | Small data |
-| External | Metadata only | Yes | Large data |
-| Hash-addressed | Metadata only | Deduplicated | Repeated data |
-| Path-addressed | Metadata only | PK-based path | Complex files |
+| Mode | Database | Object Store | Use Case |
+|------|----------|--------------|----------|
+| Database | Data | — | Small data |
+| Hash-addressed | Metadata | Deduplicated | Large/repeated data |
+| Path-addressed | Metadata | PK-based path | Complex files |
 
 ## Custom Codecs
 
@@ -2574,14 +2872,14 @@ class Network(dj.Computed):
 | NumPy arrays (large) | `<blob@>` |
 | Files to attach | `<attach>` or `<attach@>` |
 | Zarr/HDF5 | `<object@>` |
-| External file refs | `<filepath@store>` |
+| File references (in-store) | `<filepath@store>` |
 | Custom objects | Custom codec |
 
 ## Summary
 
 1. **Core types** for simple data — `int32`, `varchar`, `datetime`
 2. **`<blob>`** for Python objects — NumPy arrays, dicts
-3. **`@` suffix** for external storage — `<blob@>`, `<object@>`
+3. **`@` suffix** for object store — `<blob@>`, `<object@>`
 4. **Custom codecs** for domain-specific types
 
 
@@ -2812,6 +3110,7 @@ After finalization (Phase 4+), only 2.0 clients are supported.
 ## License Change
 
 DataJoint 2.0 is licensed under the **Apache License 2.0** (previously LGPL-2.1). This provides:
+
 - More permissive for commercial and academic use
 - Clearer patent grant provisions
 - Better compatibility with broader ecosystem
@@ -4586,9 +4885,22 @@ class SessionSummary(dj.Computed):
 ```
 
 
-### Optional Foreign Keys (Nullable)
+### Foreign Key Modifiers
 
-Use `[nullable]` for optional relationships:
+Foreign keys support modifiers that change their behavior:
+
+| Modifier | Syntax | Effect |
+|----------|--------|--------|
+| **Nullable** | `-> [nullable] Table` | Makes FK optional (can be NULL) |
+| **Unique** | `-> [unique] Table` | Enforces one-to-one from child side |
+| **Both** | `-> [nullable, unique] Table` | Optional one-to-one relationship |
+
+**Rules:**
+- `[nullable]` only allowed for secondary FKs (below `---`)
+- `[unique]` allowed for both primary and secondary FKs
+- Primary key attributes cannot be nullable
+
+**Nullable unique behavior:** Multiple rows can have NULL values because SQL's UNIQUE constraint does not consider NULLs equal to each other.
 
 
 ```python
@@ -4784,6 +5096,7 @@ If you see a warning like `"Native type 'int' used; consider 'int32' instead"`, 
 | **One-to-One** | FK is entire primary key: exactly one child per parent |
 | **Master-Part** | Compositional integrity: master and parts inserted/deleted atomically |
 | **Nullable FK** | `[nullable]` makes the reference optional |
+| **Unique FK** | `[unique]` enforces one-to-one from child side |
 | **Lookup Table** | Pre-populated reference data |
 
 ## Next Steps
@@ -10599,7 +10912,7 @@ class StudentMajor(dj.Manual):
 class Course(dj.Manual):
     definition = """
     -> Department
-    course : int64               # course number, e.g. 1010
+    course : int16               # course number, e.g. 1010
     ---
     course_name : varchar(200)
     credits : decimal(3,1)
@@ -11350,7 +11663,7 @@ Core concepts for getting started with DataJoint:
 3. [Data Entry](basics/03-data-entry.ipynb) — Inserting and managing data
 4. [Queries](basics/04-queries.ipynb) — Operators and fetching results
 5. [Computation](basics/05-computation.ipynb) — Imported and Computed tables
-6. [Object Storage](basics/06-object-storage.ipynb) — Blobs, attachments, and external stores
+6. [Object Storage](basics/06-object-storage.ipynb) — Blobs, attachments, and object stores
 
 ## Examples
 
@@ -11958,6 +12271,7 @@ subset = ref[:100, :]         # Lazy slicing
 ### Size and Storage Location
 
 **Technical Limits:**
+
 - **MySQL**: In-table blobs up to 4 GiB (`LONGBLOB`)
 - **PostgreSQL**: In-table blobs unlimited (`BYTEA`)
 - **Object stores**: Effectively unlimited (S3, file systems, etc.)
@@ -13269,7 +13583,7 @@ class Connectivity(dj.Manual):
     conn_id : int
     ---
     network : <graph>           # Uses GraphCodec
-    network_large : <graph@>    # External storage
+    network_large : <graph@>    # In-store
     """
 ```
 
@@ -13293,7 +13607,7 @@ Common return values:
 
 - `"bytes"` — Binary in database
 - `"json"` — JSON in database
-- `"<blob>"` — Chain to blob codec (internal storage)
+- `"<blob>"` — Chain to blob codec (in-table storage)
 - `"<blob@>"` — Blob in object storage
 
 ### `encode(value, *, key=None, store_name=None)`
@@ -13604,7 +13918,6 @@ See [Design Primary Keys](design-primary-keys.md) for detailed guidance on key s
 |------|-------------|
 | `bool` | Boolean (true/false) |
 | `int8`, `int16`, `int32`, `int64` | Signed integers |
-| `int16`, `int32`, `int64`, `int64` | Unsigned integers |
 | `float32`, `float64` | Floating point |
 | `decimal(m,n)` | Fixed precision decimal |
 | `varchar(n)` | Variable-length string |
@@ -13670,6 +13983,38 @@ class Session(dj.Manual):
 ```
 
 The `->` inherits primary key attributes from the referenced table.
+
+### Foreign Key Modifiers
+
+Use modifiers in brackets to change foreign key behavior:
+
+| Modifier | Effect |
+|----------|--------|
+| `[nullable]` | Makes FK attributes nullable (optional relationship) |
+| `[unique]` | Creates UNIQUE INDEX on FK attributes (one-to-one) |
+| `[nullable, unique]` | Both: optional one-to-one relationship |
+
+```python
+@schema
+class SessionAnnotation(dj.Manual):
+    definition = """
+    -> Session
+    ---
+    -> [nullable] Experimenter     # Optional: experimenter may be unknown
+    -> [unique] Protocol           # Unique: each protocol used at most once
+    -> [nullable, unique] Reviewer # Optional & unique
+    """
+```
+
+**Placement rules:**
+
+- `[nullable]` only allowed in secondary position (below `---`)
+- `[unique]` allowed in both primary and secondary positions
+- Primary key FKs cannot be nullable
+
+**Nullable unique behavior:**
+
+Multiple rows can have NULL in a `[nullable, unique]` FK because SQL's UNIQUE constraint does not consider NULLs equal. This enables optional one-to-one relationships.
 
 ## Lookup Tables with Contents
 
@@ -14509,14 +14854,14 @@ All output methods accept:
 ---
 ## File: how-to/garbage-collection.md
 
-# Clean Up External Storage
+# Clean Up Object Storage
 
 Remove orphaned data from object storage after deleting database rows.
 
 ## Why Garbage Collection?
 
-When you delete rows from tables with external storage (`<blob@>`, `<attach@>`,
-`<object@>`, `<npy@>`), the database records are removed but the external files
+When you delete rows from tables with in-store types (`<blob@>`, `<attach@>`,
+`<object@>`, `<npy@>`), the database records are removed but the stored objects
 remain. This is by design:
 
 - **Hash-addressed storage** (`<blob@>`, `<attach@>`) uses deduplication—the
@@ -14976,7 +15321,7 @@ they assume you understand the basics and focus on getting things done.
 - [Use Plugin Codecs](use-plugin-codecs.md) — Install codec packages via entry points
 - [Create Custom Codecs](create-custom-codec.md) — Domain-specific types
 - [Manage Large Data](manage-large-data.md) — Blobs, streaming, efficiency
-- [Clean Up External Storage](garbage-collection.md) — Garbage collection
+- [Clean Up Object Storage](garbage-collection.md) — Garbage collection
 
 ## Maintenance
 
@@ -15369,7 +15714,7 @@ This enables independent garbage collection per schema.
 
 ## Storage Cleanup
 
-External storage items are not automatically deleted with rows. Run garbage
+Object storage items are not automatically deleted with rows. Run garbage
 collection periodically:
 
 ```python
@@ -15386,7 +15731,7 @@ print(dj.gc.format_stats(stats))
 stats = dj.gc.collect(my_schema, dry_run=False)
 ```
 
-See [Clean Up External Storage](garbage-collection.md) for details.
+See [Clean Up Object Storage](garbage-collection.md) for details.
 
 ## Monitor Storage Usage
 
@@ -18897,6 +19242,19 @@ dj.Diagram(Employee) + dj.Diagram(ParkingSpot)
 
 **Note:** The `[unique]` modifier is NOT visible in diagrams — the line is still dashed. Check the table definition to see the constraint.
 
+### Nullable Unique Foreign Keys
+
+Combine `[nullable, unique]` for optional one-to-one relationships:
+
+```python
+-> [nullable, unique] ParentTable
+```
+
+Multiple rows can have NULL values because SQL's UNIQUE constraint does not consider NULLs as equal to each other. This is useful when:
+
+- Not every child needs to reference a parent
+- But each parent can be referenced by at most one child
+
 ## Many-to-Many
 
 Use an association table with composite primary key:
@@ -20121,12 +20479,13 @@ Choose your populate strategy based on your workload and infrastructure:
 
 ### Use `populate()` (Default) When:
 
-✅ **Single worker** - Only one process computing at a time
-✅ **Fast computations** - Each make() completes in < 1 minute
-✅ **Small job count** - Processing < 100 entries
-✅ **Development/testing** - Iterating on make() logic
+- ✅ **Single worker** - Only one process computing at a time
+- ✅ **Very fast computations** - Each make() completes in < 1 second
+- ✅ **Small job count** - Processing < 100 entries
+- ✅ **Development/testing** - Iterating on make() logic
 
 **Advantages:**
+
 - Simplest approach (no job management overhead)
 - Immediate execution (no reservation delay)
 - Easy debugging (errors stop execution)
@@ -20141,12 +20500,13 @@ ProcessedData.populate()
 
 ### Use `populate(reserve_jobs=True)` When:
 
-✅ **Multiple workers** - Running on multiple machines or processes
-✅ **Long computations** - Each make() takes > 1 minute
-✅ **Production pipelines** - Need fault tolerance and monitoring
-✅ **Worker crashes expected** - Jobs can be resumed
+- ✅ **Multiple workers** - Running on multiple machines or processes
+- ✅ **Computations > 1 second** - Job reservation overhead (~100ms) becomes negligible
+- ✅ **Production pipelines** - Need fault tolerance and monitoring
+- ✅ **Worker crashes expected** - Jobs can be resumed
 
 **Advantages:**
+
 - Prevents duplicate work between workers
 - Fault tolerance (crashed jobs can be retried)
 - Job status tracking (`ProcessedData.jobs`)
@@ -20159,17 +20519,18 @@ ProcessedData.populate(reserve_jobs=True)
 ```
 
 **Job reservation overhead:** ~100ms per job
-**Worth it when:** Computations take > 10 seconds each
+**Worth it when:** Computations take > 1 second (overhead becomes < 10%)
 
 ---
 
 ### Use `populate(reserve_jobs=True, processes=N)` When:
 
-✅ **Multi-core machine** - Want to use all CPU cores
-✅ **CPU-bound tasks** - Computations are CPU-intensive, not I/O
-✅ **Independent computations** - No shared state between jobs
+- ✅ **Multi-core machine** - Want to use all CPU cores
+- ✅ **CPU-bound tasks** - Computations are CPU-intensive, not I/O
+- ✅ **Independent computations** - No shared state between jobs
 
 **Advantages:**
+
 - Parallel execution on single machine
 - No network coordination needed
 - Combines job safety with parallelism
@@ -20192,8 +20553,8 @@ How many workers?
 └─ Multiple → Continue...
 
 How long per computation?
-├─ < 1 minute → populate() (overhead not worth it)
-└─ > 1 minute → Continue...
+├─ < 1 second → populate() (overhead not worth it)
+└─ > 1 second → Continue...
 
 Need fault tolerance?
 ├─ Yes → populate(reserve_jobs=True)
@@ -20365,6 +20726,7 @@ dj -s my_lab:lab -s my_analysis:analysis
 ```
 
 The format is `schema_name:alias` where:
+
 - `schema_name` is the database schema name
 - `alias` is the variable name in the REPL
 
@@ -20766,6 +21128,7 @@ OAS supports two addressing schemes:
 | **Schema-addressed** | Object store | Schema structure | Complex/multi-part | Zarr arrays, HDF5 datasets, multi-file objects (browsable paths) |
 
 **Key distinction:**
+
 - **Hash-addressed** (`<blob@>`, `<attach@>`) stores individual, atomic objects - one object per field
 - **Schema-addressed** (`<npy@>`, `<object@>`) can store complex, multi-part objects like Zarr (directory structures with multiple files)
 
@@ -21121,6 +21484,7 @@ Install and use plugin codec packages to extend DataJoint's type system.
 Plugin codecs are distributed as separate Python packages that extend DataJoint's type system. They add support for domain-specific data types without modifying DataJoint itself. Once installed, they register automatically via Python's entry point system and work seamlessly with DataJoint.
 
 **Benefits:**
+
 - Automatic registration via entry points - no code changes needed
 - Domain-specific types maintained independently
 - Clean separation of core framework from specialized formats
@@ -21226,11 +21590,12 @@ s3://my-bucket/data/
                 └── 0.0
 ```
 
-This organization makes external storage browsable and self-documenting.
+This organization makes object storage browsable and self-documenting.
 
 ### When to Use `<zarr@>`
 
 **Use `<zarr@>` when:**
+
 - Arrays are large (> 10 MB)
 - You need chunked access patterns
 - Compression is beneficial
@@ -21238,11 +21603,13 @@ This organization makes external storage browsable and self-documenting.
 - You want browsable, organized storage paths
 
 **Use `<npy@>` instead when:**
+
 - You need lazy loading with metadata inspection before download
 - Memory mapping is important
 - Storage format simplicity is preferred
 
 **Use `<blob@>` instead when:**
+
 - Arrays are small (< 10 MB)
 - Deduplication of repeated values is important
 - Storing mixed Python objects (not just arrays)
@@ -21267,17 +21634,20 @@ Or browse GitHub: https://github.com/topics/datajoint
 ### Domain-Specific Examples
 
 **Neuroscience:**
+
 - Spike train formats (NEO, NWB)
 - Neural network models
 - Connectivity matrices
 
 **Imaging:**
+
 - Photon-limited movies (calcium imaging, low-light microscopy)
 - OME-TIFF, OME-ZARR
 - DICOM medical images
 - Point cloud data
 
 **Genomics:**
+
 - BAM/SAM alignments
 - VCF variant calls
 - Phylogenetic trees
@@ -21775,7 +22145,7 @@ Configuration is loaded in priority order:
 
 ## Stores Configuration
 
-Unified storage configuration for all external storage types (`<blob@>`, `<attach@>`, `<filepath@>`, `<object@>`, `<npy@>`).
+Unified storage configuration for all in-store types (`<blob@>`, `<attach@>`, `<filepath@>`, `<object@>`, `<npy@>`).
 
 **Default stores:**
 
@@ -22018,7 +22388,9 @@ pk_section     = attribute_line+
 secondary_section = attribute_line*
 
 attribute_line = [foreign_key | attribute]
-foreign_key    = "->" table_reference [alias]
+foreign_key    = "->" [modifiers] table_reference [alias]
+modifiers      = "[" modifier ("," modifier)* "]"
+modifier       = "nullable" | "unique"
 attribute      = [default "="] name ":" type [# comment]
 
 default        = NULL | literal | CURRENT_TIMESTAMP
@@ -22032,7 +22404,20 @@ codec_type     = "<" name ["@" [store]] ">"
 ```python
 -> ParentTable                    # Inherit all PK attributes
 -> ParentTable.proj(new='old')    # Rename attributes
+-> [nullable] ParentTable         # Optional reference (secondary only)
+-> [unique] ParentTable           # One-to-one constraint
+-> [nullable, unique] ParentTable # Optional one-to-one
 ```
+
+### Modifiers
+
+| Modifier | Effect | Position |
+|----------|--------|----------|
+| `[nullable]` | FK attributes can be NULL | Secondary only |
+| `[unique]` | Creates UNIQUE INDEX on FK | Primary or secondary |
+| `[nullable, unique]` | Optional one-to-one | Secondary only |
+
+**Note:** Multiple rows can have NULL in a `[nullable, unique]` FK because SQL's UNIQUE constraint does not consider NULLs equal.
 
 ## Attribute Types
 
@@ -22105,6 +22490,7 @@ class Session(dj.Manual):
     ---
     session_date : date           # Date of session
     -> [nullable] Experimenter    # Optional experimenter
+    -> [unique] Protocol          # Each protocol used at most once per session
     notes = '' : varchar(1000)    # Session notes
     start_time : datetime         # Session start
     duration : float64            # Duration in minutes
@@ -23919,7 +24305,7 @@ def encode(self, value: Any, *, key: dict | None = None, store_name: str | None 
     Args:
         value: The Python object to store
         key: Primary key values (for context-dependent encoding)
-        store_name: Target store name (for external storage)
+        store_name: Target store name (for in-store storage)
 
     Returns:
         Value in the format expected by get_dtype()
@@ -24218,7 +24604,7 @@ DataJoint provides these built-in codecs. See the [Type System Specification](ty
 | `<hash@>` | N/A | `json` | Hash | Hash-addressed storage with MD5 deduplication |
 | `<object@>` | N/A | `json` | Schema | Schema-addressed storage for files/folders |
 | `<npy@>` | N/A | `json` | Schema | Schema-addressed storage for numpy arrays |
-| `<filepath@>` | N/A | `json` | External | Reference to existing files in store |
+| `<filepath@>` | N/A | `json` | Reference | Reference to existing files in store |
 
 **Addressing schemes:**
 - **Hash-addressed**: Path from content hash. Automatic deduplication.
@@ -24257,14 +24643,14 @@ class SpikeTrainCodec(dj.Codec):
         return np.cumsum(stored).astype(np.float64)
 ```
 
-### Example 2: External Storage
+### Example 2: In-Store Storage
 
 ```python
 import datajoint as dj
 import pickle
 
 class ModelCodec(dj.Codec):
-    """Store ML models with optional external storage."""
+    """Store ML models with optional in-store storage."""
 
     name = "model"
 
@@ -24291,9 +24677,9 @@ class Models(dj.Manual):
     definition = '''
     model_id : int
     ---
-    small_model : <model>         # Internal storage
-    large_model : <model@>        # External (default store)
-    archive_model : <model@cold>  # External (specific store)
+    small_model : <model>         # In-table storage
+    large_model : <model@>        # In-store (default store)
+    archive_model : <model@cold>  # In-store (specific store)
     '''
 ```
 
@@ -24382,7 +24768,7 @@ class ZarrCodec(dj.Codec):
 
     def get_dtype(self, is_store: bool) -> str:
         if not is_store:
-            raise dj.DataJointError("<zarr> requires @ (external storage only)")
+            raise dj.DataJointError("<zarr> requires @ (in-store only)")
         return "<object>"  # Delegate to object storage
 
     def encode(self, value, *, key=None, store_name=None):
@@ -24518,7 +24904,7 @@ def decode(self, stored, *, key=None):
 |-------|-------|----------|
 | `Unknown codec: <name>` | Codec not registered | Import module defining codec before table definition |
 | `Codec <name> already registered` | Duplicate name | Use unique names; check for conflicts |
-| `<codec> requires @` | External-only codec used without @ | Add `@` or `@store` to attribute type |
+| `<codec> requires @` | In-store-only codec used without @ | Add `@` or `@store` to attribute type |
 | `Circular codec reference` | Codec chain forms a loop | Check `get_dtype()` return values |
 
 ### Debugging
@@ -24530,8 +24916,8 @@ print(dj.list_codecs())
 # Inspect a codec
 codec = dj.get_codec("mycodec")
 print(f"Name: {codec.name}")
-print(f"Internal dtype: {codec.get_dtype(is_store=False)}")
-print(f"External dtype: {codec.get_dtype(is_store=True)}")
+print(f"In-table dtype: {codec.get_dtype(is_store=False)}")
+print(f"In-store dtype: {codec.get_dtype(is_store=True)}")
 
 # Resolve full chain
 from datajoint.codecs import resolve_dtype
@@ -25261,7 +25647,7 @@ table.to_dicts(
 )
 ```
 
-For external storage types (attachments, filepaths), files are downloaded to `config["download_path"]`. Use `config.override()` to change:
+For in-store types (attachments, filepaths), files are downloaded to `config["download_path"]`. Use `config.override()` to change:
 
 ```python
 with dj.config.override(download_path="/data"):
@@ -26743,6 +27129,7 @@ DataJoint 2.0 supports three storage models, all sharing the same store configur
 | **Filepath** | `<filepath@store>` | User-managed paths | **Reference** | User-managed files (no lifecycle management) |
 
 **Key distinction:**
+
 - **Hash-addressed** and **schema-addressed** storage are **integrated** into the Object-Augmented Schema. DataJoint manages their lifecycle, paths, integrity, garbage collection, transaction safety, and deduplication.
 - **Filepath** storage stores only the path string. DataJoint provides no lifecycle management, garbage collection, transaction safety, or deduplication. Users control file creation, organization, and lifecycle.
 
@@ -27524,27 +27911,30 @@ The primary key of a query result identifies unique entities in that result. For
 
 ## Integration with Semantic Matching
 
-Primary key determination is applied **after** semantic compatibility is verified. The evaluation order is:
+Primary key determination is applied **after** [semantic compatibility](semantic-matching.md) is verified. The evaluation order is:
 
 1. **Semantic Check**: `assert_join_compatibility()` ensures all namesakes are homologous (same lineage)
-2. **PK Determination**: The "determines" relationship is computed using attribute names
+2. **PK Determination**: The functional dependency relationship is computed using attribute names
 3. **Left Join Validation**: If `left=True`, verify A → B
 
 This ordering is important because:
+
 - After semantic matching passes, namesakes represent semantically equivalent attributes
-- The name-based "determines" check is therefore semantically valid
+- The name-based functional dependency check is therefore semantically valid
 - Attribute names in the context of a semantically-valid join represent the same entity
 
-The "determines" relationship uses attribute **names** (not lineages directly) because:
-- Lineage ensures namesakes are homologous
-- Once verified, checking by name is equivalent to checking by semantic identity
-- Aliased attributes (same lineage, different names) don't participate in natural joins anyway
+The functional dependency relationship is derived from the structure of primary keys and secondary attributes and their names in the two operands:
+
+- `A → B` holds when every attribute in PK(B) appears (by name) somewhere in A (either as a primary key or secondary attribute)
+- After semantic matching passes, namesakes represent semantically equivalent attributes, so checking by name is valid
+- Aliased attributes (same lineage, different names) don't participate in natural joins
 
 ## Notation
 
 In the examples below, `*` marks primary key attributes:
+
 - `A(x*, y*, z)` means A has primary key `{x, y}` and secondary attribute `z`
-- `A → B` means "A determines B" (defined below)
+- `A → B` means "A functionally determines B" (defined below)
 
 ### Rules by Operator
 
@@ -27563,7 +27953,7 @@ The join operator requires special handling because it combines two entity sets.
 
 #### Definitions
 
-**A determines B** (written `A → B`): Every attribute in PK(B) is in A.
+**A → B (A functionally determines B)**: Every attribute in PK(B) is in A.
 
 ```
 A → B  iff  ∀b ∈ PK(B): b ∈ A
@@ -27573,7 +27963,7 @@ Since `PK(A) ∪ secondary(A) = all attributes in A`, this is equivalent to sayi
 
 Intuitively, `A → B` means that knowing A's primary key is sufficient to determine B's primary key through the functional dependencies implied by A's structure.
 
-**B determines A** (written `B → A`): Every attribute in PK(A) is in B.
+**B → A (B functionally determines A)**: Every attribute in PK(A) is in B.
 
 ```
 B → A  iff  ∀a ∈ PK(A): a ∈ B
@@ -27598,6 +27988,7 @@ When both `A → B` and `B → A` hold, the left operand takes precedence (use P
 A: x*, y*
 B: x*, z*, y    (y is secondary in B, so z → y)
 ```
+
 - A → B? PK(B) = {x, z}. Is z in PK(A) or secondary in A? No (z not in A). **No.**
 - B → A? PK(A) = {x, y}. Is y in PK(B) or secondary in B? Yes (secondary). **Yes.**
 - Result: **PK(A * B) = {x, z}** with B's attributes first.
@@ -27607,6 +27998,7 @@ B: x*, z*, y    (y is secondary in B, so z → y)
 A: x*, y*, z    (z is secondary in A)
 B: y*, z*, x    (x is secondary in B)
 ```
+
 - A → B? PK(B) = {y, z}. Is z in PK(A) or secondary in A? Yes (secondary). **Yes.**
 - B → A? PK(A) = {x, y}. Is x in PK(B) or secondary in B? Yes (secondary). **Yes.**
 - Both hold, prefer left operand: **PK(A * B) = {x, y}** with A's attributes first.
@@ -27616,6 +28008,7 @@ B: y*, z*, x    (x is secondary in B)
 A: x*, y*
 B: z*, x    (x is secondary in B)
 ```
+
 - A → B? PK(B) = {z}. Is z in PK(A) or secondary in A? No. **No.**
 - B → A? PK(A) = {x, y}. Is y in PK(B) or secondary in B? No (y not in B). **No.**
 - Result: **PK(A * B) = {x, y, z}** (union) with A's attributes first.
@@ -27625,17 +28018,19 @@ B: z*, x    (x is secondary in B)
 Session: session_id*
 Trial: session_id*, trial_num*    (references Session)
 ```
+
 - A → B? PK(Trial) = {session_id, trial_num}. Is trial_num in PK(Session) or secondary? No. **No.**
 - B → A? PK(Session) = {session_id}. Is session_id in PK(Trial)? Yes. **Yes.**
 - Result: **PK(Session * Trial) = {session_id, trial_num}** with Trial's attributes first.
 
 **Join primary key determination**:
-   - `A * B` where `A → B`: result has PK(A)
-   - `A * B` where `B → A` (not `A → B`): result has PK(B), B's attributes first
-   - `A * B` where both `A → B` and `B → A`: result has PK(A) (left preference)
-   - `A * B` where neither direction: result has PK(A) ∪ PK(B)
-   - Verify attribute ordering matches primary key source
-   - Verify non-commutativity: `A * B` vs `B * A` may differ in PK and order
+
+- `A * B` where `A → B`: result has PK(A)
+- `A * B` where `B → A` (not `A → B`): result has PK(B), B's attributes first
+- `A * B` where both `A → B` and `B → A`: result has PK(A) (left preference)
+- `A * B` where neither direction: result has PK(A) ∪ PK(B)
+- Verify attribute ordering matches primary key source
+- Verify non-commutativity: `A * B` vs `B * A` may differ in PK and order
 
 ### Design Tradeoff: Predictability vs. Minimality
 
@@ -27648,10 +28043,12 @@ B: z*, x    (x is secondary in B, so z → x)
 ```
 
 The mathematically minimal primary key for `A * B` would be `{y, z}` because:
+
 - `z → x` (from B's structure)
 - `{y, z} → {x, y, z}` (z gives us x, and we have y)
 
 However, `{y, z}` is problematic:
+
 - It is **not the primary key of either operand** (A has `{x, y}`, B has `{z}`)
 - It is **not the union** of the primary keys
 - It represents a **novel entity type** that doesn't correspond to A, B, or their natural pairing
@@ -27659,6 +28056,7 @@ However, `{y, z}` is problematic:
 This creates confusion: what kind of entity does `{y, z}` identify?
 
 **The simplified rule produces `{x, y, z}`** (the union), which:
+
 - Is immediately recognizable as "one A entity paired with one B entity"
 - Contains A's full primary key and B's full primary key
 - May have redundancy (`x` is determined by `z`) but is semantically clear
@@ -27676,7 +28074,8 @@ The primary key attributes always appear **first** in the result's attribute lis
 ### Non-Commutativity
 
 With these rules, join is **not commutative** in terms of:
-1. **Primary key selection**: `A * B` may have a different PK than `B * A` when one direction determines but not the other
+
+1. **Primary key selection**: `A * B` may have a different PK than `B * A` when functional dependency holds in one direction but not the other
 2. **Attribute ordering**: The left operand's attributes appear first (unless B → A)
 
 The **result set** (the actual rows returned) remains the same regardless of order, but the **schema** (primary key and attribute order) may differ.
@@ -27734,6 +28133,7 @@ When `A → B`, the left join `A.join(B, left=True)` is conceptually distinct fr
 **The extension perspective:**
 
 The operation `A.join(B, left=True)` when `A → B` is closer to **projection** than to **join**:
+
 - It adds new attributes to A (like `A.proj(..., new_attr=...)`)
 - It preserves all rows of A
 - It preserves A's primary key
@@ -27748,6 +28148,7 @@ A.extend(B)           # clearer intent: extend A with B's attributes
 ```
 
 The `extend()` method:
+
 - Requires `A → B` (raises `DataJointError` otherwise)
 - Does not expose `allow_nullable_pk` (that's an internal mechanism)
 - Expresses the semantic intent: "add B's attributes to A's entities"
@@ -27755,6 +28156,7 @@ The `extend()` method:
 **Relationship to aggregation:**
 
 A similar argument applies to `A.aggr(B, ...)`:
+
 - It preserves A's primary key
 - It adds computed attributes derived from B
 - It's conceptually a variation of projection with grouping
@@ -27763,19 +28165,48 @@ Both `A.join(B, left=True)` (when A → B) and `A.aggr(B, ...)` can be viewed as
 
 ### Bypassing the Left Join Constraint
 
-For special cases where the user takes responsibility for handling the potentially nullable primary key, the constraint can be bypassed using `allow_nullable_pk=True`:
+#### The `allow_nullable_pk` Parameter
+
+The `join()` method accepts an `allow_nullable_pk` parameter that bypasses the `A → B` requirement for left joins:
+
+```python
+def join(self, other, semantic_check=True, left=False, allow_nullable_pk=False):
+    ...
+```
+
+#### Why the Constraint Exists
+
+In a left join, unmatched rows from A have NULL values for all of B's attributes. If B's primary key attributes are part of the result's primary key, those NULLs violate entity integrity—primary keys must not contain NULLs.
+
+The `A → B` requirement guarantees the result's primary key is `PK(A)`, which contains only A's attributes. Since A is the left operand in a left join, all its rows are retained with their original values, so the primary key cannot contain NULLs.
+
+#### What `allow_nullable_pk=True` Does
+
+When the constraint is bypassed:
+
+1. The `A → B` check is skipped
+2. The result's primary key becomes `PK(A) ∪ PK(B)` (union of both)
+3. Primary key attributes from B may be NULL for unmatched rows
 
 ```python
 # Normally blocked - A does not determine B
 A.join(B, left=True)  # Error: A → B not satisfied
 
-# Bypass the constraint - user takes responsibility
-A.join(B, left=True, allow_nullable_pk=True)  # Allowed, PK = PK(A) ∪ PK(B)
+# Bypass the constraint
+A.join(B, left=True, allow_nullable_pk=True)  # PK = PK(A) ∪ PK(B)
 ```
 
-When bypassed, the resulting primary key is the union of both operands' primary keys (PK(A) ∪ PK(B)). The user must ensure that subsequent operations (such as `GROUP BY` or projection) establish a valid primary key. The parameter name `allow_nullable_pk` reflects the specific issue: primary key attributes from the right operand could be NULL for unmatched rows.
+#### When to Use It
 
-This mechanism is used internally by aggregation (`aggr`) when `exclude_nonmatching=False` (the default), which resets the primary key via the `GROUP BY` clause.
+This parameter is primarily **internal**. It exists because aggregation (`aggr`) needs a left join but has the opposite functional dependency requirement (`B → A` instead of `A → B`). The bypass is safe in aggregation because the `GROUP BY` clause resets the primary key to `PK(A)`.
+
+Users should generally avoid this parameter. If you need left join behavior without `A → B`:
+
+- Use `extend()` if A should determine B (restructure your query)
+- Use `aggr()` if you're computing aggregates
+- Reconsider whether a left join is appropriate for your use case
+
+If you do use `allow_nullable_pk=True`, you must ensure subsequent operations (such as `GROUP BY` or projection) establish a valid, non-nullable primary key.
 
 ### Aggregation Exception
 
@@ -28868,17 +29299,7 @@ class Student(dj.Manual):
     """
 ```
 
-### Migrating from DataJoint 1.x
-
-#### Removed Operators
-
-| Old Syntax | New Syntax |
-|------------|------------|
-| `A @ B` | `A.join(B, semantic_check=False)` |
-| `A ^ B` | `A.restrict(B, semantic_check=False)` |
-| `dj.U('a') * B` | `dj.U('a') & B` |
-
-#### Rebuilding Lineage for Existing Schemas
+### Rebuilding Lineage for Existing Schemas
 
 If you have existing schemas created before DataJoint 2.0, rebuild their lineage tables:
 
@@ -28913,10 +29334,12 @@ schema.rebuild_lineage()
 **Description**: Recomputes lineage for all attributes by querying FK relationships from the database's `information_schema`. Use this to restore lineage for schemas that predate the lineage system or after corruption.
 
 **Requirements**:
+
 - Schema must exist
 - Upstream schemas (referenced via cross-schema FKs) must have their lineage rebuilt first
 
 **Side Effects**:
+
 - Creates `~lineage` table if it doesn't exist
 - Deletes and repopulates all lineage entries for tables in the schema
 
@@ -28958,6 +29381,7 @@ result = A.join(B, semantic_check=False)  # bypass semantic check
 ```
 
 **Parameters**:
+
 - `other`: Another query expression to join with
 - `semantic_check` (bool): If `True` (default), raise error on non-homologous namesakes. If `False`, perform natural join without lineage checking.
 
@@ -28973,6 +29397,7 @@ result = A.restrict(B, semantic_check=False)  # bypass semantic check
 ```
 
 **Parameters**:
+
 - `other`: Restriction condition (expression, dict, string, etc.)
 - `semantic_check` (bool): If `True` (default), raise error on non-homologous namesakes when restricting by another expression. If `False`, no lineage checking.
 
@@ -28998,20 +29423,6 @@ To bypass semantic checking: `A.restrict(dj.Not(B), semantic_check=False)`
 
 Union of expressions. Requires all namesake attributes to have matching lineage.
 
-### Removed Operators
-
-#### `A @ B` (Removed)
-
-Raises `DataJointError` with migration guidance to use `.join(semantic_check=False)`.
-
-#### `A ^ B` (Removed)
-
-Raises `DataJointError` with migration guidance to use `.restrict(semantic_check=False)`.
-
-#### `dj.U(...) * A` (Removed)
-
-Raises `DataJointError` with migration guidance to use `dj.U(...) & A`.
-
 ### Universal Set (`dj.U`)
 
 #### Valid Operations
@@ -29031,71 +29442,7 @@ dj.U('a', 'b') * A   # DataJointError: use & instead
 
 ---
 
-## Concepts
-
-### Attribute Lineage
-
-Lineage identifies the **origin** of an attribute—the **dimension** where it was first defined. A dimension is an independent axis of variation introduced by a table that defines new primary key attributes. See [Schema Dimensions](../../explanation/entity-integrity.md#schema-dimensions) for details.
-
-Lineage is represented as a string:
-
-```
-schema_name.table_name.attribute_name
-```
-
-#### Lineage Assignment Rules
-
-| Attribute Type | Lineage Value |
-|----------------|---------------|
-| Native primary key | `this_schema.this_table.attr_name` |
-| FK-inherited (primary or secondary) | Traced to original definition |
-| Native secondary | `None` |
-| Computed (in projection) | `None` |
-
-#### Example
-
-```python
-class Session(dj.Manual):         # table: session
-    definition = """
-    session_id : int64
-    ---
-    session_date : date
-    """
-
-class Trial(dj.Manual):           # table: trial
-    definition = """
-    -> Session
-    trial_num : int32
-    ---
-    stimulus : varchar(100)
-    """
-```
-
-Lineages:
-- `Session.session_id` → `myschema.session.session_id` (native PK)
-- `Session.session_date` → `None` (native secondary)
-- `Trial.session_id` → `myschema.session.session_id` (inherited via FK)
-- `Trial.trial_num` → `myschema.trial.trial_num` (native PK)
-- `Trial.stimulus` → `None` (native secondary)
-
-### Terminology
-
-| Term | Definition |
-|------|------------|
-| **Lineage** | The origin of an attribute: `schema.table.attribute` |
-| **Homologous attributes** | Attributes with the same lineage |
-| **Namesake attributes** | Attributes with the same name |
-| **Homologous namesakes** | Same name AND same lineage — used for join matching |
-| **Non-homologous namesakes** | Same name BUT different lineage — cause join errors |
-
-### Semantic Matching Rules
-
-| Scenario | Action |
-|----------|--------|
-| Same name, same lineage (both non-null) | **Match** |
-| Same name, different lineage | **Error** |
-| Same name, either lineage is null | **Error** |
-| Different names | **No match** |
+For conceptual background on lineage, terminology, and matching rules, see [Semantic Matching (Explanation)](../../explanation/semantic-matching.md).
 
 ---
 
@@ -29117,21 +29464,25 @@ CREATE TABLE `schema_name`.`~lineage` (
 ### Lineage Population
 
 **At table declaration**:
+
 1. Delete any existing lineage entries for the table
 2. For FK attributes: copy lineage from parent (with warning if parent lineage missing)
 3. For native PK attributes: set lineage to `schema.table.attribute`
 4. Native secondary attributes: no entry (lineage = None)
 
 **At table drop**:
+
 - Delete all lineage entries for the table
 
 ### Missing Lineage Handling
 
 **If `~lineage` table doesn't exist**:
+
 - Warning issued during semantic check
 - Semantic checking disabled (join proceeds as natural join)
 
 **If parent lineage missing during declaration**:
+
 - Warning issued
 - Parent attribute used as origin
 - Recommend rebuilding lineage after parent schema is fixed
@@ -29145,6 +29496,7 @@ heading.lineage_available  # True if ~lineage table exists for this schema
 ```
 
 This property is:
+
 - Set when heading is loaded from database
 - Propagated through projections, joins, and other operations
 - Used by `assert_join_compatibility` to decide whether to perform semantic checking
@@ -29159,27 +29511,6 @@ This property is:
 DataJointError: Cannot join on attribute `id`: different lineages
 (university.student.id vs university.course.id).
 Use .proj() to rename one of the attributes.
-```
-
-### Removed `@` Operator
-
-```
-DataJointError: The @ operator has been removed in DataJoint 2.0.
-Use .join(other, semantic_check=False) for permissive joins.
-```
-
-### Removed `^` Operator
-
-```
-DataJointError: The ^ operator has been removed in DataJoint 2.0.
-Use .restrict(other, semantic_check=False) for permissive restrictions.
-```
-
-### Removed `dj.U * table`
-
-```
-DataJointError: dj.U(...) * table is no longer supported in DataJoint 2.0.
-Use dj.U(...) & table instead.
 ```
 
 ### Missing Lineage Warning
@@ -29198,153 +29529,6 @@ Using it as origin. Once the parent schema's lineage is rebuilt,
 run schema.rebuild_lineage() on this schema to correct the lineage.
 ```
 
----
-
-## Examples
-
-### Example 1: Valid Join (Shared Lineage)
-
-```python
-class Student(dj.Manual):
-    definition = """
-    student_id : int64
-    ---
-    name : varchar(100)
-    """
-
-class Enrollment(dj.Manual):
-    definition = """
-    -> Student
-    -> Course
-    ---
-    grade : varchar(2)
-    """
-
-# Works: student_id has same lineage in both
-Student() * Enrollment()
-```
-
-### Example 2: Invalid Join (Different Lineage)
-
-```python
-class TableA(dj.Manual):
-    definition = """
-    id : int64
-    ---
-    value_a : int32
-    """
-
-class TableB(dj.Manual):
-    definition = """
-    id : int64
-    ---
-    value_b : int32
-    """
-
-# Error: 'id' has different lineages
-TableA() * TableB()
-
-# Solution 1: Rename
-TableA() * TableB().proj(b_id='id')
-
-# Solution 2: Bypass (use with caution)
-TableA().join(TableB(), semantic_check=False)
-```
-
-### Example 3: Multi-hop FK Inheritance
-
-```python
-class Session(dj.Manual):
-    definition = """
-    session_id : int64
-    ---
-    session_date : date
-    """
-
-class Trial(dj.Manual):
-    definition = """
-    -> Session
-    trial_num : int32
-    """
-
-class Response(dj.Computed):
-    definition = """
-    -> Trial
-    ---
-    response_time : float64
-    """
-
-# All work: session_id traces back to Session in all tables
-Session() * Trial()
-Session() * Response()
-Trial() * Response()
-```
-
-### Example 4: Secondary FK Attribute
-
-```python
-class Course(dj.Manual):
-    definition = """
-    course_id : int unsigned
-    ---
-    title : varchar(100)
-    """
-
-class FavoriteCourse(dj.Manual):
-    definition = """
-    student_id : int unsigned
-    ---
-    -> Course
-    """
-
-class RequiredCourse(dj.Manual):
-    definition = """
-    major_id : int unsigned
-    ---
-    -> Course
-    """
-
-# Works: course_id is secondary in both, but has same lineage
-FavoriteCourse() * RequiredCourse()
-```
-
-### Example 5: Aliased Foreign Key
-
-```python
-class Person(dj.Manual):
-    definition = """
-    person_id : int unsigned
-    ---
-    full_name : varchar(100)
-    """
-
-class Marriage(dj.Manual):
-    definition = """
-    -> Person.proj(husband='person_id')
-    -> Person.proj(wife='person_id')
-    ---
-    marriage_date : date
-    """
-
-# husband and wife both have lineage: schema.person.person_id
-# They are homologous (same lineage) but have different names
-```
-
----
-
-## Best Practices
-
-1. **Use descriptive attribute names**: Prefer `student_id` over generic `id`
-
-2. **Leverage foreign keys**: Inherited attributes maintain lineage automatically
-
-3. **Rebuild lineage for legacy schemas**: Run `schema.rebuild_lineage()` once
-
-4. **Rebuild upstream schemas first**: For cross-schema FKs, rebuild parent schemas before child schemas
-
-5. **Restart after rebuilding**: Restart Python kernel to pick up new lineage information
-
-6. **Use `semantic_check=False` sparingly**: Only when you're certain the natural join is correct
 
 
 ---
@@ -29547,15 +29731,15 @@ These SQL types are accepted but generate a warning recommending core types:
 
 Format: `<codec_name>` or `<codec_name@store>`
 
-| Codec | Internal dtype | External dtype | Purpose |
+| Codec | In-table dtype | In-store dtype | Purpose |
 |-------|---------------|----------------|---------|
 | `<blob>` | `bytes` | `<hash>` | Serialized Python objects |
-| `<hash>` | N/A (external only) | `json` | Hash-addressed deduped storage |
+| `<hash>` | N/A (in-store only) | `json` | Hash-addressed deduped storage |
 | `<attach>` | `bytes` | `<hash>` | File attachments with filename |
-| `<filepath>` | N/A (external only) | `json` | Reference to managed file |
-| `<object>` | N/A (external only) | `json` | Object storage (Zarr, HDF5) |
+| `<filepath>` | N/A (in-store only) | `json` | Reference to managed file |
+| `<object>` | N/A (in-store only) | `json` | Object storage (Zarr, HDF5) |
 
-External storage syntax:
+In-store storage syntax:
 - `<blob@>` - default store
 - `<blob@store_name>` - named store
 
@@ -29687,7 +29871,18 @@ class Session(dj.Manual):
 - Creates UNIQUE INDEX on inherited attributes
 - Enforces one-to-one relationship from child perspective
 
-### 6.7 Projections in Foreign Keys
+### 6.7 Nullable Unique Foreign Keys
+
+```
+-> [nullable, unique] ParentTable
+```
+
+- Combines nullable and unique constraints
+- Multiple rows **can** have NULL values (SQL standard: NULLs are not considered equal in UNIQUE constraints)
+- At most one row per non-NULL parent reference
+- Use case: optional one-to-one relationships where the child may not reference any parent
+
+### 6.8 Projections in Foreign Keys
 
 ```
 -> Parent.proj(alias='original_name')
@@ -29901,7 +30096,7 @@ Core types and codecs are preserved in comments:
 ```sql
 `value` float NOT NULL COMMENT ":float32:measurement value"
 `data` longblob DEFAULT NULL COMMENT ":<blob>:serialized data"
-`archive` json DEFAULT NULL COMMENT ":<blob@cold>:external storage"
+`archive` json DEFAULT NULL COMMENT ":<blob@cold>:in-store data"
 ```
 
 ---
@@ -29937,7 +30132,7 @@ Potential improvements identified for the declaration system:
 ---
 ## File: reference/specs/type-system.md
 
-# Storage Types Redesign Spec
+# Type System Specification
 
 ## Overview
 
@@ -29959,34 +30154,6 @@ Codec types resolve through core types to native types: `<blob>` → `bytes` →
 - Core types: `int32`, `float64`, `varchar(255)` - no brackets
 - Codec types: `<blob>`, `<object@store>`, `<filepath@main>` - angle brackets
 - The `@` character indicates store (object storage vs in-table)
-
-### OAS Addressing Schemes
-
-| Scheme | Path Pattern | Description | Use Case |
-|--------|--------------|-------------|----------|
-| **Schema-addressed** | `{schema}/{table}/{pk}/` | Path mirrors database structure | Large objects, Zarr, HDF5, numpy arrays |
-| **Hash-addressed** | `_hash/{hash}` | Path from content hash (MD5) | Deduplicated blobs/attachments |
-
-### URL Representation
-
-DataJoint uses consistent URL representation for all storage backends:
-
-| Protocol | URL Format | Example |
-|----------|------------|---------|
-| Local filesystem | `file://` | `file:///data/objects/file.dat` |
-| Amazon S3 | `s3://` | `s3://bucket/path/file.dat` |
-| Google Cloud | `gs://` | `gs://bucket/path/file.dat` |
-| Azure Blob | `az://` | `az://container/path/file.dat` |
-
-This unified approach treats all storage backends uniformly via fsspec, enabling:
-- Consistent path handling across local and cloud storage
-- Transparent switching between storage backends
-- Streaming access to any storage type
-
-### Store References
-
-`<filepath@store>` provides portable relative paths within configured stores with lazy ObjectRef access.
-For arbitrary URLs that don't need ObjectRef semantics, use `varchar` instead.
 
 ## Core DataJoint Types (Layer 2)
 
@@ -30319,7 +30486,7 @@ features JSONB NOT NULL
 
 ### `<filepath@store>` - Portable External Reference
 
-**Built-in codec. External only (store required).**
+**Built-in codec. In-store only (store required).**
 
 Relative path references within configured stores:
 
@@ -30434,7 +30601,7 @@ The `json` database type:
 
 ### `<blob>` / `<blob@>` - Serialized Python Objects
 
-**Supports both internal and external storage.**
+**Supports both in-table and in-store storage.**
 
 Serializes Python objects using DataJoint's custom binary serialization format. The format uses protocol headers and type-specific encoding to serialize complex Python objects efficiently.
 
@@ -30494,25 +30661,25 @@ class ProcessedData(dj.Computed):
     definition = """
     -> RawData
     ---
-    small_result : <blob>          # internal (in database)
-    large_result : <blob@>         # external (default store)
-    archive_result : <blob@cold>   # external (specific store)
+    small_result : <blob>          # in-table (in database)
+    large_result : <blob@>         # in-store (default store)
+    archive_result : <blob@cold>   # in-store (specific store)
     """
 ```
 
 ### `<attach>` / `<attach@>` - File Attachments
 
-**Supports both internal and external storage.**
+**Supports both in-table and in-store storage.**
 
 Stores files with filename preserved. On fetch, extracts to configured download path.
 
 - **`<attach>`**: Stored in database (`bytes` → `LONGBLOB`/`BYTEA`)
-- **`<attach@>`**: Stored externally via `<hash@>` with deduplication
+- **`<attach@>`**: Stored in object store via `<hash@>` with deduplication
 - **`<attach@store>`**: Stored in specific named store
 
 ```python
 class AttachCodec(dj.Codec):
-    """File attachment with filename. Supports internal and external."""
+    """File attachment with filename. Supports in-table and in-store."""
     name = "attach"
 
     def get_dtype(self, is_external: bool) -> str:
@@ -30536,9 +30703,9 @@ class Attachments(dj.Manual):
     definition = """
     attachment_id : int32
     ---
-    config : <attach>           # internal (small file in DB)
-    data_file : <attach@>       # external (default store)
-    archive : <attach@cold>     # external (specific store)
+    config : <attach>           # in-table (small file in DB)
+    data_file : <attach@>       # in-store (default store)
+    archive : <attach@cold>     # in-store (specific store)
     """
 ```
 
@@ -30547,10 +30714,10 @@ class Attachments(dj.Manual):
 Users can define custom codecs for domain-specific data. See the [Codec API Specification](codec-api.md) for complete examples including:
 
 - Simple serialization codecs
-- External storage codecs
+- In-store codecs
 - JSON with schema validation
 - Context-dependent encoding
-- External-only codecs (Zarr, HDF5)
+- In-store-only codecs (Zarr, HDF5)
 
 ## Storage Comparison
 
@@ -30625,20 +30792,20 @@ def garbage_collect(store_name):
    - Layer 3: Codec types (encode/decode, composable)
 2. **Core types are scientist-friendly**: `float32`, `int8`, `bool`, `bytes` instead of `FLOAT`, `TINYINT`, `LONGBLOB`
 3. **Codecs use angle brackets**: `<blob>`, `<object@store>`, `<filepath@main>` - distinguishes from core types
-4. **`@` indicates external storage**: No `@` = database, `@` present = object store
+4. **`@` indicates in-store storage**: No `@` = database, `@` present = object store
 5. **`get_dtype(is_external)` method**: Codecs resolve dtype at declaration time based on storage mode
 6. **Codecs are composable**: `<blob@>` uses `<hash@>`, which uses `json`
-7. **Built-in external codecs use JSON dtype**: Stores metadata (path, hash, store name, etc.)
+7. **Built-in in-store codecs use JSON dtype**: Stores metadata (path, hash, store name, etc.)
 8. **Two OAS regions**: object (PK-addressed) and hash (hash-addressed) within managed stores
 9. **Filepath for portability**: `<filepath@store>` uses relative paths within stores for environment portability
 10. **No `uri` type**: For arbitrary URLs, use `varchar`—simpler and more transparent
 11. **Naming conventions**:
-    - `@` = external storage (object store)
-    - No `@` = internal storage (database)
+    - `@` = in-store storage (object store)
+    - No `@` = in-table storage (database)
     - `@` alone = default store
     - `@name` = named store
-12. **Dual-mode codecs**: `<blob>` and `<attach>` support both internal and external storage
-13. **External-only codecs**: `<object@>`, `<hash@>`, `<filepath@>` require `@`
+12. **Dual-mode codecs**: `<blob>` and `<attach>` support both in-table and in-store storage
+13. **In-store-only codecs**: `<object@>`, `<hash@>`, `<filepath@>` require `@`
 14. **Transparent access**: Codecs return Python objects or file paths
 15. **Lazy access**: `<object@>` and `<filepath@store>` return ObjectRef
 16. **MD5 for content hashing**: See [Hash Algorithm Choice](#hash-algorithm-choice) below

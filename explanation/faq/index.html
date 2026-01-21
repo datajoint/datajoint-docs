@@ -962,6 +962,8 @@
       
         
       
+        
+      
     
     
     
@@ -1019,6 +1021,34 @@
     
   
     Query Algebra
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../semantic-matching/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Semantic Matching
   
 
     
@@ -5413,10 +5443,12 @@
 </table>
 <p>The definition string <strong>is</strong> the specification — a declarative language that describes entities and their relationships, independent of any host language's syntax.</p>
 <h3 id="why-custom-query-algebra">Why Custom Query Algebra?<a class="headerlink" href="#why-custom-query-algebra" title="Permanent link">&para;</a></h3>
-<p>DataJoint's operators implement <strong><a href="../../reference/specs/semantic-matching/">semantic matching</a></strong> — joins and restrictions match only on attributes connected through the foreign key graph, not arbitrary columns that happen to share a name. This prevents:
-- Accidental Cartesian products
-- Joins on unrelated columns
-- Silent incorrect results</p>
+<p>DataJoint's operators implement <strong><a href="../../reference/specs/semantic-matching/">semantic matching</a></strong> — joins and restrictions match only on attributes connected through the foreign key graph, not arbitrary columns that happen to share a name. This prevents:</p>
+<ul>
+<li>Accidental Cartesian products</li>
+<li>Joins on unrelated columns</li>
+<li>Silent incorrect results</li>
+</ul>
 <p>Every query result has a defined <strong><a href="../entity-integrity/">entity type</a></strong> with a specific <a href="../../reference/specs/primary-keys/">primary key</a> (algebraic closure). SQL results are untyped bags of rows; DataJoint results are entity sets you can continue to query and compose.</p>
 <h3 id="object-augmented-schemas">Object-Augmented Schemas<a class="headerlink" href="#object-augmented-schemas" title="Permanent link">&para;</a></h3>
 <p>Object-Relational Mappers treat large objects as opaque binary blobs or leave file management to the application. DataJoint's object store <strong>extends the relational schema</strong> (see <a href="../type-system/">Type System</a>):</p>

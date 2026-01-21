@@ -105,7 +105,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#storage-types-redesign-spec" class="md-skip">
+        <a href="#type-system-specification" class="md-skip">
           Skip to content
         </a>
       
@@ -762,6 +762,8 @@
       
         
       
+        
+      
     
     
     
@@ -819,6 +821,34 @@
     
   
     Query Algebra
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../explanation/semantic-matching/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Semantic Matching
   
 
     
@@ -3728,45 +3758,6 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Overview">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#oas-addressing-schemes" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        OAS Addressing Schemes
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#url-representation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        URL Representation
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#store-references" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Store References
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
 </li>
       
         <li class="md-nav__item">
@@ -5547,45 +5538,6 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Overview">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#oas-addressing-schemes" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        OAS Addressing Schemes
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#url-representation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        URL Representation
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#store-references" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Store References
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
 </li>
       
         <li class="md-nav__item">
@@ -6080,7 +6032,7 @@
   
 
 
-<h1 id="storage-types-redesign-spec">Storage Types Redesign Spec<a class="headerlink" href="#storage-types-redesign-spec" title="Permanent link">&para;</a></h1>
+<h1 id="type-system-specification">Type System Specification<a class="headerlink" href="#type-system-specification" title="Permanent link">&para;</a></h1>
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
 <p>This document defines a three-layer type architecture:</p>
 <ol>
@@ -6119,71 +6071,6 @@
 - Core types: <code>int32</code>, <code>float64</code>, <code>varchar(255)</code> - no brackets
 - Codec types: <code>&lt;blob&gt;</code>, <code>&lt;object@store&gt;</code>, <code>&lt;filepath@main&gt;</code> - angle brackets
 - The <code>@</code> character indicates store (object storage vs in-table)</p>
-<h3 id="oas-addressing-schemes">OAS Addressing Schemes<a class="headerlink" href="#oas-addressing-schemes" title="Permanent link">&para;</a></h3>
-<table>
-<thead>
-<tr>
-<th>Scheme</th>
-<th>Path Pattern</th>
-<th>Description</th>
-<th>Use Case</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>Schema-addressed</strong></td>
-<td><code>{schema}/{table}/{pk}/</code></td>
-<td>Path mirrors database structure</td>
-<td>Large objects, Zarr, HDF5, numpy arrays</td>
-</tr>
-<tr>
-<td><strong>Hash-addressed</strong></td>
-<td><code>_hash/{hash}</code></td>
-<td>Path from content hash (MD5)</td>
-<td>Deduplicated blobs/attachments</td>
-</tr>
-</tbody>
-</table>
-<h3 id="url-representation">URL Representation<a class="headerlink" href="#url-representation" title="Permanent link">&para;</a></h3>
-<p>DataJoint uses consistent URL representation for all storage backends:</p>
-<table>
-<thead>
-<tr>
-<th>Protocol</th>
-<th>URL Format</th>
-<th>Example</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Local filesystem</td>
-<td><code>file://</code></td>
-<td><code>file:///data/objects/file.dat</code></td>
-</tr>
-<tr>
-<td>Amazon S3</td>
-<td><code>s3://</code></td>
-<td><code>s3://bucket/path/file.dat</code></td>
-</tr>
-<tr>
-<td>Google Cloud</td>
-<td><code>gs://</code></td>
-<td><code>gs://bucket/path/file.dat</code></td>
-</tr>
-<tr>
-<td>Azure Blob</td>
-<td><code>az://</code></td>
-<td><code>az://container/path/file.dat</code></td>
-</tr>
-</tbody>
-</table>
-<p>This unified approach treats all storage backends uniformly via fsspec, enabling:
-- Consistent path handling across local and cloud storage
-- Transparent switching between storage backends
-- Streaming access to any storage type</p>
-<h3 id="store-references">Store References<a class="headerlink" href="#store-references" title="Permanent link">&para;</a></h3>
-<p><code>&lt;filepath@store&gt;</code> provides portable relative paths within configured stores with lazy ObjectRef access.
-For arbitrary URLs that don't need ObjectRef semantics, use <code>varchar</code> instead.</p>
 <h2 id="core-datajoint-types-layer-2">Core DataJoint Types (Layer 2)<a class="headerlink" href="#core-datajoint-types-layer-2" title="Permanent link">&para;</a></h2>
 <p>Core types provide a standardized, scientist-friendly interface that works identically across
 MySQL and PostgreSQL backends. Users should prefer these over native database types.</p>
@@ -6751,7 +6638,7 @@ returns the appropriate dtype based on storage mode:</p>
 <span class="n">features</span><span class="w"> </span><span class="n">JSONB</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span>
 </code></pre></div>
 <h3 id="filepathstore-portable-external-reference"><code>&lt;filepath@store&gt;</code> - Portable External Reference<a class="headerlink" href="#filepathstore-portable-external-reference" title="Permanent link">&para;</a></h3>
-<p><strong>Built-in codec. External only (store required).</strong></p>
+<p><strong>Built-in codec. In-store only (store required).</strong></p>
 <p>Relative path references within configured stores:</p>
 <ul>
 <li><strong>Relative paths</strong>: paths within a configured store (portable across environments)</li>
@@ -6895,7 +6782,7 @@ just use <code>varchar</code>. A string is simpler and more transparent.</p>
 - Supports JSON path queries where available</p>
 <h2 id="built-in-codecs">Built-in Codecs<a class="headerlink" href="#built-in-codecs" title="Permanent link">&para;</a></h2>
 <h3 id="blob-blob-serialized-python-objects"><code>&lt;blob&gt;</code> / <code>&lt;blob@&gt;</code> - Serialized Python Objects<a class="headerlink" href="#blob-blob-serialized-python-objects" title="Permanent link">&para;</a></h3>
-<p><strong>Supports both internal and external storage.</strong></p>
+<p><strong>Supports both in-table and in-store storage.</strong></p>
 <p>Serializes Python objects using DataJoint's custom binary serialization format. The format uses protocol headers and type-specific encoding to serialize complex Python objects efficiently.</p>
 <p><strong>Serialization format:</strong></p>
 <ul>
@@ -6953,21 +6840,21 @@ just use <code>varchar</code>. A string is simpler and more transparent.</p>
     <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
 <span class="s2">    -&gt; RawData</span>
 <span class="s2">    ---</span>
-<span class="s2">    small_result : &lt;blob&gt;          # internal (in database)</span>
-<span class="s2">    large_result : &lt;blob@&gt;         # external (default store)</span>
-<span class="s2">    archive_result : &lt;blob@cold&gt;   # external (specific store)</span>
+<span class="s2">    small_result : &lt;blob&gt;          # in-table (in database)</span>
+<span class="s2">    large_result : &lt;blob@&gt;         # in-store (default store)</span>
+<span class="s2">    archive_result : &lt;blob@cold&gt;   # in-store (specific store)</span>
 <span class="s2">    &quot;&quot;&quot;</span>
 </code></pre></div></p>
 <h3 id="attach-attach-file-attachments"><code>&lt;attach&gt;</code> / <code>&lt;attach@&gt;</code> - File Attachments<a class="headerlink" href="#attach-attach-file-attachments" title="Permanent link">&para;</a></h3>
-<p><strong>Supports both internal and external storage.</strong></p>
+<p><strong>Supports both in-table and in-store storage.</strong></p>
 <p>Stores files with filename preserved. On fetch, extracts to configured download path.</p>
 <ul>
 <li><strong><code>&lt;attach&gt;</code></strong>: Stored in database (<code>bytes</code> → <code>LONGBLOB</code>/<code>BYTEA</code>)</li>
-<li><strong><code>&lt;attach@&gt;</code></strong>: Stored externally via <code>&lt;hash@&gt;</code> with deduplication</li>
+<li><strong><code>&lt;attach@&gt;</code></strong>: Stored in object store via <code>&lt;hash@&gt;</code> with deduplication</li>
 <li><strong><code>&lt;attach@store&gt;</code></strong>: Stored in specific named store</li>
 </ul>
 <div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">AttachCodec</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Codec</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;File attachment with filename. Supports internal and external.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;File attachment with filename. Supports in-table and in-store.&quot;&quot;&quot;</span>
     <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;attach&quot;</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">get_dtype</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">is_external</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
@@ -6989,19 +6876,19 @@ just use <code>varchar</code>. A string is simpler and more transparent.</p>
     <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
 <span class="s2">    attachment_id : int32</span>
 <span class="s2">    ---</span>
-<span class="s2">    config : &lt;attach&gt;           # internal (small file in DB)</span>
-<span class="s2">    data_file : &lt;attach@&gt;       # external (default store)</span>
-<span class="s2">    archive : &lt;attach@cold&gt;     # external (specific store)</span>
+<span class="s2">    config : &lt;attach&gt;           # in-table (small file in DB)</span>
+<span class="s2">    data_file : &lt;attach@&gt;       # in-store (default store)</span>
+<span class="s2">    archive : &lt;attach@cold&gt;     # in-store (specific store)</span>
 <span class="s2">    &quot;&quot;&quot;</span>
 </code></pre></div></p>
 <h2 id="user-defined-codecs">User-Defined Codecs<a class="headerlink" href="#user-defined-codecs" title="Permanent link">&para;</a></h2>
 <p>Users can define custom codecs for domain-specific data. See the <a href="../codec-api/">Codec API Specification</a> for complete examples including:</p>
 <ul>
 <li>Simple serialization codecs</li>
-<li>External storage codecs</li>
+<li>In-store codecs</li>
 <li>JSON with schema validation</li>
 <li>Context-dependent encoding</li>
-<li>External-only codecs (Zarr, HDF5)</li>
+<li>In-store-only codecs (Zarr, HDF5)</li>
 </ul>
 <h2 id="storage-comparison">Storage Comparison<a class="headerlink" href="#storage-comparison" title="Permanent link">&para;</a></h2>
 <table>
@@ -7226,20 +7113,20 @@ registry table is needed. Garbage collection scans all tables to find referenced
 </li>
 <li><strong>Core types are scientist-friendly</strong>: <code>float32</code>, <code>int8</code>, <code>bool</code>, <code>bytes</code> instead of <code>FLOAT</code>, <code>TINYINT</code>, <code>LONGBLOB</code></li>
 <li><strong>Codecs use angle brackets</strong>: <code>&lt;blob&gt;</code>, <code>&lt;object@store&gt;</code>, <code>&lt;filepath@main&gt;</code> - distinguishes from core types</li>
-<li><strong><code>@</code> indicates external storage</strong>: No <code>@</code> = database, <code>@</code> present = object store</li>
+<li><strong><code>@</code> indicates in-store storage</strong>: No <code>@</code> = database, <code>@</code> present = object store</li>
 <li><strong><code>get_dtype(is_external)</code> method</strong>: Codecs resolve dtype at declaration time based on storage mode</li>
 <li><strong>Codecs are composable</strong>: <code>&lt;blob@&gt;</code> uses <code>&lt;hash@&gt;</code>, which uses <code>json</code></li>
-<li><strong>Built-in external codecs use JSON dtype</strong>: Stores metadata (path, hash, store name, etc.)</li>
+<li><strong>Built-in in-store codecs use JSON dtype</strong>: Stores metadata (path, hash, store name, etc.)</li>
 <li><strong>Two OAS regions</strong>: object (PK-addressed) and hash (hash-addressed) within managed stores</li>
 <li><strong>Filepath for portability</strong>: <code>&lt;filepath@store&gt;</code> uses relative paths within stores for environment portability</li>
 <li><strong>No <code>uri</code> type</strong>: For arbitrary URLs, use <code>varchar</code>—simpler and more transparent</li>
 <li><strong>Naming conventions</strong>:
-    - <code>@</code> = external storage (object store)
-    - No <code>@</code> = internal storage (database)
+    - <code>@</code> = in-store storage (object store)
+    - No <code>@</code> = in-table storage (database)
     - <code>@</code> alone = default store
     - <code>@name</code> = named store</li>
-<li><strong>Dual-mode codecs</strong>: <code>&lt;blob&gt;</code> and <code>&lt;attach&gt;</code> support both internal and external storage</li>
-<li><strong>External-only codecs</strong>: <code>&lt;object@&gt;</code>, <code>&lt;hash@&gt;</code>, <code>&lt;filepath@&gt;</code> require <code>@</code></li>
+<li><strong>Dual-mode codecs</strong>: <code>&lt;blob&gt;</code> and <code>&lt;attach&gt;</code> support both in-table and in-store storage</li>
+<li><strong>In-store-only codecs</strong>: <code>&lt;object@&gt;</code>, <code>&lt;hash@&gt;</code>, <code>&lt;filepath@&gt;</code> require <code>@</code></li>
 <li><strong>Transparent access</strong>: Codecs return Python objects or file paths</li>
 <li><strong>Lazy access</strong>: <code>&lt;object@&gt;</code> and <code>&lt;filepath@store&gt;</code> return ObjectRef</li>
 <li><strong>MD5 for content hashing</strong>: See <a href="#hash-algorithm-choice">Hash Algorithm Choice</a> below</li>

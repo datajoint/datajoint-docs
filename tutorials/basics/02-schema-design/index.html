@@ -400,6 +400,18 @@
   </span>
 </a>
 </li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../explanation/semantic-matching/">
+<span class="md-ellipsis">
+    
+  
+    Semantic Matching
+  
+
+    
+  </span>
+</a>
+</li>
 </ul>
 </nav>
 </li>
@@ -656,10 +668,10 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#optional-foreign-keys-nullable">
+<a class="md-nav__link" href="#foreign-key-modifiers">
 <span class="md-ellipsis">
       
-        Optional Foreign Keys (Nullable)
+        Foreign Key Modifiers
       
     </span>
 </a>
@@ -2467,10 +2479,10 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#optional-foreign-keys-nullable">
+<a class="md-nav__link" href="#foreign-key-modifiers">
 <span class="md-ellipsis">
       
-        Optional Foreign Keys (Nullable)
+        Foreign Key Modifiers
       
     </span>
 </a>
@@ -4255,7 +4267,40 @@ class SessionSummary(dj.Computed):
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h3 id="optional-foreign-keys-nullable">Optional Foreign Keys (Nullable)<a class="anchor-link" href="#optional-foreign-keys-nullable">¶</a></h3><p>Use <code>[nullable]</code> for optional relationships:</p>
+<h3 id="foreign-key-modifiers">Foreign Key Modifiers<a class="anchor-link" href="#foreign-key-modifiers">¶</a></h3><p>Foreign keys support modifiers that change their behavior:</p>
+<table>
+<thead>
+<tr>
+<th>Modifier</th>
+<th>Syntax</th>
+<th>Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Nullable</strong></td>
+<td><code>-&gt; [nullable] Table</code></td>
+<td>Makes FK optional (can be NULL)</td>
+</tr>
+<tr>
+<td><strong>Unique</strong></td>
+<td><code>-&gt; [unique] Table</code></td>
+<td>Enforces one-to-one from child side</td>
+</tr>
+<tr>
+<td><strong>Both</strong></td>
+<td><code>-&gt; [nullable, unique] Table</code></td>
+<td>Optional one-to-one relationship</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Rules:</strong></p>
+<ul>
+<li><code>[nullable]</code> only allowed for secondary FKs (below <code>---</code>)</li>
+<li><code>[unique]</code> allowed for both primary and secondary FKs</li>
+<li>Primary key attributes cannot be nullable</li>
+</ul>
+<p><strong>Nullable unique behavior:</strong> Multiple rows can have NULL values because SQL's UNIQUE constraint does not consider NULLs equal to each other.</p>
 </div>
 </div>
 </div>
@@ -4929,6 +4974,10 @@ SessionSummary()</div>
 <tr>
 <td><strong>Nullable FK</strong></td>
 <td><code>[nullable]</code> makes the reference optional</td>
+</tr>
+<tr>
+<td><strong>Unique FK</strong></td>
+<td><code>[unique]</code> enforces one-to-one from child side</td>
 </tr>
 <tr>
 <td><strong>Lookup Table</strong></td>

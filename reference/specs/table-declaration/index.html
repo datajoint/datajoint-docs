@@ -762,6 +762,8 @@
       
         
       
+        
+      
     
     
     
@@ -819,6 +821,34 @@
     
   
     Query Algebra
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../explanation/semantic-matching/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Semantic Matching
   
 
     
@@ -3830,10 +3860,21 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#67-projections-in-foreign-keys" class="md-nav__link">
+  <a href="#67-nullable-unique-foreign-keys" class="md-nav__link">
     <span class="md-ellipsis">
       
-        6.7 Projections in Foreign Keys
+        6.7 Nullable Unique Foreign Keys
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#68-projections-in-foreign-keys" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.8 Projections in Foreign Keys
       
     </span>
   </a>
@@ -6214,10 +6255,21 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#67-projections-in-foreign-keys" class="md-nav__link">
+  <a href="#67-nullable-unique-foreign-keys" class="md-nav__link">
     <span class="md-ellipsis">
       
-        6.7 Projections in Foreign Keys
+        6.7 Nullable Unique Foreign Keys
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#68-projections-in-foreign-keys" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.8 Projections in Foreign Keys
       
     </span>
   </a>
@@ -6905,8 +6957,8 @@ secondary_section
 <thead>
 <tr>
 <th>Codec</th>
-<th>Internal dtype</th>
-<th>External dtype</th>
+<th>In-table dtype</th>
+<th>In-store dtype</th>
 <th>Purpose</th>
 </tr>
 </thead>
@@ -6919,7 +6971,7 @@ secondary_section
 </tr>
 <tr>
 <td><code>&lt;hash&gt;</code></td>
-<td>N/A (external only)</td>
+<td>N/A (in-store only)</td>
 <td><code>json</code></td>
 <td>Hash-addressed deduped storage</td>
 </tr>
@@ -6931,19 +6983,19 @@ secondary_section
 </tr>
 <tr>
 <td><code>&lt;filepath&gt;</code></td>
-<td>N/A (external only)</td>
+<td>N/A (in-store only)</td>
 <td><code>json</code></td>
 <td>Reference to managed file</td>
 </tr>
 <tr>
 <td><code>&lt;object&gt;</code></td>
-<td>N/A (external only)</td>
+<td>N/A (in-store only)</td>
 <td><code>json</code></td>
 <td>Object storage (Zarr, HDF5)</td>
 </tr>
 </tbody>
 </table>
-<p>External storage syntax:
+<p>In-store storage syntax:
 - <code>&lt;blob@&gt;</code> - default store
 - <code>&lt;blob@store_name&gt;</code> - named store</p>
 <h3 id="47-type-reconstruction">4.7 Type Reconstruction<a class="headerlink" href="#47-type-reconstruction" title="Permanent link">&para;</a></h3>
@@ -7093,7 +7145,16 @@ secondary_section
 <li>Creates UNIQUE INDEX on inherited attributes</li>
 <li>Enforces one-to-one relationship from child perspective</li>
 </ul>
-<h3 id="67-projections-in-foreign-keys">6.7 Projections in Foreign Keys<a class="headerlink" href="#67-projections-in-foreign-keys" title="Permanent link">&para;</a></h3>
+<h3 id="67-nullable-unique-foreign-keys">6.7 Nullable Unique Foreign Keys<a class="headerlink" href="#67-nullable-unique-foreign-keys" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>-&gt; [nullable, unique] ParentTable
+</code></pre></div>
+<ul>
+<li>Combines nullable and unique constraints</li>
+<li>Multiple rows <strong>can</strong> have NULL values (SQL standard: NULLs are not considered equal in UNIQUE constraints)</li>
+<li>At most one row per non-NULL parent reference</li>
+<li>Use case: optional one-to-one relationships where the child may not reference any parent</li>
+</ul>
+<h3 id="68-projections-in-foreign-keys">6.8 Projections in Foreign Keys<a class="headerlink" href="#68-projections-in-foreign-keys" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code>-&gt; Parent.proj(alias=&#39;original_name&#39;)
 </code></pre></div>
 <ul>
@@ -7314,7 +7375,7 @@ unique index(attr1, attr2, ...)
 <p>Core types and codecs are preserved in comments:</p>
 <div class="highlight"><pre><span></span><code><span class="o">`</span><span class="n">value</span><span class="o">`</span><span class="w"> </span><span class="nb">float</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">COMMENT</span><span class="w"> </span><span class="ss">&quot;:float32:measurement value&quot;</span>
 <span class="o">`</span><span class="k">data</span><span class="o">`</span><span class="w"> </span><span class="n">longblob</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">COMMENT</span><span class="w"> </span><span class="ss">&quot;:&lt;blob&gt;:serialized data&quot;</span>
-<span class="o">`</span><span class="n">archive</span><span class="o">`</span><span class="w"> </span><span class="n">json</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">COMMENT</span><span class="w"> </span><span class="ss">&quot;:&lt;blob@cold&gt;:external storage&quot;</span>
+<span class="o">`</span><span class="n">archive</span><span class="o">`</span><span class="w"> </span><span class="n">json</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">COMMENT</span><span class="w"> </span><span class="ss">&quot;:&lt;blob@cold&gt;:in-store data&quot;</span>
 </code></pre></div>
 <hr />
 <h2 id="12-implementation-files">12. Implementation Files<a class="headerlink" href="#12-implementation-files" title="Permanent link">&para;</a></h2>

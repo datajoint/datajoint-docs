@@ -400,6 +400,18 @@
   </span>
 </a>
 </li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../explanation/semantic-matching/">
+<span class="md-ellipsis">
+    
+  
+    Semantic Matching
+  
+
+    
+  </span>
+</a>
+</li>
 </ul>
 </nav>
 </li>
@@ -1901,10 +1913,10 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#example-2-external-storage">
+<a class="md-nav__link" href="#example-2-in-store-storage">
 <span class="md-ellipsis">
       
-        Example 2: External Storage
+        Example 2: In-Store Storage
       
     </span>
 </a>
@@ -2868,10 +2880,10 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#example-2-external-storage">
+<a class="md-nav__link" href="#example-2-in-store-storage">
 <span class="md-ellipsis">
       
-        Example 2: External Storage
+        Example 2: In-Store Storage
       
     </span>
 </a>
@@ -3213,7 +3225,7 @@ the <code>@</code> modifier is present in the table definition:</p>
 <span class="sd">    Args:</span>
 <span class="sd">        value: The Python object to store</span>
 <span class="sd">        key: Primary key values (for context-dependent encoding)</span>
-<span class="sd">        store_name: Target store name (for external storage)</span>
+<span class="sd">        store_name: Target store name (for in-store storage)</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        Value in the format expected by get_dtype()</span>
@@ -3535,7 +3547,7 @@ This enables layered functionality:</p>
 <td><code>&lt;filepath@&gt;</code></td>
 <td>N/A</td>
 <td><code>json</code></td>
-<td>External</td>
+<td>Reference</td>
 <td>Reference to existing files in store</td>
 </tr>
 </tbody>
@@ -3572,12 +3584,12 @@ This enables layered functionality:</p>
         <span class="c1"># Reconstruct original spike times</span>
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span><span class="n">stored</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
 </code></pre></div>
-<h3 id="example-2-external-storage">Example 2: External Storage<a class="headerlink" href="#example-2-external-storage" title="Permanent link">¶</a></h3>
+<h3 id="example-2-in-store-storage">Example 2: In-Store Storage<a class="headerlink" href="#example-2-in-store-storage" title="Permanent link">¶</a></h3>
 <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">datajoint</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dj</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">pickle</span>
 
 <span class="k">class</span><span class="w"> </span><span class="nc">ModelCodec</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Codec</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">"""Store ML models with optional external storage."""</span>
+<span class="w">    </span><span class="sd">"""Store ML models with optional in-store storage."""</span>
 
     <span class="n">name</span> <span class="o">=</span> <span class="s2">"model"</span>
 
@@ -3602,9 +3614,9 @@ This enables layered functionality:</p>
     <span class="n">definition</span> <span class="o">=</span> <span class="s1">'''</span>
 <span class="s1">    model_id : int</span>
 <span class="s1">    ---</span>
-<span class="s1">    small_model : &lt;model&gt;         # Internal storage</span>
-<span class="s1">    large_model : &lt;model@&gt;        # External (default store)</span>
-<span class="s1">    archive_model : &lt;model@cold&gt;  # External (specific store)</span>
+<span class="s1">    small_model : &lt;model&gt;         # In-table storage</span>
+<span class="s1">    large_model : &lt;model@&gt;        # In-store (default store)</span>
+<span class="s1">    archive_model : &lt;model@cold&gt;  # In-store (specific store)</span>
 <span class="s1">    '''</span>
 </code></pre></div></p>
 <h3 id="example-3-json-with-schema-validation">Example 3: JSON with Schema Validation<a class="headerlink" href="#example-3-json-with-schema-validation" title="Permanent link">¶</a></h3>
@@ -3684,7 +3696,7 @@ This enables layered functionality:</p>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">get_dtype</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">is_store</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">is_store</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">dj</span><span class="o">.</span><span class="n">DataJointError</span><span class="p">(</span><span class="s2">"&lt;zarr&gt; requires @ (external storage only)"</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">dj</span><span class="o">.</span><span class="n">DataJointError</span><span class="p">(</span><span class="s2">"&lt;zarr&gt; requires @ (in-store only)"</span><span class="p">)</span>
         <span class="k">return</span> <span class="s2">"&lt;object&gt;"</span>  <span class="c1"># Delegate to object storage</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">encode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">store_name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
@@ -3837,7 +3849,7 @@ This enables layered functionality:</p>
 </tr>
 <tr>
 <td><code>&lt;codec&gt; requires @</code></td>
-<td>External-only codec used without @</td>
+<td>In-store-only codec used without @</td>
 <td>Add <code>@</code> or <code>@store</code> to attribute type</td>
 </tr>
 <tr>
@@ -3854,8 +3866,8 @@ This enables layered functionality:</p>
 <span class="c1"># Inspect a codec</span>
 <span class="n">codec</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">get_codec</span><span class="p">(</span><span class="s2">"mycodec"</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Name: </span><span class="si">{</span><span class="n">codec</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Internal dtype: </span><span class="si">{</span><span class="n">codec</span><span class="o">.</span><span class="n">get_dtype</span><span class="p">(</span><span class="n">is_store</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"External dtype: </span><span class="si">{</span><span class="n">codec</span><span class="o">.</span><span class="n">get_dtype</span><span class="p">(</span><span class="n">is_store</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"In-table dtype: </span><span class="si">{</span><span class="n">codec</span><span class="o">.</span><span class="n">get_dtype</span><span class="p">(</span><span class="n">is_store</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"In-store dtype: </span><span class="si">{</span><span class="n">codec</span><span class="o">.</span><span class="n">get_dtype</span><span class="p">(</span><span class="n">is_store</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
 <span class="c1"># Resolve full chain</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">datajoint.codecs</span><span class="w"> </span><span class="kn">import</span> <span class="n">resolve_dtype</span>

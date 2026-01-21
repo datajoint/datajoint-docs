@@ -758,6 +758,8 @@
       
         
       
+        
+      
     
     
     
@@ -815,6 +817,34 @@
     
   
     Query Algebra
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/semantic-matching/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Semantic Matching
   
 
     
@@ -5529,10 +5559,12 @@
 <p><strong>Contrast with <code>&lt;object@&gt;</code> and <code>&lt;filepath@&gt;</code>:</strong> You manage the format (Zarr, HDF5, etc.) and handle file IO yourself. More flexible, but requires format knowledge.</p>
 <h2 id="detailed-decision-criteria">Detailed Decision Criteria<a class="headerlink" href="#detailed-decision-criteria" title="Permanent link">&para;</a></h2>
 <h3 id="size-and-storage-location">Size and Storage Location<a class="headerlink" href="#size-and-storage-location" title="Permanent link">&para;</a></h3>
-<p><strong>Technical Limits:</strong>
-- <strong>MySQL</strong>: In-table blobs up to 4 GiB (<code>LONGBLOB</code>)
-- <strong>PostgreSQL</strong>: In-table blobs unlimited (<code>BYTEA</code>)
-- <strong>Object stores</strong>: Effectively unlimited (S3, file systems, etc.)</p>
+<p><strong>Technical Limits:</strong></p>
+<ul>
+<li><strong>MySQL</strong>: In-table blobs up to 4 GiB (<code>LONGBLOB</code>)</li>
+<li><strong>PostgreSQL</strong>: In-table blobs unlimited (<code>BYTEA</code>)</li>
+<li><strong>Object stores</strong>: Effectively unlimited (S3, file systems, etc.)</li>
+</ul>
 <p><strong>Practical Guidance:</strong></p>
 <p>The choice between in-table (<code>&lt;blob&gt;</code>) and object storage (<code>&lt;blob@&gt;</code>, <code>&lt;npy@&gt;</code>, <code>&lt;object@&gt;</code>) is a complex decision involving:</p>
 <ul>
