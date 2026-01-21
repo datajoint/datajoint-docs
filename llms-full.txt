@@ -1,6 +1,6 @@
 # DataJoint Documentation (Full)
 
-Generated: 2026-01-21 16:12:15 UTC
+Generated: 2026-01-21 19:27:05 UTC
 Commit: unknown
 Branch: unknown
 
@@ -2644,6 +2644,7 @@ graph TB
     subgraph "Layer 3: Codecs"
         blob["‹blob›"]
         attach["‹attach›"]
+        npy["‹npy@›"]
         object["‹object@›"]
         hash["‹hash@›"]
         custom["‹custom›"]
@@ -2665,6 +2666,7 @@ graph TB
 
     blob --> bytes
     attach --> bytes
+    npy --> json
     object --> json
     hash --> json
     bytes --> BLOB
@@ -2739,9 +2741,50 @@ Codec types use angle bracket notation:
 |-------|----------|--------------|---------|
 | `<blob>` | ✅ | ✅ `<blob@>` | Python object |
 | `<attach>` | ✅ | ✅ `<attach@>` | Local file path |
+| `<npy@>` | ❌ | ✅ | NpyRef (lazy) |
 | `<object@>` | ❌ | ✅ | ObjectRef |
 | `<hash@>` | ❌ | ✅ | bytes |
 | `<filepath@>` | ❌ | ✅ | ObjectRef |
+
+### Plugin Codecs
+
+Additional codecs are available as separately installed packages. This ecosystem is actively expanding—new codecs are added as community needs arise.
+
+| Package | Codec | Description | Repository |
+|---------|-------|-------------|------------|
+| `dj-zarr-codecs` | `<zarr@>` | Zarr arrays with lazy chunked access | [datajoint/dj-zarr-codecs](https://github.com/datajoint/dj-zarr-codecs) |
+| `dj-figpack-codecs` | `<figpack@>` | Interactive browser visualizations | [datajoint/dj-figpack-codecs](https://github.com/datajoint/dj-figpack-codecs) |
+| `dj-photon-codecs` | `<photon@>` | Photon imaging data formats | [datajoint/dj-photon-codecs](https://github.com/datajoint/dj-photon-codecs) |
+
+**Installation and discovery:**
+
+Plugin codecs use Python's entry point mechanism for automatic registration. Install the package and DataJoint discovers the codec automatically:
+
+```bash
+pip install dj-zarr-codecs
+```
+
+```python
+import datajoint as dj
+
+# Codec is available immediately after install
+@schema
+class Analysis(dj.Computed):
+    definition = """
+    -> Recording
+    ---
+    data : <zarr@store>
+    """
+```
+
+Packages declare their codecs in `pyproject.toml` under the `datajoint.codecs` entry point group:
+
+```toml
+[project.entry-points."datajoint.codecs"]
+zarr = "dj_zarr_codecs:ZarrCodec"
+```
+
+DataJoint loads these entry points on first use, making third-party codecs indistinguishable from built-ins.
 
 ### `<blob>` — Serialized Python Objects
 
@@ -2793,6 +2836,41 @@ class Config(dj.Manual):
     data_file : <attach@>       # Large file in object store
     """
 ```
+
+### `<npy@>` — NumPy Arrays as .npy Files
+
+Stores NumPy arrays as standard `.npy` files with lazy loading. Returns `NpyRef` which provides metadata access (shape, dtype) without downloading.
+
+```python
+class Recording(dj.Computed):
+    definition = """
+    -> Session
+    ---
+    waveform : <npy@>           # Default store
+    spectrogram : <npy@archive> # Named store
+    """
+```
+
+**Lazy access:**
+
+```python
+ref = (Recording & key).fetch1('waveform')
+ref.shape   # (1000, 32) — no download
+ref.dtype   # float64 — no download
+
+# Explicit load
+arr = ref.load()
+
+# Transparent numpy integration
+result = np.mean(ref)  # Downloads automatically
+```
+
+**Key features:**
+
+- **Portable format**: Standard `.npy` readable by NumPy, MATLAB, etc.
+- **Lazy loading**: Shape/dtype available without I/O
+- **Safe bulk fetch**: Fetching many rows doesn't download until needed
+- **Memory mapping**: `ref.load(mmap_mode='r')` for random access to large arrays
 
 ### `<object@>` — Path-Addressed Storage
 
@@ -2872,9 +2950,11 @@ class Network(dj.Computed):
 | Small scalars | Core types (`int32`, `float64`) |
 | Short strings | `varchar(n)` |
 | NumPy arrays (small) | `<blob>` |
-| NumPy arrays (large) | `<blob@>` |
+| NumPy arrays (large) | `<npy@>` or `<blob@>` |
 | Files to attach | `<attach>` or `<attach@>` |
-| Zarr/HDF5 | `<object@>` |
+| Zarr arrays | `<zarr@>` (plugin) |
+| Complex file structures | `<object@>` |
+| Interactive visualizations | `<figpack@>` (plugin) |
 | File references (in-store) | `<filepath@store>` |
 | Custom objects | Custom codec |
 

@@ -554,6 +554,15 @@
 </a>
 </li>
 <li class="md-nav__item">
+<a class="md-nav__link" href="#plugin-codecs">
+<span class="md-ellipsis">
+      
+        Plugin Codecs
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
 <a class="md-nav__link" href="#blob-serialized-python-objects">
 <span class="md-ellipsis">
       
@@ -567,6 +576,15 @@
 <span class="md-ellipsis">
       
         &lt;attach&gt; — File Attachments
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#npy-numpy-arrays-as-npy-files">
+<span class="md-ellipsis">
+      
+        &lt;npy@&gt; — NumPy Arrays as .npy Files
       
     </span>
 </a>
@@ -2394,6 +2412,15 @@
 </a>
 </li>
 <li class="md-nav__item">
+<a class="md-nav__link" href="#plugin-codecs">
+<span class="md-ellipsis">
+      
+        Plugin Codecs
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
 <a class="md-nav__link" href="#blob-serialized-python-objects">
 <span class="md-ellipsis">
       
@@ -2407,6 +2434,15 @@
 <span class="md-ellipsis">
       
         &lt;attach&gt; — File Attachments
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#npy-numpy-arrays-as-npy-files">
+<span class="md-ellipsis">
+      
+        &lt;npy@&gt; — NumPy Arrays as .npy Files
       
     </span>
 </a>
@@ -2487,6 +2523,7 @@ database efficiency with Python convenience.</p>
     subgraph "Layer 3: Codecs"
         blob["‹blob›"]
         attach["‹attach›"]
+        npy["‹npy@›"]
         object["‹object@›"]
         hash["‹hash@›"]
         custom["‹custom›"]
@@ -2508,6 +2545,7 @@ database efficiency with Python convenience.</p>
 
     blob --&gt; bytes
     attach --&gt; bytes
+    npy --&gt; json
     object --&gt; json
     hash --&gt; json
     bytes --&gt; BLOB
@@ -2663,6 +2701,12 @@ database efficiency with Python convenience.</p>
 <td>Local file path</td>
 </tr>
 <tr>
+<td><code>&lt;npy@&gt;</code></td>
+<td>❌</td>
+<td>✅</td>
+<td>NpyRef (lazy)</td>
+</tr>
+<tr>
 <td><code>&lt;object@&gt;</code></td>
 <td>❌</td>
 <td>✅</td>
@@ -2682,6 +2726,58 @@ database efficiency with Python convenience.</p>
 </tr>
 </tbody>
 </table>
+<h3 id="plugin-codecs">Plugin Codecs<a class="headerlink" href="#plugin-codecs" title="Permanent link">¶</a></h3>
+<p>Additional codecs are available as separately installed packages. This ecosystem is actively expanding—new codecs are added as community needs arise.</p>
+<table>
+<thead>
+<tr>
+<th>Package</th>
+<th>Codec</th>
+<th>Description</th>
+<th>Repository</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>dj-zarr-codecs</code></td>
+<td><code>&lt;zarr@&gt;</code></td>
+<td>Zarr arrays with lazy chunked access</td>
+<td><a href="https://github.com/datajoint/dj-zarr-codecs">datajoint/dj-zarr-codecs</a></td>
+</tr>
+<tr>
+<td><code>dj-figpack-codecs</code></td>
+<td><code>&lt;figpack@&gt;</code></td>
+<td>Interactive browser visualizations</td>
+<td><a href="https://github.com/datajoint/dj-figpack-codecs">datajoint/dj-figpack-codecs</a></td>
+</tr>
+<tr>
+<td><code>dj-photon-codecs</code></td>
+<td><code>&lt;photon@&gt;</code></td>
+<td>Photon imaging data formats</td>
+<td><a href="https://github.com/datajoint/dj-photon-codecs">datajoint/dj-photon-codecs</a></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Installation and discovery:</strong></p>
+<p>Plugin codecs use Python's entry point mechanism for automatic registration. Install the package and DataJoint discovers the codec automatically:</p>
+<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>dj-zarr-codecs
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">datajoint</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dj</span>
+
+<span class="c1"># Codec is available immediately after install</span>
+<span class="nd">@schema</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Analysis</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Computed</span><span class="p">):</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
+<span class="s2">    -&gt; Recording</span>
+<span class="s2">    ---</span>
+<span class="s2">    data : &lt;zarr@store&gt;</span>
+<span class="s2">    """</span>
+</code></pre></div>
+<p>Packages declare their codecs in <code>pyproject.toml</code> under the <code>datajoint.codecs</code> entry point group:</p>
+<div class="highlight"><pre><span></span><code><span class="k">[project.entry-points.</span><span class="s2">"datajoint.codecs"</span><span class="k">]</span>
+<span class="n">zarr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"dj_zarr_codecs:ZarrCodec"</span>
+</code></pre></div>
+<p>DataJoint loads these entry points on first use, making third-party codecs indistinguishable from built-ins.</p>
 <h3 id="blob-serialized-python-objects"><code>&lt;blob&gt;</code> — Serialized Python Objects<a class="headerlink" href="#blob-serialized-python-objects" title="Permanent link">¶</a></h3>
 <p>Stores NumPy arrays, dicts, lists, and other Python objects using DataJoint's custom binary serialization format.</p>
 <p><strong>Serialization format:</strong></p>
@@ -2727,6 +2823,34 @@ database efficiency with Python convenience.</p>
 <span class="s2">    data_file : &lt;attach@&gt;       # Large file in object store</span>
 <span class="s2">    """</span>
 </code></pre></div>
+<h3 id="npy-numpy-arrays-as-npy-files"><code>&lt;npy@&gt;</code> — NumPy Arrays as .npy Files<a class="headerlink" href="#npy-numpy-arrays-as-npy-files" title="Permanent link">¶</a></h3>
+<p>Stores NumPy arrays as standard <code>.npy</code> files with lazy loading. Returns <code>NpyRef</code> which provides metadata access (shape, dtype) without downloading.</p>
+<div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">Recording</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Computed</span><span class="p">):</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
+<span class="s2">    -&gt; Session</span>
+<span class="s2">    ---</span>
+<span class="s2">    waveform : &lt;npy@&gt;           # Default store</span>
+<span class="s2">    spectrogram : &lt;npy@archive&gt; # Named store</span>
+<span class="s2">    """</span>
+</code></pre></div>
+<p><strong>Lazy access:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="n">ref</span> <span class="o">=</span> <span class="p">(</span><span class="n">Recording</span> <span class="o">&amp;</span> <span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">fetch1</span><span class="p">(</span><span class="s1">'waveform'</span><span class="p">)</span>
+<span class="n">ref</span><span class="o">.</span><span class="n">shape</span>   <span class="c1"># (1000, 32) — no download</span>
+<span class="n">ref</span><span class="o">.</span><span class="n">dtype</span>   <span class="c1"># float64 — no download</span>
+
+<span class="c1"># Explicit load</span>
+<span class="n">arr</span> <span class="o">=</span> <span class="n">ref</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
+
+<span class="c1"># Transparent numpy integration</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">ref</span><span class="p">)</span>  <span class="c1"># Downloads automatically</span>
+</code></pre></div>
+<p><strong>Key features:</strong></p>
+<ul>
+<li><strong>Portable format</strong>: Standard <code>.npy</code> readable by NumPy, MATLAB, etc.</li>
+<li><strong>Lazy loading</strong>: Shape/dtype available without I/O</li>
+<li><strong>Safe bulk fetch</strong>: Fetching many rows doesn't download until needed</li>
+<li><strong>Memory mapping</strong>: <code>ref.load(mmap_mode='r')</code> for random access to large arrays</li>
+</ul>
 <h3 id="object-path-addressed-storage"><code>&lt;object@&gt;</code> — Path-Addressed Storage<a class="headerlink" href="#object-path-addressed-storage" title="Permanent link">¶</a></h3>
 <p>For large/complex file structures (Zarr, HDF5). Path derived from primary key.</p>
 <div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">ProcessedData</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Computed</span><span class="p">):</span>
@@ -2829,15 +2953,23 @@ database efficiency with Python convenience.</p>
 </tr>
 <tr>
 <td>NumPy arrays (large)</td>
-<td><code>&lt;blob@&gt;</code></td>
+<td><code>&lt;npy@&gt;</code> or <code>&lt;blob@&gt;</code></td>
 </tr>
 <tr>
 <td>Files to attach</td>
 <td><code>&lt;attach&gt;</code> or <code>&lt;attach@&gt;</code></td>
 </tr>
 <tr>
-<td>Zarr/HDF5</td>
+<td>Zarr arrays</td>
+<td><code>&lt;zarr@&gt;</code> (plugin)</td>
+</tr>
+<tr>
+<td>Complex file structures</td>
 <td><code>&lt;object@&gt;</code></td>
+</tr>
+<tr>
+<td>Interactive visualizations</td>
+<td><code>&lt;figpack@&gt;</code> (plugin)</td>
 </tr>
 <tr>
 <td>File references (in-store)</td>
