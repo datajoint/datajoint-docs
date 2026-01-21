@@ -14,6 +14,7 @@ graph TB
         blob["‹blob›"]
         blob_at["‹blob@›"]
         attach["‹attach›"]
+        attach_at["‹attach@›"]
         npy["‹npy@›"]
         object["‹object@›"]
         hash["‹hash@›"]
@@ -38,8 +39,9 @@ graph TB
 
     blob --> bytes
     blob_at --> hash
-    hash --> json
     attach --> bytes
+    attach_at --> hash
+    hash --> json
     npy --> json
     object --> json
 
