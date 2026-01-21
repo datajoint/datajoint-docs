@@ -26,21 +26,13 @@ graph TB
         bytes
         uuid
     end
-    subgraph "Layer 1: Native (MySQL)"
-        INT["INT"]
-        DOUBLE["DOUBLE"]
-        VARCHAR_M["VARCHAR"]
-        JSON_M["JSON"]
-        BLOB["LONGBLOB"]
-        BIN16["BINARY(16)"]
-    end
-    subgraph "Layer 1: Native (PostgreSQL)"
-        INTEGER["INTEGER"]
-        DOUBLE_P["DOUBLE PRECISION"]
-        VARCHAR_P["VARCHAR"]
-        JSON_P["JSON"]
-        BYTEA["BYTEA"]
-        UUID_P["UUID"]
+    subgraph "Layer 1: Native Types"
+        INT["INT / INTEGER"]
+        DOUBLE["DOUBLE / DOUBLE PRECISION"]
+        VARCHAR_N["VARCHAR"]
+        JSON_N["JSON"]
+        BYTES_N["LONGBLOB (MySQL) / BYTEA (PG)"]
+        UUID_N["BINARY(16) (MySQL) / UUID (PG)"]
     end
 
     blob --> bytes
@@ -49,18 +41,12 @@ graph TB
     object --> json
     hash --> json
 
-    bytes -->|MySQL| BLOB
-    bytes -->|PostgreSQL| BYTEA
-    json --> JSON_M
-    json --> JSON_P
+    bytes --> BYTES_N
+    json --> JSON_N
     int32 --> INT
-    int32 --> INTEGER
     float64 --> DOUBLE
-    float64 --> DOUBLE_P
-    varchar --> VARCHAR_M
-    varchar --> VARCHAR_P
-    uuid -->|MySQL| BIN16
-    uuid -->|PostgreSQL| UUID_P
+    varchar --> VARCHAR_N
+    uuid --> UUID_N
 ```
 
 Core types provide **portability** — the same table definition works on both MySQL and PostgreSQL. For example, `bytes` maps to `LONGBLOB` on MySQL but `BYTEA` on PostgreSQL; `uuid` maps to `BINARY(16)` on MySQL but native `UUID` on PostgreSQL. Native types can be used directly but sacrifice cross-backend compatibility.
