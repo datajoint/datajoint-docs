@@ -177,7 +177,10 @@ DataJoint loads these entry points on first use, making third-party codecs indis
 
 ### `<blob>` — Serialized Python Objects
 
-Stores NumPy arrays, dicts, lists, and other Python objects using DataJoint's custom binary serialization format.
+Stores NumPy arrays, dicts, lists, and other Python objects using DataJoint's custom binary serialization format. The blob type has been in continuous use in DataJoint pipelines for 15+ years and maintains full backward compatibility. It provides an efficient way to serialize complex objects into an opaque binary string.
+
+!!! note "Modern alternatives"
+    Schema-addressed codecs introduced in DataJoint 2.0 (`<npy@>`, `<object@>`, and plugin codecs) offer modern high-performance accessibility with transparent formats, lazy loading, and browsable storage paths—while maintaining rigorous data integrity and consistency. Consider these for new pipelines where interoperability and direct data access are priorities.
 
 **Serialization format:**
 
