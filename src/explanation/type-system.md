@@ -134,24 +134,24 @@ Codec types use angle bracket notation:
 
 ### Built-in Codecs
 
-| Codec | Database | Object Store | Returns |
-|-------|----------|--------------|---------|
-| `<blob>` | ✅ | ✅ `<blob@>` | Python object |
-| `<attach>` | ✅ | ✅ `<attach@>` | Local file path |
-| `<npy@>` | ❌ | ✅ | NpyRef (lazy) |
-| `<object@>` | ❌ | ✅ | ObjectRef |
-| `<hash@>` | ❌ | ✅ | bytes |
-| `<filepath@>` | ❌ | ✅ | ObjectRef |
+| Codec | Database | Object Store | Addressing | Returns |
+|-------|----------|--------------|------------|---------|
+| `<blob>` | ✅ | ✅ `<blob@>` | Hash | Python object |
+| `<attach>` | ✅ | ✅ `<attach@>` | Hash | Local file path |
+| `<npy@>` | ❌ | ✅ | Schema | NpyRef (lazy) |
+| `<object@>` | ❌ | ✅ | Schema | ObjectRef |
+| `<hash@>` | ❌ | ✅ | Hash | bytes |
+| `<filepath@>` | ❌ | ✅ | — | ObjectRef |
 
 ### Plugin Codecs
 
-Additional codecs are available as separately installed packages. This ecosystem is actively expanding—new codecs are added as community needs arise.
+Additional schema-addressed codecs are available as separately installed packages. This ecosystem is actively expanding—new codecs are added as community needs arise.
 
 | Package | Codec | Description | Repository |
 |---------|-------|-------------|------------|
-| `dj-zarr-codecs` | `<zarr@>` | Zarr arrays with lazy chunked access | [datajoint/dj-zarr-codecs](https://github.com/datajoint/dj-zarr-codecs) |
-| `dj-figpack-codecs` | `<figpack@>` | Interactive browser visualizations | [datajoint/dj-figpack-codecs](https://github.com/datajoint/dj-figpack-codecs) |
-| `dj-photon-codecs` | `<photon@>` | Photon imaging data formats | [datajoint/dj-photon-codecs](https://github.com/datajoint/dj-photon-codecs) |
+| `dj-zarr-codecs` | `<zarr@>` | Schema-addressed Zarr arrays with lazy chunked access | [datajoint/dj-zarr-codecs](https://github.com/datajoint/dj-zarr-codecs) |
+| `dj-figpack-codecs` | `<figpack@>` | Schema-addressed interactive browser visualizations | [datajoint/dj-figpack-codecs](https://github.com/datajoint/dj-figpack-codecs) |
+| `dj-photon-codecs` | `<photon@>` | Schema-addressed photon imaging data formats | [datajoint/dj-photon-codecs](https://github.com/datajoint/dj-photon-codecs) |
 
 **Installation and discovery:**
 
@@ -236,7 +236,7 @@ class Config(dj.Manual):
 
 ### `<npy@>` — NumPy Arrays as .npy Files
 
-Stores NumPy arrays as standard `.npy` files with lazy loading. Returns `NpyRef` which provides metadata access (shape, dtype) without downloading.
+Schema-addressed storage for NumPy arrays as standard `.npy` files. Returns `NpyRef` which provides metadata access (shape, dtype) without downloading.
 
 ```python
 class Recording(dj.Computed):
@@ -269,18 +269,20 @@ result = np.mean(ref)  # Downloads automatically
 - **Safe bulk fetch**: Fetching many rows doesn't download until needed
 - **Memory mapping**: `ref.load(mmap_mode='r')` for random access to large arrays
 
-### `<object@>` — Path-Addressed Storage
+### `<object@>` — Schema-Addressed Storage
 
-For large/complex file structures (Zarr, HDF5). Path derived from primary key.
+Schema-addressed storage for files and folders. Path mirrors the database structure: `{schema}/{table}/{pk}/{attribute}`.
 
 ```python
 class ProcessedData(dj.Computed):
     definition = """
     -> Recording
     ---
-    zarr_data : <object@>       # Stored at {schema}/{table}/{pk}/
+    results : <object@>       # Stored at {schema}/{table}/{pk}/results/
     """
 ```
+
+Accepts files, folders, or bytes. Returns `ObjectRef` for lazy access.
 
 ### `<filepath@store>` — Portable References
 
@@ -297,11 +299,17 @@ class RawData(dj.Manual):
 
 ## Storage Modes
 
-| Mode | Database | Object Store | Use Case |
-|------|----------|--------------|----------|
-| Database | Data | — | Small data |
-| Hash-addressed | Metadata | Deduplicated | Large/repeated data |
-| Path-addressed | Metadata | PK-based path | Complex files |
+Object store codecs use one of two addressing schemes:
+
+**Hash-addressed** — Path derived from content hash (e.g., `_hash/ab/cd/abcd1234...`). Provides automatic deduplication—identical content stored once. Used by `<blob@>`, `<attach@>`, `<hash@>`.
+
+**Schema-addressed** — Path mirrors database structure: `{schema}/{table}/{pk}/{attribute}`. Human-readable, browsable paths that reflect your data organization. No deduplication. Used by `<object@>`, `<npy@>`, and plugin codecs (`<zarr@>`, `<figpack@>`, `<photon@>`).
+
+| Mode | Database | Object Store | Deduplication | Use Case |
+|------|----------|--------------|---------------|----------|
+| Database | Data | — | — | Small data |
+| Hash-addressed | Metadata | Content hash path | ✅ Automatic | Large/repeated data |
+| Schema-addressed | Metadata | Schema-mirrored path | ❌ None | Complex files, browsable storage |
 
 ## Custom Codecs
 
