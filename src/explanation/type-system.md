@@ -27,13 +27,13 @@ graph TB
         bytes
         uuid
     end
-    subgraph "Layer 1: Native Types"
+    subgraph "Layer 1: Native Types (MySQL / PostgreSQL)"
         INT["INT / INTEGER"]
         DOUBLE["DOUBLE / DOUBLE PRECISION"]
         VARCHAR_N["VARCHAR"]
         JSON_N["JSON"]
-        BYTES_N["LONGBLOB (MySQL) / BYTEA (PG)"]
-        UUID_N["BINARY(16) (MySQL) / UUID (PG)"]
+        BYTES_N["LONGBLOB / BYTEA"]
+        UUID_N["BINARY(16) / UUID"]
     end
 
     blob --> bytes
