@@ -12,6 +12,7 @@ database efficiency with Python convenience.
 graph TB
     subgraph "Layer 3: Codecs"
         blob["‹blob›"]
+        blob_at["‹blob@›"]
         attach["‹attach›"]
         npy["‹npy@›"]
         object["‹object@›"]
@@ -36,10 +37,11 @@ graph TB
     end
 
     blob --> bytes
+    blob_at --> hash
+    hash --> json
     attach --> bytes
     npy --> json
     object --> json
-    hash --> json
 
     bytes --> BYTES_N
     json --> JSON_N
