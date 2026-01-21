@@ -49,8 +49,8 @@ graph TB
     object --> json
     hash --> json
 
-    bytes --> BLOB
-    bytes --> BYTEA
+    bytes -->|MySQL| BLOB
+    bytes -->|PostgreSQL| BYTEA
     json --> JSON_M
     json --> JSON_P
     int32 --> INT
@@ -59,11 +59,11 @@ graph TB
     float64 --> DOUBLE_P
     varchar --> VARCHAR_M
     varchar --> VARCHAR_P
-    uuid --> BIN16
-    uuid --> UUID_P
+    uuid -->|MySQL| BIN16
+    uuid -->|PostgreSQL| UUID_P
 ```
 
-Core types provide **portability** — the same table definition works on both MySQL and PostgreSQL. Native types can be used directly but sacrifice cross-backend compatibility.
+Core types provide **portability** — the same table definition works on both MySQL and PostgreSQL. For example, `bytes` maps to `LONGBLOB` on MySQL but `BYTEA` on PostgreSQL; `uuid` maps to `BINARY(16)` on MySQL but native `UUID` on PostgreSQL. Native types can be used directly but sacrifice cross-backend compatibility.
 
 ## Layer 1: Native Database Types
 
