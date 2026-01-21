@@ -24,13 +24,23 @@ graph TB
         varchar
         json
         bytes
+        uuid
     end
-    subgraph "Layer 1: Native"
+    subgraph "Layer 1: Native (MySQL)"
         INT["INT"]
         DOUBLE["DOUBLE"]
-        VARCHAR["VARCHAR"]
-        JSON_N["JSON"]
+        VARCHAR_M["VARCHAR"]
+        JSON_M["JSON"]
         BLOB["LONGBLOB"]
+        BIN16["BINARY(16)"]
+    end
+    subgraph "Layer 1: Native (PostgreSQL)"
+        INTEGER["INTEGER"]
+        DOUBLE_P["DOUBLE PRECISION"]
+        VARCHAR_P["VARCHAR"]
+        JSON_P["JSON"]
+        BYTEA["BYTEA"]
+        UUID_P["UUID"]
     end
 
     blob --> bytes
@@ -38,22 +48,40 @@ graph TB
     npy --> json
     object --> json
     hash --> json
+
     bytes --> BLOB
-    json --> JSON_N
+    bytes --> BYTEA
+    json --> JSON_M
+    json --> JSON_P
     int32 --> INT
+    int32 --> INTEGER
     float64 --> DOUBLE
-    varchar --> VARCHAR
+    float64 --> DOUBLE_P
+    varchar --> VARCHAR_M
+    varchar --> VARCHAR_P
+    uuid --> BIN16
+    uuid --> UUID_P
 ```
+
+Core types provide **portability** — the same table definition works on both MySQL and PostgreSQL. Native types can be used directly but sacrifice cross-backend compatibility.
 
 ## Layer 1: Native Database Types
 
-Backend-specific types (MySQL, PostgreSQL). **Discouraged for direct use.**
+Backend-specific types. **Can be used directly at the cost of portability.**
 
 ```python
-# Native types (avoid)
-column : TINYINT UNSIGNED
-column : MEDIUMBLOB
+# Native types — work but not portable
+column : TINYINT UNSIGNED   # MySQL only
+column : MEDIUMBLOB         # MySQL only (use BYTEA on PostgreSQL)
+column : SERIAL             # PostgreSQL only
 ```
+
+| MySQL | PostgreSQL | Portable Alternative |
+|-------|------------|---------------------|
+| `LONGBLOB` | `BYTEA` | `bytes` |
+| `BINARY(16)` | `UUID` | `uuid` |
+| `SMALLINT` | `SMALLINT` | `int16` |
+| `DOUBLE` | `DOUBLE PRECISION` | `float64` |
 
 ## Layer 2: Core DataJoint Types
 
