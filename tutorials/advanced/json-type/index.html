@@ -59,7 +59,7 @@
 <div class="md-banner">
 <div class="md-banner__inner md-grid md-typeset">
 <p>
-        📖 You are viewing documentation for <strong>DataJoint 2.0+</strong>
+        📖 You are viewing documentation for <strong>DataJoint 2.1+</strong>
         ·
         <a href="https://docs.datajoint.com/how-to/migrate-to-v20/">
           Migration guide for legacy users (pre-2.0)
@@ -818,10 +818,10 @@
     </label>
 <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
 <li class="md-nav__item">
-<a class="md-nav__link" href="#prerequisites">
+<a class="md-nav__link" href="#when-to-use-json">
 <span class="md-ellipsis">
       
-        Prerequisites
+        When to Use JSON
       
     </span>
 </a>
@@ -836,37 +836,55 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#insert">
+<a class="md-nav__link" href="#inserting-json-data">
 <span class="md-ellipsis">
       
-        Insert
+        Inserting JSON Data
       
     </span>
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#restriction">
+<a class="md-nav__link" href="#viewing-data">
 <span class="md-ellipsis">
       
-        Restriction
+        Viewing Data
       
     </span>
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#projection">
+<a class="md-nav__link" href="#fetching-json-data">
 <span class="md-ellipsis">
       
-        Projection
+        Fetching JSON Data
       
     </span>
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#describe">
+<a class="md-nav__link" href="#filtering-on-json-content">
 <span class="md-ellipsis">
       
-        Describe
+        Filtering on JSON Content
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#updating-json-data">
+<span class="md-ellipsis">
+      
+        Updating JSON Data
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#design-guidelines">
+<span class="md-ellipsis">
+      
+        Design Guidelines
       
     </span>
 </a>
@@ -1491,9 +1509,21 @@
 
           </label>
 <ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../reference/specs/database-backends/">
+<span class="md-ellipsis">
+    
+  
+    Database Backends
+  
+
+    
+  </span>
+</a>
+</li>
 <li class="md-nav__item md-nav__item--nested">
-<input class="md-nav__toggle md-toggle" id="__nav_5_1_1" type="checkbox"/>
-<label class="md-nav__link" for="__nav_5_1_1" id="__nav_5_1_1_label" tabindex="0">
+<input class="md-nav__toggle md-toggle" id="__nav_5_1_2" type="checkbox"/>
+<label class="md-nav__link" for="__nav_5_1_2" id="__nav_5_1_2_label" tabindex="0">
 <span class="md-ellipsis">
     
   
@@ -1504,8 +1534,8 @@
   </span>
 <span class="md-nav__icon md-icon"></span>
 </label>
-<nav aria-expanded="false" aria-labelledby="__nav_5_1_1_label" class="md-nav" data-md-level="3">
-<label class="md-nav__title" for="__nav_5_1_1">
+<nav aria-expanded="false" aria-labelledby="__nav_5_1_2_label" class="md-nav" data-md-level="3">
+<label class="md-nav__title" for="__nav_5_1_2">
 <span class="md-nav__icon md-icon"></span>
             
   
@@ -1554,8 +1584,8 @@
 </nav>
 </li>
 <li class="md-nav__item md-nav__item--nested">
-<input class="md-nav__toggle md-toggle" id="__nav_5_1_2" type="checkbox"/>
-<label class="md-nav__link" for="__nav_5_1_2" id="__nav_5_1_2_label" tabindex="0">
+<input class="md-nav__toggle md-toggle" id="__nav_5_1_3" type="checkbox"/>
+<label class="md-nav__link" for="__nav_5_1_3" id="__nav_5_1_3_label" tabindex="0">
 <span class="md-ellipsis">
     
   
@@ -1566,8 +1596,8 @@
   </span>
 <span class="md-nav__icon md-icon"></span>
 </label>
-<nav aria-expanded="false" aria-labelledby="__nav_5_1_2_label" class="md-nav" data-md-level="3">
-<label class="md-nav__title" for="__nav_5_1_2">
+<nav aria-expanded="false" aria-labelledby="__nav_5_1_3_label" class="md-nav" data-md-level="3">
+<label class="md-nav__title" for="__nav_5_1_3">
 <span class="md-nav__icon md-icon"></span>
             
   
@@ -1628,8 +1658,8 @@
 </nav>
 </li>
 <li class="md-nav__item md-nav__item--nested">
-<input class="md-nav__toggle md-toggle" id="__nav_5_1_3" type="checkbox"/>
-<label class="md-nav__link" for="__nav_5_1_3" id="__nav_5_1_3_label" tabindex="0">
+<input class="md-nav__toggle md-toggle" id="__nav_5_1_4" type="checkbox"/>
+<label class="md-nav__link" for="__nav_5_1_4" id="__nav_5_1_4_label" tabindex="0">
 <span class="md-ellipsis">
     
   
@@ -1640,8 +1670,8 @@
   </span>
 <span class="md-nav__icon md-icon"></span>
 </label>
-<nav aria-expanded="false" aria-labelledby="__nav_5_1_3_label" class="md-nav" data-md-level="3">
-<label class="md-nav__title" for="__nav_5_1_3">
+<nav aria-expanded="false" aria-labelledby="__nav_5_1_4_label" class="md-nav" data-md-level="3">
+<label class="md-nav__title" for="__nav_5_1_4">
 <span class="md-nav__icon md-icon"></span>
             
   
@@ -1690,8 +1720,8 @@
 </nav>
 </li>
 <li class="md-nav__item md-nav__item--nested">
-<input class="md-nav__toggle md-toggle" id="__nav_5_1_4" type="checkbox"/>
-<label class="md-nav__link" for="__nav_5_1_4" id="__nav_5_1_4_label" tabindex="0">
+<input class="md-nav__toggle md-toggle" id="__nav_5_1_5" type="checkbox"/>
+<label class="md-nav__link" for="__nav_5_1_5" id="__nav_5_1_5_label" tabindex="0">
 <span class="md-ellipsis">
     
   
@@ -1702,8 +1732,8 @@
   </span>
 <span class="md-nav__icon md-icon"></span>
 </label>
-<nav aria-expanded="false" aria-labelledby="__nav_5_1_4_label" class="md-nav" data-md-level="3">
-<label class="md-nav__title" for="__nav_5_1_4">
+<nav aria-expanded="false" aria-labelledby="__nav_5_1_5_label" class="md-nav" data-md-level="3">
+<label class="md-nav__title" for="__nav_5_1_5">
 <span class="md-nav__icon md-icon"></span>
             
   
@@ -2198,10 +2228,10 @@
     </label>
 <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
 <li class="md-nav__item">
-<a class="md-nav__link" href="#prerequisites">
+<a class="md-nav__link" href="#when-to-use-json">
 <span class="md-ellipsis">
       
-        Prerequisites
+        When to Use JSON
       
     </span>
 </a>
@@ -2216,37 +2246,55 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#insert">
+<a class="md-nav__link" href="#inserting-json-data">
 <span class="md-ellipsis">
       
-        Insert
+        Inserting JSON Data
       
     </span>
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#restriction">
+<a class="md-nav__link" href="#viewing-data">
 <span class="md-ellipsis">
       
-        Restriction
+        Viewing Data
       
     </span>
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#projection">
+<a class="md-nav__link" href="#fetching-json-data">
 <span class="md-ellipsis">
       
-        Projection
+        Fetching JSON Data
       
     </span>
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#describe">
+<a class="md-nav__link" href="#filtering-on-json-content">
 <span class="md-ellipsis">
       
-        Describe
+        Filtering on JSON Content
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#updating-json-data">
+<span class="md-ellipsis">
+      
+        Updating JSON Data
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#design-guidelines">
+<span class="md-ellipsis">
+      
+        Design Guidelines
       
     </span>
 </a>
@@ -2703,40 +2751,36 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 </style>
 <!-- End of mermaid configuration --><div class="jupyter-wrapper">
 <div class="jp-Notebook" data-jp-theme-light="true" data-jp-theme-name="JupyterLab Light">
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=7fe24127-c0d0-4ff8-96b4-6ab0d9307e73">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=intro">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h1 id="json-data-type">JSON Data Type<a class="anchor-link" href="#json-data-type">¶</a></h1><p>This tutorial covers the <code>json</code> data type in DataJoint, which allows storing semi-structured data within tables. You'll learn:</p>
+<h1 id="json-data-type">JSON Data Type<a class="anchor-link" href="#json-data-type">¶</a></h1><p>The <code>json</code> type stores semi-structured data as complete objects. This tutorial covers:</p>
 <ul>
-<li>When to use the JSON type</li>
-<li>Defining tables with JSON attributes</li>
-<li>Inserting JSON data</li>
-<li>Querying and filtering JSON fields</li>
-<li>Projecting JSON subfields</li>
+<li>When to use JSON vs normalized tables</li>
+<li>Defining, inserting, and fetching JSON data</li>
 </ul>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=62450023">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="prerequisites">Prerequisites<a class="anchor-link" href="#prerequisites">¶</a></h2><ul>
-<li><strong>MySQL 8.0+</strong> with <code>JSON_VALUE</code> function support</li>
-<li>Percona is fully compatible</li>
-<li>MariaDB is <strong>not supported</strong> (different <code>JSON_VALUE</code> syntax)</li>
+<h2 id="when-to-use-json">When to Use JSON<a class="anchor-link" href="#when-to-use-json">¶</a></h2><p><strong>Good for:</strong></p>
+<ul>
+<li>Evolving schemas not yet finalized</li>
+<li>Heterogeneous data with varying fields per entry</li>
+<li>Metadata and configuration storage</li>
+<li>Preserving structure from external APIs</li>
 </ul>
+<p><strong>Prefer normalized tables when:</strong></p>
+<ul>
+<li>Structure is consistent across entries</li>
+<li>You need database-level filtering on specific fields</li>
+<li>Referential integrity matters</li>
+</ul>
+<p>JSON fields are stored and retrieved as complete objects. Filter on JSON content in Python after fetching.</p>
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=bc0b6f54-8f11-45f4-bf8d-e1058ee0056f">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=setup">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -2755,15 +2799,32 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 </clipboard-copy>
 </div>
 <div class="highlight-ipynb hl-python"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">datajoint</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dj</span>
+
+<span class="n">schema</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">Schema</span><span class="p">(</span><span class="s1">'tutorial_json'</span><span class="p">)</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-1">import datajoint as dj</div>
+<div class="clipboard-copy-txt" id="cell-1">import datajoint as dj
+
+schema = dj.Schema('tutorial_json')</div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell-outputWrapper">
+<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+</div>
+<div class="jp-OutputArea jp-Cell-outputArea">
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
+<pre>[2026-01-20 16:19:46,095][INFO]: DataJoint 2.1.0a2 connected to postgres@127.0.0.1:5432
+</pre>
 </div>
 </div>
 </div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=3544cab9-f2db-458a-9431-939bea5affc5">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=definition-header">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -2773,22 +2834,8 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 </div>
 </div>
 </div>
-</div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=a2998c71">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<p>For this exercise, let's imagine we work for an awesome company that is organizing a fun RC car race across various teams in the company. Let's see which team has the fastest car! 🏎️</p>
-<p>This establishes 2 important entities: a <code>Team</code> and a <code>Car</code>. Normally the entities are mapped to their own dedicated table, however, let's assume that <code>Team</code> is well-structured but <code>Car</code> is less structured than we'd prefer. In other words, the structure for what makes up a <em>car</em> is varying too much between entries (perhaps because users of the pipeline haven't agreed yet on the definition? 🤷).</p>
-<p>This would make it a good use-case to keep <code>Team</code> as a table but make <code>Car</code> a <code>json</code> type defined within the <code>Team</code> table.</p>
-<p>Let's begin.</p>
-</div>
-</div>
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=dc318298-b819-4f06-abbd-7bb7544dd431">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=definition">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -2806,43 +2853,41 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">datajoint</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dj</span>
-
-<span class="c1"># Clean up any existing schema from previous runs</span>
-<span class="n">schema</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">Schema</span><span class="p">(</span><span class="s1">'tutorial_json'</span><span class="p">,</span> <span class="n">create_tables</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-<span class="n">schema</span><span class="o">.</span><span class="n">drop</span><span class="p">()</span>
-
-<span class="c1"># Create fresh schema</span>
-<span class="n">schema</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">Schema</span><span class="p">(</span><span class="s1">'tutorial_json'</span><span class="p">)</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="nd">@schema</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Equipment</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
+<span class="s2">    equipment_id : int32</span>
+<span class="s2">    ---</span>
+<span class="s2">    name : varchar(100)</span>
+<span class="s2">    specs=null : json    # flexible specifications</span>
+<span class="s2">    """</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-2">import datajoint as dj
-
-# Clean up any existing schema from previous runs
-schema = dj.Schema('tutorial_json', create_tables=False)
-schema.drop()
-
-# Create fresh schema
-schema = dj.Schema('tutorial_json')</div>
+<div class="clipboard-copy-txt" id="cell-2">@schema
+class Equipment(dj.Manual):
+    definition = """
+    equipment_id : int32
+    ---
+    name : varchar(100)
+    specs=null : json    # flexible specifications
+    """</div>
 </div>
 </div>
 </div>
 </div>
-<div class="jp-Cell-outputWrapper">
-<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
-</div>
-<div class="jp-OutputArea jp-Cell-outputArea">
-<div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>[2026-01-17 00:49:09,100][INFO]: DataJoint 2.0.0a22 connected to root@127.0.0.1:3306
-</pre>
 </div>
 </div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=insert-header">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<h2 id="inserting-json-data">Inserting JSON Data<a class="anchor-link" href="#inserting-json-data">¶</a></h2><p>Pass Python dicts for JSON fields. Structure can vary between entries:</p>
 </div>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=4aaf96db-85d9-4e94-a4c3-3558f4cc6671">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=insert">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -2860,56 +2905,75 @@ schema = dj.Schema('tutorial_json')</div>
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="nd">@schema</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">Team</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Lookup</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
-<span class="s2">    # A team within a company</span>
-<span class="s2">    name: varchar(40)  # team name</span>
-<span class="s2">    ---</span>
-<span class="s2">    car=null: json  # A car belonging to a team (null to allow registering first but specifying car later)</span>
-<span class="s2">    </span>
-<span class="s2">    unique index(car.length:decimal(4, 1))  # Add an index if this key is frequently accessed</span>
-<span class="s2">    """</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">Equipment</span><span class="o">.</span><span class="n">insert</span><span class="p">([</span>
+    <span class="p">{</span>
+        <span class="s1">'equipment_id'</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="s1">'name'</span><span class="p">:</span> <span class="s1">'Microscope A'</span><span class="p">,</span>
+        <span class="s1">'specs'</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s1">'magnification'</span><span class="p">:</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">100</span><span class="p">],</span>
+            <span class="s1">'camera'</span><span class="p">:</span> <span class="p">{</span><span class="s1">'model'</span><span class="p">:</span> <span class="s1">'XR500'</span><span class="p">,</span> <span class="s1">'resolution'</span><span class="p">:</span> <span class="p">[</span><span class="mi">2048</span><span class="p">,</span> <span class="mi">2048</span><span class="p">]},</span>
+            <span class="s1">'calibrated'</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="p">},</span>
+    <span class="p">},</span>
+    <span class="p">{</span>
+        <span class="s1">'equipment_id'</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+        <span class="s1">'name'</span><span class="p">:</span> <span class="s1">'Electrode Array'</span><span class="p">,</span>
+        <span class="s1">'specs'</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s1">'channels'</span><span class="p">:</span> <span class="mi">64</span><span class="p">,</span>
+            <span class="s1">'impedance_kohm'</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span>
+            <span class="s1">'material'</span><span class="p">:</span> <span class="s1">'tungsten'</span><span class="p">,</span>
+        <span class="p">},</span>
+    <span class="p">},</span>
+    <span class="p">{</span>
+        <span class="s1">'equipment_id'</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+        <span class="s1">'name'</span><span class="p">:</span> <span class="s1">'Pending Setup'</span><span class="p">,</span>
+        <span class="s1">'specs'</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>  <span class="c1"># null allowed</span>
+    <span class="p">},</span>
+<span class="p">])</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-3">@schema
-class Team(dj.Lookup):
-    definition = """
-    # A team within a company
-    name: varchar(40)  # team name
-    ---
-    car=null: json  # A car belonging to a team (null to allow registering first but specifying car later)
-    
-    unique index(car.length:decimal(4, 1))  # Add an index if this key is frequently accessed
-    """</div>
+<div class="clipboard-copy-txt" id="cell-3">Equipment.insert([
+    {
+        'equipment_id': 1,
+        'name': 'Microscope A',
+        'specs': {
+            'magnification': [10, 40, 100],
+            'camera': {'model': 'XR500', 'resolution': [2048, 2048]},
+            'calibrated': True,
+        },
+    },
+    {
+        'equipment_id': 2,
+        'name': 'Electrode Array',
+        'specs': {
+            'channels': 64,
+            'impedance_kohm': 0.5,
+            'material': 'tungsten',
+        },
+    },
+    {
+        'equipment_id': 3,
+        'name': 'Pending Setup',
+        'specs': None,  # null allowed
+    },
+])</div>
 </div>
 </div>
 </div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=640bf7a7-9e07-4953-9c8a-304e55c467f8">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=preview-header">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="insert">Insert<a class="anchor-link" href="#insert">¶</a></h2>
+<h2 id="viewing-data">Viewing Data<a class="anchor-link" href="#viewing-data">¶</a></h2><p>JSON displays as <code>json</code> in previews (like blobs):</p>
 </div>
 </div>
 </div>
-</div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=7081e577">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<p>Let's suppose that engineering is first up to register their car.</p>
-</div>
-</div>
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=30f0d62e">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=preview">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -2927,72 +2991,140 @@ class Team(dj.Lookup):
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">Team</span><span class="o">.</span><span class="n">insert1</span><span class="p">(</span>
-    <span class="p">{</span>
-        <span class="s2">"name"</span><span class="p">:</span> <span class="s2">"engineering"</span><span class="p">,</span>
-        <span class="s2">"car"</span><span class="p">:</span> <span class="p">{</span>
-            <span class="s2">"name"</span><span class="p">:</span> <span class="s2">"Rever"</span><span class="p">,</span>
-            <span class="s2">"length"</span><span class="p">:</span> <span class="mf">20.5</span><span class="p">,</span>
-            <span class="s2">"inspected"</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
-            <span class="s2">"tire_pressure"</span><span class="p">:</span> <span class="p">[</span><span class="mi">32</span><span class="p">,</span> <span class="mi">31</span><span class="p">,</span> <span class="mi">33</span><span class="p">,</span> <span class="mi">34</span><span class="p">],</span>
-            <span class="s2">"headlights"</span><span class="p">:</span> <span class="p">[</span>
-                <span class="p">{</span>
-                    <span class="s2">"side"</span><span class="p">:</span> <span class="s2">"left"</span><span class="p">,</span>
-                    <span class="s2">"hyper_white"</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
-                <span class="p">},</span>
-                <span class="p">{</span>
-                    <span class="s2">"side"</span><span class="p">:</span> <span class="s2">"right"</span><span class="p">,</span>
-                    <span class="s2">"hyper_white"</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
-                <span class="p">},</span>
-            <span class="p">],</span>
-        <span class="p">},</span>
-    <span class="p">}</span>
-<span class="p">)</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">Equipment</span><span class="p">()</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-4">Team.insert1(
-    {
-        "name": "engineering",
-        "car": {
-            "name": "Rever",
-            "length": 20.5,
-            "inspected": True,
-            "tire_pressure": [32, 31, 33, 34],
-            "headlights": [
-                {
-                    "side": "left",
-                    "hyper_white": None,
-                },
-                {
-                    "side": "right",
-                    "hyper_white": None,
-                },
-            ],
-        },
-    }
-)</div>
+<div class="clipboard-copy-txt" id="cell-4">Equipment()</div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell-outputWrapper">
+<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+</div>
+<div class="jp-OutputArea jp-Cell-outputArea">
+<div class="jp-OutputArea-child jp-OutputArea-executeResult">
+<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[4]:</div>
+<div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/html" tabindex="0">
+<style type="text/css">
+        .Table{
+            border-collapse:collapse;
+        }
+        .Table th{
+            background: #A0A0A0; color: #ffffff; padding:2px 4px; border:#f0e0e0 1px solid;
+            font-weight: normal; font-family: monospace; font-size: 75%; text-align: center;
+        }
+        .Table th p{
+            margin: 0;
+        }
+        .Table td{
+            padding:2px 4px; border:#f0e0e0 1px solid; font-size: 75%;
+        }
+        .Table tr:nth-child(odd){
+            background: #ffffff;
+            color: #000000;
+        }
+        .Table tr:nth-child(even){
+            background: #f3f1ff;
+            color: #000000;
+        }
+        /* Tooltip container */
+        .djtooltip {
+        }
+        /* Tooltip text */
+        .djtooltip .djtooltiptext {
+            visibility: hidden;
+            width: 120px;
+            background-color: black;
+            color: #fff;
+            text-align: center;
+            padding: 5px 0;
+            border-radius: 6px;
+            /* Position the tooltip text - see examples below! */
+            position: absolute;
+            z-index: 1;
+        }
+        #primary {
+            font-weight: bold;
+            color: black;
+        }
+        #nonprimary {
+            font-weight: normal;
+            color: white;
+        }
+
+        /* Show the tooltip text when you mouse over the tooltip container */
+        .djtooltip:hover .djtooltiptext {
+            visibility: visible;
+        }
+
+        /* Dark mode support */
+        @media (prefers-color-scheme: dark) {
+            .Table th{
+                background: #4a4a4a; color: #ffffff; border:#555555 1px solid; text-align: center;
+            }
+            .Table td{
+                border:#555555 1px solid;
+            }
+            .Table tr:nth-child(odd){
+                background: #2d2d2d;
+                color: #e0e0e0;
+            }
+            .Table tr:nth-child(even){
+                background: #3d3d3d;
+                color: #e0e0e0;
+            }
+            .djtooltip .djtooltiptext {
+                background-color: #555555;
+                color: #ffffff;
+            }
+            #primary {
+                color: #bd93f9;
+            }
+            #nonprimary {
+                color: #e0e0e0;
+            }
+        }
+    </style>
+<b>None</b>
+<div style="max-height:1000px;max-width:1500px;overflow:auto;">
+<table border="1" class="Table">
+<thead> <tr> <th> <div class="djtooltip">
+<p id="primary">equipment_id</p>
+<span class="djtooltiptext"></span>
+</div></th><th><div class="djtooltip">
+<p id="nonprimary">name</p>
+<span class="djtooltiptext"></span>
+</div></th><th><div class="djtooltip">
+<p id="nonprimary">specs</p>
+<span class="djtooltiptext">flexible specifications</span>
+</div> </th> </tr> </thead>
+<tbody> <tr> <td>1</td>
+<td>Microscope A</td>
+<td>json</td></tr><tr><td>2</td>
+<td>Electrode Array</td>
+<td>json</td></tr><tr><td>3</td>
+<td>Pending Setup</td>
+<td>json</td> </tr> </tbody>
+</table>
+<p>Total: 3</p></div>
 </div>
 </div>
 </div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=ee5e4dcf">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=fetch-header">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<p>Next, business and marketing teams are up and register their cars.</p>
-<p>A few points to notice below:</p>
-<ul>
-<li>The person signing up on behalf of marketing does not know the specifics of the car during registration but another team member will be updating this soon before the race.</li>
-<li>Notice how the <code>business</code> and <code>engineering</code> teams appear to specify the same property but refer to it as <code>safety_inspected</code> and <code>inspected</code> respectfully.</li>
-</ul>
+<h2 id="fetching-json-data">Fetching JSON Data<a class="anchor-link" href="#fetching-json-data">¶</a></h2><p>JSON deserializes to Python dicts on fetch:</p>
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=b532e16c">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=fetch">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -3010,79 +3142,35 @@ class Team(dj.Lookup):
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">Team</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span>
-    <span class="p">[</span>
-        <span class="p">{</span>
-            <span class="s2">"name"</span><span class="p">:</span> <span class="s2">"marketing"</span><span class="p">,</span>
-            <span class="s2">"car"</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="p">},</span>
-        <span class="p">{</span>
-            <span class="s2">"name"</span><span class="p">:</span> <span class="s2">"business"</span><span class="p">,</span>
-            <span class="s2">"car"</span><span class="p">:</span> <span class="p">{</span>
-                <span class="s2">"name"</span><span class="p">:</span> <span class="s2">"Chaching"</span><span class="p">,</span>
-                <span class="s2">"length"</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span>
-                <span class="s2">"safety_inspected"</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
-                <span class="s2">"tire_pressure"</span><span class="p">:</span> <span class="p">[</span><span class="mi">34</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">27</span><span class="p">,</span> <span class="mi">32</span><span class="p">],</span>
-                <span class="s2">"headlights"</span><span class="p">:</span> <span class="p">[</span>
-                    <span class="p">{</span>
-                        <span class="s2">"side"</span><span class="p">:</span> <span class="s2">"left"</span><span class="p">,</span>
-                        <span class="s2">"hyper_white"</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
-                    <span class="p">},</span>
-                    <span class="p">{</span>
-                        <span class="s2">"side"</span><span class="p">:</span> <span class="s2">"right"</span><span class="p">,</span>
-                        <span class="s2">"hyper_white"</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
-                    <span class="p">},</span>
-                <span class="p">],</span>
-            <span class="p">},</span>
-        <span class="p">},</span>
-    <span class="p">]</span>
-<span class="p">)</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Fetch all</span>
+<span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">Equipment</span><span class="o">.</span><span class="n">to_dicts</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">row</span><span class="p">[</span><span class="s1">'name'</span><span class="p">]</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">row</span><span class="p">[</span><span class="s1">'specs'</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-5">Team.insert(
-    [
-        {
-            "name": "marketing",
-            "car": None,
-        },
-        {
-            "name": "business",
-            "car": {
-                "name": "Chaching",
-                "length": 100,
-                "safety_inspected": False,
-                "tire_pressure": [34, 30, 27, 32],
-                "headlights": [
-                    {
-                        "side": "left",
-                        "hyper_white": True,
-                    },
-                    {
-                        "side": "right",
-                        "hyper_white": True,
-                    },
-                ],
-            },
-        },
-    ]
-)</div>
+<div class="clipboard-copy-txt" id="cell-5"># Fetch all
+for row in Equipment.to_dicts():
+    print(f"{row['name']}: {row['specs']}")</div>
 </div>
 </div>
 </div>
 </div>
+<div class="jp-Cell-outputWrapper">
+<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+</div>
+<div class="jp-OutputArea jp-Cell-outputArea">
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
+<pre>Microscope A: {'camera': {'model': 'XR500', 'resolution': [2048, 2048]}, 'calibrated': True, 'magnification': [10, 40, 100]}
+Electrode Array: {'channels': 64, 'material': 'tungsten', 'impedance_kohm': 0.5}
+Pending Setup: None
+</pre>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=57365de7">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<p>We can preview the table data much like normal but notice how the value of <code>car</code> behaves like other BLOB-like attributes.</p>
 </div>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=0e3b517c">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=fetch-one">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -3100,9 +3188,19 @@ class Team(dj.Lookup):
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">Team</span><span class="p">()</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Fetch one and access nested fields</span>
+<span class="n">microscope</span> <span class="o">=</span> <span class="p">(</span><span class="n">Equipment</span> <span class="o">&amp;</span> <span class="p">{</span><span class="s1">'equipment_id'</span><span class="p">:</span> <span class="mi">1</span><span class="p">})</span><span class="o">.</span><span class="n">fetch1</span><span class="p">()</span>
+<span class="n">specs</span> <span class="o">=</span> <span class="n">microscope</span><span class="p">[</span><span class="s1">'specs'</span><span class="p">]</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Camera model: </span><span class="si">{</span><span class="n">specs</span><span class="p">[</span><span class="s1">'camera'</span><span class="p">][</span><span class="s1">'model'</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Magnifications: </span><span class="si">{</span><span class="n">specs</span><span class="p">[</span><span class="s1">'magnification'</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-6">Team()</div>
+<div class="clipboard-copy-txt" id="cell-6"># Fetch one and access nested fields
+microscope = (Equipment &amp; {'equipment_id': 1}).fetch1()
+specs = microscope['specs']
+
+print(f"Camera model: {specs['camera']['model']}")
+print(f"Magnifications: {specs['magnification']}")</div>
 </div>
 </div>
 </div>
@@ -3111,134 +3209,30 @@ class Team(dj.Lookup):
 <div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
 </div>
 <div class="jp-OutputArea jp-Cell-outputArea">
-<div class="jp-OutputArea-child jp-OutputArea-executeResult">
-<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[6]:</div>
-<div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/html" tabindex="0">
-<style type="text/css">
-        .Table{
-            border-collapse:collapse;
-        }
-        .Table th{
-            background: #A0A0A0; color: #ffffff; padding:2px 4px; border:#f0e0e0 1px solid;
-            font-weight: normal; font-family: monospace; font-size: 75%; text-align: center;
-        }
-        .Table th p{
-            margin: 0;
-        }
-        .Table td{
-            padding:2px 4px; border:#f0e0e0 1px solid; font-size: 75%;
-        }
-        .Table tr:nth-child(odd){
-            background: #ffffff;
-            color: #000000;
-        }
-        .Table tr:nth-child(even){
-            background: #f3f1ff;
-            color: #000000;
-        }
-        /* Tooltip container */
-        .djtooltip {
-        }
-        /* Tooltip text */
-        .djtooltip .djtooltiptext {
-            visibility: hidden;
-            width: 120px;
-            background-color: black;
-            color: #fff;
-            text-align: center;
-            padding: 5px 0;
-            border-radius: 6px;
-            /* Position the tooltip text - see examples below! */
-            position: absolute;
-            z-index: 1;
-        }
-        #primary {
-            font-weight: bold;
-            color: black;
-        }
-        #nonprimary {
-            font-weight: normal;
-            color: white;
-        }
-
-        /* Show the tooltip text when you mouse over the tooltip container */
-        .djtooltip:hover .djtooltiptext {
-            visibility: visible;
-        }
-
-        /* Dark mode support */
-        @media (prefers-color-scheme: dark) {
-            .Table th{
-                background: #4a4a4a; color: #ffffff; border:#555555 1px solid; text-align: center;
-            }
-            .Table td{
-                border:#555555 1px solid;
-            }
-            .Table tr:nth-child(odd){
-                background: #2d2d2d;
-                color: #e0e0e0;
-            }
-            .Table tr:nth-child(even){
-                background: #3d3d3d;
-                color: #e0e0e0;
-            }
-            .djtooltip .djtooltiptext {
-                background-color: #555555;
-                color: #ffffff;
-            }
-            #primary {
-                color: #bd93f9;
-            }
-            #nonprimary {
-                color: #e0e0e0;
-            }
-        }
-    </style>
-<b>A team within a company</b>
-<div style="max-height:1000px;max-width:1500px;overflow:auto;">
-<table border="1" class="Table">
-<thead> <tr> <th> <div class="djtooltip">
-<p id="primary">name</p>
-<span class="djtooltiptext">team name</span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">car</p>
-<span class="djtooltiptext">A car belonging to a team (null to allow registering first but specifying car later)</span>
-</div> </th> </tr> </thead>
-<tbody> <tr> <td>business</td>
-<td>json</td></tr><tr><td>engineering</td>
-<td>json</td></tr><tr><td>marketing</td>
-<td>json</td> </tr> </tbody>
-</table>
-<p>Total: 3</p></div>
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
+<pre>Camera model: XR500
+Magnifications: [10, 40, 100]
+</pre>
 </div>
 </div>
 </div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=c95cbbee-4ef7-4870-ad42-a60345a3644f">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=filter-header">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="restriction">Restriction<a class="anchor-link" href="#restriction">¶</a></h2>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=8b454996">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<p>Now let's see what kinds of queries we can form to demonstrate how we can query this pipeline.</p>
+<h2 id="filtering-on-json-content">Filtering on JSON Content<a class="anchor-link" href="#filtering-on-json-content">¶</a></h2><p>Fetch then filter in Python:</p>
 </div>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=81efda24">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=filter">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -3256,11 +3250,33 @@ class Team(dj.Lookup):
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Which team has a `car` equal to 100 inches long?</span>
-<span class="n">Team</span> <span class="o">&amp;</span> <span class="p">{</span><span class="s2">"car.length"</span><span class="p">:</span> <span class="mi">100</span><span class="p">}</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Find calibrated equipment</span>
+<span class="n">calibrated</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">e</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">Equipment</span><span class="o">.</span><span class="n">to_dicts</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">e</span><span class="p">[</span><span class="s1">'specs'</span><span class="p">]</span> <span class="ow">and</span> <span class="n">e</span><span class="p">[</span><span class="s1">'specs'</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'calibrated'</span><span class="p">)</span>
+<span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Calibrated:"</span><span class="p">,</span> <span class="p">[</span><span class="n">e</span><span class="p">[</span><span class="s1">'name'</span><span class="p">]</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">calibrated</span><span class="p">])</span>
+
+<span class="c1"># Find equipment with &gt;32 channels</span>
+<span class="n">multi_channel</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">e</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">Equipment</span><span class="o">.</span><span class="n">to_dicts</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">e</span><span class="p">[</span><span class="s1">'specs'</span><span class="p">]</span> <span class="ow">and</span> <span class="n">e</span><span class="p">[</span><span class="s1">'specs'</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'channels'</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">32</span>
+<span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Multi-channel:"</span><span class="p">,</span> <span class="p">[</span><span class="n">e</span><span class="p">[</span><span class="s1">'name'</span><span class="p">]</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">multi_channel</span><span class="p">])</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-7"># Which team has a `car` equal to 100 inches long?
-Team &amp; {"car.length": 100}</div>
+<div class="clipboard-copy-txt" id="cell-7"># Find calibrated equipment
+calibrated = [
+    e for e in Equipment.to_dicts()
+    if e['specs'] and e['specs'].get('calibrated')
+]
+print("Calibrated:", [e['name'] for e in calibrated])
+
+# Find equipment with &gt;32 channels
+multi_channel = [
+    e for e in Equipment.to_dicts()
+    if e['specs'] and e['specs'].get('channels', 0) &gt; 32
+]
+print("Multi-channel:", [e['name'] for e in multi_channel])</div>
 </div>
 </div>
 </div>
@@ -3269,110 +3285,30 @@ Team &amp; {"car.length": 100}</div>
 <div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
 </div>
 <div class="jp-OutputArea jp-Cell-outputArea">
-<div class="jp-OutputArea-child jp-OutputArea-executeResult">
-<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[7]:</div>
-<div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/html" tabindex="0">
-<style type="text/css">
-        .Table{
-            border-collapse:collapse;
-        }
-        .Table th{
-            background: #A0A0A0; color: #ffffff; padding:2px 4px; border:#f0e0e0 1px solid;
-            font-weight: normal; font-family: monospace; font-size: 75%; text-align: center;
-        }
-        .Table th p{
-            margin: 0;
-        }
-        .Table td{
-            padding:2px 4px; border:#f0e0e0 1px solid; font-size: 75%;
-        }
-        .Table tr:nth-child(odd){
-            background: #ffffff;
-            color: #000000;
-        }
-        .Table tr:nth-child(even){
-            background: #f3f1ff;
-            color: #000000;
-        }
-        /* Tooltip container */
-        .djtooltip {
-        }
-        /* Tooltip text */
-        .djtooltip .djtooltiptext {
-            visibility: hidden;
-            width: 120px;
-            background-color: black;
-            color: #fff;
-            text-align: center;
-            padding: 5px 0;
-            border-radius: 6px;
-            /* Position the tooltip text - see examples below! */
-            position: absolute;
-            z-index: 1;
-        }
-        #primary {
-            font-weight: bold;
-            color: black;
-        }
-        #nonprimary {
-            font-weight: normal;
-            color: white;
-        }
-
-        /* Show the tooltip text when you mouse over the tooltip container */
-        .djtooltip:hover .djtooltiptext {
-            visibility: visible;
-        }
-
-        /* Dark mode support */
-        @media (prefers-color-scheme: dark) {
-            .Table th{
-                background: #4a4a4a; color: #ffffff; border:#555555 1px solid; text-align: center;
-            }
-            .Table td{
-                border:#555555 1px solid;
-            }
-            .Table tr:nth-child(odd){
-                background: #2d2d2d;
-                color: #e0e0e0;
-            }
-            .Table tr:nth-child(even){
-                background: #3d3d3d;
-                color: #e0e0e0;
-            }
-            .djtooltip .djtooltiptext {
-                background-color: #555555;
-                color: #ffffff;
-            }
-            #primary {
-                color: #bd93f9;
-            }
-            #nonprimary {
-                color: #e0e0e0;
-            }
-        }
-    </style>
-<b>A team within a company</b>
-<div style="max-height:1000px;max-width:1500px;overflow:auto;">
-<table border="1" class="Table">
-<thead> <tr> <th> <div class="djtooltip">
-<p id="primary">name</p>
-<span class="djtooltiptext">team name</span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">car</p>
-<span class="djtooltiptext">A car belonging to a team (null to allow registering first but specifying car later)</span>
-</div> </th> </tr> </thead>
-<tbody> <tr> <td>business</td>
-<td>json</td> </tr> </tbody>
-</table>
-<p>Total: 1</p></div>
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
+<pre>Calibrated: ['Microscope A']
+Multi-channel: ['Electrode Array']
+</pre>
 </div>
 </div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=update-header">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<h2 id="updating-json-data">Updating JSON Data<a class="anchor-link" href="#updating-json-data">¶</a></h2>
 </div>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=fd7b855d">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=update">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -3390,11 +3326,23 @@ Team &amp; {"car.length": 100}</div>
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Which team has a `car` less than 50 inches long?</span>
-<span class="n">Team</span> <span class="o">&amp;</span> <span class="s2">"car-&gt;&gt;'$.length' &lt; 50"</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Fetch, modify, delete, reinsert</span>
+<span class="n">pending</span> <span class="o">=</span> <span class="p">(</span><span class="n">Equipment</span> <span class="o">&amp;</span> <span class="p">{</span><span class="s1">'equipment_id'</span><span class="p">:</span> <span class="mi">3</span><span class="p">})</span><span class="o">.</span><span class="n">fetch1</span><span class="p">()</span>
+<span class="n">pending</span><span class="p">[</span><span class="s1">'specs'</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'type'</span><span class="p">:</span> <span class="s1">'behavioral'</span><span class="p">,</span> <span class="s1">'sensors'</span><span class="p">:</span> <span class="p">[</span><span class="s1">'IR'</span><span class="p">,</span> <span class="s1">'pressure'</span><span class="p">]}</span>
+
+<span class="p">(</span><span class="n">Equipment</span> <span class="o">&amp;</span> <span class="p">{</span><span class="s1">'equipment_id'</span><span class="p">:</span> <span class="mi">3</span><span class="p">})</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">prompt</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">Equipment</span><span class="o">.</span><span class="n">insert1</span><span class="p">(</span><span class="n">pending</span><span class="p">)</span>
+
+<span class="p">(</span><span class="n">Equipment</span> <span class="o">&amp;</span> <span class="p">{</span><span class="s1">'equipment_id'</span><span class="p">:</span> <span class="mi">3</span><span class="p">})</span><span class="o">.</span><span class="n">fetch1</span><span class="p">()</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-8"># Which team has a `car` less than 50 inches long?
-Team &amp; "car-&gt;&gt;'$.length' &lt; 50"</div>
+<div class="clipboard-copy-txt" id="cell-8"># Fetch, modify, delete, reinsert
+pending = (Equipment &amp; {'equipment_id': 3}).fetch1()
+pending['specs'] = {'type': 'behavioral', 'sensors': ['IR', 'pressure']}
+
+(Equipment &amp; {'equipment_id': 3}).delete(prompt=False)
+Equipment.insert1(pending)
+
+(Equipment &amp; {'equipment_id': 3}).fetch1()</div>
 </div>
 </div>
 </div>
@@ -3403,110 +3351,79 @@ Team &amp; "car-&gt;&gt;'$.length' &lt; 50"</div>
 <div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
 </div>
 <div class="jp-OutputArea jp-Cell-outputArea">
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
+<pre>[2026-01-20 16:19:46,149][INFO]: Deleting 1 rows from "tutorial_json"."equipment"
+</pre>
+</div>
+</div>
 <div class="jp-OutputArea-child jp-OutputArea-executeResult">
 <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[8]:</div>
-<div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/html" tabindex="0">
-<style type="text/css">
-        .Table{
-            border-collapse:collapse;
-        }
-        .Table th{
-            background: #A0A0A0; color: #ffffff; padding:2px 4px; border:#f0e0e0 1px solid;
-            font-weight: normal; font-family: monospace; font-size: 75%; text-align: center;
-        }
-        .Table th p{
-            margin: 0;
-        }
-        .Table td{
-            padding:2px 4px; border:#f0e0e0 1px solid; font-size: 75%;
-        }
-        .Table tr:nth-child(odd){
-            background: #ffffff;
-            color: #000000;
-        }
-        .Table tr:nth-child(even){
-            background: #f3f1ff;
-            color: #000000;
-        }
-        /* Tooltip container */
-        .djtooltip {
-        }
-        /* Tooltip text */
-        .djtooltip .djtooltiptext {
-            visibility: hidden;
-            width: 120px;
-            background-color: black;
-            color: #fff;
-            text-align: center;
-            padding: 5px 0;
-            border-radius: 6px;
-            /* Position the tooltip text - see examples below! */
-            position: absolute;
-            z-index: 1;
-        }
-        #primary {
-            font-weight: bold;
-            color: black;
-        }
-        #nonprimary {
-            font-weight: normal;
-            color: white;
-        }
-
-        /* Show the tooltip text when you mouse over the tooltip container */
-        .djtooltip:hover .djtooltiptext {
-            visibility: visible;
-        }
-
-        /* Dark mode support */
-        @media (prefers-color-scheme: dark) {
-            .Table th{
-                background: #4a4a4a; color: #ffffff; border:#555555 1px solid; text-align: center;
-            }
-            .Table td{
-                border:#555555 1px solid;
-            }
-            .Table tr:nth-child(odd){
-                background: #2d2d2d;
-                color: #e0e0e0;
-            }
-            .Table tr:nth-child(even){
-                background: #3d3d3d;
-                color: #e0e0e0;
-            }
-            .djtooltip .djtooltiptext {
-                background-color: #555555;
-                color: #ffffff;
-            }
-            #primary {
-                color: #bd93f9;
-            }
-            #nonprimary {
-                color: #e0e0e0;
-            }
-        }
-    </style>
-<b>A team within a company</b>
-<div style="max-height:1000px;max-width:1500px;overflow:auto;">
-<table border="1" class="Table">
-<thead> <tr> <th> <div class="djtooltip">
-<p id="primary">name</p>
-<span class="djtooltiptext">team name</span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">car</p>
-<span class="djtooltiptext">A car belonging to a team (null to allow registering first but specifying car later)</span>
-</div> </th> </tr> </thead>
-<tbody> <tr> <td>engineering</td>
-<td>json</td> </tr> </tbody>
+<div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain" tabindex="0">
+<pre>{'equipment_id': 3,
+ 'name': 'Pending Setup',
+ 'specs': {'type': 'behavioral', 'sensors': ['IR', 'pressure']}}</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=design-header">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<h2 id="design-guidelines">Design Guidelines<a class="anchor-link" href="#design-guidelines">¶</a></h2><table>
+<thead>
+<tr>
+<th>JSON</th>
+<th>Normalized Tables</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Flexible schema</td>
+<td>Fixed schema</td>
+</tr>
+<tr>
+<td>Filter in Python</td>
+<td>Filter in SQL</td>
+</tr>
+<tr>
+<td>No type enforcement</td>
+<td>Type-safe</td>
+</tr>
+<tr>
+<td>No referential integrity</td>
+<td>FK constraints</td>
+</tr>
+</tbody>
 </table>
-<p>Total: 1</p></div>
+<p><strong>Tips:</strong></p>
+<ul>
+<li>Use JSON for metadata, configs, external API responses</li>
+<li>If you frequently filter on a field, normalize it to a column</li>
+<li>Document expected JSON structure in comments</li>
+</ul>
 </div>
 </div>
 </div>
 </div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=cleanup-header">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=b76ebb75">
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<h2 id="cleanup">Cleanup<a class="anchor-link" href="#cleanup">¶</a></h2>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=cleanup">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -3524,787 +3441,9 @@ Team &amp; "car-&gt;&gt;'$.length' &lt; 50"</div>
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Any team that has had their car inspected?</span>
-<span class="n">Team</span> <span class="o">&amp;</span> <span class="p">[{</span><span class="s2">"car.inspected:unsigned"</span><span class="p">:</span> <span class="kc">True</span><span class="p">},</span> <span class="p">{</span><span class="s2">"car.safety_inspected:unsigned"</span><span class="p">:</span> <span class="kc">True</span><span class="p">}]</span>
-</pre></div>
-<div class="clipboard-copy-txt" id="cell-9"># Any team that has had their car inspected?
-Team &amp; [{"car.inspected:unsigned": True}, {"car.safety_inspected:unsigned": True}]</div>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell-outputWrapper">
-<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
-</div>
-<div class="jp-OutputArea jp-Cell-outputArea">
-<div class="jp-OutputArea-child jp-OutputArea-executeResult">
-<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[9]:</div>
-<div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/html" tabindex="0">
-<style type="text/css">
-        .Table{
-            border-collapse:collapse;
-        }
-        .Table th{
-            background: #A0A0A0; color: #ffffff; padding:2px 4px; border:#f0e0e0 1px solid;
-            font-weight: normal; font-family: monospace; font-size: 75%; text-align: center;
-        }
-        .Table th p{
-            margin: 0;
-        }
-        .Table td{
-            padding:2px 4px; border:#f0e0e0 1px solid; font-size: 75%;
-        }
-        .Table tr:nth-child(odd){
-            background: #ffffff;
-            color: #000000;
-        }
-        .Table tr:nth-child(even){
-            background: #f3f1ff;
-            color: #000000;
-        }
-        /* Tooltip container */
-        .djtooltip {
-        }
-        /* Tooltip text */
-        .djtooltip .djtooltiptext {
-            visibility: hidden;
-            width: 120px;
-            background-color: black;
-            color: #fff;
-            text-align: center;
-            padding: 5px 0;
-            border-radius: 6px;
-            /* Position the tooltip text - see examples below! */
-            position: absolute;
-            z-index: 1;
-        }
-        #primary {
-            font-weight: bold;
-            color: black;
-        }
-        #nonprimary {
-            font-weight: normal;
-            color: white;
-        }
-
-        /* Show the tooltip text when you mouse over the tooltip container */
-        .djtooltip:hover .djtooltiptext {
-            visibility: visible;
-        }
-
-        /* Dark mode support */
-        @media (prefers-color-scheme: dark) {
-            .Table th{
-                background: #4a4a4a; color: #ffffff; border:#555555 1px solid; text-align: center;
-            }
-            .Table td{
-                border:#555555 1px solid;
-            }
-            .Table tr:nth-child(odd){
-                background: #2d2d2d;
-                color: #e0e0e0;
-            }
-            .Table tr:nth-child(even){
-                background: #3d3d3d;
-                color: #e0e0e0;
-            }
-            .djtooltip .djtooltiptext {
-                background-color: #555555;
-                color: #ffffff;
-            }
-            #primary {
-                color: #bd93f9;
-            }
-            #nonprimary {
-                color: #e0e0e0;
-            }
-        }
-    </style>
-<b>A team within a company</b>
-<div style="max-height:1000px;max-width:1500px;overflow:auto;">
-<table border="1" class="Table">
-<thead> <tr> <th> <div class="djtooltip">
-<p id="primary">name</p>
-<span class="djtooltiptext">team name</span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">car</p>
-<span class="djtooltiptext">A car belonging to a team (null to allow registering first but specifying car later)</span>
-</div> </th> </tr> </thead>
-<tbody> <tr> <td>engineering</td>
-<td>json</td> </tr> </tbody>
-</table>
-<p>Total: 1</p></div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=b787784c">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [10]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-<div class="CodeMirror cm-s-jupyter">
-<div class="zeroclipboard-container">
-<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-10">
-<div>
-<span class="notice" hidden="">Copied!</span>
-<svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
-<path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z" fill="currentColor" fill-rule="evenodd"></path>
-<path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z" fill="currentColor" fill-rule="evenodd"></path>
-</svg>
-</div>
-</clipboard-copy>
-</div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Which teams do not have hyper white lights for their first head light?</span>
-<span class="n">Team</span> <span class="o">&amp;</span> <span class="p">{</span><span class="s2">"car.headlights[0].hyper_white"</span><span class="p">:</span> <span class="kc">None</span><span class="p">}</span>
-</pre></div>
-<div class="clipboard-copy-txt" id="cell-10"># Which teams do not have hyper white lights for their first head light?
-Team &amp; {"car.headlights[0].hyper_white": None}</div>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell-outputWrapper">
-<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
-</div>
-<div class="jp-OutputArea jp-Cell-outputArea">
-<div class="jp-OutputArea-child jp-OutputArea-executeResult">
-<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[10]:</div>
-<div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/html" tabindex="0">
-<style type="text/css">
-        .Table{
-            border-collapse:collapse;
-        }
-        .Table th{
-            background: #A0A0A0; color: #ffffff; padding:2px 4px; border:#f0e0e0 1px solid;
-            font-weight: normal; font-family: monospace; font-size: 75%; text-align: center;
-        }
-        .Table th p{
-            margin: 0;
-        }
-        .Table td{
-            padding:2px 4px; border:#f0e0e0 1px solid; font-size: 75%;
-        }
-        .Table tr:nth-child(odd){
-            background: #ffffff;
-            color: #000000;
-        }
-        .Table tr:nth-child(even){
-            background: #f3f1ff;
-            color: #000000;
-        }
-        /* Tooltip container */
-        .djtooltip {
-        }
-        /* Tooltip text */
-        .djtooltip .djtooltiptext {
-            visibility: hidden;
-            width: 120px;
-            background-color: black;
-            color: #fff;
-            text-align: center;
-            padding: 5px 0;
-            border-radius: 6px;
-            /* Position the tooltip text - see examples below! */
-            position: absolute;
-            z-index: 1;
-        }
-        #primary {
-            font-weight: bold;
-            color: black;
-        }
-        #nonprimary {
-            font-weight: normal;
-            color: white;
-        }
-
-        /* Show the tooltip text when you mouse over the tooltip container */
-        .djtooltip:hover .djtooltiptext {
-            visibility: visible;
-        }
-
-        /* Dark mode support */
-        @media (prefers-color-scheme: dark) {
-            .Table th{
-                background: #4a4a4a; color: #ffffff; border:#555555 1px solid; text-align: center;
-            }
-            .Table td{
-                border:#555555 1px solid;
-            }
-            .Table tr:nth-child(odd){
-                background: #2d2d2d;
-                color: #e0e0e0;
-            }
-            .Table tr:nth-child(even){
-                background: #3d3d3d;
-                color: #e0e0e0;
-            }
-            .djtooltip .djtooltiptext {
-                background-color: #555555;
-                color: #ffffff;
-            }
-            #primary {
-                color: #bd93f9;
-            }
-            #nonprimary {
-                color: #e0e0e0;
-            }
-        }
-    </style>
-<b>A team within a company</b>
-<div style="max-height:1000px;max-width:1500px;overflow:auto;">
-<table border="1" class="Table">
-<thead> <tr> <th> <div class="djtooltip">
-<p id="primary">name</p>
-<span class="djtooltiptext">team name</span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">car</p>
-<span class="djtooltiptext">A car belonging to a team (null to allow registering first but specifying car later)</span>
-</div> </th> </tr> </thead>
-<tbody> <tr> <td>engineering</td>
-<td>json</td></tr><tr><td>marketing</td>
-<td>json</td> </tr> </tbody>
-</table>
-<p>Total: 2</p></div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=5bcf0b5d">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<p>Notice that the previous query will satisfy the <code>None</code> check if it experiences any of the following scenarios:</p>
-<ul>
-<li>if entire record missing (<code>marketing</code> satisfies this)</li>
-<li>JSON key is missing</li>
-<li>JSON value is set to JSON <code>null</code> (<code>engineering</code> satisfies this)</li>
-</ul>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=bcf1682e-a0c7-4c2f-826b-0aec9052a694">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="projection">Projection<a class="anchor-link" href="#projection">¶</a></h2>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=daea110e">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<p>Projections can be quite useful with the <code>json</code> type since we can extract out just what we need. This allows greater query flexibility but more importantly, for us to be able to fetch only what is pertinent.</p>
-</div>
-</div>
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=8fb8334a">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [11]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-<div class="CodeMirror cm-s-jupyter">
-<div class="zeroclipboard-container">
-<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-11">
-<div>
-<span class="notice" hidden="">Copied!</span>
-<svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
-<path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z" fill="currentColor" fill-rule="evenodd"></path>
-<path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z" fill="currentColor" fill-rule="evenodd"></path>
-</svg>
-</div>
-</clipboard-copy>
-</div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Only interested in the car names and the length but let the type be inferred</span>
-<span class="n">q_untyped</span> <span class="o">=</span> <span class="n">Team</span><span class="o">.</span><span class="n">proj</span><span class="p">(</span>
-    <span class="n">car_name</span><span class="o">=</span><span class="s2">"car.name"</span><span class="p">,</span>
-    <span class="n">car_length</span><span class="o">=</span><span class="s2">"car.length"</span><span class="p">,</span>
-<span class="p">)</span>
-<span class="n">q_untyped</span>
-</pre></div>
-<div class="clipboard-copy-txt" id="cell-11"># Only interested in the car names and the length but let the type be inferred
-q_untyped = Team.proj(
-    car_name="car.name",
-    car_length="car.length",
-)
-q_untyped</div>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell-outputWrapper">
-<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
-</div>
-<div class="jp-OutputArea jp-Cell-outputArea">
-<div class="jp-OutputArea-child jp-OutputArea-executeResult">
-<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[11]:</div>
-<div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/html" tabindex="0">
-<style type="text/css">
-        .Table{
-            border-collapse:collapse;
-        }
-        .Table th{
-            background: #A0A0A0; color: #ffffff; padding:2px 4px; border:#f0e0e0 1px solid;
-            font-weight: normal; font-family: monospace; font-size: 75%; text-align: center;
-        }
-        .Table th p{
-            margin: 0;
-        }
-        .Table td{
-            padding:2px 4px; border:#f0e0e0 1px solid; font-size: 75%;
-        }
-        .Table tr:nth-child(odd){
-            background: #ffffff;
-            color: #000000;
-        }
-        .Table tr:nth-child(even){
-            background: #f3f1ff;
-            color: #000000;
-        }
-        /* Tooltip container */
-        .djtooltip {
-        }
-        /* Tooltip text */
-        .djtooltip .djtooltiptext {
-            visibility: hidden;
-            width: 120px;
-            background-color: black;
-            color: #fff;
-            text-align: center;
-            padding: 5px 0;
-            border-radius: 6px;
-            /* Position the tooltip text - see examples below! */
-            position: absolute;
-            z-index: 1;
-        }
-        #primary {
-            font-weight: bold;
-            color: black;
-        }
-        #nonprimary {
-            font-weight: normal;
-            color: white;
-        }
-
-        /* Show the tooltip text when you mouse over the tooltip container */
-        .djtooltip:hover .djtooltiptext {
-            visibility: visible;
-        }
-
-        /* Dark mode support */
-        @media (prefers-color-scheme: dark) {
-            .Table th{
-                background: #4a4a4a; color: #ffffff; border:#555555 1px solid; text-align: center;
-            }
-            .Table td{
-                border:#555555 1px solid;
-            }
-            .Table tr:nth-child(odd){
-                background: #2d2d2d;
-                color: #e0e0e0;
-            }
-            .Table tr:nth-child(even){
-                background: #3d3d3d;
-                color: #e0e0e0;
-            }
-            .djtooltip .djtooltiptext {
-                background-color: #555555;
-                color: #ffffff;
-            }
-            #primary {
-                color: #bd93f9;
-            }
-            #nonprimary {
-                color: #e0e0e0;
-            }
-        }
-    </style>
-<div style="max-height:1000px;max-width:1500px;overflow:auto;">
-<table border="1" class="Table">
-<thead> <tr> <th> <div class="djtooltip">
-<p id="primary">name</p>
-<span class="djtooltiptext">team name</span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">car_name</p>
-<span class="djtooltiptext">calculated attribute</span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">car_length</p>
-<span class="djtooltiptext">calculated attribute</span>
-</div> </th> </tr> </thead>
-<tbody> <tr> <td>business</td>
-<td>Chaching</td>
-<td>100</td></tr><tr><td>engineering</td>
-<td>Rever</td>
-<td>20.5</td></tr><tr><td>marketing</td>
-<td>None</td>
-<td>None</td> </tr> </tbody>
-</table>
-<p>Total: 3</p></div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=bb5f0448">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [12]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-<div class="CodeMirror cm-s-jupyter">
-<div class="zeroclipboard-container">
-<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-12">
-<div>
-<span class="notice" hidden="">Copied!</span>
-<svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
-<path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z" fill="currentColor" fill-rule="evenodd"></path>
-<path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z" fill="currentColor" fill-rule="evenodd"></path>
-</svg>
-</div>
-</clipboard-copy>
-</div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">q_untyped</span><span class="o">.</span><span class="n">to_dicts</span><span class="p">()</span>
-</pre></div>
-<div class="clipboard-copy-txt" id="cell-12">q_untyped.to_dicts()</div>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell-outputWrapper">
-<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
-</div>
-<div class="jp-OutputArea jp-Cell-outputArea">
-<div class="jp-OutputArea-child jp-OutputArea-executeResult">
-<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[12]:</div>
-<div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain" tabindex="0">
-<pre>[{'name': 'business', 'car_name': 'Chaching', 'car_length': '100'},
- {'name': 'engineering', 'car_name': 'Rever', 'car_length': '20.5'},
- {'name': 'marketing', 'car_name': None, 'car_length': None}]</pre>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=a307dfd7">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [13]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-<div class="CodeMirror cm-s-jupyter">
-<div class="zeroclipboard-container">
-<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-13">
-<div>
-<span class="notice" hidden="">Copied!</span>
-<svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
-<path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z" fill="currentColor" fill-rule="evenodd"></path>
-<path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z" fill="currentColor" fill-rule="evenodd"></path>
-</svg>
-</div>
-</clipboard-copy>
-</div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Nevermind, I'll specify the type explicitly</span>
-<span class="n">q_typed</span> <span class="o">=</span> <span class="n">Team</span><span class="o">.</span><span class="n">proj</span><span class="p">(</span>
-    <span class="n">car_name</span><span class="o">=</span><span class="s2">"car.name"</span><span class="p">,</span>
-    <span class="n">car_length</span><span class="o">=</span><span class="s2">"car.length:float"</span><span class="p">,</span>
-<span class="p">)</span>
-<span class="n">q_typed</span>
-</pre></div>
-<div class="clipboard-copy-txt" id="cell-13"># Nevermind, I'll specify the type explicitly
-q_typed = Team.proj(
-    car_name="car.name",
-    car_length="car.length:float",
-)
-q_typed</div>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell-outputWrapper">
-<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
-</div>
-<div class="jp-OutputArea jp-Cell-outputArea">
-<div class="jp-OutputArea-child jp-OutputArea-executeResult">
-<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[13]:</div>
-<div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/html" tabindex="0">
-<style type="text/css">
-        .Table{
-            border-collapse:collapse;
-        }
-        .Table th{
-            background: #A0A0A0; color: #ffffff; padding:2px 4px; border:#f0e0e0 1px solid;
-            font-weight: normal; font-family: monospace; font-size: 75%; text-align: center;
-        }
-        .Table th p{
-            margin: 0;
-        }
-        .Table td{
-            padding:2px 4px; border:#f0e0e0 1px solid; font-size: 75%;
-        }
-        .Table tr:nth-child(odd){
-            background: #ffffff;
-            color: #000000;
-        }
-        .Table tr:nth-child(even){
-            background: #f3f1ff;
-            color: #000000;
-        }
-        /* Tooltip container */
-        .djtooltip {
-        }
-        /* Tooltip text */
-        .djtooltip .djtooltiptext {
-            visibility: hidden;
-            width: 120px;
-            background-color: black;
-            color: #fff;
-            text-align: center;
-            padding: 5px 0;
-            border-radius: 6px;
-            /* Position the tooltip text - see examples below! */
-            position: absolute;
-            z-index: 1;
-        }
-        #primary {
-            font-weight: bold;
-            color: black;
-        }
-        #nonprimary {
-            font-weight: normal;
-            color: white;
-        }
-
-        /* Show the tooltip text when you mouse over the tooltip container */
-        .djtooltip:hover .djtooltiptext {
-            visibility: visible;
-        }
-
-        /* Dark mode support */
-        @media (prefers-color-scheme: dark) {
-            .Table th{
-                background: #4a4a4a; color: #ffffff; border:#555555 1px solid; text-align: center;
-            }
-            .Table td{
-                border:#555555 1px solid;
-            }
-            .Table tr:nth-child(odd){
-                background: #2d2d2d;
-                color: #e0e0e0;
-            }
-            .Table tr:nth-child(even){
-                background: #3d3d3d;
-                color: #e0e0e0;
-            }
-            .djtooltip .djtooltiptext {
-                background-color: #555555;
-                color: #ffffff;
-            }
-            #primary {
-                color: #bd93f9;
-            }
-            #nonprimary {
-                color: #e0e0e0;
-            }
-        }
-    </style>
-<div style="max-height:1000px;max-width:1500px;overflow:auto;">
-<table border="1" class="Table">
-<thead> <tr> <th> <div class="djtooltip">
-<p id="primary">name</p>
-<span class="djtooltiptext">team name</span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">car_name</p>
-<span class="djtooltiptext">calculated attribute</span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">car_length</p>
-<span class="djtooltiptext">calculated attribute</span>
-</div> </th> </tr> </thead>
-<tbody> <tr> <td>business</td>
-<td>Chaching</td>
-<td>100.0</td></tr><tr><td>engineering</td>
-<td>Rever</td>
-<td>20.5</td></tr><tr><td>marketing</td>
-<td>None</td>
-<td>None</td> </tr> </tbody>
-</table>
-<p>Total: 3</p></div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=8a93dbf9">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [14]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-<div class="CodeMirror cm-s-jupyter">
-<div class="zeroclipboard-container">
-<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-14">
-<div>
-<span class="notice" hidden="">Copied!</span>
-<svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
-<path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z" fill="currentColor" fill-rule="evenodd"></path>
-<path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z" fill="currentColor" fill-rule="evenodd"></path>
-</svg>
-</div>
-</clipboard-copy>
-</div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">q_typed</span><span class="o">.</span><span class="n">to_dicts</span><span class="p">()</span>
-</pre></div>
-<div class="clipboard-copy-txt" id="cell-14">q_typed.to_dicts()</div>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell-outputWrapper">
-<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
-</div>
-<div class="jp-OutputArea jp-Cell-outputArea">
-<div class="jp-OutputArea-child jp-OutputArea-executeResult">
-<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[14]:</div>
-<div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain" tabindex="0">
-<pre>[{'name': 'business', 'car_name': 'Chaching', 'car_length': 100.0},
- {'name': 'engineering', 'car_name': 'Rever', 'car_length': 20.5},
- {'name': 'marketing', 'car_name': None, 'car_length': None}]</pre>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=62dd0239-fa70-4369-81eb-3d46c5053fee">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="describe">Describe<a class="anchor-link" href="#describe">¶</a></h2>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=73d9df01">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<p>Lastly, the <code>.describe()</code> function on the <code>Team</code> table can help us generate the table's definition. This is useful if we are connected directly to the pipeline without the original source.</p>
-</div>
-</div>
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=0e739932">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [15]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-<div class="CodeMirror cm-s-jupyter">
-<div class="zeroclipboard-container">
-<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-15">
-<div>
-<span class="notice" hidden="">Copied!</span>
-<svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
-<path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z" fill="currentColor" fill-rule="evenodd"></path>
-<path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z" fill="currentColor" fill-rule="evenodd"></path>
-</svg>
-</div>
-</clipboard-copy>
-</div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">rebuilt_definition</span> <span class="o">=</span> <span class="n">Team</span><span class="o">.</span><span class="n">describe</span><span class="p">()</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">rebuilt_definition</span><span class="p">)</span>
-</pre></div>
-<div class="clipboard-copy-txt" id="cell-15">rebuilt_definition = Team.describe()
-print(rebuilt_definition)</div>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell-outputWrapper">
-<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
-</div>
-<div class="jp-OutputArea jp-Cell-outputArea">
-<div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre># A team within a company
-name                 : varchar(40)                  # team name
----
-car=null             : json                         # A car belonging to a team (null to allow registering first but specifying car later)
-UNIQUE INDEX ((json_value(`car`, _utf8mb4'$.length' returning decimal(4, 1))))
-
-</pre>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=be1070d5-765b-4bc2-92de-8a6ffd885984">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="cleanup">Cleanup<a class="anchor-link" href="#cleanup">¶</a></h2>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=cb959927">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<p>Finally, let's clean up what we created in this tutorial.</p>
-</div>
-</div>
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=d9cc28a3-3ffd-4126-b7e9-bc6365040b93">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [16]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-<div class="CodeMirror cm-s-jupyter">
-<div class="zeroclipboard-container">
-<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-16">
-<div>
-<span class="notice" hidden="">Copied!</span>
-<svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
-<path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z" fill="currentColor" fill-rule="evenodd"></path>
-<path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z" fill="currentColor" fill-rule="evenodd"></path>
-</svg>
-</div>
-</clipboard-copy>
-</div>
 <div class="highlight-ipynb hl-python"><pre><span></span><span class="n">schema</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">prompt</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-16">schema.drop(prompt=False)</div>
+<div class="clipboard-copy-txt" id="cell-9">schema.drop(prompt=False)</div>
 </div>
 </div>
 </div>

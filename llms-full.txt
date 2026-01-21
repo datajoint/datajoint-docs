@@ -1,6 +1,6 @@
 # DataJoint Documentation (Full)
 
-Generated: 2026-01-21 14:13:45 UTC
+Generated: 2026-01-21 16:12:15 UTC
 Commit: unknown
 Branch: unknown
 
@@ -2634,6 +2634,9 @@ This is especially valuable in large, collaborative projects where different tea
 DataJoint's type system provides a three-layer architecture that balances
 database efficiency with Python convenience.
 
+!!! version-added "New in 2.1"
+    PostgreSQL support was added in DataJoint 2.1. Core types work identically on both MySQL and PostgreSQL backends.
+
 ## Three-Layer Architecture
 
 ```mermaid
@@ -3492,229 +3495,168 @@ schema.drop(prompt=False)
 
 # JSON Data Type
 
-This tutorial covers the `json` data type in DataJoint, which allows storing semi-structured data within tables. You'll learn:
+The `json` type stores semi-structured data as complete objects. This tutorial covers:
 
-- When to use the JSON type
-- Defining tables with JSON attributes
-- Inserting JSON data
-- Querying and filtering JSON fields
-- Projecting JSON subfields
+- When to use JSON vs normalized tables
+- Defining, inserting, and fetching JSON data
 
-## Prerequisites
+## When to Use JSON
 
-- **MySQL 8.0+** with `JSON_VALUE` function support
-- Percona is fully compatible
-- MariaDB is **not supported** (different `JSON_VALUE` syntax)
+**Good for:**
+- Evolving schemas not yet finalized
+- Heterogeneous data with varying fields per entry
+- Metadata and configuration storage
+- Preserving structure from external APIs
+
+**Prefer normalized tables when:**
+- Structure is consistent across entries
+- You need database-level filtering on specific fields
+- Referential integrity matters
+
+JSON fields are stored and retrieved as complete objects. Filter on JSON content in Python after fetching.
 
 
 ```python
 import datajoint as dj
+
+schema = dj.Schema('tutorial_json')
 ```
 
 
 ## Table Definition
 
-For this exercise, let's imagine we work for an awesome company that is organizing a fun RC car race across various teams in the company. Let's see which team has the fastest car! 🏎️
-
-This establishes 2 important entities: a `Team` and a `Car`. Normally the entities are mapped to their own dedicated table, however, let's assume that `Team` is well-structured but `Car` is less structured than we'd prefer. In other words, the structure for what makes up a *car* is varying too much between entries (perhaps because users of the pipeline haven't agreed yet on the definition? 🤷).
-
-This would make it a good use-case to keep `Team` as a table but make `Car` a `json` type defined within the `Team` table.
-
-Let's begin.
-
-
-```python
-import datajoint as dj
-
-# Clean up any existing schema from previous runs
-schema = dj.Schema('tutorial_json', create_tables=False)
-schema.drop()
-
-# Create fresh schema
-schema = dj.Schema('tutorial_json')
-```
-
-
 
 ```python
 @schema
-class Team(dj.Lookup):
+class Equipment(dj.Manual):
     definition = """
-    # A team within a company
-    name: varchar(40)  # team name
+    equipment_id : int32
     ---
-    car=null: json  # A car belonging to a team (null to allow registering first but specifying car later)
-    
-    unique index(car.length:decimal(4, 1))  # Add an index if this key is frequently accessed
+    name : varchar(100)
+    specs=null : json    # flexible specifications
     """
 ```
 
 
-## Insert
+## Inserting JSON Data
 
-Let's suppose that engineering is first up to register their car.
+Pass Python dicts for JSON fields. Structure can vary between entries:
 
 
 ```python
-Team.insert1(
+Equipment.insert([
     {
-        "name": "engineering",
-        "car": {
-            "name": "Rever",
-            "length": 20.5,
-            "inspected": True,
-            "tire_pressure": [32, 31, 33, 34],
-            "headlights": [
-                {
-                    "side": "left",
-                    "hyper_white": None,
-                },
-                {
-                    "side": "right",
-                    "hyper_white": None,
-                },
-            ],
+        'equipment_id': 1,
+        'name': 'Microscope A',
+        'specs': {
+            'magnification': [10, 40, 100],
+            'camera': {'model': 'XR500', 'resolution': [2048, 2048]},
+            'calibrated': True,
         },
-    }
-)
-```
-
-
-Next, business and marketing teams are up and register their cars.
-
-A few points to notice below:
-- The person signing up on behalf of marketing does not know the specifics of the car during registration but another team member will be updating this soon before the race.
-- Notice how the `business` and `engineering` teams appear to specify the same property but refer to it as `safety_inspected` and `inspected` respectfully.
-
-
-```python
-Team.insert(
-    [
-        {
-            "name": "marketing",
-            "car": None,
+    },
+    {
+        'equipment_id': 2,
+        'name': 'Electrode Array',
+        'specs': {
+            'channels': 64,
+            'impedance_kohm': 0.5,
+            'material': 'tungsten',
         },
-        {
-            "name": "business",
-            "car": {
-                "name": "Chaching",
-                "length": 100,
-                "safety_inspected": False,
-                "tire_pressure": [34, 30, 27, 32],
-                "headlights": [
-                    {
-                        "side": "left",
-                        "hyper_white": True,
-                    },
-                    {
-                        "side": "right",
-                        "hyper_white": True,
-                    },
-                ],
-            },
-        },
-    ]
-)
+    },
+    {
+        'equipment_id': 3,
+        'name': 'Pending Setup',
+        'specs': None,  # null allowed
+    },
+])
 ```
 
 
-We can preview the table data much like normal but notice how the value of `car` behaves like other BLOB-like attributes.
+## Viewing Data
+
+JSON displays as `json` in previews (like blobs):
 
 
 ```python
-Team()
+Equipment()
 ```
 
 
-## Restriction
+## Fetching JSON Data
 
-Now let's see what kinds of queries we can form to demonstrate how we can query this pipeline.
+JSON deserializes to Python dicts on fetch:
 
 
 ```python
-# Which team has a `car` equal to 100 inches long?
-Team & {"car.length": 100}
+# Fetch all
+for row in Equipment.to_dicts():
+    print(f"{row['name']}: {row['specs']}")
 ```
 
 
 
 ```python
-# Which team has a `car` less than 50 inches long?
-Team & "car->>'$.length' < 50"
+# Fetch one and access nested fields
+microscope = (Equipment & {'equipment_id': 1}).fetch1()
+specs = microscope['specs']
+
+print(f"Camera model: {specs['camera']['model']}")
+print(f"Magnifications: {specs['magnification']}")
 ```
 
+
+## Filtering on JSON Content
+
+Fetch then filter in Python:
 
 
 ```python
-# Any team that has had their car inspected?
-Team & [{"car.inspected:unsigned": True}, {"car.safety_inspected:unsigned": True}]
+# Find calibrated equipment
+calibrated = [
+    e for e in Equipment.to_dicts()
+    if e['specs'] and e['specs'].get('calibrated')
+]
+print("Calibrated:", [e['name'] for e in calibrated])
+
+# Find equipment with >32 channels
+multi_channel = [
+    e for e in Equipment.to_dicts()
+    if e['specs'] and e['specs'].get('channels', 0) > 32
+]
+print("Multi-channel:", [e['name'] for e in multi_channel])
 ```
 
+
+## Updating JSON Data
 
 
 ```python
-# Which teams do not have hyper white lights for their first head light?
-Team & {"car.headlights[0].hyper_white": None}
+# Fetch, modify, delete, reinsert
+pending = (Equipment & {'equipment_id': 3}).fetch1()
+pending['specs'] = {'type': 'behavioral', 'sensors': ['IR', 'pressure']}
+
+(Equipment & {'equipment_id': 3}).delete(prompt=False)
+Equipment.insert1(pending)
+
+(Equipment & {'equipment_id': 3}).fetch1()
 ```
 
 
-Notice that the previous query will satisfy the `None` check if it experiences any of the following scenarios:
-- if entire record missing (`marketing` satisfies this)
-- JSON key is missing
-- JSON value is set to JSON `null` (`engineering` satisfies this)
+## Design Guidelines
 
-## Projection
+| JSON | Normalized Tables |
+|------|-------------------|
+| Flexible schema | Fixed schema |
+| Filter in Python | Filter in SQL |
+| No type enforcement | Type-safe |
+| No referential integrity | FK constraints |
 
-Projections can be quite useful with the `json` type since we can extract out just what we need. This allows greater query flexibility but more importantly, for us to be able to fetch only what is pertinent.
-
-
-```python
-# Only interested in the car names and the length but let the type be inferred
-q_untyped = Team.proj(
-    car_name="car.name",
-    car_length="car.length",
-)
-q_untyped
-```
-
-
-
-```python
-q_untyped.to_dicts()
-```
-
-
-
-```python
-# Nevermind, I'll specify the type explicitly
-q_typed = Team.proj(
-    car_name="car.name",
-    car_length="car.length:float",
-)
-q_typed
-```
-
-
-
-```python
-q_typed.to_dicts()
-```
-
-
-## Describe
-
-Lastly, the `.describe()` function on the `Team` table can help us generate the table's definition. This is useful if we are connected directly to the pipeline without the original source.
-
-
-```python
-rebuilt_definition = Team.describe()
-print(rebuilt_definition)
-```
-
+**Tips:**
+- Use JSON for metadata, configs, external API responses
+- If you frequently filter on a field, normalize it to a column
+- Document expected JSON structure in comments
 
 ## Cleanup
-
-Finally, let's clean up what we created in this tutorial.
 
 
 ```python
@@ -4217,6 +4159,8 @@ This tutorial introduces DataJoint by building a simple research lab database. Y
 
 We'll work with **Manual tables** only—tables where you enter data directly. Later tutorials introduce automated computation.
 
+> **Database Backend:** All tutorials work identically on **MySQL** and **PostgreSQL** (PostgreSQL support added in DataJoint Python 2.1). The examples shown here were executed on PostgreSQL, but you can follow along using either backend.
+
 For complete working examples, see:
 - [University Database](../../examples/university) — Academic records with complex queries
 - [Blob Detection](../../examples/blob-detection) — Image processing with computation
@@ -4423,7 +4367,7 @@ Subject & {'sex': 'M'}
 
 ```python
 # Recordings with good quality
-Recording & 'quality = "good"'
+Recording & {'quality': 'good'}
 ```
 
 
@@ -4506,7 +4450,7 @@ Operations chain together to answer complex questions:
 # Good-quality recordings for male subjects, with researcher name
 (
     Recording 
-    & 'quality = "good"' 
+    & {'quality': 'good'} 
     & (Subject & {'sex': 'M'})
 ) * Session * Researcher.proj('researcher_name')
 ```
@@ -4516,7 +4460,7 @@ Operations chain together to answer complex questions:
 ```python
 # Count of good recordings per researcher
 Researcher.aggr(
-    Session * (Recording & 'quality = "good"'),
+    Session * (Recording & {'quality': 'good'}),
     good_recordings='count(*)'
 )
 ```
@@ -4536,7 +4480,7 @@ Subject.to_dicts()
 
 ```python
 # Fetch specific attributes as arrays
-durations = (Recording & 'quality = "good"').to_arrays('duration')
+durations = (Recording & {'quality': 'good'}).to_arrays('duration')
 print(f"Good recording durations: {durations}")
 ```
 
@@ -5384,7 +5328,7 @@ DataJoint provides only `update1()` for modifying single rows. This is intention
 # Update a single row - must provide all primary key values
 Subject.update1({'subject_id': 'M001', 'notes': 'Primary subject for behavioral study'})
 
-(Subject & 'subject_id="M001"').fetch1()
+(Subject & {'subject_id': 'M001'}).fetch1()
 ```
 
 
@@ -5397,7 +5341,7 @@ Subject.update1({
     'species': 'Mus musculus (C57BL/6)'  # More specific
 })
 
-(Subject & 'subject_id="M002"').fetch1()
+(Subject & {'subject_id': 'M002'}).fetch1()
 ```
 
 
@@ -5422,7 +5366,7 @@ except Exception as e:
 ```python
 # Error: cannot update restricted table
 try:
-    (Subject & 'subject_id="M001"').update1({'subject_id': 'M001', 'notes': 'test'})
+    (Subject & {'subject_id': 'M001'}).update1({'subject_id': 'M001', 'notes': 'test'})
 except Exception as e:
     print(f"Error: {type(e).__name__}")
     print("Cannot update restricted table")
@@ -5438,7 +5382,7 @@ Setting an attribute to `None` resets it to its default value:
 # Reset notes to default (empty string)
 Subject.update1({'subject_id': 'M003', 'notes': None})
 
-(Subject & 'subject_id="M003"').fetch1()
+(Subject & {'subject_id': 'M003'}).fetch1()
 ```
 
 
@@ -7774,7 +7718,7 @@ RegionParent.populate(display_progress=True)
 
 ```python
 # Find primary visual cortex
-BrainRegion & 'acronym = "VISp"'
+BrainRegion & {'acronym': 'VISp'}
 ```
 
 
@@ -7783,7 +7727,7 @@ BrainRegion & 'acronym = "VISp"'
 
 ```python
 # Get VISp region ID
-visp = (BrainRegion & 'acronym = "VISp"').fetch1()
+visp = (BrainRegion & {'acronym': 'VISp'}).fetch1()
 visp_id = visp['region_id']
 
 # Find all children (direct descendants)
@@ -7798,7 +7742,7 @@ children.proj('acronym', 'region_name')
 ```python
 def get_ancestors(region_acronym, ccf_id=1):
     """Get the path from a region to the root."""
-    region = (BrainRegion & f'acronym = "{region_acronym}"' & f'ccf_id = {ccf_id}').fetch1()
+    region = (BrainRegion & {'acronym': region_acronym, 'ccf_id': ccf_id}).fetch1()
     region_id = region['region_id']
     
     path = [region['acronym']]
@@ -7886,9 +7830,9 @@ class RecordingSite(dj.Manual):
 # Insert example recording sites
 RecordingSite.insert([
     {'recording_id': 1, 'ccf_id': 1, 'ap': -3500, 'dv': 500, 'ml': 2500, 
-     'region_id': (BrainRegion & 'acronym="VISp"').fetch1('region_id')},
+     'region_id': (BrainRegion & {'acronym': 'VISp'}).fetch1('region_id')},
     {'recording_id': 2, 'ccf_id': 1, 'ap': -1800, 'dv': 1200, 'ml': 1500,
-     'region_id': (BrainRegion & 'acronym="CA1"').fetch1('region_id')},
+     'region_id': (BrainRegion & {'acronym': 'CA1'}).fetch1('region_id')},
 ], skip_duplicates=True)
 
 # View recordings with region info
@@ -10678,7 +10622,7 @@ Proficiency()
 # Proficient English speakers (C1 or C2)
 proficient_english = (
     Person.proj('name') & 
-    (Proficiency & {'lang_code': 'en'} & 'cefr_level >= "C1"')
+    (Proficiency & {'lang_code': 'en'} & "cefr_level >= 'C1'")
 )
 print(f"Proficient English speakers: {len(proficient_english)}")
 proficient_english
@@ -10703,7 +10647,7 @@ bilingual
 # People who speak English OR Spanish
 either = (
     Person.proj('name') & 
-    (Proficiency & 'lang_code in ("en", "es")')
+    (Proficiency & "lang_code in ('en', 'es')")
 )
 print(f"English or Spanish speakers: {len(either)}")
 either
@@ -10782,7 +10726,7 @@ full_profile & {'person_id': 0}
 ```python
 # Find people with C1+ proficiency in multiple languages
 advanced_polyglots = Person.aggr(
-    Proficiency & 'cefr_level >= "C1"',
+    Proficiency & "cefr_level >= 'C1'",
     'name',
     n_advanced='COUNT(*)'
 ) & 'n_advanced >= 2'
@@ -10925,7 +10869,7 @@ class Course(dj.Manual):
 @schema
 class Term(dj.Manual):
     definition = """
-    term_year : year
+    term_year : int16
     term : enum('Spring', 'Summer', 'Fall')
     """
 ```
@@ -11171,7 +11115,7 @@ Student & {'home_state': 'CA'}
 
 ```python
 # SQL-style string conditions
-Student & 'home_state IN ("CA", "TX", "NY")'
+Student & "home_state IN ('CA', 'TX', 'NY')"
 ```
 
 
@@ -11339,8 +11283,8 @@ Department.aggr(StudentMajor, n_students='COUNT(*)')
 # Breakdown by sex per department
 Department.aggr(
     StudentMajor * Student,
-    n_female='SUM(sex="F")',
-    n_male='SUM(sex="M")'
+    n_female="SUM(sex='F')",
+    n_male="SUM(sex='M')"
 )
 ```
 
@@ -13032,9 +12976,10 @@ Environment variables take precedence over config files.
 | Setting | Environment | Default | Description |
 |---------|-------------|---------|-------------|
 | `database.host` | `DJ_HOST` | `localhost` | Database server hostname |
-| `database.port` | `DJ_PORT` | `3306` | Database server port |
+| `database.port` | `DJ_PORT` | Auto | Database server port (3306 for MySQL, 5432 for PostgreSQL) |
 | `database.user` | `DJ_USER` | — | Database username |
 | `database.password` | `DJ_PASS` | — | Database password |
+| `database.backend` | `DJ_BACKEND` | `mysql` | Database backend: `mysql` or `postgresql` |
 | `database.use_tls` | `DJ_TLS` | `True` | Use TLS encryption |
 | `database.reconnect` | — | `True` | Auto-reconnect on timeout |
 | `safemode` | — | `True` | Prompt before destructive operations |
@@ -13093,6 +13038,66 @@ For local development without TLS:
   "database.use_tls": false
 }
 ```
+
+## PostgreSQL Backend
+
+!!! version-added "New in 2.1"
+    PostgreSQL is now supported as an alternative database backend.
+
+DataJoint supports both MySQL and PostgreSQL backends. To use PostgreSQL:
+
+### Configuration File
+
+```json
+{
+  "database": {
+    "host": "localhost",
+    "backend": "postgresql"
+  }
+}
+```
+
+The port defaults to `5432` when `backend` is set to `postgresql`.
+
+### Environment Variable
+
+```bash
+export DJ_BACKEND=postgresql
+export DJ_HOST=localhost
+export DJ_USER=postgres
+export DJ_PASS=password
+```
+
+### Programmatic Configuration
+
+```python
+import datajoint as dj
+
+dj.config['database.backend'] = 'postgresql'
+dj.config['database.host'] = 'localhost'
+```
+
+### Docker Compose for Local Development
+
+```yaml
+services:
+  postgres:
+    image: postgres:15
+    environment:
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=test
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      timeout: 30s
+      retries: 5
+```
+
+### Backend Compatibility
+
+DataJoint's core types and query operators work identically on both backends. Table definitions, queries, and computations are portable between MySQL and PostgreSQL without code changes.
 
 ## Connection Lifecycle
 
@@ -16713,6 +16718,20 @@ No action required—the new license is more permissive.
 
 DataJoint 2.0 introduces portable type aliases (`int64`, `float64`, etc.) that prepare the codebase for **PostgreSQL backend compatibility** in a future release. Migration to core types ensures your schemas will work seamlessly when Postgres support is available.
 
+**String quoting in restrictions:** MySQL and PostgreSQL handle quotes differently. MySQL allows both single and double quotes for string literals, but PostgreSQL interprets double quotes as identifier (column) references. For PostgreSQL compatibility, replace double quotes with single quotes inside SQL restriction strings:
+
+```python
+# Before (MySQL only)
+Table & 'name = "Alice"'
+Table & 'date > "2024-01-01"'
+
+# After (PostgreSQL compatible)
+Table & "name = 'Alice'"
+Table & "date > '2024-01-01'"
+```
+
+See [Database Backends Specification](../reference/specs/database-backends.md#string-quoting) for details.
+
 ### Before You Start: Testing Recommendation
 
 **⚡ Want AI agents to automate Phases I-II for you?**
@@ -16777,6 +16796,88 @@ These codecs are NEW—there's no legacy equivalent to migrate:
 - Schema-addressed storage organizes data by table structure—no migration needed, just new functionality
 
 **Learn more:** [Codec API Reference](../reference/specs/codec-api.md) · [Custom Codecs](../explanation/custom-codecs.md)
+
+### Column Comment Format (Critical for Blob Migration)
+
+DataJoint 2.0 stores type information in the SQL column comment using a `:type:` prefix format:
+
+```sql
+-- 2.0 column comment format
+COMMENT ':<type>:user comment'
+
+-- Examples
+COMMENT ':int64:subject identifier'
+COMMENT ':<blob>:serialized neural data'
+COMMENT ':<blob@store>:large array in object storage'
+```
+
+**Why this matters for blob columns:**
+
+In pre-2.0, `longblob` columns automatically deserialized Python objects using DataJoint's binary serialization format. DataJoint 2.0 identifies blob columns by checking for `:<blob>:` in the column comment. **Without this marker, blob columns are treated as raw binary data and will NOT be deserialized.**
+
+| Column Comment | DataJoint 2.0 Behavior |
+|----------------|----------------------|
+| `:<blob>:neural data` | ✓ Deserializes to Python/NumPy objects |
+| `neural data` (no marker) | ✗ Returns raw bytes (no deserialization) |
+
+**Migration requirement:** Existing blob columns need their comments updated to include the `:<blob>:` prefix. This is a metadata-only change—the actual blob data format is unchanged.
+
+#### Checking Migration Status
+
+```python
+from datajoint.migrate import check_migration_status
+
+status = check_migration_status(schema)
+print(f"Blob columns: {status['total_blob_columns']}")
+print(f"  Migrated: {status['migrated']}")
+print(f"  Pending: {status['pending']}")
+```
+
+#### Migrating Blob Column Comments
+
+Use `migrate_columns()` to add type markers to all columns (integers, floats, and blobs):
+
+```python
+from datajoint.migrate import migrate_columns
+
+# Preview changes (dry run)
+result = migrate_columns(schema, dry_run=True)
+print(f"Would migrate {len(result['sql_statements'])} columns")
+for sql in result['sql_statements']:
+    print(f"  {sql}")
+
+# Apply changes
+result = migrate_columns(schema, dry_run=False)
+print(f"Migrated {result['columns_migrated']} columns")
+```
+
+Or use `migrate_blob_columns()` to migrate only blob columns:
+
+```python
+from datajoint.migrate import migrate_blob_columns
+
+# Preview
+result = migrate_blob_columns(schema, dry_run=True)
+print(f"Would migrate {result['needs_migration']} blob columns")
+
+# Apply
+result = migrate_blob_columns(schema, dry_run=False)
+print(f"Migrated {result['migrated']} blob columns")
+```
+
+**What the migration does:**
+
+```sql
+-- Before migration
+ALTER TABLE `schema`.`table`
+  MODIFY COLUMN `data` longblob COMMENT 'neural recording';
+
+-- After migration
+ALTER TABLE `schema`.`table`
+  MODIFY COLUMN `data` longblob COMMENT ':<blob>:neural recording';
+```
+
+The data itself is unchanged—only the comment metadata is updated.
 
 ### Unified Stores Configuration
 
@@ -18129,6 +18230,24 @@ API CONVERSIONS:
    (table & key).delete()  # unchanged
    (table & restriction).delete()  # unchanged
 
+7. String Quoting in Restrictions (PostgreSQL compatibility):
+   Replace double quotes with single quotes for string literals in SQL restrictions.
+
+   MySQL allows both quote styles, but PostgreSQL interprets double quotes as
+   identifier (column) references, causing errors.
+
+   OLD: Table & 'name = "Alice"'
+   OLD: Table & 'date > "2024-01-01"'
+   OLD: Table & 'strain = "C57BL/6"'
+
+   NEW: Table & "name = 'Alice'"
+   NEW: Table & "date > '2024-01-01'"
+   NEW: Table & "strain = 'C57BL/6'"
+
+   Note: Dictionary restrictions handle quoting automatically but only support
+   equality comparisons. For range comparisons (>, <, LIKE, etc.), use string
+   restrictions with single-quoted values.
+
 PROCESS:
 1. Find all Python files with DataJoint code
 2. For each file:
@@ -18140,6 +18259,8 @@ PROCESS:
    f. Search for .join(x, left=True) patterns (consider .extend(x))
    g. Search for dj.U() * patterns (replace with just table)
    h. Verify dj.U() & patterns remain unchanged
+   i. Search for string restrictions with double-quoted values
+   j. Replace double quotes with single quotes inside SQL strings
 3. Run syntax checks
 4. Run existing tests if available
 5. If semantic checks fail after @ → * conversion, investigate schema/data
@@ -18152,6 +18273,7 @@ VERIFICATION:
 - No @ operator between tables
 - dj.U() * patterns replaced with just table
 - dj.U() & patterns remain unchanged
+- No double-quoted string literals in SQL restrictions
 - All tests pass (if available)
 - Semantic check failures investigated and resolved
 
@@ -18788,24 +18910,90 @@ DROP DATABASE `my_pipeline_old`;
 
 **Warning:** Modifies production schema directly. Test thoroughly first!
 
+#### Step 1: Backup Production
+
 ```python
-from datajoint.migrate import migrate_schema_in_place
+from datajoint.migrate import backup_schema
 
-# Backup first
-backup_schema('my_pipeline', 'my_pipeline_backup_20260114')
+result = backup_schema('my_pipeline', 'my_pipeline_backup_20260114')
+print(f"Backed up {result['tables_backed_up']} tables, {result['rows_backed_up']} rows")
+```
 
-# Migrate in place
-result = migrate_schema_in_place(
-    schema='my_pipeline',
-    backup=True,
-    steps=[
-        'update_blob_comments',  # Add :<blob>: markers
-        'add_lineage_table',  # Create ~lineage
-        'migrate_external_storage',  # BINARY(16) → JSON
-    ]
-)
+#### Step 2: Add Type Markers to Column Comments
 
-print(f"Migrated {result['steps_completed']} steps")
+This is the critical step for blob deserialization. Without `:<blob>:` markers, blob columns return raw bytes instead of deserialized Python objects.
+
+```python
+from datajoint.migrate import migrate_columns, check_migration_status
+import datajoint as dj
+
+schema = dj.Schema('my_pipeline')
+
+# Check current status
+status = check_migration_status(schema)
+print(f"Blob columns needing migration: {status['pending']}")
+
+# Preview changes
+result = migrate_columns(schema, dry_run=True)
+print(f"Would update {len(result['sql_statements'])} columns:")
+for sql in result['sql_statements'][:5]:  # Show first 5
+    print(f"  {sql}")
+
+# Apply changes (updates column comments only, no data changes)
+result = migrate_columns(schema, dry_run=False)
+print(f"Migrated {result['columns_migrated']} columns")
+```
+
+**What this does:** Adds `:<type>:` prefix to column comments:
+
+- `longblob` → `COMMENT ':<blob>:...'`
+- `int unsigned` → `COMMENT ':uint32:...'`
+- etc.
+
+#### Step 3: Rebuild Lineage Table
+
+```python
+from datajoint.migrate import rebuild_lineage
+
+result = rebuild_lineage(schema, dry_run=False)
+print(f"Rebuilt lineage: {result['lineage_entries']} entries")
+```
+
+#### Step 4: Migrate External Storage (if applicable)
+
+If you use `blob@store`, `attach@store`, or `filepath@store`:
+
+```python
+from datajoint.migrate import migrate_external, migrate_filepath
+
+# Preview external blob/attach migration
+result = migrate_external(schema, dry_run=True)
+print(f"Found {result['columns_found']} external columns")
+
+# Apply migration (adds _v2 columns with JSON metadata)
+result = migrate_external(schema, dry_run=False)
+print(f"Migrated {result['rows_migrated']} rows")
+
+# Similarly for filepath columns
+result = migrate_filepath(schema, dry_run=False)
+
+# After verification, finalize (rename columns)
+result = migrate_external(schema, finalize=True)
+result = migrate_filepath(schema, finalize=True)
+```
+
+#### Step 5: Verify Migration
+
+```python
+from datajoint.migrate import verify_schema_v20
+
+result = verify_schema_v20('my_pipeline')
+if result['compatible']:
+    print("✓ Schema fully migrated to 2.0")
+else:
+    print("Issues found:")
+    for issue in result['issues']:
+        print(f"  - {issue}")
 ```
 
 ### Option C: Gradual Migration with Legacy Compatibility
@@ -25598,6 +25786,217 @@ for row in all_rows:
 
 
 ---
+## File: reference/specs/database-backends.md
+
+# Database Backends Specification
+
+!!! version-added "New in 2.1"
+    PostgreSQL support was introduced in DataJoint 2.1.
+
+DataJoint supports multiple database backends through a unified adapter architecture.
+
+## Supported Backends
+
+| Backend | Minimum Version | Default Port | Status |
+|---------|-----------------|--------------|--------|
+| MySQL | 8.0 | 3306 | Production |
+| PostgreSQL | 15 | 5432 | Production |
+
+## Configuration
+
+Select the backend via configuration:
+
+```python
+import datajoint as dj
+
+dj.config['database.backend'] = 'mysql'      # Default
+dj.config['database.backend'] = 'postgresql' # PostgreSQL
+```
+
+Or via environment variable:
+
+```bash
+export DJ_BACKEND=postgresql
+```
+
+## Adapter Architecture
+
+DataJoint uses database adapters to generate backend-specific SQL while maintaining a consistent API.
+
+```mermaid
+flowchart TB
+    subgraph api[DataJoint API]
+        tables[Tables, Queries, Schemas]
+    end
+
+    subgraph adapter[Database Adapter]
+        gen[SQL Generation, Type Mapping]
+    end
+
+    subgraph backends[Backend Adapters]
+        mysql[MySQL Adapter]
+        postgres[PostgreSQL Adapter]
+    end
+
+    api --> adapter
+    adapter --> mysql
+    adapter --> postgres
+```
+
+## Backend Compatibility
+
+### Fully Compatible
+
+The following features work identically across all backends:
+
+- **Table definitions**: Same definition syntax for all backends
+- **Core types**: `int32`, `float64`, `varchar`, `datetime`, etc.
+- **Codec types**: `<blob>`, `<attach>`, `<object@>`, etc.
+- **Query operations**: Restriction, projection, join, aggregation
+- **Foreign keys**: Inheritance, nullable, unique modifiers
+- **Indexes**: Single-column, composite, unique
+- **Auto-populate**: Jobs queue, distributed computation
+
+### Backend-Specific Behavior
+
+| Feature | MySQL | PostgreSQL |
+|---------|-------|------------|
+| Default port | 3306 | 5432 |
+| Schema = Database | Yes | Yes (uses schemas) |
+| JSON operators | `->`, `->>` | `->`, `->>` |
+| BLOB storage | `LONGBLOB` | `BYTEA` |
+| Boolean type | `TINYINT(1)` | `BOOLEAN` |
+
+### String Quoting
+
+MySQL and PostgreSQL handle quotes differently in SQL:
+
+| Quote Type | MySQL | PostgreSQL |
+|------------|-------|------------|
+| Single quotes `'...'` | String literals | String literals |
+| Double quotes `"..."` | String literals | **Identifiers** (column names) |
+| Backticks `` `...` `` | Identifiers | Not supported |
+
+This affects restriction strings. MySQL accepts both quote styles for string values, but PostgreSQL interprets double quotes as identifier (column) references.
+
+```python
+# MySQL only - double quotes work as string literals
+Table & 'name = "Alice"'
+
+# Both backends - single quotes for string literals
+Table & "name = 'Alice'"
+```
+
+**PostgreSQL migration:** Replace double quotes with single quotes inside SQL restriction strings:
+
+```python
+# Before (MySQL)
+Table & 'strain = "C57BL/6"'
+Table & 'date > "2024-01-01"'
+
+# After (PostgreSQL compatible)
+Table & "strain = 'C57BL/6'"
+Table & "date > '2024-01-01'"
+```
+
+Dictionary restrictions handle quoting automatically but only support equality:
+
+```python
+Table & {'name': 'Alice'}  # Equality only - backend-agnostic
+```
+
+For range comparisons (`>`, `<`, `LIKE`, etc.), use string restrictions with single-quoted values.
+
+### SQL Function Translation
+
+DataJoint automatically translates certain SQL functions between backends, allowing portable code:
+
+| Function | MySQL | PostgreSQL |
+|----------|-------|------------|
+| String aggregation | `GROUP_CONCAT(col)` | `STRING_AGG(col, ',')` |
+| String aggregation with separator | `GROUP_CONCAT(col SEPARATOR ';')` | `STRING_AGG(col, ';')` |
+
+You can use either syntax in your code—DataJoint translates to the appropriate form:
+
+```python
+# Both work on both backends
+Person.aggr(Proficiency, languages='GROUP_CONCAT(lang_code)')
+Person.aggr(Proficiency, languages="STRING_AGG(lang_code, ',')")
+```
+
+The translation is bidirectional:
+
+- **On PostgreSQL**: `GROUP_CONCAT(col)` → `STRING_AGG(col::text, ',')`
+- **On MySQL**: `STRING_AGG(col, ',')` → `GROUP_CONCAT(col)`
+
+## Type Mapping
+
+DataJoint core types map to native database types:
+
+| Core Type | MySQL | PostgreSQL |
+|-----------|-------|------------|
+| `int8` | `TINYINT` | `SMALLINT` |
+| `int16` | `SMALLINT` | `SMALLINT` |
+| `int32` | `INT` | `INTEGER` |
+| `int64` | `BIGINT` | `BIGINT` |
+| `float32` | `FLOAT` | `REAL` |
+| `float64` | `DOUBLE` | `DOUBLE PRECISION` |
+| `bool` | `TINYINT(1)` | `BOOLEAN` |
+| `varchar(n)` | `VARCHAR(n)` | `VARCHAR(n)` |
+| `char(n)` | `CHAR(n)` | `CHAR(n)` |
+| `date` | `DATE` | `DATE` |
+| `datetime` | `DATETIME` | `TIMESTAMP` |
+| `datetime(n)` | `DATETIME(n)` | `TIMESTAMP(n)` |
+| `json` | `JSON` | `JSONB` |
+| `uuid` | `BINARY(16)` | `UUID` |
+| `bytes` | `LONGBLOB` | `BYTEA` |
+
+## Connection Management
+
+Both backends support the same connection patterns:
+
+```python
+# Singleton connection (default)
+conn = dj.conn()
+
+# Context manager (explicit lifecycle)
+with dj.Connection(**creds) as conn:
+    schema = dj.Schema('my_schema', connection=conn)
+
+# Reset connection
+conn = dj.conn(reset=True)
+```
+
+## Testing Against Multiple Backends
+
+For development and CI/CD, you can test against both backends:
+
+```bash
+# Test MySQL only
+DJ_BACKEND=mysql pytest tests/
+
+# Test PostgreSQL only
+DJ_BACKEND=postgresql pytest tests/
+```
+
+## Migration Between Backends
+
+DataJoint does not provide automatic migration between backends. To migrate data:
+
+1. Export data using `fetch()` and pandas DataFrames
+2. Create new schemas on the target backend
+3. Import data using `insert()`
+
+Schema definitions are portable—the same Python class definitions work on both backends.
+
+## See Also
+
+- [Configure Database](../../how-to/configure-database.md) — Connection setup
+- [Type System](type-system.md) — Core type definitions
+- [Table Declaration](table-declaration.md) — Definition syntax
+
+
+---
 ## File: reference/specs/fetch-api.md
 
 # DataJoint 2.0 Fetch API Specification
@@ -25940,11 +26339,12 @@ Specs clarify exact behavior when documentation or examples are ambiguous.
 
 ## Reading Order
 
-### Foundation (Start Here)
+### Start Here
 
-1. [Table Declaration](table-declaration.md) — How to define tables
-2. [Primary Keys](primary-keys.md) — Key propagation rules
-3. [Type System](type-system.md) — Three-layer type architecture
+1. [Database Backends](database-backends.md) — Supported databases (MySQL, PostgreSQL)
+2. [Table Declaration](table-declaration.md) — How to define tables
+3. [Primary Keys](primary-keys.md) — Key propagation rules
+4. [Type System](type-system.md) — Three-layer type architecture
 
 **Next:** Choose based on your needs:
 - **Working with data?** → Data Operations
@@ -26215,7 +26615,7 @@ SELECT * FROM table_a NATURAL JOIN table_b
 
 Hidden attributes must be excluded from all binary operator considerations. The result of a join does not preserve hidden attributes from its operands.
 
-**Current implementation:**
+**Pre-2.0 implementation:**
 ```python
 def from_clause(self):
     clause = next(support)
@@ -26223,7 +26623,7 @@ def from_clause(self):
         clause += " NATURAL{left} JOIN {clause}".format(...)
 ```
 
-**Proposed implementation:**
+**DataJoint 2.0 implementation:**
 ```python
 def from_clause(self):
     clause = next(support)
@@ -29124,64 +29524,206 @@ This allows `GROUP BY` and `HAVING` clauses to use alias column names created by
 
 ### 13.2 QueryExpression Properties
 
-Each `QueryExpression` represents a `SELECT` statement with these properties:
+Each `QueryExpression` represents a SQL `SELECT` statement with these properties:
 
 | Property | SQL Clause | Description |
 |----------|------------|-------------|
-| `heading` | `SELECT` | Attributes to retrieve |
-| `restriction` | `WHERE` | List of conditions (AND) |
-| `support` | `FROM` | Tables/subqueries to query |
+| `heading` | `SELECT` | Attributes and computed expressions |
+| `restriction` | `WHERE` / `HAVING` | Filter conditions |
+| `support` | `FROM` | Base tables and joined tables |
+| `_top` | `ORDER BY` / `LIMIT` | Ordering and pagination |
+| `_group_by` | `GROUP BY` | Grouping (for aggregations) |
 
-Operators create new expressions by combining these properties:
-- `proj` → creates new `heading`
-- `&` → appends to `restriction`
-- `*` → adds to `support`
+### 13.3 Modify-in-Place vs. Subquery Wrapping
 
-### 13.3 Subquery Generation Rules
+When an operator is applied to a QueryExpression, DataJoint either:
 
-Operators merge properties when possible, avoiding subqueries. A subquery is generated when:
+1. **Modifies in place**: Adds/modifies clauses in the existing SELECT statement
+2. **Wraps as subquery**: Creates a new outer SELECT with the input as a FROM subquery
 
-| Situation | Reason |
-|-----------|--------|
-| Restriction uses alias attributes | Alias must exist in SELECT before WHERE can reference it |
-| Projection creates alias from alias | Must materialize first alias |
-| Join on alias attribute | Alias must exist before join condition |
-| Aggregation as operand | GROUP BY requires complete subquery |
-| Union operand | UNION requires complete subqueries |
+The choice depends on SQL semantics—whether the operation can be expressed by adding clauses, or whether the input must first be materialized as a derived table.
 
-When a subquery is created, the input becomes a `FROM` clause element in a new `QueryExpression`.
+### 13.4 Restriction Rules (`&` and `-`)
 
-### 13.4 Join Mechanics
+**Modify in place** when restricting on:
+- Base table attributes (columns from FROM tables)
+- Primary key attributes (including those inherited via FK)
 
-Joins combine the properties of both inputs:
+**Wrap as subquery** when restricting on:
+- Computed/aliased attributes (created by `.proj()`)
+- Aggregated attributes (created by `.aggr()`)
+- Any attribute after `LIMIT`/`OFFSET` has been applied
 
 ```python
-result.support = A.support + B.support
-result.restriction = A.restriction + B.restriction
-result.heading = merge(A.heading, B.heading)
+# Modify in place: condition added to WHERE
+Session & "session_date > '2024-01-01'"
+# SQL: SELECT ... FROM session WHERE session_date > '2024-01-01'
+
+# Subquery required: restriction references computed alias
+Session.proj(year='YEAR(session_date)') & "year = 2024"
+# SQL: SELECT * FROM (
+#        SELECT ..., YEAR(session_date) as year FROM session
+#      ) AS _s1 WHERE year = 2024
 ```
 
-Restrictions from inputs propagate to the output. Inputs that don't become subqueries donate their supports, restrictions, and projections directly to the join.
+**Aggregation special case**: Restrictions after aggregation go to HAVING (MySQL) or require subquery (PostgreSQL):
 
-### 13.5 Aggregation SQL
+```python
+Session.aggr(Trial, n='count(*)') & "n > 10"
+# MySQL:      ... GROUP BY pk HAVING n > 10
+# PostgreSQL: SELECT * FROM (...GROUP BY pk) AS _s1 WHERE n > 10
+```
 
-Aggregation translates to:
+### 13.5 Projection Rules (`.proj()`)
+
+**Modify in place** when:
+- Selecting a subset of existing attributes
+- Renaming base attributes
+- Computing new attributes from base columns
+
+**Wrap as subquery** when:
+- Computing attribute from another computed attribute (alias of alias)
+- Projecting after `LIMIT`/`OFFSET` has been applied
+
+```python
+# Modify in place: adds computed column to SELECT
+Session.proj(year='YEAR(session_date)')
+# SQL: SELECT pk, YEAR(session_date) as year FROM session
+
+# Subquery required: decade depends on year alias
+Session.proj(year='YEAR(session_date)').proj(decade='year - year % 10')
+# SQL: SELECT pk, year - year % 10 as decade FROM (
+#        SELECT pk, YEAR(session_date) as year FROM session
+#      ) AS _s1
+```
+
+### 13.5.1 Join Rules (`*`)
+
+**Modify in place** (merge both operands' clauses) when:
+- Both operands are base tables or simple projections
+- Join attributes are base columns (not computed)
+- Neither operand has `LIMIT`/`OFFSET` or `GROUP BY`
+
+**Wrap operand as subquery** when operand has:
+- Computed attributes used in join condition
+- `LIMIT`/`OFFSET` applied
+- `GROUP BY` (is an aggregation result)
+- Is a union expression
+
+```python
+# Modify in place: merge FROM and WHERE clauses
+Session * Trial
+# SQL: SELECT ... FROM session JOIN trial USING (pk)
+
+# Subquery required: aggregation as join operand
+Session * Session.aggr(Trial, n='count(*)')
+# SQL: SELECT ... FROM session JOIN (
+#        SELECT pk, count(*) as n FROM session
+#        LEFT JOIN trial USING (pk) GROUP BY pk
+#      ) AS _s1 USING (pk)
+```
+
+### 13.5.2 Aggregation Rules (`.aggr()`)
+
+Aggregation produces a query with `GROUP BY`. The grouped expression is joined:
 
 ```sql
 SELECT A.pk, A.secondary, agg_func(B.col) AS computed
-FROM A
-LEFT JOIN B USING (pk)
-WHERE <restrictions on A>
+FROM A LEFT JOIN B USING (pk)
+WHERE <restrictions on A attributes>
 GROUP BY A.pk
-HAVING <restrictions on B or computed>
+HAVING <restrictions on B or computed attributes>
 ```
 
-Key behavior:
-- Restrictions on A → `WHERE` clause (before grouping)
-- Restrictions on B or computed attributes → `HAVING` clause (after grouping)
-- Aggregation never generates a subquery when restricted
+**Restrictions routing:**
+- On grouping expression (A) attributes → `WHERE` (before GROUP BY)
+- On grouped expression (B) or computed attributes → `HAVING` (after GROUP BY)
 
-### 13.6 Union SQL
+**Aggregation result requires subquery** when used as operand to:
+- Another join (`*`)
+- Further restriction on computed attributes
+- Another aggregation
+
+### 13.5.3 Top/Limit Rules (`dj.Top`)
+
+**Any operation after Top requires subquery** (the limited result must materialize):
+
+```python
+(Session & dj.Top(10, 'date DESC')) & "notes IS NOT NULL"
+# SQL: SELECT * FROM (
+#        SELECT * FROM session ORDER BY date DESC LIMIT 10
+#      ) AS _s1 WHERE notes IS NOT NULL
+```
+
+Exception: Chaining Tops with compatible ordering can merge (see Section 12.5)
+
+### 13.6 Backend-Specific Transpilation
+
+DataJoint supports multiple database backends with differing SQL dialects. The adapter layer handles:
+
+#### 13.6.1 Function Translation
+
+Aggregate functions are translated bidirectionally:
+
+| DataJoint | MySQL | PostgreSQL |
+|-----------|-------|------------|
+| `GROUP_CONCAT(col)` | `GROUP_CONCAT(col)` | `STRING_AGG(col::text, ',')` |
+| `STRING_AGG(col, sep)` | `GROUP_CONCAT(col SEPARATOR sep)` | `STRING_AGG(col, sep)` |
+
+Code using either syntax works on both backends.
+
+#### 13.6.2 HAVING Clause Alias References
+
+MySQL allows column aliases in HAVING:
+
+```sql
+SELECT person_id, COUNT(*) as n_languages
+FROM proficiency
+GROUP BY person_id
+HAVING n_languages >= 4   -- MySQL: OK, PostgreSQL: ERROR
+```
+
+PostgreSQL (following SQL standard) requires repeating the expression or using a subquery:
+
+```sql
+-- Option A: Repeat expression
+HAVING COUNT(*) >= 4
+
+-- Option B: Subquery wrapper
+SELECT * FROM (
+  SELECT person_id, COUNT(*) as n_languages
+  FROM proficiency
+  GROUP BY person_id
+) AS subq
+WHERE n_languages >= 4
+```
+
+**DataJoint approach:** When generating SQL for PostgreSQL, if the HAVING clause references computed attribute aliases, the aggregation is wrapped in a subquery and the HAVING condition becomes a WHERE clause on the outer query.
+
+| Backend | HAVING with alias | Generated SQL |
+|---------|------------------|---------------|
+| MySQL | Direct | `... GROUP BY pk HAVING alias > 5` |
+| PostgreSQL | Subquery wrapper | `SELECT * FROM (...) AS subq WHERE alias > 5` |
+
+This ensures consistent behavior across backends while maintaining query correctness.
+
+#### 13.6.3 Identifier Quoting
+
+| Backend | Identifier Quote | Example |
+|---------|-----------------|---------|
+| MySQL | Backtick | `` `table`.`column` `` |
+| PostgreSQL | Double quote | `"table"."column"` |
+
+#### 13.6.4 String Literal Quoting
+
+| Backend | String Literals | Identifier Literals |
+|---------|----------------|-------------------|
+| MySQL | `'value'` or `"value"` | `` `name` `` |
+| PostgreSQL | `'value'` only | `"name"` |
+
+In PostgreSQL, double quotes denote identifiers, not string literals. Dictionary restrictions handle this automatically; string restrictions must use single quotes for values.
+
+### 13.7 Union SQL
 
 Union performs an outer join:
 
@@ -29194,13 +29736,26 @@ UNION
 
 All union inputs become subqueries except unrestricted unions.
 
-### 13.7 Query Backprojection
+### 13.8 Query Backprojection
 
 Before execution, `finalize()` recursively projects out unnecessary attributes from all inputs. This optimization:
 
 - Reduces data transfer (especially for blobs)
 - Compensates for MySQL's query optimizer limitations
 - Produces leaner queries for complex expressions
+
+### 13.9 Subquery Generation Summary
+
+| Trigger | Reason | Strategy |
+|---------|--------|----------|
+| Restrict on computed attribute | Alias must exist before WHERE references it | Wrap input |
+| Restrict after LIMIT/OFFSET | Limited result must materialize first | Wrap input |
+| Project alias from alias | First alias must materialize | Wrap input |
+| Join on computed attribute | Join condition can't reference SELECT alias | Wrap operand |
+| Aggregation as join operand | GROUP BY must complete first | Wrap operand |
+| Restrict on aggregated attribute | HAVING result must materialize (PostgreSQL) | Wrap aggregation |
+| Union operands | UNION requires complete subqueries | Wrap both |
+| PostgreSQL HAVING with alias | Standard SQL compliance | Wrap + convert to WHERE |
 
 ---
 
@@ -29234,16 +29789,16 @@ Before execution, `finalize()` recursively projects out unnecessary attributes f
 ---
 ## File: reference/specs/semantic-matching.md
 
-# Semantic Matching for Joins - Specification
+# Semantic Matching - Specification
 
 ## Overview
 
-This document specifies **semantic matching** for joins in DataJoint 2.0, replacing the current name-based matching rules. Semantic matching ensures that attributes are only matched when they share both the same name and the same **lineage** (origin), preventing accidental joins on unrelated attributes that happen to share names.
+This document specifies **semantic matching** for binary operators in DataJoint 2.0. Semantic matching ensures that attributes are only matched when they share both the same name and the same **lineage** (origin), preventing accidental matches on unrelated attributes that happen to share names. This replaces the name-based matching rules from pre-2.0 versions.
 
 ### Goals
 
-1. **Prevent incorrect joins** on attributes that share names but represent different entities
-2. **Enable valid joins** that are currently blocked due to overly restrictive rules
+1. **Prevent incorrect matches** on attributes that share names but represent different entities
+2. **Enable valid operations** that were previously blocked due to overly restrictive rules
 3. **Maintain backward compatibility** for well-designed schemas
 4. **Provide clear error messages** when semantic conflicts are detected
 
@@ -30135,6 +30690,9 @@ Potential improvements identified for the declaration system:
 # Type System Specification
 
 ## Overview
+
+!!! version-added "New in 2.1"
+    PostgreSQL type mappings were added in DataJoint 2.1. See [Database Backends](database-backends.md) for backend configuration.
 
 This document defines a three-layer type architecture:
 
@@ -31713,6 +32271,7 @@ For DataJoint 0.x documentation, visit:
 
 | Version | Release Date | Major Changes |
 |---------|--------------|---------------|
+| 2.1 | 2026 | PostgreSQL multi-backend support |
 | 2.0 | 2026 | Redesigned fetch API, unified stores, per-table jobs, semantic matching |
 | 0.14.x | 2020-2025 | Legacy version with external storage |
 | 0.13.x | 2019 | Legacy version |

@@ -5,20 +5,20 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width,initial-scale=1" name="viewport"/>
-<link href="https://docs.datajoint.com/explanation/query-algebra/" rel="canonical"/>
-<link href="../computation-model/" rel="prev"/>
-<link href="../semantic-matching/" rel="next"/>
-<link href="../../assets/images/company-logo-blue.png" rel="icon"/>
+<link href="https://docs.datajoint.com/reference/specs/database-backends/" rel="canonical"/>
+<link href="../" rel="prev"/>
+<link href="../table-declaration/" rel="next"/>
+<link href="../../../assets/images/company-logo-blue.png" rel="icon"/>
 <meta content="mkdocs-1.6.1, mkdocs-material-9.7.1" name="generator"/>
-<title>Query Algebra - DataJoint Documentation</title>
-<link href="../../assets/stylesheets/main.484c7ddc.min.css" rel="stylesheet"/>
-<link href="../../assets/stylesheets/palette.ab4e12ef.min.css" rel="stylesheet"/>
+<title>Database Backends - DataJoint Documentation</title>
+<link href="../../../assets/stylesheets/main.484c7ddc.min.css" rel="stylesheet"/>
+<link href="../../../assets/stylesheets/palette.ab4e12ef.min.css" rel="stylesheet"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
 <link href="https://fonts.googleapis.com/css?family=Roboto+Slab:300,300i,400,400i,700,700i%7CSource+Code+Pro:400,400i,700,700i&amp;display=fallback" rel="stylesheet"/>
 <style>:root{--md-text-font:"Roboto Slab";--md-code-font:"Source Code Pro"}</style>
-<link href="../../assets/_mkdocstrings.css" rel="stylesheet"/>
-<link href="../../assets/stylesheets/extra.css" rel="stylesheet"/>
-<script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+<link href="../../../assets/_mkdocstrings.css" rel="stylesheet"/>
+<link href="../../../assets/stylesheets/extra.css" rel="stylesheet"/>
+<script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
 <script src="https://www.datadoghq-browser-agent.com/us1/v4/datadog-rum.js" type="text/javascript">
 </script>
 <script>
@@ -46,7 +46,7 @@
 <input autocomplete="off" class="md-toggle" data-md-toggle="search" id="__search" type="checkbox"/>
 <label class="md-overlay" for="__drawer"></label>
 <div data-md-component="skip">
-<a class="md-skip" href="#query-algebra">
+<a class="md-skip" href="#database-backends-specification">
           Skip to content
         </a>
 </div>
@@ -73,7 +73,7 @@
 </div>
 <header class="md-header md-header--shadow" data-md-component="header">
 <nav aria-label="Header" class="md-header__inner md-grid">
-<a aria-label="DataJoint Documentation" class="md-header__button md-logo" data-md-component="logo" href="../.." title="DataJoint Documentation">
+<a aria-label="DataJoint Documentation" class="md-header__button md-logo" data-md-component="logo" href="../../.." title="DataJoint Documentation">
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Generator: Adobe Illustrator 15.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
@@ -98,7 +98,7 @@
 <div class="md-header__topic" data-md-component="header-topic">
 <span class="md-ellipsis">
             
-              Query Algebra
+              Database Backends
             
           </span>
 </div>
@@ -165,7 +165,7 @@
 <div class="md-sidebar__inner">
 <nav aria-label="Navigation" class="md-nav md-nav--primary" data-md-level="0">
 <label class="md-nav__title" for="__drawer">
-<a aria-label="DataJoint Documentation" class="md-nav__button md-logo" data-md-component="logo" href="../.." title="DataJoint Documentation">
+<a aria-label="DataJoint Documentation" class="md-nav__button md-logo" data-md-component="logo" href="../../.." title="DataJoint Documentation">
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Generator: Adobe Illustrator 15.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
@@ -191,7 +191,7 @@
 </div>
 <ul class="md-nav__list" data-md-scrollfix="">
 <li class="md-nav__item">
-<a class="md-nav__link" href="../..">
+<a class="md-nav__link" href="../../..">
 <span class="md-ellipsis">
     
   
@@ -202,10 +202,10 @@
   </span>
 </a>
 </li>
-<li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
-<input checked="" class="md-nav__toggle md-toggle" id="__nav_2" type="checkbox"/>
+<li class="md-nav__item md-nav__item--section md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_2" type="checkbox"/>
 <div class="md-nav__link md-nav__container">
-<a class="md-nav__link" href="../">
+<a class="md-nav__link" href="../../../explanation/">
 <span class="md-ellipsis">
     
   
@@ -219,7 +219,7 @@
 <span class="md-nav__icon md-icon"></span>
 </label>
 </div>
-<nav aria-expanded="true" aria-labelledby="__nav_2_label" class="md-nav" data-md-level="1">
+<nav aria-expanded="false" aria-labelledby="__nav_2_label" class="md-nav" data-md-level="1">
 <label class="md-nav__title" for="__nav_2">
 <span class="md-nav__icon md-icon"></span>
             
@@ -253,7 +253,7 @@
           </label>
 <ul class="md-nav__list" data-md-scrollfix="">
 <li class="md-nav__item">
-<a class="md-nav__link" href="../data-pipelines/">
+<a class="md-nav__link" href="../../../explanation/data-pipelines/">
 <span class="md-ellipsis">
     
   
@@ -265,7 +265,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../whats-new-2/">
+<a class="md-nav__link" href="../../../explanation/whats-new-2/">
 <span class="md-ellipsis">
     
   
@@ -277,7 +277,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../faq/">
+<a class="md-nav__link" href="../../../explanation/faq/">
 <span class="md-ellipsis">
     
   
@@ -315,7 +315,7 @@
           </label>
 <ul class="md-nav__list" data-md-scrollfix="">
 <li class="md-nav__item">
-<a class="md-nav__link" href="../relational-workflow-model/">
+<a class="md-nav__link" href="../../../explanation/relational-workflow-model/">
 <span class="md-ellipsis">
     
   
@@ -327,7 +327,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../entity-integrity/">
+<a class="md-nav__link" href="../../../explanation/entity-integrity/">
 <span class="md-ellipsis">
     
   
@@ -339,7 +339,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../normalization/">
+<a class="md-nav__link" href="../../../explanation/normalization/">
 <span class="md-ellipsis">
     
   
@@ -351,7 +351,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../computation-model/">
+<a class="md-nav__link" href="../../../explanation/computation-model/">
 <span class="md-ellipsis">
     
   
@@ -365,8 +365,8 @@
 </ul>
 </nav>
 </li>
-<li class="md-nav__item md-nav__item--active md-nav__item--nested">
-<input checked="" class="md-nav__toggle md-toggle" id="__nav_2_3" type="checkbox"/>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_2_3" type="checkbox"/>
 <label class="md-nav__link" for="__nav_2_3" id="__nav_2_3_label" tabindex="0">
 <span class="md-ellipsis">
     
@@ -378,7 +378,7 @@
   </span>
 <span class="md-nav__icon md-icon"></span>
 </label>
-<nav aria-expanded="true" aria-labelledby="__nav_2_3_label" class="md-nav" data-md-level="2">
+<nav aria-expanded="false" aria-labelledby="__nav_2_3_label" class="md-nav" data-md-level="2">
 <label class="md-nav__title" for="__nav_2_3">
 <span class="md-nav__icon md-icon"></span>
             
@@ -388,20 +388,8 @@
 
           </label>
 <ul class="md-nav__list" data-md-scrollfix="">
-<li class="md-nav__item md-nav__item--active">
-<input class="md-nav__toggle md-toggle" id="__toc" type="checkbox"/>
-<label class="md-nav__link md-nav__link--active" for="__toc">
-<span class="md-ellipsis">
-    
-  
-    Query Algebra
-  
-
-    
-  </span>
-<span class="md-nav__icon md-icon"></span>
-</label>
-<a class="md-nav__link md-nav__link--active" href="./">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../explanation/query-algebra/">
 <span class="md-ellipsis">
     
   
@@ -411,191 +399,9 @@
     
   </span>
 </a>
-<nav aria-label="Table of contents" class="md-nav md-nav--secondary">
-<label class="md-nav__title" for="__toc">
-<span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
-<li class="md-nav__item">
-<a class="md-nav__link" href="#algebraic-closure">
-<span class="md-ellipsis">
-      
-        Algebraic Closure
-      
-    </span>
-</a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#core-operators">
-<span class="md-ellipsis">
-      
-        Core Operators
-      
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#restriction-and-">
-<span class="md-ellipsis">
-      
-        Restriction (&amp; and -)
-      
-    </span>
-</a>
-<nav aria-label="Restriction (&amp; and -)" class="md-nav">
-<ul class="md-nav__list">
-<li class="md-nav__item">
-<a class="md-nav__link" href="#include">
-<span class="md-ellipsis">
-      
-        Include (&amp;)
-      
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#exclude-">
-<span class="md-ellipsis">
-      
-        Exclude (-)
-      
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#top-n-djtop">
-<span class="md-ellipsis">
-      
-        Top N (dj.Top)
-      
-    </span>
-</a>
-</li>
-</ul>
-</nav>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#join">
-<span class="md-ellipsis">
-      
-        Join (*)
-      
-    </span>
-</a>
-<nav aria-label="Join (*)" class="md-nav">
-<ul class="md-nav__list">
-<li class="md-nav__item">
-<a class="md-nav__link" href="#extend-extend">
-<span class="md-ellipsis">
-      
-        Extend (.extend())
-      
-    </span>
-</a>
-</li>
-</ul>
-</nav>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#projection-proj">
-<span class="md-ellipsis">
-      
-        Projection (.proj())
-      
-    </span>
-</a>
-<nav aria-label="Projection (.proj())" class="md-nav">
-<ul class="md-nav__list">
-<li class="md-nav__item">
-<a class="md-nav__link" href="#select-attributes">
-<span class="md-ellipsis">
-      
-        Select attributes
-      
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#compute-new-attributes">
-<span class="md-ellipsis">
-      
-        Compute new attributes
-      
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#aggregate-in-projection">
-<span class="md-ellipsis">
-      
-        Aggregate in projection
-      
-    </span>
-</a>
-</li>
-</ul>
-</nav>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#aggregation-aggr">
-<span class="md-ellipsis">
-      
-        Aggregation (.aggr())
-      
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#union">
-<span class="md-ellipsis">
-      
-        Union (+)
-      
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#operator-composition">
-<span class="md-ellipsis">
-      
-        Operator Composition
-      
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#semantic-matching">
-<span class="md-ellipsis">
-      
-        Semantic Matching
-      
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#fetching-results">
-<span class="md-ellipsis">
-      
-        Fetching Results
-      
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#summary">
-<span class="md-ellipsis">
-      
-        Summary
-      
-    </span>
-</a>
-</li>
-</ul>
-</nav>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../semantic-matching/">
+<a class="md-nav__link" href="../../../explanation/semantic-matching/">
 <span class="md-ellipsis">
     
   
@@ -633,7 +439,7 @@
           </label>
 <ul class="md-nav__list" data-md-scrollfix="">
 <li class="md-nav__item">
-<a class="md-nav__link" href="../type-system/">
+<a class="md-nav__link" href="../../../explanation/type-system/">
 <span class="md-ellipsis">
     
   
@@ -645,7 +451,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../custom-codecs/">
+<a class="md-nav__link" href="../../../explanation/custom-codecs/">
 <span class="md-ellipsis">
     
   
@@ -665,7 +471,7 @@
 <li class="md-nav__item md-nav__item--section md-nav__item--nested">
 <input class="md-nav__toggle md-toggle" id="__nav_3" type="checkbox"/>
 <div class="md-nav__link md-nav__container">
-<a class="md-nav__link" href="../../tutorials/">
+<a class="md-nav__link" href="../../../tutorials/">
 <span class="md-ellipsis">
     
   
@@ -713,7 +519,7 @@
           </label>
 <ul class="md-nav__list" data-md-scrollfix="">
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../tutorials/basics/01-first-pipeline/">
+<a class="md-nav__link" href="../../../tutorials/basics/01-first-pipeline/">
 <span class="md-ellipsis">
     
   
@@ -725,7 +531,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../tutorials/basics/02-schema-design/">
+<a class="md-nav__link" href="../../../tutorials/basics/02-schema-design/">
 <span class="md-ellipsis">
     
   
@@ -737,7 +543,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../tutorials/basics/03-data-entry/">
+<a class="md-nav__link" href="../../../tutorials/basics/03-data-entry/">
 <span class="md-ellipsis">
     
   
@@ -749,7 +555,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../tutorials/basics/04-queries/">
+<a class="md-nav__link" href="../../../tutorials/basics/04-queries/">
 <span class="md-ellipsis">
     
   
@@ -761,7 +567,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../tutorials/basics/05-computation/">
+<a class="md-nav__link" href="../../../tutorials/basics/05-computation/">
 <span class="md-ellipsis">
     
   
@@ -773,7 +579,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../tutorials/basics/06-object-storage/">
+<a class="md-nav__link" href="../../../tutorials/basics/06-object-storage/">
 <span class="md-ellipsis">
     
   
@@ -811,7 +617,7 @@
           </label>
 <ul class="md-nav__list" data-md-scrollfix="">
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../tutorials/examples/university/">
+<a class="md-nav__link" href="../../../tutorials/examples/university/">
 <span class="md-ellipsis">
     
   
@@ -823,7 +629,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../tutorials/examples/hotel-reservations/">
+<a class="md-nav__link" href="../../../tutorials/examples/hotel-reservations/">
 <span class="md-ellipsis">
     
   
@@ -835,7 +641,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../tutorials/examples/languages/">
+<a class="md-nav__link" href="../../../tutorials/examples/languages/">
 <span class="md-ellipsis">
     
   
@@ -847,7 +653,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../tutorials/examples/fractal-pipeline/">
+<a class="md-nav__link" href="../../../tutorials/examples/fractal-pipeline/">
 <span class="md-ellipsis">
     
   
@@ -859,7 +665,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../tutorials/examples/blob-detection/">
+<a class="md-nav__link" href="../../../tutorials/examples/blob-detection/">
 <span class="md-ellipsis">
     
   
@@ -897,7 +703,7 @@
           </label>
 <ul class="md-nav__list" data-md-scrollfix="">
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../tutorials/domain/calcium-imaging/calcium-imaging/">
+<a class="md-nav__link" href="../../../tutorials/domain/calcium-imaging/calcium-imaging/">
 <span class="md-ellipsis">
     
   
@@ -909,7 +715,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../tutorials/domain/electrophysiology/electrophysiology/">
+<a class="md-nav__link" href="../../../tutorials/domain/electrophysiology/electrophysiology/">
 <span class="md-ellipsis">
     
   
@@ -921,7 +727,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../tutorials/domain/electrophysiology/ephys-with-npy/">
+<a class="md-nav__link" href="../../../tutorials/domain/electrophysiology/ephys-with-npy/">
 <span class="md-ellipsis">
     
   
@@ -933,7 +739,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../tutorials/domain/allen-ccf/allen-ccf/">
+<a class="md-nav__link" href="../../../tutorials/domain/allen-ccf/allen-ccf/">
 <span class="md-ellipsis">
     
   
@@ -971,7 +777,7 @@
           </label>
 <ul class="md-nav__list" data-md-scrollfix="">
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../tutorials/advanced/sql-comparison/">
+<a class="md-nav__link" href="../../../tutorials/advanced/sql-comparison/">
 <span class="md-ellipsis">
     
   
@@ -983,7 +789,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../tutorials/advanced/json-type/">
+<a class="md-nav__link" href="../../../tutorials/advanced/json-type/">
 <span class="md-ellipsis">
     
   
@@ -995,7 +801,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../tutorials/advanced/distributed/">
+<a class="md-nav__link" href="../../../tutorials/advanced/distributed/">
 <span class="md-ellipsis">
     
   
@@ -1007,7 +813,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../tutorials/advanced/custom-codecs/">
+<a class="md-nav__link" href="../../../tutorials/advanced/custom-codecs/">
 <span class="md-ellipsis">
     
   
@@ -1027,7 +833,7 @@
 <li class="md-nav__item md-nav__item--section md-nav__item--nested">
 <input class="md-nav__toggle md-toggle" id="__nav_4" type="checkbox"/>
 <div class="md-nav__link md-nav__container">
-<a class="md-nav__link" href="../../how-to/">
+<a class="md-nav__link" href="../../../how-to/">
 <span class="md-ellipsis">
     
   
@@ -1075,7 +881,7 @@
           </label>
 <ul class="md-nav__list" data-md-scrollfix="">
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../how-to/installation/">
+<a class="md-nav__link" href="../../../how-to/installation/">
 <span class="md-ellipsis">
     
   
@@ -1087,7 +893,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../how-to/configure-database/">
+<a class="md-nav__link" href="../../../how-to/configure-database/">
 <span class="md-ellipsis">
     
   
@@ -1099,7 +905,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../how-to/configure-storage/">
+<a class="md-nav__link" href="../../../how-to/configure-storage/">
 <span class="md-ellipsis">
     
   
@@ -1111,7 +917,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../how-to/use-cli/">
+<a class="md-nav__link" href="../../../how-to/use-cli/">
 <span class="md-ellipsis">
     
   
@@ -1149,7 +955,7 @@
           </label>
 <ul class="md-nav__list" data-md-scrollfix="">
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../how-to/define-tables/">
+<a class="md-nav__link" href="../../../how-to/define-tables/">
 <span class="md-ellipsis">
     
   
@@ -1161,7 +967,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../how-to/model-relationships/">
+<a class="md-nav__link" href="../../../how-to/model-relationships/">
 <span class="md-ellipsis">
     
   
@@ -1173,7 +979,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../how-to/design-primary-keys/">
+<a class="md-nav__link" href="../../../how-to/design-primary-keys/">
 <span class="md-ellipsis">
     
   
@@ -1185,7 +991,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../how-to/read-diagrams/">
+<a class="md-nav__link" href="../../../how-to/read-diagrams/">
 <span class="md-ellipsis">
     
   
@@ -1223,7 +1029,7 @@
           </label>
 <ul class="md-nav__list" data-md-scrollfix="">
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../how-to/manage-pipeline-project/">
+<a class="md-nav__link" href="../../../how-to/manage-pipeline-project/">
 <span class="md-ellipsis">
     
   
@@ -1261,7 +1067,7 @@
           </label>
 <ul class="md-nav__list" data-md-scrollfix="">
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../how-to/insert-data/">
+<a class="md-nav__link" href="../../../how-to/insert-data/">
 <span class="md-ellipsis">
     
   
@@ -1273,7 +1079,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../how-to/query-data/">
+<a class="md-nav__link" href="../../../how-to/query-data/">
 <span class="md-ellipsis">
     
   
@@ -1285,7 +1091,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../how-to/fetch-results/">
+<a class="md-nav__link" href="../../../how-to/fetch-results/">
 <span class="md-ellipsis">
     
   
@@ -1297,7 +1103,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../how-to/delete-data/">
+<a class="md-nav__link" href="../../../how-to/delete-data/">
 <span class="md-ellipsis">
     
   
@@ -1335,7 +1141,7 @@
           </label>
 <ul class="md-nav__list" data-md-scrollfix="">
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../how-to/run-computations/">
+<a class="md-nav__link" href="../../../how-to/run-computations/">
 <span class="md-ellipsis">
     
   
@@ -1347,7 +1153,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../how-to/distributed-computing/">
+<a class="md-nav__link" href="../../../how-to/distributed-computing/">
 <span class="md-ellipsis">
     
   
@@ -1359,7 +1165,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../how-to/handle-errors/">
+<a class="md-nav__link" href="../../../how-to/handle-errors/">
 <span class="md-ellipsis">
     
   
@@ -1371,7 +1177,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../how-to/monitor-progress/">
+<a class="md-nav__link" href="../../../how-to/monitor-progress/">
 <span class="md-ellipsis">
     
   
@@ -1409,7 +1215,7 @@
           </label>
 <ul class="md-nav__list" data-md-scrollfix="">
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../how-to/use-object-storage/">
+<a class="md-nav__link" href="../../../how-to/use-object-storage/">
 <span class="md-ellipsis">
     
   
@@ -1421,7 +1227,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../how-to/use-npy-codec/">
+<a class="md-nav__link" href="../../../how-to/use-npy-codec/">
 <span class="md-ellipsis">
     
   
@@ -1433,7 +1239,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../how-to/use-plugin-codecs/">
+<a class="md-nav__link" href="../../../how-to/use-plugin-codecs/">
 <span class="md-ellipsis">
     
   
@@ -1445,7 +1251,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../how-to/create-custom-codec/">
+<a class="md-nav__link" href="../../../how-to/create-custom-codec/">
 <span class="md-ellipsis">
     
   
@@ -1457,7 +1263,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../how-to/manage-large-data/">
+<a class="md-nav__link" href="../../../how-to/manage-large-data/">
 <span class="md-ellipsis">
     
   
@@ -1469,7 +1275,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../how-to/garbage-collection/">
+<a class="md-nav__link" href="../../../how-to/garbage-collection/">
 <span class="md-ellipsis">
     
   
@@ -1507,7 +1313,7 @@
           </label>
 <ul class="md-nav__list" data-md-scrollfix="">
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../how-to/migrate-to-v20/">
+<a class="md-nav__link" href="../../../how-to/migrate-to-v20/">
 <span class="md-ellipsis">
     
   
@@ -1519,7 +1325,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../how-to/alter-tables/">
+<a class="md-nav__link" href="../../../how-to/alter-tables/">
 <span class="md-ellipsis">
     
   
@@ -1531,7 +1337,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../how-to/backup-restore/">
+<a class="md-nav__link" href="../../../how-to/backup-restore/">
 <span class="md-ellipsis">
     
   
@@ -1548,10 +1354,10 @@
 </ul>
 </nav>
 </li>
-<li class="md-nav__item md-nav__item--section md-nav__item--nested">
-<input class="md-nav__toggle md-toggle" id="__nav_5" type="checkbox"/>
+<li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+<input checked="" class="md-nav__toggle md-toggle" id="__nav_5" type="checkbox"/>
 <div class="md-nav__link md-nav__container">
-<a class="md-nav__link" href="../../reference/">
+<a class="md-nav__link" href="../../">
 <span class="md-ellipsis">
     
   
@@ -1565,7 +1371,7 @@
 <span class="md-nav__icon md-icon"></span>
 </label>
 </div>
-<nav aria-expanded="false" aria-labelledby="__nav_5_label" class="md-nav" data-md-level="1">
+<nav aria-expanded="true" aria-labelledby="__nav_5_label" class="md-nav" data-md-level="1">
 <label class="md-nav__title" for="__nav_5">
 <span class="md-nav__icon md-icon"></span>
             
@@ -1575,10 +1381,10 @@
 
           </label>
 <ul class="md-nav__list" data-md-scrollfix="">
-<li class="md-nav__item md-nav__item--nested">
-<input class="md-nav__toggle md-toggle" id="__nav_5_1" type="checkbox"/>
+<li class="md-nav__item md-nav__item--active md-nav__item--nested">
+<input checked="" class="md-nav__toggle md-toggle" id="__nav_5_1" type="checkbox"/>
 <div class="md-nav__link md-nav__container">
-<a class="md-nav__link" href="../../reference/specs/">
+<a class="md-nav__link" href="../">
 <span class="md-ellipsis">
     
   
@@ -1592,7 +1398,7 @@
 <span class="md-nav__icon md-icon"></span>
 </label>
 </div>
-<nav aria-expanded="false" aria-labelledby="__nav_5_1_label" class="md-nav" data-md-level="2">
+<nav aria-expanded="true" aria-labelledby="__nav_5_1_label" class="md-nav" data-md-level="2">
 <label class="md-nav__title" for="__nav_5_1">
 <span class="md-nav__icon md-icon"></span>
             
@@ -1602,8 +1408,20 @@
 
           </label>
 <ul class="md-nav__list" data-md-scrollfix="">
-<li class="md-nav__item">
-<a class="md-nav__link" href="../../reference/specs/database-backends/">
+<li class="md-nav__item md-nav__item--active">
+<input class="md-nav__toggle md-toggle" id="__toc" type="checkbox"/>
+<label class="md-nav__link md-nav__link--active" for="__toc">
+<span class="md-ellipsis">
+    
+  
+    Database Backends
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<a class="md-nav__link md-nav__link--active" href="./">
 <span class="md-ellipsis">
     
   
@@ -1613,6 +1431,135 @@
     
   </span>
 </a>
+<nav aria-label="Table of contents" class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">
+<span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#supported-backends">
+<span class="md-ellipsis">
+      
+        Supported Backends
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#configuration">
+<span class="md-ellipsis">
+      
+        Configuration
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#adapter-architecture">
+<span class="md-ellipsis">
+      
+        Adapter Architecture
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#backend-compatibility">
+<span class="md-ellipsis">
+      
+        Backend Compatibility
+      
+    </span>
+</a>
+<nav aria-label="Backend Compatibility" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#fully-compatible">
+<span class="md-ellipsis">
+      
+        Fully Compatible
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#backend-specific-behavior">
+<span class="md-ellipsis">
+      
+        Backend-Specific Behavior
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#string-quoting">
+<span class="md-ellipsis">
+      
+        String Quoting
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#sql-function-translation">
+<span class="md-ellipsis">
+      
+        SQL Function Translation
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#type-mapping">
+<span class="md-ellipsis">
+      
+        Type Mapping
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#connection-management">
+<span class="md-ellipsis">
+      
+        Connection Management
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#testing-against-multiple-backends">
+<span class="md-ellipsis">
+      
+        Testing Against Multiple Backends
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#migration-between-backends">
+<span class="md-ellipsis">
+      
+        Migration Between Backends
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#see-also">
+<span class="md-ellipsis">
+      
+        See Also
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
 </li>
 <li class="md-nav__item md-nav__item--nested">
 <input class="md-nav__toggle md-toggle" id="__nav_5_1_2" type="checkbox"/>
@@ -1638,7 +1585,7 @@
           </label>
 <ul class="md-nav__list" data-md-scrollfix="">
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../reference/specs/table-declaration/">
+<a class="md-nav__link" href="../table-declaration/">
 <span class="md-ellipsis">
     
   
@@ -1650,7 +1597,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../reference/specs/master-part/">
+<a class="md-nav__link" href="../master-part/">
 <span class="md-ellipsis">
     
   
@@ -1662,7 +1609,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../reference/specs/virtual-schemas/">
+<a class="md-nav__link" href="../virtual-schemas/">
 <span class="md-ellipsis">
     
   
@@ -1700,7 +1647,7 @@
           </label>
 <ul class="md-nav__list" data-md-scrollfix="">
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../reference/specs/query-algebra/">
+<a class="md-nav__link" href="../query-algebra/">
 <span class="md-ellipsis">
     
   
@@ -1712,7 +1659,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../reference/specs/semantic-matching/">
+<a class="md-nav__link" href="../semantic-matching/">
 <span class="md-ellipsis">
     
   
@@ -1724,7 +1671,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../reference/specs/primary-keys/">
+<a class="md-nav__link" href="../primary-keys/">
 <span class="md-ellipsis">
     
   
@@ -1736,7 +1683,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../reference/specs/fetch-api/">
+<a class="md-nav__link" href="../fetch-api/">
 <span class="md-ellipsis">
     
   
@@ -1774,7 +1721,7 @@
           </label>
 <ul class="md-nav__list" data-md-scrollfix="">
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../reference/specs/type-system/">
+<a class="md-nav__link" href="../type-system/">
 <span class="md-ellipsis">
     
   
@@ -1786,7 +1733,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../reference/specs/codec-api/">
+<a class="md-nav__link" href="../codec-api/">
 <span class="md-ellipsis">
     
   
@@ -1798,7 +1745,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../reference/specs/npy-codec/">
+<a class="md-nav__link" href="../npy-codec/">
 <span class="md-ellipsis">
     
   
@@ -1836,7 +1783,7 @@
           </label>
 <ul class="md-nav__list" data-md-scrollfix="">
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../reference/specs/data-manipulation/">
+<a class="md-nav__link" href="../data-manipulation/">
 <span class="md-ellipsis">
     
   
@@ -1848,7 +1795,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../reference/specs/autopopulate/">
+<a class="md-nav__link" href="../autopopulate/">
 <span class="md-ellipsis">
     
   
@@ -1860,7 +1807,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../reference/specs/job-metadata/">
+<a class="md-nav__link" href="../job-metadata/">
 <span class="md-ellipsis">
     
   
@@ -1872,7 +1819,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../reference/specs/object-store-configuration/">
+<a class="md-nav__link" href="../object-store-configuration/">
 <span class="md-ellipsis">
     
   
@@ -1890,7 +1837,7 @@
 </nav>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../reference/configuration/">
+<a class="md-nav__link" href="../../configuration/">
 <span class="md-ellipsis">
     
   
@@ -1902,7 +1849,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../reference/definition-syntax/">
+<a class="md-nav__link" href="../../definition-syntax/">
 <span class="md-ellipsis">
     
   
@@ -1914,7 +1861,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../reference/operators/">
+<a class="md-nav__link" href="../../operators/">
 <span class="md-ellipsis">
     
   
@@ -1926,7 +1873,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../reference/errors/">
+<a class="md-nav__link" href="../../errors/">
 <span class="md-ellipsis">
     
   
@@ -1938,7 +1885,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../elements/">
+<a class="md-nav__link" href="../../../elements/">
 <span class="md-ellipsis">
     
   
@@ -1955,7 +1902,7 @@
 <li class="md-nav__item md-nav__item--section md-nav__item--nested">
 <input class="md-nav__toggle md-toggle" id="__nav_6" type="checkbox"/>
 <div class="md-nav__link md-nav__container">
-<a class="md-nav__link" href="../../api/">
+<a class="md-nav__link" href="../../../api/">
 <span class="md-ellipsis">
     
   
@@ -1980,7 +1927,7 @@
           </label>
 <ul class="md-nav__list" data-md-scrollfix="">
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../api/datajoint/">
+<a class="md-nav__link" href="../../../api/datajoint/">
 <span class="md-ellipsis">
     
   
@@ -1994,7 +1941,7 @@
 <li class="md-nav__item md-nav__item--nested">
 <input class="md-nav__toggle md-toggle" id="__nav_6_2" type="checkbox"/>
 <div class="md-nav__link md-nav__container">
-<a class="md-nav__link" href="../../api/datajoint/">
+<a class="md-nav__link" href="../../../api/datajoint/">
 <span class="md-ellipsis">
     
   
@@ -2019,7 +1966,7 @@
           </label>
 <ul class="md-nav__list" data-md-scrollfix="">
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../api/datajoint/admin/">
+<a class="md-nav__link" href="../../../api/datajoint/admin/">
 <span class="md-ellipsis">
     
   
@@ -2031,7 +1978,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../api/datajoint/blob/">
+<a class="md-nav__link" href="../../../api/datajoint/blob/">
 <span class="md-ellipsis">
     
   
@@ -2043,7 +1990,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../api/datajoint/codecs/">
+<a class="md-nav__link" href="../../../api/datajoint/codecs/">
 <span class="md-ellipsis">
     
   
@@ -2055,7 +2002,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../api/datajoint/connection/">
+<a class="md-nav__link" href="../../../api/datajoint/connection/">
 <span class="md-ellipsis">
     
   
@@ -2067,7 +2014,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../api/datajoint/diagram/">
+<a class="md-nav__link" href="../../../api/datajoint/diagram/">
 <span class="md-ellipsis">
     
   
@@ -2079,7 +2026,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../api/datajoint/errors/">
+<a class="md-nav__link" href="../../../api/datajoint/errors/">
 <span class="md-ellipsis">
     
   
@@ -2091,7 +2038,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../api/datajoint/expression/">
+<a class="md-nav__link" href="../../../api/datajoint/expression/">
 <span class="md-ellipsis">
     
   
@@ -2103,7 +2050,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../api/datajoint/hash_registry/">
+<a class="md-nav__link" href="../../../api/datajoint/hash_registry/">
 <span class="md-ellipsis">
     
   
@@ -2115,7 +2062,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../api/datajoint/heading/">
+<a class="md-nav__link" href="../../../api/datajoint/heading/">
 <span class="md-ellipsis">
     
   
@@ -2127,7 +2074,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../api/datajoint/jobs/">
+<a class="md-nav__link" href="../../../api/datajoint/jobs/">
 <span class="md-ellipsis">
     
   
@@ -2139,7 +2086,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../api/datajoint/migrate/">
+<a class="md-nav__link" href="../../../api/datajoint/migrate/">
 <span class="md-ellipsis">
     
   
@@ -2151,7 +2098,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../api/datajoint/schemas/">
+<a class="md-nav__link" href="../../../api/datajoint/schemas/">
 <span class="md-ellipsis">
     
   
@@ -2163,7 +2110,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../api/datajoint/settings/">
+<a class="md-nav__link" href="../../../api/datajoint/settings/">
 <span class="md-ellipsis">
     
   
@@ -2175,7 +2122,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../api/datajoint/table/">
+<a class="md-nav__link" href="../../../api/datajoint/table/">
 <span class="md-ellipsis">
     
   
@@ -2187,7 +2134,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../api/datajoint/user_tables/">
+<a class="md-nav__link" href="../../../api/datajoint/user_tables/">
 <span class="md-ellipsis">
     
   
@@ -2207,7 +2154,7 @@
 <li class="md-nav__item md-nav__item--section md-nav__item--nested">
 <input class="md-nav__toggle md-toggle" id="__nav_7" type="checkbox"/>
 <div class="md-nav__link md-nav__container">
-<a class="md-nav__link" href="../../about/">
+<a class="md-nav__link" href="../../../about/">
 <span class="md-ellipsis">
     
   
@@ -2232,7 +2179,7 @@
           </label>
 <ul class="md-nav__list" data-md-scrollfix="">
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../about/history/">
+<a class="md-nav__link" href="../../../about/history/">
 <span class="md-ellipsis">
     
   
@@ -2244,7 +2191,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../about/versioning/">
+<a class="md-nav__link" href="../../../about/versioning/">
 <span class="md-ellipsis">
     
   
@@ -2268,7 +2215,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../about/citation/">
+<a class="md-nav__link" href="../../../about/citation/">
 <span class="md-ellipsis">
     
   
@@ -2280,7 +2227,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../about/publications/">
+<a class="md-nav__link" href="../../../about/publications/">
 <span class="md-ellipsis">
     
   
@@ -2292,7 +2239,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../about/contributing/">
+<a class="md-nav__link" href="../../../about/contributing/">
 <span class="md-ellipsis">
     
   
@@ -2321,56 +2268,74 @@
     </label>
 <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
 <li class="md-nav__item">
-<a class="md-nav__link" href="#algebraic-closure">
+<a class="md-nav__link" href="#supported-backends">
 <span class="md-ellipsis">
       
-        Algebraic Closure
+        Supported Backends
       
     </span>
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#core-operators">
+<a class="md-nav__link" href="#configuration">
 <span class="md-ellipsis">
       
-        Core Operators
+        Configuration
       
     </span>
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#restriction-and-">
+<a class="md-nav__link" href="#adapter-architecture">
 <span class="md-ellipsis">
       
-        Restriction (&amp; and -)
+        Adapter Architecture
       
     </span>
 </a>
-<nav aria-label="Restriction (&amp; and -)" class="md-nav">
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#backend-compatibility">
+<span class="md-ellipsis">
+      
+        Backend Compatibility
+      
+    </span>
+</a>
+<nav aria-label="Backend Compatibility" class="md-nav">
 <ul class="md-nav__list">
 <li class="md-nav__item">
-<a class="md-nav__link" href="#include">
+<a class="md-nav__link" href="#fully-compatible">
 <span class="md-ellipsis">
       
-        Include (&amp;)
+        Fully Compatible
       
     </span>
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#exclude-">
+<a class="md-nav__link" href="#backend-specific-behavior">
 <span class="md-ellipsis">
       
-        Exclude (-)
+        Backend-Specific Behavior
       
     </span>
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#top-n-djtop">
+<a class="md-nav__link" href="#string-quoting">
 <span class="md-ellipsis">
       
-        Top N (dj.Top)
+        String Quoting
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#sql-function-translation">
+<span class="md-ellipsis">
+      
+        SQL Function Translation
       
     </span>
 </a>
@@ -2379,117 +2344,46 @@
 </nav>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#join">
+<a class="md-nav__link" href="#type-mapping">
 <span class="md-ellipsis">
       
-        Join (*)
-      
-    </span>
-</a>
-<nav aria-label="Join (*)" class="md-nav">
-<ul class="md-nav__list">
-<li class="md-nav__item">
-<a class="md-nav__link" href="#extend-extend">
-<span class="md-ellipsis">
-      
-        Extend (.extend())
-      
-    </span>
-</a>
-</li>
-</ul>
-</nav>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#projection-proj">
-<span class="md-ellipsis">
-      
-        Projection (.proj())
-      
-    </span>
-</a>
-<nav aria-label="Projection (.proj())" class="md-nav">
-<ul class="md-nav__list">
-<li class="md-nav__item">
-<a class="md-nav__link" href="#select-attributes">
-<span class="md-ellipsis">
-      
-        Select attributes
+        Type Mapping
       
     </span>
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#compute-new-attributes">
+<a class="md-nav__link" href="#connection-management">
 <span class="md-ellipsis">
       
-        Compute new attributes
+        Connection Management
       
     </span>
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#aggregate-in-projection">
+<a class="md-nav__link" href="#testing-against-multiple-backends">
 <span class="md-ellipsis">
       
-        Aggregate in projection
-      
-    </span>
-</a>
-</li>
-</ul>
-</nav>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#aggregation-aggr">
-<span class="md-ellipsis">
-      
-        Aggregation (.aggr())
+        Testing Against Multiple Backends
       
     </span>
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#union">
+<a class="md-nav__link" href="#migration-between-backends">
 <span class="md-ellipsis">
       
-        Union (+)
+        Migration Between Backends
       
     </span>
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#operator-composition">
+<a class="md-nav__link" href="#see-also">
 <span class="md-ellipsis">
       
-        Operator Composition
-      
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#semantic-matching">
-<span class="md-ellipsis">
-      
-        Semantic Matching
-      
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#fetching-results">
-<span class="md-ellipsis">
-      
-        Fetching Results
-      
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#summary">
-<span class="md-ellipsis">
-      
-        Summary
+        See Also
       
     </span>
 </a>
@@ -2501,253 +2395,319 @@
 </div>
 <div class="md-content" data-md-component="content">
 <article class="md-content__inner md-typeset">
-<h1 id="query-algebra">Query Algebra<a class="headerlink" href="#query-algebra" title="Permanent link">¶</a></h1>
-<p>DataJoint provides a powerful query algebra built on five core operators: restriction, join, projection, aggregation, and union. These operators work on <strong>entity sets</strong> (query expressions) and always return entity sets, enabling arbitrary composition.</p>
-<h2 id="algebraic-closure">Algebraic Closure<a class="headerlink" href="#algebraic-closure" title="Permanent link">¶</a></h2>
-<p>A fundamental property of DataJoint's query algebra is <strong>algebraic closure</strong>: every query result is itself a valid entity set with a well-defined <strong>entity type</strong> — you always know what kind of entity the result represents, identified by a specific primary key. Unlike SQL where query results are unstructured "bags of rows," DataJoint determines the entity type of each result based on the operator and the functional dependencies between operands.</p>
-<p>This means operators can be chained indefinitely — the output of any operation is a valid input to any other operation. See <a href="../../reference/specs/primary-keys/">Primary Keys</a> for the precise rules.</p>
-<h2 id="core-operators">Core Operators<a class="headerlink" href="#core-operators" title="Permanent link">¶</a></h2>
-<pre class="mermaid"><code>graph LR
-    A[Entity Set] --&gt; R[Restriction &amp;]
-    A --&gt; J[Join *]
-    A --&gt; E[Extend .extend]
-    A --&gt; P[Projection .proj]
-    A --&gt; G[Aggregation .aggr]
-    A --&gt; U[Union +]
-    R --&gt; B[Entity Set]
-    J --&gt; B
-    E --&gt; B
-    P --&gt; B
-    G --&gt; B
-    U --&gt; B
-</code></pre>
-<h2 id="restriction-and-">Restriction (<code>&amp;</code> and <code>-</code>)<a class="headerlink" href="#restriction-and-" title="Permanent link">¶</a></h2>
-<p>Filter entities based on conditions.</p>
-<h3 id="include">Include (<code>&amp;</code>)<a class="headerlink" href="#include" title="Permanent link">¶</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># Mice born after 2024</span>
-<span class="n">Mouse</span> <span class="o">&amp;</span> <span class="s1">'date_of_birth &gt; "2024-01-01"'</span>
-
-<span class="c1"># Sessions for a specific mouse</span>
-<span class="n">Session</span> <span class="o">&amp;</span> <span class="p">{</span><span class="s1">'mouse_id'</span><span class="p">:</span> <span class="mi">42</span><span class="p">}</span>
-
-<span class="c1"># Sessions matching a query</span>
-<span class="n">Session</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">Mouse</span> <span class="o">&amp;</span> <span class="s1">'strain = "C57BL/6"'</span><span class="p">)</span>
-</code></pre></div>
-<h3 id="exclude-">Exclude (<code>-</code>)<a class="headerlink" href="#exclude-" title="Permanent link">¶</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># Mice NOT in the study</span>
-<span class="n">Mouse</span> <span class="o">-</span> <span class="n">StudyMouse</span>
-
-<span class="c1"># Sessions without recordings</span>
-<span class="n">Session</span> <span class="o">-</span> <span class="n">Recording</span>
-</code></pre></div>
-<h3 id="top-n-djtop">Top N (<code>dj.Top</code>)<a class="headerlink" href="#top-n-djtop" title="Permanent link">¶</a></h3>
-<p>Select a limited number of entities with ordering:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Most recent 10 sessions</span>
-<span class="n">Session</span> <span class="o">&amp;</span> <span class="n">dj</span><span class="o">.</span><span class="n">Top</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="s1">'session_date DESC'</span><span class="p">)</span>
-
-<span class="c1"># First session by primary key</span>
-<span class="n">Session</span> <span class="o">&amp;</span> <span class="n">dj</span><span class="o">.</span><span class="n">Top</span><span class="p">()</span>
-</code></pre></div>
-<p>The <code>order_by</code> parameter accepts attribute names with optional <code>DESC</code>/<code>ASC</code>. The special value <code>"KEY"</code> is an alias for all primary key attributes (e.g., <code>"KEY DESC"</code> for reverse primary key order).</p>
-<h2 id="join">Join (<code>*</code>)<a class="headerlink" href="#join" title="Permanent link">¶</a></h2>
-<p>Combine entity sets along shared attributes.</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># All session-recording pairs</span>
-<span class="n">Session</span> <span class="o">*</span> <span class="n">Recording</span>
-
-<span class="c1"># Chain through workflow</span>
-<span class="n">Mouse</span> <span class="o">*</span> <span class="n">Session</span> <span class="o">*</span> <span class="n">Scan</span> <span class="o">*</span> <span class="n">Segmentation</span>
-</code></pre></div>
-<p>DataJoint joins are <strong>natural joins</strong> that:</p>
-<ul>
-<li>Match on attributes with the same name <strong>and</strong> lineage</li>
-<li>Respect declared dependencies (no accidental matches)</li>
-<li>Produce the intersection of matching entities</li>
-</ul>
-<h3 id="extend-extend">Extend (<code>.extend()</code>)<a class="headerlink" href="#extend-extend" title="Permanent link">¶</a></h3>
-<p>Add attributes from another entity set while preserving all entities in the original set.</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Add session info to each trial</span>
-<span class="n">Trial</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">Session</span><span class="p">)</span>  <span class="c1"># Adds session_date, subject_id to Trial</span>
-
-<span class="c1"># Add neuron properties to spike times</span>
-<span class="n">SpikeTime</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">Neuron</span><span class="p">)</span>  <span class="c1"># Adds cell_type, depth to SpikeTime</span>
-</code></pre></div>
-<p><strong>How it differs from join:</strong></p>
-<ul>
-<li><strong>Join (<code>*</code>)</strong>: Returns only matching entities (inner join), primary key is the union of both PKs</li>
-<li><strong>Extend</strong>: Returns all entities from the left side (left join), primary key stays as the left side's PK</li>
-</ul>
-<p><strong>Primary key formation:</strong></p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Join: PK is union of both primary keys</span>
-<span class="n">result</span> <span class="o">=</span> <span class="n">Session</span> <span class="o">*</span> <span class="n">Trial</span>
-<span class="c1"># PK: (session_id, trial_num)</span>
-
-<span class="c1"># Extend: PK stays as left side's PK</span>
-<span class="n">result</span> <span class="o">=</span> <span class="n">Trial</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">Session</span><span class="p">)</span>
-<span class="c1"># PK: (session_id, trial_num) - same as Trial</span>
-<span class="c1"># session_date is added as a non-primary attribute</span>
-</code></pre></div>
-<p><strong>Requirement:</strong> The left side must <strong>determine</strong> the right side. This means all primary key attributes from the right side must exist in the left side. This requirement ensures:</p>
-<ol>
-<li>Every entity in the left side can match at most one entity in the right side</li>
-<li>The left side's primary key uniquely identifies entities in the result</li>
-<li>No NULL values appear in the result's primary key</li>
-</ol>
-<div class="highlight"><pre><span></span><code><span class="c1"># Valid: Trial determines Session</span>
-<span class="c1"># (session_id is in Trial's primary key)</span>
-<span class="n">Trial</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">Session</span><span class="p">)</span>  <span class="err">✓</span>
-<span class="c1"># Each trial belongs to exactly one session</span>
-<span class="c1"># Result PK: (session_id, trial_num)</span>
-
-<span class="c1"># Invalid: Session does NOT determine Trial</span>
-<span class="c1"># (trial_num is not in Session)</span>
-<span class="n">Session</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">Trial</span><span class="p">)</span>  <span class="err">✗</span>  <span class="c1"># Error: trial_num not in Session</span>
-<span class="c1"># A session has multiple trials - PK would be ambiguous</span>
-</code></pre></div>
-<p><strong>Why use extend?</strong></p>
-<ol>
-<li><strong>Preserve all entities</strong>: When you need attributes from a parent but want to keep all children (even orphans)</li>
-<li><strong>Clear intent</strong>: Expresses "add attributes" rather than "combine entity sets"</li>
-<li><strong>No filtering</strong>: Guarantees the same number of entities in the result</li>
-</ol>
-<p>Think of extend as projection-like: it adds attributes to existing entities without changing which entities are present.</p>
-<h2 id="projection-proj">Projection (<code>.proj()</code>)<a class="headerlink" href="#projection-proj" title="Permanent link">¶</a></h2>
-<p>Select and transform attributes.</p>
-<h3 id="select-attributes">Select attributes<a class="headerlink" href="#select-attributes" title="Permanent link">¶</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># Only mouse_id and strain</span>
-<span class="n">Mouse</span><span class="o">.</span><span class="n">proj</span><span class="p">(</span><span class="s1">'strain'</span><span class="p">)</span>
-
-<span class="c1"># Rename attributes</span>
-<span class="n">Mouse</span><span class="o">.</span><span class="n">proj</span><span class="p">(</span><span class="n">animal_id</span><span class="o">=</span><span class="s1">'mouse_id'</span><span class="p">)</span>
-</code></pre></div>
-<h3 id="compute-new-attributes">Compute new attributes<a class="headerlink" href="#compute-new-attributes" title="Permanent link">¶</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># Calculate age</span>
-<span class="n">Mouse</span><span class="o">.</span><span class="n">proj</span><span class="p">(</span>
-    <span class="n">age</span><span class="o">=</span><span class="s1">'DATEDIFF(CURDATE(), date_of_birth)'</span>
-<span class="p">)</span>
-
-<span class="c1"># Combine attributes</span>
-<span class="n">Session</span><span class="o">.</span><span class="n">proj</span><span class="p">(</span>
-    <span class="n">session_label</span><span class="o">=</span><span class="s1">'CONCAT(subject_id, "-", session_date)'</span>
-<span class="p">)</span>
-</code></pre></div>
-<h3 id="aggregate-in-projection">Aggregate in projection<a class="headerlink" href="#aggregate-in-projection" title="Permanent link">¶</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># Count recordings per session</span>
-<span class="n">Session</span><span class="o">.</span><span class="n">aggr</span><span class="p">(</span><span class="n">Recording</span><span class="p">,</span> <span class="n">n_recordings</span><span class="o">=</span><span class="s1">'COUNT(*)'</span><span class="p">)</span>
-</code></pre></div>
-<h2 id="aggregation-aggr">Aggregation (<code>.aggr()</code>)<a class="headerlink" href="#aggregation-aggr" title="Permanent link">¶</a></h2>
-<p>Summarize across groups.</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Average spike rate per neuron</span>
-<span class="n">Neuron</span><span class="o">.</span><span class="n">aggr</span><span class="p">(</span>
-    <span class="n">SpikeTime</span><span class="p">,</span>
-    <span class="n">avg_rate</span><span class="o">=</span><span class="s1">'AVG(spike_rate)'</span><span class="p">,</span>
-    <span class="n">total_spikes</span><span class="o">=</span><span class="s1">'COUNT(*)'</span>
-<span class="p">)</span>
-
-<span class="c1"># Statistics per session</span>
-<span class="n">Session</span><span class="o">.</span><span class="n">aggr</span><span class="p">(</span>
-    <span class="n">Trial</span><span class="p">,</span>
-    <span class="n">n_trials</span><span class="o">=</span><span class="s1">'COUNT(*)'</span><span class="p">,</span>
-    <span class="n">success_rate</span><span class="o">=</span><span class="s1">'AVG(success)'</span>
-<span class="p">)</span>
-</code></pre></div>
-<h2 id="union">Union (<code>+</code>)<a class="headerlink" href="#union" title="Permanent link">¶</a></h2>
-<p>Combine entity sets with the same attributes.</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># All subjects from two studies</span>
-<span class="n">StudyA_Subjects</span> <span class="o">+</span> <span class="n">StudyB_Subjects</span>
-
-<span class="c1"># Combine results from different analyses</span>
-<span class="n">AnalysisV1</span> <span class="o">+</span> <span class="n">AnalysisV2</span>
-</code></pre></div>
-<p>Requirements:</p>
-<ul>
-<li>Same primary key structure</li>
-<li>Compatible attribute types</li>
-</ul>
-<h2 id="operator-composition">Operator Composition<a class="headerlink" href="#operator-composition" title="Permanent link">¶</a></h2>
-<p>Operators compose freely:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Complex query</span>
-<span class="n">result</span> <span class="o">=</span> <span class="p">(</span>
-    <span class="p">(</span><span class="n">Mouse</span> <span class="o">&amp;</span> <span class="s1">'strain = "C57BL/6"'</span><span class="p">)</span>  <span class="c1"># Filter mice</span>
-    <span class="o">*</span> <span class="n">Session</span>                        <span class="c1"># Join sessions</span>
-    <span class="o">*</span> <span class="n">Scan</span>                           <span class="c1"># Join scans</span>
-    <span class="o">.</span><span class="n">proj</span><span class="p">(</span><span class="s1">'scan_date'</span><span class="p">,</span> <span class="s1">'depth'</span><span class="p">)</span>      <span class="c1"># Select attributes</span>
-    <span class="o">&amp;</span> <span class="s1">'depth &gt; 200'</span>                  <span class="c1"># Filter by depth</span>
-<span class="p">)</span>
-</code></pre></div>
-<h2 id="semantic-matching">Semantic Matching<a class="headerlink" href="#semantic-matching" title="Permanent link">¶</a></h2>
-<p>All binary operators in DataJoint rely on <strong>semantic matching</strong> of attributes. Unlike SQL's natural joins that match on any shared column name, DataJoint verifies that namesake attributes (those with the same name) are <strong>homologous</strong>—they trace back to the same original definition.</p>
-<p>This prevents accidental matches on coincidentally-named columns, a pitfall that has been understood since the Entity-Relationship Model was introduced in the 1970s but was never addressed in SQL or traditional RDBMS implementations.</p>
-<p>See <a href="../semantic-matching/">Semantic Matching</a> for details.</p>
-<p>These concepts were first introduced in Yatsenko et al., 2018<sup id="fnref:1"><a class="footnote-ref" href="#fn:1">1</a></sup>.</p>
-<h2 id="fetching-results">Fetching Results<a class="headerlink" href="#fetching-results" title="Permanent link">¶</a></h2>
-<p>Query expressions are lazy—they build SQL but don't execute until you fetch:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Fetch as NumPy recarray</span>
-<span class="n">data</span> <span class="o">=</span> <span class="n">query</span><span class="o">.</span><span class="n">to_arrays</span><span class="p">()</span>
-
-<span class="c1"># Fetch as list of dicts</span>
-<span class="n">data</span> <span class="o">=</span> <span class="n">query</span><span class="o">.</span><span class="n">to_dicts</span><span class="p">()</span>
-
-<span class="c1"># Fetch as pandas DataFrame</span>
-<span class="n">df</span> <span class="o">=</span> <span class="n">query</span><span class="o">.</span><span class="n">to_pandas</span><span class="p">()</span>
-
-<span class="c1"># Fetch specific attributes</span>
-<span class="n">ids</span><span class="p">,</span> <span class="n">dates</span> <span class="o">=</span> <span class="n">query</span><span class="o">.</span><span class="n">to_arrays</span><span class="p">(</span><span class="s1">'mouse_id'</span><span class="p">,</span> <span class="s1">'session_date'</span><span class="p">)</span>
-
-<span class="c1"># Fetch single row</span>
-<span class="n">row</span> <span class="o">=</span> <span class="p">(</span><span class="n">query</span> <span class="o">&amp;</span> <span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">fetch1</span><span class="p">()</span>
-</code></pre></div>
-<h2 id="summary">Summary<a class="headerlink" href="#summary" title="Permanent link">¶</a></h2>
+<h1 id="database-backends-specification">Database Backends Specification<a class="headerlink" href="#database-backends-specification" title="Permanent link">¶</a></h1>
+<div class="admonition version-added">
+<p class="admonition-title">New in 2.1</p>
+<p>PostgreSQL support was introduced in DataJoint 2.1.</p>
+</div>
+<p>DataJoint supports multiple database backends through a unified adapter architecture.</p>
+<h2 id="supported-backends">Supported Backends<a class="headerlink" href="#supported-backends" title="Permanent link">¶</a></h2>
 <table>
 <thead>
 <tr>
-<th>Operator</th>
-<th>Symbol/Method</th>
-<th>Purpose</th>
+<th>Backend</th>
+<th>Minimum Version</th>
+<th>Default Port</th>
+<th>Status</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Restriction</td>
-<td><code>&amp;</code>, <code>-</code></td>
-<td>Filter entities</td>
+<td>MySQL</td>
+<td>8.0</td>
+<td>3306</td>
+<td>Production</td>
 </tr>
 <tr>
-<td>Join</td>
-<td><code>*</code></td>
-<td>Combine entity sets (inner join)</td>
-</tr>
-<tr>
-<td>Extend</td>
-<td><code>.extend()</code></td>
-<td>Add attributes (left join)</td>
-</tr>
-<tr>
-<td>Projection</td>
-<td><code>.proj()</code></td>
-<td>Select/transform attributes</td>
-</tr>
-<tr>
-<td>Aggregation</td>
-<td><code>.aggr()</code></td>
-<td>Summarize groups</td>
-</tr>
-<tr>
-<td>Union</td>
-<td><code>+</code></td>
-<td>Combine parallel sets</td>
+<td>PostgreSQL</td>
+<td>15</td>
+<td>5432</td>
+<td>Production</td>
 </tr>
 </tbody>
 </table>
-<p>These core operators, combined with workflow-aware join semantics, provide
-complete query capability for scientific data pipelines.</p>
-<div class="footnote">
-<hr/>
+<h2 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">¶</a></h2>
+<p>Select the backend via configuration:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">datajoint</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dj</span>
+
+<span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">'database.backend'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'mysql'</span>      <span class="c1"># Default</span>
+<span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">'database.backend'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'postgresql'</span> <span class="c1"># PostgreSQL</span>
+</code></pre></div>
+<p>Or via environment variable:</p>
+<div class="highlight"><pre><span></span><code><span class="nb">export</span><span class="w"> </span><span class="nv">DJ_BACKEND</span><span class="o">=</span>postgresql
+</code></pre></div>
+<h2 id="adapter-architecture">Adapter Architecture<a class="headerlink" href="#adapter-architecture" title="Permanent link">¶</a></h2>
+<p>DataJoint uses database adapters to generate backend-specific SQL while maintaining a consistent API.</p>
+<pre class="mermaid"><code>flowchart TB
+    subgraph api[DataJoint API]
+        tables[Tables, Queries, Schemas]
+    end
+
+    subgraph adapter[Database Adapter]
+        gen[SQL Generation, Type Mapping]
+    end
+
+    subgraph backends[Backend Adapters]
+        mysql[MySQL Adapter]
+        postgres[PostgreSQL Adapter]
+    end
+
+    api --&gt; adapter
+    adapter --&gt; mysql
+    adapter --&gt; postgres
+</code></pre>
+<h2 id="backend-compatibility">Backend Compatibility<a class="headerlink" href="#backend-compatibility" title="Permanent link">¶</a></h2>
+<h3 id="fully-compatible">Fully Compatible<a class="headerlink" href="#fully-compatible" title="Permanent link">¶</a></h3>
+<p>The following features work identically across all backends:</p>
+<ul>
+<li><strong>Table definitions</strong>: Same definition syntax for all backends</li>
+<li><strong>Core types</strong>: <code>int32</code>, <code>float64</code>, <code>varchar</code>, <code>datetime</code>, etc.</li>
+<li><strong>Codec types</strong>: <code>&lt;blob&gt;</code>, <code>&lt;attach&gt;</code>, <code>&lt;object@&gt;</code>, etc.</li>
+<li><strong>Query operations</strong>: Restriction, projection, join, aggregation</li>
+<li><strong>Foreign keys</strong>: Inheritance, nullable, unique modifiers</li>
+<li><strong>Indexes</strong>: Single-column, composite, unique</li>
+<li><strong>Auto-populate</strong>: Jobs queue, distributed computation</li>
+</ul>
+<h3 id="backend-specific-behavior">Backend-Specific Behavior<a class="headerlink" href="#backend-specific-behavior" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>MySQL</th>
+<th>PostgreSQL</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Default port</td>
+<td>3306</td>
+<td>5432</td>
+</tr>
+<tr>
+<td>Schema = Database</td>
+<td>Yes</td>
+<td>Yes (uses schemas)</td>
+</tr>
+<tr>
+<td>JSON operators</td>
+<td><code>-&gt;</code>, <code>-&gt;&gt;</code></td>
+<td><code>-&gt;</code>, <code>-&gt;&gt;</code></td>
+</tr>
+<tr>
+<td>BLOB storage</td>
+<td><code>LONGBLOB</code></td>
+<td><code>BYTEA</code></td>
+</tr>
+<tr>
+<td>Boolean type</td>
+<td><code>TINYINT(1)</code></td>
+<td><code>BOOLEAN</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="string-quoting">String Quoting<a class="headerlink" href="#string-quoting" title="Permanent link">¶</a></h3>
+<p>MySQL and PostgreSQL handle quotes differently in SQL:</p>
+<table>
+<thead>
+<tr>
+<th>Quote Type</th>
+<th>MySQL</th>
+<th>PostgreSQL</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Single quotes <code>'...'</code></td>
+<td>String literals</td>
+<td>String literals</td>
+</tr>
+<tr>
+<td>Double quotes <code>"..."</code></td>
+<td>String literals</td>
+<td><strong>Identifiers</strong> (column names)</td>
+</tr>
+<tr>
+<td>Backticks <code>`...`</code></td>
+<td>Identifiers</td>
+<td>Not supported</td>
+</tr>
+</tbody>
+</table>
+<p>This affects restriction strings. MySQL accepts both quote styles for string values, but PostgreSQL interprets double quotes as identifier (column) references.</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># MySQL only - double quotes work as string literals</span>
+<span class="n">Table</span> <span class="o">&amp;</span> <span class="s1">'name = "Alice"'</span>
+
+<span class="c1"># Both backends - single quotes for string literals</span>
+<span class="n">Table</span> <span class="o">&amp;</span> <span class="s2">"name = 'Alice'"</span>
+</code></pre></div>
+<p><strong>PostgreSQL migration:</strong> Replace double quotes with single quotes inside SQL restriction strings:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Before (MySQL)</span>
+<span class="n">Table</span> <span class="o">&amp;</span> <span class="s1">'strain = "C57BL/6"'</span>
+<span class="n">Table</span> <span class="o">&amp;</span> <span class="s1">'date &gt; "2024-01-01"'</span>
+
+<span class="c1"># After (PostgreSQL compatible)</span>
+<span class="n">Table</span> <span class="o">&amp;</span> <span class="s2">"strain = 'C57BL/6'"</span>
+<span class="n">Table</span> <span class="o">&amp;</span> <span class="s2">"date &gt; '2024-01-01'"</span>
+</code></pre></div>
+<p>Dictionary restrictions handle quoting automatically but only support equality:</p>
+<div class="highlight"><pre><span></span><code><span class="n">Table</span> <span class="o">&amp;</span> <span class="p">{</span><span class="s1">'name'</span><span class="p">:</span> <span class="s1">'Alice'</span><span class="p">}</span>  <span class="c1"># Equality only - backend-agnostic</span>
+</code></pre></div>
+<p>For range comparisons (<code>&gt;</code>, <code>&lt;</code>, <code>LIKE</code>, etc.), use string restrictions with single-quoted values.</p>
+<h3 id="sql-function-translation">SQL Function Translation<a class="headerlink" href="#sql-function-translation" title="Permanent link">¶</a></h3>
+<p>DataJoint automatically translates certain SQL functions between backends, allowing portable code:</p>
+<table>
+<thead>
+<tr>
+<th>Function</th>
+<th>MySQL</th>
+<th>PostgreSQL</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>String aggregation</td>
+<td><code>GROUP_CONCAT(col)</code></td>
+<td><code>STRING_AGG(col, ',')</code></td>
+</tr>
+<tr>
+<td>String aggregation with separator</td>
+<td><code>GROUP_CONCAT(col SEPARATOR ';')</code></td>
+<td><code>STRING_AGG(col, ';')</code></td>
+</tr>
+</tbody>
+</table>
+<p>You can use either syntax in your code—DataJoint translates to the appropriate form:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Both work on both backends</span>
+<span class="n">Person</span><span class="o">.</span><span class="n">aggr</span><span class="p">(</span><span class="n">Proficiency</span><span class="p">,</span> <span class="n">languages</span><span class="o">=</span><span class="s1">'GROUP_CONCAT(lang_code)'</span><span class="p">)</span>
+<span class="n">Person</span><span class="o">.</span><span class="n">aggr</span><span class="p">(</span><span class="n">Proficiency</span><span class="p">,</span> <span class="n">languages</span><span class="o">=</span><span class="s2">"STRING_AGG(lang_code, ',')"</span><span class="p">)</span>
+</code></pre></div>
+<p>The translation is bidirectional:</p>
+<ul>
+<li><strong>On PostgreSQL</strong>: <code>GROUP_CONCAT(col)</code> → <code>STRING_AGG(col::text, ',')</code></li>
+<li><strong>On MySQL</strong>: <code>STRING_AGG(col, ',')</code> → <code>GROUP_CONCAT(col)</code></li>
+</ul>
+<h2 id="type-mapping">Type Mapping<a class="headerlink" href="#type-mapping" title="Permanent link">¶</a></h2>
+<p>DataJoint core types map to native database types:</p>
+<table>
+<thead>
+<tr>
+<th>Core Type</th>
+<th>MySQL</th>
+<th>PostgreSQL</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>int8</code></td>
+<td><code>TINYINT</code></td>
+<td><code>SMALLINT</code></td>
+</tr>
+<tr>
+<td><code>int16</code></td>
+<td><code>SMALLINT</code></td>
+<td><code>SMALLINT</code></td>
+</tr>
+<tr>
+<td><code>int32</code></td>
+<td><code>INT</code></td>
+<td><code>INTEGER</code></td>
+</tr>
+<tr>
+<td><code>int64</code></td>
+<td><code>BIGINT</code></td>
+<td><code>BIGINT</code></td>
+</tr>
+<tr>
+<td><code>float32</code></td>
+<td><code>FLOAT</code></td>
+<td><code>REAL</code></td>
+</tr>
+<tr>
+<td><code>float64</code></td>
+<td><code>DOUBLE</code></td>
+<td><code>DOUBLE PRECISION</code></td>
+</tr>
+<tr>
+<td><code>bool</code></td>
+<td><code>TINYINT(1)</code></td>
+<td><code>BOOLEAN</code></td>
+</tr>
+<tr>
+<td><code>varchar(n)</code></td>
+<td><code>VARCHAR(n)</code></td>
+<td><code>VARCHAR(n)</code></td>
+</tr>
+<tr>
+<td><code>char(n)</code></td>
+<td><code>CHAR(n)</code></td>
+<td><code>CHAR(n)</code></td>
+</tr>
+<tr>
+<td><code>date</code></td>
+<td><code>DATE</code></td>
+<td><code>DATE</code></td>
+</tr>
+<tr>
+<td><code>datetime</code></td>
+<td><code>DATETIME</code></td>
+<td><code>TIMESTAMP</code></td>
+</tr>
+<tr>
+<td><code>datetime(n)</code></td>
+<td><code>DATETIME(n)</code></td>
+<td><code>TIMESTAMP(n)</code></td>
+</tr>
+<tr>
+<td><code>json</code></td>
+<td><code>JSON</code></td>
+<td><code>JSONB</code></td>
+</tr>
+<tr>
+<td><code>uuid</code></td>
+<td><code>BINARY(16)</code></td>
+<td><code>UUID</code></td>
+</tr>
+<tr>
+<td><code>bytes</code></td>
+<td><code>LONGBLOB</code></td>
+<td><code>BYTEA</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="connection-management">Connection Management<a class="headerlink" href="#connection-management" title="Permanent link">¶</a></h2>
+<p>Both backends support the same connection patterns:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Singleton connection (default)</span>
+<span class="n">conn</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">conn</span><span class="p">()</span>
+
+<span class="c1"># Context manager (explicit lifecycle)</span>
+<span class="k">with</span> <span class="n">dj</span><span class="o">.</span><span class="n">Connection</span><span class="p">(</span><span class="o">**</span><span class="n">creds</span><span class="p">)</span> <span class="k">as</span> <span class="n">conn</span><span class="p">:</span>
+    <span class="n">schema</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">Schema</span><span class="p">(</span><span class="s1">'my_schema'</span><span class="p">,</span> <span class="n">connection</span><span class="o">=</span><span class="n">conn</span><span class="p">)</span>
+
+<span class="c1"># Reset connection</span>
+<span class="n">conn</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">conn</span><span class="p">(</span><span class="n">reset</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</code></pre></div>
+<h2 id="testing-against-multiple-backends">Testing Against Multiple Backends<a class="headerlink" href="#testing-against-multiple-backends" title="Permanent link">¶</a></h2>
+<p>For development and CI/CD, you can test against both backends:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Test MySQL only</span>
+<span class="nv">DJ_BACKEND</span><span class="o">=</span>mysql<span class="w"> </span>pytest<span class="w"> </span>tests/
+
+<span class="c1"># Test PostgreSQL only</span>
+<span class="nv">DJ_BACKEND</span><span class="o">=</span>postgresql<span class="w"> </span>pytest<span class="w"> </span>tests/
+</code></pre></div>
+<h2 id="migration-between-backends">Migration Between Backends<a class="headerlink" href="#migration-between-backends" title="Permanent link">¶</a></h2>
+<p>DataJoint does not provide automatic migration between backends. To migrate data:</p>
 <ol>
-<li id="fn:1">
-<p>Yatsenko D, Walker EY, Tolias AS (2018). DataJoint Elements: Data Workflows for Neurophysiology. <a href="https://doi.org/10.48550/arXiv.1807.11104">arXiv:1807.11104</a> <a class="footnote-backref" href="#fnref:1" title="Jump back to footnote 1 in the text">↩</a></p>
-</li>
+<li>Export data using <code>fetch()</code> and pandas DataFrames</li>
+<li>Create new schemas on the target backend</li>
+<li>Import data using <code>insert()</code></li>
 </ol>
-</div>
+<p>Schema definitions are portable—the same Python class definitions work on both backends.</p>
+<h2 id="see-also">See Also<a class="headerlink" href="#see-also" title="Permanent link">¶</a></h2>
+<ul>
+<li><a href="../../../how-to/configure-database/">Configure Database</a> — Connection setup</li>
+<li><a href="../type-system/">Type System</a> — Core type definitions</li>
+<li><a href="../table-declaration/">Table Declaration</a> — Definition syntax</li>
+</ul>
 </article>
 </div>
 <script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
@@ -2806,9 +2766,9 @@ complete query capability for scientific data pipelines.</p>
 <div class="md-dialog" data-md-component="dialog">
 <div class="md-dialog__inner md-typeset"></div>
 </div>
-<script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.sections", "navigation.indexes", "toc.follow", "announce.dismiss"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
-<script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
-<script src="../../javascripts/mathjax.js"></script>
+<script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.sections", "navigation.indexes", "toc.follow", "announce.dismiss"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+<script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+<script src="../../../javascripts/mathjax.js"></script>
 <script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
 <script src="https://js-na1.hs-scripts.com/23133402.js"></script>
 <script type="module">import mermaid from "https://unpkg.com/mermaid@10.4.0/dist/mermaid.esm.min.mjs";

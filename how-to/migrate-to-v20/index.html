@@ -124,7 +124,7 @@
   <div class="md-banner">
     <div class="md-banner__inner md-grid md-typeset">
       <p>
-        📖 You are viewing documentation for <strong>DataJoint 2.0+</strong>
+        📖 You are viewing documentation for <strong>DataJoint 2.1+</strong>
         ·
         <a href="https://docs.datajoint.com/how-to/migrate-to-v20/">
           Migration guide for legacy users (pre-2.0)
@@ -3248,6 +3248,45 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#column-comment-format-critical-for-blob-migration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Column Comment Format (Critical for Blob Migration)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Column Comment Format (Critical for Blob Migration)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#checking-migration-status" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Checking Migration Status
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#migrating-blob-column-comments" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Migrating Blob Column Comments
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#unified-stores-configuration" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3955,6 +3994,67 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Option B: In-Place Migration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-backup-production" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Backup Production
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-add-type-markers-to-column-comments" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Add Type Markers to Column Comments
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-rebuild-lineage-table" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Rebuild Lineage Table
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-4-migrate-external-storage-if-applicable" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4: Migrate External Storage (if applicable)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-5-verify-migration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 5: Verify Migration
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
         
           <li class="md-nav__item">
@@ -4315,6 +4415,8 @@
       
         
       
+        
+      
     
     
     
@@ -4370,6 +4472,34 @@
   
   
   
+    <li class="md-nav__item">
+      <a href="../../reference/specs/database-backends/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Database Backends
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
     
     
       
@@ -4389,10 +4519,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_1_1" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_1_2" >
         
           
-          <label class="md-nav__link" for="__nav_5_1_1" id="__nav_5_1_1_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_5_1_2" id="__nav_5_1_2_label" tabindex="0">
             
   
   
@@ -4410,8 +4540,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_5_1_1_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_5_1_1">
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_5_1_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_1_2">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -4540,10 +4670,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_1_2" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_1_3" >
         
           
-          <label class="md-nav__link" for="__nav_5_1_2" id="__nav_5_1_2_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_5_1_3" id="__nav_5_1_3_label" tabindex="0">
             
   
   
@@ -4561,8 +4691,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_5_1_2_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_5_1_2">
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_5_1_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_1_3">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -4717,10 +4847,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_1_3" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_1_4" >
         
           
-          <label class="md-nav__link" for="__nav_5_1_3" id="__nav_5_1_3_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_5_1_4" id="__nav_5_1_4_label" tabindex="0">
             
   
   
@@ -4738,8 +4868,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_5_1_3_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_5_1_3">
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_5_1_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_1_4">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -4868,10 +4998,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_1_4" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_1_5" >
         
           
-          <label class="md-nav__link" for="__nav_5_1_4" id="__nav_5_1_4_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_5_1_5" id="__nav_5_1_5_label" tabindex="0">
             
   
   
@@ -4889,8 +5019,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_5_1_4_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_5_1_4">
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_5_1_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_1_5">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -6189,6 +6319,45 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#column-comment-format-critical-for-blob-migration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Column Comment Format (Critical for Blob Migration)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Column Comment Format (Critical for Blob Migration)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#checking-migration-status" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Checking Migration Status
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#migrating-blob-column-comments" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Migrating Blob Column Comments
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#unified-stores-configuration" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -6896,6 +7065,67 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Option B: In-Place Migration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-backup-production" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Backup Production
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-add-type-markers-to-column-comments" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Add Type Markers to Column Comments
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-rebuild-lineage-table" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Rebuild Lineage Table
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-4-migrate-external-storage-if-applicable" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4: Migrate External Storage (if applicable)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-5-verify-migration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 5: Verify Migration
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
         
           <li class="md-nav__item">
@@ -7162,6 +7392,16 @@ document and it will execute the migration with your oversight.</p>
 <p>No action required—the new license is more permissive.</p>
 <h3 id="future-backend-support">Future Backend Support<a class="headerlink" href="#future-backend-support" title="Permanent link">&para;</a></h3>
 <p>DataJoint 2.0 introduces portable type aliases (<code>int64</code>, <code>float64</code>, etc.) that prepare the codebase for <strong>PostgreSQL backend compatibility</strong> in a future release. Migration to core types ensures your schemas will work seamlessly when Postgres support is available.</p>
+<p><strong>String quoting in restrictions:</strong> MySQL and PostgreSQL handle quotes differently. MySQL allows both single and double quotes for string literals, but PostgreSQL interprets double quotes as identifier (column) references. For PostgreSQL compatibility, replace double quotes with single quotes inside SQL restriction strings:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Before (MySQL only)</span>
+<span class="n">Table</span> <span class="o">&amp;</span> <span class="s1">&#39;name = &quot;Alice&quot;&#39;</span>
+<span class="n">Table</span> <span class="o">&amp;</span> <span class="s1">&#39;date &gt; &quot;2024-01-01&quot;&#39;</span>
+
+<span class="c1"># After (PostgreSQL compatible)</span>
+<span class="n">Table</span> <span class="o">&amp;</span> <span class="s2">&quot;name = &#39;Alice&#39;&quot;</span>
+<span class="n">Table</span> <span class="o">&amp;</span> <span class="s2">&quot;date &gt; &#39;2024-01-01&#39;&quot;</span>
+</code></pre></div>
+<p>See <a href="../../reference/specs/database-backends/#string-quoting">Database Backends Specification</a> for details.</p>
 <h3 id="before-you-start-testing-recommendation">Before You Start: Testing Recommendation<a class="headerlink" href="#before-you-start-testing-recommendation" title="Permanent link">&para;</a></h3>
 <p><strong>⚡ Want AI agents to automate Phases I-II for you?</strong></p>
 <p>Create unit and integration tests for your pipeline against a QA database before
@@ -7293,6 +7533,80 @@ automatically, reducing manual effort by 50-80%.</p>
 <li>Schema-addressed storage organizes data by table structure—no migration needed, just new functionality</li>
 </ul>
 <p><strong>Learn more:</strong> <a href="../../reference/specs/codec-api/">Codec API Reference</a> · <a href="../../explanation/custom-codecs/">Custom Codecs</a></p>
+<h3 id="column-comment-format-critical-for-blob-migration">Column Comment Format (Critical for Blob Migration)<a class="headerlink" href="#column-comment-format-critical-for-blob-migration" title="Permanent link">&para;</a></h3>
+<p>DataJoint 2.0 stores type information in the SQL column comment using a <code>:type:</code> prefix format:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">-- 2.0 column comment format</span>
+<span class="k">COMMENT</span><span class="w"> </span><span class="s1">&#39;:&lt;type&gt;:user comment&#39;</span>
+
+<span class="c1">-- Examples</span>
+<span class="k">COMMENT</span><span class="w"> </span><span class="s1">&#39;:int64:subject identifier&#39;</span>
+<span class="k">COMMENT</span><span class="w"> </span><span class="s1">&#39;:&lt;blob&gt;:serialized neural data&#39;</span>
+<span class="k">COMMENT</span><span class="w"> </span><span class="s1">&#39;:&lt;blob@store&gt;:large array in object storage&#39;</span>
+</code></pre></div>
+<p><strong>Why this matters for blob columns:</strong></p>
+<p>In pre-2.0, <code>longblob</code> columns automatically deserialized Python objects using DataJoint's binary serialization format. DataJoint 2.0 identifies blob columns by checking for <code>:&lt;blob&gt;:</code> in the column comment. <strong>Without this marker, blob columns are treated as raw binary data and will NOT be deserialized.</strong></p>
+<table>
+<thead>
+<tr>
+<th>Column Comment</th>
+<th>DataJoint 2.0 Behavior</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>:&lt;blob&gt;:neural data</code></td>
+<td>✓ Deserializes to Python/NumPy objects</td>
+</tr>
+<tr>
+<td><code>neural data</code> (no marker)</td>
+<td>✗ Returns raw bytes (no deserialization)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Migration requirement:</strong> Existing blob columns need their comments updated to include the <code>:&lt;blob&gt;:</code> prefix. This is a metadata-only change—the actual blob data format is unchanged.</p>
+<h4 id="checking-migration-status">Checking Migration Status<a class="headerlink" href="#checking-migration-status" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">datajoint.migrate</span><span class="w"> </span><span class="kn">import</span> <span class="n">check_migration_status</span>
+
+<span class="n">status</span> <span class="o">=</span> <span class="n">check_migration_status</span><span class="p">(</span><span class="n">schema</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Blob columns: </span><span class="si">{</span><span class="n">status</span><span class="p">[</span><span class="s1">&#39;total_blob_columns&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Migrated: </span><span class="si">{</span><span class="n">status</span><span class="p">[</span><span class="s1">&#39;migrated&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Pending: </span><span class="si">{</span><span class="n">status</span><span class="p">[</span><span class="s1">&#39;pending&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
+<h4 id="migrating-blob-column-comments">Migrating Blob Column Comments<a class="headerlink" href="#migrating-blob-column-comments" title="Permanent link">&para;</a></h4>
+<p>Use <code>migrate_columns()</code> to add type markers to all columns (integers, floats, and blobs):</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">datajoint.migrate</span><span class="w"> </span><span class="kn">import</span> <span class="n">migrate_columns</span>
+
+<span class="c1"># Preview changes (dry run)</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">migrate_columns</span><span class="p">(</span><span class="n">schema</span><span class="p">,</span> <span class="n">dry_run</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Would migrate </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;sql_statements&#39;</span><span class="p">])</span><span class="si">}</span><span class="s2"> columns&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">sql</span> <span class="ow">in</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;sql_statements&#39;</span><span class="p">]:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">sql</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># Apply changes</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">migrate_columns</span><span class="p">(</span><span class="n">schema</span><span class="p">,</span> <span class="n">dry_run</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Migrated </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;columns_migrated&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> columns&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p>Or use <code>migrate_blob_columns()</code> to migrate only blob columns:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">datajoint.migrate</span><span class="w"> </span><span class="kn">import</span> <span class="n">migrate_blob_columns</span>
+
+<span class="c1"># Preview</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">migrate_blob_columns</span><span class="p">(</span><span class="n">schema</span><span class="p">,</span> <span class="n">dry_run</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Would migrate </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;needs_migration&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> blob columns&quot;</span><span class="p">)</span>
+
+<span class="c1"># Apply</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">migrate_blob_columns</span><span class="p">(</span><span class="n">schema</span><span class="p">,</span> <span class="n">dry_run</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Migrated </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;migrated&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> blob columns&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>What the migration does:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="c1">-- Before migration</span>
+<span class="k">ALTER</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="o">`</span><span class="k">schema</span><span class="o">`</span><span class="p">.</span><span class="o">`</span><span class="k">table</span><span class="o">`</span>
+<span class="w">  </span><span class="k">MODIFY</span><span class="w"> </span><span class="k">COLUMN</span><span class="w"> </span><span class="o">`</span><span class="k">data</span><span class="o">`</span><span class="w"> </span><span class="n">longblob</span><span class="w"> </span><span class="k">COMMENT</span><span class="w"> </span><span class="s1">&#39;neural recording&#39;</span><span class="p">;</span>
+
+<span class="c1">-- After migration</span>
+<span class="k">ALTER</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="o">`</span><span class="k">schema</span><span class="o">`</span><span class="p">.</span><span class="o">`</span><span class="k">table</span><span class="o">`</span>
+<span class="w">  </span><span class="k">MODIFY</span><span class="w"> </span><span class="k">COLUMN</span><span class="w"> </span><span class="o">`</span><span class="k">data</span><span class="o">`</span><span class="w"> </span><span class="n">longblob</span><span class="w"> </span><span class="k">COMMENT</span><span class="w"> </span><span class="s1">&#39;:&lt;blob&gt;:neural recording&#39;</span><span class="p">;</span>
+</code></pre></div>
+<p>The data itself is unchanged—only the comment metadata is updated.</p>
 <h3 id="unified-stores-configuration">Unified Stores Configuration<a class="headerlink" href="#unified-stores-configuration" title="Permanent link">&para;</a></h3>
 <p>DataJoint 2.0 replaces <code>external.*</code> with unified <code>stores.*</code> configuration:</p>
 <p><strong>pre-2.0 (legacy):</strong>
@@ -8717,6 +9031,24 @@ API CONVERSIONS:
    (table &amp; key).delete()  # unchanged
    (table &amp; restriction).delete()  # unchanged
 
+7. String Quoting in Restrictions (PostgreSQL compatibility):
+   Replace double quotes with single quotes for string literals in SQL restrictions.
+
+   MySQL allows both quote styles, but PostgreSQL interprets double quotes as
+   identifier (column) references, causing errors.
+
+   OLD: Table &amp; &#39;name = &quot;Alice&quot;&#39;
+   OLD: Table &amp; &#39;date &gt; &quot;2024-01-01&quot;&#39;
+   OLD: Table &amp; &#39;strain = &quot;C57BL/6&quot;&#39;
+
+   NEW: Table &amp; &quot;name = &#39;Alice&#39;&quot;
+   NEW: Table &amp; &quot;date &gt; &#39;2024-01-01&#39;&quot;
+   NEW: Table &amp; &quot;strain = &#39;C57BL/6&#39;&quot;
+
+   Note: Dictionary restrictions handle quoting automatically but only support
+   equality comparisons. For range comparisons (&gt;, &lt;, LIKE, etc.), use string
+   restrictions with single-quoted values.
+
 PROCESS:
 1. Find all Python files with DataJoint code
 2. For each file:
@@ -8728,6 +9060,8 @@ PROCESS:
    f. Search for .join(x, left=True) patterns (consider .extend(x))
    g. Search for dj.U() * patterns (replace with just table)
    h. Verify dj.U() &amp; patterns remain unchanged
+   i. Search for string restrictions with double-quoted values
+   j. Replace double quotes with single quotes inside SQL strings
 3. Run syntax checks
 4. Run existing tests if available
 5. If semantic checks fail after @ → * conversion, investigate schema/data
@@ -8740,6 +9074,7 @@ VERIFICATION:
 - No @ operator between tables
 - dj.U() * patterns replaced with just table
 - dj.U() &amp; patterns remain unchanged
+- No double-quoted string literals in SQL restrictions
 - All tests pass (if available)
 - Semantic check failures investigated and resolved
 
@@ -9291,23 +9626,74 @@ git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </
 <h3 id="option-b-in-place-migration">Option B: In-Place Migration<a class="headerlink" href="#option-b-in-place-migration" title="Permanent link">&para;</a></h3>
 <p><strong>Best for:</strong> Very large databases (&gt; 1 TB) where copying is impractical</p>
 <p><strong>Warning:</strong> Modifies production schema directly. Test thoroughly first!</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">datajoint.migrate</span><span class="w"> </span><span class="kn">import</span> <span class="n">migrate_schema_in_place</span>
+<h4 id="step-1-backup-production">Step 1: Backup Production<a class="headerlink" href="#step-1-backup-production" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">datajoint.migrate</span><span class="w"> </span><span class="kn">import</span> <span class="n">backup_schema</span>
 
-<span class="c1"># Backup first</span>
-<span class="n">backup_schema</span><span class="p">(</span><span class="s1">&#39;my_pipeline&#39;</span><span class="p">,</span> <span class="s1">&#39;my_pipeline_backup_20260114&#39;</span><span class="p">)</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">backup_schema</span><span class="p">(</span><span class="s1">&#39;my_pipeline&#39;</span><span class="p">,</span> <span class="s1">&#39;my_pipeline_backup_20260114&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Backed up </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;tables_backed_up&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> tables, </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;rows_backed_up&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> rows&quot;</span><span class="p">)</span>
+</code></pre></div>
+<h4 id="step-2-add-type-markers-to-column-comments">Step 2: Add Type Markers to Column Comments<a class="headerlink" href="#step-2-add-type-markers-to-column-comments" title="Permanent link">&para;</a></h4>
+<p>This is the critical step for blob deserialization. Without <code>:&lt;blob&gt;:</code> markers, blob columns return raw bytes instead of deserialized Python objects.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">datajoint.migrate</span><span class="w"> </span><span class="kn">import</span> <span class="n">migrate_columns</span><span class="p">,</span> <span class="n">check_migration_status</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">datajoint</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dj</span>
 
-<span class="c1"># Migrate in place</span>
-<span class="n">result</span> <span class="o">=</span> <span class="n">migrate_schema_in_place</span><span class="p">(</span>
-    <span class="n">schema</span><span class="o">=</span><span class="s1">&#39;my_pipeline&#39;</span><span class="p">,</span>
-    <span class="n">backup</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-    <span class="n">steps</span><span class="o">=</span><span class="p">[</span>
-        <span class="s1">&#39;update_blob_comments&#39;</span><span class="p">,</span>  <span class="c1"># Add :&lt;blob&gt;: markers</span>
-        <span class="s1">&#39;add_lineage_table&#39;</span><span class="p">,</span>  <span class="c1"># Create ~lineage</span>
-        <span class="s1">&#39;migrate_external_storage&#39;</span><span class="p">,</span>  <span class="c1"># BINARY(16) → JSON</span>
-    <span class="p">]</span>
-<span class="p">)</span>
+<span class="n">schema</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">Schema</span><span class="p">(</span><span class="s1">&#39;my_pipeline&#39;</span><span class="p">)</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Migrated </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;steps_completed&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> steps&quot;</span><span class="p">)</span>
+<span class="c1"># Check current status</span>
+<span class="n">status</span> <span class="o">=</span> <span class="n">check_migration_status</span><span class="p">(</span><span class="n">schema</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Blob columns needing migration: </span><span class="si">{</span><span class="n">status</span><span class="p">[</span><span class="s1">&#39;pending&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># Preview changes</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">migrate_columns</span><span class="p">(</span><span class="n">schema</span><span class="p">,</span> <span class="n">dry_run</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Would update </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;sql_statements&#39;</span><span class="p">])</span><span class="si">}</span><span class="s2"> columns:&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">sql</span> <span class="ow">in</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;sql_statements&#39;</span><span class="p">][:</span><span class="mi">5</span><span class="p">]:</span>  <span class="c1"># Show first 5</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">sql</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># Apply changes (updates column comments only, no data changes)</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">migrate_columns</span><span class="p">(</span><span class="n">schema</span><span class="p">,</span> <span class="n">dry_run</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Migrated </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;columns_migrated&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> columns&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>What this does:</strong> Adds <code>:&lt;type&gt;:</code> prefix to column comments:</p>
+<ul>
+<li><code>longblob</code> → <code>COMMENT ':&lt;blob&gt;:...'</code></li>
+<li><code>int unsigned</code> → <code>COMMENT ':uint32:...'</code></li>
+<li>etc.</li>
+</ul>
+<h4 id="step-3-rebuild-lineage-table">Step 3: Rebuild Lineage Table<a class="headerlink" href="#step-3-rebuild-lineage-table" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">datajoint.migrate</span><span class="w"> </span><span class="kn">import</span> <span class="n">rebuild_lineage</span>
+
+<span class="n">result</span> <span class="o">=</span> <span class="n">rebuild_lineage</span><span class="p">(</span><span class="n">schema</span><span class="p">,</span> <span class="n">dry_run</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Rebuilt lineage: </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;lineage_entries&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> entries&quot;</span><span class="p">)</span>
+</code></pre></div>
+<h4 id="step-4-migrate-external-storage-if-applicable">Step 4: Migrate External Storage (if applicable)<a class="headerlink" href="#step-4-migrate-external-storage-if-applicable" title="Permanent link">&para;</a></h4>
+<p>If you use <code>blob@store</code>, <code>attach@store</code>, or <code>filepath@store</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">datajoint.migrate</span><span class="w"> </span><span class="kn">import</span> <span class="n">migrate_external</span><span class="p">,</span> <span class="n">migrate_filepath</span>
+
+<span class="c1"># Preview external blob/attach migration</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">migrate_external</span><span class="p">(</span><span class="n">schema</span><span class="p">,</span> <span class="n">dry_run</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Found </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;columns_found&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> external columns&quot;</span><span class="p">)</span>
+
+<span class="c1"># Apply migration (adds _v2 columns with JSON metadata)</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">migrate_external</span><span class="p">(</span><span class="n">schema</span><span class="p">,</span> <span class="n">dry_run</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Migrated </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;rows_migrated&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> rows&quot;</span><span class="p">)</span>
+
+<span class="c1"># Similarly for filepath columns</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">migrate_filepath</span><span class="p">(</span><span class="n">schema</span><span class="p">,</span> <span class="n">dry_run</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+<span class="c1"># After verification, finalize (rename columns)</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">migrate_external</span><span class="p">(</span><span class="n">schema</span><span class="p">,</span> <span class="n">finalize</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">migrate_filepath</span><span class="p">(</span><span class="n">schema</span><span class="p">,</span> <span class="n">finalize</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</code></pre></div>
+<h4 id="step-5-verify-migration">Step 5: Verify Migration<a class="headerlink" href="#step-5-verify-migration" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">datajoint.migrate</span><span class="w"> </span><span class="kn">import</span> <span class="n">verify_schema_v20</span>
+
+<span class="n">result</span> <span class="o">=</span> <span class="n">verify_schema_v20</span><span class="p">(</span><span class="s1">&#39;my_pipeline&#39;</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;compatible&#39;</span><span class="p">]:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;✓ Schema fully migrated to 2.0&quot;</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Issues found:&quot;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">issue</span> <span class="ow">in</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;issues&#39;</span><span class="p">]:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  - </span><span class="si">{</span><span class="n">issue</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </code></pre></div>
 <h3 id="option-c-gradual-migration-with-legacy-compatibility">Option C: Gradual Migration with Legacy Compatibility<a class="headerlink" href="#option-c-gradual-migration-with-legacy-compatibility" title="Permanent link">&para;</a></h3>
 <p><strong>Best for:</strong> Pipelines that must support both pre-2.0 and 2.0 clients simultaneously</p>

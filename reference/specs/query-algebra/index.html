@@ -124,7 +124,7 @@
   <div class="md-banner">
     <div class="md-banner__inner md-grid md-typeset">
       <p>
-        📖 You are viewing documentation for <strong>DataJoint 2.0+</strong>
+        📖 You are viewing documentation for <strong>DataJoint 2.1+</strong>
         ·
         <a href="https://docs.datajoint.com/how-to/migrate-to-v20/">
           Migration guide for legacy users (pre-2.0)
@@ -3247,6 +3247,8 @@
       
         
       
+        
+      
     
     
     
@@ -3302,6 +3304,34 @@
   
   
   
+    <li class="md-nav__item">
+      <a href="../database-backends/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Database Backends
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
     
     
       
@@ -3321,10 +3351,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_1_1" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_1_2" >
         
           
-          <label class="md-nav__link" for="__nav_5_1_1" id="__nav_5_1_1_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_5_1_2" id="__nav_5_1_2_label" tabindex="0">
             
   
   
@@ -3342,8 +3372,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_5_1_1_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_5_1_1">
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_5_1_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_1_2">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -3474,10 +3504,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_1_2" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_1_3" checked>
         
           
-          <label class="md-nav__link" for="__nav_5_1_2" id="__nav_5_1_2_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_5_1_3" id="__nav_5_1_3_label" tabindex="0">
             
   
   
@@ -3495,8 +3525,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_5_1_2_label" aria-expanded="true">
-          <label class="md-nav__title" for="__nav_5_1_2">
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_5_1_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5_1_3">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -4624,10 +4654,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#133-subquery-generation-rules" class="md-nav__link">
+  <a href="#133-modify-in-place-vs-subquery-wrapping" class="md-nav__link">
     <span class="md-ellipsis">
       
-        13.3 Subquery Generation Rules
+        13.3 Modify-in-Place vs. Subquery Wrapping
       
     </span>
   </a>
@@ -4635,10 +4665,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#134-join-mechanics" class="md-nav__link">
+  <a href="#134-restriction-rules-and-" class="md-nav__link">
     <span class="md-ellipsis">
       
-        13.4 Join Mechanics
+        13.4 Restriction Rules (&amp; and -)
       
     </span>
   </a>
@@ -4646,10 +4676,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#135-aggregation-sql" class="md-nav__link">
+  <a href="#135-projection-rules-proj" class="md-nav__link">
     <span class="md-ellipsis">
       
-        13.5 Aggregation SQL
+        13.5 Projection Rules (.proj())
       
     </span>
   </a>
@@ -4657,10 +4687,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#136-union-sql" class="md-nav__link">
+  <a href="#1351-join-rules" class="md-nav__link">
     <span class="md-ellipsis">
       
-        13.6 Union SQL
+        13.5.1 Join Rules (*)
       
     </span>
   </a>
@@ -4668,10 +4698,115 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#137-query-backprojection" class="md-nav__link">
+  <a href="#1352-aggregation-rules-aggr" class="md-nav__link">
     <span class="md-ellipsis">
       
-        13.7 Query Backprojection
+        13.5.2 Aggregation Rules (.aggr())
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1353-toplimit-rules-djtop" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        13.5.3 Top/Limit Rules (dj.Top)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#136-backend-specific-transpilation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        13.6 Backend-Specific Transpilation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="13.6 Backend-Specific Transpilation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1361-function-translation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        13.6.1 Function Translation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1362-having-clause-alias-references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        13.6.2 HAVING Clause Alias References
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1363-identifier-quoting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        13.6.3 Identifier Quoting
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1364-string-literal-quoting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        13.6.4 String Literal Quoting
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#137-union-sql" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        13.7 Union SQL
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#138-query-backprojection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        13.8 Query Backprojection
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#139-subquery-generation-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        13.9 Subquery Generation Summary
       
     </span>
   </a>
@@ -4831,10 +4966,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_1_3" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_1_4" >
         
           
-          <label class="md-nav__link" for="__nav_5_1_3" id="__nav_5_1_3_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_5_1_4" id="__nav_5_1_4_label" tabindex="0">
             
   
   
@@ -4852,8 +4987,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_5_1_3_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_5_1_3">
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_5_1_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_1_4">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -4982,10 +5117,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_1_4" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_1_5" >
         
           
-          <label class="md-nav__link" for="__nav_5_1_4" id="__nav_5_1_4_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_5_1_5" id="__nav_5_1_5_label" tabindex="0">
             
   
   
@@ -5003,8 +5138,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_5_1_4_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_5_1_4">
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_5_1_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_1_5">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -7231,10 +7366,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#133-subquery-generation-rules" class="md-nav__link">
+  <a href="#133-modify-in-place-vs-subquery-wrapping" class="md-nav__link">
     <span class="md-ellipsis">
       
-        13.3 Subquery Generation Rules
+        13.3 Modify-in-Place vs. Subquery Wrapping
       
     </span>
   </a>
@@ -7242,10 +7377,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#134-join-mechanics" class="md-nav__link">
+  <a href="#134-restriction-rules-and-" class="md-nav__link">
     <span class="md-ellipsis">
       
-        13.4 Join Mechanics
+        13.4 Restriction Rules (&amp; and -)
       
     </span>
   </a>
@@ -7253,10 +7388,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#135-aggregation-sql" class="md-nav__link">
+  <a href="#135-projection-rules-proj" class="md-nav__link">
     <span class="md-ellipsis">
       
-        13.5 Aggregation SQL
+        13.5 Projection Rules (.proj())
       
     </span>
   </a>
@@ -7264,10 +7399,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#136-union-sql" class="md-nav__link">
+  <a href="#1351-join-rules" class="md-nav__link">
     <span class="md-ellipsis">
       
-        13.6 Union SQL
+        13.5.1 Join Rules (*)
       
     </span>
   </a>
@@ -7275,10 +7410,115 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#137-query-backprojection" class="md-nav__link">
+  <a href="#1352-aggregation-rules-aggr" class="md-nav__link">
     <span class="md-ellipsis">
       
-        13.7 Query Backprojection
+        13.5.2 Aggregation Rules (.aggr())
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1353-toplimit-rules-djtop" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        13.5.3 Top/Limit Rules (dj.Top)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#136-backend-specific-transpilation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        13.6 Backend-Specific Transpilation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="13.6 Backend-Specific Transpilation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1361-function-translation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        13.6.1 Function Translation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1362-having-clause-alias-references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        13.6.2 HAVING Clause Alias References
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1363-identifier-quoting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        13.6.3 Identifier Quoting
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1364-string-literal-quoting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        13.6.4 String Literal Quoting
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#137-union-sql" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        13.7 Union SQL
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#138-query-backprojection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        13.8 Query Backprojection
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#139-subquery-generation-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        13.9 Subquery Generation Summary
       
     </span>
   </a>
@@ -8444,7 +8684,7 @@ MySQL:        FROM → WHERE → SELECT → GROUP BY → HAVING
 </code></pre></div>
 <p>This allows <code>GROUP BY</code> and <code>HAVING</code> clauses to use alias column names created by <code>SELECT</code>. DataJoint targets MySQL's behavior where column aliases can be used in <code>HAVING</code>.</p>
 <h3 id="132-queryexpression-properties">13.2 QueryExpression Properties<a class="headerlink" href="#132-queryexpression-properties" title="Permanent link">&para;</a></h3>
-<p>Each <code>QueryExpression</code> represents a <code>SELECT</code> statement with these properties:</p>
+<p>Each <code>QueryExpression</code> represents a SQL <code>SELECT</code> statement with these properties:</p>
 <table>
 <thead>
 <tr>
@@ -8457,78 +8697,236 @@ MySQL:        FROM → WHERE → SELECT → GROUP BY → HAVING
 <tr>
 <td><code>heading</code></td>
 <td><code>SELECT</code></td>
-<td>Attributes to retrieve</td>
+<td>Attributes and computed expressions</td>
 </tr>
 <tr>
 <td><code>restriction</code></td>
-<td><code>WHERE</code></td>
-<td>List of conditions (AND)</td>
+<td><code>WHERE</code> / <code>HAVING</code></td>
+<td>Filter conditions</td>
 </tr>
 <tr>
 <td><code>support</code></td>
 <td><code>FROM</code></td>
-<td>Tables/subqueries to query</td>
+<td>Base tables and joined tables</td>
+</tr>
+<tr>
+<td><code>_top</code></td>
+<td><code>ORDER BY</code> / <code>LIMIT</code></td>
+<td>Ordering and pagination</td>
+</tr>
+<tr>
+<td><code>_group_by</code></td>
+<td><code>GROUP BY</code></td>
+<td>Grouping (for aggregations)</td>
 </tr>
 </tbody>
 </table>
-<p>Operators create new expressions by combining these properties:
-- <code>proj</code> → creates new <code>heading</code>
-- <code>&amp;</code> → appends to <code>restriction</code>
-- <code>*</code> → adds to <code>support</code></p>
-<h3 id="133-subquery-generation-rules">13.3 Subquery Generation Rules<a class="headerlink" href="#133-subquery-generation-rules" title="Permanent link">&para;</a></h3>
-<p>Operators merge properties when possible, avoiding subqueries. A subquery is generated when:</p>
+<h3 id="133-modify-in-place-vs-subquery-wrapping">13.3 Modify-in-Place vs. Subquery Wrapping<a class="headerlink" href="#133-modify-in-place-vs-subquery-wrapping" title="Permanent link">&para;</a></h3>
+<p>When an operator is applied to a QueryExpression, DataJoint either:</p>
+<ol>
+<li><strong>Modifies in place</strong>: Adds/modifies clauses in the existing SELECT statement</li>
+<li><strong>Wraps as subquery</strong>: Creates a new outer SELECT with the input as a FROM subquery</li>
+</ol>
+<p>The choice depends on SQL semantics—whether the operation can be expressed by adding clauses, or whether the input must first be materialized as a derived table.</p>
+<h3 id="134-restriction-rules-and-">13.4 Restriction Rules (<code>&amp;</code> and <code>-</code>)<a class="headerlink" href="#134-restriction-rules-and-" title="Permanent link">&para;</a></h3>
+<p><strong>Modify in place</strong> when restricting on:
+- Base table attributes (columns from FROM tables)
+- Primary key attributes (including those inherited via FK)</p>
+<p><strong>Wrap as subquery</strong> when restricting on:
+- Computed/aliased attributes (created by <code>.proj()</code>)
+- Aggregated attributes (created by <code>.aggr()</code>)
+- Any attribute after <code>LIMIT</code>/<code>OFFSET</code> has been applied</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Modify in place: condition added to WHERE</span>
+<span class="n">Session</span> <span class="o">&amp;</span> <span class="s2">&quot;session_date &gt; &#39;2024-01-01&#39;&quot;</span>
+<span class="c1"># SQL: SELECT ... FROM session WHERE session_date &gt; &#39;2024-01-01&#39;</span>
+
+<span class="c1"># Subquery required: restriction references computed alias</span>
+<span class="n">Session</span><span class="o">.</span><span class="n">proj</span><span class="p">(</span><span class="n">year</span><span class="o">=</span><span class="s1">&#39;YEAR(session_date)&#39;</span><span class="p">)</span> <span class="o">&amp;</span> <span class="s2">&quot;year = 2024&quot;</span>
+<span class="c1"># SQL: SELECT * FROM (</span>
+<span class="c1">#        SELECT ..., YEAR(session_date) as year FROM session</span>
+<span class="c1">#      ) AS _s1 WHERE year = 2024</span>
+</code></pre></div>
+<p><strong>Aggregation special case</strong>: Restrictions after aggregation go to HAVING (MySQL) or require subquery (PostgreSQL):</p>
+<div class="highlight"><pre><span></span><code><span class="n">Session</span><span class="o">.</span><span class="n">aggr</span><span class="p">(</span><span class="n">Trial</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="s1">&#39;count(*)&#39;</span><span class="p">)</span> <span class="o">&amp;</span> <span class="s2">&quot;n &gt; 10&quot;</span>
+<span class="c1"># MySQL:      ... GROUP BY pk HAVING n &gt; 10</span>
+<span class="c1"># PostgreSQL: SELECT * FROM (...GROUP BY pk) AS _s1 WHERE n &gt; 10</span>
+</code></pre></div>
+<h3 id="135-projection-rules-proj">13.5 Projection Rules (<code>.proj()</code>)<a class="headerlink" href="#135-projection-rules-proj" title="Permanent link">&para;</a></h3>
+<p><strong>Modify in place</strong> when:
+- Selecting a subset of existing attributes
+- Renaming base attributes
+- Computing new attributes from base columns</p>
+<p><strong>Wrap as subquery</strong> when:
+- Computing attribute from another computed attribute (alias of alias)
+- Projecting after <code>LIMIT</code>/<code>OFFSET</code> has been applied</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Modify in place: adds computed column to SELECT</span>
+<span class="n">Session</span><span class="o">.</span><span class="n">proj</span><span class="p">(</span><span class="n">year</span><span class="o">=</span><span class="s1">&#39;YEAR(session_date)&#39;</span><span class="p">)</span>
+<span class="c1"># SQL: SELECT pk, YEAR(session_date) as year FROM session</span>
+
+<span class="c1"># Subquery required: decade depends on year alias</span>
+<span class="n">Session</span><span class="o">.</span><span class="n">proj</span><span class="p">(</span><span class="n">year</span><span class="o">=</span><span class="s1">&#39;YEAR(session_date)&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">proj</span><span class="p">(</span><span class="n">decade</span><span class="o">=</span><span class="s1">&#39;year - year % 10&#39;</span><span class="p">)</span>
+<span class="c1"># SQL: SELECT pk, year - year % 10 as decade FROM (</span>
+<span class="c1">#        SELECT pk, YEAR(session_date) as year FROM session</span>
+<span class="c1">#      ) AS _s1</span>
+</code></pre></div>
+<h3 id="1351-join-rules">13.5.1 Join Rules (<code>*</code>)<a class="headerlink" href="#1351-join-rules" title="Permanent link">&para;</a></h3>
+<p><strong>Modify in place</strong> (merge both operands' clauses) when:
+- Both operands are base tables or simple projections
+- Join attributes are base columns (not computed)
+- Neither operand has <code>LIMIT</code>/<code>OFFSET</code> or <code>GROUP BY</code></p>
+<p><strong>Wrap operand as subquery</strong> when operand has:
+- Computed attributes used in join condition
+- <code>LIMIT</code>/<code>OFFSET</code> applied
+- <code>GROUP BY</code> (is an aggregation result)
+- Is a union expression</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Modify in place: merge FROM and WHERE clauses</span>
+<span class="n">Session</span> <span class="o">*</span> <span class="n">Trial</span>
+<span class="c1"># SQL: SELECT ... FROM session JOIN trial USING (pk)</span>
+
+<span class="c1"># Subquery required: aggregation as join operand</span>
+<span class="n">Session</span> <span class="o">*</span> <span class="n">Session</span><span class="o">.</span><span class="n">aggr</span><span class="p">(</span><span class="n">Trial</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="s1">&#39;count(*)&#39;</span><span class="p">)</span>
+<span class="c1"># SQL: SELECT ... FROM session JOIN (</span>
+<span class="c1">#        SELECT pk, count(*) as n FROM session</span>
+<span class="c1">#        LEFT JOIN trial USING (pk) GROUP BY pk</span>
+<span class="c1">#      ) AS _s1 USING (pk)</span>
+</code></pre></div>
+<h3 id="1352-aggregation-rules-aggr">13.5.2 Aggregation Rules (<code>.aggr()</code>)<a class="headerlink" href="#1352-aggregation-rules-aggr" title="Permanent link">&para;</a></h3>
+<p>Aggregation produces a query with <code>GROUP BY</code>. The grouped expression is joined:</p>
+<div class="highlight"><pre><span></span><code><span class="k">SELECT</span><span class="w"> </span><span class="n">A</span><span class="p">.</span><span class="n">pk</span><span class="p">,</span><span class="w"> </span><span class="n">A</span><span class="p">.</span><span class="n">secondary</span><span class="p">,</span><span class="w"> </span><span class="n">agg_func</span><span class="p">(</span><span class="n">B</span><span class="p">.</span><span class="n">col</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">computed</span>
+<span class="k">FROM</span><span class="w"> </span><span class="n">A</span><span class="w"> </span><span class="k">LEFT</span><span class="w"> </span><span class="k">JOIN</span><span class="w"> </span><span class="n">B</span><span class="w"> </span><span class="k">USING</span><span class="w"> </span><span class="p">(</span><span class="n">pk</span><span class="p">)</span>
+<span class="k">WHERE</span><span class="w"> </span><span class="o">&lt;</span><span class="n">restrictions</span><span class="w"> </span><span class="k">on</span><span class="w"> </span><span class="n">A</span><span class="w"> </span><span class="n">attributes</span><span class="o">&gt;</span>
+<span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">A</span><span class="p">.</span><span class="n">pk</span>
+<span class="k">HAVING</span><span class="w"> </span><span class="o">&lt;</span><span class="n">restrictions</span><span class="w"> </span><span class="k">on</span><span class="w"> </span><span class="n">B</span><span class="w"> </span><span class="k">or</span><span class="w"> </span><span class="n">computed</span><span class="w"> </span><span class="n">attributes</span><span class="o">&gt;</span>
+</code></pre></div>
+<p><strong>Restrictions routing:</strong>
+- On grouping expression (A) attributes → <code>WHERE</code> (before GROUP BY)
+- On grouped expression (B) or computed attributes → <code>HAVING</code> (after GROUP BY)</p>
+<p><strong>Aggregation result requires subquery</strong> when used as operand to:
+- Another join (<code>*</code>)
+- Further restriction on computed attributes
+- Another aggregation</p>
+<h3 id="1353-toplimit-rules-djtop">13.5.3 Top/Limit Rules (<code>dj.Top</code>)<a class="headerlink" href="#1353-toplimit-rules-djtop" title="Permanent link">&para;</a></h3>
+<p><strong>Any operation after Top requires subquery</strong> (the limited result must materialize):</p>
+<div class="highlight"><pre><span></span><code><span class="p">(</span><span class="n">Session</span> <span class="o">&amp;</span> <span class="n">dj</span><span class="o">.</span><span class="n">Top</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="s1">&#39;date DESC&#39;</span><span class="p">))</span> <span class="o">&amp;</span> <span class="s2">&quot;notes IS NOT NULL&quot;</span>
+<span class="c1"># SQL: SELECT * FROM (</span>
+<span class="c1">#        SELECT * FROM session ORDER BY date DESC LIMIT 10</span>
+<span class="c1">#      ) AS _s1 WHERE notes IS NOT NULL</span>
+</code></pre></div>
+<p>Exception: Chaining Tops with compatible ordering can merge (see Section 12.5)</p>
+<h3 id="136-backend-specific-transpilation">13.6 Backend-Specific Transpilation<a class="headerlink" href="#136-backend-specific-transpilation" title="Permanent link">&para;</a></h3>
+<p>DataJoint supports multiple database backends with differing SQL dialects. The adapter layer handles:</p>
+<h4 id="1361-function-translation">13.6.1 Function Translation<a class="headerlink" href="#1361-function-translation" title="Permanent link">&para;</a></h4>
+<p>Aggregate functions are translated bidirectionally:</p>
 <table>
 <thead>
 <tr>
-<th>Situation</th>
-<th>Reason</th>
+<th>DataJoint</th>
+<th>MySQL</th>
+<th>PostgreSQL</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Restriction uses alias attributes</td>
-<td>Alias must exist in SELECT before WHERE can reference it</td>
+<td><code>GROUP_CONCAT(col)</code></td>
+<td><code>GROUP_CONCAT(col)</code></td>
+<td><code>STRING_AGG(col::text, ',')</code></td>
 </tr>
 <tr>
-<td>Projection creates alias from alias</td>
-<td>Must materialize first alias</td>
-</tr>
-<tr>
-<td>Join on alias attribute</td>
-<td>Alias must exist before join condition</td>
-</tr>
-<tr>
-<td>Aggregation as operand</td>
-<td>GROUP BY requires complete subquery</td>
-</tr>
-<tr>
-<td>Union operand</td>
-<td>UNION requires complete subqueries</td>
+<td><code>STRING_AGG(col, sep)</code></td>
+<td><code>GROUP_CONCAT(col SEPARATOR sep)</code></td>
+<td><code>STRING_AGG(col, sep)</code></td>
 </tr>
 </tbody>
 </table>
-<p>When a subquery is created, the input becomes a <code>FROM</code> clause element in a new <code>QueryExpression</code>.</p>
-<h3 id="134-join-mechanics">13.4 Join Mechanics<a class="headerlink" href="#134-join-mechanics" title="Permanent link">&para;</a></h3>
-<p>Joins combine the properties of both inputs:</p>
-<div class="highlight"><pre><span></span><code><span class="n">result</span><span class="o">.</span><span class="n">support</span> <span class="o">=</span> <span class="n">A</span><span class="o">.</span><span class="n">support</span> <span class="o">+</span> <span class="n">B</span><span class="o">.</span><span class="n">support</span>
-<span class="n">result</span><span class="o">.</span><span class="n">restriction</span> <span class="o">=</span> <span class="n">A</span><span class="o">.</span><span class="n">restriction</span> <span class="o">+</span> <span class="n">B</span><span class="o">.</span><span class="n">restriction</span>
-<span class="n">result</span><span class="o">.</span><span class="n">heading</span> <span class="o">=</span> <span class="n">merge</span><span class="p">(</span><span class="n">A</span><span class="o">.</span><span class="n">heading</span><span class="p">,</span> <span class="n">B</span><span class="o">.</span><span class="n">heading</span><span class="p">)</span>
+<p>Code using either syntax works on both backends.</p>
+<h4 id="1362-having-clause-alias-references">13.6.2 HAVING Clause Alias References<a class="headerlink" href="#1362-having-clause-alias-references" title="Permanent link">&para;</a></h4>
+<p>MySQL allows column aliases in HAVING:</p>
+<div class="highlight"><pre><span></span><code><span class="k">SELECT</span><span class="w"> </span><span class="n">person_id</span><span class="p">,</span><span class="w"> </span><span class="k">COUNT</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">n_languages</span>
+<span class="k">FROM</span><span class="w"> </span><span class="n">proficiency</span>
+<span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">person_id</span>
+<span class="k">HAVING</span><span class="w"> </span><span class="n">n_languages</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">4</span><span class="w">   </span><span class="c1">-- MySQL: OK, PostgreSQL: ERROR</span>
 </code></pre></div>
-<p>Restrictions from inputs propagate to the output. Inputs that don't become subqueries donate their supports, restrictions, and projections directly to the join.</p>
-<h3 id="135-aggregation-sql">13.5 Aggregation SQL<a class="headerlink" href="#135-aggregation-sql" title="Permanent link">&para;</a></h3>
-<p>Aggregation translates to:</p>
-<div class="highlight"><pre><span></span><code><span class="k">SELECT</span><span class="w"> </span><span class="n">A</span><span class="p">.</span><span class="n">pk</span><span class="p">,</span><span class="w"> </span><span class="n">A</span><span class="p">.</span><span class="n">secondary</span><span class="p">,</span><span class="w"> </span><span class="n">agg_func</span><span class="p">(</span><span class="n">B</span><span class="p">.</span><span class="n">col</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">computed</span>
-<span class="k">FROM</span><span class="w"> </span><span class="n">A</span>
-<span class="k">LEFT</span><span class="w"> </span><span class="k">JOIN</span><span class="w"> </span><span class="n">B</span><span class="w"> </span><span class="k">USING</span><span class="w"> </span><span class="p">(</span><span class="n">pk</span><span class="p">)</span>
-<span class="k">WHERE</span><span class="w"> </span><span class="o">&lt;</span><span class="n">restrictions</span><span class="w"> </span><span class="k">on</span><span class="w"> </span><span class="n">A</span><span class="o">&gt;</span>
-<span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">A</span><span class="p">.</span><span class="n">pk</span>
-<span class="k">HAVING</span><span class="w"> </span><span class="o">&lt;</span><span class="n">restrictions</span><span class="w"> </span><span class="k">on</span><span class="w"> </span><span class="n">B</span><span class="w"> </span><span class="k">or</span><span class="w"> </span><span class="n">computed</span><span class="o">&gt;</span>
+<p>PostgreSQL (following SQL standard) requires repeating the expression or using a subquery:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">-- Option A: Repeat expression</span>
+<span class="k">HAVING</span><span class="w"> </span><span class="k">COUNT</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">4</span>
+
+<span class="c1">-- Option B: Subquery wrapper</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="p">(</span>
+<span class="w">  </span><span class="k">SELECT</span><span class="w"> </span><span class="n">person_id</span><span class="p">,</span><span class="w"> </span><span class="k">COUNT</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">n_languages</span>
+<span class="w">  </span><span class="k">FROM</span><span class="w"> </span><span class="n">proficiency</span>
+<span class="w">  </span><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">person_id</span>
+<span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">subq</span>
+<span class="k">WHERE</span><span class="w"> </span><span class="n">n_languages</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">4</span>
 </code></pre></div>
-<p>Key behavior:
-- Restrictions on A → <code>WHERE</code> clause (before grouping)
-- Restrictions on B or computed attributes → <code>HAVING</code> clause (after grouping)
-- Aggregation never generates a subquery when restricted</p>
-<h3 id="136-union-sql">13.6 Union SQL<a class="headerlink" href="#136-union-sql" title="Permanent link">&para;</a></h3>
+<p><strong>DataJoint approach:</strong> When generating SQL for PostgreSQL, if the HAVING clause references computed attribute aliases, the aggregation is wrapped in a subquery and the HAVING condition becomes a WHERE clause on the outer query.</p>
+<table>
+<thead>
+<tr>
+<th>Backend</th>
+<th>HAVING with alias</th>
+<th>Generated SQL</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>MySQL</td>
+<td>Direct</td>
+<td><code>... GROUP BY pk HAVING alias &gt; 5</code></td>
+</tr>
+<tr>
+<td>PostgreSQL</td>
+<td>Subquery wrapper</td>
+<td><code>SELECT * FROM (...) AS subq WHERE alias &gt; 5</code></td>
+</tr>
+</tbody>
+</table>
+<p>This ensures consistent behavior across backends while maintaining query correctness.</p>
+<h4 id="1363-identifier-quoting">13.6.3 Identifier Quoting<a class="headerlink" href="#1363-identifier-quoting" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th>Backend</th>
+<th>Identifier Quote</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>MySQL</td>
+<td>Backtick</td>
+<td><code>`table`.`column`</code></td>
+</tr>
+<tr>
+<td>PostgreSQL</td>
+<td>Double quote</td>
+<td><code>"table"."column"</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="1364-string-literal-quoting">13.6.4 String Literal Quoting<a class="headerlink" href="#1364-string-literal-quoting" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th>Backend</th>
+<th>String Literals</th>
+<th>Identifier Literals</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>MySQL</td>
+<td><code>'value'</code> or <code>"value"</code></td>
+<td><code>`name`</code></td>
+</tr>
+<tr>
+<td>PostgreSQL</td>
+<td><code>'value'</code> only</td>
+<td><code>"name"</code></td>
+</tr>
+</tbody>
+</table>
+<p>In PostgreSQL, double quotes denote identifiers, not string literals. Dictionary restrictions handle this automatically; string restrictions must use single quotes for values.</p>
+<h3 id="137-union-sql">13.7 Union SQL<a class="headerlink" href="#137-union-sql" title="Permanent link">&para;</a></h3>
 <p>Union performs an outer join:</p>
 <div class="highlight"><pre><span></span><code><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="n">A</span><span class="p">.</span><span class="n">pk</span><span class="p">,</span><span class="w"> </span><span class="n">A</span><span class="p">.</span><span class="n">secondary</span><span class="p">,</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">B</span><span class="p">.</span><span class="n">secondary</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">A</span><span class="p">)</span>
 <span class="k">UNION</span>
@@ -8536,13 +8934,65 @@ MySQL:        FROM → WHERE → SELECT → GROUP BY → HAVING
 <span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">B</span><span class="p">.</span><span class="n">pk</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">IN</span><span class="w"> </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="n">pk</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">A</span><span class="p">))</span>
 </code></pre></div>
 <p>All union inputs become subqueries except unrestricted unions.</p>
-<h3 id="137-query-backprojection">13.7 Query Backprojection<a class="headerlink" href="#137-query-backprojection" title="Permanent link">&para;</a></h3>
+<h3 id="138-query-backprojection">13.8 Query Backprojection<a class="headerlink" href="#138-query-backprojection" title="Permanent link">&para;</a></h3>
 <p>Before execution, <code>finalize()</code> recursively projects out unnecessary attributes from all inputs. This optimization:</p>
 <ul>
 <li>Reduces data transfer (especially for blobs)</li>
 <li>Compensates for MySQL's query optimizer limitations</li>
 <li>Produces leaner queries for complex expressions</li>
 </ul>
+<h3 id="139-subquery-generation-summary">13.9 Subquery Generation Summary<a class="headerlink" href="#139-subquery-generation-summary" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Trigger</th>
+<th>Reason</th>
+<th>Strategy</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Restrict on computed attribute</td>
+<td>Alias must exist before WHERE references it</td>
+<td>Wrap input</td>
+</tr>
+<tr>
+<td>Restrict after LIMIT/OFFSET</td>
+<td>Limited result must materialize first</td>
+<td>Wrap input</td>
+</tr>
+<tr>
+<td>Project alias from alias</td>
+<td>First alias must materialize</td>
+<td>Wrap input</td>
+</tr>
+<tr>
+<td>Join on computed attribute</td>
+<td>Join condition can't reference SELECT alias</td>
+<td>Wrap operand</td>
+</tr>
+<tr>
+<td>Aggregation as join operand</td>
+<td>GROUP BY must complete first</td>
+<td>Wrap operand</td>
+</tr>
+<tr>
+<td>Restrict on aggregated attribute</td>
+<td>HAVING result must materialize (PostgreSQL)</td>
+<td>Wrap aggregation</td>
+</tr>
+<tr>
+<td>Union operands</td>
+<td>UNION requires complete subqueries</td>
+<td>Wrap both</td>
+</tr>
+<tr>
+<td>PostgreSQL HAVING with alias</td>
+<td>Standard SQL compliance</td>
+<td>Wrap + convert to WHERE</td>
+</tr>
+</tbody>
+</table>
 <hr />
 <h2 id="14-implementation-reference">14. Implementation Reference<a class="headerlink" href="#14-implementation-reference" title="Permanent link">&para;</a></h2>
 <table>
