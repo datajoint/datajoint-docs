@@ -229,15 +229,17 @@ result = (
 )
 ```
 
-## Workflow-Aware Joins
+## Semantic Matching
 
-Unlike SQL's natural joins that match on **any** shared column name, DataJoint
-joins match on **semantic lineage**. Two attributes match only if they:
+All binary operators in DataJoint rely on **semantic matching** of attributes. Unlike SQL's natural joins that match on any shared column name, DataJoint verifies that namesake attributes (those with the same name) are **homologous**—they trace back to the same original definition.
 
-1. Have the same name
-2. Trace back to the same source definition
+This prevents accidental matches on coincidentally-named columns, a pitfall that has been understood since the Entity-Relationship Model was introduced in the 1970s but was never addressed in SQL or traditional RDBMS implementations.
 
-This prevents accidental joins on coincidentally-named columns.
+See [Semantic Matching](semantic-matching.md) for details.
+
+These concepts were first introduced in Yatsenko et al., 2018[^1].
+
+[^1]: Yatsenko D, Walker EY, Tolias AS (2018). DataJoint Elements: Data Workflows for Neurophysiology. [arXiv:1807.11104](https://doi.org/10.48550/arXiv.1807.11104)
 
 ## Fetching Results
 

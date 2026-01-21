@@ -33,8 +33,8 @@ and scalable.
 
 -   :material-code-tags: **[Type System](type-system.md)**
 
-    Three-layer architecture: native, core, and codec types. Internal and
-    external storage modes.
+    Three-layer architecture: native, core, and codec types. In-table and
+    in-store storage modes.
 
 -   :material-cog-play: **[Computation Model](computation-model.md)**
 

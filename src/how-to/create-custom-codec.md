@@ -42,7 +42,7 @@ class Connectivity(dj.Manual):
     conn_id : int
     ---
     network : <graph>           # Uses GraphCodec
-    network_large : <graph@>    # External storage
+    network_large : <graph@>    # In-store
     """
 ```
 
@@ -66,7 +66,7 @@ Common return values:
 
 - `"bytes"` — Binary in database
 - `"json"` — JSON in database
-- `"<blob>"` — Chain to blob codec (internal storage)
+- `"<blob>"` — Chain to blob codec (in-table storage)
 - `"<blob@>"` — Blob in object storage
 
 ### `encode(value, *, key=None, store_name=None)`

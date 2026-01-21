@@ -222,6 +222,7 @@ After finalization (Phase 4+), only 2.0 clients are supported.
 ## License Change
 
 DataJoint 2.0 is licensed under the **Apache License 2.0** (previously LGPL-2.1). This provides:
+
 - More permissive for commercial and academic use
 - Clearer patent grant provisions
 - Better compatibility with broader ecosystem

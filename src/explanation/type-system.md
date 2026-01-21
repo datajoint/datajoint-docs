@@ -62,13 +62,11 @@ Standardized, scientist-friendly types that work identically across backends.
 | `int16` | 16-bit signed | -32,768 to 32,767 |
 | `int32` | 32-bit signed | ±2 billion |
 | `int64` | 64-bit signed | ±9 quintillion |
-| `int16` | 8-bit unsigned | 0 to 255 |
-| `int32` | 16-bit unsigned | 0 to 65,535 |
-| `int64` | 32-bit unsigned | 0 to 4 billion |
-| `int64` | 64-bit unsigned | 0 to 18 quintillion |
 | `float32` | 32-bit float | ~7 significant digits |
 | `float64` | 64-bit float | ~15 significant digits |
 | `decimal(n,f)` | Fixed-point | Exact decimal |
+
+Unsigned integer types are not provided. Choose a signed type with sufficient range for your data.
 
 ### String Types
 
@@ -95,14 +93,16 @@ Codecs provide `encode()`/`decode()` semantics for complex Python objects.
 
 ### Syntax
 
+Codec types use angle bracket notation:
+
 - **Angle brackets**: `<blob>`, `<attach>`, `<object@store>`
-- **`@` indicates external storage**: `<blob@>` stores externally
+- **`@` indicates object store**: `<blob@>` stores in the object store
 - **Store name**: `<blob@cold>` uses named store "cold"
 
 ### Built-in Codecs
 
-| Codec | Internal | External | Returns |
-|-------|----------|----------|---------|
+| Codec | Database | Object Store | Returns |
+|-------|----------|--------------|---------|
 | `<blob>` | ✅ | ✅ `<blob@>` | Python object |
 | `<attach>` | ✅ | ✅ `<attach@>` | Local file path |
 | `<object@>` | ❌ | ✅ | ObjectRef |
@@ -114,6 +114,7 @@ Codecs provide `encode()`/`decode()` semantics for complex Python objects.
 Stores NumPy arrays, dicts, lists, and other Python objects using DataJoint's custom binary serialization format.
 
 **Serialization format:**
+
 - **Protocol headers**:
   - `mYm` — MATLAB-compatible format (see [mYm on MATLAB FileExchange](https://www.mathworks.com/matlabcentral/fileexchange/81208-mym) and [mym on GitHub](https://github.com/datajoint/mym))
   - `dj0` — Python-extended format supporting additional types
@@ -122,6 +123,7 @@ Stores NumPy arrays, dicts, lists, and other Python objects using DataJoint's cu
 - **Version detection**: Protocol header embedded in blob enables format detection
 
 **Supported types:**
+
 - NumPy arrays (numeric, structured, recarrays)
 - Collections (dict, list, tuple, set)
 - Scalars (int, float, bool, complex, str, bytes)
@@ -134,14 +136,15 @@ class Results(dj.Computed):
     -> Analysis
     ---
     spike_times : <blob>        # In database
-    waveforms : <blob@>         # External, default store
-    raw_data : <blob@archive>   # External, 'archive' store
+    waveforms : <blob@>         # Object store, default store
+    raw_data : <blob@archive>   # Object store, 'archive' store
     """
 ```
 
 **Storage modes:**
+
 - `<blob>` — Stored in database as LONGBLOB (up to ~1GB depending on MySQL config)
-- `<blob@>` — Stored externally via `<hash@>` with MD5 deduplication
+- `<blob@>` — Stored in object store via `<hash@>` with MD5 deduplication
 
 ### `<attach>` — File Attachments
 
@@ -152,8 +155,8 @@ class Config(dj.Manual):
     definition = """
     config_id : int
     ---
-    settings : <attach>         # Small config file
-    data_file : <attach@>       # Large file, external
+    settings : <attach>         # Small config file in database
+    data_file : <attach@>       # Large file in object store
     """
 ```
 
@@ -172,7 +175,7 @@ class ProcessedData(dj.Computed):
 
 ### `<filepath@store>` — Portable References
 
-References to externally-managed files with portable paths.
+References to independently-managed files with portable paths.
 
 ```python
 class RawData(dj.Manual):
@@ -185,12 +188,11 @@ class RawData(dj.Manual):
 
 ## Storage Modes
 
-| Mode | Database Storage | External Storage | Use Case |
-|------|------------------|------------------|----------|
-| Internal | Yes | No | Small data |
-| External | Metadata only | Yes | Large data |
-| Hash-addressed | Metadata only | Deduplicated | Repeated data |
-| Path-addressed | Metadata only | PK-based path | Complex files |
+| Mode | Database | Object Store | Use Case |
+|------|----------|--------------|----------|
+| Database | Data | — | Small data |
+| Hash-addressed | Metadata | Deduplicated | Large/repeated data |
+| Path-addressed | Metadata | PK-based path | Complex files |
 
 ## Custom Codecs
 
@@ -239,12 +241,12 @@ class Network(dj.Computed):
 | NumPy arrays (large) | `<blob@>` |
 | Files to attach | `<attach>` or `<attach@>` |
 | Zarr/HDF5 | `<object@>` |
-| External file refs | `<filepath@store>` |
+| File references (in-store) | `<filepath@store>` |
 | Custom objects | Custom codec |
 
 ## Summary
 
 1. **Core types** for simple data — `int32`, `varchar`, `datetime`
 2. **`<blob>`** for Python objects — NumPy arrays, dicts
-3. **`@` suffix** for external storage — `<blob@>`, `<object@>`
+3. **`@` suffix** for object store — `<blob@>`, `<object@>`
 4. **Custom codecs** for domain-specific types

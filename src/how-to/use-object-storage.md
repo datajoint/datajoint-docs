@@ -14,6 +14,7 @@ OAS supports two addressing schemes:
 | **Schema-addressed** | Object store | Schema structure | Complex/multi-part | Zarr arrays, HDF5 datasets, multi-file objects (browsable paths) |
 
 **Key distinction:**
+
 - **Hash-addressed** (`<blob@>`, `<attach@>`) stores individual, atomic objects - one object per field
 - **Schema-addressed** (`<npy@>`, `<object@>`) can store complex, multi-part objects like Zarr (directory structures with multiple files)
 

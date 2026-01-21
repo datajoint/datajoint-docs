@@ -45,7 +45,7 @@ they assume you understand the basics and focus on getting things done.
 - [Use Plugin Codecs](use-plugin-codecs.md) — Install codec packages via entry points
 - [Create Custom Codecs](create-custom-codec.md) — Domain-specific types
 - [Manage Large Data](manage-large-data.md) — Blobs, streaming, efficiency
-- [Clean Up External Storage](garbage-collection.md) — Garbage collection
+- [Clean Up Object Storage](garbage-collection.md) — Garbage collection
 
 ## Maintenance
 

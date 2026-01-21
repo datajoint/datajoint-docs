@@ -138,7 +138,7 @@ class BamCodec(dj.Codec):
 
     def get_dtype(self, is_store: bool) -> str:
         if not is_store:
-            raise dj.DataJointError("<bam> requires external storage: use <bam@>")
+            raise dj.DataJointError("<bam> requires in-store storage: use <bam@>")
         return "<object@>"  # Path-addressed storage for file structure
 
     def encode(self, alignments, *, key=None, store_name=None):
@@ -307,7 +307,7 @@ class WellDocumentedCodec(dj.Codec):
     """
     Store XYZ data structures.
 
-    Supports both internal (<xyz>) and external (<xyz@>) storage.
+    Supports both in-table (<xyz>) and in-store (<xyz@>) storage.
 
     Examples
     --------

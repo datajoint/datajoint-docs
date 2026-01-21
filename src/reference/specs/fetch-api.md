@@ -45,7 +45,7 @@ table.to_dicts(
 )
 ```
 
-For external storage types (attachments, filepaths), files are downloaded to `config["download_path"]`. Use `config.override()` to change:
+For in-store types (attachments, filepaths), files are downloaded to `config["download_path"]`. Use `config.override()` to change:
 
 ```python
 with dj.config.override(download_path="/data"):

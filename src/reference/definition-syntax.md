@@ -25,7 +25,9 @@ pk_section     = attribute_line+
 secondary_section = attribute_line*
 
 attribute_line = [foreign_key | attribute]
-foreign_key    = "->" table_reference [alias]
+foreign_key    = "->" [modifiers] table_reference [alias]
+modifiers      = "[" modifier ("," modifier)* "]"
+modifier       = "nullable" | "unique"
 attribute      = [default "="] name ":" type [# comment]
 
 default        = NULL | literal | CURRENT_TIMESTAMP
@@ -39,7 +41,20 @@ codec_type     = "<" name ["@" [store]] ">"
 ```python
 -> ParentTable                    # Inherit all PK attributes
 -> ParentTable.proj(new='old')    # Rename attributes
+-> [nullable] ParentTable         # Optional reference (secondary only)
+-> [unique] ParentTable           # One-to-one constraint
+-> [nullable, unique] ParentTable # Optional one-to-one
 ```
+
+### Modifiers
+
+| Modifier | Effect | Position |
+|----------|--------|----------|
+| `[nullable]` | FK attributes can be NULL | Secondary only |
+| `[unique]` | Creates UNIQUE INDEX on FK | Primary or secondary |
+| `[nullable, unique]` | Optional one-to-one | Secondary only |
+
+**Note:** Multiple rows can have NULL in a `[nullable, unique]` FK because SQL's UNIQUE constraint does not consider NULLs equal.
 
 ## Attribute Types
 
@@ -112,6 +127,7 @@ class Session(dj.Manual):
     ---
     session_date : date           # Date of session
     -> [nullable] Experimenter    # Optional experimenter
+    -> [unique] Protocol          # Each protocol used at most once per session
     notes = '' : varchar(1000)    # Session notes
     start_time : datetime         # Session start
     duration : float64            # Duration in minutes

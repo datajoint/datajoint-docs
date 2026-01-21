@@ -106,7 +106,7 @@ This enables independent garbage collection per schema.
 
 ## Storage Cleanup
 
-External storage items are not automatically deleted with rows. Run garbage
+Object storage items are not automatically deleted with rows. Run garbage
 collection periodically:
 
 ```python
@@ -123,7 +123,7 @@ print(dj.gc.format_stats(stats))
 stats = dj.gc.collect(my_schema, dry_run=False)
 ```
 
-See [Clean Up External Storage](garbage-collection.md) for details.
+See [Clean Up Object Storage](garbage-collection.md) for details.
 
 ## Monitor Storage Usage
 

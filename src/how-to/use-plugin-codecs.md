@@ -7,6 +7,7 @@ Install and use plugin codec packages to extend DataJoint's type system.
 Plugin codecs are distributed as separate Python packages that extend DataJoint's type system. They add support for domain-specific data types without modifying DataJoint itself. Once installed, they register automatically via Python's entry point system and work seamlessly with DataJoint.
 
 **Benefits:**
+
 - Automatic registration via entry points - no code changes needed
 - Domain-specific types maintained independently
 - Clean separation of core framework from specialized formats
@@ -112,11 +113,12 @@ s3://my-bucket/data/
                 └── 0.0
 ```
 
-This organization makes external storage browsable and self-documenting.
+This organization makes object storage browsable and self-documenting.
 
 ### When to Use `<zarr@>`
 
 **Use `<zarr@>` when:**
+
 - Arrays are large (> 10 MB)
 - You need chunked access patterns
 - Compression is beneficial
@@ -124,11 +126,13 @@ This organization makes external storage browsable and self-documenting.
 - You want browsable, organized storage paths
 
 **Use `<npy@>` instead when:**
+
 - You need lazy loading with metadata inspection before download
 - Memory mapping is important
 - Storage format simplicity is preferred
 
 **Use `<blob@>` instead when:**
+
 - Arrays are small (< 10 MB)
 - Deduplication of repeated values is important
 - Storing mixed Python objects (not just arrays)
@@ -153,17 +157,20 @@ Or browse GitHub: https://github.com/topics/datajoint
 ### Domain-Specific Examples
 
 **Neuroscience:**
+
 - Spike train formats (NEO, NWB)
 - Neural network models
 - Connectivity matrices
 
 **Imaging:**
+
 - Photon-limited movies (calcium imaging, low-light microscopy)
 - OME-TIFF, OME-ZARR
 - DICOM medical images
 - Point cloud data
 
 **Genomics:**
+
 - BAM/SAM alignments
 - VCF variant calls
 - Phylogenetic trees
