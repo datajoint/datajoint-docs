@@ -88,6 +88,10 @@ Each non-empty, non-comment line is one of:
 
 ### 2.5 Singleton Tables (Empty Primary Keys)
 
+!!! version-added "New in 2.1"
+
+    Singleton tables were introduced in DataJoint 2.1.
+
 A **singleton table** can hold at most one row. It is declared with no attributes in the primary key section:
 
 ```python
