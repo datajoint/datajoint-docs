@@ -160,7 +160,7 @@ Codecs serialize Python objects to database storage. Use angle brackets for code
 | `<blob@store>` | Serialized objects in object storage |
 | `<attach>` | File attachments in database |
 | `<attach@store>` | File attachments in object storage |
-| `<object@store>` | Files/folders via ObjectRef (path-addressed, supports Zarr/HDF5) |
+| `<object@store>` | Files/folders via ObjectRef (schema-addressed, supports Zarr/HDF5) |
 
 Example:
 
