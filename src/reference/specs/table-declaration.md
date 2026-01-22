@@ -74,15 +74,9 @@ secondary_section
 ---
 ```
 
-or equivalently:
-
-```
-___
-```
-
-- Three dashes or three underscores
-- Separates primary key attributes (above) from secondary attributes (below)
-- Required if table has secondary attributes
+- Three or more dashes
+- Separates primary key attributes (above) from dependent attributes (below)
+- Required if table has dependent attributes
 
 ### 2.4 Line Types
 
