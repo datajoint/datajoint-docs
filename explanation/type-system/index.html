@@ -646,6 +646,15 @@
     </span>
 </a>
 </li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#see-also">
+<span class="md-ellipsis">
+      
+        See Also
+      
+    </span>
+</a>
+</li>
 </ul>
 </nav>
 </li>
@@ -2504,6 +2513,15 @@
     </span>
 </a>
 </li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#see-also">
+<span class="md-ellipsis">
+      
+        See Also
+      
+    </span>
+</a>
+</li>
 </ul>
 </nav>
 </div>
@@ -2771,7 +2789,7 @@ database efficiency with Python convenience.</p>
 <td><code>&lt;filepath@&gt;</code></td>
 <td>❌</td>
 <td>✅</td>
-<td>—</td>
+<td>User-managed</td>
 <td>ObjectRef</td>
 </tr>
 </tbody>
@@ -2829,7 +2847,11 @@ database efficiency with Python convenience.</p>
 </code></pre></div>
 <p>DataJoint loads these entry points on first use, making third-party codecs indistinguishable from built-ins.</p>
 <h3 id="blob-serialized-python-objects"><code>&lt;blob&gt;</code> — Serialized Python Objects<a class="headerlink" href="#blob-serialized-python-objects" title="Permanent link">¶</a></h3>
-<p>Stores NumPy arrays, dicts, lists, and other Python objects using DataJoint's custom binary serialization format.</p>
+<p>Stores NumPy arrays, dicts, lists, and other Python objects using DataJoint's custom binary serialization format. The blob type has been in continuous use in DataJoint pipelines for 15+ years and maintains full backward compatibility. It provides an efficient way to serialize complex objects into an opaque binary string.</p>
+<div class="admonition note">
+<p class="admonition-title">Modern alternatives</p>
+<p>Schema-addressed codecs introduced in DataJoint 2.0 (<code>&lt;npy@&gt;</code>, <code>&lt;object@&gt;</code>, and plugin codecs) offer modern high-performance accessibility with transparent formats, lazy loading, and browsable storage paths—while maintaining rigorous data integrity and consistency. Consider these for new pipelines where interoperability and direct data access are priorities.</p>
+</div>
 <p><strong>Serialization format:</strong></p>
 <ul>
 <li><strong>Protocol headers</strong>:<ul>
@@ -3046,6 +3068,23 @@ database efficiency with Python convenience.</p>
 <li><strong><code>@</code> suffix</strong> for object store — <code>&lt;blob@&gt;</code>, <code>&lt;object@&gt;</code></li>
 <li><strong>Custom codecs</strong> for domain-specific types</li>
 </ol>
+<h2 id="see-also">See Also<a class="headerlink" href="#see-also" title="Permanent link">¶</a></h2>
+<p><strong>How-to Guides:</strong></p>
+<ul>
+<li><a href="../../how-to/choose-storage-type/">Choose a Storage Type</a> — Decision guide for selecting the right type</li>
+<li><a href="../../how-to/configure-storage/">Configure Object Storage</a> — Setting up stores for external data</li>
+<li><a href="../../how-to/use-object-storage/">Use Object Storage</a> — Working with <code>&lt;blob@&gt;</code>, <code>&lt;attach@&gt;</code>, <code>&lt;object@&gt;</code></li>
+<li><a href="../../how-to/use-npy-codec/">Use the npy Codec</a> — Storing NumPy arrays as <code>.npy</code> files</li>
+<li><a href="../../how-to/use-plugin-codecs/">Use Plugin Codecs</a> — Installing and using third-party codecs</li>
+<li><a href="../../how-to/create-custom-codec/">Create a Custom Codec</a> — Building your own codec</li>
+</ul>
+<p><strong>Reference:</strong></p>
+<ul>
+<li><a href="../../reference/specs/type-system/">Type System Specification</a> — Complete type reference</li>
+<li><a href="../../reference/specs/codec-api/">Codec API</a> — Codec class interface</li>
+<li><a href="../../reference/specs/npy-codec/">npy Codec Specification</a> — NpyRef and NpyCodec details</li>
+<li><a href="../../reference/specs/object-store-configuration/">Object Store Configuration</a> — Store settings reference</li>
+</ul>
 </article>
 </div>
 <script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
