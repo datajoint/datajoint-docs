@@ -1,6 +1,6 @@
 # DataJoint Documentation (Full)
 
-Generated: 2026-01-22 11:28:33 UTC
+Generated: 2026-01-22 16:06:48 UTC
 Commit: unknown
 Branch: unknown
 
@@ -1355,7 +1355,7 @@ Object-Relational Mappers treat large objects as opaque binary blobs or leave fi
 
 - Relational semantics apply: referential integrity, cascading deletes, query filtering
 - Multiple access patterns: lazy `ObjectRef`, streaming via fsspec, explicit download
-- Two addressing modes: path-addressed (by primary key) and hash-addressed (deduplicated)
+- Two addressing modes: schema-addressed (by primary key) and hash-addressed (deduplicated)
 
 The object store is part of the relational model — queryable and integrity-protected like any other attribute.
 
@@ -2946,7 +2946,7 @@ class GraphCodec(dj.Codec):
     """Store NetworkX graphs."""
     name = "graph"
 
-    def get_dtype(self, is_external):
+    def get_dtype(self, is_store):
         return "<blob>"
 
     def encode(self, graph, *, key=None, store_name=None):
@@ -14075,7 +14075,7 @@ Codecs serialize Python objects to database storage. Use angle brackets for code
 | `<blob@store>` | Serialized objects in object storage |
 | `<attach>` | File attachments in database |
 | `<attach@store>` | File attachments in object storage |
-| `<object@store>` | Files/folders via ObjectRef (path-addressed, supports Zarr/HDF5) |
+| `<object@store>` | Files/folders via ObjectRef (schema-addressed, supports Zarr/HDF5) |
 
 Example:
 
@@ -21580,7 +21580,7 @@ class Dataset(dj.Manual):
     """
 ```
 
-Use path-addressed storage for:
+Use schema-addressed storage for:
 
 - Zarr arrays (chunked, appendable)
 - HDF5 files
@@ -31228,8 +31228,8 @@ class FilepathCodec(dj.Codec):
     """Store-relative file references. External only."""
     name = "filepath"
 
-    def get_dtype(self, is_external: bool) -> str:
-        if not is_external:
+    def get_dtype(self, is_store: bool) -> str:
+        if not is_store:
             raise DataJointError("<filepath> requires @store")
         return "json"
 
@@ -31330,8 +31330,8 @@ class BlobCodec(dj.Codec):
     """Serialized Python objects. Supports internal and external."""
     name = "blob"
 
-    def get_dtype(self, is_external: bool) -> str:
-        return "<hash>" if is_external else "bytes"
+    def get_dtype(self, is_store: bool) -> str:
+        return "<hash>" if is_store else "bytes"
 
     def encode(self, value, *, key=None, store_name=None) -> bytes:
         from . import blob
@@ -31369,8 +31369,8 @@ class AttachCodec(dj.Codec):
     """File attachment with filename. Supports in-table and in-store."""
     name = "attach"
 
-    def get_dtype(self, is_external: bool) -> str:
-        return "<hash>" if is_external else "bytes"
+    def get_dtype(self, is_store: bool) -> str:
+        return "<hash>" if is_store else "bytes"
 
     def encode(self, filepath, *, key=None, store_name=None) -> bytes:
         path = Path(filepath)
@@ -31480,7 +31480,7 @@ def garbage_collect(store_name):
 2. **Core types are scientist-friendly**: `float32`, `int8`, `bool`, `bytes` instead of `FLOAT`, `TINYINT`, `LONGBLOB`
 3. **Codecs use angle brackets**: `<blob>`, `<object@store>`, `<filepath@main>` - distinguishes from core types
 4. **`@` indicates in-store storage**: No `@` = database, `@` present = object store
-5. **`get_dtype(is_external)` method**: Codecs resolve dtype at declaration time based on storage mode
+5. **`get_dtype(is_store)` method**: Codecs resolve dtype at declaration time based on storage mode
 6. **Codecs are composable**: `<blob@>` uses `<hash@>`, which uses `json`
 7. **Built-in in-store codecs use JSON dtype**: Stores metadata (path, hash, store name, etc.)
 8. **Two OAS regions**: object (PK-addressed) and hash (hash-addressed) within managed stores

@@ -6741,8 +6741,8 @@ just use <code>varchar</code>. A string is simpler and more transparent.</p>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Store-relative file references. External only.&quot;&quot;&quot;</span>
     <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;filepath&quot;</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_dtype</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">is_external</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">is_external</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_dtype</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">is_store</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">is_store</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">DataJointError</span><span class="p">(</span><span class="s2">&quot;&lt;filepath&gt; requires @store&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="s2">&quot;json&quot;</span>
 
@@ -6858,8 +6858,8 @@ just use <code>varchar</code>. A string is simpler and more transparent.</p>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Serialized Python objects. Supports internal and external.&quot;&quot;&quot;</span>
     <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;blob&quot;</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_dtype</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">is_external</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="k">return</span> <span class="s2">&quot;&lt;hash&gt;&quot;</span> <span class="k">if</span> <span class="n">is_external</span> <span class="k">else</span> <span class="s2">&quot;bytes&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_dtype</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">is_store</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">&quot;&lt;hash&gt;&quot;</span> <span class="k">if</span> <span class="n">is_store</span> <span class="k">else</span> <span class="s2">&quot;bytes&quot;</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">encode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">store_name</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
         <span class="kn">from</span><span class="w"> </span><span class="nn">.</span><span class="w"> </span><span class="kn">import</span> <span class="n">blob</span>
@@ -6891,8 +6891,8 @@ just use <code>varchar</code>. A string is simpler and more transparent.</p>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;File attachment with filename. Supports in-table and in-store.&quot;&quot;&quot;</span>
     <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;attach&quot;</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_dtype</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">is_external</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="k">return</span> <span class="s2">&quot;&lt;hash&gt;&quot;</span> <span class="k">if</span> <span class="n">is_external</span> <span class="k">else</span> <span class="s2">&quot;bytes&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_dtype</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">is_store</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">&quot;&lt;hash&gt;&quot;</span> <span class="k">if</span> <span class="n">is_store</span> <span class="k">else</span> <span class="s2">&quot;bytes&quot;</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">encode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filepath</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">store_name</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
         <span class="n">path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">filepath</span><span class="p">)</span>
@@ -7148,7 +7148,7 @@ registry table is needed. Garbage collection scans all tables to find referenced
 <li><strong>Core types are scientist-friendly</strong>: <code>float32</code>, <code>int8</code>, <code>bool</code>, <code>bytes</code> instead of <code>FLOAT</code>, <code>TINYINT</code>, <code>LONGBLOB</code></li>
 <li><strong>Codecs use angle brackets</strong>: <code>&lt;blob&gt;</code>, <code>&lt;object@store&gt;</code>, <code>&lt;filepath@main&gt;</code> - distinguishes from core types</li>
 <li><strong><code>@</code> indicates in-store storage</strong>: No <code>@</code> = database, <code>@</code> present = object store</li>
-<li><strong><code>get_dtype(is_external)</code> method</strong>: Codecs resolve dtype at declaration time based on storage mode</li>
+<li><strong><code>get_dtype(is_store)</code> method</strong>: Codecs resolve dtype at declaration time based on storage mode</li>
 <li><strong>Codecs are composable</strong>: <code>&lt;blob@&gt;</code> uses <code>&lt;hash@&gt;</code>, which uses <code>json</code></li>
 <li><strong>Built-in in-store codecs use JSON dtype</strong>: Stores metadata (path, hash, store name, etc.)</li>
 <li><strong>Two OAS regions</strong>: object (PK-addressed) and hash (hash-addressed) within managed stores</li>
