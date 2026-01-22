@@ -19,6 +19,21 @@ services:
       timeout: 5s
       retries: 10
 
+  postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: datajoint
+      POSTGRES_PASSWORD: tutorial
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U datajoint"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
   minio:
     image: minio/minio:latest
     environment:
@@ -79,5 +94,7 @@ volumes:
   mysql_data:
     # Persistent storage for tutorial databases
     # Use `docker compose down -v` to reset
+  postgres_data:
+    # Persistent storage for PostgreSQL databases
   minio_data:
     # Persistent storage for external objects
