@@ -149,7 +149,7 @@ class Dataset(dj.Manual):
     """
 ```
 
-Use path-addressed storage for:
+Use schema-addressed storage for:
 
 - Zarr arrays (chunked, appendable)
 - HDF5 files

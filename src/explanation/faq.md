@@ -88,7 +88,7 @@ Object-Relational Mappers treat large objects as opaque binary blobs or leave fi
 
 - Relational semantics apply: referential integrity, cascading deletes, query filtering
 - Multiple access patterns: lazy `ObjectRef`, streaming via fsspec, explicit download
-- Two addressing modes: path-addressed (by primary key) and hash-addressed (deduplicated)
+- Two addressing modes: schema-addressed (by primary key) and hash-addressed (deduplicated)
 
 The object store is part of the relational model — queryable and integrity-protected like any other attribute.
 

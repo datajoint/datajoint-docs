@@ -315,7 +315,7 @@ class GraphCodec(dj.Codec):
     """Store NetworkX graphs."""
     name = "graph"
 
-    def get_dtype(self, is_external):
+    def get_dtype(self, is_store):
         return "<blob>"
 
     def encode(self, graph, *, key=None, store_name=None):

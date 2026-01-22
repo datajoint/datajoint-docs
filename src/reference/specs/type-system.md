@@ -410,8 +410,8 @@ class FilepathCodec(dj.Codec):
     """Store-relative file references. External only."""
     name = "filepath"
 
-    def get_dtype(self, is_external: bool) -> str:
-        if not is_external:
+    def get_dtype(self, is_store: bool) -> str:
+        if not is_store:
             raise DataJointError("<filepath> requires @store")
         return "json"
 
@@ -512,8 +512,8 @@ class BlobCodec(dj.Codec):
     """Serialized Python objects. Supports internal and external."""
     name = "blob"
 
-    def get_dtype(self, is_external: bool) -> str:
-        return "<hash>" if is_external else "bytes"
+    def get_dtype(self, is_store: bool) -> str:
+        return "<hash>" if is_store else "bytes"
 
     def encode(self, value, *, key=None, store_name=None) -> bytes:
         from . import blob
@@ -551,8 +551,8 @@ class AttachCodec(dj.Codec):
     """File attachment with filename. Supports in-table and in-store."""
     name = "attach"
 
-    def get_dtype(self, is_external: bool) -> str:
-        return "<hash>" if is_external else "bytes"
+    def get_dtype(self, is_store: bool) -> str:
+        return "<hash>" if is_store else "bytes"
 
     def encode(self, filepath, *, key=None, store_name=None) -> bytes:
         path = Path(filepath)
@@ -662,7 +662,7 @@ def garbage_collect(store_name):
 2. **Core types are scientist-friendly**: `float32`, `int8`, `bool`, `bytes` instead of `FLOAT`, `TINYINT`, `LONGBLOB`
 3. **Codecs use angle brackets**: `<blob>`, `<object@store>`, `<filepath@main>` - distinguishes from core types
 4. **`@` indicates in-store storage**: No `@` = database, `@` present = object store
-5. **`get_dtype(is_external)` method**: Codecs resolve dtype at declaration time based on storage mode
+5. **`get_dtype(is_store)` method**: Codecs resolve dtype at declaration time based on storage mode
 6. **Codecs are composable**: `<blob@>` uses `<hash@>`, which uses `json`
 7. **Built-in in-store codecs use JSON dtype**: Stores metadata (path, hash, store name, etc.)
 8. **Two OAS regions**: object (PK-addressed) and hash (hash-addressed) within managed stores
