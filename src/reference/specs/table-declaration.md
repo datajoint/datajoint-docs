@@ -74,15 +74,9 @@ secondary_section
 ---
 ```
 
-or equivalently:
-
-```
-___
-```
-
-- Three dashes or three underscores
-- Separates primary key attributes (above) from secondary attributes (below)
-- Required if table has secondary attributes
+- Three or more dashes
+- Separates primary key attributes (above) from dependent attributes (below)
+- Required if table has dependent attributes
 
 ### 2.4 Line Types
 
@@ -91,6 +85,46 @@ Each non-empty, non-comment line is one of:
 1. **Attribute definition**
 2. **Foreign key reference**
 3. **Index declaration**
+
+### 2.5 Singleton Tables (Empty Primary Keys)
+
+A **singleton table** can hold at most one row. It is declared with no attributes in the primary key section:
+
+```python
+@schema
+class Config(dj.Lookup):
+    definition = """
+    # Global configuration
+    ---
+    setting1 : varchar(100)
+    setting2 : int32
+    """
+```
+
+**Behavior:**
+
+| Operation | Result |
+|-----------|--------|
+| Insert | Works without specifying a key |
+| Second insert | Raises `DuplicateError` |
+| `fetch1()` | Returns the single row |
+| `heading.primary_key` | Returns `[]` (empty) |
+
+**Use cases:**
+
+- Global configuration settings
+- Pipeline parameters
+- Summary statistics
+- State tracking
+
+**Implementation:**
+
+Internally, singleton tables use a hidden `_singleton` attribute of type `bool` as the primary key. This attribute is:
+
+- Automatically created and populated
+- Excluded from `heading.attributes`
+- Excluded from `fetch()` results
+- Excluded from join matching
 
 ---
 
