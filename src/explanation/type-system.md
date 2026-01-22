@@ -133,7 +133,7 @@ Codec types use angle bracket notation:
 | `<npy@>` | ❌ | ✅ | Schema | NpyRef (lazy) |
 | `<object@>` | ❌ | ✅ | Schema | ObjectRef |
 | `<hash@>` | ❌ | ✅ | Hash | bytes |
-| `<filepath@>` | ❌ | ✅ | — | ObjectRef |
+| `<filepath@>` | ❌ | ✅ | User-managed | ObjectRef |
 
 ### Plugin Codecs
 
@@ -177,7 +177,10 @@ DataJoint loads these entry points on first use, making third-party codecs indis
 
 ### `<blob>` — Serialized Python Objects
 
-Stores NumPy arrays, dicts, lists, and other Python objects using DataJoint's custom binary serialization format.
+Stores NumPy arrays, dicts, lists, and other Python objects using DataJoint's custom binary serialization format. The blob type has been in continuous use in DataJoint pipelines for 15+ years and maintains full backward compatibility. It provides an efficient way to serialize complex objects into an opaque binary string.
+
+!!! note "Modern alternatives"
+    Schema-addressed codecs introduced in DataJoint 2.0 (`<npy@>`, `<object@>`, and plugin codecs) offer modern high-performance accessibility with transparent formats, lazy loading, and browsable storage paths—while maintaining rigorous data integrity and consistency. Consider these for new pipelines where interoperability and direct data access are priorities.
 
 **Serialization format:**
 
@@ -361,3 +364,21 @@ class Network(dj.Computed):
 2. **`<blob>`** for Python objects — NumPy arrays, dicts
 3. **`@` suffix** for object store — `<blob@>`, `<object@>`
 4. **Custom codecs** for domain-specific types
+
+## See Also
+
+**How-to Guides:**
+
+- [Choose a Storage Type](../how-to/choose-storage-type.md) — Decision guide for selecting the right type
+- [Configure Object Storage](../how-to/configure-storage.md) — Setting up stores for external data
+- [Use Object Storage](../how-to/use-object-storage.md) — Working with `<blob@>`, `<attach@>`, `<object@>`
+- [Use the npy Codec](../how-to/use-npy-codec.md) — Storing NumPy arrays as `.npy` files
+- [Use Plugin Codecs](../how-to/use-plugin-codecs.md) — Installing and using third-party codecs
+- [Create a Custom Codec](../how-to/create-custom-codec.md) — Building your own codec
+
+**Reference:**
+
+- [Type System Specification](../reference/specs/type-system.md) — Complete type reference
+- [Codec API](../reference/specs/codec-api.md) — Codec class interface
+- [npy Codec Specification](../reference/specs/npy-codec.md) — NpyRef and NpyCodec details
+- [Object Store Configuration](../reference/specs/object-store-configuration.md) — Store settings reference
