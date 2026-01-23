@@ -75,9 +75,8 @@ secondary_section
 ```
 
 - Three or more dashes
-- Separates primary key attributes (above) from dependent attributes (below)
-- Also called *secondary attributes* in the Python API (`heading.secondary_attributes`)
-- Required if table has dependent attributes
+- Separates primary key attributes (above) from secondary attributes (below)
+- Required if table has secondary attributes
 
 ### 2.4 Line Types
 
@@ -360,7 +359,7 @@ class Session(dj.Manual):
 | Position | Effect |
 |----------|--------|
 | Before `---` | FK attributes become part of primary key |
-| After `---` | FK attributes are secondary (dependent) |
+| After `---` | FK attributes are secondary |
 
 ### 6.5 Nullable Foreign Keys
 
