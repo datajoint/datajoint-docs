@@ -97,41 +97,36 @@ dj.Diagram(ComputedTable) - 10
 
 | Method | Returns | Description |
 |--------|---------|-------------|
-| `make_svg(group_by_schema=False)` | `IPython.SVG` | SVG for Jupyter display |
-| `make_png(group_by_schema=False)` | `BytesIO` | PNG image bytes |
-| `make_image(group_by_schema=False)` | `ndarray` | NumPy array (matplotlib) |
-| `make_dot(group_by_schema=False)` | `pydot.Dot` | Graphviz DOT object |
+| `make_svg()` | `IPython.SVG` | SVG for Jupyter display |
+| `make_png()` | `BytesIO` | PNG image bytes |
+| `make_image()` | `ndarray` | NumPy array (matplotlib) |
+| `make_dot()` | `pydot.Dot` | Graphviz DOT object |
 
 ### Mermaid Output
 
 ```python
-make_mermaid(direction=None) -> str
+make_mermaid() -> str
 ```
 
-Generates [Mermaid](https://mermaid.js.org/) flowchart syntax for embedding in Markdown, GitHub, or web documentation.
-
-| Parameter | Type | Default | Description |
-|-----------|------|---------|-------------|
-| `direction` | str | None | Override layout direction |
+Generates [Mermaid](https://mermaid.js.org/) flowchart syntax for embedding in Markdown, GitHub, or web documentation. Tables are grouped into subgraphs by schema.
 
 ### Display Methods
 
 | Method | Description |
 |--------|-------------|
-| `draw(group_by_schema=False)` | Display with matplotlib |
+| `draw()` | Display with matplotlib |
 | `_repr_svg_()` | Jupyter notebook auto-display |
 
 ### File Output
 
 ```python
-save(filename, format=None, group_by_schema=False)
+save(filename, format=None)
 ```
 
 | Parameter | Type | Description |
 |-----------|------|-------------|
 | `filename` | str | Output file path |
 | `format` | str | `"png"`, `"svg"`, or `"mermaid"`. Inferred from extension if None. |
-| `group_by_schema` | bool | Group nodes by database schema (Graphviz only) |
 
 **Supported extensions:** `.png`, `.svg`, `.mmd`, `.mermaid`
 
@@ -169,16 +164,18 @@ Each table tier has a distinct visual style:
 
 ## Schema Grouping
 
-When `group_by_schema=True`, nodes are grouped into visual clusters by their database schema. This is useful when visualizing multi-schema pipelines.
+Tables are automatically grouped into visual clusters by their database schema. The cluster label shows the Python module name when available (following the DataJoint convention of one module per schema), otherwise the database schema name.
 
 ```python
-# Group by schema in display
-dj.Diagram(schema1) + dj.Diagram(schema2)
-diag.draw(group_by_schema=True)
+# Multi-schema diagram - tables automatically grouped
+combined = dj.Diagram(schema1) + dj.Diagram(schema2)
+combined.draw()
 
-# Group by schema in saved file
-diag.save("pipeline.svg", group_by_schema=True)
+# Save with grouping
+combined.save("pipeline.svg")
 ```
+
+This is useful when visualizing multi-schema pipelines to see which tables belong to which module.
 
 ---
 
@@ -244,9 +241,11 @@ flowchart TB
     classDef imported fill:#ADD8E6,stroke:#00008B
     classDef part fill:#FFFFFF,stroke:#000000
 
-    Mouse[Mouse]:::manual
-    Session[Session]:::manual
-    Neuron([Neuron]):::computed
+    subgraph my_pipeline
+        Mouse[Mouse]:::manual
+        Session[Session]:::manual
+        Neuron([Neuron]):::computed
+    end
     Mouse --> Session
     Session --> Neuron
 ```
