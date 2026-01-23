@@ -195,7 +195,7 @@ results = MyTable.proj('result', '_job_start_time').to_dicts()
 row = (MyTable & key).fetch1('result', '_job_start_time')
 
 # String restriction works with hidden attributes
-MyTable & '_job_start_time > "2024-01-01"'
+MyTable & "_job_start_time > '2024-01-01'"
 
 # Dict restriction IGNORES hidden attributes
 MyTable & {'_job_start_time': some_date}  # no effect

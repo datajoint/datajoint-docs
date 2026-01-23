@@ -385,7 +385,7 @@ def test_query_patterns(test_schema):
     assert len(mice) == 1
 
     # Test restriction
-    male_mice = Mouse & 'sex="M"'
+    male_mice = Mouse & "sex='M'"
     assert len(male_mice) == 1
 ```
 
@@ -417,7 +417,7 @@ def test_full_pipeline(test_schema):
     assert len(Analysis()) > 0
 
     # 4. Test queries work
-    alice_sessions = Session & 'experimenter="Alice"'
+    alice_sessions = Session & "experimenter='Alice'"
     assert len(alice_sessions) == 1
 ```
 
