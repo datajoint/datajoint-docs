@@ -52,3 +52,7 @@ they assume you understand the basics and focus on getting things done.
 - [Migrate to v2.0](migrate-to-v20.md) — Upgrading existing pipelines
 - [Alter Tables](alter-tables.md) — Schema evolution
 - [Backup and Restore](backup-restore.md) — Data protection
+
+## Testing
+
+- [Testing Best Practices](testing.md) — Integration testing with pytest
