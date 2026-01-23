@@ -75,6 +75,7 @@ The definition string **is** the specification — a declarative language that d
 ### Why Custom Query Algebra?
 
 DataJoint's operators implement **[semantic matching](../reference/specs/semantic-matching.md)** — joins and restrictions match only on attributes connected through the foreign key graph, not arbitrary columns that happen to share a name. This prevents:
+
 - Accidental Cartesian products
 - Joins on unrelated columns
 - Silent incorrect results

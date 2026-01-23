@@ -34,6 +34,9 @@ for dir in src/tutorials/domain/*/; do
     jupyter nbconvert --to notebook --execute --inplace "$dir"*.ipynb
 done
 
+echo "Executing example tutorials..."
+jupyter nbconvert --to notebook --execute --inplace src/tutorials/examples/*.ipynb
+
 echo "Executing how-to notebooks..."
 jupyter nbconvert --to notebook --execute --inplace src/how-to/*.ipynb
 

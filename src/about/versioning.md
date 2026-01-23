@@ -101,6 +101,7 @@ For DataJoint 0.x documentation, visit:
 
 | Version | Release Date | Major Changes |
 |---------|--------------|---------------|
+| 2.1 | 2026 | PostgreSQL multi-backend support |
 | 2.0 | 2026 | Redesigned fetch API, unified stores, per-table jobs, semantic matching |
 | 0.14.x | 2020-2025 | Legacy version with external storage |
 | 0.13.x | 2019 | Legacy version |

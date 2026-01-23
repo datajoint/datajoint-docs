@@ -60,9 +60,10 @@ Environment variables take precedence over config files.
 | Setting | Environment | Default | Description |
 |---------|-------------|---------|-------------|
 | `database.host` | `DJ_HOST` | `localhost` | Database server hostname |
-| `database.port` | `DJ_PORT` | `3306` | Database server port |
+| `database.port` | `DJ_PORT` | Auto | Database server port (3306 for MySQL, 5432 for PostgreSQL) |
 | `database.user` | `DJ_USER` | — | Database username |
 | `database.password` | `DJ_PASS` | — | Database password |
+| `database.backend` | `DJ_BACKEND` | `mysql` | Database backend: `mysql` or `postgresql` |
 | `database.use_tls` | `DJ_TLS` | `True` | Use TLS encryption |
 | `database.reconnect` | — | `True` | Auto-reconnect on timeout |
 | `safemode` | — | `True` | Prompt before destructive operations |
@@ -121,6 +122,66 @@ For local development without TLS:
   "database.use_tls": false
 }
 ```
+
+## PostgreSQL Backend
+
+!!! version-added "New in 2.1"
+    PostgreSQL is now supported as an alternative database backend.
+
+DataJoint supports both MySQL and PostgreSQL backends. To use PostgreSQL:
+
+### Configuration File
+
+```json
+{
+  "database": {
+    "host": "localhost",
+    "backend": "postgresql"
+  }
+}
+```
+
+The port defaults to `5432` when `backend` is set to `postgresql`.
+
+### Environment Variable
+
+```bash
+export DJ_BACKEND=postgresql
+export DJ_HOST=localhost
+export DJ_USER=postgres
+export DJ_PASS=password
+```
+
+### Programmatic Configuration
+
+```python
+import datajoint as dj
+
+dj.config['database.backend'] = 'postgresql'
+dj.config['database.host'] = 'localhost'
+```
+
+### Docker Compose for Local Development
+
+```yaml
+services:
+  postgres:
+    image: postgres:15
+    environment:
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=test
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      timeout: 30s
+      retries: 5
+```
+
+### Backend Compatibility
+
+DataJoint's core types and query operators work identically on both backends. Table definitions, queries, and computations are portable between MySQL and PostgreSQL without code changes.
 
 ## Connection Lifecycle
 

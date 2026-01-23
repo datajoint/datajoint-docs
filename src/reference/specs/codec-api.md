@@ -224,7 +224,7 @@ def encode(self, value: Any, *, key: dict | None = None, store_name: str | None 
     Args:
         value: The Python object to store
         key: Primary key values (for context-dependent encoding)
-        store_name: Target store name (for external storage)
+        store_name: Target store name (for in-store storage)
 
     Returns:
         Value in the format expected by get_dtype()
@@ -523,7 +523,7 @@ DataJoint provides these built-in codecs. See the [Type System Specification](ty
 | `<hash@>` | N/A | `json` | Hash | Hash-addressed storage with MD5 deduplication |
 | `<object@>` | N/A | `json` | Schema | Schema-addressed storage for files/folders |
 | `<npy@>` | N/A | `json` | Schema | Schema-addressed storage for numpy arrays |
-| `<filepath@>` | N/A | `json` | External | Reference to existing files in store |
+| `<filepath@>` | N/A | `json` | Reference | Reference to existing files in store |
 
 **Addressing schemes:**
 - **Hash-addressed**: Path from content hash. Automatic deduplication.
@@ -562,14 +562,14 @@ class SpikeTrainCodec(dj.Codec):
         return np.cumsum(stored).astype(np.float64)
 ```
 
-### Example 2: External Storage
+### Example 2: In-Store Storage
 
 ```python
 import datajoint as dj
 import pickle
 
 class ModelCodec(dj.Codec):
-    """Store ML models with optional external storage."""
+    """Store ML models with optional in-store storage."""
 
     name = "model"
 
@@ -596,9 +596,9 @@ class Models(dj.Manual):
     definition = '''
     model_id : int
     ---
-    small_model : <model>         # Internal storage
-    large_model : <model@>        # External (default store)
-    archive_model : <model@cold>  # External (specific store)
+    small_model : <model>         # In-table storage
+    large_model : <model@>        # In-store (default store)
+    archive_model : <model@cold>  # In-store (specific store)
     '''
 ```
 
@@ -687,7 +687,7 @@ class ZarrCodec(dj.Codec):
 
     def get_dtype(self, is_store: bool) -> str:
         if not is_store:
-            raise dj.DataJointError("<zarr> requires @ (external storage only)")
+            raise dj.DataJointError("<zarr> requires @ (in-store only)")
         return "<object>"  # Delegate to object storage
 
     def encode(self, value, *, key=None, store_name=None):
@@ -823,7 +823,7 @@ def decode(self, stored, *, key=None):
 |-------|-------|----------|
 | `Unknown codec: <name>` | Codec not registered | Import module defining codec before table definition |
 | `Codec <name> already registered` | Duplicate name | Use unique names; check for conflicts |
-| `<codec> requires @` | External-only codec used without @ | Add `@` or `@store` to attribute type |
+| `<codec> requires @` | In-store-only codec used without @ | Add `@` or `@store` to attribute type |
 | `Circular codec reference` | Codec chain forms a loop | Check `get_dtype()` return values |
 
 ### Debugging
@@ -835,8 +835,8 @@ print(dj.list_codecs())
 # Inspect a codec
 codec = dj.get_codec("mycodec")
 print(f"Name: {codec.name}")
-print(f"Internal dtype: {codec.get_dtype(is_store=False)}")
-print(f"External dtype: {codec.get_dtype(is_store=True)}")
+print(f"In-table dtype: {codec.get_dtype(is_store=False)}")
+print(f"In-store dtype: {codec.get_dtype(is_store=True)}")
 
 # Resolve full chain
 from datajoint.codecs import resolve_dtype

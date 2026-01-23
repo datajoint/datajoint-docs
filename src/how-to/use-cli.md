@@ -45,6 +45,7 @@ dj -s my_lab:lab -s my_analysis:analysis
 ```
 
 The format is `schema_name:alias` where:
+
 - `schema_name` is the database schema name
 - `alias` is the variable name in the REPL
 

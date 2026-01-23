@@ -75,8 +75,8 @@ secondary_section
 ```
 
 - Three or more dashes
-- Separates primary key attributes (above) from dependent attributes (below)
-- Required if table has dependent attributes
+- Separates primary key attributes (above) from secondary attributes (below)
+- Required if table has secondary attributes
 
 ### 2.4 Line Types
 
@@ -151,12 +151,63 @@ attribute_name [= default_value] : type [# comment]
 
 ### 3.3 Attribute Name Rules
 
-- **Pattern**: `^[a-z][a-z0-9_]*$`
-- **Start**: Lowercase letter
+- **Pattern**: `^[a-z_][a-z0-9_]*$`
+- **Start**: Lowercase letter or underscore
 - **Contains**: Lowercase letters, digits, underscores
 - **Convention**: snake_case
 
-### 3.4 Examples
+### 3.4 Hidden Attributes
+
+Attributes with names starting with underscore (`_`) are **hidden**:
+
+```python
+definition = """
+session_id : int32
+---
+result : float64
+_job_start_time : datetime(3)   # hidden
+_job_duration : float32         # hidden
+"""
+```
+
+**Behavior:**
+
+| Context | Hidden Attributes |
+|---------|-------------------|
+| `heading.attributes` | Excluded |
+| `heading._attributes` | Included |
+| Default table display | Excluded |
+| `to_dicts()` / `to_pandas()` | Excluded unless explicitly projected |
+| Join matching (namesakes) | Excluded |
+| Dict restrictions | Excluded (silently ignored) |
+| String restrictions | Included (passed to SQL) |
+
+**Accessing hidden attributes:**
+
+```python
+# Visible attributes only (default)
+results = MyTable.to_dicts()
+
+# Explicitly include hidden attributes
+results = MyTable.proj('result', '_job_start_time').to_dicts()
+
+# Or with fetch1 for single row
+row = (MyTable & key).fetch1('result', '_job_start_time')
+
+# String restriction works with hidden attributes
+MyTable & '_job_start_time > "2024-01-01"'
+
+# Dict restriction IGNORES hidden attributes
+MyTable & {'_job_start_time': some_date}  # no effect
+```
+
+**Use cases:**
+
+- Job metadata (`_job_start_time`, `_job_duration`, `_job_version`)
+- Internal tracking fields
+- Attributes that should not participate in automatic joins
+
+### 3.5 Examples
 
 ```python
 definition = """
@@ -233,15 +284,15 @@ These SQL types are accepted but generate a warning recommending core types:
 
 Format: `<codec_name>` or `<codec_name@store>`
 
-| Codec | Internal dtype | External dtype | Purpose |
+| Codec | In-table dtype | In-store dtype | Purpose |
 |-------|---------------|----------------|---------|
 | `<blob>` | `bytes` | `<hash>` | Serialized Python objects |
-| `<hash>` | N/A (external only) | `json` | Hash-addressed deduped storage |
+| `<hash>` | N/A (in-store only) | `json` | Hash-addressed deduped storage |
 | `<attach>` | `bytes` | `<hash>` | File attachments with filename |
-| `<filepath>` | N/A (external only) | `json` | Reference to managed file |
-| `<object>` | N/A (external only) | `json` | Object storage (Zarr, HDF5) |
+| `<filepath>` | N/A (in-store only) | `json` | Reference to managed file |
+| `<object>` | N/A (in-store only) | `json` | Object storage (Zarr, HDF5) |
 
-External storage syntax:
+In-store storage syntax:
 - `<blob@>` - default store
 - `<blob@store_name>` - named store
 
@@ -352,7 +403,7 @@ class Session(dj.Manual):
 | Position | Effect |
 |----------|--------|
 | Before `---` | FK attributes become part of primary key |
-| After `---` | FK attributes are secondary (dependent) |
+| After `---` | FK attributes are secondary |
 
 ### 6.5 Nullable Foreign Keys
 
@@ -373,7 +424,18 @@ class Session(dj.Manual):
 - Creates UNIQUE INDEX on inherited attributes
 - Enforces one-to-one relationship from child perspective
 
-### 6.7 Projections in Foreign Keys
+### 6.7 Nullable Unique Foreign Keys
+
+```
+-> [nullable, unique] ParentTable
+```
+
+- Combines nullable and unique constraints
+- Multiple rows **can** have NULL values (SQL standard: NULLs are not considered equal in UNIQUE constraints)
+- At most one row per non-NULL parent reference
+- Use case: optional one-to-one relationships where the child may not reference any parent
+
+### 6.8 Projections in Foreign Keys
 
 ```
 -> Parent.proj(alias='original_name')
@@ -587,7 +649,7 @@ Core types and codecs are preserved in comments:
 ```sql
 `value` float NOT NULL COMMENT ":float32:measurement value"
 `data` longblob DEFAULT NULL COMMENT ":<blob>:serialized data"
-`archive` json DEFAULT NULL COMMENT ":<blob@cold>:external storage"
+`archive` json DEFAULT NULL COMMENT ":<blob@cold>:in-store data"
 ```
 
 ---

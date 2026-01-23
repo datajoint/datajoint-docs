@@ -2,7 +2,8 @@
 #
 # MODE="LIVE" docker compose up --build     # Live dev server at http://localhost:8000/
 # MODE="BUILD" docker compose up --build    # Build static site
-# docker compose run docs jupyter nbconvert --execute ...  # Execute notebooks
+# MODE="EXECUTE" docker compose up --build  # Execute notebooks against MySQL
+# MODE="EXECUTE_PG" docker compose up --build  # Execute notebooks against PostgreSQL
 #
 services:
   mysql:
@@ -22,14 +23,15 @@ services:
   postgres:
     image: postgres:15
     environment:
-      POSTGRES_USER: datajoint
+      POSTGRES_USER: postgres
       POSTGRES_PASSWORD: tutorial
+      POSTGRES_DB: datajoint
     ports:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U datajoint"]
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 5s
       timeout: 5s
       retries: 10
@@ -57,9 +59,10 @@ services:
       dockerfile: Dockerfile
     environment:
       - MODE
-      - DJ_HOST=mysql
-      - DJ_USER=root
-      - DJ_PASS=tutorial
+      - DJ_HOST=${DJ_HOST:-mysql}
+      - DJ_USER=${DJ_USER:-root}
+      - DJ_PASS=${DJ_PASS:-tutorial}
+      - DJ_BACKEND=${DJ_BACKEND:-mysql}
     volumes:
       - .:/main
       - ${DJ_PYTHON_PATH:-../datajoint-python}:/datajoint-python
@@ -67,6 +70,8 @@ services:
       - 8000:8000
     depends_on:
       mysql:
+        condition: service_healthy
+      postgres:
         condition: service_healthy
     command:
       - sh
@@ -85,8 +90,20 @@ services:
             # Generate llms-full.txt with current git info
             python scripts/gen_llms_full.py
             mkdocs build --config-file ./mkdocs.yaml
+        elif echo "$${MODE}" | grep -i execute_pg &>/dev/null; then
+            # EXECUTE_PG mode: execute notebooks against PostgreSQL
+            pip install -e "/datajoint-python[postgres]"
+            pip install scikit-image pooch nbconvert
+            echo "Executing notebooks against PostgreSQL..."
+            python scripts/execute_notebooks.py --backend postgresql
+        elif echo "$${MODE}" | grep -i execute &>/dev/null; then
+            # EXECUTE mode: execute notebooks against MySQL (default)
+            pip install -e /datajoint-python
+            pip install scikit-image pooch nbconvert
+            echo "Executing notebooks against MySQL..."
+            python scripts/execute_notebooks.py --backend mysql
         else
-            echo "Unexpected mode..."
+            echo "Unexpected mode. Use: LIVE, BUILD, EXECUTE, or EXECUTE_PG"
             exit 1
         fi
 

@@ -17,6 +17,7 @@ DataJoint 2.0 supports three storage models, all sharing the same store configur
 | **Filepath** | `<filepath@store>` | User-managed paths | **Reference** | User-managed files (no lifecycle management) |
 
 **Key distinction:**
+
 - **Hash-addressed** and **schema-addressed** storage are **integrated** into the Object-Augmented Schema. DataJoint manages their lifecycle, paths, integrity, garbage collection, transaction safety, and deduplication.
 - **Filepath** storage stores only the path string. DataJoint provides no lifecycle management, garbage collection, transaction safety, or deduplication. Users control file creation, organization, and lifecycle.
 

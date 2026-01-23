@@ -31,7 +31,7 @@ Configuration is loaded in priority order:
 
 ## Stores Configuration
 
-Unified storage configuration for all external storage types (`<blob@>`, `<attach@>`, `<filepath@>`, `<object@>`, `<npy@>`).
+Unified storage configuration for all in-store types (`<blob@>`, `<attach@>`, `<filepath@>`, `<object@>`, `<npy@>`).
 
 **Default stores:**
 

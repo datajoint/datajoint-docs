@@ -78,6 +78,32 @@ Session & {"subject_id": 1, "session_type": "training"}
 
 Multiple key-value pairs are combined with AND.
 
+**Unmatched keys are silently ignored:**
+
+```python
+# If 'nonexistent' is not an attribute of Session:
+Session & {"subject_id": 1, "nonexistent": "value"}
+# Equivalent to:
+Session & {"subject_id": 1}  # unmatched key skipped
+
+# If NO keys match, condition evaluates to True (all rows):
+Session & {"nonexistent": "value"}  # returns all rows
+```
+
+This applies to:
+- Misspelled attribute names
+- Hidden attributes (prefixed with `_`)
+- Keys from a different table's schema
+
+**Rationale:** Enables restricting with dicts containing extra keys (e.g., a row fetched from another table) without explicitly filtering to matching attributes.
+
+**Caution:** Typos fail silently. Use string restrictions for explicit validation:
+
+```python
+# SQL error if attribute doesn't exist
+Session & "nonexistent = 'value'"
+```
+
 ### 2.5 Restriction by Query Expression
 
 Restrict to rows with matching primary keys in another expression:
@@ -854,64 +880,206 @@ This allows `GROUP BY` and `HAVING` clauses to use alias column names created by
 
 ### 13.2 QueryExpression Properties
 
-Each `QueryExpression` represents a `SELECT` statement with these properties:
+Each `QueryExpression` represents a SQL `SELECT` statement with these properties:
 
 | Property | SQL Clause | Description |
 |----------|------------|-------------|
-| `heading` | `SELECT` | Attributes to retrieve |
-| `restriction` | `WHERE` | List of conditions (AND) |
-| `support` | `FROM` | Tables/subqueries to query |
+| `heading` | `SELECT` | Attributes and computed expressions |
+| `restriction` | `WHERE` / `HAVING` | Filter conditions |
+| `support` | `FROM` | Base tables and joined tables |
+| `_top` | `ORDER BY` / `LIMIT` | Ordering and pagination |
+| `_group_by` | `GROUP BY` | Grouping (for aggregations) |
 
-Operators create new expressions by combining these properties:
-- `proj` → creates new `heading`
-- `&` → appends to `restriction`
-- `*` → adds to `support`
+### 13.3 Modify-in-Place vs. Subquery Wrapping
 
-### 13.3 Subquery Generation Rules
+When an operator is applied to a QueryExpression, DataJoint either:
 
-Operators merge properties when possible, avoiding subqueries. A subquery is generated when:
+1. **Modifies in place**: Adds/modifies clauses in the existing SELECT statement
+2. **Wraps as subquery**: Creates a new outer SELECT with the input as a FROM subquery
 
-| Situation | Reason |
-|-----------|--------|
-| Restriction uses alias attributes | Alias must exist in SELECT before WHERE can reference it |
-| Projection creates alias from alias | Must materialize first alias |
-| Join on alias attribute | Alias must exist before join condition |
-| Aggregation as operand | GROUP BY requires complete subquery |
-| Union operand | UNION requires complete subqueries |
+The choice depends on SQL semantics—whether the operation can be expressed by adding clauses, or whether the input must first be materialized as a derived table.
 
-When a subquery is created, the input becomes a `FROM` clause element in a new `QueryExpression`.
+### 13.4 Restriction Rules (`&` and `-`)
 
-### 13.4 Join Mechanics
+**Modify in place** when restricting on:
+- Base table attributes (columns from FROM tables)
+- Primary key attributes (including those inherited via FK)
 
-Joins combine the properties of both inputs:
+**Wrap as subquery** when restricting on:
+- Computed/aliased attributes (created by `.proj()`)
+- Aggregated attributes (created by `.aggr()`)
+- Any attribute after `LIMIT`/`OFFSET` has been applied
 
 ```python
-result.support = A.support + B.support
-result.restriction = A.restriction + B.restriction
-result.heading = merge(A.heading, B.heading)
+# Modify in place: condition added to WHERE
+Session & "session_date > '2024-01-01'"
+# SQL: SELECT ... FROM session WHERE session_date > '2024-01-01'
+
+# Subquery required: restriction references computed alias
+Session.proj(year='YEAR(session_date)') & "year = 2024"
+# SQL: SELECT * FROM (
+#        SELECT ..., YEAR(session_date) as year FROM session
+#      ) AS _s1 WHERE year = 2024
 ```
 
-Restrictions from inputs propagate to the output. Inputs that don't become subqueries donate their supports, restrictions, and projections directly to the join.
+**Aggregation special case**: Restrictions after aggregation go to HAVING (MySQL) or require subquery (PostgreSQL):
 
-### 13.5 Aggregation SQL
+```python
+Session.aggr(Trial, n='count(*)') & "n > 10"
+# MySQL:      ... GROUP BY pk HAVING n > 10
+# PostgreSQL: SELECT * FROM (...GROUP BY pk) AS _s1 WHERE n > 10
+```
 
-Aggregation translates to:
+### 13.5 Projection Rules (`.proj()`)
+
+**Modify in place** when:
+- Selecting a subset of existing attributes
+- Renaming base attributes
+- Computing new attributes from base columns
+
+**Wrap as subquery** when:
+- Computing attribute from another computed attribute (alias of alias)
+- Projecting after `LIMIT`/`OFFSET` has been applied
+
+```python
+# Modify in place: adds computed column to SELECT
+Session.proj(year='YEAR(session_date)')
+# SQL: SELECT pk, YEAR(session_date) as year FROM session
+
+# Subquery required: decade depends on year alias
+Session.proj(year='YEAR(session_date)').proj(decade='year - year % 10')
+# SQL: SELECT pk, year - year % 10 as decade FROM (
+#        SELECT pk, YEAR(session_date) as year FROM session
+#      ) AS _s1
+```
+
+### 13.5.1 Join Rules (`*`)
+
+**Modify in place** (merge both operands' clauses) when:
+- Both operands are base tables or simple projections
+- Join attributes are base columns (not computed)
+- Neither operand has `LIMIT`/`OFFSET` or `GROUP BY`
+
+**Wrap operand as subquery** when operand has:
+- Computed attributes used in join condition
+- `LIMIT`/`OFFSET` applied
+- `GROUP BY` (is an aggregation result)
+- Is a union expression
+
+```python
+# Modify in place: merge FROM and WHERE clauses
+Session * Trial
+# SQL: SELECT ... FROM session JOIN trial USING (pk)
+
+# Subquery required: aggregation as join operand
+Session * Session.aggr(Trial, n='count(*)')
+# SQL: SELECT ... FROM session JOIN (
+#        SELECT pk, count(*) as n FROM session
+#        LEFT JOIN trial USING (pk) GROUP BY pk
+#      ) AS _s1 USING (pk)
+```
+
+### 13.5.2 Aggregation Rules (`.aggr()`)
+
+Aggregation produces a query with `GROUP BY`. The grouped expression is joined:
 
 ```sql
 SELECT A.pk, A.secondary, agg_func(B.col) AS computed
-FROM A
-LEFT JOIN B USING (pk)
-WHERE <restrictions on A>
+FROM A LEFT JOIN B USING (pk)
+WHERE <restrictions on A attributes>
 GROUP BY A.pk
-HAVING <restrictions on B or computed>
+HAVING <restrictions on B or computed attributes>
 ```
 
-Key behavior:
-- Restrictions on A → `WHERE` clause (before grouping)
-- Restrictions on B or computed attributes → `HAVING` clause (after grouping)
-- Aggregation never generates a subquery when restricted
+**Restrictions routing:**
+- On grouping expression (A) attributes → `WHERE` (before GROUP BY)
+- On grouped expression (B) or computed attributes → `HAVING` (after GROUP BY)
 
-### 13.6 Union SQL
+**Aggregation result requires subquery** when used as operand to:
+- Another join (`*`)
+- Further restriction on computed attributes
+- Another aggregation
+
+### 13.5.3 Top/Limit Rules (`dj.Top`)
+
+**Any operation after Top requires subquery** (the limited result must materialize):
+
+```python
+(Session & dj.Top(10, 'date DESC')) & "notes IS NOT NULL"
+# SQL: SELECT * FROM (
+#        SELECT * FROM session ORDER BY date DESC LIMIT 10
+#      ) AS _s1 WHERE notes IS NOT NULL
+```
+
+Exception: Chaining Tops with compatible ordering can merge (see Section 12.5)
+
+### 13.6 Backend-Specific Transpilation
+
+DataJoint supports multiple database backends with differing SQL dialects. The adapter layer handles:
+
+#### 13.6.1 Function Translation
+
+Aggregate functions are translated bidirectionally:
+
+| DataJoint | MySQL | PostgreSQL |
+|-----------|-------|------------|
+| `GROUP_CONCAT(col)` | `GROUP_CONCAT(col)` | `STRING_AGG(col::text, ',')` |
+| `STRING_AGG(col, sep)` | `GROUP_CONCAT(col SEPARATOR sep)` | `STRING_AGG(col, sep)` |
+
+Code using either syntax works on both backends.
+
+#### 13.6.2 HAVING Clause Alias References
+
+MySQL allows column aliases in HAVING:
+
+```sql
+SELECT person_id, COUNT(*) as n_languages
+FROM proficiency
+GROUP BY person_id
+HAVING n_languages >= 4   -- MySQL: OK, PostgreSQL: ERROR
+```
+
+PostgreSQL (following SQL standard) requires repeating the expression or using a subquery:
+
+```sql
+-- Option A: Repeat expression
+HAVING COUNT(*) >= 4
+
+-- Option B: Subquery wrapper
+SELECT * FROM (
+  SELECT person_id, COUNT(*) as n_languages
+  FROM proficiency
+  GROUP BY person_id
+) AS subq
+WHERE n_languages >= 4
+```
+
+**DataJoint approach:** When generating SQL for PostgreSQL, if the HAVING clause references computed attribute aliases, the aggregation is wrapped in a subquery and the HAVING condition becomes a WHERE clause on the outer query.
+
+| Backend | HAVING with alias | Generated SQL |
+|---------|------------------|---------------|
+| MySQL | Direct | `... GROUP BY pk HAVING alias > 5` |
+| PostgreSQL | Subquery wrapper | `SELECT * FROM (...) AS subq WHERE alias > 5` |
+
+This ensures consistent behavior across backends while maintaining query correctness.
+
+#### 13.6.3 Identifier Quoting
+
+| Backend | Identifier Quote | Example |
+|---------|-----------------|---------|
+| MySQL | Backtick | `` `table`.`column` `` |
+| PostgreSQL | Double quote | `"table"."column"` |
+
+#### 13.6.4 String Literal Quoting
+
+| Backend | String Literals | Identifier Literals |
+|---------|----------------|-------------------|
+| MySQL | `'value'` or `"value"` | `` `name` `` |
+| PostgreSQL | `'value'` only | `"name"` |
+
+In PostgreSQL, double quotes denote identifiers, not string literals. Dictionary restrictions handle this automatically; string restrictions must use single quotes for values.
+
+### 13.7 Union SQL
 
 Union performs an outer join:
 
@@ -924,13 +1092,26 @@ UNION
 
 All union inputs become subqueries except unrestricted unions.
 
-### 13.7 Query Backprojection
+### 13.8 Query Backprojection
 
 Before execution, `finalize()` recursively projects out unnecessary attributes from all inputs. This optimization:
 
 - Reduces data transfer (especially for blobs)
 - Compensates for MySQL's query optimizer limitations
 - Produces leaner queries for complex expressions
+
+### 13.9 Subquery Generation Summary
+
+| Trigger | Reason | Strategy |
+|---------|--------|----------|
+| Restrict on computed attribute | Alias must exist before WHERE references it | Wrap input |
+| Restrict after LIMIT/OFFSET | Limited result must materialize first | Wrap input |
+| Project alias from alias | First alias must materialize | Wrap input |
+| Join on computed attribute | Join condition can't reference SELECT alias | Wrap operand |
+| Aggregation as join operand | GROUP BY must complete first | Wrap operand |
+| Restrict on aggregated attribute | HAVING result must materialize (PostgreSQL) | Wrap aggregation |
+| Union operands | UNION requires complete subqueries | Wrap both |
+| PostgreSQL HAVING with alias | Standard SQL compliance | Wrap + convert to WHERE |
 
 ---
 

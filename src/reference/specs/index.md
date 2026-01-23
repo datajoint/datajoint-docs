@@ -22,11 +22,12 @@ Specs clarify exact behavior when documentation or examples are ambiguous.
 
 ## Reading Order
 
-### Foundation (Start Here)
+### Start Here
 
-1. [Table Declaration](table-declaration.md) — How to define tables
-2. [Primary Keys](primary-keys.md) — Key propagation rules
-3. [Type System](type-system.md) — Three-layer type architecture
+1. [Database Backends](database-backends.md) — Supported databases (MySQL, PostgreSQL)
+2. [Table Declaration](table-declaration.md) — How to define tables
+3. [Primary Keys](primary-keys.md) — Key propagation rules
+4. [Type System](type-system.md) — Three-layer type architecture
 
 **Next:** Choose based on your needs:
 - **Working with data?** → Data Operations
