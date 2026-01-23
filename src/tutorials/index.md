@@ -183,6 +183,7 @@ Real-world scientific pipelines:
 
 - [Calcium Imaging](domain/calcium-imaging/calcium-imaging.ipynb) — Import TIFF movies, segment cells, extract fluorescence traces
 - [Electrophysiology](domain/electrophysiology/electrophysiology.ipynb) — Import recordings, detect spikes, extract waveforms
+- [Electrophysiology with Object Storage](domain/electrophysiology/ephys-with-npy.ipynb) — Neural data with `<npy@>` lazy loading
 - [Allen CCF](domain/allen-ccf/allen-ccf.ipynb) — Brain atlas with hierarchical region ontology
 
 ## Advanced Topics
