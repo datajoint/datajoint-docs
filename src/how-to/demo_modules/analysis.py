@@ -2,17 +2,19 @@
 analysis.py - Analysis tables
 
 This module defines analysis tables that aggregate results across sessions.
+Tables are declared but schema must be activated before use.
 """
 import datajoint as dj
 from . import acquisition, processing
 
-schema = dj.Schema('demo_analysis')
+# Create schema without activating - caller must activate before use
+schema = dj.Schema()
 
 
 @schema
 class AnalysisParams(dj.Lookup):
     definition = """
-    analysis_id : int
+    analysis_id : int16
     ---
     method : varchar(50)
     """
@@ -25,8 +27,8 @@ class SubjectAnalysis(dj.Computed):
     -> acquisition.Subject
     -> AnalysisParams
     ---
-    result : float
-    confidence : float
+    result : float32
+    confidence : float32
     """
 
     def make(self, key):
@@ -39,7 +41,7 @@ class CrossSessionAnalysis(dj.Computed):
     -> acquisition.Subject
     -> processing.ProcessingParams
     ---
-    aggregate_score : float
+    aggregate_score : float32
     """
 
     def make(self, key):

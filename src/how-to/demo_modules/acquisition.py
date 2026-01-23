@@ -2,10 +2,12 @@
 acquisition.py - Data acquisition tables
 
 This module defines the core acquisition schema with Subject and Session tables.
+Tables are declared but schema must be activated before use.
 """
 import datajoint as dj
 
-schema = dj.Schema('demo_acquisition')
+# Create schema without activating - caller must activate before use
+schema = dj.Schema()
 
 
 @schema
