@@ -86,6 +86,50 @@ Each non-empty, non-comment line is one of:
 2. **Foreign key reference**
 3. **Index declaration**
 
+### 2.5 Singleton Tables (Empty Primary Keys)
+
+!!! version-added "New in 2.1"
+
+    Singleton tables were introduced in DataJoint 2.1.
+
+A **singleton table** can hold at most one row. It is declared with no attributes in the primary key section:
+
+```python
+@schema
+class Config(dj.Lookup):
+    definition = """
+    # Global configuration
+    ---
+    setting1 : varchar(100)
+    setting2 : int32
+    """
+```
+
+**Behavior:**
+
+| Operation | Result |
+|-----------|--------|
+| Insert | Works without specifying a key |
+| Second insert | Raises `DuplicateError` |
+| `fetch1()` | Returns the single row |
+| `heading.primary_key` | Returns `[]` (empty) |
+
+**Use cases:**
+
+- Global configuration settings
+- Pipeline parameters
+- Summary statistics
+- State tracking
+
+**Implementation:**
+
+Internally, singleton tables use a hidden `_singleton` attribute of type `bool` as the primary key. This attribute is:
+
+- Automatically created and populated
+- Excluded from `heading.attributes`
+- Excluded from `fetch()` results
+- Excluded from join matching
+
 ---
 
 ## 3. Attribute Definition
@@ -151,7 +195,7 @@ results = MyTable.proj('result', '_job_start_time').to_dicts()
 row = (MyTable & key).fetch1('result', '_job_start_time')
 
 # String restriction works with hidden attributes
-MyTable & '_job_start_time > "2024-01-01"'
+MyTable & "_job_start_time > '2024-01-01'"
 
 # Dict restriction IGNORES hidden attributes
 MyTable & {'_job_start_time': some_date}  # no effect

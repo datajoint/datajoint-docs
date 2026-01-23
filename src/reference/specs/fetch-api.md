@@ -186,7 +186,7 @@ arr = Experiment().to_arrays()
 
 ```python
 # Get recent experiments, sorted by date
-recent = (Experiment() & 'date > "2024-01-01"').to_pandas(
+recent = (Experiment() & "date > '2024-01-01'").to_pandas(
     order_by='date DESC',
     limit=100
 )

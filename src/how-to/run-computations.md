@@ -39,7 +39,7 @@ ProcessedData.populate(limit=100)
 ProcessedData.populate(suppress_errors=True)
 
 # Check what failed
-failed = ProcessedData.jobs & 'status = "error"'
+failed = ProcessedData.jobs & "status = 'error'"
 print(failed)
 
 # Clear errors to retry

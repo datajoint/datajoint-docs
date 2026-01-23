@@ -106,10 +106,10 @@ Each auto-populated table has an associated jobs table:
 Segmentation.jobs()
 
 # View errors
-Segmentation.jobs & 'status = "error"'
+Segmentation.jobs & "status = 'error'"
 
 # Clear errors to retry
-(Segmentation.jobs & 'status = "error"').delete()
+(Segmentation.jobs & "status = 'error'").delete()
 ```
 
 ### Parallel Execution
@@ -134,13 +134,13 @@ Jobs are reserved atomically—no two workers process the same key.
 Segmentation.populate(suppress_errors=True)
 
 # Check what failed
-errors = (Segmentation.jobs & 'status = "error"').to_dicts()
+errors = (Segmentation.jobs & "status = 'error'").to_dicts()
 
 # Clear specific error to retry
 (Segmentation.jobs & error_key).delete()
 
 # Clear all errors
-(Segmentation.jobs & 'status = "error"').delete()
+(Segmentation.jobs & "status = 'error'").delete()
 ```
 
 ## Imported vs. Computed

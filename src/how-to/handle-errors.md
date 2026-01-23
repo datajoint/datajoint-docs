@@ -55,7 +55,7 @@ Target specific failed jobs:
 
 ```python
 # Clear one error
-(ProcessedData.jobs & key & 'status="error"').delete()
+(ProcessedData.jobs & key & "status='error'").delete()
 
 # Retry just that key
 ProcessedData.populate(key, reserve_jobs=True)

@@ -118,7 +118,7 @@ lab = dj.virtual_schema('my_lab_schema')
 
 # Access tables as attributes (classes)
 lab.Subject.fetch()
-lab.Session & 'subject_id="M001"'
+lab.Session & "subject_id='M001'"
 
 # Full query algebra supported
 (lab.Session * lab.Subject).fetch()
@@ -173,7 +173,7 @@ schema.make_classes()
 
 # Now table classes are available in local namespace
 Subject.fetch()
-Session & 'date > "2024-01-01"'
+Session & "date > '2024-01-01'"
 ```
 
 **Parameters:**

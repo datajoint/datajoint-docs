@@ -34,13 +34,13 @@ Filter entities based on conditions.
 
 ```python
 # Mice born after 2024
-Mouse & 'date_of_birth > "2024-01-01"'
+Mouse & "date_of_birth > '2024-01-01'"
 
 # Sessions for a specific mouse
 Session & {'mouse_id': 42}
 
 # Sessions matching a query
-Session & (Mouse & 'strain = "C57BL/6"')
+Session & (Mouse & "strain = 'C57BL/6'")
 ```
 
 ### Exclude (`-`)
@@ -221,7 +221,7 @@ Operators compose freely:
 ```python
 # Complex query
 result = (
-    (Mouse & 'strain = "C57BL/6"')  # Filter mice
+    (Mouse & "strain = 'C57BL/6'")  # Filter mice
     * Session                        # Join sessions
     * Scan                           # Join scans
     .proj('scan_date', 'depth')      # Select attributes

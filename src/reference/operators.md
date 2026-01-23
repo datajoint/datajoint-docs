@@ -39,7 +39,7 @@ Session & [{'subject_id': 'M001'}, {'subject_id': 'M002'}]
 
 **Chaining**: Multiple restrictions combine with AND:
 ```python
-Session & "duration > 30" & {'experimenter': 'alice'}
+Session & "duration > 30" & {"experimenter": "alice"}
 ```
 
 ### Top N Rows (`dj.Top`)
