@@ -110,6 +110,20 @@
    Code Block Enhancements
    ------------------------------------------------------------------- */
 
+/* Smaller font and line wrapping for code blocks */
+.md-typeset code,
+.md-typeset pre code,
+.md-typeset .highlight code {
+  font-size: 0.75em;
+}
+
+.md-typeset pre {
+  /* Wrap long lines at ~81 characters */
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
 /* Add subtle visual distinction for code comparisons */
 .version-comparison {
   display: grid;
