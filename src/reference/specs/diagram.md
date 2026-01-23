@@ -89,6 +89,26 @@ dj.Diagram(ComputedTable) - 10
 
 **Note:** Order matters. `diagram + 1 - 1` may differ from `diagram - 1 + 1`.
 
+### Collapsing Schemas
+
+```python
+diag.collapse()
+```
+
+Mark a diagram for collapsing when combined with other diagrams. Collapsed schemas appear as single nodes showing the table count.
+
+```python
+# Show schema1 expanded, schema2 as a single collapsed node
+dj.Diagram(schema1) + dj.Diagram(schema2).collapse()
+```
+
+**"Expanded wins" rule:** If a node appears in both a collapsed and non-collapsed diagram, it stays expanded. This allows you to show specific tables from a schema while collapsing the rest.
+
+```python
+# Subject is expanded, rest of analysis schema is collapsed
+dj.Diagram(Subject) + dj.Diagram(analysis).collapse()
+```
+
 ---
 
 ## Output Methods
