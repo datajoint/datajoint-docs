@@ -74,13 +74,7 @@ secondary_section
 ---
 ```
 
-or equivalently:
-
-```
-___
-```
-
-- Three dashes or three underscores
+- Three or more dashes
 - Separates primary key attributes (above) from secondary attributes (below)
 - Required if table has secondary attributes
 
@@ -113,12 +107,63 @@ attribute_name [= default_value] : type [# comment]
 
 ### 3.3 Attribute Name Rules
 
-- **Pattern**: `^[a-z][a-z0-9_]*$`
-- **Start**: Lowercase letter
+- **Pattern**: `^[a-z_][a-z0-9_]*$`
+- **Start**: Lowercase letter or underscore
 - **Contains**: Lowercase letters, digits, underscores
 - **Convention**: snake_case
 
-### 3.4 Examples
+### 3.4 Hidden Attributes
+
+Attributes with names starting with underscore (`_`) are **hidden**:
+
+```python
+definition = """
+session_id : int32
+---
+result : float64
+_job_start_time : datetime(3)   # hidden
+_job_duration : float32         # hidden
+"""
+```
+
+**Behavior:**
+
+| Context | Hidden Attributes |
+|---------|-------------------|
+| `heading.attributes` | Excluded |
+| `heading._attributes` | Included |
+| Default table display | Excluded |
+| `to_dicts()` / `to_pandas()` | Excluded unless explicitly projected |
+| Join matching (namesakes) | Excluded |
+| Dict restrictions | Excluded (silently ignored) |
+| String restrictions | Included (passed to SQL) |
+
+**Accessing hidden attributes:**
+
+```python
+# Visible attributes only (default)
+results = MyTable.to_dicts()
+
+# Explicitly include hidden attributes
+results = MyTable.proj('result', '_job_start_time').to_dicts()
+
+# Or with fetch1 for single row
+row = (MyTable & key).fetch1('result', '_job_start_time')
+
+# String restriction works with hidden attributes
+MyTable & '_job_start_time > "2024-01-01"'
+
+# Dict restriction IGNORES hidden attributes
+MyTable & {'_job_start_time': some_date}  # no effect
+```
+
+**Use cases:**
+
+- Job metadata (`_job_start_time`, `_job_duration`, `_job_version`)
+- Internal tracking fields
+- Attributes that should not participate in automatic joins
+
+### 3.5 Examples
 
 ```python
 definition = """
@@ -314,7 +359,7 @@ class Session(dj.Manual):
 | Position | Effect |
 |----------|--------|
 | Before `---` | FK attributes become part of primary key |
-| After `---` | FK attributes are secondary (dependent) |
+| After `---` | FK attributes are secondary |
 
 ### 6.5 Nullable Foreign Keys
 

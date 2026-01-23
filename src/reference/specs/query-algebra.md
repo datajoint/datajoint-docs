@@ -78,6 +78,32 @@ Session & {"subject_id": 1, "session_type": "training"}
 
 Multiple key-value pairs are combined with AND.
 
+**Unmatched keys are silently ignored:**
+
+```python
+# If 'nonexistent' is not an attribute of Session:
+Session & {"subject_id": 1, "nonexistent": "value"}
+# Equivalent to:
+Session & {"subject_id": 1}  # unmatched key skipped
+
+# If NO keys match, condition evaluates to True (all rows):
+Session & {"nonexistent": "value"}  # returns all rows
+```
+
+This applies to:
+- Misspelled attribute names
+- Hidden attributes (prefixed with `_`)
+- Keys from a different table's schema
+
+**Rationale:** Enables restricting with dicts containing extra keys (e.g., a row fetched from another table) without explicitly filtering to matching attributes.
+
+**Caution:** Typos fail silently. Use string restrictions for explicit validation:
+
+```python
+# SQL error if attribute doesn't exist
+Session & "nonexistent = 'value'"
+```
+
 ### 2.5 Restriction by Query Expression
 
 Restrict to rows with matching primary keys in another expression:
