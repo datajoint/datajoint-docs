@@ -112,13 +112,22 @@
 
 /* Smaller font and line wrapping for code blocks */
 .md-typeset code,
-.md-typeset pre code,
-.md-typeset .highlight code {
-  font-size: 0.75em;
+.md-typeset pre > code,
+.md-typeset .highlight code,
+.md-typeset .highlighttable code {
+  font-size: 0.7em !important;
 }
 
-.md-typeset pre {
-  /* Wrap long lines at ~81 characters */
+/* Also target Jupyter notebook code cells */
+.md-typeset .jp-CodeCell code,
+.md-typeset .cell_input code,
+.md-typeset .input_area code {
+  font-size: 0.7em !important;
+}
+
+.md-typeset pre,
+.md-typeset .highlight pre {
+  /* Wrap long lines */
   white-space: pre-wrap;
   word-wrap: break-word;
   overflow-wrap: break-word;
