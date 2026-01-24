@@ -22,6 +22,7 @@ they assume you understand the basics and focus on getting things done.
 ## Project Management
 
 - [Manage a Pipeline Project](manage-pipeline-project.md) — Multi-schema pipelines, team collaboration
+- [Deploy to Production](deploy-production.md) — Production mode, schema prefixes, environment config
 
 ## Data Operations
 
