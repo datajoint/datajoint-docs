@@ -14,6 +14,9 @@ export DJ_PASS=tutorial
 export DJ_BACKEND=postgresql
 export DJ_USE_TLS=false
 
+# Display settings
+export DJ_DIAGRAM_DIRECTION=LR
+
 echo "Executing tutorials with PostgreSQL backend..."
 echo "  Host: $DJ_HOST:$DJ_PORT"
 echo "  User: $DJ_USER"

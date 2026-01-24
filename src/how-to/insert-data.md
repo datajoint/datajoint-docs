@@ -143,3 +143,9 @@ with dj.conn().transaction:
 if Subject.validate(rows):
     Subject.insert(rows)
 ```
+
+## See Also
+
+- [Master-Part Tables](master-part.ipynb) — Atomic insertion of master and parts
+- [Define Tables](define-tables.md) — Table definition syntax
+- [Delete Data](delete-data.md) — Removing data from tables
