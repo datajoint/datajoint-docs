@@ -30,6 +30,9 @@ dj.Diagram(source, context=None)
 
 ### Layout Direction
 
+!!! version-added "New in 2.1"
+    Configurable layout direction was added in DataJoint 2.1.
+
 Layout direction is controlled via configuration:
 
 ```python
@@ -91,6 +94,9 @@ dj.Diagram(ComputedTable) - 10
 
 ### Collapsing Schemas
 
+!!! version-added "New in 2.1"
+    The `collapse()` method was added in DataJoint 2.1.
+
 ```python
 diag.collapse()
 ```
@@ -123,6 +129,9 @@ dj.Diagram(Subject) + dj.Diagram(analysis).collapse()
 | `make_dot()` | `pydot.Dot` | Graphviz DOT object |
 
 ### Mermaid Output
+
+!!! version-added "New in 2.1"
+    Mermaid output was added in DataJoint 2.1.
 
 ```python
 make_mermaid() -> str
@@ -183,6 +192,9 @@ Each table tier has a distinct visual style:
 ---
 
 ## Schema Grouping
+
+!!! version-added "New in 2.1"
+    Automatic schema grouping was added in DataJoint 2.1.
 
 Tables are automatically grouped into visual clusters by their database schema. The cluster label shows the Python module name when available (following the DataJoint convention of one module per schema), otherwise the database schema name.
 
