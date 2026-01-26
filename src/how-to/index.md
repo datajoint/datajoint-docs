@@ -17,7 +17,9 @@ they assume you understand the basics and focus on getting things done.
 
 - [Define Tables](define-tables.md) — Table definition syntax
 - [Model Relationships](model-relationships.ipynb) — Foreign key patterns
+- [Master-Part Tables](master-part.ipynb) — Compositional data patterns
 - [Design Primary Keys](design-primary-keys.md) — Key selection strategies
+- [Read Schema Diagrams](read-diagrams.ipynb) — Interpret visual diagrams
 
 ## Project Management
 
@@ -43,13 +45,18 @@ they assume you understand the basics and focus on getting things done.
 - [Object Storage Overview](object-storage-overview.md) — Navigation guide for all storage docs
 - [Choose a Storage Type](choose-storage-type.md) — Decision guide for codecs
 - [Use Object Storage](use-object-storage.md) — When and how
+- [Use the `<npy>` Codec](use-npy-codec.md) — NumPy arrays with lazy loading
 - [Use Plugin Codecs](use-plugin-codecs.md) — Install codec packages via entry points
 - [Create Custom Codecs](create-custom-codec.md) — Domain-specific types
 - [Manage Large Data](manage-large-data.md) — Blobs, streaming, efficiency
-- [Clean Up External Storage](garbage-collection.md) — Garbage collection
+- [Clean Up Object Storage](garbage-collection.md) — Garbage collection
 
 ## Maintenance
 
 - [Migrate to v2.0](migrate-to-v20.md) — Upgrading existing pipelines
 - [Alter Tables](alter-tables.md) — Schema evolution
 - [Backup and Restore](backup-restore.md) — Data protection
+
+## Testing
+
+- [Testing Best Practices](testing.md) — Integration testing with pytest

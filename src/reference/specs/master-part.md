@@ -1,5 +1,8 @@
 # Master-Part Relationships Specification
 
+!!! tip "Looking for a task-oriented guide?"
+    See [Master-Part Tables](../../how-to/master-part.ipynb) for step-by-step examples.
+
 ## Overview
 
 Master-Part relationships model compositional data where a master entity contains multiple detail records. Part tables provide a way to store variable-length, structured data associated with each master entity while maintaining strict referential integrity.

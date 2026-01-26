@@ -22,11 +22,12 @@ Specs clarify exact behavior when documentation or examples are ambiguous.
 
 ## Reading Order
 
-### Foundation (Start Here)
+### Start Here
 
-1. [Table Declaration](table-declaration.md) — How to define tables
-2. [Primary Keys](primary-keys.md) — Key propagation rules
-3. [Type System](type-system.md) — Three-layer type architecture
+1. [Database Backends](database-backends.md) — Supported databases (MySQL, PostgreSQL)
+2. [Table Declaration](table-declaration.md) — How to define tables
+3. [Primary Keys](primary-keys.md) — Key propagation rules
+4. [Type System](type-system.md) — Three-layer type architecture
 
 **Next:** Choose based on your needs:
 - **Working with data?** → Data Operations
@@ -96,8 +97,9 @@ Each specification follows a consistent structure:
 | [Semantic Matching](semantic-matching.md) | Query Operators | [Model Relationships](../../how-to/model-relationships.ipynb) | [Query Algebra](../../explanation/query-algebra.md) |
 | [Primary Keys](primary-keys.md) | Table Declaration | [Design Primary Keys](../../how-to/design-primary-keys.md) | [Entity Integrity](../../explanation/entity-integrity.md) |
 | [Fetch API](fetch-api.md) | Query Operators | [Fetch Results](../../how-to/fetch-results.md) | — |
+| [Diagram](diagram.md) | Table Declaration | [Read Diagrams](../../how-to/read-diagrams.ipynb) | — |
 
-**Key concepts:** Restriction (`&`, `-`), projection (`.proj()`), join (`*`), aggregation (`.aggr()`), union, universal set (`U()`), attribute lineage
+**Key concepts:** Restriction (`&`, `-`), projection (`.proj()`), join (`*`), aggregation (`.aggr()`), union, universal set (`U()`), attribute lineage, schema visualization
 
 ---
 

@@ -157,7 +157,7 @@ SELECT * FROM table_a NATURAL JOIN table_b
 
 Hidden attributes must be excluded from all binary operator considerations. The result of a join does not preserve hidden attributes from its operands.
 
-**Current implementation:**
+**Pre-2.0 implementation:**
 ```python
 def from_clause(self):
     clause = next(support)
@@ -165,7 +165,7 @@ def from_clause(self):
         clause += " NATURAL{left} JOIN {clause}".format(...)
 ```
 
-**Proposed implementation:**
+**DataJoint 2.0 implementation:**
 ```python
 def from_clause(self):
     clause = next(support)

@@ -90,7 +90,7 @@ Scientific data often includes large objects—images, recordings, time series, 
 
 All metadata, relationships, and query logic live in the relational database. The schema defines what data exists, how entities relate, and what computations produce them. Queries operate on the relational structure; results are consistent and reproducible.
 
-**2. Large objects live in external stores.**
+**2. Large objects live in object stores.**
 
 Object storage (filesystems, S3, GCS, Azure Blob, MinIO) holds the actual bytes—arrays, images, files. The database stores only lightweight references (paths, checksums, metadata). This separation lets the database stay fast while data scales to terabytes.
 
@@ -101,16 +101,16 @@ DataJoint's [type system](type-system.md) provides codec types that bridge Pytho
 | Codec | Purpose |
 |-------|---------|
 | `<blob>` | Serialize Python objects (NumPy arrays, dicts) |
-| `<blob@store>` | Same, but stored externally |
+| `<blob@store>` | Same, but stored in object store |
 | `<attach>` | Store files with preserved filenames |
 | `<object@store>` | Path-addressed storage for complex structures (Zarr, HDF5) |
-| `<filepath@store>` | References to externally-managed files |
+| `<filepath@store>` | References to user-managed files |
 
 Users work with native Python objects; serialization and storage routing are invisible.
 
 **4. Referential integrity extends to objects.**
 
-When a database row is deleted, its associated external objects are garbage-collected. Foreign key cascades work correctly—delete upstream data and downstream results (including their objects) disappear. The database and object store remain synchronized without manual cleanup.
+When a database row is deleted, its associated stored objects are garbage-collected. Foreign key cascades work correctly—delete upstream data and downstream results (including their objects) disappear. The database and object store remain synchronized without manual cleanup.
 
 **5. Multiple storage tiers support diverse access patterns.**
 

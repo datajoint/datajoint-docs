@@ -75,6 +75,7 @@ The definition string **is** the specification — a declarative language that d
 ### Why Custom Query Algebra?
 
 DataJoint's operators implement **[semantic matching](../reference/specs/semantic-matching.md)** — joins and restrictions match only on attributes connected through the foreign key graph, not arbitrary columns that happen to share a name. This prevents:
+
 - Accidental Cartesian products
 - Joins on unrelated columns
 - Silent incorrect results
@@ -87,7 +88,7 @@ Object-Relational Mappers treat large objects as opaque binary blobs or leave fi
 
 - Relational semantics apply: referential integrity, cascading deletes, query filtering
 - Multiple access patterns: lazy `ObjectRef`, streaming via fsspec, explicit download
-- Two addressing modes: path-addressed (by primary key) and hash-addressed (deduplicated)
+- Two addressing modes: schema-addressed (by primary key) and hash-addressed (deduplicated)
 
 The object store is part of the relational model — queryable and integrity-protected like any other attribute.
 

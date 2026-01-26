@@ -33,8 +33,8 @@ and scalable.
 
 -   :material-code-tags: **[Type System](type-system.md)**
 
-    Three-layer architecture: native, core, and codec types. Internal and
-    external storage modes.
+    Three-layer architecture: native, core, and codec types. In-table and
+    in-store storage modes.
 
 -   :material-cog-play: **[Computation Model](computation-model.md)**
 
@@ -48,6 +48,14 @@ and scalable.
 
     From workflows to complete data operations systems. Project structure and
     object-augmented schemas.
+
+-   :material-link-variant: **[Semantic Matching](semantic-matching.md)**
+
+    How DataJoint ensures safe joins through attribute lineage tracking.
+
+-   :material-new-box: **[What's New in 2.0](whats-new-2.md)**
+
+    Major changes, new features, and migration guidance for DataJoint 2.0.
 
 -   :material-frequently-asked-questions: **[FAQ](faq.md)**
 

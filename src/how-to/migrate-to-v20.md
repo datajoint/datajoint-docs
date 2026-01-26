@@ -39,6 +39,20 @@ No action required—the new license is more permissive.
 
 DataJoint 2.0 introduces portable type aliases (`int64`, `float64`, etc.) that prepare the codebase for **PostgreSQL backend compatibility** in a future release. Migration to core types ensures your schemas will work seamlessly when Postgres support is available.
 
+**String quoting in restrictions:** MySQL and PostgreSQL handle quotes differently. MySQL allows both single and double quotes for string literals, but PostgreSQL interprets double quotes as identifier (column) references. For PostgreSQL compatibility, replace double quotes with single quotes inside SQL restriction strings:
+
+```python
+# Before (MySQL only)
+Table & 'name = "Alice"'
+Table & 'date > "2024-01-01"'
+
+# After (PostgreSQL compatible)
+Table & "name = 'Alice'"
+Table & "date > '2024-01-01'"
+```
+
+See [Database Backends Specification](../reference/specs/database-backends.md#string-quoting) for details.
+
 ### Before You Start: Testing Recommendation
 
 **⚡ Want AI agents to automate Phases I-II for you?**
@@ -103,6 +117,88 @@ These codecs are NEW—there's no legacy equivalent to migrate:
 - Schema-addressed storage organizes data by table structure—no migration needed, just new functionality
 
 **Learn more:** [Codec API Reference](../reference/specs/codec-api.md) · [Custom Codecs](../explanation/custom-codecs.md)
+
+### Column Comment Format (Critical for Blob Migration)
+
+DataJoint 2.0 stores type information in the SQL column comment using a `:type:` prefix format:
+
+```sql
+-- 2.0 column comment format
+COMMENT ':<type>:user comment'
+
+-- Examples
+COMMENT ':int64:subject identifier'
+COMMENT ':<blob>:serialized neural data'
+COMMENT ':<blob@store>:large array in object storage'
+```
+
+**Why this matters for blob columns:**
+
+In pre-2.0, `longblob` columns automatically deserialized Python objects using DataJoint's binary serialization format. DataJoint 2.0 identifies blob columns by checking for `:<blob>:` in the column comment. **Without this marker, blob columns are treated as raw binary data and will NOT be deserialized.**
+
+| Column Comment | DataJoint 2.0 Behavior |
+|----------------|----------------------|
+| `:<blob>:neural data` | ✓ Deserializes to Python/NumPy objects |
+| `neural data` (no marker) | ✗ Returns raw bytes (no deserialization) |
+
+**Migration requirement:** Existing blob columns need their comments updated to include the `:<blob>:` prefix. This is a metadata-only change—the actual blob data format is unchanged.
+
+#### Checking Migration Status
+
+```python
+from datajoint.migrate import check_migration_status
+
+status = check_migration_status(schema)
+print(f"Blob columns: {status['total_blob_columns']}")
+print(f"  Migrated: {status['migrated']}")
+print(f"  Pending: {status['pending']}")
+```
+
+#### Migrating Blob Column Comments
+
+Use `migrate_columns()` to add type markers to all columns (integers, floats, and blobs):
+
+```python
+from datajoint.migrate import migrate_columns
+
+# Preview changes (dry run)
+result = migrate_columns(schema, dry_run=True)
+print(f"Would migrate {len(result['sql_statements'])} columns")
+for sql in result['sql_statements']:
+    print(f"  {sql}")
+
+# Apply changes
+result = migrate_columns(schema, dry_run=False)
+print(f"Migrated {result['columns_migrated']} columns")
+```
+
+Or use `migrate_blob_columns()` to migrate only blob columns:
+
+```python
+from datajoint.migrate import migrate_blob_columns
+
+# Preview
+result = migrate_blob_columns(schema, dry_run=True)
+print(f"Would migrate {result['needs_migration']} blob columns")
+
+# Apply
+result = migrate_blob_columns(schema, dry_run=False)
+print(f"Migrated {result['migrated']} blob columns")
+```
+
+**What the migration does:**
+
+```sql
+-- Before migration
+ALTER TABLE `schema`.`table`
+  MODIFY COLUMN `data` longblob COMMENT 'neural recording';
+
+-- After migration
+ALTER TABLE `schema`.`table`
+  MODIFY COLUMN `data` longblob COMMENT ':<blob>:neural recording';
+```
+
+The data itself is unchanged—only the comment metadata is updated.
 
 ### Unified Stores Configuration
 
@@ -289,7 +385,7 @@ def test_query_patterns(test_schema):
     assert len(mice) == 1
 
     # Test restriction
-    male_mice = Mouse & 'sex="M"'
+    male_mice = Mouse & "sex='M'"
     assert len(male_mice) == 1
 ```
 
@@ -321,7 +417,7 @@ def test_full_pipeline(test_schema):
     assert len(Analysis()) > 0
 
     # 4. Test queries work
-    alice_sessions = Session & 'experimenter="Alice"'
+    alice_sessions = Session & "experimenter='Alice'"
     assert len(alice_sessions) == 1
 ```
 
@@ -1455,6 +1551,24 @@ API CONVERSIONS:
    (table & key).delete()  # unchanged
    (table & restriction).delete()  # unchanged
 
+7. String Quoting in Restrictions (PostgreSQL compatibility):
+   Replace double quotes with single quotes for string literals in SQL restrictions.
+
+   MySQL allows both quote styles, but PostgreSQL interprets double quotes as
+   identifier (column) references, causing errors.
+
+   OLD: Table & 'name = "Alice"'
+   OLD: Table & 'date > "2024-01-01"'
+   OLD: Table & 'strain = "C57BL/6"'
+
+   NEW: Table & "name = 'Alice'"
+   NEW: Table & "date > '2024-01-01'"
+   NEW: Table & "strain = 'C57BL/6'"
+
+   Note: Dictionary restrictions handle quoting automatically but only support
+   equality comparisons. For range comparisons (>, <, LIKE, etc.), use string
+   restrictions with single-quoted values.
+
 PROCESS:
 1. Find all Python files with DataJoint code
 2. For each file:
@@ -1466,6 +1580,8 @@ PROCESS:
    f. Search for .join(x, left=True) patterns (consider .extend(x))
    g. Search for dj.U() * patterns (replace with just table)
    h. Verify dj.U() & patterns remain unchanged
+   i. Search for string restrictions with double-quoted values
+   j. Replace double quotes with single quotes inside SQL strings
 3. Run syntax checks
 4. Run existing tests if available
 5. If semantic checks fail after @ → * conversion, investigate schema/data
@@ -1478,6 +1594,7 @@ VERIFICATION:
 - No @ operator between tables
 - dj.U() * patterns replaced with just table
 - dj.U() & patterns remain unchanged
+- No double-quoted string literals in SQL restrictions
 - All tests pass (if available)
 - Semantic check failures investigated and resolved
 
@@ -2114,24 +2231,90 @@ DROP DATABASE `my_pipeline_old`;
 
 **Warning:** Modifies production schema directly. Test thoroughly first!
 
+#### Step 1: Backup Production
+
 ```python
-from datajoint.migrate import migrate_schema_in_place
+from datajoint.migrate import backup_schema
 
-# Backup first
-backup_schema('my_pipeline', 'my_pipeline_backup_20260114')
+result = backup_schema('my_pipeline', 'my_pipeline_backup_20260114')
+print(f"Backed up {result['tables_backed_up']} tables, {result['rows_backed_up']} rows")
+```
 
-# Migrate in place
-result = migrate_schema_in_place(
-    schema='my_pipeline',
-    backup=True,
-    steps=[
-        'update_blob_comments',  # Add :<blob>: markers
-        'add_lineage_table',  # Create ~lineage
-        'migrate_external_storage',  # BINARY(16) → JSON
-    ]
-)
+#### Step 2: Add Type Markers to Column Comments
 
-print(f"Migrated {result['steps_completed']} steps")
+This is the critical step for blob deserialization. Without `:<blob>:` markers, blob columns return raw bytes instead of deserialized Python objects.
+
+```python
+from datajoint.migrate import migrate_columns, check_migration_status
+import datajoint as dj
+
+schema = dj.Schema('my_pipeline')
+
+# Check current status
+status = check_migration_status(schema)
+print(f"Blob columns needing migration: {status['pending']}")
+
+# Preview changes
+result = migrate_columns(schema, dry_run=True)
+print(f"Would update {len(result['sql_statements'])} columns:")
+for sql in result['sql_statements'][:5]:  # Show first 5
+    print(f"  {sql}")
+
+# Apply changes (updates column comments only, no data changes)
+result = migrate_columns(schema, dry_run=False)
+print(f"Migrated {result['columns_migrated']} columns")
+```
+
+**What this does:** Adds `:<type>:` prefix to column comments:
+
+- `longblob` → `COMMENT ':<blob>:...'`
+- `int unsigned` → `COMMENT ':uint32:...'`
+- etc.
+
+#### Step 3: Rebuild Lineage Table
+
+```python
+from datajoint.migrate import rebuild_lineage
+
+result = rebuild_lineage(schema, dry_run=False)
+print(f"Rebuilt lineage: {result['lineage_entries']} entries")
+```
+
+#### Step 4: Migrate External Storage (if applicable)
+
+If you use `blob@store`, `attach@store`, or `filepath@store`:
+
+```python
+from datajoint.migrate import migrate_external, migrate_filepath
+
+# Preview external blob/attach migration
+result = migrate_external(schema, dry_run=True)
+print(f"Found {result['columns_found']} external columns")
+
+# Apply migration (adds _v2 columns with JSON metadata)
+result = migrate_external(schema, dry_run=False)
+print(f"Migrated {result['rows_migrated']} rows")
+
+# Similarly for filepath columns
+result = migrate_filepath(schema, dry_run=False)
+
+# After verification, finalize (rename columns)
+result = migrate_external(schema, finalize=True)
+result = migrate_filepath(schema, finalize=True)
+```
+
+#### Step 5: Verify Migration
+
+```python
+from datajoint.migrate import verify_schema_v20
+
+result = verify_schema_v20('my_pipeline')
+if result['compatible']:
+    print("✓ Schema fully migrated to 2.0")
+else:
+    print("Issues found:")
+    for issue in result['issues']:
+        print(f"  - {issue}")
 ```
 
 ### Option C: Gradual Migration with Legacy Compatibility

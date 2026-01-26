@@ -165,7 +165,7 @@ Core concepts for getting started with DataJoint:
 3. [Data Entry](basics/03-data-entry.ipynb) — Inserting and managing data
 4. [Queries](basics/04-queries.ipynb) — Operators and fetching results
 5. [Computation](basics/05-computation.ipynb) — Imported and Computed tables
-6. [Object Storage](basics/06-object-storage.ipynb) — Blobs, attachments, and external stores
+6. [Object Storage](basics/06-object-storage.ipynb) — Blobs, attachments, and object stores
 
 ## Examples
 
@@ -183,6 +183,7 @@ Real-world scientific pipelines:
 
 - [Calcium Imaging](domain/calcium-imaging/calcium-imaging.ipynb) — Import TIFF movies, segment cells, extract fluorescence traces
 - [Electrophysiology](domain/electrophysiology/electrophysiology.ipynb) — Import recordings, detect spikes, extract waveforms
+- [Electrophysiology with Object Storage](domain/electrophysiology/ephys-with-npy.ipynb) — Neural data with `<npy@>` lazy loading
 - [Allen CCF](domain/allen-ccf/allen-ccf.ipynb) — Brain atlas with hierarchical region ontology
 
 ## Advanced Topics

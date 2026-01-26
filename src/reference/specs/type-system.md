@@ -1,6 +1,9 @@
-# Storage Types Redesign Spec
+# Type System Specification
 
 ## Overview
+
+!!! version-added "New in 2.1"
+    PostgreSQL type mappings were added in DataJoint 2.1. See [Database Backends](database-backends.md) for backend configuration.
 
 This document defines a three-layer type architecture:
 
@@ -20,34 +23,6 @@ Codec types resolve through core types to native types: `<blob>` → `bytes` →
 - Core types: `int32`, `float64`, `varchar(255)` - no brackets
 - Codec types: `<blob>`, `<object@store>`, `<filepath@main>` - angle brackets
 - The `@` character indicates store (object storage vs in-table)
-
-### OAS Addressing Schemes
-
-| Scheme | Path Pattern | Description | Use Case |
-|--------|--------------|-------------|----------|
-| **Schema-addressed** | `{schema}/{table}/{pk}/` | Path mirrors database structure | Large objects, Zarr, HDF5, numpy arrays |
-| **Hash-addressed** | `_hash/{hash}` | Path from content hash (MD5) | Deduplicated blobs/attachments |
-
-### URL Representation
-
-DataJoint uses consistent URL representation for all storage backends:
-
-| Protocol | URL Format | Example |
-|----------|------------|---------|
-| Local filesystem | `file://` | `file:///data/objects/file.dat` |
-| Amazon S3 | `s3://` | `s3://bucket/path/file.dat` |
-| Google Cloud | `gs://` | `gs://bucket/path/file.dat` |
-| Azure Blob | `az://` | `az://container/path/file.dat` |
-
-This unified approach treats all storage backends uniformly via fsspec, enabling:
-- Consistent path handling across local and cloud storage
-- Transparent switching between storage backends
-- Streaming access to any storage type
-
-### Store References
-
-`<filepath@store>` provides portable relative paths within configured stores with lazy ObjectRef access.
-For arbitrary URLs that don't need ObjectRef semantics, use `varchar` instead.
 
 ## Core DataJoint Types (Layer 2)
 
@@ -380,7 +355,7 @@ features JSONB NOT NULL
 
 ### `<filepath@store>` - Portable External Reference
 
-**Built-in codec. External only (store required).**
+**Built-in codec. In-store only (store required).**
 
 Relative path references within configured stores:
 
@@ -435,8 +410,8 @@ class FilepathCodec(dj.Codec):
     """Store-relative file references. External only."""
     name = "filepath"
 
-    def get_dtype(self, is_external: bool) -> str:
-        if not is_external:
+    def get_dtype(self, is_store: bool) -> str:
+        if not is_store:
             raise DataJointError("<filepath> requires @store")
         return "json"
 
@@ -495,7 +470,7 @@ The `json` database type:
 
 ### `<blob>` / `<blob@>` - Serialized Python Objects
 
-**Supports both internal and external storage.**
+**Supports both in-table and in-store storage.**
 
 Serializes Python objects using DataJoint's custom binary serialization format. The format uses protocol headers and type-specific encoding to serialize complex Python objects efficiently.
 
@@ -537,8 +512,8 @@ class BlobCodec(dj.Codec):
     """Serialized Python objects. Supports internal and external."""
     name = "blob"
 
-    def get_dtype(self, is_external: bool) -> str:
-        return "<hash>" if is_external else "bytes"
+    def get_dtype(self, is_store: bool) -> str:
+        return "<hash>" if is_store else "bytes"
 
     def encode(self, value, *, key=None, store_name=None) -> bytes:
         from . import blob
@@ -555,29 +530,29 @@ class ProcessedData(dj.Computed):
     definition = """
     -> RawData
     ---
-    small_result : <blob>          # internal (in database)
-    large_result : <blob@>         # external (default store)
-    archive_result : <blob@cold>   # external (specific store)
+    small_result : <blob>          # in-table (in database)
+    large_result : <blob@>         # in-store (default store)
+    archive_result : <blob@cold>   # in-store (specific store)
     """
 ```
 
 ### `<attach>` / `<attach@>` - File Attachments
 
-**Supports both internal and external storage.**
+**Supports both in-table and in-store storage.**
 
 Stores files with filename preserved. On fetch, extracts to configured download path.
 
 - **`<attach>`**: Stored in database (`bytes` → `LONGBLOB`/`BYTEA`)
-- **`<attach@>`**: Stored externally via `<hash@>` with deduplication
+- **`<attach@>`**: Stored in object store via `<hash@>` with deduplication
 - **`<attach@store>`**: Stored in specific named store
 
 ```python
 class AttachCodec(dj.Codec):
-    """File attachment with filename. Supports internal and external."""
+    """File attachment with filename. Supports in-table and in-store."""
     name = "attach"
 
-    def get_dtype(self, is_external: bool) -> str:
-        return "<hash>" if is_external else "bytes"
+    def get_dtype(self, is_store: bool) -> str:
+        return "<hash>" if is_store else "bytes"
 
     def encode(self, filepath, *, key=None, store_name=None) -> bytes:
         path = Path(filepath)
@@ -597,9 +572,9 @@ class Attachments(dj.Manual):
     definition = """
     attachment_id : int32
     ---
-    config : <attach>           # internal (small file in DB)
-    data_file : <attach@>       # external (default store)
-    archive : <attach@cold>     # external (specific store)
+    config : <attach>           # in-table (small file in DB)
+    data_file : <attach@>       # in-store (default store)
+    archive : <attach@cold>     # in-store (specific store)
     """
 ```
 
@@ -608,10 +583,10 @@ class Attachments(dj.Manual):
 Users can define custom codecs for domain-specific data. See the [Codec API Specification](codec-api.md) for complete examples including:
 
 - Simple serialization codecs
-- External storage codecs
+- In-store codecs
 - JSON with schema validation
 - Context-dependent encoding
-- External-only codecs (Zarr, HDF5)
+- In-store-only codecs (Zarr, HDF5)
 
 ## Storage Comparison
 
@@ -686,20 +661,20 @@ def garbage_collect(store_name):
    - Layer 3: Codec types (encode/decode, composable)
 2. **Core types are scientist-friendly**: `float32`, `int8`, `bool`, `bytes` instead of `FLOAT`, `TINYINT`, `LONGBLOB`
 3. **Codecs use angle brackets**: `<blob>`, `<object@store>`, `<filepath@main>` - distinguishes from core types
-4. **`@` indicates external storage**: No `@` = database, `@` present = object store
-5. **`get_dtype(is_external)` method**: Codecs resolve dtype at declaration time based on storage mode
+4. **`@` indicates in-store storage**: No `@` = database, `@` present = object store
+5. **`get_dtype(is_store)` method**: Codecs resolve dtype at declaration time based on storage mode
 6. **Codecs are composable**: `<blob@>` uses `<hash@>`, which uses `json`
-7. **Built-in external codecs use JSON dtype**: Stores metadata (path, hash, store name, etc.)
+7. **Built-in in-store codecs use JSON dtype**: Stores metadata (path, hash, store name, etc.)
 8. **Two OAS regions**: object (PK-addressed) and hash (hash-addressed) within managed stores
 9. **Filepath for portability**: `<filepath@store>` uses relative paths within stores for environment portability
 10. **No `uri` type**: For arbitrary URLs, use `varchar`—simpler and more transparent
 11. **Naming conventions**:
-    - `@` = external storage (object store)
-    - No `@` = internal storage (database)
+    - `@` = in-store storage (object store)
+    - No `@` = in-table storage (database)
     - `@` alone = default store
     - `@name` = named store
-12. **Dual-mode codecs**: `<blob>` and `<attach>` support both internal and external storage
-13. **External-only codecs**: `<object@>`, `<hash@>`, `<filepath@>` require `@`
+12. **Dual-mode codecs**: `<blob>` and `<attach>` support both in-table and in-store storage
+13. **In-store-only codecs**: `<object@>`, `<hash@>`, `<filepath@>` require `@`
 14. **Transparent access**: Codecs return Python objects or file paths
 15. **Lazy access**: `<object@>` and `<filepath@store>` return ObjectRef
 16. **MD5 for content hashing**: See [Hash Algorithm Choice](#hash-algorithm-choice) below

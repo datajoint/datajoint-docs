@@ -45,7 +45,7 @@ table.to_dicts(
 )
 ```
 
-For external storage types (attachments, filepaths), files are downloaded to `config["download_path"]`. Use `config.override()` to change:
+For in-store types (attachments, filepaths), files are downloaded to `config["download_path"]`. Use `config.override()` to change:
 
 ```python
 with dj.config.override(download_path="/data"):
@@ -186,7 +186,7 @@ arr = Experiment().to_arrays()
 
 ```python
 # Get recent experiments, sorted by date
-recent = (Experiment() & 'date > "2024-01-01"').to_pandas(
+recent = (Experiment() & "date > '2024-01-01'").to_pandas(
     order_by='date DESC',
     limit=100
 )

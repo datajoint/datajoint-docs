@@ -11,7 +11,7 @@ Delete rows matching a restriction:
 (Subject & {'subject_id': 'M001'}).delete()
 
 # Delete with condition
-(Session & 'session_date < "2024-01-01"').delete()
+(Session & "session_date < '2024-01-01'").delete()
 ```
 
 ## Cascade Behavior
@@ -141,14 +141,14 @@ Delete without cascade (fails if dependent rows exist):
 ### By Condition
 
 ```python
-(Trial & 'outcome = "miss"').delete()
+(Trial & "outcome = 'miss'").delete()
 ```
 
 ### By Join
 
 ```python
 # Delete trials from sessions before 2024
-old_sessions = Session & 'session_date < "2024-01-01"'
+old_sessions = Session & "session_date < '2024-01-01'"
 (Trial & old_sessions).delete()
 ```
 
@@ -191,6 +191,7 @@ print(f"Deleted {count} subjects")
 
 ## See Also
 
+- [Master-Part Tables](master-part.ipynb) — Compositional data patterns
 - [Model Relationships](model-relationships.ipynb) — Foreign key patterns
 - [Insert Data](insert-data.md) — Adding data to tables
 - [Run Computations](run-computations.md) — Recomputing after changes
