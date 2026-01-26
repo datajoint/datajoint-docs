@@ -4851,8 +4851,6 @@
       
         
       
-        
-      
     
     
     
@@ -4901,34 +4899,6 @@
 
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../api/datajoint/admin/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Admin
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
             
               
                 
@@ -6040,11 +6010,17 @@
 </ul>
 <h3 id="database-permissions-by-prefix">Database Permissions by Prefix<a class="headerlink" href="#database-permissions-by-prefix" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="c1">-- Grant access to all schemas with prefix</span>
-<span class="k">GRANT</span><span class="w"> </span><span class="k">ALL</span><span class="w"> </span><span class="k">PRIVILEGES</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="o">`</span><span class="n">myproject</span><span class="err">\</span><span class="n">_</span><span class="o">%`</span><span class="p">.</span><span class="o">*</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="s1">&#39;developer&#39;</span><span class="o">@</span><span class="s1">&#39;%&#39;</span><span class="p">;</span>
+<span class="k">GRANT</span><span class="w"> </span><span class="k">ALL</span><span class="w"> </span><span class="k">PRIVILEGES</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="o">`</span><span class="n">myproject_</span><span class="o">%`</span><span class="p">.</span><span class="o">*</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="s1">&#39;developer&#39;</span><span class="o">@</span><span class="s1">&#39;10.0.0.%&#39;</span><span class="p">;</span>
 
 <span class="c1">-- Read-only access to another project</span>
-<span class="k">GRANT</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="o">`</span><span class="n">otherproject</span><span class="err">\</span><span class="n">_</span><span class="o">%`</span><span class="p">.</span><span class="o">*</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="s1">&#39;developer&#39;</span><span class="o">@</span><span class="s1">&#39;%&#39;</span><span class="p">;</span>
+<span class="k">GRANT</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="o">`</span><span class="n">otherproject_</span><span class="o">%`</span><span class="p">.</span><span class="o">*</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="s1">&#39;developer&#39;</span><span class="o">@</span><span class="s1">&#39;10.0.0.%&#39;</span><span class="p">;</span>
 </code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Restrict Host Access</p>
+<p>Avoid using <code>'%'</code> for the host in production GRANT statements—this allows
+connections from any IP address. Use specific IP addresses or subnet patterns
+like <code>'10.0.0.%'</code> to limit access to your internal network.</p>
+</div>
 <h2 id="environment-based-configuration">Environment-Based Configuration<a class="headerlink" href="#environment-based-configuration" title="Permanent link">&para;</a></h2>
 <p>Use different configurations for development, staging, and production.</p>
 <h3 id="configuration-hierarchy">Configuration Hierarchy<a class="headerlink" href="#configuration-hierarchy" title="Permanent link">&para;</a></h3>
@@ -6082,19 +6058,41 @@
 <span class="nb">export</span><span class="w"> </span><span class="nv">DJ_SAFEMODE</span><span class="o">=</span><span class="nb">false</span>
 </code></pre></div>
 <h3 id="dockerkubernetes-example">Docker/Kubernetes Example<a class="headerlink" href="#dockerkubernetes-example" title="Permanent link">&para;</a></h3>
+<p>DataJoint automatically loads credentials from <code>/run/secrets/datajoint/</code> when that directory exists (standard Docker/Kubernetes secrets mount point).</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># docker-compose.yaml</span>
 <span class="nt">services</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">worker</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">my-pipeline:latest</span>
 <span class="w">    </span><span class="nt">environment</span><span class="p">:</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DJ_HOST=db.example.com</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DJ_USER_FILE=/run/secrets/db_user</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DJ_PASS_FILE=/run/secrets/db_password</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DJ_CREATE_TABLES=false</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DJ_SCHEMA_PREFIX=prod_</span>
-<span class="w">    </span><span class="nt">secrets</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">db_user</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">db_password</span>
+<span class="w">    </span><span class="nt">volumes</span><span class="p">:</span>
+<span class="w">      </span><span class="c1"># Mount secrets directory</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bind</span>
+<span class="w">        </span><span class="nt">source</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./secrets</span>
+<span class="w">        </span><span class="nt">target</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/run/secrets/datajoint</span>
+<span class="w">        </span><span class="nt">read_only</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+</code></pre></div>
+<p>Create the secrets directory with credential files:</p>
+<div class="highlight"><pre><span></span><code>mkdir<span class="w"> </span>-p<span class="w"> </span>secrets
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;prod_user&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>secrets/database.user
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;prod_password&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>secrets/database.password
+chmod<span class="w"> </span><span class="m">600</span><span class="w"> </span>secrets/*
+</code></pre></div>
+<p>For Kubernetes, use a Secret mounted to <code>/run/secrets/datajoint/</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># kubernetes deployment</span>
+<span class="nt">spec</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">containers</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">worker</span>
+<span class="w">      </span><span class="nt">volumeMounts</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dj-secrets</span>
+<span class="w">          </span><span class="nt">mountPath</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/run/secrets/datajoint</span>
+<span class="w">          </span><span class="nt">readOnly</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">  </span><span class="nt">volumes</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dj-secrets</span>
+<span class="w">      </span><span class="nt">secret</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">secretName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">datajoint-credentials</span>
 </code></pre></div>
 <h2 id="complete-production-configuration">Complete Production Configuration<a class="headerlink" href="#complete-production-configuration" title="Permanent link">&para;</a></h2>
 <h3 id="datajointjson-committed">datajoint.json (committed)<a class="headerlink" href="#datajointjson-committed" title="Permanent link">&para;</a></h3>
