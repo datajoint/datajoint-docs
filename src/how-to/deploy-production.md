@@ -144,11 +144,16 @@ ephys_schema = dj.Schema(prefix + 'ephys')       # myproject_ephys
 
 ```sql
 -- Grant access to all schemas with prefix
-GRANT ALL PRIVILEGES ON `myproject\_%`.* TO 'developer'@'%';
+GRANT ALL PRIVILEGES ON `myproject_%`.* TO 'developer'@'10.0.0.%';
 
 -- Read-only access to another project
-GRANT SELECT ON `otherproject\_%`.* TO 'developer'@'%';
+GRANT SELECT ON `otherproject_%`.* TO 'developer'@'10.0.0.%';
 ```
+
+!!! warning "Restrict Host Access"
+    Avoid using `'%'` for the host in production GRANT statements—this allows
+    connections from any IP address. Use specific IP addresses or subnet patterns
+    like `'10.0.0.%'` to limit access to your internal network.
 
 ## Environment-Based Configuration
 
@@ -200,6 +205,8 @@ export DJ_SAFEMODE=false
 
 ### Docker/Kubernetes Example
 
+DataJoint automatically loads credentials from `/run/secrets/datajoint/` when that directory exists (standard Docker/Kubernetes secrets mount point).
+
 ```yaml
 # docker-compose.yaml
 services:
@@ -207,13 +214,40 @@ services:
     image: my-pipeline:latest
     environment:
       - DJ_HOST=db.example.com
-      - DJ_USER_FILE=/run/secrets/db_user
-      - DJ_PASS_FILE=/run/secrets/db_password
       - DJ_CREATE_TABLES=false
       - DJ_SCHEMA_PREFIX=prod_
-    secrets:
-      - db_user
-      - db_password
+    volumes:
+      # Mount secrets directory
+      - type: bind
+        source: ./secrets
+        target: /run/secrets/datajoint
+        read_only: true
+```
+
+Create the secrets directory with credential files:
+
+```bash
+mkdir -p secrets
+echo "prod_user" > secrets/database.user
+echo "prod_password" > secrets/database.password
+chmod 600 secrets/*
+```
+
+For Kubernetes, use a Secret mounted to `/run/secrets/datajoint/`:
+
+```yaml
+# kubernetes deployment
+spec:
+  containers:
+    - name: worker
+      volumeMounts:
+        - name: dj-secrets
+          mountPath: /run/secrets/datajoint
+          readOnly: true
+  volumes:
+    - name: dj-secrets
+      secret:
+        secretName: datajoint-credentials
 ```
 
 ## Complete Production Configuration
