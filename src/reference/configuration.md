@@ -15,12 +15,14 @@ Configuration is loaded in priority order:
 
 | Setting | Environment | Default | Description |
 |---------|-------------|---------|-------------|
-| `database.host` | `DJ_HOST` | `localhost` | MySQL server hostname |
-| `database.port` | `DJ_PORT` | `3306` | MySQL server port |
-| `database.user` | `DJ_USER` | — | Database username |
-| `database.password` | `DJ_PASS` | — | Database password |
+| `database.host` | `DJ_HOST` | `localhost` | Database server hostname |
+| `database.port` | `DJ_PORT` | `3306` | Database server port |
+| `database.user` | `DJ_USER` | — | Database username (required) |
+| `database.password` | `DJ_PASS` | — | Database password (required) |
 | `database.reconnect` | — | `True` | Auto-reconnect on connection loss |
 | `database.use_tls` | — | `None` | Enable TLS encryption |
+| `database.schema_prefix` | `DJ_SCHEMA_PREFIX` | `""` | Project-specific prefix for schema names |
+| `database.create_tables` | `DJ_CREATE_TABLES` | `True` | Default for `Schema(create_tables=)`. Set `False` for production mode |
 
 ## Connection Settings
 
