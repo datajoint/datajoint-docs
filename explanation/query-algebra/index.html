@@ -1087,6 +1087,18 @@
 </a>
 </li>
 <li class="md-nav__item">
+<a class="md-nav__link" href="../../how-to/manage-secrets/">
+<span class="md-ellipsis">
+    
+  
+    Manage Secrets
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
 <a class="md-nav__link" href="../../how-to/configure-database/">
 <span class="md-ellipsis">
     
@@ -1173,6 +1185,18 @@
 </a>
 </li>
 <li class="md-nav__item">
+<a class="md-nav__link" href="../../how-to/master-part/">
+<span class="md-ellipsis">
+    
+  
+    Master-Part Tables
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
 <a class="md-nav__link" href="../../how-to/design-primary-keys/">
 <span class="md-ellipsis">
     
@@ -1228,6 +1252,18 @@
     
   
     Manage Pipeline Project
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../how-to/deploy-production/">
+<span class="md-ellipsis">
+    
+  
+    Deploy to Production
   
 
     
@@ -1409,6 +1445,30 @@
           </label>
 <ul class="md-nav__list" data-md-scrollfix="">
 <li class="md-nav__item">
+<a class="md-nav__link" href="../../how-to/object-storage-overview/">
+<span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../how-to/choose-storage-type/">
+<span class="md-ellipsis">
+    
+  
+    Choose Storage Type
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
 <a class="md-nav__link" href="../../how-to/use-object-storage/">
 <span class="md-ellipsis">
     
@@ -1536,6 +1596,44 @@
     
   
     Backup and Restore
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_4_8" type="checkbox"/>
+<label class="md-nav__link" for="__nav_4_8" id="__nav_4_8_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    Testing
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_4_8_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_4_8">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Testing
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../how-to/testing/">
+<span class="md-ellipsis">
+    
+  
+    Testing Best Practices
   
 
     
@@ -1741,6 +1839,18 @@
     
   
     Fetch API
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../reference/specs/diagram/">
+<span class="md-ellipsis">
+    
+  
+    Diagram
   
 
     
@@ -2525,13 +2635,13 @@
 <p>Filter entities based on conditions.</p>
 <h3 id="include">Include (<code>&amp;</code>)<a class="headerlink" href="#include" title="Permanent link">¶</a></h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># Mice born after 2024</span>
-<span class="n">Mouse</span> <span class="o">&amp;</span> <span class="s1">'date_of_birth &gt; "2024-01-01"'</span>
+<span class="n">Mouse</span> <span class="o">&amp;</span> <span class="s2">"date_of_birth &gt; '2024-01-01'"</span>
 
 <span class="c1"># Sessions for a specific mouse</span>
 <span class="n">Session</span> <span class="o">&amp;</span> <span class="p">{</span><span class="s1">'mouse_id'</span><span class="p">:</span> <span class="mi">42</span><span class="p">}</span>
 
 <span class="c1"># Sessions matching a query</span>
-<span class="n">Session</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">Mouse</span> <span class="o">&amp;</span> <span class="s1">'strain = "C57BL/6"'</span><span class="p">)</span>
+<span class="n">Session</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">Mouse</span> <span class="o">&amp;</span> <span class="s2">"strain = 'C57BL/6'"</span><span class="p">)</span>
 </code></pre></div>
 <h3 id="exclude-">Exclude (<code>-</code>)<a class="headerlink" href="#exclude-" title="Permanent link">¶</a></h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># Mice NOT in the study</span>
@@ -2667,7 +2777,7 @@
 <p>Operators compose freely:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Complex query</span>
 <span class="n">result</span> <span class="o">=</span> <span class="p">(</span>
-    <span class="p">(</span><span class="n">Mouse</span> <span class="o">&amp;</span> <span class="s1">'strain = "C57BL/6"'</span><span class="p">)</span>  <span class="c1"># Filter mice</span>
+    <span class="p">(</span><span class="n">Mouse</span> <span class="o">&amp;</span> <span class="s2">"strain = 'C57BL/6'"</span><span class="p">)</span>  <span class="c1"># Filter mice</span>
     <span class="o">*</span> <span class="n">Session</span>                        <span class="c1"># Join sessions</span>
     <span class="o">*</span> <span class="n">Scan</span>                           <span class="c1"># Join scans</span>
     <span class="o">.</span><span class="n">proj</span><span class="p">(</span><span class="s1">'scan_date'</span><span class="p">,</span> <span class="s1">'depth'</span><span class="p">)</span>      <span class="c1"># Select attributes</span>

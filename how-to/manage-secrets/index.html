@@ -11,6 +11,10 @@
         <link rel="canonical" href="https://docs.datajoint.com/how-to/manage-secrets/">
       
       
+        <link rel="prev" href="../installation/">
+      
+      
+        <link rel="next" href="../configure-database/">
       
       
         
@@ -21,7 +25,7 @@
     
     
       
-        <title>Manage Secrets and Credentials - DataJoint Documentation</title>
+        <title>Manage Secrets - DataJoint Documentation</title>
       
     
     
@@ -174,7 +178,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Manage Secrets and Credentials
+              Manage Secrets
             
           </span>
         </div>
@@ -1878,8 +1882,10 @@
       
   
   
+    
   
   
+  
     
     
       
@@ -1897,6 +1903,8 @@
       
         
       
+        
+      
     
     
     
@@ -1906,11 +1914,11 @@
       
     
     
-    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
         
           
           <div class="md-nav__link md-nav__container">
@@ -1938,7 +1946,7 @@
             
           </div>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_4">
             <span class="md-nav__icon md-icon"></span>
             
@@ -1953,8 +1961,10 @@
                 
   
   
+    
   
   
+  
     
     
       
@@ -1966,17 +1976,19 @@
       
         
       
+        
+      
     
     
     
       
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_1" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_1" checked>
         
           
           <label class="md-nav__link" for="__nav_4_1" id="__nav_4_1_label" tabindex="0">
@@ -1997,7 +2009,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_1_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_1_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_4_1">
             <span class="md-nav__icon md-icon"></span>
             
@@ -2031,6 +2043,514 @@
   
 
       </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Manage Secrets
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Manage Secrets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuration-priority" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration Priority
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#secrets-directory-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        .secrets/ Directory Structure
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#database-credentials" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Database Credentials
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Database Credentials">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#option-1-secrets-directory-recommended-for-development" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Option 1: Secrets Directory (Recommended for Development)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#option-2-environment-variables-recommended-for-production" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Option 2: Environment Variables (Recommended for Production)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#option-3-programmatic-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Option 3: Programmatic Configuration
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#object-storage-credentials" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Object Storage Credentials
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Object Storage Credentials">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#file-storage-no-credentials" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        File Storage (No Credentials)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#s3minio-storage-with-credentials" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        S3/MinIO Storage (With Credentials)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="S3/MinIO Storage (With Credentials)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#config-in-datajointjson-non-sensitive" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Config in datajoint.json (non-sensitive):
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#credentials-in-secrets-directory" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Credentials in .secrets/ directory:
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#alternative-environment-variables" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Alternative: Environment Variables
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#environment-variable-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Environment Variable Reference
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Environment Variable Reference">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#database-connections" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Database Connections
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#object-stores" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Object Stores
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#security-best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Security Best Practices
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Security Best Practices">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#development-environment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Development Environment
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#production-environment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Production Environment
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cicd-environment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CI/CD Environment
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#docker-containers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Docker Containers
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cloud-platforms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cloud Platforms
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-patterns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Patterns
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Common Patterns">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#local-development-with-secrets-directory" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Local Development with Secrets Directory
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#production-with-environment-variables" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Production with Environment Variables
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#multi-environment-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Multi-Environment Setup
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Troubleshooting">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#secrets-not-loading" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Secrets Not Loading
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#permission-errors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Permission Errors
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#environment-variables-not-taking-effect" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Environment Variables Not Taking Effect
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#accidentally-committed-secrets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Accidentally Committed Secrets
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuration-templates" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration Templates
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Configuration Templates">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#minimal-development-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Minimal Development Setup
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#production-with-s3-storage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Production with S3 Storage
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#see-also" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        See Also
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -2145,6 +2665,8 @@
       
         
       
+        
+      
     
     
     
@@ -2250,6 +2772,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../master-part/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Master-Part Tables
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../design-primary-keys/" class="md-nav__link">
         
   
@@ -2318,6 +2868,8 @@
       
         
       
+        
+      
     
     
     
@@ -2375,6 +2927,34 @@
     
   
     Manage Pipeline Project
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../deploy-production/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deploy to Production
   
 
     
@@ -2775,6 +3355,10 @@
       
         
       
+        
+      
+        
+      
     
     
     
@@ -2816,6 +3400,62 @@
 
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../object-storage-overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../choose-storage-type/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Choose Storage Type
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
             
               
                 
@@ -3121,6 +3761,95 @@
     
   
     Backup and Restore
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_8" id="__nav_4_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Testing
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Testing
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../testing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Testing Best Practices
   
 
     
@@ -3484,6 +4213,8 @@
       
         
       
+        
+      
     
     
     
@@ -3625,6 +4356,34 @@
     
   
     Fetch API
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/specs/diagram/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Diagram
   
 
     

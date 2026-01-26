@@ -1171,6 +1171,18 @@
 </a>
 </li>
 <li class="md-nav__item">
+<a class="md-nav__link" href="../../../how-to/manage-secrets/">
+<span class="md-ellipsis">
+    
+  
+    Manage Secrets
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
 <a class="md-nav__link" href="../../../how-to/configure-database/">
 <span class="md-ellipsis">
     
@@ -1257,6 +1269,18 @@
 </a>
 </li>
 <li class="md-nav__item">
+<a class="md-nav__link" href="../../../how-to/master-part/">
+<span class="md-ellipsis">
+    
+  
+    Master-Part Tables
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
 <a class="md-nav__link" href="../../../how-to/design-primary-keys/">
 <span class="md-ellipsis">
     
@@ -1312,6 +1336,18 @@
     
   
     Manage Pipeline Project
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../how-to/deploy-production/">
+<span class="md-ellipsis">
+    
+  
+    Deploy to Production
   
 
     
@@ -1493,6 +1529,30 @@
           </label>
 <ul class="md-nav__list" data-md-scrollfix="">
 <li class="md-nav__item">
+<a class="md-nav__link" href="../../../how-to/object-storage-overview/">
+<span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../how-to/choose-storage-type/">
+<span class="md-ellipsis">
+    
+  
+    Choose Storage Type
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
 <a class="md-nav__link" href="../../../how-to/use-object-storage/">
 <span class="md-ellipsis">
     
@@ -1620,6 +1680,44 @@
     
   
     Backup and Restore
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_4_8" type="checkbox"/>
+<label class="md-nav__link" for="__nav_4_8" id="__nav_4_8_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    Testing
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_4_8_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_4_8">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Testing
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../how-to/testing/">
+<span class="md-ellipsis">
+    
+  
+    Testing Best Practices
   
 
     
@@ -1825,6 +1923,18 @@
     
   
     Fetch API
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../reference/specs/diagram/">
+<span class="md-ellipsis">
+    
+  
+    Diagram
   
 
     
@@ -3163,7 +3273,7 @@ schema = dj.Schema('tutorial_oas')</div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>[2026-01-20 16:20:17,383][INFO]: DataJoint 2.1.0a2 connected to postgres@127.0.0.1:5432
+<pre>[2026-01-23 21:27:42,256][INFO]: DataJoint 2.1.0a7 connected to postgres@127.0.0.1:5432
 </pre>
 </div>
 </div>
@@ -3628,7 +3738,7 @@ print(f"Store configured at: {store_path}")</div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>Store configured at: /var/folders/cn/dpwf5t7j3gd8gzyw2r7dhm8r0000gn/T/dj_store_f6rdcm5b
+<pre>Store configured at: /var/folders/cn/dpwf5t7j3gd8gzyw2r7dhm8r0000gn/T/dj_store_eo58lkaf
 </pre>
 </div>
 </div>
@@ -3933,7 +4043,7 @@ for root, dirs, files in os.walk(store_path):
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>_hash/tutorial_oas/qkyha65ppqnalncu5bwpz64ptq: 7,685,470 bytes
+<pre>_hash/tutorial_oas/33nrx5wnnfrrvcjarrkocfzmpe: 7,685,414 bytes
 </pre>
 </div>
 </div>
@@ -4090,7 +4200,7 @@ Files in store: 2
 <span class="s2">    session_id : int32</span>
 <span class="s2">    ---</span>
 <span class="s2">    n_frames : int32</span>
-<span class="s2">    frame_rate : float32</span>
+<span class="s2">    frame_rate : decimal(4,1)</span>
 <span class="s2">    frames : &lt;object@tutorial&gt;    # Zarr array stored at path derived from PK</span>
 <span class="s2">    """</span>
 </pre></div>
@@ -4101,7 +4211,7 @@ class ImagingSession(dj.Manual):
     session_id : int32
     ---
     n_frames : int32
-    frame_rate : float32
+    frame_rate : decimal(4,1)
     frames : <object@tutorial>    # Zarr array stored at path derived from PK
     """</object@tutorial></div>
 </div>
@@ -4378,10 +4488,10 @@ print(f"First frame mean: {z[0].mean():.1f}")</div>
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
 <pre>Type: ObjectRef
-Path: tutorial_oas/ImagingSession/subject_id=1/session_id=1/frames_7Op57E0v.zarr
+Path: tutorial_oas/ImagingSession/subject_id=1/session_id=1/frames_-1Zk4agf.zarr
 Shape: (100, 512, 512)
 Chunks: (10, 512, 512)
-First frame mean: 2051.1
+First frame mean: 2047.4
 </pre>
 </div>
 </div>
@@ -4855,13 +4965,13 @@ ProcessedRecording()</div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>ProcessedRecording:  33%|███▎      | 1/3 [00:00&lt;00:01,  1.89it/s]</pre>
+<pre>ProcessedRecording:  33%|███▎      | 1/3 [00:00&lt;00:01,  1.32it/s]</pre>
 </div>
 </div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>ProcessedRecording: 100%|██████████| 3/3 [00:00&lt;00:00,  5.47it/s]</pre>
+<pre>ProcessedRecording: 100%|██████████| 3/3 [00:00&lt;00:00,  3.82it/s]</pre>
 </div>
 </div>
 <div class="jp-OutputArea-child">
@@ -4969,7 +5079,7 @@ ProcessedRecording()</div>
 </div> </th> </tr> </thead>
 <tbody> <tr> <td>1</td>
 <td>&lt;blob&gt;</td>
-<td>-0.0003437458100666827</td></tr><tr><td>2</td>
+<td>0.0005143132649947403</td></tr><tr><td>2</td>
 <td>&lt;blob&gt;</td>
 <td>1.0000000000000002</td></tr><tr><td>3</td>
 <td>&lt;blob&gt;</td>
@@ -5029,7 +5139,7 @@ print(f"Mean value: {meta}")</div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>Mean value: -0.0003437458100666827
+<pre>Mean value: 0.0005143132649947403
 </pre>
 </div>
 </div>
@@ -5218,7 +5328,7 @@ result</div>
 <span class="djtooltiptext"></span>
 </div> </th> </tr> </thead>
 <tbody> <tr> <td>1</td>
-<td>-0.0003437458100666827</td></tr><tr><td>2</td>
+<td>0.0005143132649947403</td></tr><tr><td>2</td>
 <td>1.0000000000000002</td></tr><tr><td>3</td>
 <td>1.0000000000000002</td> </tr> </tbody>
 </table>
@@ -5254,7 +5364,7 @@ result</div>
 <span class="s2">    ---</span>
 <span class="s2">    # Queryable metadata</span>
 <span class="s2">    date : date</span>
-<span class="s2">    duration : float32</span>
+<span class="s2">    duration : decimal(5,1)</span>
 <span class="s2">    n_trials : int32</span>
 <span class="s2">    # Large data</span>
 <span class="s2">    raw_data : &lt;blob@&gt;</span>

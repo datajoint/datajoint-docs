@@ -1216,6 +1216,18 @@
 </a>
 </li>
 <li class="md-nav__item">
+<a class="md-nav__link" href="../../../how-to/manage-secrets/">
+<span class="md-ellipsis">
+    
+  
+    Manage Secrets
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
 <a class="md-nav__link" href="../../../how-to/configure-database/">
 <span class="md-ellipsis">
     
@@ -1302,6 +1314,18 @@
 </a>
 </li>
 <li class="md-nav__item">
+<a class="md-nav__link" href="../../../how-to/master-part/">
+<span class="md-ellipsis">
+    
+  
+    Master-Part Tables
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
 <a class="md-nav__link" href="../../../how-to/design-primary-keys/">
 <span class="md-ellipsis">
     
@@ -1357,6 +1381,18 @@
     
   
     Manage Pipeline Project
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../how-to/deploy-production/">
+<span class="md-ellipsis">
+    
+  
+    Deploy to Production
   
 
     
@@ -1538,6 +1574,30 @@
           </label>
 <ul class="md-nav__list" data-md-scrollfix="">
 <li class="md-nav__item">
+<a class="md-nav__link" href="../../../how-to/object-storage-overview/">
+<span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../how-to/choose-storage-type/">
+<span class="md-ellipsis">
+    
+  
+    Choose Storage Type
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
 <a class="md-nav__link" href="../../../how-to/use-object-storage/">
 <span class="md-ellipsis">
     
@@ -1665,6 +1725,44 @@
     
   
     Backup and Restore
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_4_8" type="checkbox"/>
+<label class="md-nav__link" for="__nav_4_8" id="__nav_4_8_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    Testing
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_4_8_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_4_8">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Testing
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../how-to/testing/">
+<span class="md-ellipsis">
+    
+  
+    Testing Best Practices
   
 
     
@@ -1870,6 +1968,18 @@
     
   
     Fetch API
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../reference/specs/diagram/">
+<span class="md-ellipsis">
+    
+  
+    Diagram
   
 
     
@@ -3254,7 +3364,7 @@ schema = dj.Schema('tutorial_queries')</div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>[2026-01-20 16:20:07,617][INFO]: DataJoint 2.1.0a2 connected to postgres@127.0.0.1:5432
+<pre>[2026-01-23 21:27:32,196][INFO]: DataJoint 2.1.0a7 connected to postgres@127.0.0.1:5432
 </pre>
 </div>
 </div>
@@ -3289,7 +3399,7 @@ schema = dj.Schema('tutorial_queries')</div>
 <span class="s2">    species : varchar(50)</span>
 <span class="s2">    date_of_birth : date</span>
 <span class="s2">    sex : enum('M', 'F', 'U')</span>
-<span class="s2">    weight : float32             # grams</span>
+<span class="s2">    weight : decimal(4,1)        # grams</span>
 <span class="s2">    """</span>
 
 <span class="nd">@schema</span>
@@ -3308,7 +3418,7 @@ schema = dj.Schema('tutorial_queries')</div>
 <span class="s2">    ---</span>
 <span class="s2">    -&gt; Experimenter</span>
 <span class="s2">    session_date : date</span>
-<span class="s2">    duration : float32           # minutes</span>
+<span class="s2">    duration : decimal(4,1)      # minutes</span>
 <span class="s2">    """</span>
 
     <span class="k">class</span><span class="w"> </span><span class="nc">Trial</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Part</span><span class="p">):</span>
@@ -3319,7 +3429,7 @@ schema = dj.Schema('tutorial_queries')</div>
 <span class="s2">        stimulus : varchar(50)</span>
 <span class="s2">        response : varchar(50)</span>
 <span class="s2">        correct : bool</span>
-<span class="s2">        reaction_time : float32  # seconds</span>
+<span class="s2">        reaction_time : decimal(3,2)  # seconds</span>
 <span class="s2">        """</span>
 </pre></div>
 <div class="clipboard-copy-txt" id="cell-2"># Define tables for this tutorial
@@ -3331,7 +3441,7 @@ class Subject(dj.Manual):
     species : varchar(50)
     date_of_birth : date
     sex : enum('M', 'F', 'U')
-    weight : float32             # grams
+    weight : decimal(4,1)        # grams
     """
 
 @schema
@@ -3350,7 +3460,7 @@ class Session(dj.Manual):
     ---
     -&gt; Experimenter
     session_date : date
-    duration : float32           # minutes
+    duration : decimal(4,1)      # minutes
     """
 
     class Trial(dj.Part):
@@ -3361,7 +3471,7 @@ class Session(dj.Manual):
         stimulus : varchar(50)
         response : varchar(50)
         correct : bool
-        reaction_time : float32  # seconds
+        reaction_time : decimal(3,2)  # seconds
         """</div>
 </div>
 </div>
@@ -5450,73 +5560,73 @@ Session.Trial &amp; longest_session_keys</div>
 <td>right</td>
 <td>left</td>
 <td>True</td>
-<td>0.22749463</td></tr><tr><td>M001</td>
+<td>0.23</td></tr><tr><td>M001</td>
 <td>2</td>
 <td>2</td>
 <td>left</td>
 <td>right</td>
 <td>True</td>
-<td>0.7131906</td></tr><tr><td>M001</td>
+<td>0.71</td></tr><tr><td>M001</td>
 <td>2</td>
 <td>3</td>
 <td>left</td>
 <td>right</td>
 <td>False</td>
-<td>0.58141065</td></tr><tr><td>M001</td>
+<td>0.58</td></tr><tr><td>M001</td>
 <td>2</td>
 <td>4</td>
 <td>right</td>
 <td>left</td>
 <td>True</td>
-<td>0.32570422</td></tr><tr><td>M001</td>
+<td>0.33</td></tr><tr><td>M001</td>
 <td>2</td>
 <td>5</td>
 <td>right</td>
 <td>left</td>
 <td>True</td>
-<td>0.30268317</td></tr><tr><td>M001</td>
+<td>0.30</td></tr><tr><td>M001</td>
 <td>2</td>
 <td>6</td>
 <td>left</td>
 <td>left</td>
 <td>True</td>
-<td>0.3619687</td></tr><tr><td>M001</td>
+<td>0.36</td></tr><tr><td>M001</td>
 <td>2</td>
 <td>7</td>
 <td>left</td>
 <td>right</td>
 <td>True</td>
-<td>0.66559994</td></tr><tr><td>M001</td>
+<td>0.67</td></tr><tr><td>M001</td>
 <td>2</td>
 <td>8</td>
 <td>left</td>
 <td>left</td>
 <td>True</td>
-<td>0.44069886</td></tr><tr><td>M001</td>
+<td>0.44</td></tr><tr><td>M001</td>
 <td>2</td>
 <td>9</td>
 <td>left</td>
 <td>left</td>
 <td>True</td>
-<td>0.54030806</td></tr><tr><td>M001</td>
+<td>0.54</td></tr><tr><td>M001</td>
 <td>2</td>
 <td>10</td>
 <td>right</td>
 <td>left</td>
 <td>True</td>
-<td>0.43737915</td></tr><tr><td>M002</td>
+<td>0.44</td></tr><tr><td>M002</td>
 <td>2</td>
 <td>1</td>
 <td>right</td>
 <td>left</td>
 <td>False</td>
-<td>0.65750647</td></tr><tr><td>M002</td>
+<td>0.66</td></tr><tr><td>M002</td>
 <td>2</td>
 <td>2</td>
 <td>left</td>
 <td>right</td>
 <td>True</td>
-<td>0.26712063</td> </tr> </tbody>
+<td>0.27</td> </tr> </tbody>
 </table>
 <p>...</p>
 <p>Total: 20</p></div>
@@ -7826,7 +7936,7 @@ Session.aggr(Session.Trial, n_trials='count(*)')</div>
 <span class="n">Session</span><span class="o">.</span><span class="n">aggr</span><span class="p">(</span>
     <span class="n">Session</span><span class="o">.</span><span class="n">Trial</span><span class="p">,</span>
     <span class="n">n_trials</span><span class="o">=</span><span class="s1">'count(*)'</span><span class="p">,</span>
-    <span class="n">n_correct</span><span class="o">=</span><span class="s1">'sum(correct)'</span><span class="p">,</span>
+    <span class="n">n_correct</span><span class="o">=</span><span class="s1">'sum(CASE WHEN correct THEN 1 ELSE 0 END)'</span><span class="p">,</span>
     <span class="n">avg_rt</span><span class="o">=</span><span class="s1">'avg(reaction_time)'</span>
 <span class="p">)</span>
 </pre></div>
@@ -7834,7 +7944,7 @@ Session.aggr(Session.Trial, n_trials='count(*)')</div>
 Session.aggr(
     Session.Trial,
     n_trials='count(*)',
-    n_correct='sum(correct)',
+    n_correct='sum(CASE WHEN correct THEN 1 ELSE 0 END)',
     avg_rt='avg(reaction_time)'
 )</div>
 </div>
@@ -7845,168 +7955,130 @@ Session.aggr(
 <div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
 </div>
 <div class="jp-OutputArea jp-Cell-outputArea">
-<div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>
-<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
-<span class="ansi-red-fg">UndefinedFunction</span>                         Traceback (most recent call last)
-File <span class="ansi-green-fg">/opt/anaconda3/lib/python3.12/site-packages/IPython/core/formatters.py:770</span>, in <span class="ansi-cyan-fg">PlainTextFormatter.__call__</span><span class="ansi-blue-fg">(self, obj)</span>
-<span class="ansi-green-intense-fg ansi-bold">    763</span> stream <span style="color: rgb(98,98,98)">=</span> StringIO()
-<span class="ansi-green-intense-fg ansi-bold">    764</span> printer <span style="color: rgb(98,98,98)">=</span> pretty<span style="color: rgb(98,98,98)">.</span>RepresentationPrinter(stream, <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>verbose,
-<span class="ansi-green-intense-fg ansi-bold">    765</span>     <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>max_width, <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>newline,
-<span class="ansi-green-intense-fg ansi-bold">    766</span>     max_seq_length<span style="color: rgb(98,98,98)">=</span><span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>max_seq_length,
-<span class="ansi-green-intense-fg ansi-bold">    767</span>     singleton_pprinters<span style="color: rgb(98,98,98)">=</span><span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>singleton_printers,
-<span class="ansi-green-intense-fg ansi-bold">    768</span>     type_pprinters<span style="color: rgb(98,98,98)">=</span><span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>type_printers,
-<span class="ansi-green-intense-fg ansi-bold">    769</span>     deferred_pprinters<span style="color: rgb(98,98,98)">=</span><span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>deferred_printers)
-<span class="ansi-green-fg">--&gt; 770</span> <span class="ansi-yellow-bg">printer</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">pretty</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">obj</span><span class="ansi-yellow-bg">)</span>
-<span class="ansi-green-intense-fg ansi-bold">    771</span> printer<span style="color: rgb(98,98,98)">.</span>flush()
-<span class="ansi-green-intense-fg ansi-bold">    772</span> <span class="ansi-bold" style="color: rgb(0,135,0)">return</span> stream<span style="color: rgb(98,98,98)">.</span>getvalue()
+<div class="jp-OutputArea-child jp-OutputArea-executeResult">
+<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[30]:</div>
+<div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/html" tabindex="0">
+<style type="text/css">
+        .Table{
+            border-collapse:collapse;
+        }
+        .Table th{
+            background: #A0A0A0; color: #ffffff; padding:2px 4px; border:#f0e0e0 1px solid;
+            font-weight: normal; font-family: monospace; font-size: 75%; text-align: center;
+        }
+        .Table th p{
+            margin: 0;
+        }
+        .Table td{
+            padding:2px 4px; border:#f0e0e0 1px solid; font-size: 75%;
+        }
+        .Table tr:nth-child(odd){
+            background: #ffffff;
+            color: #000000;
+        }
+        .Table tr:nth-child(even){
+            background: #f3f1ff;
+            color: #000000;
+        }
+        /* Tooltip container */
+        .djtooltip {
+        }
+        /* Tooltip text */
+        .djtooltip .djtooltiptext {
+            visibility: hidden;
+            width: 120px;
+            background-color: black;
+            color: #fff;
+            text-align: center;
+            padding: 5px 0;
+            border-radius: 6px;
+            /* Position the tooltip text - see examples below! */
+            position: absolute;
+            z-index: 1;
+        }
+        #primary {
+            font-weight: bold;
+            color: black;
+        }
+        #nonprimary {
+            font-weight: normal;
+            color: white;
+        }
 
-File <span class="ansi-green-fg">/opt/anaconda3/lib/python3.12/site-packages/IPython/lib/pretty.py:419</span>, in <span class="ansi-cyan-fg">RepresentationPrinter.pretty</span><span class="ansi-blue-fg">(self, obj)</span>
-<span class="ansi-green-intense-fg ansi-bold">    408</span>                         <span class="ansi-bold" style="color: rgb(0,135,0)">return</span> meth(obj, <span style="color: rgb(0,135,0)">self</span>, cycle)
-<span class="ansi-green-intense-fg ansi-bold">    409</span>                 <span class="ansi-bold" style="color: rgb(0,135,0)">if</span> (
-<span class="ansi-green-intense-fg ansi-bold">    410</span>                     <span style="color: rgb(0,135,0)">cls</span> <span class="ansi-bold" style="color: rgb(175,0,255)">is</span> <span class="ansi-bold" style="color: rgb(175,0,255)">not</span> <span style="color: rgb(0,135,0)">object</span>
-<span class="ansi-green-intense-fg ansi-bold">    411</span>                     <span style="color: rgb(95,135,135)"># check if cls defines __repr__</span>
-<span class="ansi-green-fg">   (...)</span>
-<span class="ansi-green-intense-fg ansi-bold">    417</span>                     <span class="ansi-bold" style="color: rgb(175,0,255)">and</span> <span style="color: rgb(0,135,0)">callable</span>(_safe_getattr(<span style="color: rgb(0,135,0)">cls</span>, <span style="color: rgb(175,0,0)">"</span><span style="color: rgb(175,0,0)">__repr__</span><span style="color: rgb(175,0,0)">"</span>, <span class="ansi-bold" style="color: rgb(0,135,0)">None</span>))
-<span class="ansi-green-intense-fg ansi-bold">    418</span>                 ):
-<span class="ansi-green-fg">--&gt; 419</span>                     <span class="ansi-bold" style="color: rgb(0,135,0)">return</span> <span class="ansi-yellow-bg">_repr_pprint</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">obj</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg" style="color: rgb(0,135,0)">self</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">cycle</span><span class="ansi-yellow-bg">)</span>
-<span class="ansi-green-intense-fg ansi-bold">    421</span>     <span class="ansi-bold" style="color: rgb(0,135,0)">return</span> _default_pprint(obj, <span style="color: rgb(0,135,0)">self</span>, cycle)
-<span class="ansi-green-intense-fg ansi-bold">    422</span> <span class="ansi-bold" style="color: rgb(0,135,0)">finally</span>:
+        /* Show the tooltip text when you mouse over the tooltip container */
+        .djtooltip:hover .djtooltiptext {
+            visibility: visible;
+        }
 
-File <span class="ansi-green-fg">/opt/anaconda3/lib/python3.12/site-packages/IPython/lib/pretty.py:794</span>, in <span class="ansi-cyan-fg">_repr_pprint</span><span class="ansi-blue-fg">(obj, p, cycle)</span>
-<span class="ansi-green-intense-fg ansi-bold">    792</span> <span style="color: rgb(175,0,0)">"""A pprint that just redirects to the normal repr function."""</span>
-<span class="ansi-green-intense-fg ansi-bold">    793</span> <span style="color: rgb(95,135,135)"># Find newlines and replace them with p.break_()</span>
-<span class="ansi-green-fg">--&gt; 794</span> output <span style="color: rgb(98,98,98)">=</span> <span class="ansi-yellow-bg" style="color: rgb(0,135,0)">repr</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">obj</span><span class="ansi-yellow-bg">)</span>
-<span class="ansi-green-intense-fg ansi-bold">    795</span> lines <span style="color: rgb(98,98,98)">=</span> output<span style="color: rgb(98,98,98)">.</span>splitlines()
-<span class="ansi-green-intense-fg ansi-bold">    796</span> <span class="ansi-bold" style="color: rgb(0,135,0)">with</span> p<span style="color: rgb(98,98,98)">.</span>group():
-
-File <span class="ansi-green-fg">~/dev/datajoint-docs-migration/datajoint-python/src/datajoint/expression.py:955</span>, in <span class="ansi-cyan-fg">QueryExpression.__repr__</span><span class="ansi-blue-fg">(self)</span>
-<span class="ansi-green-intense-fg ansi-bold">    947</span> <span class="ansi-bold" style="color: rgb(0,135,0)">def</span><span style="color: rgb(188,188,188)"> </span><span style="color: rgb(0,0,255)">__repr__</span>(<span style="color: rgb(0,135,0)">self</span>):
-<span class="ansi-green-intense-fg ansi-bold">    948</span> <span style="color: rgb(188,188,188)">    </span><span style="color: rgb(175,0,0)">"""</span>
-<span class="ansi-green-intense-fg ansi-bold">    949</span> <span style="color: rgb(175,0,0)">    returns the string representation of a QueryExpression object e.g. ``str(q1)``.</span>
-<span class="ansi-green-intense-fg ansi-bold">    950</span> 
-<span class="ansi-green-fg">   (...)</span>
-<span class="ansi-green-intense-fg ansi-bold">    953</span> <span style="color: rgb(175,0,0)">    :rtype: str</span>
-<span class="ansi-green-intense-fg ansi-bold">    954</span> <span style="color: rgb(175,0,0)">    """</span>
-<span class="ansi-green-fg">--&gt; 955</span>     <span class="ansi-bold" style="color: rgb(0,135,0)">return</span> <span style="color: rgb(0,135,0)">super</span>()<span style="color: rgb(98,98,98)">.</span><span style="color: rgb(0,0,255)">__repr__</span>() <span class="ansi-bold" style="color: rgb(0,135,0)">if</span> config[<span style="color: rgb(175,0,0)">"</span><span style="color: rgb(175,0,0)">loglevel</span><span style="color: rgb(175,0,0)">"</span>]<span style="color: rgb(98,98,98)">.</span>lower() <span style="color: rgb(98,98,98)">==</span> <span style="color: rgb(175,0,0)">"</span><span style="color: rgb(175,0,0)">debug</span><span style="color: rgb(175,0,0)">"</span> <span class="ansi-bold" style="color: rgb(0,135,0)">else</span> <span class="ansi-yellow-bg" style="color: rgb(0,135,0)">self</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">preview</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">)</span>
-
-File <span class="ansi-green-fg">~/dev/datajoint-docs-migration/datajoint-python/src/datajoint/expression.py:959</span>, in <span class="ansi-cyan-fg">QueryExpression.preview</span><span class="ansi-blue-fg">(self, limit, width)</span>
-<span class="ansi-green-intense-fg ansi-bold">    957</span> <span class="ansi-bold" style="color: rgb(0,135,0)">def</span><span style="color: rgb(188,188,188)"> </span><span style="color: rgb(0,0,255)">preview</span>(<span style="color: rgb(0,135,0)">self</span>, limit<span style="color: rgb(98,98,98)">=</span><span class="ansi-bold" style="color: rgb(0,135,0)">None</span>, width<span style="color: rgb(98,98,98)">=</span><span class="ansi-bold" style="color: rgb(0,135,0)">None</span>):
-<span class="ansi-green-intense-fg ansi-bold">    958</span> <span style="color: rgb(188,188,188)">    </span><span style="color: rgb(175,0,0)">""":return: a string of preview of the contents of the query."""</span>
-<span class="ansi-green-fg">--&gt; 959</span>     <span class="ansi-bold" style="color: rgb(0,135,0)">return</span> <span class="ansi-yellow-bg">preview</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg" style="color: rgb(0,135,0)">self</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">limit</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">width</span><span class="ansi-yellow-bg">)</span>
-
-File <span class="ansi-green-fg">~/dev/datajoint-docs-migration/datajoint-python/src/datajoint/preview.py:53</span>, in <span class="ansi-cyan-fg">preview</span><span class="ansi-blue-fg">(query_expression, limit, width)</span>
-<span class="ansi-green-intense-fg ansi-bold">     51</span> <span class="ansi-bold" style="color: rgb(0,135,0)">if</span> width <span class="ansi-bold" style="color: rgb(175,0,255)">is</span> <span class="ansi-bold" style="color: rgb(0,135,0)">None</span>:
-<span class="ansi-green-intense-fg ansi-bold">     52</span>     width <span style="color: rgb(98,98,98)">=</span> config[<span style="color: rgb(175,0,0)">"</span><span style="color: rgb(175,0,0)">display.width</span><span style="color: rgb(175,0,0)">"</span>]
-<span class="ansi-green-fg">---&gt; 53</span> tuples <span style="color: rgb(98,98,98)">=</span> <span class="ansi-yellow-bg">rel</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">to_arrays</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">limit</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">=</span><span class="ansi-yellow-bg">limit</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">+</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">1</span><span class="ansi-yellow-bg">)</span>
-<span class="ansi-green-intense-fg ansi-bold">     54</span> has_more <span style="color: rgb(98,98,98)">=</span> <span style="color: rgb(0,135,0)">len</span>(tuples) <span style="color: rgb(98,98,98)">&gt;</span> limit
-<span class="ansi-green-intense-fg ansi-bold">     55</span> tuples <span style="color: rgb(98,98,98)">=</span> tuples[:limit]
-
-File <span class="ansi-green-fg">~/dev/datajoint-docs-migration/datajoint-python/src/datajoint/expression.py:825</span>, in <span class="ansi-cyan-fg">QueryExpression.to_arrays</span><span class="ansi-blue-fg">(self, include_key, order_by, limit, offset, squeeze, *attrs)</span>
-<span class="ansi-green-intense-fg ansi-bold">    822</span> <span class="ansi-bold" style="color: rgb(0,135,0)">else</span>:
-<span class="ansi-green-intense-fg ansi-bold">    823</span>     <span style="color: rgb(95,135,135)"># Fetch all columns as structured array</span>
-<span class="ansi-green-intense-fg ansi-bold">    824</span>     get <span style="color: rgb(98,98,98)">=</span> partial(decode_attribute, squeeze<span style="color: rgb(98,98,98)">=</span>squeeze)
-<span class="ansi-green-fg">--&gt; 825</span>     cursor <span style="color: rgb(98,98,98)">=</span> <span class="ansi-yellow-bg">expr</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">cursor</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">as_dict</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">=</span><span class="ansi-yellow-bg ansi-bold" style="color: rgb(0,135,0)">False</span><span class="ansi-yellow-bg">)</span>
-<span class="ansi-green-intense-fg ansi-bold">    826</span>     rows <span style="color: rgb(98,98,98)">=</span> <span style="color: rgb(0,135,0)">list</span>(cursor<span style="color: rgb(98,98,98)">.</span>fetchall())
-<span class="ansi-green-intense-fg ansi-bold">    828</span>     <span class="ansi-bold" style="color: rgb(0,135,0)">if</span> <span class="ansi-bold" style="color: rgb(175,0,255)">not</span> rows:
-
-File <span class="ansi-green-fg">~/dev/datajoint-docs-migration/datajoint-python/src/datajoint/expression.py:945</span>, in <span class="ansi-cyan-fg">QueryExpression.cursor</span><span class="ansi-blue-fg">(self, as_dict)</span>
-<span class="ansi-green-intense-fg ansi-bold">    943</span> sql <span style="color: rgb(98,98,98)">=</span> <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>make_sql()
-<span class="ansi-green-intense-fg ansi-bold">    944</span> logger<span style="color: rgb(98,98,98)">.</span>debug(sql)
-<span class="ansi-green-fg">--&gt; 945</span> <span class="ansi-bold" style="color: rgb(0,135,0)">return</span> <span class="ansi-yellow-bg" style="color: rgb(0,135,0)">self</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">connection</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">query</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">sql</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">as_dict</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">=</span><span class="ansi-yellow-bg">as_dict</span><span class="ansi-yellow-bg">)</span>
-
-File <span class="ansi-green-fg">~/dev/datajoint-docs-migration/datajoint-python/src/datajoint/connection.py:425</span>, in <span class="ansi-cyan-fg">Connection.query</span><span class="ansi-blue-fg">(self, query, args, as_dict, suppress_warnings, reconnect)</span>
-<span class="ansi-green-intense-fg ansi-bold">    423</span> cursor <span style="color: rgb(98,98,98)">=</span> <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>adapter<span style="color: rgb(98,98,98)">.</span>get_cursor(<span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>_conn, as_dict<span style="color: rgb(98,98,98)">=</span>as_dict)
-<span class="ansi-green-intense-fg ansi-bold">    424</span> <span class="ansi-bold" style="color: rgb(0,135,0)">try</span>:
-<span class="ansi-green-fg">--&gt; 425</span>     <span class="ansi-yellow-bg" style="color: rgb(0,135,0)">self</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">_execute_query</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">cursor</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">query</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">args</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">suppress_warnings</span><span class="ansi-yellow-bg">)</span>
-<span class="ansi-green-intense-fg ansi-bold">    426</span> <span class="ansi-bold" style="color: rgb(0,135,0)">except</span> errors<span style="color: rgb(98,98,98)">.</span>LostConnectionError:
-<span class="ansi-green-intense-fg ansi-bold">    427</span>     <span class="ansi-bold" style="color: rgb(0,135,0)">if</span> <span class="ansi-bold" style="color: rgb(175,0,255)">not</span> reconnect:
-
-File <span class="ansi-green-fg">~/dev/datajoint-docs-migration/datajoint-python/src/datajoint/connection.py:366</span>, in <span class="ansi-cyan-fg">Connection._execute_query</span><span class="ansi-blue-fg">(self, cursor, query, args, suppress_warnings)</span>
-<span class="ansi-green-intense-fg ansi-bold">    364</span>         cursor<span style="color: rgb(98,98,98)">.</span>execute(query, args)
-<span class="ansi-green-intense-fg ansi-bold">    365</span> <span class="ansi-bold" style="color: rgb(0,135,0)">except</span> <span class="ansi-bold" style="color: rgb(215,95,95)">Exception</span> <span class="ansi-bold" style="color: rgb(0,135,0)">as</span> err:
-<span class="ansi-green-fg">--&gt; 366</span>     <span class="ansi-bold" style="color: rgb(0,135,0)">raise</span> translate_query_error(err, query, <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>adapter)
-
-File <span class="ansi-green-fg">~/dev/datajoint-docs-migration/datajoint-python/src/datajoint/connection.py:364</span>, in <span class="ansi-cyan-fg">Connection._execute_query</span><span class="ansi-blue-fg">(self, cursor, query, args, suppress_warnings)</span>
-<span class="ansi-green-intense-fg ansi-bold">    361</span>         <span class="ansi-bold" style="color: rgb(0,135,0)">if</span> suppress_warnings:
-<span class="ansi-green-intense-fg ansi-bold">    362</span>             <span style="color: rgb(95,135,135)"># suppress all warnings arising from underlying SQL library</span>
-<span class="ansi-green-intense-fg ansi-bold">    363</span>             warnings<span style="color: rgb(98,98,98)">.</span>simplefilter(<span style="color: rgb(175,0,0)">"</span><span style="color: rgb(175,0,0)">ignore</span><span style="color: rgb(175,0,0)">"</span>)
-<span class="ansi-green-fg">--&gt; 364</span>         <span class="ansi-yellow-bg">cursor</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">execute</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">query</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">args</span><span class="ansi-yellow-bg">)</span>
-<span class="ansi-green-intense-fg ansi-bold">    365</span> <span class="ansi-bold" style="color: rgb(0,135,0)">except</span> <span class="ansi-bold" style="color: rgb(215,95,95)">Exception</span> <span class="ansi-bold" style="color: rgb(0,135,0)">as</span> err:
-<span class="ansi-green-intense-fg ansi-bold">    366</span>     <span class="ansi-bold" style="color: rgb(0,135,0)">raise</span> translate_query_error(err, query, <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>adapter)
-
-<span class="ansi-red-fg">UndefinedFunction</span>: function sum(boolean) does not exist
-LINE 1: ..."subject_id","session_idx",count(*) as "n_trials",sum(correc...
-                                                             ^
-HINT:  No function matches the given name and argument types. You might need to add explicit type casts.
-</pre>
-</div>
-</div>
-<div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>
-<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
-<span class="ansi-red-fg">UndefinedFunction</span>                         Traceback (most recent call last)
-File <span class="ansi-green-fg">/opt/anaconda3/lib/python3.12/site-packages/IPython/core/formatters.py:406</span>, in <span class="ansi-cyan-fg">BaseFormatter.__call__</span><span class="ansi-blue-fg">(self, obj)</span>
-<span class="ansi-green-intense-fg ansi-bold">    404</span>     method <span style="color: rgb(98,98,98)">=</span> get_real_method(obj, <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>print_method)
-<span class="ansi-green-intense-fg ansi-bold">    405</span>     <span class="ansi-bold" style="color: rgb(0,135,0)">if</span> method <span class="ansi-bold" style="color: rgb(175,0,255)">is</span> <span class="ansi-bold" style="color: rgb(175,0,255)">not</span> <span class="ansi-bold" style="color: rgb(0,135,0)">None</span>:
-<span class="ansi-green-fg">--&gt; 406</span>         <span class="ansi-bold" style="color: rgb(0,135,0)">return</span> <span class="ansi-yellow-bg">method</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">)</span>
-<span class="ansi-green-intense-fg ansi-bold">    407</span>     <span class="ansi-bold" style="color: rgb(0,135,0)">return</span> <span class="ansi-bold" style="color: rgb(0,135,0)">None</span>
-<span class="ansi-green-intense-fg ansi-bold">    408</span> <span class="ansi-bold" style="color: rgb(0,135,0)">else</span>:
-
-File <span class="ansi-green-fg">~/dev/datajoint-docs-migration/datajoint-python/src/datajoint/expression.py:963</span>, in <span class="ansi-cyan-fg">QueryExpression._repr_html_</span><span class="ansi-blue-fg">(self)</span>
-<span class="ansi-green-intense-fg ansi-bold">    961</span> <span class="ansi-bold" style="color: rgb(0,135,0)">def</span><span style="color: rgb(188,188,188)"> </span><span style="color: rgb(0,0,255)">_repr_html_</span>(<span style="color: rgb(0,135,0)">self</span>):
-<span class="ansi-green-intense-fg ansi-bold">    962</span> <span style="color: rgb(188,188,188)">    </span><span style="color: rgb(175,0,0)">""":return: HTML to display table in Jupyter notebook."""</span>
-<span class="ansi-green-fg">--&gt; 963</span>     <span class="ansi-bold" style="color: rgb(0,135,0)">return</span> <span class="ansi-yellow-bg">repr_html</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg" style="color: rgb(0,135,0)">self</span><span class="ansi-yellow-bg">)</span>
-
-File <span class="ansi-green-fg">~/dev/datajoint-docs-migration/datajoint-python/src/datajoint/preview.py:111</span>, in <span class="ansi-cyan-fg">repr_html</span><span class="ansi-blue-fg">(query_expression)</span>
-<span class="ansi-green-intense-fg ansi-bold">    109</span> object_fields <span style="color: rgb(98,98,98)">=</span> []
-<span class="ansi-green-intense-fg ansi-bold">    110</span> info <span style="color: rgb(98,98,98)">=</span> heading<span style="color: rgb(98,98,98)">.</span>table_status
-<span class="ansi-green-fg">--&gt; 111</span> tuples <span style="color: rgb(98,98,98)">=</span> <span class="ansi-yellow-bg">rel</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">to_arrays</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">limit</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">=</span><span class="ansi-yellow-bg">config</span><span class="ansi-yellow-bg">[</span><span class="ansi-yellow-bg" style="color: rgb(175,0,0)">"</span><span class="ansi-yellow-bg" style="color: rgb(175,0,0)">display.limit</span><span class="ansi-yellow-bg" style="color: rgb(175,0,0)">"</span><span class="ansi-yellow-bg">]</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">+</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">1</span><span class="ansi-yellow-bg">)</span>
-<span class="ansi-green-intense-fg ansi-bold">    112</span> has_more <span style="color: rgb(98,98,98)">=</span> <span style="color: rgb(0,135,0)">len</span>(tuples) <span style="color: rgb(98,98,98)">&gt;</span> config[<span style="color: rgb(175,0,0)">"</span><span style="color: rgb(175,0,0)">display.limit</span><span style="color: rgb(175,0,0)">"</span>]
-<span class="ansi-green-intense-fg ansi-bold">    113</span> tuples <span style="color: rgb(98,98,98)">=</span> tuples[<span style="color: rgb(98,98,98)">0</span> : config[<span style="color: rgb(175,0,0)">"</span><span style="color: rgb(175,0,0)">display.limit</span><span style="color: rgb(175,0,0)">"</span>]]
-
-File <span class="ansi-green-fg">~/dev/datajoint-docs-migration/datajoint-python/src/datajoint/expression.py:825</span>, in <span class="ansi-cyan-fg">QueryExpression.to_arrays</span><span class="ansi-blue-fg">(self, include_key, order_by, limit, offset, squeeze, *attrs)</span>
-<span class="ansi-green-intense-fg ansi-bold">    822</span> <span class="ansi-bold" style="color: rgb(0,135,0)">else</span>:
-<span class="ansi-green-intense-fg ansi-bold">    823</span>     <span style="color: rgb(95,135,135)"># Fetch all columns as structured array</span>
-<span class="ansi-green-intense-fg ansi-bold">    824</span>     get <span style="color: rgb(98,98,98)">=</span> partial(decode_attribute, squeeze<span style="color: rgb(98,98,98)">=</span>squeeze)
-<span class="ansi-green-fg">--&gt; 825</span>     cursor <span style="color: rgb(98,98,98)">=</span> <span class="ansi-yellow-bg">expr</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">cursor</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">as_dict</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">=</span><span class="ansi-yellow-bg ansi-bold" style="color: rgb(0,135,0)">False</span><span class="ansi-yellow-bg">)</span>
-<span class="ansi-green-intense-fg ansi-bold">    826</span>     rows <span style="color: rgb(98,98,98)">=</span> <span style="color: rgb(0,135,0)">list</span>(cursor<span style="color: rgb(98,98,98)">.</span>fetchall())
-<span class="ansi-green-intense-fg ansi-bold">    828</span>     <span class="ansi-bold" style="color: rgb(0,135,0)">if</span> <span class="ansi-bold" style="color: rgb(175,0,255)">not</span> rows:
-
-File <span class="ansi-green-fg">~/dev/datajoint-docs-migration/datajoint-python/src/datajoint/expression.py:945</span>, in <span class="ansi-cyan-fg">QueryExpression.cursor</span><span class="ansi-blue-fg">(self, as_dict)</span>
-<span class="ansi-green-intense-fg ansi-bold">    943</span> sql <span style="color: rgb(98,98,98)">=</span> <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>make_sql()
-<span class="ansi-green-intense-fg ansi-bold">    944</span> logger<span style="color: rgb(98,98,98)">.</span>debug(sql)
-<span class="ansi-green-fg">--&gt; 945</span> <span class="ansi-bold" style="color: rgb(0,135,0)">return</span> <span class="ansi-yellow-bg" style="color: rgb(0,135,0)">self</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">connection</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">query</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">sql</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">as_dict</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">=</span><span class="ansi-yellow-bg">as_dict</span><span class="ansi-yellow-bg">)</span>
-
-File <span class="ansi-green-fg">~/dev/datajoint-docs-migration/datajoint-python/src/datajoint/connection.py:425</span>, in <span class="ansi-cyan-fg">Connection.query</span><span class="ansi-blue-fg">(self, query, args, as_dict, suppress_warnings, reconnect)</span>
-<span class="ansi-green-intense-fg ansi-bold">    423</span> cursor <span style="color: rgb(98,98,98)">=</span> <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>adapter<span style="color: rgb(98,98,98)">.</span>get_cursor(<span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>_conn, as_dict<span style="color: rgb(98,98,98)">=</span>as_dict)
-<span class="ansi-green-intense-fg ansi-bold">    424</span> <span class="ansi-bold" style="color: rgb(0,135,0)">try</span>:
-<span class="ansi-green-fg">--&gt; 425</span>     <span class="ansi-yellow-bg" style="color: rgb(0,135,0)">self</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">_execute_query</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">cursor</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">query</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">args</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">suppress_warnings</span><span class="ansi-yellow-bg">)</span>
-<span class="ansi-green-intense-fg ansi-bold">    426</span> <span class="ansi-bold" style="color: rgb(0,135,0)">except</span> errors<span style="color: rgb(98,98,98)">.</span>LostConnectionError:
-<span class="ansi-green-intense-fg ansi-bold">    427</span>     <span class="ansi-bold" style="color: rgb(0,135,0)">if</span> <span class="ansi-bold" style="color: rgb(175,0,255)">not</span> reconnect:
-
-File <span class="ansi-green-fg">~/dev/datajoint-docs-migration/datajoint-python/src/datajoint/connection.py:366</span>, in <span class="ansi-cyan-fg">Connection._execute_query</span><span class="ansi-blue-fg">(self, cursor, query, args, suppress_warnings)</span>
-<span class="ansi-green-intense-fg ansi-bold">    364</span>         cursor<span style="color: rgb(98,98,98)">.</span>execute(query, args)
-<span class="ansi-green-intense-fg ansi-bold">    365</span> <span class="ansi-bold" style="color: rgb(0,135,0)">except</span> <span class="ansi-bold" style="color: rgb(215,95,95)">Exception</span> <span class="ansi-bold" style="color: rgb(0,135,0)">as</span> err:
-<span class="ansi-green-fg">--&gt; 366</span>     <span class="ansi-bold" style="color: rgb(0,135,0)">raise</span> translate_query_error(err, query, <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>adapter)
-
-File <span class="ansi-green-fg">~/dev/datajoint-docs-migration/datajoint-python/src/datajoint/connection.py:364</span>, in <span class="ansi-cyan-fg">Connection._execute_query</span><span class="ansi-blue-fg">(self, cursor, query, args, suppress_warnings)</span>
-<span class="ansi-green-intense-fg ansi-bold">    361</span>         <span class="ansi-bold" style="color: rgb(0,135,0)">if</span> suppress_warnings:
-<span class="ansi-green-intense-fg ansi-bold">    362</span>             <span style="color: rgb(95,135,135)"># suppress all warnings arising from underlying SQL library</span>
-<span class="ansi-green-intense-fg ansi-bold">    363</span>             warnings<span style="color: rgb(98,98,98)">.</span>simplefilter(<span style="color: rgb(175,0,0)">"</span><span style="color: rgb(175,0,0)">ignore</span><span style="color: rgb(175,0,0)">"</span>)
-<span class="ansi-green-fg">--&gt; 364</span>         <span class="ansi-yellow-bg">cursor</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">execute</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">query</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">args</span><span class="ansi-yellow-bg">)</span>
-<span class="ansi-green-intense-fg ansi-bold">    365</span> <span class="ansi-bold" style="color: rgb(0,135,0)">except</span> <span class="ansi-bold" style="color: rgb(215,95,95)">Exception</span> <span class="ansi-bold" style="color: rgb(0,135,0)">as</span> err:
-<span class="ansi-green-intense-fg ansi-bold">    366</span>     <span class="ansi-bold" style="color: rgb(0,135,0)">raise</span> translate_query_error(err, query, <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>adapter)
-
-<span class="ansi-red-fg">UndefinedFunction</span>: function sum(boolean) does not exist
-LINE 1: ..."subject_id","session_idx",count(*) as "n_trials",sum(correc...
-                                                             ^
-HINT:  No function matches the given name and argument types. You might need to add explicit type casts.
-</pre>
+        /* Dark mode support */
+        @media (prefers-color-scheme: dark) {
+            .Table th{
+                background: #4a4a4a; color: #ffffff; border:#555555 1px solid; text-align: center;
+            }
+            .Table td{
+                border:#555555 1px solid;
+            }
+            .Table tr:nth-child(odd){
+                background: #2d2d2d;
+                color: #e0e0e0;
+            }
+            .Table tr:nth-child(even){
+                background: #3d3d3d;
+                color: #e0e0e0;
+            }
+            .djtooltip .djtooltiptext {
+                background-color: #555555;
+                color: #ffffff;
+            }
+            #primary {
+                color: #bd93f9;
+            }
+            #nonprimary {
+                color: #e0e0e0;
+            }
+        }
+    </style>
+<div style="max-height:1000px;max-width:1500px;overflow:auto;">
+<table border="1" class="Table">
+<thead> <tr> <th> <div class="djtooltip">
+<p id="primary">subject_id</p>
+<span class="djtooltiptext">None</span>
+</div></th><th><div class="djtooltip">
+<p id="primary">session_idx</p>
+<span class="djtooltiptext"></span>
+</div></th><th><div class="djtooltip">
+<p id="nonprimary">n_trials</p>
+<span class="djtooltiptext">calculated attribute</span>
+</div></th><th><div class="djtooltip">
+<p id="nonprimary">n_correct</p>
+<span class="djtooltiptext">calculated attribute</span>
+</div></th><th><div class="djtooltip">
+<p id="nonprimary">avg_rt</p>
+<span class="djtooltiptext">calculated attribute</span>
+</div> </th> </tr> </thead>
+<tbody> <tr> <td>M001</td>
+<td>1</td>
+<td>10</td>
+<td>8</td>
+<td>0.50800000000000000000</td></tr><tr><td>M001</td>
+<td>2</td>
+<td>10</td>
+<td>9</td>
+<td>0.46000000000000000000</td></tr><tr><td>M002</td>
+<td>1</td>
+<td>10</td>
+<td>7</td>
+<td>0.45900000000000000000</td></tr><tr><td>M002</td>
+<td>2</td>
+<td>10</td>
+<td>6</td>
+<td>0.50300000000000000000</td></tr><tr><td>M003</td>
+<td>1</td>
+<td>10</td>
+<td>6</td>
+<td>0.51100000000000000000</td> </tr> </tbody>
+</table>
+<p>Total: 5</p></div>
 </div>
 </div>
 </div>
@@ -8715,7 +8787,7 @@ dj.U().aggr(Session, total_sessions='count(*)', avg_duration='avg(duration)')</d
 <span class="djtooltiptext">calculated attribute</span>
 </div> </th> </tr> </thead>
 <tbody> <tr> <td>5</td>
-<td>45.0</td> </tr> </tbody>
+<td>45.0000000000000000</td> </tr> </tbody>
 </table>
 <p>Total: 1</p></div>
 </div>
@@ -9041,12 +9113,12 @@ rows[:2]</div>
   'species': 'Mus musculus',
   'date_of_birth': datetime.date(2026, 1, 15),
   'sex': 'M',
-  'weight': 25.3},
+  'weight': Decimal('25.3')},
  {'subject_id': 'M002',
   'species': 'Mus musculus',
   'date_of_birth': datetime.date(2026, 2, 1),
   'sex': 'F',
-  'weight': 22.1}]</pre>
+  'weight': Decimal('22.1')}]</pre>
 </div>
 </div>
 </div>
@@ -9216,11 +9288,11 @@ arr</div>
 <div class="jp-OutputArea-child jp-OutputArea-executeResult">
 <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[40]:</div>
 <div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain" tabindex="0">
-<pre>array([('M001', 'Mus musculus', datetime.date(2026, 1, 15), 'M',  25.3),
-       ('M002', 'Mus musculus', datetime.date(2026, 2, 1), 'F',  22.1),
-       ('M003', 'Mus musculus', datetime.date(2026, 2, 15), 'M',  26.8),
-       ('R001', 'Rattus norvegicus', datetime.date(2024, 1, 1), 'F', 280.5)],
-      dtype=[('subject_id', 'O'), ('species', 'O'), ('date_of_birth', 'O'), ('sex', 'O'), ('weight', '&lt;f8')])</pre>
+<pre>array([('M001', 'Mus musculus', datetime.date(2026, 1, 15), 'M', Decimal('25.3')),
+       ('M002', 'Mus musculus', datetime.date(2026, 2, 1), 'F', Decimal('22.1')),
+       ('M003', 'Mus musculus', datetime.date(2026, 2, 15), 'M', Decimal('26.8')),
+       ('R001', 'Rattus norvegicus', datetime.date(2024, 1, 1), 'F', Decimal('280.5'))],
+      dtype=[('subject_id', 'O'), ('species', 'O'), ('date_of_birth', 'O'), ('sex', 'O'), ('weight', 'O')])</pre>
 </div>
 </div>
 </div>
@@ -9266,7 +9338,7 @@ print(f"Weights: {weights}")</div>
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
 <pre>Species: ['Mus musculus' 'Mus musculus' 'Mus musculus' 'Rattus norvegicus']
-Weights: [ 25.3  22.1  26.8 280.5]
+Weights: [Decimal('25.3') Decimal('22.1') Decimal('26.8') Decimal('280.5')]
 </pre>
 </div>
 </div>
@@ -9381,7 +9453,7 @@ row</div>
  'species': 'Mus musculus',
  'date_of_birth': datetime.date(2026, 1, 15),
  'sex': 'M',
- 'weight': 25.3}</pre>
+ 'weight': Decimal('25.3')}</pre>
 </div>
 </div>
 </div>
@@ -9481,12 +9553,12 @@ Subject.to_dicts(order_by='weight DESC', limit=2)</div>
   'species': 'Rattus norvegicus',
   'date_of_birth': datetime.date(2024, 1, 1),
   'sex': 'F',
-  'weight': 280.5},
+  'weight': Decimal('280.5')},
  {'subject_id': 'M003',
   'species': 'Mus musculus',
   'date_of_birth': datetime.date(2026, 2, 15),
   'sex': 'M',
-  'weight': 26.8}]</pre>
+  'weight': Decimal('26.8')}]</pre>
 </div>
 </div>
 </div>
@@ -9531,22 +9603,22 @@ Subject.to_dicts(order_by='KEY')</div>
   'species': 'Mus musculus',
   'date_of_birth': datetime.date(2026, 1, 15),
   'sex': 'M',
-  'weight': 25.3},
+  'weight': Decimal('25.3')},
  {'subject_id': 'M002',
   'species': 'Mus musculus',
   'date_of_birth': datetime.date(2026, 2, 1),
   'sex': 'F',
-  'weight': 22.1},
+  'weight': Decimal('22.1')},
  {'subject_id': 'M003',
   'species': 'Mus musculus',
   'date_of_birth': datetime.date(2026, 2, 15),
   'sex': 'M',
-  'weight': 26.8},
+  'weight': Decimal('26.8')},
  {'subject_id': 'R001',
   'species': 'Rattus norvegicus',
   'date_of_birth': datetime.date(2024, 1, 1),
   'sex': 'F',
-  'weight': 280.5}]</pre>
+  'weight': Decimal('280.5')}]</pre>
 </div>
 </div>
 </div>

@@ -1123,6 +1123,18 @@
 </a>
 </li>
 <li class="md-nav__item">
+<a class="md-nav__link" href="../../../how-to/manage-secrets/">
+<span class="md-ellipsis">
+    
+  
+    Manage Secrets
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
 <a class="md-nav__link" href="../../../how-to/configure-database/">
 <span class="md-ellipsis">
     
@@ -1209,6 +1221,18 @@
 </a>
 </li>
 <li class="md-nav__item">
+<a class="md-nav__link" href="../../../how-to/master-part/">
+<span class="md-ellipsis">
+    
+  
+    Master-Part Tables
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
 <a class="md-nav__link" href="../../../how-to/design-primary-keys/">
 <span class="md-ellipsis">
     
@@ -1264,6 +1288,18 @@
     
   
     Manage Pipeline Project
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../how-to/deploy-production/">
+<span class="md-ellipsis">
+    
+  
+    Deploy to Production
   
 
     
@@ -1445,6 +1481,30 @@
           </label>
 <ul class="md-nav__list" data-md-scrollfix="">
 <li class="md-nav__item">
+<a class="md-nav__link" href="../../../how-to/object-storage-overview/">
+<span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../how-to/choose-storage-type/">
+<span class="md-ellipsis">
+    
+  
+    Choose Storage Type
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
 <a class="md-nav__link" href="../../../how-to/use-object-storage/">
 <span class="md-ellipsis">
     
@@ -1572,6 +1632,44 @@
     
   
     Backup and Restore
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_4_8" type="checkbox"/>
+<label class="md-nav__link" for="__nav_4_8" id="__nav_4_8_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    Testing
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_4_8_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_4_8">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Testing
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../how-to/testing/">
+<span class="md-ellipsis">
+    
+  
+    Testing Best Practices
   
 
     
@@ -1777,6 +1875,18 @@
     
   
     Fetch API
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../reference/specs/diagram/">
+<span class="md-ellipsis">
+    
+  
+    Diagram
   
 
     
@@ -3066,7 +3176,7 @@ schema = dj.Schema('tutorial_computation')</div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>[2026-01-20 16:20:11,367][INFO]: DataJoint 2.1.0a2 connected to postgres@127.0.0.1:5432
+<pre>[2026-01-23 21:27:35,801][INFO]: DataJoint 2.1.0a7 connected to postgres@127.0.0.1:5432
 </pre>
 </div>
 </div>
@@ -3128,7 +3238,7 @@ schema = dj.Schema('tutorial_computation')</div>
 <span class="s2">        stimulus : varchar(50)</span>
 <span class="s2">        response : varchar(50)</span>
 <span class="s2">        correct : bool</span>
-<span class="s2">        reaction_time : float32   # seconds</span>
+<span class="s2">        reaction_time : decimal(3,2)  # seconds</span>
 <span class="s2">        """</span>
 
 <span class="nd">@schema</span>
@@ -3168,7 +3278,7 @@ class Session(dj.Manual):
         stimulus : varchar(50)
         response : varchar(50)
         correct : bool
-        reaction_time : float32   # seconds
+        reaction_time : decimal(3,2)  # seconds
         """
 
 @schema
@@ -3335,8 +3445,9 @@ print(f"Subjects: {len(Subject())}, Sessions: {len(Session())}, "
 <span class="s2">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">make</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
-        <span class="c1"># Fetch trial data for this session</span>
+        <span class="c1"># Fetch trial data for this session (convert decimal to float)</span>
         <span class="n">correct</span><span class="p">,</span> <span class="n">rt</span> <span class="o">=</span> <span class="p">(</span><span class="n">Session</span><span class="o">.</span><span class="n">Trial</span> <span class="o">&amp;</span> <span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">to_arrays</span><span class="p">(</span><span class="s1">'correct'</span><span class="p">,</span> <span class="s1">'reaction_time'</span><span class="p">)</span>
+        <span class="n">rt</span> <span class="o">=</span> <span class="n">rt</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
         
         <span class="n">n_trials</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">correct</span><span class="p">)</span>
         <span class="n">n_correct</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">correct</span><span class="p">)</span> <span class="k">if</span> <span class="n">n_trials</span> <span class="k">else</span> <span class="mi">0</span>
@@ -3363,8 +3474,9 @@ class SessionSummary(dj.Computed):
     """
 
     def make(self, key):
-        # Fetch trial data for this session
+        # Fetch trial data for this session (convert decimal to float)
         correct, rt = (Session.Trial &amp; key).to_arrays('correct', 'reaction_time')
+        rt = rt.astype(float)
         
         n_trials = len(correct)
         n_correct = sum(correct) if n_trials else 0
@@ -3453,7 +3565,7 @@ SessionSummary()</div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>SessionSummary: 100%|██████████| 3/3 [00:00&lt;00:00, 337.04it/s]</pre>
+<pre>SessionSummary: 100%|██████████| 3/3 [00:00&lt;00:00, 349.32it/s]</pre>
 </div>
 </div>
 <div class="jp-OutputArea-child">
@@ -3573,17 +3685,17 @@ SessionSummary()</div>
 <td>15</td>
 <td>12</td>
 <td>0.8</td>
-<td>0.48129687</td></tr><tr><td>M001</td>
+<td>0.482</td></tr><tr><td>M001</td>
 <td>2</td>
 <td>15</td>
 <td>12</td>
 <td>0.8</td>
-<td>0.46870047</td></tr><tr><td>M002</td>
+<td>0.46933332</td></tr><tr><td>M002</td>
 <td>1</td>
 <td>15</td>
 <td>9</td>
 <td>0.6</td>
-<td>0.49343443</td> </tr> </tbody>
+<td>0.49266666</td> </tr> </tbody>
 </table>
 <p>Total: 3</p></div>
 </div>
@@ -3796,8 +3908,9 @@ SessionSummary.key_source</div>
 <span class="s2">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">make</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
-        <span class="c1"># Fetch trial data</span>
+        <span class="c1"># Fetch trial data (convert decimal to float for computation)</span>
         <span class="n">correct</span><span class="p">,</span> <span class="n">rt</span> <span class="o">=</span> <span class="p">(</span><span class="n">Session</span><span class="o">.</span><span class="n">Trial</span> <span class="o">&amp;</span> <span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">to_arrays</span><span class="p">(</span><span class="s1">'correct'</span><span class="p">,</span> <span class="s1">'reaction_time'</span><span class="p">)</span>
+        <span class="n">rt</span> <span class="o">=</span> <span class="n">rt</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
         
         <span class="c1"># Apply method-specific analysis</span>
         <span class="k">if</span> <span class="n">key</span><span class="p">[</span><span class="s1">'method_name'</span><span class="p">]</span> <span class="o">==</span> <span class="s1">'basic'</span><span class="p">:</span>
@@ -3822,8 +3935,9 @@ class SessionAnalysis(dj.Computed):
     """
 
     def make(self, key):
-        # Fetch trial data
+        # Fetch trial data (convert decimal to float for computation)
         correct, rt = (Session.Trial &amp; key).to_arrays('correct', 'reaction_time')
+        rt = rt.astype(float)
         
         # Apply method-specific analysis
         if key['method_name'] == 'basic':
@@ -3898,7 +4012,7 @@ SessionAnalysis()</div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>SessionAnalysis: 100%|██████████| 6/6 [00:00&lt;00:00, 598.86it/s]</pre>
+<pre>SessionAnalysis: 100%|██████████| 6/6 [00:00&lt;00:00, 570.28it/s]</pre>
 </div>
 </div>
 <div class="jp-OutputArea-child">
@@ -4013,19 +4127,19 @@ SessionAnalysis()</div>
 <td>0.8</td></tr><tr><td>M001</td>
 <td>1</td>
 <td>weighted</td>
-<td>0.8050056</td></tr><tr><td>M001</td>
+<td>0.80586994</td></tr><tr><td>M001</td>
 <td>2</td>
 <td>basic</td>
 <td>0.8</td></tr><tr><td>M001</td>
 <td>2</td>
 <td>weighted</td>
-<td>0.76322025</td></tr><tr><td>M002</td>
+<td>0.7651669</td></tr><tr><td>M002</td>
 <td>1</td>
 <td>basic</td>
 <td>0.6</td></tr><tr><td>M002</td>
 <td>1</td>
 <td>weighted</td>
-<td>0.5132756</td> </tr> </tbody>
+<td>0.5117927</td> </tr> </tbody>
 </table>
 <p>Total: 6</p></div>
 </div>
@@ -4089,8 +4203,8 @@ SessionAnalysis()</div>
             <span class="bp">self</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="o">**</span><span class="n">key</span><span class="p">,</span> <span class="s1">'n_analyzed'</span><span class="p">:</span> <span class="mi">0</span><span class="p">})</span>
             <span class="k">return</span>
         
-        <span class="c1"># Calculate percentiles</span>
-        <span class="n">rts</span> <span class="o">=</span> <span class="p">[</span><span class="n">t</span><span class="p">[</span><span class="s1">'reaction_time'</span><span class="p">]</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">trial_data</span><span class="p">]</span>
+        <span class="c1"># Calculate percentiles (convert decimal to float)</span>
+        <span class="n">rts</span> <span class="o">=</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">t</span><span class="p">[</span><span class="s1">'reaction_time'</span><span class="p">])</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">trial_data</span><span class="p">]</span>
         <span class="n">median_rt</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">rts</span><span class="p">)</span>
         
         <span class="c1"># Insert master entry</span>
@@ -4099,12 +4213,13 @@ SessionAnalysis()</div>
         <span class="c1"># Insert part entries</span>
         <span class="n">parts</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">trial_data</span><span class="p">:</span>
-            <span class="n">percentile</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">rt</span> <span class="o">&lt;=</span> <span class="n">t</span><span class="p">[</span><span class="s1">'reaction_time'</span><span class="p">]</span> <span class="k">for</span> <span class="n">rt</span> <span class="ow">in</span> <span class="n">rts</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">rts</span><span class="p">)</span> <span class="o">*</span> <span class="mi">100</span>
+            <span class="n">rt</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">t</span><span class="p">[</span><span class="s1">'reaction_time'</span><span class="p">])</span>
+            <span class="n">percentile</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">r</span> <span class="o">&lt;=</span> <span class="n">rt</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">rts</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">rts</span><span class="p">)</span> <span class="o">*</span> <span class="mi">100</span>
             <span class="n">parts</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
                 <span class="o">**</span><span class="n">key</span><span class="p">,</span>
                 <span class="s1">'trial_idx'</span><span class="p">:</span> <span class="n">t</span><span class="p">[</span><span class="s1">'trial_idx'</span><span class="p">],</span>
                 <span class="s1">'rt_percentile'</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">percentile</span><span class="p">),</span>
-                <span class="s1">'is_fast'</span><span class="p">:</span> <span class="n">t</span><span class="p">[</span><span class="s1">'reaction_time'</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">median_rt</span>
+                <span class="s1">'is_fast'</span><span class="p">:</span> <span class="n">rt</span> <span class="o">&lt;</span> <span class="n">median_rt</span>
             <span class="p">})</span>
         
         <span class="bp">self</span><span class="o">.</span><span class="n">TrialResult</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">parts</span><span class="p">)</span>
@@ -4135,8 +4250,8 @@ class TrialAnalysis(dj.Computed):
             self.insert1({**key, 'n_analyzed': 0})
             return
         
-        # Calculate percentiles
-        rts = [t['reaction_time'] for t in trial_data]
+        # Calculate percentiles (convert decimal to float)
+        rts = [float(t['reaction_time']) for t in trial_data]
         median_rt = np.median(rts)
         
         # Insert master entry
@@ -4145,12 +4260,13 @@ class TrialAnalysis(dj.Computed):
         # Insert part entries
         parts = []
         for t in trial_data:
-            percentile = sum(rt &lt;= t['reaction_time'] for rt in rts) / len(rts) * 100
+            rt = float(t['reaction_time'])
+            percentile = sum(r &lt;= rt for r in rts) / len(rts) * 100
             parts.append({
                 **key,
                 'trial_idx': t['trial_idx'],
                 'rt_percentile': float(percentile),
-                'is_fast': t['reaction_time'] &lt; median_rt
+                'is_fast': rt &lt; median_rt
             })
         
         self.TrialResult.insert(parts)</div>
@@ -4210,7 +4326,7 @@ print((TrialAnalysis.TrialResult &amp; {'subject_id': 'M001', 'session_idx': 1})
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>TrialAnalysis: 100%|██████████| 3/3 [00:00&lt;00:00, 265.61it/s]</pre>
+<pre>TrialAnalysis: 100%|██████████| 3/3 [00:00&lt;00:00, 240.73it/s]</pre>
 </div>
 </div>
 <div class="jp-OutputArea-child">
@@ -4226,7 +4342,13 @@ M002           1              15
 
 
 Part table (first session):
-*subject_id    *session_idx   *trial_idx    rt_percentile  is_fast    
+</pre>
+</div>
+</div>
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
+<pre>*subject_id    *session_idx   *trial_idx    rt_percentile  is_fast    
 +------------+ +------------+ +-----------+ +------------+ +---------+
 M001           1              1             33.333332      True       
 M001           1              2             100.0          False      
@@ -4234,8 +4356,8 @@ M001           1              3             13.333333      True
 M001           1              4             73.333336      False      
 M001           1              5             40.0           True       
 M001           1              6             53.333332      False      
-M001           1              7             46.666668      True       
-M001           1              8             86.666664      False      
+M001           1              7             53.333332      False      
+M001           1              8             93.333336      False      
 M001           1              9             60.0           False      
 M001           1              10            80.0           False      
 M001           1              11            6.6666665      True       
@@ -4385,7 +4507,7 @@ SubjectSummary()</div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>SubjectSummary: 100%|██████████| 2/2 [00:00&lt;00:00, 579.40it/s]</pre>
+<pre>SubjectSummary: 100%|██████████| 2/2 [00:00&lt;00:00, 601.51it/s]</pre>
 </div>
 </div>
 <div class="jp-OutputArea-child">
@@ -4552,7 +4674,7 @@ SubjectSummary()</div>
 <div class="jp-OutputArea-child jp-OutputArea-executeResult">
 <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[13]:</div>
 <div class="jp-RenderedSVG jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="image/svg+xml" tabindex="0">
-<img alt="No description has been provided for this image" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB3aWR0aD0iNDM2cHQiIGhlaWdodD0iMjMxcHQiIHZpZXdCb3g9IjAuMDAgMC4wMCA0MzYuMTIgMjMxLjA0Ij4KPGcgaWQ9ImdyYXBoMCIgY2xhc3M9ImdyYXBoIiB0cmFuc2Zvcm09InNjYWxlKDEgMSkgcm90YXRlKDApIHRyYW5zbGF0ZSg0IDIyNy4wNCkiPgo8cG9seWdvbiBmaWxsPSJ3aGl0ZSIgc3Ryb2tlPSJub25lIiBwb2ludHM9Ii00LDQgLTQsLTIyNy4wNCA0MzIuMTIsLTIyNy4wNCA0MzIuMTIsNCAtNCw0Ii8+CjwhLS0gU3ViamVjdCAtLT4KPGcgaWQ9Im5vZGUxIiBjbGFzcz0ibm9kZSI+Cjx0aXRsZT5TdWJqZWN0PC90aXRsZT4KPGcgaWQ9ImFfbm9kZTEiPjxhIHhsaW5rOnRpdGxlPSJzdWJqZWN0X2lkIMKgwqDCoMKgwqDCoMKgwqDCoMKgDS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ1zcGVjaWVzIMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgDSI+Cjxwb2x5Z29uIGZpbGw9IiMwMGZmMDAiIGZpbGwtb3BhY2l0eT0iMC4xODgyMzUiIHN0cm9rZT0iIzAwZmYwMCIgc3Ryb2tlLW9wYWNpdHk9IjAuMTg4MjM1IiBwb2ludHM9IjIzMS43NSwtMjIzLjA0IDE3NS4yNSwtMjIzLjA0IDE3NS4yNSwtMTg4LjQ4IDIzMS43NSwtMTg4LjQ4IDIzMS43NSwtMjIzLjA0Ii8+Cjx0ZXh0IHRleHQtYW5jaG9yPSJzdGFydCIgeD0iMTgzLjI1IiB5PSItMjAyLjQ5IiBmb250LWZhbWlseT0iYXJpYWwiIHRleHQtZGVjb3JhdGlvbj0idW5kZXJsaW5lIiBmb250LXNpemU9IjEyLjAwIiBmaWxsPSJkYXJrZ3JlZW4iPlN1YmplY3Q8L3RleHQ+CjwvYT4KPC9nPgo8L2c+CjwhLS0gU2Vzc2lvbiAtLT4KPGcgaWQ9Im5vZGUyIiBjbGFzcz0ibm9kZSI+Cjx0aXRsZT5TZXNzaW9uPC90aXRsZT4KPGcgaWQ9ImFfbm9kZTIiPjxhIHhsaW5rOnRpdGxlPSLihpIgU3ViamVjdA1zZXNzaW9uX2lkeCDCoMKgwqDCoMKgwqDCoMKgwqANLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tDXNlc3Npb25fZGF0ZSDCoMKgwqDCoMKgwqDCoMKgDSI+Cjxwb2x5Z29uIGZpbGw9IiMwMGZmMDAiIGZpbGwtb3BhY2l0eT0iMC4xODgyMzUiIHN0cm9rZT0iIzAwZmYwMCIgc3Ryb2tlLW9wYWNpdHk9IjAuMTg4MjM1IiBwb2ludHM9IjE4Mi4yNSwtMTUyLjQ4IDEyMi43NSwtMTUyLjQ4IDEyMi43NSwtMTE3LjkyIDE4Mi4yNSwtMTE3LjkyIDE4Mi4yNSwtMTUyLjQ4Ii8+Cjx0ZXh0IHRleHQtYW5jaG9yPSJzdGFydCIgeD0iMTMwLjc1IiB5PSItMTMxLjkzIiBmb250LWZhbWlseT0iYXJpYWwiIHRleHQtZGVjb3JhdGlvbj0idW5kZXJsaW5lIiBmb250LXNpemU9IjEyLjAwIiBmaWxsPSJkYXJrZ3JlZW4iPlNlc3Npb248L3RleHQ+CjwvYT4KPC9nPgo8L2c+CjwhLS0gU3ViamVjdCYjNDU7Jmd0O1Nlc3Npb24gLS0+CjxnIGlkPSJlZGdlMSIgY2xhc3M9ImVkZ2UiPgo8dGl0bGU+U3ViamVjdC0mZ3Q7U2Vzc2lvbjwvdGl0bGU+CjxwYXRoIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzAwMDAwMCIgc3Ryb2tlLXdpZHRoPSIwLjc1IiBzdHJva2Utb3BhY2l0eT0iMC4yNTA5ODAiIGQ9Ik0xOTEuMTUsLTE4OC4xNkMxODMuMTQsLTE3Ny4zOCAxNzIuNzMsLTE2My4zOSAxNjQuNzMsLTE1Mi42NCIvPgo8L2c+CjwhLS0gU3ViamVjdFN1bW1hcnkgLS0+CjxnIGlkPSJub2RlOSIgY2xhc3M9Im5vZGUiPgo8dGl0bGU+U3ViamVjdFN1bW1hcnk8L3RpdGxlPgo8ZyBpZD0iYV9ub2RlOSI+PGEgeGxpbms6dGl0bGU9IuKGkiBTdWJqZWN0DS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ1uX3Nlc3Npb25zIMKgwqDCoMKgwqDCoMKgwqDCoMKgDXRvdGFsX3RyaWFscyDCoMKgwqDCoMKgwqDCoMKgDW92ZXJhbGxfYWNjdXJhY3kgwqDCoMKgwqANIj4KPGVsbGlwc2UgZmlsbD0iI2ZmMDAwMCIgZmlsbC1vcGFjaXR5PSIwLjEyNTQ5MCIgc3Ryb2tlPSIjZmYwMDAwIiBzdHJva2Utb3BhY2l0eT0iMC4xMjU0OTAiIGN4PSIyNTQuNSIgY3k9Ii0xMzUuMiIgcng9IjEyLjk2IiByeT0iMTIuOTYiLz4KPHRleHQgdGV4dC1hbmNob3I9Im1pZGRsZSIgeD0iMjU0LjUiIHk9Ii0xMzAuOTMiIGZvbnQtZmFtaWx5PSJhcmlhbCIgZm9udC1zaXplPSIxMi4wMCIgZmlsbD0iIzdmMDAwMCIgZmlsbC1vcGFjaXR5PSIwLjYyNzQ1MSI+U3ViamVjdFN1bW1hcnk8L3RleHQ+CjwvYT4KPC9nPgo8L2c+CjwhLS0gU3ViamVjdCYjNDU7Jmd0O1N1YmplY3RTdW1tYXJ5IC0tPgo8ZyBpZD0iZWRnZTIiIGNsYXNzPSJlZGdlIj4KPHRpdGxlPlN1YmplY3QtJmd0O1N1YmplY3RTdW1tYXJ5PC90aXRsZT4KPHBhdGggZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1vcGFjaXR5PSIwLjI1MDk4MCIgZD0iTTIxNS44NSwtMTg4LjE2QzIyNS43NSwtMTc0Ljg1IDIzOS4zLC0xNTYuNjMgMjQ3LjQ1LC0xNDUuNjgiLz4KPC9nPgo8IS0tIFNlc3Npb24uVHJpYWwgLS0+CjxnIGlkPSJub2RlMyIgY2xhc3M9Im5vZGUiPgo8dGl0bGU+U2Vzc2lvbi5UcmlhbDwvdGl0bGU+CjxnIGlkPSJhX25vZGUzIj48YSB4bGluazp0aXRsZT0i4oaSIFNlc3Npb24NdHJpYWxfaWR4IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqANLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tDXN0aW11bHVzIMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoA1yZXNwb25zZSDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqANY29ycmVjdCDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoA1yZWFjdGlvbl90aW1lIMKgwqDCoMKgwqDCoMKgDSI+Cjxwb2x5Z29uIGZpbGw9Im5vbmUiIHN0cm9rZT0ibm9uZSIgcG9pbnRzPSI3MywtNzguOTYgMCwtNzguOTYgMCwtNTguOTYgNzMsLTU4Ljk2IDczLC03OC45NiIvPgo8dGV4dCB0ZXh0LWFuY2hvcj0ic3RhcnQiIHg9IjgiIHk9Ii02Ni40NiIgZm9udC1mYW1pbHk9ImFyaWFsIiB0ZXh0LWRlY29yYXRpb249InVuZGVybGluZSIgZm9udC1zaXplPSIxMC4wMCI+U2Vzc2lvbi5UcmlhbDwvdGV4dD4KPC9hPgo8L2c+CjwvZz4KPCEtLSBTZXNzaW9uJiM0NTsmZ3Q7U2Vzc2lvbi5UcmlhbCAtLT4KPGcgaWQ9ImVkZ2UzIiBjbGFzcz0iZWRnZSI+Cjx0aXRsZT5TZXNzaW9uLSZndDtTZXNzaW9uLlRyaWFsPC90aXRsZT4KPHBhdGggZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjAuNzUiIHN0cm9rZS1vcGFjaXR5PSIwLjI1MDk4MCIgZD0iTTEyMi4zMywtMTE3LjQ5QzEwMC4wNCwtMTA1LjE1IDcwLjU3LC04OC44MyA1Mi42LC03OC44OCIvPgo8L2c+CjwhLS0gU2Vzc2lvblN1bW1hcnkgLS0+CjxnIGlkPSJub2RlNSIgY2xhc3M9Im5vZGUiPgo8dGl0bGU+U2Vzc2lvblN1bW1hcnk8L3RpdGxlPgo8ZyBpZD0iYV9ub2RlNSI+PGEgeGxpbms6dGl0bGU9IuKGkiBTZXNzaW9uDS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ1uX3RyaWFscyDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqANbl9jb3JyZWN0IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqANYWNjdXJhY3kgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgDW1lYW5fcnQgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqANIj4KPGVsbGlwc2UgZmlsbD0iI2ZmMDAwMCIgZmlsbC1vcGFjaXR5PSIwLjEyNTQ5MCIgc3Ryb2tlPSIjZmYwMDAwIiBzdHJva2Utb3BhY2l0eT0iMC4xMjU0OTAiIGN4PSIxNDYuNSIgY3k9Ii02OC45NiIgcng9IjEyLjk2IiByeT0iMTIuOTYiLz4KPHRleHQgdGV4dC1hbmNob3I9Im1pZGRsZSIgeD0iMTQ2LjUiIHk9Ii02NC42OSIgZm9udC1mYW1pbHk9ImFyaWFsIiBmb250LXNpemU9IjEyLjAwIiBmaWxsPSIjN2YwMDAwIiBmaWxsLW9wYWNpdHk9IjAuNjI3NDUxIj5TZXNzaW9uU3VtbWFyeTwvdGV4dD4KPC9hPgo8L2c+CjwvZz4KPCEtLSBTZXNzaW9uJiM0NTsmZ3Q7U2Vzc2lvblN1bW1hcnkgLS0+CjxnIGlkPSJlZGdlNCIgY2xhc3M9ImVkZ2UiPgo8dGl0bGU+U2Vzc2lvbi0mZ3Q7U2Vzc2lvblN1bW1hcnk8L3RpdGxlPgo8cGF0aCBmaWxsPSJub25lIiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLW9wYWNpdHk9IjAuMjUwOTgwIiBkPSJNMTUwLjk1LC0xMTcuNjZDMTQ5LjksLTEwNi4zNiAxNDguNTMsLTkxLjY2IDE0Ny41OSwtODEuNTgiLz4KPC9nPgo8IS0tIFNlc3Npb25BbmFseXNpcyAtLT4KPGcgaWQ9Im5vZGU2IiBjbGFzcz0ibm9kZSI+Cjx0aXRsZT5TZXNzaW9uQW5hbHlzaXM8L3RpdGxlPgo8ZyBpZD0iYV9ub2RlNiI+PGEgeGxpbms6dGl0bGU9IuKGkiBTZXNzaW9uDeKGkiBBbmFseXNpc01ldGhvZA0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0Nc2NvcmUgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgDSI+CjxlbGxpcHNlIGZpbGw9IiNmZjAwMDAiIGZpbGwtb3BhY2l0eT0iMC4xMjU0OTAiIHN0cm9rZT0iI2ZmMDAwMCIgc3Ryb2tlLW9wYWNpdHk9IjAuMTI1NDkwIiBjeD0iMzc1LjUiIGN5PSItNjguOTYiIHJ4PSIxMi45NiIgcnk9IjEyLjk2Ii8+Cjx0ZXh0IHRleHQtYW5jaG9yPSJtaWRkbGUiIHg9IjM3NS41IiB5PSItNjQuNjkiIGZvbnQtZmFtaWx5PSJhcmlhbCIgZm9udC1zaXplPSIxMi4wMCIgZmlsbD0iIzdmMDAwMCIgZmlsbC1vcGFjaXR5PSIwLjYyNzQ1MSI+U2Vzc2lvbkFuYWx5c2lzPC90ZXh0Pgo8L2E+CjwvZz4KPC9nPgo8IS0tIFNlc3Npb24mIzQ1OyZndDtTZXNzaW9uQW5hbHlzaXMgLS0+CjxnIGlkPSJlZGdlNSIgY2xhc3M9ImVkZ2UiPgo8dGl0bGU+U2Vzc2lvbi0mZ3Q7U2Vzc2lvbkFuYWx5c2lzPC90aXRsZT4KPHBhdGggZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjAuNzUiIHN0cm9rZS1vcGFjaXR5PSIwLjI1MDk4MCIgZD0iTTE4Mi41NywtMTIxLjE1QzE4NS41NywtMTIwIDE4OC41OCwtMTE4LjkgMTkxLjUsLTExNy45MiAyNTUsLTk2LjUxIDMzMy40OSwtNzguOSAzNjMuMjcsLTcyLjUyIi8+CjwvZz4KPCEtLSBUcmlhbEFuYWx5c2lzIC0tPgo8ZyBpZD0ibm9kZTciIGNsYXNzPSJub2RlIj4KPHRpdGxlPlRyaWFsQW5hbHlzaXM8L3RpdGxlPgo8ZyBpZD0iYV9ub2RlNyI+PGEgeGxpbms6dGl0bGU9IuKGkiBTZXNzaW9uDS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ1uX2FuYWx5emVkIMKgwqDCoMKgwqDCoMKgwqDCoMKgDSI+CjxlbGxpcHNlIGZpbGw9IiNmZjAwMDAiIGZpbGwtb3BhY2l0eT0iMC4xMjU0OTAiIHN0cm9rZT0iI2ZmMDAwMCIgc3Ryb2tlLW9wYWNpdHk9IjAuMTI1NDkwIiBjeD0iMjYyLjUiIGN5PSItNjguOTYiIHJ4PSIxMi45NiIgcnk9IjEyLjk2Ii8+Cjx0ZXh0IHRleHQtYW5jaG9yPSJtaWRkbGUiIHg9IjI2Mi41IiB5PSItNjQuNjkiIGZvbnQtZmFtaWx5PSJhcmlhbCIgZm9udC1zaXplPSIxMi4wMCIgZmlsbD0iIzdmMDAwMCIgZmlsbC1vcGFjaXR5PSIwLjYyNzQ1MSI+VHJpYWxBbmFseXNpczwvdGV4dD4KPC9hPgo8L2c+CjwvZz4KPCEtLSBTZXNzaW9uJiM0NTsmZ3Q7VHJpYWxBbmFseXNpcyAtLT4KPGcgaWQ9ImVkZ2U2IiBjbGFzcz0iZWRnZSI+Cjx0aXRsZT5TZXNzaW9uLSZndDtUcmlhbEFuYWx5c2lzPC90aXRsZT4KPHBhdGggZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1vcGFjaXR5PSIwLjI1MDk4MCIgZD0iTTE4MS4xMSwtMTE3LjQ5QzIwNC4yOSwtMTAzLjk2IDIzNS42NCwtODUuNjQgMjUxLjg0LC03Ni4xOSIvPgo8L2c+CjwhLS0gQW5hbHlzaXNNZXRob2QgLS0+CjxnIGlkPSJub2RlNCIgY2xhc3M9Im5vZGUiPgo8dGl0bGU+QW5hbHlzaXNNZXRob2Q8L3RpdGxlPgo8ZyBpZD0iYV9ub2RlNCI+PGEgeGxpbms6dGl0bGU9Im1ldGhvZF9uYW1lIMKgwqDCoMKgwqDCoMKgwqDCoA0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0NZGVzY3JpcHRpb24gwqDCoMKgwqDCoMKgwqDCoMKgDSI+Cjxwb2x5Z29uIGZpbGw9IiMwMDAwMDAiIGZpbGwtb3BhY2l0eT0iMC4xMjU0OTAiIHN0cm9rZT0ibm9uZSIgcG9pbnRzPSI0MTguMzgsLTE1Mi40OCAzMzIuNjIsLTE1Mi40OCAzMzIuNjIsLTExNy45MiA0MTguMzgsLTExNy45MiA0MTguMzgsLTE1Mi40OCIvPgo8dGV4dCB0ZXh0LWFuY2hvcj0ic3RhcnQiIHg9IjM0MC42MiIgeT0iLTEzMi43IiBmb250LWZhbWlseT0iYXJpYWwiIHRleHQtZGVjb3JhdGlvbj0idW5kZXJsaW5lIiBmb250LXNpemU9IjEwLjAwIj5BbmFseXNpc01ldGhvZDwvdGV4dD4KPC9hPgo8L2c+CjwvZz4KPCEtLSBBbmFseXNpc01ldGhvZCYjNDU7Jmd0O1Nlc3Npb25BbmFseXNpcyAtLT4KPGcgaWQ9ImVkZ2U3IiBjbGFzcz0iZWRnZSI+Cjx0aXRsZT5BbmFseXNpc01ldGhvZC0mZ3Q7U2Vzc2lvbkFuYWx5c2lzPC90aXRsZT4KPHBhdGggZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjAuNzUiIHN0cm9rZS1vcGFjaXR5PSIwLjI1MDk4MCIgZD0iTTM3NS41LC0xMTcuOTlDMzc1LjUsLTEwNi42OSAzNzUuNSwtOTEuODggMzc1LjUsLTgxLjcxIi8+CjwvZz4KPCEtLSBUcmlhbEFuYWx5c2lzLlRyaWFsUmVzdWx0IC0tPgo8ZyBpZD0ibm9kZTgiIGNsYXNzPSJub2RlIj4KPHRpdGxlPlRyaWFsQW5hbHlzaXMuVHJpYWxSZXN1bHQ8L3RpdGxlPgo8ZyBpZD0iYV9ub2RlOCI+PGEgeGxpbms6dGl0bGU9IuKGkiBUcmlhbEFuYWx5c2lzDXRyaWFsX2lkeCDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgDS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ1ydF9wZXJjZW50aWxlIMKgwqDCoMKgwqDCoMKgDWlzX2Zhc3QgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqANIj4KPHBvbHlnb24gZmlsbD0ibm9uZSIgc3Ryb2tlPSJub25lIiBwb2ludHM9IjMyMy43NSwtMjAgMjAxLjI1LC0yMCAyMDEuMjUsMCAzMjMuNzUsMCAzMjMuNzUsLTIwIi8+Cjx0ZXh0IHRleHQtYW5jaG9yPSJzdGFydCIgeD0iMjA5LjI1IiB5PSItNy41IiBmb250LWZhbWlseT0iYXJpYWwiIHRleHQtZGVjb3JhdGlvbj0idW5kZXJsaW5lIiBmb250LXNpemU9IjEwLjAwIj5UcmlhbEFuYWx5c2lzLlRyaWFsUmVzdWx0PC90ZXh0Pgo8L2E+CjwvZz4KPC9nPgo8IS0tIFRyaWFsQW5hbHlzaXMmIzQ1OyZndDtUcmlhbEFuYWx5c2lzLlRyaWFsUmVzdWx0IC0tPgo8ZyBpZD0iZWRnZTgiIGNsYXNzPSJlZGdlIj4KPHRpdGxlPlRyaWFsQW5hbHlzaXMtJmd0O1RyaWFsQW5hbHlzaXMuVHJpYWxSZXN1bHQ8L3RpdGxlPgo8cGF0aCBmaWxsPSJub25lIiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iMC43NSIgc3Ryb2tlLW9wYWNpdHk9IjAuMjUwOTgwIiBkPSJNMjYyLjUsLTU2LjE2QzI2Mi41LC00NS4zNCAyNjIuNSwtMjkuNTYgMjYyLjUsLTE5LjgxIi8+CjwvZz4KPC9nPgo8L3N2Zz4="/>
+<img alt="No description has been provided for this image" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB3aWR0aD0iNjEycHQiIGhlaWdodD0iMjQycHQiIHZpZXdCb3g9IjAuMDAgMC4wMCA2MTEuOTAgMjQyLjAwIj4KPGcgaWQ9ImdyYXBoMCIgY2xhc3M9ImdyYXBoIiB0cmFuc2Zvcm09InNjYWxlKDEgMSkgcm90YXRlKDApIHRyYW5zbGF0ZSg0IDIzOCkiPgo8cG9seWdvbiBmaWxsPSJ3aGl0ZSIgc3Ryb2tlPSJub25lIiBwb2ludHM9Ii00LDQgLTQsLTIzOCA2MDcuOSwtMjM4IDYwNy45LDQgLTQsNCIvPgo8ZyBpZD0iY2x1c3QxIiBjbGFzcz0iY2x1c3RlciI+Cjx0aXRsZT5jbHVzdGVyX2NsdXN0ZXJfdHV0b3JpYWxfY29tcHV0YXRpb248L3RpdGxlPgo8cG9seWdvbiBmaWxsPSJub25lIiBzdHJva2U9ImdyYXkiIHN0cm9rZS1kYXNoYXJyYXk9IjUsMiIgcG9pbnRzPSI4LC04IDgsLTIyNiA1OTUuOSwtMjI2IDU5NS45LC04IDgsLTgiLz4KPHRleHQgdGV4dC1hbmNob3I9Im1pZGRsZSIgeD0iMzAxLjk1IiB5PSItMjA4LjciIGZvbnQtZmFtaWx5PSJUaW1lcyxzZXJpZiIgZm9udC1zaXplPSIxNC4wMCIgZmlsbD0iZ3JheSI+X19tYWluX188L3RleHQ+CjwvZz4KPCEtLSBTdWJqZWN0IC0tPgo8ZyBpZD0ibm9kZTEiIGNsYXNzPSJub2RlIj4KPHRpdGxlPlN1YmplY3Q8L3RpdGxlPgo8ZyBpZD0iYV9ub2RlMSI+PGEgeGxpbms6dGl0bGU9InN1YmplY3RfaWQgwqDCoMKgwqDCoMKgwqDCoMKgwqANLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tDXNwZWNpZXMgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqANIj4KPHBvbHlnb24gZmlsbD0iIzAwZmYwMCIgZmlsbC1vcGFjaXR5PSIwLjE4ODIzNSIgc3Ryb2tlPSIjMDBmZjAwIiBzdHJva2Utb3BhY2l0eT0iMC4xODgyMzUiIHBvaW50cz0iNzIuNSwtOTUuMjggMTYsLTk1LjI4IDE2LC02MC43MiA3Mi41LC02MC43MiA3Mi41LC05NS4yOCIvPgo8dGV4dCB0ZXh0LWFuY2hvcj0ic3RhcnQiIHg9IjI0IiB5PSItNzQuNzIiIGZvbnQtZmFtaWx5PSJhcmlhbCIgdGV4dC1kZWNvcmF0aW9uPSJ1bmRlcmxpbmUiIGZvbnQtc2l6ZT0iMTIuMDAiIGZpbGw9ImRhcmtncmVlbiI+U3ViamVjdDwvdGV4dD4KPC9hPgo8L2c+CjwvZz4KPCEtLSBTZXNzaW9uIC0tPgo8ZyBpZD0ibm9kZTIiIGNsYXNzPSJub2RlIj4KPHRpdGxlPlNlc3Npb248L3RpdGxlPgo8ZyBpZD0iYV9ub2RlMiI+PGEgeGxpbms6dGl0bGU9IuKGkiBTdWJqZWN0DXNlc3Npb25faWR4IMKgwqDCoMKgwqDCoMKgwqDCoA0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0Nc2Vzc2lvbl9kYXRlIMKgwqDCoMKgwqDCoMKgwqANIj4KPHBvbHlnb24gZmlsbD0iIzAwZmYwMCIgZmlsbC1vcGFjaXR5PSIwLjE4ODIzNSIgc3Ryb2tlPSIjMDBmZjAwIiBzdHJva2Utb3BhY2l0eT0iMC4xODgyMzUiIHBvaW50cz0iMjA4LjQ5LC0xMjIuMjggMTQ4Ljk5LC0xMjIuMjggMTQ4Ljk5LC04Ny43MiAyMDguNDksLTg3LjcyIDIwOC40OSwtMTIyLjI4Ii8+Cjx0ZXh0IHRleHQtYW5jaG9yPSJzdGFydCIgeD0iMTU2Ljk5IiB5PSItMTAxLjcyIiBmb250LWZhbWlseT0iYXJpYWwiIHRleHQtZGVjb3JhdGlvbj0idW5kZXJsaW5lIiBmb250LXNpemU9IjEyLjAwIiBmaWxsPSJkYXJrZ3JlZW4iPlNlc3Npb248L3RleHQ+CjwvYT4KPC9nPgo8L2c+CjwhLS0gU3ViamVjdCYjNDU7Jmd0O1Nlc3Npb24gLS0+CjxnIGlkPSJlZGdlMSIgY2xhc3M9ImVkZ2UiPgo8dGl0bGU+U3ViamVjdC0mZ3Q7U2Vzc2lvbjwvdGl0bGU+CjxwYXRoIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzAwMDAwMCIgc3Ryb2tlLXdpZHRoPSIwLjc1IiBzdHJva2Utb3BhY2l0eT0iMC4yNTA5ODAiIGQ9Ik03Mi43LC04My41OUM5NC45OSwtODguMTQgMTI2LjMxLC05NC41MiAxNDguOTUsLTk5LjEzIi8+CjwvZz4KPCEtLSBTdWJqZWN0U3VtbWFyeSAtLT4KPGcgaWQ9Im5vZGU5IiBjbGFzcz0ibm9kZSI+Cjx0aXRsZT5TdWJqZWN0U3VtbWFyeTwvdGl0bGU+CjxnIGlkPSJhX25vZGU5Ij48YSB4bGluazp0aXRsZT0i4oaSIFN1YmplY3QNLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tDW5fc2Vzc2lvbnMgwqDCoMKgwqDCoMKgwqDCoMKgwqANdG90YWxfdHJpYWxzIMKgwqDCoMKgwqDCoMKgwqANb3ZlcmFsbF9hY2N1cmFjeSDCoMKgwqDCoA0iPgo8ZWxsaXBzZSBmaWxsPSIjZmYwMDAwIiBmaWxsLW9wYWNpdHk9IjAuMTI1NDkwIiBzdHJva2U9IiNmZjAwMDAiIHN0cm9rZS1vcGFjaXR5PSIwLjEyNTQ5MCIgY3g9IjE3OC43NCIgY3k9Ii01MiIgcng9IjcwLjI0IiByeT0iMTcuMjgiLz4KPHRleHQgdGV4dC1hbmNob3I9Im1pZGRsZSIgeD0iMTc4Ljc0IiB5PSItNDcuNzMiIGZvbnQtZmFtaWx5PSJhcmlhbCIgZm9udC1zaXplPSIxMi4wMCIgZmlsbD0iIzdmMDAwMCIgZmlsbC1vcGFjaXR5PSIwLjYyNzQ1MSI+U3ViamVjdFN1bW1hcnk8L3RleHQ+CjwvYT4KPC9nPgo8L2c+CjwhLS0gU3ViamVjdCYjNDU7Jmd0O1N1YmplY3RTdW1tYXJ5IC0tPgo8ZyBpZD0iZWRnZTIiIGNsYXNzPSJlZGdlIj4KPHRpdGxlPlN1YmplY3QtJmd0O1N1YmplY3RTdW1tYXJ5PC90aXRsZT4KPHBhdGggZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1vcGFjaXR5PSIwLjI1MDk4MCIgZD0iTTcyLjcsLTcyLjYxQzg3LjE4LC02OS43NyAxMDUuNDcsLTY2LjE4IDEyMi43MiwtNjIuOCIvPgo8L2c+CjwhLS0gU2Vzc2lvbi5UcmlhbCAtLT4KPGcgaWQ9Im5vZGUzIiBjbGFzcz0ibm9kZSI+Cjx0aXRsZT5TZXNzaW9uLlRyaWFsPC90aXRsZT4KPGcgaWQ9ImFfbm9kZTMiPjxhIHhsaW5rOnRpdGxlPSLihpIgU2Vzc2lvbg10cmlhbF9pZHggwqDCoMKgwqDCoMKgwqDCoMKgwqDCoA0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0Nc3RpbXVsdXMgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgDXJlc3BvbnNlIMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoA1jb3JyZWN0IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgDXJlYWN0aW9uX3RpbWUgwqDCoMKgwqDCoMKgwqANIj4KPHBvbHlnb24gZmlsbD0ibm9uZSIgc3Ryb2tlPSJub25lIiBwb2ludHM9IjM5My42OSwtODggMzIwLjY5LC04OCAzMjAuNjksLTY4IDM5My42OSwtNjggMzkzLjY5LC04OCIvPgo8dGV4dCB0ZXh0LWFuY2hvcj0ic3RhcnQiIHg9IjMyOC42OSIgeT0iLTc1LjUiIGZvbnQtZmFtaWx5PSJhcmlhbCIgdGV4dC1kZWNvcmF0aW9uPSJ1bmRlcmxpbmUiIGZvbnQtc2l6ZT0iMTAuMDAiPlNlc3Npb24uVHJpYWw8L3RleHQ+CjwvYT4KPC9nPgo8L2c+CjwhLS0gU2Vzc2lvbiYjNDU7Jmd0O1Nlc3Npb24uVHJpYWwgLS0+CjxnIGlkPSJlZGdlMyIgY2xhc3M9ImVkZ2UiPgo8dGl0bGU+U2Vzc2lvbi0mZ3Q7U2Vzc2lvbi5UcmlhbDwvdGl0bGU+CjxwYXRoIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzAwMDAwMCIgc3Ryb2tlLXdpZHRoPSIwLjc1IiBzdHJva2Utb3BhY2l0eT0iMC4yNTA5ODAiIGQ9Ik0yMDguODgsLTEwMC41NEMyMzkuNjIsLTk1Ljg0IDI4OC4wNiwtODguNDMgMzIwLjkzLC04My40Ii8+CjwvZz4KPCEtLSBTZXNzaW9uU3VtbWFyeSAtLT4KPGcgaWQ9Im5vZGU1IiBjbGFzcz0ibm9kZSI+Cjx0aXRsZT5TZXNzaW9uU3VtbWFyeTwvdGl0bGU+CjxnIGlkPSJhX25vZGU1Ij48YSB4bGluazp0aXRsZT0i4oaSIFNlc3Npb24NLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tDW5fdHJpYWxzIMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoA1uX2NvcnJlY3QgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoA1hY2N1cmFjeSDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqANbWVhbl9ydCDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoA0iPgo8ZWxsaXBzZSBmaWxsPSIjZmYwMDAwIiBmaWxsLW9wYWNpdHk9IjAuMTI1NDkwIiBzdHJva2U9IiNmZjAwMDAiIHN0cm9rZS1vcGFjaXR5PSIwLjEyNTQ5MCIgY3g9IjM1Ny4xOSIgY3k9Ii0zMyIgcng9IjcyLjIiIHJ5PSIxNy4yOCIvPgo8dGV4dCB0ZXh0LWFuY2hvcj0ibWlkZGxlIiB4PSIzNTcuMTkiIHk9Ii0yOC43MyIgZm9udC1mYW1pbHk9ImFyaWFsIiBmb250LXNpemU9IjEyLjAwIiBmaWxsPSIjN2YwMDAwIiBmaWxsLW9wYWNpdHk9IjAuNjI3NDUxIj5TZXNzaW9uU3VtbWFyeTwvdGV4dD4KPC9hPgo8L2c+CjwvZz4KPCEtLSBTZXNzaW9uJiM0NTsmZ3Q7U2Vzc2lvblN1bW1hcnkgLS0+CjxnIGlkPSJlZGdlNCIgY2xhc3M9ImVkZ2UiPgo8dGl0bGU+U2Vzc2lvbi0mZ3Q7U2Vzc2lvblN1bW1hcnk8L3RpdGxlPgo8cGF0aCBmaWxsPSJub25lIiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLW9wYWNpdHk9IjAuMjUwOTgwIiBkPSJNMjA4LjY5LC05NC41NkMyMjEuMjEsLTg5LjgyIDIzNS45NiwtODMuOTUgMjQ4Ljk5LC03OCAyNjUuNDQsLTcwLjQ4IDI2OC40NSwtNjYuMzQgMjg0Ljk5LC01OSAyOTQuMzcsLTU0LjgzIDMwNC42NSwtNTAuNzkgMzE0LjQsLTQ3LjE5Ii8+CjwvZz4KPCEtLSBTZXNzaW9uQW5hbHlzaXMgLS0+CjxnIGlkPSJub2RlNiIgY2xhc3M9Im5vZGUiPgo8dGl0bGU+U2Vzc2lvbkFuYWx5c2lzPC90aXRsZT4KPGcgaWQ9ImFfbm9kZTYiPjxhIHhsaW5rOnRpdGxlPSLihpIgU2Vzc2lvbg3ihpIgQW5hbHlzaXNNZXRob2QNLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tDXNjb3JlIMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoA0iPgo8ZWxsaXBzZSBmaWxsPSIjZmYwMDAwIiBmaWxsLW9wYWNpdHk9IjAuMTI1NDkwIiBzdHJva2U9IiNmZjAwMDAiIHN0cm9rZS1vcGFjaXR5PSIwLjEyNTQ5MCIgY3g9IjM1Ny4xOSIgY3k9Ii0xNzYiIHJ4PSI2OC43NyIgcnk9IjE3LjI4Ii8+Cjx0ZXh0IHRleHQtYW5jaG9yPSJtaWRkbGUiIHg9IjM1Ny4xOSIgeT0iLTE3MS43MiIgZm9udC1mYW1pbHk9ImFyaWFsIiBmb250LXNpemU9IjEyLjAwIiBmaWxsPSIjN2YwMDAwIiBmaWxsLW9wYWNpdHk9IjAuNjI3NDUxIj5TZXNzaW9uQW5hbHlzaXM8L3RleHQ+CjwvYT4KPC9nPgo8L2c+CjwhLS0gU2Vzc2lvbiYjNDU7Jmd0O1Nlc3Npb25BbmFseXNpcyAtLT4KPGcgaWQ9ImVkZ2U1IiBjbGFzcz0iZWRnZSI+Cjx0aXRsZT5TZXNzaW9uLSZndDtTZXNzaW9uQW5hbHlzaXM8L3RpdGxlPgo8cGF0aCBmaWxsPSJub25lIiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iMC43NSIgc3Ryb2tlLW9wYWNpdHk9IjAuMjUwOTgwIiBkPSJNMjA4LjY3LC0xMTcuNEMyMjkuNzYsLTEyNi4zNiAyNTkuMDUsLTEzOC42NiAyODQuOTksLTE0OSAyOTUuNDMsLTE1My4xNiAzMDYuNzgsLTE1Ny41MyAzMTcuMywtMTYxLjUyIi8+CjwvZz4KPCEtLSBUcmlhbEFuYWx5c2lzIC0tPgo8ZyBpZD0ibm9kZTciIGNsYXNzPSJub2RlIj4KPHRpdGxlPlRyaWFsQW5hbHlzaXM8L3RpdGxlPgo8ZyBpZD0iYV9ub2RlNyI+PGEgeGxpbms6dGl0bGU9IuKGkiBTZXNzaW9uDS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ1uX2FuYWx5emVkIMKgwqDCoMKgwqDCoMKgwqDCoMKgDSI+CjxlbGxpcHNlIGZpbGw9IiNmZjAwMDAiIGZpbGwtb3BhY2l0eT0iMC4xMjU0OTAiIHN0cm9rZT0iI2ZmMDAwMCIgc3Ryb2tlLW9wYWNpdHk9IjAuMTI1NDkwIiBjeD0iMzU3LjE5IiBjeT0iLTEyMyIgcng9IjU1LjU0IiByeT0iMTcuMjgiLz4KPHRleHQgdGV4dC1hbmNob3I9Im1pZGRsZSIgeD0iMzU3LjE5IiB5PSItMTE4LjcyIiBmb250LWZhbWlseT0iYXJpYWwiIGZvbnQtc2l6ZT0iMTIuMDAiIGZpbGw9IiM3ZjAwMDAiIGZpbGwtb3BhY2l0eT0iMC42Mjc0NTEiPlRyaWFsQW5hbHlzaXM8L3RleHQ+CjwvYT4KPC9nPgo8L2c+CjwhLS0gU2Vzc2lvbiYjNDU7Jmd0O1RyaWFsQW5hbHlzaXMgLS0+CjxnIGlkPSJlZGdlNiIgY2xhc3M9ImVkZ2UiPgo8dGl0bGU+U2Vzc2lvbi0mZ3Q7VHJpYWxBbmFseXNpczwvdGl0bGU+CjxwYXRoIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzAwMDAwMCIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2Utb3BhY2l0eT0iMC4yNTA5ODAiIGQ9Ik0yMDguODgsLTEwNy45N0MyMzQuNjIsLTExMC42IDI3Mi43OSwtMTE0LjQ5IDMwMy44MiwtMTE3LjY2Ii8+CjwvZz4KPCEtLSBBbmFseXNpc01ldGhvZCAtLT4KPGcgaWQ9Im5vZGU0IiBjbGFzcz0ibm9kZSI+Cjx0aXRsZT5BbmFseXNpc01ldGhvZDwvdGl0bGU+CjxnIGlkPSJhX25vZGU0Ij48YSB4bGluazp0aXRsZT0ibWV0aG9kX25hbWUgwqDCoMKgwqDCoMKgwqDCoMKgDS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ1kZXNjcmlwdGlvbiDCoMKgwqDCoMKgwqDCoMKgwqANIj4KPHBvbHlnb24gZmlsbD0iIzAwMDAwMCIgZmlsbC1vcGFjaXR5PSIwLjEyNTQ5MCIgc3Ryb2tlPSJub25lIiBwb2ludHM9IjIyMS42MiwtMTkzLjI4IDEzNS44NywtMTkzLjI4IDEzNS44NywtMTU4LjcyIDIyMS42MiwtMTU4LjcyIDIyMS42MiwtMTkzLjI4Ii8+Cjx0ZXh0IHRleHQtYW5jaG9yPSJzdGFydCIgeD0iMTQzLjg3IiB5PSItMTczLjUiIGZvbnQtZmFtaWx5PSJhcmlhbCIgdGV4dC1kZWNvcmF0aW9uPSJ1bmRlcmxpbmUiIGZvbnQtc2l6ZT0iMTAuMDAiPkFuYWx5c2lzTWV0aG9kPC90ZXh0Pgo8L2E+CjwvZz4KPC9nPgo8IS0tIEFuYWx5c2lzTWV0aG9kJiM0NTsmZ3Q7U2Vzc2lvbkFuYWx5c2lzIC0tPgo8ZyBpZD0iZWRnZTciIGNsYXNzPSJlZGdlIj4KPHRpdGxlPkFuYWx5c2lzTWV0aG9kLSZndDtTZXNzaW9uQW5hbHlzaXM8L3RpdGxlPgo8cGF0aCBmaWxsPSJub25lIiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iMC43NSIgc3Ryb2tlLW9wYWNpdHk9IjAuMjUwOTgwIiBkPSJNMjIxLjU2LC0xNzZDMjQxLjQzLC0xNzYgMjY1LjcsLTE3NiAyODguMTMsLTE3NiIvPgo8L2c+CjwhLS0gVHJpYWxBbmFseXNpcy5UcmlhbFJlc3VsdCAtLT4KPGcgaWQ9Im5vZGU4IiBjbGFzcz0ibm9kZSI+Cjx0aXRsZT5UcmlhbEFuYWx5c2lzLlRyaWFsUmVzdWx0PC90aXRsZT4KPGcgaWQ9ImFfbm9kZTgiPjxhIHhsaW5rOnRpdGxlPSLihpIgVHJpYWxBbmFseXNpcw10cmlhbF9pZHggwqDCoMKgwqDCoMKgwqDCoMKgwqDCoA0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0NcnRfcGVyY2VudGlsZSDCoMKgwqDCoMKgwqDCoA1pc19mYXN0IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgDSI+Cjxwb2x5Z29uIGZpbGw9Im5vbmUiIHN0cm9rZT0ibm9uZSIgcG9pbnRzPSI1ODcuOSwtMTMzIDQ2NS40LC0xMzMgNDY1LjQsLTExMyA1ODcuOSwtMTEzIDU4Ny45LC0xMzMiLz4KPHRleHQgdGV4dC1hbmNob3I9InN0YXJ0IiB4PSI0NzMuNCIgeT0iLTEyMC41IiBmb250LWZhbWlseT0iYXJpYWwiIHRleHQtZGVjb3JhdGlvbj0idW5kZXJsaW5lIiBmb250LXNpemU9IjEwLjAwIj5UcmlhbEFuYWx5c2lzLlRyaWFsUmVzdWx0PC90ZXh0Pgo8L2E+CjwvZz4KPC9nPgo8IS0tIFRyaWFsQW5hbHlzaXMmIzQ1OyZndDtUcmlhbEFuYWx5c2lzLlRyaWFsUmVzdWx0IC0tPgo8ZyBpZD0iZWRnZTgiIGNsYXNzPSJlZGdlIj4KPHRpdGxlPlRyaWFsQW5hbHlzaXMtJmd0O1RyaWFsQW5hbHlzaXMuVHJpYWxSZXN1bHQ8L3RpdGxlPgo8cGF0aCBmaWxsPSJub25lIiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iMC43NSIgc3Ryb2tlLW9wYWNpdHk9IjAuMjUwOTgwIiBkPSJNNDEzLjAyLC0xMjNDNDI5LjgxLC0xMjMgNDQ4LjM3LC0xMjMgNDY1LjQ5LC0xMjMiLz4KPC9nPgo8L2c+Cjwvc3ZnPg=="/>
 </div>
 </div>
 </div>
@@ -4659,7 +4781,7 @@ SubjectSummary()</div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>SessionSummary: 100%|██████████| 1/1 [00:00&lt;00:00, 458.29it/s]</pre>
+<pre>SessionSummary: 100%|██████████| 1/1 [00:00&lt;00:00, 376.64it/s]</pre>
 </div>
 </div>
 <div class="jp-OutputArea-child">
@@ -4678,14 +4800,14 @@ SubjectSummary()</div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>TrialAnalysis: 100%|██████████| 1/1 [00:00&lt;00:00, 369.54it/s]</pre>
+<pre>TrialAnalysis: 100%|██████████| 1/1 [00:00&lt;00:00, 355.75it/s]</pre>
 </div>
 </div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
 <pre>
-[2026-01-20 16:20:12,042][INFO]: Deleting 1 rows from "tutorial_computation"."__subject_summary"
+[2026-01-23 21:27:36,527][INFO]: Deleting 1 rows from "tutorial_computation"."__subject_summary"
 </pre>
 </div>
 </div>
@@ -4698,7 +4820,7 @@ SubjectSummary()</div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>SubjectSummary: 100%|██████████| 1/1 [00:00&lt;00:00, 639.86it/s]</pre>
+<pre>SubjectSummary: 100%|██████████| 1/1 [00:00&lt;00:00, 561.26it/s]</pre>
 </div>
 </div>
 <div class="jp-OutputArea-child">
@@ -5177,7 +5299,7 @@ QualityCheck()</div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>QualityCheck: 100%|██████████| 4/4 [00:00&lt;00:00, 801.43it/s]</pre>
+<pre>QualityCheck: 100%|██████████| 4/4 [00:00&lt;00:00, 547.81it/s]</pre>
 </div>
 </div>
 <div class="jp-OutputArea-child">

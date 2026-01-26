@@ -1167,6 +1167,18 @@
 </a>
 </li>
 <li class="md-nav__item">
+<a class="md-nav__link" href="../../../how-to/manage-secrets/">
+<span class="md-ellipsis">
+    
+  
+    Manage Secrets
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
 <a class="md-nav__link" href="../../../how-to/configure-database/">
 <span class="md-ellipsis">
     
@@ -1253,6 +1265,18 @@
 </a>
 </li>
 <li class="md-nav__item">
+<a class="md-nav__link" href="../../../how-to/master-part/">
+<span class="md-ellipsis">
+    
+  
+    Master-Part Tables
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
 <a class="md-nav__link" href="../../../how-to/design-primary-keys/">
 <span class="md-ellipsis">
     
@@ -1308,6 +1332,18 @@
     
   
     Manage Pipeline Project
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../how-to/deploy-production/">
+<span class="md-ellipsis">
+    
+  
+    Deploy to Production
   
 
     
@@ -1489,6 +1525,30 @@
           </label>
 <ul class="md-nav__list" data-md-scrollfix="">
 <li class="md-nav__item">
+<a class="md-nav__link" href="../../../how-to/object-storage-overview/">
+<span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../how-to/choose-storage-type/">
+<span class="md-ellipsis">
+    
+  
+    Choose Storage Type
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
 <a class="md-nav__link" href="../../../how-to/use-object-storage/">
 <span class="md-ellipsis">
     
@@ -1616,6 +1676,44 @@
     
   
     Backup and Restore
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_4_8" type="checkbox"/>
+<label class="md-nav__link" for="__nav_4_8" id="__nav_4_8_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    Testing
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_4_8_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_4_8">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Testing
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../how-to/testing/">
+<span class="md-ellipsis">
+    
+  
+    Testing Best Practices
   
 
     
@@ -1821,6 +1919,18 @@
     
   
     Fetch API
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../reference/specs/diagram/">
+<span class="md-ellipsis">
+    
+  
+    Diagram
   
 
     
@@ -3153,7 +3263,7 @@ schema = dj.Schema('tutorial_data_entry')</div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>[2026-01-20 16:20:04,515][INFO]: DataJoint 2.1.0a2 connected to postgres@127.0.0.1:5432
+<pre>[2026-01-23 21:27:28,715][INFO]: DataJoint 2.1.0a7 connected to postgres@127.0.0.1:5432
 </pre>
 </div>
 </div>
@@ -3206,7 +3316,7 @@ schema = dj.Schema('tutorial_data_entry')</div>
 <span class="s2">    session_idx : int32</span>
 <span class="s2">    ---</span>
 <span class="s2">    session_date : date</span>
-<span class="s2">    duration : float32            # minutes</span>
+<span class="s2">    duration : decimal(4,1)       # minutes</span>
 <span class="s2">    """</span>
 
     <span class="k">class</span><span class="w"> </span><span class="nc">Trial</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Part</span><span class="p">):</span>
@@ -3215,7 +3325,7 @@ schema = dj.Schema('tutorial_data_entry')</div>
 <span class="s2">        trial_idx : int32</span>
 <span class="s2">        ---</span>
 <span class="s2">        outcome : enum('hit', 'miss', 'false_alarm', 'correct_reject')</span>
-<span class="s2">        reaction_time : float32   # seconds</span>
+<span class="s2">        reaction_time : decimal(3,2)  # seconds</span>
 <span class="s2">        """</span>
 
 <span class="nd">@schema</span>
@@ -3259,7 +3369,7 @@ class Session(dj.Manual):
     session_idx : int32
     ---
     session_date : date
-    duration : float32            # minutes
+    duration : decimal(4,1)       # minutes
     """
 
     class Trial(dj.Part):
@@ -3268,7 +3378,7 @@ class Session(dj.Manual):
         trial_idx : int32
         ---
         outcome : enum('hit', 'miss', 'false_alarm', 'correct_reject')
-        reaction_time : float32   # seconds
+        reaction_time : decimal(3,2)  # seconds
         """
 
 @schema
@@ -4645,21 +4755,21 @@ print(f"ProcessedData: {len(ProcessedData())}")</div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>[2026-01-20 16:20:04,680][INFO]: Deleting 5 rows from "tutorial_data_entry"."session__trial"
+<pre>[2026-01-23 21:27:28,901][INFO]: Deleting 5 rows from "tutorial_data_entry"."session__trial"
 </pre>
 </div>
 </div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>[2026-01-20 16:20:04,689][INFO]: Deleting 1 rows from "tutorial_data_entry"."__processed_data"
+<pre>[2026-01-23 21:27:28,909][INFO]: Deleting 1 rows from "tutorial_data_entry"."__processed_data"
 </pre>
 </div>
 </div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>[2026-01-20 16:20:04,690][INFO]: Deleting 1 rows from "tutorial_data_entry"."session"
+<pre>[2026-01-23 21:27:28,911][INFO]: Deleting 1 rows from "tutorial_data_entry"."session"
 </pre>
 </div>
 </div>
@@ -4761,14 +4871,14 @@ with dj.conn().transaction:
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>[2026-01-20 16:20:04,704][INFO]: Deleting 2 rows from "tutorial_data_entry"."session__trial"
+<pre>[2026-01-23 21:27:28,926][INFO]: Deleting 2 rows from "tutorial_data_entry"."session__trial"
 </pre>
 </div>
 </div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>[2026-01-20 16:20:04,706][INFO]: Deleting 1 rows from "tutorial_data_entry"."session"
+<pre>[2026-01-23 21:27:28,927][INFO]: Deleting 1 rows from "tutorial_data_entry"."session"
 </pre>
 </div>
 </div>
@@ -4939,21 +5049,21 @@ print("After correction:", ProcessedData.fetch1())</div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>[2026-01-20 16:20:04,728][INFO]: Deleting 2 rows from "tutorial_data_entry"."session__trial"
+<pre>[2026-01-23 21:27:28,951][INFO]: Deleting 2 rows from "tutorial_data_entry"."session__trial"
 </pre>
 </div>
 </div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>[2026-01-20 16:20:04,736][INFO]: Deleting 1 rows from "tutorial_data_entry"."__processed_data"
+<pre>[2026-01-23 21:27:28,959][INFO]: Deleting 1 rows from "tutorial_data_entry"."__processed_data"
 </pre>
 </div>
 </div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>[2026-01-20 16:20:04,737][INFO]: Deleting 1 rows from "tutorial_data_entry"."session"
+<pre>[2026-01-23 21:27:28,960][INFO]: Deleting 1 rows from "tutorial_data_entry"."session"
 </pre>
 </div>
 </div>

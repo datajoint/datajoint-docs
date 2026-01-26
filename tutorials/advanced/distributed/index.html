@@ -967,6 +967,18 @@
 </a>
 </li>
 <li class="md-nav__item">
+<a class="md-nav__link" href="../../../how-to/manage-secrets/">
+<span class="md-ellipsis">
+    
+  
+    Manage Secrets
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
 <a class="md-nav__link" href="../../../how-to/configure-database/">
 <span class="md-ellipsis">
     
@@ -1053,6 +1065,18 @@
 </a>
 </li>
 <li class="md-nav__item">
+<a class="md-nav__link" href="../../../how-to/master-part/">
+<span class="md-ellipsis">
+    
+  
+    Master-Part Tables
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
 <a class="md-nav__link" href="../../../how-to/design-primary-keys/">
 <span class="md-ellipsis">
     
@@ -1108,6 +1132,18 @@
     
   
     Manage Pipeline Project
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../how-to/deploy-production/">
+<span class="md-ellipsis">
+    
+  
+    Deploy to Production
   
 
     
@@ -1289,6 +1325,30 @@
           </label>
 <ul class="md-nav__list" data-md-scrollfix="">
 <li class="md-nav__item">
+<a class="md-nav__link" href="../../../how-to/object-storage-overview/">
+<span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../how-to/choose-storage-type/">
+<span class="md-ellipsis">
+    
+  
+    Choose Storage Type
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
 <a class="md-nav__link" href="../../../how-to/use-object-storage/">
 <span class="md-ellipsis">
     
@@ -1416,6 +1476,44 @@
     
   
     Backup and Restore
+  
+
+    
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_4_8" type="checkbox"/>
+<label class="md-nav__link" for="__nav_4_8" id="__nav_4_8_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    Testing
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_4_8_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_4_8">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Testing
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../how-to/testing/">
+<span class="md-ellipsis">
+    
+  
+    Testing Best Practices
   
 
     
@@ -1621,6 +1719,18 @@
     
   
     Fetch API
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../reference/specs/diagram/">
+<span class="md-ellipsis">
+    
+  
+    Diagram
   
 
     
@@ -2762,7 +2872,7 @@ schema = dj.Schema('tutorial_distributed')</div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>[2026-01-20 16:19:37,909][INFO]: DataJoint 2.1.0a2 connected to postgres@127.0.0.1:5432
+<pre>[2026-01-23 21:27:00,718][INFO]: DataJoint 2.1.0a7 connected to postgres@127.0.0.1:5432
 </pre>
 </div>
 </div>
@@ -2857,14 +2967,14 @@ class Analysis(dj.Computed):
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>[2026-01-20 16:19:37,925][WARNING]: Native type 'int' is used in attribute 'exp_id'. Consider using a core DataJoint type for better portability.
+<pre>[2026-01-23 21:27:00,737][WARNING]: Native type 'int' is used in attribute 'exp_id'. Consider using a core DataJoint type for better portability.
 </pre>
 </div>
 </div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>[2026-01-20 16:19:37,925][WARNING]: Native type 'int' is used in attribute 'n_samples'. Consider using a core DataJoint type for better portability.
+<pre>[2026-01-23 21:27:00,738][WARNING]: Native type 'int' is used in attribute 'n_samples'. Consider using a core DataJoint type for better portability.
 </pre>
 </div>
 </div>
@@ -2960,7 +3070,7 @@ Analysis.populate(reserve_jobs=True, max_calls=5, display_progress=True)</div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>[2026-01-20 16:19:37,973][WARNING]: Native type 'integer' is used in attribute 'exp_id'. Consider using a core DataJoint type for better portability.
+<pre>[2026-01-23 21:27:00,793][WARNING]: Native type 'integer' is used in attribute 'exp_id'. Consider using a core DataJoint type for better portability.
 </pre>
 </div>
 </div>
@@ -2973,37 +3083,37 @@ Analysis.populate(reserve_jobs=True, max_calls=5, display_progress=True)</div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>Analysis:  20%|██        | 1/5 [00:00&lt;00:00,  8.71it/s]</pre>
+<pre>Analysis:  20%|██        | 1/5 [00:00&lt;00:00,  7.92it/s]</pre>
 </div>
 </div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>Analysis:  40%|████      | 2/5 [00:00&lt;00:00,  8.61it/s]</pre>
+<pre>Analysis:  40%|████      | 2/5 [00:00&lt;00:00,  8.48it/s]</pre>
 </div>
 </div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>Analysis:  60%|██████    | 3/5 [00:00&lt;00:00,  8.50it/s]</pre>
+<pre>Analysis:  60%|██████    | 3/5 [00:00&lt;00:00,  8.73it/s]</pre>
 </div>
 </div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>Analysis:  80%|████████  | 4/5 [00:00&lt;00:00,  8.30it/s]</pre>
+<pre>Analysis:  80%|████████  | 4/5 [00:00&lt;00:00,  8.85it/s]</pre>
 </div>
 </div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>Analysis: 100%|██████████| 5/5 [00:00&lt;00:00,  8.18it/s]</pre>
+<pre>Analysis: 100%|██████████| 5/5 [00:00&lt;00:00,  8.82it/s]</pre>
 </div>
 </div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>Analysis: 100%|██████████| 5/5 [00:00&lt;00:00,  8.29it/s]</pre>
+<pre>Analysis: 100%|██████████| 5/5 [00:00&lt;00:00,  8.71it/s]</pre>
 </div>
 </div>
 <div class="jp-OutputArea-child">
@@ -3168,97 +3278,97 @@ print(f"Computed: {len(Analysis())}")</div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>Analysis:   7%|▋         | 1/15 [00:00&lt;00:01,  8.90it/s]</pre>
+<pre>Analysis:   7%|▋         | 1/15 [00:00&lt;00:01,  9.14it/s]</pre>
 </div>
 </div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>Analysis:  13%|█▎        | 2/15 [00:00&lt;00:01,  8.90it/s]</pre>
+<pre>Analysis:  13%|█▎        | 2/15 [00:00&lt;00:01,  8.93it/s]</pre>
 </div>
 </div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>Analysis:  20%|██        | 3/15 [00:00&lt;00:01,  8.71it/s]</pre>
+<pre>Analysis:  20%|██        | 3/15 [00:00&lt;00:01,  8.91it/s]</pre>
 </div>
 </div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>Analysis:  27%|██▋       | 4/15 [00:00&lt;00:01,  8.56it/s]</pre>
+<pre>Analysis:  27%|██▋       | 4/15 [00:00&lt;00:01,  8.80it/s]</pre>
 </div>
 </div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>Analysis:  33%|███▎      | 5/15 [00:00&lt;00:01,  8.33it/s]</pre>
+<pre>Analysis:  33%|███▎      | 5/15 [00:00&lt;00:01,  8.84it/s]</pre>
 </div>
 </div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>Analysis:  40%|████      | 6/15 [00:00&lt;00:01,  8.20it/s]</pre>
+<pre>Analysis:  40%|████      | 6/15 [00:00&lt;00:01,  8.76it/s]</pre>
 </div>
 </div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>Analysis:  47%|████▋     | 7/15 [00:00&lt;00:00,  8.18it/s]</pre>
+<pre>Analysis:  47%|████▋     | 7/15 [00:00&lt;00:00,  8.76it/s]</pre>
 </div>
 </div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>Analysis:  53%|█████▎    | 8/15 [00:00&lt;00:00,  8.20it/s]</pre>
+<pre>Analysis:  53%|█████▎    | 8/15 [00:00&lt;00:00,  8.72it/s]</pre>
 </div>
 </div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>Analysis:  60%|██████    | 9/15 [00:01&lt;00:00,  8.16it/s]</pre>
+<pre>Analysis:  60%|██████    | 9/15 [00:01&lt;00:00,  8.70it/s]</pre>
 </div>
 </div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>Analysis:  67%|██████▋   | 10/15 [00:01&lt;00:00,  8.25it/s]</pre>
+<pre>Analysis:  67%|██████▋   | 10/15 [00:01&lt;00:00,  8.78it/s]</pre>
 </div>
 </div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>Analysis:  73%|███████▎  | 11/15 [00:01&lt;00:00,  8.37it/s]</pre>
+<pre>Analysis:  73%|███████▎  | 11/15 [00:01&lt;00:00,  8.83it/s]</pre>
 </div>
 </div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>Analysis:  80%|████████  | 12/15 [00:01&lt;00:00,  8.33it/s]</pre>
+<pre>Analysis:  80%|████████  | 12/15 [00:01&lt;00:00,  8.77it/s]</pre>
 </div>
 </div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>Analysis:  87%|████████▋ | 13/15 [00:01&lt;00:00,  8.32it/s]</pre>
+<pre>Analysis:  87%|████████▋ | 13/15 [00:01&lt;00:00,  8.74it/s]</pre>
 </div>
 </div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>Analysis:  93%|█████████▎| 14/15 [00:01&lt;00:00,  8.31it/s]</pre>
+<pre>Analysis:  93%|█████████▎| 14/15 [00:01&lt;00:00,  8.72it/s]</pre>
 </div>
 </div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>Analysis: 100%|██████████| 15/15 [00:01&lt;00:00,  8.28it/s]</pre>
+<pre>Analysis: 100%|██████████| 15/15 [00:01&lt;00:00,  8.73it/s]</pre>
 </div>
 </div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>Analysis: 100%|██████████| 15/15 [00:01&lt;00:00,  8.32it/s]</pre>
+<pre>Analysis: 100%|██████████| 15/15 [00:01&lt;00:00,  8.77it/s]</pre>
 </div>
 </div>
 <div class="jp-OutputArea-child">

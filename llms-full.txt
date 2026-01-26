@@ -1,6 +1,6 @@
 # DataJoint Documentation (Full)
 
-Generated: 2026-01-22 16:06:48 UTC
+Generated: 2026-01-26 14:38:45 UTC
 Commit: unknown
 Branch: unknown
 
@@ -127,10 +127,10 @@ Each auto-populated table has an associated jobs table:
 Segmentation.jobs()
 
 # View errors
-Segmentation.jobs & 'status = "error"'
+Segmentation.jobs & "status = 'error'"
 
 # Clear errors to retry
-(Segmentation.jobs & 'status = "error"').delete()
+(Segmentation.jobs & "status = 'error'").delete()
 ```
 
 ### Parallel Execution
@@ -155,13 +155,13 @@ Jobs are reserved atomically—no two workers process the same key.
 Segmentation.populate(suppress_errors=True)
 
 # Check what failed
-errors = (Segmentation.jobs & 'status = "error"').to_dicts()
+errors = (Segmentation.jobs & "status = 'error'").to_dicts()
 
 # Clear specific error to retry
 (Segmentation.jobs & error_key).delete()
 
 # Clear all errors
-(Segmentation.jobs & 'status = "error"').delete()
+(Segmentation.jobs & "status = 'error'").delete()
 ```
 
 ## Imported vs. Computed
@@ -1549,6 +1549,14 @@ and scalable.
     From workflows to complete data operations systems. Project structure and
     object-augmented schemas.
 
+-   :material-link-variant: **[Semantic Matching](semantic-matching.md)**
+
+    How DataJoint ensures safe joins through attribute lineage tracking.
+
+-   :material-new-box: **[What's New in 2.0](whats-new-2.md)**
+
+    Major changes, new features, and migration guidance for DataJoint 2.0.
+
 -   :material-frequently-asked-questions: **[FAQ](faq.md)**
 
     How DataJoint compares to ORMs, workflow managers, and lakehouses.
@@ -1872,13 +1880,13 @@ Filter entities based on conditions.
 
 ```python
 # Mice born after 2024
-Mouse & 'date_of_birth > "2024-01-01"'
+Mouse & "date_of_birth > '2024-01-01'"
 
 # Sessions for a specific mouse
 Session & {'mouse_id': 42}
 
 # Sessions matching a query
-Session & (Mouse & 'strain = "C57BL/6"')
+Session & (Mouse & "strain = 'C57BL/6'")
 ```
 
 ### Exclude (`-`)
@@ -2059,7 +2067,7 @@ Operators compose freely:
 ```python
 # Complex query
 result = (
-    (Mouse & 'strain = "C57BL/6"')  # Filter mice
+    (Mouse & "strain = 'C57BL/6'")  # Filter mice
     * Session                        # Join sessions
     * Scan                           # Join scans
     .proj('scan_date', 'depth')      # Select attributes
@@ -3946,7 +3954,7 @@ Subject & {'species': 'mouse', 'sex': 'F'}
 
 ```python
 # SQL: SELECT * FROM Session WHERE session_date > '2024-06-10'
-Session & 'session_date > "2024-06-10"'
+Session & "session_date > '2024-06-10'"
 ```
 
 
@@ -4386,7 +4394,7 @@ class Recording(dj.Manual):
     -> Session
     recording_id : int16
     ---
-    duration : float32          # recording duration (seconds)
+    duration : decimal(5,1)     # recording duration (seconds)
     quality : enum('good', 'fair', 'poor')
     """
 ```
@@ -4818,7 +4826,7 @@ class Session(dj.Manual):
         stimulus : varchar(50)
         response : varchar(50)
         correct : bool
-        reaction_time : float32     # seconds
+        reaction_time : decimal(3,2)  # seconds
         """
 ```
 
@@ -4945,6 +4953,7 @@ class SessionSummary(dj.Computed):
     
     def make(self, key):
         correct_vals, rt_vals = (Session.Trial & key).to_arrays('correct', 'reaction_time')
+        rt_vals = rt_vals.astype(float)  # convert decimal to float
         n_trials = len(correct_vals)
         n_correct = sum(correct_vals) if n_trials else 0
 
@@ -5237,7 +5246,7 @@ class Session(dj.Manual):
     session_idx : int32
     ---
     session_date : date
-    duration : float32            # minutes
+    duration : decimal(4,1)       # minutes
     """
 
     class Trial(dj.Part):
@@ -5246,7 +5255,7 @@ class Session(dj.Manual):
         trial_idx : int32
         ---
         outcome : enum('hit', 'miss', 'false_alarm', 'correct_reject')
-        reaction_time : float32   # seconds
+        reaction_time : decimal(3,2)  # seconds
         """
 
 @schema
@@ -5820,7 +5829,7 @@ class Subject(dj.Manual):
     species : varchar(50)
     date_of_birth : date
     sex : enum('M', 'F', 'U')
-    weight : float32             # grams
+    weight : decimal(4,1)        # grams
     """
 
 @schema
@@ -5839,7 +5848,7 @@ class Session(dj.Manual):
     ---
     -> Experimenter
     session_date : date
-    duration : float32           # minutes
+    duration : decimal(4,1)      # minutes
     """
 
     class Trial(dj.Part):
@@ -5850,7 +5859,7 @@ class Session(dj.Manual):
         stimulus : varchar(50)
         response : varchar(50)
         correct : bool
-        reaction_time : float32  # seconds
+        reaction_time : decimal(3,2)  # seconds
         """
 ```
 
@@ -6226,7 +6235,7 @@ Session.aggr(Session.Trial, n_trials='count(*)')
 Session.aggr(
     Session.Trial,
     n_trials='count(*)',
-    n_correct='sum(correct)',
+    n_correct='sum(CASE WHEN correct THEN 1 ELSE 0 END)',
     avg_rt='avg(reaction_time)'
 )
 ```
@@ -6543,7 +6552,7 @@ class Session(dj.Manual):
         stimulus : varchar(50)
         response : varchar(50)
         correct : bool
-        reaction_time : float32   # seconds
+        reaction_time : decimal(3,2)  # seconds
         """
 
 @schema
@@ -6619,8 +6628,9 @@ class SessionSummary(dj.Computed):
     """
 
     def make(self, key):
-        # Fetch trial data for this session
+        # Fetch trial data for this session (convert decimal to float)
         correct, rt = (Session.Trial & key).to_arrays('correct', 'reaction_time')
+        rt = rt.astype(float)
         
         n_trials = len(correct)
         n_correct = sum(correct) if n_trials else 0
@@ -6683,8 +6693,9 @@ class SessionAnalysis(dj.Computed):
     """
 
     def make(self, key):
-        # Fetch trial data
+        # Fetch trial data (convert decimal to float for computation)
         correct, rt = (Session.Trial & key).to_arrays('correct', 'reaction_time')
+        rt = rt.astype(float)
         
         # Apply method-specific analysis
         if key['method_name'] == 'basic':
@@ -6743,8 +6754,8 @@ class TrialAnalysis(dj.Computed):
             self.insert1({**key, 'n_analyzed': 0})
             return
         
-        # Calculate percentiles
-        rts = [t['reaction_time'] for t in trial_data]
+        # Calculate percentiles (convert decimal to float)
+        rts = [float(t['reaction_time']) for t in trial_data]
         median_rt = np.median(rts)
         
         # Insert master entry
@@ -6753,12 +6764,13 @@ class TrialAnalysis(dj.Computed):
         # Insert part entries
         parts = []
         for t in trial_data:
-            percentile = sum(rt <= t['reaction_time'] for rt in rts) / len(rts) * 100
+            rt = float(t['reaction_time'])
+            percentile = sum(r <= rt for r in rts) / len(rts) * 100
             parts.append({
                 **key,
                 'trial_idx': t['trial_idx'],
                 'rt_percentile': float(percentile),
-                'is_fast': t['reaction_time'] < median_rt
+                'is_fast': rt < median_rt
             })
         
         self.TrialResult.insert(parts)
@@ -7279,7 +7291,7 @@ class ImagingSession(dj.Manual):
     session_id : int32
     ---
     n_frames : int32
-    frame_rate : float32
+    frame_rate : decimal(4,1)
     frames : <object@tutorial>    # Zarr array stored at path derived from PK
     """
 ```
@@ -7515,7 +7527,7 @@ class Experiment(dj.Manual):
     ---
     # Queryable metadata
     date : date
-    duration : float32
+    duration : decimal(5,1)
     n_trials : int32
     # Large data
     raw_data : <blob@>
@@ -7926,7 +7938,7 @@ plt.xticks(unique)
 
 A common use case is tracking where electrodes were placed during recordings.
 
-**Design choice:** Here we use `recording_id` alone as the primary key, with `BrainRegion` (which includes `ccf_id`) as a dependent attribute. This means each recording has exactly one canonical atlas registration.
+**Design choice:** Here we use `recording_id` alone as the primary key, with `BrainRegion` (which includes `ccf_id`) as a secondary attribute. This means each recording has exactly one canonical atlas registration.
 
 An alternative design would include `ccf_id` in the primary key:
 ```python
@@ -10597,7 +10609,7 @@ class Language(dj.Lookup):
         ('ja', 'Japanese', '日本語'),
         ('ko', 'Korean', '한국어'),
         ('pt', 'Portuguese', 'Português'),
-        ('ru', 'Russian', 'Русский'),
+        ('uk', 'Ukrainian', 'Українська'),
         ('zh', 'Chinese', '中文'),
     ]
 ```
@@ -11754,6 +11766,7 @@ Real-world scientific pipelines:
 
 - [Calcium Imaging](domain/calcium-imaging/calcium-imaging.ipynb) — Import TIFF movies, segment cells, extract fluorescence traces
 - [Electrophysiology](domain/electrophysiology/electrophysiology.ipynb) — Import recordings, detect spikes, extract waveforms
+- [Electrophysiology with Object Storage](domain/electrophysiology/ephys-with-npy.ipynb) — Neural data with `<npy@>` lazy loading
 - [Allen CCF](domain/allen-ccf/allen-ccf.ipynb) — Brain atlas with hierarchical region ontology
 
 ## Advanced Topics
@@ -14266,6 +14279,13 @@ print(Session().describe())
 print(Session().heading)
 ```
 
+## See Also
+
+- [Master-Part Tables](master-part.ipynb) — Working with part tables
+- [Model Relationships](model-relationships.ipynb) — Foreign key patterns
+- [Design Primary Keys](design-primary-keys.md) — Key selection strategies
+- [Insert Data](insert-data.md) — Adding data to tables
+
 
 ---
 ## File: how-to/delete-data.md
@@ -14283,7 +14303,7 @@ Delete rows matching a restriction:
 (Subject & {'subject_id': 'M001'}).delete()
 
 # Delete with condition
-(Session & 'session_date < "2024-01-01"').delete()
+(Session & "session_date < '2024-01-01'").delete()
 ```
 
 ## Cascade Behavior
@@ -14413,14 +14433,14 @@ Delete without cascade (fails if dependent rows exist):
 ### By Condition
 
 ```python
-(Trial & 'outcome = "miss"').delete()
+(Trial & "outcome = 'miss'").delete()
 ```
 
 ### By Join
 
 ```python
 # Delete trials from sessions before 2024
-old_sessions = Session & 'session_date < "2024-01-01"'
+old_sessions = Session & "session_date < '2024-01-01'"
 (Trial & old_sessions).delete()
 ```
 
@@ -14463,9 +14483,322 @@ print(f"Deleted {count} subjects")
 
 ## See Also
 
+- [Master-Part Tables](master-part.ipynb) — Compositional data patterns
 - [Model Relationships](model-relationships.ipynb) — Foreign key patterns
 - [Insert Data](insert-data.md) — Adding data to tables
 - [Run Computations](run-computations.md) — Recomputing after changes
+
+
+---
+## File: how-to/deploy-production.md
+
+# Deploy to Production
+
+Configure DataJoint for production environments with controlled schema changes and project isolation.
+
+## Overview
+
+Development and production environments have different requirements:
+
+| Concern | Development | Production |
+|---------|-------------|------------|
+| Schema changes | Automatic table creation | Controlled, explicit changes only |
+| Naming | Ad-hoc schema names | Consistent project prefixes |
+| Configuration | Local settings | Environment-based |
+
+DataJoint 2.0 provides settings to enforce production discipline.
+
+## Prevent Automatic Table Creation
+
+By default, DataJoint creates tables automatically when you first access them. This is convenient during development but dangerous in production—a typo or code bug could create unintended tables.
+
+### Enable Production Mode
+
+Set `create_tables=False` to prevent automatic table creation:
+
+```python
+import datajoint as dj
+
+# Production mode: no automatic table creation
+dj.config.database.create_tables = False
+```
+
+Or via environment variable:
+
+```bash
+export DJ_CREATE_TABLES=false
+```
+
+Or in `datajoint.json`:
+
+```json
+{
+  "database": {
+    "create_tables": false
+  }
+}
+```
+
+### What Changes
+
+With `create_tables=False`:
+
+| Action | Development (True) | Production (False) |
+|--------|-------------------|-------------------|
+| Access existing table | Works | Works |
+| Access missing table | Creates it | **Raises error** |
+| Explicit `Schema(create_tables=True)` | Creates | Creates (override) |
+
+### Example: Production Safety
+
+```python
+import datajoint as dj
+
+dj.config.database.create_tables = False
+schema = dj.Schema('myproject_ephys')
+
+@schema
+class Recording(dj.Manual):
+    definition = """
+    recording_id : int
+    ---
+    path : varchar(255)
+    """
+
+# If table doesn't exist in database:
+Recording()  # Raises DataJointError: Table not found
+```
+
+### Override for Migrations
+
+When you need to create tables during a controlled migration:
+
+```python
+# Explicit override for this schema only
+schema = dj.Schema('myproject_ephys', create_tables=True)
+
+@schema
+class NewTable(dj.Manual):
+    definition = """..."""
+
+NewTable()  # Creates the table
+```
+
+## Use Schema Prefixes
+
+When multiple projects share a database server, use prefixes to avoid naming collisions and organize schemas.
+
+### Configure Project Prefix
+
+```python
+import datajoint as dj
+
+dj.config.database.schema_prefix = 'myproject_'
+```
+
+Or via environment variable:
+
+```bash
+export DJ_SCHEMA_PREFIX=myproject_
+```
+
+Or in `datajoint.json`:
+
+```json
+{
+  "database": {
+    "schema_prefix": "myproject_"
+  }
+}
+```
+
+### Apply Prefix to Schemas
+
+Use the prefix when creating schemas:
+
+```python
+import datajoint as dj
+
+prefix = dj.config.database.schema_prefix  # 'myproject_'
+
+# Schema names include prefix
+subject_schema = dj.Schema(prefix + 'subject')   # myproject_subject
+session_schema = dj.Schema(prefix + 'session')   # myproject_session
+ephys_schema = dj.Schema(prefix + 'ephys')       # myproject_ephys
+```
+
+### Benefits
+
+- **Isolation**: Multiple projects coexist without conflicts
+- **Visibility**: Easy to identify which schemas belong to which project
+- **Permissions**: Grant access by prefix pattern (`myproject_*`)
+- **Cleanup**: Drop all project schemas by prefix
+
+### Database Permissions by Prefix
+
+```sql
+-- Grant access to all schemas with prefix
+GRANT ALL PRIVILEGES ON `myproject\_%`.* TO 'developer'@'%';
+
+-- Read-only access to another project
+GRANT SELECT ON `otherproject\_%`.* TO 'developer'@'%';
+```
+
+## Environment-Based Configuration
+
+Use different configurations for development, staging, and production.
+
+### Configuration Hierarchy
+
+DataJoint loads settings in priority order:
+
+1. **Environment variables** (highest priority)
+2. **Secrets directory** (`.secrets/`)
+3. **Config file** (`datajoint.json`)
+4. **Defaults** (lowest priority)
+
+### Development Setup
+
+**datajoint.json** (committed):
+```json
+{
+  "database": {
+    "host": "localhost",
+    "create_tables": true
+  }
+}
+```
+
+**.secrets/database.user**:
+```
+dev_user
+```
+
+### Production Setup
+
+Override via environment:
+
+```bash
+# Production database
+export DJ_HOST=prod-db.example.com
+export DJ_USER=prod_user
+export DJ_PASS=prod_password
+
+# Production mode
+export DJ_CREATE_TABLES=false
+export DJ_SCHEMA_PREFIX=myproject_
+
+# Disable interactive prompts
+export DJ_SAFEMODE=false
+```
+
+### Docker/Kubernetes Example
+
+```yaml
+# docker-compose.yaml
+services:
+  worker:
+    image: my-pipeline:latest
+    environment:
+      - DJ_HOST=db.example.com
+      - DJ_USER_FILE=/run/secrets/db_user
+      - DJ_PASS_FILE=/run/secrets/db_password
+      - DJ_CREATE_TABLES=false
+      - DJ_SCHEMA_PREFIX=prod_
+    secrets:
+      - db_user
+      - db_password
+```
+
+## Complete Production Configuration
+
+### datajoint.json (committed)
+
+```json
+{
+  "database": {
+    "host": "localhost",
+    "port": 3306
+  },
+  "stores": {
+    "default": "main",
+    "main": {
+      "protocol": "s3",
+      "endpoint": "s3.amazonaws.com",
+      "bucket": "my-org-data",
+      "location": "myproject"
+    }
+  }
+}
+```
+
+### Production Environment Variables
+
+```bash
+# Database
+export DJ_HOST=prod-mysql.example.com
+export DJ_USER=prod_service
+export DJ_PASS=<from-secret-manager>
+
+# Production behavior
+export DJ_CREATE_TABLES=false
+export DJ_SCHEMA_PREFIX=prod_
+export DJ_SAFEMODE=false
+
+# Logging
+export DJ_LOG_LEVEL=WARNING
+```
+
+### Verification Script
+
+```python
+#!/usr/bin/env python
+"""Verify production configuration before deployment."""
+import datajoint as dj
+
+def verify_production_config():
+    """Check that production settings are correctly applied."""
+    errors = []
+
+    # Check create_tables is disabled
+    if dj.config.database.create_tables:
+        errors.append("create_tables should be False in production")
+
+    # Check schema prefix is set
+    if not dj.config.database.schema_prefix:
+        errors.append("schema_prefix should be set in production")
+
+    # Check not pointing to localhost
+    if dj.config.database.host == 'localhost':
+        errors.append("database.host is localhost - expected production host")
+
+    if errors:
+        for e in errors:
+            print(f"ERROR: {e}")
+        return False
+
+    print("Production configuration verified")
+    return True
+
+if __name__ == '__main__':
+    import sys
+    sys.exit(0 if verify_production_config() else 1)
+```
+
+## Summary
+
+| Setting | Development | Production |
+|---------|-------------|------------|
+| `database.create_tables` | `true` | `false` |
+| `database.schema_prefix` | `""` or `dev_` | `prod_` |
+| `safemode` | `true` | `false` (automated) |
+| `loglevel` | `DEBUG` | `WARNING` |
+
+## See Also
+
+- [Manage Pipeline Project](manage-pipeline-project.md) — Project organization
+- [Configuration Reference](../reference/configuration.md) — All settings
+- [Manage Secrets](manage-secrets.md) — Credential management
 
 
 ---
@@ -15266,7 +15599,7 @@ Target specific failed jobs:
 
 ```python
 # Clear one error
-(ProcessedData.jobs & key & 'status="error"').delete()
+(ProcessedData.jobs & key & "status='error'").delete()
 
 # Retry just that key
 ProcessedData.populate(key, reserve_jobs=True)
@@ -15427,11 +15760,14 @@ they assume you understand the basics and focus on getting things done.
 
 - [Define Tables](define-tables.md) — Table definition syntax
 - [Model Relationships](model-relationships.ipynb) — Foreign key patterns
+- [Master-Part Tables](master-part.ipynb) — Compositional data patterns
 - [Design Primary Keys](design-primary-keys.md) — Key selection strategies
+- [Read Schema Diagrams](read-diagrams.ipynb) — Interpret visual diagrams
 
 ## Project Management
 
 - [Manage a Pipeline Project](manage-pipeline-project.md) — Multi-schema pipelines, team collaboration
+- [Deploy to Production](deploy-production.md) — Production mode, schema prefixes, environment config
 
 ## Data Operations
 
@@ -15452,6 +15788,7 @@ they assume you understand the basics and focus on getting things done.
 - [Object Storage Overview](object-storage-overview.md) — Navigation guide for all storage docs
 - [Choose a Storage Type](choose-storage-type.md) — Decision guide for codecs
 - [Use Object Storage](use-object-storage.md) — When and how
+- [Use the `<npy>` Codec](use-npy-codec.md) — NumPy arrays with lazy loading
 - [Use Plugin Codecs](use-plugin-codecs.md) — Install codec packages via entry points
 - [Create Custom Codecs](create-custom-codec.md) — Domain-specific types
 - [Manage Large Data](manage-large-data.md) — Blobs, streaming, efficiency
@@ -15462,6 +15799,10 @@ they assume you understand the basics and focus on getting things done.
 - [Migrate to v2.0](migrate-to-v20.md) — Upgrading existing pipelines
 - [Alter Tables](alter-tables.md) — Schema evolution
 - [Backup and Restore](backup-restore.md) — Data protection
+
+## Testing
+
+- [Testing Best Practices](testing.md) — Integration testing with pytest
 
 
 ---
@@ -15612,6 +15953,12 @@ with dj.conn().transaction:
 if Subject.validate(rows):
     Subject.insert(rows)
 ```
+
+## See Also
+
+- [Master-Part Tables](master-part.ipynb) — Atomic insertion of master and parts
+- [Define Tables](define-tables.md) — Table definition syntax
+- [Delete Data](delete-data.md) — Removing data from tables
 
 
 ---
@@ -16311,6 +16658,7 @@ These challenges grow with team size and pipeline complexity. The [DataJoint Pla
 
 ## See Also
 
+- [Deploy to Production](deploy-production.md) — Production mode and environment configuration
 - [Data Pipelines](../explanation/data-pipelines.md) — Conceptual overview and architecture
 - [Configure Object Storage](configure-storage.md) — Storage setup
 - [Distributed Computing](distributed-computing.md) — Multi-worker pipelines
@@ -16804,6 +17152,225 @@ git log --all --full-history -- .secrets/datajoint.json
 
 
 ---
+## File: how-to/master-part.ipynb
+
+# Master-Part Tables
+
+Work with compositional data where a master entity contains multiple detail records.
+
+
+```python
+import datajoint as dj
+
+schema = dj.Schema('howto_masterpart')
+schema.drop(prompt=False)
+schema = dj.Schema('howto_masterpart')
+```
+
+
+## When to Use Part Tables
+
+Part tables model **compositional** relationships where:
+
+- Parts cannot exist without their master
+- Parts are typically queried in the context of their master
+- The master-parts unit should be inserted and deleted together
+
+**Good use cases:**
+
+| Master | Part | Why |
+|--------|------|-----|
+| Session | Trial | Trials only exist within sessions |
+| Probe | Electrode | Electrodes are physical parts of probes |
+| Video | Frame | Frames are components of videos |
+| Segmentation | Cell | Detected cells belong to one segmentation |
+
+**Use regular foreign keys instead when:**
+
+- Entities have independent meaning (e.g., subjects across sessions)
+- Entities need to be queried without the parent context
+- The relationship is a loose association rather than strict composition
+
+## Define Master and Part Tables
+
+Part tables are nested classes inheriting from `dj.Part`. Use `-> master` to reference the enclosing table:
+
+
+```python
+@schema
+class Subject(dj.Manual):
+    definition = """
+    subject_id : varchar(16)
+    ---
+    species : varchar(32)
+    """
+
+@schema
+class Session(dj.Manual):
+    definition = """
+    -> Subject
+    session_idx : int16
+    ---
+    session_date : date
+    """
+
+    class Trial(dj.Part):
+        definition = """
+        -> master
+        trial_idx : int32
+        ---
+        stimulus : varchar(32)
+        response : varchar(32)
+        reaction_time : float32
+        """
+
+dj.Diagram(schema)
+```
+
+
+The `-> master` syntax:
+
+- Inherits the master's primary key
+- Creates a foreign key constraint
+- Enforces that parts cannot exist without their master
+
+**SQL naming:** Part tables use double underscore in the database: `session__trial`
+
+## Insert Master and Parts
+
+Masters must exist before their parts. Use a transaction for atomicity:
+
+
+```python
+# Insert subject first
+Subject.insert1({'subject_id': 'M001', 'species': 'Mus musculus'})
+
+# Insert session and trials atomically
+with dj.conn().transaction:
+    Session.insert1({
+        'subject_id': 'M001',
+        'session_idx': 1,
+        'session_date': '2026-01-20'
+    })
+    Session.Trial.insert([
+        {'subject_id': 'M001', 'session_idx': 1, 'trial_idx': 1, 
+         'stimulus': 'A', 'response': 'left', 'reaction_time': 0.35},
+        {'subject_id': 'M001', 'session_idx': 1, 'trial_idx': 2, 
+         'stimulus': 'B', 'response': 'right', 'reaction_time': 0.42},
+        {'subject_id': 'M001', 'session_idx': 1, 'trial_idx': 3, 
+         'stimulus': 'A', 'response': 'left', 'reaction_time': 0.28},
+    ])
+
+Session.Trial()
+```
+
+
+The transaction ensures both inserts succeed or neither does. If inserting trials fails, the session is rolled back.
+
+## Query and Aggregate Parts
+
+Access parts through the master class:
+
+
+```python
+# All trials
+Session.Trial()
+```
+
+
+
+```python
+# Join master and parts to get session info with each trial
+Session * Session.Trial
+```
+
+
+
+```python
+# Aggregate: count trials and compute mean reaction time per session
+Session.aggr(
+    Session.Trial,
+    n_trials='count(trial_idx)',
+    mean_rt='avg(reaction_time)'
+)
+```
+
+
+## Computed Tables with Parts
+
+Computed tables can have parts. In `make()`, insert the master first, then its parts:
+
+
+```python
+@schema
+class SessionAnalysis(dj.Computed):
+    definition = """
+    -> Session
+    ---
+    n_trials : int32
+    mean_rt : float32
+    """
+
+    class TrialScore(dj.Part):
+        definition = """
+        -> master
+        -> Session.Trial
+        ---
+        score : float32
+        """
+
+    def make(self, key):
+        trials = (Session.Trial & key).to_dicts()
+        
+        # Insert master
+        self.insert1({
+            **key,
+            'n_trials': len(trials),
+            'mean_rt': sum(t['reaction_time'] for t in trials) / len(trials)
+        })
+        
+        # Insert parts
+        self.TrialScore.insert([
+            {**key, 'trial_idx': t['trial_idx'], 'score': 1.0 / t['reaction_time']}
+            for t in trials
+        ])
+
+SessionAnalysis.populate()
+SessionAnalysis.TrialScore()
+```
+
+
+## Delete Patterns
+
+Deleting from the master cascades to its parts:
+
+
+```python
+# This deletes the session AND all its trials AND computed results
+(Session & {'subject_id': 'M001', 'session_idx': 1}).delete(prompt=False)
+
+# Verify parts are gone
+len(Session.Trial())
+```
+
+
+Direct deletion from parts is blocked by default. Use `part_integrity` to control this behavior. See [Delete Data](delete-data.md) for details.
+
+## See Also
+
+- [Define Tables](define-tables.md) — Table definition syntax
+- [Insert Data](insert-data.md) — Insertion patterns
+- [Delete Data](delete-data.md) — Deletion and part_integrity options
+- [Model Relationships](model-relationships.ipynb) — Foreign key patterns
+- [Master-Part Specification](../reference/specs/master-part.md) — Full reference
+
+
+```python
+schema.drop(prompt=False)
+```
+
+
+---
 ## File: how-to/migrate-to-v20.md
 
 # Migrate to DataJoint 2.0
@@ -17193,7 +17760,7 @@ def test_query_patterns(test_schema):
     assert len(mice) == 1
 
     # Test restriction
-    male_mice = Mouse & 'sex="M"'
+    male_mice = Mouse & "sex='M'"
     assert len(male_mice) == 1
 ```
 
@@ -17225,7 +17792,7 @@ def test_full_pipeline(test_schema):
     assert len(Analysis()) > 0
 
     # 4. Test queries work
-    alice_sessions = Session & 'experimenter="Alice"'
+    alice_sessions = Session & "experimenter='Alice'"
     assert len(alice_sessions) == 1
 ```
 
@@ -19739,6 +20306,7 @@ There are no cyclic dependencies—parent tables must always be populated before
 - [Design Primary Keys](design-primary-keys.md) — Key selection strategies
 - [Read Diagrams](read-diagrams.ipynb) — Diagram notation reference
 - [Delete Data](delete-data.md) — Cascade behavior
+- [Master-Part Tables](master-part.ipynb) — Compositional data patterns
 
 
 ```python
@@ -20681,6 +21249,286 @@ dj.Diagram(Subject) + 2
 (dj.Diagram(upstream) + 100) * (dj.Diagram(downstream) - 100)
 ```
 
+## Layout Direction
+
+*New in DataJoint 2.1*
+
+Control the flow direction of diagrams via configuration:
+
+| Direction | Description |
+|-----------|-------------|
+| `"TB"` | Top to bottom (default) |
+| `"LR"` | Left to right |
+
+
+```python
+# Horizontal layout using config override
+with dj.config.override(display__diagram_direction="LR"):
+    display(dj.Diagram(schema))
+```
+
+
+## Mermaid Output
+
+*New in DataJoint 2.1*
+
+Generate [Mermaid](https://mermaid.js.org/) syntax for embedding diagrams in Markdown documentation, GitHub, or web pages:
+
+
+```python
+# Generate Mermaid syntax
+print((dj.Diagram(Subject) + 2).make_mermaid())
+```
+
+
+Copy this output into any Mermaid-compatible viewer (GitHub Markdown, MkDocs with mermaid plugin, https://mermaid.live) to render the diagram.
+
+**Saving to file:**
+```python
+dj.Diagram(schema).save("pipeline.mmd")  # .mmd or .mermaid extension
+```
+
+## Multi-Schema Pipelines
+
+Real-world pipelines often span multiple schemas (modules). 
+
+*New in DataJoint 2.1:* Tables are automatically grouped into visual clusters by schema, with the Python module name shown as the group label.
+
+
+```python
+# Create a second schema for analysis
+howto_analysis = dj.Schema('howto_analysis')
+howto_analysis.drop(prompt=False)
+howto_analysis = dj.Schema('howto_analysis')
+
+# Reference tables from the first schema
+@howto_analysis
+class Experimenter(dj.Manual):
+    definition = """
+    experimenter : varchar(32)
+    ---
+    email : varchar(100)
+    """
+
+@howto_analysis
+class Experiment(dj.Manual):
+    definition = """
+    -> Subject                    # Cross-schema reference
+    -> Experimenter
+    experiment_date : date
+    ---
+    notes : varchar(1000)
+    """
+
+@howto_analysis
+class Analysis(dj.Computed):
+    definition = """
+    -> Experiment
+    ---
+    result : float64
+    """
+    def make(self, key):
+        self.insert1({**key, 'result': 0.0})
+```
+
+
+
+```python
+# Combine both schemas - tables are automatically grouped
+multi_schema_diagram = dj.Diagram(schema) + dj.Diagram(howto_analysis)
+multi_schema_diagram
+```
+
+
+Tables are grouped by their database schema automatically. The group label shows the Python module name when available (following the DataJoint convention of one module per schema).
+
+**Multi-schema diagrams are useful for:**
+- Visualizing pipelines spanning multiple schemas
+- Understanding which tables belong to which module
+- Documentation for multi-module architectures
+
+## Collapsing Schemas
+
+*New in DataJoint 2.1*
+
+For high-level pipeline views, collapse entire schemas into single nodes using `.collapse()`. This is useful for showing relationships between modules without the detail of individual tables.
+
+
+```python
+# Show schema1 expanded, schema2 collapsed into a single node
+dj.Diagram(schema) + dj.Diagram(howto_analysis).collapse()
+```
+
+
+The collapsed node shows the module name and table count. Edges from the expanded schema connect to the collapsed node.
+
+**"Expanded wins" rule:** If a table appears in both a collapsed and non-collapsed diagram, it stays expanded. This applies even when expanding a single table from a collapsed schema:
+
+
+```python
+# "Expanded wins": Experimenter is expanded even though howto_analysis is collapsed
+dj.Diagram(Subject) + dj.Diagram(Experimenter) + dj.Diagram(howto_analysis).collapse()
+```
+
+
+**Preserving directionality:** Collapsing middle layers of a pipeline preserves the DAG structure. The collapsed node sits between expanded tables, maintaining edge directions:
+
+
+```python
+# Create a separate schema for this example
+sandwich = dj.Schema('howto_sandwich')
+sandwich.drop(prompt=False)
+sandwich = dj.Schema('howto_sandwich')
+
+# Linear pipeline: RawData -> Filtered -> Normalized -> FinalResult
+@sandwich
+class RawData(dj.Manual):
+    definition = """
+    data_id : int32
+    """
+
+@sandwich
+class Filtered(dj.Computed):
+    definition = """
+    -> RawData
+    ---
+    filtered_value : float32
+    """
+    def make(self, key): pass
+
+@sandwich
+class Normalized(dj.Computed):
+    definition = """
+    -> Filtered
+    ---
+    normalized_value : float32
+    """
+    def make(self, key): pass
+
+@sandwich
+class FinalResult(dj.Computed):
+    definition = """
+    -> Normalized
+    ---
+    result : float32
+    """
+    def make(self, key): pass
+
+# Sandwich collapse: expand top and bottom, collapse middle processing steps
+dj.Diagram(RawData) + dj.Diagram(FinalResult) + dj.Diagram(sandwich).collapse()
+```
+
+
+### Extended Example: Multi-Module Pipeline
+
+Here's a realistic example with three modules that have cross-schema dependencies:
+
+**`demo_modules/acquisition.py`** - Core data acquisition:
+```python
+@schema
+class Lab(dj.Manual):
+    definition = """lab : varchar(32) ..."""
+
+@schema
+class Subject(dj.Manual):
+    definition = """subject_id : varchar(16) --- -> Lab ..."""
+
+@schema
+class Session(dj.Manual):
+    definition = """-> Subject  session_date : date ..."""
+```
+
+**`demo_modules/processing.py`** - Data processing (references acquisition):
+```python
+@schema
+class ProcessingParams(dj.Lookup):
+    definition = """params_id : int16 ..."""
+
+@schema
+class ProcessedSession(dj.Computed):
+    definition = """-> acquisition.Session  -> ProcessingParams ..."""
+
+@schema
+class EventDetection(dj.Computed):
+    definition = """-> ProcessedSession  event_id : int32 ..."""
+```
+
+**`demo_modules/analysis.py`** - Analysis (references both modules):
+```python
+@schema
+class AnalysisParams(dj.Lookup):
+    definition = """analysis_id : int16 ..."""
+
+@schema
+class SubjectAnalysis(dj.Computed):
+    definition = """-> acquisition.Subject  -> AnalysisParams ..."""
+
+@schema
+class CrossSessionAnalysis(dj.Computed):
+    definition = """-> acquisition.Subject  -> processing.ProcessingParams ..."""
+```
+
+
+```python
+# Import the demo modules
+from demo_modules import acquisition, processing, analysis
+
+# Activate schemas (creates tables on first run)
+acquisition.schema.activate('demo_acquisition')
+processing.schema.activate('demo_processing')
+analysis.schema.activate('demo_analysis')
+
+# Drop and recreate for clean state
+for s in [analysis.schema, processing.schema, acquisition.schema]:
+    s.drop(prompt=False)
+acquisition.schema.activate('demo_acquisition')
+processing.schema.activate('demo_processing')
+analysis.schema.activate('demo_analysis')
+
+# Full pipeline diagram - all modules expanded
+# Note: dj.Diagram(module) works when the module has a `schema` attribute
+full_pipeline = dj.Diagram(acquisition) + dj.Diagram(processing) + dj.Diagram(analysis)
+full_pipeline
+```
+
+
+The full diagram shows all three modules with cross-schema references:
+- `acquisition` provides core tables (`Lab`, `Subject`, `Session`)
+- `processing` references `Session` from acquisition
+- `analysis` references `Subject` from acquisition AND `ProcessingParams` from processing
+
+Now let's see collapse in action:
+
+
+```python
+# Two schemas collapsed: acquisition expanded, downstream modules collapsed
+# This shows acquisition's internal structure while abstracting processing & analysis
+dj.Diagram(acquisition) + dj.Diagram(processing).collapse() + dj.Diagram(analysis).collapse()
+```
+
+
+
+```python
+# "Expanded wins": Subject stays expanded even though analysis references it
+dj.Diagram(acquisition.Subject) + dj.Diagram(analysis).collapse()
+```
+
+
+
+```python
+# Schema-level DAG: all modules collapsed
+# Shows the dependency structure between modules at a glance
+dj.Diagram(acquisition).collapse() + dj.Diagram(processing).collapse() + dj.Diagram(analysis).collapse()
+```
+
+
+**Key observations:**
+
+1. **Collapsed nodes show table count** — e.g., "processing (3 tables)"
+2. **Cross-schema edges preserved** — Dependencies between modules are shown as edges between collapsed nodes
+3. **"Expanded wins"** — If you explicitly include a table (like `Subject`), it stays expanded even if a collapsed schema references it
+4. **Schema-level DAG** — Collapsing all schemas reveals the high-level module dependency graph, useful for understanding pipeline architecture
+
 ## What Diagrams Don't Show
 
 Diagrams do **NOT** show these FK modifiers:
@@ -20725,15 +21573,32 @@ A dashed line could be any of:
 | **Underlined** | Introduces new dimension |
 | **Orange dots** | Renamed FK via `.proj()` |
 | **Colors** | Green=Manual, Gray=Lookup, Red=Computed, Blue=Imported |
+| **Grouped boxes** | Tables grouped by schema/module |
+| **3D box (gray)** | Collapsed schema *(2.1+)* |
+
+| Feature | Method |
+|---------|--------|
+| Layout direction | `dj.config.display.diagram_direction` |
+| Mermaid output | `.make_mermaid()` |
+| Collapse schema | `.collapse()` *(2.1+)* |
 
 ## Related
 
+- [Diagram Specification](../reference/specs/diagram.md)
 - [Entity Integrity: Dimensions](../explanation/entity-integrity.md#schema-dimensions)
 - [Semantic Matching](../reference/specs/semantic-matching.md)
 - [Schema Design Tutorial](../tutorials/basics/02-schema-design.ipynb)
 
 
 ```python
+# Cleanup all schemas
+# Demo modules
+for s in [analysis.schema, processing.schema, acquisition.schema]:
+    if s.is_activated():
+        s.drop(prompt=False)
+# Earlier examples
+sandwich.drop(prompt=False)
+howto_analysis.drop(prompt=False)
 schema.drop(prompt=False)
 ```
 
@@ -20782,7 +21647,7 @@ ProcessedData.populate(limit=100)
 ProcessedData.populate(suppress_errors=True)
 
 # Check what failed
-failed = ProcessedData.jobs & 'status = "error"'
+failed = ProcessedData.jobs & "status = 'error'"
 print(failed)
 
 # Clear errors to retry
@@ -20991,6 +21856,462 @@ class FilteredComputation(dj.Computed):
 - [Computation Model](../explanation/computation-model.md) — How computation works
 - [Distributed Computing](distributed-computing.md) — Multi-worker setup
 - [Handle Errors](handle-errors.md) — Error recovery
+
+
+---
+## File: how-to/testing.md
+
+# Testing DataJoint Packages
+
+Best practices for integration and unit testing in packages that depend on DataJoint.
+
+## Principles
+
+1. **Use real databases** — Test against MySQL or PostgreSQL, not mocks. DataJoint's behavior depends on database semantics (transactions, foreign keys, type coercion).
+
+2. **Isolate tests** — Each test should use its own schema to avoid interference. Clean up on both success and failure.
+
+3. **Reuse connections** — Create connections once per session, not per test. Database connections are expensive.
+
+4. **Test logic, not volume** — Use minimal data that exercises your code paths. Integration tests should be fast.
+
+## Database Setup
+
+### Local Development
+
+Use Docker Compose to run test databases:
+
+```yaml
+# docker-compose.yaml
+services:
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: datajoint
+      POSTGRES_PASSWORD: datajoint
+    ports:
+      - "5432:5432"
+```
+
+```bash
+docker compose up -d
+```
+
+### Environment Variables
+
+Configure DataJoint via environment variables for flexibility across environments:
+
+```bash
+export DJ_HOST=localhost
+export DJ_PORT=5432
+export DJ_USER=datajoint
+export DJ_PASS=datajoint
+export DJ_BACKEND=postgresql
+```
+
+## Pytest Fixtures
+
+### Connection Fixture (Session-Scoped)
+
+Create the connection once per test session:
+
+```python
+# conftest.py
+import os
+import pytest
+import datajoint as dj
+
+
+@pytest.fixture(scope="session")
+def dj_connection():
+    """Configure and return DataJoint connection for the test session."""
+    dj.config["database.host"] = os.getenv("DJ_HOST", "localhost")
+    dj.config["database.port"] = int(os.getenv("DJ_PORT", 5432))
+    dj.config["database.user"] = os.getenv("DJ_USER", "datajoint")
+    dj.config["database.password"] = os.getenv("DJ_PASS", "datajoint")
+    dj.config["database.use_tls"] = os.getenv("DJ_USE_TLS", "false").lower() == "true"
+
+    backend = os.getenv("DJ_BACKEND", "postgresql")
+    if backend == "postgresql":
+        dj.config["database.backend"] = "postgresql"
+
+    # Verify connection works
+    dj.conn()
+
+    yield dj.conn()
+```
+
+### Schema Fixture (Function-Scoped)
+
+Create a fresh schema for each test, with automatic cleanup:
+
+```python
+@pytest.fixture
+def schema(dj_connection):
+    """Create a temporary schema for a single test."""
+    import uuid
+
+    # Unique schema name to avoid collisions in parallel runs
+    schema_name = f"test_{uuid.uuid4().hex[:8]}"
+    schema = dj.Schema(schema_name)
+
+    yield schema
+
+    # Cleanup: drop schema even if test fails
+    schema.drop(prompt=False)
+```
+
+### Schema Fixture (Module-Scoped)
+
+For tests that share table definitions, use module scope:
+
+```python
+@pytest.fixture(scope="module")
+def shared_schema(dj_connection):
+    """Schema shared across tests in a module."""
+    schema_name = f"test_{uuid.uuid4().hex[:8]}"
+    schema = dj.Schema(schema_name)
+
+    yield schema
+
+    schema.drop(prompt=False)
+```
+
+## Writing Tests
+
+### Basic Table Test
+
+```python
+def test_insert_and_fetch(schema):
+    @schema
+    class Subject(dj.Manual):
+        definition = """
+        subject_id : int32
+        ---
+        name : varchar(100)
+        """
+
+    # Insert
+    Subject.insert1({"subject_id": 1, "name": "Alice"})
+
+    # Verify
+    result = Subject.fetch1()
+    assert result["name"] == "Alice"
+```
+
+### Testing Computed Tables
+
+```python
+def test_computed_table(schema):
+    @schema
+    class Source(dj.Manual):
+        definition = """
+        id : int32
+        ---
+        value : float64
+        """
+
+    @schema
+    class Computed(dj.Computed):
+        definition = """
+        -> Source
+        ---
+        doubled : float64
+        """
+
+        def make(self, key):
+            value = (Source & key).fetch1("value")
+            self.insert1({**key, "doubled": value * 2})
+
+    # Setup
+    Source.insert1({"id": 1, "value": 3.5})
+
+    # Run computation
+    Computed.populate()
+
+    # Verify
+    assert Computed.fetch1("doubled") == 7.0
+```
+
+### Testing Foreign Key Constraints
+
+```python
+def test_referential_integrity(schema):
+    @schema
+    class Parent(dj.Manual):
+        definition = """
+        parent_id : int32
+        """
+
+    @schema
+    class Child(dj.Manual):
+        definition = """
+        -> Parent
+        child_id : int32
+        """
+
+    # Insert parent first
+    Parent.insert1({"parent_id": 1})
+    Child.insert1({"parent_id": 1, "child_id": 1})
+
+    # Verify FK violation raises error
+    with pytest.raises(dj.errors.IntegrityError):
+        Child.insert1({"parent_id": 999, "child_id": 2})
+```
+
+### Testing Cascading Deletes
+
+```python
+def test_cascade_delete(schema):
+    @schema
+    class Parent(dj.Manual):
+        definition = """
+        parent_id : int32
+        """
+
+    @schema
+    class Child(dj.Manual):
+        definition = """
+        -> Parent
+        child_id : int32
+        """
+
+    Parent.insert1({"parent_id": 1})
+    Child.insert([
+        {"parent_id": 1, "child_id": 1},
+        {"parent_id": 1, "child_id": 2},
+    ])
+
+    assert len(Child()) == 2
+
+    # Delete parent cascades to children
+    (Parent & {"parent_id": 1}).delete(prompt=False)
+
+    assert len(Child()) == 0
+```
+
+## Testing with Object Storage
+
+For tables using blob storage, configure a test store:
+
+```python
+import tempfile
+
+@pytest.fixture(scope="session")
+def blob_store(dj_connection):
+    """Configure a temporary blob store for tests."""
+    store_path = tempfile.mkdtemp(prefix="dj_test_store_")
+
+    dj.config["stores"] = {
+        "test": {
+            "protocol": "file",
+            "location": store_path,
+        }
+    }
+
+    yield store_path
+
+    # Cleanup
+    import shutil
+    shutil.rmtree(store_path, ignore_errors=True)
+
+
+def test_blob_storage(schema, blob_store):
+    import numpy as np
+
+    @schema
+    class ArrayData(dj.Manual):
+        definition = """
+        id : int32
+        ---
+        data : <blob@test>
+        """
+
+    arr = np.array([1, 2, 3])
+    ArrayData.insert1({"id": 1, "data": arr})
+
+    fetched = ArrayData.fetch1("data")
+    assert np.array_equal(fetched, arr)
+```
+
+## CI/CD Configuration
+
+### GitHub Actions
+
+```yaml
+# .github/workflows/test.yaml
+name: Tests
+
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: datajoint
+          POSTGRES_PASSWORD: datajoint
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install -e ".[test]"
+
+      - name: Run tests
+        env:
+          DJ_HOST: localhost
+          DJ_PORT: 5432
+          DJ_USER: datajoint
+          DJ_PASS: datajoint
+          DJ_BACKEND: postgresql
+        run: pytest tests/ -v
+```
+
+### Testing Against Multiple Backends
+
+```yaml
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - backend: postgresql
+            image: postgres:15
+            port: 5432
+          - backend: mysql
+            image: mysql:8.0
+            port: 3306
+
+    services:
+      db:
+        image: ${{ matrix.image }}
+        # ... service config
+
+    steps:
+      - name: Run tests
+        env:
+          DJ_BACKEND: ${{ matrix.backend }}
+          DJ_PORT: ${{ matrix.port }}
+        run: pytest tests/ -v
+```
+
+## Common Patterns
+
+### Parameterized Tests
+
+Test the same logic with different inputs:
+
+```python
+@pytest.mark.parametrize("value,expected", [
+    (1, 2),
+    (0, 0),
+    (-5, -10),
+])
+def test_doubling(schema, value, expected):
+    @schema
+    class Numbers(dj.Manual):
+        definition = """
+        id : int32
+        ---
+        value : int32
+        """
+
+    @schema
+    class Doubled(dj.Computed):
+        definition = """
+        -> Numbers
+        ---
+        result : int32
+        """
+        def make(self, key):
+            v = (Numbers & key).fetch1("value")
+            self.insert1({**key, "result": v * 2})
+
+    Numbers.insert1({"id": 1, "value": value})
+    Doubled.populate()
+
+    assert Doubled.fetch1("result") == expected
+```
+
+### Testing Error Conditions
+
+```python
+def test_duplicate_insert_raises(schema):
+    @schema
+    class Data(dj.Manual):
+        definition = """
+        id : int32
+        """
+
+    Data.insert1({"id": 1})
+
+    with pytest.raises(dj.errors.DuplicateError):
+        Data.insert1({"id": 1})
+```
+
+### Fixtures for Sample Data
+
+```python
+@pytest.fixture
+def sample_subjects(schema):
+    """Create Subject table with sample data."""
+    @schema
+    class Subject(dj.Manual):
+        definition = """
+        subject_id : varchar(16)
+        ---
+        species : varchar(50)
+        """
+
+    Subject.insert([
+        {"subject_id": "M001", "species": "mouse"},
+        {"subject_id": "M002", "species": "mouse"},
+        {"subject_id": "R001", "species": "rat"},
+    ])
+
+    return Subject
+```
+
+## Tips
+
+1. **Use `prompt=False`** — Always pass `prompt=False` to `delete()` and `drop()` in tests to avoid interactive prompts.
+
+2. **Unique schema names** — Use UUIDs or timestamps in schema names to allow parallel test execution.
+
+3. **Don't test DataJoint itself** — Trust that DataJoint works. Test your application logic, not basic insert/fetch operations.
+
+4. **Seed random data** — If using random test data, set a fixed seed for reproducibility:
+   ```python
+   import random
+   random.seed(42)
+   ```
+
+5. **Skip slow tests** — Mark slow integration tests for optional execution:
+   ```python
+   @pytest.mark.slow
+   def test_large_computation(schema):
+       ...
+   ```
+   ```bash
+   pytest -m "not slow"  # Skip slow tests
+   pytest -m slow        # Run only slow tests
+   ```
 
 
 ---
@@ -22446,12 +23767,14 @@ Configuration is loaded in priority order:
 
 | Setting | Environment | Default | Description |
 |---------|-------------|---------|-------------|
-| `database.host` | `DJ_HOST` | `localhost` | MySQL server hostname |
-| `database.port` | `DJ_PORT` | `3306` | MySQL server port |
-| `database.user` | `DJ_USER` | — | Database username |
-| `database.password` | `DJ_PASS` | — | Database password |
+| `database.host` | `DJ_HOST` | `localhost` | Database server hostname |
+| `database.port` | `DJ_PORT` | `3306` | Database server port |
+| `database.user` | `DJ_USER` | — | Database username (required) |
+| `database.password` | `DJ_PASS` | — | Database password (required) |
 | `database.reconnect` | — | `True` | Auto-reconnect on connection loss |
 | `database.use_tls` | — | `None` | Enable TLS encryption |
+| `database.schema_prefix` | `DJ_SCHEMA_PREFIX` | `""` | Project-specific prefix for schema names |
+| `database.create_tables` | `DJ_CREATE_TABLES` | `True` | Default for `Schema(create_tables=)`. Set `False` for production mode |
 
 ## Connection Settings
 
@@ -23125,7 +24448,7 @@ Session & [{'subject_id': 'M001'}, {'subject_id': 'M002'}]
 
 **Chaining**: Multiple restrictions combine with AND:
 ```python
-Session & "duration > 30" & {'experimenter': 'alice'}
+Session & "duration > 30" & {"experimenter": "alice"}
 ```
 
 ### Top N Rows (`dj.Top`)
@@ -26126,6 +27449,327 @@ Schema definitions are portable—the same Python class definitions work on both
 
 
 ---
+## File: reference/specs/diagram.md
+
+# Diagram Specification
+
+Schema visualization as directed acyclic graphs.
+
+## Overview
+
+`dj.Diagram` visualizes DataJoint schemas as directed graphs showing tables and their foreign key relationships. It provides multiple output formats including SVG, PNG, and Mermaid syntax.
+
+## Design Principles
+
+1. **Multiple output formats**: Graphviz (SVG/PNG) and Mermaid for different use cases
+2. **Graph algebra**: Combine and filter diagrams with set operators
+3. **Visual encoding**: Table tiers distinguished by shape and color
+4. **Flexible layout**: Configurable direction and schema grouping
+
+---
+
+## API Reference
+
+### Constructor
+
+```python
+dj.Diagram(source, context=None)
+```
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `source` | Table, Schema, module | — | Source to visualize |
+| `context` | dict | None | Namespace for class name resolution |
+
+### Layout Direction
+
+!!! version-added "New in 2.1"
+    Configurable layout direction was added in DataJoint 2.1.
+
+Layout direction is controlled via configuration:
+
+```python
+# Check current direction
+dj.config.display.diagram_direction  # "TB" or "LR"
+
+# Set globally
+dj.config.display.diagram_direction = "LR"
+
+# Override temporarily
+with dj.config.override(display__diagram_direction="LR"):
+    dj.Diagram(schema).draw()
+```
+
+| Value | Description |
+|-------|-------------|
+| `"TB"` | Top to bottom (default) |
+| `"LR"` | Left to right |
+
+### Class Method
+
+```python
+dj.Diagram.from_sequence(sequence)
+```
+
+Create a combined diagram from multiple sources. Equivalent to `Diagram(a) + Diagram(b) + ...`.
+
+---
+
+## Operators
+
+Diagrams support set algebra for combining and filtering:
+
+| Operator | Description | Example |
+|----------|-------------|---------|
+| `diag + n` | Expand n levels downstream (children) | `dj.Diagram(Mouse) + 2` |
+| `diag - n` | Expand n levels upstream (parents) | `dj.Diagram(Neuron) - 2` |
+| `diag1 + diag2` | Union of two diagrams | `dj.Diagram(Mouse) + dj.Diagram(Session)` |
+| `diag1 - diag2` | Difference (remove nodes) | `dj.Diagram(schema) - dj.Diagram(Lookup)` |
+| `diag1 * diag2` | Intersection | `dj.Diagram(schema1) * dj.Diagram(schema2)` |
+
+### Common Patterns
+
+```python
+# Show table with immediate parents and children
+dj.Diagram(MyTable) + 1 - 1
+
+# Show entire schema
+dj.Diagram(schema)
+
+# Show all tables downstream of a source
+dj.Diagram(SourceTable) + 10
+
+# Show ancestry of a computed table
+dj.Diagram(ComputedTable) - 10
+```
+
+**Note:** Order matters. `diagram + 1 - 1` may differ from `diagram - 1 + 1`.
+
+### Collapsing Schemas
+
+!!! version-added "New in 2.1"
+    The `collapse()` method was added in DataJoint 2.1.
+
+```python
+diag.collapse()
+```
+
+Mark a diagram for collapsing when combined with other diagrams. Collapsed schemas appear as single nodes showing the table count.
+
+```python
+# Show schema1 expanded, schema2 as a single collapsed node
+dj.Diagram(schema1) + dj.Diagram(schema2).collapse()
+```
+
+**"Expanded wins" rule:** If a node appears in both a collapsed and non-collapsed diagram, it stays expanded. This allows you to show specific tables from a schema while collapsing the rest.
+
+```python
+# Subject is expanded, rest of analysis schema is collapsed
+dj.Diagram(Subject) + dj.Diagram(analysis).collapse()
+```
+
+---
+
+## Output Methods
+
+### Graphviz Output
+
+| Method | Returns | Description |
+|--------|---------|-------------|
+| `make_svg()` | `IPython.SVG` | SVG for Jupyter display |
+| `make_png()` | `BytesIO` | PNG image bytes |
+| `make_image()` | `ndarray` | NumPy array (matplotlib) |
+| `make_dot()` | `pydot.Dot` | Graphviz DOT object |
+
+### Mermaid Output
+
+!!! version-added "New in 2.1"
+    Mermaid output was added in DataJoint 2.1.
+
+```python
+make_mermaid() -> str
+```
+
+Generates [Mermaid](https://mermaid.js.org/) flowchart syntax for embedding in Markdown, GitHub, or web documentation. Tables are grouped into subgraphs by schema.
+
+### Display Methods
+
+| Method | Description |
+|--------|-------------|
+| `draw()` | Display with matplotlib |
+| `_repr_svg_()` | Jupyter notebook auto-display |
+
+### File Output
+
+```python
+save(filename, format=None)
+```
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `filename` | str | Output file path |
+| `format` | str | `"png"`, `"svg"`, or `"mermaid"`. Inferred from extension if None. |
+
+**Supported extensions:** `.png`, `.svg`, `.mmd`, `.mermaid`
+
+---
+
+## Visual Encoding
+
+### Table Tiers
+
+Each table tier has a distinct visual style:
+
+| Tier | Shape | Fill Color | Font Color |
+|------|-------|------------|------------|
+| **Manual** | rectangle | green | dark green |
+| **Lookup** | plain text | gray | black |
+| **Computed** | ellipse | red | dark red |
+| **Imported** | ellipse | blue | dark blue |
+| **Part** | plain text | transparent | black |
+
+### Edge Styles
+
+| Style | Meaning |
+|-------|---------|
+| Solid line | Primary foreign key |
+| Dashed line | Non-primary foreign key |
+| Thick line | Master-Part relationship |
+| Thin line | Multi-valued foreign key |
+
+### Node Labels
+
+- **Underlined**: Table introduces new primary key attributes
+- **Plain**: Table inherits all primary key attributes from parents
+
+---
+
+## Schema Grouping
+
+!!! version-added "New in 2.1"
+    Automatic schema grouping was added in DataJoint 2.1.
+
+Tables are automatically grouped into visual clusters by their database schema. The cluster label shows the Python module name when available (following the DataJoint convention of one module per schema), otherwise the database schema name.
+
+```python
+# Multi-schema diagram - tables automatically grouped
+combined = dj.Diagram(schema1) + dj.Diagram(schema2)
+combined.draw()
+
+# Save with grouping
+combined.save("pipeline.svg")
+```
+
+This is useful when visualizing multi-schema pipelines to see which tables belong to which module.
+
+---
+
+## Examples
+
+### Basic Usage
+
+```python
+import datajoint as dj
+
+# Diagram from a single table
+dj.Diagram(Mouse)
+
+# Diagram from entire schema
+dj.Diagram(schema)
+
+# Diagram from module
+dj.Diagram(my_pipeline_module)
+```
+
+### Layout Direction
+
+```python
+# Horizontal layout using config override
+with dj.config.override(display__diagram_direction="LR"):
+    dj.Diagram(schema).draw()
+
+# Or set globally
+dj.config.display.diagram_direction = "LR"
+dj.Diagram(schema).save("pipeline.svg")
+```
+
+### Saving Diagrams
+
+```python
+diag = dj.Diagram(schema)
+
+# Save as SVG
+diag.save("pipeline.svg")
+
+# Save as PNG
+diag.save("pipeline.png")
+
+# Save as Mermaid
+diag.save("pipeline.mmd")
+
+# Explicit format
+diag.save("output.txt", format="mermaid")
+```
+
+### Mermaid Output
+
+```python
+print(dj.Diagram(schema).make_mermaid())
+```
+
+Output:
+```mermaid
+flowchart TB
+    classDef manual fill:#90EE90,stroke:#006400
+    classDef lookup fill:#D3D3D3,stroke:#696969
+    classDef computed fill:#FFB6C1,stroke:#8B0000
+    classDef imported fill:#ADD8E6,stroke:#00008B
+    classDef part fill:#FFFFFF,stroke:#000000
+
+    subgraph my_pipeline
+        Mouse[Mouse]:::manual
+        Session[Session]:::manual
+        Neuron([Neuron]):::computed
+    end
+    Mouse --> Session
+    Session --> Neuron
+```
+
+### Combining Diagrams
+
+```python
+# Union of schemas
+combined = dj.Diagram(schema1) + dj.Diagram(schema2)
+
+# Intersection
+common = dj.Diagram(schema1) * dj.Diagram(schema2)
+
+# From sequence
+combined = dj.Diagram.from_sequence([schema1, schema2, schema3])
+```
+
+---
+
+## Dependencies
+
+Diagram visualization requires optional dependencies:
+
+```bash
+pip install matplotlib pygraphviz
+```
+
+If dependencies are missing, `dj.Diagram` displays a warning and provides a stub class.
+
+---
+
+## See Also
+
+- [How to Read Diagrams](../../how-to/read-diagrams.ipynb)
+- [Query Algebra](query-algebra.md)
+- [Table Declaration](table-declaration.md)
+
+
+---
 ## File: reference/specs/fetch-api.md
 
 # DataJoint 2.0 Fetch API Specification
@@ -26316,7 +27960,7 @@ arr = Experiment().to_arrays()
 
 ```python
 # Get recent experiments, sorted by date
-recent = (Experiment() & 'date > "2024-01-01"').to_pandas(
+recent = (Experiment() & "date > '2024-01-01'").to_pandas(
     order_by='date DESC',
     limit=100
 )
@@ -26543,8 +28187,9 @@ Each specification follows a consistent structure:
 | [Semantic Matching](semantic-matching.md) | Query Operators | [Model Relationships](../../how-to/model-relationships.ipynb) | [Query Algebra](../../explanation/query-algebra.md) |
 | [Primary Keys](primary-keys.md) | Table Declaration | [Design Primary Keys](../../how-to/design-primary-keys.md) | [Entity Integrity](../../explanation/entity-integrity.md) |
 | [Fetch API](fetch-api.md) | Query Operators | [Fetch Results](../../how-to/fetch-results.md) | — |
+| [Diagram](diagram.md) | Table Declaration | [Read Diagrams](../../how-to/read-diagrams.ipynb) | — |
 
-**Key concepts:** Restriction (`&`, `-`), projection (`.proj()`), join (`*`), aggregation (`.aggr()`), union, universal set (`U()`), attribute lineage
+**Key concepts:** Restriction (`&`, `-`), projection (`.proj()`), join (`*`), aggregation (`.aggr()`), union, universal set (`U()`), attribute lineage, schema visualization
 
 ---
 
@@ -26946,6 +28591,9 @@ ProcessedData().to_arrays('_job_start_time', '_job_duration', '_job_version')
 ## File: reference/specs/master-part.md
 
 # Master-Part Relationships Specification
+
+!!! tip "Looking for a task-oriented guide?"
+    See [Master-Part Tables](../../how-to/master-part.ipynb) for step-by-step examples.
 
 ## Overview
 
@@ -28877,6 +30525,32 @@ Session & {"subject_id": 1, "session_type": "training"}
 
 Multiple key-value pairs are combined with AND.
 
+**Unmatched keys are silently ignored:**
+
+```python
+# If 'nonexistent' is not an attribute of Session:
+Session & {"subject_id": 1, "nonexistent": "value"}
+# Equivalent to:
+Session & {"subject_id": 1}  # unmatched key skipped
+
+# If NO keys match, condition evaluates to True (all rows):
+Session & {"nonexistent": "value"}  # returns all rows
+```
+
+This applies to:
+- Misspelled attribute names
+- Hidden attributes (prefixed with `_`)
+- Keys from a different table's schema
+
+**Rationale:** Enables restricting with dicts containing extra keys (e.g., a row fetched from another table) without explicitly filtering to matching attributes.
+
+**Caution:** Typos fail silently. Use string restrictions for explicit validation:
+
+```python
+# SQL error if attribute doesn't exist
+Session & "nonexistent = 'value'"
+```
+
 ### 2.5 Restriction by Query Expression
 
 Restrict to rows with matching primary keys in another expression:
@@ -30294,13 +31968,7 @@ secondary_section
 ---
 ```
 
-or equivalently:
-
-```
-___
-```
-
-- Three dashes or three underscores
+- Three or more dashes
 - Separates primary key attributes (above) from secondary attributes (below)
 - Required if table has secondary attributes
 
@@ -30311,6 +31979,50 @@ Each non-empty, non-comment line is one of:
 1. **Attribute definition**
 2. **Foreign key reference**
 3. **Index declaration**
+
+### 2.5 Singleton Tables (Empty Primary Keys)
+
+!!! version-added "New in 2.1"
+
+    Singleton tables were introduced in DataJoint 2.1.
+
+A **singleton table** can hold at most one row. It is declared with no attributes in the primary key section:
+
+```python
+@schema
+class Config(dj.Lookup):
+    definition = """
+    # Global configuration
+    ---
+    setting1 : varchar(100)
+    setting2 : int32
+    """
+```
+
+**Behavior:**
+
+| Operation | Result |
+|-----------|--------|
+| Insert | Works without specifying a key |
+| Second insert | Raises `DuplicateError` |
+| `fetch1()` | Returns the single row |
+| `heading.primary_key` | Returns `[]` (empty) |
+
+**Use cases:**
+
+- Global configuration settings
+- Pipeline parameters
+- Summary statistics
+- State tracking
+
+**Implementation:**
+
+Internally, singleton tables use a hidden `_singleton` attribute of type `bool` as the primary key. This attribute is:
+
+- Automatically created and populated
+- Excluded from `heading.attributes`
+- Excluded from `fetch()` results
+- Excluded from join matching
 
 ---
 
@@ -30333,12 +32045,63 @@ attribute_name [= default_value] : type [# comment]
 
 ### 3.3 Attribute Name Rules
 
-- **Pattern**: `^[a-z][a-z0-9_]*$`
-- **Start**: Lowercase letter
+- **Pattern**: `^[a-z_][a-z0-9_]*$`
+- **Start**: Lowercase letter or underscore
 - **Contains**: Lowercase letters, digits, underscores
 - **Convention**: snake_case
 
-### 3.4 Examples
+### 3.4 Hidden Attributes
+
+Attributes with names starting with underscore (`_`) are **hidden**:
+
+```python
+definition = """
+session_id : int32
+---
+result : float64
+_job_start_time : datetime(3)   # hidden
+_job_duration : float32         # hidden
+"""
+```
+
+**Behavior:**
+
+| Context | Hidden Attributes |
+|---------|-------------------|
+| `heading.attributes` | Excluded |
+| `heading._attributes` | Included |
+| Default table display | Excluded |
+| `to_dicts()` / `to_pandas()` | Excluded unless explicitly projected |
+| Join matching (namesakes) | Excluded |
+| Dict restrictions | Excluded (silently ignored) |
+| String restrictions | Included (passed to SQL) |
+
+**Accessing hidden attributes:**
+
+```python
+# Visible attributes only (default)
+results = MyTable.to_dicts()
+
+# Explicitly include hidden attributes
+results = MyTable.proj('result', '_job_start_time').to_dicts()
+
+# Or with fetch1 for single row
+row = (MyTable & key).fetch1('result', '_job_start_time')
+
+# String restriction works with hidden attributes
+MyTable & "_job_start_time > '2024-01-01'"
+
+# Dict restriction IGNORES hidden attributes
+MyTable & {'_job_start_time': some_date}  # no effect
+```
+
+**Use cases:**
+
+- Job metadata (`_job_start_time`, `_job_duration`, `_job_version`)
+- Internal tracking fields
+- Attributes that should not participate in automatic joins
+
+### 3.5 Examples
 
 ```python
 definition = """
@@ -30534,7 +32297,7 @@ class Session(dj.Manual):
 | Position | Effect |
 |----------|--------|
 | Before `---` | FK attributes become part of primary key |
-| After `---` | FK attributes are secondary (dependent) |
+| After `---` | FK attributes are secondary |
 
 ### 6.5 Nullable Foreign Keys
 
@@ -31720,7 +33483,7 @@ lab = dj.virtual_schema('my_lab_schema')
 
 # Access tables as attributes (classes)
 lab.Subject.fetch()
-lab.Session & 'subject_id="M001"'
+lab.Session & "subject_id='M001'"
 
 # Full query algebra supported
 (lab.Session * lab.Subject).fetch()
@@ -31775,7 +33538,7 @@ schema.make_classes()
 
 # Now table classes are available in local namespace
 Subject.fetch()
-Session & 'date > "2024-01-01"'
+Session & "date > '2024-01-01'"
 ```
 
 **Parameters:**

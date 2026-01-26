@@ -110,6 +110,29 @@
    Code Block Enhancements
    ------------------------------------------------------------------- */
 
+/* Smaller font and line wrapping for code blocks */
+.md-typeset code,
+.md-typeset pre > code,
+.md-typeset .highlight code,
+.md-typeset .highlighttable code {
+  font-size: 0.7em !important;
+}
+
+/* Also target Jupyter notebook code cells */
+.md-typeset .jp-CodeCell code,
+.md-typeset .cell_input code,
+.md-typeset .input_area code {
+  font-size: 0.7em !important;
+}
+
+.md-typeset pre,
+.md-typeset .highlight pre {
+  /* Wrap long lines */
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
 /* Add subtle visual distinction for code comparisons */
 .version-comparison {
   display: grid;
