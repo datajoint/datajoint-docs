@@ -24,7 +24,6 @@ PUBLIC_MODULES = [
     "datajoint.blob",
     "datajoint.hash_registry",
     "datajoint.jobs",
-    "datajoint.admin",
     "datajoint.migrate",
 ]
 
@@ -44,7 +43,6 @@ MODULE_INFO = {
     "datajoint.blob": ("Blob", "Binary serialization"),
     "datajoint.hash_registry": ("Hash Registry", "Content hashing for external storage"),
     "datajoint.jobs": ("Jobs", "Job queue for AutoPopulate"),
-    "datajoint.admin": ("Admin", "Administrative functions"),
     "datajoint.migrate": ("Migrate", "Schema migration utilities"),
 }
 
