@@ -90,22 +90,22 @@ class NewTable(dj.Manual):
 NewTable()  # Creates the table
 ```
 
-## Use Schema Prefixes
+## Use Database Prefixes
 
 When multiple projects share a database server, use prefixes to avoid naming collisions and organize schemas.
 
-### Configure Project Prefix
+### Configure Database Prefix
 
 ```python
 import datajoint as dj
 
-dj.config.database.schema_prefix = 'myproject_'
+dj.config.database.database_prefix = 'myproject_'
 ```
 
 Or via environment variable:
 
 ```bash
-export DJ_SCHEMA_PREFIX=myproject_
+export DJ_DATABASE_PREFIX=myproject_
 ```
 
 Or in `datajoint.json`:
@@ -113,7 +113,7 @@ Or in `datajoint.json`:
 ```json
 {
   "database": {
-    "schema_prefix": "myproject_"
+    "database_prefix": "myproject_"
   }
 }
 ```
@@ -125,7 +125,7 @@ Use the prefix when creating schemas:
 ```python
 import datajoint as dj
 
-prefix = dj.config.database.schema_prefix  # 'myproject_'
+prefix = dj.config.database.database_prefix  # 'myproject_'
 
 # Schema names include prefix
 subject_schema = dj.Schema(prefix + 'subject')   # myproject_subject
@@ -197,7 +197,7 @@ export DJ_PASS=prod_password
 
 # Production mode
 export DJ_CREATE_TABLES=false
-export DJ_SCHEMA_PREFIX=myproject_
+export DJ_DATABASE_PREFIX=myproject_
 
 # Disable interactive prompts
 export DJ_SAFEMODE=false
@@ -215,7 +215,7 @@ services:
     environment:
       - DJ_HOST=db.example.com
       - DJ_CREATE_TABLES=false
-      - DJ_SCHEMA_PREFIX=prod_
+      - DJ_DATABASE_PREFIX=prod_
     volumes:
       # Mount secrets directory
       - type: bind
@@ -282,7 +282,7 @@ export DJ_PASS=<from-secret-manager>
 
 # Production behavior
 export DJ_CREATE_TABLES=false
-export DJ_SCHEMA_PREFIX=prod_
+export DJ_DATABASE_PREFIX=prod_
 export DJ_SAFEMODE=false
 
 # Logging
@@ -304,9 +304,9 @@ def verify_production_config():
     if dj.config.database.create_tables:
         errors.append("create_tables should be False in production")
 
-    # Check schema prefix is set
-    if not dj.config.database.schema_prefix:
-        errors.append("schema_prefix should be set in production")
+    # Check database prefix is set
+    if not dj.config.database.database_prefix:
+        errors.append("database_prefix should be set in production")
 
     # Check not pointing to localhost
     if dj.config.database.host == 'localhost':
@@ -330,7 +330,7 @@ if __name__ == '__main__':
 | Setting | Development | Production |
 |---------|-------------|------------|
 | `database.create_tables` | `true` | `false` |
-| `database.schema_prefix` | `""` or `dev_` | `prod_` |
+| `database.database_prefix` | `""` or `dev_` | `prod_` |
 | `safemode` | `true` | `false` (automated) |
 | `loglevel` | `DEBUG` | `WARNING` |
 
