@@ -241,6 +241,47 @@ export DJ_PASS=secret
 
 **Note:** Per-store credentials must be configured in `datajoint.json` or `.secrets/` — environment variable overrides are not supported for nested store configurations.
 
+## Programmatic Access
+
+### Reading and Writing Settings
+
+Access settings using dot notation on `dj.config`:
+
+```python
+import datajoint as dj
+
+# Read settings
+print(dj.config.database.host)
+print(dj.config.display.diagram_direction)
+
+# Write settings
+dj.config.database.host = "mysql.example.com"
+dj.config.display.diagram_direction = "TB"
+```
+
+### Temporary Overrides
+
+Use `dj.config.override()` to temporarily change settings within a context:
+
+```python
+with dj.config.override(safemode=False):
+    # safemode is False here
+    (Table & key).delete()
+# safemode is restored to original value
+```
+
+**Nested settings syntax:** Since Python doesn't allow dots in keyword argument names, use double underscores (`__`) to access nested settings in `override()`:
+
+```python
+# These are equivalent:
+dj.config.display.diagram_direction = "TB"  # direct assignment
+
+with dj.config.override(display__diagram_direction="TB"):  # in override()
+    ...
+```
+
+The double underscore maps to the dot-notation path: `display__diagram_direction` → `display.diagram_direction`.
+
 ## API Reference
 
 See [Settings API](../api/datajoint/settings.md) for programmatic access.
