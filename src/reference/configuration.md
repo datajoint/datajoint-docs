@@ -15,12 +15,13 @@ Configuration is loaded in priority order:
 
 | Setting | Environment | Default | Description |
 |---------|-------------|---------|-------------|
+| `database.backend` | `DJ_BACKEND` | `mysql` | Database backend: `mysql` or `postgresql` *(new in 2.1)* |
 | `database.host` | `DJ_HOST` | `localhost` | Database server hostname |
-| `database.port` | `DJ_PORT` | `3306` | Database server port |
+| `database.port` | `DJ_PORT` | `3306`/`5432` | Database server port (auto-detects from backend) |
 | `database.user` | `DJ_USER` | — | Database username (required) |
 | `database.password` | `DJ_PASS` | — | Database password (required) |
 | `database.reconnect` | — | `True` | Auto-reconnect on connection loss |
-| `database.use_tls` | — | `None` | Enable TLS encryption |
+| `database.use_tls` | `DJ_USE_TLS` | `None` | Enable TLS encryption *(env var new in 2.1)* |
 | `database.database_prefix` | `DJ_DATABASE_PREFIX` | `""` | Prefix for database/schema names |
 | `database.create_tables` | `DJ_CREATE_TABLES` | `True` | Default for `Schema(create_tables=)`. Set `False` for production mode |
 
@@ -157,11 +158,12 @@ If table lacks partition attributes, it follows normal path structure.
 
 ## Display Settings
 
-| Setting | Default | Description |
-|---------|---------|-------------|
-| `display.limit` | `12` | Max rows to display |
-| `display.width` | `14` | Column width |
-| `display.show_tuple_count` | `True` | Show row count in output |
+| Setting | Environment | Default | Description |
+|---------|-------------|---------|-------------|
+| `display.limit` | — | `12` | Max rows to display |
+| `display.width` | — | `14` | Column width |
+| `display.show_tuple_count` | — | `True` | Show row count in output |
+| `display.diagram_direction` | `DJ_DIAGRAM_DIRECTION` | `LR` | Diagram layout: `LR` (left-right) or `TB` (top-bottom) *(new in 2.1)* |
 
 ## Top-Level Settings
 
