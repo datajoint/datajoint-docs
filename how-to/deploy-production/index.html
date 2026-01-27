@@ -2599,22 +2599,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#use-schema-prefixes" class="md-nav__link">
+  <a href="#use-database-prefixes" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Use Schema Prefixes
+        Use Database Prefixes
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Use Schema Prefixes">
+    <nav class="md-nav" aria-label="Use Database Prefixes">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#configure-project-prefix" class="md-nav__link">
+  <a href="#configure-database-prefix" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Configure Project Prefix
+        Configure Database Prefix
       
     </span>
   </a>
@@ -5654,22 +5654,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#use-schema-prefixes" class="md-nav__link">
+  <a href="#use-database-prefixes" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Use Schema Prefixes
+        Use Database Prefixes
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Use Schema Prefixes">
+    <nav class="md-nav" aria-label="Use Database Prefixes">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#configure-project-prefix" class="md-nav__link">
+  <a href="#configure-database-prefix" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Configure Project Prefix
+        Configure Database Prefix
       
     </span>
   </a>
@@ -5973,20 +5973,20 @@
 
 <span class="n">NewTable</span><span class="p">()</span>  <span class="c1"># Creates the table</span>
 </code></pre></div>
-<h2 id="use-schema-prefixes">Use Schema Prefixes<a class="headerlink" href="#use-schema-prefixes" title="Permanent link">&para;</a></h2>
+<h2 id="use-database-prefixes">Use Database Prefixes<a class="headerlink" href="#use-database-prefixes" title="Permanent link">&para;</a></h2>
 <p>When multiple projects share a database server, use prefixes to avoid naming collisions and organize schemas.</p>
-<h3 id="configure-project-prefix">Configure Project Prefix<a class="headerlink" href="#configure-project-prefix" title="Permanent link">&para;</a></h3>
+<h3 id="configure-database-prefix">Configure Database Prefix<a class="headerlink" href="#configure-database-prefix" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">datajoint</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dj</span>
 
-<span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">database</span><span class="o">.</span><span class="n">schema_prefix</span> <span class="o">=</span> <span class="s1">&#39;myproject_&#39;</span>
+<span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">database</span><span class="o">.</span><span class="n">database_prefix</span> <span class="o">=</span> <span class="s1">&#39;myproject_&#39;</span>
 </code></pre></div>
 <p>Or via environment variable:</p>
-<div class="highlight"><pre><span></span><code><span class="nb">export</span><span class="w"> </span><span class="nv">DJ_SCHEMA_PREFIX</span><span class="o">=</span>myproject_
+<div class="highlight"><pre><span></span><code><span class="nb">export</span><span class="w"> </span><span class="nv">DJ_DATABASE_PREFIX</span><span class="o">=</span>myproject_
 </code></pre></div>
 <p>Or in <code>datajoint.json</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;database&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;schema_prefix&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;myproject_&quot;</span>
+<span class="w">    </span><span class="nt">&quot;database_prefix&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;myproject_&quot;</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
@@ -5994,7 +5994,7 @@
 <p>Use the prefix when creating schemas:</p>
 <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">datajoint</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dj</span>
 
-<span class="n">prefix</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">database</span><span class="o">.</span><span class="n">schema_prefix</span>  <span class="c1"># &#39;myproject_&#39;</span>
+<span class="n">prefix</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">database</span><span class="o">.</span><span class="n">database_prefix</span>  <span class="c1"># &#39;myproject_&#39;</span>
 
 <span class="c1"># Schema names include prefix</span>
 <span class="n">subject_schema</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">Schema</span><span class="p">(</span><span class="n">prefix</span> <span class="o">+</span> <span class="s1">&#39;subject&#39;</span><span class="p">)</span>   <span class="c1"># myproject_subject</span>
@@ -6052,7 +6052,7 @@ like <code>'10.0.0.%'</code> to limit access to your internal network.</p>
 
 <span class="c1"># Production mode</span>
 <span class="nb">export</span><span class="w"> </span><span class="nv">DJ_CREATE_TABLES</span><span class="o">=</span><span class="nb">false</span>
-<span class="nb">export</span><span class="w"> </span><span class="nv">DJ_SCHEMA_PREFIX</span><span class="o">=</span>myproject_
+<span class="nb">export</span><span class="w"> </span><span class="nv">DJ_DATABASE_PREFIX</span><span class="o">=</span>myproject_
 
 <span class="c1"># Disable interactive prompts</span>
 <span class="nb">export</span><span class="w"> </span><span class="nv">DJ_SAFEMODE</span><span class="o">=</span><span class="nb">false</span>
@@ -6066,7 +6066,7 @@ like <code>'10.0.0.%'</code> to limit access to your internal network.</p>
 <span class="w">    </span><span class="nt">environment</span><span class="p">:</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DJ_HOST=db.example.com</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DJ_CREATE_TABLES=false</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DJ_SCHEMA_PREFIX=prod_</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DJ_DATABASE_PREFIX=prod_</span>
 <span class="w">    </span><span class="nt">volumes</span><span class="p">:</span>
 <span class="w">      </span><span class="c1"># Mount secrets directory</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bind</span>
@@ -6120,7 +6120,7 @@ chmod<span class="w"> </span><span class="m">600</span><span class="w"> </span>s
 
 <span class="c1"># Production behavior</span>
 <span class="nb">export</span><span class="w"> </span><span class="nv">DJ_CREATE_TABLES</span><span class="o">=</span><span class="nb">false</span>
-<span class="nb">export</span><span class="w"> </span><span class="nv">DJ_SCHEMA_PREFIX</span><span class="o">=</span>prod_
+<span class="nb">export</span><span class="w"> </span><span class="nv">DJ_DATABASE_PREFIX</span><span class="o">=</span>prod_
 <span class="nb">export</span><span class="w"> </span><span class="nv">DJ_SAFEMODE</span><span class="o">=</span><span class="nb">false</span>
 
 <span class="c1"># Logging</span>
@@ -6139,9 +6139,9 @@ chmod<span class="w"> </span><span class="m">600</span><span class="w"> </span>s
     <span class="k">if</span> <span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">database</span><span class="o">.</span><span class="n">create_tables</span><span class="p">:</span>
         <span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;create_tables should be False in production&quot;</span><span class="p">)</span>
 
-    <span class="c1"># Check schema prefix is set</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">database</span><span class="o">.</span><span class="n">schema_prefix</span><span class="p">:</span>
-        <span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;schema_prefix should be set in production&quot;</span><span class="p">)</span>
+    <span class="c1"># Check database prefix is set</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">database</span><span class="o">.</span><span class="n">database_prefix</span><span class="p">:</span>
+        <span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;database_prefix should be set in production&quot;</span><span class="p">)</span>
 
     <span class="c1"># Check not pointing to localhost</span>
     <span class="k">if</span> <span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">database</span><span class="o">.</span><span class="n">host</span> <span class="o">==</span> <span class="s1">&#39;localhost&#39;</span><span class="p">:</span>
@@ -6175,7 +6175,7 @@ chmod<span class="w"> </span><span class="m">600</span><span class="w"> </span>s
 <td><code>false</code></td>
 </tr>
 <tr>
-<td><code>database.schema_prefix</code></td>
+<td><code>database.database_prefix</code></td>
 <td><code>""</code> or <code>dev_</code></td>
 <td><code>prod_</code></td>
 </tr>

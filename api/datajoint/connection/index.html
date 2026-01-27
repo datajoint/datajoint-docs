@@ -5979,7 +5979,7 @@ If connection information is not provided, it is taken from config.</p>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>MySQL username.</p>
+                <p>Database username. Required if not set in config.</p>
               </div>
             </td>
             <td>
@@ -5995,7 +5995,7 @@ If connection information is not provided, it is taken from config.</p>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>MySQL password. Prompts if not provided.</p>
+                <p>Database password. Required if not set in config.</p>
               </div>
             </td>
             <td>
@@ -6071,6 +6071,29 @@ None (preferred, default), or dict for manual configuration.</p>
             <td>
               <div class="doc-md-description">
                 <p>Persistent database connection.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+<p><span class="doc-section-title">Raises:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><a class="autorefs autorefs-internal" title="DataJointError (datajoint.errors.DataJointError)" href="../errors/#datajoint.errors.DataJointError">DataJointError</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If user or password is not provided and not set in config.</p>
               </div>
             </td>
           </tr>

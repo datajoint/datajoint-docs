@@ -6039,11 +6039,12 @@ provide the namespace context for foreign key resolution.</p>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>If False, raise error when accessing missing tables. Default True.</p>
+                <p>If False, raise error when accessing missing tables.
+Default from <code>dj.config.database.create_tables</code> (True unless configured).</p>
               </div>
             </td>
             <td>
-                  <code>True</code>
+                  <code>None</code>
             </td>
           </tr>
           <tr class="doc-section-item">
