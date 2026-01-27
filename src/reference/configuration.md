@@ -21,7 +21,7 @@ Configuration is loaded in priority order:
 | `database.user` | `DJ_USER` | — | Database username (required) |
 | `database.password` | `DJ_PASS` | — | Database password (required) |
 | `database.reconnect` | — | `True` | Auto-reconnect on connection loss |
-| `database.use_tls` | `DJ_USE_TLS` | `None` | Enable TLS encryption |
+| `database.use_tls` | `DJ_USE_TLS` | `None` | Enable TLS encryption *(env var new in 2.1)* |
 | `database.database_prefix` | `DJ_DATABASE_PREFIX` | `""` | Prefix for database/schema names |
 | `database.create_tables` | `DJ_CREATE_TABLES` | `True` | Default for `Schema(create_tables=)`. Set `False` for production mode |
 
@@ -158,11 +158,12 @@ If table lacks partition attributes, it follows normal path structure.
 
 ## Display Settings
 
-| Setting | Default | Description |
-|---------|---------|-------------|
-| `display.limit` | `12` | Max rows to display |
-| `display.width` | `14` | Column width |
-| `display.show_tuple_count` | `True` | Show row count in output |
+| Setting | Environment | Default | Description |
+|---------|-------------|---------|-------------|
+| `display.limit` | — | `12` | Max rows to display |
+| `display.width` | — | `14` | Column width |
+| `display.show_tuple_count` | — | `True` | Show row count in output |
+| `display.diagram_direction` | `DJ_DIAGRAM_DIRECTION` | `LR` | Diagram layout: `LR` (left-right) or `TB` (top-bottom) *(new in 2.1)* |
 
 ## Top-Level Settings
 
