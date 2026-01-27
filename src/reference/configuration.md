@@ -15,7 +15,7 @@ Configuration is loaded in priority order:
 
 | Setting | Environment | Default | Description |
 |---------|-------------|---------|-------------|
-| `database.backend` | `DJ_BACKEND` | `mysql` | Database backend: `mysql` or `postgresql` |
+| `database.backend` | `DJ_BACKEND` | `mysql` | Database backend: `mysql` or `postgresql` *(new in 2.1)* |
 | `database.host` | `DJ_HOST` | `localhost` | Database server hostname |
 | `database.port` | `DJ_PORT` | `3306`/`5432` | Database server port (auto-detects from backend) |
 | `database.user` | `DJ_USER` | — | Database username (required) |
