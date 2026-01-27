@@ -3312,15 +3312,15 @@ print("Partitioning: {mouse_id}/{session_date}/{neuron_id}")</div>
 <div class="jp-OutputArea jp-Cell-outputArea">
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>[2026-01-23 21:28:37,921][INFO]: DataJoint 2.1.0a7 connected to postgres@127.0.0.1:5432
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
+<pre>[2026-01-27 15:30:00] DataJoint 2.1.0a9 connected to postgres@127.0.0.1:5432
 </pre>
 </div>
 </div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>Store configured at: /var/folders/cn/dpwf5t7j3gd8gzyw2r7dhm8r0000gn/T/dj_ephys_v3zape17
+<pre>Store configured at: /var/folders/cn/dpwf5t7j3gd8gzyw2r7dhm8r0000gn/T/dj_ephys_d4v7e7iq
 Partitioning: {mouse_id}/{session_date}/{neuron_id}
 </pre>
 </div>
@@ -3739,7 +3739,7 @@ class Neuron(dj.Imported):
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>Neuron: 100%|██████████| 5/5 [00:00&lt;00:00, 343.79it/s]</pre>
+<pre>Neuron: 100%|██████████| 5/5 [00:00&lt;00:00, 149.23it/s]</pre>
 </div>
 </div>
 <div class="jp-OutputArea-child">
@@ -4301,7 +4301,7 @@ ActivityStats()</div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>ActivityStats: 100%|██████████| 5/5 [00:00&lt;00:00, 468.69it/s]</pre>
+<pre>ActivityStats: 100%|██████████| 5/5 [00:00&lt;00:00, 501.46it/s]</pre>
 </div>
 </div>
 <div class="jp-OutputArea-child">
@@ -4780,7 +4780,7 @@ class Spikes(dj.Computed):
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>Spikes: 100%|██████████| 10/10 [00:00&lt;00:00, 314.29it/s]</pre>
+<pre>Spikes: 100%|██████████| 10/10 [00:00&lt;00:00, 350.05it/s]</pre>
 </div>
 </div>
 <div class="jp-OutputArea-child">
@@ -5310,7 +5310,7 @@ Mouse 100, 2017-06-01: shape=(1000,), loaded=False
 <div class="jp-OutputArea-child jp-OutputArea-executeResult">
 <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[20]:</div>
 <div class="jp-RenderedSVG jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="image/svg+xml" tabindex="0">
-<img alt="No description has been provided for this image" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB3aWR0aD0iNDQwcHQiIGhlaWdodD0iMTUycHQiIHZpZXdCb3g9IjAuMDAgMC4wMCA0NDAuMTggMTUyLjAwIj4KPGcgaWQ9ImdyYXBoMCIgY2xhc3M9ImdyYXBoIiB0cmFuc2Zvcm09InNjYWxlKDEgMSkgcm90YXRlKDApIHRyYW5zbGF0ZSg0IDE0OCkiPgo8cG9seWdvbiBmaWxsPSJ3aGl0ZSIgc3Ryb2tlPSJub25lIiBwb2ludHM9Ii00LDQgLTQsLTE0OCA0MzYuMTgsLTE0OCA0MzYuMTgsNCAtNCw0Ii8+CjxnIGlkPSJjbHVzdDEiIGNsYXNzPSJjbHVzdGVyIj4KPHRpdGxlPmNsdXN0ZXJfY2x1c3Rlcl90dXRvcmlhbF9lbGVjdHJvcGh5c2lvbG9neV9ucHk8L3RpdGxlPgo8cG9seWdvbiBmaWxsPSJub25lIiBzdHJva2U9ImdyYXkiIHN0cm9rZS1kYXNoYXJyYXk9IjUsMiIgcG9pbnRzPSI4LC04IDgsLTEzNiA0MjQuMTgsLTEzNiA0MjQuMTgsLTggOCwtOCIvPgo8dGV4dCB0ZXh0LWFuY2hvcj0ibWlkZGxlIiB4PSIyMTYuMDkiIHk9Ii0xMTguNyIgZm9udC1mYW1pbHk9IlRpbWVzLHNlcmlmIiBmb250LXNpemU9IjE0LjAwIiBmaWxsPSJncmF5Ij5fX21haW5fXzwvdGV4dD4KPC9nPgo8IS0tIE1vdXNlIC0tPgo8ZyBpZD0ibm9kZTEiIGNsYXNzPSJub2RlIj4KPHRpdGxlPk1vdXNlPC90aXRsZT4KPGcgaWQ9ImFfbm9kZTEiPjxhIHhsaW5rOnRpdGxlPSJtb3VzZV9pZCDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqANLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tDWRvYiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgDXNleCDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgDSI+Cjxwb2x5Z29uIGZpbGw9IiMwMGZmMDAiIGZpbGwtb3BhY2l0eT0iMC4xODgyMzUiIHN0cm9rZT0iIzAwZmYwMCIgc3Ryb2tlLW9wYWNpdHk9IjAuMTg4MjM1IiBwb2ludHM9IjY4LC01MC4yOCAxNiwtNTAuMjggMTYsLTE1LjcyIDY4LC0xNS43MiA2OCwtNTAuMjgiLz4KPHRleHQgdGV4dC1hbmNob3I9InN0YXJ0IiB4PSIyNCIgeT0iLTI5LjczIiBmb250LWZhbWlseT0iYXJpYWwiIHRleHQtZGVjb3JhdGlvbj0idW5kZXJsaW5lIiBmb250LXNpemU9IjEyLjAwIiBmaWxsPSJkYXJrZ3JlZW4iPk1vdXNlPC90ZXh0Pgo8L2E+CjwvZz4KPC9nPgo8IS0tIFNlc3Npb24gLS0+CjxnIGlkPSJub2RlMiIgY2xhc3M9Im5vZGUiPgo8dGl0bGU+U2Vzc2lvbjwvdGl0bGU+CjxnIGlkPSJhX25vZGUyIj48YSB4bGluazp0aXRsZT0i4oaSIE1vdXNlDXNlc3Npb25fZGF0ZSDCoMKgwqDCoMKgwqDCoMKgDS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ1leHBlcmltZW50ZXIgwqDCoMKgwqDCoMKgwqDCoA0iPgo8cG9seWdvbiBmaWxsPSIjMDBmZjAwIiBmaWxsLW9wYWNpdHk9IjAuMTg4MjM1IiBzdHJva2U9IiMwMGZmMDAiIHN0cm9rZS1vcGFjaXR5PSIwLjE4ODIzNSIgcG9pbnRzPSIxNjMuNSwtNTAuMjggMTA0LC01MC4yOCAxMDQsLTE1LjcyIDE2My41LC0xNS43MiAxNjMuNSwtNTAuMjgiLz4KPHRleHQgdGV4dC1hbmNob3I9InN0YXJ0IiB4PSIxMTIiIHk9Ii0yOS43MyIgZm9udC1mYW1pbHk9ImFyaWFsIiB0ZXh0LWRlY29yYXRpb249InVuZGVybGluZSIgZm9udC1zaXplPSIxMi4wMCIgZmlsbD0iZGFya2dyZWVuIj5TZXNzaW9uPC90ZXh0Pgo8L2E+CjwvZz4KPC9nPgo8IS0tIE1vdXNlJiM0NTsmZ3Q7U2Vzc2lvbiAtLT4KPGcgaWQ9ImVkZ2UxIiBjbGFzcz0iZWRnZSI+Cjx0aXRsZT5Nb3VzZS0mZ3Q7U2Vzc2lvbjwvdGl0bGU+CjxwYXRoIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzAwMDAwMCIgc3Ryb2tlLXdpZHRoPSIwLjc1IiBzdHJva2Utb3BhY2l0eT0iMC4yNTA5ODAiIGQ9Ik02OC40OCwtMzNDNzkuNDcsLTMzIDkyLjM3LC0zMyAxMDMuNzMsLTMzIi8+CjwvZz4KPCEtLSBOZXVyb24gLS0+CjxnIGlkPSJub2RlMyIgY2xhc3M9Im5vZGUiPgo8dGl0bGU+TmV1cm9uPC90aXRsZT4KPGcgaWQ9ImFfbm9kZTMiPjxhIHhsaW5rOnRpdGxlPSLihpIgU2Vzc2lvbg1uZXVyb25faWQgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoA0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0NYWN0aXZpdHkgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgDSI+CjxlbGxpcHNlIGZpbGw9IiMwMDAwN2YiIGZpbGwtb3BhY2l0eT0iMC4yNTA5ODAiIHN0cm9rZT0iIzAwMDA3ZiIgc3Ryb2tlLW9wYWNpdHk9IjAuMjUwOTgwIiBjeD0iMjM2Ljc1IiBjeT0iLTMzIiByeD0iMzYuNDMiIHJ5PSIxNy4yOCIvPgo8dGV4dCB0ZXh0LWFuY2hvcj0ic3RhcnQiIHg9IjIxNi44OCIgeT0iLTI5LjczIiBmb250LWZhbWlseT0iYXJpYWwiIHRleHQtZGVjb3JhdGlvbj0idW5kZXJsaW5lIiBmb250LXNpemU9IjEyLjAwIiBmaWxsPSIjMDAwMDdmIiBmaWxsLW9wYWNpdHk9IjAuNjI3NDUxIj5OZXVyb248L3RleHQ+CjwvYT4KPC9nPgo8L2c+CjwhLS0gU2Vzc2lvbiYjNDU7Jmd0O05ldXJvbiAtLT4KPGcgaWQ9ImVkZ2UyIiBjbGFzcz0iZWRnZSI+Cjx0aXRsZT5TZXNzaW9uLSZndDtOZXVyb248L3RpdGxlPgo8cGF0aCBmaWxsPSJub25lIiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iMC43NSIgc3Ryb2tlLW9wYWNpdHk9IjAuMjUwOTgwIiBkPSJNMTYzLjk2LC0zM0MxNzUuMjcsLTMzIDE4OC4zMSwtMzMgMjAwLjE1LC0zMyIvPgo8L2c+CjwhLS0gQWN0aXZpdHlTdGF0cyAtLT4KPGcgaWQ9Im5vZGU0IiBjbGFzcz0ibm9kZSI+Cjx0aXRsZT5BY3Rpdml0eVN0YXRzPC90aXRsZT4KPGcgaWQ9ImFfbm9kZTQiPjxhIHhsaW5rOnRpdGxlPSLihpIgTmV1cm9uDS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ1tZWFuX2FjdGl2aXR5IMKgwqDCoMKgwqDCoMKgDXN0ZF9hY3Rpdml0eSDCoMKgwqDCoMKgwqDCoMKgDW1heF9hY3Rpdml0eSDCoMKgwqDCoMKgwqDCoMKgDSI+CjxlbGxpcHNlIGZpbGw9IiNmZjAwMDAiIGZpbGwtb3BhY2l0eT0iMC4xMjU0OTAiIHN0cm9rZT0iI2ZmMDAwMCIgc3Ryb2tlLW9wYWNpdHk9IjAuMTI1NDkwIiBjeD0iMzYzLjA5IiBjeT0iLTMzIiByeD0iNTMuMDkiIHJ5PSIxNy4yOCIvPgo8dGV4dCB0ZXh0LWFuY2hvcj0ibWlkZGxlIiB4PSIzNjMuMDkiIHk9Ii0yOC43MyIgZm9udC1mYW1pbHk9ImFyaWFsIiBmb250LXNpemU9IjEyLjAwIiBmaWxsPSIjN2YwMDAwIiBmaWxsLW9wYWNpdHk9IjAuNjI3NDUxIj5BY3Rpdml0eVN0YXRzPC90ZXh0Pgo8L2E+CjwvZz4KPC9nPgo8IS0tIE5ldXJvbiYjNDU7Jmd0O0FjdGl2aXR5U3RhdHMgLS0+CjxnIGlkPSJlZGdlMyIgY2xhc3M9ImVkZ2UiPgo8dGl0bGU+TmV1cm9uLSZndDtBY3Rpdml0eVN0YXRzPC90aXRsZT4KPHBhdGggZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1vcGFjaXR5PSIwLjI1MDk4MCIgZD0iTTI3My4zOCwtMzNDMjg0LjcyLC0zMyAyOTcuNTEsLTMzIDMwOS43NywtMzMiLz4KPC9nPgo8IS0tIFNwaWtlcyAtLT4KPGcgaWQ9Im5vZGU2IiBjbGFzcz0ibm9kZSI+Cjx0aXRsZT5TcGlrZXM8L3RpdGxlPgo8ZyBpZD0iYV9ub2RlNiI+PGEgeGxpbms6dGl0bGU9IuKGkiBOZXVyb24N4oaSIFNwaWtlUGFyYW1zDS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ1zcGlrZV90aW1lcyDCoMKgwqDCoMKgwqDCoMKgwqANc3Bpa2VfY291bnQgwqDCoMKgwqDCoMKgwqDCoMKgDXdhdmVmb3JtcyDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgDSI+CjxlbGxpcHNlIGZpbGw9IiNmZjAwMDAiIGZpbGwtb3BhY2l0eT0iMC4xMjU0OTAiIHN0cm9rZT0iI2ZmMDAwMCIgc3Ryb2tlLW9wYWNpdHk9IjAuMTI1NDkwIiBjeD0iMzYzLjA5IiBjeT0iLTg2IiByeD0iMzQuNDciIHJ5PSIxNy4yOCIvPgo8dGV4dCB0ZXh0LWFuY2hvcj0ibWlkZGxlIiB4PSIzNjMuMDkiIHk9Ii04MS43MiIgZm9udC1mYW1pbHk9ImFyaWFsIiBmb250LXNpemU9IjEyLjAwIiBmaWxsPSIjN2YwMDAwIiBmaWxsLW9wYWNpdHk9IjAuNjI3NDUxIj5TcGlrZXM8L3RleHQ+CjwvYT4KPC9nPgo8L2c+CjwhLS0gTmV1cm9uJiM0NTsmZ3Q7U3Bpa2VzIC0tPgo8ZyBpZD0iZWRnZTQiIGNsYXNzPSJlZGdlIj4KPHRpdGxlPk5ldXJvbi0mZ3Q7U3Bpa2VzPC90aXRsZT4KPHBhdGggZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjAuNzUiIHN0cm9rZS1vcGFjaXR5PSIwLjI1MDk4MCIgZD0iTTI2NC43MywtNDQuNUMyODUuODcsLTUzLjUxIDMxNS4xMSwtNjUuOTcgMzM2LjAyLC03NC44OSIvPgo8L2c+CjwhLS0gU3Bpa2VQYXJhbXMgLS0+CjxnIGlkPSJub2RlNSIgY2xhc3M9Im5vZGUiPgo8dGl0bGU+U3Bpa2VQYXJhbXM8L3RpdGxlPgo8ZyBpZD0iYV9ub2RlNSI+PGEgeGxpbms6dGl0bGU9InNwaWtlX3BhcmFtX2lkIMKgwqDCoMKgwqDCoA0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0NdGhyZXNob2xkIMKgwqDCoMKgwqDCoMKgwqDCoMKgwqANIj4KPHBvbHlnb24gZmlsbD0iIzAwMDAwMCIgZmlsbC1vcGFjaXR5PSIwLjEyNTQ5MCIgc3Ryb2tlPSJub25lIiBwb2ludHM9IjI3NCwtMTAzLjI4IDE5OS41LC0xMDMuMjggMTk5LjUsLTY4LjcyIDI3NCwtNjguNzIgMjc0LC0xMDMuMjgiLz4KPHRleHQgdGV4dC1hbmNob3I9InN0YXJ0IiB4PSIyMDcuNSIgeT0iLTgzLjUiIGZvbnQtZmFtaWx5PSJhcmlhbCIgdGV4dC1kZWNvcmF0aW9uPSJ1bmRlcmxpbmUiIGZvbnQtc2l6ZT0iMTAuMDAiPlNwaWtlUGFyYW1zPC90ZXh0Pgo8L2E+CjwvZz4KPC9nPgo8IS0tIFNwaWtlUGFyYW1zJiM0NTsmZ3Q7U3Bpa2VzIC0tPgo8ZyBpZD0iZWRnZTUiIGNsYXNzPSJlZGdlIj4KPHRpdGxlPlNwaWtlUGFyYW1zLSZndDtTcGlrZXM8L3RpdGxlPgo8cGF0aCBmaWxsPSJub25lIiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iMC43NSIgc3Ryb2tlLW9wYWNpdHk9IjAuMjUwOTgwIiBkPSJNMjczLjcxLC04NkMyOTAuOTMsLTg2IDMxMS40MiwtODYgMzI4LjM0LC04NiIvPgo8L2c+CjwvZz4KPC9zdmc+"/>
+<img alt="No description has been provided for this image" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB3aWR0aD0iNDQwcHQiIGhlaWdodD0iMTUycHQiIHZpZXdCb3g9IjAuMDAgMC4wMCA0NDAuMTggMTUyLjAwIj4KPGcgaWQ9ImdyYXBoMCIgY2xhc3M9ImdyYXBoIiB0cmFuc2Zvcm09InNjYWxlKDEgMSkgcm90YXRlKDApIHRyYW5zbGF0ZSg0IDE0OCkiPgo8cG9seWdvbiBmaWxsPSJ3aGl0ZSIgc3Ryb2tlPSJub25lIiBwb2ludHM9Ii00LDQgLTQsLTE0OCA0MzYuMTgsLTE0OCA0MzYuMTgsNCAtNCw0Ii8+CjxnIGlkPSJjbHVzdDEiIGNsYXNzPSJjbHVzdGVyIj4KPHRpdGxlPmNsdXN0ZXJfY2x1c3Rlcl90dXRvcmlhbF9lbGVjdHJvcGh5c2lvbG9neV9ucHk8L3RpdGxlPgo8cG9seWdvbiBmaWxsPSJub25lIiBzdHJva2U9ImdyYXkiIHN0cm9rZS1kYXNoYXJyYXk9IjUsMiIgcG9pbnRzPSI4LC04IDgsLTEzNiA0MjQuMTgsLTEzNiA0MjQuMTgsLTggOCwtOCIvPgo8dGV4dCB0ZXh0LWFuY2hvcj0ibWlkZGxlIiB4PSIyMTYuMDkiIHk9Ii0xMTguNyIgZm9udC1mYW1pbHk9IlRpbWVzLHNlcmlmIiBmb250LXNpemU9IjE0LjAwIiBmaWxsPSJncmF5Ij5fX21haW5fXzwvdGV4dD4KPC9nPgo8IS0tIE1vdXNlIC0tPgo8ZyBpZD0ibm9kZTEiIGNsYXNzPSJub2RlIj4KPHRpdGxlPk1vdXNlPC90aXRsZT4KPGcgaWQ9ImFfbm9kZTEiPjxhIHhsaW5rOnRpdGxlPSJtb3VzZV9pZCDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqANLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tDWRvYiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgDXNleCDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgDSI+Cjxwb2x5Z29uIGZpbGw9IiMwMGZmMDAiIGZpbGwtb3BhY2l0eT0iMC4xODgyMzUiIHN0cm9rZT0iIzAwZmYwMCIgc3Ryb2tlLW9wYWNpdHk9IjAuMTg4MjM1IiBwb2ludHM9IjY4LC01MC4yOCAxNiwtNTAuMjggMTYsLTE1LjcyIDY4LC0xNS43MiA2OCwtNTAuMjgiLz4KPHRleHQgdGV4dC1hbmNob3I9InN0YXJ0IiB4PSIyNCIgeT0iLTI5LjczIiBmb250LWZhbWlseT0iYXJpYWwiIHRleHQtZGVjb3JhdGlvbj0idW5kZXJsaW5lIiBmb250LXNpemU9IjEyLjAwIiBmaWxsPSJkYXJrZ3JlZW4iPk1vdXNlPC90ZXh0Pgo8L2E+CjwvZz4KPC9nPgo8IS0tIFNlc3Npb24gLS0+CjxnIGlkPSJub2RlMiIgY2xhc3M9Im5vZGUiPgo8dGl0bGU+U2Vzc2lvbjwvdGl0bGU+CjxnIGlkPSJhX25vZGUyIj48YSB4bGluazp0aXRsZT0i4oaSIE1vdXNlDXNlc3Npb25fZGF0ZSDCoMKgwqDCoMKgwqDCoMKgDS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ1leHBlcmltZW50ZXIgwqDCoMKgwqDCoMKgwqDCoA0iPgo8cG9seWdvbiBmaWxsPSIjMDBmZjAwIiBmaWxsLW9wYWNpdHk9IjAuMTg4MjM1IiBzdHJva2U9IiMwMGZmMDAiIHN0cm9rZS1vcGFjaXR5PSIwLjE4ODIzNSIgcG9pbnRzPSIxNjMuNSwtNTAuMjggMTA0LC01MC4yOCAxMDQsLTE1LjcyIDE2My41LC0xNS43MiAxNjMuNSwtNTAuMjgiLz4KPHRleHQgdGV4dC1hbmNob3I9InN0YXJ0IiB4PSIxMTIiIHk9Ii0yOS43MyIgZm9udC1mYW1pbHk9ImFyaWFsIiB0ZXh0LWRlY29yYXRpb249InVuZGVybGluZSIgZm9udC1zaXplPSIxMi4wMCIgZmlsbD0iZGFya2dyZWVuIj5TZXNzaW9uPC90ZXh0Pgo8L2E+CjwvZz4KPC9nPgo8IS0tIE1vdXNlJiM0NTsmZ3Q7U2Vzc2lvbiAtLT4KPGcgaWQ9ImVkZ2UxIiBjbGFzcz0iZWRnZSI+Cjx0aXRsZT5Nb3VzZS0mZ3Q7U2Vzc2lvbjwvdGl0bGU+CjxwYXRoIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzAwMDAwMCIgc3Ryb2tlLXdpZHRoPSIwLjc1IiBzdHJva2Utb3BhY2l0eT0iMC4yNTA5ODAiIGQ9Ik02OC40OCwtMzNDNzkuNDcsLTMzIDkyLjM3LC0zMyAxMDMuNzMsLTMzIi8+CjwvZz4KPCEtLSBOZXVyb24gLS0+CjxnIGlkPSJub2RlMyIgY2xhc3M9Im5vZGUiPgo8dGl0bGU+TmV1cm9uPC90aXRsZT4KPGcgaWQ9ImFfbm9kZTMiPjxhIHhsaW5rOnRpdGxlPSLihpIgU2Vzc2lvbg1uZXVyb25faWQgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoA0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0NYWN0aXZpdHkgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgDSI+CjxlbGxpcHNlIGZpbGw9IiMwMDAwN2YiIGZpbGwtb3BhY2l0eT0iMC4yNTA5ODAiIHN0cm9rZT0iIzAwMDA3ZiIgc3Ryb2tlLW9wYWNpdHk9IjAuMjUwOTgwIiBjeD0iMjM2Ljc1IiBjeT0iLTMzIiByeD0iMzYuNDMiIHJ5PSIxNy4yOCIvPgo8dGV4dCB0ZXh0LWFuY2hvcj0ic3RhcnQiIHg9IjIxNi44OCIgeT0iLTI5LjczIiBmb250LWZhbWlseT0iYXJpYWwiIHRleHQtZGVjb3JhdGlvbj0idW5kZXJsaW5lIiBmb250LXNpemU9IjEyLjAwIiBmaWxsPSIjMDAwMDdmIiBmaWxsLW9wYWNpdHk9IjAuNjI3NDUxIj5OZXVyb248L3RleHQ+CjwvYT4KPC9nPgo8L2c+CjwhLS0gU2Vzc2lvbiYjNDU7Jmd0O05ldXJvbiAtLT4KPGcgaWQ9ImVkZ2UyIiBjbGFzcz0iZWRnZSI+Cjx0aXRsZT5TZXNzaW9uLSZndDtOZXVyb248L3RpdGxlPgo8cGF0aCBmaWxsPSJub25lIiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iMC43NSIgc3Ryb2tlLW9wYWNpdHk9IjAuMjUwOTgwIiBkPSJNMTYzLjk2LC0zM0MxNzUuMjcsLTMzIDE4OC4zMSwtMzMgMjAwLjE1LC0zMyIvPgo8L2c+CjwhLS0gQWN0aXZpdHlTdGF0cyAtLT4KPGcgaWQ9Im5vZGU0IiBjbGFzcz0ibm9kZSI+Cjx0aXRsZT5BY3Rpdml0eVN0YXRzPC90aXRsZT4KPGcgaWQ9ImFfbm9kZTQiPjxhIHhsaW5rOnRpdGxlPSLihpIgTmV1cm9uDS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ1tZWFuX2FjdGl2aXR5IMKgwqDCoMKgwqDCoMKgDXN0ZF9hY3Rpdml0eSDCoMKgwqDCoMKgwqDCoMKgDW1heF9hY3Rpdml0eSDCoMKgwqDCoMKgwqDCoMKgDSI+CjxlbGxpcHNlIGZpbGw9IiNmZjAwMDAiIGZpbGwtb3BhY2l0eT0iMC4xMjU0OTAiIHN0cm9rZT0iI2ZmMDAwMCIgc3Ryb2tlLW9wYWNpdHk9IjAuMTI1NDkwIiBjeD0iMzYzLjA5IiBjeT0iLTMzIiByeD0iNTMuMDkiIHJ5PSIxNy4yOCIvPgo8dGV4dCB0ZXh0LWFuY2hvcj0ibWlkZGxlIiB4PSIzNjMuMDkiIHk9Ii0yOC43MyIgZm9udC1mYW1pbHk9ImFyaWFsIiBmb250LXNpemU9IjEyLjAwIiBmaWxsPSIjN2YwMDAwIiBmaWxsLW9wYWNpdHk9IjAuNjI3NDUxIj5BY3Rpdml0eVN0YXRzPC90ZXh0Pgo8L2E+CjwvZz4KPC9nPgo8IS0tIE5ldXJvbiYjNDU7Jmd0O0FjdGl2aXR5U3RhdHMgLS0+CjxnIGlkPSJlZGdlMyIgY2xhc3M9ImVkZ2UiPgo8dGl0bGU+TmV1cm9uLSZndDtBY3Rpdml0eVN0YXRzPC90aXRsZT4KPHBhdGggZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1vcGFjaXR5PSIwLjI1MDk4MCIgZD0iTTI3My4zOCwtMzNDMjg0LjcyLC0zMyAyOTcuNTEsLTMzIDMwOS43NywtMzMiLz4KPC9nPgo8IS0tIFNwaWtlcyAtLT4KPGcgaWQ9Im5vZGU1IiBjbGFzcz0ibm9kZSI+Cjx0aXRsZT5TcGlrZXM8L3RpdGxlPgo8ZyBpZD0iYV9ub2RlNSI+PGEgeGxpbms6dGl0bGU9IuKGkiBOZXVyb24N4oaSIFNwaWtlUGFyYW1zDS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ1zcGlrZV90aW1lcyDCoMKgwqDCoMKgwqDCoMKgwqANc3Bpa2VfY291bnQgwqDCoMKgwqDCoMKgwqDCoMKgDXdhdmVmb3JtcyDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgDSI+CjxlbGxpcHNlIGZpbGw9IiNmZjAwMDAiIGZpbGwtb3BhY2l0eT0iMC4xMjU0OTAiIHN0cm9rZT0iI2ZmMDAwMCIgc3Ryb2tlLW9wYWNpdHk9IjAuMTI1NDkwIiBjeD0iMzYzLjA5IiBjeT0iLTg2IiByeD0iMzQuNDciIHJ5PSIxNy4yOCIvPgo8dGV4dCB0ZXh0LWFuY2hvcj0ibWlkZGxlIiB4PSIzNjMuMDkiIHk9Ii04MS43MiIgZm9udC1mYW1pbHk9ImFyaWFsIiBmb250LXNpemU9IjEyLjAwIiBmaWxsPSIjN2YwMDAwIiBmaWxsLW9wYWNpdHk9IjAuNjI3NDUxIj5TcGlrZXM8L3RleHQ+CjwvYT4KPC9nPgo8L2c+CjwhLS0gTmV1cm9uJiM0NTsmZ3Q7U3Bpa2VzIC0tPgo8ZyBpZD0iZWRnZTQiIGNsYXNzPSJlZGdlIj4KPHRpdGxlPk5ldXJvbi0mZ3Q7U3Bpa2VzPC90aXRsZT4KPHBhdGggZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjAuNzUiIHN0cm9rZS1vcGFjaXR5PSIwLjI1MDk4MCIgZD0iTTI2NC43MywtNDQuNUMyODUuODcsLTUzLjUxIDMxNS4xMSwtNjUuOTcgMzM2LjAyLC03NC44OSIvPgo8L2c+CjwhLS0gU3Bpa2VQYXJhbXMgLS0+CjxnIGlkPSJub2RlNiIgY2xhc3M9Im5vZGUiPgo8dGl0bGU+U3Bpa2VQYXJhbXM8L3RpdGxlPgo8ZyBpZD0iYV9ub2RlNiI+PGEgeGxpbms6dGl0bGU9InNwaWtlX3BhcmFtX2lkIMKgwqDCoMKgwqDCoA0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0NdGhyZXNob2xkIMKgwqDCoMKgwqDCoMKgwqDCoMKgwqANIj4KPHBvbHlnb24gZmlsbD0iIzAwMDAwMCIgZmlsbC1vcGFjaXR5PSIwLjEyNTQ5MCIgc3Ryb2tlPSJub25lIiBwb2ludHM9IjI3NCwtMTAzLjI4IDE5OS41LC0xMDMuMjggMTk5LjUsLTY4LjcyIDI3NCwtNjguNzIgMjc0LC0xMDMuMjgiLz4KPHRleHQgdGV4dC1hbmNob3I9InN0YXJ0IiB4PSIyMDcuNSIgeT0iLTgzLjUiIGZvbnQtZmFtaWx5PSJhcmlhbCIgdGV4dC1kZWNvcmF0aW9uPSJ1bmRlcmxpbmUiIGZvbnQtc2l6ZT0iMTAuMDAiPlNwaWtlUGFyYW1zPC90ZXh0Pgo8L2E+CjwvZz4KPC9nPgo8IS0tIFNwaWtlUGFyYW1zJiM0NTsmZ3Q7U3Bpa2VzIC0tPgo8ZyBpZD0iZWRnZTUiIGNsYXNzPSJlZGdlIj4KPHRpdGxlPlNwaWtlUGFyYW1zLSZndDtTcGlrZXM8L3RpdGxlPgo8cGF0aCBmaWxsPSJub25lIiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iMC43NSIgc3Ryb2tlLW9wYWNpdHk9IjAuMjUwOTgwIiBkPSJNMjczLjcxLC04NkMyOTAuOTMsLTg2IDMxMS40MiwtODYgMzI4LjM0LC04NiIvPgo8L2c+CjwvZz4KPC9zdmc+"/>
 </div>
 </div>
 </div>
@@ -5872,7 +5872,7 @@ print_tree(STORE_PATH)</div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>Store location: /var/folders/cn/dpwf5t7j3gd8gzyw2r7dhm8r0000gn/T/dj_ephys_v3zape17
+<pre>Store location: /var/folders/cn/dpwf5t7j3gd8gzyw2r7dhm8r0000gn/T/dj_ephys_d4v7e7iq
 
 Directory structure (one subject shown in full):
 └── mouse_id=0/
@@ -5881,25 +5881,25 @@ Directory structure (one subject shown in full):
     │       └── tutorial_electrophysiology_npy/
     │           ├── __spikes/
     │           │   ├── spike_param_id=1/
-    │           │   │   ├── spike_times_z_7Ser5x.npy (0.3 KB)
-    │           │   │   └── waveforms_L7nPkT5J.npy (15.1 KB)
+    │           │   │   ├── spike_times_BXKKFICZ.npy (0.3 KB)
+    │           │   │   └── waveforms_kUwdzj78.npy (15.1 KB)
     │           │   └── spike_param_id=2/
-    │           │       ├── spike_times_m3cPBscb.npy (0.3 KB)
-    │           │       └── waveforms_ilP_MJ87.npy (15.8 KB)
+    │           │       ├── spike_times_QW40D7lg.npy (0.3 KB)
+    │           │       └── waveforms_szEnIhMx.npy (15.8 KB)
     │           └── _neuron/
-    │               └── activity_v2OFGO-d.npy (7.9 KB)
+    │               └── activity_ezivz3DF.npy (7.9 KB)
     └── session_date=2017-05-19/
         └── neuron_id=0/
             └── tutorial_electrophysiology_npy/
                 ├── __spikes/
                 │   ├── spike_param_id=1/
-                │   │   ├── spike_times_NErDG9YB.npy (0.3 KB)
-                │   │   └── waveforms_EUdUSZBP.npy (14.5 KB)
+                │   │   ├── spike_times_cmgrNWWT.npy (0.3 KB)
+                │   │   └── waveforms_7qeTl_Dp.npy (14.5 KB)
                 │   └── spike_param_id=2/
-                │       ├── spike_times_b3J-aQw7.npy (0.3 KB)
-                │       └── waveforms_Eop43Gmc.npy (12.6 KB)
+                │       ├── spike_times_BEf94y5U.npy (0.3 KB)
+                │       └── waveforms_jcSQoe85.npy (12.6 KB)
                 └── _neuron/
-                    └── activity_WlOBQz9U.npy (7.9 KB)
+                    └── activity_l4RFNege.npy (7.9 KB)
 └── ... and 2 more subjects (mouse_id=5, mouse_id=100)
 </pre>
 </div>
@@ -5962,8 +5962,8 @@ print(f"First 5 values: {activity_direct[:5]}")</div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>NpyRef path (relative): mouse_id=0/session_date=2017-05-15/neuron_id=0/tutorial_electrophysiology_npy/_neuron/activity_v2OFGO-d.npy
-Full path: /var/folders/cn/dpwf5t7j3gd8gzyw2r7dhm8r0000gn/T/dj_ephys_v3zape17/mouse_id=0/session_date=2017-05-15/neuron_id=0/tutorial_electrophysiology_npy/_neuron/activity_v2OFGO-d.npy
+<pre>NpyRef path (relative): mouse_id=0/session_date=2017-05-15/neuron_id=0/tutorial_electrophysiology_npy/_neuron/activity_ezivz3DF.npy
+Full path: /var/folders/cn/dpwf5t7j3gd8gzyw2r7dhm8r0000gn/T/dj_ephys_d4v7e7iq/mouse_id=0/session_date=2017-05-15/neuron_id=0/tutorial_electrophysiology_npy/_neuron/activity_ezivz3DF.npy
 
 Loaded array: shape=(1000,), dtype=float64
 First 5 values: [0.35788741 0.44753156 0.19641299 0.39111449 0.17669518]
@@ -6032,14 +6032,14 @@ if len(all_npy_files) &gt; 8:
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
 <pre>All .npy files in store (25 total):
 
-  mouse_id=0/session_date=2017-05-15/neuron_id=0/tutorial_electrophysiology_npy/__spikes/spike_param_id=1/spike_times_z_7Ser5x.npy (0.3 KB)
-  mouse_id=0/session_date=2017-05-15/neuron_id=0/tutorial_electrophysiology_npy/__spikes/spike_param_id=1/waveforms_L7nPkT5J.npy (15.1 KB)
-  mouse_id=0/session_date=2017-05-15/neuron_id=0/tutorial_electrophysiology_npy/__spikes/spike_param_id=2/spike_times_m3cPBscb.npy (0.3 KB)
-  mouse_id=0/session_date=2017-05-15/neuron_id=0/tutorial_electrophysiology_npy/__spikes/spike_param_id=2/waveforms_ilP_MJ87.npy (15.8 KB)
-  mouse_id=0/session_date=2017-05-15/neuron_id=0/tutorial_electrophysiology_npy/_neuron/activity_v2OFGO-d.npy (7.9 KB)
-  mouse_id=0/session_date=2017-05-19/neuron_id=0/tutorial_electrophysiology_npy/__spikes/spike_param_id=1/spike_times_NErDG9YB.npy (0.3 KB)
-  mouse_id=0/session_date=2017-05-19/neuron_id=0/tutorial_electrophysiology_npy/__spikes/spike_param_id=1/waveforms_EUdUSZBP.npy (14.5 KB)
-  mouse_id=0/session_date=2017-05-19/neuron_id=0/tutorial_electrophysiology_npy/__spikes/spike_param_id=2/spike_times_b3J-aQw7.npy (0.3 KB)
+  mouse_id=0/session_date=2017-05-15/neuron_id=0/tutorial_electrophysiology_npy/__spikes/spike_param_id=1/spike_times_BXKKFICZ.npy (0.3 KB)
+  mouse_id=0/session_date=2017-05-15/neuron_id=0/tutorial_electrophysiology_npy/__spikes/spike_param_id=1/waveforms_kUwdzj78.npy (15.1 KB)
+  mouse_id=0/session_date=2017-05-15/neuron_id=0/tutorial_electrophysiology_npy/__spikes/spike_param_id=2/spike_times_QW40D7lg.npy (0.3 KB)
+  mouse_id=0/session_date=2017-05-15/neuron_id=0/tutorial_electrophysiology_npy/__spikes/spike_param_id=2/waveforms_szEnIhMx.npy (15.8 KB)
+  mouse_id=0/session_date=2017-05-15/neuron_id=0/tutorial_electrophysiology_npy/_neuron/activity_ezivz3DF.npy (7.9 KB)
+  mouse_id=0/session_date=2017-05-19/neuron_id=0/tutorial_electrophysiology_npy/__spikes/spike_param_id=1/spike_times_cmgrNWWT.npy (0.3 KB)
+  mouse_id=0/session_date=2017-05-19/neuron_id=0/tutorial_electrophysiology_npy/__spikes/spike_param_id=1/waveforms_7qeTl_Dp.npy (14.5 KB)
+  mouse_id=0/session_date=2017-05-19/neuron_id=0/tutorial_electrophysiology_npy/__spikes/spike_param_id=2/spike_times_BEf94y5U.npy (0.3 KB)
   ... and 17 more files
 </pre>
 </div>
