@@ -4453,6 +4453,45 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#programmatic-access" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Programmatic Access
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Programmatic Access">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#reading-and-writing-settings" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reading and Writing Settings
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#temporary-overrides" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Temporary Overrides
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#api-reference" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -5579,6 +5618,45 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#programmatic-access" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Programmatic Access
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Programmatic Access">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#reading-and-writing-settings" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reading and Writing Settings
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#temporary-overrides" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Temporary Overrides
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#api-reference" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -6095,6 +6173,34 @@
 <span class="nb">export</span><span class="w"> </span><span class="nv">DJ_PASS</span><span class="o">=</span>secret
 </code></pre></div>
 <p><strong>Note:</strong> Per-store credentials must be configured in <code>datajoint.json</code> or <code>.secrets/</code> — environment variable overrides are not supported for nested store configurations.</p>
+<h2 id="programmatic-access">Programmatic Access<a class="headerlink" href="#programmatic-access" title="Permanent link">&para;</a></h2>
+<h3 id="reading-and-writing-settings">Reading and Writing Settings<a class="headerlink" href="#reading-and-writing-settings" title="Permanent link">&para;</a></h3>
+<p>Access settings using dot notation on <code>dj.config</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">datajoint</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dj</span>
+
+<span class="c1"># Read settings</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">database</span><span class="o">.</span><span class="n">host</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">diagram_direction</span><span class="p">)</span>
+
+<span class="c1"># Write settings</span>
+<span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">database</span><span class="o">.</span><span class="n">host</span> <span class="o">=</span> <span class="s2">&quot;mysql.example.com&quot;</span>
+<span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">diagram_direction</span> <span class="o">=</span> <span class="s2">&quot;TB&quot;</span>
+</code></pre></div>
+<h3 id="temporary-overrides">Temporary Overrides<a class="headerlink" href="#temporary-overrides" title="Permanent link">&para;</a></h3>
+<p>Use <code>dj.config.override()</code> to temporarily change settings within a context:</p>
+<div class="highlight"><pre><span></span><code><span class="k">with</span> <span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">override</span><span class="p">(</span><span class="n">safemode</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="c1"># safemode is False here</span>
+    <span class="p">(</span><span class="n">Table</span> <span class="o">&amp;</span> <span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
+<span class="c1"># safemode is restored to original value</span>
+</code></pre></div>
+<p><strong>Nested settings syntax:</strong> Since Python doesn't allow dots in keyword argument names, use double underscores (<code>__</code>) to access nested settings in <code>override()</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># These are equivalent:</span>
+<span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">diagram_direction</span> <span class="o">=</span> <span class="s2">&quot;TB&quot;</span>  <span class="c1"># direct assignment</span>
+
+<span class="k">with</span> <span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">override</span><span class="p">(</span><span class="n">display__diagram_direction</span><span class="o">=</span><span class="s2">&quot;TB&quot;</span><span class="p">):</span>  <span class="c1"># in override()</span>
+    <span class="o">...</span>
+</code></pre></div>
+<p>The double underscore maps to the dot-notation path: <code>display__diagram_direction</code> → <code>display.diagram_direction</code>.</p>
 <h2 id="api-reference">API Reference<a class="headerlink" href="#api-reference" title="Permanent link">&para;</a></h2>
 <p>See <a href="../../api/datajoint/settings/">Settings API</a> for programmatic access.</p>
 
