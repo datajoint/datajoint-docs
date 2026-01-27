@@ -21,7 +21,7 @@ Configuration is loaded in priority order:
 | `database.password` | `DJ_PASS` | — | Database password (required) |
 | `database.reconnect` | — | `True` | Auto-reconnect on connection loss |
 | `database.use_tls` | — | `None` | Enable TLS encryption |
-| `database.schema_prefix` | `DJ_SCHEMA_PREFIX` | `""` | Project-specific prefix for schema names |
+| `database.database_prefix` | `DJ_DATABASE_PREFIX` | `""` | Prefix for database/schema names |
 | `database.create_tables` | `DJ_CREATE_TABLES` | `True` | Default for `Schema(create_tables=)`. Set `False` for production mode |
 
 ## Connection Settings
