@@ -245,6 +245,8 @@ DataJoint 2.0 replaces `external.*` with unified `stores.*` configuration:
 | `dj.ERD(schema)` | `dj.Diagram(schema)` | I |
 | `table.insert([(1, 'a'), (2, 'b')])` | Must use dicts/DataFrames (no positional tuples) | I |
 
+> **Note:** The `fetch()` method remains available in DataJoint 2.0 with a deprecation warning. Your existing code will work immediately—`fetch()` automatically delegates to the appropriate 2.0 method (`to_arrays()`, `to_dicts()`, or `to_pandas()`). You can migrate incrementally as time permits. The `download_path` parameter is not supported in the compatibility layer.
+
 **Learn more:** [Fetch API Reference](../reference/specs/fetch-api.md) · [Query Operators Reference](../reference/operators.md) · [Semantic Matching](../reference/specs/semantic-matching.md)
 
 ---
@@ -1437,6 +1439,9 @@ Update all DataJoint API calls to 2.0 patterns.
 
 **Fetch API:**
 
+> **Note:** `fetch()` remains available with a deprecation warning and works immediately.
+> Convert to new methods when convenient for cleaner, more explicit code.
+
 - `fetch()` → `to_arrays()` (recarray-like) or `to_dicts()` (list of dicts)
 - `fetch(..., format="frame")` → `to_pandas()` (pandas DataFrame)
 - `fetch('attr1', 'attr2')` → `to_arrays('attr1', 'attr2')` (returns tuple)
@@ -1486,9 +1491,14 @@ CONTEXT:
 
 API CONVERSIONS:
 
-1. Fetch API (always convert):
+1. Fetch API (recommended conversion - fetch() still works with deprecation warning):
+
+   NOTE: fetch() remains available in 2.0 and automatically delegates to the
+   new methods. Existing code works immediately. Convert when convenient.
+
    OLD: data = table.fetch()
    NEW: data = table.to_arrays()  # recarray-like
+   # OR: keep as fetch() - works with deprecation warning
 
    OLD: data = table.fetch(as_dict=True)
    NEW: data = table.to_dicts()  # list of dicts
@@ -1508,6 +1518,9 @@ API CONVERSIONS:
    OLD: keys, a, b = table.fetch("KEY", "a", "b")
    NEW: a, b = table.to_arrays('a', 'b', include_key=True)
    # Returns tuple with keys included
+
+   NOT SUPPORTED in fetch() compatibility:
+   - download_path parameter (for blob downloads)
 
 2. Update Method (always convert):
    OLD: (table & key)._update('attr', value)
@@ -1588,7 +1601,7 @@ PROCESS:
 
 VERIFICATION:
 
-- No .fetch() calls remaining (except fetch1)
+- .fetch() calls either converted OR intentionally kept (works with deprecation warning)
 - No .fetch1('KEY') calls remaining (replaced with .keys())
 - No ._update() calls remaining
 - No @ operator between tables
@@ -1732,7 +1745,7 @@ API conversions: X fetch, Y update, Z join"
 - [ ] All table definitions use 2.0 type syntax
 - [ ] All in-table codecs converted (`<blob>`, `<attach>`)
 - [ ] All in-store codecs converted (`<blob@>`, `<attach@>`, `<filepath@>`)
-- [ ] All `fetch()` calls converted (except `fetch1()`)
+- [ ] All `fetch()` calls converted OR intentionally kept (works with deprecation warning)
 - [ ] All `fetch(..., format="frame")` converted to `to_pandas()`
 - [ ] All `fetch1('KEY')` converted to `keys()`
 - [ ] All `._update()` calls converted
