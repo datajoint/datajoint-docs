@@ -245,7 +245,7 @@ DataJoint 2.0 replaces `external.*` with unified `stores.*` configuration:
 | `dj.ERD(schema)` | `dj.Diagram(schema)` | I |
 | `table.insert([(1, 'a'), (2, 'b')])` | Must use dicts/DataFrames (no positional tuples) | I |
 
-> **Note:** The `fetch()` method remains available in DataJoint 2.0 with a deprecation warning. Your existing code will work immediately—`fetch()` automatically delegates to the appropriate 2.0 method (`to_arrays()`, `to_dicts()`, or `to_pandas()`). You can migrate incrementally as time permits. The `download_path` parameter is not supported in the compatibility layer.
+> **Note:** The `fetch()` method remains available in DataJoint 2.0 with a deprecation warning. Your existing code will work immediately—`fetch()` automatically delegates to the appropriate 2.0 method (`to_arrays()`, `to_dicts()`, or `to_pandas()`). You can migrate incrementally as time permits.
 
 **Learn more:** [Fetch API Reference](../reference/specs/fetch-api.md) · [Query Operators Reference](../reference/operators.md) · [Semantic Matching](../reference/specs/semantic-matching.md)
 
@@ -1518,9 +1518,6 @@ API CONVERSIONS:
    OLD: keys, a, b = table.fetch("KEY", "a", "b")
    NEW: a, b = table.to_arrays('a', 'b', include_key=True)
    # Returns tuple with keys included
-
-   NOT SUPPORTED in fetch() compatibility:
-   - download_path parameter (for blob downloads)
 
 2. Update Method (always convert):
    OLD: (table & key)._update('attr', value)
