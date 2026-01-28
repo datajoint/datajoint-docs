@@ -6,6 +6,8 @@ If your work uses DataJoint or DataJoint Elements, please cite the respective
 
 ## 2025
 
++ Campagner, D., Bhagat, J., Lopes, G., Calcaterra, L., Pouget, A. G., Almeida, A., ... & SWC GCNU Experimental Neuroethology Group. (2025). [Aeon: an open-source platform to study the neural basis of ethological behaviours over naturalistic timescales](https://doi.org/10.1101/2025.07.31.664513). *bioRxiv*.
+
 + Bae, J. A., Baptiste, M., Bodor, A. L., Brittain, D., Buchanan, J., Bumbarger, D. J., Castro, M. A., Celii, B., Cobos, E., Collman, F., ... (2025). [Functional connectomics spanning multiple areas of mouse visual cortex](https://doi.org/10.1038/s41586-025-08790-w). *Nature*, 640(8058), 435-447.
 
 + Celii, B., Papadopoulos, S., Ding, Z., Fahey, P. G., Wang, E., Papadopoulos, C., ... & Reimer, J. (2025). [NEURD offers automated proofreading and feature extraction for connectomics](https://doi.org/10.1038/s41586-025-08660-5). *Nature*, 640(8058), 487-496.
