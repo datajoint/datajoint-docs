@@ -7937,6 +7937,9 @@ automatically, reducing manual effort by 50-80%.</p>
 </tr>
 </tbody>
 </table>
+<blockquote>
+<p><strong>Note:</strong> The <code>fetch()</code> method remains available in DataJoint 2.0 with a deprecation warning. Your existing code will work immediately—<code>fetch()</code> automatically delegates to the appropriate 2.0 method (<code>to_arrays()</code>, <code>to_dicts()</code>, or <code>to_pandas()</code>). You can migrate incrementally as time permits.</p>
+</blockquote>
 <p><strong>Learn more:</strong> <a href="../../reference/specs/fetch-api/">Fetch API Reference</a> · <a href="../../reference/operators/">Query Operators Reference</a> · <a href="../../reference/specs/semantic-matching/">Semantic Matching</a></p>
 <hr />
 <h2 id="migration-overview">Migration Overview<a class="headerlink" href="#migration-overview" title="Permanent link">&para;</a></h2>
@@ -9162,6 +9165,10 @@ Codecs converted: Y (in-table: Z, in-store: W)&quot;
 <p>Update all DataJoint API calls to 2.0 patterns.</p>
 <h4 id="background-api-changes">Background: API Changes<a class="headerlink" href="#background-api-changes" title="Permanent link">&para;</a></h4>
 <p><strong>Fetch API:</strong></p>
+<blockquote>
+<p><strong>Note:</strong> <code>fetch()</code> remains available with a deprecation warning and works immediately.
+Convert to new methods when convenient for cleaner, more explicit code.</p>
+</blockquote>
 <ul>
 <li><code>fetch()</code> → <code>to_arrays()</code> (recarray-like) or <code>to_dicts()</code> (list of dicts)</li>
 <li><code>fetch(..., format="frame")</code> → <code>to_pandas()</code> (pandas DataFrame)</li>
@@ -9207,9 +9214,14 @@ CONTEXT:
 
 API CONVERSIONS:
 
-1. Fetch API (always convert):
+1. Fetch API (recommended conversion - fetch() still works with deprecation warning):
+
+   NOTE: fetch() remains available in 2.0 and automatically delegates to the
+   new methods. Existing code works immediately. Convert when convenient.
+
    OLD: data = table.fetch()
    NEW: data = table.to_arrays()  # recarray-like
+   # OR: keep as fetch() - works with deprecation warning
 
    OLD: data = table.fetch(as_dict=True)
    NEW: data = table.to_dicts()  # list of dicts
@@ -9309,7 +9321,7 @@ PROCESS:
 
 VERIFICATION:
 
-- No .fetch() calls remaining (except fetch1)
+- .fetch() calls either converted OR intentionally kept (works with deprecation warning)
 - No .fetch1(&#39;KEY&#39;) calls remaining (replaced with .keys())
 - No ._update() calls remaining
 - No @ operator between tables
@@ -9452,7 +9464,7 @@ API conversions: X fetch, Y update, Z join&quot;
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> All table definitions use 2.0 type syntax</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> All in-table codecs converted (<code>&lt;blob&gt;</code>, <code>&lt;attach&gt;</code>)</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> All in-store codecs converted (<code>&lt;blob@&gt;</code>, <code>&lt;attach@&gt;</code>, <code>&lt;filepath@&gt;</code>)</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> All <code>fetch()</code> calls converted (except <code>fetch1()</code>)</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> All <code>fetch()</code> calls converted OR intentionally kept (works with deprecation warning)</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> All <code>fetch(..., format="frame")</code> converted to <code>to_pandas()</code></li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> All <code>fetch1('KEY')</code> converted to <code>keys()</code></li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> All <code>._update()</code> calls converted</li>

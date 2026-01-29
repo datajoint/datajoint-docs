@@ -1,6 +1,6 @@
 # DataJoint Documentation (Full)
 
-Generated: 2026-01-27 23:08:28 UTC
+Generated: 2026-01-29 03:24:31 UTC
 Commit: unknown
 Branch: unknown
 
@@ -17658,6 +17658,8 @@ DataJoint 2.0 replaces `external.*` with unified `stores.*` configuration:
 | `dj.ERD(schema)` | `dj.Diagram(schema)` | I |
 | `table.insert([(1, 'a'), (2, 'b')])` | Must use dicts/DataFrames (no positional tuples) | I |
 
+> **Note:** The `fetch()` method remains available in DataJoint 2.0 with a deprecation warning. Your existing code will work immediately—`fetch()` automatically delegates to the appropriate 2.0 method (`to_arrays()`, `to_dicts()`, or `to_pandas()`). You can migrate incrementally as time permits.
+
 **Learn more:** [Fetch API Reference](../reference/specs/fetch-api.md) · [Query Operators Reference](../reference/operators.md) · [Semantic Matching](../reference/specs/semantic-matching.md)
 
 ---
@@ -18850,6 +18852,9 @@ Update all DataJoint API calls to 2.0 patterns.
 
 **Fetch API:**
 
+> **Note:** `fetch()` remains available with a deprecation warning and works immediately.
+> Convert to new methods when convenient for cleaner, more explicit code.
+
 - `fetch()` → `to_arrays()` (recarray-like) or `to_dicts()` (list of dicts)
 - `fetch(..., format="frame")` → `to_pandas()` (pandas DataFrame)
 - `fetch('attr1', 'attr2')` → `to_arrays('attr1', 'attr2')` (returns tuple)
@@ -18899,9 +18904,14 @@ CONTEXT:
 
 API CONVERSIONS:
 
-1. Fetch API (always convert):
+1. Fetch API (recommended conversion - fetch() still works with deprecation warning):
+
+   NOTE: fetch() remains available in 2.0 and automatically delegates to the
+   new methods. Existing code works immediately. Convert when convenient.
+
    OLD: data = table.fetch()
    NEW: data = table.to_arrays()  # recarray-like
+   # OR: keep as fetch() - works with deprecation warning
 
    OLD: data = table.fetch(as_dict=True)
    NEW: data = table.to_dicts()  # list of dicts
@@ -19001,7 +19011,7 @@ PROCESS:
 
 VERIFICATION:
 
-- No .fetch() calls remaining (except fetch1)
+- .fetch() calls either converted OR intentionally kept (works with deprecation warning)
 - No .fetch1('KEY') calls remaining (replaced with .keys())
 - No ._update() calls remaining
 - No @ operator between tables
@@ -19145,7 +19155,7 @@ API conversions: X fetch, Y update, Z join"
 - [ ] All table definitions use 2.0 type syntax
 - [ ] All in-table codecs converted (`<blob>`, `<attach>`)
 - [ ] All in-store codecs converted (`<blob@>`, `<attach@>`, `<filepath@>`)
-- [ ] All `fetch()` calls converted (except `fetch1()`)
+- [ ] All `fetch()` calls converted OR intentionally kept (works with deprecation warning)
 - [ ] All `fetch(..., format="frame")` converted to `to_pandas()`
 - [ ] All `fetch1('KEY')` converted to `keys()`
 - [ ] All `._update()` calls converted
@@ -23805,12 +23815,13 @@ Configuration is loaded in priority order:
 
 | Setting | Environment | Default | Description |
 |---------|-------------|---------|-------------|
+| `database.backend` | `DJ_BACKEND` | `mysql` | Database backend: `mysql` or `postgresql` *(new in 2.1)* |
 | `database.host` | `DJ_HOST` | `localhost` | Database server hostname |
-| `database.port` | `DJ_PORT` | `3306` | Database server port |
+| `database.port` | `DJ_PORT` | `3306`/`5432` | Database server port (auto-detects from backend) |
 | `database.user` | `DJ_USER` | — | Database username (required) |
 | `database.password` | `DJ_PASS` | — | Database password (required) |
 | `database.reconnect` | — | `True` | Auto-reconnect on connection loss |
-| `database.use_tls` | — | `None` | Enable TLS encryption |
+| `database.use_tls` | `DJ_USE_TLS` | `None` | Enable TLS encryption *(env var new in 2.1)* |
 | `database.database_prefix` | `DJ_DATABASE_PREFIX` | `""` | Prefix for database/schema names |
 | `database.create_tables` | `DJ_CREATE_TABLES` | `True` | Default for `Schema(create_tables=)`. Set `False` for production mode |
 
@@ -23947,11 +23958,12 @@ If table lacks partition attributes, it follows normal path structure.
 
 ## Display Settings
 
-| Setting | Default | Description |
-|---------|---------|-------------|
-| `display.limit` | `12` | Max rows to display |
-| `display.width` | `14` | Column width |
-| `display.show_tuple_count` | `True` | Show row count in output |
+| Setting | Environment | Default | Description |
+|---------|-------------|---------|-------------|
+| `display.limit` | — | `12` | Max rows to display |
+| `display.width` | — | `14` | Column width |
+| `display.show_tuple_count` | — | `True` | Show row count in output |
+| `display.diagram_direction` | `DJ_DIAGRAM_DIRECTION` | `LR` | Diagram layout: `LR` (left-right) or `TB` (top-bottom) *(new in 2.1)* |
 
 ## Top-Level Settings
 
@@ -34028,6 +34040,8 @@ If your work uses DataJoint or DataJoint Elements, please cite the respective
 [manuscripts and RRIDs](./citation.md).
 
 ## 2025
+
++ Campagner, D., Bhagat, J., Lopes, G., Calcaterra, L., Pouget, A. G., Almeida, A., ... & SWC GCNU Experimental Neuroethology Group. (2025). [Aeon: an open-source platform to study the neural basis of ethological behaviours over naturalistic timescales](https://doi.org/10.1101/2025.07.31.664513). *bioRxiv*.
 
 + Bae, J. A., Baptiste, M., Bodor, A. L., Brittain, D., Buchanan, J., Bumbarger, D. J., Castro, M. A., Celii, B., Cobos, E., Collman, F., ... (2025). [Functional connectomics spanning multiple areas of mouse visual cortex](https://doi.org/10.1038/s41586-025-08790-w). *Nature*, 640(8058), 435-447.
 

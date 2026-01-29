@@ -5709,6 +5709,12 @@
 </thead>
 <tbody>
 <tr>
+<td><code>database.backend</code></td>
+<td><code>DJ_BACKEND</code></td>
+<td><code>mysql</code></td>
+<td>Database backend: <code>mysql</code> or <code>postgresql</code> <em>(new in 2.1)</em></td>
+</tr>
+<tr>
 <td><code>database.host</code></td>
 <td><code>DJ_HOST</code></td>
 <td><code>localhost</code></td>
@@ -5717,8 +5723,8 @@
 <tr>
 <td><code>database.port</code></td>
 <td><code>DJ_PORT</code></td>
-<td><code>3306</code></td>
-<td>Database server port</td>
+<td><code>3306</code>/<code>5432</code></td>
+<td>Database server port (auto-detects from backend)</td>
 </tr>
 <tr>
 <td><code>database.user</code></td>
@@ -5740,9 +5746,9 @@
 </tr>
 <tr>
 <td><code>database.use_tls</code></td>
-<td>—</td>
+<td><code>DJ_USE_TLS</code></td>
 <td><code>None</code></td>
-<td>Enable TLS encryption</td>
+<td>Enable TLS encryption <em>(env var new in 2.1)</em></td>
 </tr>
 <tr>
 <td><code>database.database_prefix</code></td>
@@ -6049,6 +6055,7 @@
 <thead>
 <tr>
 <th>Setting</th>
+<th>Environment</th>
 <th>Default</th>
 <th>Description</th>
 </tr>
@@ -6056,18 +6063,27 @@
 <tbody>
 <tr>
 <td><code>display.limit</code></td>
+<td>—</td>
 <td><code>12</code></td>
 <td>Max rows to display</td>
 </tr>
 <tr>
 <td><code>display.width</code></td>
+<td>—</td>
 <td><code>14</code></td>
 <td>Column width</td>
 </tr>
 <tr>
 <td><code>display.show_tuple_count</code></td>
+<td>—</td>
 <td><code>True</code></td>
 <td>Show row count in output</td>
+</tr>
+<tr>
+<td><code>display.diagram_direction</code></td>
+<td><code>DJ_DIAGRAM_DIRECTION</code></td>
+<td><code>LR</code></td>
+<td>Diagram layout: <code>LR</code> (left-right) or <code>TB</code> (top-bottom) <em>(new in 2.1)</em></td>
 </tr>
 </tbody>
 </table>

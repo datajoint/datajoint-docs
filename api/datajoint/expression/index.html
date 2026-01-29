@@ -6699,35 +6699,178 @@ Subject.aggr(Session, n="count(*)", exclude_nonmatching=True)
 
 
 
-<div class="doc doc-object doc-attribute">
-
+<div class="doc doc-object doc-function">
 
 
 <h3 id="datajoint.expression.QueryExpression.fetch" class="doc doc-heading">
-            <span class="doc doc-object-name doc-attribute-name">fetch</span>
+            <span class="doc doc-object-name doc-function-name">fetch</span>
 
-
-  <span class="doc doc-labels">
-      <small class="doc doc-label doc-label-property"><code>property</code></small>
-  </span>
 
 <a href="#datajoint.expression.QueryExpression.fetch" class="headerlink" title="Permanent link">&para;</a></h3>
-<div class="doc-signature highlight"><pre><span></span><code><span class="n">fetch</span>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">fetch</span><span class="p">(</span><span class="o">*</span><span class="n">attrs</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">order_by</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">as_dict</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">squeeze</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 </code></pre></div>
 
     <div class="doc doc-contents ">
 
-        <p>The fetch() method has been removed in DataJoint 2.0.</p>
-<p>Use the new explicit output methods instead:
-- table.to_dicts()           # list of dictionaries
-- table.to_pandas()          # pandas DataFrame
-- table.to_arrays()          # numpy structured array
-- table.to_arrays('a', 'b')  # tuple of numpy arrays
-- table.keys()               # primary keys as list[dict]
-- table.to_polars()          # polars DataFrame (requires pip install datajoint[polars])
-- table.to_arrow()           # PyArrow Table (requires pip install datajoint[arrow])</p>
-<p>For single-row fetch, use fetch1() which is unchanged.</p>
-<p>See migration guide: <a href="https://docs.datajoint.com/how-to/migrate-from-0x/">https://docs.datajoint.com/how-to/migrate-from-0x/</a></p>
+        <p>Fetch data from the table (backward-compatible with DataJoint 0.14).</p>
+<p>.. deprecated:: 2.0
+    Use the new explicit output methods instead:
+    - <code>to_dicts()</code> for list of dictionaries
+    - <code>to_pandas()</code> for pandas DataFrame
+    - <code>to_arrays()</code> for numpy structured array
+    - <code>to_arrays('a', 'b')</code> for tuple of arrays
+    - <code>keys()</code> for primary keys</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>*attrs</code>
+            </td>
+            <td>
+                  <code><span title="str">str</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Attributes to fetch. If empty, fetches all.</p>
+              </div>
+            </td>
+            <td>
+                  <code>()</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>offset</code>
+            </td>
+            <td>
+                  <code><span title="int">int</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Number of tuples to skip.</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>limit</code>
+            </td>
+            <td>
+                  <code><span title="int">int</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Maximum number of tuples to return.</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>order_by</code>
+            </td>
+            <td>
+                  <code><span title="str">str</span> or <span title="list">list</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Attribute(s) for ordering results.</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>format</code>
+            </td>
+            <td>
+                  <code><span title="str">str</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Output format: 'array' or 'frame' (pandas DataFrame).</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>as_dict</code>
+            </td>
+            <td>
+                  <code><span title="bool">bool</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Return as list of dicts instead of structured array.</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>squeeze</code>
+            </td>
+            <td>
+                  <code><span title="bool">bool</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Remove extra dimensions from arrays. Default False.</p>
+              </div>
+            </td>
+            <td>
+                  <code>False</code>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code>np.recarray, list[dict], or pd.DataFrame</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Query results in requested format.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
 
     </div>
 
