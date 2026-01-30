@@ -207,8 +207,11 @@ class SignalAverage(dj.Computed):
     avg_signal : float64
     """
 
-    def make_fetch(self, key):
-        """Step 1: Fetch input data (outside transaction)"""
+    def make_fetch(self, key, **kwargs):
+        """Step 1: Fetch input data (outside transaction).
+
+        kwargs are passed from populate(make_kwargs={...}).
+        """
         raw_signal = (RawSignal & key).fetch1("signal")
         return (raw_signal,)
 

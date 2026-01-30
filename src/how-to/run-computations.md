@@ -199,8 +199,11 @@ class LongComputation(dj.Computed):
     result : float64
     """
 
-    def make_fetch(self, key):
-        """Fetch input data (outside transaction)"""
+    def make_fetch(self, key, **kwargs):
+        """Fetch input data (outside transaction).
+
+        kwargs are passed from populate(make_kwargs={...}).
+        """
         data = (RawData & key).fetch1('data')
         return (data,)
 
