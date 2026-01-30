@@ -334,8 +334,11 @@ class HeavyComputation(dj.Computed):
     result : <blob>
     """
 
-    def make_fetch(self, key):
-        """Fetch all required data (runs in transaction)."""
+    def make_fetch(self, key, **kwargs):
+        """Fetch all required data (runs in transaction).
+
+        kwargs are passed from populate(make_kwargs={...}).
+        """
         return (Recording & key).fetch1('raw_data')
 
     def make_compute(self, key, data):
@@ -391,6 +394,15 @@ class ConfigurableAnalysis(dj.Computed):
 
 # Call with custom parameters
 ConfigurableAnalysis.populate(make_kwargs={'threshold': 0.8})
+```
+
+**Tripartite pattern:** When using the method-based tripartite pattern, `make_kwargs` are passed to `make_fetch()`:
+
+```python
+def make_fetch(self, key, verbose=False, **kwargs):
+    if verbose:
+        print(f"Fetching {key}")
+    return (Source & key).fetch1('data')
 ```
 
 **Anti-pattern warning:** Passing arguments that affect the computed result breaks reproducibility—all inputs should come from `fetch` calls inside `make()`. If a parameter affects results, it should be stored in a lookup table and referenced via foreign key.
@@ -973,8 +985,8 @@ def make(self, key):
     yield  # Re-acquire transaction
     self.insert1({**key, 'result': result})
 
-# Tripartite (methods)
-def make_fetch(self, key): return data
+# Tripartite (methods) - kwargs passed to make_fetch
+def make_fetch(self, key, **kwargs): return data
 def make_compute(self, key, data): return result
 def make_insert(self, key, result): self.insert1(...)
 ```
