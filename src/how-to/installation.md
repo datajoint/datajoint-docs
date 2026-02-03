@@ -2,43 +2,31 @@
 
 Install DataJoint Python and set up your environment.
 
-!!! warning "Pre-Release Documentation"
-
-    This documentation covers **DataJoint 2.0**, which is currently in pre-release.
-
-    - **For production use:** Install the stable version (0.14.x) and use [legacy docs](https://datajoint.github.io/datajoint-python)
-    - **For testing 2.0:** Follow the pre-release installation instructions below
-    - **For migration:** See the [Migration Guide](migrate-to-v20.md)
-
-## Choose Your Installation
-
-### Pre-Release (2.0) — For Testing and Development
-
-**Note:** DataJoint 2.0 is not yet on PyPI/conda. Install from the pre-release branch:
-
-```bash
-git clone -b pre/v2.0 https://github.com/datajoint/datajoint-python.git
-cd datajoint-python
-pip install -e ".[dev]"
-```
-
-**With optional dependencies:**
-
-```bash
-# For polars DataFrame support
-pip install -e ".[polars]"
-
-# For all optional dependencies
-pip install -e ".[all]"
-```
-
-### Stable (0.14.x) — For Production Use
+## Install DataJoint 2.0
 
 ```bash
 pip install datajoint
 ```
 
-**Note:** This installs DataJoint 0.14.x. The tutorials and guides in this documentation are written for 2.0 and will not match the stable API. Use [legacy documentation](https://datajoint.github.io/datajoint-python) instead.
+**With optional dependencies:**
+
+```bash
+# For diagram visualization (matplotlib, ipython)
+pip install datajoint[viz]
+
+# For polars DataFrame support
+pip install datajoint[polars]
+
+# For cloud storage backends
+pip install datajoint[s3]    # AWS S3
+pip install datajoint[gcs]   # Google Cloud Storage
+pip install datajoint[azure] # Azure Blob Storage
+```
+
+!!! note "Upgrading from 0.14.x?"
+
+    See the [Migration Guide](migrate-to-v20.md) for breaking changes and upgrade instructions.
+    Legacy documentation for 0.14.x is available at [datajoint.github.io](https://datajoint.github.io/datajoint-python).
 
 ## Verify Installation
 
@@ -53,12 +41,11 @@ print(dj.__version__)
 - `2.0.0` or higher — You're ready to follow this documentation
 - `0.14.x` or lower — You have the stable version, use [legacy docs](https://datajoint.github.io/datajoint-python) instead
 
-### If You Have the Wrong Version
+### If You Have an Older Version
 
 | Your Situation | Action |
 |----------------|--------|
-| Installed 0.14.x but want to test 2.0 | Follow pre-release installation above |
-| Installed 2.0 but need production stability | `pip uninstall datajoint && pip install datajoint` |
+| Installed 0.14.x, want to upgrade | `pip install --upgrade datajoint` |
 | Have existing 0.14.x pipeline to upgrade | Follow [Migration Guide](migrate-to-v20.md) |
 
 ## Database Server

@@ -28,7 +28,7 @@ This repository contains the source for the DataJoint documentation, organized u
 git clone https://github.com/datajoint/datajoint-docs.git
 cd datajoint-docs
 cd ..
-git clone -b pre/v2.0 https://github.com/datajoint/datajoint-python.git
+git clone https://github.com/datajoint/datajoint-python.git
 cd datajoint-docs
 
 # Start live preview at http://localhost:8000

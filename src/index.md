@@ -1,12 +1,9 @@
 # DataJoint Documentation
 
-!!! info "Documentation for DataJoint 2.x (Pre-Release)"
+!!! tip "Upgrading from 0.14.x?"
 
-    This documentation covers **DataJoint 2.0–2.1**, currently in pre-release.
-
-    - **Using stable 0.14.x?** Visit [legacy docs](https://datajoint.github.io/datajoint-python)
-    - **Want to test 2.x?** See [Installation Guide](how-to/installation.md)
-    - **Migrating a pipeline?** Follow the [Migration Guide](how-to/migrate-to-v20.md)
+    - **Migration guide:** [Migrate to 2.0](how-to/migrate-to-v20.md)
+    - **Legacy docs:** [datajoint.github.io](https://datajoint.github.io/datajoint-python)
 
 ## About DataJoint
 
