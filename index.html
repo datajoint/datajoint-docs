@@ -5352,16 +5352,19 @@
 
 
 <h1 id="datajoint-documentation">DataJoint Documentation<a class="headerlink" href="#datajoint-documentation" title="Permanent link">&para;</a></h1>
-<div class="admonition tip">
-<p class="admonition-title">Upgrading from 0.14.x?</p>
+<div class="admonition info">
+<p class="admonition-title">Documentation for DataJoint 2.x (Pre-Release)</p>
+<p>This documentation covers <strong>DataJoint 2.0–2.1</strong>, currently in pre-release.</p>
 <ul>
-<li><strong>Migration guide:</strong> <a href="how-to/migrate-to-v20/">Migrate to 2.0</a></li>
-<li><strong>Legacy docs:</strong> <a href="https://datajoint.github.io/datajoint-python">datajoint.github.io</a></li>
+<li><strong>Using stable 0.14.x?</strong> Visit <a href="https://datajoint.github.io/datajoint-python">legacy docs</a></li>
+<li><strong>Want to test 2.x?</strong> See <a href="how-to/installation/">Installation Guide</a></li>
+<li><strong>Migrating a pipeline?</strong> Follow the <a href="how-to/migrate-to-v20/">Migration Guide</a></li>
 </ul>
 </div>
 <h2 id="about-datajoint">About DataJoint<a class="headerlink" href="#about-datajoint" title="Permanent link">&para;</a></h2>
-<p><strong>DataJoint</strong> implements the <a href="explanation/relational-workflow-model/">Relational Workflow Model</a>—a data model where your database schema defines an executable data pipeline. Tables represent workflow steps, foreign keys encode dependencies, and the system handles job management, parallel execution, and provenance tracking. <a href="explanation/data-pipelines/#object-augmented-schemas">Object storage</a> integration enables seamless handling of large scientific data.</p>
+<p><strong>DataJoint</strong> is a framework for scientific data pipelines built on the <a href="explanation/relational-workflow-model/">Relational Workflow Model</a>—a paradigm where your database schema is an executable specification of your workflow.</p>
 <p><img alt="pipeline" src="images/pipeline.png" style="height:300px;" /></p>
+<p>Unlike traditional databases that merely store data, DataJoint pipelines <strong>process</strong> data: tables represent workflow steps, foreign keys encode computational dependencies, and the schema itself defines what computations exist and how they relate. Combined with <a href="explanation/data-pipelines/#object-augmented-schemas">Object-Augmented Schemas</a> for seamless large-data handling, DataJoint delivers reproducible, scalable scientific computing with full provenance tracking.</p>
 <div class="grid cards">
 <ul>
 <li><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2a7 7 0 0 1 7 7c0 2.38-1.19 4.47-3 5.74V17a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1v-2.26C6.19 13.47 5 11.38 5 9a7 7 0 0 1 7-7M9 21v-1h6v1a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1m3-17a5 5 0 0 0-5 5c0 2.05 1.23 3.81 3 4.58V16h4v-2.42c1.77-.77 3-2.53 3-4.58a5 5 0 0 0-5-5"/></svg></span> <strong>Concepts</strong><hr />

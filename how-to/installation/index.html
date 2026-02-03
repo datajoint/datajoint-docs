@@ -2087,13 +2087,41 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#install-datajoint-20" class="md-nav__link">
+  <a href="#choose-your-installation" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Install DataJoint 2.0
+        Choose Your Installation
       
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="Choose Your Installation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pre-release-20-for-testing-and-development" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pre-Release (2.0) — For Testing and Development
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stable-014x-for-production-use" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Stable (0.14.x) — For Production Use
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -2110,10 +2138,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#if-you-have-an-older-version" class="md-nav__link">
+  <a href="#if-you-have-the-wrong-version" class="md-nav__link">
     <span class="md-ellipsis">
       
-        If You Have an Older Version
+        If You Have the Wrong Version
       
     </span>
   </a>
@@ -5466,13 +5494,41 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#install-datajoint-20" class="md-nav__link">
+  <a href="#choose-your-installation" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Install DataJoint 2.0
+        Choose Your Installation
       
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="Choose Your Installation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pre-release-20-for-testing-and-development" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pre-Release (2.0) — For Testing and Development
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stable-014x-for-production-use" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Stable (0.14.x) — For Production Use
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -5489,10 +5545,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#if-you-have-an-older-version" class="md-nav__link">
+  <a href="#if-you-have-the-wrong-version" class="md-nav__link">
     <span class="md-ellipsis">
       
-        If You Have an Older Version
+        If You Have the Wrong Version
       
     </span>
   </a>
@@ -5637,26 +5693,33 @@
 
 <h1 id="installation">Installation<a class="headerlink" href="#installation" title="Permanent link">&para;</a></h1>
 <p>Install DataJoint Python and set up your environment.</p>
-<h2 id="install-datajoint-20">Install DataJoint 2.0<a class="headerlink" href="#install-datajoint-20" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>datajoint
+<div class="admonition warning">
+<p class="admonition-title">Pre-Release Documentation</p>
+<p>This documentation covers <strong>DataJoint 2.0</strong>, which is currently in pre-release.</p>
+<ul>
+<li><strong>For production use:</strong> Install the stable version (0.14.x) and use <a href="https://datajoint.github.io/datajoint-python">legacy docs</a></li>
+<li><strong>For testing 2.0:</strong> Follow the pre-release installation instructions below</li>
+<li><strong>For migration:</strong> See the <a href="../migrate-to-v20/">Migration Guide</a></li>
+</ul>
+</div>
+<h2 id="choose-your-installation">Choose Your Installation<a class="headerlink" href="#choose-your-installation" title="Permanent link">&para;</a></h2>
+<h3 id="pre-release-20-for-testing-and-development">Pre-Release (2.0) — For Testing and Development<a class="headerlink" href="#pre-release-20-for-testing-and-development" title="Permanent link">&para;</a></h3>
+<p><strong>Note:</strong> DataJoint 2.0 is not yet on PyPI/conda. Install from the pre-release branch:</p>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>clone<span class="w"> </span>-b<span class="w"> </span>pre/v2.0<span class="w"> </span>https://github.com/datajoint/datajoint-python.git
+<span class="nb">cd</span><span class="w"> </span>datajoint-python
+pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;.[dev]&quot;</span>
 </code></pre></div>
 <p><strong>With optional dependencies:</strong></p>
-<div class="highlight"><pre><span></span><code><span class="c1"># For diagram visualization (matplotlib, ipython)</span>
-pip<span class="w"> </span>install<span class="w"> </span>datajoint<span class="o">[</span>viz<span class="o">]</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># For polars DataFrame support</span>
+pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;.[polars]&quot;</span>
 
-<span class="c1"># For polars DataFrame support</span>
-pip<span class="w"> </span>install<span class="w"> </span>datajoint<span class="o">[</span>polars<span class="o">]</span>
-
-<span class="c1"># For cloud storage backends</span>
-pip<span class="w"> </span>install<span class="w"> </span>datajoint<span class="o">[</span>s3<span class="o">]</span><span class="w">    </span><span class="c1"># AWS S3</span>
-pip<span class="w"> </span>install<span class="w"> </span>datajoint<span class="o">[</span>gcs<span class="o">]</span><span class="w">   </span><span class="c1"># Google Cloud Storage</span>
-pip<span class="w"> </span>install<span class="w"> </span>datajoint<span class="o">[</span>azure<span class="o">]</span><span class="w"> </span><span class="c1"># Azure Blob Storage</span>
+<span class="c1"># For all optional dependencies</span>
+pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;.[all]&quot;</span>
 </code></pre></div>
-<div class="admonition note">
-<p class="admonition-title">Upgrading from 0.14.x?</p>
-<p>See the <a href="../migrate-to-v20/">Migration Guide</a> for breaking changes and upgrade instructions.
-Legacy documentation for 0.14.x is available at <a href="https://datajoint.github.io/datajoint-python">datajoint.github.io</a>.</p>
-</div>
+<h3 id="stable-014x-for-production-use">Stable (0.14.x) — For Production Use<a class="headerlink" href="#stable-014x-for-production-use" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>datajoint
+</code></pre></div>
+<p><strong>Note:</strong> This installs DataJoint 0.14.x. The tutorials and guides in this documentation are written for 2.0 and will not match the stable API. Use <a href="https://datajoint.github.io/datajoint-python">legacy documentation</a> instead.</p>
 <h2 id="verify-installation">Verify Installation<a class="headerlink" href="#verify-installation" title="Permanent link">&para;</a></h2>
 <p>Check your installed version:</p>
 <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">datajoint</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dj</span>
@@ -5665,7 +5728,7 @@ Legacy documentation for 0.14.x is available at <a href="https://datajoint.githu
 <p><strong>Expected output for this documentation:</strong>
 - <code>2.0.0</code> or higher — You're ready to follow this documentation
 - <code>0.14.x</code> or lower — You have the stable version, use <a href="https://datajoint.github.io/datajoint-python">legacy docs</a> instead</p>
-<h3 id="if-you-have-an-older-version">If You Have an Older Version<a class="headerlink" href="#if-you-have-an-older-version" title="Permanent link">&para;</a></h3>
+<h3 id="if-you-have-the-wrong-version">If You Have the Wrong Version<a class="headerlink" href="#if-you-have-the-wrong-version" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
@@ -5675,8 +5738,12 @@ Legacy documentation for 0.14.x is available at <a href="https://datajoint.githu
 </thead>
 <tbody>
 <tr>
-<td>Installed 0.14.x, want to upgrade</td>
-<td><code>pip install --upgrade datajoint</code></td>
+<td>Installed 0.14.x but want to test 2.0</td>
+<td>Follow pre-release installation above</td>
+</tr>
+<tr>
+<td>Installed 2.0 but need production stability</td>
+<td><code>pip uninstall datajoint &amp;&amp; pip install datajoint</code></td>
 </tr>
 <tr>
 <td>Have existing 0.14.x pipeline to upgrade</td>
