@@ -1,6 +1,6 @@
 # DataJoint Documentation (Full)
 
-Generated: 2026-02-03 16:29:05 UTC
+Generated: 2026-02-03 16:29:51 UTC
 Commit: unknown
 Branch: unknown
 
@@ -16009,31 +16009,43 @@ if Subject.validate(rows):
 
 Install DataJoint Python and set up your environment.
 
-## Install DataJoint 2.0
+!!! warning "Pre-Release Documentation"
+
+    This documentation covers **DataJoint 2.0**, which is currently in pre-release.
+
+    - **For production use:** Install the stable version (0.14.x) and use [legacy docs](https://datajoint.github.io/datajoint-python)
+    - **For testing 2.0:** Follow the pre-release installation instructions below
+    - **For migration:** See the [Migration Guide](migrate-to-v20.md)
+
+## Choose Your Installation
+
+### Pre-Release (2.0) — For Testing and Development
+
+**Note:** DataJoint 2.0 is not yet on PyPI/conda. Install from the pre-release branch:
 
 ```bash
-pip install datajoint
+git clone -b pre/v2.0 https://github.com/datajoint/datajoint-python.git
+cd datajoint-python
+pip install -e ".[dev]"
 ```
 
 **With optional dependencies:**
 
 ```bash
-# For diagram visualization (matplotlib, ipython)
-pip install datajoint[viz]
-
 # For polars DataFrame support
-pip install datajoint[polars]
+pip install -e ".[polars]"
 
-# For cloud storage backends
-pip install datajoint[s3]    # AWS S3
-pip install datajoint[gcs]   # Google Cloud Storage
-pip install datajoint[azure] # Azure Blob Storage
+# For all optional dependencies
+pip install -e ".[all]"
 ```
 
-!!! note "Upgrading from 0.14.x?"
+### Stable (0.14.x) — For Production Use
 
-    See the [Migration Guide](migrate-to-v20.md) for breaking changes and upgrade instructions.
-    Legacy documentation for 0.14.x is available at [datajoint.github.io](https://datajoint.github.io/datajoint-python).
+```bash
+pip install datajoint
+```
+
+**Note:** This installs DataJoint 0.14.x. The tutorials and guides in this documentation are written for 2.0 and will not match the stable API. Use [legacy documentation](https://datajoint.github.io/datajoint-python) instead.
 
 ## Verify Installation
 
@@ -16048,11 +16060,12 @@ print(dj.__version__)
 - `2.0.0` or higher — You're ready to follow this documentation
 - `0.14.x` or lower — You have the stable version, use [legacy docs](https://datajoint.github.io/datajoint-python) instead
 
-### If You Have an Older Version
+### If You Have the Wrong Version
 
 | Your Situation | Action |
 |----------------|--------|
-| Installed 0.14.x, want to upgrade | `pip install --upgrade datajoint` |
+| Installed 0.14.x but want to test 2.0 | Follow pre-release installation above |
+| Installed 2.0 but need production stability | `pip uninstall datajoint && pip install datajoint` |
 | Have existing 0.14.x pipeline to upgrade | Follow [Migration Guide](migrate-to-v20.md) |
 
 ## Database Server
@@ -23393,7 +23406,7 @@ Check compatibility with your DataJoint version:
 
 ```bash
 pip show dj-zarr-codecs
-# Requires: datajoint>=2.0.0
+# Requires: datajoint>=2.0.0a22
 ```
 
 Upgrade DataJoint if needed:
@@ -23708,14 +23721,14 @@ Add plugin codecs to your project dependencies:
 
 **requirements.txt:**
 ```
-datajoint>=2.0.0
+datajoint>=2.0.0a22
 dj-zarr-codecs>=0.1.0
 ```
 
 **pyproject.toml:**
 ```toml
 dependencies = [
-    "datajoint>=2.0.0",
+    "datajoint>=2.0.0a22",
     "dj-zarr-codecs>=0.1.0",
 ]
 ```
@@ -23730,7 +23743,7 @@ My Pipeline
 ===========
 
 Requirements:
-- datajoint>=2.0.0
+- datajoint>=2.0.0a22
 - dj-zarr-codecs>=0.1.0  # For waveform storage
 
 Install:
