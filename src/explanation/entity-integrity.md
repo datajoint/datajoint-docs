@@ -299,7 +299,7 @@ Lineage enables **semantic matching**—DataJoint only joins attributes that
 trace back to the same dimension. Two attributes named `id` from different
 dimensions cannot be accidentally joined.
 
-See [Semantic Matching](../reference/specs/semantic-matching.md/) for details.
+See [Semantic Matching](../reference/specs/semantic-matching.md) for details.
 
 ### Recognizing Dimensions in Diagrams
 

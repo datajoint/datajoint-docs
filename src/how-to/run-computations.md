@@ -248,6 +248,6 @@ class FilteredComputation(dj.Computed):
 
 ## See Also
 
-- [Computation Model](../explanation/computation-model.md/) — How computation works
+- [Computation Model](../explanation/computation-model.md) — How computation works
 - [Distributed Computing](distributed-computing.md) — Multi-worker setup
 - [Handle Errors](handle-errors.md) — Error recovery

@@ -4,7 +4,7 @@ DataJoint 2.0 is a major release that establishes DataJoint as a mature framewor
 
 > **📘 Upgrading from legacy DataJoint (pre-2.0)?**
 >
-> This page summarizes new features and concepts. For step-by-step migration instructions, see the **[Migration Guide](../how-to/migrate-to-v20.md/)**.
+> This page summarizes new features and concepts. For step-by-step migration instructions, see the **[Migration Guide](../how-to/migrate-to-v20.md)**.
 
 ## Overview
 
@@ -27,13 +27,13 @@ If you're upgrading from legacy DataJoint, these changes require code updates:
 | **Type syntax** | `longblob`, `int unsigned` | `<blob>`, `int64` |
 | **Jobs** | `~jobs` table | Per-table `~~table_name` |
 
-See the [Migration Guide](../how-to/migrate-to-v20.md/) for complete upgrade steps.
+See the [Migration Guide](../how-to/migrate-to-v20.md) for complete upgrade steps.
 
 ## Object-Augmented Schema (OAS)
 
 DataJoint 2.0 unifies relational tables with object storage into a single coherent system. The relational database stores metadata and references while large objects (arrays, files, Zarr datasets) are stored in object storage—with full referential integrity maintained across both layers.
 
-→ [Type System Specification](../reference/specs/type-system.md/)
+→ [Type System Specification](../reference/specs/type-system.md)
 
 **Three storage sections:**
 
@@ -59,7 +59,7 @@ zarr_array : <object@store> # Path-addressed for Zarr/HDF5
 
 **Breaking change**: DataJoint 2.0 makes all type conversions explicit through a three-tier architecture.
 
-→ [Type System Specification](../reference/specs/type-system.md/) · [Codec API Specification](../reference/specs/codec-api.md/)
+→ [Type System Specification](../reference/specs/type-system.md) · [Codec API Specification](../reference/specs/codec-api.md)
 
 ### What Changed
 
@@ -103,7 +103,7 @@ class GraphCodec(dj.Codec):
 
 **Breaking change**: Redesigned job coordination with per-table job management.
 
-→ [AutoPopulate Specification](../reference/specs/autopopulate.md/) · [Job Metadata Specification](../reference/specs/job-metadata.md/)
+→ [AutoPopulate Specification](../reference/specs/autopopulate.md) · [Job Metadata Specification](../reference/specs/job-metadata.md)
 
 ### What Changed
 
@@ -139,7 +139,7 @@ Analysis.jobs.update({'session_id': 123}, priority=1)  # High priority
 
 **Breaking change**: Query operations now use **lineage-based matching** by default.
 
-→ [Semantic Matching Specification](../reference/specs/semantic-matching.md/)
+→ [Semantic Matching Specification](../reference/specs/semantic-matching.md)
 
 ### What Changed
 
@@ -163,7 +163,7 @@ result = TableA.join(TableB, semantic_check=False)
 
 A cleaner configuration approach with separation of concerns.
 
-→ [Configuration Reference](../reference/configuration.md/)
+→ [Configuration Reference](../reference/configuration.md)
 
 - **`datajoint.json`**: Non-sensitive settings (commit to version control)
 - **`.secrets/`**: Credentials (never commit)
@@ -229,7 +229,7 @@ DataJoint 2.0 is licensed under the **Apache License 2.0** (previously LGPL-2.1)
 
 ## Migration Path
 
-→ **[Complete Migration Guide](../how-to/migrate-to-v20.md/)**
+→ **[Complete Migration Guide](../how-to/migrate-to-v20.md)**
 
 Upgrading from DataJoint 0.x is a **phased process** designed to minimize risk:
 
@@ -273,8 +273,8 @@ Most users complete Phases 1-2 in a single session. Phases 3-4 only apply if you
 ## See Also
 
 ### Migration
-- **[Migration Guide](../how-to/migrate-to-v20.md/)** — Complete upgrade instructions
-- [Configuration](../how-to/configure-database.md/) — Setup new configuration system
+- **[Migration Guide](../how-to/migrate-to-v20.md)** — Complete upgrade instructions
+- [Configuration](../how-to/configure-database.md) — Setup new configuration system
 
 ### Core Concepts
 - [Type System](type-system.md) — Understand the three-tier type architecture
@@ -282,10 +282,10 @@ Most users complete Phases 1-2 in a single session. Phases 3-4 only apply if you
 - [Query Algebra](query-algebra.md) — Semantic matching and operators
 
 ### Getting Started
-- [Installation](../how-to/installation.md/) — Install DataJoint 2.0
-- [Tutorials](../tutorials/index.md/) — Learn by example
+- [Installation](../how-to/installation.md) — Install DataJoint 2.0
+- [Tutorials](../tutorials/index.md) — Learn by example
 
 ### Reference
-- [Type System Specification](../reference/specs/type-system.md/) — Complete type system details
-- [Codec API](../reference/specs/codec-api.md/) — Build custom codecs
-- [AutoPopulate Specification](../reference/specs/autopopulate.md/) — Jobs 2.0 reference
+- [Type System Specification](../reference/specs/type-system.md) — Complete type system details
+- [Codec API](../reference/specs/codec-api.md) — Build custom codecs
+- [AutoPopulate Specification](../reference/specs/autopopulate.md) — Jobs 2.0 reference

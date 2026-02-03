@@ -319,4 +319,4 @@ Student * Course.proj(..., course_name='name')
 
 - [Query Algebra Specification](specs/query-algebra.md) — Complete formal specification
 - [Fetch API](specs/fetch-api.md) — Retrieving query results
-- [Queries Tutorial](../tutorials/basics/04-queries.ipynb/) — Hands-on examples
+- [Queries Tutorial](../tutorials/basics/04-queries.ipynb) — Hands-on examples

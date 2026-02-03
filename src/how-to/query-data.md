@@ -174,5 +174,5 @@ len(Subject & condition)
 
 ## See Also
 
-- [Operators Reference](../reference/operators.md/) — Complete operator documentation
+- [Operators Reference](../reference/operators.md) — Complete operator documentation
 - [Fetch Results](fetch-results.md) — Retrieving query results

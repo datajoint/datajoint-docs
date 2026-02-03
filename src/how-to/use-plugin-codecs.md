@@ -539,8 +539,8 @@ v1.0.1 (2026-01-10)
 If you need a codec that doesn't exist yet, see:
 
 - [Create Custom Codecs](create-custom-codec.md) — Step-by-step guide
-- [Codec API Specification](../reference/specs/codec-api.md/) — Technical reference
-- [Custom Codecs Explanation](../explanation/custom-codecs.md/) — Design concepts
+- [Codec API Specification](../reference/specs/codec-api.md) — Technical reference
+- [Custom Codecs Explanation](../explanation/custom-codecs.md) — Design concepts
 
 Consider publishing your codec as a package so others can benefit!
 
@@ -622,6 +622,6 @@ check_requirements()
 
 - [Use Object Storage](use-object-storage.md) — Object storage configuration
 - [Create Custom Codecs](create-custom-codec.md) — Build your own codecs
-- [Type System](../reference/specs/type-system.md/) — Complete type reference
+- [Type System](../reference/specs/type-system.md) — Complete type reference
 - [dj-zarr-codecs Repository](https://github.com/datajoint/dj-zarr-codecs) — General Zarr array storage
 - [dj-photon-codecs Repository](https://github.com/datajoint/dj-photon-codecs) — Photon-limited movies with compression

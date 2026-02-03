@@ -201,4 +201,4 @@ except dj.DataJointError as e:
 
 ## See Also
 
-- [API: errors module](../api/datajoint/errors.md/)
+- [API: errors module](../api/datajoint/errors.md)

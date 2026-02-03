@@ -311,6 +311,6 @@ If dependencies are missing, `dj.Diagram` displays a warning and provides a stub
 
 ## See Also
 
-- [How to Read Diagrams](../../how-to/read-diagrams.ipynb/)
+- [How to Read Diagrams](../../how-to/read-diagrams.ipynb)
 - [Query Algebra](query-algebra.md)
 - [Table Declaration](table-declaration.md)

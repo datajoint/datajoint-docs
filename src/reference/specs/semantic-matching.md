@@ -206,7 +206,7 @@ dj.U('a', 'b') * A   # DataJointError: use & instead
 
 ---
 
-For conceptual background on lineage, terminology, and matching rules, see [Semantic Matching (Explanation)](../../explanation/semantic-matching.md/).
+For conceptual background on lineage, terminology, and matching rules, see [Semantic Matching (Explanation)](../../explanation/semantic-matching.md).
 
 ---
 

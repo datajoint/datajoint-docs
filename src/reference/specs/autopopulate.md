@@ -933,7 +933,7 @@ slow = Analysis & '_job_duration > 3600'
 
 ## 15. Migration from Legacy DataJoint
 
-DataJoint 2.0 replaces the schema-level `~jobs` table with per-table `~~table_name` jobs tables. See the [Migration Guide](../../how-to/migrate-to-v20.md/) for details.
+DataJoint 2.0 replaces the schema-level `~jobs` table with per-table `~~table_name` jobs tables. See the [Migration Guide](../../how-to/migrate-to-v20.md) for details.
 
 ---
 

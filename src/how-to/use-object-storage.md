@@ -20,7 +20,7 @@ OAS supports two addressing schemes:
 
 Data can also be stored **in-table** directly in the database column (no `@` modifier).
 
-For complete details, see the [Type System specification](../reference/specs/type-system.md/).
+For complete details, see the [Type System specification](../reference/specs/type-system.md).
 
 ## When to Use Object Storage
 

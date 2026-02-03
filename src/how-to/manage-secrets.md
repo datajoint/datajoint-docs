@@ -478,4 +478,4 @@ git log --all --full-history -- .secrets/datajoint.json
 
 - [Configure Database Connection](configure-database.md) — Database-specific configuration
 - [Configure Object Stores](configure-storage.md) — Storage-specific configuration
-- [Configuration Reference](../reference/configuration.md/) — Complete configuration options
+- [Configuration Reference](../reference/configuration.md) — Complete configuration options

@@ -286,4 +286,4 @@ The double underscore maps to the dot-notation path: `display__diagram_direction
 
 ## API Reference
 
-See [Settings API](../api/datajoint/settings.md/) for programmatic access.
+See [Settings API](../api/datajoint/settings.md) for programmatic access.

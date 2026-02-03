@@ -201,6 +201,6 @@ Schema definitions are portable—the same Python class definitions work on both
 
 ## See Also
 
-- [Configure Database](../../how-to/configure-database.md/) — Connection setup
+- [Configure Database](../../how-to/configure-database.md) — Connection setup
 - [Type System](type-system.md) — Core type definitions
 - [Table Declaration](table-declaration.md) — Definition syntax

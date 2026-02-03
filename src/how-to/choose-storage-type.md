@@ -790,6 +790,6 @@ large_data : <object@>
 
 - [Use Object Storage](use-object-storage.md) — How to use codecs in practice
 - [Configure Object Storage](configure-storage.md) — Store configuration
-- [Type System](../explanation/type-system.md/) — Complete type system overview
-- [Type System Specification](../reference/specs/type-system.md/) — Technical details
-- [NPY Codec Specification](../reference/specs/npy-codec.md/) — NumPy array storage
+- [Type System](../explanation/type-system.md) — Complete type system overview
+- [Type System Specification](../reference/specs/type-system.md) — Technical details
+- [NPY Codec Specification](../reference/specs/npy-codec.md) — NumPy array storage
