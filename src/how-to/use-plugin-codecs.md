@@ -237,7 +237,7 @@ Check compatibility with your DataJoint version:
 
 ```bash
 pip show dj-zarr-codecs
-# Requires: datajoint>=2.0.0a22
+# Requires: datajoint>=2.0.0
 ```
 
 Upgrade DataJoint if needed:
@@ -552,14 +552,14 @@ Add plugin codecs to your project dependencies:
 
 **requirements.txt:**
 ```
-datajoint>=2.0.0a22
+datajoint>=2.0.0
 dj-zarr-codecs>=0.1.0
 ```
 
 **pyproject.toml:**
 ```toml
 dependencies = [
-    "datajoint>=2.0.0a22",
+    "datajoint>=2.0.0",
     "dj-zarr-codecs>=0.1.0",
 ]
 ```
@@ -574,7 +574,7 @@ My Pipeline
 ===========
 
 Requirements:
-- datajoint>=2.0.0a22
+- datajoint>=2.0.0
 - dj-zarr-codecs>=0.1.0  # For waveform storage
 
 Install:
