@@ -6,7 +6,7 @@ DataJoint provides a custom data definition language and [query algebra](query-a
 
 ### The Definition Language
 
-DataJoint's [definition language](../reference/specs/table-declaration.md) is a standalone scripting language for declaring table schemas — not Python syntax embedded in strings. It is designed for uniform support across multiple host languages (Python, MATLAB, and potentially others). The same definition works identically regardless of which language you use.
+DataJoint's [definition language](../reference/specs/table-declaration.md/) is a standalone scripting language for declaring table schemas — not Python syntax embedded in strings. It is designed for uniform support across multiple host languages (Python, MATLAB, and potentially others). The same definition works identically regardless of which language you use.
 
 ### Composite Primary Keys: A Clarity Comparison
 
@@ -74,13 +74,13 @@ The definition string **is** the specification — a declarative language that d
 
 ### Why Custom Query Algebra?
 
-DataJoint's operators implement **[semantic matching](../reference/specs/semantic-matching.md)** — joins and restrictions match only on attributes connected through the foreign key graph, not arbitrary columns that happen to share a name. This prevents:
+DataJoint's operators implement **[semantic matching](../reference/specs/semantic-matching.md/)** — joins and restrictions match only on attributes connected through the foreign key graph, not arbitrary columns that happen to share a name. This prevents:
 
 - Accidental Cartesian products
 - Joins on unrelated columns
 - Silent incorrect results
 
-Every query result has a defined **[entity type](entity-integrity.md)** with a specific [primary key](../reference/specs/primary-keys.md) (algebraic closure). SQL results are untyped bags of rows; DataJoint results are entity sets you can continue to query and compose.
+Every query result has a defined **[entity type](entity-integrity.md)** with a specific [primary key](../reference/specs/primary-keys.md/) (algebraic closure). SQL results are untyped bags of rows; DataJoint results are entity sets you can continue to query and compose.
 
 ### Object-Augmented Schemas
 
@@ -191,7 +191,7 @@ No. DataJoint provides a Python API that abstracts SQL:
 | `WHERE` | `table & condition` |
 | `GROUP BY` | `.aggr()` |
 
-Understanding relational concepts ([primary keys](entity-integrity.md), foreign keys, [normalization](normalization.md)) is helpful but not required to start. The [tutorials](../tutorials/index.md) teach these concepts progressively.
+Understanding relational concepts ([primary keys](entity-integrity.md), foreign keys, [normalization](normalization.md)) is helpful but not required to start. The [tutorials](../tutorials/index.md/) teach these concepts progressively.
 
 Since DataJoint uses standard database backends (MySQL, PostgreSQL), data remains accessible via SQL for users who prefer it or need integration with other tools.
 
@@ -208,7 +208,7 @@ The database maintains references to external objects, preserving:
 - Query capability (filter by metadata, join across tables)
 - Deduplication (identical content stored once)
 
-See [Object Storage](../how-to/use-object-storage.md) for details.
+See [Object Storage](../how-to/use-object-storage.md/) for details.
 
 ## Can Multiple Users Share a Pipeline?
 
@@ -225,4 +225,4 @@ Teams typically:
 2. Connect to a shared database server
 3. Run `populate()` from multiple machines simultaneously
 
-See [Distributed Computing](../how-to/distributed-computing.md) for multi-process patterns.
+See [Distributed Computing](../how-to/distributed-computing.md/) for multi-process patterns.

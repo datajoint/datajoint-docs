@@ -1,7 +1,7 @@
 # Master-Part Relationships Specification
 
 !!! tip "Looking for a task-oriented guide?"
-    See [Master-Part Tables](../../how-to/master-part.ipynb) for step-by-step examples.
+    See [Master-Part Tables](../../how-to/master-part.ipynb/) for step-by-step examples.
 
 ## Overview
 

@@ -337,5 +337,5 @@ if __name__ == '__main__':
 ## See Also
 
 - [Manage Pipeline Project](manage-pipeline-project.md) — Project organization
-- [Configuration Reference](../reference/configuration.md) — All settings
+- [Configuration Reference](../reference/configuration.md/) — All settings
 - [Manage Secrets](manage-secrets.md) — Credential management

@@ -12,7 +12,7 @@ A **scientific data pipeline** extends beyond a database with computations. It i
 
 A DataJoint pipeline integrates three core components:
 
-![DataJoint Platform Architecture](../images/dj-platform.png)
+![DataJoint Platform Architecture](../images/dj-platform.png/)
 
 | Component | Purpose |
 |-----------|---------|
@@ -26,7 +26,7 @@ These components work together: code defines the schema and computations, the da
 
 A DataJoint pipeline forms a **Directed Acyclic Graph (DAG)** at two levels:
 
-![Pipeline DAG Structure](../images/pipeline-illustration.png)
+![Pipeline DAG Structure](../images/pipeline-illustration.png/)
 
 **Nodes** represent Python modules, which correspond to database schemas.
 
@@ -65,7 +65,7 @@ This model treats the database schema as an **executable workflow specification*
 
 Each schema corresponds to a dedicated Python module. The module import structure mirrors the foreign key dependencies between schemas:
 
-![Schema Structure](../images/schema-illustration.png)
+![Schema Structure](../images/schema-illustration.png/)
 
 ```
 my_pipeline/
@@ -78,7 +78,7 @@ my_pipeline/
 │       └── analysis.py     # analysis schema (depends on acquisition)
 ```
 
-For practical guidance on organizing multi-schema pipelines, configuring repositories, and managing team access, see [Manage a Pipeline Project](../how-to/manage-pipeline-project.md).
+For practical guidance on organizing multi-schema pipelines, configuring repositories, and managing team access, see [Manage a Pipeline Project](../how-to/manage-pipeline-project.md/).
 
 ## Object-Augmented Schemas
 
@@ -175,4 +175,4 @@ The schema remains central—defining data structures, dependencies, and computa
 - [Relational Workflow Model](relational-workflow-model.md) — The conceptual foundation
 - [Entity Integrity](entity-integrity.md) — Primary keys and dimensions
 - [Type System](type-system.md) — Codec types and storage modes
-- [Manage a Pipeline Project](../how-to/manage-pipeline-project.md) — Practical project organization
+- [Manage a Pipeline Project](../how-to/manage-pipeline-project.md/) — Practical project organization

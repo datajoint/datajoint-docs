@@ -26,10 +26,10 @@ Detailed specifications of DataJoint's behavior and semantics.
 
 Curated pipeline modules for neurophysiology experiments.
 
-- [DataJoint Elements](../elements/index.md) — Pre-built pipelines for calcium imaging, electrophysiology, behavior tracking, and more
+- [DataJoint Elements](../elements/index.md/) — Pre-built pipelines for calcium imaging, electrophysiology, behavior tracking, and more
 
 ## API Documentation
 
 Auto-generated from source code docstrings.
 
-- [API Index](../api/index.md)
+- [API Index](../api/index.md/)
