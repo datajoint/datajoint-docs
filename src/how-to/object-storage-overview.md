@@ -26,7 +26,7 @@ Traditional databases excel at structured, relational data but struggle with lar
 - **Object storage:** Arrays, files, datasets (large data > 1 MB)
 - **Full referential integrity:** Maintained across both layers
 
-Read: [Object-Augmented Schemas](../explanation/data-pipelines.md#object-augmented-schemas) for conceptual overview.
+Read: [Object-Augmented Schemas](../explanation/data-pipelines.md#object-augmented-schemas/) for conceptual overview.
 
 ## Three Storage Modes
 
@@ -146,16 +146,16 @@ For implementation details and specifications:
 
 ### Specifications
 
-- [Type System Spec](../reference/specs/type-system.md) — Three-layer architecture
-- [Codec API Spec](../reference/specs/codec-api.md) — Custom codec interface
-- [NPY Codec Spec](../reference/specs/npy-codec.md) — NumPy array storage
-- [Object Store Configuration Spec](../reference/specs/object-store-configuration.md) — Store config details
+- [Type System Spec](../reference/specs/type-system.md/) — Three-layer architecture
+- [Codec API Spec](../reference/specs/codec-api.md/) — Custom codec interface
+- [NPY Codec Spec](../reference/specs/npy-codec.md/) — NumPy array storage
+- [Object Store Configuration Spec](../reference/specs/object-store-configuration.md/) — Store config details
 
 ### Explanations
 
-- [Type System](../explanation/type-system.md) — Conceptual overview
-- [Data Pipelines (OAS section)](../explanation/data-pipelines.md#object-augmented-schemas) — Why OAS exists
-- [Custom Codecs](../explanation/custom-codecs.md) — Design patterns
+- [Type System](../explanation/type-system.md/) — Conceptual overview
+- [Data Pipelines (OAS section)](../explanation/data-pipelines.md#object-augmented-schemas/) — Why OAS exists
+- [Custom Codecs](../explanation/custom-codecs.md/) — Design patterns
 
 ## Common Workflows
 
@@ -195,9 +195,9 @@ For implementation details and specifications:
 
 ### Workflow 4: Building Custom Domain Types
 
-1. Read [Custom Codecs](../explanation/custom-codecs.md) — Understand patterns
+1. Read [Custom Codecs](../explanation/custom-codecs.md/) — Understand patterns
 2. [Create Custom Codec](create-custom-codec.md) — Implementation guide
-3. [Codec API Spec](../reference/specs/codec-api.md) — Technical reference
+3. [Codec API Spec](../reference/specs/codec-api.md/) — Technical reference
 4. Test with small dataset
 5. Deploy to production
 
@@ -258,15 +258,15 @@ Write-once data with potential duplicates?
 
 ### Getting Help
 
-- Check [FAQ](../explanation/faq.md) for common questions
+- Check [FAQ](../explanation/faq.md/) for common questions
 - Search [GitHub Discussions](https://github.com/datajoint/datajoint-python/discussions)
 - Review specification for exact behavior
 
 ## See Also
 
 ### Related Concepts
-- [Type System](../explanation/type-system.md) — Three-layer type architecture
-- [Data Pipelines](../explanation/data-pipelines.md) — Object-Augmented Schemas
+- [Type System](../explanation/type-system.md/) — Three-layer type architecture
+- [Data Pipelines](../explanation/data-pipelines.md/) — Object-Augmented Schemas
 
 ### Related How-Tos
 - [Manage Secrets](manage-secrets.md) — Credentials for S3/cloud storage
@@ -274,5 +274,5 @@ Write-once data with potential duplicates?
 - [Insert Data](insert-data.md) — Data insertion patterns
 
 ### Related Tutorials
-- [Object Storage Tutorial](../tutorials/basics/06-object-storage.ipynb) — Hands-on learning
-- [Custom Codecs Tutorial](../tutorials/advanced/custom-codecs.ipynb) — Build your own codec
+- [Object Storage Tutorial](../tutorials/basics/06-object-storage.ipynb/) — Hands-on learning
+- [Custom Codecs Tutorial](../tutorials/advanced/custom-codecs.ipynb/) — Build your own codec
