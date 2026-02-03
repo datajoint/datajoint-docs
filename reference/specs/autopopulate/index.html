@@ -3814,8 +3814,11 @@
 <span class="s2">    result : &lt;blob&gt;</span>
 <span class="s2">    """</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">make_fetch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">"""Fetch all required data (runs in transaction)."""</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">make_fetch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Fetch all required data (runs in transaction).</span>
+
+<span class="sd">        kwargs are passed from populate(make_kwargs={...}).</span>
+<span class="sd">        """</span>
         <span class="k">return</span> <span class="p">(</span><span class="n">Recording</span> <span class="o">&amp;</span> <span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">fetch1</span><span class="p">(</span><span class="s1">'raw_data'</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">make_compute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
@@ -3863,6 +3866,12 @@
 
 <span class="c1"># Call with custom parameters</span>
 <span class="n">ConfigurableAnalysis</span><span class="o">.</span><span class="n">populate</span><span class="p">(</span><span class="n">make_kwargs</span><span class="o">=</span><span class="p">{</span><span class="s1">'threshold'</span><span class="p">:</span> <span class="mf">0.8</span><span class="p">})</span>
+</code></pre></div>
+<p><strong>Tripartite pattern:</strong> When using the method-based tripartite pattern, <code>make_kwargs</code> are passed to <code>make_fetch()</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">make_fetch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Fetching </span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">Source</span> <span class="o">&amp;</span> <span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">fetch1</span><span class="p">(</span><span class="s1">'data'</span><span class="p">)</span>
 </code></pre></div>
 <p><strong>Anti-pattern warning:</strong> Passing arguments that affect the computed result breaks reproducibility—all inputs should come from <code>fetch</code> calls inside <code>make()</code>. If a parameter affects results, it should be stored in a lookup table and referenced via foreign key.</p>
 <p><strong>Acceptable use:</strong> Directives that don't affect results, such as:
@@ -4365,8 +4374,8 @@ version : varchar(255)              # Code version
     <span class="k">yield</span>  <span class="c1"># Re-acquire transaction</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="o">**</span><span class="n">key</span><span class="p">,</span> <span class="s1">'result'</span><span class="p">:</span> <span class="n">result</span><span class="p">})</span>
 
-<span class="c1"># Tripartite (methods)</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">make_fetch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span> <span class="k">return</span> <span class="n">data</span>
+<span class="c1"># Tripartite (methods) - kwargs passed to make_fetch</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">make_fetch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span> <span class="k">return</span> <span class="n">data</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">make_compute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span> <span class="k">return</span> <span class="n">result</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">make_insert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">result</span><span class="p">):</span> <span class="bp">self</span><span class="o">.</span><span class="n">insert1</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
 </code></pre></div>

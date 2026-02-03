@@ -2858,8 +2858,11 @@ the transaction:</p>
 <span class="s2">    avg_signal : float64</span>
 <span class="s2">    """</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">make_fetch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">"""Step 1: Fetch input data (outside transaction)"""</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">make_fetch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Step 1: Fetch input data (outside transaction).</span>
+
+<span class="sd">        kwargs are passed from populate(make_kwargs={...}).</span>
+<span class="sd">        """</span>
         <span class="n">raw_signal</span> <span class="o">=</span> <span class="p">(</span><span class="n">RawSignal</span> <span class="o">&amp;</span> <span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">fetch1</span><span class="p">(</span><span class="s2">"signal"</span><span class="p">)</span>
         <span class="k">return</span> <span class="p">(</span><span class="n">raw_signal</span><span class="p">,)</span>
 
