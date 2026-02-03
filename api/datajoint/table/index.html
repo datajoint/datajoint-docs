@@ -6329,8 +6329,38 @@ introspection (e.g., help()).</p>
     <div class="doc doc-contents ">
 
         <p>Declare the table in the schema based on self.definition.</p>
-<p>:param context: the context for foreign key resolution. If None, foreign keys are
-    not allowed.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>context</code>
+            </td>
+            <td>
+                  <code><span title="dict">dict</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The context for foreign key resolution. If None, foreign keys are
+not allowed.</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+      </tbody>
+    </table>
 
 
     </div>
@@ -6380,7 +6410,30 @@ introspection (e.g., help()).</p>
 
     <div class="doc doc-contents ">
 
-        <p>:return: the FROM clause of SQL SELECT statements.</p>
+        <p>Return the FROM clause of SQL SELECT statements.</p>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="str">str</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The full table name for use in SQL FROM clauses.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
 
 
     </div>
@@ -6405,7 +6458,61 @@ introspection (e.g., help()).</p>
 
     <div class="doc doc-contents ">
 
-        <p>:return: the selected attributes from the SQL SELECT statement.</p>
+        <p>Return the selected attributes from the SQL SELECT statement.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>select_fields</code>
+            </td>
+            <td>
+                  <code><span title="list">list</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>List of attribute names to select. If None, selects all attributes.</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="str">str</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The SQL field selection string.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
 
 
     </div>
@@ -6430,13 +6537,96 @@ introspection (e.g., help()).</p>
 
     <div class="doc doc-contents ">
 
-        <p>:param primary: if None, then all parents are returned. If True, then only foreign keys composed of
-    primary key attributes are considered.  If False, return foreign keys including at least one
-    secondary attribute.
-:param as_objects: if False, return table names. If True, return table objects.
-:param foreign_key_info: if True, each element in result also includes foreign key info.
-:return: list of parents as table names or table objects
-    with (optional) foreign key information.</p>
+        <p>Return the list of parent tables.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>primary</code>
+            </td>
+            <td>
+                  <code><span title="bool">bool</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If None, then all parents are returned. If True, then only foreign keys
+composed of primary key attributes are considered. If False, return
+foreign keys including at least one secondary attribute.</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>as_objects</code>
+            </td>
+            <td>
+                  <code><span title="bool">bool</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If False, return table names. If True, return table objects.</p>
+              </div>
+            </td>
+            <td>
+                  <code>False</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>foreign_key_info</code>
+            </td>
+            <td>
+                  <code><span title="bool">bool</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If True, each element in result also includes foreign key info.</p>
+              </div>
+            </td>
+            <td>
+                  <code>False</code>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="list">list</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>List of parents as table names or table objects with (optional) foreign
+key information.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
 
 
     </div>
@@ -6461,13 +6651,96 @@ introspection (e.g., help()).</p>
 
     <div class="doc doc-contents ">
 
-        <p>:param primary: if None, then all children are returned. If True, then only foreign keys composed of
-    primary key attributes are considered.  If False, return foreign keys including at least one
-    secondary attribute.
-:param as_objects: if False, return table names. If True, return table objects.
-:param foreign_key_info: if True, each element in result also includes foreign key info.
-:return: list of children as table names or table objects
-    with (optional) foreign key information.</p>
+        <p>Return the list of child tables.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>primary</code>
+            </td>
+            <td>
+                  <code><span title="bool">bool</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If None, then all children are returned. If True, then only foreign keys
+composed of primary key attributes are considered. If False, return
+foreign keys including at least one secondary attribute.</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>as_objects</code>
+            </td>
+            <td>
+                  <code><span title="bool">bool</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If False, return table names. If True, return table objects.</p>
+              </div>
+            </td>
+            <td>
+                  <code>False</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>foreign_key_info</code>
+            </td>
+            <td>
+                  <code><span title="bool">bool</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If True, each element in result also includes foreign key info.</p>
+              </div>
+            </td>
+            <td>
+                  <code>False</code>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="list">list</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>List of children as table names or table objects with (optional) foreign
+key information.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
 
 
     </div>
@@ -6492,8 +6765,62 @@ introspection (e.g., help()).</p>
 
     <div class="doc doc-contents ">
 
-        <p>:param as_objects: False - a list of table names; True - a list of table objects.
-:return: list of tables descendants in topological order.</p>
+        <p>Return list of descendant tables in topological order.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>as_objects</code>
+            </td>
+            <td>
+                  <code><span title="bool">bool</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If False (default), return a list of table names. If True, return a
+list of table objects.</p>
+              </div>
+            </td>
+            <td>
+                  <code>False</code>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="list">list</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>List of descendant tables in topological order.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
 
 
     </div>
@@ -6518,8 +6845,62 @@ introspection (e.g., help()).</p>
 
     <div class="doc doc-contents ">
 
-        <p>:param as_objects: False - a list of table names; True - a list of table objects.
-:return: list of tables ancestors in topological order.</p>
+        <p>Return list of ancestor tables in topological order.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>as_objects</code>
+            </td>
+            <td>
+                  <code><span title="bool">bool</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If False (default), return a list of table names. If True, return a
+list of table objects.</p>
+              </div>
+            </td>
+            <td>
+                  <code>False</code>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="list">list</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>List of ancestor tables in topological order.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
 
 
     </div>
@@ -6544,8 +6925,62 @@ introspection (e.g., help()).</p>
 
     <div class="doc doc-contents ">
 
-        <p>return part tables either as entries in a dict with foreign key information or a list of objects</p>
-<p>:param as_objects: if False (default), the output is a dict describing the foreign keys. If True, return table objects.</p>
+        <p>Return part tables for this master table.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>as_objects</code>
+            </td>
+            <td>
+                  <code><span title="bool">bool</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If False (default), the output is a list of full table names. If True,
+return table objects.</p>
+              </div>
+            </td>
+            <td>
+                  <code>False</code>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="list">list</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>List of part table names or table objects.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
 
 
     </div>
@@ -6575,7 +7010,30 @@ introspection (e.g., help()).</p>
 
     <div class="doc doc-contents ">
 
-        <p>:return: True is the table is declared in the schema.</p>
+        <p>Check if the table is declared in the schema.</p>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="bool">bool</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>True if the table is declared in the schema.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
 
     </div>
 
@@ -6604,7 +7062,30 @@ introspection (e.g., help()).</p>
 
     <div class="doc doc-contents ">
 
-        <p>:return: full table name in the schema</p>
+        <p>Return the full table name in the schema.</p>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="str">str</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Full table name in the format <code>database</code>.<code>table_name</code>.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
 
     </div>
 
@@ -6657,24 +7138,51 @@ introspection (e.g., help()).</p>
 
     <div class="doc doc-contents ">
 
-        <p><code>update1</code> updates one existing entry in the table.
-Caution: In DataJoint the primary modes for data manipulation is to <code>insert</code> and
+        <p>Update one existing entry in the table.</p>
+<p>Caution: In DataJoint the primary modes for data manipulation is to <code>insert</code> and
 <code>delete</code> entire records since referential integrity works on the level of records,
 not fields. Therefore, updates are reserved for corrective operations outside of main
 workflow. Use UPDATE methods sparingly with full awareness of potential violations of
 assumptions.</p>
-<p>:param row: a <code>dict</code> containing the primary key values and the attributes to update.
-    Setting an attribute value to None will reset it to the default value (if any).</p>
 <p>The primary key attributes must always be provided.</p>
-<p>Examples:</p>
-<blockquote>
-<blockquote>
-<blockquote>
-<p>table.update1({'id': 1, 'value': 3})  # update value in record with id=1
-table.update1({'id': 1, 'value': None})  # reset value to default</p>
-</blockquote>
-</blockquote>
-</blockquote>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>row</code>
+            </td>
+            <td>
+                  <code><span title="dict">dict</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>A dict containing the primary key values and the attributes to update.
+Setting an attribute value to None will reset it to the default value (if any).</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+<p><span class="doc-section-title">Examples:</span></p>
+    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">table</span><span class="o">.</span><span class="n">update1</span><span class="p">({</span><span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">})</span>  <span class="c1"># update value in record with id=1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">table</span><span class="o">.</span><span class="n">update1</span><span class="p">({</span><span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">})</span>  <span class="c1"># reset value to default</span>
+</code></pre></div>
 
 
     </div>
@@ -6700,10 +7208,6 @@ table.update1({'id': 1, 'value': None})  # reset value to default</p>
     <div class="doc doc-contents ">
 
         <p>Validate rows without inserting them.</p>
-<p>:param rows: Same format as insert() - iterable of dicts, tuples, numpy records,
-    or a pandas DataFrame.
-:param ignore_extra_fields: If True, ignore fields not in the table heading.
-:return: ValidationResult with is_valid, errors list, and rows_checked count.</p>
 <p>Validates:
     - Field existence (all fields must be in table heading)
     - Row format (correct number of attributes for positional inserts)
@@ -6715,13 +7219,91 @@ table.update1({'id': 1, 'value': None})  # reset value to default</p>
     - Foreign key constraints
     - Unique constraints (other than PK)
     - Custom MySQL constraints</p>
-<p>Example::</p>
-<pre><code>result = table.validate(rows)
-if result:
-    table.insert(rows)
-else:
-    print(result.summary())
-</code></pre>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>rows</code>
+            </td>
+            <td>
+                  <code><span title="iterable">iterable</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Same format as insert() - iterable of dicts, tuples, numpy records,
+or a pandas DataFrame.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>ignore_extra_fields</code>
+            </td>
+            <td>
+                  <code><span title="bool">bool</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If True, ignore fields not in the table heading.</p>
+              </div>
+            </td>
+            <td>
+                  <code>False</code>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><a class="autorefs autorefs-internal" title="ValidationResult
+
+
+  
+      dataclass
+   (datajoint.table.ValidationResult)" href="#datajoint.table.ValidationResult">ValidationResult</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Result with is_valid, errors list, and rows_checked count.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+<p><span class="doc-section-title">Examples:</span></p>
+    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">result</span> <span class="o">=</span> <span class="n">table</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="n">rows</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">if</span> <span class="n">result</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="n">table</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">rows</span><span class="p">)</span>
+<span class="gp">... </span><span class="k">else</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">summary</span><span class="p">())</span>
+</code></pre></div>
 
 
     </div>
@@ -6746,10 +7328,61 @@ else:
 
     <div class="doc doc-contents ">
 
-        <p>Insert one data record into the table. For <code>kwargs</code>, see <code>insert()</code>.</p>
-<p>:param row: a numpy record, a dict-like object, or an ordered sequence to be inserted
-    as one row.</p>
+        <p>Insert one data record into the table.</p>
+<p>For <code>kwargs</code>, see <code>insert()</code>.</p>
 
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>row</code>
+            </td>
+            <td>
+                  <code>numpy.void, dict, or sequence</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>A numpy record, a dict-like object, or an ordered sequence to be inserted
+as one row.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>**kwargs</code>
+            </td>
+            <td>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Additional arguments passed to <code>insert()</code>.</p>
+              </div>
+            </td>
+            <td>
+                  <code>{}</code>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+<details class="see-also" open>
+  <summary>See Also</summary>
+  <p>insert : Insert multiple data records.</p>
+</details>
 
     </div>
 
@@ -6822,26 +7455,133 @@ finalizing the database insert.</p>
     <div class="doc doc-contents ">
 
         <p>Insert a collection of rows.</p>
-<p>:param rows: Either (a) an iterable where an element is a numpy record, a
-    dict-like object, a pandas.DataFrame, a polars.DataFrame, a pyarrow.Table,
-    a sequence, or a query expression with the same heading as self, or
-    (b) a pathlib.Path object specifying a path relative to the current
-    directory with a CSV file, the contents of which will be inserted.
-:param replace: If True, replaces the existing tuple.
-:param skip_duplicates: If True, silently skip duplicate inserts.
-:param ignore_extra_fields: If False, fields that are not in the heading raise error.
-:param allow_direct_insert: Only applies in auto-populated tables. If False (default),
-    insert may only be called from inside the make callback.
-:param chunk_size: If set, insert rows in batches of this size. Useful for very
-    large inserts to avoid memory issues. Each chunk is a separate transaction.</p>
-<p>Example:</p>
-<pre><code>&gt;&gt;&gt; Table.insert([
-&gt;&gt;&gt;     dict(subject_id=7, species="mouse", date_of_birth="2014-09-01"),
-&gt;&gt;&gt;     dict(subject_id=8, species="mouse", date_of_birth="2014-09-02")])
 
-# Large insert with chunking
-&gt;&gt;&gt; Table.insert(large_dataset, chunk_size=10000)
-</code></pre>
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>rows</code>
+            </td>
+            <td>
+                  <code><span title="iterable">iterable</span> or <span title="pathlib.Path">Path</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Either (a) an iterable where an element is a numpy record, a dict-like
+object, a pandas.DataFrame, a polars.DataFrame, a pyarrow.Table, a
+sequence, or a query expression with the same heading as self, or
+(b) a pathlib.Path object specifying a path relative to the current
+directory with a CSV file, the contents of which will be inserted.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>replace</code>
+            </td>
+            <td>
+                  <code><span title="bool">bool</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If True, replaces the existing tuple.</p>
+              </div>
+            </td>
+            <td>
+                  <code>False</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>skip_duplicates</code>
+            </td>
+            <td>
+                  <code><span title="bool">bool</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If True, silently skip duplicate inserts.</p>
+              </div>
+            </td>
+            <td>
+                  <code>False</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>ignore_extra_fields</code>
+            </td>
+            <td>
+                  <code><span title="bool">bool</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If False (default), fields that are not in the heading raise error.</p>
+              </div>
+            </td>
+            <td>
+                  <code>False</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>allow_direct_insert</code>
+            </td>
+            <td>
+                  <code><span title="bool">bool</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Only applies in auto-populated tables. If False (default), insert may
+only be called from inside the make callback.</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>chunk_size</code>
+            </td>
+            <td>
+                  <code><span title="int">int</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If set, insert rows in batches of this size. Useful for very large
+inserts to avoid memory issues. Each chunk is a separate transaction.</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+<p><span class="doc-section-title">Examples:</span></p>
+    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">Table</span><span class="o">.</span><span class="n">insert</span><span class="p">([</span>
+<span class="gp">... </span>    <span class="nb">dict</span><span class="p">(</span><span class="n">subject_id</span><span class="o">=</span><span class="mi">7</span><span class="p">,</span> <span class="n">species</span><span class="o">=</span><span class="s2">&quot;mouse&quot;</span><span class="p">,</span> <span class="n">date_of_birth</span><span class="o">=</span><span class="s2">&quot;2014-09-01&quot;</span><span class="p">),</span>
+<span class="gp">... </span>    <span class="nb">dict</span><span class="p">(</span><span class="n">subject_id</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">species</span><span class="o">=</span><span class="s2">&quot;mouse&quot;</span><span class="p">,</span> <span class="n">date_of_birth</span><span class="o">=</span><span class="s2">&quot;2014-09-02&quot;</span><span class="p">)])</span>
+</code></pre></div>
+    <p>Large insert with chunking:</p>
+    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">Table</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">large_dataset</span><span class="p">,</span> <span class="n">chunk_size</span><span class="o">=</span><span class="mi">10000</span><span class="p">)</span>
+</code></pre></div>
 
 
     </div>
@@ -6870,25 +7610,88 @@ finalizing the database insert.</p>
 <p>This method provides symmetry with to_pandas(): data fetched with to_pandas()
 (which sets primary key as index) can be modified and re-inserted using
 insert_dataframe() without manual index manipulation.</p>
-<p>:param df: pandas DataFrame to insert
-:param index_as_pk: How to handle DataFrame index:
-    - None (default): Auto-detect. Use index as primary key if index names
-      match primary_key columns. Drop if unnamed RangeIndex.
-    - True: Treat index as primary key columns. Raises if index names don't
-      match table primary key.
-    - False: Ignore index entirely (drop it).
-:param **insert_kwargs: Passed to insert() - replace, skip_duplicates,
-    ignore_extra_fields, allow_direct_insert, chunk_size</p>
-<p>Example::</p>
-<pre><code># Round-trip with to_pandas()
-df = table.to_pandas()           # PK becomes index
-df['value'] = df['value'] * 2    # Modify data
-table.insert_dataframe(df)       # Auto-detects index as PK
 
-# Explicit control
-table.insert_dataframe(df, index_as_pk=True)   # Use index
-table.insert_dataframe(df, index_as_pk=False)  # Ignore index
-</code></pre>
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>df</code>
+            </td>
+            <td>
+                  <code><span title="pandas.DataFrame">DataFrame</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>DataFrame to insert.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>index_as_pk</code>
+            </td>
+            <td>
+                  <code><span title="bool">bool</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>How to handle DataFrame index:</p>
+<ul>
+<li>None (default): Auto-detect. Use index as primary key if index names
+  match primary_key columns. Drop if unnamed RangeIndex.</li>
+<li>True: Treat index as primary key columns. Raises if index names don't
+  match table primary key.</li>
+<li>False: Ignore index entirely (drop it).</li>
+</ul>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>**insert_kwargs</code>
+            </td>
+            <td>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Passed to insert() - replace, skip_duplicates, ignore_extra_fields,
+allow_direct_insert, chunk_size.</p>
+              </div>
+            </td>
+            <td>
+                  <code>{}</code>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+<p><span class="doc-section-title">Examples:</span></p>
+    <p>Round-trip with to_pandas():</p>
+    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">table</span><span class="o">.</span><span class="n">to_pandas</span><span class="p">()</span>           <span class="c1"># PK becomes index</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="mi">2</span>    <span class="c1"># Modify data</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">table</span><span class="o">.</span><span class="n">insert_dataframe</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>       <span class="c1"># Auto-detects index as PK</span>
+</code></pre></div>
+    <p>Explicit control:</p>
+    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">table</span><span class="o">.</span><span class="n">insert_dataframe</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">index_as_pk</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>   <span class="c1"># Use index</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">table</span><span class="o">.</span><span class="n">insert_dataframe</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">index_as_pk</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>  <span class="c1"># Ignore index</span>
+</code></pre></div>
 
 
     </div>
@@ -7039,7 +7842,30 @@ If this table has populated dependent tables, this will fail.</p>
 
     <div class="doc doc-contents ">
 
-        <p>:return: size of data and indices in bytes on the storage device</p>
+        <p>Return the size of data and indices in bytes on the storage device.</p>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="int">int</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Size of data and indices in bytes.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
 
     </div>
 
@@ -7063,7 +7889,78 @@ If this table has populated dependent tables, this will fail.</p>
 
     <div class="doc doc-contents ">
 
-        <p>:return:  the definition string for the query using DataJoint DDL.</p>
+        <p>Return the definition string for the query using DataJoint DDL.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>context</code>
+            </td>
+            <td>
+                  <code><span title="dict">dict</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The context for foreign key resolution. If None, uses the caller's
+local and global namespace.</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>printout</code>
+            </td>
+            <td>
+                  <code><span title="bool">bool</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If True, also log the definition string.</p>
+              </div>
+            </td>
+            <td>
+                  <code>False</code>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="str">str</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The definition string for the table in DataJoint DDL format.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
 
 
     </div>
@@ -7097,11 +7994,95 @@ If this table has populated dependent tables, this will fail.</p>
 
     <div class="doc doc-contents ">
 
-        <p>given a table name in the form <code>schema_name</code>.<code>table_name</code>, find its class in the context.</p>
-<p>:param name: <code>schema_name</code>.<code>table_name</code>
-:param context: dictionary representing the namespace
-:param depth: search depth into imported modules, helps avoid infinite recursion.
-:return: class name found in the context or None if not found</p>
+        <p>Find a table's class in the context given its full table name.</p>
+<p>Given a table name in the form <code>schema_name</code>.<code>table_name</code>, find its class in
+the context.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>name</code>
+            </td>
+            <td>
+                  <code><span title="str">str</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Full table name in format <code>schema_name</code>.<code>table_name</code>.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>context</code>
+            </td>
+            <td>
+                  <code><span title="dict">dict</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Dictionary representing the namespace.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>depth</code>
+            </td>
+            <td>
+                  <code><span title="int">int</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Search depth into imported modules, helps avoid infinite recursion.</p>
+              </div>
+            </td>
+            <td>
+                  <code>3</code>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="str">str</span> or None</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Class name found in the context or None if not found.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
 
 
     </div>
@@ -7130,10 +8111,55 @@ If this table has populated dependent tables, this will fail.</p>
 
 
 
-        <p>A base table without a dedicated class. Each instance is associated with a table
-specified by full_table_name.</p>
-<p>:param conn:  a dj.Connection object
-:param full_table_name: in format <code>database</code>.<code>table_name</code></p>
+        <p>A base table without a dedicated class.</p>
+<p>Each instance is associated with a table specified by full_table_name.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>conn</code>
+            </td>
+            <td>
+                  <code><a class="autorefs autorefs-internal" title="Connection (datajoint.Connection)" href="../#datajoint.Connection">Connection</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>A DataJoint connection object.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>full_table_name</code>
+            </td>
+            <td>
+                  <code><span title="str">str</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Full table name in format <code>database</code>.<code>table_name</code>.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
 
 
 

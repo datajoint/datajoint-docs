@@ -6428,7 +6428,60 @@ A subquery is generated when:
     <div class="doc doc-contents ">
 
         <p>Make the SQL SELECT statement.</p>
-<p>:param fields: used to explicitly set the select attributes</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>fields</code>
+            </td>
+            <td>
+                  <code><span title="list">list</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Used to explicitly set the select attributes.</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="str">str</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The SQL SELECT statement.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
 
 
     </div>
@@ -6479,20 +6532,15 @@ A subquery is generated when:
     <div class="doc doc-contents ">
 
         <p>Produces a new expression with the new restriction applied.</p>
-<p>:param restriction: a sequence or an array (treated as OR list), another QueryExpression,
-    an SQL condition string, or an AndList.
-:param semantic_check: If True (default), use semantic matching - only match on
-    homologous namesakes and error on non-homologous namesakes.
-    If False, use natural matching on all namesakes (no lineage checking).
-:return: A new QueryExpression with the restriction applied.</p>
-<p>rel.restrict(restriction) is equivalent to rel &amp; restriction.
-rel.restrict(Not(restriction)) is equivalent to rel - restriction</p>
+<p><code>rel.restrict(restriction)</code> is equivalent to <code>rel &amp; restriction</code>.
+<code>rel.restrict(Not(restriction))</code> is equivalent to <code>rel - restriction</code>.</p>
 <p>The primary key of the result is unaffected.
-Successive restrictions are combined as logical AND: r &amp; a &amp; b is equivalent to r &amp; AndList((a, b))
+Successive restrictions are combined as logical AND: <code>r &amp; a &amp; b</code> is equivalent to
+<code>r &amp; AndList((a, b))</code>.
 Any QueryExpression, collection, or sequence other than an AndList are treated as OrLists
-(logical disjunction of conditions)
+(logical disjunction of conditions).
 Inverse restriction is accomplished by either using the subtraction operator or the Not class.</p>
-<p>The expressions in each row equivalent:</p>
+<p>The expressions in each row are equivalent:</p>
 <p>rel &amp; True                          rel
 rel &amp; False                         the empty entity set
 rel &amp; 'TRUE'                        rel
@@ -6512,13 +6560,88 @@ rel - AndList()                     rel &amp; False
 rel - []                            rel
 rel - None                          rel
 rel - any_empty_entity_set          rel</p>
-<p>When arg is another QueryExpression, the restriction rel &amp; arg restricts rel to elements that match at least
-one element in arg (hence arg is treated as an OrList).
-Conversely, rel - arg restricts rel to elements that do not match any elements in arg.
-Two elements match when their common attributes have equal values or when they have no common attributes.
-All shared attributes must be in the primary key of either rel or arg or both or an error will be raised.</p>
-<p>QueryExpression.restrict is the only access point that modifies restrictions. All other operators must
-ultimately call restrict()</p>
+<p>When arg is another QueryExpression, the restriction <code>rel &amp; arg</code> restricts rel to elements
+that match at least one element in arg (hence arg is treated as an OrList).
+Conversely, <code>rel - arg</code> restricts rel to elements that do not match any elements in arg.
+Two elements match when their common attributes have equal values or when they have no
+common attributes.
+All shared attributes must be in the primary key of either rel or arg or both or an error
+will be raised.</p>
+<p>QueryExpression.restrict is the only access point that modifies restrictions. All other
+operators must ultimately call restrict().</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>restriction</code>
+            </td>
+            <td>
+                  <code>QueryExpression, AndList, str, dict, list, or array-like</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>A sequence or an array (treated as OR list), another QueryExpression,
+an SQL condition string, or an AndList.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>semantic_check</code>
+            </td>
+            <td>
+                  <code><span title="bool">bool</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If True (default), use semantic matching - only match on homologous namesakes
+and error on non-homologous namesakes.
+If False, use natural matching on all namesakes (no lineage checking).</p>
+              </div>
+            </td>
+            <td>
+                  <code>True</code>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><a class="autorefs autorefs-internal" title="QueryExpression (datajoint.expression.QueryExpression)" href="#datajoint.expression.QueryExpression">QueryExpression</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>A new QueryExpression with the restriction applied.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
 
 
     </div>
@@ -6544,17 +6667,114 @@ ultimately call restrict()</p>
     <div class="doc doc-contents ">
 
         <p>Create the joined QueryExpression.</p>
-<p>:param other: QueryExpression to join with
-:param semantic_check: If True (default), use semantic matching - only match on
-    homologous namesakes (same lineage) and error on non-homologous namesakes.
-    If False, use natural join on all namesakes (no lineage checking).
-:param left: If True, perform a left join (retain all rows from self)
-:param allow_nullable_pk: If True, bypass the left join constraint that requires
-    self to determine other. When bypassed, the result PK is the union of both
-    operands' PKs, and PK attributes from the right operand could be NULL.
-    Used internally by aggregation when exclude_nonmatching=False.
-:return: The joined QueryExpression</p>
-<p>a * b is short for a.join(b)</p>
+<p><code>a * b</code> is short for <code>a.join(b)</code>.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>other</code>
+            </td>
+            <td>
+                  <code><a class="autorefs autorefs-internal" title="QueryExpression (datajoint.expression.QueryExpression)" href="#datajoint.expression.QueryExpression">QueryExpression</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>QueryExpression to join with.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>semantic_check</code>
+            </td>
+            <td>
+                  <code><span title="bool">bool</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If True (default), use semantic matching - only match on homologous namesakes
+(same lineage) and error on non-homologous namesakes.
+If False, use natural join on all namesakes (no lineage checking).</p>
+              </div>
+            </td>
+            <td>
+                  <code>True</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>left</code>
+            </td>
+            <td>
+                  <code><span title="bool">bool</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If True, perform a left join (retain all rows from self). Default False.</p>
+              </div>
+            </td>
+            <td>
+                  <code>False</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>allow_nullable_pk</code>
+            </td>
+            <td>
+                  <code><span title="bool">bool</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If True, bypass the left join constraint that requires self to determine other.
+When bypassed, the result PK is the union of both operands' PKs, and PK
+attributes from the right operand could be NULL.
+Used internally by aggregation when exclude_nonmatching=False. Default False.</p>
+              </div>
+            </td>
+            <td>
+                  <code>False</code>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><a class="autorefs autorefs-internal" title="QueryExpression (datajoint.expression.QueryExpression)" href="#datajoint.expression.QueryExpression">QueryExpression</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The joined QueryExpression.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
 
 
     </div>
@@ -6594,20 +6814,111 @@ rather than combining two entity sets.</p>
     Unlike a general join (Cartesian product restricted by matching attributes),
     extend is closer to projection—it adds new attributes to existing entities
     without changing which entities are in the result.</p>
-<p>Example:
-    # Session determines Trial (session_id is in Trial's PK)
-    # But Trial does NOT determine Session (trial_num not in Session)</p>
-<pre><code># Valid: extend trials with session info
-Trial.extend(Session)  # Adds 'date' from Session to each Trial
 
-# Invalid: Session cannot extend to Trial
-Session.extend(Trial)  # Error: trial_num not in Session
+
+<p><span class="doc-section-title">Examples:</span></p>
+    <p>Session determines Trial (session_id is in Trial's PK), but Trial does NOT
+determine Session (trial_num not in Session).</p>
+<p>Valid: extend trials with session info::</p>
+<pre><code>Trial.extend(Session)  # Adds 'date' from Session to each Trial
 </code></pre>
-<p>:param other: QueryExpression whose attributes will extend self
-:param semantic_check: If True (default), require homologous namesakes.
-    If False, match on all namesakes without lineage checking.
-:return: Extended QueryExpression with self's PK and combined attributes
-:raises DataJointError: If self does not determine other</p>
+<p>Invalid: Session cannot extend to Trial::</p>
+<pre><code>Session.extend(Trial)  # Error: trial_num not in Session
+</code></pre>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>other</code>
+            </td>
+            <td>
+                  <code><a class="autorefs autorefs-internal" title="QueryExpression (datajoint.expression.QueryExpression)" href="#datajoint.expression.QueryExpression">QueryExpression</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>QueryExpression whose attributes will extend self.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>semantic_check</code>
+            </td>
+            <td>
+                  <code><span title="bool">bool</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If True (default), require homologous namesakes.
+If False, match on all namesakes without lineage checking.</p>
+              </div>
+            </td>
+            <td>
+                  <code>True</code>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><a class="autorefs autorefs-internal" title="QueryExpression (datajoint.expression.QueryExpression)" href="#datajoint.expression.QueryExpression">QueryExpression</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Extended QueryExpression with self's PK and combined attributes.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+<p><span class="doc-section-title">Raises:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><a class="autorefs autorefs-internal" title="DataJointError (datajoint.errors.DataJointError)" href="../errors/#datajoint.errors.DataJointError">DataJointError</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If self does not determine other.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
 
 
     </div>
@@ -6633,22 +6944,95 @@ Session.extend(Trial)  # Error: trial_num not in Session
     <div class="doc doc-contents ">
 
         <p>Projection operator.</p>
-<p>:param attributes:  attributes to be included in the result. (The primary key is already included).
-:param named_attributes: new attributes computed or renamed from existing attributes.
-:return: the projected expression.
-Primary key attributes cannot be excluded but may be renamed.
-If the attribute list contains an Ellipsis ..., then all secondary attributes are included too
-Prefixing an attribute name with a dash '-attr' removes the attribute from the list if present.
-Keyword arguments can be used to rename attributes as in name='attr', duplicate them as in name='(attr)', or
-self.proj(...) or self.proj(Ellipsis) -- include all attributes (return self)
-self.proj() -- include only primary key
-self.proj('attr1', 'attr2')  -- include primary key and attributes attr1 and attr2
-self.proj(..., '-attr1', '-attr2')  -- include all attributes except attr1 and attr2
-self.proj(name1='attr1') -- include primary key and 'attr1' renamed as name1
-self.proj('attr1', dup='(attr1)') -- include primary key and attribute attr1 twice, with the duplicate 'dup'
-self.proj(k='abs(attr1)') adds the new attribute k with the value computed as an expression (SQL syntax)
-from other attributes available before the projection.
-Each attribute name can only be used once.</p>
+<p>Primary key attributes cannot be excluded but may be renamed.
+If the attribute list contains an Ellipsis <code>...</code>, then all secondary attributes
+are included too.
+Prefixing an attribute name with a dash <code>-attr</code> removes the attribute from the list
+if present.
+Keyword arguments can be used to rename attributes as in <code>name='attr'</code>, duplicate
+them as in <code>name='(attr)'</code>, or compute new attributes.</p>
+<ul>
+<li><code>self.proj(...)</code> or <code>self.proj(Ellipsis)</code> -- include all attributes (return self)</li>
+<li><code>self.proj()</code> -- include only primary key</li>
+<li><code>self.proj('attr1', 'attr2')</code> -- include primary key and attributes attr1 and attr2</li>
+<li><code>self.proj(..., '-attr1', '-attr2')</code> -- include all attributes except attr1 and attr2</li>
+<li><code>self.proj(name1='attr1')</code> -- include primary key and 'attr1' renamed as name1</li>
+<li><code>self.proj('attr1', dup='(attr1)')</code> -- include primary key and attr1 twice, with
+  the duplicate 'dup'</li>
+<li><code>self.proj(k='abs(attr1)')</code> adds the new attribute k with the value computed as an
+  expression (SQL syntax) from other attributes available before the projection.</li>
+</ul>
+<p>Each attribute name can only be used once.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>*attributes</code>
+            </td>
+            <td>
+                  <code><span title="str">str</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Attributes to be included in the result. The primary key is already included.</p>
+              </div>
+            </td>
+            <td>
+                  <code>()</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>**named_attributes</code>
+            </td>
+            <td>
+                  <code><span title="str">str</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>New attributes computed or renamed from existing attributes.</p>
+              </div>
+            </td>
+            <td>
+                  <code>{}</code>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><a class="autorefs autorefs-internal" title="QueryExpression (datajoint.expression.QueryExpression)" href="#datajoint.expression.QueryExpression">QueryExpression</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The projected expression.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
 
 
     </div>
@@ -6674,19 +7058,119 @@ Each attribute name can only be used once.</p>
     <div class="doc doc-contents ">
 
         <p>Aggregation/grouping operation, similar to proj but with computations over a grouped relation.</p>
-<p>By default, keeps all rows from self (like proj). Use exclude_nonmatching=True to
+<p>By default, keeps all rows from self (like proj). Use <code>exclude_nonmatching=True</code> to
 keep only rows that have matches in group.</p>
-<p>:param group: The query expression to be aggregated.
-:param exclude_nonmatching: If True, exclude rows from self that have no matching
-    entries in group (INNER JOIN). Default False keeps all rows (LEFT JOIN).
-:param named_attributes: computations of the form new_attribute="sql expression on attributes of group"
-:return: The derived query expression</p>
-<p>Example::</p>
-<pre><code># Count sessions per subject (keeps all subjects, even those with 0 sessions)
-Subject.aggr(Session, n="count(*)")
 
-# Count sessions per subject (only subjects with at least one session)
-Subject.aggr(Session, n="count(*)", exclude_nonmatching=True)
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>group</code>
+            </td>
+            <td>
+                  <code><a class="autorefs autorefs-internal" title="QueryExpression (datajoint.expression.QueryExpression)" href="#datajoint.expression.QueryExpression">QueryExpression</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The query expression to be aggregated.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>*attributes</code>
+            </td>
+            <td>
+                  <code><span title="str">str</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Attributes to include in the result.</p>
+              </div>
+            </td>
+            <td>
+                  <code>()</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>exclude_nonmatching</code>
+            </td>
+            <td>
+                  <code><span title="bool">bool</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If True, exclude rows from self that have no matching entries in group
+(INNER JOIN). Default False keeps all rows (LEFT JOIN).</p>
+              </div>
+            </td>
+            <td>
+                  <code>False</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>**named_attributes</code>
+            </td>
+            <td>
+                  <code><span title="str">str</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Computations of the form <code>new_attribute="sql expression on attributes of group"</code>.</p>
+              </div>
+            </td>
+            <td>
+                  <code>{}</code>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><a class="autorefs autorefs-internal" title="QueryExpression (datajoint.expression.QueryExpression)" href="#datajoint.expression.QueryExpression">QueryExpression</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The derived query expression.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+<p><span class="doc-section-title">Examples:</span></p>
+    <p>Count sessions per subject (keeps all subjects, even those with 0 sessions)::</p>
+<pre><code>Subject.aggr(Session, n="count(*)")
+</code></pre>
+<p>Count sessions per subject (only subjects with at least one session)::</p>
+<pre><code>Subject.aggr(Session, n="count(*)", exclude_nonmatching=True)
 </code></pre>
 
 
@@ -6897,11 +7381,103 @@ Subject.aggr(Session, n="count(*)", exclude_nonmatching=True)
         <p>Fetch exactly one row from the query result.</p>
 <p>If no attributes are specified, returns the result as a dict.
 If attributes are specified, returns the corresponding values as a tuple.</p>
-<p>:param attrs: attribute names to fetch (if empty, fetch all as dict)
-:param squeeze: if True, remove extra dimensions from arrays
-:return: dict (no attrs) or tuple/value (with attrs)
-:raises DataJointError: if not exactly one row in result</p>
-<p>Examples::</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>*attrs</code>
+            </td>
+            <td>
+                  <code><span title="str">str</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Attribute names to fetch. If empty, fetch all as dict.</p>
+              </div>
+            </td>
+            <td>
+                  <code>()</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>squeeze</code>
+            </td>
+            <td>
+                  <code><span title="bool">bool</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If True, remove extra dimensions from arrays. Default False.</p>
+              </div>
+            </td>
+            <td>
+                  <code>False</code>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="dict">dict</span> or <span title="tuple">tuple</span> or <span title="value">value</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Dict (no attrs) or tuple/value (with attrs).</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+<p><span class="doc-section-title">Raises:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><a class="autorefs autorefs-internal" title="DataJointError (datajoint.errors.DataJointError)" href="../errors/#datajoint.errors.DataJointError">DataJointError</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If not exactly one row in result.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+<p><span class="doc-section-title">Examples:</span></p>
+    <p>::</p>
 <pre><code>d = table.fetch1()              # returns dict with all attributes
 a, b = table.fetch1('a', 'b')   # returns tuple of attribute values
 value = table.fetch1('a')       # returns single value
@@ -6931,16 +7507,113 @@ value = table.fetch1('a')       # returns single value
     <div class="doc doc-contents ">
 
         <p>Fetch all rows as a list of dictionaries.</p>
-<p>:param order_by: attribute(s) to order by, or "KEY"/"KEY DESC"
-:param limit: maximum number of rows to return
-:param offset: number of rows to skip
-:param squeeze: if True, remove extra dimensions from arrays
-:return: list of dictionaries, one per row</p>
 <p>For object storage types (attachments, filepaths), files are downloaded
-to config["download_path"]. Use config.override() to change::</p>
+to <code>config["download_path"]</code>. Use <code>config.override()</code> to change::</p>
 <pre><code>with dj.config.override(download_path="/data"):
     data = table.to_dicts()
 </code></pre>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>order_by</code>
+            </td>
+            <td>
+                  <code><span title="str">str</span> or <span title="list">list</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Attribute(s) to order by, or "KEY"/"KEY DESC".</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>limit</code>
+            </td>
+            <td>
+                  <code><span title="int">int</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Maximum number of rows to return.</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>offset</code>
+            </td>
+            <td>
+                  <code><span title="int">int</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Number of rows to skip.</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>squeeze</code>
+            </td>
+            <td>
+                  <code><span title="bool">bool</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If True, remove extra dimensions from arrays. Default False.</p>
+              </div>
+            </td>
+            <td>
+                  <code>False</code>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="list">list</span>[<span title="dict">dict</span>]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>List of dictionaries, one per row.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
 
 
     </div>
@@ -6966,11 +7639,108 @@ to config["download_path"]. Use config.override() to change::</p>
     <div class="doc doc-contents ">
 
         <p>Fetch all rows as a pandas DataFrame with primary key as index.</p>
-<p>:param order_by: attribute(s) to order by, or "KEY"/"KEY DESC"
-:param limit: maximum number of rows to return
-:param offset: number of rows to skip
-:param squeeze: if True, remove extra dimensions from arrays
-:return: pandas DataFrame with primary key columns as index</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>order_by</code>
+            </td>
+            <td>
+                  <code><span title="str">str</span> or <span title="list">list</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Attribute(s) to order by, or "KEY"/"KEY DESC".</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>limit</code>
+            </td>
+            <td>
+                  <code><span title="int">int</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Maximum number of rows to return.</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>offset</code>
+            </td>
+            <td>
+                  <code><span title="int">int</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Number of rows to skip.</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>squeeze</code>
+            </td>
+            <td>
+                  <code><span title="bool">bool</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If True, remove extra dimensions from arrays. Default False.</p>
+              </div>
+            </td>
+            <td>
+                  <code>False</code>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="pandas.DataFrame">DataFrame</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>DataFrame with primary key columns as index.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
 
 
     </div>
@@ -6996,12 +7766,109 @@ to config["download_path"]. Use config.override() to change::</p>
     <div class="doc doc-contents ">
 
         <p>Fetch all rows as a polars DataFrame.</p>
-<p>Requires polars: pip install datajoint[polars]</p>
-<p>:param order_by: attribute(s) to order by, or "KEY"/"KEY DESC"
-:param limit: maximum number of rows to return
-:param offset: number of rows to skip
-:param squeeze: if True, remove extra dimensions from arrays
-:return: polars DataFrame</p>
+<p>Requires polars: <code>pip install datajoint[polars]</code></p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>order_by</code>
+            </td>
+            <td>
+                  <code><span title="str">str</span> or <span title="list">list</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Attribute(s) to order by, or "KEY"/"KEY DESC".</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>limit</code>
+            </td>
+            <td>
+                  <code><span title="int">int</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Maximum number of rows to return.</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>offset</code>
+            </td>
+            <td>
+                  <code><span title="int">int</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Number of rows to skip.</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>squeeze</code>
+            </td>
+            <td>
+                  <code><span title="bool">bool</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If True, remove extra dimensions from arrays. Default False.</p>
+              </div>
+            </td>
+            <td>
+                  <code>False</code>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="polars.DataFrame">DataFrame</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Polars DataFrame.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
 
 
     </div>
@@ -7027,12 +7894,109 @@ to config["download_path"]. Use config.override() to change::</p>
     <div class="doc doc-contents ">
 
         <p>Fetch all rows as a PyArrow Table.</p>
-<p>Requires pyarrow: pip install datajoint[arrow]</p>
-<p>:param order_by: attribute(s) to order by, or "KEY"/"KEY DESC"
-:param limit: maximum number of rows to return
-:param offset: number of rows to skip
-:param squeeze: if True, remove extra dimensions from arrays
-:return: pyarrow Table</p>
+<p>Requires pyarrow: <code>pip install datajoint[arrow]</code></p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>order_by</code>
+            </td>
+            <td>
+                  <code><span title="str">str</span> or <span title="list">list</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Attribute(s) to order by, or "KEY"/"KEY DESC".</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>limit</code>
+            </td>
+            <td>
+                  <code><span title="int">int</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Maximum number of rows to return.</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>offset</code>
+            </td>
+            <td>
+                  <code><span title="int">int</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Number of rows to skip.</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>squeeze</code>
+            </td>
+            <td>
+                  <code><span title="bool">bool</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If True, remove extra dimensions from arrays. Default False.</p>
+              </div>
+            </td>
+            <td>
+                  <code>False</code>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="pyarrow.Table">Table</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>PyArrow Table.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
 
 
     </div>
@@ -7060,23 +8024,152 @@ to config["download_path"]. Use config.override() to change::</p>
         <p>Fetch data as numpy arrays.</p>
 <p>If no attrs specified, returns a numpy structured array (recarray) of all columns.
 If attrs specified, returns a tuple of numpy arrays (one per attribute).</p>
-<p>:param attrs: attribute names to fetch (if empty, fetch all)
-:param include_key: if True and attrs specified, prepend primary keys as list of dicts
-:param order_by: attribute(s) to order by, or "KEY"/"KEY DESC"
-:param limit: maximum number of rows to return
-:param offset: number of rows to skip
-:param squeeze: if True, remove extra dimensions from arrays
-:return: numpy recarray (no attrs) or tuple of arrays (with attrs).
-    With include_key=True: (keys, *arrays) where keys is list[dict]</p>
-<p>Examples::</p>
-<pre><code># Fetch as structured array
-data = table.to_arrays()
 
-# Fetch specific columns as separate arrays
-a, b = table.to_arrays('a', 'b')
 
-# Fetch with primary keys for later restrictions
-keys, a, b = table.to_arrays('a', 'b', include_key=True)
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>*attrs</code>
+            </td>
+            <td>
+                  <code><span title="str">str</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Attribute names to fetch. If empty, fetch all.</p>
+              </div>
+            </td>
+            <td>
+                  <code>()</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>include_key</code>
+            </td>
+            <td>
+                  <code><span title="bool">bool</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If True and attrs specified, prepend primary keys as list of dicts. Default False.</p>
+              </div>
+            </td>
+            <td>
+                  <code>False</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>order_by</code>
+            </td>
+            <td>
+                  <code><span title="str">str</span> or <span title="list">list</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Attribute(s) to order by, or "KEY"/"KEY DESC".</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>limit</code>
+            </td>
+            <td>
+                  <code><span title="int">int</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Maximum number of rows to return.</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>offset</code>
+            </td>
+            <td>
+                  <code><span title="int">int</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Number of rows to skip.</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>squeeze</code>
+            </td>
+            <td>
+                  <code><span title="bool">bool</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If True, remove extra dimensions from arrays. Default False.</p>
+              </div>
+            </td>
+            <td>
+                  <code>False</code>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code>np.recarray or tuple of np.ndarray</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Numpy recarray (no attrs) or tuple of arrays (with attrs).
+With <code>include_key=True</code>: <code>(keys, *arrays)</code> where keys is <code>list[dict]</code>.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+<p><span class="doc-section-title">Examples:</span></p>
+    <p>Fetch as structured array::</p>
+<pre><code>data = table.to_arrays()
+</code></pre>
+<p>Fetch specific columns as separate arrays::</p>
+<pre><code>a, b = table.to_arrays('a', 'b')
+</code></pre>
+<p>Fetch with primary keys for later restrictions::</p>
+<pre><code>keys, a, b = table.to_arrays('a', 'b', include_key=True)
 # keys = [{'id': 1}, {'id': 2}, ...]  # same format as table.keys()
 </code></pre>
 
@@ -7104,10 +8197,92 @@ keys, a, b = table.to_arrays('a', 'b', include_key=True)
     <div class="doc doc-contents ">
 
         <p>Fetch primary key values as a list of dictionaries.</p>
-<p>:param order_by: attribute(s) to order by, or "KEY"/"KEY DESC"
-:param limit: maximum number of rows to return
-:param offset: number of rows to skip
-:return: list of dictionaries containing only primary key columns</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>order_by</code>
+            </td>
+            <td>
+                  <code><span title="str">str</span> or <span title="list">list</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Attribute(s) to order by, or "KEY"/"KEY DESC".</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>limit</code>
+            </td>
+            <td>
+                  <code><span title="int">int</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Maximum number of rows to return.</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>offset</code>
+            </td>
+            <td>
+                  <code><span title="int">int</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Number of rows to skip.</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="list">list</span>[<span title="dict">dict</span>]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>List of dictionaries containing only primary key columns.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
 
 
     </div>
@@ -7133,8 +8308,60 @@ keys, a, b = table.to_arrays('a', 'b', include_key=True)
     <div class="doc doc-contents ">
 
         <p>Preview the first few entries from query expression.</p>
-<p>:param limit: number of entries (default 25)
-:return: list of dictionaries</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>limit</code>
+            </td>
+            <td>
+                  <code><span title="int">int</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Number of entries. Default 25.</p>
+              </div>
+            </td>
+            <td>
+                  <code>25</code>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="list">list</span>[<span title="dict">dict</span>]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>List of dictionaries.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
 
 
     </div>
@@ -7160,8 +8387,60 @@ keys, a, b = table.to_arrays('a', 'b', include_key=True)
     <div class="doc doc-contents ">
 
         <p>Preview the last few entries from query expression.</p>
-<p>:param limit: number of entries (default 25)
-:return: list of dictionaries</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>limit</code>
+            </td>
+            <td>
+                  <code><span title="int">int</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Number of entries. Default 25.</p>
+              </div>
+            </td>
+            <td>
+                  <code>25</code>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="list">list</span>[<span title="dict">dict</span>]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>List of dictionaries.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
 
 
     </div>
@@ -7187,8 +8466,60 @@ keys, a, b = table.to_arrays('a', 'b', include_key=True)
     <div class="doc doc-contents ">
 
         <p>Execute the query and return a database cursor.</p>
-<p>:param as_dict: if True, rows are returned as dictionaries
-:return: database query cursor</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>as_dict</code>
+            </td>
+            <td>
+                  <code><span title="bool">bool</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If True, rows are returned as dictionaries. Default False.</p>
+              </div>
+            </td>
+            <td>
+                  <code>False</code>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><a class="autorefs autorefs-internal" title="cursor (datajoint.expression.QueryExpression.cursor)" href="#datajoint.expression.QueryExpression.cursor">cursor</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Database query cursor.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
 
 
     </div>
@@ -7213,7 +8544,77 @@ keys, a, b = table.to_arrays('a', 'b', include_key=True)
 
     <div class="doc doc-contents ">
 
-        <p>:return: a string of preview of the contents of the query.</p>
+        <p>Return a string preview of the contents of the query.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>limit</code>
+            </td>
+            <td>
+                  <code><span title="int">int</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Maximum number of rows to preview.</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>width</code>
+            </td>
+            <td>
+                  <code><span title="int">int</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Maximum width of the preview output.</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="str">str</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>A string preview of the contents of the query.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
 
 
     </div>
@@ -7294,9 +8695,92 @@ Aggregation is a private class in DataJoint, not exposed to users.</p>
     <div class="doc doc-contents ">
 
         <p>Create an aggregation expression.</p>
-<p>:param groupby: The expression to GROUP BY (determines the result's primary key)
-:param group: The expression to aggregate over
-:param keep_all_rows: If True, use left join to keep all rows from groupby</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>groupby</code>
+            </td>
+            <td>
+                  <code><a class="autorefs autorefs-internal" title="QueryExpression (datajoint.expression.QueryExpression)" href="#datajoint.expression.QueryExpression">QueryExpression</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The expression to GROUP BY (determines the result's primary key).</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>group</code>
+            </td>
+            <td>
+                  <code><a class="autorefs autorefs-internal" title="QueryExpression (datajoint.expression.QueryExpression)" href="#datajoint.expression.QueryExpression">QueryExpression</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The expression to aggregate over.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>keep_all_rows</code>
+            </td>
+            <td>
+                  <code><span title="bool">bool</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If True, use left join to keep all rows from groupby. Default False.</p>
+              </div>
+            </td>
+            <td>
+                  <code>False</code>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><a class="autorefs autorefs-internal" title="Aggregation (datajoint.expression.Aggregation)" href="#datajoint.expression.Aggregation">Aggregation</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The aggregation expression.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
 
 
     </div>
@@ -7521,12 +9005,80 @@ rename <code>attr</code> in one of the operands.  The expression dj.U('attr') * 
 
     <div class="doc doc-contents ">
 
-        <p>Aggregation of the type U('attr1','attr2').aggr(group, computation="QueryExpression")
-has the primary key ('attr1','attr2') and performs aggregation computations for all matching elements of <code>group</code>.</p>
-<p>Note: exclude_nonmatching is always True for dj.U (cannot keep all rows from infinite set).</p>
-<p>:param group:  The query expression to be aggregated.
-:param named_attributes: computations of the form new_attribute="sql expression on attributes of group"
-:return: The derived query expression</p>
+        <p>Aggregation of the type <code>U('attr1','attr2').aggr(group, computation="QueryExpression")</code>.</p>
+<p>Has the primary key <code>('attr1','attr2')</code> and performs aggregation computations for all
+matching elements of <code>group</code>.</p>
+<p>Note: <code>exclude_nonmatching</code> is always True for dj.U (cannot keep all rows from infinite set).</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>group</code>
+            </td>
+            <td>
+                  <code><a class="autorefs autorefs-internal" title="QueryExpression (datajoint.expression.QueryExpression)" href="#datajoint.expression.QueryExpression">QueryExpression</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The query expression to be aggregated.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>**named_attributes</code>
+            </td>
+            <td>
+                  <code><span title="str">str</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Computations of the form <code>new_attribute="sql expression on attributes of group"</code>.</p>
+              </div>
+            </td>
+            <td>
+                  <code>{}</code>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><a class="autorefs autorefs-internal" title="QueryExpression (datajoint.expression.QueryExpression)" href="#datajoint.expression.QueryExpression">QueryExpression</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The derived query expression.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
 
 
     </div>
