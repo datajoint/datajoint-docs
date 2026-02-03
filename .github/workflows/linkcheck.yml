@@ -21,6 +21,8 @@ jobs:
             --exclude-path src/api
             --exclude-path src/elements
             --exclude '^https?://'
+            --exclude 'api/datajoint'
+            --exclude 'elements/element-'
             'src/**/*.md'
             'src/**/*.ipynb'
           fail: true
