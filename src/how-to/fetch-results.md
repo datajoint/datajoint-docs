@@ -123,4 +123,4 @@ All output methods accept:
 ## See Also
 
 - [Query Data](query-data.md) — Building queries
-- [Fetch API Specification](../reference/specs/fetch-api.md) — Complete reference
+- [Fetch API Specification](../reference/specs/fetch-api.md/) — Complete reference

@@ -11,7 +11,7 @@ A production DataJoint pipeline typically involves:
 - **Shared infrastructure** — Database server, object storage, code repository
 - **Coordination** — Between code, database, and storage permissions
 
-This guide covers practical project organization. For conceptual background on pipeline architecture and the DAG structure, see [Data Pipelines](../explanation/data-pipelines.md).
+This guide covers practical project organization. For conceptual background on pipeline architecture and the DAG structure, see [Data Pipelines](../explanation/data-pipelines.md/).
 
 For a fully managed solution, [request a DataJoint Platform account](https://www.datajoint.com/sign-up).
 
@@ -369,7 +369,7 @@ These challenges grow with team size and pipeline complexity. The [DataJoint Pla
 ## See Also
 
 - [Deploy to Production](deploy-production.md) — Production mode and environment configuration
-- [Data Pipelines](../explanation/data-pipelines.md) — Conceptual overview and architecture
+- [Data Pipelines](../explanation/data-pipelines.md/) — Conceptual overview and architecture
 - [Configure Object Storage](configure-storage.md) — Storage setup
 - [Distributed Computing](distributed-computing.md) — Multi-worker pipelines
 - [Model Relationships](model-relationships.ipynb) — Foreign key patterns

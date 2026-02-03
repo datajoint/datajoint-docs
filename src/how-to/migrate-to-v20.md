@@ -55,7 +55,7 @@ Table & "name = 'Alice'"
 Table & "date > '2024-01-01'"
 ```
 
-See [Database Backends Specification](../reference/specs/database-backends.md#string-quoting) for details.
+See [Database Backends Specification](../reference/specs/database-backends.md#string-quoting/) for details.
 
 ### Before You Start: Testing Recommendation
 
@@ -88,7 +88,7 @@ DataJoint 2.0 introduces a unified type system with three tiers:
 | **Core** | Standardized portable types | `int64`, `float64`, `varchar(100)`, `json` | Phase I |
 | **Codec** | Serialization to blob or storage | `<blob>`, `<blob@store>`, `<npy@>` | Phase I-III |
 
-**Learn more:** [Type System Concept](../explanation/type-system.md) · [Type System Reference](../reference/specs/type-system.md)
+**Learn more:** [Type System Concept](../explanation/type-system.md/) · [Type System Reference](../reference/specs/type-system.md/)
 
 ### Codecs
 
@@ -120,7 +120,7 @@ These codecs are NEW—there's no legacy equivalent to migrate:
 - **New codecs** (`<npy@>`, `<object@>`) are adopted in Phase IV for new features or enhanced workflows
 - Schema-addressed storage organizes data by table structure—no migration needed, just new functionality
 
-**Learn more:** [Codec API Reference](../reference/specs/codec-api.md) · [Custom Codecs](../explanation/custom-codecs.md)
+**Learn more:** [Codec API Reference](../reference/specs/codec-api.md/) · [Custom Codecs](../explanation/custom-codecs.md/)
 
 ### Column Comment Format (Critical for Blob Migration)
 
@@ -231,7 +231,7 @@ DataJoint 2.0 replaces `external.*` with unified `stores.*` configuration:
 }
 ```
 
-**Learn more:** [Configuration Reference](../reference/configuration.md) · [Configure Object Storage](configure-storage.md)
+**Learn more:** [Configuration Reference](../reference/configuration.md/) · [Configure Object Storage](configure-storage.md)
 
 ### Query API Changes
 
@@ -251,7 +251,7 @@ DataJoint 2.0 replaces `external.*` with unified `stores.*` configuration:
 
 > **Note:** The `fetch()` method remains available in DataJoint 2.0 with a deprecation warning. Your existing code will work immediately—`fetch()` automatically delegates to the appropriate 2.0 method (`to_arrays()`, `to_dicts()`, or `to_pandas()`). You can migrate incrementally as time permits.
 
-**Learn more:** [Fetch API Reference](../reference/specs/fetch-api.md) · [Query Operators Reference](../reference/operators.md) · [Semantic Matching](../reference/specs/semantic-matching.md)
+**Learn more:** [Fetch API Reference](../reference/specs/fetch-api.md/) · [Query Operators Reference](../reference/operators.md/) · [Semantic Matching](../reference/specs/semantic-matching.md/)
 
 ---
 
@@ -693,7 +693,7 @@ DataJoint 2.0 uses:
 - **`datajoint.json`** for non-sensitive settings (checked in)
 - **`stores.*`** instead of `external.*`
 
-**Learn more:** [Configuration Reference](../reference/configuration.md)
+**Learn more:** [Configuration Reference](../reference/configuration.md/)
 
 #### Create Configuration Files
 
@@ -771,7 +771,7 @@ print(f"Connected to {conn.conn_info['host']}")
 - Named stores with `default` pointer
 - Supports multiple stores with different backends
 
-**Learn more:** [Configure Object Storage](configure-storage.md) · [Object Store Configuration Spec](../reference/specs/object-store-configuration.md)
+**Learn more:** [Configure Object Storage](configure-storage.md) · [Object Store Configuration Spec](../reference/specs/object-store-configuration.md/)
 
 #### Configure Test Stores
 
@@ -1131,7 +1131,7 @@ Convert ALL types and codecs in Phase I:
 
 - **In-store codecs:** Code is converted in Phase I using test stores. Production data migration happens in Phase III.
 
-**Learn more:** [Type System Reference](../reference/specs/type-system.md) · [Definition Syntax](../reference/definition-syntax.md)
+**Learn more:** [Type System Reference](../reference/specs/type-system.md/) · [Definition Syntax](../reference/definition-syntax.md/)
 
 #### AI Agent Prompt: Convert Table Definitions
 
@@ -1469,7 +1469,7 @@ Update all DataJoint API calls to 2.0 patterns.
 
 - `dj.ERD(schema)` → `dj.Diagram(schema)` (ERD deprecated)
 
-**Learn more:** [Fetch API Reference](../reference/specs/fetch-api.md) · [Query Operators](../reference/operators.md)
+**Learn more:** [Fetch API Reference](../reference/specs/fetch-api.md/) · [Query Operators](../reference/operators.md/)
 
 #### AI Agent Prompt: Convert Query and Insert Code
 
@@ -2410,42 +2410,42 @@ on your needs. Migration is complete - these are optional enhancements.
 - Lazy-loading arrays with fsspec integration
 - Hierarchical organization by primary key
 - Mutable objects with streaming access
-- See: [Object Storage Tutorial](../tutorials/basics/06-object-storage.ipynb)
+- See: [Object Storage Tutorial](../tutorials/basics/06-object-storage.ipynb/)
 
 **Semantic matching**
 - Lineage-based join validation (enabled by default with `*` operator)
 - Catches errors from incompatible data combinations
-- See: [Semantic Matching Spec](../reference/specs/semantic-matching.md)
+- See: [Semantic Matching Spec](../reference/specs/semantic-matching.md/)
 
 **Jobs 2.0**
 - Per-table job tracking (`~~table_name`)
 - Priority-based populate (with `reserve_jobs=True`)
 - Improved distributed computing coordination
-- See: [Distributed Computing Tutorial](../tutorials/advanced/distributed.ipynb)
+- See: [Distributed Computing Tutorial](../tutorials/advanced/distributed.ipynb/)
 
 **Custom codecs**
 - Domain-specific data types
 - Extensible type system
-- See: [Custom Codecs Tutorial](../tutorials/advanced/custom-codecs.ipynb)
+- See: [Custom Codecs Tutorial](../tutorials/advanced/custom-codecs.ipynb/)
 
 ### Learning Path
 
 **Start here:**
 
-1. [Object Storage Tutorial](../tutorials/basics/06-object-storage.ipynb) -
+1. [Object Storage Tutorial](../tutorials/basics/06-object-storage.ipynb/) -
    Learn `<npy@>` and `<object@>` for large arrays
-2. [Distributed Computing Tutorial](../tutorials/advanced/distributed.ipynb) -
+2. [Distributed Computing Tutorial](../tutorials/advanced/distributed.ipynb/) -
    Jobs 2.0 with priority-based populate
-3. [Custom Codecs Tutorial](../tutorials/advanced/custom-codecs.ipynb) -
+3. [Custom Codecs Tutorial](../tutorials/advanced/custom-codecs.ipynb/) -
    Create domain-specific types
 
 **Reference documentation:**
 
-- [Object Store Configuration](../reference/specs/object-store-configuration.md)
-- [NPY Codec Spec](../reference/specs/npy-codec.md)
-- [Codec API](../reference/specs/codec-api.md)
-- [Semantic Matching Spec](../reference/specs/semantic-matching.md)
-- [AutoPopulate Spec](../reference/specs/autopopulate.md)
+- [Object Store Configuration](../reference/specs/object-store-configuration.md/)
+- [NPY Codec Spec](../reference/specs/npy-codec.md/)
+- [Codec API](../reference/specs/codec-api.md/)
+- [Semantic Matching Spec](../reference/specs/semantic-matching.md/)
+- [AutoPopulate Spec](../reference/specs/autopopulate.md/)
 
 **Adopt features incrementally:**
 
@@ -2546,20 +2546,20 @@ print(get_store_spec('main'))
 
 **Core Documentation:**
 
-- [Type System Concept](../explanation/type-system.md)
-- [Configuration Reference](../reference/configuration.md)
-- [Definition Syntax](../reference/definition-syntax.md)
-- [Fetch API Reference](../reference/specs/fetch-api.md)
+- [Type System Concept](../explanation/type-system.md/)
+- [Configuration Reference](../reference/configuration.md/)
+- [Definition Syntax](../reference/definition-syntax.md/)
+- [Fetch API Reference](../reference/specs/fetch-api.md/)
 
 **Tutorials:**
 
-- [Object Storage](../tutorials/basics/06-object-storage.ipynb)
-- [Custom Codecs](../tutorials/advanced/custom-codecs.ipynb)
-- [Distributed Computing](../tutorials/advanced/distributed.ipynb)
+- [Object Storage](../tutorials/basics/06-object-storage.ipynb/)
+- [Custom Codecs](../tutorials/advanced/custom-codecs.ipynb/)
+- [Distributed Computing](../tutorials/advanced/distributed.ipynb/)
 
 **Specifications:**
 
-- [Type System Spec](../reference/specs/type-system.md)
-- [Codec API Spec](../reference/specs/codec-api.md)
-- [Object Store Configuration](../reference/specs/object-store-configuration.md)
-- [Semantic Matching](../reference/specs/semantic-matching.md)
+- [Type System Spec](../reference/specs/type-system.md/)
+- [Codec API Spec](../reference/specs/codec-api.md/)
+- [Object Store Configuration](../reference/specs/object-store-configuration.md/)
+- [Semantic Matching](../reference/specs/semantic-matching.md/)

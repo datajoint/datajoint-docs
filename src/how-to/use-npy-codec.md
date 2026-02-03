@@ -281,4 +281,4 @@ else:
 
 - [Use Object Storage](use-object-storage.md) - Complete storage guide
 - [Configure Object Storage](configure-storage.md) - Store setup
-- [`<npy>` Codec Specification](../reference/specs/npy-codec.md) - Full spec
+- [`<npy>` Codec Specification](../reference/specs/npy-codec.md/) - Full spec
