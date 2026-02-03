@@ -1,0 +1,26 @@
+name: Link Check
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  linkcheck:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check internal links in source files
+        uses: lycheeverse/lychee-action@v2
+        with:
+          args: >-
+            --offline
+            --no-progress
+            --exclude-path src/api
+            --exclude-path src/elements
+            --exclude '^https?://'
+            'src/**/*.md'
+            'src/**/*.ipynb'
+          fail: true
