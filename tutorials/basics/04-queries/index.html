@@ -4680,7 +4680,7 @@ Session &amp; {'subject_id': 'M001', 'session_idx': 1}</div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <h3 id="restriction-by-query-expression">Restriction by Query Expression<a class="anchor-link" href="#restriction-by-query-expression">¶</a></h3><p>Restrict by another query expression. DataJoint uses <strong>semantic matching</strong>: attributes with the same name are matched only if they share the same origin through foreign key lineage. This prevents accidental matches on unrelated attributes that happen to share names (like generic <code>id</code> columns in unrelated tables).</p>
-<p>See <a href="../../reference/specs/semantic-matching">Semantic Matching</a> for the full specification.</p>
+<p>See <a href="../../../reference/specs/semantic-matching">Semantic Matching</a> for the full specification.</p>
 </div>
 </div>
 </div>
@@ -7819,7 +7819,7 @@ Subject * Session</div>
 <li><code>Trial</code> has PK: <code>(subject_id, session_idx, trial_idx)</code></li>
 </ul>
 <p>Since Session's PK is a subset of Trial's PK, <code>Session → Trial</code>. The join <code>Session * Trial</code> has the same primary key as Session.</p>
-<p>See the <a href="../../reference/specs/query-algebra">Query Algebra Specification</a> for the complete functional dependency rules.</p>
+<p>See the <a href="../../../reference/specs/query-algebra">Query Algebra Specification</a> for the complete functional dependency rules.</p>
 </div>
 </div>
 </div>
@@ -10461,7 +10461,7 @@ Result 2: 3 rows
 </tr>
 </tbody>
 </table>
-<p>See the <a href="../../reference/specs/query-algebra">Query Algebra Specification</a> and <a href="../../reference/specs/fetch-api">Fetch API</a> for complete details.</p>
+<p>See the <a href="../../../reference/specs/query-algebra">Query Algebra Specification</a> and <a href="../../../reference/specs/fetch-api">Fetch API</a> for complete details.</p>
 <h2 id="next-steps">Next Steps<a class="anchor-link" href="#next-steps">¶</a></h2><ul>
 <li><a href="../05-computation">Computation</a> — Building computational pipelines</li>
 </ul>

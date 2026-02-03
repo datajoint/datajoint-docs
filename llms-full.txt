@@ -1,6 +1,6 @@
 # DataJoint Documentation (Full)
 
-Generated: 2026-02-03 16:52:07 UTC
+Generated: 2026-02-03 17:56:47 UTC
 Commit: unknown
 Branch: unknown
 
@@ -5080,7 +5080,7 @@ DataJoint diagrams show tables as nodes and foreign keys as edges. The notation 
 
 **Note:** Diagrams do NOT show `[nullable]` or `[unique]` modifiers—check table definitions for these constraints.
 
-See [How to Read Diagrams](../../how-to/read-diagrams/) for diagram operations and comparison to ER notation.
+See [How to Read Diagrams](../../../how-to/read-diagrams/) for diagram operations and comparison to ER notation.
 
 ## Insert Test Data and Populate
 
@@ -5135,7 +5135,7 @@ SessionSummary()
 
 ### 4. Use Core DataJoint Types
 
-DataJoint has a three-layer type architecture (see [Type System Specification](../../reference/specs/type-system/)):
+DataJoint has a three-layer type architecture (see [Type System Specification](../../../reference/specs/type-system/)):
 
 1. **Native database types** (Layer 1): Backend-specific types like `INT`, `FLOAT`, `TINYINT UNSIGNED`. These are **discouraged** but allowed for backward compatibility.
 
@@ -5781,7 +5781,7 @@ dj.config['safemode'] = True  # Require confirmation by default
 | Delete quick | `delete_quick()` | Internal cleanup (no cascade) |
 | Validate | `validate(rows)` | Pre-insert check |
 
-See the [Data Manipulation Specification](../../reference/specs/data-manipulation) for complete details.
+See the [Data Manipulation Specification](../../../../reference/specs/data-manipulation.md) for complete details.
 
 ## Next Steps
 
@@ -5976,7 +5976,7 @@ Session & {'subject_id': 'M001', 'session_idx': 1}
 
 Restrict by another query expression. DataJoint uses **semantic matching**: attributes with the same name are matched only if they share the same origin through foreign key lineage. This prevents accidental matches on unrelated attributes that happen to share names (like generic `id` columns in unrelated tables).
 
-See [Semantic Matching](../../reference/specs/semantic-matching) for the full specification.
+See [Semantic Matching](../../../reference/specs/semantic-matching) for the full specification.
 
 
 ```python
@@ -6182,7 +6182,7 @@ In our example:
 
 Since Session's PK is a subset of Trial's PK, `Session → Trial`. The join `Session * Trial` has the same primary key as Session.
 
-See the [Query Algebra Specification](../../reference/specs/query-algebra) for the complete functional dependency rules.
+See the [Query Algebra Specification](../../../reference/specs/query-algebra) for the complete functional dependency rules.
 
 ### Extension (`.extend()`)
 
@@ -6487,7 +6487,7 @@ print(f"Result 2: {len(result2)} rows")
 | `keys()` | `list[dict]` | Primary keys |
 | `fetch1()` | `dict` | Single row |
 
-See the [Query Algebra Specification](../../reference/specs/query-algebra) and [Fetch API](../../reference/specs/fetch-api) for complete details.
+See the [Query Algebra Specification](../../../reference/specs/query-algebra) and [Fetch API](../../../reference/specs/fetch-api) for complete details.
 
 ## Next Steps
 
@@ -7014,7 +7014,7 @@ class Analysis(dj.Computed):
     """
 ```
 
-See the [AutoPopulate Specification](../../reference/specs/autopopulate) for complete details.
+See the [AutoPopulate Specification](../../../reference/specs/autopopulate) for complete details.
 
 ## Quick Reference
 
@@ -7581,7 +7581,7 @@ print(f"Deleted: {stats['deleted']} items")
 - Always use `dry_run=True` first to preview changes
 - GC is safe—it only deletes content with zero references
 
-See [Clean Up Storage](../../how-to/garbage-collection/) for detailed usage.
+See [Clean Up Storage](../../../how-to/garbage-collection/) for detailed usage.
 
 ## Quick Reference
 
@@ -7595,10 +7595,10 @@ See [Clean Up Storage](../../how-to/garbage-collection/) for detailed usage.
 
 ## Next Steps
 
-- [Configure Object Storage](../../how-to/configure-storage) — Set up S3, MinIO, or filesystem stores
-- [Clean Up Storage](../../how-to/garbage-collection) — Garbage collection for hash-addressed storage
-- [Custom Codecs](../../advanced/custom-codecs) — Define domain-specific types
-- [Manage Large Data](../../how-to/manage-large-data) — Performance optimization
+- [Configure Object Storage](../../../how-to/configure-storage) — Set up S3, MinIO, or filesystem stores
+- [Clean Up Storage](../../../how-to/garbage-collection) — Garbage collection for hash-addressed storage
+- [Custom Codecs](../../../tutorials/advanced/custom-codecs) — Define domain-specific types
+- [Manage Large Data](../../../how-to/manage-large-data) — Performance optimization
 
 
 ```python
