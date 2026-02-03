@@ -1,6 +1,6 @@
 # DataJoint Documentation (Full)
 
-Generated: 2026-02-03 18:27:42 UTC
+Generated: 2026-02-03 18:28:08 UTC
 Commit: unknown
 Branch: unknown
 
@@ -691,7 +691,7 @@ Check for existing plugin codecs that may already solve your needs:
 - **[dj-zarr-codecs](https://github.com/datajoint/dj-zarr-codecs)** — General numpy arrays with Zarr storage
 - **[dj-photon-codecs](https://github.com/datajoint/dj-photon-codecs)** — Photon-limited movies with Anscombe transformation and compression
 
-See the [Use Plugin Codecs](../how-to/use-plugin-codecs.md/) guide for installation and usage of existing codec packages. Creating a custom codec is straightforward, but reusing existing ones saves time and ensures compatibility.
+See the [Use Plugin Codecs](../how-to/use-plugin-codecs.md) guide for installation and usage of existing codec packages. Creating a custom codec is straightforward, but reusing existing ones saves time and ensures compatibility.
 
 
 ---
@@ -711,7 +711,7 @@ A **scientific data pipeline** extends beyond a database with computations. It i
 
 A DataJoint pipeline integrates three core components:
 
-![DataJoint Platform Architecture](../images/dj-platform.png/)
+![DataJoint Platform Architecture](../images/dj-platform.png)
 
 | Component | Purpose |
 |-----------|---------|
@@ -725,7 +725,7 @@ These components work together: code defines the schema and computations, the da
 
 A DataJoint pipeline forms a **Directed Acyclic Graph (DAG)** at two levels:
 
-![Pipeline DAG Structure](../images/pipeline-illustration.png/)
+![Pipeline DAG Structure](../images/pipeline-illustration.png)
 
 **Nodes** represent Python modules, which correspond to database schemas.
 
@@ -764,7 +764,7 @@ This model treats the database schema as an **executable workflow specification*
 
 Each schema corresponds to a dedicated Python module. The module import structure mirrors the foreign key dependencies between schemas:
 
-![Schema Structure](../images/schema-illustration.png/)
+![Schema Structure](../images/schema-illustration.png)
 
 ```
 my_pipeline/
@@ -777,7 +777,7 @@ my_pipeline/
 │       └── analysis.py     # analysis schema (depends on acquisition)
 ```
 
-For practical guidance on organizing multi-schema pipelines, configuring repositories, and managing team access, see [Manage a Pipeline Project](../how-to/manage-pipeline-project.md/).
+For practical guidance on organizing multi-schema pipelines, configuring repositories, and managing team access, see [Manage a Pipeline Project](../how-to/manage-pipeline-project.md).
 
 ## Object-Augmented Schemas
 
@@ -874,7 +874,7 @@ The schema remains central—defining data structures, dependencies, and computa
 - [Relational Workflow Model](relational-workflow-model.md) — The conceptual foundation
 - [Entity Integrity](entity-integrity.md) — Primary keys and dimensions
 - [Type System](type-system.md) — Codec types and storage modes
-- [Manage a Pipeline Project](../how-to/manage-pipeline-project.md/) — Practical project organization
+- [Manage a Pipeline Project](../how-to/manage-pipeline-project.md) — Practical project organization
 
 
 ---
@@ -1181,7 +1181,7 @@ Lineage enables **semantic matching**—DataJoint only joins attributes that
 trace back to the same dimension. Two attributes named `id` from different
 dimensions cannot be accidentally joined.
 
-See [Semantic Matching](../reference/specs/semantic-matching.md/) for details.
+See [Semantic Matching](../reference/specs/semantic-matching.md) for details.
 
 ### Recognizing Dimensions in Diagrams
 
@@ -1276,7 +1276,7 @@ DataJoint provides a custom data definition language and [query algebra](query-a
 
 ### The Definition Language
 
-DataJoint's [definition language](../reference/specs/table-declaration.md/) is a standalone scripting language for declaring table schemas — not Python syntax embedded in strings. It is designed for uniform support across multiple host languages (Python, MATLAB, and potentially others). The same definition works identically regardless of which language you use.
+DataJoint's [definition language](../reference/specs/table-declaration.md) is a standalone scripting language for declaring table schemas — not Python syntax embedded in strings. It is designed for uniform support across multiple host languages (Python, MATLAB, and potentially others). The same definition works identically regardless of which language you use.
 
 ### Composite Primary Keys: A Clarity Comparison
 
@@ -1344,13 +1344,13 @@ The definition string **is** the specification — a declarative language that d
 
 ### Why Custom Query Algebra?
 
-DataJoint's operators implement **[semantic matching](../reference/specs/semantic-matching.md/)** — joins and restrictions match only on attributes connected through the foreign key graph, not arbitrary columns that happen to share a name. This prevents:
+DataJoint's operators implement **[semantic matching](../reference/specs/semantic-matching.md)** — joins and restrictions match only on attributes connected through the foreign key graph, not arbitrary columns that happen to share a name. This prevents:
 
 - Accidental Cartesian products
 - Joins on unrelated columns
 - Silent incorrect results
 
-Every query result has a defined **[entity type](entity-integrity.md)** with a specific [primary key](../reference/specs/primary-keys.md/) (algebraic closure). SQL results are untyped bags of rows; DataJoint results are entity sets you can continue to query and compose.
+Every query result has a defined **[entity type](entity-integrity.md)** with a specific [primary key](../reference/specs/primary-keys.md) (algebraic closure). SQL results are untyped bags of rows; DataJoint results are entity sets you can continue to query and compose.
 
 ### Object-Augmented Schemas
 
@@ -1461,7 +1461,7 @@ No. DataJoint provides a Python API that abstracts SQL:
 | `WHERE` | `table & condition` |
 | `GROUP BY` | `.aggr()` |
 
-Understanding relational concepts ([primary keys](entity-integrity.md), foreign keys, [normalization](normalization.md)) is helpful but not required to start. The [tutorials](../tutorials/index.md/) teach these concepts progressively.
+Understanding relational concepts ([primary keys](entity-integrity.md), foreign keys, [normalization](normalization.md)) is helpful but not required to start. The [tutorials](../tutorials/index.md) teach these concepts progressively.
 
 Since DataJoint uses standard database backends (MySQL, PostgreSQL), data remains accessible via SQL for users who prefer it or need integration with other tools.
 
@@ -1478,7 +1478,7 @@ The database maintains references to external objects, preserving:
 - Query capability (filter by metadata, join across tables)
 - Deduplication (identical content stored once)
 
-See [Object Storage](../how-to/use-object-storage.md/) for details.
+See [Object Storage](../how-to/use-object-storage.md) for details.
 
 ## Can Multiple Users Share a Pipeline?
 
@@ -1495,7 +1495,7 @@ Teams typically:
 2. Connect to a shared database server
 3. Run `populate()` from multiple machines simultaneously
 
-See [Distributed Computing](../how-to/distributed-computing.md/) for multi-process patterns.
+See [Distributed Computing](../how-to/distributed-computing.md) for multi-process patterns.
 
 
 ---
@@ -1855,7 +1855,7 @@ DataJoint provides a powerful query algebra built on five core operators: restri
 
 A fundamental property of DataJoint's query algebra is **algebraic closure**: every query result is itself a valid entity set with a well-defined **entity type** — you always know what kind of entity the result represents, identified by a specific primary key. Unlike SQL where query results are unstructured "bags of rows," DataJoint determines the entity type of each result based on the operator and the functional dependencies between operands.
 
-This means operators can be chained indefinitely — the output of any operation is a valid input to any other operation. See [Primary Keys](../reference/specs/primary-keys.md/) for the precise rules.
+This means operators can be chained indefinitely — the output of any operation is a valid input to any other operation. See [Primary Keys](../reference/specs/primary-keys.md) for the precise rules.
 
 ## Core Operators
 
@@ -3011,19 +3011,19 @@ class Network(dj.Computed):
 
 **How-to Guides:**
 
-- [Choose a Storage Type](../how-to/choose-storage-type.md/) — Decision guide for selecting the right type
-- [Configure Object Storage](../how-to/configure-storage.md/) — Setting up stores for external data
-- [Use Object Storage](../how-to/use-object-storage.md/) — Working with `<blob@>`, `<attach@>`, `<object@>`
-- [Use the npy Codec](../how-to/use-npy-codec.md/) — Storing NumPy arrays as `.npy` files
-- [Use Plugin Codecs](../how-to/use-plugin-codecs.md/) — Installing and using third-party codecs
-- [Create a Custom Codec](../how-to/create-custom-codec.md/) — Building your own codec
+- [Choose a Storage Type](../how-to/choose-storage-type.md) — Decision guide for selecting the right type
+- [Configure Object Storage](../how-to/configure-storage.md) — Setting up stores for external data
+- [Use Object Storage](../how-to/use-object-storage.md) — Working with `<blob@>`, `<attach@>`, `<object@>`
+- [Use the npy Codec](../how-to/use-npy-codec.md) — Storing NumPy arrays as `.npy` files
+- [Use Plugin Codecs](../how-to/use-plugin-codecs.md) — Installing and using third-party codecs
+- [Create a Custom Codec](../how-to/create-custom-codec.md) — Building your own codec
 
 **Reference:**
 
-- [Type System Specification](../reference/specs/type-system.md/) — Complete type reference
-- [Codec API](../reference/specs/codec-api.md/) — Codec class interface
-- [npy Codec Specification](../reference/specs/npy-codec.md/) — NpyRef and NpyCodec details
-- [Object Store Configuration](../reference/specs/object-store-configuration.md/) — Store settings reference
+- [Type System Specification](../reference/specs/type-system.md) — Complete type reference
+- [Codec API](../reference/specs/codec-api.md) — Codec class interface
+- [npy Codec Specification](../reference/specs/npy-codec.md) — NpyRef and NpyCodec details
+- [Object Store Configuration](../reference/specs/object-store-configuration.md) — Store settings reference
 
 
 ---
@@ -3035,7 +3035,7 @@ DataJoint 2.0 is a major release that establishes DataJoint as a mature framewor
 
 > **📘 Upgrading from legacy DataJoint (pre-2.0)?**
 >
-> This page summarizes new features and concepts. For step-by-step migration instructions, see the **[Migration Guide](../how-to/migrate-to-v20.md/)**.
+> This page summarizes new features and concepts. For step-by-step migration instructions, see the **[Migration Guide](../how-to/migrate-to-v20.md)**.
 
 ## Overview
 
@@ -3058,13 +3058,13 @@ If you're upgrading from legacy DataJoint, these changes require code updates:
 | **Type syntax** | `longblob`, `int unsigned` | `<blob>`, `int64` |
 | **Jobs** | `~jobs` table | Per-table `~~table_name` |
 
-See the [Migration Guide](../how-to/migrate-to-v20.md/) for complete upgrade steps.
+See the [Migration Guide](../how-to/migrate-to-v20.md) for complete upgrade steps.
 
 ## Object-Augmented Schema (OAS)
 
 DataJoint 2.0 unifies relational tables with object storage into a single coherent system. The relational database stores metadata and references while large objects (arrays, files, Zarr datasets) are stored in object storage—with full referential integrity maintained across both layers.
 
-→ [Type System Specification](../reference/specs/type-system.md/)
+→ [Type System Specification](../reference/specs/type-system.md)
 
 **Three storage sections:**
 
@@ -3090,7 +3090,7 @@ zarr_array : <object@store> # Path-addressed for Zarr/HDF5
 
 **Breaking change**: DataJoint 2.0 makes all type conversions explicit through a three-tier architecture.
 
-→ [Type System Specification](../reference/specs/type-system.md/) · [Codec API Specification](../reference/specs/codec-api.md/)
+→ [Type System Specification](../reference/specs/type-system.md) · [Codec API Specification](../reference/specs/codec-api.md)
 
 ### What Changed
 
@@ -3134,7 +3134,7 @@ class GraphCodec(dj.Codec):
 
 **Breaking change**: Redesigned job coordination with per-table job management.
 
-→ [AutoPopulate Specification](../reference/specs/autopopulate.md/) · [Job Metadata Specification](../reference/specs/job-metadata.md/)
+→ [AutoPopulate Specification](../reference/specs/autopopulate.md) · [Job Metadata Specification](../reference/specs/job-metadata.md)
 
 ### What Changed
 
@@ -3170,7 +3170,7 @@ Analysis.jobs.update({'session_id': 123}, priority=1)  # High priority
 
 **Breaking change**: Query operations now use **lineage-based matching** by default.
 
-→ [Semantic Matching Specification](../reference/specs/semantic-matching.md/)
+→ [Semantic Matching Specification](../reference/specs/semantic-matching.md)
 
 ### What Changed
 
@@ -3194,7 +3194,7 @@ result = TableA.join(TableB, semantic_check=False)
 
 A cleaner configuration approach with separation of concerns.
 
-→ [Configuration Reference](../reference/configuration.md/)
+→ [Configuration Reference](../reference/configuration.md)
 
 - **`datajoint.json`**: Non-sensitive settings (commit to version control)
 - **`.secrets/`**: Credentials (never commit)
@@ -3260,7 +3260,7 @@ DataJoint 2.0 is licensed under the **Apache License 2.0** (previously LGPL-2.1)
 
 ## Migration Path
 
-→ **[Complete Migration Guide](../how-to/migrate-to-v20.md/)**
+→ **[Complete Migration Guide](../how-to/migrate-to-v20.md)**
 
 Upgrading from DataJoint 0.x is a **phased process** designed to minimize risk:
 
@@ -3304,8 +3304,8 @@ Most users complete Phases 1-2 in a single session. Phases 3-4 only apply if you
 ## See Also
 
 ### Migration
-- **[Migration Guide](../how-to/migrate-to-v20.md/)** — Complete upgrade instructions
-- [Configuration](../how-to/configure-database.md/) — Setup new configuration system
+- **[Migration Guide](../how-to/migrate-to-v20.md)** — Complete upgrade instructions
+- [Configuration](../how-to/configure-database.md) — Setup new configuration system
 
 ### Core Concepts
 - [Type System](type-system.md) — Understand the three-tier type architecture
@@ -3313,13 +3313,13 @@ Most users complete Phases 1-2 in a single session. Phases 3-4 only apply if you
 - [Query Algebra](query-algebra.md) — Semantic matching and operators
 
 ### Getting Started
-- [Installation](../how-to/installation.md/) — Install DataJoint 2.0
-- [Tutorials](../tutorials/index.md/) — Learn by example
+- [Installation](../how-to/installation.md) — Install DataJoint 2.0
+- [Tutorials](../tutorials/index.md) — Learn by example
 
 ### Reference
-- [Type System Specification](../reference/specs/type-system.md/) — Complete type system details
-- [Codec API](../reference/specs/codec-api.md/) — Build custom codecs
-- [AutoPopulate Specification](../reference/specs/autopopulate.md/) — Jobs 2.0 reference
+- [Type System Specification](../reference/specs/type-system.md) — Complete type system details
+- [Codec API](../reference/specs/codec-api.md) — Build custom codecs
+- [AutoPopulate Specification](../reference/specs/autopopulate.md) — Jobs 2.0 reference
 
 
 ============================================================
@@ -4049,7 +4049,7 @@ DataJoint achieves **algebraic closure**: every query result is a valid entity s
 2. **Operators compose indefinitely** — you can chain any sequence of operations
 3. **Results remain queryable** — a query result can be used as an operand in further operations
 
-The entity type (and its primary key) is determined by precise rules based on the operator and the functional dependencies between operands. See the [Primary Keys specification](../../reference/specs/primary-keys/) for details.
+The entity type (and its primary key) is determined by precise rules based on the operator and the functional dependencies between operands. See the [Primary Keys specification](../../reference/specs/primary-keys) for details.
 
 ### SELECT columns — Projection (`.proj()`)
 
@@ -4302,8 +4302,8 @@ We'll work with **Manual tables** only—tables where you enter data directly. L
 > **Database Backend:** All tutorials work identically on **MySQL** and **PostgreSQL** (PostgreSQL support added in DataJoint Python 2.1). The examples shown here were executed on PostgreSQL, but you can follow along using either backend.
 
 For complete working examples, see:
-- [University Database](../../examples/university/) — Academic records with complex queries
-- [Blob Detection](../../examples/blob-detection/) — Image processing with computation
+- [University Database](../../examples/university) — Academic records with complex queries
+- [Blob Detection](../../examples/blob-detection) — Image processing with computation
 
 ## Setup
 
@@ -4662,14 +4662,14 @@ You've learned the fundamentals of DataJoint:
 
 ### Next Steps
 
-- [Schema Design](../02-schema-design/) — Primary keys, relationships, table tiers
-- [Queries](../04-queries/) — Advanced query patterns
-- [Computation](../05-computation/) — Automated processing with Imported/Computed tables
+- [Schema Design](../02-schema-design) — Primary keys, relationships, table tiers
+- [Queries](../04-queries) — Advanced query patterns
+- [Computation](../05-computation) — Automated processing with Imported/Computed tables
 
 ### Complete Examples
 
-- [University Database](../../examples/university/) — Complex queries on academic records
-- [Blob Detection](../../examples/blob-detection/) — Image processing pipeline with computation
+- [University Database](../../examples/university) — Complex queries on academic records
+- [Blob Detection](../../examples/blob-detection) — Image processing pipeline with computation
 
 
 ```python
@@ -5135,7 +5135,7 @@ SessionSummary()
 
 ### 4. Use Core DataJoint Types
 
-DataJoint has a three-layer type architecture (see [Type System Specification](../../../reference/specs/type-system/)/):
+DataJoint has a three-layer type architecture (see [Type System Specification](../../../reference/specs/type-system/)):
 
 1. **Native database types** (Layer 1): Backend-specific types like `INT`, `FLOAT`, `TINYINT UNSIGNED`. These are **discouraged** but allowed for backward compatibility.
 
@@ -5186,9 +5186,9 @@ If you see a warning like `"Native type 'int' used; consider 'int32' instead"`, 
 
 ## Next Steps
 
-- [Data Entry](../03-data-entry/) — Inserting, updating, and deleting data
-- [Queries](../04-queries/) — Filtering, joining, and projecting
-- [Computation](../05-computation/) — Building computational pipelines
+- [Data Entry](../03-data-entry) — Inserting, updating, and deleting data
+- [Queries](../04-queries) — Filtering, joining, and projecting
+- [Computation](../05-computation) — Building computational pipelines
 
 
 ```python
@@ -5781,12 +5781,12 @@ dj.config['safemode'] = True  # Require confirmation by default
 | Delete quick | `delete_quick()` | Internal cleanup (no cascade) |
 | Validate | `validate(rows)` | Pre-insert check |
 
-See the [Data Manipulation Specification](../../../reference/specs/data-manipulation/) for complete details.
+See the [Data Manipulation Specification](../../../reference/specs/data-manipulation) for complete details.
 
 ## Next Steps
 
-- [Queries](../04-queries/) — Filtering, joining, and projecting data
-- [Computation](../05-computation/) — Building computational pipelines
+- [Queries](../04-queries) — Filtering, joining, and projecting data
+- [Computation](../05-computation) — Building computational pipelines
 
 
 ```python
@@ -5976,7 +5976,7 @@ Session & {'subject_id': 'M001', 'session_idx': 1}
 
 Restrict by another query expression. DataJoint uses **semantic matching**: attributes with the same name are matched only if they share the same origin through foreign key lineage. This prevents accidental matches on unrelated attributes that happen to share names (like generic `id` columns in unrelated tables).
 
-See [Semantic Matching](../../../reference/specs/semantic-matching/) for the full specification.
+See [Semantic Matching](../../../reference/specs/semantic-matching) for the full specification.
 
 
 ```python
@@ -6182,7 +6182,7 @@ In our example:
 
 Since Session's PK is a subset of Trial's PK, `Session → Trial`. The join `Session * Trial` has the same primary key as Session.
 
-See the [Query Algebra Specification](../../../reference/specs/query-algebra/) for the complete functional dependency rules.
+See the [Query Algebra Specification](../../../reference/specs/query-algebra) for the complete functional dependency rules.
 
 ### Extension (`.extend()`)
 
@@ -6487,11 +6487,11 @@ print(f"Result 2: {len(result2)} rows")
 | `keys()` | `list[dict]` | Primary keys |
 | `fetch1()` | `dict` | Single row |
 
-See the [Query Algebra Specification](../../../reference/specs/query-algebra/) and [Fetch API](../../../reference/specs/fetch-api/) for complete details.
+See the [Query Algebra Specification](../../../reference/specs/query-algebra) and [Fetch API](../../../reference/specs/fetch-api) for complete details.
 
 ## Next Steps
 
-- [Computation](../05-computation/) — Building computational pipelines
+- [Computation](../05-computation) — Building computational pipelines
 
 
 ```python
@@ -7014,7 +7014,7 @@ class Analysis(dj.Computed):
     """
 ```
 
-See the [AutoPopulate Specification](../../../reference/specs/autopopulate/) for complete details.
+See the [AutoPopulate Specification](../../../reference/specs/autopopulate) for complete details.
 
 ## Quick Reference
 
@@ -7595,10 +7595,10 @@ See [Clean Up Storage](../../../how-to/garbage-collection/) for detailed usage.
 
 ## Next Steps
 
-- [Configure Object Storage](../../../how-to/configure-storage/) — Set up S3, MinIO, or filesystem stores
-- [Clean Up Storage](../../../how-to/garbage-collection/) — Garbage collection for hash-addressed storage
-- [Custom Codecs](../../../tutorials/advanced/custom-codecs/) — Define domain-specific types
-- [Manage Large Data](../../../how-to/manage-large-data/) — Performance optimization
+- [Configure Object Storage](../../../how-to/configure-storage) — Set up S3, MinIO, or filesystem stores
+- [Clean Up Storage](../../../how-to/garbage-collection) — Garbage collection for hash-addressed storage
+- [Custom Codecs](../../../tutorials/advanced/custom-codecs) — Define domain-specific types
+- [Manage Large Data](../../../how-to/manage-large-data) — Performance optimization
 
 
 ```python
@@ -9856,9 +9856,9 @@ dj.Diagram(schema)
 
 ## Next Steps
 
-- [Schema Design](../../basics/02-schema-design/) — Learn table types and relationships in depth
-- [Queries](../../basics/04-queries/) — Master DataJoint's query operators
-- [Computation](../../basics/05-computation/) — Build complex computational workflows
+- [Schema Design](../../basics/02-schema-design) — Learn table types and relationships in depth
+- [Queries](../../basics/04-queries) — Master DataJoint's query operators
+- [Computation](../../basics/05-computation) — Build complex computational workflows
 
 
 ```python
@@ -10544,9 +10544,9 @@ The schema **is** the business logic. Application code just translates errors.
 
 ## Next Steps
 
-- [University Database](../university/) — Academic records with many-to-many relationships
-- [Languages & Proficiency](../languages/) — International standards and lookup tables
-- [Data Entry](../../basics/03-data-entry/) — Insert patterns and transactions
+- [University Database](../university) — Academic records with many-to-many relationships
+- [Languages & Proficiency](../languages) — International standards and lookup tables
+- [Data Entry](../../basics/03-data-entry) — Insert patterns and transactions
 
 
 ```python
@@ -10902,9 +10902,9 @@ advanced_polyglots
 
 ## Next Steps
 
-- [University Database](../university/) — Academic records
-- [Hotel Reservations](../hotel-reservations/) — Workflow dependencies
-- [Queries Tutorial](../../basics/04-queries/) — Query operators in depth
+- [University Database](../university) — Academic records
+- [Hotel Reservations](../hotel-reservations) — Workflow dependencies
+- [Queries Tutorial](../../basics/04-queries) — Query operators in depth
 
 
 ```python
@@ -13055,9 +13055,9 @@ large_data : <object@>
 
 - [Use Object Storage](use-object-storage.md) — How to use codecs in practice
 - [Configure Object Storage](configure-storage.md) — Store configuration
-- [Type System](../explanation/type-system.md/) — Complete type system overview
-- [Type System Specification](../reference/specs/type-system.md/) — Technical details
-- [NPY Codec Specification](../reference/specs/npy-codec.md/) — NumPy array storage
+- [Type System](../explanation/type-system.md) — Complete type system overview
+- [Type System Specification](../reference/specs/type-system.md) — Technical details
+- [NPY Codec Specification](../reference/specs/npy-codec.md) — NumPy array storage
 
 
 ---
@@ -14838,7 +14838,7 @@ if __name__ == '__main__':
 ## See Also
 
 - [Manage Pipeline Project](manage-pipeline-project.md) — Project organization
-- [Configuration Reference](../reference/configuration.md/) — All settings
+- [Configuration Reference](../reference/configuration.md) — All settings
 - [Manage Secrets](manage-secrets.md) — Credential management
 
 
@@ -15356,7 +15356,7 @@ All output methods accept:
 ## See Also
 
 - [Query Data](query-data.md) — Building queries
-- [Fetch API Specification](../reference/specs/fetch-api.md/) — Complete reference
+- [Fetch API Specification](../reference/specs/fetch-api.md) — Complete reference
 
 
 ---
@@ -16329,7 +16329,7 @@ A production DataJoint pipeline typically involves:
 - **Shared infrastructure** — Database server, object storage, code repository
 - **Coordination** — Between code, database, and storage permissions
 
-This guide covers practical project organization. For conceptual background on pipeline architecture and the DAG structure, see [Data Pipelines](../explanation/data-pipelines.md/).
+This guide covers practical project organization. For conceptual background on pipeline architecture and the DAG structure, see [Data Pipelines](../explanation/data-pipelines.md).
 
 For a fully managed solution, [request a DataJoint Platform account](https://www.datajoint.com/sign-up).
 
@@ -16687,7 +16687,7 @@ These challenges grow with team size and pipeline complexity. The [DataJoint Pla
 ## See Also
 
 - [Deploy to Production](deploy-production.md) — Production mode and environment configuration
-- [Data Pipelines](../explanation/data-pipelines.md/) — Conceptual overview and architecture
+- [Data Pipelines](../explanation/data-pipelines.md) — Conceptual overview and architecture
 - [Configure Object Storage](configure-storage.md) — Storage setup
 - [Distributed Computing](distributed-computing.md) — Multi-worker pipelines
 - [Model Relationships](model-relationships.ipynb) — Foreign key patterns
@@ -17176,7 +17176,7 @@ git log --all --full-history -- .secrets/datajoint.json
 
 - [Configure Database Connection](configure-database.md) — Database-specific configuration
 - [Configure Object Stores](configure-storage.md) — Storage-specific configuration
-- [Configuration Reference](../reference/configuration.md/) — Complete configuration options
+- [Configuration Reference](../reference/configuration.md) — Complete configuration options
 
 
 ---
@@ -17458,7 +17458,7 @@ Table & "name = 'Alice'"
 Table & "date > '2024-01-01'"
 ```
 
-See [Database Backends Specification](../reference/specs/database-backends.md#string-quoting/) for details.
+See [Database Backends Specification](../reference/specs/database-backends.md#string-quoting) for details.
 
 ### Before You Start: Testing Recommendation
 
@@ -17491,7 +17491,7 @@ DataJoint 2.0 introduces a unified type system with three tiers:
 | **Core** | Standardized portable types | `int64`, `float64`, `varchar(100)`, `json` | Phase I |
 | **Codec** | Serialization to blob or storage | `<blob>`, `<blob@store>`, `<npy@>` | Phase I-III |
 
-**Learn more:** [Type System Concept](../explanation/type-system.md/) · [Type System Reference](../reference/specs/type-system.md/)
+**Learn more:** [Type System Concept](../explanation/type-system.md) · [Type System Reference](../reference/specs/type-system.md)
 
 ### Codecs
 
@@ -17523,7 +17523,7 @@ These codecs are NEW—there's no legacy equivalent to migrate:
 - **New codecs** (`<npy@>`, `<object@>`) are adopted in Phase IV for new features or enhanced workflows
 - Schema-addressed storage organizes data by table structure—no migration needed, just new functionality
 
-**Learn more:** [Codec API Reference](../reference/specs/codec-api.md/) · [Custom Codecs](../explanation/custom-codecs.md/)
+**Learn more:** [Codec API Reference](../reference/specs/codec-api.md) · [Custom Codecs](../explanation/custom-codecs.md)
 
 ### Column Comment Format (Critical for Blob Migration)
 
@@ -17634,7 +17634,7 @@ DataJoint 2.0 replaces `external.*` with unified `stores.*` configuration:
 }
 ```
 
-**Learn more:** [Configuration Reference](../reference/configuration.md/) · [Configure Object Storage](configure-storage.md)
+**Learn more:** [Configuration Reference](../reference/configuration.md) · [Configure Object Storage](configure-storage.md)
 
 ### Query API Changes
 
@@ -17654,7 +17654,7 @@ DataJoint 2.0 replaces `external.*` with unified `stores.*` configuration:
 
 > **Note:** The `fetch()` method remains available in DataJoint 2.0 with a deprecation warning. Your existing code will work immediately—`fetch()` automatically delegates to the appropriate 2.0 method (`to_arrays()`, `to_dicts()`, or `to_pandas()`). You can migrate incrementally as time permits.
 
-**Learn more:** [Fetch API Reference](../reference/specs/fetch-api.md/) · [Query Operators Reference](../reference/operators.md/) · [Semantic Matching](../reference/specs/semantic-matching.md/)
+**Learn more:** [Fetch API Reference](../reference/specs/fetch-api.md) · [Query Operators Reference](../reference/operators.md) · [Semantic Matching](../reference/specs/semantic-matching.md)
 
 ---
 
@@ -18096,7 +18096,7 @@ DataJoint 2.0 uses:
 - **`datajoint.json`** for non-sensitive settings (checked in)
 - **`stores.*`** instead of `external.*`
 
-**Learn more:** [Configuration Reference](../reference/configuration.md/)
+**Learn more:** [Configuration Reference](../reference/configuration.md)
 
 #### Create Configuration Files
 
@@ -18174,7 +18174,7 @@ print(f"Connected to {conn.conn_info['host']}")
 - Named stores with `default` pointer
 - Supports multiple stores with different backends
 
-**Learn more:** [Configure Object Storage](configure-storage.md) · [Object Store Configuration Spec](../reference/specs/object-store-configuration.md/)
+**Learn more:** [Configure Object Storage](configure-storage.md) · [Object Store Configuration Spec](../reference/specs/object-store-configuration.md)
 
 #### Configure Test Stores
 
@@ -18534,7 +18534,7 @@ Convert ALL types and codecs in Phase I:
 
 - **In-store codecs:** Code is converted in Phase I using test stores. Production data migration happens in Phase III.
 
-**Learn more:** [Type System Reference](../reference/specs/type-system.md/) · [Definition Syntax](../reference/definition-syntax.md/)
+**Learn more:** [Type System Reference](../reference/specs/type-system.md) · [Definition Syntax](../reference/definition-syntax.md)
 
 #### AI Agent Prompt: Convert Table Definitions
 
@@ -18872,7 +18872,7 @@ Update all DataJoint API calls to 2.0 patterns.
 
 - `dj.ERD(schema)` → `dj.Diagram(schema)` (ERD deprecated)
 
-**Learn more:** [Fetch API Reference](../reference/specs/fetch-api.md/) · [Query Operators](../reference/operators.md/)
+**Learn more:** [Fetch API Reference](../reference/specs/fetch-api.md) · [Query Operators](../reference/operators.md)
 
 #### AI Agent Prompt: Convert Query and Insert Code
 
@@ -19813,42 +19813,42 @@ on your needs. Migration is complete - these are optional enhancements.
 - Lazy-loading arrays with fsspec integration
 - Hierarchical organization by primary key
 - Mutable objects with streaming access
-- See: [Object Storage Tutorial](../tutorials/basics/06-object-storage.ipynb/)
+- See: [Object Storage Tutorial](../tutorials/basics/06-object-storage.ipynb)
 
 **Semantic matching**
 - Lineage-based join validation (enabled by default with `*` operator)
 - Catches errors from incompatible data combinations
-- See: [Semantic Matching Spec](../reference/specs/semantic-matching.md/)
+- See: [Semantic Matching Spec](../reference/specs/semantic-matching.md)
 
 **Jobs 2.0**
 - Per-table job tracking (`~~table_name`)
 - Priority-based populate (with `reserve_jobs=True`)
 - Improved distributed computing coordination
-- See: [Distributed Computing Tutorial](../tutorials/advanced/distributed.ipynb/)
+- See: [Distributed Computing Tutorial](../tutorials/advanced/distributed.ipynb)
 
 **Custom codecs**
 - Domain-specific data types
 - Extensible type system
-- See: [Custom Codecs Tutorial](../tutorials/advanced/custom-codecs.ipynb/)
+- See: [Custom Codecs Tutorial](../tutorials/advanced/custom-codecs.ipynb)
 
 ### Learning Path
 
 **Start here:**
 
-1. [Object Storage Tutorial](../tutorials/basics/06-object-storage.ipynb/) -
+1. [Object Storage Tutorial](../tutorials/basics/06-object-storage.ipynb) -
    Learn `<npy@>` and `<object@>` for large arrays
-2. [Distributed Computing Tutorial](../tutorials/advanced/distributed.ipynb/) -
+2. [Distributed Computing Tutorial](../tutorials/advanced/distributed.ipynb) -
    Jobs 2.0 with priority-based populate
-3. [Custom Codecs Tutorial](../tutorials/advanced/custom-codecs.ipynb/) -
+3. [Custom Codecs Tutorial](../tutorials/advanced/custom-codecs.ipynb) -
    Create domain-specific types
 
 **Reference documentation:**
 
-- [Object Store Configuration](../reference/specs/object-store-configuration.md/)
-- [NPY Codec Spec](../reference/specs/npy-codec.md/)
-- [Codec API](../reference/specs/codec-api.md/)
-- [Semantic Matching Spec](../reference/specs/semantic-matching.md/)
-- [AutoPopulate Spec](../reference/specs/autopopulate.md/)
+- [Object Store Configuration](../reference/specs/object-store-configuration.md)
+- [NPY Codec Spec](../reference/specs/npy-codec.md)
+- [Codec API](../reference/specs/codec-api.md)
+- [Semantic Matching Spec](../reference/specs/semantic-matching.md)
+- [AutoPopulate Spec](../reference/specs/autopopulate.md)
 
 **Adopt features incrementally:**
 
@@ -19949,23 +19949,23 @@ print(get_store_spec('main'))
 
 **Core Documentation:**
 
-- [Type System Concept](../explanation/type-system.md/)
-- [Configuration Reference](../reference/configuration.md/)
-- [Definition Syntax](../reference/definition-syntax.md/)
-- [Fetch API Reference](../reference/specs/fetch-api.md/)
+- [Type System Concept](../explanation/type-system.md)
+- [Configuration Reference](../reference/configuration.md)
+- [Definition Syntax](../reference/definition-syntax.md)
+- [Fetch API Reference](../reference/specs/fetch-api.md)
 
 **Tutorials:**
 
-- [Object Storage](../tutorials/basics/06-object-storage.ipynb/)
-- [Custom Codecs](../tutorials/advanced/custom-codecs.ipynb/)
-- [Distributed Computing](../tutorials/advanced/distributed.ipynb/)
+- [Object Storage](../tutorials/basics/06-object-storage.ipynb)
+- [Custom Codecs](../tutorials/advanced/custom-codecs.ipynb)
+- [Distributed Computing](../tutorials/advanced/distributed.ipynb)
 
 **Specifications:**
 
-- [Type System Spec](../reference/specs/type-system.md/)
-- [Codec API Spec](../reference/specs/codec-api.md/)
-- [Object Store Configuration](../reference/specs/object-store-configuration.md/)
-- [Semantic Matching](../reference/specs/semantic-matching.md/)
+- [Type System Spec](../reference/specs/type-system.md)
+- [Codec API Spec](../reference/specs/codec-api.md)
+- [Object Store Configuration](../reference/specs/object-store-configuration.md)
+- [Semantic Matching](../reference/specs/semantic-matching.md)
 
 
 ---
@@ -20559,7 +20559,7 @@ Traditional databases excel at structured, relational data but struggle with lar
 - **Object storage:** Arrays, files, datasets (large data > 1 MB)
 - **Full referential integrity:** Maintained across both layers
 
-Read: [Object-Augmented Schemas](../explanation/data-pipelines.md#object-augmented-schemas/) for conceptual overview.
+Read: [Object-Augmented Schemas](../explanation/data-pipelines.md#object-augmented-schemas) for conceptual overview.
 
 ## Three Storage Modes
 
@@ -20679,16 +20679,16 @@ For implementation details and specifications:
 
 ### Specifications
 
-- [Type System Spec](../reference/specs/type-system.md/) — Three-layer architecture
-- [Codec API Spec](../reference/specs/codec-api.md/) — Custom codec interface
-- [NPY Codec Spec](../reference/specs/npy-codec.md/) — NumPy array storage
-- [Object Store Configuration Spec](../reference/specs/object-store-configuration.md/) — Store config details
+- [Type System Spec](../reference/specs/type-system.md) — Three-layer architecture
+- [Codec API Spec](../reference/specs/codec-api.md) — Custom codec interface
+- [NPY Codec Spec](../reference/specs/npy-codec.md) — NumPy array storage
+- [Object Store Configuration Spec](../reference/specs/object-store-configuration.md) — Store config details
 
 ### Explanations
 
-- [Type System](../explanation/type-system.md/) — Conceptual overview
-- [Data Pipelines (OAS section)](../explanation/data-pipelines.md#object-augmented-schemas/) — Why OAS exists
-- [Custom Codecs](../explanation/custom-codecs.md/) — Design patterns
+- [Type System](../explanation/type-system.md) — Conceptual overview
+- [Data Pipelines (OAS section)](../explanation/data-pipelines.md#object-augmented-schemas) — Why OAS exists
+- [Custom Codecs](../explanation/custom-codecs.md) — Design patterns
 
 ## Common Workflows
 
@@ -20728,9 +20728,9 @@ For implementation details and specifications:
 
 ### Workflow 4: Building Custom Domain Types
 
-1. Read [Custom Codecs](../explanation/custom-codecs.md/) — Understand patterns
+1. Read [Custom Codecs](../explanation/custom-codecs.md) — Understand patterns
 2. [Create Custom Codec](create-custom-codec.md) — Implementation guide
-3. [Codec API Spec](../reference/specs/codec-api.md/) — Technical reference
+3. [Codec API Spec](../reference/specs/codec-api.md) — Technical reference
 4. Test with small dataset
 5. Deploy to production
 
@@ -20791,15 +20791,15 @@ Write-once data with potential duplicates?
 
 ### Getting Help
 
-- Check [FAQ](../explanation/faq.md/) for common questions
+- Check [FAQ](../explanation/faq.md) for common questions
 - Search [GitHub Discussions](https://github.com/datajoint/datajoint-python/discussions)
 - Review specification for exact behavior
 
 ## See Also
 
 ### Related Concepts
-- [Type System](../explanation/type-system.md/) — Three-layer type architecture
-- [Data Pipelines](../explanation/data-pipelines.md/) — Object-Augmented Schemas
+- [Type System](../explanation/type-system.md) — Three-layer type architecture
+- [Data Pipelines](../explanation/data-pipelines.md) — Object-Augmented Schemas
 
 ### Related How-Tos
 - [Manage Secrets](manage-secrets.md) — Credentials for S3/cloud storage
@@ -20807,8 +20807,8 @@ Write-once data with potential duplicates?
 - [Insert Data](insert-data.md) — Data insertion patterns
 
 ### Related Tutorials
-- [Object Storage Tutorial](../tutorials/basics/06-object-storage.ipynb/) — Hands-on learning
-- [Custom Codecs Tutorial](../tutorials/advanced/custom-codecs.ipynb/) — Build your own codec
+- [Object Storage Tutorial](../tutorials/basics/06-object-storage.ipynb) — Hands-on learning
+- [Custom Codecs Tutorial](../tutorials/advanced/custom-codecs.ipynb) — Build your own codec
 
 
 ---
@@ -20990,7 +20990,7 @@ len(Subject & condition)
 
 ## See Also
 
-- [Operators Reference](../reference/operators.md/) — Complete operator documentation
+- [Operators Reference](../reference/operators.md) — Complete operator documentation
 - [Fetch Results](fetch-results.md) — Retrieving query results
 
 
@@ -21898,7 +21898,7 @@ class FilteredComputation(dj.Computed):
 
 ## See Also
 
-- [Computation Model](../explanation/computation-model.md/) — How computation works
+- [Computation Model](../explanation/computation-model.md) — How computation works
 - [Distributed Computing](distributed-computing.md) — Multi-worker setup
 - [Handle Errors](handle-errors.md) — Error recovery
 
@@ -22789,7 +22789,7 @@ else:
 
 - [Use Object Storage](use-object-storage.md) - Complete storage guide
 - [Configure Object Storage](configure-storage.md) - Store setup
-- [`<npy>` Codec Specification](../reference/specs/npy-codec.md/) - Full spec
+- [`<npy>` Codec Specification](../reference/specs/npy-codec.md) - Full spec
 
 
 ---
@@ -22817,7 +22817,7 @@ OAS supports two addressing schemes:
 
 Data can also be stored **in-table** directly in the database column (no `@` modifier).
 
-For complete details, see the [Type System specification](../reference/specs/type-system.md/).
+For complete details, see the [Type System specification](../reference/specs/type-system.md).
 
 ## When to Use Object Storage
 
@@ -23699,8 +23699,8 @@ v1.0.1 (2026-01-10)
 If you need a codec that doesn't exist yet, see:
 
 - [Create Custom Codecs](create-custom-codec.md) — Step-by-step guide
-- [Codec API Specification](../reference/specs/codec-api.md/) — Technical reference
-- [Custom Codecs Explanation](../explanation/custom-codecs.md/) — Design concepts
+- [Codec API Specification](../reference/specs/codec-api.md) — Technical reference
+- [Custom Codecs Explanation](../explanation/custom-codecs.md) — Design concepts
 
 Consider publishing your codec as a package so others can benefit!
 
@@ -23782,7 +23782,7 @@ check_requirements()
 
 - [Use Object Storage](use-object-storage.md) — Object storage configuration
 - [Create Custom Codecs](create-custom-codec.md) — Build your own codecs
-- [Type System](../reference/specs/type-system.md/) — Complete type reference
+- [Type System](../reference/specs/type-system.md) — Complete type reference
 - [dj-zarr-codecs Repository](https://github.com/datajoint/dj-zarr-codecs) — General Zarr array storage
 - [dj-photon-codecs Repository](https://github.com/datajoint/dj-photon-codecs) — Photon-limited movies with compression
 
@@ -24083,7 +24083,7 @@ The double underscore maps to the dot-notation path: `display__diagram_direction
 
 ## API Reference
 
-See [Settings API](../api/datajoint/settings.md/) for programmatic access.
+See [Settings API](../api/datajoint/settings.md) for programmatic access.
 
 
 ---
@@ -24449,7 +24449,7 @@ except dj.DataJointError as e:
 
 ## See Also
 
-- [API: errors module](../api/datajoint/errors.md/)
+- [API: errors module](../api/datajoint/errors.md)
 
 
 ---
@@ -24483,13 +24483,13 @@ Detailed specifications of DataJoint's behavior and semantics.
 
 Curated pipeline modules for neurophysiology experiments.
 
-- [DataJoint Elements](../elements/index.md/) — Pre-built pipelines for calcium imaging, electrophysiology, behavior tracking, and more
+- [DataJoint Elements](../elements/index.md) — Pre-built pipelines for calcium imaging, electrophysiology, behavior tracking, and more
 
 ## API Documentation
 
 Auto-generated from source code docstrings.
 
-- [API Index](../api/index.md/)
+- [API Index](../api/index.md)
 
 
 ---
@@ -24816,7 +24816,7 @@ Student * Course.proj(..., course_name='name')
 
 - [Query Algebra Specification](specs/query-algebra.md) — Complete formal specification
 - [Fetch API](specs/fetch-api.md) — Retrieving query results
-- [Queries Tutorial](../tutorials/basics/04-queries.ipynb/) — Hands-on examples
+- [Queries Tutorial](../tutorials/basics/04-queries.ipynb) — Hands-on examples
 
 
 ---
@@ -25757,7 +25757,7 @@ slow = Analysis & '_job_duration > 3600'
 
 ## 15. Migration from Legacy DataJoint
 
-DataJoint 2.0 replaces the schema-level `~jobs` table with per-table `~~table_name` jobs tables. See the [Migration Guide](../../how-to/migrate-to-v20.md/) for details.
+DataJoint 2.0 replaces the schema-level `~jobs` table with per-table `~~table_name` jobs tables. See the [Migration Guide](../../how-to/migrate-to-v20.md) for details.
 
 ---
 
@@ -27543,7 +27543,7 @@ Schema definitions are portable—the same Python class definitions work on both
 
 ## See Also
 
-- [Configure Database](../../how-to/configure-database.md/) — Connection setup
+- [Configure Database](../../how-to/configure-database.md) — Connection setup
 - [Type System](type-system.md) — Core type definitions
 - [Table Declaration](table-declaration.md) — Definition syntax
 
@@ -27864,7 +27864,7 @@ If dependencies are missing, `dj.Diagram` displays a warning and provides a stub
 
 ## See Also
 
-- [How to Read Diagrams](../../how-to/read-diagrams.ipynb/)
+- [How to Read Diagrams](../../how-to/read-diagrams.ipynb)
 - [Query Algebra](query-algebra.md)
 - [Table Declaration](table-declaration.md)
 
@@ -28202,7 +28202,7 @@ authoritative references for:
 ## How to Use These Specifications
 
 **If you're new to DataJoint:**
-Start with the [tutorials](../../tutorials/index.md/) and [how-to guides](../../how-to/index.md/) before diving into specifications. Specs are technical references, not learning materials.
+Start with the [tutorials](../../tutorials/index.md) and [how-to guides](../../how-to/index.md) before diving into specifications. Specs are technical references, not learning materials.
 
 **If you're implementing features:**
 Use specs as authoritative sources for behavior. Start with dependencies (see below) and work up to your target specification.
@@ -28271,8 +28271,8 @@ Each specification follows a consistent structure:
 
 | Specification | Prerequisites | Related How-To | Related Explanation |
 |---------------|---------------|----------------|---------------------|
-| [Table Declaration](table-declaration.md) | None | [Define Tables](../../how-to/define-tables.md/) | [Relational Workflow Model](../../explanation/relational-workflow-model.md/) |
-| [Master-Part Relationships](master-part.md) | Table Declaration | [Model Relationships](../../how-to/model-relationships.ipynb/) | [Data Pipelines](../../explanation/data-pipelines.md/) |
+| [Table Declaration](table-declaration.md) | None | [Define Tables](../../how-to/define-tables.md) | [Relational Workflow Model](../../explanation/relational-workflow-model.md) |
+| [Master-Part Relationships](master-part.md) | Table Declaration | [Model Relationships](../../how-to/model-relationships.ipynb) | [Data Pipelines](../../explanation/data-pipelines.md) |
 | [Virtual Schemas](virtual-schemas.md) | Table Declaration | — | — |
 
 **Key concepts:** Table tiers (Manual, Lookup, Imported, Computed, Part), foreign keys, dependency graphs, compositional modeling
@@ -28283,11 +28283,11 @@ Each specification follows a consistent structure:
 
 | Specification | Prerequisites | Related How-To | Related Explanation |
 |---------------|---------------|----------------|---------------------|
-| [Query Operators](query-algebra.md) | Table Declaration, Primary Keys | [Query Data](../../how-to/query-data.md/) | [Query Algebra](../../explanation/query-algebra.md/) |
-| [Semantic Matching](semantic-matching.md) | Query Operators | [Model Relationships](../../how-to/model-relationships.ipynb/) | [Query Algebra](../../explanation/query-algebra.md/) |
-| [Primary Keys](primary-keys.md) | Table Declaration | [Design Primary Keys](../../how-to/design-primary-keys.md/) | [Entity Integrity](../../explanation/entity-integrity.md/) |
-| [Fetch API](fetch-api.md) | Query Operators | [Fetch Results](../../how-to/fetch-results.md/) | — |
-| [Diagram](diagram.md) | Table Declaration | [Read Diagrams](../../how-to/read-diagrams.ipynb/) | — |
+| [Query Operators](query-algebra.md) | Table Declaration, Primary Keys | [Query Data](../../how-to/query-data.md) | [Query Algebra](../../explanation/query-algebra.md) |
+| [Semantic Matching](semantic-matching.md) | Query Operators | [Model Relationships](../../how-to/model-relationships.ipynb) | [Query Algebra](../../explanation/query-algebra.md) |
+| [Primary Keys](primary-keys.md) | Table Declaration | [Design Primary Keys](../../how-to/design-primary-keys.md) | [Entity Integrity](../../explanation/entity-integrity.md) |
+| [Fetch API](fetch-api.md) | Query Operators | [Fetch Results](../../how-to/fetch-results.md) | — |
+| [Diagram](diagram.md) | Table Declaration | [Read Diagrams](../../how-to/read-diagrams.ipynb) | — |
 
 **Key concepts:** Restriction (`&`, `-`), projection (`.proj()`), join (`*`), aggregation (`.aggr()`), union, universal set (`U()`), attribute lineage, schema visualization
 
@@ -28297,9 +28297,9 @@ Each specification follows a consistent structure:
 
 | Specification | Prerequisites | Related How-To | Related Explanation |
 |---------------|---------------|----------------|---------------------|
-| [Type System](type-system.md) | None | [Choose a Storage Type](../../how-to/choose-storage-type.md/) | [Type System](../../explanation/type-system.md/) |
-| [Codec API](codec-api.md) | Type System | [Create Custom Codec](../../how-to/create-custom-codec.md/) | [Custom Codecs](../../explanation/custom-codecs.md/) |
-| [`<npy>` Codec](npy-codec.md) | Type System | [Use Object Storage](../../how-to/use-object-storage.md/) | — |
+| [Type System](type-system.md) | None | [Choose a Storage Type](../../how-to/choose-storage-type.md) | [Type System](../../explanation/type-system.md) |
+| [Codec API](codec-api.md) | Type System | [Create Custom Codec](../../how-to/create-custom-codec.md) | [Custom Codecs](../../explanation/custom-codecs.md) |
+| [`<npy>` Codec](npy-codec.md) | Type System | [Use Object Storage](../../how-to/use-object-storage.md) | — |
 
 **Key concepts:** Native types (MySQL), core types (portable), codec types (Python objects), in-table vs object storage, addressing schemes
 
@@ -28309,7 +28309,7 @@ Each specification follows a consistent structure:
 
 | Specification | Prerequisites | Related How-To | Related Explanation |
 |---------------|---------------|----------------|---------------------|
-| [Object Store Configuration](object-store-configuration.md) | Type System | [Configure Object Storage](../../how-to/configure-storage.md/) | [Data Pipelines (OAS)](../../explanation/data-pipelines.md#object-augmented-schemas/) |
+| [Object Store Configuration](object-store-configuration.md) | Type System | [Configure Object Storage](../../how-to/configure-storage.md) | [Data Pipelines (OAS)](../../explanation/data-pipelines.md#object-augmented-schemas) |
 
 **Key concepts:** Hash-addressed storage (deduplication), schema-addressed storage (browsable paths), filepath storage (user-managed), store configuration, path generation
 
@@ -28319,9 +28319,9 @@ Each specification follows a consistent structure:
 
 | Specification | Prerequisites | Related How-To | Related Explanation |
 |---------------|---------------|----------------|---------------------|
-| [Data Manipulation](data-manipulation.md) | Table Declaration | [Insert Data](../../how-to/insert-data.md/) | [Normalization](../../explanation/normalization.md/) |
-| [AutoPopulate](autopopulate.md) | Table Declaration, Data Manipulation | [Run Computations](../../how-to/run-computations.md/), [Distributed Computing](../../how-to/distributed-computing.md/) | [Computation Model](../../explanation/computation-model.md/) |
-| [Job Metadata](job-metadata.md) | AutoPopulate | [Handle Errors](../../how-to/handle-errors.md/) | [Computation Model](../../explanation/computation-model.md/) |
+| [Data Manipulation](data-manipulation.md) | Table Declaration | [Insert Data](../../how-to/insert-data.md) | [Normalization](../../explanation/normalization.md) |
+| [AutoPopulate](autopopulate.md) | Table Declaration, Data Manipulation | [Run Computations](../../how-to/run-computations.md), [Distributed Computing](../../how-to/distributed-computing.md) | [Computation Model](../../explanation/computation-model.md) |
+| [Job Metadata](job-metadata.md) | AutoPopulate | [Handle Errors](../../how-to/handle-errors.md) | [Computation Model](../../explanation/computation-model.md) |
 
 **Key concepts:** Insert patterns, transactional integrity, workflow normalization, Jobs 2.0, job coordination, populate(), make() method, job states
 
@@ -28693,7 +28693,7 @@ ProcessedData().to_arrays('_job_start_time', '_job_duration', '_job_version')
 # Master-Part Relationships Specification
 
 !!! tip "Looking for a task-oriented guide?"
-    See [Master-Part Tables](../../how-to/master-part.ipynb/) for step-by-step examples.
+    See [Master-Part Tables](../../how-to/master-part.ipynb) for step-by-step examples.
 
 ## Overview
 
@@ -30169,8 +30169,8 @@ if spec['protocol'] == 'file':
 
 ## See Also
 
-- [Configuration Reference](../configuration.md/) — All configuration options
-- [Configure Object Stores](../../how-to/configure-storage.md/) — Setup guide
+- [Configuration Reference](../configuration.md) — All configuration options
+- [Configure Object Stores](../../how-to/configure-storage.md) — Setup guide
 - [Type System Specification](type-system.md) — Data type definitions
 - [Codec API Specification](codec-api.md) — Codec implementation details
 
@@ -31900,7 +31900,7 @@ dj.U('a', 'b') * A   # DataJointError: use & instead
 
 ---
 
-For conceptual background on lineage, terminology, and matching rules, see [Semantic Matching (Explanation)](../../explanation/semantic-matching.md/).
+For conceptual background on lineage, terminology, and matching rules, see [Semantic Matching (Explanation)](../../explanation/semantic-matching.md).
 
 ---
 
