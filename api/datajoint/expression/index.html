@@ -6805,27 +6805,27 @@ Used internally by aggregation when exclude_nonmatching=False. Default False.</p
 self's entity identity. It is semantically equivalent to <code>self.join(other, left=True)</code>
 but expresses a clearer intent: extending an entity set with additional attributes
 rather than combining two entity sets.</p>
-<p>Requirements:
-    self → other: Every attribute in other's primary key must exist in self.
-    This ensures:
-    - All rows of self are preserved (no filtering)
-    - Self's primary key remains the result's primary key (no NULL PKs)
-    - The operation is a true extension, not a Cartesian product</p>
-<p>Conceptual model:
-    Unlike a general join (Cartesian product restricted by matching attributes),
-    extend is closer to projection—it adds new attributes to existing entities
-    without changing which entities are in the result.</p>
+<p><strong>Requirements</strong>: <code>self → other</code> (self determines other). Every attribute in
+other's primary key must exist in self. This ensures:</p>
+<ul>
+<li>All rows of self are preserved (no filtering)</li>
+<li>Self's primary key remains the result's primary key (no NULL PKs)</li>
+<li>The operation is a true extension, not a Cartesian product</li>
+</ul>
+<p><strong>Conceptual model</strong>: Unlike a general join (Cartesian product restricted by
+matching attributes), extend is closer to projection—it adds new attributes
+to existing entities without changing which entities are in the result.</p>
 
 
 <p><span class="doc-section-title">Examples:</span></p>
-    <p>Session determines Trial (session_id is in Trial's PK), but Trial does NOT
-determine Session (trial_num not in Session).</p>
-<p>Valid: extend trials with session info::</p>
-<pre><code>Trial.extend(Session)  # Adds 'date' from Session to each Trial
-</code></pre>
-<p>Invalid: Session cannot extend to Trial::</p>
-<pre><code>Session.extend(Trial)  # Error: trial_num not in Session
-</code></pre>
+    <p>Session determines Trial (<code>session_id</code> is in Trial's PK), but Trial does NOT
+determine Session (<code>trial_num</code> not in Session).</p>
+<p>Valid - extend trials with session info:</p>
+    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">Trial</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">Session</span><span class="p">)</span>  <span class="c1"># Adds &#39;date&#39; from Session to each Trial</span>
+</code></pre></div>
+    <p>Invalid - Session cannot extend to Trial:</p>
+    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">Session</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">Trial</span><span class="p">)</span>  <span class="c1"># Error: trial_num not in Session</span>
+</code></pre></div>
 
 
 <p><span class="doc-section-title">Parameters:</span></p>
@@ -8913,14 +8913,12 @@ Aggregation is a private class in DataJoint, not exposed to users.</p>
 
 
 
-        <p>dj.U objects are the universal sets representing all possible values of their attributes.
-dj.U objects cannot be queried on their own but are useful for forming some queries.
-dj.U('attr1', ..., 'attrn') represents the universal set with the primary key attributes attr1 ... attrn.
-The universal set is the set of all possible combinations of values of the attributes.
-Without any attributes, dj.U() represents the set with one element that has no attributes.</p>
-<p>Restriction:</p>
-<p>dj.U can be used to enumerate unique combinations of values of attributes from other expressions.</p>
-<p>The following expression yields all unique combinations of contrast and brightness found in the <code>stimulus</code> set:</p>
+        <p>Universal set representing all possible values of specified attributes.</p>
+<p><code>dj.U</code> objects cannot be queried on their own but are useful for forming
+certain queries. <code>dj.U('attr1', ..., 'attrn')</code> represents the universal set
+with primary key attributes <code>attr1 ... attrn</code>. Without any attributes,
+<code>dj.U()</code> represents a set with one element that has no attributes.</p>
+<p><strong>Restriction</strong> - Enumerate unique combinations of attribute values:</p>
 <blockquote>
 <blockquote>
 <blockquote>
@@ -8928,52 +8926,25 @@ Without any attributes, dj.U() represents the set with one element that has no a
 </blockquote>
 </blockquote>
 </blockquote>
-<p>Aggregation:</p>
-<p>In aggregation, dj.U is used for summary calculation over an entire set:</p>
-<p>The following expression yields one element with one attribute <code>s</code> containing the total number of elements in
-query expression <code>expr</code>:</p>
+<p>This yields all unique combinations of contrast and brightness in <code>stimulus</code>.</p>
+<p><strong>Aggregation</strong> - Summary calculations over an entire set:</p>
 <blockquote>
 <blockquote>
 <blockquote>
-<p>dj.U().aggr(expr, n='count(*)')</p>
+<p>dj.U().aggr(expr, n='count(*)')  # Total count</p>
+<p>dj.U().aggr(expr, n='count(distinct attr)')  # Distinct values</p>
+<p>dj.U().aggr(expr, s='sum(attr)')  # Sum of attribute</p>
+<p>dj.U('attr1', 'attr2').aggr(expr, n='count(*)')  # Count per group</p>
 </blockquote>
 </blockquote>
 </blockquote>
-<p>The following expressions both yield one element containing the number <code>n</code> of distinct values of attribute <code>attr</code> in
-query expression <code>expr</code>.</p>
-<blockquote>
-<blockquote>
-<blockquote>
-<p>dj.U().aggr(expr, n='count(distinct attr)')
-dj.U().aggr(dj.U('attr').aggr(expr), 'n=count(*)')</p>
-</blockquote>
-</blockquote>
-</blockquote>
-<p>The following expression yields one element and one attribute <code>s</code> containing the sum of values of attribute <code>attr</code>
-over entire result set of expression <code>expr</code>:</p>
-<blockquote>
-<blockquote>
-<blockquote>
-<p>dj.U().aggr(expr, s='sum(attr)')</p>
-</blockquote>
-</blockquote>
-</blockquote>
-<p>The following expression yields the set of all unique combinations of attributes <code>attr1</code>, <code>attr2</code> and the number of
-their occurrences in the result set of query expression <code>expr</code>.</p>
-<blockquote>
-<blockquote>
-<blockquote>
-<p>dj.U(attr1,attr2).aggr(expr, n='count(*)')</p>
-</blockquote>
-</blockquote>
-</blockquote>
-<p>Joins:</p>
-<p>If expression <code>expr</code> has attributes 'attr1' and 'attr2', then expr * dj.U('attr1','attr2') yields the same result
-as <code>expr</code> but <code>attr1</code> and <code>attr2</code> are promoted to the the primary key.  This is useful for producing a join on
-non-primary key attributes.
-For example, if <code>attr</code> is in both expr1 and expr2 but not in their primary keys, then expr1 * expr2 will throw
-an error because in most cases, it does not make sense to join on non-primary key attributes and users must first
-rename <code>attr</code> in one of the operands.  The expression dj.U('attr') * rel1 * rel2 overrides this constraint.</p>
+<p><strong>Joins</strong> - Promote attributes to primary key:</p>
+<p>If <code>expr</code> has attributes <code>attr1</code> and <code>attr2</code>, then
+<code>expr * dj.U('attr1', 'attr2')</code> yields the same result as <code>expr</code>
+but with <code>attr1</code> and <code>attr2</code> promoted to the primary key.</p>
+<p>.. note::
+    The <code>*</code> operator with <code>dj.U</code> has been removed in DataJoint 2.0.
+    This pattern is no longer necessary with the new semantic matching system.</p>
 
 
 
