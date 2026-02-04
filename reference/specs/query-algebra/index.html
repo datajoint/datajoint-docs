@@ -7824,11 +7824,43 @@
 <span class="c1"># original is unchanged</span>
 </code></pre></div>
 <h3 id="12-primary-key-preservation">1.2 Primary Key Preservation<a class="headerlink" href="#12-primary-key-preservation" title="Permanent link">&para;</a></h3>
-<p>Most operators preserve the primary key of their input. The exceptions are:</p>
+<p>For most binary operators, the primary key of the result is the primary key of the <strong>left operand</strong>:</p>
 <ul>
-<li><strong>Join</strong>: May expand or contract PK based on functional dependencies</li>
-<li><strong>U &amp; table</strong>: Sets PK to U's attributes</li>
+<li><code>A &amp; condition</code> → PK(A)</li>
+<li><code>A - condition</code> → PK(A)</li>
+<li><code>A.proj(...)</code> → PK(A)</li>
+<li><code>A.aggr(B, ...)</code> → PK(A)</li>
+<li><code>A.extend(B)</code> → PK(A)</li>
+<li><code>A + B</code> → PK(A) = PK(B)</li>
+<li><code>dj.U('x', 'y') &amp; table</code> → PK(U) = (x, y)</li>
 </ul>
+<p>The <strong>only exception</strong> is <strong>Join</strong> (<code>A * B</code>), where the result's primary key depends on functional dependencies between operands:</p>
+<table>
+<thead>
+<tr>
+<th>Condition</th>
+<th>Result PK</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>A → B (A determines B)</td>
+<td>PK(A)</td>
+</tr>
+<tr>
+<td>B → A (B determines A)</td>
+<td>PK(B)</td>
+</tr>
+<tr>
+<td>Both directions</td>
+<td>PK(A)</td>
+</tr>
+<tr>
+<td>Neither direction</td>
+<td>PK(A) ∪ PK(B)</td>
+</tr>
+</tbody>
+</table>
 <h3 id="13-lazy-evaluation">1.3 Lazy Evaluation<a class="headerlink" href="#13-lazy-evaluation" title="Permanent link">&para;</a></h3>
 <p>Expressions are not executed until data is fetched:</p>
 <div class="highlight"><pre><span></span><code><span class="n">expr</span> <span class="o">=</span> <span class="p">(</span><span class="n">Session</span> <span class="o">*</span> <span class="n">Trial</span><span class="p">)</span> <span class="o">&amp;</span> <span class="s2">&quot;trial_type = &#39;test&#39;&quot;</span>  <span class="c1"># No database query yet</span>
