@@ -70,6 +70,7 @@ Session & dj.Top(None, 'session_date DESC')
 ```
 
 **Parameters**:
+
 - `limit` (default=1): Maximum rows. Use `None` for no limit.
 - `order_by` (default="KEY"): Attribute(s) to sort by. `"KEY"` expands to all primary key attributes. Add `DESC` for descending order (e.g., `"KEY DESC"`, `"score DESC"`). Use `None` to inherit existing order.
 - `offset` (default=0): Rows to skip.
@@ -224,6 +225,7 @@ Mouse + Rat
 ```
 
 **Requirements**:
+
 - Same primary key attributes
 - No overlapping secondary attributes
 
