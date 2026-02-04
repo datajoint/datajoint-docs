@@ -8172,11 +8172,17 @@
 </tbody>
 </table>
 <h3 id="43-join-condition">4.3 Join Condition<a class="headerlink" href="#43-join-condition" title="Permanent link">&para;</a></h3>
-<p>Joins match on all shared non-hidden attributes (namesakes):</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># If Session has (subject_id, session_id) and Trial has (subject_id, session_id, trial_id)</span>
+<p>With <code>semantic_check=True</code> (default), joins match only on <strong>homologous namesakes</strong>—attributes with the same name AND same lineage (traced through foreign keys to the same original definition):</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Session has (subject_id, session_id) and Trial has (subject_id, session_id, trial_id)</span>
+<span class="c1"># Both subject_id attributes trace to Subject.subject_id via foreign keys</span>
 <span class="c1"># Join matches on (subject_id, session_id)</span>
 <span class="n">Session</span> <span class="o">*</span> <span class="n">Trial</span>
 </code></pre></div>
+<p>With <code>semantic_check=False</code>, joins match on <strong>all namesakes</strong> regardless of lineage (natural join):</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Match on any shared attribute names, ignoring lineage</span>
+<span class="n">A</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">B</span><span class="p">,</span> <span class="n">semantic_check</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</code></pre></div>
+<p>See <a href="#9-semantic-matching">Section 9: Semantic Matching</a> for details on attribute lineage.</p>
 <h3 id="44-primary-key-determination">4.4 Primary Key Determination<a class="headerlink" href="#44-primary-key-determination" title="Permanent link">&para;</a></h3>
 <p>The result's primary key depends on functional dependencies:</p>
 <table>
