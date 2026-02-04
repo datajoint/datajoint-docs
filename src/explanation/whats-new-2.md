@@ -13,7 +13,7 @@ DataJoint 2.0 introduces fundamental improvements to type handling, job coordina
 - **Explicit over implicit**: All type conversions are now explicit through the codec system
 - **Better distributed computing**: Per-table job coordination with improved error handling
 - **Object storage integration**: Native support for large arrays and files
-- **Future-proof architecture**: Portable types preparing for PostgreSQL backend support
+- **Multi-backend support**: Portable types enabling PostgreSQL backend (added in 2.1)
 
 ### Breaking Changes at a Glance
 
