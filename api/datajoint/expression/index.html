@@ -6540,8 +6540,8 @@ Successive restrictions are combined as logical AND: <code>r &amp; a &amp; b</co
 Any QueryExpression, collection, or sequence other than an AndList are treated as OrLists
 (logical disjunction of conditions).
 Inverse restriction is accomplished by either using the subtraction operator or the Not class.</p>
-<p>The expressions in each row are equivalent:</p>
-<p>rel &amp; True                          rel
+<p>The expressions in each row are equivalent::</p>
+<pre><code>rel &amp; True                          rel
 rel &amp; False                         the empty entity set
 rel &amp; 'TRUE'                        rel
 rel &amp; 'FALSE'                       the empty entity set
@@ -6559,7 +6559,8 @@ rel - [cond1, cond2]                rel &amp; Not(cond1) &amp; Not(cond2)
 rel - AndList()                     rel &amp; False
 rel - []                            rel
 rel - None                          rel
-rel - any_empty_entity_set          rel</p>
+rel - any_empty_entity_set          rel
+</code></pre>
 <p>When arg is another QueryExpression, the restriction <code>rel &amp; arg</code> restricts rel to elements
 that match at least one element in arg (hence arg is treated as an OrList).
 Conversely, <code>rel - arg</code> restricts rel to elements that do not match any elements in arg.
