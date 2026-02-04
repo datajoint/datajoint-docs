@@ -1,6 +1,6 @@
 # DataJoint Documentation (Full)
 
-Generated: 2026-02-04 14:59:47 UTC
+Generated: 2026-02-04 17:07:00 UTC
 Commit: unknown
 Branch: unknown
 
@@ -3044,7 +3044,7 @@ DataJoint 2.0 introduces fundamental improvements to type handling, job coordina
 - **Explicit over implicit**: All type conversions are now explicit through the codec system
 - **Better distributed computing**: Per-table job coordination with improved error handling
 - **Object storage integration**: Native support for large arrays and files
-- **Future-proof architecture**: Portable types preparing for PostgreSQL backend support
+- **Multi-backend support**: Portable types enabling PostgreSQL backend (added in 2.1)
 
 ### Breaking Changes at a Glance
 
@@ -17428,7 +17428,7 @@ Upgrade existing pipelines from legacy DataJoint (pre-2.0) to DataJoint 2.0.
 **Character encoding and collation:** DataJoint 2.0 standardizes on UTF-8 encoding with binary collation (case-sensitive comparisons). This is configured **server-wide** and is assumed by DataJoint:
 
 - **MySQL:** `utf8mb4` character set with `utf8mb4_bin` collation
-- **PostgreSQL (future):** `UTF8` encoding with `C` collation
+- **PostgreSQL (new in 2.1):** `UTF8` encoding with `C` collation
 
 Like timezone handling, encoding is infrastructure configuration, not part of the data model. Ensure your MySQL server is configured with these defaults before migration.
 
@@ -17442,9 +17442,9 @@ DataJoint 2.0 is licensed under **Apache 2.0** (previously LGPL-2.1).
 
 No action required—the new license is more permissive.
 
-### Future Backend Support
+### PostgreSQL Backend Support
 
-DataJoint 2.0 introduces portable type aliases (`int64`, `float64`, etc.) that prepare the codebase for **PostgreSQL backend compatibility** in a future release. Migration to core types ensures your schemas will work seamlessly when Postgres support is available.
+DataJoint 2.0 introduced portable type aliases (`int64`, `float64`, etc.) that enable **PostgreSQL backend compatibility**, which was added in DataJoint 2.1. Migration to core types ensures your schemas work seamlessly on both MySQL and PostgreSQL backends.
 
 **String quoting in restrictions:** MySQL and PostgreSQL handle quotes differently. MySQL allows both single and double quotes for string literals, but PostgreSQL interprets double quotes as identifier (column) references. For PostgreSQL compatibility, replace double quotes with single quotes inside SQL restriction strings:
 

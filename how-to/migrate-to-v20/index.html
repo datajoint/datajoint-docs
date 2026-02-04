@@ -3311,10 +3311,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#future-backend-support" class="md-nav__link">
+  <a href="#postgresql-backend-support" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Future Backend Support
+        PostgreSQL Backend Support
       
     </span>
   </a>
@@ -6471,10 +6471,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#future-backend-support" class="md-nav__link">
+  <a href="#postgresql-backend-support" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Future Backend Support
+        PostgreSQL Backend Support
       
     </span>
   </a>
@@ -7624,7 +7624,7 @@ document and it will execute the migration with your oversight.</p>
 <p><strong>Character encoding and collation:</strong> DataJoint 2.0 standardizes on UTF-8 encoding with binary collation (case-sensitive comparisons). This is configured <strong>server-wide</strong> and is assumed by DataJoint:</p>
 <ul>
 <li><strong>MySQL:</strong> <code>utf8mb4</code> character set with <code>utf8mb4_bin</code> collation</li>
-<li><strong>PostgreSQL (future):</strong> <code>UTF8</code> encoding with <code>C</code> collation</li>
+<li><strong>PostgreSQL (new in 2.1):</strong> <code>UTF8</code> encoding with <code>C</code> collation</li>
 </ul>
 <p>Like timezone handling, encoding is infrastructure configuration, not part of the data model. Ensure your MySQL server is configured with these defaults before migration.</p>
 <h3 id="license-change">License Change<a class="headerlink" href="#license-change" title="Permanent link">&para;</a></h3>
@@ -7635,8 +7635,8 @@ document and it will execute the migration with your oversight.</p>
 <li>Clearer patent grant provisions</li>
 </ul>
 <p>No action required—the new license is more permissive.</p>
-<h3 id="future-backend-support">Future Backend Support<a class="headerlink" href="#future-backend-support" title="Permanent link">&para;</a></h3>
-<p>DataJoint 2.0 introduces portable type aliases (<code>int64</code>, <code>float64</code>, etc.) that prepare the codebase for <strong>PostgreSQL backend compatibility</strong> in a future release. Migration to core types ensures your schemas will work seamlessly when Postgres support is available.</p>
+<h3 id="postgresql-backend-support">PostgreSQL Backend Support<a class="headerlink" href="#postgresql-backend-support" title="Permanent link">&para;</a></h3>
+<p>DataJoint 2.0 introduced portable type aliases (<code>int64</code>, <code>float64</code>, etc.) that enable <strong>PostgreSQL backend compatibility</strong>, which was added in DataJoint 2.1. Migration to core types ensures your schemas work seamlessly on both MySQL and PostgreSQL backends.</p>
 <p><strong>String quoting in restrictions:</strong> MySQL and PostgreSQL handle quotes differently. MySQL allows both single and double quotes for string literals, but PostgreSQL interprets double quotes as identifier (column) references. For PostgreSQL compatibility, replace double quotes with single quotes inside SQL restriction strings:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Before (MySQL only)</span>
 <span class="n">Table</span> <span class="o">&amp;</span> <span class="s1">&#39;name = &quot;Alice&quot;&#39;</span>
