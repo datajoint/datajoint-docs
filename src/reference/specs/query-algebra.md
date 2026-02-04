@@ -300,13 +300,23 @@ result = A.join(B, semantic_check=True, left=False)
 
 ### 4.3 Join Condition
 
-Joins match on all shared non-hidden attributes (namesakes):
+With `semantic_check=True` (default), joins match only on **homologous namesakes**—attributes with the same name AND same lineage (traced through foreign keys to the same original definition):
 
 ```python
-# If Session has (subject_id, session_id) and Trial has (subject_id, session_id, trial_id)
+# Session has (subject_id, session_id) and Trial has (subject_id, session_id, trial_id)
+# Both subject_id attributes trace to Subject.subject_id via foreign keys
 # Join matches on (subject_id, session_id)
 Session * Trial
 ```
+
+With `semantic_check=False`, joins match on **all namesakes** regardless of lineage (natural join):
+
+```python
+# Match on any shared attribute names, ignoring lineage
+A.join(B, semantic_check=False)
+```
+
+See [Section 9: Semantic Matching](#9-semantic-matching) for details on attribute lineage.
 
 ### 4.4 Primary Key Determination
 
