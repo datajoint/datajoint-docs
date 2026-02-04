@@ -5836,10 +5836,12 @@
 <span class="c1"># All rows ordered (no limit)</span>
 <span class="n">Session</span> <span class="o">&amp;</span> <span class="n">dj</span><span class="o">.</span><span class="n">Top</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;session_date DESC&#39;</span><span class="p">)</span>
 </code></pre></div>
-<p><strong>Parameters</strong>:
-- <code>limit</code> (default=1): Maximum rows. Use <code>None</code> for no limit.
-- <code>order_by</code> (default="KEY"): Attribute(s) to sort by. <code>"KEY"</code> expands to all primary key attributes. Add <code>DESC</code> for descending order (e.g., <code>"KEY DESC"</code>, <code>"score DESC"</code>). Use <code>None</code> to inherit existing order.
-- <code>offset</code> (default=0): Rows to skip.</p>
+<p><strong>Parameters</strong>:</p>
+<ul>
+<li><code>limit</code> (default=1): Maximum rows. Use <code>None</code> for no limit.</li>
+<li><code>order_by</code> (default="KEY"): Attribute(s) to sort by. <code>"KEY"</code> expands to all primary key attributes. Add <code>DESC</code> for descending order (e.g., <code>"KEY DESC"</code>, <code>"score DESC"</code>). Use <code>None</code> to inherit existing order.</li>
+<li><code>offset</code> (default=0): Rows to skip.</li>
+</ul>
 <p><strong>Chaining Tops</strong>: When chaining multiple Top restrictions, the second Top can inherit the first's ordering by using <code>order_by=None</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># First Top sets the order, second inherits it</span>
 <span class="p">(</span><span class="n">Session</span> <span class="o">&amp;</span> <span class="n">dj</span><span class="o">.</span><span class="n">Top</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="s1">&#39;date DESC&#39;</span><span class="p">))</span> <span class="o">&amp;</span> <span class="n">dj</span><span class="o">.</span><span class="n">Top</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="n">order_by</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
@@ -5980,9 +5982,11 @@
 <div class="highlight"><pre><span></span><code><span class="c1"># All subjects that are either mice or rats</span>
 <span class="n">Mouse</span> <span class="o">+</span> <span class="n">Rat</span>
 </code></pre></div>
-<p><strong>Requirements</strong>:
-- Same primary key attributes
-- No overlapping secondary attributes</p>
+<p><strong>Requirements</strong>:</p>
+<ul>
+<li>Same primary key attributes</li>
+<li>No overlapping secondary attributes</li>
+</ul>
 <hr />
 <h2 id="universal-set-dju">Universal Set (<code>dj.U()</code>)<a class="headerlink" href="#universal-set-dju" title="Permanent link">&para;</a></h2>
 <p>Create ad-hoc groupings or extract unique values.</p>
