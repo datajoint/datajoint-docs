@@ -18,10 +18,24 @@ restricted = original & "session_date > '2024-01-01'"  # New object
 
 ### 1.2 Primary Key Preservation
 
-Most operators preserve the primary key of their input. The exceptions are:
+For most binary operators, the primary key of the result is the primary key of the **left operand**:
 
-- **Join**: May expand or contract PK based on functional dependencies
-- **U & table**: Sets PK to U's attributes
+- `A & condition` → PK(A)
+- `A - condition` → PK(A)
+- `A.proj(...)` → PK(A)
+- `A.aggr(B, ...)` → PK(A)
+- `A.extend(B)` → PK(A)
+- `A + B` → PK(A) = PK(B)
+- `dj.U('x', 'y') & table` → PK(U) = (x, y)
+
+The **only exception** is **Join** (`A * B`), where the result's primary key depends on functional dependencies between operands:
+
+| Condition | Result PK |
+|-----------|-----------|
+| A → B (A determines B) | PK(A) |
+| B → A (B determines A) | PK(B) |
+| Both directions | PK(A) |
+| Neither direction | PK(A) ∪ PK(B) |
 
 ### 1.3 Lazy Evaluation
 
