@@ -38,6 +38,7 @@ print(dj.__version__)
 ```
 
 **Expected output for this documentation:**
+
 - `2.0.0` or higher — You're ready to follow this documentation
 - `0.14.x` or lower — You have the stable version, use [legacy docs](https://datajoint.github.io/datajoint-python) instead
 
