@@ -4,6 +4,8 @@ Set up your DataJoint database connection.
 
 > **Tip:** [DataJoint.com](https://datajoint.com) handles database configuration automatically with fully managed infrastructure and support.
 
+> **Example:** See [lcms-demo](https://github.com/datajoint/lcms-demo) for a complete DataJoint project with configuration examples.
+
 ## Configuration Structure
 
 DataJoint separates configuration into two parts:

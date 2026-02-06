@@ -2,6 +2,8 @@
 
 DataJoint configuration options and settings.
 
+> **Example:** See [lcms-demo](https://github.com/datajoint/lcms-demo) for a complete project with configuration files.
+
 ## Configuration Sources
 
 Configuration is loaded in priority order:
