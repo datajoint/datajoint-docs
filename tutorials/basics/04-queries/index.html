@@ -3637,7 +3637,7 @@ schema = dj.Schema('tutorial_queries')</div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>[2026-01-27 15:28:55] DataJoint 2.1.0a9 connected to postgres@127.0.0.1:5432
+<pre>[2026-02-06 11:44:51] DataJoint 2.1.0 connected to datajoint@127.0.0.1:5432
 </pre>
 </div>
 </div>
@@ -3964,22 +3964,6 @@ Subject &amp; "weight &gt; 25"</div>
             background: #f3f1ff;
             color: #000000;
         }
-        /* Tooltip container */
-        .djtooltip {
-        }
-        /* Tooltip text */
-        .djtooltip .djtooltiptext {
-            visibility: hidden;
-            width: 120px;
-            background-color: black;
-            color: #fff;
-            text-align: center;
-            padding: 5px 0;
-            border-radius: 6px;
-            /* Position the tooltip text - see examples below! */
-            position: absolute;
-            z-index: 1;
-        }
         #primary {
             font-weight: bold;
             color: black;
@@ -3987,11 +3971,6 @@ Subject &amp; "weight &gt; 25"</div>
         #nonprimary {
             font-weight: normal;
             color: white;
-        }
-
-        /* Show the tooltip text when you mouse over the tooltip container */
-        .djtooltip:hover .djtooltiptext {
-            visibility: visible;
         }
 
         /* Dark mode support */
@@ -4010,10 +3989,6 @@ Subject &amp; "weight &gt; 25"</div>
                 background: #3d3d3d;
                 color: #e0e0e0;
             }
-            .djtooltip .djtooltiptext {
-                background-color: #555555;
-                color: #ffffff;
-            }
             #primary {
                 color: #bd93f9;
             }
@@ -4022,25 +3997,9 @@ Subject &amp; "weight &gt; 25"</div>
             }
         }
     </style>
-<b>None</b>
 <div style="max-height:1000px;max-width:1500px;overflow:auto;">
 <table border="1" class="Table">
-<thead> <tr> <th> <div class="djtooltip">
-<p id="primary">subject_id</p>
-<span class="djtooltiptext"></span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">species</p>
-<span class="djtooltiptext"></span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">date_of_birth</p>
-<span class="djtooltiptext"></span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">sex</p>
-<span class="djtooltiptext"></span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">weight</p>
-<span class="djtooltiptext">grams</span>
-</div> </th> </tr> </thead>
+<thead> <tr> <th> <span id="primary" title="">subject_id</span></th><th><span id="nonprimary" title="">species</span></th><th><span id="nonprimary" title="">date_of_birth</span></th><th><span id="nonprimary" title="">sex</span></th><th><span id="nonprimary" title="grams">weight</span> </th> </tr> </thead>
 <tbody> <tr> <td>M001</td>
 <td>Mus musculus</td>
 <td>2026-01-15</td>
@@ -4118,22 +4077,6 @@ Session &amp; "session_date &gt; '2026-01-06'"</div>
             background: #f3f1ff;
             color: #000000;
         }
-        /* Tooltip container */
-        .djtooltip {
-        }
-        /* Tooltip text */
-        .djtooltip .djtooltiptext {
-            visibility: hidden;
-            width: 120px;
-            background-color: black;
-            color: #fff;
-            text-align: center;
-            padding: 5px 0;
-            border-radius: 6px;
-            /* Position the tooltip text - see examples below! */
-            position: absolute;
-            z-index: 1;
-        }
         #primary {
             font-weight: bold;
             color: black;
@@ -4141,11 +4084,6 @@ Session &amp; "session_date &gt; '2026-01-06'"</div>
         #nonprimary {
             font-weight: normal;
             color: white;
-        }
-
-        /* Show the tooltip text when you mouse over the tooltip container */
-        .djtooltip:hover .djtooltiptext {
-            visibility: visible;
         }
 
         /* Dark mode support */
@@ -4164,10 +4102,6 @@ Session &amp; "session_date &gt; '2026-01-06'"</div>
                 background: #3d3d3d;
                 color: #e0e0e0;
             }
-            .djtooltip .djtooltiptext {
-                background-color: #555555;
-                color: #ffffff;
-            }
             #primary {
                 color: #bd93f9;
             }
@@ -4176,25 +4110,9 @@ Session &amp; "session_date &gt; '2026-01-06'"</div>
             }
         }
     </style>
-<b>None</b>
 <div style="max-height:1000px;max-width:1500px;overflow:auto;">
 <table border="1" class="Table">
-<thead> <tr> <th> <div class="djtooltip">
-<p id="primary">subject_id</p>
-<span class="djtooltiptext">None</span>
-</div></th><th><div class="djtooltip">
-<p id="primary">session_idx</p>
-<span class="djtooltiptext"></span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">experimenter_id</p>
-<span class="djtooltiptext">None</span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">session_date</p>
-<span class="djtooltiptext"></span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">duration</p>
-<span class="djtooltiptext">minutes</span>
-</div> </th> </tr> </thead>
+<thead> <tr> <th> <span id="primary" title="None">subject_id</span></th><th><span id="primary" title="">session_idx</span></th><th><span id="nonprimary" title="None">experimenter_id</span></th><th><span id="nonprimary" title="">session_date</span></th><th><span id="nonprimary" title="minutes">duration</span> </th> </tr> </thead>
 <tbody> <tr> <td>M001</td>
 <td>2</td>
 <td>alice</td>
@@ -4272,22 +4190,6 @@ Subject &amp; "sex = 'M' AND weight &gt; 25"</div>
             background: #f3f1ff;
             color: #000000;
         }
-        /* Tooltip container */
-        .djtooltip {
-        }
-        /* Tooltip text */
-        .djtooltip .djtooltiptext {
-            visibility: hidden;
-            width: 120px;
-            background-color: black;
-            color: #fff;
-            text-align: center;
-            padding: 5px 0;
-            border-radius: 6px;
-            /* Position the tooltip text - see examples below! */
-            position: absolute;
-            z-index: 1;
-        }
         #primary {
             font-weight: bold;
             color: black;
@@ -4295,11 +4197,6 @@ Subject &amp; "sex = 'M' AND weight &gt; 25"</div>
         #nonprimary {
             font-weight: normal;
             color: white;
-        }
-
-        /* Show the tooltip text when you mouse over the tooltip container */
-        .djtooltip:hover .djtooltiptext {
-            visibility: visible;
         }
 
         /* Dark mode support */
@@ -4318,10 +4215,6 @@ Subject &amp; "sex = 'M' AND weight &gt; 25"</div>
                 background: #3d3d3d;
                 color: #e0e0e0;
             }
-            .djtooltip .djtooltiptext {
-                background-color: #555555;
-                color: #ffffff;
-            }
             #primary {
                 color: #bd93f9;
             }
@@ -4330,25 +4223,9 @@ Subject &amp; "sex = 'M' AND weight &gt; 25"</div>
             }
         }
     </style>
-<b>None</b>
 <div style="max-height:1000px;max-width:1500px;overflow:auto;">
 <table border="1" class="Table">
-<thead> <tr> <th> <div class="djtooltip">
-<p id="primary">subject_id</p>
-<span class="djtooltiptext"></span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">species</p>
-<span class="djtooltiptext"></span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">date_of_birth</p>
-<span class="djtooltiptext"></span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">sex</p>
-<span class="djtooltiptext"></span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">weight</p>
-<span class="djtooltiptext">grams</span>
-</div> </th> </tr> </thead>
+<thead> <tr> <th> <span id="primary" title="">subject_id</span></th><th><span id="nonprimary" title="">species</span></th><th><span id="nonprimary" title="">date_of_birth</span></th><th><span id="nonprimary" title="">sex</span></th><th><span id="nonprimary" title="grams">weight</span> </th> </tr> </thead>
 <tbody> <tr> <td>M001</td>
 <td>Mus musculus</td>
 <td>2026-01-15</td>
@@ -4433,22 +4310,6 @@ Subject &amp; {'sex': 'F'}</div>
             background: #f3f1ff;
             color: #000000;
         }
-        /* Tooltip container */
-        .djtooltip {
-        }
-        /* Tooltip text */
-        .djtooltip .djtooltiptext {
-            visibility: hidden;
-            width: 120px;
-            background-color: black;
-            color: #fff;
-            text-align: center;
-            padding: 5px 0;
-            border-radius: 6px;
-            /* Position the tooltip text - see examples below! */
-            position: absolute;
-            z-index: 1;
-        }
         #primary {
             font-weight: bold;
             color: black;
@@ -4456,11 +4317,6 @@ Subject &amp; {'sex': 'F'}</div>
         #nonprimary {
             font-weight: normal;
             color: white;
-        }
-
-        /* Show the tooltip text when you mouse over the tooltip container */
-        .djtooltip:hover .djtooltiptext {
-            visibility: visible;
         }
 
         /* Dark mode support */
@@ -4479,10 +4335,6 @@ Subject &amp; {'sex': 'F'}</div>
                 background: #3d3d3d;
                 color: #e0e0e0;
             }
-            .djtooltip .djtooltiptext {
-                background-color: #555555;
-                color: #ffffff;
-            }
             #primary {
                 color: #bd93f9;
             }
@@ -4491,25 +4343,9 @@ Subject &amp; {'sex': 'F'}</div>
             }
         }
     </style>
-<b>None</b>
 <div style="max-height:1000px;max-width:1500px;overflow:auto;">
 <table border="1" class="Table">
-<thead> <tr> <th> <div class="djtooltip">
-<p id="primary">subject_id</p>
-<span class="djtooltiptext"></span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">species</p>
-<span class="djtooltiptext"></span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">date_of_birth</p>
-<span class="djtooltiptext"></span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">sex</p>
-<span class="djtooltiptext"></span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">weight</p>
-<span class="djtooltiptext">grams</span>
-</div> </th> </tr> </thead>
+<thead> <tr> <th> <span id="primary" title="">subject_id</span></th><th><span id="nonprimary" title="">species</span></th><th><span id="nonprimary" title="">date_of_birth</span></th><th><span id="nonprimary" title="">sex</span></th><th><span id="nonprimary" title="grams">weight</span> </th> </tr> </thead>
 <tbody> <tr> <td>M002</td>
 <td>Mus musculus</td>
 <td>2026-02-01</td>
@@ -4583,22 +4419,6 @@ Session &amp; {'subject_id': 'M001', 'session_idx': 1}</div>
             background: #f3f1ff;
             color: #000000;
         }
-        /* Tooltip container */
-        .djtooltip {
-        }
-        /* Tooltip text */
-        .djtooltip .djtooltiptext {
-            visibility: hidden;
-            width: 120px;
-            background-color: black;
-            color: #fff;
-            text-align: center;
-            padding: 5px 0;
-            border-radius: 6px;
-            /* Position the tooltip text - see examples below! */
-            position: absolute;
-            z-index: 1;
-        }
         #primary {
             font-weight: bold;
             color: black;
@@ -4606,11 +4426,6 @@ Session &amp; {'subject_id': 'M001', 'session_idx': 1}</div>
         #nonprimary {
             font-weight: normal;
             color: white;
-        }
-
-        /* Show the tooltip text when you mouse over the tooltip container */
-        .djtooltip:hover .djtooltiptext {
-            visibility: visible;
         }
 
         /* Dark mode support */
@@ -4629,10 +4444,6 @@ Session &amp; {'subject_id': 'M001', 'session_idx': 1}</div>
                 background: #3d3d3d;
                 color: #e0e0e0;
             }
-            .djtooltip .djtooltiptext {
-                background-color: #555555;
-                color: #ffffff;
-            }
             #primary {
                 color: #bd93f9;
             }
@@ -4641,25 +4452,9 @@ Session &amp; {'subject_id': 'M001', 'session_idx': 1}</div>
             }
         }
     </style>
-<b>None</b>
 <div style="max-height:1000px;max-width:1500px;overflow:auto;">
 <table border="1" class="Table">
-<thead> <tr> <th> <div class="djtooltip">
-<p id="primary">subject_id</p>
-<span class="djtooltiptext">None</span>
-</div></th><th><div class="djtooltip">
-<p id="primary">session_idx</p>
-<span class="djtooltiptext"></span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">experimenter_id</p>
-<span class="djtooltiptext">None</span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">session_date</p>
-<span class="djtooltiptext"></span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">duration</p>
-<span class="djtooltiptext">minutes</span>
-</div> </th> </tr> </thead>
+<thead> <tr> <th> <span id="primary" title="None">subject_id</span></th><th><span id="primary" title="">session_idx</span></th><th><span id="nonprimary" title="None">experimenter_id</span></th><th><span id="nonprimary" title="">session_date</span></th><th><span id="nonprimary" title="minutes">duration</span> </th> </tr> </thead>
 <tbody> <tr> <td>M001</td>
 <td>1</td>
 <td>alice</td>
@@ -4741,22 +4536,6 @@ Subject &amp; Session</div>
             background: #f3f1ff;
             color: #000000;
         }
-        /* Tooltip container */
-        .djtooltip {
-        }
-        /* Tooltip text */
-        .djtooltip .djtooltiptext {
-            visibility: hidden;
-            width: 120px;
-            background-color: black;
-            color: #fff;
-            text-align: center;
-            padding: 5px 0;
-            border-radius: 6px;
-            /* Position the tooltip text - see examples below! */
-            position: absolute;
-            z-index: 1;
-        }
         #primary {
             font-weight: bold;
             color: black;
@@ -4764,11 +4543,6 @@ Subject &amp; Session</div>
         #nonprimary {
             font-weight: normal;
             color: white;
-        }
-
-        /* Show the tooltip text when you mouse over the tooltip container */
-        .djtooltip:hover .djtooltiptext {
-            visibility: visible;
         }
 
         /* Dark mode support */
@@ -4787,10 +4561,6 @@ Subject &amp; Session</div>
                 background: #3d3d3d;
                 color: #e0e0e0;
             }
-            .djtooltip .djtooltiptext {
-                background-color: #555555;
-                color: #ffffff;
-            }
             #primary {
                 color: #bd93f9;
             }
@@ -4799,25 +4569,9 @@ Subject &amp; Session</div>
             }
         }
     </style>
-<b>None</b>
 <div style="max-height:1000px;max-width:1500px;overflow:auto;">
 <table border="1" class="Table">
-<thead> <tr> <th> <div class="djtooltip">
-<p id="primary">subject_id</p>
-<span class="djtooltiptext"></span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">species</p>
-<span class="djtooltiptext"></span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">date_of_birth</p>
-<span class="djtooltiptext"></span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">sex</p>
-<span class="djtooltiptext"></span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">weight</p>
-<span class="djtooltiptext">grams</span>
-</div> </th> </tr> </thead>
+<thead> <tr> <th> <span id="primary" title="">subject_id</span></th><th><span id="nonprimary" title="">species</span></th><th><span id="nonprimary" title="">date_of_birth</span></th><th><span id="nonprimary" title="">sex</span></th><th><span id="nonprimary" title="grams">weight</span> </th> </tr> </thead>
 <tbody> <tr> <td>M001</td>
 <td>Mus musculus</td>
 <td>2026-01-15</td>
@@ -4895,22 +4649,6 @@ Subject - Session</div>
             background: #f3f1ff;
             color: #000000;
         }
-        /* Tooltip container */
-        .djtooltip {
-        }
-        /* Tooltip text */
-        .djtooltip .djtooltiptext {
-            visibility: hidden;
-            width: 120px;
-            background-color: black;
-            color: #fff;
-            text-align: center;
-            padding: 5px 0;
-            border-radius: 6px;
-            /* Position the tooltip text - see examples below! */
-            position: absolute;
-            z-index: 1;
-        }
         #primary {
             font-weight: bold;
             color: black;
@@ -4918,11 +4656,6 @@ Subject - Session</div>
         #nonprimary {
             font-weight: normal;
             color: white;
-        }
-
-        /* Show the tooltip text when you mouse over the tooltip container */
-        .djtooltip:hover .djtooltiptext {
-            visibility: visible;
         }
 
         /* Dark mode support */
@@ -4941,10 +4674,6 @@ Subject - Session</div>
                 background: #3d3d3d;
                 color: #e0e0e0;
             }
-            .djtooltip .djtooltiptext {
-                background-color: #555555;
-                color: #ffffff;
-            }
             #primary {
                 color: #bd93f9;
             }
@@ -4953,25 +4682,9 @@ Subject - Session</div>
             }
         }
     </style>
-<b>None</b>
 <div style="max-height:1000px;max-width:1500px;overflow:auto;">
 <table border="1" class="Table">
-<thead> <tr> <th> <div class="djtooltip">
-<p id="primary">subject_id</p>
-<span class="djtooltiptext"></span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">species</p>
-<span class="djtooltiptext"></span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">date_of_birth</p>
-<span class="djtooltiptext"></span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">sex</p>
-<span class="djtooltiptext"></span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">weight</p>
-<span class="djtooltiptext">grams</span>
-</div> </th> </tr> </thead>
+<thead> <tr> <th> <span id="primary" title="">subject_id</span></th><th><span id="nonprimary" title="">species</span></th><th><span id="nonprimary" title="">date_of_birth</span></th><th><span id="nonprimary" title="">sex</span></th><th><span id="nonprimary" title="grams">weight</span> </th> </tr> </thead>
 <tbody> <tr> <td>R001</td>
 <td>Rattus norvegicus</td>
 <td>2024-01-01</td>
@@ -5052,22 +4765,6 @@ Subject &amp; [{'subject_id': 'M001'}, {'subject_id': 'M002'}]</div>
             background: #f3f1ff;
             color: #000000;
         }
-        /* Tooltip container */
-        .djtooltip {
-        }
-        /* Tooltip text */
-        .djtooltip .djtooltiptext {
-            visibility: hidden;
-            width: 120px;
-            background-color: black;
-            color: #fff;
-            text-align: center;
-            padding: 5px 0;
-            border-radius: 6px;
-            /* Position the tooltip text - see examples below! */
-            position: absolute;
-            z-index: 1;
-        }
         #primary {
             font-weight: bold;
             color: black;
@@ -5075,11 +4772,6 @@ Subject &amp; [{'subject_id': 'M001'}, {'subject_id': 'M002'}]</div>
         #nonprimary {
             font-weight: normal;
             color: white;
-        }
-
-        /* Show the tooltip text when you mouse over the tooltip container */
-        .djtooltip:hover .djtooltiptext {
-            visibility: visible;
         }
 
         /* Dark mode support */
@@ -5098,10 +4790,6 @@ Subject &amp; [{'subject_id': 'M001'}, {'subject_id': 'M002'}]</div>
                 background: #3d3d3d;
                 color: #e0e0e0;
             }
-            .djtooltip .djtooltiptext {
-                background-color: #555555;
-                color: #ffffff;
-            }
             #primary {
                 color: #bd93f9;
             }
@@ -5110,25 +4798,9 @@ Subject &amp; [{'subject_id': 'M001'}, {'subject_id': 'M002'}]</div>
             }
         }
     </style>
-<b>None</b>
 <div style="max-height:1000px;max-width:1500px;overflow:auto;">
 <table border="1" class="Table">
-<thead> <tr> <th> <div class="djtooltip">
-<p id="primary">subject_id</p>
-<span class="djtooltiptext"></span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">species</p>
-<span class="djtooltiptext"></span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">date_of_birth</p>
-<span class="djtooltiptext"></span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">sex</p>
-<span class="djtooltiptext"></span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">weight</p>
-<span class="djtooltiptext">grams</span>
-</div> </th> </tr> </thead>
+<thead> <tr> <th> <span id="primary" title="">subject_id</span></th><th><span id="nonprimary" title="">species</span></th><th><span id="nonprimary" title="">date_of_birth</span></th><th><span id="nonprimary" title="">sex</span></th><th><span id="nonprimary" title="grams">weight</span> </th> </tr> </thead>
 <tbody> <tr> <td>M001</td>
 <td>Mus musculus</td>
 <td>2026-01-15</td>
@@ -5278,22 +4950,6 @@ Subject &amp; dj.Top(limit=2, order_by='weight DESC')</div>
             background: #f3f1ff;
             color: #000000;
         }
-        /* Tooltip container */
-        .djtooltip {
-        }
-        /* Tooltip text */
-        .djtooltip .djtooltiptext {
-            visibility: hidden;
-            width: 120px;
-            background-color: black;
-            color: #fff;
-            text-align: center;
-            padding: 5px 0;
-            border-radius: 6px;
-            /* Position the tooltip text - see examples below! */
-            position: absolute;
-            z-index: 1;
-        }
         #primary {
             font-weight: bold;
             color: black;
@@ -5301,11 +4957,6 @@ Subject &amp; dj.Top(limit=2, order_by='weight DESC')</div>
         #nonprimary {
             font-weight: normal;
             color: white;
-        }
-
-        /* Show the tooltip text when you mouse over the tooltip container */
-        .djtooltip:hover .djtooltiptext {
-            visibility: visible;
         }
 
         /* Dark mode support */
@@ -5324,10 +4975,6 @@ Subject &amp; dj.Top(limit=2, order_by='weight DESC')</div>
                 background: #3d3d3d;
                 color: #e0e0e0;
             }
-            .djtooltip .djtooltiptext {
-                background-color: #555555;
-                color: #ffffff;
-            }
             #primary {
                 color: #bd93f9;
             }
@@ -5336,25 +4983,9 @@ Subject &amp; dj.Top(limit=2, order_by='weight DESC')</div>
             }
         }
     </style>
-<b>None</b>
 <div style="max-height:1000px;max-width:1500px;overflow:auto;">
 <table border="1" class="Table">
-<thead> <tr> <th> <div class="djtooltip">
-<p id="primary">subject_id</p>
-<span class="djtooltiptext"></span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">species</p>
-<span class="djtooltiptext"></span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">date_of_birth</p>
-<span class="djtooltiptext"></span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">sex</p>
-<span class="djtooltiptext"></span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">weight</p>
-<span class="djtooltiptext">grams</span>
-</div> </th> </tr> </thead>
+<thead> <tr> <th> <span id="primary" title="">subject_id</span></th><th><span id="nonprimary" title="">species</span></th><th><span id="nonprimary" title="">date_of_birth</span></th><th><span id="nonprimary" title="">sex</span></th><th><span id="nonprimary" title="grams">weight</span> </th> </tr> </thead>
 <tbody> <tr> <td>R001</td>
 <td>Rattus norvegicus</td>
 <td>2024-01-01</td>
@@ -5428,22 +5059,6 @@ Subject &amp; dj.Top(limit=2, order_by='weight DESC', offset=2)</div>
             background: #f3f1ff;
             color: #000000;
         }
-        /* Tooltip container */
-        .djtooltip {
-        }
-        /* Tooltip text */
-        .djtooltip .djtooltiptext {
-            visibility: hidden;
-            width: 120px;
-            background-color: black;
-            color: #fff;
-            text-align: center;
-            padding: 5px 0;
-            border-radius: 6px;
-            /* Position the tooltip text - see examples below! */
-            position: absolute;
-            z-index: 1;
-        }
         #primary {
             font-weight: bold;
             color: black;
@@ -5451,11 +5066,6 @@ Subject &amp; dj.Top(limit=2, order_by='weight DESC', offset=2)</div>
         #nonprimary {
             font-weight: normal;
             color: white;
-        }
-
-        /* Show the tooltip text when you mouse over the tooltip container */
-        .djtooltip:hover .djtooltiptext {
-            visibility: visible;
         }
 
         /* Dark mode support */
@@ -5474,10 +5084,6 @@ Subject &amp; dj.Top(limit=2, order_by='weight DESC', offset=2)</div>
                 background: #3d3d3d;
                 color: #e0e0e0;
             }
-            .djtooltip .djtooltiptext {
-                background-color: #555555;
-                color: #ffffff;
-            }
             #primary {
                 color: #bd93f9;
             }
@@ -5486,25 +5092,9 @@ Subject &amp; dj.Top(limit=2, order_by='weight DESC', offset=2)</div>
             }
         }
     </style>
-<b>None</b>
 <div style="max-height:1000px;max-width:1500px;overflow:auto;">
 <table border="1" class="Table">
-<thead> <tr> <th> <div class="djtooltip">
-<p id="primary">subject_id</p>
-<span class="djtooltiptext"></span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">species</p>
-<span class="djtooltiptext"></span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">date_of_birth</p>
-<span class="djtooltiptext"></span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">sex</p>
-<span class="djtooltiptext"></span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">weight</p>
-<span class="djtooltiptext">grams</span>
-</div> </th> </tr> </thead>
+<thead> <tr> <th> <span id="primary" title="">subject_id</span></th><th><span id="nonprimary" title="">species</span></th><th><span id="nonprimary" title="">date_of_birth</span></th><th><span id="nonprimary" title="">sex</span></th><th><span id="nonprimary" title="grams">weight</span> </th> </tr> </thead>
 <tbody> <tr> <td>M001</td>
 <td>Mus musculus</td>
 <td>2026-01-15</td>
@@ -5578,22 +5168,6 @@ Subject &amp; dj.Top(limit=2, order_by='weight DESC', offset=2)</div>
             background: #f3f1ff;
             color: #000000;
         }
-        /* Tooltip container */
-        .djtooltip {
-        }
-        /* Tooltip text */
-        .djtooltip .djtooltiptext {
-            visibility: hidden;
-            width: 120px;
-            background-color: black;
-            color: #fff;
-            text-align: center;
-            padding: 5px 0;
-            border-radius: 6px;
-            /* Position the tooltip text - see examples below! */
-            position: absolute;
-            z-index: 1;
-        }
         #primary {
             font-weight: bold;
             color: black;
@@ -5601,11 +5175,6 @@ Subject &amp; dj.Top(limit=2, order_by='weight DESC', offset=2)</div>
         #nonprimary {
             font-weight: normal;
             color: white;
-        }
-
-        /* Show the tooltip text when you mouse over the tooltip container */
-        .djtooltip:hover .djtooltiptext {
-            visibility: visible;
         }
 
         /* Dark mode support */
@@ -5624,10 +5193,6 @@ Subject &amp; dj.Top(limit=2, order_by='weight DESC', offset=2)</div>
                 background: #3d3d3d;
                 color: #e0e0e0;
             }
-            .djtooltip .djtooltiptext {
-                background-color: #555555;
-                color: #ffffff;
-            }
             #primary {
                 color: #bd93f9;
             }
@@ -5636,25 +5201,9 @@ Subject &amp; dj.Top(limit=2, order_by='weight DESC', offset=2)</div>
             }
         }
     </style>
-<b>None</b>
 <div style="max-height:1000px;max-width:1500px;overflow:auto;">
 <table border="1" class="Table">
-<thead> <tr> <th> <div class="djtooltip">
-<p id="primary">subject_id</p>
-<span class="djtooltiptext"></span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">species</p>
-<span class="djtooltiptext"></span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">date_of_birth</p>
-<span class="djtooltiptext"></span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">sex</p>
-<span class="djtooltiptext"></span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">weight</p>
-<span class="djtooltiptext">grams</span>
-</div> </th> </tr> </thead>
+<thead> <tr> <th> <span id="primary" title="">subject_id</span></th><th><span id="nonprimary" title="">species</span></th><th><span id="nonprimary" title="">date_of_birth</span></th><th><span id="nonprimary" title="">sex</span></th><th><span id="nonprimary" title="grams">weight</span> </th> </tr> </thead>
 <tbody> <tr> <td>M003</td>
 <td>Mus musculus</td>
 <td>2026-02-15</td>
@@ -5744,22 +5293,6 @@ Session.Trial &amp; longest_session_keys</div>
             background: #f3f1ff;
             color: #000000;
         }
-        /* Tooltip container */
-        .djtooltip {
-        }
-        /* Tooltip text */
-        .djtooltip .djtooltiptext {
-            visibility: hidden;
-            width: 120px;
-            background-color: black;
-            color: #fff;
-            text-align: center;
-            padding: 5px 0;
-            border-radius: 6px;
-            /* Position the tooltip text - see examples below! */
-            position: absolute;
-            z-index: 1;
-        }
         #primary {
             font-weight: bold;
             color: black;
@@ -5767,11 +5300,6 @@ Session.Trial &amp; longest_session_keys</div>
         #nonprimary {
             font-weight: normal;
             color: white;
-        }
-
-        /* Show the tooltip text when you mouse over the tooltip container */
-        .djtooltip:hover .djtooltiptext {
-            visibility: visible;
         }
 
         /* Dark mode support */
@@ -5790,10 +5318,6 @@ Session.Trial &amp; longest_session_keys</div>
                 background: #3d3d3d;
                 color: #e0e0e0;
             }
-            .djtooltip .djtooltiptext {
-                background-color: #555555;
-                color: #ffffff;
-            }
             #primary {
                 color: #bd93f9;
             }
@@ -5802,31 +5326,9 @@ Session.Trial &amp; longest_session_keys</div>
             }
         }
     </style>
-<b>None</b>
 <div style="max-height:1000px;max-width:1500px;overflow:auto;">
 <table border="1" class="Table">
-<thead> <tr> <th> <div class="djtooltip">
-<p id="primary">subject_id</p>
-<span class="djtooltiptext">None</span>
-</div></th><th><div class="djtooltip">
-<p id="primary">session_idx</p>
-<span class="djtooltiptext">None</span>
-</div></th><th><div class="djtooltip">
-<p id="primary">trial_idx</p>
-<span class="djtooltiptext"></span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">stimulus</p>
-<span class="djtooltiptext"></span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">response</p>
-<span class="djtooltiptext"></span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">correct</p>
-<span class="djtooltiptext"></span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">reaction_time</p>
-<span class="djtooltiptext">seconds</span>
-</div> </th> </tr> </thead>
+<thead> <tr> <th> <span id="primary" title="None">subject_id</span></th><th><span id="primary" title="None">session_idx</span></th><th><span id="primary" title="">trial_idx</span></th><th><span id="nonprimary" title="">stimulus</span></th><th><span id="nonprimary" title="">response</span></th><th><span id="nonprimary" title="">correct</span></th><th><span id="nonprimary" title="seconds">reaction_time</span> </th> </tr> </thead>
 <tbody> <tr> <td>M001</td>
 <td>2</td>
 <td>1</td>
@@ -5977,22 +5479,6 @@ Subject.proj()</div>
             background: #f3f1ff;
             color: #000000;
         }
-        /* Tooltip container */
-        .djtooltip {
-        }
-        /* Tooltip text */
-        .djtooltip .djtooltiptext {
-            visibility: hidden;
-            width: 120px;
-            background-color: black;
-            color: #fff;
-            text-align: center;
-            padding: 5px 0;
-            border-radius: 6px;
-            /* Position the tooltip text - see examples below! */
-            position: absolute;
-            z-index: 1;
-        }
         #primary {
             font-weight: bold;
             color: black;
@@ -6000,11 +5486,6 @@ Subject.proj()</div>
         #nonprimary {
             font-weight: normal;
             color: white;
-        }
-
-        /* Show the tooltip text when you mouse over the tooltip container */
-        .djtooltip:hover .djtooltiptext {
-            visibility: visible;
         }
 
         /* Dark mode support */
@@ -6023,10 +5504,6 @@ Subject.proj()</div>
                 background: #3d3d3d;
                 color: #e0e0e0;
             }
-            .djtooltip .djtooltiptext {
-                background-color: #555555;
-                color: #ffffff;
-            }
             #primary {
                 color: #bd93f9;
             }
@@ -6035,42 +5512,10 @@ Subject.proj()</div>
             }
         }
     </style>
-<b>None</b>
 <div style="max-height:1000px;max-width:1500px;overflow:auto;">
 <table border="1" class="Table">
-<thead> <tr> <th> <div class="djtooltip">
-<p id="primary">subject_id</p>
-<span class="djtooltiptext"></span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">species</p>
-<span class="djtooltiptext"></span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">date_of_birth</p>
-<span class="djtooltiptext"></span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">sex</p>
-<span class="djtooltiptext"></span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">weight</p>
-<span class="djtooltiptext">grams</span>
-</div> </th> </tr> </thead>
-<tbody> <tr> <td>M001</td>
-<td>bytes</td>
-<td>bytes</td>
-<td>bytes</td>
-<td>bytes</td></tr><tr><td>M002</td>
-<td>bytes</td>
-<td>bytes</td>
-<td>bytes</td>
-<td>bytes</td></tr><tr><td>M003</td>
-<td>bytes</td>
-<td>bytes</td>
-<td>bytes</td>
-<td>bytes</td></tr><tr><td>R001</td>
-<td>bytes</td>
-<td>bytes</td>
-<td>bytes</td>
-<td>bytes</td> </tr> </tbody>
+<thead> <tr> <th> <span id="primary" title="">subject_id</span> </th> </tr> </thead>
+<tbody> <tr> <td>M001</td></tr><tr><td>M002</td></tr><tr><td>M003</td></tr><tr><td>R001</td> </tr> </tbody>
 </table>
 <p>Total: 4</p></div>
 </div>
@@ -6135,22 +5580,6 @@ Subject.proj('species', 'sex')</div>
             background: #f3f1ff;
             color: #000000;
         }
-        /* Tooltip container */
-        .djtooltip {
-        }
-        /* Tooltip text */
-        .djtooltip .djtooltiptext {
-            visibility: hidden;
-            width: 120px;
-            background-color: black;
-            color: #fff;
-            text-align: center;
-            padding: 5px 0;
-            border-radius: 6px;
-            /* Position the tooltip text - see examples below! */
-            position: absolute;
-            z-index: 1;
-        }
         #primary {
             font-weight: bold;
             color: black;
@@ -6158,11 +5587,6 @@ Subject.proj('species', 'sex')</div>
         #nonprimary {
             font-weight: normal;
             color: white;
-        }
-
-        /* Show the tooltip text when you mouse over the tooltip container */
-        .djtooltip:hover .djtooltiptext {
-            visibility: visible;
         }
 
         /* Dark mode support */
@@ -6181,10 +5605,6 @@ Subject.proj('species', 'sex')</div>
                 background: #3d3d3d;
                 color: #e0e0e0;
             }
-            .djtooltip .djtooltiptext {
-                background-color: #555555;
-                color: #ffffff;
-            }
             #primary {
                 color: #bd93f9;
             }
@@ -6193,42 +5613,18 @@ Subject.proj('species', 'sex')</div>
             }
         }
     </style>
-<b>None</b>
 <div style="max-height:1000px;max-width:1500px;overflow:auto;">
 <table border="1" class="Table">
-<thead> <tr> <th> <div class="djtooltip">
-<p id="primary">subject_id</p>
-<span class="djtooltiptext"></span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">species</p>
-<span class="djtooltiptext"></span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">date_of_birth</p>
-<span class="djtooltiptext"></span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">sex</p>
-<span class="djtooltiptext"></span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">weight</p>
-<span class="djtooltiptext">grams</span>
-</div> </th> </tr> </thead>
+<thead> <tr> <th> <span id="primary" title="">subject_id</span></th><th><span id="nonprimary" title="">species</span></th><th><span id="nonprimary" title="">sex</span> </th> </tr> </thead>
 <tbody> <tr> <td>M001</td>
 <td>Mus musculus</td>
-<td>bytes</td>
-<td>M</td>
-<td>bytes</td></tr><tr><td>M002</td>
+<td>M</td></tr><tr><td>M002</td>
 <td>Mus musculus</td>
-<td>bytes</td>
-<td>F</td>
-<td>bytes</td></tr><tr><td>M003</td>
+<td>F</td></tr><tr><td>M003</td>
 <td>Mus musculus</td>
-<td>bytes</td>
-<td>M</td>
-<td>bytes</td></tr><tr><td>R001</td>
+<td>M</td></tr><tr><td>R001</td>
 <td>Rattus norvegicus</td>
-<td>bytes</td>
-<td>F</td>
-<td>bytes</td> </tr> </tbody>
+<td>F</td> </tr> </tbody>
 </table>
 <p>Total: 4</p></div>
 </div>
@@ -6293,22 +5689,6 @@ Subject.proj(...)</div>
             background: #f3f1ff;
             color: #000000;
         }
-        /* Tooltip container */
-        .djtooltip {
-        }
-        /* Tooltip text */
-        .djtooltip .djtooltiptext {
-            visibility: hidden;
-            width: 120px;
-            background-color: black;
-            color: #fff;
-            text-align: center;
-            padding: 5px 0;
-            border-radius: 6px;
-            /* Position the tooltip text - see examples below! */
-            position: absolute;
-            z-index: 1;
-        }
         #primary {
             font-weight: bold;
             color: black;
@@ -6316,11 +5696,6 @@ Subject.proj(...)</div>
         #nonprimary {
             font-weight: normal;
             color: white;
-        }
-
-        /* Show the tooltip text when you mouse over the tooltip container */
-        .djtooltip:hover .djtooltiptext {
-            visibility: visible;
         }
 
         /* Dark mode support */
@@ -6339,10 +5714,6 @@ Subject.proj(...)</div>
                 background: #3d3d3d;
                 color: #e0e0e0;
             }
-            .djtooltip .djtooltiptext {
-                background-color: #555555;
-                color: #ffffff;
-            }
             #primary {
                 color: #bd93f9;
             }
@@ -6351,25 +5722,9 @@ Subject.proj(...)</div>
             }
         }
     </style>
-<b>None</b>
 <div style="max-height:1000px;max-width:1500px;overflow:auto;">
 <table border="1" class="Table">
-<thead> <tr> <th> <div class="djtooltip">
-<p id="primary">subject_id</p>
-<span class="djtooltiptext"></span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">species</p>
-<span class="djtooltiptext"></span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">date_of_birth</p>
-<span class="djtooltiptext"></span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">sex</p>
-<span class="djtooltiptext"></span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">weight</p>
-<span class="djtooltiptext">grams</span>
-</div> </th> </tr> </thead>
+<thead> <tr> <th> <span id="primary" title="">subject_id</span></th><th><span id="nonprimary" title="">species</span></th><th><span id="nonprimary" title="">date_of_birth</span></th><th><span id="nonprimary" title="">sex</span></th><th><span id="nonprimary" title="grams">weight</span> </th> </tr> </thead>
 <tbody> <tr> <td>M001</td>
 <td>Mus musculus</td>
 <td>2026-01-15</td>
@@ -6451,22 +5806,6 @@ Subject.proj(..., '-weight')</div>
             background: #f3f1ff;
             color: #000000;
         }
-        /* Tooltip container */
-        .djtooltip {
-        }
-        /* Tooltip text */
-        .djtooltip .djtooltiptext {
-            visibility: hidden;
-            width: 120px;
-            background-color: black;
-            color: #fff;
-            text-align: center;
-            padding: 5px 0;
-            border-radius: 6px;
-            /* Position the tooltip text - see examples below! */
-            position: absolute;
-            z-index: 1;
-        }
         #primary {
             font-weight: bold;
             color: black;
@@ -6474,11 +5813,6 @@ Subject.proj(..., '-weight')</div>
         #nonprimary {
             font-weight: normal;
             color: white;
-        }
-
-        /* Show the tooltip text when you mouse over the tooltip container */
-        .djtooltip:hover .djtooltiptext {
-            visibility: visible;
         }
 
         /* Dark mode support */
@@ -6497,10 +5831,6 @@ Subject.proj(..., '-weight')</div>
                 background: #3d3d3d;
                 color: #e0e0e0;
             }
-            .djtooltip .djtooltiptext {
-                background-color: #555555;
-                color: #ffffff;
-            }
             #primary {
                 color: #bd93f9;
             }
@@ -6509,42 +5839,22 @@ Subject.proj(..., '-weight')</div>
             }
         }
     </style>
-<b>None</b>
 <div style="max-height:1000px;max-width:1500px;overflow:auto;">
 <table border="1" class="Table">
-<thead> <tr> <th> <div class="djtooltip">
-<p id="primary">subject_id</p>
-<span class="djtooltiptext"></span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">species</p>
-<span class="djtooltiptext"></span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">date_of_birth</p>
-<span class="djtooltiptext"></span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">sex</p>
-<span class="djtooltiptext"></span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">weight</p>
-<span class="djtooltiptext">grams</span>
-</div> </th> </tr> </thead>
+<thead> <tr> <th> <span id="primary" title="">subject_id</span></th><th><span id="nonprimary" title="">species</span></th><th><span id="nonprimary" title="">date_of_birth</span></th><th><span id="nonprimary" title="">sex</span> </th> </tr> </thead>
 <tbody> <tr> <td>M001</td>
 <td>Mus musculus</td>
 <td>2026-01-15</td>
-<td>M</td>
-<td>bytes</td></tr><tr><td>M002</td>
+<td>M</td></tr><tr><td>M002</td>
 <td>Mus musculus</td>
 <td>2026-02-01</td>
-<td>F</td>
-<td>bytes</td></tr><tr><td>M003</td>
+<td>F</td></tr><tr><td>M003</td>
 <td>Mus musculus</td>
 <td>2026-02-15</td>
-<td>M</td>
-<td>bytes</td></tr><tr><td>R001</td>
+<td>M</td></tr><tr><td>R001</td>
 <td>Rattus norvegicus</td>
 <td>2024-01-01</td>
-<td>F</td>
-<td>bytes</td> </tr> </tbody>
+<td>F</td> </tr> </tbody>
 </table>
 <p>Total: 4</p></div>
 </div>
@@ -6620,22 +5930,6 @@ Subject.proj(animal_species='species')</div>
             background: #f3f1ff;
             color: #000000;
         }
-        /* Tooltip container */
-        .djtooltip {
-        }
-        /* Tooltip text */
-        .djtooltip .djtooltiptext {
-            visibility: hidden;
-            width: 120px;
-            background-color: black;
-            color: #fff;
-            text-align: center;
-            padding: 5px 0;
-            border-radius: 6px;
-            /* Position the tooltip text - see examples below! */
-            position: absolute;
-            z-index: 1;
-        }
         #primary {
             font-weight: bold;
             color: black;
@@ -6643,11 +5937,6 @@ Subject.proj(animal_species='species')</div>
         #nonprimary {
             font-weight: normal;
             color: white;
-        }
-
-        /* Show the tooltip text when you mouse over the tooltip container */
-        .djtooltip:hover .djtooltiptext {
-            visibility: visible;
         }
 
         /* Dark mode support */
@@ -6666,10 +5955,6 @@ Subject.proj(animal_species='species')</div>
                 background: #3d3d3d;
                 color: #e0e0e0;
             }
-            .djtooltip .djtooltiptext {
-                background-color: #555555;
-                color: #ffffff;
-            }
             #primary {
                 color: #bd93f9;
             }
@@ -6678,42 +5963,14 @@ Subject.proj(animal_species='species')</div>
             }
         }
     </style>
-<b>None</b>
 <div style="max-height:1000px;max-width:1500px;overflow:auto;">
 <table border="1" class="Table">
-<thead> <tr> <th> <div class="djtooltip">
-<p id="primary">subject_id</p>
-<span class="djtooltiptext"></span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">species</p>
-<span class="djtooltiptext"></span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">date_of_birth</p>
-<span class="djtooltiptext"></span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">sex</p>
-<span class="djtooltiptext"></span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">weight</p>
-<span class="djtooltiptext">grams</span>
-</div> </th> </tr> </thead>
+<thead> <tr> <th> <span id="primary" title="">subject_id</span></th><th><span id="nonprimary" title="">animal_species</span> </th> </tr> </thead>
 <tbody> <tr> <td>M001</td>
-<td>bytes</td>
-<td>bytes</td>
-<td>bytes</td>
-<td>bytes</td></tr><tr><td>M002</td>
-<td>bytes</td>
-<td>bytes</td>
-<td>bytes</td>
-<td>bytes</td></tr><tr><td>M003</td>
-<td>bytes</td>
-<td>bytes</td>
-<td>bytes</td>
-<td>bytes</td></tr><tr><td>R001</td>
-<td>bytes</td>
-<td>bytes</td>
-<td>bytes</td>
-<td>bytes</td> </tr> </tbody>
+<td>Mus musculus</td></tr><tr><td>M002</td>
+<td>Mus musculus</td></tr><tr><td>M003</td>
+<td>Mus musculus</td></tr><tr><td>R001</td>
+<td>Rattus norvegicus</td> </tr> </tbody>
 </table>
 <p>Total: 4</p></div>
 </div>
@@ -6789,22 +6046,6 @@ Subject.proj('species', weight_kg='weight / 1000')</div>
             background: #f3f1ff;
             color: #000000;
         }
-        /* Tooltip container */
-        .djtooltip {
-        }
-        /* Tooltip text */
-        .djtooltip .djtooltiptext {
-            visibility: hidden;
-            width: 120px;
-            background-color: black;
-            color: #fff;
-            text-align: center;
-            padding: 5px 0;
-            border-radius: 6px;
-            /* Position the tooltip text - see examples below! */
-            position: absolute;
-            z-index: 1;
-        }
         #primary {
             font-weight: bold;
             color: black;
@@ -6812,11 +6053,6 @@ Subject.proj('species', weight_kg='weight / 1000')</div>
         #nonprimary {
             font-weight: normal;
             color: white;
-        }
-
-        /* Show the tooltip text when you mouse over the tooltip container */
-        .djtooltip:hover .djtooltiptext {
-            visibility: visible;
         }
 
         /* Dark mode support */
@@ -6835,10 +6071,6 @@ Subject.proj('species', weight_kg='weight / 1000')</div>
                 background: #3d3d3d;
                 color: #e0e0e0;
             }
-            .djtooltip .djtooltiptext {
-                background-color: #555555;
-                color: #ffffff;
-            }
             #primary {
                 color: #bd93f9;
             }
@@ -6847,42 +6079,18 @@ Subject.proj('species', weight_kg='weight / 1000')</div>
             }
         }
     </style>
-<b>None</b>
 <div style="max-height:1000px;max-width:1500px;overflow:auto;">
 <table border="1" class="Table">
-<thead> <tr> <th> <div class="djtooltip">
-<p id="primary">subject_id</p>
-<span class="djtooltiptext"></span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">species</p>
-<span class="djtooltiptext"></span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">date_of_birth</p>
-<span class="djtooltiptext"></span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">sex</p>
-<span class="djtooltiptext"></span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">weight</p>
-<span class="djtooltiptext">grams</span>
-</div> </th> </tr> </thead>
+<thead> <tr> <th> <span id="primary" title="">subject_id</span></th><th><span id="nonprimary" title="">species</span></th><th><span id="nonprimary" title="calculated attribute">weight_kg</span> </th> </tr> </thead>
 <tbody> <tr> <td>M001</td>
 <td>Mus musculus</td>
-<td>bytes</td>
-<td>bytes</td>
-<td>bytes</td></tr><tr><td>M002</td>
+<td>0.02530000000000000000</td></tr><tr><td>M002</td>
 <td>Mus musculus</td>
-<td>bytes</td>
-<td>bytes</td>
-<td>bytes</td></tr><tr><td>M003</td>
+<td>0.02210000000000000000</td></tr><tr><td>M003</td>
 <td>Mus musculus</td>
-<td>bytes</td>
-<td>bytes</td>
-<td>bytes</td></tr><tr><td>R001</td>
+<td>0.02680000000000000000</td></tr><tr><td>R001</td>
 <td>Rattus norvegicus</td>
-<td>bytes</td>
-<td>bytes</td>
-<td>bytes</td> </tr> </tbody>
+<td>0.28050000000000000000</td> </tr> </tbody>
 </table>
 <p>Total: 4</p></div>
 </div>
@@ -6947,22 +6155,6 @@ Session.proj('session_date', year='YEAR(session_date)', month='MONTH(session_dat
             background: #f3f1ff;
             color: #000000;
         }
-        /* Tooltip container */
-        .djtooltip {
-        }
-        /* Tooltip text */
-        .djtooltip .djtooltiptext {
-            visibility: hidden;
-            width: 120px;
-            background-color: black;
-            color: #fff;
-            text-align: center;
-            padding: 5px 0;
-            border-radius: 6px;
-            /* Position the tooltip text - see examples below! */
-            position: absolute;
-            z-index: 1;
-        }
         #primary {
             font-weight: bold;
             color: black;
@@ -6970,11 +6162,6 @@ Session.proj('session_date', year='YEAR(session_date)', month='MONTH(session_dat
         #nonprimary {
             font-weight: normal;
             color: white;
-        }
-
-        /* Show the tooltip text when you mouse over the tooltip container */
-        .djtooltip:hover .djtooltiptext {
-            visibility: visible;
         }
 
         /* Dark mode support */
@@ -6993,10 +6180,6 @@ Session.proj('session_date', year='YEAR(session_date)', month='MONTH(session_dat
                 background: #3d3d3d;
                 color: #e0e0e0;
             }
-            .djtooltip .djtooltiptext {
-                background-color: #555555;
-                color: #ffffff;
-            }
             #primary {
                 color: #bd93f9;
             }
@@ -7005,46 +6188,30 @@ Session.proj('session_date', year='YEAR(session_date)', month='MONTH(session_dat
             }
         }
     </style>
-<b>None</b>
 <div style="max-height:1000px;max-width:1500px;overflow:auto;">
 <table border="1" class="Table">
-<thead> <tr> <th> <div class="djtooltip">
-<p id="primary">subject_id</p>
-<span class="djtooltiptext">None</span>
-</div></th><th><div class="djtooltip">
-<p id="primary">session_idx</p>
-<span class="djtooltiptext"></span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">experimenter_id</p>
-<span class="djtooltiptext">None</span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">session_date</p>
-<span class="djtooltiptext"></span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">duration</p>
-<span class="djtooltiptext">minutes</span>
-</div> </th> </tr> </thead>
+<thead> <tr> <th> <span id="primary" title="None">subject_id</span></th><th><span id="primary" title="">session_idx</span></th><th><span id="nonprimary" title="">session_date</span></th><th><span id="nonprimary" title="calculated attribute">year</span></th><th><span id="nonprimary" title="calculated attribute">month</span> </th> </tr> </thead>
 <tbody> <tr> <td>M001</td>
 <td>1</td>
-<td>bytes</td>
 <td>2026-01-06</td>
-<td>bytes</td></tr><tr><td>M001</td>
+<td>2026</td>
+<td>1</td></tr><tr><td>M001</td>
 <td>2</td>
-<td>bytes</td>
 <td>2026-01-07</td>
-<td>bytes</td></tr><tr><td>M002</td>
+<td>2026</td>
+<td>1</td></tr><tr><td>M002</td>
 <td>1</td>
-<td>bytes</td>
 <td>2026-01-06</td>
-<td>bytes</td></tr><tr><td>M002</td>
+<td>2026</td>
+<td>1</td></tr><tr><td>M002</td>
 <td>2</td>
-<td>bytes</td>
 <td>2026-01-08</td>
-<td>bytes</td></tr><tr><td>M003</td>
+<td>2026</td>
+<td>1</td></tr><tr><td>M003</td>
 <td>1</td>
-<td>bytes</td>
 <td>2026-01-07</td>
-<td>bytes</td> </tr> </tbody>
+<td>2026</td>
+<td>1</td> </tr> </tbody>
 </table>
 <p>Total: 5</p></div>
 </div>
@@ -7127,22 +6294,6 @@ Subject * Session</div>
             background: #f3f1ff;
             color: #000000;
         }
-        /* Tooltip container */
-        .djtooltip {
-        }
-        /* Tooltip text */
-        .djtooltip .djtooltiptext {
-            visibility: hidden;
-            width: 120px;
-            background-color: black;
-            color: #fff;
-            text-align: center;
-            padding: 5px 0;
-            border-radius: 6px;
-            /* Position the tooltip text - see examples below! */
-            position: absolute;
-            z-index: 1;
-        }
         #primary {
             font-weight: bold;
             color: black;
@@ -7150,11 +6301,6 @@ Subject * Session</div>
         #nonprimary {
             font-weight: normal;
             color: white;
-        }
-
-        /* Show the tooltip text when you mouse over the tooltip container */
-        .djtooltip:hover .djtooltiptext {
-            visibility: visible;
         }
 
         /* Dark mode support */
@@ -7173,10 +6319,6 @@ Subject * Session</div>
                 background: #3d3d3d;
                 color: #e0e0e0;
             }
-            .djtooltip .djtooltiptext {
-                background-color: #555555;
-                color: #ffffff;
-            }
             #primary {
                 color: #bd93f9;
             }
@@ -7187,34 +6329,7 @@ Subject * Session</div>
     </style>
 <div style="max-height:1000px;max-width:1500px;overflow:auto;">
 <table border="1" class="Table">
-<thead> <tr> <th> <div class="djtooltip">
-<p id="primary">subject_id</p>
-<span class="djtooltiptext">None</span>
-</div></th><th><div class="djtooltip">
-<p id="primary">session_idx</p>
-<span class="djtooltiptext"></span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">experimenter_id</p>
-<span class="djtooltiptext">None</span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">session_date</p>
-<span class="djtooltiptext"></span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">duration</p>
-<span class="djtooltiptext">minutes</span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">species</p>
-<span class="djtooltiptext"></span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">date_of_birth</p>
-<span class="djtooltiptext"></span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">sex</p>
-<span class="djtooltiptext"></span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">weight</p>
-<span class="djtooltiptext">grams</span>
-</div> </th> </tr> </thead>
+<thead> <tr> <th> <span id="primary" title="None">subject_id</span></th><th><span id="primary" title="">session_idx</span></th><th><span id="nonprimary" title="None">experimenter_id</span></th><th><span id="nonprimary" title="">session_date</span></th><th><span id="nonprimary" title="minutes">duration</span></th><th><span id="nonprimary" title="">species</span></th><th><span id="nonprimary" title="">date_of_birth</span></th><th><span id="nonprimary" title="">sex</span></th><th><span id="nonprimary" title="grams">weight</span> </th> </tr> </thead>
 <tbody> <tr> <td>M001</td>
 <td>1</td>
 <td>alice</td>
@@ -7320,22 +6435,6 @@ Subject * Session</div>
             background: #f3f1ff;
             color: #000000;
         }
-        /* Tooltip container */
-        .djtooltip {
-        }
-        /* Tooltip text */
-        .djtooltip .djtooltiptext {
-            visibility: hidden;
-            width: 120px;
-            background-color: black;
-            color: #fff;
-            text-align: center;
-            padding: 5px 0;
-            border-radius: 6px;
-            /* Position the tooltip text - see examples below! */
-            position: absolute;
-            z-index: 1;
-        }
         #primary {
             font-weight: bold;
             color: black;
@@ -7343,11 +6442,6 @@ Subject * Session</div>
         #nonprimary {
             font-weight: normal;
             color: white;
-        }
-
-        /* Show the tooltip text when you mouse over the tooltip container */
-        .djtooltip:hover .djtooltiptext {
-            visibility: visible;
         }
 
         /* Dark mode support */
@@ -7366,10 +6460,6 @@ Subject * Session</div>
                 background: #3d3d3d;
                 color: #e0e0e0;
             }
-            .djtooltip .djtooltiptext {
-                background-color: #555555;
-                color: #ffffff;
-            }
             #primary {
                 color: #bd93f9;
             }
@@ -7380,34 +6470,7 @@ Subject * Session</div>
     </style>
 <div style="max-height:1000px;max-width:1500px;overflow:auto;">
 <table border="1" class="Table">
-<thead> <tr> <th> <div class="djtooltip">
-<p id="primary">subject_id</p>
-<span class="djtooltiptext">None</span>
-</div></th><th><div class="djtooltip">
-<p id="primary">session_idx</p>
-<span class="djtooltiptext"></span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">experimenter_id</p>
-<span class="djtooltiptext">None</span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">session_date</p>
-<span class="djtooltiptext"></span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">duration</p>
-<span class="djtooltiptext">minutes</span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">species</p>
-<span class="djtooltiptext"></span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">date_of_birth</p>
-<span class="djtooltiptext"></span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">sex</p>
-<span class="djtooltiptext"></span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">weight</p>
-<span class="djtooltiptext">grams</span>
-</div> </th> </tr> </thead>
+<thead> <tr> <th> <span id="primary" title="None">subject_id</span></th><th><span id="primary" title="">session_idx</span></th><th><span id="nonprimary" title="None">experimenter_id</span></th><th><span id="nonprimary" title="">session_date</span></th><th><span id="nonprimary" title="minutes">duration</span></th><th><span id="nonprimary" title="">species</span></th><th><span id="nonprimary" title="">date_of_birth</span></th><th><span id="nonprimary" title="">sex</span></th><th><span id="nonprimary" title="grams">weight</span> </th> </tr> </thead>
 <tbody> <tr> <td>M001</td>
 <td>1</td>
 <td>alice</td>
@@ -7497,22 +6560,6 @@ Subject * Session</div>
             background: #f3f1ff;
             color: #000000;
         }
-        /* Tooltip container */
-        .djtooltip {
-        }
-        /* Tooltip text */
-        .djtooltip .djtooltiptext {
-            visibility: hidden;
-            width: 120px;
-            background-color: black;
-            color: #fff;
-            text-align: center;
-            padding: 5px 0;
-            border-radius: 6px;
-            /* Position the tooltip text - see examples below! */
-            position: absolute;
-            z-index: 1;
-        }
         #primary {
             font-weight: bold;
             color: black;
@@ -7520,11 +6567,6 @@ Subject * Session</div>
         #nonprimary {
             font-weight: normal;
             color: white;
-        }
-
-        /* Show the tooltip text when you mouse over the tooltip container */
-        .djtooltip:hover .djtooltiptext {
-            visibility: visible;
         }
 
         /* Dark mode support */
@@ -7543,10 +6585,6 @@ Subject * Session</div>
                 background: #3d3d3d;
                 color: #e0e0e0;
             }
-            .djtooltip .djtooltiptext {
-                background-color: #555555;
-                color: #ffffff;
-            }
             #primary {
                 color: #bd93f9;
             }
@@ -7557,34 +6595,7 @@ Subject * Session</div>
     </style>
 <div style="max-height:1000px;max-width:1500px;overflow:auto;">
 <table border="1" class="Table">
-<thead> <tr> <th> <div class="djtooltip">
-<p id="primary">subject_id</p>
-<span class="djtooltiptext">None</span>
-</div></th><th><div class="djtooltip">
-<p id="primary">session_idx</p>
-<span class="djtooltiptext"></span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">experimenter_id</p>
-<span class="djtooltiptext">None</span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">session_date</p>
-<span class="djtooltiptext"></span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">duration</p>
-<span class="djtooltiptext">minutes</span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">species</p>
-<span class="djtooltiptext"></span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">date_of_birth</p>
-<span class="djtooltiptext"></span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">sex</p>
-<span class="djtooltiptext"></span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">weight</p>
-<span class="djtooltiptext">grams</span>
-</div> </th> </tr> </thead>
+<thead> <tr> <th> <span id="primary" title="None">subject_id</span></th><th><span id="primary" title="">session_idx</span></th><th><span id="nonprimary" title="None">experimenter_id</span></th><th><span id="nonprimary" title="">session_date</span></th><th><span id="nonprimary" title="minutes">duration</span></th><th><span id="nonprimary" title="">species</span></th><th><span id="nonprimary" title="">date_of_birth</span></th><th><span id="nonprimary" title="">sex</span></th><th><span id="nonprimary" title="grams">weight</span> </th> </tr> </thead>
 <tbody> <tr> <td>M001</td>
 <td>1</td>
 <td>alice</td>
@@ -7674,22 +6685,6 @@ Subject * Session</div>
             background: #f3f1ff;
             color: #000000;
         }
-        /* Tooltip container */
-        .djtooltip {
-        }
-        /* Tooltip text */
-        .djtooltip .djtooltiptext {
-            visibility: hidden;
-            width: 120px;
-            background-color: black;
-            color: #fff;
-            text-align: center;
-            padding: 5px 0;
-            border-radius: 6px;
-            /* Position the tooltip text - see examples below! */
-            position: absolute;
-            z-index: 1;
-        }
         #primary {
             font-weight: bold;
             color: black;
@@ -7697,11 +6692,6 @@ Subject * Session</div>
         #nonprimary {
             font-weight: normal;
             color: white;
-        }
-
-        /* Show the tooltip text when you mouse over the tooltip container */
-        .djtooltip:hover .djtooltiptext {
-            visibility: visible;
         }
 
         /* Dark mode support */
@@ -7720,10 +6710,6 @@ Subject * Session</div>
                 background: #3d3d3d;
                 color: #e0e0e0;
             }
-            .djtooltip .djtooltiptext {
-                background-color: #555555;
-                color: #ffffff;
-            }
             #primary {
                 color: #bd93f9;
             }
@@ -7734,22 +6720,7 @@ Subject * Session</div>
     </style>
 <div style="max-height:1000px;max-width:1500px;overflow:auto;">
 <table border="1" class="Table">
-<thead> <tr> <th> <div class="djtooltip">
-<p id="primary">subject_id</p>
-<span class="djtooltiptext">None</span>
-</div></th><th><div class="djtooltip">
-<p id="primary">session_idx</p>
-<span class="djtooltiptext"></span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">session_date</p>
-<span class="djtooltiptext"></span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">species</p>
-<span class="djtooltiptext"></span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">full_name</p>
-<span class="djtooltiptext"></span>
-</div> </th> </tr> </thead>
+<thead> <tr> <th> <span id="primary" title="None">subject_id</span></th><th><span id="primary" title="">session_idx</span></th><th><span id="nonprimary" title="">session_date</span></th><th><span id="nonprimary" title="">species</span></th><th><span id="nonprimary" title="">full_name</span> </th> </tr> </thead>
 <tbody> <tr> <td>M001</td>
 <td>1</td>
 <td>2026-01-06</td>
@@ -7895,22 +6866,6 @@ Session.extend(Experimenter)</div>
             background: #f3f1ff;
             color: #000000;
         }
-        /* Tooltip container */
-        .djtooltip {
-        }
-        /* Tooltip text */
-        .djtooltip .djtooltiptext {
-            visibility: hidden;
-            width: 120px;
-            background-color: black;
-            color: #fff;
-            text-align: center;
-            padding: 5px 0;
-            border-radius: 6px;
-            /* Position the tooltip text - see examples below! */
-            position: absolute;
-            z-index: 1;
-        }
         #primary {
             font-weight: bold;
             color: black;
@@ -7918,11 +6873,6 @@ Session.extend(Experimenter)</div>
         #nonprimary {
             font-weight: normal;
             color: white;
-        }
-
-        /* Show the tooltip text when you mouse over the tooltip container */
-        .djtooltip:hover .djtooltiptext {
-            visibility: visible;
         }
 
         /* Dark mode support */
@@ -7941,10 +6891,6 @@ Session.extend(Experimenter)</div>
                 background: #3d3d3d;
                 color: #e0e0e0;
             }
-            .djtooltip .djtooltiptext {
-                background-color: #555555;
-                color: #ffffff;
-            }
             #primary {
                 color: #bd93f9;
             }
@@ -7955,25 +6901,7 @@ Session.extend(Experimenter)</div>
     </style>
 <div style="max-height:1000px;max-width:1500px;overflow:auto;">
 <table border="1" class="Table">
-<thead> <tr> <th> <div class="djtooltip">
-<p id="primary">subject_id</p>
-<span class="djtooltiptext">None</span>
-</div></th><th><div class="djtooltip">
-<p id="primary">session_idx</p>
-<span class="djtooltiptext"></span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">experimenter_id</p>
-<span class="djtooltiptext">None</span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">session_date</p>
-<span class="djtooltiptext"></span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">duration</p>
-<span class="djtooltiptext">minutes</span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">full_name</p>
-<span class="djtooltiptext"></span>
-</div> </th> </tr> </thead>
+<thead> <tr> <th> <span id="primary" title="None">subject_id</span></th><th><span id="primary" title="">session_idx</span></th><th><span id="nonprimary" title="None">experimenter_id</span></th><th><span id="nonprimary" title="">session_date</span></th><th><span id="nonprimary" title="minutes">duration</span></th><th><span id="nonprimary" title="">full_name</span> </th> </tr> </thead>
 <tbody> <tr> <td>M001</td>
 <td>1</td>
 <td>alice</td>
@@ -8098,22 +7026,6 @@ Session.aggr(Session.Trial, n_trials='count(*)')</div>
             background: #f3f1ff;
             color: #000000;
         }
-        /* Tooltip container */
-        .djtooltip {
-        }
-        /* Tooltip text */
-        .djtooltip .djtooltiptext {
-            visibility: hidden;
-            width: 120px;
-            background-color: black;
-            color: #fff;
-            text-align: center;
-            padding: 5px 0;
-            border-radius: 6px;
-            /* Position the tooltip text - see examples below! */
-            position: absolute;
-            z-index: 1;
-        }
         #primary {
             font-weight: bold;
             color: black;
@@ -8121,11 +7033,6 @@ Session.aggr(Session.Trial, n_trials='count(*)')</div>
         #nonprimary {
             font-weight: normal;
             color: white;
-        }
-
-        /* Show the tooltip text when you mouse over the tooltip container */
-        .djtooltip:hover .djtooltiptext {
-            visibility: visible;
         }
 
         /* Dark mode support */
@@ -8144,10 +7051,6 @@ Session.aggr(Session.Trial, n_trials='count(*)')</div>
                 background: #3d3d3d;
                 color: #e0e0e0;
             }
-            .djtooltip .djtooltiptext {
-                background-color: #555555;
-                color: #ffffff;
-            }
             #primary {
                 color: #bd93f9;
             }
@@ -8158,16 +7061,7 @@ Session.aggr(Session.Trial, n_trials='count(*)')</div>
     </style>
 <div style="max-height:1000px;max-width:1500px;overflow:auto;">
 <table border="1" class="Table">
-<thead> <tr> <th> <div class="djtooltip">
-<p id="primary">subject_id</p>
-<span class="djtooltiptext">None</span>
-</div></th><th><div class="djtooltip">
-<p id="primary">session_idx</p>
-<span class="djtooltiptext"></span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">n_trials</p>
-<span class="djtooltiptext">calculated attribute</span>
-</div> </th> </tr> </thead>
+<thead> <tr> <th> <span id="primary" title="None">subject_id</span></th><th><span id="primary" title="">session_idx</span></th><th><span id="nonprimary" title="calculated attribute">n_trials</span> </th> </tr> </thead>
 <tbody> <tr> <td>M001</td>
 <td>1</td>
 <td>10</td></tr><tr><td>M001</td>
@@ -8253,22 +7147,6 @@ Session.aggr(
             background: #f3f1ff;
             color: #000000;
         }
-        /* Tooltip container */
-        .djtooltip {
-        }
-        /* Tooltip text */
-        .djtooltip .djtooltiptext {
-            visibility: hidden;
-            width: 120px;
-            background-color: black;
-            color: #fff;
-            text-align: center;
-            padding: 5px 0;
-            border-radius: 6px;
-            /* Position the tooltip text - see examples below! */
-            position: absolute;
-            z-index: 1;
-        }
         #primary {
             font-weight: bold;
             color: black;
@@ -8276,11 +7154,6 @@ Session.aggr(
         #nonprimary {
             font-weight: normal;
             color: white;
-        }
-
-        /* Show the tooltip text when you mouse over the tooltip container */
-        .djtooltip:hover .djtooltiptext {
-            visibility: visible;
         }
 
         /* Dark mode support */
@@ -8299,10 +7172,6 @@ Session.aggr(
                 background: #3d3d3d;
                 color: #e0e0e0;
             }
-            .djtooltip .djtooltiptext {
-                background-color: #555555;
-                color: #ffffff;
-            }
             #primary {
                 color: #bd93f9;
             }
@@ -8313,22 +7182,7 @@ Session.aggr(
     </style>
 <div style="max-height:1000px;max-width:1500px;overflow:auto;">
 <table border="1" class="Table">
-<thead> <tr> <th> <div class="djtooltip">
-<p id="primary">subject_id</p>
-<span class="djtooltiptext">None</span>
-</div></th><th><div class="djtooltip">
-<p id="primary">session_idx</p>
-<span class="djtooltiptext"></span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">n_trials</p>
-<span class="djtooltiptext">calculated attribute</span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">n_correct</p>
-<span class="djtooltiptext">calculated attribute</span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">avg_rt</p>
-<span class="djtooltiptext">calculated attribute</span>
-</div> </th> </tr> </thead>
+<thead> <tr> <th> <span id="primary" title="None">subject_id</span></th><th><span id="primary" title="">session_idx</span></th><th><span id="nonprimary" title="calculated attribute">n_trials</span></th><th><span id="nonprimary" title="calculated attribute">n_correct</span></th><th><span id="nonprimary" title="calculated attribute">avg_rt</span> </th> </tr> </thead>
 <tbody> <tr> <td>M001</td>
 <td>1</td>
 <td>10</td>
@@ -8414,22 +7268,6 @@ Subject.aggr(Session, n_sessions='count(*)')</div>
             background: #f3f1ff;
             color: #000000;
         }
-        /* Tooltip container */
-        .djtooltip {
-        }
-        /* Tooltip text */
-        .djtooltip .djtooltiptext {
-            visibility: hidden;
-            width: 120px;
-            background-color: black;
-            color: #fff;
-            text-align: center;
-            padding: 5px 0;
-            border-radius: 6px;
-            /* Position the tooltip text - see examples below! */
-            position: absolute;
-            z-index: 1;
-        }
         #primary {
             font-weight: bold;
             color: black;
@@ -8437,11 +7275,6 @@ Subject.aggr(Session, n_sessions='count(*)')</div>
         #nonprimary {
             font-weight: normal;
             color: white;
-        }
-
-        /* Show the tooltip text when you mouse over the tooltip container */
-        .djtooltip:hover .djtooltiptext {
-            visibility: visible;
         }
 
         /* Dark mode support */
@@ -8460,10 +7293,6 @@ Subject.aggr(Session, n_sessions='count(*)')</div>
                 background: #3d3d3d;
                 color: #e0e0e0;
             }
-            .djtooltip .djtooltiptext {
-                background-color: #555555;
-                color: #ffffff;
-            }
             #primary {
                 color: #bd93f9;
             }
@@ -8474,13 +7303,7 @@ Subject.aggr(Session, n_sessions='count(*)')</div>
     </style>
 <div style="max-height:1000px;max-width:1500px;overflow:auto;">
 <table border="1" class="Table">
-<thead> <tr> <th> <div class="djtooltip">
-<p id="primary">subject_id</p>
-<span class="djtooltiptext"></span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">n_sessions</p>
-<span class="djtooltiptext">calculated attribute</span>
-</div> </th> </tr> </thead>
+<thead> <tr> <th> <span id="primary" title="">subject_id</span></th><th><span id="nonprimary" title="calculated attribute">n_sessions</span> </th> </tr> </thead>
 <tbody> <tr> <td>M001</td>
 <td>2</td></tr><tr><td>M002</td>
 <td>2</td></tr><tr><td>M003</td>
@@ -8564,22 +7387,6 @@ Subject.aggr(Session, n_sessions='count(session_idx)')</div>
             background: #f3f1ff;
             color: #000000;
         }
-        /* Tooltip container */
-        .djtooltip {
-        }
-        /* Tooltip text */
-        .djtooltip .djtooltiptext {
-            visibility: hidden;
-            width: 120px;
-            background-color: black;
-            color: #fff;
-            text-align: center;
-            padding: 5px 0;
-            border-radius: 6px;
-            /* Position the tooltip text - see examples below! */
-            position: absolute;
-            z-index: 1;
-        }
         #primary {
             font-weight: bold;
             color: black;
@@ -8587,11 +7394,6 @@ Subject.aggr(Session, n_sessions='count(session_idx)')</div>
         #nonprimary {
             font-weight: normal;
             color: white;
-        }
-
-        /* Show the tooltip text when you mouse over the tooltip container */
-        .djtooltip:hover .djtooltiptext {
-            visibility: visible;
         }
 
         /* Dark mode support */
@@ -8610,10 +7412,6 @@ Subject.aggr(Session, n_sessions='count(session_idx)')</div>
                 background: #3d3d3d;
                 color: #e0e0e0;
             }
-            .djtooltip .djtooltiptext {
-                background-color: #555555;
-                color: #ffffff;
-            }
             #primary {
                 color: #bd93f9;
             }
@@ -8624,13 +7422,7 @@ Subject.aggr(Session, n_sessions='count(session_idx)')</div>
     </style>
 <div style="max-height:1000px;max-width:1500px;overflow:auto;">
 <table border="1" class="Table">
-<thead> <tr> <th> <div class="djtooltip">
-<p id="primary">subject_id</p>
-<span class="djtooltiptext"></span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">n_sessions</p>
-<span class="djtooltiptext">calculated attribute</span>
-</div> </th> </tr> </thead>
+<thead> <tr> <th> <span id="primary" title="">subject_id</span></th><th><span id="nonprimary" title="calculated attribute">n_sessions</span> </th> </tr> </thead>
 <tbody> <tr> <td>M001</td>
 <td>2</td></tr><tr><td>M002</td>
 <td>2</td></tr><tr><td>M003</td>
@@ -8700,22 +7492,6 @@ Subject.aggr(Session, n_sessions='count(session_idx)', exclude_nonmatching=True)
             background: #f3f1ff;
             color: #000000;
         }
-        /* Tooltip container */
-        .djtooltip {
-        }
-        /* Tooltip text */
-        .djtooltip .djtooltiptext {
-            visibility: hidden;
-            width: 120px;
-            background-color: black;
-            color: #fff;
-            text-align: center;
-            padding: 5px 0;
-            border-radius: 6px;
-            /* Position the tooltip text - see examples below! */
-            position: absolute;
-            z-index: 1;
-        }
         #primary {
             font-weight: bold;
             color: black;
@@ -8723,11 +7499,6 @@ Subject.aggr(Session, n_sessions='count(session_idx)', exclude_nonmatching=True)
         #nonprimary {
             font-weight: normal;
             color: white;
-        }
-
-        /* Show the tooltip text when you mouse over the tooltip container */
-        .djtooltip:hover .djtooltiptext {
-            visibility: visible;
         }
 
         /* Dark mode support */
@@ -8746,10 +7517,6 @@ Subject.aggr(Session, n_sessions='count(session_idx)', exclude_nonmatching=True)
                 background: #3d3d3d;
                 color: #e0e0e0;
             }
-            .djtooltip .djtooltiptext {
-                background-color: #555555;
-                color: #ffffff;
-            }
             #primary {
                 color: #bd93f9;
             }
@@ -8760,13 +7527,7 @@ Subject.aggr(Session, n_sessions='count(session_idx)', exclude_nonmatching=True)
     </style>
 <div style="max-height:1000px;max-width:1500px;overflow:auto;">
 <table border="1" class="Table">
-<thead> <tr> <th> <div class="djtooltip">
-<p id="primary">subject_id</p>
-<span class="djtooltiptext">None</span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">n_sessions</p>
-<span class="djtooltiptext">calculated attribute</span>
-</div> </th> </tr> </thead>
+<thead> <tr> <th> <span id="primary" title="None">subject_id</span></th><th><span id="nonprimary" title="calculated attribute">n_sessions</span> </th> </tr> </thead>
 <tbody> <tr> <td>M001</td>
 <td>2</td></tr><tr><td>M002</td>
 <td>2</td></tr><tr><td>M003</td>
@@ -8849,22 +7610,6 @@ dj.U('session_date').aggr(Session, n_sessions='count(*)', total_duration='sum(du
             background: #f3f1ff;
             color: #000000;
         }
-        /* Tooltip container */
-        .djtooltip {
-        }
-        /* Tooltip text */
-        .djtooltip .djtooltiptext {
-            visibility: hidden;
-            width: 120px;
-            background-color: black;
-            color: #fff;
-            text-align: center;
-            padding: 5px 0;
-            border-radius: 6px;
-            /* Position the tooltip text - see examples below! */
-            position: absolute;
-            z-index: 1;
-        }
         #primary {
             font-weight: bold;
             color: black;
@@ -8872,11 +7617,6 @@ dj.U('session_date').aggr(Session, n_sessions='count(*)', total_duration='sum(du
         #nonprimary {
             font-weight: normal;
             color: white;
-        }
-
-        /* Show the tooltip text when you mouse over the tooltip container */
-        .djtooltip:hover .djtooltiptext {
-            visibility: visible;
         }
 
         /* Dark mode support */
@@ -8895,10 +7635,6 @@ dj.U('session_date').aggr(Session, n_sessions='count(*)', total_duration='sum(du
                 background: #3d3d3d;
                 color: #e0e0e0;
             }
-            .djtooltip .djtooltiptext {
-                background-color: #555555;
-                color: #ffffff;
-            }
             #primary {
                 color: #bd93f9;
             }
@@ -8909,16 +7645,7 @@ dj.U('session_date').aggr(Session, n_sessions='count(*)', total_duration='sum(du
     </style>
 <div style="max-height:1000px;max-width:1500px;overflow:auto;">
 <table border="1" class="Table">
-<thead> <tr> <th> <div class="djtooltip">
-<p id="primary">session_date</p>
-<span class="djtooltiptext"></span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">n_sessions</p>
-<span class="djtooltiptext">calculated attribute</span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">total_duration</p>
-<span class="djtooltiptext">calculated attribute</span>
-</div> </th> </tr> </thead>
+<thead> <tr> <th> <span id="primary" title="">session_date</span></th><th><span id="nonprimary" title="calculated attribute">n_sessions</span></th><th><span id="nonprimary" title="calculated attribute">total_duration</span> </th> </tr> </thead>
 <tbody> <tr> <td>2026-01-06</td>
 <td>2</td>
 <td>85.0</td></tr><tr><td>2026-01-07</td>
@@ -8992,22 +7719,6 @@ dj.U().aggr(Session, total_sessions='count(*)', avg_duration='avg(duration)')</d
             background: #f3f1ff;
             color: #000000;
         }
-        /* Tooltip container */
-        .djtooltip {
-        }
-        /* Tooltip text */
-        .djtooltip .djtooltiptext {
-            visibility: hidden;
-            width: 120px;
-            background-color: black;
-            color: #fff;
-            text-align: center;
-            padding: 5px 0;
-            border-radius: 6px;
-            /* Position the tooltip text - see examples below! */
-            position: absolute;
-            z-index: 1;
-        }
         #primary {
             font-weight: bold;
             color: black;
@@ -9015,11 +7726,6 @@ dj.U().aggr(Session, total_sessions='count(*)', avg_duration='avg(duration)')</d
         #nonprimary {
             font-weight: normal;
             color: white;
-        }
-
-        /* Show the tooltip text when you mouse over the tooltip container */
-        .djtooltip:hover .djtooltiptext {
-            visibility: visible;
         }
 
         /* Dark mode support */
@@ -9038,10 +7744,6 @@ dj.U().aggr(Session, total_sessions='count(*)', avg_duration='avg(duration)')</d
                 background: #3d3d3d;
                 color: #e0e0e0;
             }
-            .djtooltip .djtooltiptext {
-                background-color: #555555;
-                color: #ffffff;
-            }
             #primary {
                 color: #bd93f9;
             }
@@ -9052,13 +7754,7 @@ dj.U().aggr(Session, total_sessions='count(*)', avg_duration='avg(duration)')</d
     </style>
 <div style="max-height:1000px;max-width:1500px;overflow:auto;">
 <table border="1" class="Table">
-<thead> <tr> <th> <div class="djtooltip">
-<p id="nonprimary">total_sessions</p>
-<span class="djtooltiptext">calculated attribute</span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">avg_duration</p>
-<span class="djtooltiptext">calculated attribute</span>
-</div> </th> </tr> </thead>
+<thead> <tr> <th> <span id="nonprimary" title="calculated attribute">total_sessions</span></th><th><span id="nonprimary" title="calculated attribute">avg_duration</span> </th> </tr> </thead>
 <tbody> <tr> <td>5</td>
 <td>45.0000000000000000</td> </tr> </tbody>
 </table>
@@ -9127,22 +7823,6 @@ dj.U('experimenter_id').aggr(Session, n_sessions='count(*)')</div>
             background: #f3f1ff;
             color: #000000;
         }
-        /* Tooltip container */
-        .djtooltip {
-        }
-        /* Tooltip text */
-        .djtooltip .djtooltiptext {
-            visibility: hidden;
-            width: 120px;
-            background-color: black;
-            color: #fff;
-            text-align: center;
-            padding: 5px 0;
-            border-radius: 6px;
-            /* Position the tooltip text - see examples below! */
-            position: absolute;
-            z-index: 1;
-        }
         #primary {
             font-weight: bold;
             color: black;
@@ -9150,11 +7830,6 @@ dj.U('experimenter_id').aggr(Session, n_sessions='count(*)')</div>
         #nonprimary {
             font-weight: normal;
             color: white;
-        }
-
-        /* Show the tooltip text when you mouse over the tooltip container */
-        .djtooltip:hover .djtooltiptext {
-            visibility: visible;
         }
 
         /* Dark mode support */
@@ -9173,10 +7848,6 @@ dj.U('experimenter_id').aggr(Session, n_sessions='count(*)')</div>
                 background: #3d3d3d;
                 color: #e0e0e0;
             }
-            .djtooltip .djtooltiptext {
-                background-color: #555555;
-                color: #ffffff;
-            }
             #primary {
                 color: #bd93f9;
             }
@@ -9187,13 +7858,7 @@ dj.U('experimenter_id').aggr(Session, n_sessions='count(*)')</div>
     </style>
 <div style="max-height:1000px;max-width:1500px;overflow:auto;">
 <table border="1" class="Table">
-<thead> <tr> <th> <div class="djtooltip">
-<p id="primary">experimenter_id</p>
-<span class="djtooltiptext">None</span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">n_sessions</p>
-<span class="djtooltiptext">calculated attribute</span>
-</div> </th> </tr> </thead>
+<thead> <tr> <th> <span id="primary" title="None">experimenter_id</span></th><th><span id="nonprimary" title="calculated attribute">n_sessions</span> </th> </tr> </thead>
 <tbody> <tr> <td>alice</td>
 <td>3</td></tr><tr><td>bob</td>
 <td>2</td> </tr> </tbody>
@@ -9261,22 +7926,6 @@ dj.U('species') &amp; Subject</div>
             background: #f3f1ff;
             color: #000000;
         }
-        /* Tooltip container */
-        .djtooltip {
-        }
-        /* Tooltip text */
-        .djtooltip .djtooltiptext {
-            visibility: hidden;
-            width: 120px;
-            background-color: black;
-            color: #fff;
-            text-align: center;
-            padding: 5px 0;
-            border-radius: 6px;
-            /* Position the tooltip text - see examples below! */
-            position: absolute;
-            z-index: 1;
-        }
         #primary {
             font-weight: bold;
             color: black;
@@ -9284,11 +7933,6 @@ dj.U('species') &amp; Subject</div>
         #nonprimary {
             font-weight: normal;
             color: white;
-        }
-
-        /* Show the tooltip text when you mouse over the tooltip container */
-        .djtooltip:hover .djtooltiptext {
-            visibility: visible;
         }
 
         /* Dark mode support */
@@ -9307,10 +7951,6 @@ dj.U('species') &amp; Subject</div>
                 background: #3d3d3d;
                 color: #e0e0e0;
             }
-            .djtooltip .djtooltiptext {
-                background-color: #555555;
-                color: #ffffff;
-            }
             #primary {
                 color: #bd93f9;
             }
@@ -9321,10 +7961,7 @@ dj.U('species') &amp; Subject</div>
     </style>
 <div style="max-height:1000px;max-width:1500px;overflow:auto;">
 <table border="1" class="Table">
-<thead> <tr> <th> <div class="djtooltip">
-<p id="primary">species</p>
-<span class="djtooltiptext"></span>
-</div> </th> </tr> </thead>
+<thead> <tr> <th> <span id="primary" title="">species</span> </th> </tr> </thead>
 <tbody> <tr> <td>Mus musculus</td></tr><tr><td>Rattus norvegicus</td> </tr> </tbody>
 </table>
 <p>Total: 2</p></div>
@@ -10033,22 +8670,6 @@ result</div>
             background: #f3f1ff;
             color: #000000;
         }
-        /* Tooltip container */
-        .djtooltip {
-        }
-        /* Tooltip text */
-        .djtooltip .djtooltiptext {
-            visibility: hidden;
-            width: 120px;
-            background-color: black;
-            color: #fff;
-            text-align: center;
-            padding: 5px 0;
-            border-radius: 6px;
-            /* Position the tooltip text - see examples below! */
-            position: absolute;
-            z-index: 1;
-        }
         #primary {
             font-weight: bold;
             color: black;
@@ -10056,11 +8677,6 @@ result</div>
         #nonprimary {
             font-weight: normal;
             color: white;
-        }
-
-        /* Show the tooltip text when you mouse over the tooltip container */
-        .djtooltip:hover .djtooltiptext {
-            visibility: visible;
         }
 
         /* Dark mode support */
@@ -10079,10 +8695,6 @@ result</div>
                 background: #3d3d3d;
                 color: #e0e0e0;
             }
-            .djtooltip .djtooltiptext {
-                background-color: #555555;
-                color: #ffffff;
-            }
             #primary {
                 color: #bd93f9;
             }
@@ -10093,22 +8705,7 @@ result</div>
     </style>
 <div style="max-height:1000px;max-width:1500px;overflow:auto;">
 <table border="1" class="Table">
-<thead> <tr> <th> <div class="djtooltip">
-<p id="primary">subject_id</p>
-<span class="djtooltiptext">None</span>
-</div></th><th><div class="djtooltip">
-<p id="primary">session_idx</p>
-<span class="djtooltiptext"></span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">session_date</p>
-<span class="djtooltiptext"></span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">duration</p>
-<span class="djtooltiptext">minutes</span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">weight</p>
-<span class="djtooltiptext">grams</span>
-</div> </th> </tr> </thead>
+<thead> <tr> <th> <span id="primary" title="None">subject_id</span></th><th><span id="primary" title="">session_idx</span></th><th><span id="nonprimary" title="">session_date</span></th><th><span id="nonprimary" title="minutes">duration</span></th><th><span id="nonprimary" title="grams">weight</span> </th> </tr> </thead>
 <tbody> <tr> <td>M001</td>
 <td>1</td>
 <td>2026-01-06</td>
@@ -10192,22 +8789,6 @@ result</div>
             background: #f3f1ff;
             color: #000000;
         }
-        /* Tooltip container */
-        .djtooltip {
-        }
-        /* Tooltip text */
-        .djtooltip .djtooltiptext {
-            visibility: hidden;
-            width: 120px;
-            background-color: black;
-            color: #fff;
-            text-align: center;
-            padding: 5px 0;
-            border-radius: 6px;
-            /* Position the tooltip text - see examples below! */
-            position: absolute;
-            z-index: 1;
-        }
         #primary {
             font-weight: bold;
             color: black;
@@ -10215,11 +8796,6 @@ result</div>
         #nonprimary {
             font-weight: normal;
             color: white;
-        }
-
-        /* Show the tooltip text when you mouse over the tooltip container */
-        .djtooltip:hover .djtooltiptext {
-            visibility: visible;
         }
 
         /* Dark mode support */
@@ -10238,10 +8814,6 @@ result</div>
                 background: #3d3d3d;
                 color: #e0e0e0;
             }
-            .djtooltip .djtooltiptext {
-                background-color: #555555;
-                color: #ffffff;
-            }
             #primary {
                 color: #bd93f9;
             }
@@ -10252,22 +8824,7 @@ result</div>
     </style>
 <div style="max-height:1000px;max-width:1500px;overflow:auto;">
 <table border="1" class="Table">
-<thead> <tr> <th> <div class="djtooltip">
-<p id="primary">subject_id</p>
-<span class="djtooltiptext">None</span>
-</div></th><th><div class="djtooltip">
-<p id="primary">session_idx</p>
-<span class="djtooltiptext"></span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">session_date</p>
-<span class="djtooltiptext"></span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">duration</p>
-<span class="djtooltiptext">minutes</span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">weight</p>
-<span class="djtooltiptext">grams</span>
-</div> </th> </tr> </thead>
+<thead> <tr> <th> <span id="primary" title="None">subject_id</span></th><th><span id="primary" title="">session_idx</span></th><th><span id="nonprimary" title="">session_date</span></th><th><span id="nonprimary" title="minutes">duration</span></th><th><span id="nonprimary" title="grams">weight</span> </th> </tr> </thead>
 <tbody> <tr> <td>M001</td>
 <td>1</td>
 <td>2026-01-06</td>

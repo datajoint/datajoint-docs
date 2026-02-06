@@ -3536,7 +3536,7 @@ schema = dj.Schema('tutorial_data_entry')</div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>[2026-01-27 15:28:52] DataJoint 2.1.0a9 connected to postgres@127.0.0.1:5432
+<pre>[2026-02-06 11:44:48] DataJoint 2.1.0 connected to datajoint@127.0.0.1:5432
 </pre>
 </div>
 </div>
@@ -3758,22 +3758,6 @@ Subject()</div>
             background: #f3f1ff;
             color: #000000;
         }
-        /* Tooltip container */
-        .djtooltip {
-        }
-        /* Tooltip text */
-        .djtooltip .djtooltiptext {
-            visibility: hidden;
-            width: 120px;
-            background-color: black;
-            color: #fff;
-            text-align: center;
-            padding: 5px 0;
-            border-radius: 6px;
-            /* Position the tooltip text - see examples below! */
-            position: absolute;
-            z-index: 1;
-        }
         #primary {
             font-weight: bold;
             color: black;
@@ -3781,11 +3765,6 @@ Subject()</div>
         #nonprimary {
             font-weight: normal;
             color: white;
-        }
-
-        /* Show the tooltip text when you mouse over the tooltip container */
-        .djtooltip:hover .djtooltiptext {
-            visibility: visible;
         }
 
         /* Dark mode support */
@@ -3804,10 +3783,6 @@ Subject()</div>
                 background: #3d3d3d;
                 color: #e0e0e0;
             }
-            .djtooltip .djtooltiptext {
-                background-color: #555555;
-                color: #ffffff;
-            }
             #primary {
                 color: #bd93f9;
             }
@@ -3816,25 +3791,9 @@ Subject()</div>
             }
         }
     </style>
-<b>None</b>
 <div style="max-height:1000px;max-width:1500px;overflow:auto;">
 <table border="1" class="Table">
-<thead> <tr> <th> <div class="djtooltip">
-<p id="primary">subject_id</p>
-<span class="djtooltiptext"></span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">lab_id</p>
-<span class="djtooltiptext">None</span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">species</p>
-<span class="djtooltiptext"></span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">date_of_birth</p>
-<span class="djtooltiptext"></span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">notes</p>
-<span class="djtooltiptext"></span>
-</div> </th> </tr> </thead>
+<thead> <tr> <th> <span id="primary" title="">subject_id</span></th><th><span id="nonprimary" title="None">lab_id</span></th><th><span id="nonprimary" title="">species</span></th><th><span id="nonprimary" title="">date_of_birth</span></th><th><span id="nonprimary" title="">notes</span> </th> </tr> </thead>
 <tbody> <tr> <td>M001</td>
 <td>tolias</td>
 <td>Mus musculus</td>
@@ -3945,22 +3904,6 @@ Subject()</div>
             background: #f3f1ff;
             color: #000000;
         }
-        /* Tooltip container */
-        .djtooltip {
-        }
-        /* Tooltip text */
-        .djtooltip .djtooltiptext {
-            visibility: hidden;
-            width: 120px;
-            background-color: black;
-            color: #fff;
-            text-align: center;
-            padding: 5px 0;
-            border-radius: 6px;
-            /* Position the tooltip text - see examples below! */
-            position: absolute;
-            z-index: 1;
-        }
         #primary {
             font-weight: bold;
             color: black;
@@ -3968,11 +3911,6 @@ Subject()</div>
         #nonprimary {
             font-weight: normal;
             color: white;
-        }
-
-        /* Show the tooltip text when you mouse over the tooltip container */
-        .djtooltip:hover .djtooltiptext {
-            visibility: visible;
         }
 
         /* Dark mode support */
@@ -3991,10 +3929,6 @@ Subject()</div>
                 background: #3d3d3d;
                 color: #e0e0e0;
             }
-            .djtooltip .djtooltiptext {
-                background-color: #555555;
-                color: #ffffff;
-            }
             #primary {
                 color: #bd93f9;
             }
@@ -4003,25 +3937,9 @@ Subject()</div>
             }
         }
     </style>
-<b>None</b>
 <div style="max-height:1000px;max-width:1500px;overflow:auto;">
 <table border="1" class="Table">
-<thead> <tr> <th> <div class="djtooltip">
-<p id="primary">subject_id</p>
-<span class="djtooltiptext"></span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">lab_id</p>
-<span class="djtooltiptext">None</span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">species</p>
-<span class="djtooltiptext"></span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">date_of_birth</p>
-<span class="djtooltiptext"></span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">notes</p>
-<span class="djtooltiptext"></span>
-</div> </th> </tr> </thead>
+<thead> <tr> <th> <span id="primary" title="">subject_id</span></th><th><span id="nonprimary" title="None">lab_id</span></th><th><span id="nonprimary" title="">species</span></th><th><span id="nonprimary" title="">date_of_birth</span></th><th><span id="nonprimary" title="">notes</span> </th> </tr> </thead>
 <tbody> <tr> <td>M001</td>
 <td>tolias</td>
 <td>Mus musculus</td>
@@ -4508,22 +4426,6 @@ Session.Trial()</div>
             background: #f3f1ff;
             color: #000000;
         }
-        /* Tooltip container */
-        .djtooltip {
-        }
-        /* Tooltip text */
-        .djtooltip .djtooltiptext {
-            visibility: hidden;
-            width: 120px;
-            background-color: black;
-            color: #fff;
-            text-align: center;
-            padding: 5px 0;
-            border-radius: 6px;
-            /* Position the tooltip text - see examples below! */
-            position: absolute;
-            z-index: 1;
-        }
         #primary {
             font-weight: bold;
             color: black;
@@ -4531,11 +4433,6 @@ Session.Trial()</div>
         #nonprimary {
             font-weight: normal;
             color: white;
-        }
-
-        /* Show the tooltip text when you mouse over the tooltip container */
-        .djtooltip:hover .djtooltiptext {
-            visibility: visible;
         }
 
         /* Dark mode support */
@@ -4554,10 +4451,6 @@ Session.Trial()</div>
                 background: #3d3d3d;
                 color: #e0e0e0;
             }
-            .djtooltip .djtooltiptext {
-                background-color: #555555;
-                color: #ffffff;
-            }
             #primary {
                 color: #bd93f9;
             }
@@ -4566,25 +4459,9 @@ Session.Trial()</div>
             }
         }
     </style>
-<b>None</b>
 <div style="max-height:1000px;max-width:1500px;overflow:auto;">
 <table border="1" class="Table">
-<thead> <tr> <th> <div class="djtooltip">
-<p id="primary">subject_id</p>
-<span class="djtooltiptext">None</span>
-</div></th><th><div class="djtooltip">
-<p id="primary">session_idx</p>
-<span class="djtooltiptext">None</span>
-</div></th><th><div class="djtooltip">
-<p id="primary">trial_idx</p>
-<span class="djtooltiptext"></span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">outcome</p>
-<span class="djtooltiptext"></span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">reaction_time</p>
-<span class="djtooltiptext">seconds</span>
-</div> </th> </tr> </thead>
+<thead> <tr> <th> <span id="primary" title="None">subject_id</span></th><th><span id="primary" title="None">session_idx</span></th><th><span id="primary" title="">trial_idx</span></th><th><span id="nonprimary" title="">outcome</span></th><th><span id="nonprimary" title="seconds">reaction_time</span> </th> </tr> </thead>
 <tbody> <tr> <td>M001</td>
 <td>1</td>
 <td>1</td>
@@ -5028,21 +4905,21 @@ print(f"ProcessedData: {len(ProcessedData())}")</div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>[2026-01-27 15:28:52] Deleting 5 rows from "tutorial_data_entry"."session__trial"
+<pre>[2026-02-06 11:44:48] Deleting 5 rows from "tutorial_data_entry"."session__trial"
 </pre>
 </div>
 </div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>[2026-01-27 15:28:52] Deleting 1 rows from "tutorial_data_entry"."__processed_data"
+<pre>[2026-02-06 11:44:48] Deleting 1 rows from "tutorial_data_entry"."__processed_data"
 </pre>
 </div>
 </div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>[2026-01-27 15:28:52] Deleting 1 rows from "tutorial_data_entry"."session"
+<pre>[2026-02-06 11:44:48] Deleting 1 rows from "tutorial_data_entry"."session"
 </pre>
 </div>
 </div>
@@ -5144,14 +5021,14 @@ with dj.conn().transaction:
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>[2026-01-27 15:28:52] Deleting 2 rows from "tutorial_data_entry"."session__trial"
+<pre>[2026-02-06 11:44:48] Deleting 2 rows from "tutorial_data_entry"."session__trial"
 </pre>
 </div>
 </div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>[2026-01-27 15:28:52] Deleting 1 rows from "tutorial_data_entry"."session"
+<pre>[2026-02-06 11:44:48] Deleting 1 rows from "tutorial_data_entry"."session"
 </pre>
 </div>
 </div>
@@ -5322,21 +5199,21 @@ print("After correction:", ProcessedData.fetch1())</div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>[2026-01-27 15:28:52] Deleting 2 rows from "tutorial_data_entry"."session__trial"
+<pre>[2026-02-06 11:44:48] Deleting 2 rows from "tutorial_data_entry"."session__trial"
 </pre>
 </div>
 </div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>[2026-01-27 15:28:52] Deleting 1 rows from "tutorial_data_entry"."__processed_data"
+<pre>[2026-02-06 11:44:48] Deleting 1 rows from "tutorial_data_entry"."__processed_data"
 </pre>
 </div>
 </div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>[2026-01-27 15:28:52] Deleting 1 rows from "tutorial_data_entry"."session"
+<pre>[2026-02-06 11:44:48] Deleting 1 rows from "tutorial_data_entry"."session"
 </pre>
 </div>
 </div>

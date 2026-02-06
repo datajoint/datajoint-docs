@@ -3477,7 +3477,7 @@ DATA_DIR.mkdir(exist_ok=True)</div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>[2026-01-27 15:29:38] DataJoint 2.1.0a9 connected to postgres@127.0.0.1:5432
+<pre>[2026-02-06 11:45:35] DataJoint 2.1.0 connected to datajoint@127.0.0.1:5432
 </pre>
 </div>
 </div>
@@ -4201,22 +4201,6 @@ CCF()</div>
             background: #f3f1ff;
             color: #000000;
         }
-        /* Tooltip container */
-        .djtooltip {
-        }
-        /* Tooltip text */
-        .djtooltip .djtooltiptext {
-            visibility: hidden;
-            width: 120px;
-            background-color: black;
-            color: #fff;
-            text-align: center;
-            padding: 5px 0;
-            border-radius: 6px;
-            /* Position the tooltip text - see examples below! */
-            position: absolute;
-            z-index: 1;
-        }
         #primary {
             font-weight: bold;
             color: black;
@@ -4224,11 +4208,6 @@ CCF()</div>
         #nonprimary {
             font-weight: normal;
             color: white;
-        }
-
-        /* Show the tooltip text when you mouse over the tooltip container */
-        .djtooltip:hover .djtooltiptext {
-            visibility: visible;
         }
 
         /* Dark mode support */
@@ -4247,10 +4226,6 @@ CCF()</div>
                 background: #3d3d3d;
                 color: #e0e0e0;
             }
-            .djtooltip .djtooltiptext {
-                background-color: #555555;
-                color: #ffffff;
-            }
             #primary {
                 color: #bd93f9;
             }
@@ -4259,22 +4234,9 @@ CCF()</div>
             }
         }
     </style>
-<b>Common Coordinate Framework atlas</b>
 <div style="max-height:1000px;max-width:1500px;overflow:auto;">
 <table border="1" class="Table">
-<thead> <tr> <th> <div class="djtooltip">
-<p id="primary">ccf_id</p>
-<span class="djtooltiptext"></span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">ccf_version</p>
-<span class="djtooltiptext">e.g., 'CCFv3'</span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">ccf_resolution</p>
-<span class="djtooltiptext">voxel resolution in microns</span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">ccf_description</p>
-<span class="djtooltiptext"></span>
-</div> </th> </tr> </thead>
+<thead> <tr> <th> <span id="primary" title="">ccf_id</span></th><th><span id="nonprimary" title="e.g., 'CCFv3'">ccf_version</span></th><th><span id="nonprimary" title="voxel resolution in microns">ccf_resolution</span></th><th><span id="nonprimary" title="">ccf_description</span> </th> </tr> </thead>
 <tbody> <tr> <td>1</td>
 <td>CCFv3</td>
 <td>25.0</td>
@@ -4327,7 +4289,7 @@ BrainRegion.populate(display_progress=True)</div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>BrainRegion: 100%|██████████| 1/1 [00:00&lt;00:00, 12.25it/s]</pre>
+<pre>BrainRegion: 100%|██████████| 1/1 [00:00&lt;00:00, 11.49it/s]</pre>
 </div>
 </div>
 <div class="jp-OutputArea-child">
@@ -4410,22 +4372,6 @@ BrainRegion() &amp; 'region_id &lt; 100'</div>
             background: #f3f1ff;
             color: #000000;
         }
-        /* Tooltip container */
-        .djtooltip {
-        }
-        /* Tooltip text */
-        .djtooltip .djtooltiptext {
-            visibility: hidden;
-            width: 120px;
-            background-color: black;
-            color: #fff;
-            text-align: center;
-            padding: 5px 0;
-            border-radius: 6px;
-            /* Position the tooltip text - see examples below! */
-            position: absolute;
-            z-index: 1;
-        }
         #primary {
             font-weight: bold;
             color: black;
@@ -4433,11 +4379,6 @@ BrainRegion() &amp; 'region_id &lt; 100'</div>
         #nonprimary {
             font-weight: normal;
             color: white;
-        }
-
-        /* Show the tooltip text when you mouse over the tooltip container */
-        .djtooltip:hover .djtooltiptext {
-            visibility: visible;
         }
 
         /* Dark mode support */
@@ -4456,10 +4397,6 @@ BrainRegion() &amp; 'region_id &lt; 100'</div>
                 background: #3d3d3d;
                 color: #e0e0e0;
             }
-            .djtooltip .djtooltiptext {
-                background-color: #555555;
-                color: #ffffff;
-            }
             #primary {
                 color: #bd93f9;
             }
@@ -4468,28 +4405,9 @@ BrainRegion() &amp; 'region_id &lt; 100'</div>
             }
         }
     </style>
-<b>Brain region from Allen ontology</b>
 <div style="max-height:1000px;max-width:1500px;overflow:auto;">
 <table border="1" class="Table">
-<thead> <tr> <th> <div class="djtooltip">
-<p id="primary">ccf_id</p>
-<span class="djtooltiptext">None</span>
-</div></th><th><div class="djtooltip">
-<p id="primary">region_id</p>
-<span class="djtooltiptext">Allen structure ID</span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">acronym</p>
-<span class="djtooltiptext">short name (e.g., 'VISp')</span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">region_name</p>
-<span class="djtooltiptext">full name</span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">color_hex</p>
-<span class="djtooltiptext">hex color code for visualization</span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">structure_order</p>
-<span class="djtooltiptext">order in hierarchy</span>
-</div> </th> </tr> </thead>
+<thead> <tr> <th> <span id="primary" title="None">ccf_id</span></th><th><span id="primary" title="Allen structure ID">region_id</span></th><th><span id="nonprimary" title="short name (e.g., 'VISp')">acronym</span></th><th><span id="nonprimary" title="full name">region_name</span></th><th><span id="nonprimary" title="hex color code for visualization">color_hex</span></th><th><span id="nonprimary" title="order in hierarchy">structure_order</span> </th> </tr> </thead>
 <tbody> <tr> <td>1</td>
 <td>1</td>
 <td>TMv</td>
@@ -4600,7 +4518,7 @@ RegionParent.populate(display_progress=True)</div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>RegionParent:   6%|▌         | 80/1327 [00:00&lt;00:01, 798.68it/s]</pre>
+<pre>RegionParent:   5%|▍         | 63/1327 [00:00&lt;00:02, 629.87it/s]</pre>
 </div>
 </div>
 <div class="jp-OutputArea-child">
@@ -4613,43 +4531,43 @@ RegionParent.populate(display_progress=True)</div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>RegionParent:  20%|██        | 271/1327 [00:00&lt;00:00, 1449.72it/s]</pre>
+<pre>RegionParent:  19%|█▉        | 249/1327 [00:00&lt;00:00, 1352.91it/s]</pre>
 </div>
 </div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>RegionParent:  35%|███▍      | 464/1327 [00:00&lt;00:00, 1667.27it/s]</pre>
+<pre>RegionParent:  34%|███▎      | 445/1327 [00:00&lt;00:00, 1628.90it/s]</pre>
 </div>
 </div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>RegionParent:  49%|████▉     | 656/1327 [00:00&lt;00:00, 1764.10it/s]</pre>
+<pre>RegionParent:  49%|████▉     | 652/1327 [00:00&lt;00:00, 1802.33it/s]</pre>
 </div>
 </div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>RegionParent:  64%|██████▍   | 851/1327 [00:00&lt;00:00, 1829.11it/s]</pre>
+<pre>RegionParent:  64%|██████▍   | 849/1327 [00:00&lt;00:00, 1862.70it/s]</pre>
 </div>
 </div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>RegionParent:  79%|███████▊  | 1045/1327 [00:00&lt;00:00, 1866.21it/s]</pre>
+<pre>RegionParent:  79%|███████▊  | 1045/1327 [00:00&lt;00:00, 1894.76it/s]</pre>
 </div>
 </div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>RegionParent:  93%|█████████▎| 1236/1327 [00:00&lt;00:00, 1879.48it/s]</pre>
+<pre>RegionParent:  93%|█████████▎| 1237/1327 [00:00&lt;00:00, 1901.15it/s]</pre>
 </div>
 </div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>RegionParent: 100%|██████████| 1327/1327 [00:00&lt;00:00, 1772.63it/s]</pre>
+<pre>RegionParent: 100%|██████████| 1327/1327 [00:00&lt;00:00, 1779.12it/s]</pre>
 </div>
 </div>
 <div class="jp-OutputArea-child">
@@ -4736,22 +4654,6 @@ BrainRegion &amp; {'acronym': 'VISp'}</div>
             background: #f3f1ff;
             color: #000000;
         }
-        /* Tooltip container */
-        .djtooltip {
-        }
-        /* Tooltip text */
-        .djtooltip .djtooltiptext {
-            visibility: hidden;
-            width: 120px;
-            background-color: black;
-            color: #fff;
-            text-align: center;
-            padding: 5px 0;
-            border-radius: 6px;
-            /* Position the tooltip text - see examples below! */
-            position: absolute;
-            z-index: 1;
-        }
         #primary {
             font-weight: bold;
             color: black;
@@ -4759,11 +4661,6 @@ BrainRegion &amp; {'acronym': 'VISp'}</div>
         #nonprimary {
             font-weight: normal;
             color: white;
-        }
-
-        /* Show the tooltip text when you mouse over the tooltip container */
-        .djtooltip:hover .djtooltiptext {
-            visibility: visible;
         }
 
         /* Dark mode support */
@@ -4782,10 +4679,6 @@ BrainRegion &amp; {'acronym': 'VISp'}</div>
                 background: #3d3d3d;
                 color: #e0e0e0;
             }
-            .djtooltip .djtooltiptext {
-                background-color: #555555;
-                color: #ffffff;
-            }
             #primary {
                 color: #bd93f9;
             }
@@ -4794,28 +4687,9 @@ BrainRegion &amp; {'acronym': 'VISp'}</div>
             }
         }
     </style>
-<b>Brain region from Allen ontology</b>
 <div style="max-height:1000px;max-width:1500px;overflow:auto;">
 <table border="1" class="Table">
-<thead> <tr> <th> <div class="djtooltip">
-<p id="primary">ccf_id</p>
-<span class="djtooltiptext">None</span>
-</div></th><th><div class="djtooltip">
-<p id="primary">region_id</p>
-<span class="djtooltiptext">Allen structure ID</span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">acronym</p>
-<span class="djtooltiptext">short name (e.g., 'VISp')</span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">region_name</p>
-<span class="djtooltiptext">full name</span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">color_hex</p>
-<span class="djtooltiptext">hex color code for visualization</span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">structure_order</p>
-<span class="djtooltiptext">order in hierarchy</span>
-</div> </th> </tr> </thead>
+<thead> <tr> <th> <span id="primary" title="None">ccf_id</span></th><th><span id="primary" title="Allen structure ID">region_id</span></th><th><span id="nonprimary" title="short name (e.g., 'VISp')">acronym</span></th><th><span id="nonprimary" title="full name">region_name</span></th><th><span id="nonprimary" title="hex color code for visualization">color_hex</span></th><th><span id="nonprimary" title="order in hierarchy">structure_order</span> </th> </tr> </thead>
 <tbody> <tr> <td>1</td>
 <td>385</td>
 <td>VISp</td>
@@ -4907,22 +4781,6 @@ children.proj('acronym', 'region_name')</div>
             background: #f3f1ff;
             color: #000000;
         }
-        /* Tooltip container */
-        .djtooltip {
-        }
-        /* Tooltip text */
-        .djtooltip .djtooltiptext {
-            visibility: hidden;
-            width: 120px;
-            background-color: black;
-            color: #fff;
-            text-align: center;
-            padding: 5px 0;
-            border-radius: 6px;
-            /* Position the tooltip text - see examples below! */
-            position: absolute;
-            z-index: 1;
-        }
         #primary {
             font-weight: bold;
             color: black;
@@ -4930,11 +4788,6 @@ children.proj('acronym', 'region_name')</div>
         #nonprimary {
             font-weight: normal;
             color: white;
-        }
-
-        /* Show the tooltip text when you mouse over the tooltip container */
-        .djtooltip:hover .djtooltiptext {
-            visibility: visible;
         }
 
         /* Dark mode support */
@@ -4953,10 +4806,6 @@ children.proj('acronym', 'region_name')</div>
                 background: #3d3d3d;
                 color: #e0e0e0;
             }
-            .djtooltip .djtooltiptext {
-                background-color: #555555;
-                color: #ffffff;
-            }
             #primary {
                 color: #bd93f9;
             }
@@ -4967,19 +4816,7 @@ children.proj('acronym', 'region_name')</div>
     </style>
 <div style="max-height:1000px;max-width:1500px;overflow:auto;">
 <table border="1" class="Table">
-<thead> <tr> <th> <div class="djtooltip">
-<p id="primary">ccf_id</p>
-<span class="djtooltiptext">None</span>
-</div></th><th><div class="djtooltip">
-<p id="primary">region_id</p>
-<span class="djtooltiptext">Allen structure ID</span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">acronym</p>
-<span class="djtooltiptext">short name (e.g., 'VISp')</span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">region_name</p>
-<span class="djtooltiptext">full name</span>
-</div> </th> </tr> </thead>
+<thead> <tr> <th> <span id="primary" title="None">ccf_id</span></th><th><span id="primary" title="Allen structure ID">region_id</span></th><th><span id="nonprimary" title="short name (e.g., 'VISp')">acronym</span></th><th><span id="nonprimary" title="full name">region_name</span> </th> </tr> </thead>
 <tbody> <tr> <td>1</td>
 <td>33</td>
 <td>VISp6a</td>
@@ -5162,17 +4999,17 @@ plt.xticks(unique)</div>
 <div class="jp-OutputArea-child jp-OutputArea-executeResult">
 <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[15]:</div>
 <div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain" tabindex="0">
-<pre>([&lt;matplotlib.axis.XTick at 0x1a2b94080&gt;,
-  &lt;matplotlib.axis.XTick at 0x1a296bdd0&gt;,
-  &lt;matplotlib.axis.XTick at 0x1a2b954c0&gt;,
-  &lt;matplotlib.axis.XTick at 0x1a2b5bb30&gt;,
-  &lt;matplotlib.axis.XTick at 0x1a2b594c0&gt;,
-  &lt;matplotlib.axis.XTick at 0x1a2b591f0&gt;,
-  &lt;matplotlib.axis.XTick at 0x1a2b5a480&gt;,
-  &lt;matplotlib.axis.XTick at 0x1a2b746e0&gt;,
-  &lt;matplotlib.axis.XTick at 0x1a2b75220&gt;,
-  &lt;matplotlib.axis.XTick at 0x1a2b75fa0&gt;,
-  &lt;matplotlib.axis.XTick at 0x1a2b74710&gt;],
+<pre>([&lt;matplotlib.axis.XTick at 0x1a2800dd0&gt;,
+  &lt;matplotlib.axis.XTick at 0x1a2800350&gt;,
+  &lt;matplotlib.axis.XTick at 0x1a251a6f0&gt;,
+  &lt;matplotlib.axis.XTick at 0x1a28bb4d0&gt;,
+  &lt;matplotlib.axis.XTick at 0x1a28b8620&gt;,
+  &lt;matplotlib.axis.XTick at 0x1a28ba8d0&gt;,
+  &lt;matplotlib.axis.XTick at 0x1a28bb950&gt;,
+  &lt;matplotlib.axis.XTick at 0x1a28a92e0&gt;,
+  &lt;matplotlib.axis.XTick at 0x1a28aa5d0&gt;,
+  &lt;matplotlib.axis.XTick at 0x1a28ab4d0&gt;,
+  &lt;matplotlib.axis.XTick at 0x1a28a98b0&gt;],
  [Text(0, 0, '0'),
   Text(1, 0, '1'),
   Text(2, 0, '2'),
@@ -5263,22 +5100,6 @@ plt.xticks(unique)</div>
             background: #f3f1ff;
             color: #000000;
         }
-        /* Tooltip container */
-        .djtooltip {
-        }
-        /* Tooltip text */
-        .djtooltip .djtooltiptext {
-            visibility: hidden;
-            width: 120px;
-            background-color: black;
-            color: #fff;
-            text-align: center;
-            padding: 5px 0;
-            border-radius: 6px;
-            /* Position the tooltip text - see examples below! */
-            position: absolute;
-            z-index: 1;
-        }
         #primary {
             font-weight: bold;
             color: black;
@@ -5286,11 +5107,6 @@ plt.xticks(unique)</div>
         #nonprimary {
             font-weight: normal;
             color: white;
-        }
-
-        /* Show the tooltip text when you mouse over the tooltip container */
-        .djtooltip:hover .djtooltiptext {
-            visibility: visible;
         }
 
         /* Dark mode support */
@@ -5309,10 +5125,6 @@ plt.xticks(unique)</div>
                 background: #3d3d3d;
                 color: #e0e0e0;
             }
-            .djtooltip .djtooltiptext {
-                background-color: #555555;
-                color: #ffffff;
-            }
             #primary {
                 color: #bd93f9;
             }
@@ -5321,64 +5133,31 @@ plt.xticks(unique)</div>
             }
         }
     </style>
-<b>Brain region from Allen ontology</b>
 <div style="max-height:1000px;max-width:1500px;overflow:auto;">
 <table border="1" class="Table">
-<thead> <tr> <th> <div class="djtooltip">
-<p id="primary">ccf_id</p>
-<span class="djtooltiptext">None</span>
-</div></th><th><div class="djtooltip">
-<p id="primary">region_id</p>
-<span class="djtooltiptext">Allen structure ID</span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">acronym</p>
-<span class="djtooltiptext">short name (e.g., 'VISp')</span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">region_name</p>
-<span class="djtooltiptext">full name</span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">color_hex</p>
-<span class="djtooltiptext">hex color code for visualization</span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">structure_order</p>
-<span class="djtooltiptext">order in hierarchy</span>
-</div> </th> </tr> </thead>
+<thead> <tr> <th> <span id="primary" title="None">ccf_id</span></th><th><span id="primary" title="Allen structure ID">region_id</span></th><th><span id="nonprimary" title="short name (e.g., 'VISp')">acronym</span></th><th><span id="nonprimary" title="full name">region_name</span> </th> </tr> </thead>
 <tbody> <tr> <td>1</td>
 <td>457</td>
 <td>VIS6a</td>
-<td>Visual areas layer 6a</td>
-<td>bytes</td>
-<td>bytes</td></tr><tr><td>1</td>
+<td>Visual areas layer 6a</td></tr><tr><td>1</td>
 <td>497</td>
 <td>VIS6b</td>
-<td>Visual areas layer 6b</td>
-<td>bytes</td>
-<td>bytes</td></tr><tr><td>1</td>
+<td>Visual areas layer 6b</td></tr><tr><td>1</td>
 <td>561</td>
 <td>VIS2/3</td>
-<td>Visual areas layer 2/3</td>
-<td>bytes</td>
-<td>bytes</td></tr><tr><td>1</td>
+<td>Visual areas layer 2/3</td></tr><tr><td>1</td>
 <td>669</td>
 <td>VIS</td>
-<td>Visual areas</td>
-<td>bytes</td>
-<td>bytes</td></tr><tr><td>1</td>
+<td>Visual areas</td></tr><tr><td>1</td>
 <td>801</td>
 <td>VIS1</td>
-<td>Visual areas layer 1</td>
-<td>bytes</td>
-<td>bytes</td></tr><tr><td>1</td>
+<td>Visual areas layer 1</td></tr><tr><td>1</td>
 <td>913</td>
 <td>VIS4</td>
-<td>Visual areas layer 4</td>
-<td>bytes</td>
-<td>bytes</td></tr><tr><td>1</td>
+<td>Visual areas layer 4</td></tr><tr><td>1</td>
 <td>937</td>
 <td>VIS5</td>
-<td>Visual areas layer 5</td>
-<td>bytes</td>
-<td>bytes</td> </tr> </tbody>
+<td>Visual areas layer 5</td> </tr> </tbody>
 </table>
 <p>Total: 7</p></div>
 </div>
@@ -5523,22 +5302,6 @@ RecordingSite * BrainRegion.proj('acronym', 'region_name')</div>
             background: #f3f1ff;
             color: #000000;
         }
-        /* Tooltip container */
-        .djtooltip {
-        }
-        /* Tooltip text */
-        .djtooltip .djtooltiptext {
-            visibility: hidden;
-            width: 120px;
-            background-color: black;
-            color: #fff;
-            text-align: center;
-            padding: 5px 0;
-            border-radius: 6px;
-            /* Position the tooltip text - see examples below! */
-            position: absolute;
-            z-index: 1;
-        }
         #primary {
             font-weight: bold;
             color: black;
@@ -5546,11 +5309,6 @@ RecordingSite * BrainRegion.proj('acronym', 'region_name')</div>
         #nonprimary {
             font-weight: normal;
             color: white;
-        }
-
-        /* Show the tooltip text when you mouse over the tooltip container */
-        .djtooltip:hover .djtooltiptext {
-            visibility: visible;
         }
 
         /* Dark mode support */
@@ -5569,10 +5327,6 @@ RecordingSite * BrainRegion.proj('acronym', 'region_name')</div>
                 background: #3d3d3d;
                 color: #e0e0e0;
             }
-            .djtooltip .djtooltiptext {
-                background-color: #555555;
-                color: #ffffff;
-            }
             #primary {
                 color: #bd93f9;
             }
@@ -5583,31 +5337,7 @@ RecordingSite * BrainRegion.proj('acronym', 'region_name')</div>
     </style>
 <div style="max-height:1000px;max-width:1500px;overflow:auto;">
 <table border="1" class="Table">
-<thead> <tr> <th> <div class="djtooltip">
-<p id="primary">recording_id</p>
-<span class="djtooltiptext"></span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">ap</p>
-<span class="djtooltiptext">anterior-posterior (µm from bregma)</span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">dv</p>
-<span class="djtooltiptext">dorsal-ventral (µm from brain surface)</span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">ml</p>
-<span class="djtooltiptext">medial-lateral (µm from midline)</span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">ccf_id</p>
-<span class="djtooltiptext">None</span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">region_id</p>
-<span class="djtooltiptext">None</span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">acronym</p>
-<span class="djtooltiptext">short name (e.g., 'VISp')</span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">region_name</p>
-<span class="djtooltiptext">full name</span>
-</div> </th> </tr> </thead>
+<thead> <tr> <th> <span id="primary" title="">recording_id</span></th><th><span id="nonprimary" title="anterior-posterior (µm from bregma)">ap</span></th><th><span id="nonprimary" title="dorsal-ventral (µm from brain surface)">dv</span></th><th><span id="nonprimary" title="medial-lateral (µm from midline)">ml</span></th><th><span id="nonprimary" title="None">ccf_id</span></th><th><span id="nonprimary" title="None">region_id</span></th><th><span id="nonprimary" title="short name (e.g., 'VISp')">acronym</span></th><th><span id="nonprimary" title="full name">region_name</span> </th> </tr> </thead>
 <tbody> <tr> <td>1</td>
 <td>-3500.0</td>
 <td>500.0</td>

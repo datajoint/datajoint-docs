@@ -3199,7 +3199,7 @@ schema = dj.Schema('tutorial_json')</div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>[2026-01-27 15:28:33] DataJoint 2.1.0a9 connected to postgres@127.0.0.1:5432
+<pre>[2026-02-06 11:44:28] DataJoint 2.1.0 connected to datajoint@127.0.0.1:5432
 </pre>
 </div>
 </div>
@@ -3410,22 +3410,6 @@ class Equipment(dj.Manual):
             background: #f3f1ff;
             color: #000000;
         }
-        /* Tooltip container */
-        .djtooltip {
-        }
-        /* Tooltip text */
-        .djtooltip .djtooltiptext {
-            visibility: hidden;
-            width: 120px;
-            background-color: black;
-            color: #fff;
-            text-align: center;
-            padding: 5px 0;
-            border-radius: 6px;
-            /* Position the tooltip text - see examples below! */
-            position: absolute;
-            z-index: 1;
-        }
         #primary {
             font-weight: bold;
             color: black;
@@ -3433,11 +3417,6 @@ class Equipment(dj.Manual):
         #nonprimary {
             font-weight: normal;
             color: white;
-        }
-
-        /* Show the tooltip text when you mouse over the tooltip container */
-        .djtooltip:hover .djtooltiptext {
-            visibility: visible;
         }
 
         /* Dark mode support */
@@ -3456,10 +3435,6 @@ class Equipment(dj.Manual):
                 background: #3d3d3d;
                 color: #e0e0e0;
             }
-            .djtooltip .djtooltiptext {
-                background-color: #555555;
-                color: #ffffff;
-            }
             #primary {
                 color: #bd93f9;
             }
@@ -3468,19 +3443,9 @@ class Equipment(dj.Manual):
             }
         }
     </style>
-<b>None</b>
 <div style="max-height:1000px;max-width:1500px;overflow:auto;">
 <table border="1" class="Table">
-<thead> <tr> <th> <div class="djtooltip">
-<p id="primary">equipment_id</p>
-<span class="djtooltiptext"></span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">name</p>
-<span class="djtooltiptext"></span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">specs</p>
-<span class="djtooltiptext">flexible specifications</span>
-</div> </th> </tr> </thead>
+<thead> <tr> <th> <span id="primary" title="">equipment_id</span></th><th><span id="nonprimary" title="">name</span></th><th><span id="nonprimary" title="flexible specifications">specs</span> </th> </tr> </thead>
 <tbody> <tr> <td>1</td>
 <td>Microscope A</td>
 <td>json</td></tr><tr><td>2</td>
@@ -3737,7 +3702,7 @@ Equipment.insert1(pending)
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>[2026-01-27 15:28:33] Deleting 1 rows from "tutorial_json"."equipment"
+<pre>[2026-02-06 11:44:28] Deleting 1 rows from "tutorial_json"."equipment"
 </pre>
 </div>
 </div>

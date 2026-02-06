@@ -3353,7 +3353,7 @@ DATA_DIR = Path('./data')</div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>[2026-01-27 15:29:53] DataJoint 2.1.0a9 connected to postgres@127.0.0.1:5432
+<pre>[2026-02-06 11:45:50] DataJoint 2.1.0 connected to datajoint@127.0.0.1:5432
 </pre>
 </div>
 </div>
@@ -3530,22 +3530,6 @@ Session()</div>
             background: #f3f1ff;
             color: #000000;
         }
-        /* Tooltip container */
-        .djtooltip {
-        }
-        /* Tooltip text */
-        .djtooltip .djtooltiptext {
-            visibility: hidden;
-            width: 120px;
-            background-color: black;
-            color: #fff;
-            text-align: center;
-            padding: 5px 0;
-            border-radius: 6px;
-            /* Position the tooltip text - see examples below! */
-            position: absolute;
-            z-index: 1;
-        }
         #primary {
             font-weight: bold;
             color: black;
@@ -3553,11 +3537,6 @@ Session()</div>
         #nonprimary {
             font-weight: normal;
             color: white;
-        }
-
-        /* Show the tooltip text when you mouse over the tooltip container */
-        .djtooltip:hover .djtooltiptext {
-            visibility: visible;
         }
 
         /* Dark mode support */
@@ -3576,10 +3555,6 @@ Session()</div>
                 background: #3d3d3d;
                 color: #e0e0e0;
             }
-            .djtooltip .djtooltiptext {
-                background-color: #555555;
-                color: #ffffff;
-            }
             #primary {
                 color: #bd93f9;
             }
@@ -3588,19 +3563,9 @@ Session()</div>
             }
         }
     </style>
-<b>None</b>
 <div style="max-height:1000px;max-width:1500px;overflow:auto;">
 <table border="1" class="Table">
-<thead> <tr> <th> <div class="djtooltip">
-<p id="primary">mouse_id</p>
-<span class="djtooltiptext">None</span>
-</div></th><th><div class="djtooltip">
-<p id="primary">session_date</p>
-<span class="djtooltiptext"></span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">experimenter</p>
-<span class="djtooltiptext"></span>
-</div> </th> </tr> </thead>
+<thead> <tr> <th> <span id="primary" title="None">mouse_id</span></th><th><span id="primary" title="">session_date</span></th><th><span id="nonprimary" title="">experimenter</span> </th> </tr> </thead>
 <tbody> <tr> <td>0</td>
 <td>2017-05-15</td>
 <td>Alice</td></tr><tr><td>0</td>
@@ -3746,7 +3711,7 @@ class Neuron(dj.Imported):
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>Neuron: 100%|██████████| 5/5 [00:00&lt;00:00, 182.65it/s]</pre>
+<pre>Neuron: 100%|██████████| 5/5 [00:00&lt;00:00, 160.89it/s]</pre>
 </div>
 </div>
 <div class="jp-OutputArea-child">
@@ -3831,22 +3796,6 @@ Imported 1 neuron(s) from data_100_2017-06-01.npy
             background: #f3f1ff;
             color: #000000;
         }
-        /* Tooltip container */
-        .djtooltip {
-        }
-        /* Tooltip text */
-        .djtooltip .djtooltiptext {
-            visibility: hidden;
-            width: 120px;
-            background-color: black;
-            color: #fff;
-            text-align: center;
-            padding: 5px 0;
-            border-radius: 6px;
-            /* Position the tooltip text - see examples below! */
-            position: absolute;
-            z-index: 1;
-        }
         #primary {
             font-weight: bold;
             color: black;
@@ -3854,11 +3803,6 @@ Imported 1 neuron(s) from data_100_2017-06-01.npy
         #nonprimary {
             font-weight: normal;
             color: white;
-        }
-
-        /* Show the tooltip text when you mouse over the tooltip container */
-        .djtooltip:hover .djtooltiptext {
-            visibility: visible;
         }
 
         /* Dark mode support */
@@ -3877,10 +3821,6 @@ Imported 1 neuron(s) from data_100_2017-06-01.npy
                 background: #3d3d3d;
                 color: #e0e0e0;
             }
-            .djtooltip .djtooltiptext {
-                background-color: #555555;
-                color: #ffffff;
-            }
             #primary {
                 color: #bd93f9;
             }
@@ -3889,22 +3829,9 @@ Imported 1 neuron(s) from data_100_2017-06-01.npy
             }
         }
     </style>
-<b>None</b>
 <div style="max-height:1000px;max-width:1500px;overflow:auto;">
 <table border="1" class="Table">
-<thead> <tr> <th> <div class="djtooltip">
-<p id="primary">mouse_id</p>
-<span class="djtooltiptext">None</span>
-</div></th><th><div class="djtooltip">
-<p id="primary">session_date</p>
-<span class="djtooltiptext">None</span>
-</div></th><th><div class="djtooltip">
-<p id="primary">neuron_id</p>
-<span class="djtooltiptext"></span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">activity</p>
-<span class="djtooltiptext">neural activity trace</span>
-</div> </th> </tr> </thead>
+<thead> <tr> <th> <span id="primary" title="None">mouse_id</span></th><th><span id="primary" title="None">session_date</span></th><th><span id="primary" title="">neuron_id</span></th><th><span id="nonprimary" title="neural activity trace">activity</span> </th> </tr> </thead>
 <tbody> <tr> <td>0</td>
 <td>2017-05-15</td>
 <td>0</td>
@@ -4115,7 +4042,7 @@ ActivityStats()</div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>ActivityStats: 100%|██████████| 5/5 [00:00&lt;00:00, 530.68it/s]</pre>
+<pre>ActivityStats: 100%|██████████| 5/5 [00:00&lt;00:00, 472.02it/s]</pre>
 </div>
 </div>
 <div class="jp-OutputArea-child">
@@ -4150,22 +4077,6 @@ ActivityStats()</div>
             background: #f3f1ff;
             color: #000000;
         }
-        /* Tooltip container */
-        .djtooltip {
-        }
-        /* Tooltip text */
-        .djtooltip .djtooltiptext {
-            visibility: hidden;
-            width: 120px;
-            background-color: black;
-            color: #fff;
-            text-align: center;
-            padding: 5px 0;
-            border-radius: 6px;
-            /* Position the tooltip text - see examples below! */
-            position: absolute;
-            z-index: 1;
-        }
         #primary {
             font-weight: bold;
             color: black;
@@ -4173,11 +4084,6 @@ ActivityStats()</div>
         #nonprimary {
             font-weight: normal;
             color: white;
-        }
-
-        /* Show the tooltip text when you mouse over the tooltip container */
-        .djtooltip:hover .djtooltiptext {
-            visibility: visible;
         }
 
         /* Dark mode support */
@@ -4196,10 +4102,6 @@ ActivityStats()</div>
                 background: #3d3d3d;
                 color: #e0e0e0;
             }
-            .djtooltip .djtooltiptext {
-                background-color: #555555;
-                color: #ffffff;
-            }
             #primary {
                 color: #bd93f9;
             }
@@ -4208,28 +4110,9 @@ ActivityStats()</div>
             }
         }
     </style>
-<b>None</b>
 <div style="max-height:1000px;max-width:1500px;overflow:auto;">
 <table border="1" class="Table">
-<thead> <tr> <th> <div class="djtooltip">
-<p id="primary">mouse_id</p>
-<span class="djtooltiptext">None</span>
-</div></th><th><div class="djtooltip">
-<p id="primary">session_date</p>
-<span class="djtooltiptext">None</span>
-</div></th><th><div class="djtooltip">
-<p id="primary">neuron_id</p>
-<span class="djtooltiptext">None</span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">mean_activity</p>
-<span class="djtooltiptext"></span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">std_activity</p>
-<span class="djtooltiptext"></span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">max_activity</p>
-<span class="djtooltiptext"></span>
-</div> </th> </tr> </thead>
+<thead> <tr> <th> <span id="primary" title="None">mouse_id</span></th><th><span id="primary" title="None">session_date</span></th><th><span id="primary" title="None">neuron_id</span></th><th><span id="nonprimary" title="">mean_activity</span></th><th><span id="nonprimary" title="">std_activity</span></th><th><span id="nonprimary" title="">max_activity</span> </th> </tr> </thead>
 <tbody> <tr> <td>0</td>
 <td>2017-05-15</td>
 <td>0</td>
@@ -4355,22 +4238,6 @@ SpikeParams()</div>
             background: #f3f1ff;
             color: #000000;
         }
-        /* Tooltip container */
-        .djtooltip {
-        }
-        /* Tooltip text */
-        .djtooltip .djtooltiptext {
-            visibility: hidden;
-            width: 120px;
-            background-color: black;
-            color: #fff;
-            text-align: center;
-            padding: 5px 0;
-            border-radius: 6px;
-            /* Position the tooltip text - see examples below! */
-            position: absolute;
-            z-index: 1;
-        }
         #primary {
             font-weight: bold;
             color: black;
@@ -4378,11 +4245,6 @@ SpikeParams()</div>
         #nonprimary {
             font-weight: normal;
             color: white;
-        }
-
-        /* Show the tooltip text when you mouse over the tooltip container */
-        .djtooltip:hover .djtooltiptext {
-            visibility: visible;
         }
 
         /* Dark mode support */
@@ -4401,10 +4263,6 @@ SpikeParams()</div>
                 background: #3d3d3d;
                 color: #e0e0e0;
             }
-            .djtooltip .djtooltiptext {
-                background-color: #555555;
-                color: #ffffff;
-            }
             #primary {
                 color: #bd93f9;
             }
@@ -4413,16 +4271,9 @@ SpikeParams()</div>
             }
         }
     </style>
-<b>None</b>
 <div style="max-height:1000px;max-width:1500px;overflow:auto;">
 <table border="1" class="Table">
-<thead> <tr> <th> <div class="djtooltip">
-<p id="primary">spike_param_id</p>
-<span class="djtooltiptext"></span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">threshold</p>
-<span class="djtooltiptext">spike detection threshold</span>
-</div> </th> </tr> </thead>
+<thead> <tr> <th> <span id="primary" title="">spike_param_id</span></th><th><span id="nonprimary" title="spike detection threshold">threshold</span> </th> </tr> </thead>
 <tbody> <tr> <td>1</td>
 <td>0.5</td></tr><tr><td>2</td>
 <td>0.9</td> </tr> </tbody>
@@ -4608,7 +4459,13 @@ class Spikes(dj.Computed):
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>Spikes: 100%|██████████| 10/10 [00:00&lt;00:00, 120.69it/s]</pre>
+<pre>Spikes:  90%|█████████ | 9/10 [00:00&lt;00:00, 89.80it/s]</pre>
+</div>
+</div>
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
+<pre>Spikes: 100%|██████████| 10/10 [00:00&lt;00:00, 92.96it/s]</pre>
 </div>
 </div>
 <div class="jp-OutputArea-child">
@@ -4684,22 +4541,6 @@ Spikes.proj('spike_count')</div>
             background: #f3f1ff;
             color: #000000;
         }
-        /* Tooltip container */
-        .djtooltip {
-        }
-        /* Tooltip text */
-        .djtooltip .djtooltiptext {
-            visibility: hidden;
-            width: 120px;
-            background-color: black;
-            color: #fff;
-            text-align: center;
-            padding: 5px 0;
-            border-radius: 6px;
-            /* Position the tooltip text - see examples below! */
-            position: absolute;
-            z-index: 1;
-        }
         #primary {
             font-weight: bold;
             color: black;
@@ -4707,11 +4548,6 @@ Spikes.proj('spike_count')</div>
         #nonprimary {
             font-weight: normal;
             color: white;
-        }
-
-        /* Show the tooltip text when you mouse over the tooltip container */
-        .djtooltip:hover .djtooltiptext {
-            visibility: visible;
         }
 
         /* Dark mode support */
@@ -4730,10 +4566,6 @@ Spikes.proj('spike_count')</div>
                 background: #3d3d3d;
                 color: #e0e0e0;
             }
-            .djtooltip .djtooltiptext {
-                background-color: #555555;
-                color: #ffffff;
-            }
             #primary {
                 color: #bd93f9;
             }
@@ -4742,78 +4574,49 @@ Spikes.proj('spike_count')</div>
             }
         }
     </style>
-<b>None</b>
 <div style="max-height:1000px;max-width:1500px;overflow:auto;">
 <table border="1" class="Table">
-<thead> <tr> <th> <div class="djtooltip">
-<p id="primary">mouse_id</p>
-<span class="djtooltiptext">None</span>
-</div></th><th><div class="djtooltip">
-<p id="primary">session_date</p>
-<span class="djtooltiptext">None</span>
-</div></th><th><div class="djtooltip">
-<p id="primary">neuron_id</p>
-<span class="djtooltiptext">None</span>
-</div></th><th><div class="djtooltip">
-<p id="primary">spike_param_id</p>
-<span class="djtooltiptext">None</span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">spike_times</p>
-<span class="djtooltiptext">indices of detected spikes</span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">spike_count</p>
-<span class="djtooltiptext">total number of spikes</span>
-</div> </th> </tr> </thead>
+<thead> <tr> <th> <span id="primary" title="None">mouse_id</span></th><th><span id="primary" title="None">session_date</span></th><th><span id="primary" title="None">neuron_id</span></th><th><span id="primary" title="None">spike_param_id</span></th><th><span id="nonprimary" title="total number of spikes">spike_count</span> </th> </tr> </thead>
 <tbody> <tr> <td>0</td>
 <td>2017-05-15</td>
 <td>0</td>
 <td>1</td>
-<td>&lt;blob&gt;</td>
 <td>26</td></tr><tr><td>0</td>
 <td>2017-05-15</td>
 <td>0</td>
 <td>2</td>
-<td>&lt;blob&gt;</td>
 <td>27</td></tr><tr><td>0</td>
 <td>2017-05-19</td>
 <td>0</td>
 <td>1</td>
-<td>&lt;blob&gt;</td>
 <td>24</td></tr><tr><td>0</td>
 <td>2017-05-19</td>
 <td>0</td>
 <td>2</td>
-<td>&lt;blob&gt;</td>
 <td>21</td></tr><tr><td>5</td>
 <td>2017-01-05</td>
 <td>0</td>
 <td>1</td>
-<td>&lt;blob&gt;</td>
 <td>18</td></tr><tr><td>5</td>
 <td>2017-01-05</td>
 <td>0</td>
 <td>2</td>
-<td>&lt;blob&gt;</td>
 <td>14</td></tr><tr><td>100</td>
 <td>2017-05-25</td>
 <td>0</td>
 <td>1</td>
-<td>&lt;blob&gt;</td>
 <td>41</td></tr><tr><td>100</td>
 <td>2017-05-25</td>
 <td>0</td>
 <td>2</td>
-<td>&lt;blob&gt;</td>
 <td>35</td></tr><tr><td>100</td>
 <td>2017-06-01</td>
 <td>0</td>
 <td>1</td>
-<td>&lt;blob&gt;</td>
 <td>18</td></tr><tr><td>100</td>
 <td>2017-06-01</td>
 <td>0</td>
 <td>2</td>
-<td>&lt;blob&gt;</td>
 <td>15</td> </tr> </tbody>
 </table>
 <p>Total: 10</p></div>
@@ -5042,7 +4845,7 @@ else:
 <div class="jp-OutputArea-child jp-OutputArea-executeResult">
 <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[16]:</div>
 <div class="jp-RenderedSVG jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="image/svg+xml" tabindex="0">
-<img alt="No description has been provided for this image" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB3aWR0aD0iNTY5cHQiIGhlaWdodD0iMTUycHQiIHZpZXdCb3g9IjAuMDAgMC4wMCA1NjkuNDMgMTUyLjAwIj4KPGcgaWQ9ImdyYXBoMCIgY2xhc3M9ImdyYXBoIiB0cmFuc2Zvcm09InNjYWxlKDEgMSkgcm90YXRlKDApIHRyYW5zbGF0ZSg0IDE0OCkiPgo8cG9seWdvbiBmaWxsPSJ3aGl0ZSIgc3Ryb2tlPSJub25lIiBwb2ludHM9Ii00LDQgLTQsLTE0OCA1NjUuNDMsLTE0OCA1NjUuNDMsNCAtNCw0Ii8+CjxnIGlkPSJjbHVzdDEiIGNsYXNzPSJjbHVzdGVyIj4KPHRpdGxlPmNsdXN0ZXJfY2x1c3Rlcl90dXRvcmlhbF9lbGVjdHJvcGh5c2lvbG9neTwvdGl0bGU+Cjxwb2x5Z29uIGZpbGw9Im5vbmUiIHN0cm9rZT0iZ3JheSIgc3Ryb2tlLWRhc2hhcnJheT0iNSwyIiBwb2ludHM9IjgsLTggOCwtMTM2IDU1My40MywtMTM2IDU1My40MywtOCA4LC04Ii8+Cjx0ZXh0IHRleHQtYW5jaG9yPSJtaWRkbGUiIHg9IjI4MC43MiIgeT0iLTExOC43IiBmb250LWZhbWlseT0iVGltZXMsc2VyaWYiIGZvbnQtc2l6ZT0iMTQuMDAiIGZpbGw9ImdyYXkiPl9fbWFpbl9fPC90ZXh0Pgo8L2c+CjwhLS0gU3Bpa2VzLldhdmVmb3JtIC0tPgo8ZyBpZD0ibm9kZTEiIGNsYXNzPSJub2RlIj4KPHRpdGxlPlNwaWtlcy5XYXZlZm9ybTwvdGl0bGU+CjxnIGlkPSJhX25vZGUxIj48YSB4bGluazp0aXRsZT0i4oaSIFNwaWtlcw1zcGlrZV9pZHggwqDCoMKgwqDCoMKgwqDCoMKgwqDCoA0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0Nd2F2ZWZvcm0gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgDSI+Cjxwb2x5Z29uIGZpbGw9Im5vbmUiIHN0cm9rZT0ibm9uZSIgcG9pbnRzPSI1NDUuNDMsLTk2IDQ1Mi4xOCwtOTYgNDUyLjE4LC03NiA1NDUuNDMsLTc2IDU0NS40MywtOTYiLz4KPHRleHQgdGV4dC1hbmNob3I9InN0YXJ0IiB4PSI0NjAuMTgiIHk9Ii04My41IiBmb250LWZhbWlseT0iYXJpYWwiIHRleHQtZGVjb3JhdGlvbj0idW5kZXJsaW5lIiBmb250LXNpemU9IjEwLjAwIj5TcGlrZXMuV2F2ZWZvcm08L3RleHQ+CjwvYT4KPC9nPgo8L2c+CjwhLS0gTmV1cm9uIC0tPgo8ZyBpZD0ibm9kZTIiIGNsYXNzPSJub2RlIj4KPHRpdGxlPk5ldXJvbjwvdGl0bGU+CjxnIGlkPSJhX25vZGUyIj48YSB4bGluazp0aXRsZT0i4oaSIFNlc3Npb24NbmV1cm9uX2lkIMKgwqDCoMKgwqDCoMKgwqDCoMKgwqANLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tDWFjdGl2aXR5IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoA0iPgo8ZWxsaXBzZSBmaWxsPSIjMDAwMDdmIiBmaWxsLW9wYWNpdHk9IjAuMjUwOTgwIiBzdHJva2U9IiMwMDAwN2YiIHN0cm9rZS1vcGFjaXR5PSIwLjI1MDk4MCIgY3g9IjIzNi43NSIgY3k9Ii0zMyIgcng9IjM2LjQzIiByeT0iMTcuMjgiLz4KPHRleHQgdGV4dC1hbmNob3I9InN0YXJ0IiB4PSIyMTYuODgiIHk9Ii0yOS43MyIgZm9udC1mYW1pbHk9ImFyaWFsIiB0ZXh0LWRlY29yYXRpb249InVuZGVybGluZSIgZm9udC1zaXplPSIxMi4wMCIgZmlsbD0iIzAwMDA3ZiIgZmlsbC1vcGFjaXR5PSIwLjYyNzQ1MSI+TmV1cm9uPC90ZXh0Pgo8L2E+CjwvZz4KPC9nPgo8IS0tIEFjdGl2aXR5U3RhdHMgLS0+CjxnIGlkPSJub2RlNSIgY2xhc3M9Im5vZGUiPgo8dGl0bGU+QWN0aXZpdHlTdGF0czwvdGl0bGU+CjxnIGlkPSJhX25vZGU1Ij48YSB4bGluazp0aXRsZT0i4oaSIE5ldXJvbg0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0NbWVhbl9hY3Rpdml0eSDCoMKgwqDCoMKgwqDCoA1zdGRfYWN0aXZpdHkgwqDCoMKgwqDCoMKgwqDCoA1tYXhfYWN0aXZpdHkgwqDCoMKgwqDCoMKgwqDCoA0iPgo8ZWxsaXBzZSBmaWxsPSIjZmYwMDAwIiBmaWxsLW9wYWNpdHk9IjAuMTI1NDkwIiBzdHJva2U9IiNmZjAwMDAiIHN0cm9rZS1vcGFjaXR5PSIwLjEyNTQ5MCIgY3g9IjM2My4wOSIgY3k9Ii0zMyIgcng9IjUzLjA5IiByeT0iMTcuMjgiLz4KPHRleHQgdGV4dC1hbmNob3I9Im1pZGRsZSIgeD0iMzYzLjA5IiB5PSItMjguNzMiIGZvbnQtZmFtaWx5PSJhcmlhbCIgZm9udC1zaXplPSIxMi4wMCIgZmlsbD0iIzdmMDAwMCIgZmlsbC1vcGFjaXR5PSIwLjYyNzQ1MSI+QWN0aXZpdHlTdGF0czwvdGV4dD4KPC9hPgo8L2c+CjwvZz4KPCEtLSBOZXVyb24mIzQ1OyZndDtBY3Rpdml0eVN0YXRzIC0tPgo8ZyBpZD0iZWRnZTEiIGNsYXNzPSJlZGdlIj4KPHRpdGxlPk5ldXJvbi0mZ3Q7QWN0aXZpdHlTdGF0czwvdGl0bGU+CjxwYXRoIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzAwMDAwMCIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2Utb3BhY2l0eT0iMC4yNTA5ODAiIGQ9Ik0yNzMuMzgsLTMzQzI4NC43MiwtMzMgMjk3LjUxLC0zMyAzMDkuNzcsLTMzIi8+CjwvZz4KPCEtLSBTcGlrZXMgLS0+CjxnIGlkPSJub2RlNiIgY2xhc3M9Im5vZGUiPgo8dGl0bGU+U3Bpa2VzPC90aXRsZT4KPGcgaWQ9ImFfbm9kZTYiPjxhIHhsaW5rOnRpdGxlPSLihpIgTmV1cm9uDeKGkiBTcGlrZVBhcmFtcw0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0Nc3Bpa2VfdGltZXMgwqDCoMKgwqDCoMKgwqDCoMKgDXNwaWtlX2NvdW50IMKgwqDCoMKgwqDCoMKgwqDCoA0iPgo8ZWxsaXBzZSBmaWxsPSIjZmYwMDAwIiBmaWxsLW9wYWNpdHk9IjAuMTI1NDkwIiBzdHJva2U9IiNmZjAwMDAiIHN0cm9rZS1vcGFjaXR5PSIwLjEyNTQ5MCIgY3g9IjM2My4wOSIgY3k9Ii04NiIgcng9IjM0LjQ3IiByeT0iMTcuMjgiLz4KPHRleHQgdGV4dC1hbmNob3I9Im1pZGRsZSIgeD0iMzYzLjA5IiB5PSItODEuNzIiIGZvbnQtZmFtaWx5PSJhcmlhbCIgZm9udC1zaXplPSIxMi4wMCIgZmlsbD0iIzdmMDAwMCIgZmlsbC1vcGFjaXR5PSIwLjYyNzQ1MSI+U3Bpa2VzPC90ZXh0Pgo8L2E+CjwvZz4KPC9nPgo8IS0tIE5ldXJvbiYjNDU7Jmd0O1NwaWtlcyAtLT4KPGcgaWQ9ImVkZ2UyIiBjbGFzcz0iZWRnZSI+Cjx0aXRsZT5OZXVyb24tJmd0O1NwaWtlczwvdGl0bGU+CjxwYXRoIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzAwMDAwMCIgc3Ryb2tlLXdpZHRoPSIwLjc1IiBzdHJva2Utb3BhY2l0eT0iMC4yNTA5ODAiIGQ9Ik0yNjQuNzMsLTQ0LjVDMjg1Ljg3LC01My41MSAzMTUuMTEsLTY1Ljk3IDMzNi4wMiwtNzQuODkiLz4KPC9nPgo8IS0tIE1vdXNlIC0tPgo8ZyBpZD0ibm9kZTMiIGNsYXNzPSJub2RlIj4KPHRpdGxlPk1vdXNlPC90aXRsZT4KPGcgaWQ9ImFfbm9kZTMiPjxhIHhsaW5rOnRpdGxlPSJtb3VzZV9pZCDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqANLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tDWRvYiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgDXNleCDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgDSI+Cjxwb2x5Z29uIGZpbGw9IiMwMGZmMDAiIGZpbGwtb3BhY2l0eT0iMC4xODgyMzUiIHN0cm9rZT0iIzAwZmYwMCIgc3Ryb2tlLW9wYWNpdHk9IjAuMTg4MjM1IiBwb2ludHM9IjY4LC01MC4yOCAxNiwtNTAuMjggMTYsLTE1LjcyIDY4LC0xNS43MiA2OCwtNTAuMjgiLz4KPHRleHQgdGV4dC1hbmNob3I9InN0YXJ0IiB4PSIyNCIgeT0iLTI5LjczIiBmb250LWZhbWlseT0iYXJpYWwiIHRleHQtZGVjb3JhdGlvbj0idW5kZXJsaW5lIiBmb250LXNpemU9IjEyLjAwIiBmaWxsPSJkYXJrZ3JlZW4iPk1vdXNlPC90ZXh0Pgo8L2E+CjwvZz4KPC9nPgo8IS0tIFNlc3Npb24gLS0+CjxnIGlkPSJub2RlNCIgY2xhc3M9Im5vZGUiPgo8dGl0bGU+U2Vzc2lvbjwvdGl0bGU+CjxnIGlkPSJhX25vZGU0Ij48YSB4bGluazp0aXRsZT0i4oaSIE1vdXNlDXNlc3Npb25fZGF0ZSDCoMKgwqDCoMKgwqDCoMKgDS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ1leHBlcmltZW50ZXIgwqDCoMKgwqDCoMKgwqDCoA0iPgo8cG9seWdvbiBmaWxsPSIjMDBmZjAwIiBmaWxsLW9wYWNpdHk9IjAuMTg4MjM1IiBzdHJva2U9IiMwMGZmMDAiIHN0cm9rZS1vcGFjaXR5PSIwLjE4ODIzNSIgcG9pbnRzPSIxNjMuNSwtNTAuMjggMTA0LC01MC4yOCAxMDQsLTE1LjcyIDE2My41LC0xNS43MiAxNjMuNSwtNTAuMjgiLz4KPHRleHQgdGV4dC1hbmNob3I9InN0YXJ0IiB4PSIxMTIiIHk9Ii0yOS43MyIgZm9udC1mYW1pbHk9ImFyaWFsIiB0ZXh0LWRlY29yYXRpb249InVuZGVybGluZSIgZm9udC1zaXplPSIxMi4wMCIgZmlsbD0iZGFya2dyZWVuIj5TZXNzaW9uPC90ZXh0Pgo8L2E+CjwvZz4KPC9nPgo8IS0tIE1vdXNlJiM0NTsmZ3Q7U2Vzc2lvbiAtLT4KPGcgaWQ9ImVkZ2UzIiBjbGFzcz0iZWRnZSI+Cjx0aXRsZT5Nb3VzZS0mZ3Q7U2Vzc2lvbjwvdGl0bGU+CjxwYXRoIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzAwMDAwMCIgc3Ryb2tlLXdpZHRoPSIwLjc1IiBzdHJva2Utb3BhY2l0eT0iMC4yNTA5ODAiIGQ9Ik02OC40OCwtMzNDNzkuNDcsLTMzIDkyLjM3LC0zMyAxMDMuNzMsLTMzIi8+CjwvZz4KPCEtLSBTZXNzaW9uJiM0NTsmZ3Q7TmV1cm9uIC0tPgo8ZyBpZD0iZWRnZTQiIGNsYXNzPSJlZGdlIj4KPHRpdGxlPlNlc3Npb24tJmd0O05ldXJvbjwvdGl0bGU+CjxwYXRoIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzAwMDAwMCIgc3Ryb2tlLXdpZHRoPSIwLjc1IiBzdHJva2Utb3BhY2l0eT0iMC4yNTA5ODAiIGQ9Ik0xNjMuOTYsLTMzQzE3NS4yNywtMzMgMTg4LjMxLC0zMyAyMDAuMTUsLTMzIi8+CjwvZz4KPCEtLSBTcGlrZXMmIzQ1OyZndDtTcGlrZXMuV2F2ZWZvcm0gLS0+CjxnIGlkPSJlZGdlNSIgY2xhc3M9ImVkZ2UiPgo8dGl0bGU+U3Bpa2VzLSZndDtTcGlrZXMuV2F2ZWZvcm08L3RpdGxlPgo8cGF0aCBmaWxsPSJub25lIiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iMC43NSIgc3Ryb2tlLW9wYWNpdHk9IjAuMjUwOTgwIiBkPSJNMzk3LjgzLC04NkM0MTQuMzEsLTg2IDQzNC4zOCwtODYgNDUyLjIxLC04NiIvPgo8L2c+CjwhLS0gU3Bpa2VQYXJhbXMgLS0+CjxnIGlkPSJub2RlNyIgY2xhc3M9Im5vZGUiPgo8dGl0bGU+U3Bpa2VQYXJhbXM8L3RpdGxlPgo8ZyBpZD0iYV9ub2RlNyI+PGEgeGxpbms6dGl0bGU9InNwaWtlX3BhcmFtX2lkIMKgwqDCoMKgwqDCoA0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0NdGhyZXNob2xkIMKgwqDCoMKgwqDCoMKgwqDCoMKgwqANIj4KPHBvbHlnb24gZmlsbD0iIzAwMDAwMCIgZmlsbC1vcGFjaXR5PSIwLjEyNTQ5MCIgc3Ryb2tlPSJub25lIiBwb2ludHM9IjI3NCwtMTAzLjI4IDE5OS41LC0xMDMuMjggMTk5LjUsLTY4LjcyIDI3NCwtNjguNzIgMjc0LC0xMDMuMjgiLz4KPHRleHQgdGV4dC1hbmNob3I9InN0YXJ0IiB4PSIyMDcuNSIgeT0iLTgzLjUiIGZvbnQtZmFtaWx5PSJhcmlhbCIgdGV4dC1kZWNvcmF0aW9uPSJ1bmRlcmxpbmUiIGZvbnQtc2l6ZT0iMTAuMDAiPlNwaWtlUGFyYW1zPC90ZXh0Pgo8L2E+CjwvZz4KPC9nPgo8IS0tIFNwaWtlUGFyYW1zJiM0NTsmZ3Q7U3Bpa2VzIC0tPgo8ZyBpZD0iZWRnZTYiIGNsYXNzPSJlZGdlIj4KPHRpdGxlPlNwaWtlUGFyYW1zLSZndDtTcGlrZXM8L3RpdGxlPgo8cGF0aCBmaWxsPSJub25lIiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iMC43NSIgc3Ryb2tlLW9wYWNpdHk9IjAuMjUwOTgwIiBkPSJNMjczLjcxLC04NkMyOTAuOTMsLTg2IDMxMS40MiwtODYgMzI4LjM0LC04NiIvPgo8L2c+CjwvZz4KPC9zdmc+"/>
+<img alt="No description has been provided for this image" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB3aWR0aD0iNTY5cHQiIGhlaWdodD0iMTUycHQiIHZpZXdCb3g9IjAuMDAgMC4wMCA1NjkuNDMgMTUyLjAwIj4KPGcgaWQ9ImdyYXBoMCIgY2xhc3M9ImdyYXBoIiB0cmFuc2Zvcm09InNjYWxlKDEgMSkgcm90YXRlKDApIHRyYW5zbGF0ZSg0IDE0OCkiPgo8cG9seWdvbiBmaWxsPSJ3aGl0ZSIgc3Ryb2tlPSJub25lIiBwb2ludHM9Ii00LDQgLTQsLTE0OCA1NjUuNDMsLTE0OCA1NjUuNDMsNCAtNCw0Ii8+CjxnIGlkPSJjbHVzdDEiIGNsYXNzPSJjbHVzdGVyIj4KPHRpdGxlPmNsdXN0ZXJfY2x1c3Rlcl90dXRvcmlhbF9lbGVjdHJvcGh5c2lvbG9neTwvdGl0bGU+Cjxwb2x5Z29uIGZpbGw9Im5vbmUiIHN0cm9rZT0iZ3JheSIgc3Ryb2tlLWRhc2hhcnJheT0iNSwyIiBwb2ludHM9IjgsLTggOCwtMTM2IDU1My40MywtMTM2IDU1My40MywtOCA4LC04Ii8+Cjx0ZXh0IHRleHQtYW5jaG9yPSJtaWRkbGUiIHg9IjI4MC43MiIgeT0iLTExOC43IiBmb250LWZhbWlseT0iVGltZXMsc2VyaWYiIGZvbnQtc2l6ZT0iMTQuMDAiIGZpbGw9ImdyYXkiPl9fbWFpbl9fPC90ZXh0Pgo8L2c+CjwhLS0gU3Bpa2VzLldhdmVmb3JtIC0tPgo8ZyBpZD0ibm9kZTEiIGNsYXNzPSJub2RlIj4KPHRpdGxlPlNwaWtlcy5XYXZlZm9ybTwvdGl0bGU+CjxnIGlkPSJhX25vZGUxIj48YSB4bGluazp0aXRsZT0i4oaSIFNwaWtlcw1zcGlrZV9pZHggwqDCoMKgwqDCoMKgwqDCoMKgwqDCoA0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0Nd2F2ZWZvcm0gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgDSI+Cjxwb2x5Z29uIGZpbGw9Im5vbmUiIHN0cm9rZT0ibm9uZSIgcG9pbnRzPSI1NDUuNDMsLTk2IDQ1Mi4xOCwtOTYgNDUyLjE4LC03NiA1NDUuNDMsLTc2IDU0NS40MywtOTYiLz4KPHRleHQgdGV4dC1hbmNob3I9InN0YXJ0IiB4PSI0NjAuMTgiIHk9Ii04My41IiBmb250LWZhbWlseT0iYXJpYWwiIHRleHQtZGVjb3JhdGlvbj0idW5kZXJsaW5lIiBmb250LXNpemU9IjEwLjAwIj5TcGlrZXMuV2F2ZWZvcm08L3RleHQ+CjwvYT4KPC9nPgo8L2c+CjwhLS0gTW91c2UgLS0+CjxnIGlkPSJub2RlMiIgY2xhc3M9Im5vZGUiPgo8dGl0bGU+TW91c2U8L3RpdGxlPgo8ZyBpZD0iYV9ub2RlMiI+PGEgeGxpbms6dGl0bGU9Im1vdXNlX2lkIMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoA0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0NZG9iIMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqANc2V4IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqANIj4KPHBvbHlnb24gZmlsbD0iIzAwZmYwMCIgZmlsbC1vcGFjaXR5PSIwLjE4ODIzNSIgc3Ryb2tlPSIjMDBmZjAwIiBzdHJva2Utb3BhY2l0eT0iMC4xODgyMzUiIHBvaW50cz0iNjgsLTUwLjI4IDE2LC01MC4yOCAxNiwtMTUuNzIgNjgsLTE1LjcyIDY4LC01MC4yOCIvPgo8dGV4dCB0ZXh0LWFuY2hvcj0ic3RhcnQiIHg9IjI0IiB5PSItMjkuNzMiIGZvbnQtZmFtaWx5PSJhcmlhbCIgdGV4dC1kZWNvcmF0aW9uPSJ1bmRlcmxpbmUiIGZvbnQtc2l6ZT0iMTIuMDAiIGZpbGw9ImRhcmtncmVlbiI+TW91c2U8L3RleHQ+CjwvYT4KPC9nPgo8L2c+CjwhLS0gU2Vzc2lvbiAtLT4KPGcgaWQ9Im5vZGUzIiBjbGFzcz0ibm9kZSI+Cjx0aXRsZT5TZXNzaW9uPC90aXRsZT4KPGcgaWQ9ImFfbm9kZTMiPjxhIHhsaW5rOnRpdGxlPSLihpIgTW91c2UNc2Vzc2lvbl9kYXRlIMKgwqDCoMKgwqDCoMKgwqANLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tDWV4cGVyaW1lbnRlciDCoMKgwqDCoMKgwqDCoMKgDSI+Cjxwb2x5Z29uIGZpbGw9IiMwMGZmMDAiIGZpbGwtb3BhY2l0eT0iMC4xODgyMzUiIHN0cm9rZT0iIzAwZmYwMCIgc3Ryb2tlLW9wYWNpdHk9IjAuMTg4MjM1IiBwb2ludHM9IjE2My41LC01MC4yOCAxMDQsLTUwLjI4IDEwNCwtMTUuNzIgMTYzLjUsLTE1LjcyIDE2My41LC01MC4yOCIvPgo8dGV4dCB0ZXh0LWFuY2hvcj0ic3RhcnQiIHg9IjExMiIgeT0iLTI5LjczIiBmb250LWZhbWlseT0iYXJpYWwiIHRleHQtZGVjb3JhdGlvbj0idW5kZXJsaW5lIiBmb250LXNpemU9IjEyLjAwIiBmaWxsPSJkYXJrZ3JlZW4iPlNlc3Npb248L3RleHQ+CjwvYT4KPC9nPgo8L2c+CjwhLS0gTW91c2UmIzQ1OyZndDtTZXNzaW9uIC0tPgo8ZyBpZD0iZWRnZTEiIGNsYXNzPSJlZGdlIj4KPHRpdGxlPk1vdXNlLSZndDtTZXNzaW9uPC90aXRsZT4KPHBhdGggZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjAuNzUiIHN0cm9rZS1vcGFjaXR5PSIwLjI1MDk4MCIgZD0iTTY4LjQ4LC0zM0M3OS40NywtMzMgOTIuMzcsLTMzIDEwMy43MywtMzMiLz4KPC9nPgo8IS0tIE5ldXJvbiAtLT4KPGcgaWQ9Im5vZGU0IiBjbGFzcz0ibm9kZSI+Cjx0aXRsZT5OZXVyb248L3RpdGxlPgo8ZyBpZD0iYV9ub2RlNCI+PGEgeGxpbms6dGl0bGU9IuKGkiBTZXNzaW9uDW5ldXJvbl9pZCDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgDS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ1hY3Rpdml0eSDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqANIj4KPGVsbGlwc2UgZmlsbD0iIzAwMDA3ZiIgZmlsbC1vcGFjaXR5PSIwLjI1MDk4MCIgc3Ryb2tlPSIjMDAwMDdmIiBzdHJva2Utb3BhY2l0eT0iMC4yNTA5ODAiIGN4PSIyMzYuNzUiIGN5PSItMzMiIHJ4PSIzNi40MyIgcnk9IjE3LjI4Ii8+Cjx0ZXh0IHRleHQtYW5jaG9yPSJzdGFydCIgeD0iMjE2Ljg4IiB5PSItMjkuNzMiIGZvbnQtZmFtaWx5PSJhcmlhbCIgdGV4dC1kZWNvcmF0aW9uPSJ1bmRlcmxpbmUiIGZvbnQtc2l6ZT0iMTIuMDAiIGZpbGw9IiMwMDAwN2YiIGZpbGwtb3BhY2l0eT0iMC42Mjc0NTEiPk5ldXJvbjwvdGV4dD4KPC9hPgo8L2c+CjwvZz4KPCEtLSBTZXNzaW9uJiM0NTsmZ3Q7TmV1cm9uIC0tPgo8ZyBpZD0iZWRnZTIiIGNsYXNzPSJlZGdlIj4KPHRpdGxlPlNlc3Npb24tJmd0O05ldXJvbjwvdGl0bGU+CjxwYXRoIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzAwMDAwMCIgc3Ryb2tlLXdpZHRoPSIwLjc1IiBzdHJva2Utb3BhY2l0eT0iMC4yNTA5ODAiIGQ9Ik0xNjMuOTYsLTMzQzE3NS4yNywtMzMgMTg4LjMxLC0zMyAyMDAuMTUsLTMzIi8+CjwvZz4KPCEtLSBBY3Rpdml0eVN0YXRzIC0tPgo8ZyBpZD0ibm9kZTUiIGNsYXNzPSJub2RlIj4KPHRpdGxlPkFjdGl2aXR5U3RhdHM8L3RpdGxlPgo8ZyBpZD0iYV9ub2RlNSI+PGEgeGxpbms6dGl0bGU9IuKGkiBOZXVyb24NLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tDW1lYW5fYWN0aXZpdHkgwqDCoMKgwqDCoMKgwqANc3RkX2FjdGl2aXR5IMKgwqDCoMKgwqDCoMKgwqANbWF4X2FjdGl2aXR5IMKgwqDCoMKgwqDCoMKgwqANIj4KPGVsbGlwc2UgZmlsbD0iI2ZmMDAwMCIgZmlsbC1vcGFjaXR5PSIwLjEyNTQ5MCIgc3Ryb2tlPSIjZmYwMDAwIiBzdHJva2Utb3BhY2l0eT0iMC4xMjU0OTAiIGN4PSIzNjMuMDkiIGN5PSItMzMiIHJ4PSI1My4wOSIgcnk9IjE3LjI4Ii8+Cjx0ZXh0IHRleHQtYW5jaG9yPSJtaWRkbGUiIHg9IjM2My4wOSIgeT0iLTI4LjczIiBmb250LWZhbWlseT0iYXJpYWwiIGZvbnQtc2l6ZT0iMTIuMDAiIGZpbGw9IiM3ZjAwMDAiIGZpbGwtb3BhY2l0eT0iMC42Mjc0NTEiPkFjdGl2aXR5U3RhdHM8L3RleHQ+CjwvYT4KPC9nPgo8L2c+CjwhLS0gTmV1cm9uJiM0NTsmZ3Q7QWN0aXZpdHlTdGF0cyAtLT4KPGcgaWQ9ImVkZ2UzIiBjbGFzcz0iZWRnZSI+Cjx0aXRsZT5OZXVyb24tJmd0O0FjdGl2aXR5U3RhdHM8L3RpdGxlPgo8cGF0aCBmaWxsPSJub25lIiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLW9wYWNpdHk9IjAuMjUwOTgwIiBkPSJNMjczLjM4LC0zM0MyODQuNzIsLTMzIDI5Ny41MSwtMzMgMzA5Ljc3LC0zMyIvPgo8L2c+CjwhLS0gU3Bpa2VzIC0tPgo8ZyBpZD0ibm9kZTciIGNsYXNzPSJub2RlIj4KPHRpdGxlPlNwaWtlczwvdGl0bGU+CjxnIGlkPSJhX25vZGU3Ij48YSB4bGluazp0aXRsZT0i4oaSIE5ldXJvbg3ihpIgU3Bpa2VQYXJhbXMNLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tDXNwaWtlX3RpbWVzIMKgwqDCoMKgwqDCoMKgwqDCoA1zcGlrZV9jb3VudCDCoMKgwqDCoMKgwqDCoMKgwqANIj4KPGVsbGlwc2UgZmlsbD0iI2ZmMDAwMCIgZmlsbC1vcGFjaXR5PSIwLjEyNTQ5MCIgc3Ryb2tlPSIjZmYwMDAwIiBzdHJva2Utb3BhY2l0eT0iMC4xMjU0OTAiIGN4PSIzNjMuMDkiIGN5PSItODYiIHJ4PSIzNC40NyIgcnk9IjE3LjI4Ii8+Cjx0ZXh0IHRleHQtYW5jaG9yPSJtaWRkbGUiIHg9IjM2My4wOSIgeT0iLTgxLjcyIiBmb250LWZhbWlseT0iYXJpYWwiIGZvbnQtc2l6ZT0iMTIuMDAiIGZpbGw9IiM3ZjAwMDAiIGZpbGwtb3BhY2l0eT0iMC42Mjc0NTEiPlNwaWtlczwvdGV4dD4KPC9hPgo8L2c+CjwvZz4KPCEtLSBOZXVyb24mIzQ1OyZndDtTcGlrZXMgLS0+CjxnIGlkPSJlZGdlNCIgY2xhc3M9ImVkZ2UiPgo8dGl0bGU+TmV1cm9uLSZndDtTcGlrZXM8L3RpdGxlPgo8cGF0aCBmaWxsPSJub25lIiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iMC43NSIgc3Ryb2tlLW9wYWNpdHk9IjAuMjUwOTgwIiBkPSJNMjY0LjczLC00NC41QzI4NS44NywtNTMuNTEgMzE1LjExLC02NS45NyAzMzYuMDIsLTc0Ljg5Ii8+CjwvZz4KPCEtLSBTcGlrZVBhcmFtcyAtLT4KPGcgaWQ9Im5vZGU2IiBjbGFzcz0ibm9kZSI+Cjx0aXRsZT5TcGlrZVBhcmFtczwvdGl0bGU+CjxnIGlkPSJhX25vZGU2Ij48YSB4bGluazp0aXRsZT0ic3Bpa2VfcGFyYW1faWQgwqDCoMKgwqDCoMKgDS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ10aHJlc2hvbGQgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoA0iPgo8cG9seWdvbiBmaWxsPSIjMDAwMDAwIiBmaWxsLW9wYWNpdHk9IjAuMTI1NDkwIiBzdHJva2U9Im5vbmUiIHBvaW50cz0iMjc0LC0xMDMuMjggMTk5LjUsLTEwMy4yOCAxOTkuNSwtNjguNzIgMjc0LC02OC43MiAyNzQsLTEwMy4yOCIvPgo8dGV4dCB0ZXh0LWFuY2hvcj0ic3RhcnQiIHg9IjIwNy41IiB5PSItODMuNSIgZm9udC1mYW1pbHk9ImFyaWFsIiB0ZXh0LWRlY29yYXRpb249InVuZGVybGluZSIgZm9udC1zaXplPSIxMC4wMCI+U3Bpa2VQYXJhbXM8L3RleHQ+CjwvYT4KPC9nPgo8L2c+CjwhLS0gU3Bpa2VQYXJhbXMmIzQ1OyZndDtTcGlrZXMgLS0+CjxnIGlkPSJlZGdlNSIgY2xhc3M9ImVkZ2UiPgo8dGl0bGU+U3Bpa2VQYXJhbXMtJmd0O1NwaWtlczwvdGl0bGU+CjxwYXRoIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzAwMDAwMCIgc3Ryb2tlLXdpZHRoPSIwLjc1IiBzdHJva2Utb3BhY2l0eT0iMC4yNTA5ODAiIGQ9Ik0yNzMuNzEsLTg2QzI5MC45MywtODYgMzExLjQyLC04NiAzMjguMzQsLTg2Ii8+CjwvZz4KPCEtLSBTcGlrZXMmIzQ1OyZndDtTcGlrZXMuV2F2ZWZvcm0gLS0+CjxnIGlkPSJlZGdlNiIgY2xhc3M9ImVkZ2UiPgo8dGl0bGU+U3Bpa2VzLSZndDtTcGlrZXMuV2F2ZWZvcm08L3RpdGxlPgo8cGF0aCBmaWxsPSJub25lIiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iMC43NSIgc3Ryb2tlLW9wYWNpdHk9IjAuMjUwOTgwIiBkPSJNMzk3LjgzLC04NkM0MTQuMzEsLTg2IDQzNC4zOCwtODYgNDUyLjIxLC04NiIvPgo8L2c+CjwvZz4KPC9zdmc+"/>
 </div>
 </div>
 </div>
@@ -5116,22 +4919,6 @@ else:
             background: #f3f1ff;
             color: #000000;
         }
-        /* Tooltip container */
-        .djtooltip {
-        }
-        /* Tooltip text */
-        .djtooltip .djtooltiptext {
-            visibility: hidden;
-            width: 120px;
-            background-color: black;
-            color: #fff;
-            text-align: center;
-            padding: 5px 0;
-            border-radius: 6px;
-            /* Position the tooltip text - see examples below! */
-            position: absolute;
-            z-index: 1;
-        }
         #primary {
             font-weight: bold;
             color: black;
@@ -5139,11 +4926,6 @@ else:
         #nonprimary {
             font-weight: normal;
             color: white;
-        }
-
-        /* Show the tooltip text when you mouse over the tooltip container */
-        .djtooltip:hover .djtooltiptext {
-            visibility: visible;
         }
 
         /* Dark mode support */
@@ -5162,10 +4944,6 @@ else:
                 background: #3d3d3d;
                 color: #e0e0e0;
             }
-            .djtooltip .djtooltiptext {
-                background-color: #555555;
-                color: #ffffff;
-            }
             #primary {
                 color: #bd93f9;
             }
@@ -5174,43 +4952,21 @@ else:
             }
         }
     </style>
-<b>None</b>
 <div style="max-height:1000px;max-width:1500px;overflow:auto;">
 <table border="1" class="Table">
-<thead> <tr> <th> <div class="djtooltip">
-<p id="primary">mouse_id</p>
-<span class="djtooltiptext">None</span>
-</div></th><th><div class="djtooltip">
-<p id="primary">session_date</p>
-<span class="djtooltiptext">None</span>
-</div></th><th><div class="djtooltip">
-<p id="primary">neuron_id</p>
-<span class="djtooltiptext">None</span>
-</div></th><th><div class="djtooltip">
-<p id="primary">spike_param_id</p>
-<span class="djtooltiptext">None</span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">spike_times</p>
-<span class="djtooltiptext">indices of detected spikes</span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">spike_count</p>
-<span class="djtooltiptext">total number of spikes</span>
-</div> </th> </tr> </thead>
+<thead> <tr> <th> <span id="primary" title="None">mouse_id</span></th><th><span id="primary" title="None">session_date</span></th><th><span id="primary" title="None">neuron_id</span></th><th><span id="primary" title="None">spike_param_id</span></th><th><span id="nonprimary" title="total number of spikes">spike_count</span> </th> </tr> </thead>
 <tbody> <tr> <td>0</td>
 <td>2017-05-15</td>
 <td>0</td>
 <td>1</td>
-<td>&lt;blob&gt;</td>
 <td>26</td></tr><tr><td>0</td>
 <td>2017-05-19</td>
 <td>0</td>
 <td>1</td>
-<td>&lt;blob&gt;</td>
 <td>24</td></tr><tr><td>100</td>
 <td>2017-05-25</td>
 <td>0</td>
 <td>1</td>
-<td>&lt;blob&gt;</td>
 <td>41</td> </tr> </tbody>
 </table>
 <p>Total: 3</p></div>
@@ -5276,22 +5032,6 @@ else:
             background: #f3f1ff;
             color: #000000;
         }
-        /* Tooltip container */
-        .djtooltip {
-        }
-        /* Tooltip text */
-        .djtooltip .djtooltiptext {
-            visibility: hidden;
-            width: 120px;
-            background-color: black;
-            color: #fff;
-            text-align: center;
-            padding: 5px 0;
-            border-radius: 6px;
-            /* Position the tooltip text - see examples below! */
-            position: absolute;
-            z-index: 1;
-        }
         #primary {
             font-weight: bold;
             color: black;
@@ -5299,11 +5039,6 @@ else:
         #nonprimary {
             font-weight: normal;
             color: white;
-        }
-
-        /* Show the tooltip text when you mouse over the tooltip container */
-        .djtooltip:hover .djtooltiptext {
-            visibility: visible;
         }
 
         /* Dark mode support */
@@ -5322,10 +5057,6 @@ else:
                 background: #3d3d3d;
                 color: #e0e0e0;
             }
-            .djtooltip .djtooltiptext {
-                background-color: #555555;
-                color: #ffffff;
-            }
             #primary {
                 color: #bd93f9;
             }
@@ -5336,22 +5067,7 @@ else:
     </style>
 <div style="max-height:1000px;max-width:1500px;overflow:auto;">
 <table border="1" class="Table">
-<thead> <tr> <th> <div class="djtooltip">
-<p id="primary">mouse_id</p>
-<span class="djtooltiptext">None</span>
-</div></th><th><div class="djtooltip">
-<p id="primary">session_date</p>
-<span class="djtooltiptext">None</span>
-</div></th><th><div class="djtooltip">
-<p id="primary">neuron_id</p>
-<span class="djtooltiptext">None</span>
-</div></th><th><div class="djtooltip">
-<p id="primary">spike_param_id</p>
-<span class="djtooltiptext">None</span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">spike_count</p>
-<span class="djtooltiptext">total number of spikes</span>
-</div> </th> </tr> </thead>
+<thead> <tr> <th> <span id="primary" title="None">mouse_id</span></th><th><span id="primary" title="None">session_date</span></th><th><span id="primary" title="None">neuron_id</span></th><th><span id="primary" title="None">spike_param_id</span></th><th><span id="nonprimary" title="total number of spikes">spike_count</span> </th> </tr> </thead>
 <tbody> <tr> <td>0</td>
 <td>2017-05-15</td>
 <td>0</td>

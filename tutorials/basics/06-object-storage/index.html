@@ -3554,7 +3554,7 @@ schema = dj.Schema('tutorial_oas')</div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>[2026-01-27 15:29:05] DataJoint 2.1.0a9 connected to postgres@127.0.0.1:5432
+<pre>[2026-02-06 11:45:02] DataJoint 2.1.0 connected to datajoint@127.0.0.1:5432
 </pre>
 </div>
 </div>
@@ -3718,22 +3718,6 @@ Recording()</div>
             background: #f3f1ff;
             color: #000000;
         }
-        /* Tooltip container */
-        .djtooltip {
-        }
-        /* Tooltip text */
-        .djtooltip .djtooltiptext {
-            visibility: hidden;
-            width: 120px;
-            background-color: black;
-            color: #fff;
-            text-align: center;
-            padding: 5px 0;
-            border-radius: 6px;
-            /* Position the tooltip text - see examples below! */
-            position: absolute;
-            z-index: 1;
-        }
         #primary {
             font-weight: bold;
             color: black;
@@ -3741,11 +3725,6 @@ Recording()</div>
         #nonprimary {
             font-weight: normal;
             color: white;
-        }
-
-        /* Show the tooltip text when you mouse over the tooltip container */
-        .djtooltip:hover .djtooltiptext {
-            visibility: visible;
         }
 
         /* Dark mode support */
@@ -3764,10 +3743,6 @@ Recording()</div>
                 background: #3d3d3d;
                 color: #e0e0e0;
             }
-            .djtooltip .djtooltiptext {
-                background-color: #555555;
-                color: #ffffff;
-            }
             #primary {
                 color: #bd93f9;
             }
@@ -3776,19 +3751,9 @@ Recording()</div>
             }
         }
     </style>
-<b>None</b>
 <div style="max-height:1000px;max-width:1500px;overflow:auto;">
 <table border="1" class="Table">
-<thead> <tr> <th> <div class="djtooltip">
-<p id="primary">recording_id</p>
-<span class="djtooltiptext"></span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">metadata</p>
-<span class="djtooltiptext">Dict, stored in database</span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">waveform</p>
-<span class="djtooltiptext">NumPy array, stored in database</span>
-</div> </th> </tr> </thead>
+<thead> <tr> <th> <span id="primary" title="">recording_id</span></th><th><span id="nonprimary" title="Dict, stored in database">metadata</span></th><th><span id="nonprimary" title="NumPy array, stored in database">waveform</span> </th> </tr> </thead>
 <tbody> <tr> <td>1</td>
 <td>&lt;blob&gt;</td>
 <td>&lt;blob&gt;</td> </tr> </tbody>
@@ -4019,7 +3984,7 @@ print(f"Store configured at: {store_path}")</div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>Store configured at: /var/folders/cn/dpwf5t7j3gd8gzyw2r7dhm8r0000gn/T/dj_store_sp2ddbn9
+<pre>Store configured at: /var/folders/cn/dpwf5t7j3gd8gzyw2r7dhm8r0000gn/T/dj_store_x2x_aatv
 </pre>
 </div>
 </div>
@@ -4153,22 +4118,6 @@ LargeRecording()</div>
             background: #f3f1ff;
             color: #000000;
         }
-        /* Tooltip container */
-        .djtooltip {
-        }
-        /* Tooltip text */
-        .djtooltip .djtooltiptext {
-            visibility: hidden;
-            width: 120px;
-            background-color: black;
-            color: #fff;
-            text-align: center;
-            padding: 5px 0;
-            border-radius: 6px;
-            /* Position the tooltip text - see examples below! */
-            position: absolute;
-            z-index: 1;
-        }
         #primary {
             font-weight: bold;
             color: black;
@@ -4176,11 +4125,6 @@ LargeRecording()</div>
         #nonprimary {
             font-weight: normal;
             color: white;
-        }
-
-        /* Show the tooltip text when you mouse over the tooltip container */
-        .djtooltip:hover .djtooltiptext {
-            visibility: visible;
         }
 
         /* Dark mode support */
@@ -4199,10 +4143,6 @@ LargeRecording()</div>
                 background: #3d3d3d;
                 color: #e0e0e0;
             }
-            .djtooltip .djtooltiptext {
-                background-color: #555555;
-                color: #ffffff;
-            }
             #primary {
                 color: #bd93f9;
             }
@@ -4211,19 +4151,9 @@ LargeRecording()</div>
             }
         }
     </style>
-<b>None</b>
 <div style="max-height:1000px;max-width:1500px;overflow:auto;">
 <table border="1" class="Table">
-<thead> <tr> <th> <div class="djtooltip">
-<p id="primary">recording_id</p>
-<span class="djtooltiptext"></span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">small_data</p>
-<span class="djtooltiptext">In database (small)</span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">large_data</p>
-<span class="djtooltiptext">In object storage (large)</span>
-</div> </th> </tr> </thead>
+<thead> <tr> <th> <span id="primary" title="">recording_id</span></th><th><span id="nonprimary" title="In database (small)">small_data</span></th><th><span id="nonprimary" title="In object storage (large)">large_data</span> </th> </tr> </thead>
 <tbody> <tr> <td>1</td>
 <td>&lt;blob&gt;</td>
 <td>&lt;blob&gt;</td> </tr> </tbody>
@@ -4324,7 +4254,7 @@ for root, dirs, files in os.walk(store_path):
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>_hash/tutorial_oas/2ag53duaiyvpii3ar3dux3rmlq: 7,685,350 bytes
+<pre>_hash/tutorial_oas/yqn2t7i7vajacorzpk3ipwfmkm: 7,685,032 bytes
 </pre>
 </div>
 </div>
@@ -4628,22 +4558,6 @@ ImagingSession()</div>
             background: #f3f1ff;
             color: #000000;
         }
-        /* Tooltip container */
-        .djtooltip {
-        }
-        /* Tooltip text */
-        .djtooltip .djtooltiptext {
-            visibility: hidden;
-            width: 120px;
-            background-color: black;
-            color: #fff;
-            text-align: center;
-            padding: 5px 0;
-            border-radius: 6px;
-            /* Position the tooltip text - see examples below! */
-            position: absolute;
-            z-index: 1;
-        }
         #primary {
             font-weight: bold;
             color: black;
@@ -4651,11 +4565,6 @@ ImagingSession()</div>
         #nonprimary {
             font-weight: normal;
             color: white;
-        }
-
-        /* Show the tooltip text when you mouse over the tooltip container */
-        .djtooltip:hover .djtooltiptext {
-            visibility: visible;
         }
 
         /* Dark mode support */
@@ -4674,10 +4583,6 @@ ImagingSession()</div>
                 background: #3d3d3d;
                 color: #e0e0e0;
             }
-            .djtooltip .djtooltiptext {
-                background-color: #555555;
-                color: #ffffff;
-            }
             #primary {
                 color: #bd93f9;
             }
@@ -4686,25 +4591,9 @@ ImagingSession()</div>
             }
         }
     </style>
-<b>None</b>
 <div style="max-height:1000px;max-width:1500px;overflow:auto;">
 <table border="1" class="Table">
-<thead> <tr> <th> <div class="djtooltip">
-<p id="primary">subject_id</p>
-<span class="djtooltiptext"></span>
-</div></th><th><div class="djtooltip">
-<p id="primary">session_id</p>
-<span class="djtooltiptext"></span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">n_frames</p>
-<span class="djtooltiptext"></span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">frame_rate</p>
-<span class="djtooltiptext"></span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">frames</p>
-<span class="djtooltiptext">Zarr array stored at path derived from PK</span>
-</div> </th> </tr> </thead>
+<thead> <tr> <th> <span id="primary" title="">subject_id</span></th><th><span id="primary" title="">session_id</span></th><th><span id="nonprimary" title="">n_frames</span></th><th><span id="nonprimary" title="">frame_rate</span></th><th><span id="nonprimary" title="Zarr array stored at path derived from PK">frames</span> </th> </tr> </thead>
 <tbody> <tr> <td>1</td>
 <td>1</td>
 <td>100</td>
@@ -4769,10 +4658,10 @@ print(f"First frame mean: {z[0].mean():.1f}")</div>
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
 <pre>Type: ObjectRef
-Path: tutorial_oas/ImagingSession/subject_id=1/session_id=1/frames_Itka_HXm.zarr
+Path: tutorial_oas/ImagingSession/subject_id=1/session_id=1/frames_sWRCkZuy.zarr
 Shape: (100, 512, 512)
 Chunks: (10, 512, 512)
-First frame mean: 2048.7
+First frame mean: 2045.9
 </pre>
 </div>
 </div>
@@ -4932,22 +4821,6 @@ Document()</div>
             background: #f3f1ff;
             color: #000000;
         }
-        /* Tooltip container */
-        .djtooltip {
-        }
-        /* Tooltip text */
-        .djtooltip .djtooltiptext {
-            visibility: hidden;
-            width: 120px;
-            background-color: black;
-            color: #fff;
-            text-align: center;
-            padding: 5px 0;
-            border-radius: 6px;
-            /* Position the tooltip text - see examples below! */
-            position: absolute;
-            z-index: 1;
-        }
         #primary {
             font-weight: bold;
             color: black;
@@ -4955,11 +4828,6 @@ Document()</div>
         #nonprimary {
             font-weight: normal;
             color: white;
-        }
-
-        /* Show the tooltip text when you mouse over the tooltip container */
-        .djtooltip:hover .djtooltiptext {
-            visibility: visible;
         }
 
         /* Dark mode support */
@@ -4978,10 +4846,6 @@ Document()</div>
                 background: #3d3d3d;
                 color: #e0e0e0;
             }
-            .djtooltip .djtooltiptext {
-                background-color: #555555;
-                color: #ffffff;
-            }
             #primary {
                 color: #bd93f9;
             }
@@ -4990,16 +4854,9 @@ Document()</div>
             }
         }
     </style>
-<b>None</b>
 <div style="max-height:1000px;max-width:1500px;overflow:auto;">
 <table border="1" class="Table">
-<thead> <tr> <th> <div class="djtooltip">
-<p id="primary">doc_id</p>
-<span class="djtooltiptext"></span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">report</p>
-<span class="djtooltiptext"></span>
-</div> </th> </tr> </thead>
+<thead> <tr> <th> <span id="primary" title="">doc_id</span></th><th><span id="nonprimary" title="">report</span> </th> </tr> </thead>
 <tbody> <tr> <td>1</td>
 <td>&lt;attach&gt;</td> </tr> </tbody>
 </table>
@@ -5246,13 +5103,13 @@ ProcessedRecording()</div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>ProcessedRecording:  33%|███▎      | 1/3 [00:00&lt;00:01,  1.73it/s]</pre>
+<pre>ProcessedRecording:  33%|███▎      | 1/3 [00:00&lt;00:01,  1.76it/s]</pre>
 </div>
 </div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>ProcessedRecording: 100%|██████████| 3/3 [00:00&lt;00:00,  4.94it/s]</pre>
+<pre>ProcessedRecording: 100%|██████████| 3/3 [00:00&lt;00:00,  5.02it/s]</pre>
 </div>
 </div>
 <div class="jp-OutputArea-child">
@@ -5287,22 +5144,6 @@ ProcessedRecording()</div>
             background: #f3f1ff;
             color: #000000;
         }
-        /* Tooltip container */
-        .djtooltip {
-        }
-        /* Tooltip text */
-        .djtooltip .djtooltiptext {
-            visibility: hidden;
-            width: 120px;
-            background-color: black;
-            color: #fff;
-            text-align: center;
-            padding: 5px 0;
-            border-radius: 6px;
-            /* Position the tooltip text - see examples below! */
-            position: absolute;
-            z-index: 1;
-        }
         #primary {
             font-weight: bold;
             color: black;
@@ -5310,11 +5151,6 @@ ProcessedRecording()</div>
         #nonprimary {
             font-weight: normal;
             color: white;
-        }
-
-        /* Show the tooltip text when you mouse over the tooltip container */
-        .djtooltip:hover .djtooltiptext {
-            visibility: visible;
         }
 
         /* Dark mode support */
@@ -5333,10 +5169,6 @@ ProcessedRecording()</div>
                 background: #3d3d3d;
                 color: #e0e0e0;
             }
-            .djtooltip .djtooltiptext {
-                background-color: #555555;
-                color: #ffffff;
-            }
             #primary {
                 color: #bd93f9;
             }
@@ -5345,22 +5177,12 @@ ProcessedRecording()</div>
             }
         }
     </style>
-<b>None</b>
 <div style="max-height:1000px;max-width:1500px;overflow:auto;">
 <table border="1" class="Table">
-<thead> <tr> <th> <div class="djtooltip">
-<p id="primary">recording_id</p>
-<span class="djtooltiptext">None</span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">filtered</p>
-<span class="djtooltiptext">Result in object storage</span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">mean_value</p>
-<span class="djtooltiptext"></span>
-</div> </th> </tr> </thead>
+<thead> <tr> <th> <span id="primary" title="None">recording_id</span></th><th><span id="nonprimary" title="Result in object storage">filtered</span></th><th><span id="nonprimary" title="">mean_value</span> </th> </tr> </thead>
 <tbody> <tr> <td>1</td>
 <td>&lt;blob&gt;</td>
-<td>0.00013025842312467347</td></tr><tr><td>2</td>
+<td>-0.001368765720450917</td></tr><tr><td>2</td>
 <td>&lt;blob&gt;</td>
 <td>1.0000000000000002</td></tr><tr><td>3</td>
 <td>&lt;blob&gt;</td>
@@ -5420,7 +5242,7 @@ print(f"Mean value: {meta}")</div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>Mean value: 0.00013025842312467347
+<pre>Mean value: -0.001368765720450917
 </pre>
 </div>
 </div>
@@ -5541,22 +5363,6 @@ result</div>
             background: #f3f1ff;
             color: #000000;
         }
-        /* Tooltip container */
-        .djtooltip {
-        }
-        /* Tooltip text */
-        .djtooltip .djtooltiptext {
-            visibility: hidden;
-            width: 120px;
-            background-color: black;
-            color: #fff;
-            text-align: center;
-            padding: 5px 0;
-            border-radius: 6px;
-            /* Position the tooltip text - see examples below! */
-            position: absolute;
-            z-index: 1;
-        }
         #primary {
             font-weight: bold;
             color: black;
@@ -5564,11 +5370,6 @@ result</div>
         #nonprimary {
             font-weight: normal;
             color: white;
-        }
-
-        /* Show the tooltip text when you mouse over the tooltip container */
-        .djtooltip:hover .djtooltiptext {
-            visibility: visible;
         }
 
         /* Dark mode support */
@@ -5587,10 +5388,6 @@ result</div>
                 background: #3d3d3d;
                 color: #e0e0e0;
             }
-            .djtooltip .djtooltiptext {
-                background-color: #555555;
-                color: #ffffff;
-            }
             #primary {
                 color: #bd93f9;
             }
@@ -5601,15 +5398,9 @@ result</div>
     </style>
 <div style="max-height:1000px;max-width:1500px;overflow:auto;">
 <table border="1" class="Table">
-<thead> <tr> <th> <div class="djtooltip">
-<p id="primary">recording_id</p>
-<span class="djtooltiptext"></span>
-</div></th><th><div class="djtooltip">
-<p id="nonprimary">mean_value</p>
-<span class="djtooltiptext"></span>
-</div> </th> </tr> </thead>
+<thead> <tr> <th> <span id="primary" title="">recording_id</span></th><th><span id="nonprimary" title="">mean_value</span> </th> </tr> </thead>
 <tbody> <tr> <td>1</td>
-<td>0.00013025842312467347</td></tr><tr><td>2</td>
+<td>-0.001368765720450917</td></tr><tr><td>2</td>
 <td>1.0000000000000002</td></tr><tr><td>3</td>
 <td>1.0000000000000002</td> </tr> </tbody>
 </table>
