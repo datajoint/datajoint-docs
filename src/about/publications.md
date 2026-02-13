@@ -12,6 +12,8 @@ If your work uses DataJoint or DataJoint Elements, please cite the respective
 
 + Celii, B., Papadopoulos, S., Ding, Z., Fahey, P. G., Wang, E., Papadopoulos, C., ... & Reimer, J. (2025). [NEURD offers automated proofreading and feature extraction for connectomics](https://doi.org/10.1038/s41586-025-08660-5). *Nature*, 640(8058), 487-496.
 
++ Coulter, M. E., Gillespie, A. K., Chu, J., Denovellis, E. L., Nguyen, T. T. K., Liu, D. F., Wadhwani, K., Sharma, B., Wang, K., Deng, X., Eden, U. T., Kemere, C. & Frank, L. M. (2025). [Closed-loop modulation of remote hippocampal representations with neurofeedback](https://doi.org/10.1016/j.neuron.2024.12.023). *Neuron*, 113(6), 949-961.
+
 + Ding, Z., Fahey, P.G., Papadopoulos, S., Wang, E.Y., Celii, B., Papadopoulos, C., Chang, A., Kunin, A.B., Tran, D., Fu, J. ... & Tolias, A. S. (2025). [Functional connectomics reveals general wiring rule in mouse visual cortex](https://doi.org/10.1038/s41586-025-08840-3). *Nature*, 640(8058), 459-469.
 
 + Dyszkant, N., Oesterle, J., Qiu, Y., Harrer, M., Schubert, T., Gonschorek, D. & Euler, T. (2025). [Photoreceptor degeneration has heterogeneous effects on functional retinal ganglion cell types](https://doi.org/10.1113/JP287643). *The Journal of Physiology*, 603(21), 6599-6621.
@@ -21,6 +23,8 @@ If your work uses DataJoint or DataJoint Elements, please cite the respective
 + Gillon, C.J., Baker, C., Ly, R., Balzani, E., Brunton, B.W., Schottdorf, M., Ghosh, S. and Dehghani, N.(2025). [Open data in neurophysiology: Advancements, solutions & challenges](https://doi.org/10.1523/ENEURO.0486-24.2025). *eNeuro*, 12(11).
 
 + Huang, J.Y., Hess, M., Bajpai, A., Li, X., Hobson, L.N., Xu, A.J., Barton, S.J. and Lu, H.C.(2025). [From initial formation to developmental refinement: GABAergic inputs shape neuronal subnetworks in the primary somatosensory cortex](https://doi.org/10.1016/j.isci.2025.112104). *iScience*, 28(3).
+
++ Joshi, A., Comrie, A. E., Bray, S., Mankili, A., Guidera, J. A., Nevers, R., Sun, X., Monroe, E., Kharazia, V., Ly, R., Astudillo Maya, D., Morales-Rodriguez, D., Yu, J., Kiseleva, A., Perez, V. & Frank, L. M. (2025). [Disruption of theta-timescale spiking impairs learning but spares hippocampal replay](https://doi.org/10.1101/2025.09.15.675587). *bioRxiv*.
 
 + Lee, K. H., Denovellis, E. L., Ly, R., Magland, J., Soules, J., Comrie, A. E., Gramling, D. P., Guidera, J. A., Nevers, R., Adenekan, P., Brozdowski, C., Bray, S. R., Monroe, E., Bak, J. H., Coulter, M. E., Sun, X., Broyles, E., Shin, D., Chiang, S., Holobetz, C., ... Frank, L. M. (2025). [Spyglass: a data analysis framework for reproducible and shareable neuroscience research](https://elifesciences.org/reviewed-preprints/108089). *eLife*.
 
