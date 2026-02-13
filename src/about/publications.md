@@ -4,6 +4,10 @@ The following publications relied on DataJoint open-source software for data ana
 If your work uses DataJoint or DataJoint Elements, please cite the respective
 [manuscripts and RRIDs](./citation.md).
 
+## 2026
+
++ Sun, X., Comrie, A. E., Kahn, A. E., Monroe, E. J., Joshi, A., Guidera, J. A., Denovellis, E. L., Krausz, T. A., Zhou, J., Thompson, P., Hernandez, J., Yorita, A., Haque, R., Berke, J. D., Daw, N. D. & Frank, L. M. (2026). [Meta-learning is expressed through altered prefrontal cortical dynamics](https://doi.org/10.64898/2026.01.01.697272). *bioRxiv*.
+
 ## 2025
 
 + Campagner, D., Bhagat, J., Lopes, G., Calcaterra, L., Pouget, A. G., Almeida, A., ... & SWC GCNU Experimental Neuroethology Group. (2025). [Aeon: an open-source platform to study the neural basis of ethological behaviours over naturalistic timescales](https://doi.org/10.1101/2025.07.31.664513). *bioRxiv*.
