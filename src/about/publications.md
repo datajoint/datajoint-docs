@@ -116,6 +116,8 @@ If your work uses DataJoint or DataJoint Elements, please cite the respective
 
 + Jiang, X., Shen, S., Cadwell, C. R., Berens, P., Sinz, F., Ecker, A. S., Patel, S., & Tolias, A. S. (2015). [Principles of connectivity among morphologically defined cell types in adult neocortex](https://doi.org/10.1126/science.aac9462). *Science*, 350(6264), aac9462.
 
++ Yatsenko, D., Josić, K., Ecker, A. S., Froudarakis, E., Cotton, R. J., & Tolias, A. S. (2015). [Improved estimation and interpretation of correlations in neural circuits](https://doi.org/10.1371/journal.pcbi.1004083). *PLOS Computational Biology*, 11(3), e1004083.
+
 ## 2014
 
 + Froudarakis, E., Berens, P., Ecker, A. S., Cotton, R. J., Sinz, F. H., Yatsenko, D., Saggau, P., Bethge, M., & Tolias, A. S. (2014). [Population code in mouse V1 facilitates readout of natural scenes through increased sparseness](https://doi.org/10.1038/nn.3707). *Nature Neuroscience*, 17(6), 851-857.
