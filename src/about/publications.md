@@ -44,6 +44,8 @@ If your work uses DataJoint or DataJoint Elements, please cite the respective
 
 + Schmors, L., Kotkat, A.H., Bauer, Y., Huang, Z., Crombie, D., Meyerolbersleben, L.S., Sokoloski, S., Berens, P. & Busse, L. (2025). [Effects of corticothalamic feedback depend on visual responsiveness and stimulus type](https://doi.org/10.1016/j.isci.2025.112481). *iScience*, 28, 112481.
 
++ Sutlief, E., Zhang, S., Foresberg, K., Kaneko, R. & Hussain Shuler, M. G. (2025). [Reward-reset interval timing drives patch foraging decisions through neural state transitions in dorsomedial striatum](https://doi.org/10.1101/2025.09.29.679309). *bioRxiv*.
+
 + Sibener, L.J., Mosberger, A.C., Chen, T.X., Athalye, V.R., Murray, J.M. & Costa, R.M. (2025). [Dissociable roles of distinct thalamic circuits in learning reaches to spatial targets](https://doi.org/10.1038/s41467-025-58143-4). *Nature Communications*, 16, 2962.
 
 ## 2024
@@ -65,6 +67,8 @@ If your work uses DataJoint or DataJoint Elements, please cite the respective
 + Laboratory, I. B., Bonacchi, N., Chapuis, G. A., Churchland, A. K., DeWitt, E. E., Faulkner, M., ... & Wells, M. J. (2023). [A modular architecture for organizing, processing and sharing neurophysiology data](https://doi.org/10.1038/s41592-022-01742-6). *Nature Methods*. 1-5.
 
 ## 2022
+
++ Claudi, F., Campagner, D. & Branco, T. (2022). [Innate heuristics and fast learning support escape route selection in mice](https://doi.org/10.1016/j.cub.2022.05.020). *Current Biology*, 32(13), 2980-2987.
 
 + Franke, K., Willeke, K. F., Ponder, K., Galdamez, M., Zhou, N., Muhammad, T., ... & Tolias, A. S. (2022). [State-dependent pupil dilation rapidly shifts visual feature selectivity](https://www.nature.com/articles/s41586-022-05270-3). *Nature*, 610(7930), 128-134.
 
@@ -92,6 +96,8 @@ If your work uses DataJoint or DataJoint Elements, please cite the respective
 
 + Laboratory, T. I. B., Aguillon-Rodriguez, V., Angelaki, D., Bayer, H., Bonacchi, N., Carandini, M., Cazettes, F., Chapuis, G., Churchland, A. K., Dan, Y., ... (2021). [Standardized and reproducible measurement of decision-making in mice](https://doi.org/10.7554/eLife.63711). *eLife*, 10.
 
++ Subramaniyan, M., Manivannan, S., Chelur, V., Tsetsenis, T., Jiang, E. & Dani, J. A. (2021). [Fear conditioning potentiates the hippocampal CA1 commissural pathway in vivo and increases awake phase sleep](https://doi.org/10.1002/hipo.23381). *Hippocampus*, 31(10), 1154-1175.
+
 ## 2020
 
 + Angelaki, D. E., Ng, J., Abrego, A. M., Cham, H. X., Asprodini, E. K., Dickman, J. D., & Laurens, J. (2020). [A gravity-based three-dimensional compass in the mouse brain](https://doi.org/10.1038/s41467-020-15566-5). *Nature Communications*, 11(1), 1-13.
@@ -113,6 +119,8 @@ If your work uses DataJoint or DataJoint Elements, please cite the respective
 ## 2017
 
 + Franke, K., Berens, P., Schubert, T., Bethge, M., Euler, T., & Baden, T. (2017). [Inhibition decorrelates visual feature representations in the inner retina](https://doi.org/10.1038/nature21394). *Nature*, 542(7642), 439.
+
++ Shan, K. Q., Lubenov, E. V. & Siapas, A. G. (2017). [Model-based spike sorting with a mixture of drifting t-distributions](https://doi.org/10.1016/j.jneumeth.2017.06.017). *Journal of Neuroscience Methods*, 288, 82-98.
 
 ## 2016
 
