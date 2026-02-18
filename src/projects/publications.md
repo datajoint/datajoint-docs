@@ -6,11 +6,26 @@ Title: Publications
 The following publications relied on DataJoint open-source software for data analysis.  If your work uses DataJoint or DataJoint Elements, please cite the respective
 [manuscripts and RRIDs](../about/citation.md).
 
+
+## 2026
+
++ Cotton, R. J. & Leonard, T. (2026). [BiomechAgent: AI-Assisted Biomechanical Analysis Through Code-Generating Agents](https://doi.org/10.48550/arXiv.2602.06975). *arXiv*. 2602.06975.
+
++ Willeke, K. F., Restivo, K., Franke, K., Nix, A. F., Cadena, S. A., Shinn, T., Nealley, C., Rodriguez, G., Patel, S., Ecker, A. S., Sinz, F. H., & Tolias, A. S. (2026). [Deep learning-driven characterization of single cell tuning in primate visual area V4 supports topological organization](https://doi.org/10.7554/eLife.109875.1). *eLife*.
+
 ## 2025
+
++ Finkelstein, A., Daie, K., Rózsa, M., Darshan, R., & Svoboda, K. (2025). [Connectivity underlying motor cortex activity during goal-directed behaviour](https://doi.org/10.1038/s41586-025-09758-6). *Nature*.
 
 + Ding, Z., Fahey, P.G., Papadopoulos, S., Wang, E.Y., Celii, B., Papadopoulos, C., Chang, A., Kunin, A.B., Tran, D., Fu, J. ... & Tolias, A. S. (2025). [Functional connectomics reveals general wiring rule in mouse visual cortex](https://doi.org/10.1038/s41586-025-08840-3). *Nature*, 640(8058), 459-469.
 
++ Sibener, L. J., Mosberger, A. C., Chen, T. X., Athalye, V. R., Murray, J. M., & Costa, R. M. (2025). Dissociable roles of distinct thalamic circuits in learning reaches to spatial targets. Nature Communications, 16(1), 2962.
+
+
 ## 2024 
+
++ Fu, J., Pierzchlewicz, P. A., Willeke, K. F., Bashiri, M., Muhammad, T., Diamantaki, M., ... & Franke, K. (2024). Heterogeneous orientation tuning in the primary visual cortex of mice diverges from Gabor-like receptive fields in primates. [Cell reports 43(8)](
+https://www.cell.com/cell-reports/fulltext/S2211-1247%2824%2900989-6). 
 
 + Reimer, M. L., Kauer, S. D., Benson, C. A., King, J. F., Patwa, S., Feng, S., Estacion, M. A., Bangalore, L., Waxman, S. G., & Tan, A. M. (2024). [A FAIR, open-source virtual reality platform for dendritic spine analysis. Patterns](https://www.cell.com/patterns/pdf/S2666-3899(24)00183-1.pdf), 5(9). *Patterns*, 5(9).
 
