@@ -21,7 +21,7 @@
       
       
       <link rel="icon" href="../../../assets/images/company-logo-blue.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.2">
     
     
       
@@ -5753,6 +5753,10 @@ priority, scheduling, and error information.</p>
 
 
 
+
+
+
+
 <div class="doc doc-object doc-class">
 
 
@@ -6455,8 +6459,10 @@ Default None (no orphan cleanup).</p>
     <div class="doc doc-contents ">
 
         <p>Attempt to reserve a pending job for processing.</p>
-<p>Updates status to <code>'reserved'</code> if currently <code>'pending'</code> and
-<code>scheduled_time &lt;= now</code>.</p>
+<p>Atomically updates status to <code>'reserved'</code> if currently <code>'pending'</code>
+and <code>scheduled_time &lt;= now</code>, using a single UPDATE with a WHERE clause
+that includes the status check. This prevents race conditions where
+multiple workers could reserve the same job simultaneously.</p>
 
 
 <p><span class="doc-section-title">Parameters:</span></p>
