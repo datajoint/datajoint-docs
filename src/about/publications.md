@@ -8,6 +8,8 @@ If your work uses DataJoint or DataJoint Elements, please cite the respective
 
 + Cotton, R. J. & Leonard, T. (2026). [BiomechAgent: AI-Assisted Biomechanical Analysis Through Code-Generating Agents](https://doi.org/10.48550/arXiv.2602.06975). *arXiv*.
 
++ Donahue, S., Djuraskovic, I., Shah, K., Sinz, F., Chafetz, R. & Cotton, R. J. (2026). [Calibrated Uncertainty for Trustworthy Clinical Gait Analysis Using Probabilistic Multiview Markerless Motion Capture](https://doi.org/10.48550/arXiv.2601.22412). *arXiv*.
+
 + Sun, X., Comrie, A. E., Kahn, A. E., Monroe, E. J., Joshi, A., Guidera, J. A., Denovellis, E. L., Krausz, T. A., Zhou, J., Thompson, P., Hernandez, J., Yorita, A., Haque, R., Berke, J. D., Daw, N. D. & Frank, L. M. (2026). [Meta-learning is expressed through altered prefrontal cortical dynamics](https://doi.org/10.64898/2026.01.01.697272). *bioRxiv*.
 
 ## 2025
