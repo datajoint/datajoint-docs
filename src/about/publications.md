@@ -10,9 +10,9 @@ If your work uses DataJoint or DataJoint Elements, please cite the respective
 
 ## 2025
 
-+ Campagner, D., Bhagat, J., Lopes, G., Calcaterra, L., Pouget, A. G., Almeida, A., ... & SWC GCNU Experimental Neuroethology Group. (2025). [Aeon: an open-source platform to study the neural basis of ethological behaviours over naturalistic timescales](https://doi.org/10.1101/2025.07.31.664513). *bioRxiv*.
-
 + Bae, J. A., Baptiste, M., Bodor, A. L., Brittain, D., Buchanan, J., Bumbarger, D. J., Castro, M. A., Celii, B., Cobos, E., Collman, F., ... (2025). [Functional connectomics spanning multiple areas of mouse visual cortex](https://doi.org/10.1038/s41586-025-08790-w). *Nature*, 640(8058), 435-447.
+
++ Campagner, D., Bhagat, J., Lopes, G., Calcaterra, L., Pouget, A. G., Almeida, A., ... & SWC GCNU Experimental Neuroethology Group. (2025). [Aeon: an open-source platform to study the neural basis of ethological behaviours over naturalistic timescales](https://doi.org/10.1101/2025.07.31.664513). *bioRxiv*.
 
 + Celii, B., Papadopoulos, S., Ding, Z., Fahey, P. G., Wang, E., Papadopoulos, C., ... & Reimer, J. (2025). [NEURD offers automated proofreading and feature extraction for connectomics](https://doi.org/10.1038/s41586-025-08660-5). *Nature*, 640(8058), 487-496.
 
@@ -26,6 +26,8 @@ If your work uses DataJoint or DataJoint Elements, please cite the respective
 
 + Gillon, C.J., Baker, C., Ly, R., Balzani, E., Brunton, B.W., Schottdorf, M., Ghosh, S. and Dehghani, N.(2025). [Open data in neurophysiology: Advancements, solutions & challenges](https://doi.org/10.1523/ENEURO.0486-24.2025). *eNeuro*, 12(11).
 
++ Heiser, H., Kiessler, F., Roggenbach, A., Ibanez, V., Wieckhorst, M., Helmchen, F., Gjorgjieva, J. & Wahl, A.-S. (2025). [Brain-wide microstrokes affect the stability of memory circuits in the hippocampus](https://doi.org/10.1038/s41467-025-58688-4). *Nature Communications*, 16, 3462.
+
 + Huang, J.Y., Hess, M., Bajpai, A., Li, X., Hobson, L.N., Xu, A.J., Barton, S.J. and Lu, H.C.(2025). [From initial formation to developmental refinement: GABAergic inputs shape neuronal subnetworks in the primary somatosensory cortex](https://doi.org/10.1016/j.isci.2025.112104). *iScience*, 28(3).
 
 + Joshi, A., Comrie, A. E., Bray, S., Mankili, A., Guidera, J. A., Nevers, R., Sun, X., Monroe, E., Kharazia, V., Ly, R., Astudillo Maya, D., Morales-Rodriguez, D., Yu, J., Kiseleva, A., Perez, V. & Frank, L. M. (2025). [Disruption of theta-timescale spiking impairs learning but spares hippocampal replay](https://doi.org/10.1101/2025.09.15.675587). *bioRxiv*.
@@ -33,6 +35,12 @@ If your work uses DataJoint or DataJoint Elements, please cite the respective
 + Lee, K. H., Denovellis, E. L., Ly, R., Magland, J., Soules, J., Comrie, A. E., Gramling, D. P., Guidera, J. A., Nevers, R., Adenekan, P., Brozdowski, C., Bray, S. R., Monroe, E., Bak, J. H., Coulter, M. E., Sun, X., Broyles, E., Shin, D., Chiang, S., Holobetz, C., ... Frank, L. M. (2025). [Spyglass: a data analysis framework for reproducible and shareable neuroscience research](https://elifesciences.org/reviewed-preprints/108089). *eLife*.
 
 + Lees, R.M., Bianco, I.H., Campbell, R.A.A., Orlova, N., Peterka, D.S., Pichler, B., Smith, S.L., Yatsenko, D., Yu, C.H. & Packer, A.M. (2025). [Standardized measurements for monitoring and comparing multiphoton microscope systems](https://doi.org/10.1038/s41596-024-01120-w). *Nature Protocols*, 20, 2171–2208.
+
++ Oesterle, J., Ran, Y., Stahr, P., Kerr, J. N. D., Schubert, T., Berens, P. & Euler, T. (2025). [Task-specific regional circuit adaptations in distinct mouse retinal ganglion cells](https://doi.org/10.1126/sciadv.adp7075). *Science Advances*, 11(17).
+
++ Panzeri, M., Thiem, N., Hoffmann, C., Schillinger, U., Barapatre, N., Musall, S., Helmchen, F. & Wahl, A.-S. (2025). [Contralesional activity reflects compensation, while brainstem detour pathways support skilled motor recovery after stroke](https://doi.org/10.1101/2025.11.24.690099). *bioRxiv*.
+
++ Peiffer, J. D., Shah, K., Djuraskovic, I., Anarwala, S., Abdou, K., Patel, R., Jayabalan, P., Pennicooke, B. & Cotton, R. J. (2025). [Portable Biomechanics Laboratory: Clinically accessible movement analysis from a handheld smartphone](https://doi.org/10.48550/arXiv.2507.08268). *arXiv*.
 
 + Schmors, L., Kotkat, A.H., Bauer, Y., Huang, Z., Crombie, D., Meyerolbersleben, L.S., Sokoloski, S., Berens, P. & Busse, L. (2025). [Effects of corticothalamic feedback depend on visual responsiveness and stimulus type](https://doi.org/10.1016/j.isci.2025.112481). *iScience*, 28, 112481.
 
