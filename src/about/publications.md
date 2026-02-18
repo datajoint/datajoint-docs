@@ -96,6 +96,8 @@ If your work uses DataJoint or DataJoint Elements, please cite the respective
 
 + Laboratory, T. I. B., Aguillon-Rodriguez, V., Angelaki, D., Bayer, H., Bonacchi, N., Carandini, M., Cazettes, F., Chapuis, G., Churchland, A. K., Dan, Y., ... (2021). [Standardized and reproducible measurement of decision-making in mice](https://doi.org/10.7554/eLife.63711). *eLife*, 10.
 
++ Reimer, M. L., Bangalore, L., Waxman, S. G. & Tan, A. M. (2021). [Core principles for the implementation of the neurodata without borders data standard](https://doi.org/10.1016/j.jneumeth.2020.108972). *Journal of Neuroscience Methods*, 348, 108972.
+
 + Subramaniyan, M., Manivannan, S., Chelur, V., Tsetsenis, T., Jiang, E. & Dani, J. A. (2021). [Fear conditioning potentiates the hippocampal CA1 commissural pathway in vivo and increases awake phase sleep](https://doi.org/10.1002/hipo.23381). *Hippocampus*, 31(10), 1154-1175.
 
 ## 2020
