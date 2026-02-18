@@ -21,8 +21,12 @@ The following publications relied on DataJoint open-source software for data ana
 
 + Sibener, L. J., Mosberger, A. C., Chen, T. X., Athalye, V. R., Murray, J. M., & Costa, R. M. (2025). Dissociable roles of distinct thalamic circuits in learning reaches to spatial targets. Nature Communications, 16(1), 2962.
 
++ Schmors, L., Kotkat, A. H., Bauer, Y., Huang, Z., Crombie, D., Meyerolbersleben, L. S., Sokoloski, S., Berens, P., & Busse, L. (2025). [Effects of corticothalamic feedback depend on visual responsiveness and stimulus type](https://doi.org/10.1016/j.isci.2025.112481). *iScience*, 28(6), 112481.
 
-## 2024 
++ Heiser, H., Kiessler, F., Roggenbach, A., Ibanez, V., Wieckhorst, M., Helmchen, F., Gjorgjieva, J., & Wahl, A. S. (2025). [Brain-wide microstrokes affect the stability of memory circuits in the hippocampus](https://doi.org/10.1038/s41467-025-58688-4). *Nature Communications*, 16, 3462.
+
+
+## 2024
 
 + Fu, J., Pierzchlewicz, P. A., Willeke, K. F., Bashiri, M., Muhammad, T., Diamantaki, M., ... & Franke, K. (2024). Heterogeneous orientation tuning in the primary visual cortex of mice diverges from Gabor-like receptive fields in primates. [Cell reports 43(8)](
 https://www.cell.com/cell-reports/fulltext/S2211-1247%2824%2900989-6). 
