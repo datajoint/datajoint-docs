@@ -120,7 +120,7 @@ Choose your learning path based on your goals:
 
 **Prerequisites:** Complete basics, understand computation model
 
-**Production Software: [DataJoint Elements](https://datajoint.com/docs/elements/)**
+**Production Software: [DataJoint Elements](https://docs.datajoint.com/elements/)**
 
 Standard pipelines for neurophysiology experiments, actively used in many labs worldwide. These are not tutorials—they are production-ready modular pipelines for calcium imaging, electrophysiology, array ephys, optogenetics, and more.
 
