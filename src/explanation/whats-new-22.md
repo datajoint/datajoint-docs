@@ -202,6 +202,6 @@ Once a Schema is created, table definitions, inserts, queries, and all other ope
 ## See Also
 
 - [Use Isolated Instances](../how-to/use-instances.md/) — Task-oriented guide
-- [Working with Instances](../tutorials/advanced/instances/) — Step-by-step tutorial
+- [Working with Instances](../tutorials/advanced/instances.ipynb/) — Step-by-step tutorial
 - [Configuration Reference](../reference/configuration.md/) — Thread-safe mode settings
 - [Configure Database](../how-to/configure-database.md/) — Connection setup

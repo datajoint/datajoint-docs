@@ -140,5 +140,5 @@ def test_insert(test_instance):
 ## See Also
 
 - [What's New in 2.2](../explanation/whats-new-22.md/) — Feature overview and rationale
-- [Working with Instances](../tutorials/advanced/instances/) — Step-by-step tutorial
+- [Working with Instances](../tutorials/advanced/instances.ipynb/) — Step-by-step tutorial
 - [Configuration Reference](../reference/configuration.md/) — Thread-safe mode settings
