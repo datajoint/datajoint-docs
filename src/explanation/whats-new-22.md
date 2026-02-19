@@ -4,6 +4,8 @@ DataJoint 2.2 introduces **isolated instances** and **thread-safe mode** for app
 
 > **Upgrading from 2.0 or 2.1?** No breaking changes. All existing code using `dj.config` and `dj.Schema()` continues to work. The new Instance API is purely additive.
 
+> **Citation:** Yatsenko D, Nguyen TT. *DataJoint 2.0: A Computational Substrate for Agentic Scientific Workflows.* arXiv:2602.16585. 2026. [doi:10.48550/arXiv.2602.16585](https://doi.org/10.48550/arXiv.2602.16585)
+
 ## Overview
 
 DataJoint has traditionally used a global singleton pattern: one configuration (`dj.config`), one connection (`dj.conn()`), shared across all tables in a process. This works well for interactive sessions and single-user scripts, but breaks down when:
