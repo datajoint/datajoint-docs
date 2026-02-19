@@ -286,6 +286,75 @@ with dj.config.override(display__diagram_direction="TB"):  # in override()
 
 The double underscore maps to the dot-notation path: `display__diagram_direction` → `display.diagram_direction`.
 
+## Instance API
+
+!!! version-added "New in 2.2"
+    `dj.Instance` provides isolated config and connection for multi-tenant and thread-safe use.
+
+`dj.Instance` encapsulates a Config and Connection pair, independent of global state:
+
+```python
+inst = dj.Instance(host="localhost", user="root", password="secret")
+schema = inst.Schema("my_schema")
+```
+
+### Parameters
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `host` | str | — | Database hostname (required) |
+| `user` | str | — | Database username (required) |
+| `password` | str | — | Database password (required) |
+| `port` | int | from config | Database port |
+| `use_tls` | bool or dict | `None` | TLS configuration |
+| `**kwargs` | — | — | Config overrides (e.g., `safemode=False`, `database__reconnect=False`) |
+
+### Attributes and Methods
+
+| Member | Description |
+|--------|-------------|
+| `inst.config` | This Instance's Config object |
+| `inst.connection` | This Instance's Connection object |
+| `inst.Schema(name)` | Create a Schema bound to this Instance |
+| `inst.FreeTable(full_name)` | Create a FreeTable bound to this Instance |
+
+See [What's New in 2.2](../explanation/whats-new-22.md/) for usage examples and rationale.
+
+## Thread-Safe Mode
+
+!!! version-added "New in 2.2"
+    Thread-safe mode disables global singletons to prevent shared-state bugs in concurrent applications.
+
+| Setting | Environment | Default | Description |
+|---------|-------------|---------|-------------|
+| Thread-safe mode | `DJ_THREAD_SAFE` | `false` | Disable global `dj.config` and `dj.conn()` |
+
+Accepted values for `DJ_THREAD_SAFE`: `true`, `1`, `yes` (enabled) or `false`, `0`, `no` (disabled).
+
+When enabled, the following raise `ThreadSafetyError`:
+
+- Any access to `dj.config` (read or write)
+- Calling `dj.conn()`
+- Calling `dj.Schema()` without an explicit connection
+
+Only `dj.Instance()` works in thread-safe mode, enforcing explicit connection management.
+
+```python
+import os
+os.environ["DJ_THREAD_SAFE"] = "true"
+
+import datajoint as dj
+
+# These all raise ThreadSafetyError:
+# dj.config.database.host
+# dj.conn()
+# dj.Schema("my_db")
+
+# This works:
+inst = dj.Instance(host="localhost", user="root", password="secret")
+schema = inst.Schema("my_db")
+```
+
 ## API Reference
 
 See [Settings API](../api/datajoint/settings.md/) for programmatic access.

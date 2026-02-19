@@ -242,3 +242,32 @@ conn = dj.conn()
 conn.close()
 ```
 
+## Instance-Based Connections
+
+!!! version-added "New in 2.2"
+    `dj.Instance` provides isolated connections independent of global config.
+
+For applications that need multiple connections or thread safety, use `dj.Instance` instead of global config:
+
+```python
+import datajoint as dj
+
+inst = dj.Instance(host="db.example.com", user="myuser", password="mypassword")
+schema = inst.Schema("my_schema")
+```
+
+Each Instance has its own config and connection. This is useful for:
+
+- **Web servers**: One Instance per request or tenant
+- **Testing**: Isolated databases per test
+- **Multi-database**: Connect to production and staging simultaneously
+- **Thread safety**: Set `DJ_THREAD_SAFE=true` to enforce Instance usage
+
+```python
+# Multiple simultaneous connections
+prod = dj.Instance(host="prod.example.com", user="analyst", password="...")
+staging = dj.Instance(host="staging.example.com", user="dev", password="...")
+```
+
+See [Use Isolated Instances](use-instances.md/) for a complete guide.
+
