@@ -17,7 +17,7 @@ DataJoint provides two patterns for database access:
 ### `dj.Instance`
 
 ```python
-dj.Instance(host, user, password, port=None, use_tls=None, **kwargs)
+dj.Instance(host, user, password, port=None, use_tls=None, backend=None, **kwargs)
 ```
 
 Creates an isolated config and connection pair.
@@ -27,9 +27,38 @@ Creates an isolated config and connection pair.
 | `host` | `str` | — | Database hostname (required) |
 | `user` | `str` | — | Database username (required) |
 | `password` | `str` | — | Database password (required) |
-| `port` | `int` | from config | Database port |
+| `port` | `int` | from config | Database port (see backend defaults below) |
 | `use_tls` | `bool \| dict` | `None` | TLS configuration |
+| `backend` | `str` | from config | `"mysql"` or `"postgresql"` |
 | `**kwargs` | — | — | Config overrides (see below) |
+
+#### Backend selection
+
+The `backend` parameter selects the database engine. When set, it also determines the default port:
+
+| Backend | Default port |
+|---------|-------------|
+| `"mysql"` | 3306 |
+| `"postgresql"` | 5432 |
+
+If `backend` is omitted, it defaults to `config.database.backend` (which itself defaults to `"mysql"` unless overridden by environment or config file). An explicit `port` always takes precedence over the backend default.
+
+```python
+# MySQL (default)
+inst = dj.Instance(host="db.example.com", user="root", password="secret")
+
+# PostgreSQL — port defaults to 5432
+inst = dj.Instance(
+    host="db.example.com", user="postgres", password="secret",
+    backend="postgresql",
+)
+
+# PostgreSQL on a non-standard port
+inst = dj.Instance(
+    host="db.example.com", user="postgres", password="secret",
+    backend="postgresql", port=5433,
+)
+```
 
 **Config overrides:** Any keyword argument that matches a config attribute is applied to the Instance's config. Use double underscores for nested settings:
 
@@ -165,13 +194,13 @@ schema.drop() reads self.connection._config["safemode"]  → False ✓
 
 ```python
 Connection(host, user, password, port, use_tls,
-           backend="mysql",              # explicit backend selection
+           backend="mysql",              # "mysql" or "postgresql"
            config_override=inst.config)  # use this config, not the global
 ```
 
 When `config_override` is provided, the Connection uses it for all config reads (port, charset, reconnect, query cache, etc.). When omitted, it falls back to the module-level `settings.config`.
 
-When `backend` is provided, it is used directly. When omitted, the backend is read from `self._config["database.backend"]`.
+When `backend` is provided, it selects the database adapter directly (`"mysql"` → `pymysql`, `"postgresql"` → `psycopg`). When omitted, the backend is read from `self._config["database.backend"]` (default: `"mysql"`).
 
 ### Connection-scoped config reads
 
