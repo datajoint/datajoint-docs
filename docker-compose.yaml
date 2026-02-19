@@ -73,6 +73,8 @@ services:
         condition: service_healthy
       postgres:
         condition: service_healthy
+      minio:
+        condition: service_healthy
     command:
       - sh
       - -c
@@ -94,6 +96,7 @@ services:
             # EXECUTE_PG mode: execute notebooks against PostgreSQL
             pip install -e "/datajoint-python[postgres]"
             pip install scikit-image pooch nbconvert matplotlib faker zarr
+            mkdir -p /tmp/datajoint-tutorials
             echo "Executing notebooks against PostgreSQL..."
             export DJ_HOST=postgres
             python scripts/execute_notebooks.py --backend postgresql
@@ -101,6 +104,7 @@ services:
             # EXECUTE mode: execute notebooks against MySQL (default)
             pip install -e /datajoint-python
             pip install scikit-image pooch nbconvert matplotlib faker zarr
+            mkdir -p /tmp/datajoint-tutorials
             echo "Executing notebooks against MySQL..."
             python scripts/execute_notebooks.py --backend mysql
         else
