@@ -1,6 +1,6 @@
 # DataJoint Documentation (Full)
 
-Generated: 2026-02-18 19:06:35 UTC
+Generated: 2026-02-22 22:41:56 UTC
 Commit: unknown
 Branch: unknown
 
@@ -3037,6 +3037,8 @@ DataJoint 2.0 is a major release that establishes DataJoint as a mature framewor
 >
 > This page summarizes new features and concepts. For step-by-step migration instructions, see the **[Migration Guide](../how-to/migrate-to-v20.md/)**.
 
+> **Citation:** Yatsenko D, Nguyen TT. *DataJoint 2.0: A Computational Substrate for Agentic Scientific Workflows.* arXiv:2602.16585. 2026. [doi:10.48550/arXiv.2602.16585](https://doi.org/10.48550/arXiv.2602.16585)
+
 ## Overview
 
 DataJoint 2.0 introduces fundamental improvements to type handling, job coordination, and object storage while maintaining compatibility with your existing pipelines during migration. Key themes:
@@ -3320,6 +3322,220 @@ Most users complete Phases 1-2 in a single session. Phases 3-4 only apply if you
 - [Type System Specification](../reference/specs/type-system.md/) — Complete type system details
 - [Codec API](../reference/specs/codec-api.md/) — Build custom codecs
 - [AutoPopulate Specification](../reference/specs/autopopulate.md/) — Jobs 2.0 reference
+
+
+---
+## File: explanation/whats-new-22.md
+
+# What's New in DataJoint 2.2
+
+DataJoint 2.2 introduces **isolated instances** and **thread-safe mode** for applications that need multiple independent database connections—web servers, multi-tenant notebooks, parallel pipelines, and testing.
+
+> **Upgrading from 2.0 or 2.1?** No breaking changes. All existing code using `dj.config` and `dj.Schema()` continues to work. The new Instance API is purely additive.
+
+> **Citation:** Yatsenko D, Nguyen TT. *DataJoint 2.0: A Computational Substrate for Agentic Scientific Workflows.* arXiv:2602.16585. 2026. [doi:10.48550/arXiv.2602.16585](https://doi.org/10.48550/arXiv.2602.16585)
+
+## Overview
+
+DataJoint has traditionally used a global singleton pattern: one configuration (`dj.config`), one connection (`dj.conn()`), shared across all tables in a process. This works well for interactive sessions and single-user scripts, but breaks down when:
+
+- A web server handles requests for different databases simultaneously
+- A notebook connects to production and staging databases side by side
+- Tests need isolated databases that don't interfere with each other
+- Parallel pipelines need independent connections
+
+DataJoint 2.2 solves this with `dj.Instance`—an object that bundles its own configuration and connection, independent of global state.
+
+## `dj.Instance` API
+
+An Instance encapsulates a config and connection pair. Create one by providing database credentials directly:
+
+```python
+import datajoint as dj
+
+inst = dj.Instance(host="localhost", user="root", password="secret")
+```
+
+Then use `inst.Schema()` instead of `dj.Schema()`:
+
+```python
+schema = inst.Schema("my_database")
+
+@schema
+class Experiment(dj.Manual):
+    definition = """
+    experiment_id : int32
+    ---
+    description : varchar(255)
+    """
+```
+
+Tables defined this way use the Instance's connection—completely independent of `dj.config` and `dj.conn()`.
+
+### Instance Parameters
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `host` | str | — | Database hostname (required) |
+| `user` | str | — | Database username (required) |
+| `password` | str | — | Database password (required) |
+| `port` | int | from config | Database port (default: 3306 for MySQL, 5432 for PostgreSQL) |
+| `use_tls` | bool or dict | `None` | TLS configuration |
+| `**kwargs` | — | — | Config overrides (e.g., `safemode=False`) |
+
+### Instance Methods
+
+| Method | Description |
+|--------|-------------|
+| `inst.Schema(name)` | Create a Schema bound to this Instance's connection |
+| `inst.FreeTable(full_name)` | Create a FreeTable bound to this Instance's connection |
+| `inst.config` | Access this Instance's Config object |
+| `inst.connection` | Access this Instance's Connection object |
+
+### Config Overrides
+
+Pass any config setting as a keyword argument. Use double underscores for nested settings:
+
+```python
+inst = dj.Instance(
+    host="localhost", user="root", password="secret",
+    safemode=False,
+    database__reconnect=False,
+)
+```
+
+## Multiple Databases
+
+Instances make it straightforward to work with multiple databases simultaneously:
+
+```python
+production = dj.Instance(host="prod.example.com", user="analyst", password="...")
+staging = dj.Instance(host="staging.example.com", user="dev", password="...")
+
+prod_schema = production.Schema("experiment_data")
+staging_schema = staging.Schema("experiment_data")
+
+# Query both independently
+prod_data = ProdTable.to_dicts()
+staging_data = StagingTable.to_dicts()
+```
+
+Each Instance maintains its own connection pool and configuration—no cross-contamination.
+
+## Thread-Safe Mode
+
+For applications where global state is dangerous (web servers, multi-threaded workers), enable thread-safe mode:
+
+```bash
+export DJ_THREAD_SAFE=true
+```
+
+When thread-safe mode is enabled:
+
+- `dj.config` raises `ThreadSafetyError` on any access
+- `dj.conn()` raises `ThreadSafetyError`
+- `dj.Schema()` without an explicit connection raises `ThreadSafetyError`
+- Only `dj.Instance()` works, enforcing explicit connection management
+
+This prevents accidental use of shared global state in concurrent environments.
+
+### `ThreadSafetyError`
+
+```python
+import os
+os.environ["DJ_THREAD_SAFE"] = "true"
+
+import datajoint as dj
+
+dj.config.database.host  # raises ThreadSafetyError
+dj.conn()                # raises ThreadSafetyError
+
+# Instead, use Instance:
+inst = dj.Instance(host="localhost", user="root", password="secret")
+schema = inst.Schema("my_db")  # works
+```
+
+### Environment Variable
+
+| Variable | Values | Default | Description |
+|----------|--------|---------|-------------|
+| `DJ_THREAD_SAFE` | `true`, `1`, `yes` / `false`, `0`, `no` | `false` | Enable thread-safe mode |
+
+## Connection-Scoped Config
+
+Each Instance carries its own `Config` object. Runtime configuration reads go through the Instance's config, not global state:
+
+```python
+inst = dj.Instance(host="localhost", user="root", password="secret")
+
+# Instance-scoped config
+inst.config.safemode = False
+inst.config.display.limit = 25
+
+# Global config is unaffected
+print(dj.config.safemode)  # still True (default)
+```
+
+Tables created through an Instance's Schema read config from that Instance's connection, not from `dj.config`.
+
+## When to Use Instances
+
+| Scenario | Pattern |
+|----------|---------|
+| Interactive notebook, single database | `dj.config` + `dj.Schema()` (global pattern) |
+| Script connecting to one database | Either pattern works |
+| Web server (Flask, FastAPI, Django) | `dj.Instance()` per request/tenant |
+| Multi-database comparison | One `dj.Instance()` per database |
+| Parallel workers | `dj.Instance()` per worker + `DJ_THREAD_SAFE=true` |
+| Test suite | `dj.Instance()` per test for isolation |
+| Shared notebook server | `dj.Instance()` per user session |
+
+## Comparison: Global vs Instance
+
+### Global Pattern (unchanged)
+
+```python
+import datajoint as dj
+
+# Config set via environment, files, or programmatically
+dj.config["database.host"] = "localhost"
+
+schema = dj.Schema("my_db")
+
+@schema
+class MyTable(dj.Manual):
+    definition = """
+    id : int32
+    ---
+    value : float64
+    """
+```
+
+### Instance Pattern (new in 2.2)
+
+```python
+import datajoint as dj
+
+inst = dj.Instance(host="localhost", user="root", password="secret")
+schema = inst.Schema("my_db")
+
+@schema
+class MyTable(dj.Manual):
+    definition = """
+    id : int32
+    ---
+    value : float64
+    """
+```
+
+Once a Schema is created, table definitions, inserts, queries, and all other operations work identically regardless of which pattern was used to create the Schema.
+
+## See Also
+
+- [Use Isolated Instances](../how-to/use-instances.md/) — Task-oriented guide
+- [Working with Instances](../tutorials/advanced/instances.ipynb/) — Step-by-step tutorial
+- [Configuration Reference](../reference/configuration.md/) — Thread-safe mode settings
+- [Configure Database](../how-to/configure-database.md/) — Connection setup
 
 
 ============================================================
@@ -3627,6 +3843,218 @@ Analysis.populate(reserve_jobs=True, suppress_errors=True)
 
 ```python
 schema.drop(prompt=False)
+```
+
+
+---
+## File: tutorials/advanced/instances.ipynb
+
+# Working with Instances
+
+This tutorial introduces `dj.Instance`, which provides isolated database connections. You'll learn to:
+
+- Create an Instance with explicit credentials
+- Define tables using `inst.Schema()`
+- Insert and query data (same API as the global pattern)
+- Connect to multiple databases simultaneously
+- Understand when to use Instances vs the global pattern
+
+> **New in DataJoint 2.2.** For the rationale behind Instances, see [What's New in 2.2](../../explanation/whats-new-22.md).
+
+## Setup
+
+Instead of configuring `dj.config` and calling `dj.Schema()`, we create an Instance with explicit credentials:
+
+
+```python
+import os
+import datajoint as dj
+
+inst = dj.Instance(
+    host=os.environ.get("DJ_HOST", "localhost"),
+    user=os.environ.get("DJ_USER", "root"),
+    password=os.environ.get("DJ_PASS", "tutorial"),
+)
+```
+
+
+The Instance has its own config. Any settings we change here don't affect `dj.config`:
+
+
+```python
+inst.config.safemode = False
+print(f"Instance safemode: {inst.config.safemode}")
+print(f"Global safemode:   {dj.config.safemode}")
+```
+
+
+## Define Tables
+
+Create a Schema from the Instance. Table definitions work exactly like the global pattern:
+
+
+```python
+schema = inst.Schema('tutorial_instances')
+
+@schema
+class Lab(dj.Manual):
+    definition = """
+    lab_id : int32
+    ---
+    lab_name : varchar(100)
+    institution : varchar(200)
+    """
+
+@schema
+class Researcher(dj.Manual):
+    definition = """
+    -> Lab
+    researcher_id : int32
+    ---
+    researcher_name : varchar(100)
+    """
+```
+
+
+## Insert and Query Data
+
+All data operations work identically—insert, restriction, projection, join, aggregation:
+
+
+```python
+Lab.insert([
+    {'lab_id': 1, 'lab_name': 'Neural Dynamics', 'institution': 'MIT'},
+    {'lab_id': 2, 'lab_name': 'Vision Lab', 'institution': 'Stanford'},
+])
+
+Researcher.insert([
+    {'lab_id': 1, 'researcher_id': 1, 'researcher_name': 'Alice Chen'},
+    {'lab_id': 1, 'researcher_id': 2, 'researcher_name': 'Bob Park'},
+    {'lab_id': 2, 'researcher_id': 3, 'researcher_name': 'Carol Ruiz'},
+])
+```
+
+
+
+```python
+# Restriction
+Researcher & {'lab_id': 1}
+```
+
+
+
+```python
+# Join
+Researcher * Lab
+```
+
+
+
+```python
+# Aggregation
+Lab.aggr(Researcher, num_researchers='count(*)')
+```
+
+
+
+```python
+# Fetch
+Researcher.to_dicts()
+```
+
+
+## Multiple Instances
+
+The real power of Instances is connecting to multiple databases at once. Let's create a second Instance that points to a different schema on the same server (in practice, these could be entirely different servers):
+
+
+```python
+inst2 = dj.Instance(
+    host=os.environ.get("DJ_HOST", "localhost"),
+    user=os.environ.get("DJ_USER", "root"),
+    password=os.environ.get("DJ_PASS", "tutorial"),
+)
+schema2 = inst2.Schema('tutorial_instances_2')
+
+@schema2
+class Project(dj.Manual):
+    definition = """
+    project_id : int32
+    ---
+    project_name : varchar(200)
+    """
+
+Project.insert([
+    {'project_id': 1, 'project_name': 'Brain Mapping Initiative'},
+    {'project_id': 2, 'project_name': 'Visual Cortex Study'},
+])
+```
+
+
+
+```python
+# Query each independently
+print("Labs from instance 1:")
+for row in Lab.to_dicts():
+    print(f"  {row['lab_name']} ({row['institution']})")
+
+print("\nProjects from instance 2:")
+for row in Project.to_dicts():
+    print(f"  {row['project_name']}")
+```
+
+
+## Global Pattern vs Instance Pattern
+
+The global pattern reads credentials from config files and environment variables:
+
+```python
+# Global pattern (unchanged, still works)
+import datajoint as dj
+schema = dj.Schema('my_db')  # uses dj.config credentials
+```
+
+The Instance pattern provides credentials explicitly:
+
+```python
+# Instance pattern (new in 2.2)
+inst = dj.Instance(host='localhost', user='root', password='secret')
+schema = inst.Schema('my_db')  # uses inst's own connection
+```
+
+Once a Schema exists, all table operations are the same regardless of how it was created.
+
+**When to use which:**
+
+| Scenario | Recommendation |
+|----------|----------------|
+| Interactive notebook, one database | Global pattern |
+| Web server, multi-tenant | Instance pattern |
+| Testing with isolation | Instance pattern |
+| Multiple databases at once | Instance pattern |
+| Single-user script | Either works |
+
+## Summary
+
+| Concept | Description |
+|---------|-------------|
+| `dj.Instance(host, user, password)` | Create an isolated config + connection |
+| `inst.Schema(name)` | Create a Schema using the Instance's connection |
+| `inst.config` | Per-instance configuration |
+| `inst.FreeTable(full_name)` | Access an existing table without a class |
+| `DJ_THREAD_SAFE=true` | Disable global state, force Instance usage |
+
+### Next Steps
+
+- [What's New in 2.2](../../explanation/whats-new-22.md) — Feature overview and rationale
+- [Use Isolated Instances](../../how-to/use-instances.md) — Task-oriented guide
+- [Configuration Reference](../../reference/configuration.md) — Thread-safe mode settings
+
+
+```python
+# Cleanup
+schema.drop(prompt=False)
+schema2.drop(prompt=False)
 ```
 
 
@@ -4659,6 +5087,26 @@ You've learned the fundamentals of DataJoint:
 | **Projection** | `.proj()` selects/computes columns |
 | **Join** | `*` combines tables |
 | **Aggregation** | `.aggr()` summarizes groups |
+
+## Alternative: Using Instances
+
+The tutorial above used DataJoint's global configuration (`dj.config` + `dj.Schema()`). For applications that need isolated connections—web servers, testing, multi-database workflows—use `dj.Instance` (new in 2.2):
+
+```python
+inst = dj.Instance(host="localhost", user="root", password="password")
+schema = inst.Schema("tutorial_first_pipeline_inst")
+
+@schema
+class Subject(dj.Manual):
+    definition = """
+    subject_id : int32
+    ---
+    species : varchar(32)
+    """
+# ... same table definitions and operations work identically
+```
+
+See [Working with Instances](../advanced/instances/) for a full tutorial.
 
 ### Next Steps
 
@@ -10580,6 +11028,7 @@ Using international standards ensures data consistency and enables integration w
 ```python
 import datajoint as dj
 import numpy as np
+from datetime import date
 from faker import Faker
 
 dj.config['display.limit'] = 8
@@ -10721,8 +11170,8 @@ Person.insert(
     {
         'person_id': i,
         'name': fake.name(),
-        'date_of_birth': fake.date_of_birth(
-            minimum_age=18, maximum_age=70)
+        'date_of_birth': fake.date_between(
+            start_date=date(1956, 1, 1), end_date=date(2008, 1, 1))
     }
     for i in range(n_people)
 )
@@ -11114,7 +11563,7 @@ def generate_students(n=500):
             'last_name': name[-1],
             'sex': sex,
             'date_of_birth': fake.date_between(
-                start_date='-35y', end_date='-17y'),
+                start_date=date(1991, 1, 1), end_date=date(2009, 1, 1)),
             'home_city': fake.city(),
             'home_state': fake.state_abbr()
         }
@@ -11140,7 +11589,8 @@ depts = Department.keys()
 StudentMajor.insert(
     {
         **s, **random.choice(depts),
-        'declare_date': fake.date_between(start_date='-4y')
+        'declare_date': fake.date_between(
+            start_date=date(2022, 1, 1), end_date=date(2026, 1, 1))
     }
     for s in students if random.random() < 0.75
 )
@@ -11710,7 +12160,7 @@ Choose your learning path based on your goals:
 
 **Prerequisites:** Complete basics, understand computation model
 
-**Production Software: [DataJoint Elements](https://datajoint.com/docs/elements/)**
+**Production Software: [DataJoint Elements](https://docs.datajoint.com/elements/)**
 
 Standard pipelines for neurophysiology experiments, actively used in many labs worldwide. These are not tutorials—they are production-ready modular pipelines for calcium imaging, electrophysiology, array ephys, optogenetics, and more.
 
@@ -13306,6 +13756,35 @@ conn = dj.conn()
 # ... do work ...
 conn.close()
 ```
+
+## Instance-Based Connections
+
+!!! version-added "New in 2.2"
+    `dj.Instance` provides isolated connections independent of global config.
+
+For applications that need multiple connections or thread safety, use `dj.Instance` instead of global config:
+
+```python
+import datajoint as dj
+
+inst = dj.Instance(host="db.example.com", user="myuser", password="mypassword")
+schema = inst.Schema("my_schema")
+```
+
+Each Instance has its own config and connection. This is useful for:
+
+- **Web servers**: One Instance per request or tenant
+- **Testing**: Isolated databases per test
+- **Multi-database**: Connect to production and staging simultaneously
+- **Thread safety**: Set `DJ_THREAD_SAFE=true` to enforce Instance usage
+
+```python
+# Multiple simultaneous connections
+prod = dj.Instance(host="prod.example.com", user="analyst", password="...")
+staging = dj.Instance(host="staging.example.com", user="dev", password="...")
+```
+
+See [Use Isolated Instances](use-instances.md/) for a complete guide.
 
 
 
@@ -22507,6 +22986,155 @@ cli(["-s", "my_lab:lab"])
 
 
 ---
+## File: how-to/use-instances.md
+
+# Use Isolated Instances
+
+Create independent database connections using `dj.Instance` for multi-tenant applications, testing, and parallel pipelines.
+
+## Create an Instance
+
+Provide database credentials directly:
+
+```python
+import datajoint as dj
+
+inst = dj.Instance(host="localhost", user="root", password="secret")
+```
+
+The Instance has its own config and connection, independent of `dj.config`:
+
+```python
+inst.config.safemode = False  # only affects this instance
+```
+
+## Create Schemas and Tables
+
+Use `inst.Schema()` instead of `dj.Schema()`:
+
+```python
+schema = inst.Schema("my_experiment")
+
+@schema
+class Subject(dj.Manual):
+    definition = """
+    subject_id : int32
+    ---
+    species : varchar(32)
+    """
+```
+
+All table operations (insert, query, delete, populate) work identically to the global pattern.
+
+## Pass Config Overrides
+
+Set config values at creation time using keyword arguments:
+
+```python
+inst = dj.Instance(
+    host="localhost", user="root", password="secret",
+    safemode=False,
+    database__reconnect=False,  # double underscore for nested keys
+)
+```
+
+## Work with Multiple Databases
+
+Create one Instance per database:
+
+```python
+prod = dj.Instance(host="prod.example.com", user="analyst", password="...")
+staging = dj.Instance(host="staging.example.com", user="dev", password="...")
+
+prod_schema = prod.Schema("experiment_data")
+staging_schema = staging.Schema("experiment_data")
+```
+
+Tables from different Instances are fully independent.
+
+## Use FreeTable with Instances
+
+To access an existing table without defining a class:
+
+```python
+inst = dj.Instance(host="localhost", user="root", password="secret")
+table = inst.FreeTable("`my_schema`.`my_table`")
+table.to_dicts()
+```
+
+## Enable Thread-Safe Mode
+
+For web servers and multi-threaded applications, disable global state:
+
+```bash
+export DJ_THREAD_SAFE=true
+```
+
+In thread-safe mode, `dj.config`, `dj.conn()`, and `dj.Schema()` (without an explicit connection) all raise `ThreadSafetyError`. Only `dj.Instance()` works.
+
+## Use in Web Servers
+
+Create an Instance per request or per tenant:
+
+```python
+from flask import Flask, g
+
+app = Flask(__name__)
+
+def get_instance():
+    if "dj_inst" not in g:
+        g.dj_inst = dj.Instance(
+            host="db.example.com",
+            user=current_user.db_user,
+            password=current_user.db_password,
+        )
+    return g.dj_inst
+
+@app.route("/subjects")
+def list_subjects():
+    inst = get_instance()
+    schema = inst.Schema("lab_data")
+    return Subject.to_dicts()
+```
+
+## Use in Tests
+
+Create a fresh Instance per test to ensure isolation:
+
+```python
+import pytest
+import datajoint as dj
+
+@pytest.fixture
+def test_instance():
+    inst = dj.Instance(host="localhost", user="root", password="test")
+    schema = inst.Schema("test_db")
+    yield inst, schema
+    schema.drop(prompt=False)
+
+def test_insert(test_instance):
+    inst, schema = test_instance
+
+    @schema
+    class Item(dj.Manual):
+        definition = """
+        item_id : int32
+        ---
+        name : varchar(100)
+        """
+
+    Item.insert1({"item_id": 1, "name": "test"})
+    assert len(Item) == 1
+```
+
+## See Also
+
+- [What's New in 2.2](../explanation/whats-new-22.md/) — Feature overview and rationale
+- [Working with Instances](../tutorials/advanced/instances.ipynb/) — Step-by-step tutorial
+- [Configuration Reference](../reference/configuration.md/) — Thread-safe mode settings
+
+
+---
 ## File: how-to/use-npy-codec.md
 
 # Use the `<npy>` Codec
@@ -24085,6 +24713,75 @@ with dj.config.override(display__diagram_direction="TB"):  # in override()
 ```
 
 The double underscore maps to the dot-notation path: `display__diagram_direction` → `display.diagram_direction`.
+
+## Instance API
+
+!!! version-added "New in 2.2"
+    `dj.Instance` provides isolated config and connection for multi-tenant and thread-safe use.
+
+`dj.Instance` encapsulates a Config and Connection pair, independent of global state:
+
+```python
+inst = dj.Instance(host="localhost", user="root", password="secret")
+schema = inst.Schema("my_schema")
+```
+
+### Parameters
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `host` | str | — | Database hostname (required) |
+| `user` | str | — | Database username (required) |
+| `password` | str | — | Database password (required) |
+| `port` | int | from config | Database port |
+| `use_tls` | bool or dict | `None` | TLS configuration |
+| `**kwargs` | — | — | Config overrides (e.g., `safemode=False`, `database__reconnect=False`) |
+
+### Attributes and Methods
+
+| Member | Description |
+|--------|-------------|
+| `inst.config` | This Instance's Config object |
+| `inst.connection` | This Instance's Connection object |
+| `inst.Schema(name)` | Create a Schema bound to this Instance |
+| `inst.FreeTable(full_name)` | Create a FreeTable bound to this Instance |
+
+See [What's New in 2.2](../explanation/whats-new-22.md/) for usage examples and rationale.
+
+## Thread-Safe Mode
+
+!!! version-added "New in 2.2"
+    Thread-safe mode disables global singletons to prevent shared-state bugs in concurrent applications.
+
+| Setting | Environment | Default | Description |
+|---------|-------------|---------|-------------|
+| Thread-safe mode | `DJ_THREAD_SAFE` | `false` | Disable global `dj.config` and `dj.conn()` |
+
+Accepted values for `DJ_THREAD_SAFE`: `true`, `1`, `yes` (enabled) or `false`, `0`, `no` (disabled).
+
+When enabled, the following raise `ThreadSafetyError`:
+
+- Any access to `dj.config` (read or write)
+- Calling `dj.conn()`
+- Calling `dj.Schema()` without an explicit connection
+
+Only `dj.Instance()` works in thread-safe mode, enforcing explicit connection management.
+
+```python
+import os
+os.environ["DJ_THREAD_SAFE"] = "true"
+
+import datajoint as dj
+
+# These all raise ThreadSafetyError:
+# dj.config.database.host
+# dj.conn()
+# dj.Schema("my_db")
+
+# This works:
+inst = dj.Instance(host="localhost", user="root", password="secret")
+schema = inst.Schema("my_db")
+```
 
 ## API Reference
 
@@ -32708,6 +33405,251 @@ Potential improvements identified for the declaration system:
 
 
 ---
+## File: reference/specs/thread-safe-mode.md
+
+# Thread-Safe Mode & Instance API
+
+*New in DataJoint 2.2*
+
+## Overview
+
+DataJoint provides two patterns for database access:
+
+1. **Global pattern** — a singleton config (`dj.config`) and connection (`dj.conn()`) shared across the process. Suitable for interactive sessions and single-user scripts.
+
+2. **Instance pattern** — isolated `dj.Instance` objects, each with its own config and connection. Required for multi-tenant applications, web servers, and concurrent pipelines.
+
+**Thread-safe mode** (`DJ_THREAD_SAFE=true`) disables the global pattern, forcing all code to use explicit Instances.
+
+## Instance API
+
+### `dj.Instance`
+
+```python
+dj.Instance(host, user, password, port=None, use_tls=None, backend=None, **kwargs)
+```
+
+Creates an isolated config and connection pair.
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `host` | `str` | — | Database hostname (required) |
+| `user` | `str` | — | Database username (required) |
+| `password` | `str` | — | Database password (required) |
+| `port` | `int` | from config | Database port (see backend defaults below) |
+| `use_tls` | `bool \| dict` | `None` | TLS configuration |
+| `backend` | `str` | from config | `"mysql"` or `"postgresql"` |
+| `**kwargs` | — | — | Config overrides (see below) |
+
+#### Backend selection
+
+The `backend` parameter selects the database engine. When set, it also determines the default port:
+
+| Backend | Default port |
+|---------|-------------|
+| `"mysql"` | 3306 |
+| `"postgresql"` | 5432 |
+
+If `backend` is omitted, it defaults to `config.database.backend` (which itself defaults to `"mysql"` unless overridden by environment or config file). An explicit `port` always takes precedence over the backend default.
+
+```python
+# MySQL (default)
+inst = dj.Instance(host="db.example.com", user="root", password="secret")
+
+# PostgreSQL — port defaults to 5432
+inst = dj.Instance(
+    host="db.example.com", user="postgres", password="secret",
+    backend="postgresql",
+)
+
+# PostgreSQL on a non-standard port
+inst = dj.Instance(
+    host="db.example.com", user="postgres", password="secret",
+    backend="postgresql", port=5433,
+)
+```
+
+**Config overrides:** Any keyword argument that matches a config attribute is applied to the Instance's config. Use double underscores for nested settings:
+
+```python
+inst = dj.Instance(
+    host="localhost", user="root", password="secret",
+    safemode=False,                 # inst.config.safemode = False
+    database__reconnect=False,      # inst.config.database.reconnect = False
+)
+```
+
+### Instance attributes
+
+| Attribute | Type | Description |
+|-----------|------|-------------|
+| `inst.config` | `Config` | This Instance's configuration object |
+| `inst.connection` | `Connection` | This Instance's database connection |
+
+### Instance methods
+
+#### `inst.Schema(schema_name, *, context=None, create_schema=True, create_tables=None, add_objects=None)`
+
+Create a `Schema` bound to this Instance's connection. Parameters are identical to `dj.Schema()`.
+
+#### `inst.FreeTable(full_table_name)`
+
+Create a `FreeTable` bound to this Instance's connection. The `full_table_name` argument is the full table name as `'schema.table'` or `` `schema`.`table` ``.
+
+## Global Pattern (Legacy)
+
+The global pattern uses module-level state:
+
+| Symbol | Description |
+|--------|-------------|
+| `dj.config` | Proxy to the global `Config` object. Raises `ThreadSafetyError` in thread-safe mode. |
+| `dj.conn()` | Returns the singleton `Connection`. Creates it lazily on first call. Raises `ThreadSafetyError` in thread-safe mode. |
+| `dj.Schema()` | Creates a Schema using the singleton connection (when no `connection=` argument is provided). Raises `ThreadSafetyError` in thread-safe mode. |
+| `dj.FreeTable()` | Creates a FreeTable using the singleton connection (when called with a single string argument). Raises `ThreadSafetyError` in thread-safe mode. |
+
+The global config is created at import time from environment variables and the `datajoint.json` config file. The singleton connection is created lazily on first access to `dj.conn()` or `dj.Schema()`.
+
+## Thread-Safe Mode
+
+### Activation
+
+Thread-safe mode is controlled by the `DJ_THREAD_SAFE` environment variable. It must be set before the process starts — there is no runtime API to toggle it, because mutating a global to enable thread-safety would be self-contradictory.
+
+| Variable | Enabled values | Disabled values | Default |
+|----------|---------------|-----------------|---------|
+| `DJ_THREAD_SAFE` | `true`, `1`, `yes` | `false`, `0`, `no` | `false` (disabled) |
+
+### Behavior
+
+When thread-safe mode is enabled:
+
+| Operation | Behavior |
+|-----------|----------|
+| `dj.config` (any access) | Raises `ThreadSafetyError` |
+| `dj.conn()` | Raises `ThreadSafetyError` |
+| `dj.Schema()` without `connection=` | Raises `ThreadSafetyError` |
+| `dj.FreeTable("name")` without connection | Raises `ThreadSafetyError` |
+| `dj.Instance(...)` | Works normally |
+| `inst.Schema(...)` | Works normally |
+| `inst.FreeTable(...)` | Works normally |
+| `inst.config` | Works normally |
+| `dj.config.save_template()` | Works (static method, no global state access) |
+
+### `ThreadSafetyError`
+
+```python
+from datajoint.errors import ThreadSafetyError
+```
+
+`ThreadSafetyError` is a subclass of `DataJointError`. It is raised when global state is accessed in thread-safe mode.
+
+## Architecture
+
+### Object graph
+
+```
+settings.py
+  config = _create_config()          ← the single global Config
+
+instance.py
+  _global_config = settings.config   ← same object (not a copy)
+  _singleton_connection = None       ← lazily created Connection
+
+__init__.py
+  dj.config = _ConfigProxy()         ← proxy → _global_config (with thread-safety check)
+  dj.conn()                          ← returns _singleton_connection
+  dj.Schema()                        ← uses _singleton_connection
+  dj.FreeTable()                     ← uses _singleton_connection
+
+Connection (singleton)
+  _config → _global_config           ← same Config that dj.config writes to
+
+Connection (Instance)
+  _config → fresh Config             ← isolated per-instance
+```
+
+### Config flow: singleton path
+
+```
+dj.config["safemode"] = False
+       ↓ _ConfigProxy.__setitem__
+_global_config["safemode"] = False   (same object as settings.config)
+       ↓
+Connection._config["safemode"]       (points to _global_config)
+       ↓
+schema.drop() reads self.connection._config["safemode"]  → False ✓
+```
+
+### Config flow: Instance path
+
+```
+inst = dj.Instance(host=..., user=..., password=...)
+       ↓
+inst.config = _create_config()       (fresh Config, independent)
+inst.connection = Connection(..., config_override=inst.config)
+       ↓
+inst.config.safemode = False
+       ↓
+schema.drop() reads self.connection._config["safemode"]  → False ✓
+```
+
+### Key invariant
+
+**All runtime config reads go through `self.connection._config`**, never through the global `config` directly. This ensures both the singleton and Instance paths read the correct config.
+
+### Connection dependency injection
+
+`Connection.__init__` accepts `backend` and `config_override` keyword arguments:
+
+```python
+Connection(host, user, password, port, use_tls,
+           backend="mysql",              # "mysql" or "postgresql"
+           config_override=inst.config)  # use this config, not the global
+```
+
+When `config_override` is provided, the Connection uses it for all config reads (port, charset, reconnect, query cache, etc.). When omitted, it falls back to the module-level `settings.config`.
+
+When `backend` is provided, it selects the database adapter directly (`"mysql"` → `pymysql`, `"postgresql"` → `psycopg`). When omitted, the backend is read from `self._config["database.backend"]` (default: `"mysql"`).
+
+### Connection-scoped config reads
+
+Every module that needs runtime config reads it from `self.connection._config`, not from the global `config` import. This includes:
+
+- `schemas.py` — `safemode`, `create_tables`
+- `table.py` — `safemode` in `delete()`, `drop()`
+- `expression.py` — `loglevel` in `__repr__()`
+- `preview.py` — `display.*` settings
+- `autopopulate.py` — `jobs.*` settings
+- `jobs.py` — `jobs.*` settings
+- `diagram.py` — `display.*` settings
+
+Functions that cannot access `self.connection` receive config as a parameter (e.g., `declare()`, `_get_job_version()`, hash registry functions).
+
+## Global State Audit
+
+### Guarded (blocked in thread-safe mode)
+
+| State | Location | Mechanism |
+|-------|----------|-----------|
+| Global config | `settings.py` | `_ConfigProxy` raises `ThreadSafetyError` |
+| Singleton connection | `instance.py` | `_check_thread_safe()` guard |
+
+### Safe by design (no guard needed)
+
+| State | Location | Rationale |
+|-------|----------|-----------|
+| `_codec_registry` | `codecs.py` | Immutable after import. Registration runs under Python's import lock. |
+| `_entry_points_loaded` | `codecs.py` | Idempotent lazy loading flag. |
+| `ADAPTERS` dict | `adapters/__init__.py` | Backend registry, populated at import time. |
+| `_lazy_modules` | `__init__.py` | Import caching via `globals()`. Protected by import lock. |
+| Logging config | `logging.py` | Standard Python logging. Not connection-scoped. |
+
+### Design principle
+
+Only **connection-scoped** state (credentials, database settings, connection objects) needs thread-safe guards. **Code-scoped** state (type registries, import caches, logging) is shared across all threads by design.
+
+
+---
 ## File: reference/specs/type-system.md
 
 # Type System Specification
@@ -33818,6 +34760,17 @@ If your work utilizes **DataJoint Elements**, please cite the following manuscri
 - **RRID**: [RRID:SCR_021894](https://scicrunch.org/resolver/SCR_021894)
 
 You should also cite the **DataJoint Core manuscript** detailed below.
+
+## Citing DataJoint 2.0
+
+For work using **DataJoint 2.0** or the **Relational Workflow Model**, cite the following
+manuscript:
+
+- **Manuscript**: Yatsenko D, Nguyen TT. DataJoint 2.0: A Computational Substrate for
+  Agentic Scientific Workflows. arXiv:2602.16585. 2026 Feb 18. doi:
+  https://doi.org/10.48550/arXiv.2602.16585
+
+- **RRID**: [RRID:SCR_014543](https://scicrunch.org/resolver/SCR_014543)
 
 ## Citing the DataJoint Relational Model
 

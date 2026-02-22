@@ -11,7 +11,7 @@
         <link rel="canonical" href="https://docs.datajoint.com/reference/configuration/">
       
       
-        <link rel="prev" href="../specs/object-store-configuration/">
+        <link rel="prev" href="../specs/thread-safe-mode/">
       
       
         <link rel="next" href="../definition-syntax/">
@@ -124,7 +124,7 @@
   <div class="md-banner">
     <div class="md-banner__inner md-grid md-typeset">
       <p>
-        📖 You are viewing documentation for <strong>DataJoint 2.1+</strong>
+        📖 You are viewing documentation for <strong>DataJoint 2.2+</strong>
         ·
         <a href="https://docs.datajoint.com/how-to/migrate-to-v20/">
           Migration guide for legacy users (pre-2.0)
@@ -438,6 +438,8 @@
       
         
       
+        
+      
     
     
     
@@ -523,6 +525,34 @@
     
   
     What's New in 2.0
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/whats-new-22/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    What's New in 2.2
   
 
     
@@ -1709,6 +1739,8 @@
       
         
       
+        
+      
     
     
     
@@ -1863,6 +1895,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/advanced/instances/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Working with Instances
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -1963,6 +2023,8 @@
   
     
     
+      
+        
       
         
       
@@ -2087,6 +2149,34 @@
     
   
     Configure Database
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/use-instances/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Use Isolated Instances
   
 
     
@@ -3417,6 +3507,8 @@
       
         
       
+        
+      
     
     
     
@@ -4263,6 +4355,95 @@
                 
   
   
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_2" id="__nav_5_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Instance & Thread Safety
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Instance & Thread Safety
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../specs/thread-safe-mode/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Thread-Safe Mode
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
     
   
   
@@ -4488,6 +4669,56 @@
         
       </ul>
     </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#instance-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Instance API
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Instance API">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parameters
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#attributes-and-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Attributes and Methods
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#thread-safe-mode" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Thread-Safe Mode
+      
+    </span>
+  </a>
   
 </li>
       
@@ -5657,6 +5888,56 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#instance-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Instance API
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Instance API">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parameters
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#attributes-and-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Attributes and Methods
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#thread-safe-mode" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Thread-Safe Mode
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#api-reference" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -6220,6 +6501,137 @@
     <span class="o">...</span>
 </code></pre></div>
 <p>The double underscore maps to the dot-notation path: <code>display__diagram_direction</code> → <code>display.diagram_direction</code>.</p>
+<h2 id="instance-api">Instance API<a class="headerlink" href="#instance-api" title="Permanent link">&para;</a></h2>
+<div class="admonition version-added">
+<p class="admonition-title">New in 2.2</p>
+<p><code>dj.Instance</code> provides isolated config and connection for multi-tenant and thread-safe use.</p>
+</div>
+<p><code>dj.Instance</code> encapsulates a Config and Connection pair, independent of global state:</p>
+<div class="highlight"><pre><span></span><code><span class="n">inst</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">Instance</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="s2">&quot;localhost&quot;</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="s2">&quot;root&quot;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s2">&quot;secret&quot;</span><span class="p">)</span>
+<span class="n">schema</span> <span class="o">=</span> <span class="n">inst</span><span class="o">.</span><span class="n">Schema</span><span class="p">(</span><span class="s2">&quot;my_schema&quot;</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="parameters">Parameters<a class="headerlink" href="#parameters" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>host</code></td>
+<td>str</td>
+<td>—</td>
+<td>Database hostname (required)</td>
+</tr>
+<tr>
+<td><code>user</code></td>
+<td>str</td>
+<td>—</td>
+<td>Database username (required)</td>
+</tr>
+<tr>
+<td><code>password</code></td>
+<td>str</td>
+<td>—</td>
+<td>Database password (required)</td>
+</tr>
+<tr>
+<td><code>port</code></td>
+<td>int</td>
+<td>from config</td>
+<td>Database port</td>
+</tr>
+<tr>
+<td><code>use_tls</code></td>
+<td>bool or dict</td>
+<td><code>None</code></td>
+<td>TLS configuration</td>
+</tr>
+<tr>
+<td><code>**kwargs</code></td>
+<td>—</td>
+<td>—</td>
+<td>Config overrides (e.g., <code>safemode=False</code>, <code>database__reconnect=False</code>)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="attributes-and-methods">Attributes and Methods<a class="headerlink" href="#attributes-and-methods" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Member</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>inst.config</code></td>
+<td>This Instance's Config object</td>
+</tr>
+<tr>
+<td><code>inst.connection</code></td>
+<td>This Instance's Connection object</td>
+</tr>
+<tr>
+<td><code>inst.Schema(name)</code></td>
+<td>Create a Schema bound to this Instance</td>
+</tr>
+<tr>
+<td><code>inst.FreeTable(full_name)</code></td>
+<td>Create a FreeTable bound to this Instance</td>
+</tr>
+</tbody>
+</table>
+<p>See <a href="../../explanation/whats-new-22/">What's New in 2.2</a> for usage examples and rationale.</p>
+<h2 id="thread-safe-mode">Thread-Safe Mode<a class="headerlink" href="#thread-safe-mode" title="Permanent link">&para;</a></h2>
+<div class="admonition version-added">
+<p class="admonition-title">New in 2.2</p>
+<p>Thread-safe mode disables global singletons to prevent shared-state bugs in concurrent applications.</p>
+</div>
+<table>
+<thead>
+<tr>
+<th>Setting</th>
+<th>Environment</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Thread-safe mode</td>
+<td><code>DJ_THREAD_SAFE</code></td>
+<td><code>false</code></td>
+<td>Disable global <code>dj.config</code> and <code>dj.conn()</code></td>
+</tr>
+</tbody>
+</table>
+<p>Accepted values for <code>DJ_THREAD_SAFE</code>: <code>true</code>, <code>1</code>, <code>yes</code> (enabled) or <code>false</code>, <code>0</code>, <code>no</code> (disabled).</p>
+<p>When enabled, the following raise <code>ThreadSafetyError</code>:</p>
+<ul>
+<li>Any access to <code>dj.config</code> (read or write)</li>
+<li>Calling <code>dj.conn()</code></li>
+<li>Calling <code>dj.Schema()</code> without an explicit connection</li>
+</ul>
+<p>Only <code>dj.Instance()</code> works in thread-safe mode, enforcing explicit connection management.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;DJ_THREAD_SAFE&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;true&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">datajoint</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dj</span>
+
+<span class="c1"># These all raise ThreadSafetyError:</span>
+<span class="c1"># dj.config.database.host</span>
+<span class="c1"># dj.conn()</span>
+<span class="c1"># dj.Schema(&quot;my_db&quot;)</span>
+
+<span class="c1"># This works:</span>
+<span class="n">inst</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">Instance</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="s2">&quot;localhost&quot;</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="s2">&quot;root&quot;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s2">&quot;secret&quot;</span><span class="p">)</span>
+<span class="n">schema</span> <span class="o">=</span> <span class="n">inst</span><span class="o">.</span><span class="n">Schema</span><span class="p">(</span><span class="s2">&quot;my_db&quot;</span><span class="p">)</span>
+</code></pre></div>
 <h2 id="api-reference">API Reference<a class="headerlink" href="#api-reference" title="Permanent link">&para;</a></h2>
 <p>See <a href="../../api/datajoint/settings/">Settings API</a> for programmatic access.</p>
 

@@ -59,7 +59,7 @@
 <div class="md-banner">
 <div class="md-banner__inner md-grid md-typeset">
 <p>
-        📖 You are viewing documentation for <strong>DataJoint 2.1+</strong>
+        📖 You are viewing documentation for <strong>DataJoint 2.2+</strong>
         ·
         <a href="https://docs.datajoint.com/how-to/migrate-to-v20/">
           Migration guide for legacy users (pre-2.0)
@@ -270,6 +270,18 @@
     
   
     What's New in 2.0
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../explanation/whats-new-22/">
+<span class="md-ellipsis">
+    
+  
+    What's New in 2.2
   
 
     
@@ -951,6 +963,18 @@
   </span>
 </a>
 </li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../advanced/instances/">
+<span class="md-ellipsis">
+    
+  
+    Working with Instances
+  
+
+    
+  </span>
+</a>
+</li>
 </ul>
 </nav>
 </li>
@@ -1037,6 +1061,18 @@
     
   
     Configure Database
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../how-to/use-instances/">
+<span class="md-ellipsis">
+    
+  
+    Use Isolated Instances
   
 
     
@@ -1928,6 +1964,44 @@
 </li>
 </ul>
 </nav>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_5_2" type="checkbox"/>
+<label class="md-nav__link" for="__nav_5_2" id="__nav_5_2_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    Instance &amp; Thread Safety
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_5_2_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_5_2">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Instance &amp; Thread Safety
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../reference/specs/thread-safe-mode/">
+<span class="md-ellipsis">
+    
+  
+    Thread-Safe Mode
+  
+
+    
+  </span>
+</a>
 </li>
 </ul>
 </nav>
@@ -3229,6 +3303,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 </div>
 <div class="highlight-ipynb hl-python"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">datajoint</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dj</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">date</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">faker</span><span class="w"> </span><span class="kn">import</span> <span class="n">Faker</span>
 
 <span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">'display.limit'</span><span class="p">]</span> <span class="o">=</span> <span class="mi">8</span>
@@ -3240,6 +3315,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 </pre></div>
 <div class="clipboard-copy-txt" id="cell-1">import datajoint as dj
 import numpy as np
+from datetime import date
 from faker import Faker
 
 dj.config['display.limit'] = 8
@@ -3259,7 +3335,7 @@ schema = dj.Schema('tutorial_languages')</div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>[2026-02-06 11:46:39] DataJoint 2.1.0 connected to datajoint@127.0.0.1:5432
+<pre>[2026-02-19 20:41:16] DataJoint 2.1.1 connected to postgres@postgres:5432
 </pre>
 </div>
 </div>
@@ -3624,7 +3700,7 @@ class Proficiency(dj.Manual):
 <div class="jp-OutputArea-child jp-OutputArea-executeResult">
 <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[7]:</div>
 <div class="jp-RenderedSVG jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="image/svg+xml" tabindex="0">
-<img alt="No description has been provided for this image" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB3aWR0aD0iMjE4cHQiIGhlaWdodD0iMjA1cHQiIHZpZXdCb3g9IjAuMDAgMC4wMCAyMTguMjUgMjA1LjAwIj4KPGcgaWQ9ImdyYXBoMCIgY2xhc3M9ImdyYXBoIiB0cmFuc2Zvcm09InNjYWxlKDEgMSkgcm90YXRlKDApIHRyYW5zbGF0ZSg0IDIwMSkiPgo8cG9seWdvbiBmaWxsPSJ3aGl0ZSIgc3Ryb2tlPSJub25lIiBwb2ludHM9Ii00LDQgLTQsLTIwMSAyMTQuMjUsLTIwMSAyMTQuMjUsNCAtNCw0Ii8+CjxnIGlkPSJjbHVzdDEiIGNsYXNzPSJjbHVzdGVyIj4KPHRpdGxlPmNsdXN0ZXJfY2x1c3Rlcl90dXRvcmlhbF9sYW5ndWFnZXM8L3RpdGxlPgo8cG9seWdvbiBmaWxsPSJub25lIiBzdHJva2U9ImdyYXkiIHN0cm9rZS1kYXNoYXJyYXk9IjUsMiIgcG9pbnRzPSI4LC04IDgsLTE4OSAyMDIuMjUsLTE4OSAyMDIuMjUsLTggOCwtOCIvPgo8dGV4dCB0ZXh0LWFuY2hvcj0ibWlkZGxlIiB4PSIxMDUuMTIiIHk9Ii0xNzEuNyIgZm9udC1mYW1pbHk9IlRpbWVzLHNlcmlmIiBmb250LXNpemU9IjE0LjAwIiBmaWxsPSJncmF5Ij5fX21haW5fXzwvdGV4dD4KPC9nPgo8IS0tIExhbmd1YWdlIC0tPgo8ZyBpZD0ibm9kZTEiIGNsYXNzPSJub2RlIj4KPHRpdGxlPkxhbmd1YWdlPC90aXRsZT4KPGcgaWQ9ImFfbm9kZTEiPjxhIHhsaW5rOnRpdGxlPSJsYW5nX2NvZGUgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoA0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0NbGFuZ3VhZ2UgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgDW5hdGl2ZV9uYW1lIMKgwqDCoMKgwqDCoMKgwqDCoA0iPgo8cG9seWdvbiBmaWxsPSIjMDAwMDAwIiBmaWxsLW9wYWNpdHk9IjAuMTI1NDkwIiBzdHJva2U9Im5vbmUiIHBvaW50cz0iNzguNSwtNTAuMjggMjAuNSwtNTAuMjggMjAuNSwtMTUuNzIgNzguNSwtMTUuNzIgNzguNSwtNTAuMjgiLz4KPHRleHQgdGV4dC1hbmNob3I9InN0YXJ0IiB4PSIyOC41IiB5PSItMzAuNSIgZm9udC1mYW1pbHk9ImFyaWFsIiB0ZXh0LWRlY29yYXRpb249InVuZGVybGluZSIgZm9udC1zaXplPSIxMC4wMCI+TGFuZ3VhZ2U8L3RleHQ+CjwvYT4KPC9nPgo8L2c+CjwhLS0gUHJvZmljaWVuY3kgLS0+CjxnIGlkPSJub2RlNCIgY2xhc3M9Im5vZGUiPgo8dGl0bGU+UHJvZmljaWVuY3k8L3RpdGxlPgo8ZyBpZD0iYV9ub2RlNCI+PGEgeGxpbms6dGl0bGU9IuKGkiBQZXJzb24N4oaSIExhbmd1YWdlDS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ3ihpIgQ0VGUkxldmVsDSI+Cjxwb2x5Z29uIGZpbGw9IiMwMGZmMDAiIGZpbGwtb3BhY2l0eT0iMC4xODgyMzUiIHN0cm9rZT0iIzAwZmYwMCIgc3Ryb2tlLW9wYWNpdHk9IjAuMTg4MjM1IiBwb2ludHM9IjE5NC4yNSwtMTAzLjI4IDExOSwtMTAzLjI4IDExOSwtNjguNzIgMTk0LjI1LC02OC43MiAxOTQuMjUsLTEwMy4yOCIvPgo8dGV4dCB0ZXh0LWFuY2hvcj0ibWlkZGxlIiB4PSIxNTYuNjIiIHk9Ii04MS43MiIgZm9udC1mYW1pbHk9ImFyaWFsIiBmb250LXNpemU9IjEyLjAwIiBmaWxsPSJkYXJrZ3JlZW4iPlByb2ZpY2llbmN5PC90ZXh0Pgo8L2E+CjwvZz4KPC9nPgo8IS0tIExhbmd1YWdlJiM0NTsmZ3Q7UHJvZmljaWVuY3kgLS0+CjxnIGlkPSJlZGdlMSIgY2xhc3M9ImVkZ2UiPgo8dGl0bGU+TGFuZ3VhZ2UtJmd0O1Byb2ZpY2llbmN5PC90aXRsZT4KPHBhdGggZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjAuNzUiIHN0cm9rZS1vcGFjaXR5PSIwLjI1MDk4MCIgZD0iTTc4LjQsLTQ3LjA2QzkxLjI5LC01My41NyAxMDYuNzUsLTYxLjM2IDEyMC40MywtNjguMjYiLz4KPC9nPgo8IS0tIENFRlJMZXZlbCAtLT4KPGcgaWQ9Im5vZGUyIiBjbGFzcz0ibm9kZSI+Cjx0aXRsZT5DRUZSTGV2ZWw8L3RpdGxlPgo8ZyBpZD0iYV9ub2RlMiI+PGEgeGxpbms6dGl0bGU9ImNlZnJfbGV2ZWwgwqDCoMKgwqDCoMKgwqDCoMKgwqANLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tDWxldmVsX25hbWUgwqDCoMKgwqDCoMKgwqDCoMKgwqANY2F0ZWdvcnkgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgDWRlc2NyaXB0aW9uIMKgwqDCoMKgwqDCoMKgwqDCoA0iPgo8cG9seWdvbiBmaWxsPSIjMDAwMDAwIiBmaWxsLW9wYWNpdHk9IjAuMTI1NDkwIiBzdHJva2U9Im5vbmUiIHBvaW50cz0iODMsLTEwMy4yOCAxNiwtMTAzLjI4IDE2LC02OC43MiA4MywtNjguNzIgODMsLTEwMy4yOCIvPgo8dGV4dCB0ZXh0LWFuY2hvcj0ic3RhcnQiIHg9IjI0IiB5PSItODMuNSIgZm9udC1mYW1pbHk9ImFyaWFsIiB0ZXh0LWRlY29yYXRpb249InVuZGVybGluZSIgZm9udC1zaXplPSIxMC4wMCI+Q0VGUkxldmVsPC90ZXh0Pgo8L2E+CjwvZz4KPC9nPgo8IS0tIENFRlJMZXZlbCYjNDU7Jmd0O1Byb2ZpY2llbmN5IC0tPgo8ZyBpZD0iZWRnZTIiIGNsYXNzPSJlZGdlIj4KPHRpdGxlPkNFRlJMZXZlbC0mZ3Q7UHJvZmljaWVuY3k8L3RpdGxlPgo8cGF0aCBmaWxsPSJub25lIiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iMC43NSIgc3Ryb2tlLWRhc2hhcnJheT0iNSwyIiBzdHJva2Utb3BhY2l0eT0iMC4yNTA5ODAiIGQ9Ik04Mi45LC04NkM5NC4yNCwtODYgMTA3LjA2LC04NiAxMTguNzQsLTg2Ii8+CjwvZz4KPCEtLSBQZXJzb24gLS0+CjxnIGlkPSJub2RlMyIgY2xhc3M9Im5vZGUiPgo8dGl0bGU+UGVyc29uPC90aXRsZT4KPGcgaWQ9ImFfbm9kZTMiPjxhIHhsaW5rOnRpdGxlPSJwZXJzb25faWQgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoA0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0NbmFtZSDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoA1kYXRlX29mX2JpcnRoIMKgwqDCoMKgwqDCoMKgDSI+Cjxwb2x5Z29uIGZpbGw9IiMwMGZmMDAiIGZpbGwtb3BhY2l0eT0iMC4xODgyMzUiIHN0cm9rZT0iIzAwZmYwMCIgc3Ryb2tlLW9wYWNpdHk9IjAuMTg4MjM1IiBwb2ludHM9Ijc2LjYyLC0xNTYuMjggMjIuMzgsLTE1Ni4yOCAyMi4zOCwtMTIxLjcyIDc2LjYyLC0xMjEuNzIgNzYuNjIsLTE1Ni4yOCIvPgo8dGV4dCB0ZXh0LWFuY2hvcj0ic3RhcnQiIHg9IjMwLjM4IiB5PSItMTM1LjcyIiBmb250LWZhbWlseT0iYXJpYWwiIHRleHQtZGVjb3JhdGlvbj0idW5kZXJsaW5lIiBmb250LXNpemU9IjEyLjAwIiBmaWxsPSJkYXJrZ3JlZW4iPlBlcnNvbjwvdGV4dD4KPC9hPgo8L2c+CjwvZz4KPCEtLSBQZXJzb24mIzQ1OyZndDtQcm9maWNpZW5jeSAtLT4KPGcgaWQ9ImVkZ2UzIiBjbGFzcz0iZWRnZSI+Cjx0aXRsZT5QZXJzb24tJmd0O1Byb2ZpY2llbmN5PC90aXRsZT4KPHBhdGggZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjAuNzUiIHN0cm9rZS1vcGFjaXR5PSIwLjI1MDk4MCIgZD0iTTc3LjAzLC0xMjUuNjNDOTAuMTcsLTExOSAxMDYuMjEsLTExMC45MSAxMjAuMzYsLTEwMy43OCIvPgo8L2c+CjwvZz4KPC9zdmc+"/>
+<img alt="No description has been provided for this image" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB3aWR0aD0iMjEzcHQiIGhlaWdodD0iMjA2cHQiIHZpZXdCb3g9IjAuMDAgMC4wMCAyMTMuMDAgMjA2LjAwIj4KPGcgaWQ9ImdyYXBoMCIgY2xhc3M9ImdyYXBoIiB0cmFuc2Zvcm09InNjYWxlKDEgMSkgcm90YXRlKDApIHRyYW5zbGF0ZSg0IDIwMikiPgo8cG9seWdvbiBmaWxsPSJ3aGl0ZSIgc3Ryb2tlPSJub25lIiBwb2ludHM9Ii00LDQgLTQsLTIwMiAyMDksLTIwMiAyMDksNCAtNCw0Ii8+CjxnIGlkPSJjbHVzdDEiIGNsYXNzPSJjbHVzdGVyIj4KPHRpdGxlPmNsdXN0ZXJfY2x1c3Rlcl90dXRvcmlhbF9sYW5ndWFnZXM8L3RpdGxlPgo8cG9seWdvbiBmaWxsPSJub25lIiBzdHJva2U9ImdyYXkiIHN0cm9rZS1kYXNoYXJyYXk9IjUsMiIgcG9pbnRzPSI4LC04IDgsLTE5MCAxOTcsLTE5MCAxOTcsLTggOCwtOCIvPgo8dGV4dCB0ZXh0LWFuY2hvcj0ibWlkZGxlIiB4PSIxMDIuNSIgeT0iLTE3Mi43IiBmb250LWZhbWlseT0iVGltZXMsc2VyaWYiIGZvbnQtc2l6ZT0iMTQuMDAiIGZpbGw9ImdyYXkiPl9fbWFpbl9fPC90ZXh0Pgo8L2c+CjwhLS0gUGVyc29uIC0tPgo8ZyBpZD0ibm9kZTEiIGNsYXNzPSJub2RlIj4KPHRpdGxlPlBlcnNvbjwvdGl0bGU+CjxnIGlkPSJhX25vZGUxIj48YSB4bGluazp0aXRsZT0icGVyc29uX2lkIMKgwqDCoMKgwqDCoMKgwqDCoMKgwqANLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tDW5hbWUgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqANZGF0ZV9vZl9iaXJ0aCDCoMKgwqDCoMKgwqDCoA0iPgo8cG9seWdvbiBmaWxsPSIjMDBmZjAwIiBmaWxsLW9wYWNpdHk9IjAuMTg4MjM1IiBzdHJva2U9IiMwMGZmMDAiIHN0cm9rZS1vcGFjaXR5PSIwLjE4ODIzNSIgcG9pbnRzPSI3NCwtNTAuMjggMjIsLTUwLjI4IDIyLC0xNS43MiA3NCwtMTUuNzIgNzQsLTUwLjI4Ii8+Cjx0ZXh0IHRleHQtYW5jaG9yPSJzdGFydCIgeD0iMzAiIHk9Ii0zMC4xIiBmb250LWZhbWlseT0iYXJpYWwiIHRleHQtZGVjb3JhdGlvbj0idW5kZXJsaW5lIiBmb250LXNpemU9IjEyLjAwIiBmaWxsPSJkYXJrZ3JlZW4iPlBlcnNvbjwvdGV4dD4KPC9hPgo8L2c+CjwvZz4KPCEtLSBQcm9maWNpZW5jeSAtLT4KPGcgaWQ9Im5vZGUyIiBjbGFzcz0ibm9kZSI+Cjx0aXRsZT5Qcm9maWNpZW5jeTwvdGl0bGU+CjxnIGlkPSJhX25vZGUyIj48YSB4bGluazp0aXRsZT0i4oaSIFBlcnNvbg3ihpIgTGFuZ3VhZ2UNLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tDeKGkiBDRUZSTGV2ZWwNIj4KPHBvbHlnb24gZmlsbD0iIzAwZmYwMCIgZmlsbC1vcGFjaXR5PSIwLjE4ODIzNSIgc3Ryb2tlPSIjMDBmZjAwIiBzdHJva2Utb3BhY2l0eT0iMC4xODgyMzUiIHBvaW50cz0iMTg5LC0xMDMuMjggMTE2LC0xMDMuMjggMTE2LC02OC43MiAxODksLTY4LjcyIDE4OSwtMTAzLjI4Ii8+Cjx0ZXh0IHRleHQtYW5jaG9yPSJtaWRkbGUiIHg9IjE1Mi41IiB5PSItODIuMSIgZm9udC1mYW1pbHk9ImFyaWFsIiBmb250LXNpemU9IjEyLjAwIiBmaWxsPSJkYXJrZ3JlZW4iPlByb2ZpY2llbmN5PC90ZXh0Pgo8L2E+CjwvZz4KPC9nPgo8IS0tIFBlcnNvbiYjNDU7Jmd0O1Byb2ZpY2llbmN5IC0tPgo8ZyBpZD0iZWRnZTEiIGNsYXNzPSJlZGdlIj4KPHRpdGxlPlBlcnNvbi0mZ3Q7UHJvZmljaWVuY3k8L3RpdGxlPgo8cGF0aCBmaWxsPSJub25lIiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iMC43NSIgc3Ryb2tlLW9wYWNpdHk9IjAuMjUwOTgwIiBkPSJNNzQuMzQsLTQ2LjFDODcuMjYsLTUyLjc4IDEwMy4xNywtNjEuMDEgMTE3LjE4LC02OC4yNSIvPgo8L2c+CjwhLS0gTGFuZ3VhZ2UgLS0+CjxnIGlkPSJub2RlMyIgY2xhc3M9Im5vZGUiPgo8dGl0bGU+TGFuZ3VhZ2U8L3RpdGxlPgo8ZyBpZD0iYV9ub2RlMyI+PGEgeGxpbms6dGl0bGU9ImxhbmdfY29kZSDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgDS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ1sYW5ndWFnZSDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqANbmF0aXZlX25hbWUgwqDCoMKgwqDCoMKgwqDCoMKgDSI+Cjxwb2x5Z29uIGZpbGw9IiMwMDAwMDAiIGZpbGwtb3BhY2l0eT0iMC4xMjU0OTAiIHN0cm9rZT0ibm9uZSIgcG9pbnRzPSI3OC4xMiwtMTAzLjI4IDE3Ljg4LC0xMDMuMjggMTcuODgsLTY4LjcyIDc4LjEyLC02OC43MiA3OC4xMiwtMTAzLjI4Ii8+Cjx0ZXh0IHRleHQtYW5jaG9yPSJzdGFydCIgeD0iMjUuODgiIHk9Ii04My44OCIgZm9udC1mYW1pbHk9ImFyaWFsIiB0ZXh0LWRlY29yYXRpb249InVuZGVybGluZSIgZm9udC1zaXplPSIxMC4wMCI+TGFuZ3VhZ2U8L3RleHQ+CjwvYT4KPC9nPgo8L2c+CjwhLS0gTGFuZ3VhZ2UmIzQ1OyZndDtQcm9maWNpZW5jeSAtLT4KPGcgaWQ9ImVkZ2UyIiBjbGFzcz0iZWRnZSI+Cjx0aXRsZT5MYW5ndWFnZS0mZ3Q7UHJvZmljaWVuY3k8L3RpdGxlPgo8cGF0aCBmaWxsPSJub25lIiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iMC43NSIgc3Ryb2tlLW9wYWNpdHk9IjAuMjUwOTgwIiBkPSJNNzguMSwtODZDODkuODIsLTg2IDEwMy40NSwtODYgMTE1Ljc2LC04NiIvPgo8L2c+CjwhLS0gQ0VGUkxldmVsIC0tPgo8ZyBpZD0ibm9kZTQiIGNsYXNzPSJub2RlIj4KPHRpdGxlPkNFRlJMZXZlbDwvdGl0bGU+CjxnIGlkPSJhX25vZGU0Ij48YSB4bGluazp0aXRsZT0iY2Vmcl9sZXZlbCDCoMKgwqDCoMKgwqDCoMKgwqDCoA0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0NbGV2ZWxfbmFtZSDCoMKgwqDCoMKgwqDCoMKgwqDCoA1jYXRlZ29yeSDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqANZGVzY3JpcHRpb24gwqDCoMKgwqDCoMKgwqDCoMKgDSI+Cjxwb2x5Z29uIGZpbGw9IiMwMDAwMDAiIGZpbGwtb3BhY2l0eT0iMC4xMjU0OTAiIHN0cm9rZT0ibm9uZSIgcG9pbnRzPSI4MCwtMTU2LjI4IDE2LC0xNTYuMjggMTYsLTEyMS43MiA4MCwtMTIxLjcyIDgwLC0xNTYuMjgiLz4KPHRleHQgdGV4dC1hbmNob3I9InN0YXJ0IiB4PSIyNCIgeT0iLTEzNi44OCIgZm9udC1mYW1pbHk9ImFyaWFsIiB0ZXh0LWRlY29yYXRpb249InVuZGVybGluZSIgZm9udC1zaXplPSIxMC4wMCI+Q0VGUkxldmVsPC90ZXh0Pgo8L2E+CjwvZz4KPC9nPgo8IS0tIENFRlJMZXZlbCYjNDU7Jmd0O1Byb2ZpY2llbmN5IC0tPgo8ZyBpZD0iZWRnZTMiIGNsYXNzPSJlZGdlIj4KPHRpdGxlPkNFRlJMZXZlbC0mZ3Q7UHJvZmljaWVuY3k8L3RpdGxlPgo8cGF0aCBmaWxsPSJub25lIiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iMC43NSIgc3Ryb2tlLWRhc2hhcnJheT0iNSwyIiBzdHJva2Utb3BhY2l0eT0iMC4yNTA5ODAiIGQ9Ik03OS43NSwtMTIzLjFDOTEuNTUsLTExNyAxMDUuMDcsLTExMC4wMSAxMTcuMTgsLTEwMy43NCIvPgo8L2c+CjwvZz4KPC9zdmc+"/>
 </div>
 </div>
 </div>
@@ -3687,8 +3763,8 @@ class Proficiency(dj.Manual):
     <span class="p">{</span>
         <span class="s1">'person_id'</span><span class="p">:</span> <span class="n">i</span><span class="p">,</span>
         <span class="s1">'name'</span><span class="p">:</span> <span class="n">fake</span><span class="o">.</span><span class="n">name</span><span class="p">(),</span>
-        <span class="s1">'date_of_birth'</span><span class="p">:</span> <span class="n">fake</span><span class="o">.</span><span class="n">date_of_birth</span><span class="p">(</span>
-            <span class="n">minimum_age</span><span class="o">=</span><span class="mi">18</span><span class="p">,</span> <span class="n">maximum_age</span><span class="o">=</span><span class="mi">70</span><span class="p">)</span>
+        <span class="s1">'date_of_birth'</span><span class="p">:</span> <span class="n">fake</span><span class="o">.</span><span class="n">date_between</span><span class="p">(</span>
+            <span class="n">start_date</span><span class="o">=</span><span class="n">date</span><span class="p">(</span><span class="mi">1956</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">end_date</span><span class="o">=</span><span class="n">date</span><span class="p">(</span><span class="mi">2008</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
     <span class="p">}</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_people</span><span class="p">)</span>
 <span class="p">)</span>
@@ -3706,8 +3782,8 @@ Person.insert(
     {
         'person_id': i,
         'name': fake.name(),
-        'date_of_birth': fake.date_of_birth(
-            minimum_age=18, maximum_age=70)
+        'date_of_birth': fake.date_between(
+            start_date=date(1956, 1, 1), end_date=date(2008, 1, 1))
     }
     for i in range(n_people)
 )
@@ -3792,21 +3868,21 @@ Person()</div>
 <thead> <tr> <th> <span id="primary" title="unique identifier">person_id</span></th><th><span id="nonprimary" title="">name</span></th><th><span id="nonprimary" title="">date_of_birth</span> </th> </tr> </thead>
 <tbody> <tr> <td>0</td>
 <td>Allison Hill</td>
-<td>1966-12-05</td></tr><tr><td>1</td>
+<td>1967-08-10</td></tr><tr><td>1</td>
 <td>Megan Mcclain</td>
-<td>1959-09-15</td></tr><tr><td>2</td>
+<td>1960-07-09</td></tr><tr><td>2</td>
 <td>Allen Robinson</td>
-<td>1981-11-18</td></tr><tr><td>3</td>
+<td>1982-04-12</td></tr><tr><td>3</td>
 <td>Cristian Santos</td>
-<td>1983-12-24</td></tr><tr><td>4</td>
+<td>1984-05-03</td></tr><tr><td>4</td>
 <td>Kevin Pacheco</td>
-<td>1955-06-11</td></tr><tr><td>5</td>
+<td>1956-05-03</td></tr><tr><td>5</td>
 <td>Melissa Peterson</td>
-<td>1963-05-04</td></tr><tr><td>6</td>
+<td>1964-02-01</td></tr><tr><td>6</td>
 <td>Gabrielle Davis</td>
-<td>1960-03-23</td></tr><tr><td>7</td>
+<td>1961-01-10</td></tr><tr><td>7</td>
 <td>Lindsey Roman</td>
-<td>1993-10-10</td> </tr> </tbody>
+<td>1993-12-11</td> </tr> </tbody>
 </table>
 <p>...</p>
 <p>Total: 200</p></div>

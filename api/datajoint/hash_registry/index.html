@@ -124,7 +124,7 @@
   <div class="md-banner">
     <div class="md-banner__inner md-grid md-typeset">
       <p>
-        📖 You are viewing documentation for <strong>DataJoint 2.1+</strong>
+        📖 You are viewing documentation for <strong>DataJoint 2.2+</strong>
         ·
         <a href="https://docs.datajoint.com/how-to/migrate-to-v20/">
           Migration guide for legacy users (pre-2.0)
@@ -438,6 +438,8 @@
       
         
       
+        
+      
     
     
     
@@ -523,6 +525,34 @@
     
   
     What's New in 2.0
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../explanation/whats-new-22/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    What's New in 2.2
   
 
     
@@ -1709,6 +1739,8 @@
       
         
       
+        
+      
     
     
     
@@ -1863,6 +1895,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tutorials/advanced/instances/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Working with Instances
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -1963,6 +2023,8 @@
   
     
     
+      
+        
       
         
       
@@ -2087,6 +2149,34 @@
     
   
     Configure Database
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../how-to/use-instances/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Use Isolated Instances
   
 
     
@@ -3415,6 +3505,8 @@
       
         
       
+        
+      
     
     
     
@@ -4244,6 +4336,95 @@
           </ul>
         </nav>
       
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_2" id="__nav_5_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Instance & Thread Safety
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Instance & Thread Safety
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../reference/specs/thread-safe-mode/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Thread-Safe Mode
+  
+
+    
+  </span>
+  
+  
+
+      </a>
     </li>
   
 
@@ -5776,7 +5957,7 @@ via <code>dj.gc.collect()</code>.</p>
 
 
 <a href="#datajoint.hash_registry.get_store_backend" class="headerlink" title="Permanent link">&para;</a></h2>
-<div class="doc-signature highlight"><pre><span></span><code><span class="nf">get_store_backend</span><span class="p">(</span><span class="n">store_name</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">get_store_backend</span><span class="p">(</span><span class="n">store_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
 </code></pre></div>
 
     <div class="doc doc-contents ">
@@ -5805,6 +5986,22 @@ via <code>dj.gc.collect()</code>.</p>
             <td>
               <div class="doc-md-description">
                 <p>Name of the store to use. If None, uses stores.default.</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>config</code>
+            </td>
+            <td>
+                  <code><span title="Config">Config</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Config instance. If None, falls back to global settings.config.</p>
               </div>
             </td>
             <td>
@@ -5855,7 +6052,7 @@ via <code>dj.gc.collect()</code>.</p>
 
 
 <a href="#datajoint.hash_registry.get_store_subfolding" class="headerlink" title="Permanent link">&para;</a></h2>
-<div class="doc-signature highlight"><pre><span></span><code><span class="nf">get_store_subfolding</span><span class="p">(</span><span class="n">store_name</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">get_store_subfolding</span><span class="p">(</span><span class="n">store_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
 </code></pre></div>
 
     <div class="doc doc-contents ">
@@ -5884,6 +6081,22 @@ via <code>dj.gc.collect()</code>.</p>
             <td>
               <div class="doc-md-description">
                 <p>Name of the store. If None, uses stores.default.</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>config</code>
+            </td>
+            <td>
+                  <code><span title="Config">Config</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Config instance. If None, falls back to global settings.config.</p>
               </div>
             </td>
             <td>
@@ -5934,7 +6147,7 @@ via <code>dj.gc.collect()</code>.</p>
 
 
 <a href="#datajoint.hash_registry.put_hash" class="headerlink" title="Permanent link">&para;</a></h2>
-<div class="doc-signature highlight"><pre><span></span><code><span class="nf">put_hash</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">schema_name</span><span class="p">,</span> <span class="n">store_name</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">put_hash</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">schema_name</span><span class="p">,</span> <span class="n">store_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
 </code></pre></div>
 
     <div class="doc doc-contents ">
@@ -6005,6 +6218,22 @@ against configuration changes (e.g., subfolding) affecting existing data.</p>
                   <code>None</code>
             </td>
           </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>config</code>
+            </td>
+            <td>
+                  <code><span title="Config">Config</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Config instance. If None, falls back to global settings.config.</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
       </tbody>
     </table>
 
@@ -6049,7 +6278,7 @@ against configuration changes (e.g., subfolding) affecting existing data.</p>
 
 
 <a href="#datajoint.hash_registry.get_hash" class="headerlink" title="Permanent link">&para;</a></h2>
-<div class="doc-signature highlight"><pre><span></span><code><span class="nf">get_hash</span><span class="p">(</span><span class="n">metadata</span><span class="p">)</span>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">get_hash</span><span class="p">(</span><span class="n">metadata</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
 </code></pre></div>
 
     <div class="doc doc-contents ">
@@ -6084,6 +6313,22 @@ configuration changes affecting existing data.</p>
             </td>
             <td>
                 <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>config</code>
+            </td>
+            <td>
+                  <code><span title="Config">Config</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Config instance. If None, falls back to global settings.config.</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
             </td>
           </tr>
       </tbody>
@@ -6163,7 +6408,7 @@ configuration changes affecting existing data.</p>
 
 
 <a href="#datajoint.hash_registry.delete_path" class="headerlink" title="Permanent link">&para;</a></h2>
-<div class="doc-signature highlight"><pre><span></span><code><span class="nf">delete_path</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">store_name</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">delete_path</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">store_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
 </code></pre></div>
 
     <div class="doc doc-contents ">
@@ -6210,6 +6455,22 @@ Use garbage collection to safely remove unreferenced content.</p>
             <td>
               <div class="doc-md-description">
                 <p>Name of the store. If None, uses default store.</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>config</code>
+            </td>
+            <td>
+                  <code><span title="Config">Config</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Config instance. If None, falls back to global settings.config.</p>
               </div>
             </td>
             <td>

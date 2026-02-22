@@ -59,7 +59,7 @@
 <div class="md-banner">
 <div class="md-banner__inner md-grid md-typeset">
 <p>
-        📖 You are viewing documentation for <strong>DataJoint 2.1+</strong>
+        📖 You are viewing documentation for <strong>DataJoint 2.2+</strong>
         ·
         <a href="https://docs.datajoint.com/how-to/migrate-to-v20/">
           Migration guide for legacy users (pre-2.0)
@@ -270,6 +270,18 @@
     
   
     What's New in 2.0
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../explanation/whats-new-22/">
+<span class="md-ellipsis">
+    
+  
+    What's New in 2.2
   
 
     
@@ -824,6 +836,18 @@
   </span>
 </a>
 </li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../tutorials/advanced/instances/">
+<span class="md-ellipsis">
+    
+  
+    Working with Instances
+  
+
+    
+  </span>
+</a>
+</li>
 </ul>
 </nav>
 </li>
@@ -910,6 +934,18 @@
     
   
     Configure Database
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../use-instances/">
+<span class="md-ellipsis">
+    
+  
+    Use Isolated Instances
   
 
     
@@ -1884,6 +1920,44 @@
 </li>
 </ul>
 </nav>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_5_2" type="checkbox"/>
+<label class="md-nav__link" for="__nav_5_2" id="__nav_5_2_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    Instance &amp; Thread Safety
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_5_2_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_5_2">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Instance &amp; Thread Safety
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../reference/specs/thread-safe-mode/">
+<span class="md-ellipsis">
+    
+  
+    Thread-Safe Mode
+  
+
+    
+  </span>
+</a>
 </li>
 </ul>
 </nav>
@@ -3149,7 +3223,7 @@ schema = dj.Schema('howto_masterpart')</div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>[2026-02-06 11:44:01] DataJoint 2.1.0 connected to datajoint@127.0.0.1:5432
+<pre>[2026-02-19 18:32:09] DataJoint 2.1.1 connected to postgres@postgres:5432
 </pre>
 </div>
 </div>
@@ -3308,7 +3382,7 @@ dj.Diagram(schema)</div>
 <div class="jp-OutputArea-child jp-OutputArea-executeResult">
 <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[2]:</div>
 <div class="jp-RenderedSVG jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="image/svg+xml" tabindex="0">
-<img alt="No description has been provided for this image" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB3aWR0aD0iMzAxcHQiIGhlaWdodD0iOTlwdCIgdmlld0JveD0iMC4wMCAwLjAwIDMwMS4wMCA5OS4wMCI+CjxnIGlkPSJncmFwaDAiIGNsYXNzPSJncmFwaCIgdHJhbnNmb3JtPSJzY2FsZSgxIDEpIHJvdGF0ZSgwKSB0cmFuc2xhdGUoNCA5NSkiPgo8cG9seWdvbiBmaWxsPSJ3aGl0ZSIgc3Ryb2tlPSJub25lIiBwb2ludHM9Ii00LDQgLTQsLTk1IDI5NywtOTUgMjk3LDQgLTQsNCIvPgo8ZyBpZD0iY2x1c3QxIiBjbGFzcz0iY2x1c3RlciI+Cjx0aXRsZT5jbHVzdGVyX2NsdXN0ZXJfaG93dG9fbWFzdGVycGFydDwvdGl0bGU+Cjxwb2x5Z29uIGZpbGw9Im5vbmUiIHN0cm9rZT0iZ3JheSIgc3Ryb2tlLWRhc2hhcnJheT0iNSwyIiBwb2ludHM9IjgsLTggOCwtODMgMjg1LC04MyAyODUsLTggOCwtOCIvPgo8dGV4dCB0ZXh0LWFuY2hvcj0ibWlkZGxlIiB4PSIxNDYuNSIgeT0iLTY1LjciIGZvbnQtZmFtaWx5PSJUaW1lcyxzZXJpZiIgZm9udC1zaXplPSIxNC4wMCIgZmlsbD0iZ3JheSI+X19tYWluX188L3RleHQ+CjwvZz4KPCEtLSBTdWJqZWN0IC0tPgo8ZyBpZD0ibm9kZTEiIGNsYXNzPSJub2RlIj4KPHRpdGxlPlN1YmplY3Q8L3RpdGxlPgo8ZyBpZD0iYV9ub2RlMSI+PGEgeGxpbms6dGl0bGU9InN1YmplY3RfaWQgwqDCoMKgwqDCoMKgwqDCoMKgwqANLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tDXNwZWNpZXMgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqANIj4KPHBvbHlnb24gZmlsbD0iIzAwZmYwMCIgZmlsbC1vcGFjaXR5PSIwLjE4ODIzNSIgc3Ryb2tlPSIjMDBmZjAwIiBzdHJva2Utb3BhY2l0eT0iMC4xODgyMzUiIHBvaW50cz0iNzIuNSwtNTAuMjggMTYsLTUwLjI4IDE2LC0xNS43MiA3Mi41LC0xNS43MiA3Mi41LC01MC4yOCIvPgo8dGV4dCB0ZXh0LWFuY2hvcj0ic3RhcnQiIHg9IjI0IiB5PSItMjkuNzMiIGZvbnQtZmFtaWx5PSJhcmlhbCIgdGV4dC1kZWNvcmF0aW9uPSJ1bmRlcmxpbmUiIGZvbnQtc2l6ZT0iMTIuMDAiIGZpbGw9ImRhcmtncmVlbiI+U3ViamVjdDwvdGV4dD4KPC9hPgo8L2c+CjwvZz4KPCEtLSBTZXNzaW9uIC0tPgo8ZyBpZD0ibm9kZTIiIGNsYXNzPSJub2RlIj4KPHRpdGxlPlNlc3Npb248L3RpdGxlPgo8ZyBpZD0iYV9ub2RlMiI+PGEgeGxpbms6dGl0bGU9IuKGkiBTdWJqZWN0DXNlc3Npb25faWR4IMKgwqDCoMKgwqDCoMKgwqDCoA0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0Nc2Vzc2lvbl9kYXRlIMKgwqDCoMKgwqDCoMKgwqANIj4KPHBvbHlnb24gZmlsbD0iIzAwZmYwMCIgZmlsbC1vcGFjaXR5PSIwLjE4ODIzNSIgc3Ryb2tlPSIjMDBmZjAwIiBzdHJva2Utb3BhY2l0eT0iMC4xODgyMzUiIHBvaW50cz0iMTY4LC01MC4yOCAxMDguNSwtNTAuMjggMTA4LjUsLTE1LjcyIDE2OCwtMTUuNzIgMTY4LC01MC4yOCIvPgo8dGV4dCB0ZXh0LWFuY2hvcj0ic3RhcnQiIHg9IjExNi41IiB5PSItMjkuNzMiIGZvbnQtZmFtaWx5PSJhcmlhbCIgdGV4dC1kZWNvcmF0aW9uPSJ1bmRlcmxpbmUiIGZvbnQtc2l6ZT0iMTIuMDAiIGZpbGw9ImRhcmtncmVlbiI+U2Vzc2lvbjwvdGV4dD4KPC9hPgo8L2c+CjwvZz4KPCEtLSBTdWJqZWN0JiM0NTsmZ3Q7U2Vzc2lvbiAtLT4KPGcgaWQ9ImVkZ2UxIiBjbGFzcz0iZWRnZSI+Cjx0aXRsZT5TdWJqZWN0LSZndDtTZXNzaW9uPC90aXRsZT4KPHBhdGggZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjAuNzUiIHN0cm9rZS1vcGFjaXR5PSIwLjI1MDk4MCIgZD0iTTcyLjg1LC0zM0M4My45NywtMzMgOTYuOCwtMzMgMTA4LjA3LC0zMyIvPgo8L2c+CjwhLS0gU2Vzc2lvbi5UcmlhbCAtLT4KPGcgaWQ9Im5vZGUzIiBjbGFzcz0ibm9kZSI+Cjx0aXRsZT5TZXNzaW9uLlRyaWFsPC90aXRsZT4KPGcgaWQ9ImFfbm9kZTMiPjxhIHhsaW5rOnRpdGxlPSLihpIgU2Vzc2lvbg10cmlhbF9pZHggwqDCoMKgwqDCoMKgwqDCoMKgwqDCoA0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0Nc3RpbXVsdXMgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgDXJlc3BvbnNlIMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoA1yZWFjdGlvbl90aW1lIMKgwqDCoMKgwqDCoMKgDSI+Cjxwb2x5Z29uIGZpbGw9Im5vbmUiIHN0cm9rZT0ibm9uZSIgcG9pbnRzPSIyNzcsLTQzIDIwNCwtNDMgMjA0LC0yMyAyNzcsLTIzIDI3NywtNDMiLz4KPHRleHQgdGV4dC1hbmNob3I9InN0YXJ0IiB4PSIyMTIiIHk9Ii0zMC41IiBmb250LWZhbWlseT0iYXJpYWwiIHRleHQtZGVjb3JhdGlvbj0idW5kZXJsaW5lIiBmb250LXNpemU9IjEwLjAwIj5TZXNzaW9uLlRyaWFsPC90ZXh0Pgo8L2E+CjwvZz4KPC9nPgo8IS0tIFNlc3Npb24mIzQ1OyZndDtTZXNzaW9uLlRyaWFsIC0tPgo8ZyBpZD0iZWRnZTIiIGNsYXNzPSJlZGdlIj4KPHRpdGxlPlNlc3Npb24tJmd0O1Nlc3Npb24uVHJpYWw8L3RpdGxlPgo8cGF0aCBmaWxsPSJub25lIiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iMC43NSIgc3Ryb2tlLW9wYWNpdHk9IjAuMjUwOTgwIiBkPSJNMTY4LjI1LC0zM0MxNzkuNDYsLTMzIDE5Mi40MSwtMzMgMjA0LjE3LC0zMyIvPgo8L2c+CjwvZz4KPC9zdmc+"/>
+<img alt="No description has been provided for this image" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB3aWR0aD0iMjk1cHQiIGhlaWdodD0iMTAwcHQiIHZpZXdCb3g9IjAuMDAgMC4wMCAyOTUuMDAgMTAwLjAwIj4KPGcgaWQ9ImdyYXBoMCIgY2xhc3M9ImdyYXBoIiB0cmFuc2Zvcm09InNjYWxlKDEgMSkgcm90YXRlKDApIHRyYW5zbGF0ZSg0IDk2KSI+Cjxwb2x5Z29uIGZpbGw9IndoaXRlIiBzdHJva2U9Im5vbmUiIHBvaW50cz0iLTQsNCAtNCwtOTYgMjkxLC05NiAyOTEsNCAtNCw0Ii8+CjxnIGlkPSJjbHVzdDEiIGNsYXNzPSJjbHVzdGVyIj4KPHRpdGxlPmNsdXN0ZXJfY2x1c3Rlcl9ob3d0b19tYXN0ZXJwYXJ0PC90aXRsZT4KPHBvbHlnb24gZmlsbD0ibm9uZSIgc3Ryb2tlPSJncmF5IiBzdHJva2UtZGFzaGFycmF5PSI1LDIiIHBvaW50cz0iOCwtOCA4LC04NCAyNzksLTg0IDI3OSwtOCA4LC04Ii8+Cjx0ZXh0IHRleHQtYW5jaG9yPSJtaWRkbGUiIHg9IjE0My41IiB5PSItNjYuNyIgZm9udC1mYW1pbHk9IlRpbWVzLHNlcmlmIiBmb250LXNpemU9IjE0LjAwIiBmaWxsPSJncmF5Ij5fX21haW5fXzwvdGV4dD4KPC9nPgo8IS0tIFN1YmplY3QgLS0+CjxnIGlkPSJub2RlMSIgY2xhc3M9Im5vZGUiPgo8dGl0bGU+U3ViamVjdDwvdGl0bGU+CjxnIGlkPSJhX25vZGUxIj48YSB4bGluazp0aXRsZT0ic3ViamVjdF9pZCDCoMKgwqDCoMKgwqDCoMKgwqDCoA0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0Nc3BlY2llcyDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoA0iPgo8cG9seWdvbiBmaWxsPSIjMDBmZjAwIiBmaWxsLW9wYWNpdHk9IjAuMTg4MjM1IiBzdHJva2U9IiMwMGZmMDAiIHN0cm9rZS1vcGFjaXR5PSIwLjE4ODIzNSIgcG9pbnRzPSI3MSwtNTAuMjggMTYsLTUwLjI4IDE2LC0xNS43MiA3MSwtMTUuNzIgNzEsLTUwLjI4Ii8+Cjx0ZXh0IHRleHQtYW5jaG9yPSJzdGFydCIgeD0iMjQiIHk9Ii0zMC4xIiBmb250LWZhbWlseT0iYXJpYWwiIHRleHQtZGVjb3JhdGlvbj0idW5kZXJsaW5lIiBmb250LXNpemU9IjEyLjAwIiBmaWxsPSJkYXJrZ3JlZW4iPlN1YmplY3Q8L3RleHQ+CjwvYT4KPC9nPgo8L2c+CjwhLS0gU2Vzc2lvbiAtLT4KPGcgaWQ9Im5vZGUyIiBjbGFzcz0ibm9kZSI+Cjx0aXRsZT5TZXNzaW9uPC90aXRsZT4KPGcgaWQ9ImFfbm9kZTIiPjxhIHhsaW5rOnRpdGxlPSLihpIgU3ViamVjdA1zZXNzaW9uX2lkeCDCoMKgwqDCoMKgwqDCoMKgwqANLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tDXNlc3Npb25fZGF0ZSDCoMKgwqDCoMKgwqDCoMKgDSI+Cjxwb2x5Z29uIGZpbGw9IiMwMGZmMDAiIGZpbGwtb3BhY2l0eT0iMC4xODgyMzUiIHN0cm9rZT0iIzAwZmYwMCIgc3Ryb2tlLW9wYWNpdHk9IjAuMTg4MjM1IiBwb2ludHM9IjE2Mi43NSwtNTAuMjggMTA3LC01MC4yOCAxMDcsLTE1LjcyIDE2Mi43NSwtMTUuNzIgMTYyLjc1LC01MC4yOCIvPgo8dGV4dCB0ZXh0LWFuY2hvcj0ic3RhcnQiIHg9IjExNSIgeT0iLTMwLjEiIGZvbnQtZmFtaWx5PSJhcmlhbCIgdGV4dC1kZWNvcmF0aW9uPSJ1bmRlcmxpbmUiIGZvbnQtc2l6ZT0iMTIuMDAiIGZpbGw9ImRhcmtncmVlbiI+U2Vzc2lvbjwvdGV4dD4KPC9hPgo8L2c+CjwvZz4KPCEtLSBTdWJqZWN0JiM0NTsmZ3Q7U2Vzc2lvbiAtLT4KPGcgaWQ9ImVkZ2UxIiBjbGFzcz0iZWRnZSI+Cjx0aXRsZT5TdWJqZWN0LSZndDtTZXNzaW9uPC90aXRsZT4KPHBhdGggZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjAuNzUiIHN0cm9rZS1vcGFjaXR5PSIwLjI1MDk4MCIgZD0iTTcxLjMyLC0zM0M4Mi41MiwtMzMgOTUuNTMsLTMzIDEwNi43NywtMzMiLz4KPC9nPgo8IS0tIFNlc3Npb24uVHJpYWwgLS0+CjxnIGlkPSJub2RlMyIgY2xhc3M9Im5vZGUiPgo8dGl0bGU+U2Vzc2lvbi5UcmlhbDwvdGl0bGU+CjxnIGlkPSJhX25vZGUzIj48YSB4bGluazp0aXRsZT0i4oaSIFNlc3Npb24NdHJpYWxfaWR4IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqANLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tDXN0aW11bHVzIMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoA1yZXNwb25zZSDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqANcmVhY3Rpb25fdGltZSDCoMKgwqDCoMKgwqDCoA0iPgo8cG9seWdvbiBmaWxsPSJub25lIiBzdHJva2U9Im5vbmUiIHBvaW50cz0iMjcxLC00My4zOCAxOTguNzUsLTQzLjM4IDE5OC43NSwtMjIuNjIgMjcxLC0yMi42MiAyNzEsLTQzLjM4Ii8+Cjx0ZXh0IHRleHQtYW5jaG9yPSJzdGFydCIgeD0iMjA2Ljc1IiB5PSItMzAuODgiIGZvbnQtZmFtaWx5PSJhcmlhbCIgdGV4dC1kZWNvcmF0aW9uPSJ1bmRlcmxpbmUiIGZvbnQtc2l6ZT0iMTAuMDAiPlNlc3Npb24uVHJpYWw8L3RleHQ+CjwvYT4KPC9nPgo8L2c+CjwhLS0gU2Vzc2lvbiYjNDU7Jmd0O1Nlc3Npb24uVHJpYWwgLS0+CjxnIGlkPSJlZGdlMiIgY2xhc3M9ImVkZ2UiPgo8dGl0bGU+U2Vzc2lvbi0mZ3Q7U2Vzc2lvbi5UcmlhbDwvdGl0bGU+CjxwYXRoIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzAwMDAwMCIgc3Ryb2tlLXdpZHRoPSIwLjc1IiBzdHJva2Utb3BhY2l0eT0iMC4yNTA5ODAiIGQ9Ik0xNjMuMTcsLTMzQzE3NC4yNywtMzMgMTg3LjI0LC0zMyAxOTkuMDEsLTMzIi8+CjwvZz4KPC9nPgo8L3N2Zz4="/>
 </div>
 </div>
 </div>
@@ -4102,28 +4176,28 @@ len(Session.Trial())</div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>[2026-02-06 11:44:02] Deleting 3 rows from "howto_masterpart"."__session_analysis__trial_score"
+<pre>[2026-02-19 18:32:09] Deleting 3 rows from "howto_masterpart"."__session_analysis__trial_score"
 </pre>
 </div>
 </div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>[2026-02-06 11:44:02] Deleting 3 rows from "howto_masterpart"."session__trial"
+<pre>[2026-02-19 18:32:09] Deleting 3 rows from "howto_masterpart"."session__trial"
 </pre>
 </div>
 </div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>[2026-02-06 11:44:02] Deleting 1 rows from "howto_masterpart"."__session_analysis"
+<pre>[2026-02-19 18:32:09] Deleting 1 rows from "howto_masterpart"."__session_analysis"
 </pre>
 </div>
 </div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>[2026-02-06 11:44:02] Deleting 1 rows from "howto_masterpart"."session"
+<pre>[2026-02-19 18:32:09] Deleting 1 rows from "howto_masterpart"."session"
 </pre>
 </div>
 </div>

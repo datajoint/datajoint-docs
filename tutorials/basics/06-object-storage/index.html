@@ -59,7 +59,7 @@
 <div class="md-banner">
 <div class="md-banner__inner md-grid md-typeset">
 <p>
-        📖 You are viewing documentation for <strong>DataJoint 2.1+</strong>
+        📖 You are viewing documentation for <strong>DataJoint 2.2+</strong>
         ·
         <a href="https://docs.datajoint.com/how-to/migrate-to-v20/">
           Migration guide for legacy users (pre-2.0)
@@ -270,6 +270,18 @@
     
   
     What's New in 2.0
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../explanation/whats-new-22/">
+<span class="md-ellipsis">
+    
+  
+    What's New in 2.2
   
 
     
@@ -1102,6 +1114,18 @@
   </span>
 </a>
 </li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../advanced/instances/">
+<span class="md-ellipsis">
+    
+  
+    Working with Instances
+  
+
+    
+  </span>
+</a>
+</li>
 </ul>
 </nav>
 </li>
@@ -1188,6 +1212,18 @@
     
   
     Configure Database
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../how-to/use-instances/">
+<span class="md-ellipsis">
+    
+  
+    Use Isolated Instances
   
 
     
@@ -2079,6 +2115,44 @@
 </li>
 </ul>
 </nav>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_5_2" type="checkbox"/>
+<label class="md-nav__link" for="__nav_5_2" id="__nav_5_2_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    Instance &amp; Thread Safety
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_5_2_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_5_2">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Instance &amp; Thread Safety
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../reference/specs/thread-safe-mode/">
+<span class="md-ellipsis">
+    
+  
+    Thread-Safe Mode
+  
+
+    
+  </span>
+</a>
 </li>
 </ul>
 </nav>
@@ -3554,7 +3628,7 @@ schema = dj.Schema('tutorial_oas')</div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>[2026-02-06 11:45:02] DataJoint 2.1.0 connected to datajoint@127.0.0.1:5432
+<pre>[2026-02-19 18:32:40] DataJoint 2.1.1 connected to postgres@postgres:5432
 </pre>
 </div>
 </div>
@@ -3984,7 +4058,7 @@ print(f"Store configured at: {store_path}")</div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>Store configured at: /var/folders/cn/dpwf5t7j3gd8gzyw2r7dhm8r0000gn/T/dj_store_x2x_aatv
+<pre>Store configured at: /tmp/dj_store_5logl9br
 </pre>
 </div>
 </div>
@@ -4254,7 +4328,7 @@ for root, dirs, files in os.walk(store_path):
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>_hash/tutorial_oas/yqn2t7i7vajacorzpk3ipwfmkm: 7,685,032 bytes
+<pre>_hash/tutorial_oas/7qnbupn5subgt2p2ekffyzqxvi: 7,685,585 bytes
 </pre>
 </div>
 </div>
@@ -4533,6 +4607,14 @@ ImagingSession()</div>
 <div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
 </div>
 <div class="jp-OutputArea jp-Cell-outputArea">
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
+<pre>/usr/local/lib/python3.12/site-packages/google_crc32c/__init__.py:29: RuntimeWarning: As the c extension couldn't be imported, `google-crc32c` is using a pure python implementation that is significantly slower. If possible, please configure a c build environment and compile the extension
+  warnings.warn(_SLOW_CRC32C_WARNING, RuntimeWarning)
+</pre>
+</div>
+</div>
 <div class="jp-OutputArea-child jp-OutputArea-executeResult">
 <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[13]:</div>
 <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/html" tabindex="0">
@@ -4658,10 +4740,10 @@ print(f"First frame mean: {z[0].mean():.1f}")</div>
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
 <pre>Type: ObjectRef
-Path: tutorial_oas/ImagingSession/subject_id=1/session_id=1/frames_sWRCkZuy.zarr
+Path: tutorial_oas/ImagingSession/subject_id=1/session_id=1/frames_0mrMUPxn.zarr
 Shape: (100, 512, 512)
 Chunks: (10, 512, 512)
-First frame mean: 2045.9
+First frame mean: 2044.5
 </pre>
 </div>
 </div>
@@ -5103,13 +5185,13 @@ ProcessedRecording()</div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>ProcessedRecording:  33%|███▎      | 1/3 [00:00&lt;00:01,  1.76it/s]</pre>
+<pre>ProcessedRecording:  33%|███▎      | 1/3 [00:00&lt;00:00,  2.72it/s]</pre>
 </div>
 </div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>ProcessedRecording: 100%|██████████| 3/3 [00:00&lt;00:00,  5.02it/s]</pre>
+<pre>ProcessedRecording: 100%|██████████| 3/3 [00:00&lt;00:00,  7.64it/s]</pre>
 </div>
 </div>
 <div class="jp-OutputArea-child">
@@ -5182,7 +5264,7 @@ ProcessedRecording()</div>
 <thead> <tr> <th> <span id="primary" title="None">recording_id</span></th><th><span id="nonprimary" title="Result in object storage">filtered</span></th><th><span id="nonprimary" title="">mean_value</span> </th> </tr> </thead>
 <tbody> <tr> <td>1</td>
 <td>&lt;blob&gt;</td>
-<td>-0.001368765720450917</td></tr><tr><td>2</td>
+<td>0.00022221858929436872</td></tr><tr><td>2</td>
 <td>&lt;blob&gt;</td>
 <td>1.0000000000000002</td></tr><tr><td>3</td>
 <td>&lt;blob&gt;</td>
@@ -5242,7 +5324,7 @@ print(f"Mean value: {meta}")</div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>Mean value: -0.001368765720450917
+<pre>Mean value: 0.00022221858929436872
 </pre>
 </div>
 </div>
@@ -5400,7 +5482,7 @@ result</div>
 <table border="1" class="Table">
 <thead> <tr> <th> <span id="primary" title="">recording_id</span></th><th><span id="nonprimary" title="">mean_value</span> </th> </tr> </thead>
 <tbody> <tr> <td>1</td>
-<td>-0.001368765720450917</td></tr><tr><td>2</td>
+<td>0.00022221858929436872</td></tr><tr><td>2</td>
 <td>1.0000000000000002</td></tr><tr><td>3</td>
 <td>1.0000000000000002</td> </tr> </tbody>
 </table>

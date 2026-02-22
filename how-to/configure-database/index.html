@@ -14,7 +14,7 @@
         <link rel="prev" href="../manage-secrets/">
       
       
-        <link rel="next" href="../configure-storage/">
+        <link rel="next" href="../use-instances/">
       
       
         
@@ -124,7 +124,7 @@
   <div class="md-banner">
     <div class="md-banner__inner md-grid md-typeset">
       <p>
-        📖 You are viewing documentation for <strong>DataJoint 2.1+</strong>
+        📖 You are viewing documentation for <strong>DataJoint 2.2+</strong>
         ·
         <a href="https://docs.datajoint.com/how-to/migrate-to-v20/">
           Migration guide for legacy users (pre-2.0)
@@ -438,6 +438,8 @@
       
         
       
+        
+      
     
     
     
@@ -523,6 +525,34 @@
     
   
     What's New in 2.0
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/whats-new-22/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    What's New in 2.2
   
 
     
@@ -1709,6 +1739,8 @@
       
         
       
+        
+      
     
     
     
@@ -1863,6 +1895,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/advanced/instances/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Working with Instances
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -1967,6 +2027,8 @@
   
     
     
+      
+        
       
         
       
@@ -2374,10 +2436,49 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#instance-based-connections" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Instance-Based Connections
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
       
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../use-instances/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Use Isolated Instances
+  
+
+    
+  </span>
+  
+  
+
+      </a>
     </li>
   
 
@@ -3698,6 +3799,8 @@
       
         
       
+        
+      
     
     
     
@@ -4527,6 +4630,95 @@
           </ul>
         </nav>
       
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_2" id="__nav_5_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Instance & Thread Safety
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Instance & Thread Safety
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/specs/thread-safe-mode/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Thread-Safe Mode
+  
+
+    
+  </span>
+  
+  
+
+      </a>
     </li>
   
 
@@ -5779,6 +5971,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#instance-based-connections" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Instance-Based Connections
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -6021,6 +6224,29 @@
 <span class="c1"># ... do work ...</span>
 <span class="n">conn</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 </code></pre></div>
+<h2 id="instance-based-connections">Instance-Based Connections<a class="headerlink" href="#instance-based-connections" title="Permanent link">&para;</a></h2>
+<div class="admonition version-added">
+<p class="admonition-title">New in 2.2</p>
+<p><code>dj.Instance</code> provides isolated connections independent of global config.</p>
+</div>
+<p>For applications that need multiple connections or thread safety, use <code>dj.Instance</code> instead of global config:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">datajoint</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dj</span>
+
+<span class="n">inst</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">Instance</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="s2">&quot;db.example.com&quot;</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="s2">&quot;myuser&quot;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s2">&quot;mypassword&quot;</span><span class="p">)</span>
+<span class="n">schema</span> <span class="o">=</span> <span class="n">inst</span><span class="o">.</span><span class="n">Schema</span><span class="p">(</span><span class="s2">&quot;my_schema&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p>Each Instance has its own config and connection. This is useful for:</p>
+<ul>
+<li><strong>Web servers</strong>: One Instance per request or tenant</li>
+<li><strong>Testing</strong>: Isolated databases per test</li>
+<li><strong>Multi-database</strong>: Connect to production and staging simultaneously</li>
+<li><strong>Thread safety</strong>: Set <code>DJ_THREAD_SAFE=true</code> to enforce Instance usage</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="c1"># Multiple simultaneous connections</span>
+<span class="n">prod</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">Instance</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="s2">&quot;prod.example.com&quot;</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="s2">&quot;analyst&quot;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s2">&quot;...&quot;</span><span class="p">)</span>
+<span class="n">staging</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">Instance</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="s2">&quot;staging.example.com&quot;</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="s2">&quot;dev&quot;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s2">&quot;...&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p>See <a href="../use-instances/">Use Isolated Instances</a> for a complete guide.</p>
 
 
 

@@ -59,7 +59,7 @@
 <div class="md-banner">
 <div class="md-banner__inner md-grid md-typeset">
 <p>
-        📖 You are viewing documentation for <strong>DataJoint 2.1+</strong>
+        📖 You are viewing documentation for <strong>DataJoint 2.2+</strong>
         ·
         <a href="https://docs.datajoint.com/how-to/migrate-to-v20/">
           Migration guide for legacy users (pre-2.0)
@@ -270,6 +270,18 @@
     
   
     What's New in 2.0
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../explanation/whats-new-22/">
+<span class="md-ellipsis">
+    
+  
+    What's New in 2.2
   
 
     
@@ -956,6 +968,18 @@
   </span>
 </a>
 </li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../advanced/instances/">
+<span class="md-ellipsis">
+    
+  
+    Working with Instances
+  
+
+    
+  </span>
+</a>
+</li>
 </ul>
 </nav>
 </li>
@@ -1042,6 +1066,18 @@
     
   
     Configure Database
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../how-to/use-instances/">
+<span class="md-ellipsis">
+    
+  
+    Use Isolated Instances
   
 
     
@@ -1933,6 +1969,44 @@
 </li>
 </ul>
 </nav>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_5_2" type="checkbox"/>
+<label class="md-nav__link" for="__nav_5_2" id="__nav_5_2_label" tabindex="0">
+<span class="md-ellipsis">
+    
+  
+    Instance &amp; Thread Safety
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_5_2_label" class="md-nav" data-md-level="2">
+<label class="md-nav__title" for="__nav_5_2">
+<span class="md-nav__icon md-icon"></span>
+            
+  
+    Instance &amp; Thread Safety
+  
+
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../reference/specs/thread-safe-mode/">
+<span class="md-ellipsis">
+    
+  
+    Thread-Safe Mode
+  
+
+    
+  </span>
+</a>
 </li>
 </ul>
 </nav>
@@ -3258,7 +3332,7 @@ schema = dj.Schema('tutorial_university')</div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>[2026-02-06 11:46:43] DataJoint 2.1.0 connected to datajoint@127.0.0.1:5432
+<pre>[2026-02-19 20:41:18] DataJoint 2.1.1 connected to postgres@postgres:5432
 </pre>
 </div>
 </div>
@@ -3736,7 +3810,7 @@ class Grade(dj.Manual):
 <div class="jp-OutputArea-child jp-OutputArea-executeResult">
 <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[11]:</div>
 <div class="jp-RenderedSVG jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="image/svg+xml" tabindex="0">
-<img alt="No description has been provided for this image" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB3aWR0aD0iNTIycHQiIGhlaWdodD0iMjI1cHQiIHZpZXdCb3g9IjAuMDAgMC4wMCA1MjIuMDAgMjI1LjAwIj4KPGcgaWQ9ImdyYXBoMCIgY2xhc3M9ImdyYXBoIiB0cmFuc2Zvcm09InNjYWxlKDEgMSkgcm90YXRlKDApIHRyYW5zbGF0ZSg0IDIyMSkiPgo8cG9seWdvbiBmaWxsPSJ3aGl0ZSIgc3Ryb2tlPSJub25lIiBwb2ludHM9Ii00LDQgLTQsLTIyMSA1MTgsLTIyMSA1MTgsNCAtNCw0Ii8+CjxnIGlkPSJjbHVzdDEiIGNsYXNzPSJjbHVzdGVyIj4KPHRpdGxlPmNsdXN0ZXJfY2x1c3Rlcl90dXRvcmlhbF91bml2ZXJzaXR5PC90aXRsZT4KPHBvbHlnb24gZmlsbD0ibm9uZSIgc3Ryb2tlPSJncmF5IiBzdHJva2UtZGFzaGFycmF5PSI1LDIiIHBvaW50cz0iOCwtOCA4LC0yMDkgNTA2LC0yMDkgNTA2LC04IDgsLTgiLz4KPHRleHQgdGV4dC1hbmNob3I9Im1pZGRsZSIgeD0iMjU3IiB5PSItMTkxLjciIGZvbnQtZmFtaWx5PSJUaW1lcyxzZXJpZiIgZm9udC1zaXplPSIxNC4wMCIgZmlsbD0iZ3JheSI+X19tYWluX188L3RleHQ+CjwvZz4KPCEtLSBTdHVkZW50IC0tPgo8ZyBpZD0ibm9kZTEiIGNsYXNzPSJub2RlIj4KPHRpdGxlPlN0dWRlbnQ8L3RpdGxlPgo8ZyBpZD0iYV9ub2RlMSI+PGEgeGxpbms6dGl0bGU9InN0dWRlbnRfaWQgwqDCoMKgwqDCoMKgwqDCoMKgwqANLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tDWZpcnN0X25hbWUgwqDCoMKgwqDCoMKgwqDCoMKgwqANbGFzdF9uYW1lIMKgwqDCoMKgwqDCoMKgwqDCoMKgwqANc2V4IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqANZGF0ZV9vZl9iaXJ0aCDCoMKgwqDCoMKgwqDCoA1ob21lX2NpdHkgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoA1ob21lX3N0YXRlIMKgwqDCoMKgwqDCoMKgwqDCoMKgDSI+Cjxwb2x5Z29uIGZpbGw9IiMwMGZmMDAiIGZpbGwtb3BhY2l0eT0iMC4xODgyMzUiIHN0cm9rZT0iIzAwZmYwMCIgc3Ryb2tlLW9wYWNpdHk9IjAuMTg4MjM1IiBwb2ludHM9IjgzLjc1LC02MC4yOCAyNi41LC02MC4yOCAyNi41LC0yNS43MiA4My43NSwtMjUuNzIgODMuNzUsLTYwLjI4Ii8+Cjx0ZXh0IHRleHQtYW5jaG9yPSJzdGFydCIgeD0iMzQuNSIgeT0iLTM5LjczIiBmb250LWZhbWlseT0iYXJpYWwiIHRleHQtZGVjb3JhdGlvbj0idW5kZXJsaW5lIiBmb250LXNpemU9IjEyLjAwIiBmaWxsPSJkYXJrZ3JlZW4iPlN0dWRlbnQ8L3RleHQ+CjwvYT4KPC9nPgo8L2c+CjwhLS0gU3R1ZGVudE1ham9yIC0tPgo8ZyBpZD0ibm9kZTMiIGNsYXNzPSJub2RlIj4KPHRpdGxlPlN0dWRlbnRNYWpvcjwvdGl0bGU+CjxnIGlkPSJhX25vZGUzIj48YSB4bGluazp0aXRsZT0i4oaSIFN0dWRlbnQNLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tDeKGkiBEZXBhcnRtZW50DWRlY2xhcmVfZGF0ZSDCoMKgwqDCoMKgwqDCoMKgDSI+Cjxwb2x5Z29uIGZpbGw9IiMwMGZmMDAiIGZpbGwtb3BhY2l0eT0iMC4xODgyMzUiIHN0cm9rZT0iIzAwZmYwMCIgc3Ryb2tlLW9wYWNpdHk9IjAuMTg4MjM1IiBwb2ludHM9IjIxNy41LC03MC4yOCAxMzAuMjUsLTcwLjI4IDEzMC4yNSwtMzUuNzIgMjE3LjUsLTM1LjcyIDIxNy41LC03MC4yOCIvPgo8dGV4dCB0ZXh0LWFuY2hvcj0ibWlkZGxlIiB4PSIxNzMuODgiIHk9Ii00OC43MyIgZm9udC1mYW1pbHk9ImFyaWFsIiBmb250LXNpemU9IjEyLjAwIiBmaWxsPSJkYXJrZ3JlZW4iPlN0dWRlbnRNYWpvcjwvdGV4dD4KPC9hPgo8L2c+CjwvZz4KPCEtLSBTdHVkZW50JiM0NTsmZ3Q7U3R1ZGVudE1ham9yIC0tPgo8ZyBpZD0iZWRnZTEiIGNsYXNzPSJlZGdlIj4KPHRpdGxlPlN0dWRlbnQtJmd0O1N0dWRlbnRNYWpvcjwvdGl0bGU+CjxwYXRoIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzAwMDAwMCIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2Utb3BhY2l0eT0iMC4yNTA5ODAiIGQ9Ik04NC4wOSwtNDUuNEM5Ny44NSwtNDYuNTcgMTE0Ljc0LC00OC4wMiAxMzAuMDgsLTQ5LjMzIi8+CjwvZz4KPCEtLSBFbnJvbGwgLS0+CjxnIGlkPSJub2RlNyIgY2xhc3M9Im5vZGUiPgo8dGl0bGU+RW5yb2xsPC90aXRsZT4KPGcgaWQ9ImFfbm9kZTciPjxhIHhsaW5rOnRpdGxlPSLihpIgU3R1ZGVudA3ihpIgU2VjdGlvbg0iPgo8cG9seWdvbiBmaWxsPSIjMDBmZjAwIiBmaWxsLW9wYWNpdHk9IjAuMTg4MjM1IiBzdHJva2U9IiMwMGZmMDAiIHN0cm9rZS1vcGFjaXR5PSIwLjE4ODIzNSIgcG9pbnRzPSI0MDMuMjUsLTUwLjI4IDM1NS43NSwtNTAuMjggMzU1Ljc1LC0xNS43MiA0MDMuMjUsLTE1LjcyIDQwMy4yNSwtNTAuMjgiLz4KPHRleHQgdGV4dC1hbmNob3I9Im1pZGRsZSIgeD0iMzc5LjUiIHk9Ii0yOC43MyIgZm9udC1mYW1pbHk9ImFyaWFsIiBmb250LXNpemU9IjEyLjAwIiBmaWxsPSJkYXJrZ3JlZW4iPkVucm9sbDwvdGV4dD4KPC9hPgo8L2c+CjwvZz4KPCEtLSBTdHVkZW50JiM0NTsmZ3Q7RW5yb2xsIC0tPgo8ZyBpZD0iZWRnZTIiIGNsYXNzPSJlZGdlIj4KPHRpdGxlPlN0dWRlbnQtJmd0O0Vucm9sbDwvdGl0bGU+CjxwYXRoIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzAwMDAwMCIgc3Ryb2tlLXdpZHRoPSIwLjc1IiBzdHJva2Utb3BhY2l0eT0iMC4yNTA5ODAiIGQ9Ik04NC4wNiwtMzUuNUM5Ny44NSwtMzIuMTggMTE0LjgsLTI4LjY1IDEzMC4yNSwtMjcgMjEyLjc3LC0xOC4yIDMxMS41NiwtMjYuMDIgMzU1LjQ5LC0zMC40NSIvPgo8L2c+CjwhLS0gRGVwYXJ0bWVudCAtLT4KPGcgaWQ9Im5vZGUyIiBjbGFzcz0ibm9kZSI+Cjx0aXRsZT5EZXBhcnRtZW50PC90aXRsZT4KPGcgaWQ9ImFfbm9kZTIiPjxhIHhsaW5rOnRpdGxlPSJkZXB0IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgDS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ1kZXB0X25hbWUgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoA0iPgo8cG9seWdvbiBmaWxsPSIjMDBmZjAwIiBmaWxsLW9wYWNpdHk9IjAuMTg4MjM1IiBzdHJva2U9IiMwMGZmMDAiIHN0cm9rZS1vcGFjaXR5PSIwLjE4ODIzNSIgcG9pbnRzPSI5NC4yNSwtMTE4LjI4IDE2LC0xMTguMjggMTYsLTgzLjcyIDk0LjI1LC04My43MiA5NC4yNSwtMTE4LjI4Ii8+Cjx0ZXh0IHRleHQtYW5jaG9yPSJzdGFydCIgeD0iMjQiIHk9Ii05Ny43MiIgZm9udC1mYW1pbHk9ImFyaWFsIiB0ZXh0LWRlY29yYXRpb249InVuZGVybGluZSIgZm9udC1zaXplPSIxMi4wMCIgZmlsbD0iZGFya2dyZWVuIj5EZXBhcnRtZW50PC90ZXh0Pgo8L2E+CjwvZz4KPC9nPgo8IS0tIERlcGFydG1lbnQmIzQ1OyZndDtTdHVkZW50TWFqb3IgLS0+CjxnIGlkPSJlZGdlMyIgY2xhc3M9ImVkZ2UiPgo8dGl0bGU+RGVwYXJ0bWVudC0mZ3Q7U3R1ZGVudE1ham9yPC90aXRsZT4KPHBhdGggZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjAuNzUiIHN0cm9rZS1kYXNoYXJyYXk9IjUsMiIgc3Ryb2tlLW9wYWNpdHk9IjAuMjUwOTgwIiBkPSJNOTQuNjgsLTg1LjE1QzEwNS45NywtODAuNTEgMTE4LjM4LC03NS40IDEyOS45MywtNzAuNjYiLz4KPC9nPgo8IS0tIENvdXJzZSAtLT4KPGcgaWQ9Im5vZGU0IiBjbGFzcz0ibm9kZSI+Cjx0aXRsZT5Db3Vyc2U8L3RpdGxlPgo8ZyBpZD0iYV9ub2RlNCI+PGEgeGxpbms6dGl0bGU9IuKGkiBEZXBhcnRtZW50DWNvdXJzZSDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgDS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ1jb3Vyc2VfbmFtZSDCoMKgwqDCoMKgwqDCoMKgwqANY3JlZGl0cyDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoA0iPgo8cG9seWdvbiBmaWxsPSIjMDBmZjAwIiBmaWxsLW9wYWNpdHk9IjAuMTg4MjM1IiBzdHJva2U9IiMwMGZmMDAiIHN0cm9rZS1vcGFjaXR5PSIwLjE4ODIzNSIgcG9pbnRzPSIyMDEuMzgsLTEyMy4yOCAxNDYuMzgsLTEyMy4yOCAxNDYuMzgsLTg4LjcyIDIwMS4zOCwtODguNzIgMjAxLjM4LC0xMjMuMjgiLz4KPHRleHQgdGV4dC1hbmNob3I9InN0YXJ0IiB4PSIxNTQuMzgiIHk9Ii0xMDIuNzIiIGZvbnQtZmFtaWx5PSJhcmlhbCIgdGV4dC1kZWNvcmF0aW9uPSJ1bmRlcmxpbmUiIGZvbnQtc2l6ZT0iMTIuMDAiIGZpbGw9ImRhcmtncmVlbiI+Q291cnNlPC90ZXh0Pgo8L2E+CjwvZz4KPC9nPgo8IS0tIERlcGFydG1lbnQmIzQ1OyZndDtDb3Vyc2UgLS0+CjxnIGlkPSJlZGdlNCIgY2xhc3M9ImVkZ2UiPgo8dGl0bGU+RGVwYXJ0bWVudC0mZ3Q7Q291cnNlPC90aXRsZT4KPHBhdGggZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjAuNzUiIHN0cm9rZS1vcGFjaXR5PSIwLjI1MDk4MCIgZD0iTTk0LjY4LC0xMDIuNjVDMTExLjU1LC0xMDMuMzcgMTMwLjkyLC0xMDQuMiAxNDYuMTcsLTEwNC44NiIvPgo8L2c+CjwhLS0gU2VjdGlvbiAtLT4KPGcgaWQ9Im5vZGU2IiBjbGFzcz0ibm9kZSI+Cjx0aXRsZT5TZWN0aW9uPC90aXRsZT4KPGcgaWQ9ImFfbm9kZTYiPjxhIHhsaW5rOnRpdGxlPSLihpIgQ291cnNlDeKGkiBUZXJtDXNlY3Rpb24gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqANLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tDWF1ZGl0b3JpdW0gwqDCoMKgwqDCoMKgwqDCoMKgwqANIj4KPHBvbHlnb24gZmlsbD0iIzAwZmYwMCIgZmlsbC1vcGFjaXR5PSIwLjE4ODIzNSIgc3Ryb2tlPSIjMDBmZjAwIiBzdHJva2Utb3BhY2l0eT0iMC4xODgyMzUiIHBvaW50cz0iMzEwLC0xMjMuMjggMjUzLjUsLTEyMy4yOCAyNTMuNSwtODguNzIgMzEwLC04OC43MiAzMTAsLTEyMy4yOCIvPgo8dGV4dCB0ZXh0LWFuY2hvcj0ic3RhcnQiIHg9IjI2MS41IiB5PSItMTAyLjcyIiBmb250LWZhbWlseT0iYXJpYWwiIHRleHQtZGVjb3JhdGlvbj0idW5kZXJsaW5lIiBmb250LXNpemU9IjEyLjAwIiBmaWxsPSJkYXJrZ3JlZW4iPlNlY3Rpb248L3RleHQ+CjwvYT4KPC9nPgo8L2c+CjwhLS0gQ291cnNlJiM0NTsmZ3Q7U2VjdGlvbiAtLT4KPGcgaWQ9ImVkZ2U1IiBjbGFzcz0iZWRnZSI+Cjx0aXRsZT5Db3Vyc2UtJmd0O1NlY3Rpb248L3RpdGxlPgo8cGF0aCBmaWxsPSJub25lIiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iMC43NSIgc3Ryb2tlLW9wYWNpdHk9IjAuMjUwOTgwIiBkPSJNMjAxLjg3LC0xMDZDMjE3LjU1LC0xMDYgMjM3LjI3LC0xMDYgMjUzLjA3LC0xMDYiLz4KPC9nPgo8IS0tIFRlcm0gLS0+CjxnIGlkPSJub2RlNSIgY2xhc3M9Im5vZGUiPgo8dGl0bGU+VGVybTwvdGl0bGU+CjxnIGlkPSJhX25vZGU1Ij48YSB4bGluazp0aXRsZT0idGVybV95ZWFyIMKgwqDCoMKgwqDCoMKgwqDCoMKgwqANdGVybSDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoA0iPgo8cG9seWdvbiBmaWxsPSIjMDBmZjAwIiBmaWxsLW9wYWNpdHk9IjAuMTg4MjM1IiBzdHJva2U9IiMwMGZmMDAiIHN0cm9rZS1vcGFjaXR5PSIwLjE4ODIzNSIgcG9pbnRzPSIxOTUsLTE3Ni4yOCAxNTIuNzUsLTE3Ni4yOCAxNTIuNzUsLTE0MS43MiAxOTUsLTE0MS43MiAxOTUsLTE3Ni4yOCIvPgo8dGV4dCB0ZXh0LWFuY2hvcj0ic3RhcnQiIHg9IjE2MC43NSIgeT0iLTE1NS43MiIgZm9udC1mYW1pbHk9ImFyaWFsIiB0ZXh0LWRlY29yYXRpb249InVuZGVybGluZSIgZm9udC1zaXplPSIxMi4wMCIgZmlsbD0iZGFya2dyZWVuIj5UZXJtPC90ZXh0Pgo8L2E+CjwvZz4KPC9nPgo8IS0tIFRlcm0mIzQ1OyZndDtTZWN0aW9uIC0tPgo8ZyBpZD0iZWRnZTYiIGNsYXNzPSJlZGdlIj4KPHRpdGxlPlRlcm0tJmd0O1NlY3Rpb248L3RpdGxlPgo8cGF0aCBmaWxsPSJub25lIiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iMC43NSIgc3Ryb2tlLW9wYWNpdHk9IjAuMjUwOTgwIiBkPSJNMTk1LjI5LC0xNDguNzhDMjExLjc1LC0xNDAuNTQgMjM1LjA3LC0xMjguODcgMjUzLjE5LC0xMTkuOCIvPgo8L2c+CjwhLS0gU2VjdGlvbiYjNDU7Jmd0O0Vucm9sbCAtLT4KPGcgaWQ9ImVkZ2U3IiBjbGFzcz0iZWRnZSI+Cjx0aXRsZT5TZWN0aW9uLSZndDtFbnJvbGw8L3RpdGxlPgo8cGF0aCBmaWxsPSJub25lIiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iMC43NSIgc3Ryb2tlLW9wYWNpdHk9IjAuMjUwOTgwIiBkPSJNMzA1LjkzLC04OC4zM0MzMjAuOTgsLTc2Ljg1IDM0MC41MiwtNjEuOTUgMzU1LjU0LC01MC41MSIvPgo8L2c+CjwhLS0gR3JhZGUgLS0+CjxnIGlkPSJub2RlOSIgY2xhc3M9Im5vZGUiPgo8dGl0bGU+R3JhZGU8L3RpdGxlPgo8ZyBpZD0iYV9ub2RlOSI+PGEgeGxpbms6dGl0bGU9IuKGkiBFbnJvbGwNLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tDeKGkiBMZXR0ZXJHcmFkZQ0iPgo8cG9seWdvbiBmaWxsPSIjMDBmZjAwIiBmaWxsLW9wYWNpdHk9IjAuMTg4MjM1IiBzdHJva2U9IiMwMGZmMDAiIHN0cm9rZS1vcGFjaXR5PSIwLjE4ODIzNSIgcG9pbnRzPSI0OTgsLTc2LjI4IDQ0OSwtNzYuMjggNDQ5LC00MS43MiA0OTgsLTQxLjcyIDQ5OCwtNzYuMjgiLz4KPHRleHQgdGV4dC1hbmNob3I9Im1pZGRsZSIgeD0iNDczLjUiIHk9Ii01NC43MyIgZm9udC1mYW1pbHk9ImFyaWFsIiBmb250LXNpemU9IjEyLjAwIiBmaWxsPSJkYXJrZ3JlZW4iPkdyYWRlPC90ZXh0Pgo8L2E+CjwvZz4KPC9nPgo8IS0tIEVucm9sbCYjNDU7Jmd0O0dyYWRlIC0tPgo8ZyBpZD0iZWRnZTgiIGNsYXNzPSJlZGdlIj4KPHRpdGxlPkVucm9sbC0mZ3Q7R3JhZGU8L3RpdGxlPgo8cGF0aCBmaWxsPSJub25lIiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLW9wYWNpdHk9IjAuMjUwOTgwIiBkPSJNNDAzLjcyLC0zOS41NkM0MTcuNDUsLTQzLjQ0IDQzNC44MSwtNDguMzUgNDQ4LjY1LC01Mi4yNiIvPgo8L2c+CjwhLS0gTGV0dGVyR3JhZGUgLS0+CjxnIGlkPSJub2RlOCIgY2xhc3M9Im5vZGUiPgo8dGl0bGU+TGV0dGVyR3JhZGU8L3RpdGxlPgo8ZyBpZD0iYV9ub2RlOCI+PGEgeGxpbms6dGl0bGU9ImdyYWRlIMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoA0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0NcG9pbnRzIMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqANIj4KPHBvbHlnb24gZmlsbD0iIzAwMDAwMCIgZmlsbC1vcGFjaXR5PSIwLjEyNTQ5MCIgc3Ryb2tlPSJub25lIiBwb2ludHM9IjQxMywtMTAzLjI4IDM0NiwtMTAzLjI4IDM0NiwtNjguNzIgNDEzLC02OC43MiA0MTMsLTEwMy4yOCIvPgo8dGV4dCB0ZXh0LWFuY2hvcj0ic3RhcnQiIHg9IjM1NCIgeT0iLTgzLjUiIGZvbnQtZmFtaWx5PSJhcmlhbCIgdGV4dC1kZWNvcmF0aW9uPSJ1bmRlcmxpbmUiIGZvbnQtc2l6ZT0iMTAuMDAiPkxldHRlckdyYWRlPC90ZXh0Pgo8L2E+CjwvZz4KPC9nPgo8IS0tIExldHRlckdyYWRlJiM0NTsmZ3Q7R3JhZGUgLS0+CjxnIGlkPSJlZGdlOSIgY2xhc3M9ImVkZ2UiPgo8dGl0bGU+TGV0dGVyR3JhZGUtJmd0O0dyYWRlPC90aXRsZT4KPHBhdGggZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjAuNzUiIHN0cm9rZS1kYXNoYXJyYXk9IjUsMiIgc3Ryb2tlLW9wYWNpdHk9IjAuMjUwOTgwIiBkPSJNNDEyLjk0LC03Ni40OEM0MjQuNzMsLTczLjAyIDQzNy44MywtNjkuMTcgNDQ4Ljc0LC02NS45NyIvPgo8L2c+CjwvZz4KPC9zdmc+"/>
+<img alt="No description has been provided for this image" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB3aWR0aD0iNTI2cHQiIGhlaWdodD0iMjI2cHQiIHZpZXdCb3g9IjAuMDAgMC4wMCA1MjUuNzUgMjI2LjAwIj4KPGcgaWQ9ImdyYXBoMCIgY2xhc3M9ImdyYXBoIiB0cmFuc2Zvcm09InNjYWxlKDEgMSkgcm90YXRlKDApIHRyYW5zbGF0ZSg0IDIyMikiPgo8cG9seWdvbiBmaWxsPSJ3aGl0ZSIgc3Ryb2tlPSJub25lIiBwb2ludHM9Ii00LDQgLTQsLTIyMiA1MjEuNzUsLTIyMiA1MjEuNzUsNCAtNCw0Ii8+CjxnIGlkPSJjbHVzdDEiIGNsYXNzPSJjbHVzdGVyIj4KPHRpdGxlPmNsdXN0ZXJfY2x1c3Rlcl90dXRvcmlhbF91bml2ZXJzaXR5PC90aXRsZT4KPHBvbHlnb24gZmlsbD0ibm9uZSIgc3Ryb2tlPSJncmF5IiBzdHJva2UtZGFzaGFycmF5PSI1LDIiIHBvaW50cz0iOCwtOCA4LC0yMTAgNTA5Ljc1LC0yMTAgNTA5Ljc1LC04IDgsLTgiLz4KPHRleHQgdGV4dC1hbmNob3I9Im1pZGRsZSIgeD0iMjU4Ljg4IiB5PSItMTkyLjciIGZvbnQtZmFtaWx5PSJUaW1lcyxzZXJpZiIgZm9udC1zaXplPSIxNC4wMCIgZmlsbD0iZ3JheSI+X19tYWluX188L3RleHQ+CjwvZz4KPCEtLSBUZXJtIC0tPgo8ZyBpZD0ibm9kZTEiIGNsYXNzPSJub2RlIj4KPHRpdGxlPlRlcm08L3RpdGxlPgo8ZyBpZD0iYV9ub2RlMSI+PGEgeGxpbms6dGl0bGU9InRlcm1feWVhciDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgDXRlcm0gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqANIj4KPHBvbHlnb24gZmlsbD0iIzAwZmYwMCIgZmlsbC1vcGFjaXR5PSIwLjE4ODIzNSIgc3Ryb2tlPSIjMDBmZjAwIiBzdHJva2Utb3BhY2l0eT0iMC4xODgyMzUiIHBvaW50cz0iMTk4LC03MC4yOCAxNTQuMjUsLTcwLjI4IDE1NC4yNSwtMzUuNzIgMTk4LC0zNS43MiAxOTgsLTcwLjI4Ii8+Cjx0ZXh0IHRleHQtYW5jaG9yPSJzdGFydCIgeD0iMTYyLjI1IiB5PSItNTAuMSIgZm9udC1mYW1pbHk9ImFyaWFsIiB0ZXh0LWRlY29yYXRpb249InVuZGVybGluZSIgZm9udC1zaXplPSIxMi4wMCIgZmlsbD0iZGFya2dyZWVuIj5UZXJtPC90ZXh0Pgo8L2E+CjwvZz4KPC9nPgo8IS0tIFNlY3Rpb24gLS0+CjxnIGlkPSJub2RlNyIgY2xhc3M9Im5vZGUiPgo8dGl0bGU+U2VjdGlvbjwvdGl0bGU+CjxnIGlkPSJhX25vZGU3Ij48YSB4bGluazp0aXRsZT0i4oaSIENvdXJzZQ3ihpIgVGVybQ1zZWN0aW9uIMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgDS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ1hdWRpdG9yaXVtIMKgwqDCoMKgwqDCoMKgwqDCoMKgDSI+Cjxwb2x5Z29uIGZpbGw9IiMwMGZmMDAiIGZpbGwtb3BhY2l0eT0iMC4xODgyMzUiIHN0cm9rZT0iIzAwZmYwMCIgc3Ryb2tlLW9wYWNpdHk9IjAuMTg4MjM1IiBwb2ludHM9IjMxMS41LC03MC4yOCAyNTYuNSwtNzAuMjggMjU2LjUsLTM1LjcyIDMxMS41LC0zNS43MiAzMTEuNSwtNzAuMjgiLz4KPHRleHQgdGV4dC1hbmNob3I9InN0YXJ0IiB4PSIyNjQuNSIgeT0iLTUwLjEiIGZvbnQtZmFtaWx5PSJhcmlhbCIgdGV4dC1kZWNvcmF0aW9uPSJ1bmRlcmxpbmUiIGZvbnQtc2l6ZT0iMTIuMDAiIGZpbGw9ImRhcmtncmVlbiI+U2VjdGlvbjwvdGV4dD4KPC9hPgo8L2c+CjwvZz4KPCEtLSBUZXJtJiM0NTsmZ3Q7U2VjdGlvbiAtLT4KPGcgaWQ9ImVkZ2UxIiBjbGFzcz0iZWRnZSI+Cjx0aXRsZT5UZXJtLSZndDtTZWN0aW9uPC90aXRsZT4KPHBhdGggZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjAuNzUiIHN0cm9rZS1vcGFjaXR5PSIwLjI1MDk4MCIgZD0iTTE5OC4zLC01M0MyMTQuOTUsLTUzIDIzOC4yNiwtNTMgMjU2LjIyLC01MyIvPgo8L2c+CjwhLS0gRW5yb2xsIC0tPgo8ZyBpZD0ibm9kZTIiIGNsYXNzPSJub2RlIj4KPHRpdGxlPkVucm9sbDwvdGl0bGU+CjxnIGlkPSJhX25vZGUyIj48YSB4bGluazp0aXRsZT0i4oaSIFN0dWRlbnQN4oaSIFNlY3Rpb24NIj4KPHBvbHlnb24gZmlsbD0iIzAwZmYwMCIgZmlsbC1vcGFjaXR5PSIwLjE4ODIzNSIgc3Ryb2tlPSIjMDBmZjAwIiBzdHJva2Utb3BhY2l0eT0iMC4xODgyMzUiIHBvaW50cz0iNDA2LjI1LC01MC4yOCAzNTkuNSwtNTAuMjggMzU5LjUsLTE1LjcyIDQwNi4yNSwtMTUuNzIgNDA2LjI1LC01MC4yOCIvPgo8dGV4dCB0ZXh0LWFuY2hvcj0ibWlkZGxlIiB4PSIzODIuODgiIHk9Ii0yOS4xIiBmb250LWZhbWlseT0iYXJpYWwiIGZvbnQtc2l6ZT0iMTIuMDAiIGZpbGw9ImRhcmtncmVlbiI+RW5yb2xsPC90ZXh0Pgo8L2E+CjwvZz4KPC9nPgo8IS0tIEdyYWRlIC0tPgo8ZyBpZD0ibm9kZTgiIGNsYXNzPSJub2RlIj4KPHRpdGxlPkdyYWRlPC90aXRsZT4KPGcgaWQ9ImFfbm9kZTgiPjxhIHhsaW5rOnRpdGxlPSLihpIgRW5yb2xsDS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ3ihpIgTGV0dGVyR3JhZGUNIj4KPHBvbHlnb24gZmlsbD0iIzAwZmYwMCIgZmlsbC1vcGFjaXR5PSIwLjE4ODIzNSIgc3Ryb2tlPSIjMDBmZjAwIiBzdHJva2Utb3BhY2l0eT0iMC4xODgyMzUiIHBvaW50cz0iNTAxLjc1LC03Ni4yOCA0NTQuMjUsLTc2LjI4IDQ1NC4yNSwtNDEuNzIgNTAxLjc1LC00MS43MiA1MDEuNzUsLTc2LjI4Ii8+Cjx0ZXh0IHRleHQtYW5jaG9yPSJtaWRkbGUiIHg9IjQ3OCIgeT0iLTU1LjEiIGZvbnQtZmFtaWx5PSJhcmlhbCIgZm9udC1zaXplPSIxMi4wMCIgZmlsbD0iZGFya2dyZWVuIj5HcmFkZTwvdGV4dD4KPC9hPgo8L2c+CjwvZz4KPCEtLSBFbnJvbGwmIzQ1OyZndDtHcmFkZSAtLT4KPGcgaWQ9ImVkZ2UyIiBjbGFzcz0iZWRnZSI+Cjx0aXRsZT5FbnJvbGwtJmd0O0dyYWRlPC90aXRsZT4KPHBhdGggZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1vcGFjaXR5PSIwLjI1MDk4MCIgZD0iTTQwNi40MiwtMzkuMjlDNDIwLjg0LC00My4zMiA0MzkuNTEsLTQ4LjUzIDQ1NC4wMiwtNTIuNTgiLz4KPC9nPgo8IS0tIFN0dWRlbnQgLS0+CjxnIGlkPSJub2RlMyIgY2xhc3M9Im5vZGUiPgo8dGl0bGU+U3R1ZGVudDwvdGl0bGU+CjxnIGlkPSJhX25vZGUzIj48YSB4bGluazp0aXRsZT0ic3R1ZGVudF9pZCDCoMKgwqDCoMKgwqDCoMKgwqDCoA0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0NZmlyc3RfbmFtZSDCoMKgwqDCoMKgwqDCoMKgwqDCoA1sYXN0X25hbWUgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoA1zZXggwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoA1kYXRlX29mX2JpcnRoIMKgwqDCoMKgwqDCoMKgDWhvbWVfY2l0eSDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgDWhvbWVfc3RhdGUgwqDCoMKgwqDCoMKgwqDCoMKgwqANIj4KPHBvbHlnb24gZmlsbD0iIzAwZmYwMCIgZmlsbC1vcGFjaXR5PSIwLjE4ODIzNSIgc3Ryb2tlPSIjMDBmZjAwIiBzdHJva2Utb3BhY2l0eT0iMC4xODgyMzUiIHBvaW50cz0iODQuODgsLTg2LjI4IDI2Ljg4LC04Ni4yOCAyNi44OCwtNTEuNzIgODQuODgsLTUxLjcyIDg0Ljg4LC04Ni4yOCIvPgo8dGV4dCB0ZXh0LWFuY2hvcj0ic3RhcnQiIHg9IjM0Ljg4IiB5PSItNjYuMSIgZm9udC1mYW1pbHk9ImFyaWFsIiB0ZXh0LWRlY29yYXRpb249InVuZGVybGluZSIgZm9udC1zaXplPSIxMi4wMCIgZmlsbD0iZGFya2dyZWVuIj5TdHVkZW50PC90ZXh0Pgo8L2E+CjwvZz4KPC9nPgo8IS0tIFN0dWRlbnQmIzQ1OyZndDtFbnJvbGwgLS0+CjxnIGlkPSJlZGdlMyIgY2xhc3M9ImVkZ2UiPgo8dGl0bGU+U3R1ZGVudC0mZ3Q7RW5yb2xsPC90aXRsZT4KPHBhdGggZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjAuNzUiIHN0cm9rZS1vcGFjaXR5PSIwLjI1MDk4MCIgZD0iTTgwLjgsLTUxLjRDOTQuODcsLTQyLjE2IDExMy40NCwtMzEuNzkgMTMxLjc1LC0yNyAyMTMuMjgsLTUuNjkgMzE0Ljg4LC0yMC4xMyAzNTkuMzEsLTI4LjM3Ii8+CjwvZz4KPCEtLSBTdHVkZW50TWFqb3IgLS0+CjxnIGlkPSJub2RlNCIgY2xhc3M9Im5vZGUiPgo8dGl0bGU+U3R1ZGVudE1ham9yPC90aXRsZT4KPGcgaWQ9ImFfbm9kZTQiPjxhIHhsaW5rOnRpdGxlPSLihpIgU3R1ZGVudA0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0N4oaSIERlcGFydG1lbnQNZGVjbGFyZV9kYXRlIMKgwqDCoMKgwqDCoMKgwqANIj4KPHBvbHlnb24gZmlsbD0iIzAwZmYwMCIgZmlsbC1vcGFjaXR5PSIwLjE4ODIzNSIgc3Ryb2tlPSIjMDBmZjAwIiBzdHJva2Utb3BhY2l0eT0iMC4xODgyMzUiIHBvaW50cz0iMjIwLjUsLTEyMy4yOCAxMzEuNzUsLTEyMy4yOCAxMzEuNzUsLTg4LjcyIDIyMC41LC04OC43MiAyMjAuNSwtMTIzLjI4Ii8+Cjx0ZXh0IHRleHQtYW5jaG9yPSJtaWRkbGUiIHg9IjE3Ni4xMiIgeT0iLTEwMi4xIiBmb250LWZhbWlseT0iYXJpYWwiIGZvbnQtc2l6ZT0iMTIuMDAiIGZpbGw9ImRhcmtncmVlbiI+U3R1ZGVudE1ham9yPC90ZXh0Pgo8L2E+CjwvZz4KPC9nPgo8IS0tIFN0dWRlbnQmIzQ1OyZndDtTdHVkZW50TWFqb3IgLS0+CjxnIGlkPSJlZGdlNCIgY2xhc3M9ImVkZ2UiPgo8dGl0bGU+U3R1ZGVudC0mZ3Q7U3R1ZGVudE1ham9yPC90aXRsZT4KPHBhdGggZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1vcGFjaXR5PSIwLjI1MDk4MCIgZD0iTTg1LjIsLTc3Ljg2Qzk5LC04Mi4xOCAxMTUuOTEsLTg3LjQ3IDEzMS4zMywtOTIuMyIvPgo8L2c+CjwhLS0gRGVwYXJ0bWVudCAtLT4KPGcgaWQ9Im5vZGU1IiBjbGFzcz0ibm9kZSI+Cjx0aXRsZT5EZXBhcnRtZW50PC90aXRsZT4KPGcgaWQ9ImFfbm9kZTUiPjxhIHhsaW5rOnRpdGxlPSJkZXB0IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgDS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ1kZXB0X25hbWUgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoA0iPgo8cG9seWdvbiBmaWxsPSIjMDBmZjAwIiBmaWxsLW9wYWNpdHk9IjAuMTg4MjM1IiBzdHJva2U9IiMwMGZmMDAiIHN0cm9rZS1vcGFjaXR5PSIwLjE4ODIzNSIgcG9pbnRzPSI5NS43NSwtMTQ5LjI4IDE2LC0xNDkuMjggMTYsLTExNC43MiA5NS43NSwtMTE0LjcyIDk1Ljc1LC0xNDkuMjgiLz4KPHRleHQgdGV4dC1hbmNob3I9InN0YXJ0IiB4PSIyNCIgeT0iLTEyOS4xIiBmb250LWZhbWlseT0iYXJpYWwiIHRleHQtZGVjb3JhdGlvbj0idW5kZXJsaW5lIiBmb250LXNpemU9IjEyLjAwIiBmaWxsPSJkYXJrZ3JlZW4iPkRlcGFydG1lbnQ8L3RleHQ+CjwvYT4KPC9nPgo8L2c+CjwhLS0gRGVwYXJ0bWVudCYjNDU7Jmd0O1N0dWRlbnRNYWpvciAtLT4KPGcgaWQ9ImVkZ2U1IiBjbGFzcz0iZWRnZSI+Cjx0aXRsZT5EZXBhcnRtZW50LSZndDtTdHVkZW50TWFqb3I8L3RpdGxlPgo8cGF0aCBmaWxsPSJub25lIiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iMC43NSIgc3Ryb2tlLWRhc2hhcnJheT0iNSwyIiBzdHJva2Utb3BhY2l0eT0iMC4yNTA5ODAiIGQ9Ik05NS45MiwtMTIzLjQxQzEwNy4zNiwtMTIwLjkgMTE5LjkzLC0xMTguMTQgMTMxLjYzLC0xMTUuNTYiLz4KPC9nPgo8IS0tIENvdXJzZSAtLT4KPGcgaWQ9Im5vZGU2IiBjbGFzcz0ibm9kZSI+Cjx0aXRsZT5Db3Vyc2U8L3RpdGxlPgo8ZyBpZD0iYV9ub2RlNiI+PGEgeGxpbms6dGl0bGU9IuKGkiBEZXBhcnRtZW50DWNvdXJzZSDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgDS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ1jb3Vyc2VfbmFtZSDCoMKgwqDCoMKgwqDCoMKgwqANY3JlZGl0cyDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoA0iPgo8cG9seWdvbiBmaWxsPSIjMDBmZjAwIiBmaWxsLW9wYWNpdHk9IjAuMTg4MjM1IiBzdHJva2U9IiMwMGZmMDAiIHN0cm9rZS1vcGFjaXR5PSIwLjE4ODIzNSIgcG9pbnRzPSIyMDIuNSwtMTc2LjI4IDE0OS43NSwtMTc2LjI4IDE0OS43NSwtMTQxLjcyIDIwMi41LC0xNDEuNzIgMjAyLjUsLTE3Ni4yOCIvPgo8dGV4dCB0ZXh0LWFuY2hvcj0ic3RhcnQiIHg9IjE1Ny43NSIgeT0iLTE1Ni4xIiBmb250LWZhbWlseT0iYXJpYWwiIHRleHQtZGVjb3JhdGlvbj0idW5kZXJsaW5lIiBmb250LXNpemU9IjEyLjAwIiBmaWxsPSJkYXJrZ3JlZW4iPkNvdXJzZTwvdGV4dD4KPC9hPgo8L2c+CjwvZz4KPCEtLSBEZXBhcnRtZW50JiM0NTsmZ3Q7Q291cnNlIC0tPgo8ZyBpZD0iZWRnZTYiIGNsYXNzPSJlZGdlIj4KPHRpdGxlPkRlcGFydG1lbnQtJmd0O0NvdXJzZTwvdGl0bGU+CjxwYXRoIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzAwMDAwMCIgc3Ryb2tlLXdpZHRoPSIwLjc1IiBzdHJva2Utb3BhY2l0eT0iMC4yNTA5ODAiIGQ9Ik05NS45MiwtMTQwLjkyQzExMy41NSwtMTQ0Ljk0IDEzMy44NywtMTQ5LjU4IDE0OS41MiwtMTUzLjE1Ii8+CjwvZz4KPCEtLSBDb3Vyc2UmIzQ1OyZndDtTZWN0aW9uIC0tPgo8ZyBpZD0iZWRnZTciIGNsYXNzPSJlZGdlIj4KPHRpdGxlPkNvdXJzZS0mZ3Q7U2VjdGlvbjwvdGl0bGU+CjxwYXRoIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzAwMDAwMCIgc3Ryb2tlLXdpZHRoPSIwLjc1IiBzdHJva2Utb3BhY2l0eT0iMC4yNTA5ODAiIGQ9Ik0yMDIuOTQsLTE0NC45N0MyMDguOTksLTE0MS4xNCAyMTUuMjEsLTEzNi43MyAyMjAuNSwtMTMyIDI0MS4xMSwtMTEzLjU5IDI2MC4wOCwtODcuODEgMjcxLjU5LC03MC43NyIvPgo8L2c+CjwhLS0gU2VjdGlvbiYjNDU7Jmd0O0Vucm9sbCAtLT4KPGcgaWQ9ImVkZ2U4IiBjbGFzcz0iZWRnZSI+Cjx0aXRsZT5TZWN0aW9uLSZndDtFbnJvbGw8L3RpdGxlPgo8cGF0aCBmaWxsPSJub25lIiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iMC43NSIgc3Ryb2tlLW9wYWNpdHk9IjAuMjUwOTgwIiBkPSJNMzExLjk5LC00Ny40M0MzMjYuODgsLTQ0LjM1IDM0NS4xNiwtNDAuNTggMzU5LjI5LC0zNy42NiIvPgo8L2c+CjwhLS0gTGV0dGVyR3JhZGUgLS0+CjxnIGlkPSJub2RlOSIgY2xhc3M9Im5vZGUiPgo8dGl0bGU+TGV0dGVyR3JhZGU8L3RpdGxlPgo8ZyBpZD0iYV9ub2RlOSI+PGEgeGxpbms6dGl0bGU9ImdyYWRlIMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoA0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0NcG9pbnRzIMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqANIj4KPHBvbHlnb24gZmlsbD0iIzAwMDAwMCIgZmlsbC1vcGFjaXR5PSIwLjEyNTQ5MCIgc3Ryb2tlPSJub25lIiBwb2ludHM9IjQxOC4yNSwtMTAzLjI4IDM0Ny41LC0xMDMuMjggMzQ3LjUsLTY4LjcyIDQxOC4yNSwtNjguNzIgNDE4LjI1LC0xMDMuMjgiLz4KPHRleHQgdGV4dC1hbmNob3I9InN0YXJ0IiB4PSIzNTUuNSIgeT0iLTgzLjg4IiBmb250LWZhbWlseT0iYXJpYWwiIHRleHQtZGVjb3JhdGlvbj0idW5kZXJsaW5lIiBmb250LXNpemU9IjEwLjAwIj5MZXR0ZXJHcmFkZTwvdGV4dD4KPC9hPgo8L2c+CjwvZz4KPCEtLSBMZXR0ZXJHcmFkZSYjNDU7Jmd0O0dyYWRlIC0tPgo8ZyBpZD0iZWRnZTkiIGNsYXNzPSJlZGdlIj4KPHRpdGxlPkxldHRlckdyYWRlLSZndDtHcmFkZTwvdGl0bGU+CjxwYXRoIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzAwMDAwMCIgc3Ryb2tlLXdpZHRoPSIwLjc1IiBzdHJva2UtZGFzaGFycmF5PSI1LDIiIHN0cm9rZS1vcGFjaXR5PSIwLjI1MDk4MCIgZD0iTTQxOC4wMiwtNzYuMUM0MjkuOTYsLTcyLjY0IDQ0My4wOCwtNjguODQgNDUzLjksLTY1LjciLz4KPC9nPgo8L2c+Cjwvc3ZnPg=="/>
 </div>
 </div>
 </div>
@@ -3821,7 +3895,7 @@ random.seed(42)</div>
             <span class="s1">'last_name'</span><span class="p">:</span> <span class="n">name</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span>
             <span class="s1">'sex'</span><span class="p">:</span> <span class="n">sex</span><span class="p">,</span>
             <span class="s1">'date_of_birth'</span><span class="p">:</span> <span class="n">fake</span><span class="o">.</span><span class="n">date_between</span><span class="p">(</span>
-                <span class="n">start_date</span><span class="o">=</span><span class="s1">'-35y'</span><span class="p">,</span> <span class="n">end_date</span><span class="o">=</span><span class="s1">'-17y'</span><span class="p">),</span>
+                <span class="n">start_date</span><span class="o">=</span><span class="n">date</span><span class="p">(</span><span class="mi">1991</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">end_date</span><span class="o">=</span><span class="n">date</span><span class="p">(</span><span class="mi">2009</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)),</span>
             <span class="s1">'home_city'</span><span class="p">:</span> <span class="n">fake</span><span class="o">.</span><span class="n">city</span><span class="p">(),</span>
             <span class="s1">'home_state'</span><span class="p">:</span> <span class="n">fake</span><span class="o">.</span><span class="n">state_abbr</span><span class="p">()</span>
         <span class="p">}</span>
@@ -3841,7 +3915,7 @@ random.seed(42)</div>
             'last_name': name[-1],
             'sex': sex,
             'date_of_birth': fake.date_between(
-                start_date='-35y', end_date='-17y'),
+                start_date=date(1991, 1, 1), end_date=date(2009, 1, 1)),
             'home_city': fake.city(),
             'home_state': fake.state_abbr()
         }
@@ -3899,7 +3973,8 @@ print(f"Inserted {len(Student())} students")</div>
 <span class="n">StudentMajor</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span>
     <span class="p">{</span>
         <span class="o">**</span><span class="n">s</span><span class="p">,</span> <span class="o">**</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">depts</span><span class="p">),</span>
-        <span class="s1">'declare_date'</span><span class="p">:</span> <span class="n">fake</span><span class="o">.</span><span class="n">date_between</span><span class="p">(</span><span class="n">start_date</span><span class="o">=</span><span class="s1">'-4y'</span><span class="p">)</span>
+        <span class="s1">'declare_date'</span><span class="p">:</span> <span class="n">fake</span><span class="o">.</span><span class="n">date_between</span><span class="p">(</span>
+            <span class="n">start_date</span><span class="o">=</span><span class="n">date</span><span class="p">(</span><span class="mi">2022</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">end_date</span><span class="o">=</span><span class="n">date</span><span class="p">(</span><span class="mi">2026</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
     <span class="p">}</span>
     <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">students</span> <span class="k">if</span> <span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mf">0.75</span>
 <span class="p">)</span>
@@ -3919,7 +3994,8 @@ depts = Department.keys()
 StudentMajor.insert(
     {
         **s, **random.choice(depts),
-        'declare_date': fake.date_between(start_date='-4y')
+        'declare_date': fake.date_between(
+            start_date=date(2022, 1, 1), end_date=date(2026, 1, 1))
     }
     for s in students if random.random() &lt; 0.75
 )
@@ -4368,31 +4444,31 @@ Student &amp; {'home_state': 'CA'}</div>
 <td>Kyle</td>
 <td>Martinez</td>
 <td>M</td>
-<td>2008-10-21</td>
+<td>2008-09-16</td>
 <td>West Amandastad</td>
 <td>CA</td></tr><tr><td>1092</td>
 <td>Christina</td>
 <td>Wilson</td>
 <td>F</td>
-<td>1995-02-22</td>
+<td>1995-01-18</td>
 <td>West Margaret</td>
 <td>CA</td></tr><tr><td>1157</td>
 <td>Kelly</td>
 <td>Foster</td>
 <td>F</td>
-<td>1996-09-06</td>
+<td>1996-08-02</td>
 <td>Jeffreyburgh</td>
 <td>CA</td></tr><tr><td>1194</td>
 <td>Nicholas</td>
 <td>Buck</td>
 <td>M</td>
-<td>2002-03-02</td>
+<td>2002-01-25</td>
 <td>Hillton</td>
 <td>CA</td></tr><tr><td>1203</td>
 <td>Heather</td>
 <td>Armstrong</td>
 <td>F</td>
-<td>1999-07-06</td>
+<td>1999-06-01</td>
 <td>New Nicole</td>
 <td>CA</td> </tr> </tbody>
 </table>
@@ -4499,49 +4575,49 @@ Student &amp; {'home_state': 'CA'}</div>
 <td>Allison</td>
 <td>Hill</td>
 <td>F</td>
-<td>1995-02-12</td>
+<td>1995-01-07</td>
 <td>Lake Joyside</td>
 <td>CO</td></tr><tr><td>1001</td>
 <td>Amanda</td>
 <td>Davis</td>
 <td>F</td>
-<td>1995-04-15</td>
+<td>1995-03-10</td>
 <td>New Jamesside</td>
 <td>MT</td></tr><tr><td>1003</td>
 <td>Tina</td>
 <td>Rogers</td>
 <td>F</td>
-<td>1992-10-07</td>
+<td>1992-09-01</td>
 <td>West Melanieview</td>
 <td>AS</td></tr><tr><td>1004</td>
 <td>Julia</td>
 <td>Martinez</td>
 <td>F</td>
-<td>2007-09-13</td>
+<td>2007-08-09</td>
 <td>New Kellystad</td>
 <td>OK</td></tr><tr><td>1005</td>
 <td>Andrea</td>
 <td>Stanley</td>
 <td>F</td>
-<td>2005-01-05</td>
+<td>2004-11-30</td>
 <td>Port Jesseville</td>
 <td>MS</td></tr><tr><td>1006</td>
 <td>Madison</td>
 <td>Diaz</td>
 <td>F</td>
-<td>1997-10-05</td>
+<td>1997-08-30</td>
 <td>Lake Joseph</td>
 <td>TX</td></tr><tr><td>1007</td>
 <td>Lisa</td>
 <td>Jackson</td>
 <td>F</td>
-<td>2004-03-22</td>
+<td>2004-02-16</td>
 <td>South Noah</td>
 <td>SC</td></tr><tr><td>1009</td>
 <td>Christine</td>
 <td>Hahn</td>
 <td>F</td>
-<td>2006-11-15</td>
+<td>2006-10-11</td>
 <td>Jasonfort</td>
 <td>MO</td> </tr> </tbody>
 </table>
@@ -4649,49 +4725,49 @@ Student &amp; "home_state IN ('CA', 'TX', 'NY')"</div>
 <td>Madison</td>
 <td>Diaz</td>
 <td>F</td>
-<td>1997-10-05</td>
+<td>1997-08-30</td>
 <td>Lake Joseph</td>
 <td>TX</td></tr><tr><td>1014</td>
 <td>Ashley</td>
 <td>Graham</td>
 <td>F</td>
-<td>1999-04-07</td>
+<td>1999-03-03</td>
 <td>Teresaburgh</td>
 <td>NY</td></tr><tr><td>1073</td>
 <td>Kyle</td>
 <td>Martinez</td>
 <td>M</td>
-<td>2008-10-21</td>
+<td>2008-09-16</td>
 <td>West Amandastad</td>
 <td>CA</td></tr><tr><td>1092</td>
 <td>Christina</td>
 <td>Wilson</td>
 <td>F</td>
-<td>1995-02-22</td>
+<td>1995-01-18</td>
 <td>West Margaret</td>
 <td>CA</td></tr><tr><td>1136</td>
 <td>Beth</td>
 <td>Fisher</td>
 <td>F</td>
-<td>1993-02-22</td>
+<td>1993-01-17</td>
 <td>South Shanestad</td>
 <td>NY</td></tr><tr><td>1149</td>
 <td>Emily</td>
 <td>Nguyen</td>
 <td>F</td>
-<td>2008-01-16</td>
+<td>2007-12-12</td>
 <td>North Ericton</td>
 <td>TX</td></tr><tr><td>1157</td>
 <td>Kelly</td>
 <td>Foster</td>
 <td>F</td>
-<td>1996-09-06</td>
+<td>1996-08-02</td>
 <td>Jeffreyburgh</td>
 <td>CA</td></tr><tr><td>1163</td>
 <td>Tiffany</td>
 <td>Stevenson</td>
 <td>F</td>
-<td>1991-11-02</td>
+<td>1991-09-27</td>
 <td>West Cassidy</td>
 <td>NY</td> </tr> </tbody>
 </table>
@@ -4799,49 +4875,49 @@ Student &amp; [{'home_state': 'CA'}, {'home_state': 'TX'}]</div>
 <td>Madison</td>
 <td>Diaz</td>
 <td>F</td>
-<td>1997-10-05</td>
+<td>1997-08-30</td>
 <td>Lake Joseph</td>
 <td>TX</td></tr><tr><td>1073</td>
 <td>Kyle</td>
 <td>Martinez</td>
 <td>M</td>
-<td>2008-10-21</td>
+<td>2008-09-16</td>
 <td>West Amandastad</td>
 <td>CA</td></tr><tr><td>1092</td>
 <td>Christina</td>
 <td>Wilson</td>
 <td>F</td>
-<td>1995-02-22</td>
+<td>1995-01-18</td>
 <td>West Margaret</td>
 <td>CA</td></tr><tr><td>1149</td>
 <td>Emily</td>
 <td>Nguyen</td>
 <td>F</td>
-<td>2008-01-16</td>
+<td>2007-12-12</td>
 <td>North Ericton</td>
 <td>TX</td></tr><tr><td>1157</td>
 <td>Kelly</td>
 <td>Foster</td>
 <td>F</td>
-<td>1996-09-06</td>
+<td>1996-08-02</td>
 <td>Jeffreyburgh</td>
 <td>CA</td></tr><tr><td>1194</td>
 <td>Nicholas</td>
 <td>Buck</td>
 <td>M</td>
-<td>2002-03-02</td>
+<td>2002-01-25</td>
 <td>Hillton</td>
 <td>CA</td></tr><tr><td>1203</td>
 <td>Heather</td>
 <td>Armstrong</td>
 <td>F</td>
-<td>1999-07-06</td>
+<td>1999-06-01</td>
 <td>New Nicole</td>
 <td>CA</td></tr><tr><td>1267</td>
 <td>Angela</td>
 <td>Cole</td>
 <td>F</td>
-<td>1997-10-11</td>
+<td>1997-09-05</td>
 <td>North Joseph</td>
 <td>TX</td> </tr> </tbody>
 </table>
@@ -4960,49 +5036,49 @@ Student &amp; (StudentMajor &amp; {'dept': 'CS'})</div>
 <td>Julia</td>
 <td>Martinez</td>
 <td>F</td>
-<td>2007-09-13</td>
+<td>2007-08-09</td>
 <td>New Kellystad</td>
 <td>OK</td></tr><tr><td>1005</td>
 <td>Andrea</td>
 <td>Stanley</td>
 <td>F</td>
-<td>2005-01-05</td>
+<td>2004-11-30</td>
 <td>Port Jesseville</td>
 <td>MS</td></tr><tr><td>1007</td>
 <td>Lisa</td>
 <td>Jackson</td>
 <td>F</td>
-<td>2004-03-22</td>
+<td>2004-02-16</td>
 <td>South Noah</td>
 <td>SC</td></tr><tr><td>1009</td>
 <td>Christine</td>
 <td>Hahn</td>
 <td>F</td>
-<td>2006-11-15</td>
+<td>2006-10-11</td>
 <td>Jasonfort</td>
 <td>MO</td></tr><tr><td>1011</td>
 <td>Heidi</td>
 <td>Osborn</td>
 <td>F</td>
-<td>1993-08-03</td>
+<td>1993-06-28</td>
 <td>Daviston</td>
 <td>VI</td></tr><tr><td>1013</td>
 <td>Kristen</td>
 <td>Dunlap</td>
 <td>F</td>
-<td>2003-05-06</td>
+<td>2003-03-31</td>
 <td>Lake Nicoleview</td>
 <td>WI</td></tr><tr><td>1017</td>
 <td>Sandra</td>
 <td>Parker</td>
 <td>F</td>
-<td>1992-02-21</td>
+<td>1992-01-16</td>
 <td>North Jessicaland</td>
 <td>WV</td></tr><tr><td>1020</td>
 <td>Jessica</td>
 <td>Holmes</td>
 <td>F</td>
-<td>1993-04-11</td>
+<td>1993-03-06</td>
 <td>North Matthew</td>
 <td>OR</td> </tr> </tbody>
 </table>
@@ -5110,49 +5186,49 @@ Student - (Enroll &amp; {'dept': 'MATH'})</div>
 <td>Jose</td>
 <td>Ramirez</td>
 <td>M</td>
-<td>1999-11-02</td>
+<td>1999-09-27</td>
 <td>Lake Selena</td>
 <td>OK</td></tr><tr><td>1059</td>
 <td>Stephanie</td>
 <td>Simmons</td>
 <td>F</td>
-<td>2007-06-03</td>
+<td>2007-04-29</td>
 <td>Merrittfort</td>
 <td>NV</td></tr><tr><td>1061</td>
 <td>Donna</td>
 <td>Nelson</td>
 <td>F</td>
-<td>1996-11-07</td>
+<td>1996-10-03</td>
 <td>East Edwardfurt</td>
 <td>UT</td></tr><tr><td>1064</td>
 <td>Scott</td>
 <td>Ashley</td>
 <td>M</td>
-<td>1998-08-22</td>
+<td>1998-07-18</td>
 <td>South Jeffrey</td>
 <td>NE</td></tr><tr><td>1096</td>
 <td>Nicole</td>
 <td>Ruiz</td>
 <td>F</td>
-<td>2002-10-29</td>
+<td>2002-09-23</td>
 <td>Howardshire</td>
 <td>NE</td></tr><tr><td>1098</td>
 <td>Jennifer</td>
 <td>Simpson</td>
 <td>F</td>
-<td>2003-01-09</td>
+<td>2002-12-05</td>
 <td>Cervantesside</td>
 <td>AZ</td></tr><tr><td>1124</td>
 <td>Tonya</td>
 <td>Taylor</td>
 <td>F</td>
-<td>2008-06-29</td>
+<td>2008-05-25</td>
 <td>Coffeyside</td>
 <td>MN</td></tr><tr><td>1151</td>
 <td>Ashley</td>
 <td>Gregory</td>
 <td>F</td>
-<td>2001-10-10</td>
+<td>2001-09-04</td>
 <td>Brandonfurt</td>
 <td>PA</td> </tr> </tbody>
 </table>
@@ -5260,49 +5336,49 @@ Student &amp; (Enroll - Grade)</div>
 <td>Allison</td>
 <td>Hill</td>
 <td>F</td>
-<td>1995-02-12</td>
+<td>1995-01-07</td>
 <td>Lake Joyside</td>
 <td>CO</td></tr><tr><td>1002</td>
 <td>Kevin</td>
 <td>Pacheco</td>
 <td>M</td>
-<td>1991-03-20</td>
+<td>1991-02-12</td>
 <td>Lake Roberto</td>
 <td>KY</td></tr><tr><td>1003</td>
 <td>Tina</td>
 <td>Rogers</td>
 <td>F</td>
-<td>1992-10-07</td>
+<td>1992-09-01</td>
 <td>West Melanieview</td>
 <td>AS</td></tr><tr><td>1004</td>
 <td>Julia</td>
 <td>Martinez</td>
 <td>F</td>
-<td>2007-09-13</td>
+<td>2007-08-09</td>
 <td>New Kellystad</td>
 <td>OK</td></tr><tr><td>1005</td>
 <td>Andrea</td>
 <td>Stanley</td>
 <td>F</td>
-<td>2005-01-05</td>
+<td>2004-11-30</td>
 <td>Port Jesseville</td>
 <td>MS</td></tr><tr><td>1006</td>
 <td>Madison</td>
 <td>Diaz</td>
 <td>F</td>
-<td>1997-10-05</td>
+<td>1997-08-30</td>
 <td>Lake Joseph</td>
 <td>TX</td></tr><tr><td>1007</td>
 <td>Lisa</td>
 <td>Jackson</td>
 <td>F</td>
-<td>2004-03-22</td>
+<td>2004-02-16</td>
 <td>South Noah</td>
 <td>SC</td></tr><tr><td>1008</td>
 <td>Daniel</td>
 <td>Nguyen</td>
 <td>M</td>
-<td>2004-12-04</td>
+<td>2004-10-30</td>
 <td>East Lydiamouth</td>
 <td>MO</td> </tr> </tbody>
 </table>
@@ -5753,13 +5829,13 @@ Student.proj('first_name', 'last_name',
 <tbody> <tr> <td>1000</td>
 <td>Allison</td>
 <td>Hill</td>
-<td>30</td></tr><tr><td>1001</td>
+<td>31</td></tr><tr><td>1001</td>
 <td>Amanda</td>
 <td>Davis</td>
 <td>30</td></tr><tr><td>1002</td>
 <td>Kevin</td>
 <td>Pacheco</td>
-<td>34</td></tr><tr><td>1003</td>
+<td>35</td></tr><tr><td>1003</td>
 <td>Tina</td>
 <td>Rogers</td>
 <td>33</td></tr><tr><td>1004</td>
@@ -5774,7 +5850,7 @@ Student.proj('first_name', 'last_name',
 <td>28</td></tr><tr><td>1007</td>
 <td>Lisa</td>
 <td>Jackson</td>
-<td>21</td> </tr> </tbody>
+<td>22</td> </tr> </tbody>
 </table>
 <p>...</p>
 <p>Total: 500</p></div>
@@ -5880,59 +5956,59 @@ Student.proj(..., age='TIMESTAMPDIFF(YEAR, date_of_birth, CURDATE())')</div>
 <td>Allison</td>
 <td>Hill</td>
 <td>F</td>
-<td>1995-02-12</td>
+<td>1995-01-07</td>
 <td>Lake Joyside</td>
 <td>CO</td>
-<td>30</td></tr><tr><td>1001</td>
+<td>31</td></tr><tr><td>1001</td>
 <td>Amanda</td>
 <td>Davis</td>
 <td>F</td>
-<td>1995-04-15</td>
+<td>1995-03-10</td>
 <td>New Jamesside</td>
 <td>MT</td>
 <td>30</td></tr><tr><td>1002</td>
 <td>Kevin</td>
 <td>Pacheco</td>
 <td>M</td>
-<td>1991-03-20</td>
+<td>1991-02-12</td>
 <td>Lake Roberto</td>
 <td>KY</td>
-<td>34</td></tr><tr><td>1003</td>
+<td>35</td></tr><tr><td>1003</td>
 <td>Tina</td>
 <td>Rogers</td>
 <td>F</td>
-<td>1992-10-07</td>
+<td>1992-09-01</td>
 <td>West Melanieview</td>
 <td>AS</td>
 <td>33</td></tr><tr><td>1004</td>
 <td>Julia</td>
 <td>Martinez</td>
 <td>F</td>
-<td>2007-09-13</td>
+<td>2007-08-09</td>
 <td>New Kellystad</td>
 <td>OK</td>
 <td>18</td></tr><tr><td>1005</td>
 <td>Andrea</td>
 <td>Stanley</td>
 <td>F</td>
-<td>2005-01-05</td>
+<td>2004-11-30</td>
 <td>Port Jesseville</td>
 <td>MS</td>
 <td>21</td></tr><tr><td>1006</td>
 <td>Madison</td>
 <td>Diaz</td>
 <td>F</td>
-<td>1997-10-05</td>
+<td>1997-08-30</td>
 <td>Lake Joseph</td>
 <td>TX</td>
 <td>28</td></tr><tr><td>1007</td>
 <td>Lisa</td>
 <td>Jackson</td>
 <td>F</td>
-<td>2004-03-22</td>
+<td>2004-02-16</td>
 <td>South Noah</td>
 <td>SC</td>
-<td>21</td> </tr> </tbody>
+<td>22</td> </tr> </tbody>
 </table>
 <p>...</p>
 <p>Total: 500</p></div>
@@ -6516,7 +6592,7 @@ dj.U('birth_year') &amp; (
 <tbody> <tr> <td>1991</td></tr><tr><td>1992</td></tr><tr><td>1993</td></tr><tr><td>1994</td></tr><tr><td>1995</td></tr><tr><td>1996</td></tr><tr><td>1997</td></tr><tr><td>1998</td> </tr> </tbody>
 </table>
 <p>...</p>
-<p>Total: 19</p></div>
+<p>Total: 18</p></div>
 </div>
 </div>
 </div>
@@ -6630,35 +6706,35 @@ Student.proj('first_name', 'last_name') * StudentMajor</div>
 <td>Allison</td>
 <td>Hill</td>
 <td>MATH</td>
-<td>2025-06-29</td></tr><tr><td>1001</td>
+<td>2025-05-24</td></tr><tr><td>1001</td>
 <td>Amanda</td>
 <td>Davis</td>
 <td>MATH</td>
-<td>2023-07-13</td></tr><tr><td>1002</td>
+<td>2023-06-07</td></tr><tr><td>1002</td>
 <td>Kevin</td>
 <td>Pacheco</td>
 <td>MATH</td>
-<td>2024-02-10</td></tr><tr><td>1003</td>
+<td>2024-01-05</td></tr><tr><td>1003</td>
 <td>Tina</td>
 <td>Rogers</td>
 <td>MATH</td>
-<td>2023-04-05</td></tr><tr><td>1004</td>
+<td>2023-02-28</td></tr><tr><td>1004</td>
 <td>Julia</td>
 <td>Martinez</td>
 <td>CS</td>
-<td>2024-11-04</td></tr><tr><td>1005</td>
+<td>2024-09-29</td></tr><tr><td>1005</td>
 <td>Andrea</td>
 <td>Stanley</td>
 <td>CS</td>
-<td>2024-07-11</td></tr><tr><td>1007</td>
+<td>2024-06-05</td></tr><tr><td>1007</td>
 <td>Lisa</td>
 <td>Jackson</td>
 <td>CS</td>
-<td>2023-03-24</td></tr><tr><td>1009</td>
+<td>2023-02-16</td></tr><tr><td>1009</td>
 <td>Christine</td>
 <td>Hahn</td>
 <td>CS</td>
-<td>2025-10-21</td> </tr> </tbody>
+<td>2025-09-15</td> </tr> </tbody>
 </table>
 <p>...</p>
 <p>Total: 378</p></div>
@@ -6898,27 +6974,27 @@ Student.proj('first_name', 'last_name').join(StudentMajor, left=True)</div>
 <td>Allison</td>
 <td>Hill</td>
 <td>MATH</td>
-<td>2025-06-29</td></tr><tr><td>1001</td>
+<td>2025-05-24</td></tr><tr><td>1001</td>
 <td>Amanda</td>
 <td>Davis</td>
 <td>MATH</td>
-<td>2023-07-13</td></tr><tr><td>1002</td>
+<td>2023-06-07</td></tr><tr><td>1002</td>
 <td>Kevin</td>
 <td>Pacheco</td>
 <td>MATH</td>
-<td>2024-02-10</td></tr><tr><td>1003</td>
+<td>2024-01-05</td></tr><tr><td>1003</td>
 <td>Tina</td>
 <td>Rogers</td>
 <td>MATH</td>
-<td>2023-04-05</td></tr><tr><td>1004</td>
+<td>2023-02-28</td></tr><tr><td>1004</td>
 <td>Julia</td>
 <td>Martinez</td>
 <td>CS</td>
-<td>2024-11-04</td></tr><tr><td>1005</td>
+<td>2024-09-29</td></tr><tr><td>1005</td>
 <td>Andrea</td>
 <td>Stanley</td>
 <td>CS</td>
-<td>2024-07-11</td></tr><tr><td>1006</td>
+<td>2024-06-05</td></tr><tr><td>1006</td>
 <td>Madison</td>
 <td>Diaz</td>
 <td>None</td>
@@ -6926,7 +7002,7 @@ Student.proj('first_name', 'last_name').join(StudentMajor, left=True)</div>
 <td>Lisa</td>
 <td>Jackson</td>
 <td>CS</td>
-<td>2023-03-24</td> </tr> </tbody>
+<td>2023-02-16</td> </tr> </tbody>
 </table>
 <p>...</p>
 <p>Total: 500</p></div>
@@ -8350,9 +8426,9 @@ data[:3]</div>
 <div class="jp-OutputArea-child jp-OutputArea-executeResult">
 <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[50]:</div>
 <div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain" tabindex="0">
-<pre>array([(1073, 'Kyle', 'Martinez', 'M', datetime.date(2008, 10, 21), 'West Amandastad', 'CA'),
-       (1092, 'Christina', 'Wilson', 'F', datetime.date(1995, 2, 22), 'West Margaret', 'CA'),
-       (1157, 'Kelly', 'Foster', 'F', datetime.date(1996, 9, 6), 'Jeffreyburgh', 'CA')],
+<pre>array([(1073, 'Kyle', 'Martinez', 'M', datetime.date(2008, 9, 16), 'West Amandastad', 'CA'),
+       (1092, 'Christina', 'Wilson', 'F', datetime.date(1995, 1, 18), 'West Margaret', 'CA'),
+       (1157, 'Kelly', 'Foster', 'F', datetime.date(1996, 8, 2), 'Jeffreyburgh', 'CA')],
       dtype=[('student_id', '&lt;i8'), ('first_name', 'O'), ('last_name', 'O'), ('sex', 'O'), ('date_of_birth', 'O'), ('home_city', 'O'), ('home_state', 'O')])</pre>
 </div>
 </div>
@@ -8398,21 +8474,21 @@ data[:3]</div>
   'first_name': 'Kyle',
   'last_name': 'Martinez',
   'sex': 'M',
-  'date_of_birth': datetime.date(2008, 10, 21),
+  'date_of_birth': datetime.date(2008, 9, 16),
   'home_city': 'West Amandastad',
   'home_state': 'CA'},
  {'student_id': 1092,
   'first_name': 'Christina',
   'last_name': 'Wilson',
   'sex': 'F',
-  'date_of_birth': datetime.date(1995, 2, 22),
+  'date_of_birth': datetime.date(1995, 1, 18),
   'home_city': 'West Margaret',
   'home_state': 'CA'},
  {'student_id': 1157,
   'first_name': 'Kelly',
   'last_name': 'Foster',
   'sex': 'F',
-  'date_of_birth': datetime.date(1996, 9, 6),
+  'date_of_birth': datetime.date(1996, 8, 2),
   'home_city': 'Jeffreyburgh',
   'home_state': 'CA'}]</pre>
 </div>
@@ -8457,11 +8533,11 @@ list(zip(first_names, last_names))[:5]</div>
 <div class="jp-OutputArea-child jp-OutputArea-executeResult">
 <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[52]:</div>
 <div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain" tabindex="0">
-<pre>[('Kyle', 'Martinez'),
- ('Christina', 'Wilson'),
- ('Kelly', 'Foster'),
- ('Nicholas', 'Buck'),
- ('Heather', 'Armstrong')]</pre>
+<pre>[(np.str_('Kyle'), np.str_('Martinez')),
+ (np.str_('Christina'), np.str_('Wilson')),
+ (np.str_('Kelly'), np.str_('Foster')),
+ (np.str_('Nicholas'), np.str_('Buck')),
+ (np.str_('Heather'), np.str_('Armstrong'))]</pre>
 </div>
 </div>
 </div>
