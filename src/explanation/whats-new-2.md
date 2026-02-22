@@ -6,6 +6,8 @@ DataJoint 2.0 is a major release that establishes DataJoint as a mature framewor
 >
 > This page summarizes new features and concepts. For step-by-step migration instructions, see the **[Migration Guide](../how-to/migrate-to-v20.md/)**.
 
+> **Citation:** Yatsenko D, Nguyen TT. *DataJoint 2.0: A Computational Substrate for Agentic Scientific Workflows.* arXiv:2602.16585. 2026. [doi:10.48550/arXiv.2602.16585](https://doi.org/10.48550/arXiv.2602.16585)
+
 ## Overview
 
 DataJoint 2.0 introduces fundamental improvements to type handling, job coordination, and object storage while maintaining compatibility with your existing pipelines during migration. Key themes:

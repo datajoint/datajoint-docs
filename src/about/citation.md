@@ -17,6 +17,17 @@ If your work utilizes **DataJoint Elements**, please cite the following manuscri
 
 You should also cite the **DataJoint Core manuscript** detailed below.
 
+## Citing DataJoint 2.0
+
+For work using **DataJoint 2.0** or the **Relational Workflow Model**, cite the following
+manuscript:
+
+- **Manuscript**: Yatsenko D, Nguyen TT. DataJoint 2.0: A Computational Substrate for
+  Agentic Scientific Workflows. arXiv:2602.16585. 2026 Feb 18. doi:
+  https://doi.org/10.48550/arXiv.2602.16585
+
+- **RRID**: [RRID:SCR_014543](https://scicrunch.org/resolver/SCR_014543)
+
 ## Citing the DataJoint Relational Model
 
 For any work relying on the **DataJoint Relational Model**, include the following
