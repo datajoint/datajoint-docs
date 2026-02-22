@@ -1,6 +1,6 @@
 # What's New in DataJoint 2.2
 
-DataJoint 2.2 introduces **isolated instances** and **thread-safe mode** for applications that need multiple independent database connections—web servers, multi-tenant notebooks, parallel pipelines, and testing.
+DataJoint 2.2 introduces **isolated instances**, **thread-safe mode**, and **graph-driven diagram operations** for applications that need multiple independent database connections, explicit cascade control, and operational use of the dependency graph.
 
 > **Upgrading from 2.0 or 2.1?** No breaking changes. All existing code using `dj.config` and `dj.Schema()` continues to work. The new Instance API is purely additive.
 
@@ -201,9 +201,56 @@ class MyTable(dj.Manual):
 
 Once a Schema is created, table definitions, inserts, queries, and all other operations work identically regardless of which pattern was used to create the Schema.
 
+## Graph-Driven Diagram Operations
+
+DataJoint 2.2 promotes `dj.Diagram` from a visualization tool to an operational component. The same dependency graph that renders pipeline diagrams now powers cascade delete, table drop, and data subsetting.
+
+### From Visualization to Operations
+
+In prior versions, `dj.Diagram` existed solely for visualization — drawing the dependency graph as SVG or Mermaid output. The cascade logic inside `Table.delete()` traversed dependencies independently, with no way to inspect or control the cascade before it executed.
+
+In 2.2, `Table.delete()` and `Table.drop()` delegate internally to `dj.Diagram`. The user-facing behavior of `Table.delete()` is unchanged, but the diagram-level API is now available as a more powerful interface for complex scenarios.
+
+### The Preview-Then-Execute Pattern
+
+The key benefit of the diagram-level API is the ability to build a cascade explicitly, inspect it, and then decide whether to execute:
+
+```python
+# Build the dependency graph
+diag = dj.Diagram(schema)
+
+# Apply cascade restriction — nothing is deleted yet
+restricted = diag.cascade(Session & {'subject_id': 'M001'})
+
+# Inspect: what tables and how many rows would be affected?
+counts = restricted.preview()
+# {'`lab`.`session`': 3, '`lab`.`trial`': 45, '`lab`.`processed_data`': 45}
+
+# Execute only after reviewing the blast radius
+restricted.delete(prompt=False)
+```
+
+This is valuable when working with unfamiliar pipelines, large datasets, or multi-schema dependencies where the cascade impact is not immediately obvious.
+
+### Two Propagation Modes
+
+The diagram supports two restriction propagation modes with different convergence semantics:
+
+**`cascade()` uses OR at convergence.** When a child table has multiple restricted ancestors, the child row is affected if *any* parent path reaches it. This is the right semantics for delete — if any reason exists to remove a row, it should be removed. `cascade()` is one-shot: it can only be called once on an unrestricted diagram.
+
+**`restrict()` uses AND at convergence.** A child row is included only if *all* restricted ancestors match. This is the right semantics for data subsetting and export — only rows satisfying every condition are selected. `restrict()` is chainable: call it multiple times to build up conditions from different tables.
+
+The two modes are mutually exclusive on the same diagram. This prevents accidental mixing of incompatible semantics.
+
+### Architecture
+
+`Table.delete()` now constructs a `Diagram` internally, calls `cascade()`, and then `delete()`. This means every table-level delete benefits from the same graph-driven logic. The diagram-level API simply exposes this machinery for direct use when more control is needed.
+
 ## See Also
 
 - [Use Isolated Instances](../how-to/use-instances.md/) — Task-oriented guide
 - [Working with Instances](../tutorials/advanced/instances.ipynb/) — Step-by-step tutorial
 - [Configuration Reference](../reference/configuration.md/) — Thread-safe mode settings
 - [Configure Database](../how-to/configure-database.md/) — Connection setup
+- [Diagram Specification](../reference/specs/diagram.md/) — Full reference for diagram operations
+- [Delete Data](../how-to/delete-data.md/) — Task-oriented delete guide
