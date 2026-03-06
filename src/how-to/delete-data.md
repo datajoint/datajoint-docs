@@ -189,8 +189,43 @@ count = (Subject & restriction).delete(prompt=False)
 print(f"Deleted {count} subjects")
 ```
 
+## Diagram-Level Delete
+
+!!! version-added "New in 2.2"
+    Diagram-level delete was added in DataJoint 2.2.
+
+For complex scenarios — previewing the blast radius, working across schemas, or understanding the dependency graph before deleting — use `dj.Diagram` to build and inspect the cascade before executing.
+
+### Build, Preview, Execute
+
+```python
+import datajoint as dj
+
+# 1. Build the dependency graph
+diag = dj.Diagram(schema)
+
+# 2. Apply cascade restriction (nothing deleted yet)
+restricted = diag.cascade(Session & {'subject_id': 'M001'})
+
+# 3. Preview: see affected tables and row counts
+counts = restricted.preview()
+# {'`lab`.`session`': 3, '`lab`.`trial`': 45, '`lab`.`processed_data`': 45}
+
+# 4. Execute only after reviewing
+restricted.delete(prompt=False)
+```
+
+### When to Use
+
+- **Preview blast radius**: Understand what a cascade delete will affect before committing
+- **Multi-schema cascades**: Build a diagram spanning multiple schemas and delete across them in one operation
+- **Programmatic control**: Use `preview()` return values to make decisions in automated workflows
+
+For simple single-table deletes, `(Table & restriction).delete()` remains the simplest approach. The diagram-level API is for when you need more visibility or control.
+
 ## See Also
 
+- [Diagram Specification](../reference/specs/diagram.md/) — Full reference for diagram operations
 - [Master-Part Tables](master-part.ipynb) — Compositional data patterns
 - [Model Relationships](model-relationships.ipynb) — Foreign key patterns
 - [Insert Data](insert-data.md) — Adding data to tables
