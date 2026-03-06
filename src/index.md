@@ -1,41 +1,68 @@
-# **Welcome to the DataJoint Documentation**
+# DataJoint Documentation
 
-![pipeline](https://raw.githubusercontent.com/datajoint/datajoint-python/master/images/pipeline.png){: style="height:300px;"}
+!!! tip "Upgrading from 0.14.x?"
+
+    - **Migration guide:** [Migrate to 2.0](how-to/migrate-to-v20.md)
+    - **Legacy docs:** [datajoint.github.io](https://datajoint.github.io/datajoint-python)
+
+## About DataJoint
+
+**DataJoint** implements the [Relational Workflow Model](explanation/relational-workflow-model.md)—a data model where your database schema defines an executable data pipeline. Tables represent workflow steps, foreign keys encode dependencies, and the system handles job management, parallel execution, and provenance tracking. [Object storage](explanation/data-pipelines.md#object-augmented-schemas) integration enables seamless handling of large scientific data.
+
+![pipeline](images/pipeline.png){: style="height:300px;"}
 
 <div class="grid cards" markdown>
 
--   **DataJoint Python**
+-   :material-lightbulb-outline: **Concepts**
 
-     ---
+    ---
 
-     Open-source framework for defining, operating, and querying data pipelines
+    Understand the Relational Workflow Model and DataJoint's core principles
 
-     [:octicons-arrow-right-24: Learn more](./core/datajoint-python/)
-    
--   **DataJoint Elements**
+    [:octicons-arrow-right-24: Learn the concepts](explanation/index.md)
 
-     ---
+-   :material-school-outline: **Tutorials**
 
-     Open-source implementation of data pipelines for neuroscience studies
+    ---
 
-     [:octicons-arrow-right-24: Learn more](./elements/)
+    Build your first pipeline with hands-on Jupyter notebooks
 
--   **DataJoint Platform**
+    [:octicons-arrow-right-24: Start learning](tutorials/index.md)
 
-     ---
+-   :material-tools: **How-To Guides**
 
-     A cloud platform for automated analysis workflows. It relies on DataJoint 
-     Python and DataJoint Elements.
+    ---
 
-     [:octicons-arrow-right-24: Learn
-     more](https://datajoint.com/){:target="_blank"} | [Sign-in](https://works.datajoint.com){:target="_blank"}
+    Practical guides for common tasks and patterns
 
--   **Project Showcase**
+    [:octicons-arrow-right-24: Find solutions](how-to/index.md)
 
-     ---
+-   :material-book-open-variant: **Reference**
 
-     Projects and research teams supported by DataJoint software
+    ---
 
-     [:octicons-arrow-right-24: Learn more](projects/index.md)
+    Specifications, API documentation, and technical details
+
+    [:octicons-arrow-right-24: Look it up](reference/index.md)
+
+-   :material-puzzle: **DataJoint Elements**
+
+    ---
+
+    Reusable pipeline modules for neurophysiology experiments
+
+    [:octicons-arrow-right-24: Explore Elements](elements/index.md)
+
+-   :material-cloud: **DataJoint Platform**
+
+    ---
+
+    A cloud platform for automated analysis workflows. It relies on DataJoint Python and DataJoint Elements.
+
+    [:octicons-arrow-right-24: Learn more](https://datajoint.com/){:target="_blank"} | [Sign-in](https://works.datajoint.com){:target="_blank"}
 
 </div>
+
+---
+
+**New to DataJoint?** Start with the [:octicons-arrow-right-24: Quick Start tutorial](tutorials/index.md).

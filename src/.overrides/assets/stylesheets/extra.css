@@ -29,9 +29,6 @@
 html a[title="DataJoint"].md-social__link svg {
     color: var(--dj-primary);
 }
-html a[title="Slack"].md-social__link svg {
-    color: var(--dj-primary);
-}
 html a[title="LinkedIn"].md-social__link svg {
     color: var(--dj-primary);
 }
@@ -104,4 +101,23 @@ html a[title="YouTube"].md-social__link svg {
     /* footer */
     /* previous/next text */
     /* --md-footer-fg-color: var(--dj-white); */
+}
+
+/* DataJoint query result tables - make them smaller */
+.jp-OutputArea-output table,
+.jp-RenderedHTMLCommon table {
+    font-size: 0.75rem;
+}
+
+.jp-OutputArea-output table td,
+.jp-OutputArea-output table th,
+.jp-RenderedHTMLCommon table td,
+.jp-RenderedHTMLCommon table th {
+    padding: 0.25rem 0.5rem;
+}
+
+/* Reduce monospace font size in notebook outputs */
+.jp-OutputArea-output pre,
+.jp-OutputArea-output code {
+    font-size: 0.8rem;
 }

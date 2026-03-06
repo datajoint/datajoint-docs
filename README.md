@@ -1,90 +1,91 @@
 # DataJoint Documentation
 
-This is the home for DataJoint software documentation as hosted at https://docs.datajoint.com
-## VSCode Linter Extensions and Settings
+Official documentation for [DataJoint](https://github.com/datajoint/datajoint-python) 2.0 — an open-source framework for building scientific data pipelines.
 
-The following extensions were used in developing these docs, with the corresponding
-settings files:
+**📖 Live site:** https://docs.datajoint.com
 
-- Recommended extensions are already specified in `.vscode/extensions.json`, it will ask you to install them when you open the project if you haven't installed them.
-- settings in `.vscode/settings.json`
-- [MarkdownLinter](https://marketplace.visualstudio.com/items?itemName=DavidAnson.vscode-markdownlint):
-  - `.markdownlint.yaml` establishes settings for various
-  [linter rules](https://github.com/DavidAnson/markdownlint/blob/main/doc/Rules.md)
-  - `.vscode/settings.json` formatting on save to fix linting
+> **Upgrading from pre-2.0?** See the [Migration Guide](https://docs.datajoint.com/how-to/migrate-to-v20/)
 
-- [CSpell](https://marketplace.visualstudio.com/items?itemName=streetsidesoftware.code-spell-checker): `cspell.json`
-has various ignored words.
+## About DataJoint
 
-- [ReWrap](https://marketplace.visualstudio.com/items?itemName=stkb.rewrap): `.vscode/settings.json` allows toggling
-automated hard wrapping for files at 88 characters. This can also be keymapped to be
-performed on individual paragraphs, see documentation.
+DataJoint is a Python framework for scientific data pipelines built on the **Relational Workflow Model**. For installation, tutorials, and complete documentation, visit **[docs.datajoint.com](https://docs.datajoint.com)**.
 
-## With Virtual Environment
+## Documentation Structure
 
-conda
+This repository contains the source for the DataJoint documentation, organized using the [Diátaxis](https://diataxis.fr/) framework:
+
+- **[Tutorials](https://docs.datajoint.com/tutorials/)** — Learn by building real pipelines
+- **[How-To Guides](https://docs.datajoint.com/how-to/)** — Practical task-oriented guides
+- **[Explanation](https://docs.datajoint.com/explanation/)** — Understanding concepts and design
+- **[Reference](https://docs.datajoint.com/reference/)** — Specifications and API documentation
+
+## Local Development
+
+### Docker (Recommended)
+
 ```bash
-conda create -n djdocs -y
-conda activate djdocs
-```
-venv
-```bash
-python -m venv .venv
-source .venv/bin/activate
-```
+# Clone repositories
+git clone https://github.com/datajoint/datajoint-docs.git
+cd datajoint-docs
+cd ..
+git clone https://github.com/datajoint/datajoint-python.git
+cd datajoint-docs
 
-Then install the required packages:
-```bash
-pip install -r pip_requirements.txt
-```
-
-Run mkdocs at: http://127.0.0.1:8000/
-```bash
-# It will automatically reload the docs when changes are made
-mkdocs serve --config-file ./mkdocs.yaml
-```
-
-## With Docker
-
-> We mostly use Docker to simplify docs deployment
-
-Ensure you have `Docker` and `Docker Compose` installed.
-
-Then run the following:
-```bash
-# It will automatically reload the docs when changes are made
+# Start live preview at http://localhost:8000
 MODE="LIVE" docker compose up --build
+
+# Build static site (optional)
+# MODE="BUILD" docker compose up --build
 ```
 
-Navigate to http://127.0.0.1:8000/ to preview the changes.
+The Docker environment includes MySQL, MinIO, and all dependencies.
 
-This setup supports live-reloading so all that is needed is to save the markdown files
-and/or `mkdocs.yaml` file to trigger a reload.
+### Native Python
 
-## Mkdocs Warning Explanation
+**Prerequisites:** Python 3.10+, MySQL 8.0+
 
-> TL;DR: We need to do it this way for hosting, please keep it as is.
+```bash
+# Setup
+git clone https://github.com/datajoint/datajoint-docs.git
+cd datajoint-docs
+python -m venv .venv && source .venv/bin/activate  # Windows: .venv\Scripts\activate
+pip install -r pip_requirements.txt
 
-```log
-WARNING -  A reference to 'core/datajoint-python/' is included in the 'nav' configuration, which is not found
-           in the documentation files.
-INFO    -  Doc file 'index.md' contains an unrecognized relative link './core/datajoint-python/', it was left
-           as is.
+# Configure credentials
+mkdir -p .secrets
+echo "your_username" > .secrets/database.user
+echo "your_password" > .secrets/database.password
+chmod 600 .secrets/*
+
+# Start live preview at http://localhost:8000
+mkdocs serve
 ```
 
-- We use reverse proxy to proxy our docs sites, here is the proxy flow:
-  - You hit `datajoint.com/*` on your browser
-  - It'll bring you to the reverse proxy server first, that you wouldn't notice
-  - when your URL ends with:
-    - `/` is the landing/navigation page hosted by datajoint/datajoint-docs's github pages
-    - `/core/datajoint-python/` is the actual docs site hosted by datajoint/datajoint-python's github pages
-    - `/elements/element-*/` is the actual docs site hosted by each element's github pages
+## Contributing
 
+Contributions welcome! See [contribution guidelines](https://docs.datajoint.com/about/contributing/).
 
-```log
-WARNING -  Doc file 'partnerships/openephysgui.md' contains a link
-           '../../images/community-partnerships-openephysgui-logo.png', but the target
-           '../images/community-partnerships-openephysgui-logo.png' is not found among documentation files.
-           Did you mean '../images/community-partnerships-openephysgui-logo.png'?
+**Quick fixes:** Fork, edit markdown in `src/`, submit PR.
+
+**Tutorial notebooks:** Re-execute after changes:
+```bash
+docker compose exec docs jupyter nbconvert --to notebook --execute --inplace \
+    /main/src/tutorials/YOUR_NOTEBOOK.ipynb
 ```
-- We use Github Pages to host our docs, the image references needs to follow the mkdocs's build directory structure, under `site/` directory once you run mkdocs.
+
+## Related
+
+- [datajoint-python](https://github.com/datajoint/datajoint-python) — Core library
+- [DataJoint Elements](https://docs.datajoint.com/elements/) — Neuroscience pipeline modules
+- [datajoint.com](https://datajoint.com) — Commercial support
+
+## Citation
+
+> Yatsenko D, Walker EY, Tolias AS. DataJoint: A Simpler Relational Data Model. arXiv:2303.00102. 2023. doi: [10.48550/arXiv.2303.00102](https://doi.org/10.48550/arXiv.2303.00102)
+
+Full citation information: [docs.datajoint.com/about/citation/](https://docs.datajoint.com/about/citation/)
+
+## License
+
+- Documentation: [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)
+- DataJoint software: [Apache 2.0](https://github.com/datajoint/datajoint-python/blob/master/LICENSE) (LGPLv2.1 prior to v2.0)

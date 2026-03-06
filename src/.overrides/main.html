@@ -1,5 +1,19 @@
 {% extends "base.html" %}
 
+{% block announce %}
+  <div class="md-banner">
+    <div class="md-banner__inner md-grid md-typeset">
+      <p>
+        📖 You are viewing documentation for <strong>DataJoint {{ config.extra.datajoint_version }}+</strong>
+        ·
+        <a href="{{ config.site_url }}how-to/migrate-to-v20/">
+          Migration guide for legacy users (pre-2.0)
+        </a>
+      </p>
+    </div>
+  </div>
+{% endblock %}
+
 {% block extrahead %}
 	<script
 		src="https://www.datadoghq-browser-agent.com/us1/v4/datadog-rum.js"
