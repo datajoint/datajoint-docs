@@ -332,6 +332,9 @@ Delete automatically cascades to all dependent tables:
 2. Recursively delete matching rows in child tables
 3. Delete rows in target table
 
+!!! version-added "New in 2.2"
+    `Table.delete()` now uses graph-driven cascade internally via `dj.Diagram`. User-facing behavior is unchanged — the same parameters and return values apply. For direct control over the cascade (preview, multi-schema operations), use the [Diagram operational methods](diagram.md#operational-methods).
+
 ### 4.3 Basic Usage
 
 ```python
