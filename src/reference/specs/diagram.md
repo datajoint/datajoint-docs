@@ -190,7 +190,7 @@ restricted = (diag
 ### `delete()`
 
 ```python
-diag.delete(transaction=True, prompt=None)
+diag.delete(transaction=True, prompt=None, dry_run=False)
 ```
 
 Execute a cascading delete using previously applied cascade restrictions. Tables are deleted in reverse topological order (leaves first) to maintain referential integrity.
@@ -199,8 +199,9 @@ Execute a cascading delete using previously applied cascade restrictions. Tables
 |-----------|------|---------|-------------|
 | `transaction` | bool | `True` | Wrap in atomic transaction |
 | `prompt` | bool or None | `None` | Prompt for confirmation. Default: `dj.config['safemode']` |
+| `dry_run` | bool | `False` | If `True`, return affected row counts without deleting |
 
-**Returns:** Number of rows deleted from the root table.
+**Returns:** `int` (rows deleted from root table) or `dict[str, int]` (table → row count mapping when `dry_run=True`).
 
 **Requires:** `cascade()` must be called first.
 
@@ -214,7 +215,7 @@ restricted.delete()    # execute the delete
 ### `drop()`
 
 ```python
-diag.drop(prompt=None, part_integrity="enforce")
+diag.drop(prompt=None, part_integrity="enforce", dry_run=False)
 ```
 
 Drop all tables in the diagram in reverse topological order.
@@ -223,6 +224,9 @@ Drop all tables in the diagram in reverse topological order.
 |-----------|------|---------|-------------|
 | `prompt` | bool or None | `None` | Prompt for confirmation. Default: `dj.config['safemode']` |
 | `part_integrity` | str | `"enforce"` | `"enforce"` or `"ignore"` |
+| `dry_run` | bool | `False` | If `True`, return row counts without dropping tables |
+
+**Returns:** `dict[str, int]` (table → row count mapping when `dry_run=True`). Returns `None` otherwise.
 
 **Note:** Unlike `delete()`, `drop()` does not use cascade restrictions. It drops all tables in the diagram.
 
@@ -483,9 +487,9 @@ If visualization dependencies are missing, `dj.Diagram` displays a warning and p
 
 ## See Also
 
-- [How to Read Diagrams](../../how-to/read-diagrams.ipynb/)
-- [Delete Data](../../how-to/delete-data.md/) — Diagram-level delete workflow
-- [What's New in 2.2](../../explanation/whats-new-22.md/) — Motivation and design
+- [How to Read Diagrams](../../how-to/read-diagrams.ipynb)
+- [Delete Data](../../how-to/delete-data.md) — Diagram-level delete workflow
+- [What's New in 2.2](../../explanation/whats-new-22.md) — Motivation and design
 - [Data Manipulation](data-manipulation.md) — Insert, update, delete specification
 - [Query Algebra](query-algebra.md)
 - [Table Declaration](table-declaration.md)

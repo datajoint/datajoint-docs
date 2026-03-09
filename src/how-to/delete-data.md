@@ -225,7 +225,7 @@ For simple single-table deletes, `(Table & restriction).delete()` remains the si
 
 ## See Also
 
-- [Diagram Specification](../reference/specs/diagram.md/) — Full reference for diagram operations
+- [Diagram Specification](../reference/specs/diagram.md) — Full reference for diagram operations
 - [Master-Part Tables](master-part.ipynb) — Compositional data patterns
 - [Model Relationships](model-relationships.ipynb) — Foreign key patterns
 - [Insert Data](insert-data.md) — Adding data to tables

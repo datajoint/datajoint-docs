@@ -264,9 +264,9 @@ Without prior restrictions, `prune()` removes physically empty tables. This is u
 
 ## See Also
 
-- [Use Isolated Instances](../how-to/use-instances.md/) — Task-oriented guide
-- [Working with Instances](../tutorials/advanced/instances.ipynb/) — Step-by-step tutorial
-- [Configuration Reference](../reference/configuration.md/) — Thread-safe mode settings
-- [Configure Database](../how-to/configure-database.md/) — Connection setup
-- [Diagram Specification](../reference/specs/diagram.md/) — Full reference for diagram operations
-- [Delete Data](../how-to/delete-data.md/) — Task-oriented delete guide
+- [Use Isolated Instances](../how-to/use-instances.md) — Task-oriented guide
+- [Working with Instances](../tutorials/advanced/instances.ipynb) — Step-by-step tutorial
+- [Configuration Reference](../reference/configuration.md) — Thread-safe mode settings
+- [Configure Database](../how-to/configure-database.md) — Connection setup
+- [Diagram Specification](../reference/specs/diagram.md) — Full reference for diagram operations
+- [Delete Data](../how-to/delete-data.md) — Task-oriented delete guide
