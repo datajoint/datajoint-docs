@@ -151,7 +151,9 @@ Prepare a cascading delete. Starting from a restricted table expression, propaga
 |-------|----------|
 | `"enforce"` | Error if parts would be deleted before masters |
 | `"ignore"` | Allow deleting parts without masters |
-| `"cascade"` | Also delete masters when parts are deleted |
+| `"cascade"` | Propagate restriction upward from part to master, then re-propagate downstream to all sibling parts |
+
+With `"cascade"`, the restriction flows **upward** from a part table to its master: the restricted part rows identify which master rows are affected, those masters receive a restriction, and that restriction propagates back downstream through the normal cascade — deleting the entire compositional unit (master + all parts), not just the originally matched part rows.
 
 ```python
 # Build a cascade from a restricted table
