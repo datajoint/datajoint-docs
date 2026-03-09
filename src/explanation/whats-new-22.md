@@ -234,15 +234,13 @@ This is valuable when working with unfamiliar pipelines, large datasets, or mult
 
 ### Two Propagation Modes
 
-The diagram supports two restriction propagation modes with different convergence semantics:
+The diagram supports two restriction propagation modes designed for fundamentally different tasks.
 
-**`cascade()` uses OR at convergence.** When a child table has multiple restricted ancestors, the child row is affected if *any* parent path reaches it. This is the right semantics for delete — if any reason exists to remove a row, it should be removed. `cascade()` is one-shot: it can only be called once on an unrestricted diagram.
+**`cascade()` prepares a delete.** It takes a single restricted table expression, propagates the restriction downstream through all descendants, and **trims the diagram** to the resulting subgraph — ancestors and unrelated tables are removed entirely. Convergence uses OR: a descendant row is marked for deletion if *any* ancestor path reaches it, because if any reason exists to remove a row, it should be removed. `cascade()` is one-shot and is always followed by `preview()` or `delete()`.
 
-**`restrict()` uses AND at convergence.** A child row is included only if *all* restricted ancestors match. This is the right semantics for data subsetting and export — only rows satisfying every condition are selected. `restrict()` is chainable: call it multiple times to build up conditions from different tables.
+**`restrict()` selects a data subset.** It propagates a restriction downstream but **preserves the full diagram**, allowing `restrict()` to be called again from a different seed table. This makes it possible to build up multi-condition subsets incrementally — for example, restricting by species from one table and by date from another. Convergence uses AND: a descendant row is included only if *all* restricted ancestors match, because an export should contain only rows satisfying every condition. After chaining restrictions, use `prune()` to remove empty tables and `preview()` to inspect the result.
 
-Both modes propagate **downstream only** — from the seed table to its descendants. `cascade()` goes further: it trims the returned Diagram to the cascade subgraph, removing all ancestors and unrelated tables. This means `delete()` operates on the entire trimmed diagram with no additional filtering. `restrict()` keeps the full graph intact (to support chaining from multiple seed tables) but only restricts the seed's descendants. This matches the semantics of foreign key cascades: deleting a session deletes its trials, not its subject.
-
-The two modes are mutually exclusive on the same diagram. This prevents accidental mixing of incompatible semantics.
+The two modes are mutually exclusive on the same diagram. This prevents accidental mixing of incompatible semantics — a delete diagram should never be reused for subsetting, and vice versa.
 
 ### Pruning Empty Tables
 

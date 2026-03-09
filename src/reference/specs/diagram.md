@@ -130,7 +130,7 @@ Diagrams can propagate restrictions through the dependency graph and execute dat
 diag.cascade(table_expr, part_integrity="enforce")
 ```
 
-Apply a cascade restriction and propagate it downstream through the dependency graph. The returned Diagram is trimmed to the **cascade subgraph** — only the seed table and its descendants remain. All ancestors and unrelated tables are removed. Uses **OR** semantics at convergence — a child row is affected if *any* restricted ancestor reaches it. Designed for delete operations.
+Prepare a cascading delete. Starting from a restricted table expression, propagate the restriction downstream through all descendants using **OR** semantics — a descendant row is marked for deletion if *any* ancestor path reaches it. The returned Diagram is **trimmed** to the cascade subgraph: only the seed table and its descendants remain; all ancestors and unrelated tables are removed. The trimmed diagram is ready for `preview()` and `delete()`.
 
 | Parameter | Type | Default | Description |
 |-----------|------|---------|-------------|
@@ -141,8 +141,8 @@ Apply a cascade restriction and propagate it downstream through the dependency g
 
 **Constraints:**
 
-- `cascade()` can only be called **once** on an unrestricted Diagram
-- Cannot be mixed with `restrict()` — the two modes are mutually exclusive
+- **One-shot** — can only be called once on an unrestricted Diagram
+- Mutually exclusive with `restrict()`
 - `table_expr.full_table_name` must be a node in the diagram
 
 **`part_integrity` values:**
@@ -165,19 +165,19 @@ restricted = diag.cascade(Session & {'subject_id': 'M001'})
 diag.restrict(table_expr)
 ```
 
-Apply a restrict condition and propagate it downstream. Only the seed table and its descendants receive restrictions — ancestors remain in the diagram but are not restricted. Unlike `cascade()`, the diagram is not trimmed (to support chaining from multiple seed tables). Uses **AND** semantics at convergence — a child row is included only if it satisfies *all* restricted ancestors. Designed for data subsetting and export operations.
+Select a subset of data for export or inspection. Starting from a restricted table expression, propagate the restriction downstream through all descendants using **AND** semantics — a descendant row is included only if *all* restricted ancestors match. The full diagram is preserved (ancestors, unrelated tables) so that `restrict()` can be called again from a different seed table, building up a multi-condition subset incrementally.
 
 | Parameter | Type | Default | Description |
 |-----------|------|---------|-------------|
 | `table_expr` | QueryExpression | — | A restricted table expression |
 
-**Returns:** New `Diagram` with restrict conditions applied.
+**Returns:** New `Diagram` with restrict conditions applied. The graph is not trimmed.
 
 **Constraints:**
 
-- Cannot be called on a cascade-restricted Diagram (mutually exclusive with `cascade()`)
+- **Chainable** — call multiple times to add conditions from different seed tables
+- Mutually exclusive with `cascade()`
 - `table_expr.full_table_name` must be a node in the diagram
-- **Can be chained** — call `restrict()` multiple times to add conditions from different tables
 
 ```python
 # Chain multiple restrictions (AND semantics)
