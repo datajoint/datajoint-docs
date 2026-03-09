@@ -130,14 +130,14 @@ Diagrams can propagate restrictions through the dependency graph and execute dat
 diag.cascade(table_expr, part_integrity="enforce")
 ```
 
-Apply a cascade restriction and propagate it downstream through the dependency graph. Only the seed table and its descendants receive restrictions — ancestors of the seed table are unaffected by subsequent `delete()` or `preview()` calls. Uses **OR** semantics at convergence — a child row is affected if *any* restricted ancestor reaches it. Designed for delete operations.
+Apply a cascade restriction and propagate it downstream through the dependency graph. The returned Diagram is trimmed to the **cascade subgraph** — only the seed table and its descendants remain. All ancestors and unrelated tables are removed. Uses **OR** semantics at convergence — a child row is affected if *any* restricted ancestor reaches it. Designed for delete operations.
 
 | Parameter | Type | Default | Description |
 |-----------|------|---------|-------------|
 | `table_expr` | QueryExpression | — | A restricted table expression (e.g., `Session & 'subject_id=1'`) |
 | `part_integrity` | str | `"enforce"` | Master-part integrity policy |
 
-**Returns:** New `Diagram` with cascade restrictions applied.
+**Returns:** New `Diagram` containing only the seed table and its descendants, with cascade restrictions applied.
 
 **Constraints:**
 
@@ -165,7 +165,7 @@ restricted = diag.cascade(Session & {'subject_id': 'M001'})
 diag.restrict(table_expr)
 ```
 
-Apply a restrict condition and propagate it downstream. Only the seed table and its descendants receive restrictions — ancestors of the seed table are unaffected by subsequent operations. Uses **AND** semantics at convergence — a child row is included only if it satisfies *all* restricted ancestors. Designed for data subsetting and export operations.
+Apply a restrict condition and propagate it downstream. Only the seed table and its descendants receive restrictions — ancestors remain in the diagram but are not restricted. Unlike `cascade()`, the diagram is not trimmed (to support chaining from multiple seed tables). Uses **AND** semantics at convergence — a child row is included only if it satisfies *all* restricted ancestors. Designed for data subsetting and export operations.
 
 | Parameter | Type | Default | Description |
 |-----------|------|---------|-------------|
@@ -193,7 +193,7 @@ restricted = (diag
 diag.delete(transaction=True, prompt=None, dry_run=False)
 ```
 
-Execute a cascading delete using previously applied cascade restrictions. Tables are deleted in reverse topological order (leaves first) to maintain referential integrity.
+Execute a cascading delete on the cascade subgraph. All tables in the diagram are deleted in reverse topological order (leaves first) to maintain referential integrity.
 
 | Parameter | Type | Default | Description |
 |-----------|------|---------|-------------|
