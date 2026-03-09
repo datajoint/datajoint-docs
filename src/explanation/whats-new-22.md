@@ -240,6 +240,8 @@ The diagram supports two restriction propagation modes with different convergenc
 
 **`restrict()` uses AND at convergence.** A child row is included only if *all* restricted ancestors match. This is the right semantics for data subsetting and export — only rows satisfying every condition are selected. `restrict()` is chainable: call it multiple times to build up conditions from different tables.
 
+Both modes propagate **downstream only** — from the seed table to its descendants. Tables upstream of the seed (its ancestors) are never affected. This matches the semantics of foreign key cascades: deleting a session deletes its trials, not its subject.
+
 The two modes are mutually exclusive on the same diagram. This prevents accidental mixing of incompatible semantics.
 
 ### Pruning Empty Tables
