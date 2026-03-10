@@ -189,39 +189,46 @@ count = (Subject & restriction).delete(prompt=False)
 print(f"Deleted {count} subjects")
 ```
 
-## Diagram-Level Delete
+## Inspecting Cascade Before Deleting
 
 !!! version-added "New in 2.2"
-    Diagram-level delete was added in DataJoint 2.2.
+    Cascade inspection via `dj.Diagram` was added in DataJoint 2.2.
 
-For complex scenarios — previewing the blast radius, working across schemas, or understanding the dependency graph before deleting — use `dj.Diagram` to build and inspect the cascade before executing.
+For a quick preview, `table.delete(dry_run=True)` returns the affected row counts without deleting anything:
 
-### Build, Preview, Execute
+```python
+# Quick preview of what would be deleted
+(Session & {'subject_id': 'M001'}).delete(dry_run=True)
+# {'`lab`.`session`': 3, '`lab`.`trial`': 45, '`lab`.`processed_data`': 45}
+```
+
+For more complex scenarios — working across schemas, chaining multiple restrictions, or visualizing the dependency graph — use `dj.Diagram` to build and inspect the cascade explicitly:
 
 ```python
 import datajoint as dj
 
-# 1. Build the dependency graph
+# 1. Build the dependency graph and apply cascade restriction
 diag = dj.Diagram(schema)
-
-# 2. Apply cascade restriction (nothing deleted yet)
 restricted = diag.cascade(Session & {'subject_id': 'M001'})
 
-# 3. Preview: see affected tables and row counts
+# 2. Preview: see affected tables and row counts
 counts = restricted.preview()
 # {'`lab`.`session`': 3, '`lab`.`trial`': 45, '`lab`.`processed_data`': 45}
 
-# 4. Execute only after reviewing
-restricted.delete(prompt=False)
+# 3. Visualize the cascade subgraph (in Jupyter)
+restricted
+
+# 4. Execute via Table.delete() after reviewing
+(Session & {'subject_id': 'M001'}).delete(prompt=False)
 ```
 
 ### When to Use
 
 - **Preview blast radius**: Understand what a cascade delete will affect before committing
-- **Multi-schema cascades**: Build a diagram spanning multiple schemas and delete across them in one operation
+- **Multi-schema inspection**: Build a diagram spanning multiple schemas to visualize cascade impact
 - **Programmatic control**: Use `preview()` return values to make decisions in automated workflows
 
-For simple single-table deletes, `(Table & restriction).delete()` remains the simplest approach. The diagram-level API is for when you need more visibility or control.
+For simple single-table deletes, `(Table & restriction).delete()` remains the simplest approach. The diagram API is for when you need more visibility before executing.
 
 ## See Also
 

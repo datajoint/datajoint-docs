@@ -120,9 +120,9 @@ dj.Diagram(Subject) + dj.Diagram(analysis).collapse()
 ## Operational Methods
 
 !!! version-added "New in 2.2"
-    Operational methods (`cascade`, `restrict`, `delete`, `drop`, `preview`, `prune`) were added in DataJoint 2.2.
+    Operational methods (`cascade`, `restrict`, `preview`, `prune`) were added in DataJoint 2.2.
 
-Diagrams can propagate restrictions through the dependency graph and execute data operations (delete, drop) using the graph structure. These methods turn Diagram from a visualization tool into an operational component.
+Diagrams can propagate restrictions through the dependency graph and inspect affected data using the graph structure. These methods turn Diagram from a visualization tool into a graph computation and inspection component. All mutation operations (delete, drop) are executed by `Table.delete()` and `Table.drop()`, which use Diagram internally.
 
 ### `cascade()`
 
@@ -189,49 +189,6 @@ restricted = (diag
     .restrict(Session & 'session_date > "2024-01-01"'))
 ```
 
-### `delete()`
-
-```python
-diag.delete(transaction=True, prompt=None, dry_run=False)
-```
-
-Execute a cascading delete on the cascade subgraph. All tables in the diagram are deleted in reverse topological order (leaves first) to maintain referential integrity.
-
-| Parameter | Type | Default | Description |
-|-----------|------|---------|-------------|
-| `transaction` | bool | `True` | Wrap in atomic transaction |
-| `prompt` | bool or None | `None` | Prompt for confirmation. Default: `dj.config['safemode']` |
-| `dry_run` | bool | `False` | If `True`, return affected row counts without deleting |
-
-**Returns:** `int` (rows deleted from root table) or `dict[str, int]` (table → row count mapping when `dry_run=True`).
-
-**Requires:** `cascade()` must be called first.
-
-```python
-diag = dj.Diagram(schema)
-restricted = diag.cascade(Session & {'subject_id': 'M001'})
-restricted.preview()   # inspect what will be deleted
-restricted.delete()    # execute the delete
-```
-
-### `drop()`
-
-```python
-diag.drop(prompt=None, part_integrity="enforce", dry_run=False)
-```
-
-Drop all tables in the diagram in reverse topological order.
-
-| Parameter | Type | Default | Description |
-|-----------|------|---------|-------------|
-| `prompt` | bool or None | `None` | Prompt for confirmation. Default: `dj.config['safemode']` |
-| `part_integrity` | str | `"enforce"` | `"enforce"` or `"ignore"` |
-| `dry_run` | bool | `False` | If `True`, return row counts without dropping tables |
-
-**Returns:** `dict[str, int]` (table → row count mapping when `dry_run=True`). Returns `None` otherwise.
-
-**Note:** Unlike `delete()`, `drop()` does not use cascade restrictions. It drops all tables in the diagram.
-
 ### `preview()`
 
 ```python
@@ -257,7 +214,7 @@ counts = restricted.preview()
 diag.prune()
 ```
 
-Remove tables with zero matching rows from the diagram. Without prior restrictions, removes physically empty tables. With restrictions (`cascade()` or `restrict()`), removes tables where the restricted query yields zero rows.
+Remove tables with zero matching rows from the diagram view. This only affects the diagram object — no tables or data are modified in the database. Without prior restrictions, removes physically empty tables from the diagram. With restrictions (`cascade()` or `restrict()`), removes tables where the restricted query yields zero rows.
 
 **Returns:** New `Diagram` with empty tables removed.
 
@@ -290,6 +247,14 @@ When a child table has multiple restricted ancestors, the convergence rule depen
 
 - **`cascade()` (OR):** A child row is affected if *any* path from a restricted ancestor reaches it. This is appropriate for delete — if any reason exists to delete a row, it should be deleted.
 - **`restrict()` (AND):** A child row is included only if *all* restricted ancestors match. This is appropriate for export — only rows satisfying every condition are selected.
+
+**Multiple foreign keys to the same parent:**
+
+When a child table references the same parent through multiple foreign keys (e.g., `source_mouse` and `target_mouse` both referencing `Mouse`), these paths always combine with **OR** regardless of the propagation mode. Each foreign key path is an independent reason for the child row to be affected — this is structural, not operation-dependent.
+
+**Unloaded schemas:**
+
+If a descendant table lives in a schema that hasn't been activated (loaded into the dependency graph), the graph-driven delete won't know about it. The final `DELETE` on the parent will fail with a foreign key error. DataJoint catches this and produces an actionable error message identifying which schema needs to be activated.
 
 ---
 
@@ -475,7 +440,7 @@ combined = dj.Diagram.from_sequence([schema1, schema2, schema3])
 
 ## Dependencies
 
-Operational methods (`cascade`, `restrict`, `delete`, `drop`, `preview`, `prune`) use `networkx`, which is always installed as a core dependency.
+Operational methods (`cascade`, `restrict`, `preview`, `prune`) use `networkx`, which is always installed as a core dependency.
 
 Diagram **visualization** requires optional dependencies:
 
@@ -490,7 +455,7 @@ If visualization dependencies are missing, `dj.Diagram` displays a warning and p
 ## See Also
 
 - [How to Read Diagrams](../../how-to/read-diagrams.ipynb)
-- [Delete Data](../../how-to/delete-data.md) — Diagram-level delete workflow
+- [Delete Data](../../how-to/delete-data.md) — Cascade inspection and delete workflow
 - [What's New in 2.2](../../explanation/whats-new-22.md) — Motivation and design
 - [Data Manipulation](data-manipulation.md) — Insert, update, delete specification
 - [Query Algebra](query-algebra.md)

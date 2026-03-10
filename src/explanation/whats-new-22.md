@@ -1,6 +1,6 @@
 # What's New in DataJoint 2.2
 
-DataJoint 2.2 introduces **isolated instances**, **thread-safe mode**, and **graph-driven diagram operations** for applications that need multiple independent database connections, explicit cascade control, and operational use of the dependency graph.
+DataJoint 2.2 introduces **isolated instances** and **thread-safe mode** for applications that need multiple independent database connections, and **graph-driven diagram operations** that replace the legacy error-driven cascade with a reliable, inspectable approach for all users.
 
 > **Upgrading from 2.0 or 2.1?** No breaking changes. All existing code using `dj.config` and `dj.Schema()` continues to work. The new Instance API is purely additive.
 
@@ -207,27 +207,29 @@ DataJoint 2.2 promotes `dj.Diagram` from a visualization tool to an operational 
 
 ### From Visualization to Operations
 
-In prior versions, `dj.Diagram` existed solely for visualization — drawing the dependency graph as SVG or Mermaid output. The cascade logic inside `Table.delete()` traversed dependencies independently, with no way to inspect or control the cascade before it executed.
+In prior versions, `dj.Diagram` existed solely for visualization — drawing the dependency graph as SVG or Mermaid output. The cascade logic inside `Table.delete()` traversed dependencies independently using an error-driven approach: attempt `DELETE` on the parent, catch the foreign key integrity error, parse the error message to discover which child table is blocking, then recursively delete from that child first. This had several problems:
 
-In 2.2, `Table.delete()` and `Table.drop()` delegate internally to `dj.Diagram`. The user-facing behavior of `Table.delete()` is unchanged, but the diagram-level API is now available as a more powerful interface for complex scenarios.
+- **MySQL 8 with limited privileges** returns error 1217 (`ROW_IS_REFERENCED`) instead of 1451 (`ROW_IS_REFERENCED_2`), which provides no table name — the cascade crashes with no way to proceed.
+- **PostgreSQL** aborts the entire transaction on any error, requiring `SAVEPOINT` / `ROLLBACK TO SAVEPOINT` round-trips for each failed delete attempt.
+- **Fragile error parsing** across MySQL versions and privilege levels, where different configurations produce different error message formats.
+
+In 2.2, `Table.delete()` and `Table.drop()` use `dj.Diagram` internally to compute the dependency graph and walk it in reverse topological order — deleting leaves first, with no trial-and-error needed. The user-facing behavior of `Table.delete()` is unchanged. The Diagram's `cascade()` and `preview()` methods are available as a public inspection API for understanding cascade impact before executing.
 
 ### The Preview-Then-Execute Pattern
 
-The key benefit of the diagram-level API is the ability to build a cascade explicitly, inspect it, and then decide whether to execute:
+The key benefit of the diagram-level API is the ability to build a cascade explicitly, inspect it, and then execute via `Table.delete()`:
 
 ```python
-# Build the dependency graph
+# Build the dependency graph and inspect the cascade
 diag = dj.Diagram(schema)
-
-# Apply cascade restriction — nothing is deleted yet
 restricted = diag.cascade(Session & {'subject_id': 'M001'})
 
 # Inspect: what tables and how many rows would be affected?
 counts = restricted.preview()
 # {'`lab`.`session`': 3, '`lab`.`trial`': 45, '`lab`.`processed_data`': 45}
 
-# Execute only after reviewing the blast radius
-restricted.delete(prompt=False)
+# Execute via Table.delete() after reviewing the blast radius
+(Session & {'subject_id': 'M001'}).delete(prompt=False)
 ```
 
 This is valuable when working with unfamiliar pipelines, large datasets, or multi-schema dependencies where the cascade impact is not immediately obvious.
@@ -238,9 +240,11 @@ The diagram supports two restriction propagation modes designed for fundamentall
 
 **`cascade()` prepares a delete.** It takes a single restricted table expression, propagates the restriction downstream through all descendants, and **trims the diagram** to the resulting subgraph — ancestors and unrelated tables are removed entirely. Convergence uses OR: a descendant row is marked for deletion if *any* ancestor path reaches it, because if any reason exists to remove a row, it should be removed. `cascade()` is one-shot and is always followed by `preview()` or `delete()`.
 
+When the cascade encounters a part table whose master is not yet included in the cascade, the behavior depends on the `part_integrity` setting. With `"enforce"` (the default), `delete()` raises an error if part rows would be deleted without their master — preventing orphaned master rows. With `"cascade"`, the restriction propagates *upward* from the part to its master: the restricted part rows identify which master rows are affected, those masters receive a restriction, and that restriction then propagates back downstream to all sibling parts — deleting the entire compositional unit, not just the originally matched part rows.
+
 **`restrict()` selects a data subset.** It propagates a restriction downstream but **preserves the full diagram**, allowing `restrict()` to be called again from a different seed table. This makes it possible to build up multi-condition subsets incrementally — for example, restricting by species from one table and by date from another. Convergence uses AND: a descendant row is included only if *all* restricted ancestors match, because an export should contain only rows satisfying every condition. After chaining restrictions, use `prune()` to remove empty tables and `preview()` to inspect the result.
 
-The two modes are mutually exclusive on the same diagram. This prevents accidental mixing of incompatible semantics — a delete diagram should never be reused for subsetting, and vice versa.
+The two modes are mutually exclusive on the same diagram — DataJoint raises an error if you attempt to mix `cascade()` and `restrict()`, or if you call `cascade()` more than once. This prevents accidental mixing of incompatible semantics: a delete diagram should never be reused for subsetting, and vice versa.
 
 ### Pruning Empty Tables
 
@@ -260,7 +264,21 @@ Without prior restrictions, `prune()` removes physically empty tables. This is u
 
 ### Architecture
 
-`Table.delete()` now constructs a `Diagram` internally, calls `cascade()`, and then `delete()`. This means every table-level delete benefits from the same graph-driven logic. The diagram-level API simply exposes this machinery for direct use when more control is needed.
+`Table.delete()` constructs a `Diagram` internally, calls `cascade()` to compute the affected subgraph, then executes the delete itself in reverse topological order. The Diagram is purely a graph computation and inspection tool — it computes the cascade and provides `preview()`, but all mutation logic (transactions, SQL execution, prompts) lives in `Table.delete()` and `Table.drop()`.
+
+### Advantages over Error-Driven Cascade
+
+The graph-driven approach resolves every known limitation of the prior error-driven cascade:
+
+| Scenario | Error-driven (prior) | Graph-driven (2.2) |
+|---|---|---|
+| MySQL 8 + limited privileges | Crashes (error 1217, no table name) | Works — no error parsing needed |
+| PostgreSQL | Savepoint overhead per attempt | No errors triggered |
+| Multiple FKs to same child | One-at-a-time via retry loop | All paths resolved upfront |
+| Part integrity enforcement | Post-hoc check after delete | Data-driven post-check (no false positives) |
+| Unloaded schemas | Crash with opaque error | Clear error: "activate schema X" |
+| Reusability | Delete-only | Delete, drop, export, prune |
+| Inspectability | Opaque recursive cascade | `preview()` / `dry_run` before executing |
 
 ## See Also
 
