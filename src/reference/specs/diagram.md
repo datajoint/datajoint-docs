@@ -456,7 +456,7 @@ If visualization dependencies are missing, `dj.Diagram` displays a warning and p
 
 - [How to Read Diagrams](../../how-to/read-diagrams.ipynb)
 - [Delete Data](../../how-to/delete-data.md) — Cascade inspection and delete workflow
-- [What's New in 2.2](../../explanation/whats-new-22.md) — Motivation and design
+- [What's New in 2.2](../../about/whats-new-22.md) — Motivation and design
 - [Data Manipulation](data-manipulation.md) — Insert, update, delete specification
 - [Query Algebra](query-algebra.md)
 - [Table Declaration](table-declaration.md)

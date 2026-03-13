@@ -262,6 +262,38 @@ export             # visualize the export subgraph
 
 Without prior restrictions, `prune()` removes physically empty tables. This is useful for understanding which parts of a pipeline are populated.
 
+### Restriction Propagation Rules
+
+When `cascade()` or `restrict()` propagates a restriction from a parent to a child, one of three rules applies depending on the foreign key relationship:
+
+| Rule | Condition | Child restriction |
+|------|-----------|-------------------|
+| **Direct copy** | Non-aliased FK, restriction attributes are a subset of child's primary key | Restriction copied directly |
+| **Aliased projection** | FK uses attribute renaming (e.g., `subject_id` → `animal_id`) | Parent projected with attribute mapping |
+| **Full projection** | Non-aliased FK, restriction uses attributes not in child's primary key | Parent projected (all attributes) as restriction |
+
+When a child has multiple restricted ancestors, convergence depends on the mode: `cascade()` uses OR (any path marks a row for deletion), `restrict()` uses AND (all conditions must match).
+
+When a child references the same parent through multiple foreign keys (e.g., `source_mouse` and `target_mouse` both referencing `Mouse`), these paths always combine with OR regardless of the mode — each FK path is an independent reason for the child row to be affected.
+
+### Dry Run
+
+`Table.delete()` and `Table.drop()` accept a `dry_run` parameter that returns affected row counts without modifying data:
+
+```python
+# Preview what would be deleted
+(Session & {'subject_id': 'M001'}).delete(dry_run=True)
+# {'`lab`.`session`': 3, '`lab`.`trial`': 45, '`lab`.`processed_data`': 45}
+
+# Preview what would be dropped
+Session.drop(dry_run=True)
+# {'`lab`.`session`': 100, '`lab`.`trial`': 5000}
+```
+
+### Unloaded Schema Detection
+
+If a descendant table lives in a schema that hasn't been activated, the graph-driven delete won't know about it. When the final `DELETE` fails with a foreign key error, DataJoint catches it and produces an actionable error message identifying which schema needs to be activated — rather than the opaque crash of the prior implementation.
+
 ### Architecture
 
 `Table.delete()` constructs a `Diagram` internally, calls `cascade()` to compute the affected subgraph, then executes the delete itself in reverse topological order. The Diagram is purely a graph computation and inspection tool — it computes the cascade and provides `preview()`, but all mutation logic (transactions, SQL execution, prompts) lives in `Table.delete()` and `Table.drop()`.
@@ -282,6 +314,8 @@ The graph-driven approach resolves every known limitation of the prior error-dri
 
 ## See Also
 
+- [What's New in 2.1](whats-new-21.md) — Previous release
+- [Release Notes (v2.2.0)](https://github.com/datajoint/datajoint-python/releases) — GitHub changelog
 - [Use Isolated Instances](../how-to/use-instances.md) — Task-oriented guide
 - [Working with Instances](../tutorials/advanced/instances.ipynb) — Step-by-step tutorial
 - [Configuration Reference](../reference/configuration.md) — Thread-safe mode settings

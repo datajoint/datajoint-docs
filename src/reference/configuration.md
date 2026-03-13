@@ -318,7 +318,7 @@ schema = inst.Schema("my_schema")
 | `inst.Schema(name)` | Create a Schema bound to this Instance |
 | `inst.FreeTable(full_name)` | Create a FreeTable bound to this Instance |
 
-See [What's New in 2.2](../explanation/whats-new-22.md/) for usage examples and rationale.
+See [What's New in 2.2](../about/whats-new-22.md) for usage examples and rationale.
 
 ## Thread-Safe Mode
 
