@@ -9,7 +9,7 @@
 <link href="../design-primary-keys/" rel="prev"/>
 <link href="../manage-pipeline-project/" rel="next"/>
 <link href="../../assets/images/company-logo-blue.png" rel="icon"/>
-<meta content="mkdocs-1.6.1, mkdocs-material-9.7.2" name="generator"/>
+<meta content="mkdocs-1.6.1, mkdocs-material-9.7.5" name="generator"/>
 <title>Read Schema Diagrams - DataJoint Documentation</title>
 <link href="../../assets/stylesheets/main.484c7ddc.min.css" rel="stylesheet"/>
 <link href="../../assets/stylesheets/palette.ab4e12ef.min.css" rel="stylesheet"/>
@@ -4265,6 +4265,10 @@ dj.Diagram(Subject) + 2</div>
 <td><code>D1 * D2</code></td>
 <td>Intersection (common nodes)</td>
 </tr>
+<tr>
+<td><code>D.prune()</code></td>
+<td>Remove tables with zero matching rows <em>(New in 2.2)</em></td>
+</tr>
 </tbody>
 </table>
 <p><strong>Finding paths:</strong> Use intersection to find connection paths:</p>
@@ -4280,7 +4284,8 @@ dj.Diagram(Subject) + 2</div>
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="layout-direction">Layout Direction<a class="anchor-link" href="#layout-direction">¶</a></h2><p><em>New in DataJoint 2.1</em></p>
+<h2 id="layout-direction">Layout Direction<a class="anchor-link" href="#layout-direction">¶</a></h2><p>!!! version-added "New in 2.1"
+Configurable layout direction was added in DataJoint 2.1.</p>
 <p>Control the flow direction of diagrams via configuration:</p>
 <table>
 <thead>
@@ -4353,7 +4358,8 @@ with dj.config.override(display__diagram_direction="LR"):
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="mermaid-output">Mermaid Output<a class="anchor-link" href="#mermaid-output">¶</a></h2><p><em>New in DataJoint 2.1</em></p>
+<h2 id="mermaid-output">Mermaid Output<a class="anchor-link" href="#mermaid-output">¶</a></h2><p>!!! version-added "New in 2.1"
+Mermaid output was added in DataJoint 2.1.</p>
 <p>Generate <a href="https://mermaid.js.org/">Mermaid</a> syntax for embedding diagrams in Markdown documentation, GitHub, or web pages:</p>
 </div>
 </div>
@@ -4437,7 +4443,8 @@ print((dj.Diagram(Subject) + 2).make_mermaid())</div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <h2 id="multi-schema-pipelines">Multi-Schema Pipelines<a class="anchor-link" href="#multi-schema-pipelines">¶</a></h2><p>Real-world pipelines often span multiple schemas (modules).</p>
-<p><em>New in DataJoint 2.1:</em> Tables are automatically grouped into visual clusters by schema, with the Python module name shown as the group label.</p>
+<p>!!! version-added "New in 2.1"
+Automatic schema grouping was added in DataJoint 2.1. Tables are automatically grouped into visual clusters by schema, with the Python module name shown as the group label.</p>
 </div>
 </div>
 </div>
@@ -4599,7 +4606,8 @@ multi_schema_diagram</div>
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="collapsing-schemas">Collapsing Schemas<a class="anchor-link" href="#collapsing-schemas">¶</a></h2><p><em>New in DataJoint 2.1</em></p>
+<h2 id="collapsing-schemas">Collapsing Schemas<a class="anchor-link" href="#collapsing-schemas">¶</a></h2><p>!!! version-added "New in 2.1"
+The <code>collapse()</code> method was added in DataJoint 2.1.</p>
 <p>For high-level pipeline views, collapse entire schemas into single nodes using <code>.collapse()</code>. This is useful for showing relationships between modules without the detail of individual tables.</p>
 </div>
 </div>
@@ -5263,7 +5271,7 @@ dj.Diagram(acquisition).collapse() + dj.Diagram(processing).collapse() + dj.Diag
 </tr>
 <tr>
 <td><strong>3D box (gray)</strong></td>
-<td>Collapsed schema <em>(2.1+)</em></td>
+<td>Collapsed schema <em>(New in 2.1)</em></td>
 </tr>
 </tbody>
 </table>
@@ -5285,7 +5293,11 @@ dj.Diagram(acquisition).collapse() + dj.Diagram(processing).collapse() + dj.Diag
 </tr>
 <tr>
 <td>Collapse schema</td>
-<td><code>.collapse()</code> <em>(2.1+)</em></td>
+<td><code>.collapse()</code> <em>(New in 2.1)</em></td>
+</tr>
+<tr>
+<td>Prune empty tables</td>
+<td><code>.prune()</code> <em>(New in 2.2)</em></td>
 </tr>
 </tbody>
 </table>

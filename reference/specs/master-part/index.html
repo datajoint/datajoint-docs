@@ -21,7 +21,7 @@
       
       
       <link rel="icon" href="../../../assets/images/company-logo-blue.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.2">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.5">
     
     
       
@@ -6557,10 +6557,8 @@
 <div class="highlight"><pre><span></span><code><span class="c1"># Delete parts AND their masters</span>
 <span class="p">(</span><span class="n">Session</span><span class="o">.</span><span class="n">Trial</span> <span class="o">&amp;</span> <span class="n">condition</span><span class="p">)</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">part_integrity</span><span class="o">=</span><span class="s2">&quot;cascade&quot;</span><span class="p">)</span>
 </code></pre></div>
-<p><strong>Behavior:</strong>
-- Identifies affected masters
-- Deletes masters (which cascades to ALL their parts)
-- Maintains compositional integrity</p>
+<p><strong>Behavior:</strong> The restriction propagates <strong>upward</strong> from the part to its master. Specifically, the restricted part rows identify which master rows are affected, and those masters receive a restriction. The master restriction then propagates back <strong>downstream</strong> through the normal cascade, reaching all sibling parts. The result is that the entire compositional unit — master plus all its parts — is deleted, not just the originally restricted part rows.</p>
+<p>This upward propagation may trigger further rounds: if the master itself is a part of a higher-level master, the restriction continues upward. The cascade engine iterates until no new restrictions are produced.</p>
 <h3 id="46-behavior-matrix">4.6 Behavior Matrix<a class="headerlink" href="#46-behavior-matrix" title="Permanent link">&para;</a></h3>
 <table>
 <thead>

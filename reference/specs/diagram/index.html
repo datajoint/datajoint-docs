@@ -9,7 +9,7 @@
 <link href="../fetch-api/" rel="prev"/>
 <link href="../type-system/" rel="next"/>
 <link href="../../../assets/images/company-logo-blue.png" rel="icon"/>
-<meta content="mkdocs-1.6.1, mkdocs-material-9.7.2" name="generator"/>
+<meta content="mkdocs-1.6.1, mkdocs-material-9.7.5" name="generator"/>
 <title>Diagram - DataJoint Documentation</title>
 <link href="../../../assets/stylesheets/main.484c7ddc.min.css" rel="stylesheet"/>
 <link href="../../../assets/stylesheets/palette.ab4e12ef.min.css" rel="stylesheet"/>
@@ -1806,6 +1806,64 @@
 </nav>
 </li>
 <li class="md-nav__item">
+<a class="md-nav__link" href="#operational-methods">
+<span class="md-ellipsis">
+      
+        Operational Methods
+      
+    </span>
+</a>
+<nav aria-label="Operational Methods" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#cascade">
+<span class="md-ellipsis">
+      
+        cascade()
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#restrict">
+<span class="md-ellipsis">
+      
+        restrict()
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#preview">
+<span class="md-ellipsis">
+      
+        preview()
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#prune">
+<span class="md-ellipsis">
+      
+        prune()
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#restriction-propagation">
+<span class="md-ellipsis">
+      
+        Restriction Propagation
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
 <a class="md-nav__link" href="#output-methods">
 <span class="md-ellipsis">
       
@@ -2671,6 +2729,64 @@
 </nav>
 </li>
 <li class="md-nav__item">
+<a class="md-nav__link" href="#operational-methods">
+<span class="md-ellipsis">
+      
+        Operational Methods
+      
+    </span>
+</a>
+<nav aria-label="Operational Methods" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#cascade">
+<span class="md-ellipsis">
+      
+        cascade()
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#restrict">
+<span class="md-ellipsis">
+      
+        restrict()
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#preview">
+<span class="md-ellipsis">
+      
+        preview()
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#prune">
+<span class="md-ellipsis">
+      
+        prune()
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#restriction-propagation">
+<span class="md-ellipsis">
+      
+        Restriction Propagation
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
 <a class="md-nav__link" href="#output-methods">
 <span class="md-ellipsis">
       
@@ -2998,6 +3114,152 @@
 <span class="n">dj</span><span class="o">.</span><span class="n">Diagram</span><span class="p">(</span><span class="n">Subject</span><span class="p">)</span> <span class="o">+</span> <span class="n">dj</span><span class="o">.</span><span class="n">Diagram</span><span class="p">(</span><span class="n">analysis</span><span class="p">)</span><span class="o">.</span><span class="n">collapse</span><span class="p">()</span>
 </code></pre></div>
 <hr/>
+<h2 id="operational-methods">Operational Methods<a class="headerlink" href="#operational-methods" title="Permanent link">¶</a></h2>
+<div class="admonition version-added">
+<p class="admonition-title">New in 2.2</p>
+<p>Operational methods (<code>cascade</code>, <code>restrict</code>, <code>preview</code>, <code>prune</code>) were added in DataJoint 2.2.</p>
+</div>
+<p>Diagrams can propagate restrictions through the dependency graph and inspect affected data using the graph structure. These methods turn Diagram from a visualization tool into a graph computation and inspection component. All mutation operations (delete, drop) are executed by <code>Table.delete()</code> and <code>Table.drop()</code>, which use Diagram internally.</p>
+<h3 id="cascade"><code>cascade()</code><a class="headerlink" href="#cascade" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><span class="n">diag</span><span class="o">.</span><span class="n">cascade</span><span class="p">(</span><span class="n">table_expr</span><span class="p">,</span> <span class="n">part_integrity</span><span class="o">=</span><span class="s2">"enforce"</span><span class="p">)</span>
+</code></pre></div>
+<p>Prepare a cascading delete. Starting from a restricted table expression, propagate the restriction downstream through all descendants using <strong>OR</strong> semantics — a descendant row is marked for deletion if <em>any</em> ancestor path reaches it. The returned Diagram is <strong>trimmed</strong> to the cascade subgraph: only the seed table and its descendants remain; all ancestors and unrelated tables are removed. The trimmed diagram is ready for <code>preview()</code> and <code>delete()</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>table_expr</code></td>
+<td>QueryExpression</td>
+<td>—</td>
+<td>A restricted table expression (e.g., <code>Session &amp; 'subject_id=1'</code>)</td>
+</tr>
+<tr>
+<td><code>part_integrity</code></td>
+<td>str</td>
+<td><code>"enforce"</code></td>
+<td>Master-part integrity policy</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong> New <code>Diagram</code> containing only the seed table and its descendants, with cascade restrictions applied.</p>
+<p><strong>Constraints:</strong></p>
+<ul>
+<li><strong>One-shot</strong> — can only be called once on an unrestricted Diagram</li>
+<li>Mutually exclusive with <code>restrict()</code></li>
+<li><code>table_expr.full_table_name</code> must be a node in the diagram</li>
+</ul>
+<p><strong><code>part_integrity</code> values:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Value</th>
+<th>Behavior</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>"enforce"</code></td>
+<td>Error if parts would be deleted before masters</td>
+</tr>
+<tr>
+<td><code>"ignore"</code></td>
+<td>Allow deleting parts without masters</td>
+</tr>
+<tr>
+<td><code>"cascade"</code></td>
+<td>Propagate restriction upward from part to master, then re-propagate downstream to all sibling parts</td>
+</tr>
+</tbody>
+</table>
+<p>With <code>"cascade"</code>, the restriction flows <strong>upward</strong> from a part table to its master: the restricted part rows identify which master rows are affected, those masters receive a restriction, and that restriction propagates back downstream through the normal cascade — deleting the entire compositional unit (master + all parts), not just the originally matched part rows.</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Build a cascade from a restricted table</span>
+<span class="n">diag</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">Diagram</span><span class="p">(</span><span class="n">schema</span><span class="p">)</span>
+<span class="n">restricted</span> <span class="o">=</span> <span class="n">diag</span><span class="o">.</span><span class="n">cascade</span><span class="p">(</span><span class="n">Session</span> <span class="o">&amp;</span> <span class="p">{</span><span class="s1">'subject_id'</span><span class="p">:</span> <span class="s1">'M001'</span><span class="p">})</span>
+</code></pre></div>
+<h3 id="restrict"><code>restrict()</code><a class="headerlink" href="#restrict" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><span class="n">diag</span><span class="o">.</span><span class="n">restrict</span><span class="p">(</span><span class="n">table_expr</span><span class="p">)</span>
+</code></pre></div>
+<p>Select a subset of data for export or inspection. Starting from a restricted table expression, propagate the restriction downstream through all descendants using <strong>AND</strong> semantics — a descendant row is included only if <em>all</em> restricted ancestors match. The full diagram is preserved (ancestors, unrelated tables) so that <code>restrict()</code> can be called again from a different seed table, building up a multi-condition subset incrementally.</p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>table_expr</code></td>
+<td>QueryExpression</td>
+<td>—</td>
+<td>A restricted table expression</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong> New <code>Diagram</code> with restrict conditions applied. The graph is not trimmed.</p>
+<p><strong>Constraints:</strong></p>
+<ul>
+<li><strong>Chainable</strong> — call multiple times to add conditions from different seed tables</li>
+<li>Mutually exclusive with <code>cascade()</code></li>
+<li><code>table_expr.full_table_name</code> must be a node in the diagram</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="c1"># Chain multiple restrictions (AND semantics)</span>
+<span class="n">diag</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">Diagram</span><span class="p">(</span><span class="n">schema</span><span class="p">)</span>
+<span class="n">restricted</span> <span class="o">=</span> <span class="p">(</span><span class="n">diag</span>
+    <span class="o">.</span><span class="n">restrict</span><span class="p">(</span><span class="n">Subject</span> <span class="o">&amp;</span> <span class="p">{</span><span class="s1">'species'</span><span class="p">:</span> <span class="s1">'mouse'</span><span class="p">})</span>
+    <span class="o">.</span><span class="n">restrict</span><span class="p">(</span><span class="n">Session</span> <span class="o">&amp;</span> <span class="s1">'session_date &gt; "2024-01-01"'</span><span class="p">))</span>
+</code></pre></div>
+<h3 id="preview"><code>preview()</code><a class="headerlink" href="#preview" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><span class="n">diag</span><span class="o">.</span><span class="n">preview</span><span class="p">()</span>
+</code></pre></div>
+<p>Show affected tables and row counts without modifying data. Works with both <code>cascade()</code> and <code>restrict()</code> restrictions.</p>
+<p><strong>Returns:</strong> <code>dict[str, int]</code> — mapping of full table names to affected row counts.</p>
+<p><strong>Requires:</strong> <code>cascade()</code> or <code>restrict()</code> must be called first.</p>
+<div class="highlight"><pre><span></span><code><span class="n">diag</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">Diagram</span><span class="p">(</span><span class="n">schema</span><span class="p">)</span>
+<span class="n">restricted</span> <span class="o">=</span> <span class="n">diag</span><span class="o">.</span><span class="n">cascade</span><span class="p">(</span><span class="n">Session</span> <span class="o">&amp;</span> <span class="p">{</span><span class="s1">'subject_id'</span><span class="p">:</span> <span class="s1">'M001'</span><span class="p">})</span>
+<span class="n">counts</span> <span class="o">=</span> <span class="n">restricted</span><span class="o">.</span><span class="n">preview</span><span class="p">()</span>
+<span class="c1"># {'`lab`.`session`': 3, '`lab`.`trial`': 45, '`lab`.`processed_data`': 45}</span>
+</code></pre></div>
+<h3 id="prune"><code>prune()</code><a class="headerlink" href="#prune" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><span class="n">diag</span><span class="o">.</span><span class="n">prune</span><span class="p">()</span>
+</code></pre></div>
+<p>Remove tables with zero matching rows from the diagram view. This only affects the diagram object — no tables or data are modified in the database. Without prior restrictions, removes physically empty tables from the diagram. With restrictions (<code>cascade()</code> or <code>restrict()</code>), removes tables where the restricted query yields zero rows.</p>
+<p><strong>Returns:</strong> New <code>Diagram</code> with empty tables removed.</p>
+<p><strong>Note:</strong> Queries the database to determine row counts. The underlying graph structure is preserved — subsequent <code>restrict()</code> calls can still seed at any table in the schema.</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Export workflow: restrict, prune, visualize</span>
+<span class="n">export</span> <span class="o">=</span> <span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Diagram</span><span class="p">(</span><span class="n">schema</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">restrict</span><span class="p">(</span><span class="n">Subject</span> <span class="o">&amp;</span> <span class="p">{</span><span class="s1">'species'</span><span class="p">:</span> <span class="s1">'mouse'</span><span class="p">})</span>
+    <span class="o">.</span><span class="n">restrict</span><span class="p">(</span><span class="n">Session</span> <span class="o">&amp;</span> <span class="s1">'session_date &gt; "2024-01-01"'</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">prune</span><span class="p">())</span>
+
+<span class="n">export</span><span class="o">.</span><span class="n">preview</span><span class="p">()</span>   <span class="c1"># only tables with matching rows</span>
+<span class="n">export</span>             <span class="c1"># visualize the export subgraph</span>
+</code></pre></div>
+<h3 id="restriction-propagation">Restriction Propagation<a class="headerlink" href="#restriction-propagation" title="Permanent link">¶</a></h3>
+<p>When <code>cascade()</code> or <code>restrict()</code> propagates a restriction from a parent table to a child table, one of three rules applies depending on the foreign key relationship:</p>
+<p><strong>Rule 1 — Direct copy:</strong> When the foreign key is non-aliased and the restriction attributes are a subset of the child's primary key, the restriction is copied directly to the child.</p>
+<p><strong>Rule 2 — Aliased projection:</strong> When the foreign key uses attribute renaming (e.g., <code>subject_id</code> → <code>animal_id</code>), the parent is projected with the attribute mapping to match the child's column names.</p>
+<p><strong>Rule 3 — Full projection:</strong> When the foreign key is non-aliased but the restriction uses attributes not in the child's primary key, the parent is projected (all attributes) and used as a restriction on the child.</p>
+<p><strong>Convergence behavior:</strong></p>
+<p>When a child table has multiple restricted ancestors, the convergence rule depends on the mode:</p>
+<ul>
+<li><strong><code>cascade()</code> (OR):</strong> A child row is affected if <em>any</em> path from a restricted ancestor reaches it. This is appropriate for delete — if any reason exists to delete a row, it should be deleted.</li>
+<li><strong><code>restrict()</code> (AND):</strong> A child row is included only if <em>all</em> restricted ancestors match. This is appropriate for export — only rows satisfying every condition are selected.</li>
+</ul>
+<p><strong>Multiple foreign keys to the same parent:</strong></p>
+<p>When a child table references the same parent through multiple foreign keys (e.g., <code>source_mouse</code> and <code>target_mouse</code> both referencing <code>Mouse</code>), these paths always combine with <strong>OR</strong> regardless of the propagation mode. Each foreign key path is an independent reason for the child row to be affected — this is structural, not operation-dependent.</p>
+<p><strong>Unloaded schemas:</strong></p>
+<p>If a descendant table lives in a schema that hasn't been activated (loaded into the dependency graph), the graph-driven delete won't know about it. The final <code>DELETE</code> on the parent will fail with a foreign key error. DataJoint catches this and produces an actionable error message identifying which schema needs to be activated.</p>
+<hr/>
 <h2 id="output-methods">Output Methods<a class="headerlink" href="#output-methods" title="Permanent link">¶</a></h2>
 <h3 id="graphviz-output">Graphviz Output<a class="headerlink" href="#graphviz-output" title="Permanent link">¶</a></h3>
 <table>
@@ -3245,14 +3507,18 @@
 </code></pre></div>
 <hr/>
 <h2 id="dependencies">Dependencies<a class="headerlink" href="#dependencies" title="Permanent link">¶</a></h2>
-<p>Diagram visualization requires optional dependencies:</p>
+<p>Operational methods (<code>cascade</code>, <code>restrict</code>, <code>preview</code>, <code>prune</code>) use <code>networkx</code>, which is always installed as a core dependency.</p>
+<p>Diagram <strong>visualization</strong> requires optional dependencies:</p>
 <div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>matplotlib<span class="w"> </span>pygraphviz
 </code></pre></div>
-<p>If dependencies are missing, <code>dj.Diagram</code> displays a warning and provides a stub class.</p>
+<p>If visualization dependencies are missing, <code>dj.Diagram</code> displays a warning and provides a stub class. Operational methods remain available regardless.</p>
 <hr/>
 <h2 id="see-also">See Also<a class="headerlink" href="#see-also" title="Permanent link">¶</a></h2>
 <ul>
 <li><a href="../../../how-to/read-diagrams/">How to Read Diagrams</a></li>
+<li><a href="../../../how-to/delete-data/">Delete Data</a> — Cascade inspection and delete workflow</li>
+<li><a href="../../../explanation/whats-new-22/">What's New in 2.2</a> — Motivation and design</li>
+<li><a href="../data-manipulation/">Data Manipulation</a> — Insert, update, delete specification</li>
 <li><a href="../query-algebra/">Query Algebra</a></li>
 <li><a href="../table-declaration/">Table Declaration</a></li>
 </ul>

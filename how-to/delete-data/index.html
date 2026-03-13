@@ -21,7 +21,7 @@
       
       
       <link rel="icon" href="../../assets/images/company-logo-blue.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.2">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.5">
     
     
       
@@ -2956,6 +2956,34 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#inspecting-cascade-before-deleting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Inspecting Cascade Before Deleting
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Inspecting Cascade Before Deleting">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#when-to-use" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When to Use
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#see-also" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -5828,6 +5856,34 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#inspecting-cascade-before-deleting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Inspecting Cascade Before Deleting
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Inspecting Cascade Before Deleting">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#when-to-use" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When to Use
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#see-also" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -6000,8 +6056,43 @@ Proceed? [yes, No]:
 <div class="highlight"><pre><span></span><code><span class="n">count</span> <span class="o">=</span> <span class="p">(</span><span class="n">Subject</span> <span class="o">&amp;</span> <span class="n">restriction</span><span class="p">)</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">prompt</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Deleted </span><span class="si">{</span><span class="n">count</span><span class="si">}</span><span class="s2"> subjects&quot;</span><span class="p">)</span>
 </code></pre></div>
+<h2 id="inspecting-cascade-before-deleting">Inspecting Cascade Before Deleting<a class="headerlink" href="#inspecting-cascade-before-deleting" title="Permanent link">&para;</a></h2>
+<div class="admonition version-added">
+<p class="admonition-title">New in 2.2</p>
+<p>Cascade inspection via <code>dj.Diagram</code> was added in DataJoint 2.2.</p>
+</div>
+<p>For a quick preview, <code>table.delete(dry_run=True)</code> returns the affected row counts without deleting anything:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Quick preview of what would be deleted</span>
+<span class="p">(</span><span class="n">Session</span> <span class="o">&amp;</span> <span class="p">{</span><span class="s1">&#39;subject_id&#39;</span><span class="p">:</span> <span class="s1">&#39;M001&#39;</span><span class="p">})</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">dry_run</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="c1"># {&#39;`lab`.`session`&#39;: 3, &#39;`lab`.`trial`&#39;: 45, &#39;`lab`.`processed_data`&#39;: 45}</span>
+</code></pre></div>
+<p>For more complex scenarios — working across schemas, chaining multiple restrictions, or visualizing the dependency graph — use <code>dj.Diagram</code> to build and inspect the cascade explicitly:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">datajoint</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dj</span>
+
+<span class="c1"># 1. Build the dependency graph and apply cascade restriction</span>
+<span class="n">diag</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">Diagram</span><span class="p">(</span><span class="n">schema</span><span class="p">)</span>
+<span class="n">restricted</span> <span class="o">=</span> <span class="n">diag</span><span class="o">.</span><span class="n">cascade</span><span class="p">(</span><span class="n">Session</span> <span class="o">&amp;</span> <span class="p">{</span><span class="s1">&#39;subject_id&#39;</span><span class="p">:</span> <span class="s1">&#39;M001&#39;</span><span class="p">})</span>
+
+<span class="c1"># 2. Preview: see affected tables and row counts</span>
+<span class="n">counts</span> <span class="o">=</span> <span class="n">restricted</span><span class="o">.</span><span class="n">preview</span><span class="p">()</span>
+<span class="c1"># {&#39;`lab`.`session`&#39;: 3, &#39;`lab`.`trial`&#39;: 45, &#39;`lab`.`processed_data`&#39;: 45}</span>
+
+<span class="c1"># 3. Visualize the cascade subgraph (in Jupyter)</span>
+<span class="n">restricted</span>
+
+<span class="c1"># 4. Execute via Table.delete() after reviewing</span>
+<span class="p">(</span><span class="n">Session</span> <span class="o">&amp;</span> <span class="p">{</span><span class="s1">&#39;subject_id&#39;</span><span class="p">:</span> <span class="s1">&#39;M001&#39;</span><span class="p">})</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">prompt</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="when-to-use">When to Use<a class="headerlink" href="#when-to-use" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Preview blast radius</strong>: Understand what a cascade delete will affect before committing</li>
+<li><strong>Multi-schema inspection</strong>: Build a diagram spanning multiple schemas to visualize cascade impact</li>
+<li><strong>Programmatic control</strong>: Use <code>preview()</code> return values to make decisions in automated workflows</li>
+</ul>
+<p>For simple single-table deletes, <code>(Table &amp; restriction).delete()</code> remains the simplest approach. The diagram API is for when you need more visibility before executing.</p>
 <h2 id="see-also">See Also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
 <ul>
+<li><a href="../../reference/specs/diagram/">Diagram Specification</a> — Full reference for diagram operations</li>
 <li><a href="../master-part/">Master-Part Tables</a> — Compositional data patterns</li>
 <li><a href="../model-relationships/">Model Relationships</a> — Foreign key patterns</li>
 <li><a href="../insert-data/">Insert Data</a> — Adding data to tables</li>

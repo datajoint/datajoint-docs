@@ -21,7 +21,7 @@
       
       
       <link rel="icon" href="../../assets/images/company-logo-blue.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.2">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.5">
     
     
       
@@ -769,6 +769,89 @@
     <span class="md-ellipsis">
       
         Instance Pattern (new in 2.2)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#graph-driven-diagram-operations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Graph-Driven Diagram Operations
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Graph-Driven Diagram Operations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#from-visualization-to-operations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        From Visualization to Operations
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-preview-then-execute-pattern" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Preview-Then-Execute Pattern
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#two-propagation-modes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Two Propagation Modes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pruning-empty-tables" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pruning Empty Tables
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Architecture
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#advantages-over-error-driven-cascade" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Advantages over Error-Driven Cascade
       
     </span>
   </a>
@@ -5852,6 +5935,89 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#graph-driven-diagram-operations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Graph-Driven Diagram Operations
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Graph-Driven Diagram Operations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#from-visualization-to-operations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        From Visualization to Operations
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-preview-then-execute-pattern" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Preview-Then-Execute Pattern
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#two-propagation-modes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Two Propagation Modes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pruning-empty-tables" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pruning Empty Tables
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Architecture
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#advantages-over-error-driven-cascade" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Advantages over Error-Driven Cascade
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#see-also" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -5883,7 +6049,7 @@
 
 
 <h1 id="whats-new-in-datajoint-22">What's New in DataJoint 2.2<a class="headerlink" href="#whats-new-in-datajoint-22" title="Permanent link">&para;</a></h1>
-<p>DataJoint 2.2 introduces <strong>isolated instances</strong> and <strong>thread-safe mode</strong> for applications that need multiple independent database connections—web servers, multi-tenant notebooks, parallel pipelines, and testing.</p>
+<p>DataJoint 2.2 introduces <strong>isolated instances</strong> and <strong>thread-safe mode</strong> for applications that need multiple independent database connections, and <strong>graph-driven diagram operations</strong> that replace the legacy error-driven cascade with a reliable, inspectable approach for all users.</p>
 <blockquote>
 <p><strong>Upgrading from 2.0 or 2.1?</strong> No breaking changes. All existing code using <code>dj.config</code> and <code>dj.Schema()</code> continues to work. The new Instance API is purely additive.</p>
 <p><strong>Citation:</strong> Yatsenko D, Nguyen TT. <em>DataJoint 2.0: A Computational Substrate for Agentic Scientific Workflows.</em> arXiv:2602.16585. 2026. <a href="https://doi.org/10.48550/arXiv.2602.16585">doi:10.48550/arXiv.2602.16585</a></p>
@@ -6139,12 +6305,105 @@
 <span class="s2">    &quot;&quot;&quot;</span>
 </code></pre></div>
 <p>Once a Schema is created, table definitions, inserts, queries, and all other operations work identically regardless of which pattern was used to create the Schema.</p>
+<h2 id="graph-driven-diagram-operations">Graph-Driven Diagram Operations<a class="headerlink" href="#graph-driven-diagram-operations" title="Permanent link">&para;</a></h2>
+<p>DataJoint 2.2 promotes <code>dj.Diagram</code> from a visualization tool to an operational component. The same dependency graph that renders pipeline diagrams now powers cascade delete, table drop, and data subsetting.</p>
+<h3 id="from-visualization-to-operations">From Visualization to Operations<a class="headerlink" href="#from-visualization-to-operations" title="Permanent link">&para;</a></h3>
+<p>In prior versions, <code>dj.Diagram</code> existed solely for visualization — drawing the dependency graph as SVG or Mermaid output. The cascade logic inside <code>Table.delete()</code> traversed dependencies independently using an error-driven approach: attempt <code>DELETE</code> on the parent, catch the foreign key integrity error, parse the error message to discover which child table is blocking, then recursively delete from that child first. This had several problems:</p>
+<ul>
+<li><strong>MySQL 8 with limited privileges</strong> returns error 1217 (<code>ROW_IS_REFERENCED</code>) instead of 1451 (<code>ROW_IS_REFERENCED_2</code>), which provides no table name — the cascade crashes with no way to proceed.</li>
+<li><strong>PostgreSQL</strong> aborts the entire transaction on any error, requiring <code>SAVEPOINT</code> / <code>ROLLBACK TO SAVEPOINT</code> round-trips for each failed delete attempt.</li>
+<li><strong>Fragile error parsing</strong> across MySQL versions and privilege levels, where different configurations produce different error message formats.</li>
+</ul>
+<p>In 2.2, <code>Table.delete()</code> and <code>Table.drop()</code> use <code>dj.Diagram</code> internally to compute the dependency graph and walk it in reverse topological order — deleting leaves first, with no trial-and-error needed. The user-facing behavior of <code>Table.delete()</code> is unchanged. The Diagram's <code>cascade()</code> and <code>preview()</code> methods are available as a public inspection API for understanding cascade impact before executing.</p>
+<h3 id="the-preview-then-execute-pattern">The Preview-Then-Execute Pattern<a class="headerlink" href="#the-preview-then-execute-pattern" title="Permanent link">&para;</a></h3>
+<p>The key benefit of the diagram-level API is the ability to build a cascade explicitly, inspect it, and then execute via <code>Table.delete()</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Build the dependency graph and inspect the cascade</span>
+<span class="n">diag</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">Diagram</span><span class="p">(</span><span class="n">schema</span><span class="p">)</span>
+<span class="n">restricted</span> <span class="o">=</span> <span class="n">diag</span><span class="o">.</span><span class="n">cascade</span><span class="p">(</span><span class="n">Session</span> <span class="o">&amp;</span> <span class="p">{</span><span class="s1">&#39;subject_id&#39;</span><span class="p">:</span> <span class="s1">&#39;M001&#39;</span><span class="p">})</span>
+
+<span class="c1"># Inspect: what tables and how many rows would be affected?</span>
+<span class="n">counts</span> <span class="o">=</span> <span class="n">restricted</span><span class="o">.</span><span class="n">preview</span><span class="p">()</span>
+<span class="c1"># {&#39;`lab`.`session`&#39;: 3, &#39;`lab`.`trial`&#39;: 45, &#39;`lab`.`processed_data`&#39;: 45}</span>
+
+<span class="c1"># Execute via Table.delete() after reviewing the blast radius</span>
+<span class="p">(</span><span class="n">Session</span> <span class="o">&amp;</span> <span class="p">{</span><span class="s1">&#39;subject_id&#39;</span><span class="p">:</span> <span class="s1">&#39;M001&#39;</span><span class="p">})</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">prompt</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</code></pre></div>
+<p>This is valuable when working with unfamiliar pipelines, large datasets, or multi-schema dependencies where the cascade impact is not immediately obvious.</p>
+<h3 id="two-propagation-modes">Two Propagation Modes<a class="headerlink" href="#two-propagation-modes" title="Permanent link">&para;</a></h3>
+<p>The diagram supports two restriction propagation modes designed for fundamentally different tasks.</p>
+<p><strong><code>cascade()</code> prepares a delete.</strong> It takes a single restricted table expression, propagates the restriction downstream through all descendants, and <strong>trims the diagram</strong> to the resulting subgraph — ancestors and unrelated tables are removed entirely. Convergence uses OR: a descendant row is marked for deletion if <em>any</em> ancestor path reaches it, because if any reason exists to remove a row, it should be removed. <code>cascade()</code> is one-shot and is always followed by <code>preview()</code> or <code>delete()</code>.</p>
+<p>When the cascade encounters a part table whose master is not yet included in the cascade, the behavior depends on the <code>part_integrity</code> setting. With <code>"enforce"</code> (the default), <code>delete()</code> raises an error if part rows would be deleted without their master — preventing orphaned master rows. With <code>"cascade"</code>, the restriction propagates <em>upward</em> from the part to its master: the restricted part rows identify which master rows are affected, those masters receive a restriction, and that restriction then propagates back downstream to all sibling parts — deleting the entire compositional unit, not just the originally matched part rows.</p>
+<p><strong><code>restrict()</code> selects a data subset.</strong> It propagates a restriction downstream but <strong>preserves the full diagram</strong>, allowing <code>restrict()</code> to be called again from a different seed table. This makes it possible to build up multi-condition subsets incrementally — for example, restricting by species from one table and by date from another. Convergence uses AND: a descendant row is included only if <em>all</em> restricted ancestors match, because an export should contain only rows satisfying every condition. After chaining restrictions, use <code>prune()</code> to remove empty tables and <code>preview()</code> to inspect the result.</p>
+<p>The two modes are mutually exclusive on the same diagram — DataJoint raises an error if you attempt to mix <code>cascade()</code> and <code>restrict()</code>, or if you call <code>cascade()</code> more than once. This prevents accidental mixing of incompatible semantics: a delete diagram should never be reused for subsetting, and vice versa.</p>
+<h3 id="pruning-empty-tables">Pruning Empty Tables<a class="headerlink" href="#pruning-empty-tables" title="Permanent link">&para;</a></h3>
+<p>After applying restrictions, some tables in the diagram may have zero matching rows. The <code>prune()</code> method removes these tables from the diagram, leaving only the subgraph with actual data:</p>
+<div class="highlight"><pre><span></span><code><span class="n">export</span> <span class="o">=</span> <span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Diagram</span><span class="p">(</span><span class="n">schema</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">restrict</span><span class="p">(</span><span class="n">Subject</span> <span class="o">&amp;</span> <span class="p">{</span><span class="s1">&#39;species&#39;</span><span class="p">:</span> <span class="s1">&#39;mouse&#39;</span><span class="p">})</span>
+    <span class="o">.</span><span class="n">restrict</span><span class="p">(</span><span class="n">Session</span> <span class="o">&amp;</span> <span class="s1">&#39;session_date &gt; &quot;2024-01-01&quot;&#39;</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">prune</span><span class="p">())</span>
+
+<span class="n">export</span><span class="o">.</span><span class="n">preview</span><span class="p">()</span>   <span class="c1"># only tables with matching rows</span>
+<span class="n">export</span>             <span class="c1"># visualize the export subgraph</span>
+</code></pre></div>
+<p>Without prior restrictions, <code>prune()</code> removes physically empty tables. This is useful for understanding which parts of a pipeline are populated.</p>
+<h3 id="architecture">Architecture<a class="headerlink" href="#architecture" title="Permanent link">&para;</a></h3>
+<p><code>Table.delete()</code> constructs a <code>Diagram</code> internally, calls <code>cascade()</code> to compute the affected subgraph, then executes the delete itself in reverse topological order. The Diagram is purely a graph computation and inspection tool — it computes the cascade and provides <code>preview()</code>, but all mutation logic (transactions, SQL execution, prompts) lives in <code>Table.delete()</code> and <code>Table.drop()</code>.</p>
+<h3 id="advantages-over-error-driven-cascade">Advantages over Error-Driven Cascade<a class="headerlink" href="#advantages-over-error-driven-cascade" title="Permanent link">&para;</a></h3>
+<p>The graph-driven approach resolves every known limitation of the prior error-driven cascade:</p>
+<table>
+<thead>
+<tr>
+<th>Scenario</th>
+<th>Error-driven (prior)</th>
+<th>Graph-driven (2.2)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>MySQL 8 + limited privileges</td>
+<td>Crashes (error 1217, no table name)</td>
+<td>Works — no error parsing needed</td>
+</tr>
+<tr>
+<td>PostgreSQL</td>
+<td>Savepoint overhead per attempt</td>
+<td>No errors triggered</td>
+</tr>
+<tr>
+<td>Multiple FKs to same child</td>
+<td>One-at-a-time via retry loop</td>
+<td>All paths resolved upfront</td>
+</tr>
+<tr>
+<td>Part integrity enforcement</td>
+<td>Post-hoc check after delete</td>
+<td>Data-driven post-check (no false positives)</td>
+</tr>
+<tr>
+<td>Unloaded schemas</td>
+<td>Crash with opaque error</td>
+<td>Clear error: "activate schema X"</td>
+</tr>
+<tr>
+<td>Reusability</td>
+<td>Delete-only</td>
+<td>Delete, drop, export, prune</td>
+</tr>
+<tr>
+<td>Inspectability</td>
+<td>Opaque recursive cascade</td>
+<td><code>preview()</code> / <code>dry_run</code> before executing</td>
+</tr>
+</tbody>
+</table>
 <h2 id="see-also">See Also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
 <ul>
 <li><a href="../../how-to/use-instances/">Use Isolated Instances</a> — Task-oriented guide</li>
 <li><a href="../../tutorials/advanced/instances/">Working with Instances</a> — Step-by-step tutorial</li>
 <li><a href="../../reference/configuration/">Configuration Reference</a> — Thread-safe mode settings</li>
 <li><a href="../../how-to/configure-database/">Configure Database</a> — Connection setup</li>
+<li><a href="../../reference/specs/diagram/">Diagram Specification</a> — Full reference for diagram operations</li>
+<li><a href="../../how-to/delete-data/">Delete Data</a> — Task-oriented delete guide</li>
 </ul>
 
 

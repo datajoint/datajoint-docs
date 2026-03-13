@@ -21,7 +21,7 @@
       
       
       <link rel="icon" href="../../../assets/images/company-logo-blue.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.2">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.5">
     
     
       
@@ -7119,6 +7119,10 @@ Delete: Remove entities and all dependent data (cascading)
 1. Identify all tables with foreign keys referencing target
 2. Recursively delete matching rows in child tables
 3. Delete rows in target table</p>
+<div class="admonition version-added">
+<p class="admonition-title">New in 2.2</p>
+<p><code>Table.delete()</code> now uses graph-driven cascade internally via <code>dj.Diagram</code>. User-facing behavior is unchanged — the same parameters and return values apply. For direct control over the cascade (preview, multi-schema operations), use the <a href="../diagram/#operational-methods">Diagram operational methods</a>.</p>
+</div>
 <h3 id="43-basic-usage">4.3 Basic Usage<a class="headerlink" href="#43-basic-usage" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># Delete specific rows</span>
 <span class="p">(</span><span class="n">Subject</span> <span class="o">&amp;</span> <span class="p">{</span><span class="s2">&quot;subject_id&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">})</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
