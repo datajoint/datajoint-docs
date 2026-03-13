@@ -212,7 +212,7 @@ diag = dj.Diagram(schema)
 restricted = diag.cascade(Session & {'subject_id': 'M001'})
 
 # 2. Preview: see affected tables and row counts
-counts = restricted.preview()
+counts = restricted.counts()
 # {'`lab`.`session`': 3, '`lab`.`trial`': 45, '`lab`.`processed_data`': 45}
 
 # 3. Visualize the cascade subgraph (in Jupyter)
@@ -226,7 +226,7 @@ restricted
 
 - **Preview blast radius**: Understand what a cascade delete will affect before committing
 - **Multi-schema inspection**: Build a diagram spanning multiple schemas to visualize cascade impact
-- **Programmatic control**: Use `preview()` return values to make decisions in automated workflows
+- **Programmatic control**: Use `counts()` return values to make decisions in automated workflows
 
 For simple single-table deletes, `(Table & restriction).delete()` remains the simplest approach. The diagram API is for when you need more visibility before executing.
 

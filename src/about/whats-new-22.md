@@ -213,7 +213,7 @@ In prior versions, `dj.Diagram` existed solely for visualization — drawing the
 - **PostgreSQL** aborts the entire transaction on any error, requiring `SAVEPOINT` / `ROLLBACK TO SAVEPOINT` round-trips for each failed delete attempt.
 - **Fragile error parsing** across MySQL versions and privilege levels, where different configurations produce different error message formats.
 
-In 2.2, `Table.delete()` and `Table.drop()` use `dj.Diagram` internally to compute the dependency graph and walk it in reverse topological order — deleting leaves first, with no trial-and-error needed. The user-facing behavior of `Table.delete()` is unchanged. The Diagram's `cascade()` and `preview()` methods are available as a public inspection API for understanding cascade impact before executing.
+In 2.2, `Table.delete()` and `Table.drop()` use `dj.Diagram` internally to compute the dependency graph and walk it in reverse topological order — deleting leaves first, with no trial-and-error needed. The user-facing behavior of `Table.delete()` is unchanged. The Diagram's `cascade()` and `counts()` methods are available as a public inspection API for understanding cascade impact before executing.
 
 ### The Preview-Then-Execute Pattern
 
@@ -225,7 +225,7 @@ diag = dj.Diagram(schema)
 restricted = diag.cascade(Session & {'subject_id': 'M001'})
 
 # Inspect: what tables and how many rows would be affected?
-counts = restricted.preview()
+counts = restricted.counts()
 # {'`lab`.`session`': 3, '`lab`.`trial`': 45, '`lab`.`processed_data`': 45}
 
 # Execute via Table.delete() after reviewing the blast radius
@@ -238,11 +238,11 @@ This is valuable when working with unfamiliar pipelines, large datasets, or mult
 
 The diagram supports two restriction propagation modes designed for fundamentally different tasks.
 
-**`cascade()` prepares a delete.** It takes a single restricted table expression, propagates the restriction downstream through all descendants, and **trims the diagram** to the resulting subgraph — ancestors and unrelated tables are removed entirely. Convergence uses OR: a descendant row is marked for deletion if *any* ancestor path reaches it, because if any reason exists to remove a row, it should be removed. `cascade()` is one-shot and is always followed by `preview()` or `delete()`.
+**`cascade()` prepares a delete.** It takes a single restricted table expression, propagates the restriction downstream through all descendants, and **trims the diagram** to the resulting subgraph — ancestors and unrelated tables are removed entirely. Convergence uses OR: a descendant row is marked for deletion if *any* ancestor path reaches it, because if any reason exists to remove a row, it should be removed. `cascade()` is one-shot and is always followed by `counts()` or `delete()`.
 
 When the cascade encounters a part table whose master is not yet included in the cascade, the behavior depends on the `part_integrity` setting. With `"enforce"` (the default), `delete()` raises an error if part rows would be deleted without their master — preventing orphaned master rows. With `"cascade"`, the restriction propagates *upward* from the part to its master: the restricted part rows identify which master rows are affected, those masters receive a restriction, and that restriction then propagates back downstream to all sibling parts — deleting the entire compositional unit, not just the originally matched part rows.
 
-**`restrict()` selects a data subset.** It propagates a restriction downstream but **preserves the full diagram**, allowing `restrict()` to be called again from a different seed table. This makes it possible to build up multi-condition subsets incrementally — for example, restricting by species from one table and by date from another. Convergence uses AND: a descendant row is included only if *all* restricted ancestors match, because an export should contain only rows satisfying every condition. After chaining restrictions, use `prune()` to remove empty tables and `preview()` to inspect the result.
+**`restrict()` selects a data subset.** It propagates a restriction downstream but **preserves the full diagram**, allowing `restrict()` to be called again from a different seed table. This makes it possible to build up multi-condition subsets incrementally — for example, restricting by species from one table and by date from another. Convergence uses AND: a descendant row is included only if *all* restricted ancestors match, because an export should contain only rows satisfying every condition. After chaining restrictions, use `prune()` to remove empty tables and `counts()` to inspect the result.
 
 The two modes are mutually exclusive on the same diagram — DataJoint raises an error if you attempt to mix `cascade()` and `restrict()`, or if you call `cascade()` more than once. This prevents accidental mixing of incompatible semantics: a delete diagram should never be reused for subsetting, and vice versa.
 
@@ -256,7 +256,7 @@ export = (dj.Diagram(schema)
     .restrict(Session & 'session_date > "2024-01-01"')
     .prune())
 
-export.preview()   # only tables with matching rows
+export.counts()    # only tables with matching rows
 export             # visualize the export subgraph
 ```
 
@@ -312,7 +312,7 @@ Each yielded `FreeTable` carries any cascade or restrict conditions that have be
 
 ### Architecture
 
-`Table.delete()` constructs a `Diagram` internally, calls `cascade()` to compute the affected subgraph, then iterates `reversed(diagram)` to delete leaves first. The Diagram is purely a graph computation and inspection tool — it computes the cascade and provides `preview()` and iteration, but all mutation logic (transactions, SQL execution, prompts) lives in `Table.delete()` and `Table.drop()`.
+`Table.delete()` constructs a `Diagram` internally, calls `cascade()` to compute the affected subgraph, then iterates `reversed(diagram)` to delete leaves first. The Diagram is purely a graph computation and inspection tool — it computes the cascade and provides `counts()` and iteration, but all mutation logic (transactions, SQL execution, prompts) lives in `Table.delete()` and `Table.drop()`.
 
 ### Advantages over Error-Driven Cascade
 
@@ -326,7 +326,7 @@ The graph-driven approach resolves every known limitation of the prior error-dri
 | Part integrity enforcement | Post-hoc check after delete | Data-driven post-check (no false positives) |
 | Unloaded schemas | Crash with opaque error | Clear error: "activate schema X" |
 | Reusability | Delete-only | Delete, drop, export, prune |
-| Inspectability | Opaque recursive cascade | `preview()` / `dry_run` before executing |
+| Inspectability | Opaque recursive cascade | `counts()` / `dry_run` before executing |
 
 ## See Also
 
