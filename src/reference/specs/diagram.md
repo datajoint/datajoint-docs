@@ -231,6 +231,19 @@ export.preview()   # only tables with matching rows
 export             # visualize the export subgraph
 ```
 
+### Iteration
+
+Diagrams support iteration in topological order:
+
+| Method | Order | Use Case |
+|--------|-------|----------|
+| `for ft in diagram` | Parents first | Data export, inspection |
+| `for ft in reversed(diagram)` | Leaves first | Cascade delete, drop |
+
+Each iteration yields a `FreeTable` with any cascade or restrict conditions applied. Alias nodes are skipped. Only nodes in the diagram's visible set (`nodes_to_show`) are yielded.
+
+`Table.delete()` and `Table.drop()` use `reversed(diagram)` internally to execute mutations in safe dependency order.
+
 ### Restriction Propagation
 
 When `cascade()` or `restrict()` propagates a restriction from a parent table to a child table, one of three rules applies depending on the foreign key relationship:

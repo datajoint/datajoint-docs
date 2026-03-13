@@ -294,9 +294,25 @@ Session.drop(dry_run=True)
 
 If a descendant table lives in a schema that hasn't been activated, the graph-driven delete won't know about it. When the final `DELETE` fails with a foreign key error, DataJoint catches it and produces an actionable error message identifying which schema needs to be activated — rather than the opaque crash of the prior implementation.
 
+### Iteration API
+
+Diagrams support Python's iteration protocol, yielding `FreeTable` objects in topological order:
+
+```python
+# Forward iteration (parents first) — useful for export/inspection
+for ft in diagram:
+    print(ft.full_table_name, len(ft))
+
+# Reverse iteration (leaves first) — used by delete and drop
+for ft in reversed(diagram):
+    ft.delete_quick()
+```
+
+Each yielded `FreeTable` carries any cascade or restrict conditions that have been applied. `Table.delete()` and `Table.drop()` use `reversed(diagram)` internally, replacing the manual `topo_sort()` loops from prior implementations.
+
 ### Architecture
 
-`Table.delete()` constructs a `Diagram` internally, calls `cascade()` to compute the affected subgraph, then executes the delete itself in reverse topological order. The Diagram is purely a graph computation and inspection tool — it computes the cascade and provides `preview()`, but all mutation logic (transactions, SQL execution, prompts) lives in `Table.delete()` and `Table.drop()`.
+`Table.delete()` constructs a `Diagram` internally, calls `cascade()` to compute the affected subgraph, then iterates `reversed(diagram)` to delete leaves first. The Diagram is purely a graph computation and inspection tool — it computes the cascade and provides `preview()` and iteration, but all mutation logic (transactions, SQL execution, prompts) lives in `Table.delete()` and `Table.drop()`.
 
 ### Advantages over Error-Driven Cascade
 
