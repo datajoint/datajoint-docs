@@ -189,8 +189,50 @@ count = (Subject & restriction).delete(prompt=False)
 print(f"Deleted {count} subjects")
 ```
 
+## Inspecting Cascade Before Deleting
+
+!!! version-added "New in 2.2"
+    Cascade inspection via `dj.Diagram` was added in DataJoint 2.2.
+
+For a quick preview, `table.delete(dry_run=True)` returns the affected row counts without deleting anything:
+
+```python
+# Quick preview of what would be deleted
+(Session & {'subject_id': 'M001'}).delete(dry_run=True)
+# {'`lab`.`session`': 3, '`lab`.`trial`': 45, '`lab`.`processed_data`': 45}
+```
+
+For more complex scenarios — working across schemas, chaining multiple restrictions, or visualizing the dependency graph — use `dj.Diagram` to build and inspect the cascade explicitly:
+
+```python
+import datajoint as dj
+
+# 1. Build the dependency graph and apply cascade restriction
+diag = dj.Diagram(schema)
+restricted = diag.cascade(Session & {'subject_id': 'M001'})
+
+# 2. Preview: see affected tables and row counts
+counts = restricted.preview()
+# {'`lab`.`session`': 3, '`lab`.`trial`': 45, '`lab`.`processed_data`': 45}
+
+# 3. Visualize the cascade subgraph (in Jupyter)
+restricted
+
+# 4. Execute via Table.delete() after reviewing
+(Session & {'subject_id': 'M001'}).delete(prompt=False)
+```
+
+### When to Use
+
+- **Preview blast radius**: Understand what a cascade delete will affect before committing
+- **Multi-schema inspection**: Build a diagram spanning multiple schemas to visualize cascade impact
+- **Programmatic control**: Use `preview()` return values to make decisions in automated workflows
+
+For simple single-table deletes, `(Table & restriction).delete()` remains the simplest approach. The diagram API is for when you need more visibility before executing.
+
 ## See Also
 
+- [Diagram Specification](../reference/specs/diagram.md) — Full reference for diagram operations
 - [Master-Part Tables](master-part.ipynb) — Compositional data patterns
 - [Model Relationships](model-relationships.ipynb) — Foreign key patterns
 - [Insert Data](insert-data.md) — Adding data to tables

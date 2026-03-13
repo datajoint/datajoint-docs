@@ -117,6 +117,147 @@ dj.Diagram(Subject) + dj.Diagram(analysis).collapse()
 
 ---
 
+## Operational Methods
+
+!!! version-added "New in 2.2"
+    Operational methods (`cascade`, `restrict`, `preview`, `prune`) were added in DataJoint 2.2.
+
+Diagrams can propagate restrictions through the dependency graph and inspect affected data using the graph structure. These methods turn Diagram from a visualization tool into a graph computation and inspection component. All mutation operations (delete, drop) are executed by `Table.delete()` and `Table.drop()`, which use Diagram internally.
+
+### `cascade()`
+
+```python
+diag.cascade(table_expr, part_integrity="enforce")
+```
+
+Prepare a cascading delete. Starting from a restricted table expression, propagate the restriction downstream through all descendants using **OR** semantics — a descendant row is marked for deletion if *any* ancestor path reaches it. The returned Diagram is **trimmed** to the cascade subgraph: only the seed table and its descendants remain; all ancestors and unrelated tables are removed. The trimmed diagram is ready for `preview()` and `delete()`.
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `table_expr` | QueryExpression | — | A restricted table expression (e.g., `Session & 'subject_id=1'`) |
+| `part_integrity` | str | `"enforce"` | Master-part integrity policy |
+
+**Returns:** New `Diagram` containing only the seed table and its descendants, with cascade restrictions applied.
+
+**Constraints:**
+
+- **One-shot** — can only be called once on an unrestricted Diagram
+- Mutually exclusive with `restrict()`
+- `table_expr.full_table_name` must be a node in the diagram
+
+**`part_integrity` values:**
+
+| Value | Behavior |
+|-------|----------|
+| `"enforce"` | Error if parts would be deleted before masters |
+| `"ignore"` | Allow deleting parts without masters |
+| `"cascade"` | Propagate restriction upward from part to master, then re-propagate downstream to all sibling parts |
+
+With `"cascade"`, the restriction flows **upward** from a part table to its master: the restricted part rows identify which master rows are affected, those masters receive a restriction, and that restriction propagates back downstream through the normal cascade — deleting the entire compositional unit (master + all parts), not just the originally matched part rows.
+
+```python
+# Build a cascade from a restricted table
+diag = dj.Diagram(schema)
+restricted = diag.cascade(Session & {'subject_id': 'M001'})
+```
+
+### `restrict()`
+
+```python
+diag.restrict(table_expr)
+```
+
+Select a subset of data for export or inspection. Starting from a restricted table expression, propagate the restriction downstream through all descendants using **AND** semantics — a descendant row is included only if *all* restricted ancestors match. The full diagram is preserved (ancestors, unrelated tables) so that `restrict()` can be called again from a different seed table, building up a multi-condition subset incrementally.
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `table_expr` | QueryExpression | — | A restricted table expression |
+
+**Returns:** New `Diagram` with restrict conditions applied. The graph is not trimmed.
+
+**Constraints:**
+
+- **Chainable** — call multiple times to add conditions from different seed tables
+- Mutually exclusive with `cascade()`
+- `table_expr.full_table_name` must be a node in the diagram
+
+```python
+# Chain multiple restrictions (AND semantics)
+diag = dj.Diagram(schema)
+restricted = (diag
+    .restrict(Subject & {'species': 'mouse'})
+    .restrict(Session & 'session_date > "2024-01-01"'))
+```
+
+### `preview()`
+
+```python
+diag.preview()
+```
+
+Show affected tables and row counts without modifying data. Works with both `cascade()` and `restrict()` restrictions.
+
+**Returns:** `dict[str, int]` — mapping of full table names to affected row counts.
+
+**Requires:** `cascade()` or `restrict()` must be called first.
+
+```python
+diag = dj.Diagram(schema)
+restricted = diag.cascade(Session & {'subject_id': 'M001'})
+counts = restricted.preview()
+# {'`lab`.`session`': 3, '`lab`.`trial`': 45, '`lab`.`processed_data`': 45}
+```
+
+### `prune()`
+
+```python
+diag.prune()
+```
+
+Remove tables with zero matching rows from the diagram view. This only affects the diagram object — no tables or data are modified in the database. Without prior restrictions, removes physically empty tables from the diagram. With restrictions (`cascade()` or `restrict()`), removes tables where the restricted query yields zero rows.
+
+**Returns:** New `Diagram` with empty tables removed.
+
+**Note:** Queries the database to determine row counts. The underlying graph structure is preserved — subsequent `restrict()` calls can still seed at any table in the schema.
+
+```python
+# Export workflow: restrict, prune, visualize
+export = (dj.Diagram(schema)
+    .restrict(Subject & {'species': 'mouse'})
+    .restrict(Session & 'session_date > "2024-01-01"')
+    .prune())
+
+export.preview()   # only tables with matching rows
+export             # visualize the export subgraph
+```
+
+### Restriction Propagation
+
+When `cascade()` or `restrict()` propagates a restriction from a parent table to a child table, one of three rules applies depending on the foreign key relationship:
+
+**Rule 1 — Direct copy:** When the foreign key is non-aliased and the restriction attributes are a subset of the child's primary key, the restriction is copied directly to the child.
+
+**Rule 2 — Aliased projection:** When the foreign key uses attribute renaming (e.g., `subject_id` → `animal_id`), the parent is projected with the attribute mapping to match the child's column names.
+
+**Rule 3 — Full projection:** When the foreign key is non-aliased but the restriction uses attributes not in the child's primary key, the parent is projected (all attributes) and used as a restriction on the child.
+
+**Convergence behavior:**
+
+When a child table has multiple restricted ancestors, the convergence rule depends on the mode:
+
+- **`cascade()` (OR):** A child row is affected if *any* path from a restricted ancestor reaches it. This is appropriate for delete — if any reason exists to delete a row, it should be deleted.
+- **`restrict()` (AND):** A child row is included only if *all* restricted ancestors match. This is appropriate for export — only rows satisfying every condition are selected.
+
+**Multiple foreign keys to the same parent:**
+
+When a child table references the same parent through multiple foreign keys (e.g., `source_mouse` and `target_mouse` both referencing `Mouse`), these paths always combine with **OR** regardless of the propagation mode. Each foreign key path is an independent reason for the child row to be affected — this is structural, not operation-dependent.
+
+**Unloaded schemas:**
+
+If a descendant table lives in a schema that hasn't been activated (loaded into the dependency graph), the graph-driven delete won't know about it. The final `DELETE` on the parent will fail with a foreign key error. DataJoint catches this and produces an actionable error message identifying which schema needs to be activated.
+
+---
+
 ## Output Methods
 
 ### Graphviz Output
@@ -299,18 +440,23 @@ combined = dj.Diagram.from_sequence([schema1, schema2, schema3])
 
 ## Dependencies
 
-Diagram visualization requires optional dependencies:
+Operational methods (`cascade`, `restrict`, `preview`, `prune`) use `networkx`, which is always installed as a core dependency.
+
+Diagram **visualization** requires optional dependencies:
 
 ```bash
 pip install matplotlib pygraphviz
 ```
 
-If dependencies are missing, `dj.Diagram` displays a warning and provides a stub class.
+If visualization dependencies are missing, `dj.Diagram` displays a warning and provides a stub class. Operational methods remain available regardless.
 
 ---
 
 ## See Also
 
-- [How to Read Diagrams](../../how-to/read-diagrams.ipynb/)
+- [How to Read Diagrams](../../how-to/read-diagrams.ipynb)
+- [Delete Data](../../how-to/delete-data.md) — Cascade inspection and delete workflow
+- [What's New in 2.2](../../explanation/whats-new-22.md) — Motivation and design
+- [Data Manipulation](data-manipulation.md) — Insert, update, delete specification
 - [Query Algebra](query-algebra.md)
 - [Table Declaration](table-declaration.md)

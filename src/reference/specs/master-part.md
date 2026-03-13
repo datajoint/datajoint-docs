@@ -216,10 +216,9 @@ Session.Trial.delete()
 (Session.Trial & condition).delete(part_integrity="cascade")
 ```
 
-**Behavior:**
-- Identifies affected masters
-- Deletes masters (which cascades to ALL their parts)
-- Maintains compositional integrity
+**Behavior:** The restriction propagates **upward** from the part to its master. Specifically, the restricted part rows identify which master rows are affected, and those masters receive a restriction. The master restriction then propagates back **downstream** through the normal cascade, reaching all sibling parts. The result is that the entire compositional unit — master plus all its parts — is deleted, not just the originally restricted part rows.
+
+This upward propagation may trigger further rounds: if the master itself is a part of a higher-level master, the restriction continues upward. The cascade engine iterates until no new restrictions are produced.
 
 ### 4.6 Behavior Matrix
 
