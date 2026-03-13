@@ -8,10 +8,10 @@ Continue processing despite individual failures:
 
 ```python
 # Stop on first error (default)
-ProcessedData.populate()
+SessionAnalysis.populate()
 
 # Log errors but continue
-ProcessedData.populate(suppress_errors=True)
+SessionAnalysis.populate(suppress_errors=True)
 ```
 
 ## View Failed Jobs
@@ -20,10 +20,10 @@ Check the jobs table for errors:
 
 ```python
 # All error jobs
-ProcessedData.jobs.errors
+SessionAnalysis.jobs.errors
 
 # View error details
-for job in ProcessedData.jobs.errors.to_dicts():
+for job in SessionAnalysis.jobs.errors.to_dicts():
     print(f"Key: {job}")
     print(f"Message: {job['error_message']}")
 ```
@@ -33,7 +33,7 @@ for job in ProcessedData.jobs.errors.to_dicts():
 Error stack traces are stored in the jobs table:
 
 ```python
-job = (ProcessedData.jobs.errors & key).fetch1()
+job = (SessionAnalysis.jobs.errors & key).fetch1()
 print(job['error_stack'])
 ```
 
@@ -43,10 +43,10 @@ Clear error status and rerun:
 
 ```python
 # Delete error records to retry
-ProcessedData.jobs.errors.delete()
+SessionAnalysis.jobs.errors.delete()
 
 # Reprocess
-ProcessedData.populate(reserve_jobs=True)
+SessionAnalysis.populate(reserve_jobs=True)
 ```
 
 ## Retry Specific Jobs
@@ -55,10 +55,10 @@ Target specific failed jobs:
 
 ```python
 # Clear one error
-(ProcessedData.jobs & key & "status='error'").delete()
+(SessionAnalysis.jobs & key & "status='error'").delete()
 
 # Retry just that key
-ProcessedData.populate(key, reserve_jobs=True)
+SessionAnalysis.populate(key, reserve_jobs=True)
 ```
 
 ## Ignore Problematic Jobs
@@ -67,10 +67,10 @@ Mark jobs to skip permanently:
 
 ```python
 # Mark job as ignored
-ProcessedData.jobs.ignore(key)
+SessionAnalysis.jobs.ignore(key)
 
 # View ignored jobs
-ProcessedData.jobs.ignored
+SessionAnalysis.jobs.ignored
 ```
 
 ## Error Handling in make()
@@ -79,16 +79,16 @@ Handle expected errors gracefully:
 
 ```python
 @schema
-class ProcessedData(dj.Computed):
+class SessionAnalysis(dj.Computed):
     definition = """
-    -> RawData
+    -> Session
     ---
     result : float64
     """
 
     def make(self, key):
         try:
-            data = (RawData & key).fetch1('data')
+            data = (Session & key).fetch1('data')
             result = risky_computation(data)
         except ValueError as e:
             # Log and skip this key
@@ -117,7 +117,7 @@ def make(self, key):
 Get exception objects for programmatic handling:
 
 ```python
-result = ProcessedData.populate(
+result = SessionAnalysis.populate(
     suppress_errors=True,
     return_exception_objects=True
 )
@@ -133,7 +133,7 @@ for key, exception in result['error_list']:
 Track errors over time:
 
 ```python
-progress = ProcessedData.jobs.progress()
+progress = SessionAnalysis.jobs.progress()
 print(f"Pending: {progress.get('pending', 0)}")
 print(f"Errors: {progress.get('error', 0)}")
 print(f"Success: {progress.get('success', 0)}")

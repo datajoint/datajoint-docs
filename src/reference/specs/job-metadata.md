@@ -318,9 +318,9 @@ def _get_job_version() -> str:
 dj.config.jobs.add_job_metadata = True
 
 @schema
-class ProcessedData(dj.Computed):
+class SessionAnalysis(dj.Computed):
     definition = """
-    -> RawData
+    -> Session
     ---
     result : float
     """
@@ -333,11 +333,11 @@ class ProcessedData(dj.Computed):
 # _job_start_time, _job_duration, _job_version
 
 # User-facing API unaffected:
-ProcessedData().heading.names  # ['raw_data_id', 'result']
-ProcessedData().to_dicts()  # Returns only visible attributes
+SessionAnalysis().heading.names  # ['session_id', 'result']
+SessionAnalysis().to_dicts()  # Returns only visible attributes
 
 # Access hidden attributes explicitly if needed:
-ProcessedData().to_arrays('_job_start_time', '_job_duration', '_job_version')
+SessionAnalysis().to_arrays('_job_start_time', '_job_duration', '_job_version')
 ```
 
 ## Summary of Design Decisions

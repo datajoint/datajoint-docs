@@ -175,7 +175,7 @@ with dj.conn().transaction:
     Session.Trial.insert(corrected_trials)
 
 # 3. Recompute derived data
-ProcessedData.populate()
+SessionAnalysis.populate()
 ```
 
 This ensures all derived data remains consistent with source data.

@@ -199,10 +199,10 @@ For tables created before enabling job metadata:
 from datajoint.migrate import add_job_metadata_columns
 
 # Dry run
-add_job_metadata_columns(ProcessedData, dry_run=True)
+add_job_metadata_columns(SessionAnalysis, dry_run=True)
 
 # Apply
-add_job_metadata_columns(ProcessedData, dry_run=False)
+add_job_metadata_columns(SessionAnalysis, dry_run=False)
 ```
 
 ## Best Practices

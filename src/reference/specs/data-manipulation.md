@@ -357,7 +357,7 @@ About to delete:
   Subject: 1 rows
   Session: 5 rows
   Trial: 150 rows
-  ProcessedData: 150 rows
+  SessionAnalysis: 150 rows
 
 Commit deletes? [yes, No]:
 ```

@@ -7,7 +7,7 @@ Track computation progress and job status.
 Show progress bar during populate:
 
 ```python
-ProcessedData.populate(display_progress=True)
+SessionAnalysis.populate(display_progress=True)
 ```
 
 ## Check Remaining Work
@@ -16,7 +16,7 @@ Count entries left to compute:
 
 ```python
 # What's left to compute
-remaining = ProcessedData.key_source - ProcessedData
+remaining = SessionAnalysis.key_source - SessionAnalysis
 print(f"{len(remaining)} entries remaining")
 ```
 
@@ -25,7 +25,7 @@ print(f"{len(remaining)} entries remaining")
 Get counts by status:
 
 ```python
-progress = ProcessedData.jobs.progress()
+progress = SessionAnalysis.jobs.progress()
 # {'pending': 100, 'reserved': 5, 'error': 3, 'success': 892}
 
 for status, count in progress.items():
@@ -38,19 +38,19 @@ Access jobs by their current status:
 
 ```python
 # Pending jobs (waiting to run)
-ProcessedData.jobs.pending
+SessionAnalysis.jobs.pending
 
 # Currently running
-ProcessedData.jobs.reserved
+SessionAnalysis.jobs.reserved
 
 # Failed jobs
-ProcessedData.jobs.errors
+SessionAnalysis.jobs.errors
 
 # Completed jobs (if keep_completed=True)
-ProcessedData.jobs.completed
+SessionAnalysis.jobs.completed
 
 # Skipped jobs
-ProcessedData.jobs.ignored
+SessionAnalysis.jobs.ignored
 ```
 
 ## View Job Details
@@ -59,10 +59,10 @@ Inspect specific jobs:
 
 ```python
 # All jobs for a key
-(ProcessedData.jobs & key).fetch1()
+(SessionAnalysis.jobs & key).fetch1()
 
 # Recent errors
-ProcessedData.jobs.errors.to_dicts(
+SessionAnalysis.jobs.errors.to_dicts(
     order_by='completed_time DESC',
     limit=10
 )
@@ -73,7 +73,7 @@ ProcessedData.jobs.errors.to_dicts(
 See which workers are processing:
 
 ```python
-for job in ProcessedData.jobs.reserved.to_dicts():
+for job in SessionAnalysis.jobs.reserved.to_dicts():
     print(f"Key: {job}")
     print(f"Host: {job['host']}")
     print(f"PID: {job['pid']}")
@@ -86,7 +86,7 @@ Track how long jobs take:
 
 ```python
 # Average duration of completed jobs
-completed = ProcessedData.jobs.completed.to_arrays('duration')
+completed = SessionAnalysis.jobs.completed.to_arrays('duration')
 print(f"Average: {np.mean(completed):.1f}s")
 print(f"Median: {np.median(completed):.1f}s")
 ```
@@ -112,10 +112,10 @@ This adds hidden attributes to computed tables:
 
 ```python
 import time
-from my_pipeline import ProcessedData
+from my_pipeline import SessionAnalysis
 
 while True:
-    remaining, total = ProcessedData.progress()
+    remaining, total = SessionAnalysis.progress()
 
     print(f"\rProgress: {total - remaining}/{total} ({(total - remaining) / total:.0%})", end='')
 
@@ -130,10 +130,10 @@ For distributed mode with job tracking:
 
 ```python
 import time
-from my_pipeline import ProcessedData
+from my_pipeline import SessionAnalysis
 
 while True:
-    status = ProcessedData.jobs.progress()
+    status = SessionAnalysis.jobs.progress()
 
     print(f"\rPending: {status.get('pending', 0)} | "
           f"Running: {status.get('reserved', 0)} | "
@@ -152,7 +152,7 @@ while True:
 Check multiple tables:
 
 ```python
-tables = [RawData, ProcessedData, Analysis]
+tables = [Session, SessionAnalysis, TrialStats]
 
 for table in tables:
     total = len(table.key_source)
