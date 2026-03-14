@@ -274,20 +274,12 @@ Most users complete Phases 1-2 in a single session. Phases 3-4 only apply if you
 
 ## See Also
 
-### Migration
-- **[Migration Guide](../how-to/migrate-to-v20.md/)** — Complete upgrade instructions
-- [Configuration](../how-to/configure-database.md/) — Setup new configuration system
-
-### Core Concepts
-- [Type System](type-system.md) — Understand the three-tier type architecture
-- [Computation Model](computation-model.md) — Jobs 2.0 and AutoPopulate
-- [Query Algebra](query-algebra.md) — Semantic matching and operators
-
-### Getting Started
-- [Installation](../how-to/installation.md/) — Install DataJoint 2.0
-- [Tutorials](../tutorials/index.md/) — Learn by example
-
-### Reference
-- [Type System Specification](../reference/specs/type-system.md/) — Complete type system details
-- [Codec API](../reference/specs/codec-api.md/) — Build custom codecs
-- [AutoPopulate Specification](../reference/specs/autopopulate.md/) — Jobs 2.0 reference
+- [What's New in 2.1](whats-new-21.md) — Next release
+- [Release Notes (v2.0.0)](https://github.com/datajoint/datajoint-python/releases/tag/v2.0.0) — GitHub changelog
+- **[Migration Guide](../how-to/migrate-to-v20.md)** — Complete upgrade instructions
+- [Configuration](../how-to/configure-database.md) — Setup new configuration system
+- [Type System](../explanation/type-system.md) — Understand the three-tier type architecture
+- [Computation Model](../explanation/computation-model.md) — Jobs 2.0 and AutoPopulate
+- [Query Algebra](../explanation/query-algebra.md) — Semantic matching and operators
+- [Installation](../how-to/installation.md) — Install DataJoint 2.0
+- [Tutorials](../tutorials/index.md) — Learn by example

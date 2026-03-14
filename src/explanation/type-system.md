@@ -269,7 +269,7 @@ result = np.mean(ref)  # Downloads automatically
 Schema-addressed storage for files and folders. Path mirrors the database structure: `{schema}/{table}/{pk}/{attribute}`.
 
 ```python
-class ProcessedData(dj.Computed):
+class RecordingAnalysis(dj.Computed):
     definition = """
     -> Recording
     ---

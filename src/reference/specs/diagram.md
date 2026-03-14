@@ -120,7 +120,7 @@ dj.Diagram(Subject) + dj.Diagram(analysis).collapse()
 ## Operational Methods
 
 !!! version-added "New in 2.2"
-    Operational methods (`cascade`, `restrict`, `preview`, `prune`) were added in DataJoint 2.2.
+    Operational methods (`cascade`, `restrict`, `counts`, `prune`) were added in DataJoint 2.2.
 
 Diagrams can propagate restrictions through the dependency graph and inspect affected data using the graph structure. These methods turn Diagram from a visualization tool into a graph computation and inspection component. All mutation operations (delete, drop) are executed by `Table.delete()` and `Table.drop()`, which use Diagram internally.
 
@@ -130,7 +130,7 @@ Diagrams can propagate restrictions through the dependency graph and inspect aff
 diag.cascade(table_expr, part_integrity="enforce")
 ```
 
-Prepare a cascading delete. Starting from a restricted table expression, propagate the restriction downstream through all descendants using **OR** semantics — a descendant row is marked for deletion if *any* ancestor path reaches it. The returned Diagram is **trimmed** to the cascade subgraph: only the seed table and its descendants remain; all ancestors and unrelated tables are removed. The trimmed diagram is ready for `preview()` and `delete()`.
+Prepare a cascading delete. Starting from a restricted table expression, propagate the restriction downstream through all descendants using **OR** semantics — a descendant row is marked for deletion if *any* ancestor path reaches it. The returned Diagram is **trimmed** to the cascade subgraph: only the seed table and its descendants remain; all ancestors and unrelated tables are removed. The trimmed diagram is ready for `counts()` and `delete()`.
 
 | Parameter | Type | Default | Description |
 |-----------|------|---------|-------------|
@@ -189,13 +189,13 @@ restricted = (diag
     .restrict(Session & 'session_date > "2024-01-01"'))
 ```
 
-### `preview()`
+### `counts()`
 
 ```python
-diag.preview()
+diag.counts()
 ```
 
-Show affected tables and row counts without modifying data. Works with both `cascade()` and `restrict()` restrictions.
+Return affected row counts per table without modifying data. Works with both `cascade()` and `restrict()` restrictions.
 
 **Returns:** `dict[str, int]` — mapping of full table names to affected row counts.
 
@@ -204,7 +204,7 @@ Show affected tables and row counts without modifying data. Works with both `cas
 ```python
 diag = dj.Diagram(schema)
 restricted = diag.cascade(Session & {'subject_id': 'M001'})
-counts = restricted.preview()
+counts = restricted.counts()
 # {'`lab`.`session`': 3, '`lab`.`trial`': 45, '`lab`.`processed_data`': 45}
 ```
 
@@ -227,9 +227,22 @@ export = (dj.Diagram(schema)
     .restrict(Session & 'session_date > "2024-01-01"')
     .prune())
 
-export.preview()   # only tables with matching rows
+export.counts()    # only tables with matching rows
 export             # visualize the export subgraph
 ```
+
+### Iteration
+
+Diagrams support iteration in topological order:
+
+| Method | Order | Use Case |
+|--------|-------|----------|
+| `for ft in diagram` | Parents first | Data export, inspection |
+| `for ft in reversed(diagram)` | Leaves first | Cascade delete, drop |
+
+Each iteration yields a `FreeTable` with any cascade or restrict conditions applied. Alias nodes are skipped. Only nodes in the diagram's visible set (`nodes_to_show`) are yielded.
+
+`Table.delete()` and `Table.drop()` use `reversed(diagram)` internally to execute mutations in safe dependency order.
 
 ### Restriction Propagation
 
@@ -440,7 +453,7 @@ combined = dj.Diagram.from_sequence([schema1, schema2, schema3])
 
 ## Dependencies
 
-Operational methods (`cascade`, `restrict`, `preview`, `prune`) use `networkx`, which is always installed as a core dependency.
+Operational methods (`cascade`, `restrict`, `counts`, `prune`) use `networkx`, which is always installed as a core dependency.
 
 Diagram **visualization** requires optional dependencies:
 
@@ -456,7 +469,7 @@ If visualization dependencies are missing, `dj.Diagram` displays a warning and p
 
 - [How to Read Diagrams](../../how-to/read-diagrams.ipynb)
 - [Delete Data](../../how-to/delete-data.md) — Cascade inspection and delete workflow
-- [What's New in 2.2](../../explanation/whats-new-22.md) — Motivation and design
+- [What's New in 2.2](../../about/whats-new-22.md) — Motivation and design
 - [Data Manipulation](data-manipulation.md) — Insert, update, delete specification
 - [Query Algebra](query-algebra.md)
 - [Table Declaration](table-declaration.md)

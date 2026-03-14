@@ -526,9 +526,9 @@ class BlobCodec(dj.Codec):
 
 Usage:
 ```python
-class ProcessedData(dj.Computed):
+class SessionAnalysis(dj.Computed):
     definition = """
-    -> RawData
+    -> Session
     ---
     small_result : <blob>          # in-table (in database)
     large_result : <blob@>         # in-store (default store)

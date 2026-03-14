@@ -8,10 +8,10 @@ Use `reserve_jobs=True` to enable job coordination:
 
 ```python
 # Single worker (default)
-ProcessedData.populate()
+SessionAnalysis.populate()
 
 # Distributed mode with job reservation
-ProcessedData.populate(reserve_jobs=True)
+SessionAnalysis.populate(reserve_jobs=True)
 ```
 
 ## How It Works
@@ -26,7 +26,7 @@ With `reserve_jobs=True`:
 
 ```python
 # Use multiple processes
-ProcessedData.populate(reserve_jobs=True, processes=4)
+SessionAnalysis.populate(reserve_jobs=True, processes=4)
 ```
 
 Each process:
@@ -42,10 +42,10 @@ Run the same script on multiple machines:
 ```python
 # worker_script.py - run on each machine
 import datajoint as dj
-from my_pipeline import ProcessedData
+from my_pipeline import SessionAnalysis
 
 # Each worker reserves and processes different jobs
-ProcessedData.populate(
+SessionAnalysis.populate(
     reserve_jobs=True,
     display_progress=True,
     suppress_errors=True
@@ -60,13 +60,13 @@ Each auto-populated table has a jobs table (`~~table_name`):
 
 ```python
 # View job status
-ProcessedData.jobs
+SessionAnalysis.jobs
 
 # Filter by status
-ProcessedData.jobs.pending
-ProcessedData.jobs.reserved
-ProcessedData.jobs.errors
-ProcessedData.jobs.completed
+SessionAnalysis.jobs.pending
+SessionAnalysis.jobs.reserved
+SessionAnalysis.jobs.errors
+SessionAnalysis.jobs.completed
 ```
 
 ## Job Statuses
@@ -85,7 +85,7 @@ Sync the job queue with current key_source:
 
 ```python
 # Add new pending jobs, remove stale ones
-result = ProcessedData.jobs.refresh()
+result = SessionAnalysis.jobs.refresh()
 print(f"Added: {result['added']}, Removed: {result['removed']}")
 ```
 
@@ -95,10 +95,10 @@ Control processing order with priorities:
 
 ```python
 # Refresh with specific priority
-ProcessedData.jobs.refresh(priority=1)  # Lower = more urgent
+SessionAnalysis.jobs.refresh(priority=1)  # Lower = more urgent
 
 # Process only high-priority jobs
-ProcessedData.populate(reserve_jobs=True, priority=3)
+SessionAnalysis.populate(reserve_jobs=True, priority=3)
 ```
 
 ## Error Recovery
@@ -107,13 +107,13 @@ Handle failed jobs:
 
 ```python
 # View errors
-errors = ProcessedData.jobs.errors
+errors = SessionAnalysis.jobs.errors
 for job in errors.to_dicts():
     print(f"Key: {job}, Error: {job['error_message']}")
 
 # Clear errors to retry
 errors.delete()
-ProcessedData.populate(reserve_jobs=True)
+SessionAnalysis.populate(reserve_jobs=True)
 ```
 
 ## Orphan Detection
@@ -122,7 +122,7 @@ Jobs from crashed workers are automatically recovered:
 
 ```python
 # Refresh with orphan timeout (seconds)
-ProcessedData.jobs.refresh(orphan_timeout=3600)
+SessionAnalysis.jobs.refresh(orphan_timeout=3600)
 ```
 
 Reserved jobs older than the timeout are reset to pending.
@@ -172,10 +172,10 @@ dj.config.jobs.version_method = "git"
 
 # worker.py - run on each node
 from config import *
-from my_pipeline import ProcessedData
+from my_pipeline import SessionAnalysis
 
 while True:
-    result = ProcessedData.populate(
+    result = SessionAnalysis.populate(
         reserve_jobs=True,
         max_calls=100,
         suppress_errors=True,

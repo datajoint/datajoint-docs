@@ -53,7 +53,7 @@ and scalable.
 
     How DataJoint ensures safe joins through attribute lineage tracking.
 
--   :material-new-box: **[What's New in 2.0](whats-new-2.md)**
+-   :material-new-box: **[What's New in 2.0](../about/whats-new-2.md)**
 
     Major changes, new features, and migration guidance for DataJoint 2.0.
 

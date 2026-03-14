@@ -1,69 +1,64 @@
 # The Relational Workflow Model
 
-DataJoint implements the **Relational Workflow Model**—a paradigm that extends
-relational databases with native support for computational workflows. This model
-defines a new class of databases called **Computational Databases**, where
-computational transformations are first-class citizens of the data model.
+The relational data model has historically been interpreted through two
+conceptual frameworks: Codd's mathematical foundation, which views tables as
+logical predicates, and Chen's Entity-Relationship Model, which views tables
+as entity types and relationships. The relational workflow model introduces a
+third paradigm: **tables represent workflow steps, rows represent workflow
+artifacts, and foreign key dependencies prescribe execution order.** This
+adds an operational dimension absent from both predecessors—the schema
+specifies not only what data exists but how it is derived.
 
-These concepts, along with DataJoint's schema definition language and query algebra,
-were first formalized in [Yatsenko et al., 2018](https://doi.org/10.48550/arXiv.1807.11104).
-
-## The Problem with Traditional Approaches
-
-Traditional relational databases excel at storing and querying data but struggle
-with computational workflows. They can store inputs and outputs, but:
-
-- The database doesn't understand that outputs were *computed from* inputs
-- It doesn't automatically recompute when inputs change
-- It doesn't track provenance
-
-**DataJoint solves these problems by treating your database schema as an
-executable workflow specification.**
+The relational workflow model and its technical innovations are formally
+defined in [Yatsenko & Nguyen, 2026](https://arxiv.org/abs/2602.16585).
+DataJoint's schema definition language and query algebra were first
+formalized in [Yatsenko et al., 2018](https://doi.org/10.48550/arXiv.1807.11104).
 
 ## Three Paradigms Compared
 
-The relational data model has been interpreted through different conceptual
-frameworks, each with distinct strengths and limitations:
-
 | Aspect | Mathematical (Codd) | Entity-Relationship (Chen) | **Relational Workflow (DataJoint)** |
 |--------|---------------------|----------------------------|-------------------------------------|
-| **Core Question** | "What functional dependencies exist?" | "What entity types exist?" | **"When/how are entities created?"** |
-| **Time Dimension** | Not addressed | Not central | **Fundamental** |
-| **Implementation Gap** | High (abstract to SQL) | High (ERM to SQL) | **None (unified approach)** |
-| **Workflow Support** | None | None | **Native workflow modeling** |
+| **Core question** | What functional dependencies exist? | What entity types exist? | **When/how are entities created?** |
+| **Table semantics** | Logical predicate | Entity or relationship | **Workflow step** |
+| **Row semantics** | True proposition | Entity instance | **Workflow artifact** |
+| **Foreign keys** | Referential integrity | Relationship | **Execution order** |
+| **Computation** | Not addressed | Not addressed | **Declared in schema** |
+| **Provenance** | Not addressed | Not addressed | **Structural** |
+| **Implementation gap** | High | High | **None** |
 
 ### Codd's Mathematical Foundation
 
-Edgar F. Codd's original relational model is rooted in predicate calculus and
-set theory. Tables represent logical predicates; rows assert true propositions.
-While mathematically rigorous, this approach requires abstract reasoning that
-doesn't map to intuitive domain thinking.
+Codd's mathematical foundation views tables as logical predicates and rows as
+true propositions—rigorous but abstract.
 
 ### Chen's Entity-Relationship Model
 
-Peter Chen's Entity-Relationship Model (ERM) shifted focus to concrete domain
-modeling—entities and relationships visualized in diagrams. However, ERM:
+Chen's Entity-Relationship Model shifted focus to domain modeling with
+entities, attributes, and relationships—more intuitive, but lacking any
+workflow or computational dimension.
 
-- Creates a gap between conceptual design and SQL implementation
-- Lacks temporal dimension ("when" entities are created)
-- Treats relationships as static connections, not dynamic processes
+## Core Concepts
 
-## The Relational Workflow Model
+### Workflow Steps and Artifacts
 
-The Relational Workflow Model introduces four fundamental concepts:
+Tables are classified into tiers by data entry mode:
 
-### 1. Workflow Entities
+| Tier | Role | `make()` |
+|------|------|----------|
+| **Manual** | Receive direct user entry | No |
+| **Lookup** | Hold reference data | No |
+| **Imported** | Reach out to data sources outside the DataJoint system (instruments, electronic lab notebooks, external databases) | Yes |
+| **Computed** | Derive their contents entirely from upstream DataJoint tables | Yes |
 
-Unlike traditional entities that exist independently, **workflow entities** are
-artifacts of workflow execution—they represent the products of specific
-operations. This temporal dimension allows us to understand not just *what*
-exists, but *when* and *how* it came to exist.
+Imported and Computed tables define computations via `make()` methods. The
+`make()` method specifies how each entity is derived—this computation logic is
+declared within the table definition, making it part of the schema itself
+rather than an external workflow specification.
 
-### 2. Workflow Dependencies
+### Dependencies as Foreign Keys
 
-**Workflow dependencies** extend foreign keys with operational semantics. They
-don't just ensure referential integrity—they prescribe the order of operations.
-Parent entities must be created before child entities.
+Foreign keys define computational dependencies, not only referential integrity.
+The dependency graph is explicit, queryable, and enforced by the database.
 
 ```mermaid
 graph LR
@@ -72,142 +67,102 @@ graph LR
     C --> D[Analysis]
 ```
 
-### 3. Workflow Steps (Table Tiers)
+### Master-Part Relationships
 
-Each table represents a distinct **workflow step** with a specific role:
+Master-part relationships declare transactional grouping directly in the
+schema: the master table represents the workflow step, while part tables hold
+the individual items. Insertions and deletions cascade as a unit, enforcing
+transactional semantics without application code.
 
-```mermaid
-graph TD
-    subgraph "Lookup (Gray)"
-        L[Parameters]
-    end
-    subgraph "Manual (Green)"
-        M[Subject]
-        S[Session]
-    end
-    subgraph "Imported (Blue)"
-        I[Recording]
-    end
-    subgraph "Computed (Red)"
-        C[Analysis]
-    end
+### Directed Acyclic Graph
 
-    L --> C
-    M --> S
-    S --> I
-    I --> C
-```
+Dependencies between tables form a directed acyclic graph (DAG); aggregated
+dependencies between schemas likewise form a DAG. Unlike task DAGs in
+workflow managers, these are *relational schema* DAGs—they define data
+structure and relationships, not just execution steps.
 
-| Tier | Role | Examples |
-|------|------|----------|
-| **Lookup** | Reference data, parameters | Species, analysis methods |
-| **Manual** | Human-entered observations | Subjects, sessions |
-| **Imported** | Automated data acquisition | Recordings, images |
-| **Computed** | Derived results | Analyses, statistics |
+## Active Schemas
 
-### 4. Directed Acyclic Graph (DAG)
+The key distinction from classical models: traditional schemas are
+*passive*—containers for data produced by external processes. In the
+relational workflow model, the schema is *active*—Computed tables declare how
+their contents are derived, making the schema itself the workflow
+specification. Schemas are defined as Python classes, and entire pipelines are
+organized as self-contained code repositories—version-controlled, testable,
+and deployable using standard software engineering practices.
 
-The schema forms a **DAG** that:
+A useful analogy: electronic spreadsheets unified data and computation—cells
+with values alongside cells with formulas. Yet this integration never
+penetrated relational databases in their 50+ years of history. The relational
+workflow model brings to databases what spreadsheets brought to tabular
+calculation: the recognition that data and the computations that produce it
+belong together. The analogy has limits: spreadsheets' coupling is also the
+source of their well-known fragility. DataJoint addresses this through formal
+schema constraints and explicit dependency declaration rather than ad-hoc cell
+references.
 
-- Prohibits circular dependencies
-- Ensures valid execution sequences
-- Enables efficient parallel execution
-- Supports resumable computation
+## Workflow Normalization
 
-## The Workflow Normalization Principle
+> **"Every table represents an entity type created at a specific workflow
+> step, and all attributes describe that entity as it exists at that step."**
 
-> **"Every table represents an entity type that is created at a specific step
-> in a workflow, and all attributes describe that entity as it exists at that
-> workflow step."**
+Database normalization decomposes data into tables to eliminate redundancy.
+Classical normalization theory achieves this through normal forms based on
+functional dependencies. Entity normalization asks whether each attribute
+describes the entity identified by the primary key. Workflow normalization
+extends these principles with a temporal dimension.
 
-This principle extends entity normalization with temporal and operational
-dimensions.
+A Session table contains attributes known when the session is entered (date,
+experimenter, subject). Analysis parameters determined later belong in
+Computed tables that depend on Session. This discipline prevents tables that
+accumulate attributes from different workflow stages, obscuring provenance and
+complicating updates.
 
-## Why This Matters
+## Entity Integrity
 
-### Unified Design and Implementation
+All data is represented as well-formed entity sets with primary keys
+identifying each entity uniquely. This eliminates redundancy and ensures
+consistent updates.
 
-Unlike the ERM-SQL gap, DataJoint provides unified:
+When upstream data is deleted, dependent results cascade-delete
+automatically—including associated objects in external storage. To correct
+errors, you delete, reinsert, and recompute, ensuring every result represents
+a consistent computation from valid inputs.
 
-- **Diagramming** — Schema diagrams reflect actual structure
-- **Definition** — Table definitions are executable code
-- **Querying** — Operators understand workflow semantics
+## Query Algebra
 
-No translation needed between conceptual design and implementation.
-
-### Temporal and Operational Awareness
-
-The model captures the dynamic nature of workflows:
-
-- Data processing sequences
-- Computational dependencies
-- Operation ordering
-
-### Immutability and Provenance
-
-Workflow artifacts are immutable once created:
-
-- Preserves execution history
-- Maintains data provenance
-- Enables reproducible science
-
-When you delete upstream data, dependent results cascade-delete automatically.
-To correct errors, you delete, reinsert, and recompute—ensuring every result
-represents a consistent computation from valid inputs.
-
-### Workflow Integrity
-
-The DAG structure guarantees:
-
-- No circular dependencies
-- Valid operation sequences
-- Enforced temporal order
-- Computational validity
-
-## Query Algebra with Workflow Semantics
-
-DataJoint's five operators provide a complete query algebra:
+DataJoint provides a five-operator algebra:
 
 | Operator | Symbol | Purpose |
 |----------|--------|---------|
-| **Restriction** | `&` | Filter entities |
-| **Join** | `*` | Combine from converging paths |
-| **Projection** | `.proj()` | Select/compute attributes |
-| **Aggregation** | `.aggr()` | Summarize groups |
-| **Union** | `+` | Combine parallel branches |
+| **Restrict** | `&` | Filter entities by attribute values or membership in other relations |
+| **Project** | `.proj()` | Select and rename attributes, compute derived values |
+| **Join** | `*` | Combine related entities across relations |
+| **Aggregate** | `.aggr()` | Group entities and compute summary statistics |
+| **Union** | `+` | Combine entity sets with compatible structure |
 
-These operators:
-
-- Take entity sets as input, produce entity sets as output
-- Preserve entity integrity
-- Respect declared dependencies (no ambiguous joins)
+The algebra achieves *algebraic closure*: every operator produces a valid
+entity set with a well-defined primary key, enabling unlimited composition.
+This preservation of entity integrity—every query result is itself a proper
+entity set with clear identity—distinguishes DataJoint's algebra from SQL,
+where query results lack both a well-defined primary key and a clear entity
+type.
 
 ## From Transactions to Transformations
 
-The Relational Workflow Model represents a conceptual shift:
-
 | Traditional View | Workflow View |
 |------------------|---------------|
-| Tables store data | Entity sets are workflow steps |
-| Rows are records | Entities are execution instances |
-| Foreign keys enforce consistency | Dependencies specify information flow |
+| Tables store data | Tables represent workflow steps |
+| Rows are records | Rows are workflow artifacts |
+| Foreign keys enforce consistency | Foreign keys prescribe execution order |
 | Updates modify state | Computations create new states |
 | Schemas organize storage | Schemas specify pipelines |
 | Queries retrieve data | Queries trace provenance |
 
-This makes DataJoint feel less like a traditional database and more like a
-**workflow engine with persistent state**—one that maintains computational
-validity while supporting scientific flexibility.
-
 ## Summary
 
-The Relational Workflow Model:
-
-1. **Extends** relational theory (doesn't replace it)
-2. **Adds** temporal and operational semantics
-3. **Eliminates** the design-implementation gap
-4. **Enables** reproducible computational workflows
-5. **Maintains** mathematical rigor
-
-It's not a departure from relational databases—it's their evolution for
-computational workflows.
+The relational workflow model offers a new way to understand relational
+databases—not merely as storage systems but as computational substrates. By
+interpreting tables as workflow steps and foreign keys as execution
+dependencies, the schema becomes a complete specification of how data is
+derived, not just what data exists.
