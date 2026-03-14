@@ -1,8 +1,10 @@
 # The Relational Workflow Model
 
 The relational data model has historically been interpreted through two
-conceptual frameworks. The relational workflow model introduces a third
-paradigm: **tables represent workflow steps, rows represent workflow
+conceptual frameworks: Codd's mathematical foundation, which views tables as
+logical predicates, and Chen's Entity-Relationship Model, which views tables
+as entity types and relationships. The relational workflow model introduces a
+third paradigm: **tables represent workflow steps, rows represent workflow
 artifacts, and foreign key dependencies prescribe execution order.** This
 adds an operational dimension absent from both predecessors—the schema
 specifies not only what data exists but how it is derived.
