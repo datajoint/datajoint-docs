@@ -196,23 +196,20 @@ print(f"Deleted {count} subjects")
 
 With `safemode=True` (the default), `delete()` provides a built-in safety workflow: it executes the cascade inside a transaction, shows all affected tables and row counts, and asks **"Commit deletes?"** before committing. Declining rolls back all changes.
 
-For programmatic preview without executing, or for complex scenarios — working across schemas, chaining multiple restrictions, or visualizing the dependency graph — use `dj.Diagram` to build and inspect the cascade explicitly:
+For programmatic preview without executing, or for complex scenarios — working across schemas or visualizing the dependency graph — use `Diagram.cascade()` to inspect the cascade:
 
 ```python
 import datajoint as dj
 
-# 1. Build the dependency graph and apply cascade restriction
-diag = dj.Diagram(schema)
-restricted = diag.cascade(Session & {'subject_id': 'M001'})
-
-# 2. Preview: see affected tables and row counts
-counts = restricted.counts()
+# 1. Preview: see affected tables and row counts (across all loaded schemas)
+cascade = dj.Diagram.cascade(Session & {'subject_id': 'M001'})
+counts = cascade.counts()
 # {'`lab`.`session`': 3, '`lab`.`trial`': 45, '`lab`.`processed_data`': 45}
 
-# 3. Visualize the cascade subgraph (in Jupyter)
-restricted
+# 2. Visualize the cascade subgraph (in Jupyter)
+cascade
 
-# 4. Execute via Table.delete() after reviewing
+# 3. Execute via Table.delete() after reviewing
 (Session & {'subject_id': 'M001'}).delete(prompt=False)
 ```
 

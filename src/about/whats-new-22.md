@@ -217,15 +217,11 @@ In 2.2, `Table.delete()` and `Table.drop()` use `dj.Diagram` internally to compu
 
 ### The Preview-Then-Execute Pattern
 
-The key benefit of the diagram-level API is the ability to build a cascade explicitly, inspect it, and then execute via `Table.delete()`:
+`Diagram.cascade()` is a class method that builds a complete cascade diagram from a table expression — including all descendants across all loaded schemas — in a single call:
 
 ```python
-# Build the dependency graph and inspect the cascade
-diag = dj.Diagram(schema)
-restricted = diag.cascade(Session & {'subject_id': 'M001'})
-
-# Inspect: what tables and how many rows would be affected?
-counts = restricted.counts()
+# Preview: what tables and how many rows would be affected?
+dj.Diagram.cascade(Session & {'subject_id': 'M001'}).counts()
 # {'`lab`.`session`': 3, '`lab`.`trial`': 45, '`lab`.`processed_data`': 45}
 
 # Execute via Table.delete() after reviewing the blast radius
@@ -238,17 +234,17 @@ This is valuable when working with unfamiliar pipelines, large datasets, or mult
 
 The diagram supports two restriction propagation modes designed for fundamentally different tasks.
 
-**`cascade()` prepares a delete.** It takes a single restricted table expression, propagates the restriction downstream through all descendants, and **trims the diagram** to the resulting subgraph — ancestors and unrelated tables are removed entirely. Convergence uses OR: a descendant row is marked for deletion if *any* ancestor path reaches it, because if any reason exists to remove a row, it should be removed. `cascade()` is one-shot and is always followed by `counts()` or `delete()`.
+**`Diagram.cascade(table_expr)`** is a class method that creates a cascade diagram for delete. It takes a (possibly restricted) table expression, includes all descendants across loaded schemas, propagates the restriction downstream, and **trims the diagram** to the resulting subgraph — ancestors and unrelated tables are removed entirely. Convergence uses OR: a descendant row is marked for deletion if *any* ancestor path reaches it, because if any reason exists to remove a row, it should be removed.
 
 When the cascade encounters a part table whose master is not yet included in the cascade, the behavior depends on the `part_integrity` setting. With `"enforce"` (the default), `delete()` raises an error if part rows would be deleted without their master — preventing orphaned master rows. With `"cascade"`, the restriction propagates *upward* from the part to its master: the restricted part rows identify which master rows are affected, those masters receive a restriction, and that restriction then propagates back downstream to all sibling parts — deleting the entire compositional unit, not just the originally matched part rows.
 
-**`restrict()` selects a data subset.** It propagates a restriction downstream but **preserves the full diagram**, allowing `restrict()` to be called again from a different seed table. This makes it possible to build up multi-condition subsets incrementally — for example, restricting by species from one table and by date from another. Convergence uses AND: a descendant row is included only if *all* restricted ancestors match, because an export should contain only rows satisfying every condition. After chaining restrictions, use `prune()` to remove empty tables and `counts()` to inspect the result.
+**`diagram.restrict(table_expr)`** is an instance method that selects a data subset. It propagates a restriction downstream but **preserves the full diagram**, allowing `restrict()` to be called again from a different seed table. This makes it possible to build up multi-condition subsets incrementally — for example, restricting by species from one table and by date from another. Convergence uses AND: a descendant row is included only if *all* restricted ancestors match, because an export should contain only rows satisfying every condition. After chaining restrictions, use `prune()` to remove empty tables and `counts()` to inspect the result.
 
-The two modes are mutually exclusive on the same diagram — DataJoint raises an error if you attempt to mix `cascade()` and `restrict()`, or if you call `cascade()` more than once. This prevents accidental mixing of incompatible semantics: a delete diagram should never be reused for subsetting, and vice versa.
+The two modes are mutually exclusive — `restrict()` raises an error if called on a Diagram produced by `cascade()`. This prevents accidental mixing of incompatible semantics: a delete diagram should never be reused for subsetting.
 
 ### Pruning Empty Tables
 
-After applying restrictions, some tables in the diagram may have zero matching rows. The `prune()` method removes these tables from the diagram, leaving only the subgraph with actual data:
+After applying restrictions with `restrict()`, some tables in the diagram may have zero matching rows. The `prune()` method removes these tables from the diagram, leaving only the subgraph with actual data:
 
 ```python
 export = (dj.Diagram(schema)
@@ -261,6 +257,8 @@ export             # visualize the export subgraph
 ```
 
 Without prior restrictions, `prune()` removes physically empty tables. This is useful for understanding which parts of a pipeline are populated.
+
+`prune()` cannot be used on cascade Diagrams — cascade retains all descendant tables to handle concurrent inserts safely (a table empty at cascade time could have rows by the time `delete()` executes).
 
 ### Restriction Propagation Rules
 
@@ -287,11 +285,10 @@ With `safemode=True` (the default), `delete()` provides a built-in preview-and-c
 
 This is safer than a pre-transaction preview because it reflects the actual database state at delete time, including triggers and concurrent changes.
 
-For programmatic preview without executing, use `Diagram` directly:
+For programmatic preview without executing, use `Diagram.cascade()`:
 
 ```python
-diag = dj.Diagram(schema)
-counts = diag.cascade(Session & {'subject_id': 'M001'}).counts()
+dj.Diagram.cascade(Session & {'subject_id': 'M001'}).counts()
 # {'`lab`.`session`': 3, '`lab`.`trial`': 45, '`lab`.`processed_data`': 45}
 ```
 
@@ -319,7 +316,7 @@ Each yielded `FreeTable` carries any cascade or restrict conditions that have be
 
 ### Architecture
 
-`Table.delete()` constructs a `Diagram` internally, calls `cascade()` to compute the affected subgraph, then iterates `reversed(diagram)` to delete leaves first. The Diagram is purely a graph computation and inspection tool — it computes the cascade and provides `counts()` and iteration, but all mutation logic (transactions, SQL execution, prompts) lives in `Table.delete()` and `Table.drop()`.
+`Table.delete()` uses `Diagram.cascade(self)` internally to compute the affected subgraph, then iterates `reversed(diagram)` to delete leaves first. `Table.drop()` builds a Diagram with all descendants and drops in the same order. The Diagram is purely a graph computation and inspection tool — it computes the cascade and provides `counts()` and iteration, but all mutation logic (transactions, SQL execution, prompts) lives in `Table.delete()` and `Table.drop()`.
 
 ### Advantages over Error-Driven Cascade
 
