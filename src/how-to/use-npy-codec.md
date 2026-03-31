@@ -159,7 +159,7 @@ for rec in large:
 
 ```python
 @schema
-class ProcessedData(dj.Computed):
+class FilteredTrace(dj.Computed):
     definition = """
     -> RawData
     ---

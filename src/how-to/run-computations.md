@@ -6,45 +6,45 @@ Execute automated computations with `populate()`.
 
 ```python
 # Populate all missing entries
-ProcessedData.populate()
+SessionAnalysis.populate()
 
 # With progress display
-ProcessedData.populate(display_progress=True)
+SessionAnalysis.populate(display_progress=True)
 ```
 
 ## Restrict What to Compute
 
 ```python
 # Only specific subjects
-ProcessedData.populate(Subject & "sex = 'M'")
+SessionAnalysis.populate(Subject & "sex = 'M'")
 
 # Only recent sessions
-ProcessedData.populate(Session & "session_date > '2026-01-01'")
+SessionAnalysis.populate(Session & "session_date > '2026-01-01'")
 
 # Specific key
-ProcessedData.populate({'subject_id': 'M001', 'session_idx': 1})
+SessionAnalysis.populate({'subject_id': 'M001', 'session_idx': 1})
 ```
 
 ## Limit Number of Jobs
 
 ```python
 # Process at most 100 entries
-ProcessedData.populate(limit=100)
+SessionAnalysis.populate(limit=100)
 ```
 
 ## Error Handling
 
 ```python
 # Continue on errors (log but don't stop)
-ProcessedData.populate(suppress_errors=True)
+SessionAnalysis.populate(suppress_errors=True)
 
 # Check what failed
-failed = ProcessedData.jobs & "status = 'error'"
+failed = SessionAnalysis.jobs & "status = 'error'"
 print(failed)
 
 # Clear errors to retry
 failed.delete()
-ProcessedData.populate()
+SessionAnalysis.populate()
 ```
 
 ## When to Use Distributed Mode
@@ -67,7 +67,7 @@ Choose your populate strategy based on your workload and infrastructure:
 **Example:**
 ```python
 # Simple, direct execution
-ProcessedData.populate()
+SessionAnalysis.populate()
 ```
 
 ---
@@ -83,13 +83,13 @@ ProcessedData.populate()
 
 - Prevents duplicate work between workers
 - Fault tolerance (crashed jobs can be retried)
-- Job status tracking (`ProcessedData.jobs`)
+- Job status tracking (`SessionAnalysis.jobs`)
 - Error isolation (one failure doesn't stop others)
 
 **Example:**
 ```python
 # Distributed mode with job coordination
-ProcessedData.populate(reserve_jobs=True)
+SessionAnalysis.populate(reserve_jobs=True)
 ```
 
 **Job reservation overhead:** ~100ms per job
@@ -112,7 +112,7 @@ ProcessedData.populate(reserve_jobs=True)
 **Example:**
 ```python
 # Use 4 CPU cores
-ProcessedData.populate(reserve_jobs=True, processes=4)
+SessionAnalysis.populate(reserve_jobs=True, processes=4)
 ```
 
 **Caution:** Don't use more processes than CPU cores (causes context switching overhead)
@@ -144,10 +144,10 @@ For multi-worker coordination:
 
 ```python
 # Worker 1 (on machine A)
-ProcessedData.populate(reserve_jobs=True)
+SessionAnalysis.populate(reserve_jobs=True)
 
 # Worker 2 (on machine B)
-ProcessedData.populate(reserve_jobs=True)
+SessionAnalysis.populate(reserve_jobs=True)
 
 # Workers coordinate automatically via database
 # Each reserves different keys, no duplicates
@@ -157,30 +157,30 @@ ProcessedData.populate(reserve_jobs=True)
 
 ```python
 # What's left to compute
-remaining = ProcessedData.key_source - ProcessedData
+remaining = SessionAnalysis.key_source - SessionAnalysis
 print(f"{len(remaining)} entries remaining")
 
 # View job status
-ProcessedData.jobs
+SessionAnalysis.jobs
 ```
 
 ## The `make()` Method
 
 ```python
 @schema
-class ProcessedData(dj.Computed):
+class SessionAnalysis(dj.Computed):
     definition = """
-    -> RawData
+    -> Session
     ---
     result : float64
     """
 
     def make(self, key):
         # 1. Fetch input data
-        raw = (RawData & key).fetch1('data')
+        data = (Session & key).fetch1('data')
 
         # 2. Compute
-        result = process(raw)
+        result = process(data)
 
         # 3. Insert
         self.insert1({**key, 'result': result})

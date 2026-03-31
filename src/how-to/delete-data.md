@@ -175,7 +175,7 @@ with dj.conn().transaction:
     Session.Trial.insert(corrected_trials)
 
 # 3. Recompute derived data
-ProcessedData.populate()
+SessionAnalysis.populate()
 ```
 
 This ensures all derived data remains consistent with source data.
@@ -194,31 +194,22 @@ print(f"Deleted {count} subjects")
 !!! version-added "New in 2.2"
     Cascade inspection via `dj.Diagram` was added in DataJoint 2.2.
 
-For a quick preview, `table.delete(dry_run=True)` returns the affected row counts without deleting anything:
+With `safemode=True` (the default), `delete()` provides a built-in safety workflow: it executes the cascade inside a transaction, shows all affected tables and row counts, and asks **"Commit deletes?"** before committing. Declining rolls back all changes.
 
-```python
-# Quick preview of what would be deleted
-(Session & {'subject_id': 'M001'}).delete(dry_run=True)
-# {'`lab`.`session`': 3, '`lab`.`trial`': 45, '`lab`.`processed_data`': 45}
-```
-
-For more complex scenarios — working across schemas, chaining multiple restrictions, or visualizing the dependency graph — use `dj.Diagram` to build and inspect the cascade explicitly:
+For programmatic preview without executing, or for complex scenarios — working across schemas or visualizing the dependency graph — use `Diagram.cascade()` to inspect the cascade:
 
 ```python
 import datajoint as dj
 
-# 1. Build the dependency graph and apply cascade restriction
-diag = dj.Diagram(schema)
-restricted = diag.cascade(Session & {'subject_id': 'M001'})
-
-# 2. Preview: see affected tables and row counts
-counts = restricted.preview()
+# 1. Preview: see affected tables and row counts (across all loaded schemas)
+cascade = dj.Diagram.cascade(Session & {'subject_id': 'M001'})
+counts = cascade.counts()
 # {'`lab`.`session`': 3, '`lab`.`trial`': 45, '`lab`.`processed_data`': 45}
 
-# 3. Visualize the cascade subgraph (in Jupyter)
-restricted
+# 2. Visualize the cascade subgraph (in Jupyter)
+cascade
 
-# 4. Execute via Table.delete() after reviewing
+# 3. Execute via Table.delete() after reviewing
 (Session & {'subject_id': 'M001'}).delete(prompt=False)
 ```
 
@@ -226,7 +217,7 @@ restricted
 
 - **Preview blast radius**: Understand what a cascade delete will affect before committing
 - **Multi-schema inspection**: Build a diagram spanning multiple schemas to visualize cascade impact
-- **Programmatic control**: Use `preview()` return values to make decisions in automated workflows
+- **Programmatic control**: Use `counts()` return values to make decisions in automated workflows
 
 For simple single-table deletes, `(Table & restriction).delete()` remains the simplest approach. The diagram API is for when you need more visibility before executing.
 

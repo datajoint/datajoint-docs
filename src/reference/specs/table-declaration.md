@@ -31,7 +31,7 @@ class TableName(dj.Manual):
 
 ### 1.3 Class Naming Rules
 
-- **Format**: Strict CamelCase (e.g., `MyTable`, `ProcessedData`)
+- **Format**: Strict CamelCase (e.g., `MyTable`, `SessionAnalysis`)
 - **Pattern**: `^[A-Z][A-Za-z0-9]*$`
 - **Conversion**: CamelCase to snake_case for SQL table name
 - **Examples**:

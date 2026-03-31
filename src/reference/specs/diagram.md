@@ -120,17 +120,17 @@ dj.Diagram(Subject) + dj.Diagram(analysis).collapse()
 ## Operational Methods
 
 !!! version-added "New in 2.2"
-    Operational methods (`cascade`, `restrict`, `preview`, `prune`) were added in DataJoint 2.2.
+    Operational methods (`Diagram.cascade()`, `restrict`, `counts`, `prune`) were added in DataJoint 2.2.
 
 Diagrams can propagate restrictions through the dependency graph and inspect affected data using the graph structure. These methods turn Diagram from a visualization tool into a graph computation and inspection component. All mutation operations (delete, drop) are executed by `Table.delete()` and `Table.drop()`, which use Diagram internally.
 
-### `cascade()`
+### `Diagram.cascade()` (class method)
 
 ```python
-diag.cascade(table_expr, part_integrity="enforce")
+dj.Diagram.cascade(table_expr, part_integrity="enforce")
 ```
 
-Prepare a cascading delete. Starting from a restricted table expression, propagate the restriction downstream through all descendants using **OR** semantics — a descendant row is marked for deletion if *any* ancestor path reaches it. The returned Diagram is **trimmed** to the cascade subgraph: only the seed table and its descendants remain; all ancestors and unrelated tables are removed. The trimmed diagram is ready for `preview()` and `delete()`.
+Create a cascade diagram for delete. Builds a complete dependency graph from the table expression, includes all descendants across all loaded schemas, propagates the restriction downstream using **OR** semantics — a descendant row is marked for deletion if *any* ancestor path reaches it — and **trims** to the cascade subgraph.
 
 | Parameter | Type | Default | Description |
 |-----------|------|---------|-------------|
@@ -138,12 +138,6 @@ Prepare a cascading delete. Starting from a restricted table expression, propaga
 | `part_integrity` | str | `"enforce"` | Master-part integrity policy |
 
 **Returns:** New `Diagram` containing only the seed table and its descendants, with cascade restrictions applied.
-
-**Constraints:**
-
-- **One-shot** — can only be called once on an unrestricted Diagram
-- Mutually exclusive with `restrict()`
-- `table_expr.full_table_name` must be a node in the diagram
 
 **`part_integrity` values:**
 
@@ -156,9 +150,8 @@ Prepare a cascading delete. Starting from a restricted table expression, propaga
 With `"cascade"`, the restriction flows **upward** from a part table to its master: the restricted part rows identify which master rows are affected, those masters receive a restriction, and that restriction propagates back downstream through the normal cascade — deleting the entire compositional unit (master + all parts), not just the originally matched part rows.
 
 ```python
-# Build a cascade from a restricted table
-diag = dj.Diagram(schema)
-restricted = diag.cascade(Session & {'subject_id': 'M001'})
+# Preview cascade impact across all loaded schemas
+dj.Diagram.cascade(Session & {'subject_id': 'M001'}).counts()
 ```
 
 ### `restrict()`
@@ -178,7 +171,7 @@ Select a subset of data for export or inspection. Starting from a restricted tab
 **Constraints:**
 
 - **Chainable** — call multiple times to add conditions from different seed tables
-- Mutually exclusive with `cascade()`
+- Cannot be called on a Diagram produced by `Diagram.cascade()`
 - `table_expr.full_table_name` must be a node in the diagram
 
 ```python
@@ -189,22 +182,20 @@ restricted = (diag
     .restrict(Session & 'session_date > "2024-01-01"'))
 ```
 
-### `preview()`
+### `counts()`
 
 ```python
-diag.preview()
+diag.counts()
 ```
 
-Show affected tables and row counts without modifying data. Works with both `cascade()` and `restrict()` restrictions.
+Return affected row counts per table without modifying data. Works with both `cascade()` and `restrict()` restrictions.
 
 **Returns:** `dict[str, int]` — mapping of full table names to affected row counts.
 
-**Requires:** `cascade()` or `restrict()` must be called first.
+**Requires:** `Diagram.cascade()` or `restrict()` must be called first.
 
 ```python
-diag = dj.Diagram(schema)
-restricted = diag.cascade(Session & {'subject_id': 'M001'})
-counts = restricted.preview()
+counts = dj.Diagram.cascade(Session & {'subject_id': 'M001'}).counts()
 # {'`lab`.`session`': 3, '`lab`.`trial`': 45, '`lab`.`processed_data`': 45}
 ```
 
@@ -214,9 +205,11 @@ counts = restricted.preview()
 diag.prune()
 ```
 
-Remove tables with zero matching rows from the diagram view. This only affects the diagram object — no tables or data are modified in the database. Without prior restrictions, removes physically empty tables from the diagram. With restrictions (`cascade()` or `restrict()`), removes tables where the restricted query yields zero rows.
+Remove tables with zero matching rows from the diagram view. This only affects the diagram object — no tables or data are modified in the database. Without prior restrictions, removes physically empty tables from the diagram. After `restrict()`, removes tables where the restricted query yields zero rows.
 
 **Returns:** New `Diagram` with empty tables removed.
+
+**Constraints:** Cannot be used on a Diagram produced by `Diagram.cascade()`. Cascade diagrams must retain all descendant tables because a table empty at cascade time could have rows by the time `delete()` executes.
 
 **Note:** Queries the database to determine row counts. The underlying graph structure is preserved — subsequent `restrict()` calls can still seed at any table in the schema.
 
@@ -227,9 +220,22 @@ export = (dj.Diagram(schema)
     .restrict(Session & 'session_date > "2024-01-01"')
     .prune())
 
-export.preview()   # only tables with matching rows
+export.counts()    # only tables with matching rows
 export             # visualize the export subgraph
 ```
+
+### Iteration
+
+Diagrams support iteration in topological order:
+
+| Method | Order | Use Case |
+|--------|-------|----------|
+| `for ft in diagram` | Parents first | Data export, inspection |
+| `for ft in reversed(diagram)` | Leaves first | Cascade delete, drop |
+
+Each iteration yields a `FreeTable` with any cascade or restrict conditions applied. Alias nodes are skipped. Only nodes in the diagram's visible set (`nodes_to_show`) are yielded.
+
+`Table.delete()` and `Table.drop()` use `reversed(diagram)` internally to execute mutations in safe dependency order.
 
 ### Restriction Propagation
 
@@ -440,7 +446,7 @@ combined = dj.Diagram.from_sequence([schema1, schema2, schema3])
 
 ## Dependencies
 
-Operational methods (`cascade`, `restrict`, `preview`, `prune`) use `networkx`, which is always installed as a core dependency.
+Operational methods (`cascade`, `restrict`, `counts`, `prune`) use `networkx`, which is always installed as a core dependency.
 
 Diagram **visualization** requires optional dependencies:
 
@@ -456,7 +462,7 @@ If visualization dependencies are missing, `dj.Diagram` displays a warning and p
 
 - [How to Read Diagrams](../../how-to/read-diagrams.ipynb)
 - [Delete Data](../../how-to/delete-data.md) — Cascade inspection and delete workflow
-- [What's New in 2.2](../../explanation/whats-new-22.md) — Motivation and design
+- [What's New in 2.2](../../about/whats-new-22.md) — Motivation and design
 - [Data Manipulation](data-manipulation.md) — Insert, update, delete specification
 - [Query Algebra](query-algebra.md)
 - [Table Declaration](table-declaration.md)

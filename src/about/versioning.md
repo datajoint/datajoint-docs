@@ -87,7 +87,7 @@ print(dj.__version__)
 
 If you're upgrading from legacy DataJoint (pre-2.0):
 
-1. **Review** the [What's New in 2.0](../explanation/whats-new-2.md) page to understand major changes
+1. **Review** the [What's New in 2.0](whats-new-2.md) page to understand major changes
 2. **Follow** the [Migration Guide](../how-to/migrate-to-v20.md) for step-by-step upgrade instructions
 3. **Reference** this documentation for updated syntax and APIs
 

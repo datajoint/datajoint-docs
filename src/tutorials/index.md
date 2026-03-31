@@ -130,6 +130,10 @@ Standard pipelines for neurophysiology experiments, actively used in many labs w
 - [Electrophysiology](domain/electrophysiology/electrophysiology.ipynb) — Import recordings, spike detection, waveforms
 - [Allen CCF](domain/allen-ccf/allen-ccf.ipynb) — Hierarchical brain atlas ontology
 
+**Complete demo pipeline:**
+
+- [LC-MS Demo](https://github.com/datajoint/lcms-demo) — Liquid chromatography-mass spectrometry pipeline showcasing DataJoint best practices with PostgreSQL: sample tracking, scan acquisition, mass spectral analysis, and parameterized peak detection
+
 **General patterns:**
 
 - [Hotel Reservations](examples/hotel-reservations.ipynb) — Booking systems with resource management
