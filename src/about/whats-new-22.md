@@ -276,19 +276,26 @@ When a child has multiple restricted ancestors, convergence depends on the mode:
 
 When a child references the same parent through multiple foreign keys (e.g., `source_mouse` and `target_mouse` both referencing `Mouse`), these paths always combine with OR regardless of the mode — each FK path is an independent reason for the child row to be affected.
 
-### Dry Run
+### Safe Delete Workflow
 
-`Table.delete()` and `Table.drop()` accept a `dry_run` parameter that returns affected row counts without modifying data:
+With `safemode=True` (the default), `delete()` provides a built-in preview-and-confirm workflow:
+
+1. Builds the cascade diagram and computes all affected tables
+2. Executes the deletes inside a transaction
+3. Logs every affected table and its row count
+4. Asks **"Commit deletes?"** — declining **rolls back** all changes
+
+This is safer than a pre-transaction preview because it reflects the actual database state at delete time, including triggers and concurrent changes.
+
+For programmatic preview without executing, use `Diagram` directly:
 
 ```python
-# Preview what would be deleted
-(Session & {'subject_id': 'M001'}).delete(dry_run=True)
+diag = dj.Diagram(schema)
+counts = diag.cascade(Session & {'subject_id': 'M001'}).counts()
 # {'`lab`.`session`': 3, '`lab`.`trial`': 45, '`lab`.`processed_data`': 45}
-
-# Preview what would be dropped
-Session.drop(dry_run=True)
-# {'`lab`.`session`': 100, '`lab`.`trial`': 5000}
 ```
+
+The `drop()` method follows the same safemode pattern — previewing affected tables and asking for confirmation before proceeding.
 
 ### Unloaded Schema Detection
 
@@ -326,7 +333,7 @@ The graph-driven approach resolves every known limitation of the prior error-dri
 | Part integrity enforcement | Post-hoc check after delete | Data-driven post-check (no false positives) |
 | Unloaded schemas | Crash with opaque error | Clear error: "activate schema X" |
 | Reusability | Delete-only | Delete, drop, export, prune |
-| Inspectability | Opaque recursive cascade | `counts()` / `dry_run` before executing |
+| Inspectability | Opaque recursive cascade | `counts()` preview + safemode confirmation before commit |
 
 ## See Also
 

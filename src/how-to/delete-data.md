@@ -194,15 +194,9 @@ print(f"Deleted {count} subjects")
 !!! version-added "New in 2.2"
     Cascade inspection via `dj.Diagram` was added in DataJoint 2.2.
 
-For a quick preview, `table.delete(dry_run=True)` returns the affected row counts without deleting anything:
+With `safemode=True` (the default), `delete()` provides a built-in safety workflow: it executes the cascade inside a transaction, shows all affected tables and row counts, and asks **"Commit deletes?"** before committing. Declining rolls back all changes.
 
-```python
-# Quick preview of what would be deleted
-(Session & {'subject_id': 'M001'}).delete(dry_run=True)
-# {'`lab`.`session`': 3, '`lab`.`trial`': 45, '`lab`.`processed_data`': 45}
-```
-
-For more complex scenarios — working across schemas, chaining multiple restrictions, or visualizing the dependency graph — use `dj.Diagram` to build and inspect the cascade explicitly:
+For programmatic preview without executing, or for complex scenarios — working across schemas, chaining multiple restrictions, or visualizing the dependency graph — use `dj.Diagram` to build and inspect the cascade explicitly:
 
 ```python
 import datajoint as dj
