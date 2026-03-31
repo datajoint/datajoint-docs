@@ -9,7 +9,7 @@
 <link href="../distributed/" rel="prev"/>
 <link href="../instances/" rel="next"/>
 <link href="../../../assets/images/company-logo-blue.png" rel="icon"/>
-<meta content="mkdocs-1.6.1, mkdocs-material-9.7.5" name="generator"/>
+<meta content="mkdocs-1.6.1, mkdocs-material-9.7.6" name="generator"/>
 <title>Custom Codecs - DataJoint Documentation</title>
 <link href="../../../assets/stylesheets/main.484c7ddc.min.css" rel="stylesheet"/>
 <link href="../../../assets/stylesheets/palette.ab4e12ef.min.css" rel="stylesheet"/>
@@ -258,30 +258,6 @@
     
   
     Data Pipelines
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../../../explanation/whats-new-2/">
-<span class="md-ellipsis">
-    
-  
-    What's New in 2.0
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../../../explanation/whats-new-22/">
-<span class="md-ellipsis">
-    
-  
-    What's New in 2.2
   
 
     
@@ -2257,6 +2233,42 @@
           </label>
 <ul class="md-nav__list" data-md-scrollfix="">
 <li class="md-nav__item">
+<a class="md-nav__link" href="../../../about/whats-new-22/">
+<span class="md-ellipsis">
+    
+  
+    What's New in 2.2
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../about/whats-new-21/">
+<span class="md-ellipsis">
+    
+  
+    What's New in 2.1
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../about/whats-new-2/">
+<span class="md-ellipsis">
+    
+  
+    What's New in 2.0
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
 <a class="md-nav__link" href="../../../about/history/">
 <span class="md-ellipsis">
     
@@ -3219,10 +3231,10 @@ schema = dj.Schema('tutorial_codecs')</div>
 class GraphCodec(dj.Codec):
     """Store NetworkX graphs."""
     
-    name = "graph"  # Use as <graph>
+    name = "graph"  # Use as &lt;graph&gt;
     
     def get_dtype(self, is_store: bool) -&gt; str:
-        return "<blob>"
+        return "&lt;blob&gt;"
     
     def encode(self, value, *, key=None, store_name=None):
         return {'nodes': list(value.nodes(data=True)), 'edges': list(value.edges(data=True))}
@@ -3235,7 +3247,7 @@ class GraphCodec(dj.Codec):
     
     def validate(self, value):
         if not isinstance(value, nx.Graph):
-            raise TypeError(f"Expected nx.Graph")</blob></graph></div>
+            raise TypeError(f"Expected nx.Graph")</div>
 </div>
 </div>
 </div>
@@ -3273,8 +3285,8 @@ class Connectivity(dj.Manual):
     definition = """
     conn_id : int32
     ---
-    network : <graph>
-    """</graph></div>
+    network : &lt;graph&gt;
+    """</div>
 </div>
 </div>
 </div>
@@ -3424,13 +3436,13 @@ class SpikeTrainCodec(dj.Codec):
     name = "spike_train"
     
     def get_dtype(self, is_store: bool) -&gt; str:
-        return "<blob>"
+        return "&lt;blob&gt;"
     
     def encode(self, value, *, key=None, store_name=None):
         return {'times': value.times, 'unit_id': value.unit_id, 'quality': value.quality}
     
     def decode(self, stored, *, key=None):
-        return SpikeTrain(times=stored['times'], unit_id=stored['unit_id'], quality=stored['quality'])</blob></div>
+        return SpikeTrain(times=stored['times'], unit_id=stored['unit_id'], quality=stored['quality'])</div>
 </div>
 </div>
 </div>
@@ -3474,14 +3486,14 @@ class Unit(dj.Manual):
     definition = """
     unit_id : int32
     ---
-    spikes : <spike_train>
+    spikes : &lt;spike_train&gt;
     """
 
 train = SpikeTrain(times=np.sort(np.random.uniform(0, 100, 50)), unit_id=1, quality='good')
 Unit.insert1({'unit_id': 1, 'spikes': train})
 
 result = (Unit &amp; {'unit_id': 1}).fetch1('spikes')
-print(f"Type: {type(result)}, Spikes: {len(result.times)}")</spike_train></div>
+print(f"Type: {type(result)}, Spikes: {len(result.times)}")</div>
 </div>
 </div>
 </div>

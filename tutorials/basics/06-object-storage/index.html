@@ -9,7 +9,7 @@
 <link href="../05-computation/" rel="prev"/>
 <link href="../../examples/university/" rel="next"/>
 <link href="../../../assets/images/company-logo-blue.png" rel="icon"/>
-<meta content="mkdocs-1.6.1, mkdocs-material-9.7.5" name="generator"/>
+<meta content="mkdocs-1.6.1, mkdocs-material-9.7.6" name="generator"/>
 <title>Object-Augmented Schemas - DataJoint Documentation</title>
 <link href="../../../assets/stylesheets/main.484c7ddc.min.css" rel="stylesheet"/>
 <link href="../../../assets/stylesheets/palette.ab4e12ef.min.css" rel="stylesheet"/>
@@ -258,30 +258,6 @@
     
   
     Data Pipelines
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../../../explanation/whats-new-2/">
-<span class="md-ellipsis">
-    
-  
-    What's New in 2.0
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../../../explanation/whats-new-22/">
-<span class="md-ellipsis">
-    
-  
-    What's New in 2.2
   
 
     
@@ -2488,6 +2464,42 @@
           </label>
 <ul class="md-nav__list" data-md-scrollfix="">
 <li class="md-nav__item">
+<a class="md-nav__link" href="../../../about/whats-new-22/">
+<span class="md-ellipsis">
+    
+  
+    What's New in 2.2
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../about/whats-new-21/">
+<span class="md-ellipsis">
+    
+  
+    What's New in 2.1
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../about/whats-new-2/">
+<span class="md-ellipsis">
+    
+  
+    What's New in 2.0
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
 <a class="md-nav__link" href="../../../about/history/">
 <span class="md-ellipsis">
     
@@ -3715,9 +3727,9 @@ class Recording(dj.Manual):
     definition = """
     recording_id : int32
     ---
-    metadata : <blob>         # Dict, stored in database
-    waveform : <blob>         # NumPy array, stored in database
-    """</blob></blob></div>
+    metadata : &lt;blob&gt;         # Dict, stored in database
+    waveform : &lt;blob&gt;         # NumPy array, stored in database
+    """</div>
 </div>
 </div>
 </div>
@@ -3952,8 +3964,8 @@ class AnalysisResult(dj.Manual):
     definition = """
     result_id : int32
     ---
-    arrays : <blob>
-    nested_data : <blob>
+    arrays : &lt;blob&gt;
+    nested_data : &lt;blob&gt;
     """
 
 # Store complex data structures
@@ -3969,7 +3981,7 @@ AnalysisResult.insert1({
 # Fetch back
 result = (AnalysisResult &amp; {'result_id': 1}).fetch1()
 print(f"Arrays type: {type(result['arrays'])}")
-print(f"Arrays keys: {result['arrays'].keys()}")</blob></blob></div>
+print(f"Arrays keys: {result['arrays'].keys()}")</div>
 </div>
 </div>
 </div>
@@ -4109,9 +4121,9 @@ class LargeRecording(dj.Manual):
     definition = """
     recording_id : int32
     ---
-    small_data : <blob>            # In database (small)
-    large_data : <blob@tutorial>   # In object storage (large)
-    """</blob@tutorial></blob></div>
+    small_data : &lt;blob&gt;            # In database (small)
+    large_data : &lt;blob@tutorial&gt;   # In object storage (large)
+    """</div>
 </div>
 </div>
 </div>
@@ -4497,8 +4509,8 @@ class ImagingSession(dj.Manual):
     ---
     n_frames : int32
     frame_rate : decimal(4,1)
-    frames : <object@tutorial>    # Zarr array stored at path derived from PK
-    """</object@tutorial></div>
+    frames : &lt;object@tutorial&gt;    # Zarr array stored at path derived from PK
+    """</div>
 </div>
 </div>
 </div>
@@ -4815,8 +4827,8 @@ class Document(dj.Manual):
     definition = """
     doc_id : int32
     ---
-    report : <attach@tutorial>
-    """</attach@tutorial></div>
+    report : &lt;attach@tutorial&gt;
+    """</div>
 </div>
 </div>
 </div>
@@ -5122,7 +5134,7 @@ class ProcessedRecording(dj.Computed):
     definition = """
     -&gt; LargeRecording
     ---
-    filtered : <blob@tutorial>     # Result in object storage
+    filtered : &lt;blob@tutorial&gt;     # Result in object storage
     mean_value : float64
     """
 
@@ -5138,7 +5150,7 @@ class ProcessedRecording(dj.Computed):
             **key,
             'filtered': filtered,
             'mean_value': float(np.mean(filtered))
-        })</blob@tutorial></div>
+        })</div>
 </div>
 </div>
 </div>

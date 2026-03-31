@@ -21,7 +21,7 @@
       
       
       <link rel="icon" href="../../../assets/images/company-logo-blue.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.5">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
     
     
       
@@ -436,10 +436,6 @@
       
         
       
-        
-      
-        
-      
     
     
     
@@ -497,62 +493,6 @@
     
   
     Data Pipelines
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../../explanation/whats-new-2/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    What's New in 2.0
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../../explanation/whats-new-22/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    What's New in 2.2
   
 
     
@@ -5561,6 +5501,12 @@
       
         
       
+        
+      
+        
+      
+        
+      
     
     
     
@@ -5612,6 +5558,90 @@
 
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../about/whats-new-22/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    What's New in 2.2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../about/whats-new-21/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    What's New in 2.1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../about/whats-new-2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    What's New in 2.0
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
             
               
                 
@@ -6498,9 +6528,9 @@ To add metadata columns to existing tables, use the migration utility (not autom
 <span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">jobs</span><span class="o">.</span><span class="n">add_job_metadata</span> <span class="o">=</span> <span class="kc">True</span>
 
 <span class="nd">@schema</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">ProcessedData</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Computed</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">SessionAnalysis</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Computed</span><span class="p">):</span>
     <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
-<span class="s2">    -&gt; RawData</span>
+<span class="s2">    -&gt; Session</span>
 <span class="s2">    ---</span>
 <span class="s2">    result : float</span>
 <span class="s2">    &quot;&quot;&quot;</span>
@@ -6513,11 +6543,11 @@ To add metadata columns to existing tables, use the migration utility (not autom
 <span class="c1"># _job_start_time, _job_duration, _job_version</span>
 
 <span class="c1"># User-facing API unaffected:</span>
-<span class="n">ProcessedData</span><span class="p">()</span><span class="o">.</span><span class="n">heading</span><span class="o">.</span><span class="n">names</span>  <span class="c1"># [&#39;raw_data_id&#39;, &#39;result&#39;]</span>
-<span class="n">ProcessedData</span><span class="p">()</span><span class="o">.</span><span class="n">to_dicts</span><span class="p">()</span>  <span class="c1"># Returns only visible attributes</span>
+<span class="n">SessionAnalysis</span><span class="p">()</span><span class="o">.</span><span class="n">heading</span><span class="o">.</span><span class="n">names</span>  <span class="c1"># [&#39;session_id&#39;, &#39;result&#39;]</span>
+<span class="n">SessionAnalysis</span><span class="p">()</span><span class="o">.</span><span class="n">to_dicts</span><span class="p">()</span>  <span class="c1"># Returns only visible attributes</span>
 
 <span class="c1"># Access hidden attributes explicitly if needed:</span>
-<span class="n">ProcessedData</span><span class="p">()</span><span class="o">.</span><span class="n">to_arrays</span><span class="p">(</span><span class="s1">&#39;_job_start_time&#39;</span><span class="p">,</span> <span class="s1">&#39;_job_duration&#39;</span><span class="p">,</span> <span class="s1">&#39;_job_version&#39;</span><span class="p">)</span>
+<span class="n">SessionAnalysis</span><span class="p">()</span><span class="o">.</span><span class="n">to_arrays</span><span class="p">(</span><span class="s1">&#39;_job_start_time&#39;</span><span class="p">,</span> <span class="s1">&#39;_job_duration&#39;</span><span class="p">,</span> <span class="s1">&#39;_job_version&#39;</span><span class="p">)</span>
 </code></pre></div>
 <h2 id="summary-of-design-decisions">Summary of Design Decisions<a class="headerlink" href="#summary-of-design-decisions" title="Permanent link">&para;</a></h2>
 <table>

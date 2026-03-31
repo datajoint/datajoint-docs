@@ -9,7 +9,7 @@
 <link href="../languages/" rel="prev"/>
 <link href="../blob-detection/" rel="next"/>
 <link href="../../../assets/images/company-logo-blue.png" rel="icon"/>
-<meta content="mkdocs-1.6.1, mkdocs-material-9.7.5" name="generator"/>
+<meta content="mkdocs-1.6.1, mkdocs-material-9.7.6" name="generator"/>
 <title>Fractal Image Pipeline - DataJoint Documentation</title>
 <link href="../../../assets/stylesheets/main.484c7ddc.min.css" rel="stylesheet"/>
 <link href="../../../assets/stylesheets/palette.ab4e12ef.min.css" rel="stylesheet"/>
@@ -258,30 +258,6 @@
     
   
     Data Pipelines
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../../../explanation/whats-new-2/">
-<span class="md-ellipsis">
-    
-  
-    What's New in 2.0
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../../../explanation/whats-new-22/">
-<span class="md-ellipsis">
-    
-  
-    What's New in 2.2
   
 
     
@@ -2266,6 +2242,42 @@
           </label>
 <ul class="md-nav__list" data-md-scrollfix="">
 <li class="md-nav__item">
+<a class="md-nav__link" href="../../../about/whats-new-22/">
+<span class="md-ellipsis">
+    
+  
+    What's New in 2.2
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../about/whats-new-21/">
+<span class="md-ellipsis">
+    
+  
+    What's New in 2.1
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../about/whats-new-2/">
+<span class="md-ellipsis">
+    
+  
+    What's New in 2.0
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
 <a class="md-nav__link" href="../../../about/history/">
 <span class="md-ellipsis">
     
@@ -3393,14 +3405,14 @@ class JuliaImage(dj.Computed):
     definition = """
     -&gt; JuliaSpec
     ---
-    image : <blob>            # Generated fractal image
+    image : &lt;blob&gt;            # Generated fractal image
     """
     
     def make(self, key):
         spec = (JuliaSpec &amp; key).fetch1()
         img = julia(spec['c_real'] + 1j * spec['c_imag'])
         img += np.random.randn(*img.shape) * spec['noise_level']
-        self.insert1({**key, 'image': img.astype(np.float32)})</blob></div>
+        self.insert1({**key, 'image': img.astype(np.float32)})</div>
 </div>
 </div>
 </div>
@@ -3453,13 +3465,13 @@ class DenoiseMethod(dj.Lookup):
     method_id : int16
     ---
     method_name : varchar(20)
-    params : <blob>
+    params : &lt;blob&gt;
     """
     contents = [
         [0, 'gaussian', {'sigma': 1.8}],
         [1, 'median', {'radius': 3}],
         [2, 'tv', {'weight': 20.0}],
-    ]</blob></div>
+    ]</div>
 </div>
 </div>
 </div>
@@ -3516,7 +3528,7 @@ class Denoised(dj.Computed):
     -&gt; JuliaImage
     -&gt; DenoiseMethod
     ---
-    denoised : <blob>
+    denoised : &lt;blob&gt;
     """
     
     def make(self, key):
@@ -3532,7 +3544,7 @@ class Denoised(dj.Computed):
         else:
             raise ValueError(f"Unknown method: {method}")
             
-        self.insert1({**key, 'denoised': result.astype(np.float32)})</blob></div>
+        self.insert1({**key, 'denoised': result.astype(np.float32)})</div>
 </div>
 </div>
 </div>

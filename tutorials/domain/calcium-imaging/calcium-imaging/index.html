@@ -9,7 +9,7 @@
 <link href="../../../examples/blob-detection/" rel="prev"/>
 <link href="../../electrophysiology/electrophysiology/" rel="next"/>
 <link href="../../../../assets/images/company-logo-blue.png" rel="icon"/>
-<meta content="mkdocs-1.6.1, mkdocs-material-9.7.5" name="generator"/>
+<meta content="mkdocs-1.6.1, mkdocs-material-9.7.6" name="generator"/>
 <title>Calcium Imaging Pipeline - DataJoint Documentation</title>
 <link href="../../../../assets/stylesheets/main.484c7ddc.min.css" rel="stylesheet"/>
 <link href="../../../../assets/stylesheets/palette.ab4e12ef.min.css" rel="stylesheet"/>
@@ -258,30 +258,6 @@
     
   
     Data Pipelines
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../../../../explanation/whats-new-2/">
-<span class="md-ellipsis">
-    
-  
-    What's New in 2.0
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../../../../explanation/whats-new-22/">
-<span class="md-ellipsis">
-    
-  
-    What's New in 2.2
   
 
     
@@ -2363,6 +2339,42 @@
           </label>
 <ul class="md-nav__list" data-md-scrollfix="">
 <li class="md-nav__item">
+<a class="md-nav__link" href="../../../../about/whats-new-22/">
+<span class="md-ellipsis">
+    
+  
+    What's New in 2.2
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../../about/whats-new-21/">
+<span class="md-ellipsis">
+    
+  
+    What's New in 2.1
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../../about/whats-new-2/">
+<span class="md-ellipsis">
+    
+  
+    What's New in 2.0
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
 <a class="md-nav__link" href="../../../../about/history/">
 <span class="md-ellipsis">
     
@@ -3741,7 +3753,7 @@ class AverageFrame(dj.Imported):
     definition = """
     -&gt; Scan
     ---
-    average_frame : <blob>    # mean fluorescence across frames
+    average_frame : &lt;blob&gt;    # mean fluorescence across frames
     """
 
     def make(self, key):
@@ -3755,7 +3767,7 @@ class AverageFrame(dj.Imported):
         
         # Insert result
         self.insert1({**key, 'average_frame': avg_frame})
-        print(f"Processed {file_name}: {movie.shape[0]} frames")</blob></div>
+        print(f"Processed {file_name}: {movie.shape[0]} frames")</div>
 </div>
 </div>
 </div>
@@ -4134,7 +4146,7 @@ class Segmentation(dj.Computed):
     -&gt; SegmentationParam
     ---
     num_rois : int16          # number of detected ROIs
-    segmented_mask : <blob>   # labeled mask image
+    segmented_mask : &lt;blob&gt;   # labeled mask image
     """
 
     class Roi(dj.Part):
@@ -4142,7 +4154,7 @@ class Segmentation(dj.Computed):
         -&gt; master
         roi_idx : int16
         ---
-        mask : <blob>         # binary mask for this ROI
+        mask : &lt;blob&gt;         # binary mask for this ROI
         center_x : float32    # ROI center x coordinate
         center_y : float32    # ROI center y coordinate
         """
@@ -4189,7 +4201,7 @@ class Segmentation(dj.Computed):
                 'center_y': cy
             })
         
-        print(f"Scan {key['scan_idx']}, params {key['seg_param_id']}: {len(roi_masks)} ROIs")</blob></blob></div>
+        print(f"Scan {key['scan_idx']}, params {key['seg_param_id']}: {len(roi_masks)} ROIs")</div>
 </div>
 </div>
 </div>
@@ -4756,7 +4768,7 @@ class Fluorescence(dj.Imported):
     definition = """
     -&gt; Segmentation
     ---
-    timestamps : <blob>    # time for each frame (seconds)
+    timestamps : &lt;blob&gt;    # time for each frame (seconds)
     """
 
     class Trace(dj.Part):
@@ -4764,7 +4776,7 @@ class Fluorescence(dj.Imported):
         -&gt; master
         -&gt; Segmentation.Roi
         ---
-        trace : <blob>     # fluorescence trace (mean within ROI mask)
+        trace : &lt;blob&gt;     # fluorescence trace (mean within ROI mask)
         """
 
     def make(self, key):
@@ -4789,7 +4801,7 @@ class Fluorescence(dj.Imported):
             self.Trace.insert1({**roi_key, 'trace': trace})
         
         n_rois = len(Segmentation.Roi &amp; key)
-        print(f"Extracted {n_rois} traces from {file_name}")</blob></blob></div>
+        print(f"Extracted {n_rois} traces from {file_name}")</div>
 </div>
 </div>
 </div>

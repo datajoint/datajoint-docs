@@ -9,7 +9,7 @@
 <link href="../02-schema-design/" rel="prev"/>
 <link href="../04-queries/" rel="next"/>
 <link href="../../../assets/images/company-logo-blue.png" rel="icon"/>
-<meta content="mkdocs-1.6.1, mkdocs-material-9.7.5" name="generator"/>
+<meta content="mkdocs-1.6.1, mkdocs-material-9.7.6" name="generator"/>
 <title>Data Entry - DataJoint Documentation</title>
 <link href="../../../assets/stylesheets/main.484c7ddc.min.css" rel="stylesheet"/>
 <link href="../../../assets/stylesheets/palette.ab4e12ef.min.css" rel="stylesheet"/>
@@ -258,30 +258,6 @@
     
   
     Data Pipelines
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../../../explanation/whats-new-2/">
-<span class="md-ellipsis">
-    
-  
-    What's New in 2.0
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../../../explanation/whats-new-22/">
-<span class="md-ellipsis">
-    
-  
-    What's New in 2.2
   
 
     
@@ -2484,6 +2460,42 @@
           </label>
 <ul class="md-nav__list" data-md-scrollfix="">
 <li class="md-nav__item">
+<a class="md-nav__link" href="../../../about/whats-new-22/">
+<span class="md-ellipsis">
+    
+  
+    What's New in 2.2
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../about/whats-new-21/">
+<span class="md-ellipsis">
+    
+  
+    What's New in 2.1
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../about/whats-new-2/">
+<span class="md-ellipsis">
+    
+  
+    What's New in 2.0
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
 <a class="md-nav__link" href="../../../about/history/">
 <span class="md-ellipsis">
     
@@ -3610,7 +3622,15 @@ schema = dj.Schema('tutorial_data_entry')</div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>[2026-02-19 18:32:34] DataJoint 2.1.1 connected to postgres@postgres:5432
+<pre>[2026-03-13 13:18:17][WARNING]: SSL connection failed (connection to server at "localhost" (::1), port 5432 failed: server does not support SSL, but SSL was required
+). Falling back to non-SSL connection. To require SSL, set use_tls=True explicitly.
+</pre>
+</div>
+</div>
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
+<pre>[2026-03-13 13:18:17] DataJoint 2.2.0.dev0 connected to postgres@localhost:5432
 </pre>
 </div>
 </div>
@@ -3676,7 +3696,7 @@ schema = dj.Schema('tutorial_data_entry')</div>
 <span class="s2">        """</span>
 
 <span class="nd">@schema</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">ProcessedData</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Computed</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">SessionAnalysis</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Computed</span><span class="p">):</span>
     <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    -&gt; Session</span>
 <span class="s2">    ---</span>
@@ -3729,7 +3749,7 @@ class Session(dj.Manual):
         """
 
 @schema
-class ProcessedData(dj.Computed):
+class SessionAnalysis(dj.Computed):
     definition = """
     -&gt; Session
     ---
@@ -4904,16 +4924,16 @@ Subject.update1({'subject_id': 'M003', 'notes': None})
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Trials: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">Session</span><span class="o">.</span><span class="n">Trial</span><span class="p">())</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
 <span class="c1"># Populate computed table</span>
-<span class="n">ProcessedData</span><span class="o">.</span><span class="n">populate</span><span class="p">()</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"ProcessedData: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">ProcessedData</span><span class="p">())</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="n">SessionAnalysis</span><span class="o">.</span><span class="n">populate</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"SessionAnalysis: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">SessionAnalysis</span><span class="p">())</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 </pre></div>
 <div class="clipboard-copy-txt" id="cell-16"># First, let's see what we have
 print(f"Sessions: {len(Session())}")
 print(f"Trials: {len(Session.Trial())}")
 
 # Populate computed table
-ProcessedData.populate()
-print(f"ProcessedData: {len(ProcessedData())}")</div>
+SessionAnalysis.populate()
+print(f"SessionAnalysis: {len(SessionAnalysis())}")</div>
 </div>
 </div>
 </div>
@@ -4926,8 +4946,20 @@ print(f"ProcessedData: {len(ProcessedData())}")</div>
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
 <pre>Sessions: 1
-Trials: 5
-ProcessedData: 1
+</pre>
+</div>
+</div>
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
+<pre>Trials: 5
+</pre>
+</div>
+</div>
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
+<pre>SessionAnalysis: 1
 </pre>
 </div>
 </div>
@@ -4953,21 +4985,21 @@ ProcessedData: 1
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Delete a session - cascades to Trial and ProcessedData</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Delete a session - cascades to Trial and SessionAnalysis</span>
 <span class="p">(</span><span class="n">Session</span> <span class="o">&amp;</span> <span class="p">{</span><span class="s1">'subject_id'</span><span class="p">:</span> <span class="s1">'M001'</span><span class="p">,</span> <span class="s1">'session_idx'</span><span class="p">:</span> <span class="mi">1</span><span class="p">})</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">prompt</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"After delete:"</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Sessions: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">Session</span><span class="p">())</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Trials: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">Session</span><span class="o">.</span><span class="n">Trial</span><span class="p">())</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"ProcessedData: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">ProcessedData</span><span class="p">())</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"SessionAnalysis: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">SessionAnalysis</span><span class="p">())</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-17"># Delete a session - cascades to Trial and ProcessedData
+<div class="clipboard-copy-txt" id="cell-17"># Delete a session - cascades to Trial and SessionAnalysis
 (Session &amp; {'subject_id': 'M001', 'session_idx': 1}).delete(prompt=False)
 
 print(f"After delete:")
 print(f"Sessions: {len(Session())}")
 print(f"Trials: {len(Session.Trial())}")
-print(f"ProcessedData: {len(ProcessedData())}")</div>
+print(f"SessionAnalysis: {len(SessionAnalysis())}")</div>
 </div>
 </div>
 </div>
@@ -4979,21 +5011,21 @@ print(f"ProcessedData: {len(ProcessedData())}")</div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>[2026-02-19 18:32:34] Deleting 5 rows from "tutorial_data_entry"."session__trial"
+<pre>[2026-03-13 13:18:18] Deleting 1 rows from "tutorial_data_entry"."__session_analysis"
 </pre>
 </div>
 </div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>[2026-02-19 18:32:34] Deleting 1 rows from "tutorial_data_entry"."__processed_data"
+<pre>[2026-03-13 13:18:18] Deleting 5 rows from "tutorial_data_entry"."session__trial"
 </pre>
 </div>
 </div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>[2026-02-19 18:32:34] Deleting 1 rows from "tutorial_data_entry"."session"
+<pre>[2026-03-13 13:18:18] Deleting 1 rows from "tutorial_data_entry"."session"
 </pre>
 </div>
 </div>
@@ -5003,7 +5035,7 @@ print(f"ProcessedData: {len(ProcessedData())}")</div>
 <pre>After delete:
 Sessions: 0
 Trials: 0
-ProcessedData: 0
+SessionAnalysis: 0
 </pre>
 </div>
 </div>
@@ -5095,14 +5127,21 @@ with dj.conn().transaction:
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>[2026-02-19 18:32:34] Deleting 2 rows from "tutorial_data_entry"."session__trial"
+<pre>[2026-03-13 13:18:18] Deleting 0 rows from "tutorial_data_entry"."__session_analysis"
 </pre>
 </div>
 </div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>[2026-02-19 18:32:34] Deleting 1 rows from "tutorial_data_entry"."session"
+<pre>[2026-03-13 13:18:18] Deleting 2 rows from "tutorial_data_entry"."session__trial"
+</pre>
+</div>
+</div>
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
+<pre>[2026-03-13 13:18:18] Deleting 1 rows from "tutorial_data_entry"."session"
 </pre>
 </div>
 </div>
@@ -5161,8 +5200,8 @@ with dj.conn().transaction:
     <span class="p">])</span>
 
 <span class="c1"># Compute results</span>
-<span class="n">ProcessedData</span><span class="o">.</span><span class="n">populate</span><span class="p">()</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"Before correction:"</span><span class="p">,</span> <span class="n">ProcessedData</span><span class="o">.</span><span class="n">fetch1</span><span class="p">())</span>
+<span class="n">SessionAnalysis</span><span class="o">.</span><span class="n">populate</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Before correction:"</span><span class="p">,</span> <span class="n">SessionAnalysis</span><span class="o">.</span><span class="n">fetch1</span><span class="p">())</span>
 </pre></div>
 <div class="clipboard-copy-txt" id="cell-19"># Add a session with trials (using transaction for compositional integrity)
 with dj.conn().transaction:
@@ -5180,8 +5219,8 @@ with dj.conn().transaction:
     ])
 
 # Compute results
-ProcessedData.populate()
-print("Before correction:", ProcessedData.fetch1())</div>
+SessionAnalysis.populate()
+print("Before correction:", SessionAnalysis.fetch1())</div>
 </div>
 </div>
 </div>
@@ -5220,13 +5259,13 @@ print("Before correction:", ProcessedData.fetch1())</div>
 </clipboard-copy>
 </div>
 <div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Suppose we discovered trial 2 was actually a 'hit' not 'miss'</span>
-<span class="c1"># WRONG: Updating the trial would leave ProcessedData stale!</span>
+<span class="c1"># WRONG: Updating the trial would leave SessionAnalysis stale!</span>
 <span class="c1"># Session.Trial.update1({...})  # DON'T DO THIS</span>
 
 <span class="c1"># CORRECT: Delete, reinsert, recompute</span>
 <span class="n">key</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'subject_id'</span><span class="p">:</span> <span class="s1">'M003'</span><span class="p">,</span> <span class="s1">'session_idx'</span><span class="p">:</span> <span class="mi">1</span><span class="p">}</span>
 
-<span class="c1"># 1. Delete cascades to ProcessedData</span>
+<span class="c1"># 1. Delete cascades to SessionAnalysis</span>
 <span class="p">(</span><span class="n">Session</span> <span class="o">&amp;</span> <span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">prompt</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
 <span class="c1"># 2. Reinsert with corrected data (using transaction)</span>
@@ -5238,17 +5277,17 @@ print("Before correction:", ProcessedData.fetch1())</div>
     <span class="p">])</span>
 
 <span class="c1"># 3. Recompute</span>
-<span class="n">ProcessedData</span><span class="o">.</span><span class="n">populate</span><span class="p">()</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"After correction:"</span><span class="p">,</span> <span class="n">ProcessedData</span><span class="o">.</span><span class="n">fetch1</span><span class="p">())</span>
+<span class="n">SessionAnalysis</span><span class="o">.</span><span class="n">populate</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"After correction:"</span><span class="p">,</span> <span class="n">SessionAnalysis</span><span class="o">.</span><span class="n">fetch1</span><span class="p">())</span>
 </pre></div>
 <div class="clipboard-copy-txt" id="cell-20"># Suppose we discovered trial 2 was actually a 'hit' not 'miss'
-# WRONG: Updating the trial would leave ProcessedData stale!
+# WRONG: Updating the trial would leave SessionAnalysis stale!
 # Session.Trial.update1({...})  # DON'T DO THIS
 
 # CORRECT: Delete, reinsert, recompute
 key = {'subject_id': 'M003', 'session_idx': 1}
 
-# 1. Delete cascades to ProcessedData
+# 1. Delete cascades to SessionAnalysis
 (Session &amp; key).delete(prompt=False)
 
 # 2. Reinsert with corrected data (using transaction)
@@ -5260,8 +5299,8 @@ with dj.conn().transaction:
     ])
 
 # 3. Recompute
-ProcessedData.populate()
-print("After correction:", ProcessedData.fetch1())</div>
+SessionAnalysis.populate()
+print("After correction:", SessionAnalysis.fetch1())</div>
 </div>
 </div>
 </div>
@@ -5273,21 +5312,21 @@ print("After correction:", ProcessedData.fetch1())</div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>[2026-02-19 18:32:34] Deleting 2 rows from "tutorial_data_entry"."session__trial"
+<pre>[2026-03-13 13:18:18] Deleting 1 rows from "tutorial_data_entry"."__session_analysis"
 </pre>
 </div>
 </div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>[2026-02-19 18:32:34] Deleting 1 rows from "tutorial_data_entry"."__processed_data"
+<pre>[2026-03-13 13:18:18] Deleting 2 rows from "tutorial_data_entry"."session__trial"
 </pre>
 </div>
 </div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>[2026-02-19 18:32:34] Deleting 1 rows from "tutorial_data_entry"."session"
+<pre>[2026-03-13 13:18:18] Deleting 1 rows from "tutorial_data_entry"."session"
 </pre>
 </div>
 </div>

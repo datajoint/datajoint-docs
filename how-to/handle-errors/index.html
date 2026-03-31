@@ -21,7 +21,7 @@
       
       
       <link rel="icon" href="../../assets/images/company-logo-blue.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.5">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
     
     
       
@@ -436,10 +436,6 @@
       
         
       
-        
-      
-        
-      
     
     
     
@@ -497,62 +493,6 @@
     
   
     Data Pipelines
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../explanation/whats-new-2/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    What's New in 2.0
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../explanation/whats-new-22/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    What's New in 2.2
   
 
     
@@ -5414,6 +5354,12 @@
       
         
       
+        
+      
+        
+      
+        
+      
     
     
     
@@ -5465,6 +5411,90 @@
 
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../about/whats-new-22/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    What's New in 2.2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../about/whats-new-21/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    What's New in 2.1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../about/whats-new-2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    What's New in 2.0
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
             
               
                 
@@ -5863,63 +5893,63 @@
 <h2 id="suppress-errors-during-populate">Suppress Errors During Populate<a class="headerlink" href="#suppress-errors-during-populate" title="Permanent link">&para;</a></h2>
 <p>Continue processing despite individual failures:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Stop on first error (default)</span>
-<span class="n">ProcessedData</span><span class="o">.</span><span class="n">populate</span><span class="p">()</span>
+<span class="n">SessionAnalysis</span><span class="o">.</span><span class="n">populate</span><span class="p">()</span>
 
 <span class="c1"># Log errors but continue</span>
-<span class="n">ProcessedData</span><span class="o">.</span><span class="n">populate</span><span class="p">(</span><span class="n">suppress_errors</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">SessionAnalysis</span><span class="o">.</span><span class="n">populate</span><span class="p">(</span><span class="n">suppress_errors</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </code></pre></div>
 <h2 id="view-failed-jobs">View Failed Jobs<a class="headerlink" href="#view-failed-jobs" title="Permanent link">&para;</a></h2>
 <p>Check the jobs table for errors:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># All error jobs</span>
-<span class="n">ProcessedData</span><span class="o">.</span><span class="n">jobs</span><span class="o">.</span><span class="n">errors</span>
+<span class="n">SessionAnalysis</span><span class="o">.</span><span class="n">jobs</span><span class="o">.</span><span class="n">errors</span>
 
 <span class="c1"># View error details</span>
-<span class="k">for</span> <span class="n">job</span> <span class="ow">in</span> <span class="n">ProcessedData</span><span class="o">.</span><span class="n">jobs</span><span class="o">.</span><span class="n">errors</span><span class="o">.</span><span class="n">to_dicts</span><span class="p">():</span>
+<span class="k">for</span> <span class="n">job</span> <span class="ow">in</span> <span class="n">SessionAnalysis</span><span class="o">.</span><span class="n">jobs</span><span class="o">.</span><span class="n">errors</span><span class="o">.</span><span class="n">to_dicts</span><span class="p">():</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Key: </span><span class="si">{</span><span class="n">job</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Message: </span><span class="si">{</span><span class="n">job</span><span class="p">[</span><span class="s1">&#39;error_message&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </code></pre></div>
 <h2 id="get-full-stack-trace">Get Full Stack Trace<a class="headerlink" href="#get-full-stack-trace" title="Permanent link">&para;</a></h2>
 <p>Error stack traces are stored in the jobs table:</p>
-<div class="highlight"><pre><span></span><code><span class="n">job</span> <span class="o">=</span> <span class="p">(</span><span class="n">ProcessedData</span><span class="o">.</span><span class="n">jobs</span><span class="o">.</span><span class="n">errors</span> <span class="o">&amp;</span> <span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">fetch1</span><span class="p">()</span>
+<div class="highlight"><pre><span></span><code><span class="n">job</span> <span class="o">=</span> <span class="p">(</span><span class="n">SessionAnalysis</span><span class="o">.</span><span class="n">jobs</span><span class="o">.</span><span class="n">errors</span> <span class="o">&amp;</span> <span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">fetch1</span><span class="p">()</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">job</span><span class="p">[</span><span class="s1">&#39;error_stack&#39;</span><span class="p">])</span>
 </code></pre></div>
 <h2 id="retry-failed-jobs">Retry Failed Jobs<a class="headerlink" href="#retry-failed-jobs" title="Permanent link">&para;</a></h2>
 <p>Clear error status and rerun:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Delete error records to retry</span>
-<span class="n">ProcessedData</span><span class="o">.</span><span class="n">jobs</span><span class="o">.</span><span class="n">errors</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
+<span class="n">SessionAnalysis</span><span class="o">.</span><span class="n">jobs</span><span class="o">.</span><span class="n">errors</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
 
 <span class="c1"># Reprocess</span>
-<span class="n">ProcessedData</span><span class="o">.</span><span class="n">populate</span><span class="p">(</span><span class="n">reserve_jobs</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">SessionAnalysis</span><span class="o">.</span><span class="n">populate</span><span class="p">(</span><span class="n">reserve_jobs</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </code></pre></div>
 <h2 id="retry-specific-jobs">Retry Specific Jobs<a class="headerlink" href="#retry-specific-jobs" title="Permanent link">&para;</a></h2>
 <p>Target specific failed jobs:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Clear one error</span>
-<span class="p">(</span><span class="n">ProcessedData</span><span class="o">.</span><span class="n">jobs</span> <span class="o">&amp;</span> <span class="n">key</span> <span class="o">&amp;</span> <span class="s2">&quot;status=&#39;error&#39;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
+<span class="p">(</span><span class="n">SessionAnalysis</span><span class="o">.</span><span class="n">jobs</span> <span class="o">&amp;</span> <span class="n">key</span> <span class="o">&amp;</span> <span class="s2">&quot;status=&#39;error&#39;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
 
 <span class="c1"># Retry just that key</span>
-<span class="n">ProcessedData</span><span class="o">.</span><span class="n">populate</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">reserve_jobs</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">SessionAnalysis</span><span class="o">.</span><span class="n">populate</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">reserve_jobs</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </code></pre></div>
 <h2 id="ignore-problematic-jobs">Ignore Problematic Jobs<a class="headerlink" href="#ignore-problematic-jobs" title="Permanent link">&para;</a></h2>
 <p>Mark jobs to skip permanently:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Mark job as ignored</span>
-<span class="n">ProcessedData</span><span class="o">.</span><span class="n">jobs</span><span class="o">.</span><span class="n">ignore</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+<span class="n">SessionAnalysis</span><span class="o">.</span><span class="n">jobs</span><span class="o">.</span><span class="n">ignore</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
 
 <span class="c1"># View ignored jobs</span>
-<span class="n">ProcessedData</span><span class="o">.</span><span class="n">jobs</span><span class="o">.</span><span class="n">ignored</span>
+<span class="n">SessionAnalysis</span><span class="o">.</span><span class="n">jobs</span><span class="o">.</span><span class="n">ignored</span>
 </code></pre></div>
 <h2 id="error-handling-in-make">Error Handling in make()<a class="headerlink" href="#error-handling-in-make" title="Permanent link">&para;</a></h2>
 <p>Handle expected errors gracefully:</p>
 <div class="highlight"><pre><span></span><code><span class="nd">@schema</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">ProcessedData</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Computed</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">SessionAnalysis</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Computed</span><span class="p">):</span>
     <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
-<span class="s2">    -&gt; RawData</span>
+<span class="s2">    -&gt; Session</span>
 <span class="s2">    ---</span>
 <span class="s2">    result : float64</span>
 <span class="s2">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">make</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="n">RawData</span> <span class="o">&amp;</span> <span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">fetch1</span><span class="p">(</span><span class="s1">&#39;data&#39;</span><span class="p">)</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="n">Session</span> <span class="o">&amp;</span> <span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">fetch1</span><span class="p">(</span><span class="s1">&#39;data&#39;</span><span class="p">)</span>
             <span class="n">result</span> <span class="o">=</span> <span class="n">risky_computation</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="c1"># Log and skip this key</span>
@@ -5940,7 +5970,7 @@
 </code></pre></div>
 <h2 id="return-exception-objects">Return Exception Objects<a class="headerlink" href="#return-exception-objects" title="Permanent link">&para;</a></h2>
 <p>Get exception objects for programmatic handling:</p>
-<div class="highlight"><pre><span></span><code><span class="n">result</span> <span class="o">=</span> <span class="n">ProcessedData</span><span class="o">.</span><span class="n">populate</span><span class="p">(</span>
+<div class="highlight"><pre><span></span><code><span class="n">result</span> <span class="o">=</span> <span class="n">SessionAnalysis</span><span class="o">.</span><span class="n">populate</span><span class="p">(</span>
     <span class="n">suppress_errors</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
     <span class="n">return_exception_objects</span><span class="o">=</span><span class="kc">True</span>
 <span class="p">)</span>
@@ -5952,7 +5982,7 @@
 </code></pre></div>
 <h2 id="monitor-error-rate">Monitor Error Rate<a class="headerlink" href="#monitor-error-rate" title="Permanent link">&para;</a></h2>
 <p>Track errors over time:</p>
-<div class="highlight"><pre><span></span><code><span class="n">progress</span> <span class="o">=</span> <span class="n">ProcessedData</span><span class="o">.</span><span class="n">jobs</span><span class="o">.</span><span class="n">progress</span><span class="p">()</span>
+<div class="highlight"><pre><span></span><code><span class="n">progress</span> <span class="o">=</span> <span class="n">SessionAnalysis</span><span class="o">.</span><span class="n">jobs</span><span class="o">.</span><span class="n">progress</span><span class="p">()</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Pending: </span><span class="si">{</span><span class="n">progress</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;pending&#39;</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Errors: </span><span class="si">{</span><span class="n">progress</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;error&#39;</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Success: </span><span class="si">{</span><span class="n">progress</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;success&#39;</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>

@@ -1,6 +1,6 @@
 # DataJoint Documentation (Full)
 
-Generated: 2026-03-13 15:27:17 UTC
+Generated: 2026-03-31 22:34:45 UTC
 Commit: unknown
 Branch: unknown
 
@@ -1556,7 +1556,7 @@ and scalable.
 
     How DataJoint ensures safe joins through attribute lineage tracking.
 
--   :material-new-box: **[What's New in 2.0](whats-new-2.md)**
+-   :material-new-box: **[What's New in 2.0](../about/whats-new-2.md)**
 
     Major changes, new features, and migration guidance for DataJoint 2.0.
 
@@ -2131,70 +2131,65 @@ complete query capability for scientific data pipelines.
 
 # The Relational Workflow Model
 
-DataJoint implements the **Relational Workflow Model**—a paradigm that extends
-relational databases with native support for computational workflows. This model
-defines a new class of databases called **Computational Databases**, where
-computational transformations are first-class citizens of the data model.
+The relational data model has historically been interpreted through two
+conceptual frameworks: Codd's mathematical foundation, which views tables as
+logical predicates, and Chen's Entity-Relationship Model, which views tables
+as entity types and relationships. The relational workflow model introduces a
+third paradigm: **tables represent workflow steps, rows represent workflow
+artifacts, and foreign key dependencies prescribe execution order.** This
+adds an operational dimension absent from both predecessors—the schema
+specifies not only what data exists but how it is derived.
 
-These concepts, along with DataJoint's schema definition language and query algebra,
-were first formalized in [Yatsenko et al., 2018](https://doi.org/10.48550/arXiv.1807.11104).
-
-## The Problem with Traditional Approaches
-
-Traditional relational databases excel at storing and querying data but struggle
-with computational workflows. They can store inputs and outputs, but:
-
-- The database doesn't understand that outputs were *computed from* inputs
-- It doesn't automatically recompute when inputs change
-- It doesn't track provenance
-
-**DataJoint solves these problems by treating your database schema as an
-executable workflow specification.**
+The relational workflow model and its technical innovations are formally
+defined in [Yatsenko & Nguyen, 2026](https://arxiv.org/abs/2602.16585).
+DataJoint's schema definition language and query algebra were first
+formalized in [Yatsenko et al., 2018](https://doi.org/10.48550/arXiv.1807.11104).
 
 ## Three Paradigms Compared
 
-The relational data model has been interpreted through different conceptual
-frameworks, each with distinct strengths and limitations:
-
 | Aspect | Mathematical (Codd) | Entity-Relationship (Chen) | **Relational Workflow (DataJoint)** |
 |--------|---------------------|----------------------------|-------------------------------------|
-| **Core Question** | "What functional dependencies exist?" | "What entity types exist?" | **"When/how are entities created?"** |
-| **Time Dimension** | Not addressed | Not central | **Fundamental** |
-| **Implementation Gap** | High (abstract to SQL) | High (ERM to SQL) | **None (unified approach)** |
-| **Workflow Support** | None | None | **Native workflow modeling** |
+| **Core question** | What functional dependencies exist? | What entity types exist? | **When/how are entities created?** |
+| **Table semantics** | Logical predicate | Entity or relationship | **Workflow step** |
+| **Row semantics** | True proposition | Entity instance | **Workflow artifact** |
+| **Foreign keys** | Referential integrity | Relationship | **Execution order** |
+| **Computation** | Not addressed | Not addressed | **Declared in schema** |
+| **Provenance** | Not addressed | Not addressed | **Structural** |
+| **Implementation gap** | High | High | **None** |
 
 ### Codd's Mathematical Foundation
 
-Edgar F. Codd's original relational model is rooted in predicate calculus and
-set theory. Tables represent logical predicates; rows assert true propositions.
-While mathematically rigorous, this approach requires abstract reasoning that
-doesn't map to intuitive domain thinking.
+Codd's mathematical foundation views tables as logical predicates and rows as
+true propositions—rigorous but abstract.
 
 ### Chen's Entity-Relationship Model
 
-Peter Chen's Entity-Relationship Model (ERM) shifted focus to concrete domain
-modeling—entities and relationships visualized in diagrams. However, ERM:
+Chen's Entity-Relationship Model shifted focus to domain modeling with
+entities, attributes, and relationships—more intuitive, but lacking any
+workflow or computational dimension.
 
-- Creates a gap between conceptual design and SQL implementation
-- Lacks temporal dimension ("when" entities are created)
-- Treats relationships as static connections, not dynamic processes
+## Core Concepts
 
-## The Relational Workflow Model
+### Workflow Steps and Artifacts
 
-The Relational Workflow Model introduces four fundamental concepts:
+Tables are classified into tiers by data entry mode:
 
-### 1. Workflow Entities
+| Tier | Role | `make()` |
+|------|------|----------|
+| **Manual** | Receive direct user entry | No |
+| **Lookup** | Hold reference data | No |
+| **Imported** | Reach out to data sources outside the DataJoint system (instruments, electronic lab notebooks, external databases) | Yes |
+| **Computed** | Derive their contents entirely from upstream DataJoint tables | Yes |
 
-Unlike traditional entities that exist independently, **workflow entities** are
-artifacts of workflow execution—they represent the products of specific
-operations. This temporal dimension allows us to understand not just *what*
-exists, but *when* and *how* it came to exist.
+Imported and Computed tables define computations via `make()` methods. The
+`make()` method specifies how each entity is derived—this computation logic is
+declared within the table definition, making it part of the schema itself
+rather than an external workflow specification.
 
-### 2. Workflow Dependencies
+### Dependencies as Foreign Keys
 
-**Workflow dependencies** extend foreign keys with operational semantics. They
-don't just ensure referential integrity—they prescribe the order of operations.
-Parent entities must be created before child entities.
+Foreign keys define computational dependencies, not only referential integrity.
+The dependency graph is explicit, queryable, and enforced by the database.
 
 ```mermaid
 graph LR
@@ -2203,145 +2198,105 @@ graph LR
     C --> D[Analysis]
 ```
 
-### 3. Workflow Steps (Table Tiers)
+### Master-Part Relationships
 
-Each table represents a distinct **workflow step** with a specific role:
+Master-part relationships declare transactional grouping directly in the
+schema: the master table represents the workflow step, while part tables hold
+the individual items. Insertions and deletions cascade as a unit, enforcing
+transactional semantics without application code.
 
-```mermaid
-graph TD
-    subgraph "Lookup (Gray)"
-        L[Parameters]
-    end
-    subgraph "Manual (Green)"
-        M[Subject]
-        S[Session]
-    end
-    subgraph "Imported (Blue)"
-        I[Recording]
-    end
-    subgraph "Computed (Red)"
-        C[Analysis]
-    end
+### Directed Acyclic Graph
 
-    L --> C
-    M --> S
-    S --> I
-    I --> C
-```
+Dependencies between tables form a directed acyclic graph (DAG); aggregated
+dependencies between schemas likewise form a DAG. Unlike task DAGs in
+workflow managers, these are *relational schema* DAGs—they define data
+structure and relationships, not just execution steps.
 
-| Tier | Role | Examples |
-|------|------|----------|
-| **Lookup** | Reference data, parameters | Species, analysis methods |
-| **Manual** | Human-entered observations | Subjects, sessions |
-| **Imported** | Automated data acquisition | Recordings, images |
-| **Computed** | Derived results | Analyses, statistics |
+## Active Schemas
 
-### 4. Directed Acyclic Graph (DAG)
+The key distinction from classical models: traditional schemas are
+*passive*—containers for data produced by external processes. In the
+relational workflow model, the schema is *active*—Computed tables declare how
+their contents are derived, making the schema itself the workflow
+specification. Schemas are defined as Python classes, and entire pipelines are
+organized as self-contained code repositories—version-controlled, testable,
+and deployable using standard software engineering practices.
 
-The schema forms a **DAG** that:
+A useful analogy: electronic spreadsheets unified data and computation—cells
+with values alongside cells with formulas. Yet this integration never
+penetrated relational databases in their 50+ years of history. The relational
+workflow model brings to databases what spreadsheets brought to tabular
+calculation: the recognition that data and the computations that produce it
+belong together. The analogy has limits: spreadsheets' coupling is also the
+source of their well-known fragility. DataJoint addresses this through formal
+schema constraints and explicit dependency declaration rather than ad-hoc cell
+references.
 
-- Prohibits circular dependencies
-- Ensures valid execution sequences
-- Enables efficient parallel execution
-- Supports resumable computation
+## Workflow Normalization
 
-## The Workflow Normalization Principle
+> **"Every table represents an entity type created at a specific workflow
+> step, and all attributes describe that entity as it exists at that step."**
 
-> **"Every table represents an entity type that is created at a specific step
-> in a workflow, and all attributes describe that entity as it exists at that
-> workflow step."**
+Database normalization decomposes data into tables to eliminate redundancy.
+Classical normalization theory achieves this through normal forms based on
+functional dependencies. Entity normalization asks whether each attribute
+describes the entity identified by the primary key. Workflow normalization
+extends these principles with a temporal dimension.
 
-This principle extends entity normalization with temporal and operational
-dimensions.
+A Session table contains attributes known when the session is entered (date,
+experimenter, subject). Analysis parameters determined later belong in
+Computed tables that depend on Session. This discipline prevents tables that
+accumulate attributes from different workflow stages, obscuring provenance and
+complicating updates.
 
-## Why This Matters
+## Entity Integrity
 
-### Unified Design and Implementation
+All data is represented as well-formed entity sets with primary keys
+identifying each entity uniquely. This eliminates redundancy and ensures
+consistent updates.
 
-Unlike the ERM-SQL gap, DataJoint provides unified:
+When upstream data is deleted, dependent results cascade-delete
+automatically—including associated objects in external storage. To correct
+errors, you delete, reinsert, and recompute, ensuring every result represents
+a consistent computation from valid inputs.
 
-- **Diagramming** — Schema diagrams reflect actual structure
-- **Definition** — Table definitions are executable code
-- **Querying** — Operators understand workflow semantics
+## Query Algebra
 
-No translation needed between conceptual design and implementation.
-
-### Temporal and Operational Awareness
-
-The model captures the dynamic nature of workflows:
-
-- Data processing sequences
-- Computational dependencies
-- Operation ordering
-
-### Immutability and Provenance
-
-Workflow artifacts are immutable once created:
-
-- Preserves execution history
-- Maintains data provenance
-- Enables reproducible science
-
-When you delete upstream data, dependent results cascade-delete automatically.
-To correct errors, you delete, reinsert, and recompute—ensuring every result
-represents a consistent computation from valid inputs.
-
-### Workflow Integrity
-
-The DAG structure guarantees:
-
-- No circular dependencies
-- Valid operation sequences
-- Enforced temporal order
-- Computational validity
-
-## Query Algebra with Workflow Semantics
-
-DataJoint's five operators provide a complete query algebra:
+DataJoint provides a five-operator algebra:
 
 | Operator | Symbol | Purpose |
 |----------|--------|---------|
-| **Restriction** | `&` | Filter entities |
-| **Join** | `*` | Combine from converging paths |
-| **Projection** | `.proj()` | Select/compute attributes |
-| **Aggregation** | `.aggr()` | Summarize groups |
-| **Union** | `+` | Combine parallel branches |
+| **Restrict** | `&` | Filter entities by attribute values or membership in other relations |
+| **Project** | `.proj()` | Select and rename attributes, compute derived values |
+| **Join** | `*` | Combine related entities across relations |
+| **Aggregate** | `.aggr()` | Group entities and compute summary statistics |
+| **Union** | `+` | Combine entity sets with compatible structure |
 
-These operators:
-
-- Take entity sets as input, produce entity sets as output
-- Preserve entity integrity
-- Respect declared dependencies (no ambiguous joins)
+The algebra achieves *algebraic closure*: every operator produces a valid
+entity set with a well-defined primary key, enabling unlimited composition.
+This preservation of entity integrity—every query result is itself a proper
+entity set with clear identity—distinguishes DataJoint's algebra from SQL,
+where query results lack both a well-defined primary key and a clear entity
+type.
 
 ## From Transactions to Transformations
 
-The Relational Workflow Model represents a conceptual shift:
-
 | Traditional View | Workflow View |
 |------------------|---------------|
-| Tables store data | Entity sets are workflow steps |
-| Rows are records | Entities are execution instances |
-| Foreign keys enforce consistency | Dependencies specify information flow |
+| Tables store data | Tables represent workflow steps |
+| Rows are records | Rows are workflow artifacts |
+| Foreign keys enforce consistency | Foreign keys prescribe execution order |
 | Updates modify state | Computations create new states |
 | Schemas organize storage | Schemas specify pipelines |
 | Queries retrieve data | Queries trace provenance |
 
-This makes DataJoint feel less like a traditional database and more like a
-**workflow engine with persistent state**—one that maintains computational
-validity while supporting scientific flexibility.
-
 ## Summary
 
-The Relational Workflow Model:
-
-1. **Extends** relational theory (doesn't replace it)
-2. **Adds** temporal and operational semantics
-3. **Eliminates** the design-implementation gap
-4. **Enables** reproducible computational workflows
-5. **Maintains** mathematical rigor
-
-It's not a departure from relational databases—it's their evolution for
-computational workflows.
+The relational workflow model offers a new way to understand relational
+databases—not merely as storage systems but as computational substrates. By
+interpreting tables as workflow steps and foreign keys as execution
+dependencies, the schema becomes a complete specification of how data is
+derived, not just what data exists.
 
 
 ---
@@ -2911,7 +2866,7 @@ result = np.mean(ref)  # Downloads automatically
 Schema-addressed storage for files and folders. Path mirrors the database structure: `{schema}/{table}/{pk}/{attribute}`.
 
 ```python
-class ProcessedData(dj.Computed):
+class RecordingAnalysis(dj.Computed):
     definition = """
     -> Recording
     ---
@@ -3024,599 +2979,6 @@ class Network(dj.Computed):
 - [Codec API](../reference/specs/codec-api.md/) — Codec class interface
 - [npy Codec Specification](../reference/specs/npy-codec.md/) — NpyRef and NpyCodec details
 - [Object Store Configuration](../reference/specs/object-store-configuration.md/) — Store settings reference
-
-
----
-## File: explanation/whats-new-2.md
-
-# What's New in DataJoint 2.0
-
-DataJoint 2.0 is a major release that establishes DataJoint as a mature framework for scientific data pipelines. The version jump from 0.14 to 2.0 reflects the significance of these changes.
-
-> **📘 Upgrading from legacy DataJoint (pre-2.0)?**
->
-> This page summarizes new features and concepts. For step-by-step migration instructions, see the **[Migration Guide](../how-to/migrate-to-v20.md/)**.
-
-> **Citation:** Yatsenko D, Nguyen TT. *DataJoint 2.0: A Computational Substrate for Agentic Scientific Workflows.* arXiv:2602.16585. 2026. [doi:10.48550/arXiv.2602.16585](https://doi.org/10.48550/arXiv.2602.16585)
-
-## Overview
-
-DataJoint 2.0 introduces fundamental improvements to type handling, job coordination, and object storage while maintaining compatibility with your existing pipelines during migration. Key themes:
-
-- **Explicit over implicit**: All type conversions are now explicit through the codec system
-- **Better distributed computing**: Per-table job coordination with improved error handling
-- **Object storage integration**: Native support for large arrays and files
-- **Multi-backend support**: Portable types enabling PostgreSQL backend (added in 2.1)
-
-### Breaking Changes at a Glance
-
-If you're upgrading from legacy DataJoint, these changes require code updates:
-
-| Area | Legacy | 2.0 |
-|------|--------|-----|
-| **Fetch API** | `table.fetch()` | `table.to_dicts()` or `.to_arrays()` |
-| **Update** | `(table & key)._update('attr', val)` | `table.update1({**key, 'attr': val})` |
-| **Join** | `table1 @ table2` | `table1 * table2` (with semantic check) |
-| **Type syntax** | `longblob`, `int unsigned` | `<blob>`, `int64` |
-| **Jobs** | `~jobs` table | Per-table `~~table_name` |
-
-See the [Migration Guide](../how-to/migrate-to-v20.md/) for complete upgrade steps.
-
-## Object-Augmented Schema (OAS)
-
-DataJoint 2.0 unifies relational tables with object storage into a single coherent system. The relational database stores metadata and references while large objects (arrays, files, Zarr datasets) are stored in object storage—with full referential integrity maintained across both layers.
-
-→ [Type System Specification](../reference/specs/type-system.md/)
-
-**Three storage sections:**
-
-| Section | Addressing | Use Case |
-|---------|------------|----------|
-| **Internal** | Row-based (in database) | Small objects (< 1 MB) |
-| **Hash-addressed** | Content hash | Arrays, files (deduplication) |
-| **Path-addressed** | Primary key path | Zarr, HDF5, streaming access |
-
-**New syntax:**
-
-```python
-definition = """
-recording_id : uuid
----
-metadata : <blob>           # Internal storage
-raw_data : <blob@store>     # Hash-addressed object storage
-zarr_array : <object@store> # Path-addressed for Zarr/HDF5
-"""
-```
-
-## Explicit Type System
-
-**Breaking change**: DataJoint 2.0 makes all type conversions explicit through a three-tier architecture.
-
-→ [Type System Specification](../reference/specs/type-system.md/) · [Codec API Specification](../reference/specs/codec-api.md/)
-
-### What Changed
-
-Legacy DataJoint overloaded MySQL types with implicit conversions:
-- `longblob` could be blob serialization OR in-table attachment
-- `attach` was implicitly converted to longblob
-- `uuid` was used internally for external storage
-
-**DataJoint 2.0 makes everything explicit:**
-
-| Legacy (Implicit) | 2.0 (Explicit) |
-|-------------------|----------------|
-| `longblob` | `<blob>` |
-| `attach` | `<attach>` |
-| `blob@store` | `<blob@store>` |
-| `int unsigned` | `int64` |
-
-### Three-Tier Architecture
-
-1. **Native types**: MySQL types (`INT`, `VARCHAR`, `LONGBLOB`)
-2. **Core types**: Portable aliases (`int32`, `float64`, `varchar`, `uuid`, `json`)
-3. **Codecs**: Serialization for Python objects (`<blob>`, `<attach>`, `<object@>`)
-
-### Custom Codecs
-
-Replace legacy AdaptedTypes with the new codec API:
-
-```python
-class GraphCodec(dj.Codec):
-    name = "graph"
-
-    def encode(self, value, **kwargs):
-        return list(value.edges)
-
-    def decode(self, stored, **kwargs):
-        import networkx as nx
-        return nx.Graph(stored)
-```
-
-## Jobs 2.0
-
-**Breaking change**: Redesigned job coordination with per-table job management.
-
-→ [AutoPopulate Specification](../reference/specs/autopopulate.md/) · [Job Metadata Specification](../reference/specs/job-metadata.md/)
-
-### What Changed
-
-| Legacy (Schema-level) | 2.0 (Per-table) |
-|----------------------|-----------------|
-| One `~jobs` table per schema | One `~~table_name` per Computed/Imported table |
-| Opaque hashed keys | Native primary keys (readable) |
-| Statuses: `reserved`, `error`, `ignore` | Added: `pending`, `success` |
-| No priority support | Priority column (lower = more urgent) |
-
-### New Features
-
-- **Automatic refresh**: Job queue synchronized with pending work automatically
-- **Better coordination**: Multiple workers coordinate via database without conflicts
-- **Error tracking**: Built-in error table (`Table.jobs.errors`) with full stack traces
-- **Priority support**: Control computation order with priority values
-
-```python
-# Distributed mode with coordination
-Analysis.populate(reserve_jobs=True, processes=4)
-
-# Monitor progress
-Analysis.jobs.progress()  # {'pending': 10, 'reserved': 2, 'error': 0}
-
-# Handle errors
-Analysis.jobs.errors.to_dicts()
-
-# Set priorities
-Analysis.jobs.update({'session_id': 123}, priority=1)  # High priority
-```
-
-## Semantic Matching
-
-**Breaking change**: Query operations now use **lineage-based matching** by default.
-
-→ [Semantic Matching Specification](../reference/specs/semantic-matching.md/)
-
-### What Changed
-
-Legacy DataJoint used SQL-style natural joins: attributes matched if they had the same name, regardless of meaning.
-
-**DataJoint 2.0 validates semantic lineage**: Attributes must share common origin through foreign key chains, not just coincidentally matching names.
-
-```python
-# 2.0: Semantic join (default) - validates lineage
-result = TableA * TableB  # Only matches attributes with shared origin
-
-# Legacy behavior (if needed)
-result = TableA.join(TableB, semantic_check=False)
-```
-
-**Why this matters**: Prevents accidental matches between attributes like `session_id` that happen to share a name but refer to different entities in different parts of your schema.
-
-**During migration**: If semantic matching fails, it often indicates a malformed join that should be reviewed rather than forced.
-
-## Configuration System
-
-A cleaner configuration approach with separation of concerns.
-
-→ [Configuration Reference](../reference/configuration.md/)
-
-- **`datajoint.json`**: Non-sensitive settings (commit to version control)
-- **`.secrets/`**: Credentials (never commit)
-- **Environment variables**: For CI/CD and production
-
-```bash
-export DJ_HOST=db.example.com
-export DJ_USER=myuser
-export DJ_PASS=mypassword
-```
-
-## ObjectRef API (New)
-
-**New feature**: Path-addressed storage returns `ObjectRef` handles that support streaming access without downloading entire datasets.
-
-```python
-ref = (Dataset & key).fetch1('zarr_array')
-
-# Direct fsspec access for Zarr/xarray
-z = zarr.open(ref.fsmap, mode='r')
-
-# Or download locally
-local_path = ref.download('/tmp/data')
-
-# Stream chunks without full download
-with ref.open('rb') as f:
-    chunk = f.read(1024)
-```
-
-This enables efficient access to large datasets stored in Zarr, HDF5, or custom formats.
-
-## Deprecated and Removed
-
-### Removed APIs
-
-- **`.fetch()` method**: Replaced with `.to_dicts()`, `.to_arrays()`, or `.to_pandas()`
-- **`._update()` method**: Replaced with `.update1()`
-- **`@` operator (natural join)**: Use `*` with semantic matching or `.join(semantic_check=False)`
-- **`dj.U() * table` pattern**: Use just `table` (universal set is implicit)
-
-### Deprecated Features
-
-- **AdaptedTypes**: Replaced by codec system (still works but migration recommended)
-- **Native type syntax**: `int unsigned` → `int64` (warnings on new tables)
-- **Legacy external storage** (`blob@store`): Replaced by `<blob@store>` codec syntax
-
-### Legacy Support
-
-During migration (Phases 1-3), both legacy and 2.0 APIs can coexist:
-- Legacy clients can still access data
-- 2.0 clients understand legacy column types
-- Dual attributes enable cross-testing
-
-After finalization (Phase 4+), only 2.0 clients are supported.
-
-## License Change
-
-DataJoint 2.0 is licensed under the **Apache License 2.0** (previously LGPL-2.1). This provides:
-
-- More permissive for commercial and academic use
-- Clearer patent grant provisions
-- Better compatibility with broader ecosystem
-
-## Migration Path
-
-→ **[Complete Migration Guide](../how-to/migrate-to-v20.md/)**
-
-Upgrading from DataJoint 0.x is a **phased process** designed to minimize risk:
-
-### Phase 1: Code Updates (Reversible)
-- Update Python code to 2.0 API patterns (`.fetch()` → `.to_dicts()`, etc.)
-- Update configuration files (`dj_local_conf.json` → `datajoint.json` + `.secrets/`)
-- **No database changes** — legacy clients still work
-
-### Phase 2: Type Migration (Reversible)
-- Update database column comments to use core types (`:int64:`, `:<blob>:`)
-- Rebuild `~lineage` tables for semantic matching
-- Update Python table definitions
-- **Legacy clients still work** — only metadata changed
-
-### Phase 3: External Storage Dual Attributes (Reversible)
-- Create `*_v2` attributes alongside legacy external storage columns
-- Both APIs can access data during transition
-- Enables cross-testing between legacy and 2.0
-- **Legacy clients still work**
-
-### Phase 4: Finalize (Point of No Return)
-- Remove legacy external storage columns
-- Drop old `~jobs` and `~external_*` tables
-- **Legacy clients stop working** — database backup required
-
-### Phase 5: Adopt New Features (Optional)
-- Use new codecs (`<object@>`, `<npy@>`)
-- Leverage Jobs 2.0 features (priority, better errors)
-- Implement custom codecs for domain-specific types
-
-### Migration Support
-
-The migration guide includes:
-- **AI agent prompts** for automated migration steps
-- **Validation commands** to check migration status
-- **Rollback procedures** for each phase
-- **Dry-run modes** for all database changes
-
-Most users complete Phases 1-2 in a single session. Phases 3-4 only apply if you use legacy external storage.
-
-## See Also
-
-### Migration
-- **[Migration Guide](../how-to/migrate-to-v20.md/)** — Complete upgrade instructions
-- [Configuration](../how-to/configure-database.md/) — Setup new configuration system
-
-### Core Concepts
-- [Type System](type-system.md) — Understand the three-tier type architecture
-- [Computation Model](computation-model.md) — Jobs 2.0 and AutoPopulate
-- [Query Algebra](query-algebra.md) — Semantic matching and operators
-
-### Getting Started
-- [Installation](../how-to/installation.md/) — Install DataJoint 2.0
-- [Tutorials](../tutorials/index.md/) — Learn by example
-
-### Reference
-- [Type System Specification](../reference/specs/type-system.md/) — Complete type system details
-- [Codec API](../reference/specs/codec-api.md/) — Build custom codecs
-- [AutoPopulate Specification](../reference/specs/autopopulate.md/) — Jobs 2.0 reference
-
-
----
-## File: explanation/whats-new-22.md
-
-# What's New in DataJoint 2.2
-
-DataJoint 2.2 introduces **isolated instances** and **thread-safe mode** for applications that need multiple independent database connections, and **graph-driven diagram operations** that replace the legacy error-driven cascade with a reliable, inspectable approach for all users.
-
-> **Upgrading from 2.0 or 2.1?** No breaking changes. All existing code using `dj.config` and `dj.Schema()` continues to work. The new Instance API is purely additive.
-
-> **Citation:** Yatsenko D, Nguyen TT. *DataJoint 2.0: A Computational Substrate for Agentic Scientific Workflows.* arXiv:2602.16585. 2026. [doi:10.48550/arXiv.2602.16585](https://doi.org/10.48550/arXiv.2602.16585)
-
-## Overview
-
-DataJoint has traditionally used a global singleton pattern: one configuration (`dj.config`), one connection (`dj.conn()`), shared across all tables in a process. This works well for interactive sessions and single-user scripts, but breaks down when:
-
-- A web server handles requests for different databases simultaneously
-- A notebook connects to production and staging databases side by side
-- Tests need isolated databases that don't interfere with each other
-- Parallel pipelines need independent connections
-
-DataJoint 2.2 solves this with `dj.Instance`—an object that bundles its own configuration and connection, independent of global state.
-
-## `dj.Instance` API
-
-An Instance encapsulates a config and connection pair. Create one by providing database credentials directly:
-
-```python
-import datajoint as dj
-
-inst = dj.Instance(host="localhost", user="root", password="secret")
-```
-
-Then use `inst.Schema()` instead of `dj.Schema()`:
-
-```python
-schema = inst.Schema("my_database")
-
-@schema
-class Experiment(dj.Manual):
-    definition = """
-    experiment_id : int32
-    ---
-    description : varchar(255)
-    """
-```
-
-Tables defined this way use the Instance's connection—completely independent of `dj.config` and `dj.conn()`.
-
-### Instance Parameters
-
-| Parameter | Type | Default | Description |
-|-----------|------|---------|-------------|
-| `host` | str | — | Database hostname (required) |
-| `user` | str | — | Database username (required) |
-| `password` | str | — | Database password (required) |
-| `port` | int | from config | Database port (default: 3306 for MySQL, 5432 for PostgreSQL) |
-| `use_tls` | bool or dict | `None` | TLS configuration |
-| `**kwargs` | — | — | Config overrides (e.g., `safemode=False`) |
-
-### Instance Methods
-
-| Method | Description |
-|--------|-------------|
-| `inst.Schema(name)` | Create a Schema bound to this Instance's connection |
-| `inst.FreeTable(full_name)` | Create a FreeTable bound to this Instance's connection |
-| `inst.config` | Access this Instance's Config object |
-| `inst.connection` | Access this Instance's Connection object |
-
-### Config Overrides
-
-Pass any config setting as a keyword argument. Use double underscores for nested settings:
-
-```python
-inst = dj.Instance(
-    host="localhost", user="root", password="secret",
-    safemode=False,
-    database__reconnect=False,
-)
-```
-
-## Multiple Databases
-
-Instances make it straightforward to work with multiple databases simultaneously:
-
-```python
-production = dj.Instance(host="prod.example.com", user="analyst", password="...")
-staging = dj.Instance(host="staging.example.com", user="dev", password="...")
-
-prod_schema = production.Schema("experiment_data")
-staging_schema = staging.Schema("experiment_data")
-
-# Query both independently
-prod_data = ProdTable.to_dicts()
-staging_data = StagingTable.to_dicts()
-```
-
-Each Instance maintains its own connection pool and configuration—no cross-contamination.
-
-## Thread-Safe Mode
-
-For applications where global state is dangerous (web servers, multi-threaded workers), enable thread-safe mode:
-
-```bash
-export DJ_THREAD_SAFE=true
-```
-
-When thread-safe mode is enabled:
-
-- `dj.config` raises `ThreadSafetyError` on any access
-- `dj.conn()` raises `ThreadSafetyError`
-- `dj.Schema()` without an explicit connection raises `ThreadSafetyError`
-- Only `dj.Instance()` works, enforcing explicit connection management
-
-This prevents accidental use of shared global state in concurrent environments.
-
-### `ThreadSafetyError`
-
-```python
-import os
-os.environ["DJ_THREAD_SAFE"] = "true"
-
-import datajoint as dj
-
-dj.config.database.host  # raises ThreadSafetyError
-dj.conn()                # raises ThreadSafetyError
-
-# Instead, use Instance:
-inst = dj.Instance(host="localhost", user="root", password="secret")
-schema = inst.Schema("my_db")  # works
-```
-
-### Environment Variable
-
-| Variable | Values | Default | Description |
-|----------|--------|---------|-------------|
-| `DJ_THREAD_SAFE` | `true`, `1`, `yes` / `false`, `0`, `no` | `false` | Enable thread-safe mode |
-
-## Connection-Scoped Config
-
-Each Instance carries its own `Config` object. Runtime configuration reads go through the Instance's config, not global state:
-
-```python
-inst = dj.Instance(host="localhost", user="root", password="secret")
-
-# Instance-scoped config
-inst.config.safemode = False
-inst.config.display.limit = 25
-
-# Global config is unaffected
-print(dj.config.safemode)  # still True (default)
-```
-
-Tables created through an Instance's Schema read config from that Instance's connection, not from `dj.config`.
-
-## When to Use Instances
-
-| Scenario | Pattern |
-|----------|---------|
-| Interactive notebook, single database | `dj.config` + `dj.Schema()` (global pattern) |
-| Script connecting to one database | Either pattern works |
-| Web server (Flask, FastAPI, Django) | `dj.Instance()` per request/tenant |
-| Multi-database comparison | One `dj.Instance()` per database |
-| Parallel workers | `dj.Instance()` per worker + `DJ_THREAD_SAFE=true` |
-| Test suite | `dj.Instance()` per test for isolation |
-| Shared notebook server | `dj.Instance()` per user session |
-
-## Comparison: Global vs Instance
-
-### Global Pattern (unchanged)
-
-```python
-import datajoint as dj
-
-# Config set via environment, files, or programmatically
-dj.config["database.host"] = "localhost"
-
-schema = dj.Schema("my_db")
-
-@schema
-class MyTable(dj.Manual):
-    definition = """
-    id : int32
-    ---
-    value : float64
-    """
-```
-
-### Instance Pattern (new in 2.2)
-
-```python
-import datajoint as dj
-
-inst = dj.Instance(host="localhost", user="root", password="secret")
-schema = inst.Schema("my_db")
-
-@schema
-class MyTable(dj.Manual):
-    definition = """
-    id : int32
-    ---
-    value : float64
-    """
-```
-
-Once a Schema is created, table definitions, inserts, queries, and all other operations work identically regardless of which pattern was used to create the Schema.
-
-## Graph-Driven Diagram Operations
-
-DataJoint 2.2 promotes `dj.Diagram` from a visualization tool to an operational component. The same dependency graph that renders pipeline diagrams now powers cascade delete, table drop, and data subsetting.
-
-### From Visualization to Operations
-
-In prior versions, `dj.Diagram` existed solely for visualization — drawing the dependency graph as SVG or Mermaid output. The cascade logic inside `Table.delete()` traversed dependencies independently using an error-driven approach: attempt `DELETE` on the parent, catch the foreign key integrity error, parse the error message to discover which child table is blocking, then recursively delete from that child first. This had several problems:
-
-- **MySQL 8 with limited privileges** returns error 1217 (`ROW_IS_REFERENCED`) instead of 1451 (`ROW_IS_REFERENCED_2`), which provides no table name — the cascade crashes with no way to proceed.
-- **PostgreSQL** aborts the entire transaction on any error, requiring `SAVEPOINT` / `ROLLBACK TO SAVEPOINT` round-trips for each failed delete attempt.
-- **Fragile error parsing** across MySQL versions and privilege levels, where different configurations produce different error message formats.
-
-In 2.2, `Table.delete()` and `Table.drop()` use `dj.Diagram` internally to compute the dependency graph and walk it in reverse topological order — deleting leaves first, with no trial-and-error needed. The user-facing behavior of `Table.delete()` is unchanged. The Diagram's `cascade()` and `preview()` methods are available as a public inspection API for understanding cascade impact before executing.
-
-### The Preview-Then-Execute Pattern
-
-The key benefit of the diagram-level API is the ability to build a cascade explicitly, inspect it, and then execute via `Table.delete()`:
-
-```python
-# Build the dependency graph and inspect the cascade
-diag = dj.Diagram(schema)
-restricted = diag.cascade(Session & {'subject_id': 'M001'})
-
-# Inspect: what tables and how many rows would be affected?
-counts = restricted.preview()
-# {'`lab`.`session`': 3, '`lab`.`trial`': 45, '`lab`.`processed_data`': 45}
-
-# Execute via Table.delete() after reviewing the blast radius
-(Session & {'subject_id': 'M001'}).delete(prompt=False)
-```
-
-This is valuable when working with unfamiliar pipelines, large datasets, or multi-schema dependencies where the cascade impact is not immediately obvious.
-
-### Two Propagation Modes
-
-The diagram supports two restriction propagation modes designed for fundamentally different tasks.
-
-**`cascade()` prepares a delete.** It takes a single restricted table expression, propagates the restriction downstream through all descendants, and **trims the diagram** to the resulting subgraph — ancestors and unrelated tables are removed entirely. Convergence uses OR: a descendant row is marked for deletion if *any* ancestor path reaches it, because if any reason exists to remove a row, it should be removed. `cascade()` is one-shot and is always followed by `preview()` or `delete()`.
-
-When the cascade encounters a part table whose master is not yet included in the cascade, the behavior depends on the `part_integrity` setting. With `"enforce"` (the default), `delete()` raises an error if part rows would be deleted without their master — preventing orphaned master rows. With `"cascade"`, the restriction propagates *upward* from the part to its master: the restricted part rows identify which master rows are affected, those masters receive a restriction, and that restriction then propagates back downstream to all sibling parts — deleting the entire compositional unit, not just the originally matched part rows.
-
-**`restrict()` selects a data subset.** It propagates a restriction downstream but **preserves the full diagram**, allowing `restrict()` to be called again from a different seed table. This makes it possible to build up multi-condition subsets incrementally — for example, restricting by species from one table and by date from another. Convergence uses AND: a descendant row is included only if *all* restricted ancestors match, because an export should contain only rows satisfying every condition. After chaining restrictions, use `prune()` to remove empty tables and `preview()` to inspect the result.
-
-The two modes are mutually exclusive on the same diagram — DataJoint raises an error if you attempt to mix `cascade()` and `restrict()`, or if you call `cascade()` more than once. This prevents accidental mixing of incompatible semantics: a delete diagram should never be reused for subsetting, and vice versa.
-
-### Pruning Empty Tables
-
-After applying restrictions, some tables in the diagram may have zero matching rows. The `prune()` method removes these tables from the diagram, leaving only the subgraph with actual data:
-
-```python
-export = (dj.Diagram(schema)
-    .restrict(Subject & {'species': 'mouse'})
-    .restrict(Session & 'session_date > "2024-01-01"')
-    .prune())
-
-export.preview()   # only tables with matching rows
-export             # visualize the export subgraph
-```
-
-Without prior restrictions, `prune()` removes physically empty tables. This is useful for understanding which parts of a pipeline are populated.
-
-### Architecture
-
-`Table.delete()` constructs a `Diagram` internally, calls `cascade()` to compute the affected subgraph, then executes the delete itself in reverse topological order. The Diagram is purely a graph computation and inspection tool — it computes the cascade and provides `preview()`, but all mutation logic (transactions, SQL execution, prompts) lives in `Table.delete()` and `Table.drop()`.
-
-### Advantages over Error-Driven Cascade
-
-The graph-driven approach resolves every known limitation of the prior error-driven cascade:
-
-| Scenario | Error-driven (prior) | Graph-driven (2.2) |
-|---|---|---|
-| MySQL 8 + limited privileges | Crashes (error 1217, no table name) | Works — no error parsing needed |
-| PostgreSQL | Savepoint overhead per attempt | No errors triggered |
-| Multiple FKs to same child | One-at-a-time via retry loop | All paths resolved upfront |
-| Part integrity enforcement | Post-hoc check after delete | Data-driven post-check (no false positives) |
-| Unloaded schemas | Crash with opaque error | Clear error: "activate schema X" |
-| Reusability | Delete-only | Delete, drop, export, prune |
-| Inspectability | Opaque recursive cascade | `preview()` / `dry_run` before executing |
-
-## See Also
-
-- [Use Isolated Instances](../how-to/use-instances.md) — Task-oriented guide
-- [Working with Instances](../tutorials/advanced/instances.ipynb) — Step-by-step tutorial
-- [Configuration Reference](../reference/configuration.md) — Thread-safe mode settings
-- [Configure Database](../how-to/configure-database.md) — Connection setup
-- [Diagram Specification](../reference/specs/diagram.md) — Full reference for diagram operations
-- [Delete Data](../how-to/delete-data.md) — Task-oriented delete guide
 
 
 ============================================================
@@ -3940,7 +3302,7 @@ This tutorial introduces `dj.Instance`, which provides isolated database connect
 - Connect to multiple databases simultaneously
 - Understand when to use Instances vs the global pattern
 
-> **New in DataJoint 2.2.** For the rationale behind Instances, see [What's New in 2.2](../../explanation/whats-new-22.md).
+> **New in DataJoint 2.2.** For the rationale behind Instances, see [What's New in 2.2](../../about/whats-new-22.md).
 
 ## Setup
 
@@ -4127,7 +3489,7 @@ Once a Schema exists, all table operations are the same regardless of how it was
 
 ### Next Steps
 
-- [What's New in 2.2](../../explanation/whats-new-22.md) — Feature overview and rationale
+- [What's New in 2.2](../../about/whats-new-22.md) — Feature overview and rationale
 - [Use Isolated Instances](../../how-to/use-instances.md) — Task-oriented guide
 - [Configuration Reference](../../reference/configuration.md) — Thread-safe mode settings
 
@@ -5791,7 +5153,7 @@ class Session(dj.Manual):
         """
 
 @schema
-class ProcessedData(dj.Computed):
+class SessionAnalysis(dj.Computed):
     definition = """
     -> Session
     ---
@@ -6069,20 +5431,20 @@ print(f"Sessions: {len(Session())}")
 print(f"Trials: {len(Session.Trial())}")
 
 # Populate computed table
-ProcessedData.populate()
-print(f"ProcessedData: {len(ProcessedData())}")
+SessionAnalysis.populate()
+print(f"SessionAnalysis: {len(SessionAnalysis())}")
 ```
 
 
 
 ```python
-# Delete a session - cascades to Trial and ProcessedData
+# Delete a session - cascades to Trial and SessionAnalysis
 (Session & {'subject_id': 'M001', 'session_idx': 1}).delete(prompt=False)
 
 print(f"After delete:")
 print(f"Sessions: {len(Session())}")
 print(f"Trials: {len(Session.Trial())}")
-print(f"ProcessedData: {len(ProcessedData())}")
+print(f"SessionAnalysis: {len(SessionAnalysis())}")
 ```
 
 
@@ -6145,21 +5507,21 @@ with dj.conn().transaction:
     ])
 
 # Compute results
-ProcessedData.populate()
-print("Before correction:", ProcessedData.fetch1())
+SessionAnalysis.populate()
+print("Before correction:", SessionAnalysis.fetch1())
 ```
 
 
 
 ```python
 # Suppose we discovered trial 2 was actually a 'hit' not 'miss'
-# WRONG: Updating the trial would leave ProcessedData stale!
+# WRONG: Updating the trial would leave SessionAnalysis stale!
 # Session.Trial.update1({...})  # DON'T DO THIS
 
 # CORRECT: Delete, reinsert, recompute
 key = {'subject_id': 'M003', 'session_idx': 1}
 
-# 1. Delete cascades to ProcessedData
+# 1. Delete cascades to SessionAnalysis
 (Session & key).delete(prompt=False)
 
 # 2. Reinsert with corrected data (using transaction)
@@ -6171,8 +5533,8 @@ with dj.conn().transaction:
     ])
 
 # 3. Recompute
-ProcessedData.populate()
-print("After correction:", ProcessedData.fetch1())
+SessionAnalysis.populate()
+print("After correction:", SessionAnalysis.fetch1())
 ```
 
 
@@ -12251,6 +11613,10 @@ Standard pipelines for neurophysiology experiments, actively used in many labs w
 - [Electrophysiology](domain/electrophysiology/electrophysiology.ipynb) — Import recordings, spike detection, waveforms
 - [Allen CCF](domain/allen-ccf/allen-ccf.ipynb) — Hierarchical brain atlas ontology
 
+**Complete demo pipeline:**
+
+- [LC-MS Demo](https://github.com/datajoint/lcms-demo) — Liquid chromatography-mass spectrometry pipeline showcasing DataJoint best practices with PostgreSQL: sample tracking, scan acquisition, mass spectral analysis, and parameterized peak detection
+
 **General patterns:**
 
 - [Hotel Reservations](examples/hotel-reservations.ipynb) — Booking systems with resource management
@@ -12542,10 +11908,10 @@ For tables created before enabling job metadata:
 from datajoint.migrate import add_job_metadata_columns
 
 # Dry run
-add_job_metadata_columns(ProcessedData, dry_run=True)
+add_job_metadata_columns(SessionAnalysis, dry_run=True)
 
 # Apply
-add_job_metadata_columns(ProcessedData, dry_run=False)
+add_job_metadata_columns(SessionAnalysis, dry_run=False)
 ```
 
 ## Best Practices
@@ -15036,7 +14402,7 @@ with dj.conn().transaction:
     Session.Trial.insert(corrected_trials)
 
 # 3. Recompute derived data
-ProcessedData.populate()
+SessionAnalysis.populate()
 ```
 
 This ensures all derived data remains consistent with source data.
@@ -15055,31 +14421,22 @@ print(f"Deleted {count} subjects")
 !!! version-added "New in 2.2"
     Cascade inspection via `dj.Diagram` was added in DataJoint 2.2.
 
-For a quick preview, `table.delete(dry_run=True)` returns the affected row counts without deleting anything:
+With `safemode=True` (the default), `delete()` provides a built-in safety workflow: it executes the cascade inside a transaction, shows all affected tables and row counts, and asks **"Commit deletes?"** before committing. Declining rolls back all changes.
 
-```python
-# Quick preview of what would be deleted
-(Session & {'subject_id': 'M001'}).delete(dry_run=True)
-# {'`lab`.`session`': 3, '`lab`.`trial`': 45, '`lab`.`processed_data`': 45}
-```
-
-For more complex scenarios — working across schemas, chaining multiple restrictions, or visualizing the dependency graph — use `dj.Diagram` to build and inspect the cascade explicitly:
+For programmatic preview without executing, or for complex scenarios — working across schemas or visualizing the dependency graph — use `Diagram.cascade()` to inspect the cascade:
 
 ```python
 import datajoint as dj
 
-# 1. Build the dependency graph and apply cascade restriction
-diag = dj.Diagram(schema)
-restricted = diag.cascade(Session & {'subject_id': 'M001'})
-
-# 2. Preview: see affected tables and row counts
-counts = restricted.preview()
+# 1. Preview: see affected tables and row counts (across all loaded schemas)
+cascade = dj.Diagram.cascade(Session & {'subject_id': 'M001'})
+counts = cascade.counts()
 # {'`lab`.`session`': 3, '`lab`.`trial`': 45, '`lab`.`processed_data`': 45}
 
-# 3. Visualize the cascade subgraph (in Jupyter)
-restricted
+# 2. Visualize the cascade subgraph (in Jupyter)
+cascade
 
-# 4. Execute via Table.delete() after reviewing
+# 3. Execute via Table.delete() after reviewing
 (Session & {'subject_id': 'M001'}).delete(prompt=False)
 ```
 
@@ -15087,7 +14444,7 @@ restricted
 
 - **Preview blast radius**: Understand what a cascade delete will affect before committing
 - **Multi-schema inspection**: Build a diagram spanning multiple schemas to visualize cascade impact
-- **Programmatic control**: Use `preview()` return values to make decisions in automated workflows
+- **Programmatic control**: Use `counts()` return values to make decisions in automated workflows
 
 For simple single-table deletes, `(Table & restriction).delete()` remains the simplest approach. The diagram API is for when you need more visibility before executing.
 
@@ -15648,10 +15005,10 @@ Use `reserve_jobs=True` to enable job coordination:
 
 ```python
 # Single worker (default)
-ProcessedData.populate()
+SessionAnalysis.populate()
 
 # Distributed mode with job reservation
-ProcessedData.populate(reserve_jobs=True)
+SessionAnalysis.populate(reserve_jobs=True)
 ```
 
 ## How It Works
@@ -15666,7 +15023,7 @@ With `reserve_jobs=True`:
 
 ```python
 # Use multiple processes
-ProcessedData.populate(reserve_jobs=True, processes=4)
+SessionAnalysis.populate(reserve_jobs=True, processes=4)
 ```
 
 Each process:
@@ -15682,10 +15039,10 @@ Run the same script on multiple machines:
 ```python
 # worker_script.py - run on each machine
 import datajoint as dj
-from my_pipeline import ProcessedData
+from my_pipeline import SessionAnalysis
 
 # Each worker reserves and processes different jobs
-ProcessedData.populate(
+SessionAnalysis.populate(
     reserve_jobs=True,
     display_progress=True,
     suppress_errors=True
@@ -15700,13 +15057,13 @@ Each auto-populated table has a jobs table (`~~table_name`):
 
 ```python
 # View job status
-ProcessedData.jobs
+SessionAnalysis.jobs
 
 # Filter by status
-ProcessedData.jobs.pending
-ProcessedData.jobs.reserved
-ProcessedData.jobs.errors
-ProcessedData.jobs.completed
+SessionAnalysis.jobs.pending
+SessionAnalysis.jobs.reserved
+SessionAnalysis.jobs.errors
+SessionAnalysis.jobs.completed
 ```
 
 ## Job Statuses
@@ -15725,7 +15082,7 @@ Sync the job queue with current key_source:
 
 ```python
 # Add new pending jobs, remove stale ones
-result = ProcessedData.jobs.refresh()
+result = SessionAnalysis.jobs.refresh()
 print(f"Added: {result['added']}, Removed: {result['removed']}")
 ```
 
@@ -15735,10 +15092,10 @@ Control processing order with priorities:
 
 ```python
 # Refresh with specific priority
-ProcessedData.jobs.refresh(priority=1)  # Lower = more urgent
+SessionAnalysis.jobs.refresh(priority=1)  # Lower = more urgent
 
 # Process only high-priority jobs
-ProcessedData.populate(reserve_jobs=True, priority=3)
+SessionAnalysis.populate(reserve_jobs=True, priority=3)
 ```
 
 ## Error Recovery
@@ -15747,13 +15104,13 @@ Handle failed jobs:
 
 ```python
 # View errors
-errors = ProcessedData.jobs.errors
+errors = SessionAnalysis.jobs.errors
 for job in errors.to_dicts():
     print(f"Key: {job}, Error: {job['error_message']}")
 
 # Clear errors to retry
 errors.delete()
-ProcessedData.populate(reserve_jobs=True)
+SessionAnalysis.populate(reserve_jobs=True)
 ```
 
 ## Orphan Detection
@@ -15762,7 +15119,7 @@ Jobs from crashed workers are automatically recovered:
 
 ```python
 # Refresh with orphan timeout (seconds)
-ProcessedData.jobs.refresh(orphan_timeout=3600)
+SessionAnalysis.jobs.refresh(orphan_timeout=3600)
 ```
 
 Reserved jobs older than the timeout are reset to pending.
@@ -15812,10 +15169,10 @@ dj.config.jobs.version_method = "git"
 
 # worker.py - run on each node
 from config import *
-from my_pipeline import ProcessedData
+from my_pipeline import SessionAnalysis
 
 while True:
-    result = ProcessedData.populate(
+    result = SessionAnalysis.populate(
         reserve_jobs=True,
         max_calls=100,
         suppress_errors=True,
@@ -16197,10 +15554,10 @@ Continue processing despite individual failures:
 
 ```python
 # Stop on first error (default)
-ProcessedData.populate()
+SessionAnalysis.populate()
 
 # Log errors but continue
-ProcessedData.populate(suppress_errors=True)
+SessionAnalysis.populate(suppress_errors=True)
 ```
 
 ## View Failed Jobs
@@ -16209,10 +15566,10 @@ Check the jobs table for errors:
 
 ```python
 # All error jobs
-ProcessedData.jobs.errors
+SessionAnalysis.jobs.errors
 
 # View error details
-for job in ProcessedData.jobs.errors.to_dicts():
+for job in SessionAnalysis.jobs.errors.to_dicts():
     print(f"Key: {job}")
     print(f"Message: {job['error_message']}")
 ```
@@ -16222,7 +15579,7 @@ for job in ProcessedData.jobs.errors.to_dicts():
 Error stack traces are stored in the jobs table:
 
 ```python
-job = (ProcessedData.jobs.errors & key).fetch1()
+job = (SessionAnalysis.jobs.errors & key).fetch1()
 print(job['error_stack'])
 ```
 
@@ -16232,10 +15589,10 @@ Clear error status and rerun:
 
 ```python
 # Delete error records to retry
-ProcessedData.jobs.errors.delete()
+SessionAnalysis.jobs.errors.delete()
 
 # Reprocess
-ProcessedData.populate(reserve_jobs=True)
+SessionAnalysis.populate(reserve_jobs=True)
 ```
 
 ## Retry Specific Jobs
@@ -16244,10 +15601,10 @@ Target specific failed jobs:
 
 ```python
 # Clear one error
-(ProcessedData.jobs & key & "status='error'").delete()
+(SessionAnalysis.jobs & key & "status='error'").delete()
 
 # Retry just that key
-ProcessedData.populate(key, reserve_jobs=True)
+SessionAnalysis.populate(key, reserve_jobs=True)
 ```
 
 ## Ignore Problematic Jobs
@@ -16256,10 +15613,10 @@ Mark jobs to skip permanently:
 
 ```python
 # Mark job as ignored
-ProcessedData.jobs.ignore(key)
+SessionAnalysis.jobs.ignore(key)
 
 # View ignored jobs
-ProcessedData.jobs.ignored
+SessionAnalysis.jobs.ignored
 ```
 
 ## Error Handling in make()
@@ -16268,16 +15625,16 @@ Handle expected errors gracefully:
 
 ```python
 @schema
-class ProcessedData(dj.Computed):
+class SessionAnalysis(dj.Computed):
     definition = """
-    -> RawData
+    -> Session
     ---
     result : float64
     """
 
     def make(self, key):
         try:
-            data = (RawData & key).fetch1('data')
+            data = (Session & key).fetch1('data')
             result = risky_computation(data)
         except ValueError as e:
             # Log and skip this key
@@ -16306,7 +15663,7 @@ def make(self, key):
 Get exception objects for programmatic handling:
 
 ```python
-result = ProcessedData.populate(
+result = SessionAnalysis.populate(
     suppress_errors=True,
     return_exception_objects=True
 )
@@ -16322,7 +15679,7 @@ for key, exception in result['error_list']:
 Track errors over time:
 
 ```python
-progress = ProcessedData.jobs.progress()
+progress = SessionAnalysis.jobs.progress()
 print(f"Pending: {progress.get('pending', 0)}")
 print(f"Errors: {progress.get('error', 0)}")
 print(f"Success: {progress.get('success', 0)}")
@@ -20973,7 +20330,7 @@ Track computation progress and job status.
 Show progress bar during populate:
 
 ```python
-ProcessedData.populate(display_progress=True)
+SessionAnalysis.populate(display_progress=True)
 ```
 
 ## Check Remaining Work
@@ -20982,7 +20339,7 @@ Count entries left to compute:
 
 ```python
 # What's left to compute
-remaining = ProcessedData.key_source - ProcessedData
+remaining = SessionAnalysis.key_source - SessionAnalysis
 print(f"{len(remaining)} entries remaining")
 ```
 
@@ -20991,7 +20348,7 @@ print(f"{len(remaining)} entries remaining")
 Get counts by status:
 
 ```python
-progress = ProcessedData.jobs.progress()
+progress = SessionAnalysis.jobs.progress()
 # {'pending': 100, 'reserved': 5, 'error': 3, 'success': 892}
 
 for status, count in progress.items():
@@ -21004,19 +20361,19 @@ Access jobs by their current status:
 
 ```python
 # Pending jobs (waiting to run)
-ProcessedData.jobs.pending
+SessionAnalysis.jobs.pending
 
 # Currently running
-ProcessedData.jobs.reserved
+SessionAnalysis.jobs.reserved
 
 # Failed jobs
-ProcessedData.jobs.errors
+SessionAnalysis.jobs.errors
 
 # Completed jobs (if keep_completed=True)
-ProcessedData.jobs.completed
+SessionAnalysis.jobs.completed
 
 # Skipped jobs
-ProcessedData.jobs.ignored
+SessionAnalysis.jobs.ignored
 ```
 
 ## View Job Details
@@ -21025,10 +20382,10 @@ Inspect specific jobs:
 
 ```python
 # All jobs for a key
-(ProcessedData.jobs & key).fetch1()
+(SessionAnalysis.jobs & key).fetch1()
 
 # Recent errors
-ProcessedData.jobs.errors.to_dicts(
+SessionAnalysis.jobs.errors.to_dicts(
     order_by='completed_time DESC',
     limit=10
 )
@@ -21039,7 +20396,7 @@ ProcessedData.jobs.errors.to_dicts(
 See which workers are processing:
 
 ```python
-for job in ProcessedData.jobs.reserved.to_dicts():
+for job in SessionAnalysis.jobs.reserved.to_dicts():
     print(f"Key: {job}")
     print(f"Host: {job['host']}")
     print(f"PID: {job['pid']}")
@@ -21052,7 +20409,7 @@ Track how long jobs take:
 
 ```python
 # Average duration of completed jobs
-completed = ProcessedData.jobs.completed.to_arrays('duration')
+completed = SessionAnalysis.jobs.completed.to_arrays('duration')
 print(f"Average: {np.mean(completed):.1f}s")
 print(f"Median: {np.median(completed):.1f}s")
 ```
@@ -21078,10 +20435,10 @@ This adds hidden attributes to computed tables:
 
 ```python
 import time
-from my_pipeline import ProcessedData
+from my_pipeline import SessionAnalysis
 
 while True:
-    remaining, total = ProcessedData.progress()
+    remaining, total = SessionAnalysis.progress()
 
     print(f"\rProgress: {total - remaining}/{total} ({(total - remaining) / total:.0%})", end='')
 
@@ -21096,10 +20453,10 @@ For distributed mode with job tracking:
 
 ```python
 import time
-from my_pipeline import ProcessedData
+from my_pipeline import SessionAnalysis
 
 while True:
-    status = ProcessedData.jobs.progress()
+    status = SessionAnalysis.jobs.progress()
 
     print(f"\rPending: {status.get('pending', 0)} | "
           f"Running: {status.get('reserved', 0)} | "
@@ -21118,7 +20475,7 @@ while True:
 Check multiple tables:
 
 ```python
-tables = [RawData, ProcessedData, Analysis]
+tables = [Session, SessionAnalysis, TrialStats]
 
 for table in tables:
     total = len(table.key_source)
@@ -22267,45 +21624,45 @@ Execute automated computations with `populate()`.
 
 ```python
 # Populate all missing entries
-ProcessedData.populate()
+SessionAnalysis.populate()
 
 # With progress display
-ProcessedData.populate(display_progress=True)
+SessionAnalysis.populate(display_progress=True)
 ```
 
 ## Restrict What to Compute
 
 ```python
 # Only specific subjects
-ProcessedData.populate(Subject & "sex = 'M'")
+SessionAnalysis.populate(Subject & "sex = 'M'")
 
 # Only recent sessions
-ProcessedData.populate(Session & "session_date > '2026-01-01'")
+SessionAnalysis.populate(Session & "session_date > '2026-01-01'")
 
 # Specific key
-ProcessedData.populate({'subject_id': 'M001', 'session_idx': 1})
+SessionAnalysis.populate({'subject_id': 'M001', 'session_idx': 1})
 ```
 
 ## Limit Number of Jobs
 
 ```python
 # Process at most 100 entries
-ProcessedData.populate(limit=100)
+SessionAnalysis.populate(limit=100)
 ```
 
 ## Error Handling
 
 ```python
 # Continue on errors (log but don't stop)
-ProcessedData.populate(suppress_errors=True)
+SessionAnalysis.populate(suppress_errors=True)
 
 # Check what failed
-failed = ProcessedData.jobs & "status = 'error'"
+failed = SessionAnalysis.jobs & "status = 'error'"
 print(failed)
 
 # Clear errors to retry
 failed.delete()
-ProcessedData.populate()
+SessionAnalysis.populate()
 ```
 
 ## When to Use Distributed Mode
@@ -22328,7 +21685,7 @@ Choose your populate strategy based on your workload and infrastructure:
 **Example:**
 ```python
 # Simple, direct execution
-ProcessedData.populate()
+SessionAnalysis.populate()
 ```
 
 ---
@@ -22344,13 +21701,13 @@ ProcessedData.populate()
 
 - Prevents duplicate work between workers
 - Fault tolerance (crashed jobs can be retried)
-- Job status tracking (`ProcessedData.jobs`)
+- Job status tracking (`SessionAnalysis.jobs`)
 - Error isolation (one failure doesn't stop others)
 
 **Example:**
 ```python
 # Distributed mode with job coordination
-ProcessedData.populate(reserve_jobs=True)
+SessionAnalysis.populate(reserve_jobs=True)
 ```
 
 **Job reservation overhead:** ~100ms per job
@@ -22373,7 +21730,7 @@ ProcessedData.populate(reserve_jobs=True)
 **Example:**
 ```python
 # Use 4 CPU cores
-ProcessedData.populate(reserve_jobs=True, processes=4)
+SessionAnalysis.populate(reserve_jobs=True, processes=4)
 ```
 
 **Caution:** Don't use more processes than CPU cores (causes context switching overhead)
@@ -22405,10 +21762,10 @@ For multi-worker coordination:
 
 ```python
 # Worker 1 (on machine A)
-ProcessedData.populate(reserve_jobs=True)
+SessionAnalysis.populate(reserve_jobs=True)
 
 # Worker 2 (on machine B)
-ProcessedData.populate(reserve_jobs=True)
+SessionAnalysis.populate(reserve_jobs=True)
 
 # Workers coordinate automatically via database
 # Each reserves different keys, no duplicates
@@ -22418,30 +21775,30 @@ ProcessedData.populate(reserve_jobs=True)
 
 ```python
 # What's left to compute
-remaining = ProcessedData.key_source - ProcessedData
+remaining = SessionAnalysis.key_source - SessionAnalysis
 print(f"{len(remaining)} entries remaining")
 
 # View job status
-ProcessedData.jobs
+SessionAnalysis.jobs
 ```
 
 ## The `make()` Method
 
 ```python
 @schema
-class ProcessedData(dj.Computed):
+class SessionAnalysis(dj.Computed):
     definition = """
-    -> RawData
+    -> Session
     ---
     result : float64
     """
 
     def make(self, key):
         # 1. Fetch input data
-        raw = (RawData & key).fetch1('data')
+        data = (Session & key).fetch1('data')
 
         # 2. Compute
-        result = process(raw)
+        result = process(data)
 
         # 3. Insert
         self.insert1({**key, 'result': result})
@@ -23258,7 +22615,7 @@ def test_insert(test_instance):
 
 ## See Also
 
-- [What's New in 2.2](../explanation/whats-new-22.md/) — Feature overview and rationale
+- [What's New in 2.2](../about/whats-new-22.md) — Feature overview and rationale
 - [Working with Instances](../tutorials/advanced/instances.ipynb/) — Step-by-step tutorial
 - [Configuration Reference](../reference/configuration.md/) — Thread-safe mode settings
 
@@ -23427,7 +22784,7 @@ for rec in large:
 
 ```python
 @schema
-class ProcessedData(dj.Computed):
+class FilteredTrace(dj.Computed):
     definition = """
     -> RawData
     ---
@@ -24875,7 +24232,7 @@ schema = inst.Schema("my_schema")
 | `inst.Schema(name)` | Create a Schema bound to this Instance |
 | `inst.FreeTable(full_name)` | Create a FreeTable bound to this Instance |
 
-See [What's New in 2.2](../explanation/whats-new-22.md/) for usage examples and rationale.
+See [What's New in 2.2](../about/whats-new-22.md) for usage examples and rationale.
 
 ## Thread-Safe Mode
 
@@ -27863,7 +27220,7 @@ About to delete:
   Subject: 1 rows
   Session: 5 rows
   Trial: 150 rows
-  ProcessedData: 150 rows
+  SessionAnalysis: 150 rows
 
 Commit deletes? [yes, No]:
 ```
@@ -28509,17 +27866,17 @@ dj.Diagram(Subject) + dj.Diagram(analysis).collapse()
 ## Operational Methods
 
 !!! version-added "New in 2.2"
-    Operational methods (`cascade`, `restrict`, `preview`, `prune`) were added in DataJoint 2.2.
+    Operational methods (`Diagram.cascade()`, `restrict`, `counts`, `prune`) were added in DataJoint 2.2.
 
 Diagrams can propagate restrictions through the dependency graph and inspect affected data using the graph structure. These methods turn Diagram from a visualization tool into a graph computation and inspection component. All mutation operations (delete, drop) are executed by `Table.delete()` and `Table.drop()`, which use Diagram internally.
 
-### `cascade()`
+### `Diagram.cascade()` (class method)
 
 ```python
-diag.cascade(table_expr, part_integrity="enforce")
+dj.Diagram.cascade(table_expr, part_integrity="enforce")
 ```
 
-Prepare a cascading delete. Starting from a restricted table expression, propagate the restriction downstream through all descendants using **OR** semantics — a descendant row is marked for deletion if *any* ancestor path reaches it. The returned Diagram is **trimmed** to the cascade subgraph: only the seed table and its descendants remain; all ancestors and unrelated tables are removed. The trimmed diagram is ready for `preview()` and `delete()`.
+Create a cascade diagram for delete. Builds a complete dependency graph from the table expression, includes all descendants across all loaded schemas, propagates the restriction downstream using **OR** semantics — a descendant row is marked for deletion if *any* ancestor path reaches it — and **trims** to the cascade subgraph.
 
 | Parameter | Type | Default | Description |
 |-----------|------|---------|-------------|
@@ -28527,12 +27884,6 @@ Prepare a cascading delete. Starting from a restricted table expression, propaga
 | `part_integrity` | str | `"enforce"` | Master-part integrity policy |
 
 **Returns:** New `Diagram` containing only the seed table and its descendants, with cascade restrictions applied.
-
-**Constraints:**
-
-- **One-shot** — can only be called once on an unrestricted Diagram
-- Mutually exclusive with `restrict()`
-- `table_expr.full_table_name` must be a node in the diagram
 
 **`part_integrity` values:**
 
@@ -28545,9 +27896,8 @@ Prepare a cascading delete. Starting from a restricted table expression, propaga
 With `"cascade"`, the restriction flows **upward** from a part table to its master: the restricted part rows identify which master rows are affected, those masters receive a restriction, and that restriction propagates back downstream through the normal cascade — deleting the entire compositional unit (master + all parts), not just the originally matched part rows.
 
 ```python
-# Build a cascade from a restricted table
-diag = dj.Diagram(schema)
-restricted = diag.cascade(Session & {'subject_id': 'M001'})
+# Preview cascade impact across all loaded schemas
+dj.Diagram.cascade(Session & {'subject_id': 'M001'}).counts()
 ```
 
 ### `restrict()`
@@ -28567,7 +27917,7 @@ Select a subset of data for export or inspection. Starting from a restricted tab
 **Constraints:**
 
 - **Chainable** — call multiple times to add conditions from different seed tables
-- Mutually exclusive with `cascade()`
+- Cannot be called on a Diagram produced by `Diagram.cascade()`
 - `table_expr.full_table_name` must be a node in the diagram
 
 ```python
@@ -28578,22 +27928,20 @@ restricted = (diag
     .restrict(Session & 'session_date > "2024-01-01"'))
 ```
 
-### `preview()`
+### `counts()`
 
 ```python
-diag.preview()
+diag.counts()
 ```
 
-Show affected tables and row counts without modifying data. Works with both `cascade()` and `restrict()` restrictions.
+Return affected row counts per table without modifying data. Works with both `cascade()` and `restrict()` restrictions.
 
 **Returns:** `dict[str, int]` — mapping of full table names to affected row counts.
 
-**Requires:** `cascade()` or `restrict()` must be called first.
+**Requires:** `Diagram.cascade()` or `restrict()` must be called first.
 
 ```python
-diag = dj.Diagram(schema)
-restricted = diag.cascade(Session & {'subject_id': 'M001'})
-counts = restricted.preview()
+counts = dj.Diagram.cascade(Session & {'subject_id': 'M001'}).counts()
 # {'`lab`.`session`': 3, '`lab`.`trial`': 45, '`lab`.`processed_data`': 45}
 ```
 
@@ -28603,9 +27951,11 @@ counts = restricted.preview()
 diag.prune()
 ```
 
-Remove tables with zero matching rows from the diagram view. This only affects the diagram object — no tables or data are modified in the database. Without prior restrictions, removes physically empty tables from the diagram. With restrictions (`cascade()` or `restrict()`), removes tables where the restricted query yields zero rows.
+Remove tables with zero matching rows from the diagram view. This only affects the diagram object — no tables or data are modified in the database. Without prior restrictions, removes physically empty tables from the diagram. After `restrict()`, removes tables where the restricted query yields zero rows.
 
 **Returns:** New `Diagram` with empty tables removed.
+
+**Constraints:** Cannot be used on a Diagram produced by `Diagram.cascade()`. Cascade diagrams must retain all descendant tables because a table empty at cascade time could have rows by the time `delete()` executes.
 
 **Note:** Queries the database to determine row counts. The underlying graph structure is preserved — subsequent `restrict()` calls can still seed at any table in the schema.
 
@@ -28616,9 +27966,22 @@ export = (dj.Diagram(schema)
     .restrict(Session & 'session_date > "2024-01-01"')
     .prune())
 
-export.preview()   # only tables with matching rows
+export.counts()    # only tables with matching rows
 export             # visualize the export subgraph
 ```
+
+### Iteration
+
+Diagrams support iteration in topological order:
+
+| Method | Order | Use Case |
+|--------|-------|----------|
+| `for ft in diagram` | Parents first | Data export, inspection |
+| `for ft in reversed(diagram)` | Leaves first | Cascade delete, drop |
+
+Each iteration yields a `FreeTable` with any cascade or restrict conditions applied. Alias nodes are skipped. Only nodes in the diagram's visible set (`nodes_to_show`) are yielded.
+
+`Table.delete()` and `Table.drop()` use `reversed(diagram)` internally to execute mutations in safe dependency order.
 
 ### Restriction Propagation
 
@@ -28829,7 +28192,7 @@ combined = dj.Diagram.from_sequence([schema1, schema2, schema3])
 
 ## Dependencies
 
-Operational methods (`cascade`, `restrict`, `preview`, `prune`) use `networkx`, which is always installed as a core dependency.
+Operational methods (`cascade`, `restrict`, `counts`, `prune`) use `networkx`, which is always installed as a core dependency.
 
 Diagram **visualization** requires optional dependencies:
 
@@ -28845,7 +28208,7 @@ If visualization dependencies are missing, `dj.Diagram` displays a warning and p
 
 - [How to Read Diagrams](../../how-to/read-diagrams.ipynb)
 - [Delete Data](../../how-to/delete-data.md) — Cascade inspection and delete workflow
-- [What's New in 2.2](../../explanation/whats-new-22.md) — Motivation and design
+- [What's New in 2.2](../../about/whats-new-22.md) — Motivation and design
 - [Data Manipulation](data-manipulation.md) — Insert, update, delete specification
 - [Query Algebra](query-algebra.md)
 - [Table Declaration](table-declaration.md)
@@ -29632,9 +28995,9 @@ def _get_job_version() -> str:
 dj.config.jobs.add_job_metadata = True
 
 @schema
-class ProcessedData(dj.Computed):
+class SessionAnalysis(dj.Computed):
     definition = """
-    -> RawData
+    -> Session
     ---
     result : float
     """
@@ -29647,11 +29010,11 @@ class ProcessedData(dj.Computed):
 # _job_start_time, _job_duration, _job_version
 
 # User-facing API unaffected:
-ProcessedData().heading.names  # ['raw_data_id', 'result']
-ProcessedData().to_dicts()  # Returns only visible attributes
+SessionAnalysis().heading.names  # ['session_id', 'result']
+SessionAnalysis().to_dicts()  # Returns only visible attributes
 
 # Access hidden attributes explicitly if needed:
-ProcessedData().to_arrays('_job_start_time', '_job_duration', '_job_version')
+SessionAnalysis().to_arrays('_job_start_time', '_job_duration', '_job_version')
 ```
 
 ## Summary of Design Decisions
@@ -33030,7 +32393,7 @@ class TableName(dj.Manual):
 
 ### 1.3 Class Naming Rules
 
-- **Format**: Strict CamelCase (e.g., `MyTable`, `ProcessedData`)
+- **Format**: Strict CamelCase (e.g., `MyTable`, `SessionAnalysis`)
 - **Pattern**: `^[A-Z][A-Za-z0-9]*$`
 - **Conversion**: CamelCase to snake_case for SQL table name
 - **Examples**:
@@ -34457,9 +33820,9 @@ class BlobCodec(dj.Codec):
 
 Usage:
 ```python
-class ProcessedData(dj.Computed):
+class SessionAnalysis(dj.Computed):
     definition = """
-    -> RawData
+    -> Session
     ---
     small_result : <blob>          # in-table (in database)
     large_result : <blob@>         # in-store (default store)
@@ -35544,7 +34907,7 @@ print(dj.__version__)
 
 If you're upgrading from legacy DataJoint (pre-2.0):
 
-1. **Review** the [What's New in 2.0](../explanation/whats-new-2.md) page to understand major changes
+1. **Review** the [What's New in 2.0](whats-new-2.md) page to understand major changes
 2. **Follow** the [Migration Guide](../how-to/migrate-to-v20.md) for step-by-step upgrade instructions
 3. **Reference** this documentation for updated syntax and APIs
 
@@ -35564,4 +34927,773 @@ For DataJoint 0.x documentation, visit:
 | 0.13.x | 2019 | Legacy version |
 
 For complete version history, see the [changelog](https://github.com/datajoint/datajoint-python/releases).
+
+
+---
+## File: about/whats-new-2.md
+
+# What's New in DataJoint 2.0
+
+DataJoint 2.0 is a major release that establishes DataJoint as a mature framework for scientific data pipelines. The version jump from 0.14 to 2.0 reflects the significance of these changes.
+
+> **📘 Upgrading from legacy DataJoint (pre-2.0)?**
+>
+> This page summarizes new features and concepts. For step-by-step migration instructions, see the **[Migration Guide](../how-to/migrate-to-v20.md/)**.
+
+> **Citation:** Yatsenko D, Nguyen TT. *DataJoint 2.0: A Computational Substrate for Agentic Scientific Workflows.* arXiv:2602.16585. 2026. [doi:10.48550/arXiv.2602.16585](https://doi.org/10.48550/arXiv.2602.16585)
+
+## Overview
+
+DataJoint 2.0 introduces fundamental improvements to type handling, job coordination, and object storage while maintaining compatibility with your existing pipelines during migration. Key themes:
+
+- **Explicit over implicit**: All type conversions are now explicit through the codec system
+- **Better distributed computing**: Per-table job coordination with improved error handling
+- **Object storage integration**: Native support for large arrays and files
+- **Multi-backend support**: Portable types enabling PostgreSQL backend (added in 2.1)
+
+### Breaking Changes at a Glance
+
+If you're upgrading from legacy DataJoint, these changes require code updates:
+
+| Area | Legacy | 2.0 |
+|------|--------|-----|
+| **Fetch API** | `table.fetch()` | `table.to_dicts()` or `.to_arrays()` |
+| **Update** | `(table & key)._update('attr', val)` | `table.update1({**key, 'attr': val})` |
+| **Join** | `table1 @ table2` | `table1 * table2` (with semantic check) |
+| **Type syntax** | `longblob`, `int unsigned` | `<blob>`, `int64` |
+| **Jobs** | `~jobs` table | Per-table `~~table_name` |
+
+See the [Migration Guide](../how-to/migrate-to-v20.md/) for complete upgrade steps.
+
+## Object-Augmented Schema (OAS)
+
+DataJoint 2.0 unifies relational tables with object storage into a single coherent system. The relational database stores metadata and references while large objects (arrays, files, Zarr datasets) are stored in object storage—with full referential integrity maintained across both layers.
+
+→ [Type System Specification](../reference/specs/type-system.md/)
+
+**Three storage sections:**
+
+| Section | Addressing | Use Case |
+|---------|------------|----------|
+| **Internal** | Row-based (in database) | Small objects (< 1 MB) |
+| **Hash-addressed** | Content hash | Arrays, files (deduplication) |
+| **Path-addressed** | Primary key path | Zarr, HDF5, streaming access |
+
+**New syntax:**
+
+```python
+definition = """
+recording_id : uuid
+---
+metadata : <blob>           # Internal storage
+raw_data : <blob@store>     # Hash-addressed object storage
+zarr_array : <object@store> # Path-addressed for Zarr/HDF5
+"""
+```
+
+## Explicit Type System
+
+**Breaking change**: DataJoint 2.0 makes all type conversions explicit through a three-tier architecture.
+
+→ [Type System Specification](../reference/specs/type-system.md/) · [Codec API Specification](../reference/specs/codec-api.md/)
+
+### What Changed
+
+Legacy DataJoint overloaded MySQL types with implicit conversions:
+- `longblob` could be blob serialization OR in-table attachment
+- `attach` was implicitly converted to longblob
+- `uuid` was used internally for external storage
+
+**DataJoint 2.0 makes everything explicit:**
+
+| Legacy (Implicit) | 2.0 (Explicit) |
+|-------------------|----------------|
+| `longblob` | `<blob>` |
+| `attach` | `<attach>` |
+| `blob@store` | `<blob@store>` |
+| `int unsigned` | `int64` |
+
+### Three-Tier Architecture
+
+1. **Native types**: MySQL types (`INT`, `VARCHAR`, `LONGBLOB`)
+2. **Core types**: Portable aliases (`int32`, `float64`, `varchar`, `uuid`, `json`)
+3. **Codecs**: Serialization for Python objects (`<blob>`, `<attach>`, `<object@>`)
+
+### Custom Codecs
+
+Replace legacy AdaptedTypes with the new codec API:
+
+```python
+class GraphCodec(dj.Codec):
+    name = "graph"
+
+    def encode(self, value, **kwargs):
+        return list(value.edges)
+
+    def decode(self, stored, **kwargs):
+        import networkx as nx
+        return nx.Graph(stored)
+```
+
+## Jobs 2.0
+
+**Breaking change**: Redesigned job coordination with per-table job management.
+
+→ [AutoPopulate Specification](../reference/specs/autopopulate.md/) · [Job Metadata Specification](../reference/specs/job-metadata.md/)
+
+### What Changed
+
+| Legacy (Schema-level) | 2.0 (Per-table) |
+|----------------------|-----------------|
+| One `~jobs` table per schema | One `~~table_name` per Computed/Imported table |
+| Opaque hashed keys | Native primary keys (readable) |
+| Statuses: `reserved`, `error`, `ignore` | Added: `pending`, `success` |
+| No priority support | Priority column (lower = more urgent) |
+
+### New Features
+
+- **Automatic refresh**: Job queue synchronized with pending work automatically
+- **Better coordination**: Multiple workers coordinate via database without conflicts
+- **Error tracking**: Built-in error table (`Table.jobs.errors`) with full stack traces
+- **Priority support**: Control computation order with priority values
+
+```python
+# Distributed mode with coordination
+Analysis.populate(reserve_jobs=True, processes=4)
+
+# Monitor progress
+Analysis.jobs.progress()  # {'pending': 10, 'reserved': 2, 'error': 0}
+
+# Handle errors
+Analysis.jobs.errors.to_dicts()
+
+# Set priorities
+Analysis.jobs.update({'session_id': 123}, priority=1)  # High priority
+```
+
+## Semantic Matching
+
+**Breaking change**: Query operations now use **lineage-based matching** by default.
+
+→ [Semantic Matching Specification](../reference/specs/semantic-matching.md/)
+
+### What Changed
+
+Legacy DataJoint used SQL-style natural joins: attributes matched if they had the same name, regardless of meaning.
+
+**DataJoint 2.0 validates semantic lineage**: Attributes must share common origin through foreign key chains, not just coincidentally matching names.
+
+```python
+# 2.0: Semantic join (default) - validates lineage
+result = TableA * TableB  # Only matches attributes with shared origin
+
+# Legacy behavior (if needed)
+result = TableA.join(TableB, semantic_check=False)
+```
+
+**Why this matters**: Prevents accidental matches between attributes like `session_id` that happen to share a name but refer to different entities in different parts of your schema.
+
+**During migration**: If semantic matching fails, it often indicates a malformed join that should be reviewed rather than forced.
+
+## Configuration System
+
+A cleaner configuration approach with separation of concerns.
+
+→ [Configuration Reference](../reference/configuration.md/)
+
+- **`datajoint.json`**: Non-sensitive settings (commit to version control)
+- **`.secrets/`**: Credentials (never commit)
+- **Environment variables**: For CI/CD and production
+
+```bash
+export DJ_HOST=db.example.com
+export DJ_USER=myuser
+export DJ_PASS=mypassword
+```
+
+## ObjectRef API (New)
+
+**New feature**: Path-addressed storage returns `ObjectRef` handles that support streaming access without downloading entire datasets.
+
+```python
+ref = (Dataset & key).fetch1('zarr_array')
+
+# Direct fsspec access for Zarr/xarray
+z = zarr.open(ref.fsmap, mode='r')
+
+# Or download locally
+local_path = ref.download('/tmp/data')
+
+# Stream chunks without full download
+with ref.open('rb') as f:
+    chunk = f.read(1024)
+```
+
+This enables efficient access to large datasets stored in Zarr, HDF5, or custom formats.
+
+## Deprecated and Removed
+
+### Removed APIs
+
+- **`.fetch()` method**: Replaced with `.to_dicts()`, `.to_arrays()`, or `.to_pandas()`
+- **`._update()` method**: Replaced with `.update1()`
+- **`@` operator (natural join)**: Use `*` with semantic matching or `.join(semantic_check=False)`
+- **`dj.U() * table` pattern**: Use just `table` (universal set is implicit)
+
+### Deprecated Features
+
+- **AdaptedTypes**: Replaced by codec system (still works but migration recommended)
+- **Native type syntax**: `int unsigned` → `int64` (warnings on new tables)
+- **Legacy external storage** (`blob@store`): Replaced by `<blob@store>` codec syntax
+
+### Legacy Support
+
+During migration (Phases 1-3), both legacy and 2.0 APIs can coexist:
+- Legacy clients can still access data
+- 2.0 clients understand legacy column types
+- Dual attributes enable cross-testing
+
+After finalization (Phase 4+), only 2.0 clients are supported.
+
+## License Change
+
+DataJoint 2.0 is licensed under the **Apache License 2.0** (previously LGPL-2.1). This provides:
+
+- More permissive for commercial and academic use
+- Clearer patent grant provisions
+- Better compatibility with broader ecosystem
+
+## Migration Path
+
+→ **[Complete Migration Guide](../how-to/migrate-to-v20.md/)**
+
+Upgrading from DataJoint 0.x is a **phased process** designed to minimize risk:
+
+### Phase 1: Code Updates (Reversible)
+- Update Python code to 2.0 API patterns (`.fetch()` → `.to_dicts()`, etc.)
+- Update configuration files (`dj_local_conf.json` → `datajoint.json` + `.secrets/`)
+- **No database changes** — legacy clients still work
+
+### Phase 2: Type Migration (Reversible)
+- Update database column comments to use core types (`:int64:`, `:<blob>:`)
+- Rebuild `~lineage` tables for semantic matching
+- Update Python table definitions
+- **Legacy clients still work** — only metadata changed
+
+### Phase 3: External Storage Dual Attributes (Reversible)
+- Create `*_v2` attributes alongside legacy external storage columns
+- Both APIs can access data during transition
+- Enables cross-testing between legacy and 2.0
+- **Legacy clients still work**
+
+### Phase 4: Finalize (Point of No Return)
+- Remove legacy external storage columns
+- Drop old `~jobs` and `~external_*` tables
+- **Legacy clients stop working** — database backup required
+
+### Phase 5: Adopt New Features (Optional)
+- Use new codecs (`<object@>`, `<npy@>`)
+- Leverage Jobs 2.0 features (priority, better errors)
+- Implement custom codecs for domain-specific types
+
+### Migration Support
+
+The migration guide includes:
+- **AI agent prompts** for automated migration steps
+- **Validation commands** to check migration status
+- **Rollback procedures** for each phase
+- **Dry-run modes** for all database changes
+
+Most users complete Phases 1-2 in a single session. Phases 3-4 only apply if you use legacy external storage.
+
+## See Also
+
+- [What's New in 2.1](whats-new-21.md) — Next release
+- [Release Notes (v2.0.0)](https://github.com/datajoint/datajoint-python/releases/tag/v2.0.0) — GitHub changelog
+- **[Migration Guide](../how-to/migrate-to-v20.md)** — Complete upgrade instructions
+- [Configuration](../how-to/configure-database.md) — Setup new configuration system
+- [Type System](../explanation/type-system.md) — Understand the three-tier type architecture
+- [Computation Model](../explanation/computation-model.md) — Jobs 2.0 and AutoPopulate
+- [Query Algebra](../explanation/query-algebra.md) — Semantic matching and operators
+- [Installation](../how-to/installation.md) — Install DataJoint 2.0
+- [Tutorials](../tutorials/index.md) — Learn by example
+
+
+---
+## File: about/whats-new-21.md
+
+# What's New in DataJoint 2.1
+
+DataJoint 2.1 adds **PostgreSQL as a production backend**, **enhanced diagram visualization**, and **singleton tables**.
+
+> **Upgrading from 2.0?** No breaking changes. All existing code continues to work. New features are purely additive.
+
+> **Citation:** Yatsenko D, Nguyen TT. *DataJoint 2.0: A Computational Substrate for Agentic Scientific Workflows.* arXiv:2602.16585. 2026. [doi:10.48550/arXiv.2602.16585](https://doi.org/10.48550/arXiv.2602.16585)
+
+## PostgreSQL Backend
+
+DataJoint now supports PostgreSQL 15+ as a production database backend alongside MySQL 8+. The adapter architecture generates backend-specific SQL while maintaining a consistent API — the same table definitions, queries, and pipeline logic work on both backends.
+
+```bash
+export DJ_BACKEND=postgresql
+export DJ_HOST=localhost
+export DJ_PORT=5432
+```
+
+Or configure programmatically:
+
+```python
+dj.config['database.backend'] = 'postgresql'
+```
+
+All core types (`int32`, `float64`, `varchar`, `uuid`, `json`), codec types (`<blob>`, `<attach>`, `<object@>`), query operations, foreign keys, indexes, and auto-populate work identically across backends. Backend-specific differences are handled internally by the adapter layer.
+
+See [Database Backends](../reference/specs/database-backends.md) for the full specification.
+
+## Diagram Enhancements
+
+`dj.Diagram` gains several visualization features for working with complex, multi-schema pipelines.
+
+### Layout Direction
+
+Control the flow direction of diagrams:
+
+```python
+# Horizontal layout
+dj.config.display.diagram_direction = "LR"
+
+# Or temporarily
+with dj.config.override(display__diagram_direction="LR"):
+    dj.Diagram(schema).draw()
+```
+
+| Value | Description |
+|-------|-------------|
+| `"TB"` | Top to bottom (default) |
+| `"LR"` | Left to right |
+
+### Mermaid Output
+
+Generate [Mermaid](https://mermaid.js.org/) syntax for embedding diagrams in Markdown, GitHub, or web documentation:
+
+```python
+print(dj.Diagram(schema).make_mermaid())
+```
+
+Save directly to `.mmd` or `.mermaid` files:
+
+```python
+dj.Diagram(schema).save("pipeline.mmd")
+```
+
+### Schema Grouping
+
+Multi-schema diagrams automatically group tables into visual clusters by database schema. The cluster label shows the Python module name when available, following the DataJoint convention of one module per schema.
+
+```python
+combined = dj.Diagram(schema1) + dj.Diagram(schema2)
+combined.draw()  # tables grouped by schema
+```
+
+### Collapsing Schemas
+
+For high-level pipeline views, collapse entire schemas into single nodes:
+
+```python
+# Show schema1 expanded, schema2 as a single node with table count
+dj.Diagram(schema1) + dj.Diagram(schema2).collapse()
+```
+
+The **"expanded wins" rule** applies: if a table appears in both a collapsed and non-collapsed diagram, it stays expanded. This allows showing specific tables while collapsing the rest:
+
+```python
+# Subject is expanded, rest of analysis schema is collapsed
+dj.Diagram(Subject) + dj.Diagram(analysis).collapse()
+```
+
+See [Diagram Specification](../reference/specs/diagram.md) for the full reference.
+
+## Singleton Tables
+
+A **singleton table** holds at most one row. Declare it with no attributes in the primary key section:
+
+```python
+@schema
+class Config(dj.Lookup):
+    definition = """
+    # Global configuration
+    ---
+    setting1 : varchar(100)
+    setting2 : int32
+    """
+```
+
+| Operation | Result |
+|-----------|--------|
+| Insert | Works without specifying a key |
+| Second insert | Raises `DuplicateError` |
+| `fetch1()` | Returns the single row |
+
+Useful for global configuration, pipeline parameters, and summary statistics.
+
+See [Table Declaration](../reference/specs/table-declaration.md#25-singleton-tables-empty-primary-keys) for details.
+
+## See Also
+
+- [Database Backends](../reference/specs/database-backends.md) — Full backend specification
+- [Diagram Specification](../reference/specs/diagram.md) — Diagram reference
+- [Table Declaration](../reference/specs/table-declaration.md) — Singleton tables
+- [Configure Database](../how-to/configure-database.md) — Connection setup for both backends
+- [What's New in 2.0](whats-new-2.md) — Previous release
+- [What's New in 2.2](whats-new-22.md) — Next release
+- [Release Notes (v2.1.0)](https://github.com/datajoint/datajoint-python/releases/tag/v2.1.0) — GitHub changelog
+
+
+---
+## File: about/whats-new-22.md
+
+# What's New in DataJoint 2.2
+
+DataJoint 2.2 introduces **isolated instances** and **thread-safe mode** for applications that need multiple independent database connections, and **graph-driven diagram operations** that replace the legacy error-driven cascade with a reliable, inspectable approach for all users.
+
+> **Upgrading from 2.0 or 2.1?** No breaking changes. All existing code using `dj.config` and `dj.Schema()` continues to work. The new Instance API is purely additive.
+
+> **Citation:** Yatsenko D, Nguyen TT. *DataJoint 2.0: A Computational Substrate for Agentic Scientific Workflows.* arXiv:2602.16585. 2026. [doi:10.48550/arXiv.2602.16585](https://doi.org/10.48550/arXiv.2602.16585)
+
+## Overview
+
+DataJoint has traditionally used a global singleton pattern: one configuration (`dj.config`), one connection (`dj.conn()`), shared across all tables in a process. This works well for interactive sessions and single-user scripts, but breaks down when:
+
+- A web server handles requests for different databases simultaneously
+- A notebook connects to production and staging databases side by side
+- Tests need isolated databases that don't interfere with each other
+- Parallel pipelines need independent connections
+
+DataJoint 2.2 solves this with `dj.Instance`—an object that bundles its own configuration and connection, independent of global state.
+
+## `dj.Instance` API
+
+An Instance encapsulates a config and connection pair. Create one by providing database credentials directly:
+
+```python
+import datajoint as dj
+
+inst = dj.Instance(host="localhost", user="root", password="secret")
+```
+
+Then use `inst.Schema()` instead of `dj.Schema()`:
+
+```python
+schema = inst.Schema("my_database")
+
+@schema
+class Experiment(dj.Manual):
+    definition = """
+    experiment_id : int32
+    ---
+    description : varchar(255)
+    """
+```
+
+Tables defined this way use the Instance's connection—completely independent of `dj.config` and `dj.conn()`.
+
+### Instance Parameters
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `host` | str | — | Database hostname (required) |
+| `user` | str | — | Database username (required) |
+| `password` | str | — | Database password (required) |
+| `port` | int | from config | Database port (default: 3306 for MySQL, 5432 for PostgreSQL) |
+| `use_tls` | bool or dict | `None` | TLS configuration |
+| `**kwargs` | — | — | Config overrides (e.g., `safemode=False`) |
+
+### Instance Methods
+
+| Method | Description |
+|--------|-------------|
+| `inst.Schema(name)` | Create a Schema bound to this Instance's connection |
+| `inst.FreeTable(full_name)` | Create a FreeTable bound to this Instance's connection |
+| `inst.config` | Access this Instance's Config object |
+| `inst.connection` | Access this Instance's Connection object |
+
+### Config Overrides
+
+Pass any config setting as a keyword argument. Use double underscores for nested settings:
+
+```python
+inst = dj.Instance(
+    host="localhost", user="root", password="secret",
+    safemode=False,
+    database__reconnect=False,
+)
+```
+
+## Multiple Databases
+
+Instances make it straightforward to work with multiple databases simultaneously:
+
+```python
+production = dj.Instance(host="prod.example.com", user="analyst", password="...")
+staging = dj.Instance(host="staging.example.com", user="dev", password="...")
+
+prod_schema = production.Schema("experiment_data")
+staging_schema = staging.Schema("experiment_data")
+
+# Query both independently
+prod_data = ProdTable.to_dicts()
+staging_data = StagingTable.to_dicts()
+```
+
+Each Instance maintains its own connection pool and configuration—no cross-contamination.
+
+## Thread-Safe Mode
+
+For applications where global state is dangerous (web servers, multi-threaded workers), enable thread-safe mode:
+
+```bash
+export DJ_THREAD_SAFE=true
+```
+
+When thread-safe mode is enabled:
+
+- `dj.config` raises `ThreadSafetyError` on any access
+- `dj.conn()` raises `ThreadSafetyError`
+- `dj.Schema()` without an explicit connection raises `ThreadSafetyError`
+- Only `dj.Instance()` works, enforcing explicit connection management
+
+This prevents accidental use of shared global state in concurrent environments.
+
+### `ThreadSafetyError`
+
+```python
+import os
+os.environ["DJ_THREAD_SAFE"] = "true"
+
+import datajoint as dj
+
+dj.config.database.host  # raises ThreadSafetyError
+dj.conn()                # raises ThreadSafetyError
+
+# Instead, use Instance:
+inst = dj.Instance(host="localhost", user="root", password="secret")
+schema = inst.Schema("my_db")  # works
+```
+
+### Environment Variable
+
+| Variable | Values | Default | Description |
+|----------|--------|---------|-------------|
+| `DJ_THREAD_SAFE` | `true`, `1`, `yes` / `false`, `0`, `no` | `false` | Enable thread-safe mode |
+
+## Connection-Scoped Config
+
+Each Instance carries its own `Config` object. Runtime configuration reads go through the Instance's config, not global state:
+
+```python
+inst = dj.Instance(host="localhost", user="root", password="secret")
+
+# Instance-scoped config
+inst.config.safemode = False
+inst.config.display.limit = 25
+
+# Global config is unaffected
+print(dj.config.safemode)  # still True (default)
+```
+
+Tables created through an Instance's Schema read config from that Instance's connection, not from `dj.config`.
+
+## When to Use Instances
+
+| Scenario | Pattern |
+|----------|---------|
+| Interactive notebook, single database | `dj.config` + `dj.Schema()` (global pattern) |
+| Script connecting to one database | Either pattern works |
+| Web server (Flask, FastAPI, Django) | `dj.Instance()` per request/tenant |
+| Multi-database comparison | One `dj.Instance()` per database |
+| Parallel workers | `dj.Instance()` per worker + `DJ_THREAD_SAFE=true` |
+| Test suite | `dj.Instance()` per test for isolation |
+| Shared notebook server | `dj.Instance()` per user session |
+
+## Comparison: Global vs Instance
+
+### Global Pattern (unchanged)
+
+```python
+import datajoint as dj
+
+# Config set via environment, files, or programmatically
+dj.config["database.host"] = "localhost"
+
+schema = dj.Schema("my_db")
+
+@schema
+class MyTable(dj.Manual):
+    definition = """
+    id : int32
+    ---
+    value : float64
+    """
+```
+
+### Instance Pattern (new in 2.2)
+
+```python
+import datajoint as dj
+
+inst = dj.Instance(host="localhost", user="root", password="secret")
+schema = inst.Schema("my_db")
+
+@schema
+class MyTable(dj.Manual):
+    definition = """
+    id : int32
+    ---
+    value : float64
+    """
+```
+
+Once a Schema is created, table definitions, inserts, queries, and all other operations work identically regardless of which pattern was used to create the Schema.
+
+## Graph-Driven Diagram Operations
+
+DataJoint 2.2 promotes `dj.Diagram` from a visualization tool to an operational component. The same dependency graph that renders pipeline diagrams now powers cascade delete, table drop, and data subsetting.
+
+### From Visualization to Operations
+
+In prior versions, `dj.Diagram` existed solely for visualization — drawing the dependency graph as SVG or Mermaid output. The cascade logic inside `Table.delete()` traversed dependencies independently using an error-driven approach: attempt `DELETE` on the parent, catch the foreign key integrity error, parse the error message to discover which child table is blocking, then recursively delete from that child first. This had several problems:
+
+- **MySQL 8 with limited privileges** returns error 1217 (`ROW_IS_REFERENCED`) instead of 1451 (`ROW_IS_REFERENCED_2`), which provides no table name — the cascade crashes with no way to proceed.
+- **PostgreSQL** aborts the entire transaction on any error, requiring `SAVEPOINT` / `ROLLBACK TO SAVEPOINT` round-trips for each failed delete attempt.
+- **Fragile error parsing** across MySQL versions and privilege levels, where different configurations produce different error message formats.
+
+In 2.2, `Table.delete()` and `Table.drop()` use `dj.Diagram` internally to compute the dependency graph and walk it in reverse topological order — deleting leaves first, with no trial-and-error needed. The user-facing behavior of `Table.delete()` is unchanged. The Diagram's `cascade()` and `counts()` methods are available as a public inspection API for understanding cascade impact before executing.
+
+### The Preview-Then-Execute Pattern
+
+`Diagram.cascade()` is a class method that builds a complete cascade diagram from a table expression — including all descendants across all loaded schemas — in a single call:
+
+```python
+# Preview: what tables and how many rows would be affected?
+dj.Diagram.cascade(Session & {'subject_id': 'M001'}).counts()
+# {'`lab`.`session`': 3, '`lab`.`trial`': 45, '`lab`.`processed_data`': 45}
+
+# Execute via Table.delete() after reviewing the blast radius
+(Session & {'subject_id': 'M001'}).delete(prompt=False)
+```
+
+This is valuable when working with unfamiliar pipelines, large datasets, or multi-schema dependencies where the cascade impact is not immediately obvious.
+
+### Two Propagation Modes
+
+The diagram supports two restriction propagation modes designed for fundamentally different tasks.
+
+**`Diagram.cascade(table_expr)`** is a class method that creates a cascade diagram for delete. It takes a (possibly restricted) table expression, includes all descendants across loaded schemas, propagates the restriction downstream, and **trims the diagram** to the resulting subgraph — ancestors and unrelated tables are removed entirely. Convergence uses OR: a descendant row is marked for deletion if *any* ancestor path reaches it, because if any reason exists to remove a row, it should be removed.
+
+When the cascade encounters a part table whose master is not yet included in the cascade, the behavior depends on the `part_integrity` setting. With `"enforce"` (the default), `delete()` raises an error if part rows would be deleted without their master — preventing orphaned master rows. With `"cascade"`, the restriction propagates *upward* from the part to its master: the restricted part rows identify which master rows are affected, those masters receive a restriction, and that restriction then propagates back downstream to all sibling parts — deleting the entire compositional unit, not just the originally matched part rows.
+
+**`diagram.restrict(table_expr)`** is an instance method that selects a data subset. It propagates a restriction downstream but **preserves the full diagram**, allowing `restrict()` to be called again from a different seed table. This makes it possible to build up multi-condition subsets incrementally — for example, restricting by species from one table and by date from another. Convergence uses AND: a descendant row is included only if *all* restricted ancestors match, because an export should contain only rows satisfying every condition. After chaining restrictions, use `prune()` to remove empty tables and `counts()` to inspect the result.
+
+The two modes are mutually exclusive — `restrict()` raises an error if called on a Diagram produced by `cascade()`. This prevents accidental mixing of incompatible semantics: a delete diagram should never be reused for subsetting.
+
+### Pruning Empty Tables
+
+After applying restrictions with `restrict()`, some tables in the diagram may have zero matching rows. The `prune()` method removes these tables from the diagram, leaving only the subgraph with actual data:
+
+```python
+export = (dj.Diagram(schema)
+    .restrict(Subject & {'species': 'mouse'})
+    .restrict(Session & 'session_date > "2024-01-01"')
+    .prune())
+
+export.counts()    # only tables with matching rows
+export             # visualize the export subgraph
+```
+
+Without prior restrictions, `prune()` removes physically empty tables. This is useful for understanding which parts of a pipeline are populated.
+
+`prune()` cannot be used on cascade Diagrams — cascade retains all descendant tables to handle concurrent inserts safely (a table empty at cascade time could have rows by the time `delete()` executes).
+
+### Restriction Propagation Rules
+
+When `cascade()` or `restrict()` propagates a restriction from a parent to a child, one of three rules applies depending on the foreign key relationship:
+
+| Rule | Condition | Child restriction |
+|------|-----------|-------------------|
+| **Direct copy** | Non-aliased FK, restriction attributes are a subset of child's primary key | Restriction copied directly |
+| **Aliased projection** | FK uses attribute renaming (e.g., `subject_id` → `animal_id`) | Parent projected with attribute mapping |
+| **Full projection** | Non-aliased FK, restriction uses attributes not in child's primary key | Parent projected (all attributes) as restriction |
+
+When a child has multiple restricted ancestors, convergence depends on the mode: `cascade()` uses OR (any path marks a row for deletion), `restrict()` uses AND (all conditions must match).
+
+When a child references the same parent through multiple foreign keys (e.g., `source_mouse` and `target_mouse` both referencing `Mouse`), these paths always combine with OR regardless of the mode — each FK path is an independent reason for the child row to be affected.
+
+### Safe Delete Workflow
+
+With `safemode=True` (the default), `delete()` provides a built-in preview-and-confirm workflow:
+
+1. Builds the cascade diagram and computes all affected tables
+2. Executes the deletes inside a transaction
+3. Logs every affected table and its row count
+4. Asks **"Commit deletes?"** — declining **rolls back** all changes
+
+This is safer than a pre-transaction preview because it reflects the actual database state at delete time, including triggers and concurrent changes.
+
+For programmatic preview without executing, use `Diagram.cascade()`:
+
+```python
+dj.Diagram.cascade(Session & {'subject_id': 'M001'}).counts()
+# {'`lab`.`session`': 3, '`lab`.`trial`': 45, '`lab`.`processed_data`': 45}
+```
+
+The `drop()` method follows the same safemode pattern — previewing affected tables and asking for confirmation before proceeding.
+
+### Unloaded Schema Detection
+
+If a descendant table lives in a schema that hasn't been activated, the graph-driven delete won't know about it. When the final `DELETE` fails with a foreign key error, DataJoint catches it and produces an actionable error message identifying which schema needs to be activated — rather than the opaque crash of the prior implementation.
+
+### Iteration API
+
+Diagrams support Python's iteration protocol, yielding `FreeTable` objects in topological order:
+
+```python
+# Forward iteration (parents first) — useful for export/inspection
+for ft in diagram:
+    print(ft.full_table_name, len(ft))
+
+# Reverse iteration (leaves first) — used by delete and drop
+for ft in reversed(diagram):
+    ft.delete_quick()
+```
+
+Each yielded `FreeTable` carries any cascade or restrict conditions that have been applied. `Table.delete()` and `Table.drop()` use `reversed(diagram)` internally, replacing the manual `topo_sort()` loops from prior implementations.
+
+### Architecture
+
+`Table.delete()` uses `Diagram.cascade(self)` internally to compute the affected subgraph, then iterates `reversed(diagram)` to delete leaves first. `Table.drop()` builds a Diagram with all descendants and drops in the same order. The Diagram is purely a graph computation and inspection tool — it computes the cascade and provides `counts()` and iteration, but all mutation logic (transactions, SQL execution, prompts) lives in `Table.delete()` and `Table.drop()`.
+
+### Advantages over Error-Driven Cascade
+
+The graph-driven approach resolves every known limitation of the prior error-driven cascade:
+
+| Scenario | Error-driven (prior) | Graph-driven (2.2) |
+|---|---|---|
+| MySQL 8 + limited privileges | Crashes (error 1217, no table name) | Works — no error parsing needed |
+| PostgreSQL | Savepoint overhead per attempt | No errors triggered |
+| Multiple FKs to same child | One-at-a-time via retry loop | All paths resolved upfront |
+| Part integrity enforcement | Post-hoc check after delete | Data-driven post-check (no false positives) |
+| Unloaded schemas | Crash with opaque error | Clear error: "activate schema X" |
+| Reusability | Delete-only | Delete, drop, export, prune |
+| Inspectability | Opaque recursive cascade | `counts()` preview + safemode confirmation before commit |
+
+## See Also
+
+- [What's New in 2.1](whats-new-21.md) — Previous release
+- [Release Notes (v2.2.0)](https://github.com/datajoint/datajoint-python/releases) — GitHub changelog
+- [Use Isolated Instances](../how-to/use-instances.md) — Task-oriented guide
+- [Working with Instances](../tutorials/advanced/instances.ipynb) — Step-by-step tutorial
+- [Configuration Reference](../reference/configuration.md) — Thread-safe mode settings
+- [Configure Database](../how-to/configure-database.md) — Connection setup
+- [Diagram Specification](../reference/specs/diagram.md) — Full reference for diagram operations
+- [Delete Data](../how-to/delete-data.md) — Task-oriented delete guide
 

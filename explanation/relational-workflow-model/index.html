@@ -9,7 +9,7 @@
 <link href="../faq/" rel="prev"/>
 <link href="../entity-integrity/" rel="next"/>
 <link href="../../assets/images/company-logo-blue.png" rel="icon"/>
-<meta content="mkdocs-1.6.1, mkdocs-material-9.7.5" name="generator"/>
+<meta content="mkdocs-1.6.1, mkdocs-material-9.7.6" name="generator"/>
 <title>Relational Workflow Model - DataJoint Documentation</title>
 <link href="../../assets/stylesheets/main.484c7ddc.min.css" rel="stylesheet"/>
 <link href="../../assets/stylesheets/palette.ab4e12ef.min.css" rel="stylesheet"/>
@@ -265,30 +265,6 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../whats-new-2/">
-<span class="md-ellipsis">
-    
-  
-    What's New in 2.0
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../whats-new-22/">
-<span class="md-ellipsis">
-    
-  
-    What's New in 2.2
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
 <a class="md-nav__link" href="../faq/">
 <span class="md-ellipsis">
     
@@ -356,15 +332,6 @@
     </label>
 <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
 <li class="md-nav__item">
-<a class="md-nav__link" href="#the-problem-with-traditional-approaches">
-<span class="md-ellipsis">
-      
-        The Problem with Traditional Approaches
-      
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
 <a class="md-nav__link" href="#three-paradigms-compared">
 <span class="md-ellipsis">
       
@@ -396,47 +363,47 @@
 </nav>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#the-relational-workflow-model_1">
+<a class="md-nav__link" href="#core-concepts">
 <span class="md-ellipsis">
       
-        The Relational Workflow Model
+        Core Concepts
       
     </span>
 </a>
-<nav aria-label="The Relational Workflow Model" class="md-nav">
+<nav aria-label="Core Concepts" class="md-nav">
 <ul class="md-nav__list">
 <li class="md-nav__item">
-<a class="md-nav__link" href="#1-workflow-entities">
+<a class="md-nav__link" href="#workflow-steps-and-artifacts">
 <span class="md-ellipsis">
       
-        1. Workflow Entities
+        Workflow Steps and Artifacts
       
     </span>
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#2-workflow-dependencies">
+<a class="md-nav__link" href="#dependencies-as-foreign-keys">
 <span class="md-ellipsis">
       
-        2. Workflow Dependencies
+        Dependencies as Foreign Keys
       
     </span>
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#3-workflow-steps-table-tiers">
+<a class="md-nav__link" href="#master-part-relationships">
 <span class="md-ellipsis">
       
-        3. Workflow Steps (Table Tiers)
+        Master-Part Relationships
       
     </span>
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#4-directed-acyclic-graph-dag">
+<a class="md-nav__link" href="#directed-acyclic-graph">
 <span class="md-ellipsis">
       
-        4. Directed Acyclic Graph (DAG)
+        Directed Acyclic Graph
       
     </span>
 </a>
@@ -445,68 +412,37 @@
 </nav>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#the-workflow-normalization-principle">
+<a class="md-nav__link" href="#active-schemas">
 <span class="md-ellipsis">
       
-        The Workflow Normalization Principle
+        Active Schemas
       
     </span>
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#why-this-matters">
+<a class="md-nav__link" href="#workflow-normalization">
 <span class="md-ellipsis">
       
-        Why This Matters
-      
-    </span>
-</a>
-<nav aria-label="Why This Matters" class="md-nav">
-<ul class="md-nav__list">
-<li class="md-nav__item">
-<a class="md-nav__link" href="#unified-design-and-implementation">
-<span class="md-ellipsis">
-      
-        Unified Design and Implementation
+        Workflow Normalization
       
     </span>
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#temporal-and-operational-awareness">
+<a class="md-nav__link" href="#entity-integrity">
 <span class="md-ellipsis">
       
-        Temporal and Operational Awareness
+        Entity Integrity
       
     </span>
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#immutability-and-provenance">
+<a class="md-nav__link" href="#query-algebra">
 <span class="md-ellipsis">
       
-        Immutability and Provenance
-      
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#workflow-integrity">
-<span class="md-ellipsis">
-      
-        Workflow Integrity
-      
-    </span>
-</a>
-</li>
-</ul>
-</nav>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#query-algebra-with-workflow-semantics">
-<span class="md-ellipsis">
-      
-        Query Algebra with Workflow Semantics
+        Query Algebra
       
     </span>
 </a>
@@ -2404,6 +2340,42 @@
           </label>
 <ul class="md-nav__list" data-md-scrollfix="">
 <li class="md-nav__item">
+<a class="md-nav__link" href="../../about/whats-new-22/">
+<span class="md-ellipsis">
+    
+  
+    What's New in 2.2
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../about/whats-new-21/">
+<span class="md-ellipsis">
+    
+  
+    What's New in 2.1
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../about/whats-new-2/">
+<span class="md-ellipsis">
+    
+  
+    What's New in 2.0
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
 <a class="md-nav__link" href="../../about/history/">
 <span class="md-ellipsis">
     
@@ -2493,15 +2465,6 @@
     </label>
 <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
 <li class="md-nav__item">
-<a class="md-nav__link" href="#the-problem-with-traditional-approaches">
-<span class="md-ellipsis">
-      
-        The Problem with Traditional Approaches
-      
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
 <a class="md-nav__link" href="#three-paradigms-compared">
 <span class="md-ellipsis">
       
@@ -2533,47 +2496,47 @@
 </nav>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#the-relational-workflow-model_1">
+<a class="md-nav__link" href="#core-concepts">
 <span class="md-ellipsis">
       
-        The Relational Workflow Model
+        Core Concepts
       
     </span>
 </a>
-<nav aria-label="The Relational Workflow Model" class="md-nav">
+<nav aria-label="Core Concepts" class="md-nav">
 <ul class="md-nav__list">
 <li class="md-nav__item">
-<a class="md-nav__link" href="#1-workflow-entities">
+<a class="md-nav__link" href="#workflow-steps-and-artifacts">
 <span class="md-ellipsis">
       
-        1. Workflow Entities
+        Workflow Steps and Artifacts
       
     </span>
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#2-workflow-dependencies">
+<a class="md-nav__link" href="#dependencies-as-foreign-keys">
 <span class="md-ellipsis">
       
-        2. Workflow Dependencies
+        Dependencies as Foreign Keys
       
     </span>
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#3-workflow-steps-table-tiers">
+<a class="md-nav__link" href="#master-part-relationships">
 <span class="md-ellipsis">
       
-        3. Workflow Steps (Table Tiers)
+        Master-Part Relationships
       
     </span>
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#4-directed-acyclic-graph-dag">
+<a class="md-nav__link" href="#directed-acyclic-graph">
 <span class="md-ellipsis">
       
-        4. Directed Acyclic Graph (DAG)
+        Directed Acyclic Graph
       
     </span>
 </a>
@@ -2582,68 +2545,37 @@
 </nav>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#the-workflow-normalization-principle">
+<a class="md-nav__link" href="#active-schemas">
 <span class="md-ellipsis">
       
-        The Workflow Normalization Principle
+        Active Schemas
       
     </span>
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#why-this-matters">
+<a class="md-nav__link" href="#workflow-normalization">
 <span class="md-ellipsis">
       
-        Why This Matters
-      
-    </span>
-</a>
-<nav aria-label="Why This Matters" class="md-nav">
-<ul class="md-nav__list">
-<li class="md-nav__item">
-<a class="md-nav__link" href="#unified-design-and-implementation">
-<span class="md-ellipsis">
-      
-        Unified Design and Implementation
+        Workflow Normalization
       
     </span>
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#temporal-and-operational-awareness">
+<a class="md-nav__link" href="#entity-integrity">
 <span class="md-ellipsis">
       
-        Temporal and Operational Awareness
+        Entity Integrity
       
     </span>
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#immutability-and-provenance">
+<a class="md-nav__link" href="#query-algebra">
 <span class="md-ellipsis">
       
-        Immutability and Provenance
-      
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#workflow-integrity">
-<span class="md-ellipsis">
-      
-        Workflow Integrity
-      
-    </span>
-</a>
-</li>
-</ul>
-</nav>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#query-algebra-with-workflow-semantics">
-<span class="md-ellipsis">
-      
-        Query Algebra with Workflow Semantics
+        Query Algebra
       
     </span>
 </a>
@@ -2674,25 +2606,19 @@
 <div class="md-content" data-md-component="content">
 <article class="md-content__inner md-typeset">
 <h1 id="the-relational-workflow-model">The Relational Workflow Model<a class="headerlink" href="#the-relational-workflow-model" title="Permanent link">¶</a></h1>
-<p>DataJoint implements the <strong>Relational Workflow Model</strong>—a paradigm that extends
-relational databases with native support for computational workflows. This model
-defines a new class of databases called <strong>Computational Databases</strong>, where
-computational transformations are first-class citizens of the data model.</p>
-<p>These concepts, along with DataJoint's schema definition language and query algebra,
-were first formalized in <a href="https://doi.org/10.48550/arXiv.1807.11104">Yatsenko et al., 2018</a>.</p>
-<h2 id="the-problem-with-traditional-approaches">The Problem with Traditional Approaches<a class="headerlink" href="#the-problem-with-traditional-approaches" title="Permanent link">¶</a></h2>
-<p>Traditional relational databases excel at storing and querying data but struggle
-with computational workflows. They can store inputs and outputs, but:</p>
-<ul>
-<li>The database doesn't understand that outputs were <em>computed from</em> inputs</li>
-<li>It doesn't automatically recompute when inputs change</li>
-<li>It doesn't track provenance</li>
-</ul>
-<p><strong>DataJoint solves these problems by treating your database schema as an
-executable workflow specification.</strong></p>
+<p>The relational data model has historically been interpreted through two
+conceptual frameworks: Codd's mathematical foundation, which views tables as
+logical predicates, and Chen's Entity-Relationship Model, which views tables
+as entity types and relationships. The relational workflow model introduces a
+third paradigm: <strong>tables represent workflow steps, rows represent workflow
+artifacts, and foreign key dependencies prescribe execution order.</strong> This
+adds an operational dimension absent from both predecessors—the schema
+specifies not only what data exists but how it is derived.</p>
+<p>The relational workflow model and its technical innovations are formally
+defined in <a href="https://arxiv.org/abs/2602.16585">Yatsenko &amp; Nguyen, 2026</a>.
+DataJoint's schema definition language and query algebra were first
+formalized in <a href="https://doi.org/10.48550/arXiv.1807.11104">Yatsenko et al., 2018</a>.</p>
 <h2 id="three-paradigms-compared">Three Paradigms Compared<a class="headerlink" href="#three-paradigms-compared" title="Permanent link">¶</a></h2>
-<p>The relational data model has been interpreted through different conceptual
-frameworks, each with distinct strengths and limitations:</p>
 <table>
 <thead>
 <tr>
@@ -2704,165 +2630,154 @@ frameworks, each with distinct strengths and limitations:</p>
 </thead>
 <tbody>
 <tr>
-<td><strong>Core Question</strong></td>
-<td>"What functional dependencies exist?"</td>
-<td>"What entity types exist?"</td>
-<td><strong>"When/how are entities created?"</strong></td>
+<td><strong>Core question</strong></td>
+<td>What functional dependencies exist?</td>
+<td>What entity types exist?</td>
+<td><strong>When/how are entities created?</strong></td>
 </tr>
 <tr>
-<td><strong>Time Dimension</strong></td>
+<td><strong>Table semantics</strong></td>
+<td>Logical predicate</td>
+<td>Entity or relationship</td>
+<td><strong>Workflow step</strong></td>
+</tr>
+<tr>
+<td><strong>Row semantics</strong></td>
+<td>True proposition</td>
+<td>Entity instance</td>
+<td><strong>Workflow artifact</strong></td>
+</tr>
+<tr>
+<td><strong>Foreign keys</strong></td>
+<td>Referential integrity</td>
+<td>Relationship</td>
+<td><strong>Execution order</strong></td>
+</tr>
+<tr>
+<td><strong>Computation</strong></td>
 <td>Not addressed</td>
-<td>Not central</td>
-<td><strong>Fundamental</strong></td>
+<td>Not addressed</td>
+<td><strong>Declared in schema</strong></td>
 </tr>
 <tr>
-<td><strong>Implementation Gap</strong></td>
-<td>High (abstract to SQL)</td>
-<td>High (ERM to SQL)</td>
-<td><strong>None (unified approach)</strong></td>
+<td><strong>Provenance</strong></td>
+<td>Not addressed</td>
+<td>Not addressed</td>
+<td><strong>Structural</strong></td>
 </tr>
 <tr>
-<td><strong>Workflow Support</strong></td>
-<td>None</td>
-<td>None</td>
-<td><strong>Native workflow modeling</strong></td>
+<td><strong>Implementation gap</strong></td>
+<td>High</td>
+<td>High</td>
+<td><strong>None</strong></td>
 </tr>
 </tbody>
 </table>
 <h3 id="codds-mathematical-foundation">Codd's Mathematical Foundation<a class="headerlink" href="#codds-mathematical-foundation" title="Permanent link">¶</a></h3>
-<p>Edgar F. Codd's original relational model is rooted in predicate calculus and
-set theory. Tables represent logical predicates; rows assert true propositions.
-While mathematically rigorous, this approach requires abstract reasoning that
-doesn't map to intuitive domain thinking.</p>
+<p>Codd's mathematical foundation views tables as logical predicates and rows as
+true propositions—rigorous but abstract.</p>
 <h3 id="chens-entity-relationship-model">Chen's Entity-Relationship Model<a class="headerlink" href="#chens-entity-relationship-model" title="Permanent link">¶</a></h3>
-<p>Peter Chen's Entity-Relationship Model (ERM) shifted focus to concrete domain
-modeling—entities and relationships visualized in diagrams. However, ERM:</p>
-<ul>
-<li>Creates a gap between conceptual design and SQL implementation</li>
-<li>Lacks temporal dimension ("when" entities are created)</li>
-<li>Treats relationships as static connections, not dynamic processes</li>
-</ul>
-<h2 id="the-relational-workflow-model_1">The Relational Workflow Model<a class="headerlink" href="#the-relational-workflow-model_1" title="Permanent link">¶</a></h2>
-<p>The Relational Workflow Model introduces four fundamental concepts:</p>
-<h3 id="1-workflow-entities">1. Workflow Entities<a class="headerlink" href="#1-workflow-entities" title="Permanent link">¶</a></h3>
-<p>Unlike traditional entities that exist independently, <strong>workflow entities</strong> are
-artifacts of workflow execution—they represent the products of specific
-operations. This temporal dimension allows us to understand not just <em>what</em>
-exists, but <em>when</em> and <em>how</em> it came to exist.</p>
-<h3 id="2-workflow-dependencies">2. Workflow Dependencies<a class="headerlink" href="#2-workflow-dependencies" title="Permanent link">¶</a></h3>
-<p><strong>Workflow dependencies</strong> extend foreign keys with operational semantics. They
-don't just ensure referential integrity—they prescribe the order of operations.
-Parent entities must be created before child entities.</p>
-<pre class="mermaid"><code>graph LR
-    A[Session] --&gt; B[Scan]
-    B --&gt; C[Segmentation]
-    C --&gt; D[Analysis]
-</code></pre>
-<h3 id="3-workflow-steps-table-tiers">3. Workflow Steps (Table Tiers)<a class="headerlink" href="#3-workflow-steps-table-tiers" title="Permanent link">¶</a></h3>
-<p>Each table represents a distinct <strong>workflow step</strong> with a specific role:</p>
-<pre class="mermaid"><code>graph TD
-    subgraph "Lookup (Gray)"
-        L[Parameters]
-    end
-    subgraph "Manual (Green)"
-        M[Subject]
-        S[Session]
-    end
-    subgraph "Imported (Blue)"
-        I[Recording]
-    end
-    subgraph "Computed (Red)"
-        C[Analysis]
-    end
-
-    L --&gt; C
-    M --&gt; S
-    S --&gt; I
-    I --&gt; C
-</code></pre>
+<p>Chen's Entity-Relationship Model shifted focus to domain modeling with
+entities, attributes, and relationships—more intuitive, but lacking any
+workflow or computational dimension.</p>
+<h2 id="core-concepts">Core Concepts<a class="headerlink" href="#core-concepts" title="Permanent link">¶</a></h2>
+<h3 id="workflow-steps-and-artifacts">Workflow Steps and Artifacts<a class="headerlink" href="#workflow-steps-and-artifacts" title="Permanent link">¶</a></h3>
+<p>Tables are classified into tiers by data entry mode:</p>
 <table>
 <thead>
 <tr>
 <th>Tier</th>
 <th>Role</th>
-<th>Examples</th>
+<th><code>make()</code></th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><strong>Lookup</strong></td>
-<td>Reference data, parameters</td>
-<td>Species, analysis methods</td>
+<td><strong>Manual</strong></td>
+<td>Receive direct user entry</td>
+<td>No</td>
 </tr>
 <tr>
-<td><strong>Manual</strong></td>
-<td>Human-entered observations</td>
-<td>Subjects, sessions</td>
+<td><strong>Lookup</strong></td>
+<td>Hold reference data</td>
+<td>No</td>
 </tr>
 <tr>
 <td><strong>Imported</strong></td>
-<td>Automated data acquisition</td>
-<td>Recordings, images</td>
+<td>Reach out to data sources outside the DataJoint system (instruments, electronic lab notebooks, external databases)</td>
+<td>Yes</td>
 </tr>
 <tr>
 <td><strong>Computed</strong></td>
-<td>Derived results</td>
-<td>Analyses, statistics</td>
+<td>Derive their contents entirely from upstream DataJoint tables</td>
+<td>Yes</td>
 </tr>
 </tbody>
 </table>
-<h3 id="4-directed-acyclic-graph-dag">4. Directed Acyclic Graph (DAG)<a class="headerlink" href="#4-directed-acyclic-graph-dag" title="Permanent link">¶</a></h3>
-<p>The schema forms a <strong>DAG</strong> that:</p>
-<ul>
-<li>Prohibits circular dependencies</li>
-<li>Ensures valid execution sequences</li>
-<li>Enables efficient parallel execution</li>
-<li>Supports resumable computation</li>
-</ul>
-<h2 id="the-workflow-normalization-principle">The Workflow Normalization Principle<a class="headerlink" href="#the-workflow-normalization-principle" title="Permanent link">¶</a></h2>
+<p>Imported and Computed tables define computations via <code>make()</code> methods. The
+<code>make()</code> method specifies how each entity is derived—this computation logic is
+declared within the table definition, making it part of the schema itself
+rather than an external workflow specification.</p>
+<h3 id="dependencies-as-foreign-keys">Dependencies as Foreign Keys<a class="headerlink" href="#dependencies-as-foreign-keys" title="Permanent link">¶</a></h3>
+<p>Foreign keys define computational dependencies, not only referential integrity.
+The dependency graph is explicit, queryable, and enforced by the database.</p>
+<pre class="mermaid"><code>graph LR
+    A[Session] --&gt; B[Scan]
+    B --&gt; C[Segmentation]
+    C --&gt; D[Analysis]
+</code></pre>
+<h3 id="master-part-relationships">Master-Part Relationships<a class="headerlink" href="#master-part-relationships" title="Permanent link">¶</a></h3>
+<p>Master-part relationships declare transactional grouping directly in the
+schema: the master table represents the workflow step, while part tables hold
+the individual items. Insertions and deletions cascade as a unit, enforcing
+transactional semantics without application code.</p>
+<h3 id="directed-acyclic-graph">Directed Acyclic Graph<a class="headerlink" href="#directed-acyclic-graph" title="Permanent link">¶</a></h3>
+<p>Dependencies between tables form a directed acyclic graph (DAG); aggregated
+dependencies between schemas likewise form a DAG. Unlike task DAGs in
+workflow managers, these are <em>relational schema</em> DAGs—they define data
+structure and relationships, not just execution steps.</p>
+<h2 id="active-schemas">Active Schemas<a class="headerlink" href="#active-schemas" title="Permanent link">¶</a></h2>
+<p>The key distinction from classical models: traditional schemas are
+<em>passive</em>—containers for data produced by external processes. In the
+relational workflow model, the schema is <em>active</em>—Computed tables declare how
+their contents are derived, making the schema itself the workflow
+specification. Schemas are defined as Python classes, and entire pipelines are
+organized as self-contained code repositories—version-controlled, testable,
+and deployable using standard software engineering practices.</p>
+<p>A useful analogy: electronic spreadsheets unified data and computation—cells
+with values alongside cells with formulas. Yet this integration never
+penetrated relational databases in their 50+ years of history. The relational
+workflow model brings to databases what spreadsheets brought to tabular
+calculation: the recognition that data and the computations that produce it
+belong together. The analogy has limits: spreadsheets' coupling is also the
+source of their well-known fragility. DataJoint addresses this through formal
+schema constraints and explicit dependency declaration rather than ad-hoc cell
+references.</p>
+<h2 id="workflow-normalization">Workflow Normalization<a class="headerlink" href="#workflow-normalization" title="Permanent link">¶</a></h2>
 <blockquote>
-<p><strong>"Every table represents an entity type that is created at a specific step
-in a workflow, and all attributes describe that entity as it exists at that
-workflow step."</strong></p>
+<p><strong>"Every table represents an entity type created at a specific workflow
+step, and all attributes describe that entity as it exists at that step."</strong></p>
 </blockquote>
-<p>This principle extends entity normalization with temporal and operational
-dimensions.</p>
-<h2 id="why-this-matters">Why This Matters<a class="headerlink" href="#why-this-matters" title="Permanent link">¶</a></h2>
-<h3 id="unified-design-and-implementation">Unified Design and Implementation<a class="headerlink" href="#unified-design-and-implementation" title="Permanent link">¶</a></h3>
-<p>Unlike the ERM-SQL gap, DataJoint provides unified:</p>
-<ul>
-<li><strong>Diagramming</strong> — Schema diagrams reflect actual structure</li>
-<li><strong>Definition</strong> — Table definitions are executable code</li>
-<li><strong>Querying</strong> — Operators understand workflow semantics</li>
-</ul>
-<p>No translation needed between conceptual design and implementation.</p>
-<h3 id="temporal-and-operational-awareness">Temporal and Operational Awareness<a class="headerlink" href="#temporal-and-operational-awareness" title="Permanent link">¶</a></h3>
-<p>The model captures the dynamic nature of workflows:</p>
-<ul>
-<li>Data processing sequences</li>
-<li>Computational dependencies</li>
-<li>Operation ordering</li>
-</ul>
-<h3 id="immutability-and-provenance">Immutability and Provenance<a class="headerlink" href="#immutability-and-provenance" title="Permanent link">¶</a></h3>
-<p>Workflow artifacts are immutable once created:</p>
-<ul>
-<li>Preserves execution history</li>
-<li>Maintains data provenance</li>
-<li>Enables reproducible science</li>
-</ul>
-<p>When you delete upstream data, dependent results cascade-delete automatically.
-To correct errors, you delete, reinsert, and recompute—ensuring every result
-represents a consistent computation from valid inputs.</p>
-<h3 id="workflow-integrity">Workflow Integrity<a class="headerlink" href="#workflow-integrity" title="Permanent link">¶</a></h3>
-<p>The DAG structure guarantees:</p>
-<ul>
-<li>No circular dependencies</li>
-<li>Valid operation sequences</li>
-<li>Enforced temporal order</li>
-<li>Computational validity</li>
-</ul>
-<h2 id="query-algebra-with-workflow-semantics">Query Algebra with Workflow Semantics<a class="headerlink" href="#query-algebra-with-workflow-semantics" title="Permanent link">¶</a></h2>
-<p>DataJoint's five operators provide a complete query algebra:</p>
+<p>Database normalization decomposes data into tables to eliminate redundancy.
+Classical normalization theory achieves this through normal forms based on
+functional dependencies. Entity normalization asks whether each attribute
+describes the entity identified by the primary key. Workflow normalization
+extends these principles with a temporal dimension.</p>
+<p>A Session table contains attributes known when the session is entered (date,
+experimenter, subject). Analysis parameters determined later belong in
+Computed tables that depend on Session. This discipline prevents tables that
+accumulate attributes from different workflow stages, obscuring provenance and
+complicating updates.</p>
+<h2 id="entity-integrity">Entity Integrity<a class="headerlink" href="#entity-integrity" title="Permanent link">¶</a></h2>
+<p>All data is represented as well-formed entity sets with primary keys
+identifying each entity uniquely. This eliminates redundancy and ensures
+consistent updates.</p>
+<p>When upstream data is deleted, dependent results cascade-delete
+automatically—including associated objects in external storage. To correct
+errors, you delete, reinsert, and recompute, ensuring every result represents
+a consistent computation from valid inputs.</p>
+<h2 id="query-algebra">Query Algebra<a class="headerlink" href="#query-algebra" title="Permanent link">¶</a></h2>
+<p>DataJoint provides a five-operator algebra:</p>
 <table>
 <thead>
 <tr>
@@ -2873,40 +2788,39 @@ represents a consistent computation from valid inputs.</p>
 </thead>
 <tbody>
 <tr>
-<td><strong>Restriction</strong></td>
+<td><strong>Restrict</strong></td>
 <td><code>&amp;</code></td>
-<td>Filter entities</td>
+<td>Filter entities by attribute values or membership in other relations</td>
+</tr>
+<tr>
+<td><strong>Project</strong></td>
+<td><code>.proj()</code></td>
+<td>Select and rename attributes, compute derived values</td>
 </tr>
 <tr>
 <td><strong>Join</strong></td>
 <td><code>*</code></td>
-<td>Combine from converging paths</td>
+<td>Combine related entities across relations</td>
 </tr>
 <tr>
-<td><strong>Projection</strong></td>
-<td><code>.proj()</code></td>
-<td>Select/compute attributes</td>
-</tr>
-<tr>
-<td><strong>Aggregation</strong></td>
+<td><strong>Aggregate</strong></td>
 <td><code>.aggr()</code></td>
-<td>Summarize groups</td>
+<td>Group entities and compute summary statistics</td>
 </tr>
 <tr>
 <td><strong>Union</strong></td>
 <td><code>+</code></td>
-<td>Combine parallel branches</td>
+<td>Combine entity sets with compatible structure</td>
 </tr>
 </tbody>
 </table>
-<p>These operators:</p>
-<ul>
-<li>Take entity sets as input, produce entity sets as output</li>
-<li>Preserve entity integrity</li>
-<li>Respect declared dependencies (no ambiguous joins)</li>
-</ul>
+<p>The algebra achieves <em>algebraic closure</em>: every operator produces a valid
+entity set with a well-defined primary key, enabling unlimited composition.
+This preservation of entity integrity—every query result is itself a proper
+entity set with clear identity—distinguishes DataJoint's algebra from SQL,
+where query results lack both a well-defined primary key and a clear entity
+type.</p>
 <h2 id="from-transactions-to-transformations">From Transactions to Transformations<a class="headerlink" href="#from-transactions-to-transformations" title="Permanent link">¶</a></h2>
-<p>The Relational Workflow Model represents a conceptual shift:</p>
 <table>
 <thead>
 <tr>
@@ -2917,15 +2831,15 @@ represents a consistent computation from valid inputs.</p>
 <tbody>
 <tr>
 <td>Tables store data</td>
-<td>Entity sets are workflow steps</td>
+<td>Tables represent workflow steps</td>
 </tr>
 <tr>
 <td>Rows are records</td>
-<td>Entities are execution instances</td>
+<td>Rows are workflow artifacts</td>
 </tr>
 <tr>
 <td>Foreign keys enforce consistency</td>
-<td>Dependencies specify information flow</td>
+<td>Foreign keys prescribe execution order</td>
 </tr>
 <tr>
 <td>Updates modify state</td>
@@ -2941,20 +2855,12 @@ represents a consistent computation from valid inputs.</p>
 </tr>
 </tbody>
 </table>
-<p>This makes DataJoint feel less like a traditional database and more like a
-<strong>workflow engine with persistent state</strong>—one that maintains computational
-validity while supporting scientific flexibility.</p>
 <h2 id="summary">Summary<a class="headerlink" href="#summary" title="Permanent link">¶</a></h2>
-<p>The Relational Workflow Model:</p>
-<ol>
-<li><strong>Extends</strong> relational theory (doesn't replace it)</li>
-<li><strong>Adds</strong> temporal and operational semantics</li>
-<li><strong>Eliminates</strong> the design-implementation gap</li>
-<li><strong>Enables</strong> reproducible computational workflows</li>
-<li><strong>Maintains</strong> mathematical rigor</li>
-</ol>
-<p>It's not a departure from relational databases—it's their evolution for
-computational workflows.</p>
+<p>The relational workflow model offers a new way to understand relational
+databases—not merely as storage systems but as computational substrates. By
+interpreting tables as workflow steps and foreign keys as execution
+dependencies, the schema becomes a complete specification of how data is
+derived, not just what data exists.</p>
 </article>
 </div>
 <script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>

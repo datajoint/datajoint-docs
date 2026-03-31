@@ -21,7 +21,7 @@
       
       
       <link rel="icon" href="../../assets/images/company-logo-blue.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.5">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
     
     
       
@@ -436,10 +436,6 @@
       
         
       
-        
-      
-        
-      
     
     
     
@@ -497,62 +493,6 @@
     
   
     Data Pipelines
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../explanation/whats-new-2/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    What's New in 2.0
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../explanation/whats-new-22/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    What's New in 2.2
   
 
     
@@ -5397,6 +5337,12 @@
       
         
       
+        
+      
+        
+      
+        
+      
     
     
     
@@ -5448,6 +5394,90 @@
 
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../about/whats-new-22/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    What's New in 2.2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../about/whats-new-21/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    What's New in 2.1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../about/whats-new-2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    What's New in 2.0
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
             
               
                 
@@ -5829,10 +5859,10 @@
 <h2 id="enable-distributed-mode">Enable Distributed Mode<a class="headerlink" href="#enable-distributed-mode" title="Permanent link">&para;</a></h2>
 <p>Use <code>reserve_jobs=True</code> to enable job coordination:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Single worker (default)</span>
-<span class="n">ProcessedData</span><span class="o">.</span><span class="n">populate</span><span class="p">()</span>
+<span class="n">SessionAnalysis</span><span class="o">.</span><span class="n">populate</span><span class="p">()</span>
 
 <span class="c1"># Distributed mode with job reservation</span>
-<span class="n">ProcessedData</span><span class="o">.</span><span class="n">populate</span><span class="p">(</span><span class="n">reserve_jobs</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">SessionAnalysis</span><span class="o">.</span><span class="n">populate</span><span class="p">(</span><span class="n">reserve_jobs</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </code></pre></div>
 <h2 id="how-it-works">How It Works<a class="headerlink" href="#how-it-works" title="Permanent link">&para;</a></h2>
 <p>With <code>reserve_jobs=True</code>:
@@ -5842,7 +5872,7 @@
 4. On completion, job is marked success (or error)</p>
 <h2 id="multi-process-on-single-machine">Multi-Process on Single Machine<a class="headerlink" href="#multi-process-on-single-machine" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><span class="c1"># Use multiple processes</span>
-<span class="n">ProcessedData</span><span class="o">.</span><span class="n">populate</span><span class="p">(</span><span class="n">reserve_jobs</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">processes</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+<span class="n">SessionAnalysis</span><span class="o">.</span><span class="n">populate</span><span class="p">(</span><span class="n">reserve_jobs</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">processes</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
 </code></pre></div>
 <p>Each process:</p>
 <ul>
@@ -5854,10 +5884,10 @@
 <p>Run the same script on multiple machines:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># worker_script.py - run on each machine</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">datajoint</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dj</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">my_pipeline</span><span class="w"> </span><span class="kn">import</span> <span class="n">ProcessedData</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">my_pipeline</span><span class="w"> </span><span class="kn">import</span> <span class="n">SessionAnalysis</span>
 
 <span class="c1"># Each worker reserves and processes different jobs</span>
-<span class="n">ProcessedData</span><span class="o">.</span><span class="n">populate</span><span class="p">(</span>
+<span class="n">SessionAnalysis</span><span class="o">.</span><span class="n">populate</span><span class="p">(</span>
     <span class="n">reserve_jobs</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
     <span class="n">display_progress</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
     <span class="n">suppress_errors</span><span class="o">=</span><span class="kc">True</span>
@@ -5867,13 +5897,13 @@
 <h2 id="job-table">Job Table<a class="headerlink" href="#job-table" title="Permanent link">&para;</a></h2>
 <p>Each auto-populated table has a jobs table (<code>~~table_name</code>):</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># View job status</span>
-<span class="n">ProcessedData</span><span class="o">.</span><span class="n">jobs</span>
+<span class="n">SessionAnalysis</span><span class="o">.</span><span class="n">jobs</span>
 
 <span class="c1"># Filter by status</span>
-<span class="n">ProcessedData</span><span class="o">.</span><span class="n">jobs</span><span class="o">.</span><span class="n">pending</span>
-<span class="n">ProcessedData</span><span class="o">.</span><span class="n">jobs</span><span class="o">.</span><span class="n">reserved</span>
-<span class="n">ProcessedData</span><span class="o">.</span><span class="n">jobs</span><span class="o">.</span><span class="n">errors</span>
-<span class="n">ProcessedData</span><span class="o">.</span><span class="n">jobs</span><span class="o">.</span><span class="n">completed</span>
+<span class="n">SessionAnalysis</span><span class="o">.</span><span class="n">jobs</span><span class="o">.</span><span class="n">pending</span>
+<span class="n">SessionAnalysis</span><span class="o">.</span><span class="n">jobs</span><span class="o">.</span><span class="n">reserved</span>
+<span class="n">SessionAnalysis</span><span class="o">.</span><span class="n">jobs</span><span class="o">.</span><span class="n">errors</span>
+<span class="n">SessionAnalysis</span><span class="o">.</span><span class="n">jobs</span><span class="o">.</span><span class="n">completed</span>
 </code></pre></div>
 <h2 id="job-statuses">Job Statuses<a class="headerlink" href="#job-statuses" title="Permanent link">&para;</a></h2>
 <table>
@@ -5909,32 +5939,32 @@
 <h2 id="refresh-job-queue">Refresh Job Queue<a class="headerlink" href="#refresh-job-queue" title="Permanent link">&para;</a></h2>
 <p>Sync the job queue with current key_source:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Add new pending jobs, remove stale ones</span>
-<span class="n">result</span> <span class="o">=</span> <span class="n">ProcessedData</span><span class="o">.</span><span class="n">jobs</span><span class="o">.</span><span class="n">refresh</span><span class="p">()</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">SessionAnalysis</span><span class="o">.</span><span class="n">jobs</span><span class="o">.</span><span class="n">refresh</span><span class="p">()</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Added: </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;added&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">, Removed: </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;removed&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </code></pre></div>
 <h2 id="priority-scheduling">Priority Scheduling<a class="headerlink" href="#priority-scheduling" title="Permanent link">&para;</a></h2>
 <p>Control processing order with priorities:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Refresh with specific priority</span>
-<span class="n">ProcessedData</span><span class="o">.</span><span class="n">jobs</span><span class="o">.</span><span class="n">refresh</span><span class="p">(</span><span class="n">priority</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># Lower = more urgent</span>
+<span class="n">SessionAnalysis</span><span class="o">.</span><span class="n">jobs</span><span class="o">.</span><span class="n">refresh</span><span class="p">(</span><span class="n">priority</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># Lower = more urgent</span>
 
 <span class="c1"># Process only high-priority jobs</span>
-<span class="n">ProcessedData</span><span class="o">.</span><span class="n">populate</span><span class="p">(</span><span class="n">reserve_jobs</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">priority</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">SessionAnalysis</span><span class="o">.</span><span class="n">populate</span><span class="p">(</span><span class="n">reserve_jobs</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">priority</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
 </code></pre></div>
 <h2 id="error-recovery">Error Recovery<a class="headerlink" href="#error-recovery" title="Permanent link">&para;</a></h2>
 <p>Handle failed jobs:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># View errors</span>
-<span class="n">errors</span> <span class="o">=</span> <span class="n">ProcessedData</span><span class="o">.</span><span class="n">jobs</span><span class="o">.</span><span class="n">errors</span>
+<span class="n">errors</span> <span class="o">=</span> <span class="n">SessionAnalysis</span><span class="o">.</span><span class="n">jobs</span><span class="o">.</span><span class="n">errors</span>
 <span class="k">for</span> <span class="n">job</span> <span class="ow">in</span> <span class="n">errors</span><span class="o">.</span><span class="n">to_dicts</span><span class="p">():</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Key: </span><span class="si">{</span><span class="n">job</span><span class="si">}</span><span class="s2">, Error: </span><span class="si">{</span><span class="n">job</span><span class="p">[</span><span class="s1">&#39;error_message&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
 <span class="c1"># Clear errors to retry</span>
 <span class="n">errors</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
-<span class="n">ProcessedData</span><span class="o">.</span><span class="n">populate</span><span class="p">(</span><span class="n">reserve_jobs</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">SessionAnalysis</span><span class="o">.</span><span class="n">populate</span><span class="p">(</span><span class="n">reserve_jobs</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </code></pre></div>
 <h2 id="orphan-detection">Orphan Detection<a class="headerlink" href="#orphan-detection" title="Permanent link">&para;</a></h2>
 <p>Jobs from crashed workers are automatically recovered:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Refresh with orphan timeout (seconds)</span>
-<span class="n">ProcessedData</span><span class="o">.</span><span class="n">jobs</span><span class="o">.</span><span class="n">refresh</span><span class="p">(</span><span class="n">orphan_timeout</span><span class="o">=</span><span class="mi">3600</span><span class="p">)</span>
+<span class="n">SessionAnalysis</span><span class="o">.</span><span class="n">jobs</span><span class="o">.</span><span class="n">refresh</span><span class="p">(</span><span class="n">orphan_timeout</span><span class="o">=</span><span class="mi">3600</span><span class="p">)</span>
 </code></pre></div>
 <p>Reserved jobs older than the timeout are reset to pending.</p>
 <h2 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">&para;</a></h2>
@@ -6012,10 +6042,10 @@
 
 <span class="c1"># worker.py - run on each node</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">config</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">my_pipeline</span><span class="w"> </span><span class="kn">import</span> <span class="n">ProcessedData</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">my_pipeline</span><span class="w"> </span><span class="kn">import</span> <span class="n">SessionAnalysis</span>
 
 <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
-    <span class="n">result</span> <span class="o">=</span> <span class="n">ProcessedData</span><span class="o">.</span><span class="n">populate</span><span class="p">(</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">SessionAnalysis</span><span class="o">.</span><span class="n">populate</span><span class="p">(</span>
         <span class="n">reserve_jobs</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
         <span class="n">max_calls</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
         <span class="n">suppress_errors</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>

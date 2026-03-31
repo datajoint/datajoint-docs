@@ -21,7 +21,7 @@
       
       
       <link rel="icon" href="../../assets/images/company-logo-blue.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.5">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
     
     
       
@@ -436,10 +436,6 @@
       
         
       
-        
-      
-        
-      
     
     
     
@@ -497,62 +493,6 @@
     
   
     Data Pipelines
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../explanation/whats-new-2/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    What's New in 2.0
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../explanation/whats-new-22/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    What's New in 2.2
   
 
     
@@ -5364,6 +5304,12 @@
       
         
       
+        
+      
+        
+      
+        
+      
     
     
     
@@ -5415,6 +5361,90 @@
 
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../about/whats-new-22/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    What's New in 2.2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../about/whats-new-21/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    What's New in 2.1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../about/whats-new-2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    What's New in 2.0
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
             
               
                 
@@ -5762,17 +5792,17 @@
 <p>Track computation progress and job status.</p>
 <h2 id="progress-display">Progress Display<a class="headerlink" href="#progress-display" title="Permanent link">&para;</a></h2>
 <p>Show progress bar during populate:</p>
-<div class="highlight"><pre><span></span><code><span class="n">ProcessedData</span><span class="o">.</span><span class="n">populate</span><span class="p">(</span><span class="n">display_progress</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><span class="n">SessionAnalysis</span><span class="o">.</span><span class="n">populate</span><span class="p">(</span><span class="n">display_progress</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </code></pre></div>
 <h2 id="check-remaining-work">Check Remaining Work<a class="headerlink" href="#check-remaining-work" title="Permanent link">&para;</a></h2>
 <p>Count entries left to compute:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># What&#39;s left to compute</span>
-<span class="n">remaining</span> <span class="o">=</span> <span class="n">ProcessedData</span><span class="o">.</span><span class="n">key_source</span> <span class="o">-</span> <span class="n">ProcessedData</span>
+<span class="n">remaining</span> <span class="o">=</span> <span class="n">SessionAnalysis</span><span class="o">.</span><span class="n">key_source</span> <span class="o">-</span> <span class="n">SessionAnalysis</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">remaining</span><span class="p">)</span><span class="si">}</span><span class="s2"> entries remaining&quot;</span><span class="p">)</span>
 </code></pre></div>
 <h2 id="job-status-summary">Job Status Summary<a class="headerlink" href="#job-status-summary" title="Permanent link">&para;</a></h2>
 <p>Get counts by status:</p>
-<div class="highlight"><pre><span></span><code><span class="n">progress</span> <span class="o">=</span> <span class="n">ProcessedData</span><span class="o">.</span><span class="n">jobs</span><span class="o">.</span><span class="n">progress</span><span class="p">()</span>
+<div class="highlight"><pre><span></span><code><span class="n">progress</span> <span class="o">=</span> <span class="n">SessionAnalysis</span><span class="o">.</span><span class="n">jobs</span><span class="o">.</span><span class="n">progress</span><span class="p">()</span>
 <span class="c1"># {&#39;pending&#39;: 100, &#39;reserved&#39;: 5, &#39;error&#39;: 3, &#39;success&#39;: 892}</span>
 
 <span class="k">for</span> <span class="n">status</span><span class="p">,</span> <span class="n">count</span> <span class="ow">in</span> <span class="n">progress</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
@@ -5781,34 +5811,34 @@
 <h2 id="filter-jobs-by-status">Filter Jobs by Status<a class="headerlink" href="#filter-jobs-by-status" title="Permanent link">&para;</a></h2>
 <p>Access jobs by their current status:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Pending jobs (waiting to run)</span>
-<span class="n">ProcessedData</span><span class="o">.</span><span class="n">jobs</span><span class="o">.</span><span class="n">pending</span>
+<span class="n">SessionAnalysis</span><span class="o">.</span><span class="n">jobs</span><span class="o">.</span><span class="n">pending</span>
 
 <span class="c1"># Currently running</span>
-<span class="n">ProcessedData</span><span class="o">.</span><span class="n">jobs</span><span class="o">.</span><span class="n">reserved</span>
+<span class="n">SessionAnalysis</span><span class="o">.</span><span class="n">jobs</span><span class="o">.</span><span class="n">reserved</span>
 
 <span class="c1"># Failed jobs</span>
-<span class="n">ProcessedData</span><span class="o">.</span><span class="n">jobs</span><span class="o">.</span><span class="n">errors</span>
+<span class="n">SessionAnalysis</span><span class="o">.</span><span class="n">jobs</span><span class="o">.</span><span class="n">errors</span>
 
 <span class="c1"># Completed jobs (if keep_completed=True)</span>
-<span class="n">ProcessedData</span><span class="o">.</span><span class="n">jobs</span><span class="o">.</span><span class="n">completed</span>
+<span class="n">SessionAnalysis</span><span class="o">.</span><span class="n">jobs</span><span class="o">.</span><span class="n">completed</span>
 
 <span class="c1"># Skipped jobs</span>
-<span class="n">ProcessedData</span><span class="o">.</span><span class="n">jobs</span><span class="o">.</span><span class="n">ignored</span>
+<span class="n">SessionAnalysis</span><span class="o">.</span><span class="n">jobs</span><span class="o">.</span><span class="n">ignored</span>
 </code></pre></div>
 <h2 id="view-job-details">View Job Details<a class="headerlink" href="#view-job-details" title="Permanent link">&para;</a></h2>
 <p>Inspect specific jobs:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># All jobs for a key</span>
-<span class="p">(</span><span class="n">ProcessedData</span><span class="o">.</span><span class="n">jobs</span> <span class="o">&amp;</span> <span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">fetch1</span><span class="p">()</span>
+<span class="p">(</span><span class="n">SessionAnalysis</span><span class="o">.</span><span class="n">jobs</span> <span class="o">&amp;</span> <span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">fetch1</span><span class="p">()</span>
 
 <span class="c1"># Recent errors</span>
-<span class="n">ProcessedData</span><span class="o">.</span><span class="n">jobs</span><span class="o">.</span><span class="n">errors</span><span class="o">.</span><span class="n">to_dicts</span><span class="p">(</span>
+<span class="n">SessionAnalysis</span><span class="o">.</span><span class="n">jobs</span><span class="o">.</span><span class="n">errors</span><span class="o">.</span><span class="n">to_dicts</span><span class="p">(</span>
     <span class="n">order_by</span><span class="o">=</span><span class="s1">&#39;completed_time DESC&#39;</span><span class="p">,</span>
     <span class="n">limit</span><span class="o">=</span><span class="mi">10</span>
 <span class="p">)</span>
 </code></pre></div>
 <h2 id="worker-information">Worker Information<a class="headerlink" href="#worker-information" title="Permanent link">&para;</a></h2>
 <p>See which workers are processing:</p>
-<div class="highlight"><pre><span></span><code><span class="k">for</span> <span class="n">job</span> <span class="ow">in</span> <span class="n">ProcessedData</span><span class="o">.</span><span class="n">jobs</span><span class="o">.</span><span class="n">reserved</span><span class="o">.</span><span class="n">to_dicts</span><span class="p">():</span>
+<div class="highlight"><pre><span></span><code><span class="k">for</span> <span class="n">job</span> <span class="ow">in</span> <span class="n">SessionAnalysis</span><span class="o">.</span><span class="n">jobs</span><span class="o">.</span><span class="n">reserved</span><span class="o">.</span><span class="n">to_dicts</span><span class="p">():</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Key: </span><span class="si">{</span><span class="n">job</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Host: </span><span class="si">{</span><span class="n">job</span><span class="p">[</span><span class="s1">&#39;host&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;PID: </span><span class="si">{</span><span class="n">job</span><span class="p">[</span><span class="s1">&#39;pid&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
@@ -5817,7 +5847,7 @@
 <h2 id="computation-timing">Computation Timing<a class="headerlink" href="#computation-timing" title="Permanent link">&para;</a></h2>
 <p>Track how long jobs take:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Average duration of completed jobs</span>
-<span class="n">completed</span> <span class="o">=</span> <span class="n">ProcessedData</span><span class="o">.</span><span class="n">jobs</span><span class="o">.</span><span class="n">completed</span><span class="o">.</span><span class="n">to_arrays</span><span class="p">(</span><span class="s1">&#39;duration&#39;</span><span class="p">)</span>
+<span class="n">completed</span> <span class="o">=</span> <span class="n">SessionAnalysis</span><span class="o">.</span><span class="n">jobs</span><span class="o">.</span><span class="n">completed</span><span class="o">.</span><span class="n">to_arrays</span><span class="p">(</span><span class="s1">&#39;duration&#39;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Average: </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">completed</span><span class="p">)</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">s&quot;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Median: </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">completed</span><span class="p">)</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">s&quot;</span><span class="p">)</span>
 </code></pre></div>
@@ -5836,10 +5866,10 @@
 </ul>
 <h2 id="simple-progress-script">Simple Progress Script<a class="headerlink" href="#simple-progress-script" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">my_pipeline</span><span class="w"> </span><span class="kn">import</span> <span class="n">ProcessedData</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">my_pipeline</span><span class="w"> </span><span class="kn">import</span> <span class="n">SessionAnalysis</span>
 
 <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
-    <span class="n">remaining</span><span class="p">,</span> <span class="n">total</span> <span class="o">=</span> <span class="n">ProcessedData</span><span class="o">.</span><span class="n">progress</span><span class="p">()</span>
+    <span class="n">remaining</span><span class="p">,</span> <span class="n">total</span> <span class="o">=</span> <span class="n">SessionAnalysis</span><span class="o">.</span><span class="n">progress</span><span class="p">()</span>
 
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\r</span><span class="s2">Progress: </span><span class="si">{</span><span class="n">total</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">remaining</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">total</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="p">(</span><span class="n">total</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">remaining</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">total</span><span class="si">:</span><span class="s2">.0%</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
 
@@ -5851,10 +5881,10 @@
 </code></pre></div>
 <p>For distributed mode with job tracking:</p>
 <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">my_pipeline</span><span class="w"> </span><span class="kn">import</span> <span class="n">ProcessedData</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">my_pipeline</span><span class="w"> </span><span class="kn">import</span> <span class="n">SessionAnalysis</span>
 
 <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
-    <span class="n">status</span> <span class="o">=</span> <span class="n">ProcessedData</span><span class="o">.</span><span class="n">jobs</span><span class="o">.</span><span class="n">progress</span><span class="p">()</span>
+    <span class="n">status</span> <span class="o">=</span> <span class="n">SessionAnalysis</span><span class="o">.</span><span class="n">jobs</span><span class="o">.</span><span class="n">progress</span><span class="p">()</span>
 
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\r</span><span class="s2">Pending: </span><span class="si">{</span><span class="n">status</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;pending&#39;</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="si">}</span><span class="s2"> | &quot;</span>
           <span class="sa">f</span><span class="s2">&quot;Running: </span><span class="si">{</span><span class="n">status</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;reserved&#39;</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="si">}</span><span class="s2"> | &quot;</span>
@@ -5869,7 +5899,7 @@
 </code></pre></div>
 <h2 id="pipeline-wide-status">Pipeline-Wide Status<a class="headerlink" href="#pipeline-wide-status" title="Permanent link">&para;</a></h2>
 <p>Check multiple tables:</p>
-<div class="highlight"><pre><span></span><code><span class="n">tables</span> <span class="o">=</span> <span class="p">[</span><span class="n">RawData</span><span class="p">,</span> <span class="n">ProcessedData</span><span class="p">,</span> <span class="n">Analysis</span><span class="p">]</span>
+<div class="highlight"><pre><span></span><code><span class="n">tables</span> <span class="o">=</span> <span class="p">[</span><span class="n">Session</span><span class="p">,</span> <span class="n">SessionAnalysis</span><span class="p">,</span> <span class="n">TrialStats</span><span class="p">]</span>
 
 <span class="k">for</span> <span class="n">table</span> <span class="ow">in</span> <span class="n">tables</span><span class="p">:</span>
     <span class="n">total</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">table</span><span class="o">.</span><span class="n">key_source</span><span class="p">)</span>

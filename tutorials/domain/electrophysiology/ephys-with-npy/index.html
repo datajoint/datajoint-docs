@@ -9,7 +9,7 @@
 <link href="../electrophysiology/" rel="prev"/>
 <link href="../../allen-ccf/allen-ccf/" rel="next"/>
 <link href="../../../../assets/images/company-logo-blue.png" rel="icon"/>
-<meta content="mkdocs-1.6.1, mkdocs-material-9.7.5" name="generator"/>
+<meta content="mkdocs-1.6.1, mkdocs-material-9.7.6" name="generator"/>
 <title>Electrophysiology Pipeline with Object Storage - DataJoint Documentation</title>
 <link href="../../../../assets/stylesheets/main.484c7ddc.min.css" rel="stylesheet"/>
 <link href="../../../../assets/stylesheets/palette.ab4e12ef.min.css" rel="stylesheet"/>
@@ -258,30 +258,6 @@
     
   
     Data Pipelines
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../../../../explanation/whats-new-2/">
-<span class="md-ellipsis">
-    
-  
-    What's New in 2.0
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../../../../explanation/whats-new-22/">
-<span class="md-ellipsis">
-    
-  
-    What's New in 2.2
   
 
     
@@ -2470,6 +2446,42 @@
           </label>
 <ul class="md-nav__list" data-md-scrollfix="">
 <li class="md-nav__item">
+<a class="md-nav__link" href="../../../../about/whats-new-22/">
+<span class="md-ellipsis">
+    
+  
+    What's New in 2.2
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../../about/whats-new-21/">
+<span class="md-ellipsis">
+    
+  
+    What's New in 2.1
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../../about/whats-new-2/">
+<span class="md-ellipsis">
+    
+  
+    What's New in 2.0
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
 <a class="md-nav__link" href="../../../../about/history/">
 <span class="md-ellipsis">
     
@@ -3999,7 +4011,7 @@ class Neuron(dj.Imported):
     -&gt; Session
     neuron_id : int16
     ---
-    activity : <npy@ephys>    # neural activity trace (lazy loading)
+    activity : &lt;npy@ephys&gt;    # neural activity trace (lazy loading)
     """
 
     def make(self, key):
@@ -4018,7 +4030,7 @@ class Neuron(dj.Imported):
                 'activity': activity
             })
         
-        print(f"Imported {len(data)} neuron(s) from {filename}")</npy@ephys></div>
+        print(f"Imported {len(data)} neuron(s) from {filename}")</div>
 </div>
 </div>
 </div>
@@ -4909,9 +4921,9 @@ class Spikes(dj.Computed):
     -&gt; Neuron
     -&gt; SpikeParams
     ---
-    spike_times : <npy@ephys>    # indices of detected spikes
+    spike_times : &lt;npy@ephys&gt;    # indices of detected spikes
     spike_count : int64         # total number of spikes
-    waveforms : <npy@ephys>      # all waveforms stacked (n_spikes x window_size)
+    waveforms : &lt;npy@ephys&gt;      # all waveforms stacked (n_spikes x window_size)
     """
 
     def make(self, key):
@@ -4945,7 +4957,7 @@ class Spikes(dj.Computed):
             'spike_times': spike_times,
             'spike_count': len(spike_times),
             'waveforms': waveforms,  # All waveforms as single array
-        })</npy@ephys></npy@ephys></div>
+        })</div>
 </div>
 </div>
 </div>

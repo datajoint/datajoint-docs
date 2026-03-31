@@ -9,7 +9,7 @@
 <link href="../../calcium-imaging/calcium-imaging/" rel="prev"/>
 <link href="../ephys-with-npy/" rel="next"/>
 <link href="../../../../assets/images/company-logo-blue.png" rel="icon"/>
-<meta content="mkdocs-1.6.1, mkdocs-material-9.7.5" name="generator"/>
+<meta content="mkdocs-1.6.1, mkdocs-material-9.7.6" name="generator"/>
 <title>Electrophysiology Pipeline - DataJoint Documentation</title>
 <link href="../../../../assets/stylesheets/main.484c7ddc.min.css" rel="stylesheet"/>
 <link href="../../../../assets/stylesheets/palette.ab4e12ef.min.css" rel="stylesheet"/>
@@ -258,30 +258,6 @@
     
   
     Data Pipelines
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../../../../explanation/whats-new-2/">
-<span class="md-ellipsis">
-    
-  
-    What's New in 2.0
-  
-
-    
-  </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../../../../explanation/whats-new-22/">
-<span class="md-ellipsis">
-    
-  
-    What's New in 2.2
   
 
     
@@ -2381,6 +2357,42 @@
           </label>
 <ul class="md-nav__list" data-md-scrollfix="">
 <li class="md-nav__item">
+<a class="md-nav__link" href="../../../../about/whats-new-22/">
+<span class="md-ellipsis">
+    
+  
+    What's New in 2.2
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../../about/whats-new-21/">
+<span class="md-ellipsis">
+    
+  
+    What's New in 2.1
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../../about/whats-new-2/">
+<span class="md-ellipsis">
+    
+  
+    What's New in 2.0
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
 <a class="md-nav__link" href="../../../../about/history/">
 <span class="md-ellipsis">
     
@@ -3721,7 +3733,7 @@ class Neuron(dj.Imported):
     -&gt; Session
     neuron_id : int16
     ---
-    activity : <blob>    # neural activity trace
+    activity : &lt;blob&gt;    # neural activity trace
     """
 
     def make(self, key):
@@ -3740,7 +3752,7 @@ class Neuron(dj.Imported):
                 'activity': activity
             })
         
-        print(f"Imported {len(data)} neuron(s) from {filename}")</blob></div>
+        print(f"Imported {len(data)} neuron(s) from {filename}")</div>
 </div>
 </div>
 </div>
@@ -4447,7 +4459,7 @@ class Spikes(dj.Computed):
     -&gt; Neuron
     -&gt; SpikeParams
     ---
-    spike_times : <blob>    # indices of detected spikes
+    spike_times : &lt;blob&gt;    # indices of detected spikes
     spike_count : int32     # total number of spikes
     """
 
@@ -4456,7 +4468,7 @@ class Spikes(dj.Computed):
         -&gt; master
         spike_idx : int32
         ---
-        waveform : <blob>    # activity around spike (±40 samples)
+        waveform : &lt;blob&gt;    # activity around spike (±40 samples)
         """
 
     def make(self, key):
@@ -4488,7 +4500,7 @@ class Spikes(dj.Computed):
                 **key,
                 'spike_idx': spike_idx,
                 'waveform': waveform
-            })</blob></blob></div>
+            })</div>
 </div>
 </div>
 </div>

@@ -21,7 +21,7 @@
       
       
       <link rel="icon" href="../../assets/images/company-logo-blue.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.5">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
     
     
       
@@ -436,10 +436,6 @@
       
         
       
-        
-      
-        
-      
     
     
     
@@ -497,62 +493,6 @@
     
   
     Data Pipelines
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../explanation/whats-new-2/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    What's New in 2.0
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../explanation/whats-new-22/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    What's New in 2.2
   
 
     
@@ -5425,6 +5365,12 @@
       
         
       
+        
+      
+        
+      
+        
+      
     
     
     
@@ -5476,6 +5422,90 @@
 
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../about/whats-new-22/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    What's New in 2.2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../about/whats-new-21/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    What's New in 2.1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../about/whats-new-2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    What's New in 2.0
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
             
               
                 
@@ -5884,36 +5914,36 @@
 <p>Execute automated computations with <code>populate()</code>.</p>
 <h2 id="basic-usage">Basic Usage<a class="headerlink" href="#basic-usage" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><span class="c1"># Populate all missing entries</span>
-<span class="n">ProcessedData</span><span class="o">.</span><span class="n">populate</span><span class="p">()</span>
+<span class="n">SessionAnalysis</span><span class="o">.</span><span class="n">populate</span><span class="p">()</span>
 
 <span class="c1"># With progress display</span>
-<span class="n">ProcessedData</span><span class="o">.</span><span class="n">populate</span><span class="p">(</span><span class="n">display_progress</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">SessionAnalysis</span><span class="o">.</span><span class="n">populate</span><span class="p">(</span><span class="n">display_progress</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </code></pre></div>
 <h2 id="restrict-what-to-compute">Restrict What to Compute<a class="headerlink" href="#restrict-what-to-compute" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><span class="c1"># Only specific subjects</span>
-<span class="n">ProcessedData</span><span class="o">.</span><span class="n">populate</span><span class="p">(</span><span class="n">Subject</span> <span class="o">&amp;</span> <span class="s2">&quot;sex = &#39;M&#39;&quot;</span><span class="p">)</span>
+<span class="n">SessionAnalysis</span><span class="o">.</span><span class="n">populate</span><span class="p">(</span><span class="n">Subject</span> <span class="o">&amp;</span> <span class="s2">&quot;sex = &#39;M&#39;&quot;</span><span class="p">)</span>
 
 <span class="c1"># Only recent sessions</span>
-<span class="n">ProcessedData</span><span class="o">.</span><span class="n">populate</span><span class="p">(</span><span class="n">Session</span> <span class="o">&amp;</span> <span class="s2">&quot;session_date &gt; &#39;2026-01-01&#39;&quot;</span><span class="p">)</span>
+<span class="n">SessionAnalysis</span><span class="o">.</span><span class="n">populate</span><span class="p">(</span><span class="n">Session</span> <span class="o">&amp;</span> <span class="s2">&quot;session_date &gt; &#39;2026-01-01&#39;&quot;</span><span class="p">)</span>
 
 <span class="c1"># Specific key</span>
-<span class="n">ProcessedData</span><span class="o">.</span><span class="n">populate</span><span class="p">({</span><span class="s1">&#39;subject_id&#39;</span><span class="p">:</span> <span class="s1">&#39;M001&#39;</span><span class="p">,</span> <span class="s1">&#39;session_idx&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">})</span>
+<span class="n">SessionAnalysis</span><span class="o">.</span><span class="n">populate</span><span class="p">({</span><span class="s1">&#39;subject_id&#39;</span><span class="p">:</span> <span class="s1">&#39;M001&#39;</span><span class="p">,</span> <span class="s1">&#39;session_idx&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">})</span>
 </code></pre></div>
 <h2 id="limit-number-of-jobs">Limit Number of Jobs<a class="headerlink" href="#limit-number-of-jobs" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><span class="c1"># Process at most 100 entries</span>
-<span class="n">ProcessedData</span><span class="o">.</span><span class="n">populate</span><span class="p">(</span><span class="n">limit</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+<span class="n">SessionAnalysis</span><span class="o">.</span><span class="n">populate</span><span class="p">(</span><span class="n">limit</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
 </code></pre></div>
 <h2 id="error-handling">Error Handling<a class="headerlink" href="#error-handling" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><span class="c1"># Continue on errors (log but don&#39;t stop)</span>
-<span class="n">ProcessedData</span><span class="o">.</span><span class="n">populate</span><span class="p">(</span><span class="n">suppress_errors</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">SessionAnalysis</span><span class="o">.</span><span class="n">populate</span><span class="p">(</span><span class="n">suppress_errors</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
 <span class="c1"># Check what failed</span>
-<span class="n">failed</span> <span class="o">=</span> <span class="n">ProcessedData</span><span class="o">.</span><span class="n">jobs</span> <span class="o">&amp;</span> <span class="s2">&quot;status = &#39;error&#39;&quot;</span>
+<span class="n">failed</span> <span class="o">=</span> <span class="n">SessionAnalysis</span><span class="o">.</span><span class="n">jobs</span> <span class="o">&amp;</span> <span class="s2">&quot;status = &#39;error&#39;&quot;</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">failed</span><span class="p">)</span>
 
 <span class="c1"># Clear errors to retry</span>
 <span class="n">failed</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
-<span class="n">ProcessedData</span><span class="o">.</span><span class="n">populate</span><span class="p">()</span>
+<span class="n">SessionAnalysis</span><span class="o">.</span><span class="n">populate</span><span class="p">()</span>
 </code></pre></div>
 <h2 id="when-to-use-distributed-mode">When to Use Distributed Mode<a class="headerlink" href="#when-to-use-distributed-mode" title="Permanent link">&para;</a></h2>
 <p>Choose your populate strategy based on your workload and infrastructure:</p>
@@ -5932,7 +5962,7 @@
 </ul>
 <p><strong>Example:</strong>
 <div class="highlight"><pre><span></span><code><span class="c1"># Simple, direct execution</span>
-<span class="n">ProcessedData</span><span class="o">.</span><span class="n">populate</span><span class="p">()</span>
+<span class="n">SessionAnalysis</span><span class="o">.</span><span class="n">populate</span><span class="p">()</span>
 </code></pre></div></p>
 <hr />
 <h3 id="use-populatereserve_jobstrue-when">Use <code>populate(reserve_jobs=True)</code> When:<a class="headerlink" href="#use-populatereserve_jobstrue-when" title="Permanent link">&para;</a></h3>
@@ -5946,12 +5976,12 @@
 <ul>
 <li>Prevents duplicate work between workers</li>
 <li>Fault tolerance (crashed jobs can be retried)</li>
-<li>Job status tracking (<code>ProcessedData.jobs</code>)</li>
+<li>Job status tracking (<code>SessionAnalysis.jobs</code>)</li>
 <li>Error isolation (one failure doesn't stop others)</li>
 </ul>
 <p><strong>Example:</strong>
 <div class="highlight"><pre><span></span><code><span class="c1"># Distributed mode with job coordination</span>
-<span class="n">ProcessedData</span><span class="o">.</span><span class="n">populate</span><span class="p">(</span><span class="n">reserve_jobs</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">SessionAnalysis</span><span class="o">.</span><span class="n">populate</span><span class="p">(</span><span class="n">reserve_jobs</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </code></pre></div></p>
 <p><strong>Job reservation overhead:</strong> ~100ms per job
 <strong>Worth it when:</strong> Computations take &gt; 1 second (overhead becomes &lt; 10%)</p>
@@ -5970,7 +6000,7 @@
 </ul>
 <p><strong>Example:</strong>
 <div class="highlight"><pre><span></span><code><span class="c1"># Use 4 CPU cores</span>
-<span class="n">ProcessedData</span><span class="o">.</span><span class="n">populate</span><span class="p">(</span><span class="n">reserve_jobs</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">processes</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+<span class="n">SessionAnalysis</span><span class="o">.</span><span class="n">populate</span><span class="p">(</span><span class="n">reserve_jobs</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">processes</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
 </code></pre></div></p>
 <p><strong>Caution:</strong> Don't use more processes than CPU cores (causes context switching overhead)</p>
 <hr />
@@ -5993,37 +6023,37 @@ Multiple cores on one machine?
 <h2 id="distributed-computing">Distributed Computing<a class="headerlink" href="#distributed-computing" title="Permanent link">&para;</a></h2>
 <p>For multi-worker coordination:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Worker 1 (on machine A)</span>
-<span class="n">ProcessedData</span><span class="o">.</span><span class="n">populate</span><span class="p">(</span><span class="n">reserve_jobs</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">SessionAnalysis</span><span class="o">.</span><span class="n">populate</span><span class="p">(</span><span class="n">reserve_jobs</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
 <span class="c1"># Worker 2 (on machine B)</span>
-<span class="n">ProcessedData</span><span class="o">.</span><span class="n">populate</span><span class="p">(</span><span class="n">reserve_jobs</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">SessionAnalysis</span><span class="o">.</span><span class="n">populate</span><span class="p">(</span><span class="n">reserve_jobs</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
 <span class="c1"># Workers coordinate automatically via database</span>
 <span class="c1"># Each reserves different keys, no duplicates</span>
 </code></pre></div>
 <h2 id="check-progress">Check Progress<a class="headerlink" href="#check-progress" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><span class="c1"># What&#39;s left to compute</span>
-<span class="n">remaining</span> <span class="o">=</span> <span class="n">ProcessedData</span><span class="o">.</span><span class="n">key_source</span> <span class="o">-</span> <span class="n">ProcessedData</span>
+<span class="n">remaining</span> <span class="o">=</span> <span class="n">SessionAnalysis</span><span class="o">.</span><span class="n">key_source</span> <span class="o">-</span> <span class="n">SessionAnalysis</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">remaining</span><span class="p">)</span><span class="si">}</span><span class="s2"> entries remaining&quot;</span><span class="p">)</span>
 
 <span class="c1"># View job status</span>
-<span class="n">ProcessedData</span><span class="o">.</span><span class="n">jobs</span>
+<span class="n">SessionAnalysis</span><span class="o">.</span><span class="n">jobs</span>
 </code></pre></div>
 <h2 id="the-make-method">The <code>make()</code> Method<a class="headerlink" href="#the-make-method" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><span class="nd">@schema</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">ProcessedData</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Computed</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">SessionAnalysis</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Computed</span><span class="p">):</span>
     <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
-<span class="s2">    -&gt; RawData</span>
+<span class="s2">    -&gt; Session</span>
 <span class="s2">    ---</span>
 <span class="s2">    result : float64</span>
 <span class="s2">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">make</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
         <span class="c1"># 1. Fetch input data</span>
-        <span class="n">raw</span> <span class="o">=</span> <span class="p">(</span><span class="n">RawData</span> <span class="o">&amp;</span> <span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">fetch1</span><span class="p">(</span><span class="s1">&#39;data&#39;</span><span class="p">)</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="n">Session</span> <span class="o">&amp;</span> <span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">fetch1</span><span class="p">(</span><span class="s1">&#39;data&#39;</span><span class="p">)</span>
 
         <span class="c1"># 2. Compute</span>
-        <span class="n">result</span> <span class="o">=</span> <span class="n">process</span><span class="p">(</span><span class="n">raw</span><span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">process</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
 
         <span class="c1"># 3. Insert</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="o">**</span><span class="n">key</span><span class="p">,</span> <span class="s1">&#39;result&#39;</span><span class="p">:</span> <span class="n">result</span><span class="p">})</span>
