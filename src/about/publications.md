@@ -10,6 +10,8 @@ If your work uses DataJoint or DataJoint Elements, please cite the respective
 
 + Donahue, S., Djuraskovic, I., Shah, K., Sinz, F., Chafetz, R. & Cotton, R. J. (2026). [Calibrated Uncertainty for Trustworthy Clinical Gait Analysis Using Probabilistic Multiview Markerless Motion Capture](https://doi.org/10.48550/arXiv.2601.22412). *arXiv*.
 
++ Fu, J., Shrinivasan, S., Baroni, L., Ding, Z., Fahey, P. G., Pierzchlewicz, P. A., Karantzas, N., Ponder, K., Froebe, R., Ntanavara, L., Muhammad, T., Willeke, K. F., Wang, E., Ding, Z., Tran, D., Papadopoulos, S., Patel, S., Reimer, J., Ecker, A. S., Pitkow, X., Antolik, J., Sinz, F. H., Haefner, R. M., Tolias, A. S. & Franke, K. (2026). [Statistics of natural scenes shape contextual modulation in the visual cortex](https://doi.org/10.1016/j.neuron.2026.02.022). *Neuron*.
+
 + Sun, X., Comrie, A. E., Kahn, A. E., Monroe, E. J., Joshi, A., Guidera, J. A., Denovellis, E. L., Krausz, T. A., Zhou, J., Thompson, P., Hernandez, J., Yorita, A., Haque, R., Berke, J. D., Daw, N. D. & Frank, L. M. (2026). [Meta-learning is expressed through altered prefrontal cortical dynamics](https://doi.org/10.64898/2026.01.01.697272). *bioRxiv*.
 
 ## 2025
