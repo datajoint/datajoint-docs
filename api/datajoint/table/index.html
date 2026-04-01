@@ -7702,7 +7702,13 @@ directory with a CSV file, the contents of which will be inserted.</p>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>If True, silently skip duplicate inserts.</p>
+                <p>If True, silently skip rows with duplicate primary key values.
+On <strong>PostgreSQL</strong>, secondary unique constraint violations still
+raise an error even when <code>skip_duplicates=True</code>, because the
+generated <code>ON CONFLICT (pk) DO NOTHING</code> clause targets only
+the primary key. On <strong>MySQL</strong>, <code>ON DUPLICATE KEY UPDATE</code>
+catches all unique-key conflicts, so secondary unique violations
+are also silently skipped.</p>
               </div>
             </td>
             <td>
@@ -7932,6 +7938,16 @@ If this table has populated dependent tables, this will fail.</p>
     <div class="doc doc-contents ">
 
         <p>Deletes the contents of the table and its dependent tables, recursively.</p>
+<p>Uses graph-driven cascade: builds a dependency diagram, propagates
+restrictions to all descendants, then deletes in reverse topological
+order (leaves first).</p>
+<p>With <code>safemode=True</code> (the default), delete previews all affected
+tables and row counts, executes within a transaction, and asks for
+confirmation before committing. Declining rolls back all changes —
+effectively a built-in dry run.</p>
+<p>To preview cascade impact without executing, use <code>Diagram</code>::</p>
+<pre><code>dj.Diagram.cascade(MyTable &amp; restriction).counts()
+</code></pre>
 <p>Args:
     transaction: If <code>True</code>, use of the entire delete becomes an atomic transaction.
         This is the default and recommended behavior. Set to <code>False</code> if this delete is
@@ -7945,7 +7961,6 @@ If this table has populated dependent tables, this will fail.</p>
 <p>Returns:
     Number of deleted rows (excluding those from dependent tables).</p>
 <p>Raises:
-    DataJointError: Delete exceeds maximum number of delete attempts.
     DataJointError: When deleting within an existing transaction.
     DataJointError: Deleting a part table before its master (when part_integrity="enforce").
     ValueError: Invalid part_integrity value.</p>
@@ -7993,15 +8008,22 @@ If this table has populated dependent tables, this will fail.</p>
 
 
 <a href="#datajoint.table.Table.drop" class="headerlink" title="Permanent link">&para;</a></h3>
-<div class="doc-signature highlight"><pre><span></span><code><span class="nf">drop</span><span class="p">(</span><span class="n">prompt</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">drop</span><span class="p">(</span><span class="n">prompt</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">part_integrity</span><span class="o">=</span><span class="s1">&#39;enforce&#39;</span><span class="p">)</span>
 </code></pre></div>
 
     <div class="doc doc-contents ">
 
         <p>Drop the table and all tables that reference it, recursively.</p>
+<p>Uses graph-driven traversal: builds a dependency diagram and drops
+in reverse topological order (leaves first).</p>
+<p>With <code>safemode=True</code> (the default), drop previews all affected
+tables and row counts and asks for confirmation before proceeding.</p>
 <p>Args:
     prompt: If <code>True</code>, show what will be dropped and ask for confirmation.
-        If <code>False</code>, drop without confirmation. Default is <code>dj.config['safemode']</code>.</p>
+        If <code>False</code>, drop without confirmation. Default is <code>dj.config['safemode']</code>.
+    part_integrity: Policy for master-part integrity. One of:
+        - <code>"enforce"</code> (default): Error if parts would be dropped without masters.
+        - <code>"ignore"</code>: Allow dropping parts without masters.</p>
 
 
     </div>

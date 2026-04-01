@@ -2096,10 +2096,37 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#datajoint.diagram.Diagram.topo_sort">
+<a class="md-nav__link" href="#datajoint.diagram.Diagram.cascade">
 <span class="md-ellipsis">
       
-        topo_sort
+        cascade
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#datajoint.diagram.Diagram.restrict">
+<span class="md-ellipsis">
+      
+        restrict
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#datajoint.diagram.Diagram.counts">
+<span class="md-ellipsis">
+      
+        counts
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#datajoint.diagram.Diagram.prune">
+<span class="md-ellipsis">
+      
+        prune
       
     </span>
 </a>
@@ -2462,10 +2489,37 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#datajoint.diagram.Diagram.topo_sort">
+<a class="md-nav__link" href="#datajoint.diagram.Diagram.cascade">
 <span class="md-ellipsis">
       
-        topo_sort
+        cascade
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#datajoint.diagram.Diagram.restrict">
+<span class="md-ellipsis">
+      
+        restrict
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#datajoint.diagram.Diagram.counts">
+<span class="md-ellipsis">
+      
+        counts
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#datajoint.diagram.Diagram.prune">
+<span class="md-ellipsis">
+      
+        prune
       
     </span>
 </a>
@@ -2512,9 +2566,15 @@
 <div class="doc doc-object doc-module">
 <a id="datajoint.diagram"></a>
 <div class="doc doc-contents first">
-<p>Diagram visualization for DataJoint schemas.</p>
-<p>This module provides the Diagram class for visualizing schema structure
-as directed acyclic graphs showing tables and their foreign key relationships.</p>
+<p>Diagram for DataJoint schemas.</p>
+<p>This module provides the Diagram class for constructing derived views of the
+dependency graph. Diagram supports set operators (+, -, *) for selecting subsets
+of tables, restriction propagation (cascade, restrict) for selecting subsets of
+data, and inspection (counts, prune) for viewing those selections.</p>
+<p>Mutation operations (delete, drop) live in Table, which uses Diagram internally
+for graph computation.</p>
+<p>Visualization methods (draw, make_dot, make_svg, etc.) require matplotlib and
+pygraphviz. All other methods are always available.</p>
 <div class="doc doc-children">
 <div class="doc doc-object doc-class">
 <h2 class="doc doc-heading" id="datajoint.diagram.Diagram">
@@ -2589,7 +2649,13 @@ frame globals/locals.</p>
 <details class="note" open="">
 <summary>Notes</summary>
 <p><code>diagram + 1 - 1</code> may differ from <code>diagram - 1 + 1</code>.
-Only tables loaded in the connection are displayed.</p>
+Only tables in activated schemas are displayed. To include tables in
+downstream schemas that depend on the current schema but haven't been
+explicitly activated::</p>
+<pre><code>conn.dependencies.load_all_downstream()
+dj.Diagram(schema)  # now includes all downstream schemas
+</code></pre>
+<p><code>Diagram.cascade()</code> calls <code>load_all_downstream()</code> automatically.</p>
 <p>Layout direction is controlled via <code>dj.config.display.diagram_direction</code>
 (default <code>"TB"</code>). Use <code>dj.config.override()</code> to change temporarily::</p>
 <pre><code>with dj.config.override(display_diagram_direction="LR"):
@@ -2736,13 +2802,66 @@ expanded in either operand, it remains expanded in the result.</p>
 </div>
 </div>
 <div class="doc doc-object doc-function">
-<h3 class="doc doc-heading" id="datajoint.diagram.Diagram.topo_sort">
-<span class="doc doc-object-name doc-function-name">topo_sort</span>
-<a class="headerlink" href="#datajoint.diagram.Diagram.topo_sort" title="Permanent link">¶</a></h3>
-<div class="doc-signature highlight"><pre><span></span><code><span class="nf">topo_sort</span><span class="p">()</span>
+<h3 class="doc doc-heading" id="datajoint.diagram.Diagram.cascade">
+<span class="doc doc-object-name doc-function-name">cascade</span>
+<span class="doc doc-labels">
+<small class="doc doc-label doc-label-classmethod"><code>classmethod</code></small>
+</span>
+<a class="headerlink" href="#datajoint.diagram.Diagram.cascade" title="Permanent link">¶</a></h3>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">cascade</span><span class="p">(</span><span class="n">table_expr</span><span class="p">,</span> <span class="n">part_integrity</span><span class="o">=</span><span class="s1">'enforce'</span><span class="p">)</span>
 </code></pre></div>
 <div class="doc doc-contents">
-<p>Return nodes in topological order.</p>
+<p>Create a cascade diagram for a table expression.</p>
+<p>Builds a Diagram from the table's dependency graph, includes all
+descendants (across all loaded schemas), and propagates the
+restriction downstream using OR convergence — a child row is
+affected if <em>any</em> restricted ancestor taints it.</p>
+<p><span class="doc-section-title">Parameters:</span></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr class="doc-section-item">
+<td>
+<code>table_expr</code>
+</td>
+<td>
+<code><span title="QueryExpression">QueryExpression</span></code>
+</td>
+<td>
+<div class="doc-md-description">
+<p>A (possibly restricted) table expression
+(e.g., <code>Session &amp; 'subject_id=1'</code>).</p>
+</div>
+</td>
+<td>
+<em>required</em>
+</td>
+</tr>
+<tr class="doc-section-item">
+<td>
+<code>part_integrity</code>
+</td>
+<td>
+<code><span title="str">str</span></code>
+</td>
+<td>
+<div class="doc-md-description">
+<p><code>"enforce"</code> (default), <code>"ignore"</code>, or <code>"cascade"</code>.</p>
+</div>
+</td>
+<td>
+<code>'enforce'</code>
+</td>
+</tr>
+</tbody>
+</table>
 <p><span class="doc-section-title">Returns:</span></p>
 <table>
 <thead>
@@ -2754,11 +2873,149 @@ expanded in either operand, it remains expanded in the result.</p>
 <tbody>
 <tr class="doc-section-item">
 <td>
-<code><span title="list">list</span>[<span title="str">str</span>]</code>
+<code><a class="autorefs autorefs-internal" href="#datajoint.diagram.Diagram" title="Diagram (datajoint.diagram.Diagram)">Diagram</a></code>
 </td>
 <td>
 <div class="doc-md-description">
-<p>Node names in topological order.</p>
+<p>New Diagram with cascade restrictions applied, trimmed to
+the seed table and its affected descendants.</p>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<p><span class="doc-section-title">Examples:</span></p>
+<div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Preview cascade impact across all downstream schemas</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dj</span><span class="o">.</span><span class="n">Diagram</span><span class="o">.</span><span class="n">cascade</span><span class="p">(</span><span class="n">Session</span> <span class="o">&amp;</span> <span class="s1">'subject_id=1'</span><span class="p">)</span><span class="o">.</span><span class="n">counts</span><span class="p">()</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Inspect the cascade subgraph</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dj</span><span class="o">.</span><span class="n">Diagram</span><span class="o">.</span><span class="n">cascade</span><span class="p">(</span><span class="n">Session</span> <span class="o">&amp;</span> <span class="s1">'subject_id=1'</span><span class="p">)</span>
+</code></pre></div>
+</div>
+</div>
+<div class="doc doc-object doc-function">
+<h3 class="doc doc-heading" id="datajoint.diagram.Diagram.restrict">
+<span class="doc doc-object-name doc-function-name">restrict</span>
+<a class="headerlink" href="#datajoint.diagram.Diagram.restrict" title="Permanent link">¶</a></h3>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">restrict</span><span class="p">(</span><span class="n">table_expr</span><span class="p">)</span>
+</code></pre></div>
+<div class="doc doc-contents">
+<p>Apply restrict condition and propagate downstream.</p>
+<p>AND at convergence — a child row is included only if it satisfies
+<em>all</em> restricted ancestors. Used for export. Can be chained.</p>
+<p>Cannot be called on a Diagram produced by <code>Diagram.cascade()</code>.</p>
+<p><span class="doc-section-title">Parameters:</span></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr class="doc-section-item">
+<td>
+<code>table_expr</code>
+</td>
+<td>
+<code><span title="QueryExpression">QueryExpression</span></code>
+</td>
+<td>
+<div class="doc-md-description">
+<p>A restricted table expression.</p>
+</div>
+</td>
+<td>
+<em>required</em>
+</td>
+</tr>
+</tbody>
+</table>
+<p><span class="doc-section-title">Returns:</span></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="doc-section-item">
+<td>
+<code><a class="autorefs autorefs-internal" href="#datajoint.diagram.Diagram" title="Diagram (datajoint.diagram.Diagram)">Diagram</a></code>
+</td>
+<td>
+<div class="doc-md-description">
+<p>New Diagram with restrict conditions applied.</p>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="doc doc-object doc-function">
+<h3 class="doc doc-heading" id="datajoint.diagram.Diagram.counts">
+<span class="doc doc-object-name doc-function-name">counts</span>
+<a class="headerlink" href="#datajoint.diagram.Diagram.counts" title="Permanent link">¶</a></h3>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">counts</span><span class="p">()</span>
+</code></pre></div>
+<div class="doc doc-contents">
+<p>Return affected row counts per table without modifying data.</p>
+<p><span class="doc-section-title">Returns:</span></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="doc-section-item">
+<td>
+<code><span title="dict">dict</span>[<span title="str">str</span>, <span title="int">int</span>]</code>
+</td>
+<td>
+<div class="doc-md-description">
+<p>Mapping of full table name to affected row count.</p>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="doc doc-object doc-function">
+<h3 class="doc doc-heading" id="datajoint.diagram.Diagram.prune">
+<span class="doc doc-object-name doc-function-name">prune</span>
+<a class="headerlink" href="#datajoint.diagram.Diagram.prune" title="Permanent link">¶</a></h3>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">prune</span><span class="p">()</span>
+</code></pre></div>
+<div class="doc doc-contents">
+<p>Remove tables with zero matching rows from the diagram.</p>
+<p>Without prior restrictions, removes physically empty tables.
+After <code>restrict()</code>, removes tables where the restricted query
+yields zero rows. Cannot be used on a cascade Diagram (cascade
+is for delete, where zero-count tables must remain in the graph
+to handle concurrent inserts safely).</p>
+<p><span class="doc-section-title">Returns:</span></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="doc-section-item">
+<td>
+<code><a class="autorefs autorefs-internal" href="#datajoint.diagram.Diagram" title="Diagram (datajoint.diagram.Diagram)">Diagram</a></code>
+</td>
+<td>
+<div class="doc-md-description">
+<p>New Diagram with empty tables removed.</p>
 </div>
 </td>
 </tr>
@@ -2790,6 +3047,27 @@ expanded in either operand, it remains expanded in the result.</p>
 <td>
 <div class="doc-md-description">
 <p>The graph object ready for rendering.</p>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<p><span class="doc-section-title">Raises:</span></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="doc-section-item">
+<td>
+<code><a class="autorefs autorefs-internal" href="../errors/#datajoint.errors.DataJointError" title="DataJointError (datajoint.errors.DataJointError)">DataJointError</a></code>
+</td>
+<td>
+<div class="doc-md-description">
+<p>If pygraphviz/pydot is not installed.</p>
 </div>
 </td>
 </tr>
