@@ -96,6 +96,9 @@ When multiple projects share a database server, use prefixes to avoid naming col
 
 ### Configure Database Prefix
 
+!!! version-deprecated "Deprecated in 2.2.1"
+    `database_prefix` is deprecated. For PostgreSQL, use `database.name` to select a database instead. `database_prefix` will be removed in 2.3.
+
 ```python
 import datajoint as dj
 

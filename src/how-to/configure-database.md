@@ -66,6 +66,7 @@ Environment variables take precedence over config files.
 | `database.user` | `DJ_USER` | — | Database username |
 | `database.password` | `DJ_PASS` | — | Database password |
 | `database.backend` | `DJ_BACKEND` | `mysql` | Database backend: `mysql` or `postgresql` |
+| `database.name` | `DJ_DATABASE_NAME` | `None` | Database name (PostgreSQL only). Defaults to `"postgres"` |
 | `database.use_tls` | `DJ_TLS` | `True` | Use TLS encryption |
 | `database.reconnect` | — | `True` | Auto-reconnect on timeout |
 | `safemode` | — | `True` | Prompt before destructive operations |
@@ -145,6 +146,37 @@ DataJoint supports both MySQL and PostgreSQL backends. To use PostgreSQL:
 
 The port defaults to `5432` when `backend` is set to `postgresql`.
 
+### Database Name
+
+!!! version-added "New in 2.2.1"
+    The `database.name` setting specifies which PostgreSQL database to connect to.
+
+PostgreSQL requires connecting to a specific database. By default, DataJoint connects to the `postgres` database. To use a different database:
+
+```json
+{
+  "database": {
+    "host": "localhost",
+    "backend": "postgresql",
+    "name": "my_database"
+  }
+}
+```
+
+Or via environment variable:
+
+```bash
+export DJ_DATABASE_NAME=my_database
+```
+
+Or programmatically:
+
+```python
+dj.config['database.name'] = 'my_database'
+```
+
+This setting only applies to PostgreSQL. Setting it with the MySQL backend emits a warning.
+
 ### Environment Variable
 
 ```bash
@@ -152,6 +184,7 @@ export DJ_BACKEND=postgresql
 export DJ_HOST=localhost
 export DJ_USER=postgres
 export DJ_PASS=password
+export DJ_DATABASE_NAME=my_database  # optional, defaults to "postgres"
 ```
 
 ### Programmatic Configuration
@@ -161,6 +194,7 @@ import datajoint as dj
 
 dj.config['database.backend'] = 'postgresql'
 dj.config['database.host'] = 'localhost'
+dj.config['database.name'] = 'my_database'  # optional
 ```
 
 ### Docker Compose for Local Development

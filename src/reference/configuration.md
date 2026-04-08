@@ -22,9 +22,10 @@ Configuration is loaded in priority order:
 | `database.port` | `DJ_PORT` | `3306`/`5432` | Database server port (auto-detects from backend) |
 | `database.user` | `DJ_USER` | — | Database username (required) |
 | `database.password` | `DJ_PASS` | — | Database password (required) |
+| `database.name` | `DJ_DATABASE_NAME` | `None` | Database name for PostgreSQL connections. Defaults to `"postgres"` if not set. *(new in 2.2.1)* |
 | `database.reconnect` | — | `True` | Auto-reconnect on connection loss |
 | `database.use_tls` | `DJ_USE_TLS` | `None` | Enable TLS encryption *(env var new in 2.1)* |
-| `database.database_prefix` | `DJ_DATABASE_PREFIX` | `""` | Prefix for database/schema names |
+| `database.database_prefix` | `DJ_DATABASE_PREFIX` | `""` | *(Deprecated — use `database.name` instead)* Prefix for database/schema names |
 | `database.create_tables` | `DJ_CREATE_TABLES` | `True` | Default for `Schema(create_tables=)`. Set `False` for production mode |
 
 ## Connection Settings
@@ -241,6 +242,7 @@ echo ".secrets/" >> .gitignore
 export DJ_HOST=mysql.example.com
 export DJ_USER=analyst
 export DJ_PASS=secret
+export DJ_DATABASE_NAME=my_database  # PostgreSQL only (new in 2.2.1)
 ```
 
 **Note:** Per-store credentials must be configured in `datajoint.json` or `.secrets/` — environment variable overrides are not supported for nested store configurations.
