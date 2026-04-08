@@ -6053,6 +6053,12 @@
 <td>Database password (required)</td>
 </tr>
 <tr>
+<td><code>database.name</code></td>
+<td><code>DJ_DATABASE_NAME</code></td>
+<td><code>None</code></td>
+<td>Database name for PostgreSQL connections. Defaults to <code>"postgres"</code> if not set. <em>(new in 2.2.1)</em></td>
+</tr>
+<tr>
 <td><code>database.reconnect</code></td>
 <td>—</td>
 <td><code>True</code></td>
@@ -6068,7 +6074,7 @@
 <td><code>database.database_prefix</code></td>
 <td><code>DJ_DATABASE_PREFIX</code></td>
 <td><code>""</code></td>
-<td>Prefix for database/schema names</td>
+<td><em>(Deprecated — use <code>database.name</code> instead)</em> Prefix for database/schema names</td>
 </tr>
 <tr>
 <td><code>database.create_tables</code></td>
@@ -6501,6 +6507,7 @@
 <span class="nb">export</span><span class="w"> </span><span class="nv">DJ_HOST</span><span class="o">=</span>mysql.example.com
 <span class="nb">export</span><span class="w"> </span><span class="nv">DJ_USER</span><span class="o">=</span>analyst
 <span class="nb">export</span><span class="w"> </span><span class="nv">DJ_PASS</span><span class="o">=</span>secret
+<span class="nb">export</span><span class="w"> </span><span class="nv">DJ_DATABASE_NAME</span><span class="o">=</span>my_database<span class="w">  </span><span class="c1"># PostgreSQL only (new in 2.2.1)</span>
 </code></pre></div>
 <p><strong>Note:</strong> Per-store credentials must be configured in <code>datajoint.json</code> or <code>.secrets/</code> — environment variable overrides are not supported for nested store configurations.</p>
 <h2 id="programmatic-access">Programmatic Access<a class="headerlink" href="#programmatic-access" title="Permanent link">&para;</a></h2>

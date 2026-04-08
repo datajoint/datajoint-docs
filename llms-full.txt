@@ -1,6 +1,6 @@
 # DataJoint Documentation (Full)
 
-Generated: 2026-04-01 15:38:13 UTC
+Generated: 2026-04-08 13:59:32 UTC
 Commit: unknown
 Branch: unknown
 
@@ -13028,6 +13028,7 @@ Environment variables take precedence over config files.
 | `database.user` | `DJ_USER` | — | Database username |
 | `database.password` | `DJ_PASS` | — | Database password |
 | `database.backend` | `DJ_BACKEND` | `mysql` | Database backend: `mysql` or `postgresql` |
+| `database.name` | `DJ_DATABASE_NAME` | `None` | Database name (PostgreSQL only). Defaults to `"postgres"` |
 | `database.use_tls` | `DJ_TLS` | `True` | Use TLS encryption |
 | `database.reconnect` | — | `True` | Auto-reconnect on timeout |
 | `safemode` | — | `True` | Prompt before destructive operations |
@@ -13107,6 +13108,37 @@ DataJoint supports both MySQL and PostgreSQL backends. To use PostgreSQL:
 
 The port defaults to `5432` when `backend` is set to `postgresql`.
 
+### Database Name
+
+!!! version-added "New in 2.2.1"
+    The `database.name` setting specifies which PostgreSQL database to connect to.
+
+PostgreSQL requires connecting to a specific database. By default, DataJoint connects to the `postgres` database. To use a different database:
+
+```json
+{
+  "database": {
+    "host": "localhost",
+    "backend": "postgresql",
+    "name": "my_database"
+  }
+}
+```
+
+Or via environment variable:
+
+```bash
+export DJ_DATABASE_NAME=my_database
+```
+
+Or programmatically:
+
+```python
+dj.config['database.name'] = 'my_database'
+```
+
+This setting only applies to PostgreSQL. Setting it with the MySQL backend emits a warning.
+
 ### Environment Variable
 
 ```bash
@@ -13114,6 +13146,7 @@ export DJ_BACKEND=postgresql
 export DJ_HOST=localhost
 export DJ_USER=postgres
 export DJ_PASS=password
+export DJ_DATABASE_NAME=my_database  # optional, defaults to "postgres"
 ```
 
 ### Programmatic Configuration
@@ -13123,6 +13156,7 @@ import datajoint as dj
 
 dj.config['database.backend'] = 'postgresql'
 dj.config['database.host'] = 'localhost'
+dj.config['database.name'] = 'my_database'  # optional
 ```
 
 ### Docker Compose for Local Development
@@ -14557,6 +14591,9 @@ NewTable()  # Creates the table
 When multiple projects share a database server, use prefixes to avoid naming collisions and organize schemas.
 
 ### Configure Database Prefix
+
+!!! version-deprecated "Deprecated in 2.2.1"
+    `database_prefix` is deprecated. For PostgreSQL, use `database.name` to select a database instead. `database_prefix` will be removed in 2.3.
 
 ```python
 import datajoint as dj
@@ -23936,9 +23973,10 @@ Configuration is loaded in priority order:
 | `database.port` | `DJ_PORT` | `3306`/`5432` | Database server port (auto-detects from backend) |
 | `database.user` | `DJ_USER` | — | Database username (required) |
 | `database.password` | `DJ_PASS` | — | Database password (required) |
+| `database.name` | `DJ_DATABASE_NAME` | `None` | Database name for PostgreSQL connections. Defaults to `"postgres"` if not set. *(new in 2.2.1)* |
 | `database.reconnect` | — | `True` | Auto-reconnect on connection loss |
 | `database.use_tls` | `DJ_USE_TLS` | `None` | Enable TLS encryption *(env var new in 2.1)* |
-| `database.database_prefix` | `DJ_DATABASE_PREFIX` | `""` | Prefix for database/schema names |
+| `database.database_prefix` | `DJ_DATABASE_PREFIX` | `""` | *(Deprecated — use `database.name` instead)* Prefix for database/schema names |
 | `database.create_tables` | `DJ_CREATE_TABLES` | `True` | Default for `Schema(create_tables=)`. Set `False` for production mode |
 
 ## Connection Settings
@@ -24155,6 +24193,7 @@ echo ".secrets/" >> .gitignore
 export DJ_HOST=mysql.example.com
 export DJ_USER=analyst
 export DJ_PASS=secret
+export DJ_DATABASE_NAME=my_database  # PostgreSQL only (new in 2.2.1)
 ```
 
 **Note:** Per-store credentials must be configured in `datajoint.json` or `.secrets/` — environment variable overrides are not supported for nested store configurations.

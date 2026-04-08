@@ -2278,6 +2278,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#database-name" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Database Name
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#environment-variable" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -5903,6 +5914,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#database-name" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Database Name
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#environment-variable" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -6113,6 +6135,12 @@
 <td>Database backend: <code>mysql</code> or <code>postgresql</code></td>
 </tr>
 <tr>
+<td><code>database.name</code></td>
+<td><code>DJ_DATABASE_NAME</code></td>
+<td><code>None</code></td>
+<td>Database name (PostgreSQL only). Defaults to <code>"postgres"</code></td>
+</tr>
+<tr>
 <td><code>database.use_tls</code></td>
 <td><code>DJ_TLS</code></td>
 <td><code>True</code></td>
@@ -6185,17 +6213,40 @@
 <span class="p">}</span>
 </code></pre></div>
 <p>The port defaults to <code>5432</code> when <code>backend</code> is set to <code>postgresql</code>.</p>
+<h3 id="database-name">Database Name<a class="headerlink" href="#database-name" title="Permanent link">&para;</a></h3>
+<div class="admonition version-added">
+<p class="admonition-title">New in 2.2.1</p>
+<p>The <code>database.name</code> setting specifies which PostgreSQL database to connect to.</p>
+</div>
+<p>PostgreSQL requires connecting to a specific database. By default, DataJoint connects to the <code>postgres</code> database. To use a different database:</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;database&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;host&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;localhost&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;backend&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;postgresql&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;my_database&quot;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Or via environment variable:</p>
+<div class="highlight"><pre><span></span><code><span class="nb">export</span><span class="w"> </span><span class="nv">DJ_DATABASE_NAME</span><span class="o">=</span>my_database
+</code></pre></div>
+<p>Or programmatically:</p>
+<div class="highlight"><pre><span></span><code><span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;database.name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;my_database&#39;</span>
+</code></pre></div>
+<p>This setting only applies to PostgreSQL. Setting it with the MySQL backend emits a warning.</p>
 <h3 id="environment-variable">Environment Variable<a class="headerlink" href="#environment-variable" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="nb">export</span><span class="w"> </span><span class="nv">DJ_BACKEND</span><span class="o">=</span>postgresql
 <span class="nb">export</span><span class="w"> </span><span class="nv">DJ_HOST</span><span class="o">=</span>localhost
 <span class="nb">export</span><span class="w"> </span><span class="nv">DJ_USER</span><span class="o">=</span>postgres
 <span class="nb">export</span><span class="w"> </span><span class="nv">DJ_PASS</span><span class="o">=</span>password
+<span class="nb">export</span><span class="w"> </span><span class="nv">DJ_DATABASE_NAME</span><span class="o">=</span>my_database<span class="w">  </span><span class="c1"># optional, defaults to &quot;postgres&quot;</span>
 </code></pre></div>
 <h3 id="programmatic-configuration_1">Programmatic Configuration<a class="headerlink" href="#programmatic-configuration_1" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">datajoint</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dj</span>
 
 <span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;database.backend&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;postgresql&#39;</span>
 <span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;database.host&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;localhost&#39;</span>
+<span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;database.name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;my_database&#39;</span>  <span class="c1"># optional</span>
 </code></pre></div>
 <h3 id="docker-compose-for-local-development">Docker Compose for Local Development<a class="headerlink" href="#docker-compose-for-local-development" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="nt">services</span><span class="p">:</span>

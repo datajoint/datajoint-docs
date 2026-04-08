@@ -6187,6 +6187,10 @@
 <h2 id="use-database-prefixes">Use Database Prefixes<a class="headerlink" href="#use-database-prefixes" title="Permanent link">&para;</a></h2>
 <p>When multiple projects share a database server, use prefixes to avoid naming collisions and organize schemas.</p>
 <h3 id="configure-database-prefix">Configure Database Prefix<a class="headerlink" href="#configure-database-prefix" title="Permanent link">&para;</a></h3>
+<div class="admonition version-deprecated">
+<p class="admonition-title">Deprecated in 2.2.1</p>
+<p><code>database_prefix</code> is deprecated. For PostgreSQL, use <code>database.name</code> to select a database instead. <code>database_prefix</code> will be removed in 2.3.</p>
+</div>
 <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">datajoint</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dj</span>
 
 <span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">database</span><span class="o">.</span><span class="n">database_prefix</span> <span class="o">=</span> <span class="s1">&#39;myproject_&#39;</span>
