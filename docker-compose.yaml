@@ -84,12 +84,13 @@ services:
             # LIVE mode: install datajoint and notebook dependencies for interactive development
             pip install -e /datajoint-python
             pip install scikit-image pooch
+            python scripts/gen_llms_full.py
             mkdocs serve --config-file ./mkdocs.yaml -a 0.0.0.0:8000
         elif echo "$${MODE}" | grep -i build &>/dev/null; then
             # BUILD mode: build static site from pre-executed notebooks
             # Install datajoint-python for mkdocstrings (needs to import for API docs)
             pip install -e /datajoint-python
-            # Generate llms-full.txt with current git info
+            # Generate llms.txt and llms-full.txt
             python scripts/gen_llms_full.py
             mkdocs build --config-file ./mkdocs.yaml
         elif echo "$${MODE}" | grep -i execute_pg &>/dev/null; then
