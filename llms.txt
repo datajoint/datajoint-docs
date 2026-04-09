@@ -1,87 +1,116 @@
 # DataJoint Documentation
 
-> DataJoint is a Python framework for building scientific data pipelines with automated computation, integrity constraints, and seamless integration of relational databases with object storage. This documentation covers DataJoint 2.0.
+> DataJoint is a Python framework for building scientific data pipelines with automated computation, integrity constraints, and seamless integration of relational databases with object storage.
 
 > For the complete documentation in a single file, see [/llms-full.txt](/llms-full.txt)
 
 ## Concepts
 
-- [What's New in 2.0](/about/whats-new-2.md): Major changes and new features in DataJoint 2.0
-- [Relational Workflow Model](/explanation/relational-workflow-model.md): Core data model concepts
-- [Entity Integrity](/explanation/entity-integrity.md): How DataJoint ensures data consistency
-- [Normalization](/explanation/normalization.md): Database normalization principles
-- [Query Algebra](/explanation/query-algebra.md): Operators for combining and filtering data
-- [Type System](/explanation/type-system.md): Data types and codecs
-- [Computation Model](/explanation/computation-model.md): Automated computation with populate()
-- [Custom Codecs](/explanation/custom-codecs.md): Extending the type system
+- [Data Pipelines](/explanation/data-pipelines/)
+- [FAQ](/explanation/faq/)
+- [Relational Workflow Model](/explanation/relational-workflow-model/)
+- [Entity Integrity](/explanation/entity-integrity/)
+- [Normalization](/explanation/normalization/)
+- [Computation Model](/explanation/computation-model/)
+- [Query Algebra](/explanation/query-algebra/)
+- [Semantic Matching](/explanation/semantic-matching/)
+- [Type System](/explanation/type-system/)
+- [Custom Codecs](/explanation/custom-codecs/)
 
-## Tutorials (Basics)
+## Tutorials
 
-- [First Pipeline](/tutorials/basics/01-first-pipeline.ipynb): Your first DataJoint pipeline
-- [Schema Design](/tutorials/basics/02-schema-design.ipynb): Tables, keys, and relationships
-- [Data Entry](/tutorials/basics/03-data-entry.ipynb): Inserting and managing data
-- [Queries](/tutorials/basics/04-queries.ipynb): Operators and fetching results
-- [Computation](/tutorials/basics/05-computation.ipynb): Imported and Computed tables
-- [Object Storage](/tutorials/basics/06-object-storage.ipynb): Blobs, attachments, and object storage
+- [First Pipeline](/tutorials/basics/01-first-pipeline/)
+- [Schema Design](/tutorials/basics/02-schema-design/)
+- [Data Entry](/tutorials/basics/03-data-entry/)
+- [Queries](/tutorials/basics/04-queries/)
+- [Computation](/tutorials/basics/05-computation/)
+- [Object Storage](/tutorials/basics/06-object-storage/)
+- [University Database](/tutorials/examples/university/)
+- [Hotel Reservations](/tutorials/examples/hotel-reservations/)
+- [Languages & Proficiency](/tutorials/examples/languages/)
+- [Fractal Pipeline](/tutorials/examples/fractal-pipeline/)
+- [Blob Detection](/tutorials/examples/blob-detection/)
+- [Calcium Imaging](/tutorials/domain/calcium-imaging/calcium-imaging/)
+- [Electrophysiology](/tutorials/domain/electrophysiology/electrophysiology/)
+- [Ephys with Object Storage](/tutorials/domain/electrophysiology/ephys-with-npy/)
+- [Allen CCF](/tutorials/domain/allen-ccf/allen-ccf/)
+- [SQL Comparison](/tutorials/advanced/sql-comparison/)
+- [JSON Data Type](/tutorials/advanced/json-type/)
+- [Distributed Computing](/tutorials/advanced/distributed/)
+- [Custom Codecs](/tutorials/advanced/custom-codecs/)
+- [Instances](/tutorials/advanced/instances/)
 
-## Tutorials (Examples)
+## How-To
 
-- [University Database](/tutorials/examples/university.ipynb): Complete example with students, courses, grades
-- [Fractal Pipeline](/tutorials/examples/fractal-pipeline.ipynb): Iterative computation patterns
-- [Blob Detection](/tutorials/examples/blob-detection.ipynb): Image processing with automated computation
-
-## Tutorials (Domain)
-
-- [Calcium Imaging](/tutorials/domain/calcium-imaging/calcium-imaging.ipynb): Import TIFF movies, segment cells, extract traces
-- [Electrophysiology](/tutorials/domain/electrophysiology/electrophysiology.ipynb): Import recordings, detect spikes, extract waveforms
-- [Allen CCF](/tutorials/domain/allen-ccf/allen-ccf.ipynb): Brain atlas with hierarchical region ontology
-
-## Tutorials (Advanced)
-
-- [SQL Comparison](/tutorials/advanced/sql-comparison.ipynb): DataJoint for SQL users
-- [JSON Data Type](/tutorials/advanced/json-type.ipynb): Semi-structured data in tables
-- [Distributed Computing](/tutorials/advanced/distributed.ipynb): Multi-process and cluster workflows
-- [Custom Codecs](/tutorials/advanced/custom-codecs.ipynb): Extending the type system
-
-## How-To Guides
-
-- [Installation](/how-to/installation.md): Install DataJoint
-- [Configure Database](/how-to/configure-database.md): Database connection setup
-- [Configure Object Storage](/how-to/configure-storage.md): S3 and filesystem storage
-- [Define Tables](/how-to/define-tables.md): Table definitions
-- [Model Relationships](/how-to/model-relationships.ipynb): Foreign keys and dependencies
-- [Design Primary Keys](/how-to/design-primary-keys.md): Key selection best practices
-- [Insert Data](/how-to/insert-data.md): Adding data to tables
-- [Query Data](/how-to/query-data.md): Filtering and combining tables
-- [Fetch Results](/how-to/fetch-results.md): Retrieving data
-- [Delete Data](/how-to/delete-data.md): Removing data safely
-- [Run Computations](/how-to/run-computations.md): Using populate()
-- [Distributed Computing](/how-to/distributed-computing.md): Multi-worker execution
-- [Handle Errors](/how-to/handle-errors.md): Error handling in pipelines
-- [Monitor Progress](/how-to/monitor-progress.md): Tracking computation status
-- [Use Object Storage](/how-to/use-object-storage.md): Object storage integration
-- [Create Custom Codecs](/how-to/create-custom-codec.md): Custom data types
-- [Manage Large Data](/how-to/manage-large-data.md): Scaling strategies
-- [Migrate to v2.0](/how-to/migrate-to-v20.md): Upgrading from DataJoint 0.14
-- [Alter Tables](/how-to/alter-tables.md): Schema modifications
-- [Backup and Restore](/how-to/backup-restore.md): Data backup strategies
+- [Installation](/how-to/installation/)
+- [Manage Secrets](/how-to/manage-secrets/)
+- [Configure Database](/how-to/configure-database/)
+- [Use Isolated Instances](/how-to/use-instances/)
+- [Configure Object Storage](/how-to/configure-storage/)
+- [Command-Line Interface](/how-to/use-cli/)
+- [Define Tables](/how-to/define-tables/)
+- [Model Relationships](/how-to/model-relationships/)
+- [Master-Part Tables](/how-to/master-part/)
+- [Design Primary Keys](/how-to/design-primary-keys/)
+- [Read Diagrams](/how-to/read-diagrams/)
+- [Manage Pipeline Project](/how-to/manage-pipeline-project/)
+- [Deploy to Production](/how-to/deploy-production/)
+- [Insert Data](/how-to/insert-data/)
+- [Query Data](/how-to/query-data/)
+- [Fetch Results](/how-to/fetch-results/)
+- [Delete Data](/how-to/delete-data/)
+- [Run Computations](/how-to/run-computations/)
+- [Distributed Computing](/how-to/distributed-computing/)
+- [Handle Errors](/how-to/handle-errors/)
+- [Monitor Progress](/how-to/monitor-progress/)
+- [Overview](/how-to/object-storage-overview/)
+- [Choose Storage Type](/how-to/choose-storage-type/)
+- [Use Object Storage](/how-to/use-object-storage/)
+- [Use NPY Codec](/how-to/use-npy-codec/)
+- [Use Plugin Codecs](/how-to/use-plugin-codecs/)
+- [Create Custom Codecs](/how-to/create-custom-codec/)
+- [Manage Large Data](/how-to/manage-large-data/)
+- [Clean Up Storage](/how-to/garbage-collection/)
+- [Migrate to 2.0](/how-to/migrate-to-v20/)
+- [Alter Tables](/how-to/alter-tables/)
+- [Backup and Restore](/how-to/backup-restore/)
+- [Testing Best Practices](/how-to/testing/)
 
 ## Reference
 
-- [Table Declaration](/reference/specs/table-declaration.md): Table definition syntax
-- [Query Algebra](/reference/specs/query-algebra.md): Query operator reference
-- [Data Manipulation](/reference/specs/data-manipulation.md): Insert, update, delete operations
-- [Primary Keys](/reference/specs/primary-keys.md): Key constraints specification
-- [Semantic Matching](/reference/specs/semantic-matching.md): Join and restriction rules
-- [Type System](/reference/specs/type-system.md): Data type specification
-- [Codec API](/reference/specs/codec-api.md): Custom codec interface
-- [AutoPopulate](/reference/specs/autopopulate.md): Computation engine specification
-- [Fetch API](/reference/specs/fetch-api.md): Data retrieval methods
-- [Job Metadata](/reference/specs/job-metadata.md): Job management tables
+- [Database Backends](/reference/specs/database-backends/)
+- [Table Declaration](/reference/specs/table-declaration/)
+- [Master-Part](/reference/specs/master-part/)
+- [Virtual Schemas](/reference/specs/virtual-schemas/)
+- [Query Operators](/reference/specs/query-algebra/)
+- [Semantic Matching](/reference/specs/semantic-matching/)
+- [Primary Keys](/reference/specs/primary-keys/)
+- [Fetch API](/reference/specs/fetch-api/)
+- [Diagram](/reference/specs/diagram/)
+- [Types](/reference/specs/type-system/)
+- [Codec API](/reference/specs/codec-api/)
+- [NPY Codec](/reference/specs/npy-codec/)
+- [Data Manipulation](/reference/specs/data-manipulation/)
+- [AutoPopulate](/reference/specs/autopopulate/)
+- [Job Metadata](/reference/specs/job-metadata/)
+- [Object Store Configuration](/reference/specs/object-store-configuration/)
+- [Thread-Safe Mode](/reference/specs/thread-safe-mode/)
+- [Configuration](/reference/configuration/)
+- [Definition Syntax](/reference/definition-syntax/)
+- [Operators](/reference/operators/)
+- [Errors](/reference/errors/)
+- [Elements](/elements/)
 
-## Optional
+- [API](/api/)
 
-- [API Reference](/api/): Auto-generated Python API documentation
-- [Configuration](/reference/configuration.md): All configuration options
-- [Definition Syntax](/reference/definition-syntax.md): Table definition grammar
-- [Errors](/reference/errors.md): Error types and handling
+## About
+
+- [What's New in 2.2](/about/whats-new-22/)
+- [What's New in 2.1](/about/whats-new-21/)
+- [What's New in 2.0](/about/whats-new-2/)
+- [History](/about/history/)
+- [Documentation Versioning](/about/versioning/)
+- [Citation](/about/citation/)
+- [Publications](/about/publications/)
+- [Contributing](/about/contributing/)
+
