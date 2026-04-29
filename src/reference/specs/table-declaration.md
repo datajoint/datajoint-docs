@@ -225,7 +225,9 @@ MyTable & "_job_start_time > '2024-01-01'"
 MyTable & {'_job_start_time': some_date}   # ⚠ ignored
 ```
 
-**When to declare a hidden attribute.** Reach for the `_` prefix when the column is part of the table's schema-level contract — needed for an index, a constraint, or platform bookkeeping — but should not appear in default fetches, joins, or displays. If you simply want a column that users *usually* don't see but might want to query with a dict, prefer a regular attribute and use `proj()` to control visibility at the call site.
+**When to declare a hidden attribute.** The bar is high. Reach for the `_` prefix only when the column is purely a platform/implementation concern that application code never reads, writes, or references — for example, `_job_start_time` (populated by `populate()` lifecycle internals), `_singleton` (an implementation detail of the singleton pattern), or a field whose values would actively interfere with natural-join semantics if visible.
+
+If your application code computes the column, inserts it, queries on it, or wants to see it in `describe()` output, **declare it as a regular attribute** even when you don't want it featured prominently. Backing a unique index, on its own, is not a sufficient reason to hide a column — for example, a `params_hash` column that backs `unique index (tool, params_hash)` should be a regular attribute because the application code is the one computing and inserting the hash. Hiding it forfeits `insert1`, dict restrictions, and `describe()` round-trip without buying anything you couldn't get from `proj()` at the call site for visibility control.
 
 ### 3.5 Examples
 
