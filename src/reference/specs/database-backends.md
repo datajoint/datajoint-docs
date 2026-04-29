@@ -9,7 +9,7 @@ DataJoint supports multiple database backends through a unified adapter architec
 
 | Backend | Minimum Version | Default Port | Status |
 |---------|-----------------|--------------|--------|
-| MySQL | 8.0 | 3306 | Production |
+| MySQL | 8.0.13 | 3306 | Production |
 | PostgreSQL | 15 | 5432 | Production |
 
 ## Configuration

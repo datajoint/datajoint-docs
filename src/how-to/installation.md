@@ -78,7 +78,7 @@ See [Configure Database Connection](configure-database.md) for connection setup.
 ## Requirements
 
 - Python 3.10+
-- MySQL 8.0+ or MariaDB 10.6+
+- MySQL 8.0.13+ or PostgreSQL 15+
 - Network access to database server
 
 ## Troubleshooting

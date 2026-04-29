@@ -176,7 +176,7 @@ parameters : json             # JSON data (core type, no brackets)
 
 ## Native Database Types
 
-You can also use native MySQL/MariaDB types directly when needed:
+You can also use native database types directly when needed:
 
 ```python
 definition = """
