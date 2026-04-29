@@ -158,9 +158,16 @@ attribute_name [= default_value] : type [# comment]
 
 ### 3.4 Hidden Attributes
 
-Attributes with names starting with an underscore (`_`) are **hidden**. The hidden-attribute mechanism was designed for platform operations — bookkeeping columns DataJoint itself adds to support the data pipeline — and is filtered out of normal user-facing query results. Some hidden-attribute functionality is exposed to users as well, but the feature is not intended as a general column-hiding tool.
+Attributes with names starting with an underscore (`_`) are **hidden**. The hidden-attribute mechanism is reserved for **platform-managed** columns — bookkeeping that DataJoint itself adds to support the data pipeline — and is intentionally not exposed for user-defined attributes. Attempting to declare an attribute name with a leading underscore raises:
 
-**Platform-managed hidden attributes** are added automatically when DataJoint declares certain table types. Users do not write these in the definition:
+```text
+DataJointError: Attribute name in line "_hidden: bool" starts with an underscore.
+Names with leading underscore are reserved for platform-managed columns
+(e.g. _job_start_time, _singleton). Use a regular attribute name; if you
+need to control visibility at the call site, use proj().
+```
+
+**Platform-managed hidden attributes** are added automatically when DataJoint declares certain table types. Users do not write these in the definition; the framework injects them programmatically after parsing.
 
 | Hidden attribute | Added to | Purpose |
 |------------------|----------|---------|
@@ -169,22 +176,9 @@ Attributes with names starting with an underscore (`_`) are **hidden**. The hidd
 | `_job_version` | `Computed`, `Imported` | Library version that produced the row |
 | `_singleton` | Singleton tables | Implementation detail of the singleton pattern |
 
-**User-defined hidden attributes.** A definition may also declare hidden attributes directly. The most common use case is storing a derived value (for example, a hash of a JSON column) that backs a unique index but should not appear in query results:
+These columns are populated by DataJoint internals via raw SQL during the `populate()` lifecycle, not via `insert`/`update1`. They are filtered out of every public API surface so they don't clutter joins, fetches, or displays.
 
-```python
-@schema
-class TaskParams(dj.Manual):
-    definition = """
-    task_id : int32
-    ---
-    tool : varchar(32)
-    params : json
-    _params_hash : varchar(32)
-    unique index (tool, _params_hash)
-    """
-```
-
-**Behavior.** Hidden attributes are filtered out of nearly every user-facing surface. The filter is implemented in `Heading.attributes`, which all visible code paths consume; raw SQL strings bypass it.
+**Behavior.** The filter is implemented in `Heading.attributes`, which all visible code paths consume; raw SQL strings bypass it.
 
 | Context | Hidden attributes |
 |---------|-------------------|
@@ -197,16 +191,14 @@ class TaskParams(dj.Manual):
 | Natural-join namesake matching | Excluded |
 | Dict restriction `Table & {"_name": value}` | Silently ignored |
 | String restriction `Table & "_name = ..."` | Included (passes to SQL) |
-| `insert()`, `insert1()`, `update1()` | Rejected — see write caveat below |
+| `insert()`, `insert1()`, `update1()` | Rejected (`Field not in table heading`) |
 | `insert(..., ignore_extra_fields=True)` | Silently dropped (key not written) |
-| `describe()` / reverse-engineered definition | **Excluded** — see round-trip caveat below |
+| `describe()` / reverse-engineered definition | Excluded |
 | `unique index (..., _name)` | Allowed |
 
-**Write caveat.** Neither `insert`/`insert1` nor `update1` accepts hidden attributes through the public API. `update1` raises `DataJointError: Attribute '_name' not found.` `insert` raises `Field '_name' not in table heading` — unless `ignore_extra_fields=True` is passed, in which case the hidden key is *silently dropped* and never written. There is currently no public-API path to populate a user-defined hidden column. Platform-managed hidden columns (the `_job_*` group) are populated by DataJoint internals via raw SQL during the `populate()` lifecycle (see `autopopulate.py`), not via the user-facing `insert`/`update1` methods. If you declare a user-defined hidden column today and need to populate it, you must do so via `connection.query()` with a raw `INSERT` or `UPDATE`, or compute it from a non-hidden column inside an `auto_populate` step.
+**Why users can't declare them.** Allowing user-defined hidden attributes would expose a feature with no public-API write path (`insert`/`update1` reject the keys; `ignore_extra_fields=True` drops them silently), no `describe()` round-trip (the regenerated definition would be missing the column), and silent filtering on dict restrictions. The cases users typically reach for hidden attributes — most commonly an index-backing derived column — are better served by a regular attribute.
 
-**Round-trip caveat.** `describe()` walks `heading.attributes`, so it omits hidden attributes from the regenerated definition. For platform-managed hidden columns this is harmless: re-declaring a `Computed` or `Imported` table re-injects `_job_*` automatically. For *user-defined* hidden columns (such as `_params_hash` above), the regenerated definition is incomplete — re-applying it would create a table without the hidden column. Treat `describe()` output as a starting point for review, not as a faithful round-trip when user-defined hidden columns are present.
-
-**Accessing hidden attributes:**
+**Inspecting platform-managed hidden columns:**
 
 ```python
 # Default fetch — hidden columns excluded
@@ -225,9 +217,29 @@ MyTable & "_job_start_time > '2024-01-01'"
 MyTable & {'_job_start_time': some_date}   # ⚠ ignored
 ```
 
-**When to declare a hidden attribute.** The bar is high. Reach for the `_` prefix only when the column is purely a platform/implementation concern that application code never reads, writes, or references — for example, `_job_start_time` (populated by `populate()` lifecycle internals), `_singleton` (an implementation detail of the singleton pattern), or a field whose values would actively interfere with natural-join semantics if visible.
+**Use a regular attribute instead.** When you want a column that's part of the schema-level contract (backing an index, storing a derived value, etc.) but isn't featured in default displays, declare it as a regular attribute and use `proj()` at the call site if you want to omit it from a particular query result. For example, a hash column backing a unique index:
 
-If your application code computes the column, inserts it, queries on it, or wants to see it in `describe()` output, **declare it as a regular attribute** even when you don't want it featured prominently. Backing a unique index, on its own, is not a sufficient reason to hide a column — for example, a `params_hash` column that backs `unique index (tool, params_hash)` should be a regular attribute because the application code is the one computing and inserting the hash. Hiding it forfeits `insert1`, dict restrictions, and `describe()` round-trip without buying anything you couldn't get from `proj()` at the call site for visibility control.
+```python
+@schema
+class TaskParams(dj.Manual):
+    definition = """
+    task_id : int32
+    ---
+    tool : varchar(32)
+    params : json
+    params_hash : varchar(32)
+    unique index (tool, params_hash)
+    """
+
+# Inserts work directly:
+TaskParams.insert1({'task_id': 1, 'tool': 't', 'params': {...}, 'params_hash': h})
+
+# Dict restrictions work:
+TaskParams & {'params_hash': h}
+
+# Hide from a specific result set with proj() if needed:
+TaskParams.proj('tool', 'params').fetch()
+```
 
 ### 3.5 Examples
 
