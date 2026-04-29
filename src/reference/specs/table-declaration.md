@@ -175,7 +175,7 @@ Attributes with names starting with an underscore (`_`) are **hidden**. The hidd
 @schema
 class TaskParams(dj.Manual):
     definition = """
-    task_id : int
+    task_id : int32
     ---
     tool : varchar(32)
     params : json
