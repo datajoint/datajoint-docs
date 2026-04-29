@@ -197,9 +197,12 @@ class TaskParams(dj.Manual):
 | Natural-join namesake matching | Excluded |
 | Dict restriction `Table & {"_name": value}` | Silently ignored |
 | String restriction `Table & "_name = ..."` | Included (passes to SQL) |
-| `insert()`, `insert1()`, `update1()` | Rejected — key not in heading |
-| `describe()` / reverse-engineered definition | **Excluded** — see caveat below |
+| `insert()`, `insert1()`, `update1()` | Rejected — see write caveat below |
+| `insert(..., ignore_extra_fields=True)` | Silently dropped (key not written) |
+| `describe()` / reverse-engineered definition | **Excluded** — see round-trip caveat below |
 | `unique index (..., _name)` | Allowed |
+
+**Write caveat.** Neither `insert`/`insert1` nor `update1` accepts hidden attributes through the public API. `update1` raises `DataJointError: Attribute '_name' not found.` `insert` raises `Field '_name' not in table heading` — unless `ignore_extra_fields=True` is passed, in which case the hidden key is *silently dropped* and never written. There is currently no public-API path to populate a user-defined hidden column. Platform-managed hidden columns (the `_job_*` group) are populated by DataJoint internals via raw SQL during the `populate()` lifecycle (see `autopopulate.py`), not via the user-facing `insert`/`update1` methods. If you declare a user-defined hidden column today and need to populate it, you must do so via `connection.query()` with a raw `INSERT` or `UPDATE`, or compute it from a non-hidden column inside an `auto_populate` step.
 
 **Round-trip caveat.** `describe()` walks `heading.attributes`, so it omits hidden attributes from the regenerated definition. For platform-managed hidden columns this is harmless: re-declaring a `Computed` or `Imported` table re-injects `_job_*` automatically. For *user-defined* hidden columns (such as `_params_hash` above), the regenerated definition is incomplete — re-applying it would create a table without the hidden column. Treat `describe()` output as a starting point for review, not as a faithful round-trip when user-defined hidden columns are present.
 
