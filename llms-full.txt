@@ -1,6 +1,6 @@
 # DataJoint Documentation (Full)
 
-Generated: 2026-04-30 16:38:10 UTC
+Generated: 2026-04-30 16:41:50 UTC
 Commit: unknown
 Branch: unknown
 
@@ -14073,7 +14073,7 @@ parameters : json             # JSON data (core type, no brackets)
 
 ## Native Database Types
 
-You can also use native MySQL/MariaDB types directly when needed:
+You can also use native database types directly when needed:
 
 ```python
 definition = """
@@ -16083,7 +16083,7 @@ See [Configure Database Connection](configure-database.md) for connection setup.
 ## Requirements
 
 - Python 3.10+
-- MySQL 8.0+ or MariaDB 10.6+
+- MySQL 8.0.13+ or PostgreSQL 15+
 - Network access to database server
 
 ## Troubleshooting
@@ -27583,7 +27583,7 @@ DataJoint supports multiple database backends through a unified adapter architec
 
 | Backend | Minimum Version | Default Port | Status |
 |---------|-----------------|--------------|--------|
-| MySQL | 8.0 | 3306 | Production |
+| MySQL | 8.0.13 | 3306 | Production |
 | PostgreSQL | 15 | 5432 | Production |
 
 ## Configuration
