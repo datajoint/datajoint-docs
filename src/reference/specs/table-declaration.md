@@ -186,12 +186,13 @@ These columns are populated by DataJoint internals via raw SQL during the `popul
 | `heading._attributes` (internal) | Included |
 | Table display / `repr` / `_repr_html_` | Excluded |
 | `fetch()`, `fetch1()`, `to_dicts()`, `to_pandas()` (default) | Excluded |
-| `fetch("_name")` / `fetch1("_name")` (explicit) | Included |
-| `proj("_name")` (explicit) | Included |
+| `fetch("_name")` / `fetch1("_name")` (explicit) | Rejected (`Attribute not found`) — use raw SQL via `conn.query(...)` |
+| `proj("_name")` (explicit) | Rejected (same reason) |
 | Natural-join namesake matching | Excluded |
 | Dict restriction `Table & {"_name": value}` | Silently ignored |
 | String restriction `Table & "_name = ..."` | Included (passes to SQL) |
-| `insert()`, `insert1()`, `update1()` | Rejected (`Field not in table heading`) |
+| `insert()`, `insert1()` | Rejected — ``KeyError("`_name` is not in the table heading")`` |
+| `update1()` | Rejected — ``DataJointError("Attribute `_name` not found.")`` |
 | `insert(..., ignore_extra_fields=True)` | Silently dropped (key not written) |
 | `describe()` / reverse-engineered definition | Excluded |
 | `unique index (..., _name)` | Allowed |
@@ -204,11 +205,13 @@ These columns are populated by DataJoint internals via raw SQL during the `popul
 # Default fetch — hidden columns excluded
 results = MyTable.to_dicts()
 
-# Explicit projection promotes a hidden column to visible
-results = MyTable.proj('result', '_job_start_time').to_dicts()
-
-# Explicit fetch by name returns hidden columns
-row = (MyTable & key).fetch1('result', '_job_start_time')
+# To inspect platform-managed hidden columns, query raw SQL.
+# The public API (fetch / proj) intentionally rejects them.
+conn = MyTable.connection
+rows = conn.query(
+    f"SELECT _job_start_time, _job_duration, _job_version "
+    f"FROM {MyTable.full_table_name}"
+).fetchall()
 
 # String restriction works (passes through to SQL)
 MyTable & "_job_start_time > '2024-01-01'"
