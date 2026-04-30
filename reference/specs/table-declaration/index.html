@@ -7340,76 +7340,152 @@ secondary_section
 <li><strong>Convention</strong>: snake_case</li>
 </ul>
 <h3 id="34-hidden-attributes">3.4 Hidden Attributes<a class="headerlink" href="#34-hidden-attributes" title="Permanent link">&para;</a></h3>
-<p>Attributes with names starting with underscore (<code>_</code>) are <strong>hidden</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
-<span class="s2">session_id : int32</span>
-<span class="s2">---</span>
-<span class="s2">result : float64</span>
-<span class="s2">_job_start_time : datetime(3)   # hidden</span>
-<span class="s2">_job_duration : float32         # hidden</span>
-<span class="s2">&quot;&quot;&quot;</span>
+<p>Attributes with names starting with an underscore (<code>_</code>) are <strong>hidden</strong>. The hidden-attribute mechanism is reserved for <strong>platform-managed</strong> columns — bookkeeping that DataJoint itself adds to support the data pipeline — and is intentionally not exposed for user-defined attributes. Attempting to declare an attribute name with a leading underscore raises:</p>
+<div class="highlight"><pre><span></span><code>DataJointError: Attribute name in line &quot;_hidden: bool&quot; starts with an underscore.
+Names with leading underscore are reserved for platform-managed columns
+(e.g. _job_start_time, _singleton). Use a regular attribute name; if you
+need to control visibility at the call site, use proj().
 </code></pre></div>
-<p><strong>Behavior:</strong></p>
+<p><strong>Platform-managed hidden attributes</strong> are added automatically when DataJoint declares certain table types. Users do not write these in the definition; the framework injects them programmatically after parsing.</p>
 <table>
 <thead>
 <tr>
-<th>Context</th>
-<th>Hidden Attributes</th>
+<th>Hidden attribute</th>
+<th>Added to</th>
+<th>Purpose</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>heading.attributes</code></td>
-<td>Excluded</td>
+<td><code>_job_start_time</code></td>
+<td><code>Computed</code>, <code>Imported</code></td>
+<td>Wall-clock start of the populate call</td>
 </tr>
 <tr>
-<td><code>heading._attributes</code></td>
-<td>Included</td>
+<td><code>_job_duration</code></td>
+<td><code>Computed</code>, <code>Imported</code></td>
+<td>Elapsed seconds for the populate call</td>
 </tr>
 <tr>
-<td>Default table display</td>
-<td>Excluded</td>
+<td><code>_job_version</code></td>
+<td><code>Computed</code>, <code>Imported</code></td>
+<td>Library version that produced the row</td>
 </tr>
 <tr>
-<td><code>to_dicts()</code> / <code>to_pandas()</code></td>
-<td>Excluded unless explicitly projected</td>
-</tr>
-<tr>
-<td>Join matching (namesakes)</td>
-<td>Excluded</td>
-</tr>
-<tr>
-<td>Dict restrictions</td>
-<td>Excluded (silently ignored)</td>
-</tr>
-<tr>
-<td>String restrictions</td>
-<td>Included (passed to SQL)</td>
+<td><code>_singleton</code></td>
+<td>Singleton tables</td>
+<td>Implementation detail of the singleton pattern</td>
 </tr>
 </tbody>
 </table>
-<p><strong>Accessing hidden attributes:</strong></p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Visible attributes only (default)</span>
+<p>These columns are populated by DataJoint internals via raw SQL during the <code>populate()</code> lifecycle, not via <code>insert</code>/<code>update1</code>. They are filtered out of every public API surface so they don't clutter joins, fetches, or displays.</p>
+<p><strong>Behavior.</strong> The filter is implemented in <code>Heading.attributes</code>, which all visible code paths consume; raw SQL strings bypass it.</p>
+<table>
+<thead>
+<tr>
+<th>Context</th>
+<th>Hidden attributes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>heading.attributes</code>, <code>heading.names</code>, <code>heading.primary_key</code></td>
+<td>Excluded</td>
+</tr>
+<tr>
+<td><code>heading._attributes</code> (internal)</td>
+<td>Included</td>
+</tr>
+<tr>
+<td>Table display / <code>repr</code> / <code>_repr_html_</code></td>
+<td>Excluded</td>
+</tr>
+<tr>
+<td><code>fetch()</code>, <code>fetch1()</code>, <code>to_dicts()</code>, <code>to_pandas()</code> (default)</td>
+<td>Excluded</td>
+</tr>
+<tr>
+<td><code>fetch("_name")</code> / <code>fetch1("_name")</code> (explicit)</td>
+<td>Rejected (<code>Attribute not found</code>) — use raw SQL via <code>conn.query(...)</code></td>
+</tr>
+<tr>
+<td><code>proj("_name")</code> (explicit)</td>
+<td>Rejected (same reason)</td>
+</tr>
+<tr>
+<td>Natural-join namesake matching</td>
+<td>Excluded</td>
+</tr>
+<tr>
+<td>Dict restriction <code>Table &amp; {"_name": value}</code></td>
+<td>Silently ignored</td>
+</tr>
+<tr>
+<td>String restriction <code>Table &amp; "_name = ..."</code></td>
+<td>Included (passes to SQL)</td>
+</tr>
+<tr>
+<td><code>insert()</code>, <code>insert1()</code></td>
+<td>Rejected — <code>KeyError("`_name` is not in the table heading")</code></td>
+</tr>
+<tr>
+<td><code>update1()</code></td>
+<td>Rejected — <code>DataJointError("Attribute `_name` not found.")</code></td>
+</tr>
+<tr>
+<td><code>insert(..., ignore_extra_fields=True)</code></td>
+<td>Silently dropped (key not written)</td>
+</tr>
+<tr>
+<td><code>describe()</code> / reverse-engineered definition</td>
+<td>Excluded</td>
+</tr>
+<tr>
+<td><code>unique index (..., _name)</code></td>
+<td>Allowed</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Why users can't declare them.</strong> Allowing user-defined hidden attributes would expose a feature with no public-API write path (<code>insert</code>/<code>update1</code> reject the keys; <code>ignore_extra_fields=True</code> drops them silently), no <code>describe()</code> round-trip (the regenerated definition would be missing the column), and silent filtering on dict restrictions. The cases users typically reach for hidden attributes — most commonly an index-backing derived column — are better served by a regular attribute.</p>
+<p><strong>Inspecting platform-managed hidden columns:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Default fetch — hidden columns excluded</span>
 <span class="n">results</span> <span class="o">=</span> <span class="n">MyTable</span><span class="o">.</span><span class="n">to_dicts</span><span class="p">()</span>
 
-<span class="c1"># Explicitly include hidden attributes</span>
-<span class="n">results</span> <span class="o">=</span> <span class="n">MyTable</span><span class="o">.</span><span class="n">proj</span><span class="p">(</span><span class="s1">&#39;result&#39;</span><span class="p">,</span> <span class="s1">&#39;_job_start_time&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">to_dicts</span><span class="p">()</span>
+<span class="c1"># To inspect platform-managed hidden columns, query raw SQL.</span>
+<span class="c1"># The public API (fetch / proj) intentionally rejects them.</span>
+<span class="n">conn</span> <span class="o">=</span> <span class="n">MyTable</span><span class="o">.</span><span class="n">connection</span>
+<span class="n">rows</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">query</span><span class="p">(</span>
+    <span class="sa">f</span><span class="s2">&quot;SELECT _job_start_time, _job_duration, _job_version &quot;</span>
+    <span class="sa">f</span><span class="s2">&quot;FROM </span><span class="si">{</span><span class="n">MyTable</span><span class="o">.</span><span class="n">full_table_name</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="p">)</span><span class="o">.</span><span class="n">fetchall</span><span class="p">()</span>
 
-<span class="c1"># Or with fetch1 for single row</span>
-<span class="n">row</span> <span class="o">=</span> <span class="p">(</span><span class="n">MyTable</span> <span class="o">&amp;</span> <span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">fetch1</span><span class="p">(</span><span class="s1">&#39;result&#39;</span><span class="p">,</span> <span class="s1">&#39;_job_start_time&#39;</span><span class="p">)</span>
-
-<span class="c1"># String restriction works with hidden attributes</span>
+<span class="c1"># String restriction works (passes through to SQL)</span>
 <span class="n">MyTable</span> <span class="o">&amp;</span> <span class="s2">&quot;_job_start_time &gt; &#39;2024-01-01&#39;&quot;</span>
 
-<span class="c1"># Dict restriction IGNORES hidden attributes</span>
-<span class="n">MyTable</span> <span class="o">&amp;</span> <span class="p">{</span><span class="s1">&#39;_job_start_time&#39;</span><span class="p">:</span> <span class="n">some_date</span><span class="p">}</span>  <span class="c1"># no effect</span>
+<span class="c1"># Dict restriction is silently dropped — does NOT filter</span>
+<span class="n">MyTable</span> <span class="o">&amp;</span> <span class="p">{</span><span class="s1">&#39;_job_start_time&#39;</span><span class="p">:</span> <span class="n">some_date</span><span class="p">}</span>   <span class="c1"># ⚠ ignored</span>
 </code></pre></div>
-<p><strong>Use cases:</strong></p>
-<ul>
-<li>Job metadata (<code>_job_start_time</code>, <code>_job_duration</code>, <code>_job_version</code>)</li>
-<li>Internal tracking fields</li>
-<li>Attributes that should not participate in automatic joins</li>
-</ul>
+<p><strong>Use a regular attribute instead.</strong> When you want a column that's part of the schema-level contract (backing an index, storing a derived value, etc.) but isn't featured in default displays, declare it as a regular attribute and use <code>proj()</code> at the call site if you want to omit it from a particular query result. For example, a hash column backing a unique index:</p>
+<div class="highlight"><pre><span></span><code><span class="nd">@schema</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">TaskParams</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">    task_id : int32</span>
+<span class="s2">    ---</span>
+<span class="s2">    tool : varchar(32)</span>
+<span class="s2">    params : json</span>
+<span class="s2">    params_hash : varchar(32)</span>
+<span class="s2">    unique index (tool, params_hash)</span>
+<span class="s2">    &quot;&quot;&quot;</span>
+
+<span class="c1"># Inserts work directly:</span>
+<span class="n">TaskParams</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="s1">&#39;task_id&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;tool&#39;</span><span class="p">:</span> <span class="s1">&#39;t&#39;</span><span class="p">,</span> <span class="s1">&#39;params&#39;</span><span class="p">:</span> <span class="p">{</span><span class="o">...</span><span class="p">},</span> <span class="s1">&#39;params_hash&#39;</span><span class="p">:</span> <span class="n">h</span><span class="p">})</span>
+
+<span class="c1"># Dict restrictions work:</span>
+<span class="n">TaskParams</span> <span class="o">&amp;</span> <span class="p">{</span><span class="s1">&#39;params_hash&#39;</span><span class="p">:</span> <span class="n">h</span><span class="p">}</span>
+
+<span class="c1"># Hide from a specific result set with proj() if needed:</span>
+<span class="n">TaskParams</span><span class="o">.</span><span class="n">proj</span><span class="p">(</span><span class="s1">&#39;tool&#39;</span><span class="p">,</span> <span class="s1">&#39;params&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">fetch</span><span class="p">()</span>
+</code></pre></div>
 <h3 id="35-examples">3.5 Examples<a class="headerlink" href="#35-examples" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
 <span class="s2"># Experimental session with subject and timing info</span>
