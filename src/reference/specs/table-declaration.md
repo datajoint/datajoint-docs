@@ -158,54 +158,91 @@ attribute_name [= default_value] : type [# comment]
 
 ### 3.4 Hidden Attributes
 
-Attributes with names starting with underscore (`_`) are **hidden**:
+Attributes with names starting with an underscore (`_`) are **hidden**. The hidden-attribute mechanism is reserved for **platform-managed** columns — bookkeeping that DataJoint itself adds to support the data pipeline — and is intentionally not exposed for user-defined attributes. Attempting to declare an attribute name with a leading underscore raises:
 
-```python
-definition = """
-session_id : int32
----
-result : float64
-_job_start_time : datetime(3)   # hidden
-_job_duration : float32         # hidden
-"""
+```text
+DataJointError: Attribute name in line "_hidden: bool" starts with an underscore.
+Names with leading underscore are reserved for platform-managed columns
+(e.g. _job_start_time, _singleton). Use a regular attribute name; if you
+need to control visibility at the call site, use proj().
 ```
 
-**Behavior:**
+**Platform-managed hidden attributes** are added automatically when DataJoint declares certain table types. Users do not write these in the definition; the framework injects them programmatically after parsing.
 
-| Context | Hidden Attributes |
+| Hidden attribute | Added to | Purpose |
+|------------------|----------|---------|
+| `_job_start_time` | `Computed`, `Imported` | Wall-clock start of the populate call |
+| `_job_duration` | `Computed`, `Imported` | Elapsed seconds for the populate call |
+| `_job_version` | `Computed`, `Imported` | Library version that produced the row |
+| `_singleton` | Singleton tables | Implementation detail of the singleton pattern |
+
+These columns are populated by DataJoint internals via raw SQL during the `populate()` lifecycle, not via `insert`/`update1`. They are filtered out of every public API surface so they don't clutter joins, fetches, or displays.
+
+**Behavior.** The filter is implemented in `Heading.attributes`, which all visible code paths consume; raw SQL strings bypass it.
+
+| Context | Hidden attributes |
 |---------|-------------------|
-| `heading.attributes` | Excluded |
-| `heading._attributes` | Included |
-| Default table display | Excluded |
-| `to_dicts()` / `to_pandas()` | Excluded unless explicitly projected |
-| Join matching (namesakes) | Excluded |
-| Dict restrictions | Excluded (silently ignored) |
-| String restrictions | Included (passed to SQL) |
+| `heading.attributes`, `heading.names`, `heading.primary_key` | Excluded |
+| `heading._attributes` (internal) | Included |
+| Table display / `repr` / `_repr_html_` | Excluded |
+| `fetch()`, `fetch1()`, `to_dicts()`, `to_pandas()` (default) | Excluded |
+| `fetch("_name")` / `fetch1("_name")` (explicit) | Rejected (`Attribute not found`) — use raw SQL via `conn.query(...)` |
+| `proj("_name")` (explicit) | Rejected (same reason) |
+| Natural-join namesake matching | Excluded |
+| Dict restriction `Table & {"_name": value}` | Silently ignored |
+| String restriction `Table & "_name = ..."` | Included (passes to SQL) |
+| `insert()`, `insert1()` | Rejected — ``KeyError("`_name` is not in the table heading")`` |
+| `update1()` | Rejected — ``DataJointError("Attribute `_name` not found.")`` |
+| `insert(..., ignore_extra_fields=True)` | Silently dropped (key not written) |
+| `describe()` / reverse-engineered definition | Excluded |
+| `unique index (..., _name)` | Allowed |
 
-**Accessing hidden attributes:**
+**Why users can't declare them.** Allowing user-defined hidden attributes would expose a feature with no public-API write path (`insert`/`update1` reject the keys; `ignore_extra_fields=True` drops them silently), no `describe()` round-trip (the regenerated definition would be missing the column), and silent filtering on dict restrictions. The cases users typically reach for hidden attributes — most commonly an index-backing derived column — are better served by a regular attribute.
+
+**Inspecting platform-managed hidden columns:**
 
 ```python
-# Visible attributes only (default)
+# Default fetch — hidden columns excluded
 results = MyTable.to_dicts()
 
-# Explicitly include hidden attributes
-results = MyTable.proj('result', '_job_start_time').to_dicts()
+# To inspect platform-managed hidden columns, query raw SQL.
+# The public API (fetch / proj) intentionally rejects them.
+conn = MyTable.connection
+rows = conn.query(
+    f"SELECT _job_start_time, _job_duration, _job_version "
+    f"FROM {MyTable.full_table_name}"
+).fetchall()
 
-# Or with fetch1 for single row
-row = (MyTable & key).fetch1('result', '_job_start_time')
-
-# String restriction works with hidden attributes
+# String restriction works (passes through to SQL)
 MyTable & "_job_start_time > '2024-01-01'"
 
-# Dict restriction IGNORES hidden attributes
-MyTable & {'_job_start_time': some_date}  # no effect
+# Dict restriction is silently dropped — does NOT filter
+MyTable & {'_job_start_time': some_date}   # ⚠ ignored
 ```
 
-**Use cases:**
+**Use a regular attribute instead.** When you want a column that's part of the schema-level contract (backing an index, storing a derived value, etc.) but isn't featured in default displays, declare it as a regular attribute and use `proj()` at the call site if you want to omit it from a particular query result. For example, a hash column backing a unique index:
 
-- Job metadata (`_job_start_time`, `_job_duration`, `_job_version`)
-- Internal tracking fields
-- Attributes that should not participate in automatic joins
+```python
+@schema
+class TaskParams(dj.Manual):
+    definition = """
+    task_id : int32
+    ---
+    tool : varchar(32)
+    params : json
+    params_hash : varchar(32)
+    unique index (tool, params_hash)
+    """
+
+# Inserts work directly:
+TaskParams.insert1({'task_id': 1, 'tool': 't', 'params': {...}, 'params_hash': h})
+
+# Dict restrictions work:
+TaskParams & {'params_hash': h}
+
+# Hide from a specific result set with proj() if needed:
+TaskParams.proj('tool', 'params').fetch()
+```
 
 ### 3.5 Examples
 
