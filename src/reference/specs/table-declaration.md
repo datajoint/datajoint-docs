@@ -191,6 +191,7 @@ These columns are populated by DataJoint internals via raw SQL during the `popul
 | Natural-join namesake matching | Excluded |
 | Dict restriction `Table & {"_name": value}` | Silently ignored |
 | String restriction `Table & "_name = ..."` | Included (passes to SQL) |
+| `Top(order_by="_name")` | Allowed (passes through to SQL `ORDER BY`; no heading validation) |
 | `insert()`, `insert1()` | Rejected — ``KeyError("`_name` is not in the table heading")`` |
 | `update1()` | Rejected — ``DataJointError("Attribute `_name` not found.")`` |
 | `insert(..., ignore_extra_fields=True)` | Silently dropped (key not written) |
