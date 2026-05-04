@@ -7425,6 +7425,10 @@ need to control visibility at the call site, use proj().
 <td>Included (passes to SQL)</td>
 </tr>
 <tr>
+<td><code>Top(order_by="_name")</code></td>
+<td>Allowed (passes through to SQL <code>ORDER BY</code>; no heading validation)</td>
+</tr>
+<tr>
 <td><code>insert()</code>, <code>insert1()</code></td>
 <td>Rejected — <code>KeyError("`_name` is not in the table heading")</code></td>
 </tr>
