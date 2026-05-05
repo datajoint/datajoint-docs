@@ -18,6 +18,8 @@ If your work uses DataJoint or DataJoint Elements, please cite the respective
 
 + Sun, X., Comrie, A. E., Kahn, A. E., Monroe, E. J., Joshi, A., Guidera, J. A., Denovellis, E. L., Krausz, T. A., Zhou, J., Thompson, P., Hernandez, J., Yorita, A., Haque, R., Berke, J. D., Daw, N. D. & Frank, L. M. (2026). [Meta-learning is expressed through altered prefrontal cortical dynamics](https://doi.org/10.64898/2026.01.01.697272). *bioRxiv*.
 
++ Yatsenko, D. & Nguyen, T. T. (2026). [DataJoint 2.0: A Computational Substrate for Agentic Scientific Workflows](https://doi.org/10.48550/arXiv.2602.16585). *arXiv*.
+
 ## 2025
 
 + Bae, J. A., Baptiste, M., Bodor, A. L., Brittain, D., Buchanan, J., Bumbarger, D. J., Castro, M. A., Celii, B., Cobos, E., Collman, F., ... (2025). [Functional connectomics spanning multiple areas of mouse visual cortex](https://doi.org/10.1038/s41586-025-08790-w). *Nature*, 640(8058), 435-447.
