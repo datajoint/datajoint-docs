@@ -96,7 +96,7 @@ services:
         elif echo "$${MODE}" | grep -i execute_pg &>/dev/null; then
             # EXECUTE_PG mode: execute notebooks against PostgreSQL
             pip install -e "/datajoint-python[postgres]"
-            pip install scikit-image pooch nbconvert matplotlib faker zarr
+            pip install scikit-image pooch nbconvert matplotlib faker zarr ipywidgets
             mkdir -p /tmp/datajoint-tutorials
             echo "Executing notebooks against PostgreSQL..."
             export DJ_HOST=postgres
@@ -104,7 +104,7 @@ services:
         elif echo "$${MODE}" | grep -i execute &>/dev/null; then
             # EXECUTE mode: execute notebooks against MySQL (default)
             pip install -e /datajoint-python
-            pip install scikit-image pooch nbconvert matplotlib faker zarr
+            pip install scikit-image pooch nbconvert matplotlib faker zarr ipywidgets
             mkdir -p /tmp/datajoint-tutorials
             echo "Executing notebooks against MySQL..."
             python scripts/execute_notebooks.py --backend mysql
