@@ -1,0 +1,19 @@
+name: Check notebooks
+on:
+  pull_request:
+    paths:
+      - 'src/tutorials/**/*.ipynb'
+      - 'src/how-to/**/*.ipynb'
+      - 'mkdocs.yaml'
+      - 'scripts/check_notebook_versions.py'
+      - '.github/workflows/check-notebooks.yml'
+jobs:
+  check-versions:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Verify notebook DataJoint connection banners are current
+        run: python scripts/check_notebook_versions.py
