@@ -3622,15 +3622,7 @@ schema = dj.Schema('tutorial_data_entry')</div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>[2026-03-13 13:18:17][WARNING]: SSL connection failed (connection to server at "localhost" (::1), port 5432 failed: server does not support SSL, but SSL was required
-). Falling back to non-SSL connection. To require SSL, set use_tls=True explicitly.
-</pre>
-</div>
-</div>
-<div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>[2026-03-13 13:18:17] DataJoint 2.2.0.dev0 connected to postgres@localhost:5432
+<pre>[2026-05-18 19:42:50] DataJoint 2.2.2 connected to postgres@postgres:5432
 </pre>
 </div>
 </div>
@@ -4946,20 +4938,8 @@ print(f"SessionAnalysis: {len(SessionAnalysis())}")</div>
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
 <pre>Sessions: 1
-</pre>
-</div>
-</div>
-<div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>Trials: 5
-</pre>
-</div>
-</div>
-<div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>SessionAnalysis: 1
+Trials: 5
+SessionAnalysis: 1
 </pre>
 </div>
 </div>
@@ -5011,21 +4991,21 @@ print(f"SessionAnalysis: {len(SessionAnalysis())}")</div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>[2026-03-13 13:18:18] Deleting 1 rows from "tutorial_data_entry"."__session_analysis"
+<pre>[2026-05-18 19:42:51] Deleting 1 rows from "tutorial_data_entry"."__session_analysis"
 </pre>
 </div>
 </div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>[2026-03-13 13:18:18] Deleting 5 rows from "tutorial_data_entry"."session__trial"
+<pre>[2026-05-18 19:42:51] Deleting 5 rows from "tutorial_data_entry"."session__trial"
 </pre>
 </div>
 </div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>[2026-03-13 13:18:18] Deleting 1 rows from "tutorial_data_entry"."session"
+<pre>[2026-05-18 19:42:51] Deleting 1 rows from "tutorial_data_entry"."session"
 </pre>
 </div>
 </div>
@@ -5127,21 +5107,21 @@ with dj.conn().transaction:
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>[2026-03-13 13:18:18] Deleting 0 rows from "tutorial_data_entry"."__session_analysis"
+<pre>[2026-05-18 19:42:51] Deleting 0 rows from "tutorial_data_entry"."__session_analysis"
 </pre>
 </div>
 </div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>[2026-03-13 13:18:18] Deleting 2 rows from "tutorial_data_entry"."session__trial"
+<pre>[2026-05-18 19:42:51] Deleting 2 rows from "tutorial_data_entry"."session__trial"
 </pre>
 </div>
 </div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>[2026-03-13 13:18:18] Deleting 1 rows from "tutorial_data_entry"."session"
+<pre>[2026-05-18 19:42:51] Deleting 1 rows from "tutorial_data_entry"."session"
 </pre>
 </div>
 </div>
@@ -5312,21 +5292,21 @@ print("After correction:", SessionAnalysis.fetch1())</div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>[2026-03-13 13:18:18] Deleting 1 rows from "tutorial_data_entry"."__session_analysis"
+<pre>[2026-05-18 19:42:51] Deleting 1 rows from "tutorial_data_entry"."__session_analysis"
 </pre>
 </div>
 </div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>[2026-03-13 13:18:18] Deleting 2 rows from "tutorial_data_entry"."session__trial"
+<pre>[2026-05-18 19:42:51] Deleting 2 rows from "tutorial_data_entry"."session__trial"
 </pre>
 </div>
 </div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>[2026-03-13 13:18:18] Deleting 1 rows from "tutorial_data_entry"."session"
+<pre>[2026-05-18 19:42:51] Deleting 1 rows from "tutorial_data_entry"."session"
 </pre>
 </div>
 </div>
