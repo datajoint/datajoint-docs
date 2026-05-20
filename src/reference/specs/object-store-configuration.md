@@ -111,6 +111,24 @@ A fully configured store specifying all sections:
 }
 ```
 
+### Configuration Sources and Precedence
+
+!!! version-added "New in 2.3"
+    `DJ_STORES` env var carries a JSON-encoded copy of the entire `stores` dict. Replaces the file's `stores` block. `DJ_IGNORE_CONFIG_FILE=true` skips the file and the secrets directory entirely.
+
+The `stores` block can be loaded from any of:
+
+| Source | Precedence | When Used |
+|--------|------------|-----------|
+| `dj.config["stores"][...]` (programmatic) | 1 (highest) | Runtime overrides in scripts/notebooks |
+| `DJ_STORES` env var | 2 | Env-var-only deployments (Kubernetes, the DataJoint platform) — *new in 2.3* |
+| `stores` block of `datajoint.json` | 3 | Local development, committed project config |
+| `.secrets/stores.<name>.<attr>` files | 4 (fills missing attrs only) | Local credentials kept out of `datajoint.json` |
+
+When `DJ_STORES` is set, it replaces the `stores` block loaded from `datajoint.json` wholesale. The `.secrets/` directory still runs after `DJ_STORES` and fills in attributes that `DJ_STORES` omits — useful for hybrid setups (env-var store config + file-based credentials). To disable file-based config sources entirely, set `DJ_IGNORE_CONFIG_FILE=true` *(new in 2.3)*.
+
+See [Manage Secrets](../../how-to/manage-secrets.md#env-var-only-deployments) and [Storage Adapter API](storage-adapter-api.md) for adapter-specific field names.
+
 ### Section Prefixes
 
 Each store is divided into sections controlled by prefix configuration. The `*_prefix` parameters define the path prefix for each storage section:
