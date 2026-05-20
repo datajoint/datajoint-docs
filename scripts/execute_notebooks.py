@@ -173,6 +173,17 @@ def main():
     print(f"  DJ_PORT: {env.get('DJ_PORT')}")
     print(f"  DJ_USER: {env.get('DJ_USER')}")
 
+    # Pre-cache scikit-image datasets so the one-time "Downloading file ..."
+    # message doesn't leak into committed notebook outputs.
+    print("\nPre-caching scikit-image datasets...")
+    import skimage.data as _sk_data
+    for _loader in (_sk_data.hubble_deep_field, _sk_data.human_mitosis):
+        try:
+            _loader()
+            print(f"  cached: {_loader.__name__}")
+        except Exception as _e:
+            print(f"  pre-cache warn: {_loader.__name__}: {_e}")
+
     # Find notebooks
     notebooks = find_notebooks(args.base_path)
     print(f"\nFound {len(notebooks)} notebooks to execute\n")

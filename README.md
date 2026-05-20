@@ -73,6 +73,29 @@ docker compose exec docs jupyter nbconvert --to notebook --execute --inplace \
     /main/src/tutorials/YOUR_NOTEBOOK.ipynb
 ```
 
+### Notebook execution policy
+
+Tutorial and how-to notebooks under `src/tutorials/` and `src/how-to/` are
+committed **with their executed cell outputs**. The static site renders these
+outputs verbatim via `mkdocs-jupyter` — the build container does not execute
+notebooks, so the rendered page always matches what was committed.
+
+Refresh outputs whenever the DataJoint version pinned in `mkdocs.yaml`
+(`extra.datajoint_version`) changes, or whenever a tutorial's code changes:
+
+```bash
+# Re-execute against the bind-mounted local datajoint-python checkout
+DJ_PYTHON_PATH=../datajoint-python MODE=EXECUTE    docker compose up --build
+DJ_PYTHON_PATH=../datajoint-python MODE=EXECUTE_PG docker compose up --build
+```
+
+A guard script flags notebooks whose committed `DataJoint X.Y.Z connected`
+banner doesn't match `extra.datajoint_version`:
+
+```bash
+python scripts/check_notebook_versions.py
+```
+
 ## Related
 
 - [datajoint-python](https://github.com/datajoint/datajoint-python) — Core library
