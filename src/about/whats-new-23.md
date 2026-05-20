@@ -62,7 +62,7 @@ export DJ_STORES='{
 
 ### Errors
 
-If `DJ_STORES` is set but unparseable, DataJoint raises `ValueError` at config load time with the JSON error, rather than failing later with a confusing `KeyError` from a half-loaded store.
+If `DJ_STORES` is set but unparsable, DataJoint raises `ValueError` at config load time with the JSON error, rather than failing later with a confusing `KeyError` from a half-loaded store.
 
 ```python
 ValueError: DJ_STORES contains invalid JSON: Expecting property name enclosed in double quotes...
