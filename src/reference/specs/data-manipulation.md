@@ -175,7 +175,7 @@ Equivalent to `insert((row,), **kwargs)`.
 
 ### 2.9 Staged Insert for Large Objects
 
-For large objects (Zarr arrays, HDF5 files), use staged insert to write directly to object storage:
+For large objects (Zarr arrays, HDF5 files), use staged insert to write directly to object storage. The lifecycle, codec protocol, atomicity model, and codec compatibility matrix are specified in detail in [Staged Insert Specification](staged-insert.md).
 
 ```python
 with table.staged_insert1 as staged:
