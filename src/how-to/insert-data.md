@@ -108,6 +108,8 @@ ImageData.insert1({
 })
 ```
 
+For multi-GB arrays, Zarr stores, HDF5 files, or any object too large to hold in memory before insert, use [Staged Insert](staged-insert.md) instead — it writes directly to object storage and commits the row atomically.
+
 ## Insert Options Summary
 
 | Option | Default | Description |
@@ -146,6 +148,7 @@ if Subject.validate(rows):
 
 ## See Also
 
+- [Staged Insert](staged-insert.md) — Atomic insert for large objects written directly to object storage
 - [Master-Part Tables](master-part.ipynb) — Atomic insertion of master and parts
 - [Define Tables](define-tables.md) — Table definition syntax
 - [Delete Data](delete-data.md) — Removing data from tables
