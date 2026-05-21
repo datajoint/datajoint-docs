@@ -12,7 +12,7 @@ This pattern is the right choice when:
 - You want to stream or write in chunks rather than buffer in memory
 - You want all-or-nothing semantics across object storage and the database
 
-It is only available for object-typed fields (`<...@>` syntax) and codecs that support direct storage handles — primarily `<object@>` (Zarr / HDF5 / multi-file) and `<blob@>` written via a file handle. For ordinary inserts of small or in-memory objects, use [`insert` / `insert1`](insert-data.md).
+It is only available for `<object@>` fields — the schema-addressed codec used for Zarr arrays, HDF5 files, and other multi-file objects. Attempting `staged.store()` or `staged.open()` on a field of any other type raises `DataJointError`. For ordinary inserts of small or in-memory objects, use [`insert` / `insert1`](insert-data.md).
 
 ## Quick Start
 
@@ -61,7 +61,7 @@ Inside the `with` block, the row is a draft — `staged.rec` collects attribute 
 
 When the block exits without an exception, DataJoint:
 
-1. Computes object metadata (size, manifest, content hash for hash-addressed codecs) from the staged objects.
+1. Computes object metadata (size, manifest) from the staged objects.
 2. Inserts the row into the database with the populated metadata.
 
 When the block raises, DataJoint:
@@ -80,7 +80,7 @@ with Table.staged_insert1 as staged:
     ...
 ```
 
-Context manager property on every `dj.Table` subclass. Yields a `StagedInsert` object scoped to one row.
+Context manager property on every `dj.Table` subclass. Yields a `StagedInsert` object scoped to one row. Writes go to the store referenced by the field's type spec — `<object@>` uses `stores.default`, and `<object@name>` uses the named store.
 
 ### `staged.rec`
 
@@ -171,6 +171,7 @@ If the database insert itself fails on exit (e.g., duplicate primary key), the s
 - Only one row per block — use a loop of `with` blocks for many rows, or use the standard `insert` for batches that fit in memory.
 - The block must set all primary key fields before calling `store()` or `open()`.
 - Requires `stores.default` configured, or a named store referenced by the field's type spec.
+- Cleanup only runs for ordinary exceptions. `KeyboardInterrupt` (Ctrl+C) and other `BaseException` subclasses bypass the cleanup path, so a process killed mid-write may leave staged objects behind. Run the garbage collector to reclaim them — see [Clean Up Storage](garbage-collection.md).
 
 ## Troubleshooting
 
