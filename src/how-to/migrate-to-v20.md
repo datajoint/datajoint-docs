@@ -7,7 +7,7 @@ Upgrade existing pipelines from legacy DataJoint (pre-2.0) to DataJoint 2.0.
 
 !!! warning "Temporary module"
 
-    The `datajoint.migrate` module is provided temporarily to assist with migration. It will be deprecated in DataJoint 2.1 and removed in 2.2. Complete your migration while on 2.0.
+    The `datajoint.migrate` module is provided temporarily to assist with migration and is scheduled for removal in DataJoint 2.4 or 2.5. We recommend completing your migration while on DataJoint 2.3 or earlier.
 
 ## Requirements
 
