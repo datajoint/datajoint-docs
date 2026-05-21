@@ -1,5 +1,9 @@
 # Staged Insert Specification
 
+!!! info "Implementation status"
+
+    This is a **forward-looking specification**. The single-codec implementation in `datajoint-python` master (gated to `<object@>` only via `staged_insert.py:100-101`) predates this spec; the generalized protocol described here (codec-side `staged_handle` / `finalize_staged` / `cleanup_staged`, the `HashAddressedCodec` base class, shape convergence between `encode()` and `finalize_staged`) lands in a reference implementation PR against `datajoint-python` and is then validated against `dj-zarr-codecs`. Until that PR merges, the only path described here that works against shipped code is `<object@>` via the existing `<object@>`-only gate. Cross-reference the source line numbers cited inline (e.g., `staged_insert.py:100-101`, `hash_registry.py:51-67`, `builtin_codecs/object.py:166-174`) for the as-shipped state.
+
 This document specifies the staged-insert contract for DataJoint: the lifecycle, the codec-side protocol that participating codecs must implement, the path and metadata contracts for each addressing scheme, and the atomicity and concurrency model. For the user-facing how-to, see [Staged Insert](../../how-to/staged-insert.md). For the codec base classes referenced here, see the [Codec API Specification](codec-api.md).
 
 ## Overview
@@ -116,7 +120,7 @@ Implemented by `HashAddressedCodec` and inherited by `<blob@>`, `<attach@>`, and
 | Phase | Behavior |
 |---|---|
 | `staged_handle` | Builds a **staging path** `_staging/{schema}/{table}/{field}_{token}{ext}` and returns a handle pointing there. The canonical hash-addressed path is not yet computable. |
-| `finalize_staged` | Streams the staged file through `hashlib.sha256` to compute the content hash, derives the canonical path `_hash/{hash[:2]}/{hash[2:4]}/{hash}`, then: <br/>**(a)** if the canonical path already exists → deletes the staging copy (dedup hit);<br/>**(b)** else moves staging → canonical;<br/>**(c)** if the move fails because the destination concurrently appeared → falls through to (a) on the dedup-hit branch.<br/>Returns the codec's `encode()`-shaped metadata dict. |
+| `finalize_staged` | Streams the staged file through `hash_registry.compute_hash` (MD5 + base32 → 26-char lowercase token; see [hash format below](#path-construction-normative)) to compute the content hash, derives the canonical path via `hash_registry.build_hash_path(content_hash, schema_name, subfolding)`, then: <br/>**(a)** if the canonical path already exists → deletes the staging copy (dedup hit);<br/>**(b)** else moves staging → canonical;<br/>**(c)** if the move fails because the destination concurrently appeared → falls through to (a) on the dedup-hit branch.<br/>Returns the codec's `encode()`-shaped metadata dict. |
 | `cleanup_staged` | Deletes the staging path if it still exists. Never touches canonical paths (other rows may reference them). |
 
 The framework does not delete canonical hash-addressed objects even when the row that produced them was rolled back — that is the garbage collector's responsibility and depends on what other rows reference the same content hash.
@@ -168,9 +172,12 @@ The framework does not delete canonical hash-addressed objects even when the row
 |---|---|---|
 | Schema-addressed canonical | `{location}/{schema}/{table}/{pk_serialized}/{field}_{token}{ext}` | `storage.build_object_path` |
 | Hash-addressed staging | `{location}/_staging/{schema}/{table}/{field}_{token}{ext}` | `HashAddressedCodec._build_staging_path` (new) |
-| Hash-addressed canonical | `{location}/_hash/{hash[:2]}/{hash[2:4]}/{hash}` | `hash_registry.build_hash_path` |
+| Hash-addressed canonical (flat) | `{location}/_hash/{schema}/{content_hash}` | `hash_registry.build_hash_path` |
+| Hash-addressed canonical (subfolded) | `{location}/_hash/{schema}/{fold_1}/.../{fold_N}/{content_hash}` | `hash_registry.build_hash_path` (when the store config sets `subfolding`) |
 
-`{token}` is a random suffix per the store's `token_length` setting (default 8 chars). Partitioning is preserved as today via the store's `partition_pattern`.
+`{content_hash}` is the 26-character lowercase base32-encoded MD5 of the content, produced by `hash_registry.compute_hash(data)` (`hash_registry.py:51-67`). The `{schema}` segment is load-bearing — it scopes hash-addressed objects to their owning schema for isolation. `{fold_i}` are derived from leading characters of the hash per the store spec's `subfolding` tuple (e.g., `(2, 2)` → two-level folding using the first two and next two hash characters).
+
+`{token}` in the schema-addressed and staging paths is a random suffix per the store's `token_length` setting (default 8 chars). Partitioning is preserved as today via the store's `partition_pattern`.
 
 The `_staging/` prefix is reserved by this spec. The garbage collector treats objects under `_staging/` as orphan candidates after a configurable grace period, since any object still under `_staging/` after a session has ended represents an aborted insert.
 
@@ -178,14 +185,22 @@ The `_staging/` prefix is reserved by this spec. The garbage collector treats ob
 
 Each codec's `finalize_staged` returns a dict that matches what the same codec's `encode()` would produce for equivalent content. These shapes are normative; tests assert that staged-insert metadata is structurally equal to encode-produced metadata for the same input.
 
-| Codec | Returned metadata shape |
+| Codec | Returned metadata shape (normative) |
 |---|---|
-| `<object@>` | `{path, size, hash: None, ext, is_dir, timestamp, item_count?, mime_type?}` |
+| `<object@>` | `{path, store, size, ext, is_dir, item_count, timestamp}` |
 | `<npy@>`    | `{path, store, dtype, shape}` |
 | `<blob@>`   | `{hash, path, store, size}` |
 | `<attach@>` | `{hash, path, store, size, filename}` |
 
-For `<object@>`, `hash` is always `None` — the codec is path-addressed; no content hash participates.
+These shapes are the **single source of truth** for both the ordinary `insert1` path and the `staged_insert1` path — the codec's `finalize_staged` must produce a dict structurally equal to what `encode()` would produce for the same content, modulo `timestamp` which reflects materialization time.
+
+**Note on convergence with today's source.** Today's source has three places where `<object@>`'s shape appears, with minor divergences:
+
+1. `ObjectCodec.encode` (`builtin_codecs/object.py:166-174`) — `{path, store, size, ext, is_dir, item_count, timestamp}`. **This is the normative shape adopted by this spec.**
+2. `StagedInsert._compute_metadata` — includes `hash: None`, sometimes `mime_type`, and omits `store`. The implementation PR will refactor this to converge on shape (1).
+3. Earlier drafts of this spec — listed `hash: None` and `mime_type?` as part of the shape. Removed.
+
+For `<blob@>` and `<attach@>`, today's `BlobCodec.encode` and `AttachCodec.encode` return raw `bytes` — the dict shape `{hash, path, store, size}` is produced by the chained `<hash@>` codec at storage time. The implementation PR refactors these codecs to return the dict shape directly when used as `<blob@>` / `<attach@>` (object-store mode), so the normative shape above is what `encode()` produces. `<hash@>`'s own metadata-dict shape will be consolidated to `{hash, path, store, size}` as part of the same refactor (currently documented three different ways in source).
 
 ## Atomicity model
 
