@@ -153,6 +153,15 @@ The framework does not delete canonical hash-addressed objects even when the row
 - Hash-addressed lifecycle.
 - Rarely declared directly in table definitions; usually composed under other codecs. Listed here so plugin authors composing on top of `<hash@>` inherit staged-insert support.
 
+### `<zarr@>` (from `dj-zarr-codecs`)
+
+- Schema-addressed lifecycle. `<zarr@>` is a `SchemaCodec` subclass and inherits the protocol automatically.
+- **Two distinct usage paths**, both supported:
+    - *Ordinary `insert1` (canonical for in-memory arrays):* `Table.insert1({..., field: numpy_or_zarr_array})`. The codec serializes the materialized array to Zarr format synchronously in `encode()`. Use this whenever the array fits in memory — it is simpler and does not go through the staged-insert machinery at all.
+    - *Staged insert (for arrays that don't fit in memory):* `with Table.staged_insert1 as staged: zarr.open(staged.store(field, '.zarr'), mode='w', shape=..., chunks=..., dtype=...)`. The caller drives the Zarr write chunk-by-chunk through the FSMap handle the codec hands them. The canonical schema-addressed path is fixed at handle creation.
+- `staged_handle('store')` returns an `fsspec.FSMap` at the canonical `.zarr` path. `staged_handle('open')` is rejected (Zarr stores are directory-shaped, not single-file).
+- `_enrich_staged_metadata` reads the just-written Zarr array's metadata (via `zarr.open(store, mode='r')`) to extract `shape`, `dtype`, `chunks`, and codec/compressor info; returns `{path, store, shape, dtype, provenance}` matching the shape `ZarrArrayCodec.encode` produces on the ordinary `insert1` path. The same metadata invariant holds across both paths: a staged Zarr insert and an ordinary insert of the same array produce structurally equal column values.
+
 ## Path construction (normative)
 
 | Path role | Shape | Built by |
@@ -212,6 +221,7 @@ Defined behavior for concurrent use:
 | `<blob@>`               | ✓ | Hash-addressed | Streams + hashes on finalize |
 | `<attach@>`             | ✓ | Hash-addressed | Requires `staged.set_filename(...)` |
 | `<hash@>` (direct)      | ✓ | Hash-addressed | Rarely declared directly |
+| `<zarr@>` (from `dj-zarr-codecs`) | ✓ | Schema-addressed | First-class plugin codec. For in-memory arrays use ordinary `insert1` (simpler); for arrays too large to materialize use `staged_insert1` with `zarr.open(staged.store(field, '.zarr'))` |
 | `<blob>` (in-table)     | ✗ | n/a | No object storage; use ordinary `insert1` |
 | `<attach>` (in-table)   | ✗ | n/a | No object storage; use ordinary `insert1` |
 | `<filepath@>`           | ✗ | n/a | Reference codec (no copy); different feature |
@@ -231,7 +241,20 @@ Staged insert requires the same storage configuration as ordinary object-store i
 
 ## Examples
 
-### `<object@>` — Zarr
+### `<zarr@>` — Zarr array (from `dj-zarr-codecs`)
+
+`<zarr@>` has two paths. For arrays that fit in memory, ordinary `insert1` is canonical — the codec serializes synchronously:
+
+```python
+import numpy as np
+
+Recording.insert1({
+    'recording_id': 1,
+    'waveform': np.random.randn(1000, 32),     # codec writes Zarr internally
+})
+```
+
+For arrays too large to materialize, use `staged_insert1` and drive the Zarr write directly through the FSMap handle. The codec inspects the written Zarr on finalization to record `shape`, `dtype`, `chunks`, and provenance in the metadata column. The resulting column value is structurally equal to what the in-memory `insert1` path would have produced for the same final array:
 
 ```python
 import zarr
@@ -244,6 +267,20 @@ with ImagingSession.staged_insert1 as staged:
     for i in range(1000):
         z[i] = acquire_frame()
     staged.rec['n_frames'] = 1000
+```
+
+### `<object@>` — Generic multi-file directory
+
+`<object@>` is the generic fallback for directory layouts without a format-aware codec — custom binary formats, mixed file collections, ad-hoc multi-file objects. The column metadata is generic (`{path, size, is_dir, manifest, ...}`); fetch returns an `ObjectRef`. Prefer a typed codec (`<zarr@>`, `<npy@>`, or a custom `SchemaCodec`) when one fits the data:
+
+```python
+import json
+
+with Dataset.staged_insert1 as staged:
+    staged.rec['dataset_id'] = 1
+    fs = staged.store('artifact')                  # fsspec.FSMap at canonical path
+    fs['data.bin']      = signal.tobytes()
+    fs['metadata.json'] = json.dumps({'session': '2026-05-21'}).encode()
 ```
 
 ### `<npy@>` — NumPy array
