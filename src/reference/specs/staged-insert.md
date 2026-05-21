@@ -261,7 +261,18 @@ Staged insert requires the same storage configuration as ordinary object-store i
 `<zarr@>` has two paths. For arrays that fit in memory, ordinary `insert1` is canonical — the codec serializes synchronously:
 
 ```python
+import datajoint as dj
 import numpy as np
+
+schema = dj.Schema('ephys')
+
+@schema
+class Recording(dj.Manual):
+    definition = """
+    recording_id : int32
+    ---
+    waveform : <zarr@>
+    """
 
 Recording.insert1({
     'recording_id': 1,
@@ -272,7 +283,21 @@ Recording.insert1({
 For arrays too large to materialize, use `staged_insert1` and drive the Zarr write directly through the FSMap handle. The codec inspects the written Zarr on finalization to record `shape`, `dtype`, `chunks`, and provenance in the metadata column. The resulting column value is structurally equal to what the in-memory `insert1` path would have produced for the same final array:
 
 ```python
+import datajoint as dj
 import zarr
+
+schema = dj.Schema('imaging')
+
+@schema
+class ImagingSession(dj.Manual):
+    definition = """
+    subject_id : int32
+    session_id : int32
+    ---
+    n_frames   : int32
+    frame_rate : float32
+    frames     : <zarr@>
+    """
 
 with ImagingSession.staged_insert1 as staged:
     staged.rec['subject_id'] = 1
@@ -282,6 +307,7 @@ with ImagingSession.staged_insert1 as staged:
     for i in range(1000):
         z[i] = acquire_frame()
     staged.rec['n_frames'] = 1000
+    staged.rec['frame_rate'] = 30.0
 ```
 
 ### `<object@>` — Generic multi-file directory
@@ -289,7 +315,18 @@ with ImagingSession.staged_insert1 as staged:
 `<object@>` is the generic fallback for directory layouts without a format-aware codec — custom binary formats, mixed file collections, ad-hoc multi-file objects. The column metadata is generic (`{path, size, is_dir, manifest, ...}`); fetch returns an `ObjectRef`. Prefer a typed codec (`<zarr@>`, `<npy@>`, or a custom `SchemaCodec`) when one fits the data:
 
 ```python
+import datajoint as dj
 import json
+
+schema = dj.Schema('experiments')
+
+@schema
+class Dataset(dj.Manual):
+    definition = """
+    dataset_id : int32
+    ---
+    artifact : <object@>
+    """
 
 with Dataset.staged_insert1 as staged:
     staged.rec['dataset_id'] = 1
@@ -301,7 +338,18 @@ with Dataset.staged_insert1 as staged:
 ### `<npy@>` — NumPy array
 
 ```python
+import datajoint as dj
 import numpy as np
+
+schema = dj.Schema('recordings')
+
+@schema
+class Recording(dj.Manual):
+    definition = """
+    recording_id : int32
+    ---
+    waveform : <npy@>
+    """
 
 with Recording.staged_insert1 as staged:
     staged.rec['recording_id'] = 42
@@ -312,8 +360,20 @@ with Recording.staged_insert1 as staged:
 ### `<blob@>` — Large opaque blob
 
 ```python
+import datajoint as dj
+
+schema = dj.Schema('artifacts')
+
+@schema
+class Artifact(dj.Manual):
+    definition = """
+    artifact_id : int32
+    ---
+    payload : <blob@>
+    """
+
 with Artifact.staged_insert1 as staged:
-    staged.rec['artifact_id'] = key
+    staged.rec['artifact_id'] = 1
     with staged.open('payload', '.bin') as f:
         for chunk in producer:
             f.write(chunk)
@@ -322,8 +382,21 @@ with Artifact.staged_insert1 as staged:
 ### `<attach@>` — File with preserved filename
 
 ```python
+import datajoint as dj
+import shutil
+
+schema = dj.Schema('documents')
+
+@schema
+class Document(dj.Manual):
+    definition = """
+    doc_id : int32
+    ---
+    report : <attach@>
+    """
+
 with Document.staged_insert1 as staged:
-    staged.rec['doc_id'] = doc_id
+    staged.rec['doc_id'] = 1
     staged.set_filename('report', 'final_report.pdf')
     with staged.open('report', '.pdf') as f:
         with open(local_pdf_path, 'rb') as src:
