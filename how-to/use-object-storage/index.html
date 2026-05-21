@@ -14,7 +14,7 @@
         <link rel="prev" href="../choose-storage-type/">
       
       
-        <link rel="next" href="../use-npy-codec/">
+        <link rel="next" href="../staged-insert/">
       
       
         
@@ -2909,6 +2909,8 @@
       
         
       
+        
+      
     
     
     
@@ -3298,6 +3300,34 @@
   
 </nav>
       
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../staged-insert/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Staged Insert
+  
+
+    
+  </span>
+  
+  
+
+      </a>
     </li>
   
 
@@ -6167,49 +6197,14 @@
 <li>Large datasets requiring streaming access</li>
 </ul>
 <h2 id="write-directly-to-object-storage">Write Directly to Object Storage<a class="headerlink" href="#write-directly-to-object-storage" title="Permanent link">&para;</a></h2>
-<p>For large datasets like multi-GB imaging recordings, avoid intermediate copies by writing directly to object storage with <code>staged_insert1</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">zarr</span>
-
-<span class="nd">@schema</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">ImagingSession</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
-<span class="s2">    subject_id : int32</span>
-<span class="s2">    session_id : int32</span>
-<span class="s2">    ---</span>
-<span class="s2">    n_frames : int32</span>
-<span class="s2">    frame_rate : float32</span>
-<span class="s2">    frames : &lt;object@&gt;</span>
-<span class="s2">    &quot;&quot;&quot;</span>
-
-<span class="c1"># Write Zarr directly to object storage</span>
-<span class="k">with</span> <span class="n">ImagingSession</span><span class="o">.</span><span class="n">staged_insert1</span> <span class="k">as</span> <span class="n">staged</span><span class="p">:</span>
-    <span class="c1"># 1. Set primary key values first</span>
+<p>For multi-GB imaging recordings, Zarr arrays, HDF5 files, or any object too large to round-trip through local storage, use <a href="../staged-insert/">Staged Insert</a>. It writes directly to the destination object store inside a context manager and commits the database row atomically on clean exit:</p>
+<div class="highlight"><pre><span></span><code><span class="k">with</span> <span class="n">ImagingSession</span><span class="o">.</span><span class="n">staged_insert1</span> <span class="k">as</span> <span class="n">staged</span><span class="p">:</span>
     <span class="n">staged</span><span class="o">.</span><span class="n">rec</span><span class="p">[</span><span class="s1">&#39;subject_id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
     <span class="n">staged</span><span class="o">.</span><span class="n">rec</span><span class="p">[</span><span class="s1">&#39;session_id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
-
-    <span class="c1"># 2. Get storage handle</span>
-    <span class="n">store</span> <span class="o">=</span> <span class="n">staged</span><span class="o">.</span><span class="n">store</span><span class="p">(</span><span class="s1">&#39;frames&#39;</span><span class="p">,</span> <span class="s1">&#39;.zarr&#39;</span><span class="p">)</span>
-
-    <span class="c1"># 3. Write directly (no local copy)</span>
-    <span class="n">z</span> <span class="o">=</span> <span class="n">zarr</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">store</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span> <span class="mi">512</span><span class="p">,</span> <span class="mi">512</span><span class="p">),</span>
-                  <span class="n">chunks</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">512</span><span class="p">,</span> <span class="mi">512</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;int32&#39;</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1000</span><span class="p">):</span>
-        <span class="n">z</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">acquire_frame</span><span class="p">()</span>  <span class="c1"># Write frame-by-frame</span>
-
-    <span class="c1"># 4. Set remaining attributes</span>
-    <span class="n">staged</span><span class="o">.</span><span class="n">rec</span><span class="p">[</span><span class="s1">&#39;n_frames&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1000</span>
-    <span class="n">staged</span><span class="o">.</span><span class="n">rec</span><span class="p">[</span><span class="s1">&#39;frame_rate&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">30.0</span>
-
-<span class="c1"># Record inserted with computed metadata on successful exit</span>
+    <span class="n">z</span> <span class="o">=</span> <span class="n">zarr</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">staged</span><span class="o">.</span><span class="n">store</span><span class="p">(</span><span class="s1">&#39;frames&#39;</span><span class="p">,</span> <span class="s1">&#39;.zarr&#39;</span><span class="p">),</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="o">...</span><span class="p">)</span>
+    <span class="o">...</span>
 </code></pre></div>
-<p>The <code>staged_insert1</code> context manager:</p>
-<ul>
-<li>Writes directly to the object store (no intermediate files)</li>
-<li>Computes metadata (size, manifest) automatically on exit</li>
-<li>Cleans up storage if an error occurs (atomic)</li>
-<li>Requires primary key values before calling <code>store()</code> or <code>open()</code></li>
-</ul>
-<p>Use <code>staged.store(field, ext)</code> for FSMap access (Zarr), or <code>staged.open(field, ext)</code> for file-like access.</p>
+<p>See <a href="../staged-insert/">Staged Insert</a> for the full API, atomicity guarantees, and patterns for Zarr, HDF5, and streaming sources.</p>
 <h2 id="attachments">Attachments<a class="headerlink" href="#attachments" title="Permanent link">&para;</a></h2>
 <p>Preserve original filenames with <code>&lt;attach@&gt;</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="nd">@schema</span>

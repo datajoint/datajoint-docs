@@ -3127,6 +3127,8 @@
       
         
       
+        
+      
     
     
     
@@ -3240,6 +3242,34 @@
     
   
     Use Object Storage
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../staged-insert/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Staged Insert
   
 
     
@@ -5968,6 +5998,7 @@
     <span class="s1">&#39;pixel_data&#39;</span><span class="p">:</span> <span class="n">data</span>  <span class="c1"># Automatically serialized</span>
 <span class="p">})</span>
 </code></pre></div>
+<p>For multi-GB arrays, Zarr stores, HDF5 files, or any object too large to hold in memory before insert, use <a href="../staged-insert/">Staged Insert</a> instead — it writes directly to object storage and commits the row atomically.</p>
 <h2 id="insert-options-summary">Insert Options Summary<a class="headerlink" href="#insert-options-summary" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -6015,6 +6046,7 @@
 </code></pre></div>
 <h2 id="see-also">See Also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
 <ul>
+<li><a href="../staged-insert/">Staged Insert</a> — Atomic insert for large objects written directly to object storage</li>
 <li><a href="../master-part/">Master-Part Tables</a> — Atomic insertion of master and parts</li>
 <li><a href="../define-tables/">Define Tables</a> — Table definition syntax</li>
 <li><a href="../delete-data/">Delete Data</a> — Removing data from tables</li>
