@@ -80,22 +80,22 @@ def main() -> int:
             notebooks.extend(p for p in d.rglob("*.ipynb") if ".ipynb_checkpoints" not in str(p))
     notebooks.sort()
 
-    stale: list[tuple[Path, tuple[int, int, int]]] = []
+    stale: dict[Path, set[tuple[int, int, int]]] = {}
     checked = 0
     for nb in notebooks:
         had_banner = False
         for ver in iter_banner_versions(nb):
             had_banner = True
             if ver[0] != target_major or ver[1] != target_minor:
-                stale.append((nb.relative_to(repo), ver))
-                break
+                stale.setdefault(nb.relative_to(repo), set()).add(ver)
         if had_banner:
             checked += 1
 
     if stale:
         print(f"Stale DataJoint connection banner(s) (target: {target_major}.{target_minor}.x):")
-        for path, ver in stale:
-            print(f"  {path}: found {ver[0]}.{ver[1]}.{ver[2]}")
+        for path, vers in sorted(stale.items()):
+            for ver in sorted(vers):
+                print(f"  {path}: found {ver[0]}.{ver[1]}.{ver[2]}")
         print(f"\nRe-execute notebooks with MODE=EXECUTE or MODE=EXECUTE_PG.")
         return 1
 

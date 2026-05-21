@@ -174,15 +174,21 @@ def main():
     print(f"  DJ_USER: {env.get('DJ_USER')}")
 
     # Pre-cache scikit-image datasets so the one-time "Downloading file ..."
-    # message doesn't leak into committed notebook outputs.
+    # message doesn't leak into committed notebook outputs. Warnings go to
+    # stderr so a transient gitlab.com hiccup is visible in CI logs without
+    # silently re-introducing the download chatter on the next refresh.
     print("\nPre-caching scikit-image datasets...")
-    import skimage.data as _sk_data
-    for _loader in (_sk_data.hubble_deep_field, _sk_data.human_mitosis):
-        try:
-            _loader()
-            print(f"  cached: {_loader.__name__}")
-        except Exception as _e:
-            print(f"  pre-cache warn: {_loader.__name__}: {_e}")
+    try:
+        import skimage.data as _sk_data
+    except ImportError as _e:
+        print(f"  skipping pre-cache (scikit-image not installed): {_e}", file=sys.stderr)
+    else:
+        for _loader in (_sk_data.hubble_deep_field, _sk_data.human_mitosis):
+            try:
+                _loader()
+                print(f"  cached: {_loader.__name__}")
+            except Exception as _e:
+                print(f"  pre-cache warn: {_loader.__name__}: {_e}", file=sys.stderr)
 
     # Find notebooks
     notebooks = find_notebooks(args.base_path)
