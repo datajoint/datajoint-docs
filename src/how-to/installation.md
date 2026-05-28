@@ -17,6 +17,9 @@ pip install datajoint[viz]
 # For polars DataFrame support
 pip install datajoint[polars]
 
+# For the PostgreSQL backend (psycopg2-binary) — added in 2.1
+pip install datajoint[postgres]
+
 # For cloud storage backends
 pip install datajoint[s3]    # AWS S3
 pip install datajoint[gcs]   # Google Cloud Storage
@@ -51,16 +54,26 @@ print(dj.__version__)
 
 ## Database Server
 
-DataJoint requires a MySQL-compatible database server:
+DataJoint connects to either MySQL or PostgreSQL. MySQL has been supported since the original release; PostgreSQL support was added in **2.1**, and the `database.name` setting for selecting a non-default PostgreSQL database was added in **2.2.1**. See [Configure Database Connection](configure-database.md#postgresql-backend) for the full configuration reference.
 
 ### Local Development (Docker)
 
 ```bash
+# MySQL
 docker run -d \
   --name datajoint-db \
   -p 3306:3306 \
   -e MYSQL_ROOT_PASSWORD=simple \
   mysql:8.0
+```
+
+```bash
+# PostgreSQL (added in 2.1)
+docker run -d \
+  --name datajoint-db \
+  -p 5432:5432 \
+  -e POSTGRES_PASSWORD=simple \
+  postgres:15
 ```
 
 ### DataJoint.com (Recommended)
@@ -69,9 +82,9 @@ docker run -d \
 
 ### Self-Managed Cloud Databases
 
-- **Amazon RDS** — MySQL or Aurora
-- **Google Cloud SQL** — MySQL
-- **Azure Database** — MySQL
+- **Amazon RDS** — MySQL, Aurora MySQL, PostgreSQL, or Aurora PostgreSQL
+- **Google Cloud SQL** — MySQL or PostgreSQL
+- **Azure Database** — MySQL or PostgreSQL
 
 See [Configure Database Connection](configure-database.md) for connection setup.
 
@@ -89,6 +102,14 @@ See [Configure Database Connection](configure-database.md) for connection setup.
 pip install pymysql --force-reinstall
 ```
 
+### `psycopg2` connection errors
+
+```bash
+pip install datajoint[postgres] --force-reinstall
+```
+
+The PostgreSQL backend (added in 2.1) requires the `postgres` extra, which installs `psycopg2-binary`.
+
 ### SSL/TLS connection issues
 
 Set `use_tls=False` for local development:
@@ -102,5 +123,11 @@ dj.config['database.use_tls'] = False
 Ensure your database user has appropriate privileges:
 
 ```sql
+-- MySQL
 GRANT ALL PRIVILEGES ON `your_schema%`.* TO 'username'@'%';
+```
+
+```sql
+-- PostgreSQL
+GRANT ALL PRIVILEGES ON DATABASE my_db TO username;
 ```
