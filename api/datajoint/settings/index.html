@@ -6973,9 +6973,12 @@ Default: False (use stores.default for integrated storage).</p>
         <p>Create a template datajoint.json configuration file.</p>
 <p>Credentials should NOT be stored in datajoint.json. Instead, use either:</p>
 <ul>
-<li>Environment variables (<code>DJ_USER</code>, <code>DJ_PASS</code>, <code>DJ_HOST</code>, etc.)</li>
+<li>Environment variables (<code>DJ_USER</code>, <code>DJ_PASS</code>, <code>DJ_HOST</code>,
+  <code>DJ_STORES</code> for JSON-encoded store configs, etc.)</li>
 <li>The <code>.secrets/</code> directory (created alongside datajoint.json)</li>
 </ul>
+<p>Set <code>DJ_IGNORE_CONFIG_FILE=true</code> to skip both <code>datajoint.json</code> and
+the secrets directory entirely (env-var-only configuration).</p>
 
 
 <p><span class="doc-section-title">Parameters:</span></p>

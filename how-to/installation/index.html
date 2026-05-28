@@ -2212,6 +2212,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#psycopg2-connection-errors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        psycopg2 connection errors
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#ssltls-connection-issues" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -5830,6 +5841,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#psycopg2-connection-errors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        psycopg2 connection errors
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#ssltls-connection-issues" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -5888,6 +5910,9 @@ pip<span class="w"> </span>install<span class="w"> </span>datajoint<span class="
 <span class="c1"># For polars DataFrame support</span>
 pip<span class="w"> </span>install<span class="w"> </span>datajoint<span class="o">[</span>polars<span class="o">]</span>
 
+<span class="c1"># For the PostgreSQL backend (psycopg2-binary) — added in 2.1</span>
+pip<span class="w"> </span>install<span class="w"> </span>datajoint<span class="o">[</span>postgres<span class="o">]</span>
+
 <span class="c1"># For cloud storage backends</span>
 pip<span class="w"> </span>install<span class="w"> </span>datajoint<span class="o">[</span>s3<span class="o">]</span><span class="w">    </span><span class="c1"># AWS S3</span>
 pip<span class="w"> </span>install<span class="w"> </span>datajoint<span class="o">[</span>gcs<span class="o">]</span><span class="w">   </span><span class="c1"># Google Cloud Storage</span>
@@ -5928,21 +5953,29 @@ Legacy documentation for 0.14.x is available at <a href="https://datajoint.githu
 </tbody>
 </table>
 <h2 id="database-server">Database Server<a class="headerlink" href="#database-server" title="Permanent link">&para;</a></h2>
-<p>DataJoint requires a MySQL-compatible database server:</p>
+<p>DataJoint connects to either MySQL or PostgreSQL. MySQL has been supported since the original release; PostgreSQL support was added in <strong>2.1</strong>, and the <code>database.name</code> setting for selecting a non-default PostgreSQL database was added in <strong>2.2.1</strong>. See <a href="../configure-database/#postgresql-backend">Configure Database Connection</a> for the full configuration reference.</p>
 <h3 id="local-development-docker">Local Development (Docker)<a class="headerlink" href="#local-development-docker" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>run<span class="w"> </span>-d<span class="w"> </span><span class="se">\</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># MySQL</span>
+docker<span class="w"> </span>run<span class="w"> </span>-d<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--name<span class="w"> </span>datajoint-db<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>-p<span class="w"> </span><span class="m">3306</span>:3306<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>-e<span class="w"> </span><span class="nv">MYSQL_ROOT_PASSWORD</span><span class="o">=</span>simple<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>mysql:8.0
 </code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="c1"># PostgreSQL (added in 2.1)</span>
+docker<span class="w"> </span>run<span class="w"> </span>-d<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--name<span class="w"> </span>datajoint-db<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-p<span class="w"> </span><span class="m">5432</span>:5432<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-e<span class="w"> </span><span class="nv">POSTGRES_PASSWORD</span><span class="o">=</span>simple<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>postgres:15
+</code></pre></div>
 <h3 id="datajointcom-recommended">DataJoint.com (Recommended)<a class="headerlink" href="#datajointcom-recommended" title="Permanent link">&para;</a></h3>
 <p><a href="https://datajoint.com">DataJoint.com</a> provides fully managed infrastructure for scientific data pipelines—cloud or on-premises—with comprehensive support, automatic backups, object storage, and team collaboration features.</p>
 <h3 id="self-managed-cloud-databases">Self-Managed Cloud Databases<a class="headerlink" href="#self-managed-cloud-databases" title="Permanent link">&para;</a></h3>
 <ul>
-<li><strong>Amazon RDS</strong> — MySQL or Aurora</li>
-<li><strong>Google Cloud SQL</strong> — MySQL</li>
-<li><strong>Azure Database</strong> — MySQL</li>
+<li><strong>Amazon RDS</strong> — MySQL, Aurora MySQL, PostgreSQL, or Aurora PostgreSQL</li>
+<li><strong>Google Cloud SQL</strong> — MySQL or PostgreSQL</li>
+<li><strong>Azure Database</strong> — MySQL or PostgreSQL</li>
 </ul>
 <p>See <a href="../configure-database/">Configure Database Connection</a> for connection setup.</p>
 <h2 id="requirements">Requirements<a class="headerlink" href="#requirements" title="Permanent link">&para;</a></h2>
@@ -5955,13 +5988,21 @@ Legacy documentation for 0.14.x is available at <a href="https://datajoint.githu
 <h3 id="pymysql-connection-errors"><code>pymysql</code> connection errors<a class="headerlink" href="#pymysql-connection-errors" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>pymysql<span class="w"> </span>--force-reinstall
 </code></pre></div>
+<h3 id="psycopg2-connection-errors"><code>psycopg2</code> connection errors<a class="headerlink" href="#psycopg2-connection-errors" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>datajoint<span class="o">[</span>postgres<span class="o">]</span><span class="w"> </span>--force-reinstall
+</code></pre></div>
+<p>The PostgreSQL backend (added in 2.1) requires the <code>postgres</code> extra, which installs <code>psycopg2-binary</code>.</p>
 <h3 id="ssltls-connection-issues">SSL/TLS connection issues<a class="headerlink" href="#ssltls-connection-issues" title="Permanent link">&para;</a></h3>
 <p>Set <code>use_tls=False</code> for local development:</p>
 <div class="highlight"><pre><span></span><code><span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;database.use_tls&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
 </code></pre></div>
 <h3 id="permission-denied">Permission denied<a class="headerlink" href="#permission-denied" title="Permanent link">&para;</a></h3>
 <p>Ensure your database user has appropriate privileges:</p>
-<div class="highlight"><pre><span></span><code><span class="k">GRANT</span><span class="w"> </span><span class="k">ALL</span><span class="w"> </span><span class="k">PRIVILEGES</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="o">`</span><span class="n">your_schema</span><span class="o">%`</span><span class="p">.</span><span class="o">*</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="s1">&#39;username&#39;</span><span class="o">@</span><span class="s1">&#39;%&#39;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span class="c1">-- MySQL</span>
+<span class="k">GRANT</span><span class="w"> </span><span class="k">ALL</span><span class="w"> </span><span class="k">PRIVILEGES</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="o">`</span><span class="n">your_schema</span><span class="o">%`</span><span class="p">.</span><span class="o">*</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="s1">&#39;username&#39;</span><span class="o">@</span><span class="s1">&#39;%&#39;</span><span class="p">;</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="c1">-- PostgreSQL</span>
+<span class="k">GRANT</span><span class="w"> </span><span class="k">ALL</span><span class="w"> </span><span class="k">PRIVILEGES</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">DATABASE</span><span class="w"> </span><span class="n">my_db</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">username</span><span class="p">;</span>
 </code></pre></div>
 
 
