@@ -129,7 +129,7 @@ For local development without TLS:
 ## PostgreSQL Backend
 
 !!! version-added "New in 2.1"
-    PostgreSQL is now supported as an alternative database backend.
+    PostgreSQL is supported as a peer database backend alongside MySQL.
 
 DataJoint supports both MySQL and PostgreSQL backends. To use PostgreSQL:
 

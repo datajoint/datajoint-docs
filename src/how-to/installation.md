@@ -120,10 +120,14 @@ dj.config['database.use_tls'] = False
 
 ### Permission denied
 
-Ensure your database user has appropriate privileges. MySQL example:
+Ensure your database user has appropriate privileges:
 
 ```sql
+-- MySQL
 GRANT ALL PRIVILEGES ON `your_schema%`.* TO 'username'@'%';
 ```
 
-PostgreSQL uses a different `GRANT ... TO username` syntax — see [Configure Database Connection](configure-database.md#postgresql-backend) for backend-specific guidance.
+```sql
+-- PostgreSQL
+GRANT ALL PRIVILEGES ON DATABASE my_db TO username;
+```
