@@ -13,7 +13,7 @@ A production DataJoint pipeline typically involves:
 
 This guide covers practical project organization. For conceptual background on pipeline architecture and the DAG structure, see [Data Pipelines](../explanation/data-pipelines.md/).
 
-For a fully managed solution, [request a DataJoint Platform account](https://www.datajoint.com/sign-up).
+For a fully managed solution, [contact us about the DataJoint Platform](https://www.datajoint.com/contact).
 
 ## Project Structure
 
@@ -364,7 +364,7 @@ Managing a team pipeline requires coordinating:
 | **Compute** | Worker deployment, job distribution, resource allocation |
 | **Monitoring** | Progress tracking, error alerting, audit logging |
 
-These challenges grow with team size and pipeline complexity. The [DataJoint Platform](https://www.datajoint.com/sign-up) provides integrated management for all these concerns.
+These challenges grow with team size and pipeline complexity. The [DataJoint Platform](https://www.datajoint.com/contact) provides integrated management for all these concerns.
 
 ## See Also
 
