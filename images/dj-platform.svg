@@ -1,0 +1,159 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 540" font-family="'Segoe UI', system-ui, -apple-system, sans-serif">
+  <defs>
+    <style>
+      .core-label { font-size: 12px; fill: #64748b; font-weight: 600; text-anchor: middle; letter-spacing: 0.8px; text-transform: uppercase; }
+      .platform-label { font-size: 17px; fill: #1a73e8; font-weight: 700; text-anchor: middle; letter-spacing: 1.5px; text-transform: uppercase; }
+      .core-sub { font-size: 10px; fill: #94a3b8; font-weight: 400; text-anchor: middle; font-style: italic; }
+      .comp-label { font-size: 12px; fill: #334155; font-weight: 600; text-anchor: middle; text-transform: uppercase; letter-spacing: 0.3px; }
+      .tagline { font-size: 12px; fill: #94a3b8; font-weight: 400; text-anchor: middle; font-style: italic; }
+    </style>
+    <filter id="shadow" x="-4%" y="-4%" width="108%" height="112%">
+      <feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="#000" flood-opacity="0.08"/>
+    </filter>
+    <filter id="shadow-sm" x="-4%" y="-4%" width="108%" height="112%">
+      <feDropShadow dx="0" dy="1" stdDeviation="2" flood-color="#000" flood-opacity="0.06"/>
+    </filter>
+  </defs>
+
+  <!-- ========== PLATFORM BOUNDARY ========== -->
+  <rect x="60" y="40" width="780" height="500" rx="24" ry="24"
+        fill="#f0f7ff" stroke="#1a73e8" stroke-width="1.5" filter="url(#shadow)"/>
+  <text x="450" y="68" class="platform-label">DataJoint Platform</text>
+
+  <!-- ========== AI INTERFACE — prominent, full-width ========== -->
+  <g transform="translate(450, 106)">
+    <rect x="-340" y="-26" width="680" height="50" rx="10" fill="#e8f0fe" stroke="#b8d4f8" stroke-width="1" filter="url(#shadow-sm)"/>
+    <!-- Robot icon -->
+    <rect x="-130" y="-16" width="24" height="20" rx="4" fill="#1a73e8" stroke="none"/>
+    <circle cx="-122" cy="-6" r="3.5" fill="#fff"/>
+    <circle cx="-112" cy="-6" r="3.5" fill="#fff"/>
+    <line x1="-117" y1="-19" x2="-117" y2="-25" stroke="#1a73e8" stroke-width="2"/>
+    <circle cx="-117" cy="-26" r="2.5" fill="#1a73e8"/>
+    <text x="0" y="5" class="comp-label" style="font-size: 15px; fill: #1a73e8; font-weight: 700;">AI Interface</text>
+  </g>
+
+  <!-- ========== SERVICE ROW (larger boxes) ========== -->
+
+  <!-- Pipeline Explorer -->
+  <g transform="translate(195, 178)">
+    <rect x="-115" y="-28" width="230" height="54" rx="10" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1" filter="url(#shadow-sm)"/>
+    <!-- Graph icon (solid) -->
+    <circle cx="-76" cy="-1" r="9" fill="#1a73e8"/>
+    <circle cx="-58" cy="-14" r="7" fill="#00c9a7"/>
+    <circle cx="-58" cy="12" r="7" fill="#00c9a7"/>
+    <line x1="-70" y1="-3" x2="-63" y2="-11" stroke="#475569" stroke-width="1.5"/>
+    <line x1="-70" y1="2" x2="-63" y2="9" stroke="#475569" stroke-width="1.5"/>
+    <text x="-38" y="-4" class="comp-label" style="font-size: 12px; text-anchor: start;">Pipeline</text>
+    <text x="-38" y="12" class="comp-label" style="font-size: 12px; text-anchor: start;">Explorer</text>
+  </g>
+
+  <!-- Data Ingest + Integration -->
+  <g transform="translate(450, 178)">
+    <rect x="-115" y="-28" width="230" height="54" rx="10" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1" filter="url(#shadow-sm)"/>
+    <!-- Arrow-into-box icon (solid) -->
+    <rect x="-68" y="-14" width="26" height="24" rx="4" fill="#1a73e8"/>
+    <path d="M-94,0 L-72,0 M-82,-8 L-72,0 L-82,8" fill="none" stroke="#1a73e8" stroke-width="2.5"/>
+    <text x="-30" y="-4" class="comp-label" style="font-size: 12px; text-anchor: start;">Data Ingest</text>
+    <text x="-30" y="12" class="comp-label" style="font-size: 12px; text-anchor: start;">+ Integration</text>
+  </g>
+
+  <!-- Security + Infra + Compute -->
+  <g transform="translate(705, 178)">
+    <rect x="-115" y="-28" width="230" height="54" rx="10" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1" filter="url(#shadow-sm)"/>
+    <!-- Shield icon (solid) -->
+    <path d="M-84,-18 L-84,4 Q-84,16 -71,20 Q-58,16 -58,4 L-58,-18 L-71,-24 Z"
+          fill="#1a73e8"/>
+    <text x="-42" y="-4" class="comp-label" style="font-size: 12px; text-anchor: start;">Security + Infra</text>
+    <text x="-42" y="12" class="comp-label" style="font-size: 12px; text-anchor: start;">+ Compute</text>
+  </g>
+
+  <!-- ========== OPEN-SOURCE CORE (compact) ========== -->
+  <rect x="230" y="240" width="440" height="90" rx="12" ry="12"
+        fill="#fff" stroke="#cbd5e1" stroke-width="1" stroke-dasharray="5 3"/>
+  <text x="450" y="258" class="core-label">Open-Source Core</text>
+  <text x="450" y="272" class="core-sub">schema + workflow</text>
+
+  <!-- Core components — compact inline -->
+  <g transform="translate(310, 305)">
+    <rect x="-48" y="-20" width="96" height="40" rx="8" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1"/>
+    <!-- DB icon small -->
+    <ellipse cx="-22" cy="-8" rx="10" ry="4" fill="#1a73e8" opacity="0.8"/>
+    <path d="M-32,-8 v12 a10,4 0 0,0 20,0 v-12" fill="#1a73e8" opacity="0.6" stroke="none"/>
+    <text x="10" y="-3" class="comp-label" style="font-size: 9px; text-anchor: start;">Relational</text>
+    <text x="10" y="8" class="comp-label" style="font-size: 9px; text-anchor: start;">Database</text>
+  </g>
+
+  <g transform="translate(450, 305)">
+    <rect x="-48" y="-20" width="96" height="40" rx="8" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1"/>
+    <text x="-22" y="4" text-anchor="middle" font-size="18" fill="#1a73e8" font-weight="600">&lt;/&gt;</text>
+    <text x="10" y="-3" class="comp-label" style="font-size: 9px; text-anchor: start;">Code</text>
+    <text x="10" y="8" class="comp-label" style="font-size: 9px; text-anchor: start;">Repo</text>
+  </g>
+
+  <g transform="translate(590, 305)">
+    <rect x="-48" y="-20" width="96" height="40" rx="8" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1"/>
+    <!-- Bucket icon small -->
+    <path d="M-30,-8 L-32,4 Q-32,10 -22,10 Q-12,10 -12,4 L-14,-8 Q-14,-12 -22,-12 Q-30,-12 -30,-8 Z"
+          fill="#1a73e8" opacity="0.6" stroke="none"/>
+    <ellipse cx="-22" cy="-8" rx="9" ry="3.5" fill="#1a73e8" opacity="0.8"/>
+    <text x="10" y="-3" class="comp-label" style="font-size: 9px; text-anchor: start;">Object</text>
+    <text x="10" y="8" class="comp-label" style="font-size: 9px; text-anchor: start;">Store</text>
+  </g>
+
+  <!-- ========== BOTTOM ROW (larger boxes) ========== -->
+
+  <!-- Electronic Lab Notebook -->
+  <g transform="translate(168, 395)">
+    <rect x="-80" y="-30" width="160" height="58" rx="10" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1" filter="url(#shadow-sm)"/>
+    <!-- Notebook icon (solid) -->
+    <rect x="-66" y="-20" width="24" height="34" rx="3" fill="#1a73e8"/>
+    <line x1="-58" y1="-20" x2="-58" y2="14" stroke="#fff" stroke-width="1.5"/>
+    <line x1="-55" y1="-10" x2="-46" y2="-10" stroke="#fff" stroke-width="1.2"/>
+    <line x1="-55" y1="-3" x2="-46" y2="-3" stroke="#fff" stroke-width="1.2"/>
+    <line x1="-55" y1="4" x2="-49" y2="4" stroke="#fff" stroke-width="1.2"/>
+    <text x="-32" y="-5" class="comp-label" style="font-size: 11px; text-anchor: start;">Electronic</text>
+    <text x="-32" y="10" class="comp-label" style="font-size: 11px; text-anchor: start;">Lab Notebook</text>
+  </g>
+
+  <!-- Integrated Dev Environment -->
+  <g transform="translate(355, 395)">
+    <rect x="-80" y="-30" width="160" height="58" rx="10" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1" filter="url(#shadow-sm)"/>
+    <!-- Terminal icon (solid) -->
+    <rect x="-66" y="-18" width="30" height="28" rx="4" fill="#1a73e8"/>
+    <path d="M-59,-8 L-49,-1 L-59,6" fill="none" stroke="#fff" stroke-width="2.5"/>
+    <line x1="-47" y1="7" x2="-40" y2="7" stroke="#fff" stroke-width="2.5"/>
+    <text x="-26" y="-5" class="comp-label" style="font-size: 11px; text-anchor: start;">Integrated Dev</text>
+    <text x="-26" y="10" class="comp-label" style="font-size: 11px; text-anchor: start;">Environment</text>
+  </g>
+
+  <!-- Visualization Dashboard -->
+  <g transform="translate(543, 395)">
+    <rect x="-80" y="-30" width="160" height="58" rx="10" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1" filter="url(#shadow-sm)"/>
+    <!-- Chart icon (solid) -->
+    <rect x="-66" y="0" width="11" height="16" rx="2" fill="#1a73e8"/>
+    <rect x="-53" y="-8" width="11" height="24" rx="2" fill="#00c9a7"/>
+    <rect x="-40" y="-16" width="11" height="32" rx="2" fill="#1a73e8"/>
+    <text x="-18" y="-5" class="comp-label" style="font-size: 11px; text-anchor: start;">Visualization</text>
+    <text x="-18" y="10" class="comp-label" style="font-size: 11px; text-anchor: start;">Dashboard</text>
+  </g>
+
+  <!-- Collaboration + Publishing -->
+  <g transform="translate(730, 395)">
+    <rect x="-80" y="-30" width="160" height="58" rx="10" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1" filter="url(#shadow-sm)"/>
+    <!-- Share/network icon (solid) -->
+    <circle cx="-58" cy="-2" r="8" fill="#1a73e8"/>
+    <circle cx="-40" cy="-16" r="6" fill="#1a73e8" opacity="0.8"/>
+    <circle cx="-40" cy="12" r="6" fill="#1a73e8" opacity="0.8"/>
+    <line x1="-51" y1="-6" x2="-45" y2="-12" stroke="#475569" stroke-width="1.5"/>
+    <line x1="-51" y1="2" x2="-45" y2="8" stroke="#475569" stroke-width="1.5"/>
+    <text x="-24" y="-5" class="comp-label" style="font-size: 11px; text-anchor: start;">Collaboration</text>
+    <text x="-24" y="10" class="comp-label" style="font-size: 11px; text-anchor: start;">+ Publishing</text>
+  </g>
+
+  <!-- ========== GOVERNED EXECUTION BAR ========== -->
+  <rect x="90" y="465" width="720" height="28" rx="6" fill="#1a73e8" opacity="0.1"/>
+  <text x="450" y="483" style="font-size: 12px; fill: #1a73e8; font-weight: 600; text-anchor: middle; letter-spacing: 1px; text-transform: uppercase;">Reproducibility &#x2022; Provenance &#x2022; Integrity &#x2022; Collaboration</text>
+
+  <!-- ========== TAGLINE ========== -->
+  <text x="450" y="520" class="tagline">The language for automated, reproducible research workflows</text>
+</svg>
