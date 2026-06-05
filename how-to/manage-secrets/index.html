@@ -2311,8 +2311,30 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#config-source-control" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Config-Source Control
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#env-var-only-deployments" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Env-var-only deployments
+      
+    </span>
+  </a>
   
 </li>
       
@@ -4482,6 +4504,8 @@
       
         
       
+        
+      
     
     
     
@@ -4595,6 +4619,34 @@
     
   
     NPY Codec
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/specs/storage-adapter-api/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Storage Adapter API
   
 
     
@@ -5652,6 +5704,8 @@
       
         
       
+        
+      
     
     
     
@@ -5703,6 +5757,34 @@
 
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../about/whats-new-2-2-4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    What's New in 2.2.4
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
             
               
                 
@@ -6184,8 +6266,30 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#config-source-control" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Config-Source Control
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#env-var-only-deployments" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Env-var-only deployments
+      
+    </span>
+  </a>
   
 </li>
       
@@ -6480,12 +6584,12 @@
 <p>DataJoint loads configuration in this priority order (highest to lowest):</p>
 <ol>
 <li><strong>Programmatic settings</strong> — <code>dj.config['key'] = value</code></li>
-<li><strong>Environment variables</strong> — <code>DJ_HOST</code>, <code>DJ_USER</code>, etc.</li>
-<li><strong>Secrets directory</strong> — <code>.secrets/datajoint.json</code>, <code>.secrets/stores.*</code></li>
+<li><strong>Environment variables</strong> — <code>DJ_HOST</code>, <code>DJ_USER</code>, <code>DJ_STORES</code>, etc.</li>
 <li><strong>Project configuration</strong> — <code>datajoint.json</code></li>
+<li><strong>Secrets directory</strong> — <code>.secrets/stores.&lt;name&gt;.&lt;attr&gt;</code> (fills attributes the file/env didn't already set)</li>
 <li><strong>Default values</strong> — Built-in defaults</li>
 </ol>
-<p>Higher priority sources override lower ones.</p>
+<p>Higher priority sources override lower ones. Set <code>DJ_IGNORE_CONFIG_FILE=true</code> <em>(new in 2.2.4)</em> to skip both <code>datajoint.json</code> and the secrets directory entirely — see <a href="#env-var-only-deployments">Env-var-only deployments</a> below.</p>
 <h2 id="secrets-directory-structure"><code>.secrets/</code> Directory Structure<a class="headerlink" href="#secrets-directory-structure" title="Permanent link">&para;</a></h2>
 <p>Create a <code>.secrets/</code> directory in your project root:</p>
 <div class="highlight"><pre><span></span><code>project/
@@ -6496,9 +6600,14 @@
 │   ├── stores.main.access_key   # S3/cloud storage credentials
 │   ├── stores.main.secret_key
 │   ├── stores.archive.access_key
-│   └── stores.archive.secret_key
+│   ├── stores.archive.secret_key
+│   └── stores.uc.token          # any stores.&lt;name&gt;.&lt;attr&gt; (new in 2.2.4)
 └── ...
 </code></pre></div>
+<div class="admonition version-added">
+<p class="admonition-title">New in 2.2.4</p>
+<p>Any <code>stores.&lt;name&gt;.&lt;attr&gt;</code> file is loaded, not only <code>access_key</code> / <code>secret_key</code>. Plugin-registered storage adapters (e.g. a Databricks Bearer-token adapter) can define their own field names — see <a href="../../reference/specs/storage-adapter-api/">Storage Adapter API</a>.</p>
+</div>
 <p><strong>Critical:</strong> Add <code>.secrets/</code> to <code>.gitignore</code>:</p>
 <div class="highlight"><pre><span></span><code># .gitignore
 .secrets/
@@ -6525,7 +6634,7 @@
 <span class="nb">export</span><span class="w"> </span><span class="nv">DJ_USER</span><span class="o">=</span>myuser
 <span class="nb">export</span><span class="w"> </span><span class="nv">DJ_PASS</span><span class="o">=</span>mypassword
 <span class="nb">export</span><span class="w"> </span><span class="nv">DJ_PORT</span><span class="o">=</span><span class="m">3306</span>
-<span class="nb">export</span><span class="w"> </span><span class="nv">DJ_TLS</span><span class="o">=</span><span class="nb">true</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">DJ_USE_TLS</span><span class="o">=</span><span class="nb">true</span>
 </code></pre></div>
 <h3 id="option-3-programmatic-configuration">Option 3: Programmatic Configuration<a class="headerlink" href="#option-3-programmatic-configuration" title="Permanent link">&para;</a></h3>
 <p>For scripts and applications:</p>
@@ -6584,10 +6693,25 @@ AKIAIOSFODNN7EXAMPLE
 wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
 </code></pre></div>
 <h4 id="alternative-environment-variables">Alternative: Environment Variables<a class="headerlink" href="#alternative-environment-variables" title="Permanent link">&para;</a></h4>
-<p>For cloud deployments:</p>
-<div class="highlight"><pre><span></span><code><span class="nb">export</span><span class="w"> </span><span class="nv">DJ_STORES_MAIN_ACCESS_KEY</span><span class="o">=</span>AKIAIOSFODNN7EXAMPLE
-<span class="nb">export</span><span class="w"> </span><span class="nv">DJ_STORES_MAIN_SECRET_KEY</span><span class="o">=</span>wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
+<div class="admonition version-added">
+<p class="admonition-title">New in 2.2.4</p>
+<p><code>DJ_STORES</code> carries a JSON-encoded copy of the entire <code>stores</code> dict, in the same shape as <code>datajoint.json</code>. Replaces the <code>stores</code> block from the file. <code>.secrets/stores.&lt;name&gt;.&lt;attr&gt;</code> files still fill in attributes that <code>DJ_STORES</code> omits.</p>
+</div>
+<p>For cloud deployments, put the entire <code>stores</code> block in a single env var:</p>
+<div class="highlight"><pre><span></span><code><span class="nb">export</span><span class="w"> </span><span class="nv">DJ_STORES</span><span class="o">=</span><span class="s1">&#39;{</span>
+<span class="s1">  &quot;default&quot;: &quot;main&quot;,</span>
+<span class="s1">  &quot;main&quot;: {</span>
+<span class="s1">    &quot;protocol&quot;: &quot;s3&quot;,</span>
+<span class="s1">    &quot;endpoint&quot;: &quot;s3.amazonaws.com&quot;,</span>
+<span class="s1">    &quot;bucket&quot;: &quot;my-bucket&quot;,</span>
+<span class="s1">    &quot;location&quot;: &quot;my-project/data&quot;,</span>
+<span class="s1">    &quot;access_key&quot;: &quot;AKIAIOSFODNN7EXAMPLE&quot;,</span>
+<span class="s1">    &quot;secret_key&quot;: &quot;wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY&quot;</span>
+<span class="s1">  }</span>
+<span class="s1">}&#39;</span>
 </code></pre></div>
+<p>For plugin-registered adapters, the field names are whatever the adapter declares — <code>token</code>, <code>api_key</code>, <code>workspace_url</code>, etc. See <a href="../../reference/specs/storage-adapter-api/">Storage Adapter API</a>.</p>
+<p>If <code>DJ_STORES</code> contains invalid JSON, DataJoint raises <code>ValueError</code> at config-load time with the JSON parser's error message.</p>
 <h2 id="environment-variable-reference">Environment Variable Reference<a class="headerlink" href="#environment-variable-reference" title="Permanent link">&para;</a></h2>
 <h3 id="database-connections">Database Connections<a class="headerlink" href="#database-connections" title="Permanent link">&para;</a></h3>
 <table>
@@ -6621,7 +6745,7 @@ wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
 </tr>
 <tr>
 <td><code>database.use_tls</code></td>
-<td><code>DJ_TLS</code></td>
+<td><code>DJ_USE_TLS</code></td>
 <td>Use TLS encryption (true/false)</td>
 </tr>
 </tbody>
@@ -6630,25 +6754,53 @@ wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
 <table>
 <thead>
 <tr>
-<th>Pattern</th>
-<th>Example</th>
+<th>Variable</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>DJ_STORES_&lt;NAME&gt;_ACCESS_KEY</code></td>
-<td><code>DJ_STORES_MAIN_ACCESS_KEY</code></td>
-<td>S3 access key ID</td>
-</tr>
-<tr>
-<td><code>DJ_STORES_&lt;NAME&gt;_SECRET_KEY</code></td>
-<td><code>DJ_STORES_MAIN_SECRET_KEY</code></td>
-<td>S3 secret access key</td>
+<td><code>DJ_STORES</code></td>
+<td>JSON-encoded <code>stores</code> dict (same shape as <code>datajoint.json</code>). Replaces the <code>stores</code> block from the file. <em>(new in 2.2.4)</em></td>
 </tr>
 </tbody>
 </table>
-<p><strong>Note:</strong> <code>&lt;NAME&gt;</code> is the uppercase store name with <code>_</code> replacing special characters.</p>
+<h3 id="config-source-control">Config-Source Control<a class="headerlink" href="#config-source-control" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>DJ_IGNORE_CONFIG_FILE</code></td>
+<td><code>false</code></td>
+<td>If <code>true</code>, skip <code>datajoint.json</code>, the project <code>.secrets/</code>, and <code>/run/secrets/datajoint/</code>. Only env vars and defaults apply. <em>(new in 2.2.4)</em></td>
+</tr>
+</tbody>
+</table>
+<h2 id="env-var-only-deployments">Env-var-only deployments<a class="headerlink" href="#env-var-only-deployments" title="Permanent link">&para;</a></h2>
+<div class="admonition version-added">
+<p class="admonition-title">New in 2.2.4</p>
+<p><code>DJ_IGNORE_CONFIG_FILE=true</code> plus <code>DJ_STORES</code> gives a deployment a hard guarantee that no file on disk contributes to config — only env vars do. This is how the DataJoint platform configures pipelines.</p>
+</div>
+<p>For Kubernetes, Lambda, the DataJoint platform, or any deployment where the container image must not carry configuration:</p>
+<div class="highlight"><pre><span></span><code><span class="nb">export</span><span class="w"> </span><span class="nv">DJ_IGNORE_CONFIG_FILE</span><span class="o">=</span><span class="nb">true</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">DJ_HOST</span><span class="o">=</span>db.example.com
+<span class="nb">export</span><span class="w"> </span><span class="nv">DJ_USER</span><span class="o">=</span><span class="k">$(</span>vault<span class="w"> </span><span class="nb">read</span><span class="w"> </span>-field<span class="o">=</span>username<span class="w"> </span>secret/datajoint<span class="k">)</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">DJ_PASS</span><span class="o">=</span><span class="k">$(</span>vault<span class="w"> </span><span class="nb">read</span><span class="w"> </span>-field<span class="o">=</span>password<span class="w"> </span>secret/datajoint<span class="k">)</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">DJ_STORES</span><span class="o">=</span><span class="s2">&quot;</span><span class="k">$(</span>vault<span class="w"> </span><span class="nb">read</span><span class="w"> </span>-format<span class="o">=</span>json<span class="w"> </span>-field<span class="o">=</span>stores<span class="w"> </span>secret/datajoint<span class="k">)</span><span class="s2">&quot;</span>
+</code></pre></div>
+<p>With <code>DJ_IGNORE_CONFIG_FILE=true</code>, DataJoint skips:</p>
+<ul>
+<li>the recursive parent-directory search for <code>datajoint.json</code></li>
+<li>the project <code>.secrets/</code> directory</li>
+<li>the Docker/Kubernetes <code>/run/secrets/datajoint/</code> directory</li>
+</ul>
+<p>Only env vars (<code>DJ_HOST</code>, <code>DJ_USER</code>, <code>DJ_PASS</code>, <code>DJ_STORES</code>, …) and built-in defaults apply. No file under any parent directory of the working directory can contribute to config.</p>
 <h2 id="security-best-practices">Security Best Practices<a class="headerlink" href="#security-best-practices" title="Permanent link">&para;</a></h2>
 <h3 id="development-environment">Development Environment<a class="headerlink" href="#development-environment" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># 1. Initialize secrets directory</span>
@@ -6673,8 +6825,12 @@ chmod<span class="w"> </span><span class="m">600</span><span class="w"> </span>.
 <div class="highlight"><pre><span></span><code><span class="c1"># Use environment variables from secure sources</span>
 <span class="nb">export</span><span class="w"> </span><span class="nv">DJ_USER</span><span class="o">=</span><span class="k">$(</span>vault<span class="w"> </span><span class="nb">read</span><span class="w"> </span>-field<span class="o">=</span>username<span class="w"> </span>secret/datajoint/db<span class="k">)</span>
 <span class="nb">export</span><span class="w"> </span><span class="nv">DJ_PASS</span><span class="o">=</span><span class="k">$(</span>vault<span class="w"> </span><span class="nb">read</span><span class="w"> </span>-field<span class="o">=</span>password<span class="w"> </span>secret/datajoint/db<span class="k">)</span>
-<span class="nb">export</span><span class="w"> </span><span class="nv">DJ_STORES_MAIN_ACCESS_KEY</span><span class="o">=</span><span class="k">$(</span>vault<span class="w"> </span><span class="nb">read</span><span class="w"> </span>-field<span class="o">=</span>access_key<span class="w"> </span>secret/datajoint/s3<span class="k">)</span>
-<span class="nb">export</span><span class="w"> </span><span class="nv">DJ_STORES_MAIN_SECRET_KEY</span><span class="o">=</span><span class="k">$(</span>vault<span class="w"> </span><span class="nb">read</span><span class="w"> </span>-field<span class="o">=</span>secret_key<span class="w"> </span>secret/datajoint/s3<span class="k">)</span>
+
+<span class="c1"># Stores: one JSON-encoded env var (new in 2.2.4)</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">DJ_STORES</span><span class="o">=</span><span class="k">$(</span>vault<span class="w"> </span><span class="nb">read</span><span class="w"> </span>-format<span class="o">=</span>json<span class="w"> </span>-field<span class="o">=</span>stores<span class="w"> </span>secret/datajoint<span class="k">)</span>
+
+<span class="c1"># Optional: guarantee no file on disk contributes to config (new in 2.2.4)</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">DJ_IGNORE_CONFIG_FILE</span><span class="o">=</span><span class="nb">true</span>
 </code></pre></div>
 <h3 id="cicd-environment">CI/CD Environment<a class="headerlink" href="#cicd-environment" title="Permanent link">&para;</a></h3>
 <p>Use your CI system's secrets management:</p>

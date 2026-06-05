@@ -4002,6 +4002,8 @@
       
         
       
+        
+      
     
     
     
@@ -4115,6 +4117,34 @@
     
   
     NPY Codec
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../storage-adapter-api/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Storage Adapter API
   
 
     
@@ -4442,6 +4472,17 @@
     <span class="md-ellipsis">
       
         Complete Store Configuration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configuration-sources-and-precedence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration Sources and Precedence
       
     </span>
   </a>
@@ -5726,6 +5767,8 @@
       
         
       
+        
+      
     
     
     
@@ -5777,6 +5820,34 @@
 
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../about/whats-new-2-2-4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    What's New in 2.2.4
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
             
               
                 
@@ -6158,6 +6229,17 @@
     <span class="md-ellipsis">
       
         Complete Store Configuration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configuration-sources-and-precedence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration Sources and Precedence
       
     </span>
   </a>
@@ -6698,6 +6780,45 @@
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
+<h3 id="configuration-sources-and-precedence">Configuration Sources and Precedence<a class="headerlink" href="#configuration-sources-and-precedence" title="Permanent link">&para;</a></h3>
+<div class="admonition version-added">
+<p class="admonition-title">New in 2.2.4</p>
+<p><code>DJ_STORES</code> env var carries a JSON-encoded copy of the entire <code>stores</code> dict. Replaces the file's <code>stores</code> block. <code>DJ_IGNORE_CONFIG_FILE=true</code> skips the file and the secrets directory entirely.</p>
+</div>
+<p>The <code>stores</code> block can be loaded from any of:</p>
+<table>
+<thead>
+<tr>
+<th>Source</th>
+<th>Precedence</th>
+<th>When Used</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>dj.config["stores"][...]</code> (programmatic)</td>
+<td>1 (highest)</td>
+<td>Runtime overrides in scripts/notebooks</td>
+</tr>
+<tr>
+<td><code>DJ_STORES</code> env var</td>
+<td>2</td>
+<td>Env-var-only deployments (Kubernetes, the DataJoint platform) — <em>new in 2.2.4</em></td>
+</tr>
+<tr>
+<td><code>stores</code> block of <code>datajoint.json</code></td>
+<td>3</td>
+<td>Local development, committed project config</td>
+</tr>
+<tr>
+<td><code>.secrets/stores.&lt;name&gt;.&lt;attr&gt;</code> files</td>
+<td>4 (fills missing attrs only)</td>
+<td>Local credentials kept out of <code>datajoint.json</code></td>
+</tr>
+</tbody>
+</table>
+<p>When <code>DJ_STORES</code> is set, it replaces the <code>stores</code> block loaded from <code>datajoint.json</code> wholesale. The <code>.secrets/</code> directory still runs after <code>DJ_STORES</code> and fills in attributes that <code>DJ_STORES</code> omits — useful for hybrid setups (env-var store config + file-based credentials). To disable file-based config sources entirely, set <code>DJ_IGNORE_CONFIG_FILE=true</code> <em>(new in 2.2.4)</em>.</p>
+<p>See <a href="../../../how-to/manage-secrets/#env-var-only-deployments">Manage Secrets</a> and <a href="../storage-adapter-api/">Storage Adapter API</a> for adapter-specific field names.</p>
 <h3 id="section-prefixes">Section Prefixes<a class="headerlink" href="#section-prefixes" title="Permanent link">&para;</a></h3>
 <p>Each store is divided into sections controlled by prefix configuration. The <code>*_prefix</code> parameters define the path prefix for each storage section:</p>
 <table>

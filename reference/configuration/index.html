@@ -4000,6 +4000,8 @@
       
         
       
+        
+      
     
     
     
@@ -4113,6 +4115,34 @@
     
   
     NPY Codec
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../specs/storage-adapter-api/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Storage Adapter API
   
 
     
@@ -5444,6 +5474,8 @@
       
         
       
+        
+      
     
     
     
@@ -5495,6 +5527,34 @@
 
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../about/whats-new-2-2-4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    What's New in 2.2.4
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
             
               
                 
@@ -6351,8 +6411,13 @@
 ├── stores.main.access_key
 ├── stores.main.secret_key
 ├── stores.archive.access_key
-└── stores.archive.secret_key
+├── stores.archive.secret_key
+└── stores.uc.token            # any stores.&lt;name&gt;.&lt;attr&gt; file (new in 2.2.4)
 </code></pre></div>
+<div class="admonition version-added">
+<p class="admonition-title">New in 2.2.4</p>
+<p>Any <code>stores.&lt;name&gt;.&lt;attr&gt;</code> file is loaded, not only <code>access_key</code> / <code>secret_key</code>. This supports plugin-registered adapters with arbitrary field names (e.g. a Bearer <code>token</code>). See <a href="../specs/storage-adapter-api/">Storage Adapter API</a>.</p>
+</div>
 <h2 id="jobs-settings">Jobs Settings<a class="headerlink" href="#jobs-settings" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -6484,6 +6549,18 @@
 <td><code>.</code></td>
 <td>Download location for attachments/filepaths</td>
 </tr>
+<tr>
+<td><code>stores</code></td>
+<td><code>DJ_STORES</code></td>
+<td><code>{}</code></td>
+<td>JSON-encoded <code>stores</code> dict. Replaces the <code>stores</code> block from <code>datajoint.json</code>. <em>(new in 2.2.4)</em></td>
+</tr>
+<tr>
+<td><code>ignore_config_file</code></td>
+<td><code>DJ_IGNORE_CONFIG_FILE</code></td>
+<td><code>False</code></td>
+<td>Skip <code>datajoint.json</code> and the secrets directory. <em>(new in 2.2.4)</em></td>
+</tr>
 </tbody>
 </table>
 <h2 id="example-configuration">Example Configuration<a class="headerlink" href="#example-configuration" title="Permanent link">&para;</a></h2>
@@ -6538,8 +6615,27 @@
 <span class="nb">export</span><span class="w"> </span><span class="nv">DJ_USER</span><span class="o">=</span>analyst
 <span class="nb">export</span><span class="w"> </span><span class="nv">DJ_PASS</span><span class="o">=</span>secret
 <span class="nb">export</span><span class="w"> </span><span class="nv">DJ_DATABASE_NAME</span><span class="o">=</span>my_database<span class="w">  </span><span class="c1"># PostgreSQL only (new in 2.2.1)</span>
+
+<span class="c1"># Stores (new in 2.2.4) — JSON-encoded copy of the stores block</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">DJ_STORES</span><span class="o">=</span><span class="s1">&#39;{</span>
+<span class="s1">  &quot;default&quot;: &quot;main&quot;,</span>
+<span class="s1">  &quot;main&quot;: {</span>
+<span class="s1">    &quot;protocol&quot;: &quot;s3&quot;,</span>
+<span class="s1">    &quot;endpoint&quot;: &quot;s3.amazonaws.com&quot;,</span>
+<span class="s1">    &quot;bucket&quot;: &quot;datajoint-bucket&quot;,</span>
+<span class="s1">    &quot;location&quot;: &quot;neuroscience-lab/production&quot;,</span>
+<span class="s1">    &quot;access_key&quot;: &quot;AKIA...&quot;,</span>
+<span class="s1">    &quot;secret_key&quot;: &quot;wJal...&quot;</span>
+<span class="s1">  }</span>
+<span class="s1">}&#39;</span>
+
+<span class="c1"># Skip datajoint.json and .secrets/ entirely (new in 2.2.4)</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">DJ_IGNORE_CONFIG_FILE</span><span class="o">=</span><span class="nb">true</span>
 </code></pre></div>
-<p><strong>Note:</strong> Per-store credentials must be configured in <code>datajoint.json</code> or <code>.secrets/</code> — environment variable overrides are not supported for nested store configurations.</p>
+<div class="admonition version-added">
+<p class="admonition-title">New in 2.2.4</p>
+<p><code>DJ_STORES</code> carries a JSON-encoded copy of the <code>stores</code> block. <code>DJ_IGNORE_CONFIG_FILE=true</code> skips <code>datajoint.json</code>, the project <code>.secrets/</code>, and <code>/run/secrets/datajoint/</code> — useful for env-var-only deployments (Kubernetes pods, the DataJoint platform). See <a href="../../how-to/manage-secrets/#env-var-only-deployments">Manage Secrets</a>.</p>
+</div>
 <h2 id="programmatic-access">Programmatic Access<a class="headerlink" href="#programmatic-access" title="Permanent link">&para;</a></h2>
 <h3 id="reading-and-writing-settings">Reading and Writing Settings<a class="headerlink" href="#reading-and-writing-settings" title="Permanent link">&para;</a></h3>
 <p>Access settings using dot notation on <code>dj.config</code>:</p>

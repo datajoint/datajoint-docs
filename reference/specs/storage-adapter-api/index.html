@@ -5,12 +5,12 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width,initial-scale=1" name="viewport"/>
-<link href="https://docs.datajoint.com/reference/specs/database-backends/" rel="canonical"/>
-<link href="../" rel="prev"/>
-<link href="../table-declaration/" rel="next"/>
+<link href="https://docs.datajoint.com/reference/specs/storage-adapter-api/" rel="canonical"/>
+<link href="../npy-codec/" rel="prev"/>
+<link href="../data-manipulation/" rel="next"/>
 <link href="../../../assets/images/company-logo-blue.png" rel="icon"/>
 <meta content="mkdocs-1.6.1, mkdocs-material-9.7.6" name="generator"/>
-<title>Database Backends - DataJoint Documentation</title>
+<title>Storage Adapter API - DataJoint Documentation</title>
 <link href="../../../assets/stylesheets/main.484c7ddc.min.css" rel="stylesheet"/>
 <link href="../../../assets/stylesheets/palette.ab4e12ef.min.css" rel="stylesheet"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
@@ -46,7 +46,7 @@
 <input autocomplete="off" class="md-toggle" data-md-toggle="search" id="__search" type="checkbox"/>
 <label class="md-overlay" for="__drawer"></label>
 <div data-md-component="skip">
-<a class="md-skip" href="#database-backends-specification">
+<a class="md-skip" href="#storage-adapter-api-specification">
           Skip to content
         </a>
 </div>
@@ -98,7 +98,7 @@
 <div class="md-header__topic" data-md-component="header-topic">
 <span class="md-ellipsis">
             
-              Database Backends
+              Storage Adapter API
             
           </span>
 </div>
@@ -1530,20 +1530,8 @@
 
           </label>
 <ul class="md-nav__list" data-md-scrollfix="">
-<li class="md-nav__item md-nav__item--active">
-<input class="md-nav__toggle md-toggle" id="__toc" type="checkbox"/>
-<label class="md-nav__link md-nav__link--active" for="__toc">
-<span class="md-ellipsis">
-    
-  
-    Database Backends
-  
-
-    
-  </span>
-<span class="md-nav__icon md-icon"></span>
-</label>
-<a class="md-nav__link md-nav__link--active" href="./">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../database-backends/">
 <span class="md-ellipsis">
     
   
@@ -1553,135 +1541,6 @@
     
   </span>
 </a>
-<nav aria-label="Table of contents" class="md-nav md-nav--secondary">
-<label class="md-nav__title" for="__toc">
-<span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
-<li class="md-nav__item">
-<a class="md-nav__link" href="#supported-backends">
-<span class="md-ellipsis">
-      
-        Supported Backends
-      
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#configuration">
-<span class="md-ellipsis">
-      
-        Configuration
-      
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#adapter-architecture">
-<span class="md-ellipsis">
-      
-        Adapter Architecture
-      
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#backend-compatibility">
-<span class="md-ellipsis">
-      
-        Backend Compatibility
-      
-    </span>
-</a>
-<nav aria-label="Backend Compatibility" class="md-nav">
-<ul class="md-nav__list">
-<li class="md-nav__item">
-<a class="md-nav__link" href="#fully-compatible">
-<span class="md-ellipsis">
-      
-        Fully Compatible
-      
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#backend-specific-behavior">
-<span class="md-ellipsis">
-      
-        Backend-Specific Behavior
-      
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#string-quoting">
-<span class="md-ellipsis">
-      
-        String Quoting
-      
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#sql-function-translation">
-<span class="md-ellipsis">
-      
-        SQL Function Translation
-      
-    </span>
-</a>
-</li>
-</ul>
-</nav>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#type-mapping">
-<span class="md-ellipsis">
-      
-        Type Mapping
-      
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#connection-management">
-<span class="md-ellipsis">
-      
-        Connection Management
-      
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#testing-against-multiple-backends">
-<span class="md-ellipsis">
-      
-        Testing Against Multiple Backends
-      
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#migration-between-backends">
-<span class="md-ellipsis">
-      
-        Migration Between Backends
-      
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#see-also">
-<span class="md-ellipsis">
-      
-        See Also
-      
-    </span>
-</a>
-</li>
-</ul>
-</nav>
 </li>
 <li class="md-nav__item md-nav__item--nested">
 <input class="md-nav__toggle md-toggle" id="__nav_5_1_2" type="checkbox"/>
@@ -1831,8 +1690,8 @@
 </ul>
 </nav>
 </li>
-<li class="md-nav__item md-nav__item--nested">
-<input class="md-nav__toggle md-toggle" id="__nav_5_1_4" type="checkbox"/>
+<li class="md-nav__item md-nav__item--active md-nav__item--nested">
+<input checked="" class="md-nav__toggle md-toggle" id="__nav_5_1_4" type="checkbox"/>
 <label class="md-nav__link" for="__nav_5_1_4" id="__nav_5_1_4_label" tabindex="0">
 <span class="md-ellipsis">
     
@@ -1844,7 +1703,7 @@
   </span>
 <span class="md-nav__icon md-icon"></span>
 </label>
-<nav aria-expanded="false" aria-labelledby="__nav_5_1_4_label" class="md-nav" data-md-level="3">
+<nav aria-expanded="true" aria-labelledby="__nav_5_1_4_label" class="md-nav" data-md-level="3">
 <label class="md-nav__title" for="__nav_5_1_4">
 <span class="md-nav__icon md-icon"></span>
             
@@ -1890,8 +1749,20 @@
   </span>
 </a>
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../storage-adapter-api/">
+<li class="md-nav__item md-nav__item--active">
+<input class="md-nav__toggle md-toggle" id="__toc" type="checkbox"/>
+<label class="md-nav__link md-nav__link--active" for="__toc">
+<span class="md-ellipsis">
+    
+  
+    Storage Adapter API
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<a class="md-nav__link md-nav__link--active" href="./">
 <span class="md-ellipsis">
     
   
@@ -1901,6 +1772,166 @@
     
   </span>
 </a>
+<nav aria-label="Table of contents" class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">
+<span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#overview">
+<span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#when-to-write-a-storage-adapter">
+<span class="md-ellipsis">
+      
+        When to write a storage adapter
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#the-storageadapter-base-class">
+<span class="md-ellipsis">
+      
+        The StorageAdapter Base Class
+      
+    </span>
+</a>
+<nav aria-label="The StorageAdapter Base Class" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#required-class-attributes">
+<span class="md-ellipsis">
+      
+        Required class attributes
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#required-method-create_filesystem">
+<span class="md-ellipsis">
+      
+        Required method: create_filesystem
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#default-methods-override-as-needed">
+<span class="md-ellipsis">
+      
+        Default methods (override as needed)
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#configuration-shape">
+<span class="md-ellipsis">
+      
+        Configuration shape
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#plugin-packaging">
+<span class="md-ellipsis">
+      
+        Plugin packaging
+      
+    </span>
+</a>
+<nav aria-label="Plugin packaging" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#package-layout">
+<span class="md-ellipsis">
+      
+        Package layout
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#pyprojecttoml">
+<span class="md-ellipsis">
+      
+        pyproject.toml
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#adapter-implementation">
+<span class="md-ellipsis">
+      
+        Adapter implementation
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#discovery">
+<span class="md-ellipsis">
+      
+        Discovery
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#credential-hygiene">
+<span class="md-ellipsis">
+      
+        Credential hygiene
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#error-handling">
+<span class="md-ellipsis">
+      
+        Error handling
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#api-reference">
+<span class="md-ellipsis">
+      
+        API Reference
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#see-also">
+<span class="md-ellipsis">
+      
+        See Also
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
 </li>
 </ul>
 </nav>
@@ -2488,74 +2519,56 @@
     </label>
 <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
 <li class="md-nav__item">
-<a class="md-nav__link" href="#supported-backends">
+<a class="md-nav__link" href="#overview">
 <span class="md-ellipsis">
       
-        Supported Backends
+        Overview
       
     </span>
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#configuration">
+<a class="md-nav__link" href="#when-to-write-a-storage-adapter">
 <span class="md-ellipsis">
       
-        Configuration
+        When to write a storage adapter
       
     </span>
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#adapter-architecture">
+<a class="md-nav__link" href="#the-storageadapter-base-class">
 <span class="md-ellipsis">
       
-        Adapter Architecture
+        The StorageAdapter Base Class
       
     </span>
 </a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#backend-compatibility">
-<span class="md-ellipsis">
-      
-        Backend Compatibility
-      
-    </span>
-</a>
-<nav aria-label="Backend Compatibility" class="md-nav">
+<nav aria-label="The StorageAdapter Base Class" class="md-nav">
 <ul class="md-nav__list">
 <li class="md-nav__item">
-<a class="md-nav__link" href="#fully-compatible">
+<a class="md-nav__link" href="#required-class-attributes">
 <span class="md-ellipsis">
       
-        Fully Compatible
+        Required class attributes
       
     </span>
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#backend-specific-behavior">
+<a class="md-nav__link" href="#required-method-create_filesystem">
 <span class="md-ellipsis">
       
-        Backend-Specific Behavior
+        Required method: create_filesystem
       
     </span>
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#string-quoting">
+<a class="md-nav__link" href="#default-methods-override-as-needed">
 <span class="md-ellipsis">
       
-        String Quoting
-      
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#sql-function-translation">
-<span class="md-ellipsis">
-      
-        SQL Function Translation
+        Default methods (override as needed)
       
     </span>
 </a>
@@ -2564,37 +2577,86 @@
 </nav>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#type-mapping">
+<a class="md-nav__link" href="#configuration-shape">
 <span class="md-ellipsis">
       
-        Type Mapping
+        Configuration shape
       
     </span>
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#connection-management">
+<a class="md-nav__link" href="#plugin-packaging">
 <span class="md-ellipsis">
       
-        Connection Management
+        Plugin packaging
+      
+    </span>
+</a>
+<nav aria-label="Plugin packaging" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#package-layout">
+<span class="md-ellipsis">
+      
+        Package layout
       
     </span>
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#testing-against-multiple-backends">
+<a class="md-nav__link" href="#pyprojecttoml">
 <span class="md-ellipsis">
       
-        Testing Against Multiple Backends
+        pyproject.toml
       
     </span>
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#migration-between-backends">
+<a class="md-nav__link" href="#adapter-implementation">
 <span class="md-ellipsis">
       
-        Migration Between Backends
+        Adapter implementation
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#discovery">
+<span class="md-ellipsis">
+      
+        Discovery
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#credential-hygiene">
+<span class="md-ellipsis">
+      
+        Credential hygiene
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#error-handling">
+<span class="md-ellipsis">
+      
+        Error handling
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#api-reference">
+<span class="md-ellipsis">
+      
+        API Reference
       
     </span>
 </a>
@@ -2615,318 +2677,258 @@
 </div>
 <div class="md-content" data-md-component="content">
 <article class="md-content__inner md-typeset">
-<h1 id="database-backends-specification">Database Backends Specification<a class="headerlink" href="#database-backends-specification" title="Permanent link">¶</a></h1>
+<h1 id="storage-adapter-api-specification">Storage Adapter API Specification<a class="headerlink" href="#storage-adapter-api-specification" title="Permanent link">¶</a></h1>
+<p>This specification defines the DataJoint Storage Adapter plugin contract for adding new storage protocols.</p>
+<p>For attribute-level codecs (e.g. NetworkX graphs, Parquet, Zarr), see <a href="../codec-api/">Codec API</a>.</p>
 <div class="admonition version-added">
-<p class="admonition-title">New in 2.1</p>
-<p>PostgreSQL support was introduced in DataJoint 2.1.</p>
+<p class="admonition-title">New in 2.2.4</p>
+<p>The <code>datajoint.storage</code> entry-point group is now part of the public API for third-party adapters. (The built-in <code>file</code>, <code>s3</code>, <code>gcs</code>, and <code>azure</code> protocols continue to be served by <code>StorageBackend._create_filesystem()</code>; migrating them onto this contract is tracked separately.)</p>
 </div>
-<p>DataJoint supports multiple database backends through a unified adapter architecture.</p>
-<h2 id="supported-backends">Supported Backends<a class="headerlink" href="#supported-backends" title="Permanent link">¶</a></h2>
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">¶</a></h2>
+<p>A <em>storage adapter</em> maps a protocol name (e.g. <code>s3</code>, <code>databricks</code>) to an <code>fsspec</code> filesystem and tells DataJoint how to construct paths and validate per-store configuration.</p>
+<pre class="mermaid"><code>flowchart LR
+    A["stores.uc.protocol = 'databricks'"] -- discovery --&gt; B["DatabricksAdapter"]
+    B -- create_filesystem(spec) --&gt; C["fsspec filesystem"]
+    C -- get/put --&gt; D["Storage Backend"]
+</code></pre>
+<p>Adapters are distributed as ordinary Python packages. DataJoint discovers them via the <code>datajoint.storage</code> <a href="https://packaging.python.org/en/latest/specifications/entry-points/">entry-point group</a>, so users install the adapter with <code>pip install &lt;package&gt;</code> and the new protocol becomes available immediately — no registration code, no explicit imports.</p>
 <table>
 <thead>
 <tr>
-<th>Backend</th>
-<th>Minimum Version</th>
-<th>Default Port</th>
-<th>Status</th>
+<th>Layer</th>
+<th>Purpose</th>
+<th>Configures via</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>MySQL</td>
-<td>8.0.13</td>
-<td>3306</td>
-<td>Production</td>
+<td>Codec</td>
+<td>Attribute-level (in-table) serialization for <code>&lt;graph&gt;</code>, <code>&lt;parquet&gt;</code>, etc.</td>
+<td><code>dj.Codec</code> subclass, <code>datajoint.codecs</code> entry point</td>
 </tr>
 <tr>
-<td>PostgreSQL</td>
-<td>15</td>
-<td>5432</td>
-<td>Production</td>
+<td><strong>Storage adapter</strong></td>
+<td><strong>Protocol-level (storage-backend) filesystem for <code>stores.&lt;name&gt;.protocol</code></strong></td>
+<td><strong><code>dj.StorageAdapter</code> subclass, <code>datajoint.storage</code> entry point</strong></td>
 </tr>
 </tbody>
 </table>
-<h2 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">¶</a></h2>
-<p>Select the backend via configuration:</p>
+<h2 id="when-to-write-a-storage-adapter">When to write a storage adapter<a class="headerlink" href="#when-to-write-a-storage-adapter" title="Permanent link">¶</a></h2>
+<p>Write a <code>StorageAdapter</code> when DataJoint needs to talk to a new storage backend — Databricks Unity Catalog Volumes, a lab-specific archive system, an HTTP-based object store with bespoke auth, an on-prem deduplicated filesystem, etc.</p>
+<p>You do <strong>not</strong> need an adapter for <code>s3</code>, <code>gcs</code>, <code>azure</code>, or <code>file</code> — those are built in. You also do not need an adapter to change <em>how</em> DataJoint serializes a Python value into bytes; that is a <a href="../codec-api/">codec</a>, not an adapter.</p>
+<h2 id="the-storageadapter-base-class">The <code>StorageAdapter</code> Base Class<a class="headerlink" href="#the-storageadapter-base-class" title="Permanent link">¶</a></h2>
+<p>All storage adapters inherit from <code>dj.StorageAdapter</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">abstractmethod</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">fsspec</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">datajoint</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dj</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">StorageAdapter</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Base class for storage protocol adapters."""</span>
+
+    <span class="n">protocol</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">required_keys</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="p">()</span>
+    <span class="n">allowed_keys</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="p">()</span>
+
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_filesystem</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">spec</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">fsspec</span><span class="o">.</span><span class="n">AbstractFileSystem</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Return an fsspec filesystem instance for this protocol."""</span>
+        <span class="o">...</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">validate_spec</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">spec</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Validate protocol-specific config fields. Called once per store at load."""</span>
+        <span class="o">...</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">full_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">spec</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">relpath</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Construct an absolute storage path from a relative path."""</span>
+        <span class="o">...</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_url</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">spec</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Return a display URL for the stored object."""</span>
+        <span class="o">...</span>
+</code></pre></div>
+<h3 id="required-class-attributes">Required class attributes<a class="headerlink" href="#required-class-attributes" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>protocol</code></td>
+<td><code>str</code></td>
+<td>Identifier matched against <code>stores.&lt;name&gt;.protocol</code>. Must be unique across all installed adapters.</td>
+</tr>
+<tr>
+<td><code>required_keys</code></td>
+<td><code>tuple[str, ...]</code></td>
+<td>Field names that must be present in the store spec (e.g. <code>("bucket", "endpoint")</code>).</td>
+</tr>
+<tr>
+<td><code>allowed_keys</code></td>
+<td><code>tuple[str, ...]</code></td>
+<td>Field names the adapter accepts beyond the common keys. Other keys raise <code>DataJointError</code> at load time.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Common keys</strong> are always allowed in addition to <code>allowed_keys</code>: <code>protocol</code>, <code>location</code>, <code>subfolding</code>, <code>partition_pattern</code>, <code>token_length</code>, <code>hash_prefix</code>, <code>schema_prefix</code>, <code>filepath_prefix</code>, <code>stage</code>. These come from the unified store schema (see <a href="../object-store-configuration/">Object Store Configuration</a>).</p>
+<h3 id="required-method-create_filesystem">Required method: <code>create_filesystem</code><a class="headerlink" href="#required-method-create_filesystem" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">create_filesystem</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">spec</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">fsspec</span><span class="o">.</span><span class="n">AbstractFileSystem</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Return an fsspec filesystem instance for this protocol."""</span>
+</code></pre></div>
+<p>Called once per store when DataJoint first accesses an object in that store. Receives the resolved store spec (a plain <code>dict[str, Any]</code> merged from <code>datajoint.json</code>, <code>DJ_STORES</code>, and <code>.secrets/</code>). Returns an <a href="https://filesystem-spec.readthedocs.io/"><code>fsspec.AbstractFileSystem</code></a> instance — DataJoint uses fsspec uniformly across all backends, so as long as your adapter returns a working fsspec filesystem, the standard DataJoint storage logic (hash-addressed, schema-addressed, filepath) just works.</p>
+<h3 id="default-methods-override-as-needed">Default methods (override as needed)<a class="headerlink" href="#default-methods-override-as-needed" title="Permanent link">¶</a></h3>
+<p><code>validate_spec</code> — runs <code>required_keys</code> and <code>allowed_keys</code> checks. Override only to add protocol-specific validation (e.g. URL format, mutually exclusive fields).</p>
+<p><code>full_path(spec, relpath) -&gt; str</code> — returns <code>f"{spec['location']}/{relpath}"</code> by default. Override if your protocol needs a non-slash separator or a scheme-prefixed URL.</p>
+<p><code>get_url(spec, path) -&gt; str</code> — returns <code>f"{self.protocol}://{path}"</code> by default. Override if your protocol's display URL has a different shape.</p>
+<h2 id="configuration-shape">Configuration shape<a class="headerlink" href="#configuration-shape" title="Permanent link">¶</a></h2>
+<p>A store using a plugin-registered protocol is configured exactly like a built-in store:</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">"stores"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"uc"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">"protocol"</span><span class="p">:</span><span class="w"> </span><span class="s2">"databricks"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"workspace_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://my-workspace.cloud.databricks.com"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"volume"</span><span class="p">:</span><span class="w"> </span><span class="s2">"main.default.my_volume"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"token"</span><span class="p">:</span><span class="w"> </span><span class="s2">"dapibd..."</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"location"</span><span class="p">:</span><span class="w"> </span><span class="s2">"experiments/2026"</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Field names beyond the common keys are adapter-defined. The adapter's <code>required_keys</code> / <code>allowed_keys</code> enforce the schema at load time.</p>
+<p>The same store can be configured via <code>DJ_STORES</code> (env-var-only deployments) — see <a href="../../../how-to/configure-storage/#configuring-stores-via-environment-variables">Configure Storage</a>.</p>
+<p>Per-store secrets in <code>.secrets/stores.&lt;name&gt;.&lt;attr&gt;</code> use the adapter's field names (e.g. <code>.secrets/stores.uc.token</code>). <em>(new in 2.2.4 — previously only <code>access_key</code>/<code>secret_key</code> were honored.)</em></p>
+<h2 id="plugin-packaging">Plugin packaging<a class="headerlink" href="#plugin-packaging" title="Permanent link">¶</a></h2>
+<h3 id="package-layout">Package layout<a class="headerlink" href="#package-layout" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code>dj-databricks-storage/
+├── pyproject.toml
+└── src/
+    └── dj_databricks_storage/
+        ├── __init__.py
+        └── adapter.py
+</code></pre></div>
+<h3 id="pyprojecttoml"><code>pyproject.toml</code><a class="headerlink" href="#pyprojecttoml" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><span class="k">[project]</span>
+<span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"dj-databricks-storage"</span>
+<span class="n">version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"0.1.0"</span>
+<span class="n">dependencies</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">"datajoint&gt;=2.2.4"</span><span class="p">,</span><span class="w"> </span><span class="s2">"fsspec"</span><span class="p">,</span><span class="w"> </span><span class="s2">"databricks-sdk"</span><span class="p">]</span>
+
+<span class="k">[project.entry-points.</span><span class="s2">"datajoint.storage"</span><span class="k">]</span>
+<span class="n">databricks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"dj_databricks_storage.adapter:DatabricksVolumesAdapter"</span>
+</code></pre></div>
+<p>The entry-point <strong>name</strong> (<code>databricks</code>) is informational. The <strong><code>protocol</code> class attribute</strong> on the adapter is what DataJoint matches against <code>stores.&lt;name&gt;.protocol</code>. Conventionally these match.</p>
+<h3 id="adapter-implementation">Adapter implementation<a class="headerlink" href="#adapter-implementation" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># src/dj_databricks_storage/adapter.py</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">fsspec</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">datajoint</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dj</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">databricks.sdk</span><span class="w"> </span><span class="kn">import</span> <span class="n">WorkspaceClient</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">DatabricksVolumesAdapter</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">StorageAdapter</span><span class="p">):</span>
+    <span class="n">protocol</span> <span class="o">=</span> <span class="s2">"databricks"</span>
+    <span class="n">required_keys</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"workspace_url"</span><span class="p">,</span> <span class="s2">"volume"</span><span class="p">,</span> <span class="s2">"token"</span><span class="p">)</span>
+    <span class="n">allowed_keys</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"workspace_url"</span><span class="p">,</span> <span class="s2">"volume"</span><span class="p">,</span> <span class="s2">"token"</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_filesystem</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">spec</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">fsspec</span><span class="o">.</span><span class="n">AbstractFileSystem</span><span class="p">:</span>
+        <span class="n">client</span> <span class="o">=</span> <span class="n">WorkspaceClient</span><span class="p">(</span>
+            <span class="n">host</span><span class="o">=</span><span class="n">spec</span><span class="p">[</span><span class="s2">"workspace_url"</span><span class="p">],</span>
+            <span class="n">token</span><span class="o">=</span><span class="n">spec</span><span class="p">[</span><span class="s2">"token"</span><span class="p">],</span>
+        <span class="p">)</span>
+        <span class="c1"># Return an fsspec-compatible filesystem backed by the client.</span>
+        <span class="c1"># Implementation-specific; see your backend's fsspec integration.</span>
+        <span class="k">return</span> <span class="n">_databricks_fs</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="n">volume</span><span class="o">=</span><span class="n">spec</span><span class="p">[</span><span class="s2">"volume"</span><span class="p">])</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">full_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">spec</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">relpath</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="c1"># Unity Catalog Volume paths look like /Volumes/&lt;catalog&gt;/&lt;schema&gt;/&lt;volume&gt;/&lt;path&gt;</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">"/Volumes/</span><span class="si">{</span><span class="n">spec</span><span class="p">[</span><span class="s1">'volume'</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">'.'</span><span class="p">,</span><span class="w"> </span><span class="s1">'/'</span><span class="p">)</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">spec</span><span class="p">[</span><span class="s1">'location'</span><span class="p">]</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">relpath</span><span class="si">}</span><span class="s2">"</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_url</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">spec</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">"databricks://</span><span class="si">{</span><span class="n">spec</span><span class="p">[</span><span class="s1">'volume'</span><span class="p">]</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">"</span>
+</code></pre></div>
+<h3 id="discovery">Discovery<a class="headerlink" href="#discovery" title="Permanent link">¶</a></h3>
+<p>DataJoint loads <code>datajoint.storage</code> entry points lazily, the first time it looks up a protocol it does not already have in its registry. Installation is all that is required:</p>
+<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>dj-databricks-storage
+</code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">datajoint</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dj</span>
 
-<span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">'database.backend'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'mysql'</span>      <span class="c1"># Default</span>
-<span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">'database.backend'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'postgresql'</span> <span class="c1"># PostgreSQL</span>
+<span class="c1"># protocol "databricks" is now resolvable</span>
+<span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">"stores"</span><span class="p">][</span><span class="s2">"uc"</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">"protocol"</span><span class="p">:</span> <span class="s2">"databricks"</span><span class="p">,</span>
+    <span class="s2">"workspace_url"</span><span class="p">:</span> <span class="s2">"https://my-workspace.cloud.databricks.com"</span><span class="p">,</span>
+    <span class="s2">"volume"</span><span class="p">:</span> <span class="s2">"main.default.my_volume"</span><span class="p">,</span>
+    <span class="s2">"token"</span><span class="p">:</span> <span class="s2">"dapibd..."</span><span class="p">,</span>
+    <span class="s2">"location"</span><span class="p">:</span> <span class="s2">"experiments/2026"</span><span class="p">,</span>
+<span class="p">}</span>
 </code></pre></div>
-<p>Or via environment variable:</p>
-<div class="highlight"><pre><span></span><code><span class="nb">export</span><span class="w"> </span><span class="nv">DJ_BACKEND</span><span class="o">=</span>postgresql
+<h2 id="credential-hygiene">Credential hygiene<a class="headerlink" href="#credential-hygiene" title="Permanent link">¶</a></h2>
+<p>For deployments where the container image must not carry credentials, configure plugin-adapter secrets via env vars instead of files:</p>
+<div class="highlight"><pre><span></span><code><span class="nb">export</span><span class="w"> </span><span class="nv">DJ_IGNORE_CONFIG_FILE</span><span class="o">=</span><span class="nb">true</span><span class="w">   </span><span class="c1"># skip datajoint.json and .secrets/</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">DJ_STORES</span><span class="o">=</span><span class="s1">'{</span>
+<span class="s1">  "uc": {</span>
+<span class="s1">    "protocol": "databricks",</span>
+<span class="s1">    "workspace_url": "https://my-workspace.cloud.databricks.com",</span>
+<span class="s1">    "volume": "main.default.my_volume",</span>
+<span class="s1">    "token": "dapibd...",</span>
+<span class="s1">    "location": "experiments/2026"</span>
+<span class="s1">  }</span>
+<span class="s1">}'</span>
 </code></pre></div>
-<h2 id="adapter-architecture">Adapter Architecture<a class="headerlink" href="#adapter-architecture" title="Permanent link">¶</a></h2>
-<p>DataJoint uses database adapters to generate backend-specific SQL while maintaining a consistent API.</p>
-<pre class="mermaid"><code>flowchart TB
-    subgraph api[DataJoint API]
-        tables[Tables, Queries, Schemas]
-    end
-
-    subgraph adapter[Database Adapter]
-        gen[SQL Generation, Type Mapping]
-    end
-
-    subgraph backends[Backend Adapters]
-        mysql[MySQL Adapter]
-        postgres[PostgreSQL Adapter]
-    end
-
-    api --&gt; adapter
-    adapter --&gt; mysql
-    adapter --&gt; postgres
-</code></pre>
-<h2 id="backend-compatibility">Backend Compatibility<a class="headerlink" href="#backend-compatibility" title="Permanent link">¶</a></h2>
-<h3 id="fully-compatible">Fully Compatible<a class="headerlink" href="#fully-compatible" title="Permanent link">¶</a></h3>
-<p>The following features work identically across all backends:</p>
-<ul>
-<li><strong>Table definitions</strong>: Same definition syntax for all backends</li>
-<li><strong>Core types</strong>: <code>int32</code>, <code>float64</code>, <code>varchar</code>, <code>datetime</code>, etc.</li>
-<li><strong>Codec types</strong>: <code>&lt;blob&gt;</code>, <code>&lt;attach&gt;</code>, <code>&lt;object@&gt;</code>, etc.</li>
-<li><strong>Query operations</strong>: Restriction, projection, join, aggregation</li>
-<li><strong>Foreign keys</strong>: Inheritance, nullable, unique modifiers</li>
-<li><strong>Indexes</strong>: Single-column, composite, unique</li>
-<li><strong>Auto-populate</strong>: Jobs queue, distributed computation</li>
-</ul>
-<h3 id="backend-specific-behavior">Backend-Specific Behavior<a class="headerlink" href="#backend-specific-behavior" title="Permanent link">¶</a></h3>
+<p>See <a href="../../../how-to/manage-secrets/#env-var-only-deployments">Manage Secrets — Env-var-only deployments</a>.</p>
+<h2 id="error-handling">Error handling<a class="headerlink" href="#error-handling" title="Permanent link">¶</a></h2>
 <table>
 <thead>
 <tr>
-<th>Feature</th>
-<th>MySQL</th>
-<th>PostgreSQL</th>
+<th>Error</th>
+<th>Cause</th>
+<th>Solution</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Default port</td>
-<td>3306</td>
-<td>5432</td>
+<td><code>Unknown protocol: &lt;name&gt;</code></td>
+<td>No adapter registered for the protocol</td>
+<td><code>pip install</code> the adapter package; check <code>[project.entry-points."datajoint.storage"]</code></td>
 </tr>
 <tr>
-<td>Schema = Database</td>
-<td>Yes</td>
-<td>Yes (uses schemas)</td>
+<td><code>&lt;protocol&gt; store is missing: &lt;fields&gt;</code></td>
+<td>Required key absent from store spec</td>
+<td>Provide the missing field via <code>datajoint.json</code>, <code>DJ_STORES</code>, or <code>.secrets/</code></td>
 </tr>
 <tr>
-<td>JSON operators</td>
-<td><code>-&gt;</code>, <code>-&gt;&gt;</code></td>
-<td><code>-&gt;</code>, <code>-&gt;&gt;</code></td>
+<td><code>Invalid key(s) for &lt;protocol&gt;: &lt;fields&gt;</code></td>
+<td>Spec contains a field the adapter does not accept</td>
+<td>Remove the field, or add it to <code>allowed_keys</code> in the adapter</td>
 </tr>
 <tr>
-<td>BLOB storage</td>
-<td><code>LONGBLOB</code></td>
-<td><code>BYTEA</code></td>
-</tr>
-<tr>
-<td>Boolean type</td>
-<td><code>TINYINT(1)</code></td>
-<td><code>BOOLEAN</code></td>
+<td><code>Failed to load storage adapter '&lt;name&gt;'</code></td>
+<td>Adapter class raised on import or instantiation</td>
+<td>Check the warning's exception trace; usually a missing dependency in the adapter package</td>
 </tr>
 </tbody>
 </table>
-<h3 id="string-quoting">String Quoting<a class="headerlink" href="#string-quoting" title="Permanent link">¶</a></h3>
-<p>MySQL and PostgreSQL handle quotes differently in SQL:</p>
-<table>
-<thead>
-<tr>
-<th>Quote Type</th>
-<th>MySQL</th>
-<th>PostgreSQL</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Single quotes <code>'...'</code></td>
-<td>String literals</td>
-<td>String literals</td>
-</tr>
-<tr>
-<td>Double quotes <code>"..."</code></td>
-<td>String literals</td>
-<td><strong>Identifiers</strong> (column names)</td>
-</tr>
-<tr>
-<td>Backticks <code>`...`</code></td>
-<td>Identifiers</td>
-<td>Not supported</td>
-</tr>
-</tbody>
-</table>
-<p>This affects restriction strings. MySQL accepts both quote styles for string values, but PostgreSQL interprets double quotes as identifier (column) references.</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># MySQL only - double quotes work as string literals</span>
-<span class="n">Table</span> <span class="o">&amp;</span> <span class="s1">'name = "Alice"'</span>
+<h2 id="api-reference">API Reference<a class="headerlink" href="#api-reference" title="Permanent link">¶</a></h2>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">datajoint</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dj</span>
 
-<span class="c1"># Both backends - single quotes for string literals</span>
-<span class="n">Table</span> <span class="o">&amp;</span> <span class="s2">"name = 'Alice'"</span>
-</code></pre></div>
-<p><strong>PostgreSQL migration:</strong> Replace double quotes with single quotes inside SQL restriction strings:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Before (MySQL)</span>
-<span class="n">Table</span> <span class="o">&amp;</span> <span class="s1">'strain = "C57BL/6"'</span>
-<span class="n">Table</span> <span class="o">&amp;</span> <span class="s1">'date &gt; "2024-01-01"'</span>
+<span class="c1"># Inspect a registered adapter</span>
+<span class="n">adapter</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">get_storage_adapter</span><span class="p">(</span><span class="s2">"s3"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">adapter</span><span class="o">.</span><span class="n">protocol</span><span class="p">,</span> <span class="n">adapter</span><span class="o">.</span><span class="n">required_keys</span><span class="p">,</span> <span class="n">adapter</span><span class="o">.</span><span class="n">allowed_keys</span><span class="p">)</span>
 
-<span class="c1"># After (PostgreSQL compatible)</span>
-<span class="n">Table</span> <span class="o">&amp;</span> <span class="s2">"strain = 'C57BL/6'"</span>
-<span class="n">Table</span> <span class="o">&amp;</span> <span class="s2">"date &gt; '2024-01-01'"</span>
+<span class="c1"># Internal: force re-discovery (testing)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">datajoint.storage_adapter</span><span class="w"> </span><span class="kn">import</span> <span class="n">_discover_adapters</span>
+<span class="n">_discover_adapters</span><span class="p">()</span>
 </code></pre></div>
-<p>Dictionary restrictions handle quoting automatically but only support equality:</p>
-<div class="highlight"><pre><span></span><code><span class="n">Table</span> <span class="o">&amp;</span> <span class="p">{</span><span class="s1">'name'</span><span class="p">:</span> <span class="s1">'Alice'</span><span class="p">}</span>  <span class="c1"># Equality only - backend-agnostic</span>
-</code></pre></div>
-<p>For range comparisons (<code>&gt;</code>, <code>&lt;</code>, <code>LIKE</code>, etc.), use string restrictions with single-quoted values.</p>
-<h3 id="sql-function-translation">SQL Function Translation<a class="headerlink" href="#sql-function-translation" title="Permanent link">¶</a></h3>
-<p>DataJoint automatically translates certain SQL functions between backends, allowing portable code:</p>
-<table>
-<thead>
-<tr>
-<th>Function</th>
-<th>MySQL</th>
-<th>PostgreSQL</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>String aggregation</td>
-<td><code>GROUP_CONCAT(col)</code></td>
-<td><code>STRING_AGG(col, ',')</code></td>
-</tr>
-<tr>
-<td>String aggregation with separator</td>
-<td><code>GROUP_CONCAT(col SEPARATOR ';')</code></td>
-<td><code>STRING_AGG(col, ';')</code></td>
-</tr>
-</tbody>
-</table>
-<p>You can use either syntax in your code—DataJoint translates to the appropriate form:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Both work on both backends</span>
-<span class="n">Person</span><span class="o">.</span><span class="n">aggr</span><span class="p">(</span><span class="n">Proficiency</span><span class="p">,</span> <span class="n">languages</span><span class="o">=</span><span class="s1">'GROUP_CONCAT(lang_code)'</span><span class="p">)</span>
-<span class="n">Person</span><span class="o">.</span><span class="n">aggr</span><span class="p">(</span><span class="n">Proficiency</span><span class="p">,</span> <span class="n">languages</span><span class="o">=</span><span class="s2">"STRING_AGG(lang_code, ',')"</span><span class="p">)</span>
-</code></pre></div>
-<p>The translation is bidirectional:</p>
-<ul>
-<li><strong>On PostgreSQL</strong>: <code>GROUP_CONCAT(col)</code> → <code>STRING_AGG(col::text, ',')</code></li>
-<li><strong>On MySQL</strong>: <code>STRING_AGG(col, ',')</code> → <code>GROUP_CONCAT(col)</code></li>
-</ul>
-<h2 id="type-mapping">Type Mapping<a class="headerlink" href="#type-mapping" title="Permanent link">¶</a></h2>
-<p>DataJoint core types map to native database types:</p>
-<table>
-<thead>
-<tr>
-<th>Core Type</th>
-<th>MySQL</th>
-<th>PostgreSQL</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>int8</code></td>
-<td><code>TINYINT</code></td>
-<td><code>SMALLINT</code></td>
-</tr>
-<tr>
-<td><code>int16</code></td>
-<td><code>SMALLINT</code></td>
-<td><code>SMALLINT</code></td>
-</tr>
-<tr>
-<td><code>int32</code></td>
-<td><code>INT</code></td>
-<td><code>INTEGER</code></td>
-</tr>
-<tr>
-<td><code>int64</code></td>
-<td><code>BIGINT</code></td>
-<td><code>BIGINT</code></td>
-</tr>
-<tr>
-<td><code>float32</code></td>
-<td><code>FLOAT</code></td>
-<td><code>REAL</code></td>
-</tr>
-<tr>
-<td><code>float64</code></td>
-<td><code>DOUBLE</code></td>
-<td><code>DOUBLE PRECISION</code></td>
-</tr>
-<tr>
-<td><code>bool</code></td>
-<td><code>TINYINT(1)</code></td>
-<td><code>BOOLEAN</code></td>
-</tr>
-<tr>
-<td><code>varchar(n)</code></td>
-<td><code>VARCHAR(n)</code></td>
-<td><code>VARCHAR(n)</code></td>
-</tr>
-<tr>
-<td><code>char(n)</code></td>
-<td><code>CHAR(n)</code></td>
-<td><code>CHAR(n)</code></td>
-</tr>
-<tr>
-<td><code>date</code></td>
-<td><code>DATE</code></td>
-<td><code>DATE</code></td>
-</tr>
-<tr>
-<td><code>datetime</code></td>
-<td><code>DATETIME</code></td>
-<td><code>TIMESTAMP</code></td>
-</tr>
-<tr>
-<td><code>datetime(n)</code></td>
-<td><code>DATETIME(n)</code></td>
-<td><code>TIMESTAMP(n)</code></td>
-</tr>
-<tr>
-<td><code>json</code></td>
-<td><code>JSON</code></td>
-<td><code>JSONB</code></td>
-</tr>
-<tr>
-<td><code>uuid</code></td>
-<td><code>BINARY(16)</code></td>
-<td><code>UUID</code></td>
-</tr>
-<tr>
-<td><code>bytes</code></td>
-<td><code>LONGBLOB</code></td>
-<td><code>BYTEA</code></td>
-</tr>
-</tbody>
-</table>
-<h2 id="connection-management">Connection Management<a class="headerlink" href="#connection-management" title="Permanent link">¶</a></h2>
-<p>Both backends support the same connection patterns:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Singleton connection (default)</span>
-<span class="n">conn</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">conn</span><span class="p">()</span>
-
-<span class="c1"># Context manager (explicit lifecycle)</span>
-<span class="k">with</span> <span class="n">dj</span><span class="o">.</span><span class="n">Connection</span><span class="p">(</span><span class="o">**</span><span class="n">creds</span><span class="p">)</span> <span class="k">as</span> <span class="n">conn</span><span class="p">:</span>
-    <span class="n">schema</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">Schema</span><span class="p">(</span><span class="s1">'my_schema'</span><span class="p">,</span> <span class="n">connection</span><span class="o">=</span><span class="n">conn</span><span class="p">)</span>
-
-<span class="c1"># Reset connection</span>
-<span class="n">conn</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">conn</span><span class="p">(</span><span class="n">reset</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-</code></pre></div>
-<h2 id="testing-against-multiple-backends">Testing Against Multiple Backends<a class="headerlink" href="#testing-against-multiple-backends" title="Permanent link">¶</a></h2>
-<p>For development and CI/CD, you can test against both backends:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Test MySQL only</span>
-<span class="nv">DJ_BACKEND</span><span class="o">=</span>mysql<span class="w"> </span>pytest<span class="w"> </span>tests/
-
-<span class="c1"># Test PostgreSQL only</span>
-<span class="nv">DJ_BACKEND</span><span class="o">=</span>postgresql<span class="w"> </span>pytest<span class="w"> </span>tests/
-</code></pre></div>
-<h2 id="migration-between-backends">Migration Between Backends<a class="headerlink" href="#migration-between-backends" title="Permanent link">¶</a></h2>
-<p>DataJoint does not provide automatic migration between backends. To migrate data:</p>
-<ol>
-<li>Export data using <code>fetch()</code> and pandas DataFrames</li>
-<li>Create new schemas on the target backend</li>
-<li>Import data using <code>insert()</code></li>
-</ol>
-<p>Schema definitions are portable—the same Python class definitions work on both backends.</p>
 <h2 id="see-also">See Also<a class="headerlink" href="#see-also" title="Permanent link">¶</a></h2>
 <ul>
-<li><a href="../../../how-to/configure-database/">Configure Database</a> — Connection setup</li>
-<li><a href="../type-system/">Type System</a> — Core type definitions</li>
-<li><a href="../table-declaration/">Table Declaration</a> — Definition syntax</li>
+<li><a href="../../../how-to/configure-storage/">Configure Object Storage</a> — Task-oriented setup guide</li>
+<li><a href="../../../how-to/manage-secrets/">Manage Secrets</a> — Credential hygiene, env-var-only deployments</li>
+<li><a href="../object-store-configuration/">Object Store Configuration</a> — Common store-config schema and precedence</li>
+<li><a href="../codec-api/">Codec API</a> — Attribute-level codecs (different layer)</li>
+<li><a href="https://github.com/datajoint/datajoint-python/pull/1452">datajoint-python PR #1452</a> — <code>DJ_STORES</code>, <code>DJ_IGNORE_CONFIG_FILE</code>, arbitrary-attr secrets</li>
 </ul>
 </article>
 </div>

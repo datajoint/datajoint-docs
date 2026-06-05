@@ -2384,6 +2384,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#configuring-stores-via-environment-variables" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuring stores via environment variables
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#see-also" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4243,6 +4254,8 @@
       
         
       
+        
+      
     
     
     
@@ -4356,6 +4369,34 @@
     
   
     NPY Codec
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/specs/storage-adapter-api/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Storage Adapter API
   
 
     
@@ -5413,6 +5454,8 @@
       
         
       
+        
+      
     
     
     
@@ -5464,6 +5507,34 @@
 
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../about/whats-new-2-2-4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    What's New in 2.2.4
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
             
               
                 
@@ -5934,6 +6005,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#configuring-stores-via-environment-variables" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuring stores via environment variables
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#see-also" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -6370,10 +6452,42 @@ Modern local filesystems and cloud object storage work well without subfolding.<
 <li>Cannot use reserved sections (configured by <code>hash_prefix</code> and <code>schema_prefix</code>)</li>
 <li>Can be restricted to specific prefix using <code>filepath_prefix</code> configuration</li>
 </ul>
+<h2 id="configuring-stores-via-environment-variables">Configuring stores via environment variables<a class="headerlink" href="#configuring-stores-via-environment-variables" title="Permanent link">&para;</a></h2>
+<div class="admonition version-added">
+<p class="admonition-title">New in 2.2.4</p>
+<p><code>DJ_STORES</code> carries a JSON-encoded copy of the <code>stores</code> dict for env-var-only deployments (Kubernetes pods, Lambda, the DataJoint platform). Combined with <code>DJ_IGNORE_CONFIG_FILE=true</code>, it removes the need for any file on disk.</p>
+</div>
+<p>The JSON shape is identical to the <code>stores</code> block of <code>datajoint.json</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="nb">export</span><span class="w"> </span><span class="nv">DJ_STORES</span><span class="o">=</span><span class="s1">&#39;{</span>
+<span class="s1">  &quot;default&quot;: &quot;main&quot;,</span>
+<span class="s1">  &quot;main&quot;: {</span>
+<span class="s1">    &quot;protocol&quot;: &quot;s3&quot;,</span>
+<span class="s1">    &quot;endpoint&quot;: &quot;s3.amazonaws.com&quot;,</span>
+<span class="s1">    &quot;bucket&quot;: &quot;my-bucket&quot;,</span>
+<span class="s1">    &quot;location&quot;: &quot;my-project/production&quot;,</span>
+<span class="s1">    &quot;access_key&quot;: &quot;AKIA...&quot;,</span>
+<span class="s1">    &quot;secret_key&quot;: &quot;wJal...&quot;</span>
+<span class="s1">  }</span>
+<span class="s1">}&#39;</span>
+</code></pre></div>
+<p>For plugin-registered adapters, declare whatever fields the adapter requires:</p>
+<div class="highlight"><pre><span></span><code><span class="nb">export</span><span class="w"> </span><span class="nv">DJ_STORES</span><span class="o">=</span><span class="s1">&#39;{</span>
+<span class="s1">  &quot;uc&quot;: {</span>
+<span class="s1">    &quot;protocol&quot;: &quot;databricks&quot;,</span>
+<span class="s1">    &quot;workspace_url&quot;: &quot;https://my-workspace.cloud.databricks.com&quot;,</span>
+<span class="s1">    &quot;volume&quot;: &quot;main.default.my_volume&quot;,</span>
+<span class="s1">    &quot;token&quot;: &quot;dapibd...&quot;</span>
+<span class="s1">  }</span>
+<span class="s1">}&#39;</span>
+</code></pre></div>
+<p><code>DJ_STORES</code>, when set, replaces the <code>stores</code> block loaded from <code>datajoint.json</code>. The <code>.secrets/</code> directory still runs afterward and fills in any attribute that <code>DJ_STORES</code> omits — useful if you want to keep non-sensitive store config in a file and inject only credentials via env vars.</p>
+<p>See <a href="../manage-secrets/#env-var-only-deployments">Manage Secrets</a> for credential hygiene and <a href="../../reference/specs/storage-adapter-api/">Storage Adapter API</a> for the plugin contract.</p>
 <h2 id="see-also">See Also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
 <ul>
 <li><a href="../use-object-storage/">Use Object Storage</a> — When and how to use object storage</li>
 <li><a href="../manage-large-data/">Manage Large Data</a> — Working with blobs and objects</li>
+<li><a href="../manage-secrets/">Manage Secrets</a> — Credential hygiene, env-var-only deployments</li>
+<li><a href="../../reference/specs/storage-adapter-api/">Storage Adapter API</a> — Plugin contract for third-party storage protocols <em>(new in 2.2.4)</em></li>
 </ul>
 
 
