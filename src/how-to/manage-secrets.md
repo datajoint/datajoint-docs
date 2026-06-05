@@ -22,7 +22,7 @@ DataJoint loads configuration in this priority order (highest to lowest):
 4. **Secrets directory** — `.secrets/stores.<name>.<attr>` (fills attributes the file/env didn't already set)
 5. **Default values** — Built-in defaults
 
-Higher priority sources override lower ones. Set `DJ_IGNORE_CONFIG_FILE=true` *(new in 2.3)* to skip both `datajoint.json` and the secrets directory entirely — see [Env-var-only deployments](#env-var-only-deployments) below.
+Higher priority sources override lower ones. Set `DJ_IGNORE_CONFIG_FILE=true` *(new in 2.2.3)* to skip both `datajoint.json` and the secrets directory entirely — see [Env-var-only deployments](#env-var-only-deployments) below.
 
 ## `.secrets/` Directory Structure
 
@@ -38,11 +38,11 @@ project/
 │   ├── stores.main.secret_key
 │   ├── stores.archive.access_key
 │   ├── stores.archive.secret_key
-│   └── stores.uc.token          # any stores.<name>.<attr> (new in 2.3)
+│   └── stores.uc.token          # any stores.<name>.<attr> (new in 2.2.3)
 └── ...
 ```
 
-!!! version-added "New in 2.3"
+!!! version-added "New in 2.2.3"
     Any `stores.<name>.<attr>` file is loaded, not only `access_key` / `secret_key`. Plugin-registered storage adapters (e.g. a Databricks Bearer-token adapter) can define their own field names — see [Storage Adapter API](../reference/specs/storage-adapter-api.md).
 
 **Critical:** Add `.secrets/` to `.gitignore`:
@@ -167,7 +167,7 @@ wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
 
 #### Alternative: Environment Variables
 
-!!! version-added "New in 2.3"
+!!! version-added "New in 2.2.3"
     `DJ_STORES` carries a JSON-encoded copy of the entire `stores` dict, in the same shape as `datajoint.json`. Replaces the `stores` block from the file. `.secrets/stores.<name>.<attr>` files still fill in attributes that `DJ_STORES` omits.
 
 For cloud deployments, put the entire `stores` block in a single env var:
@@ -206,17 +206,17 @@ If `DJ_STORES` contains invalid JSON, DataJoint raises `ValueError` at config-lo
 
 | Variable | Description |
 |----------|-------------|
-| `DJ_STORES` | JSON-encoded `stores` dict (same shape as `datajoint.json`). Replaces the `stores` block from the file. *(new in 2.3)* |
+| `DJ_STORES` | JSON-encoded `stores` dict (same shape as `datajoint.json`). Replaces the `stores` block from the file. *(new in 2.2.3)* |
 
 ### Config-Source Control
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `DJ_IGNORE_CONFIG_FILE` | `false` | If `true`, skip `datajoint.json`, the project `.secrets/`, and `/run/secrets/datajoint/`. Only env vars and defaults apply. *(new in 2.3)* |
+| `DJ_IGNORE_CONFIG_FILE` | `false` | If `true`, skip `datajoint.json`, the project `.secrets/`, and `/run/secrets/datajoint/`. Only env vars and defaults apply. *(new in 2.2.3)* |
 
 ## Env-var-only deployments
 
-!!! version-added "New in 2.3"
+!!! version-added "New in 2.2.3"
     `DJ_IGNORE_CONFIG_FILE=true` plus `DJ_STORES` gives a deployment a hard guarantee that no file on disk contributes to config — only env vars do. This is how the DataJoint platform configures pipelines.
 
 For Kubernetes, Lambda, the DataJoint platform, or any deployment where the container image must not carry configuration:
@@ -268,10 +268,10 @@ chmod 600 .secrets/datajoint.json
 export DJ_USER=$(vault read -field=username secret/datajoint/db)
 export DJ_PASS=$(vault read -field=password secret/datajoint/db)
 
-# Stores: one JSON-encoded env var (new in 2.3)
+# Stores: one JSON-encoded env var (new in 2.2.3)
 export DJ_STORES=$(vault read -format=json -field=stores secret/datajoint)
 
-# Optional: guarantee no file on disk contributes to config (new in 2.3)
+# Optional: guarantee no file on disk contributes to config (new in 2.2.3)
 export DJ_IGNORE_CONFIG_FILE=true
 ```
 
