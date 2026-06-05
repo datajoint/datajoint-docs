@@ -372,7 +372,47 @@ table.insert1({'session_id': 4, 'recording': '_schema/myschema/...'}) # Error!
 - Cannot use reserved sections (configured by `hash_prefix` and `schema_prefix`)
 - Can be restricted to specific prefix using `filepath_prefix` configuration
 
+## Configuring stores via environment variables
+
+!!! version-added "New in 2.2.4"
+    `DJ_STORES` carries a JSON-encoded copy of the `stores` dict for env-var-only deployments (Kubernetes pods, Lambda, the DataJoint platform). Combined with `DJ_IGNORE_CONFIG_FILE=true`, it removes the need for any file on disk.
+
+The JSON shape is identical to the `stores` block of `datajoint.json`:
+
+```bash
+export DJ_STORES='{
+  "default": "main",
+  "main": {
+    "protocol": "s3",
+    "endpoint": "s3.amazonaws.com",
+    "bucket": "my-bucket",
+    "location": "my-project/production",
+    "access_key": "AKIA...",
+    "secret_key": "wJal..."
+  }
+}'
+```
+
+For plugin-registered adapters, declare whatever fields the adapter requires:
+
+```bash
+export DJ_STORES='{
+  "uc": {
+    "protocol": "databricks",
+    "workspace_url": "https://my-workspace.cloud.databricks.com",
+    "volume": "main.default.my_volume",
+    "token": "dapibd..."
+  }
+}'
+```
+
+`DJ_STORES`, when set, replaces the `stores` block loaded from `datajoint.json`. The `.secrets/` directory still runs afterward and fills in any attribute that `DJ_STORES` omits — useful if you want to keep non-sensitive store config in a file and inject only credentials via env vars.
+
+See [Manage Secrets](manage-secrets.md#env-var-only-deployments) for credential hygiene and [Storage Adapter API](../reference/specs/storage-adapter-api.md) for the plugin contract.
+
 ## See Also
 
 - [Use Object Storage](use-object-storage.md) — When and how to use object storage
 - [Manage Large Data](manage-large-data.md) — Working with blobs and objects
+- [Manage Secrets](manage-secrets.md) — Credential hygiene, env-var-only deployments
+- [Storage Adapter API](../reference/specs/storage-adapter-api.md) — Plugin contract for third-party storage protocols *(new in 2.2.4)*

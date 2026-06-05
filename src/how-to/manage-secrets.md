@@ -17,12 +17,12 @@ DataJoint separates configuration into sensitive and non-sensitive components:
 DataJoint loads configuration in this priority order (highest to lowest):
 
 1. **Programmatic settings** — `dj.config['key'] = value`
-2. **Environment variables** — `DJ_HOST`, `DJ_USER`, etc.
-3. **Secrets directory** — `.secrets/datajoint.json`, `.secrets/stores.*`
-4. **Project configuration** — `datajoint.json`
+2. **Environment variables** — `DJ_HOST`, `DJ_USER`, `DJ_STORES`, etc.
+3. **Project configuration** — `datajoint.json`
+4. **Secrets directory** — `.secrets/stores.<name>.<attr>` (fills attributes the file/env didn't already set)
 5. **Default values** — Built-in defaults
 
-Higher priority sources override lower ones.
+Higher priority sources override lower ones. Set `DJ_IGNORE_CONFIG_FILE=true` *(new in 2.2.4)* to skip both `datajoint.json` and the secrets directory entirely — see [Env-var-only deployments](#env-var-only-deployments) below.
 
 ## `.secrets/` Directory Structure
 
@@ -37,9 +37,13 @@ project/
 │   ├── stores.main.access_key   # S3/cloud storage credentials
 │   ├── stores.main.secret_key
 │   ├── stores.archive.access_key
-│   └── stores.archive.secret_key
+│   ├── stores.archive.secret_key
+│   └── stores.uc.token          # any stores.<name>.<attr> (new in 2.2.4)
 └── ...
 ```
+
+!!! version-added "New in 2.2.4"
+    Any `stores.<name>.<attr>` file is loaded, not only `access_key` / `secret_key`. Plugin-registered storage adapters (e.g. a Databricks Bearer-token adapter) can define their own field names — see [Storage Adapter API](../reference/specs/storage-adapter-api.md).
 
 **Critical:** Add `.secrets/` to `.gitignore`:
 
@@ -81,7 +85,7 @@ export DJ_HOST=db.example.com
 export DJ_USER=myuser
 export DJ_PASS=mypassword
 export DJ_PORT=3306
-export DJ_TLS=true
+export DJ_USE_TLS=true
 ```
 
 ### Option 3: Programmatic Configuration
@@ -163,12 +167,28 @@ wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
 
 #### Alternative: Environment Variables
 
-For cloud deployments:
+!!! version-added "New in 2.2.4"
+    `DJ_STORES` carries a JSON-encoded copy of the entire `stores` dict, in the same shape as `datajoint.json`. Replaces the `stores` block from the file. `.secrets/stores.<name>.<attr>` files still fill in attributes that `DJ_STORES` omits.
+
+For cloud deployments, put the entire `stores` block in a single env var:
 
 ```bash
-export DJ_STORES_MAIN_ACCESS_KEY=AKIAIOSFODNN7EXAMPLE
-export DJ_STORES_MAIN_SECRET_KEY=wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
+export DJ_STORES='{
+  "default": "main",
+  "main": {
+    "protocol": "s3",
+    "endpoint": "s3.amazonaws.com",
+    "bucket": "my-bucket",
+    "location": "my-project/data",
+    "access_key": "AKIAIOSFODNN7EXAMPLE",
+    "secret_key": "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
+  }
+}'
 ```
+
+For plugin-registered adapters, the field names are whatever the adapter declares — `token`, `api_key`, `workspace_url`, etc. See [Storage Adapter API](../reference/specs/storage-adapter-api.md).
+
+If `DJ_STORES` contains invalid JSON, DataJoint raises `ValueError` at config-load time with the JSON parser's error message.
 
 ## Environment Variable Reference
 
@@ -180,16 +200,42 @@ export DJ_STORES_MAIN_SECRET_KEY=wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
 | `database.port` | `DJ_PORT` | Database port (default: 3306) |
 | `database.user` | `DJ_USER` | Database username |
 | `database.password` | `DJ_PASS` | Database password |
-| `database.use_tls` | `DJ_TLS` | Use TLS encryption (true/false) |
+| `database.use_tls` | `DJ_USE_TLS` | Use TLS encryption (true/false) |
 
 ### Object Stores
 
-| Pattern | Example | Description |
-|---------|---------|-------------|
-| `DJ_STORES_<NAME>_ACCESS_KEY` | `DJ_STORES_MAIN_ACCESS_KEY` | S3 access key ID |
-| `DJ_STORES_<NAME>_SECRET_KEY` | `DJ_STORES_MAIN_SECRET_KEY` | S3 secret access key |
+| Variable | Description |
+|----------|-------------|
+| `DJ_STORES` | JSON-encoded `stores` dict (same shape as `datajoint.json`). Replaces the `stores` block from the file. *(new in 2.2.4)* |
 
-**Note:** `<NAME>` is the uppercase store name with `_` replacing special characters.
+### Config-Source Control
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `DJ_IGNORE_CONFIG_FILE` | `false` | If `true`, skip `datajoint.json`, the project `.secrets/`, and `/run/secrets/datajoint/`. Only env vars and defaults apply. *(new in 2.2.4)* |
+
+## Env-var-only deployments
+
+!!! version-added "New in 2.2.4"
+    `DJ_IGNORE_CONFIG_FILE=true` plus `DJ_STORES` gives a deployment a hard guarantee that no file on disk contributes to config — only env vars do. This is how the DataJoint platform configures pipelines.
+
+For Kubernetes, Lambda, the DataJoint platform, or any deployment where the container image must not carry configuration:
+
+```bash
+export DJ_IGNORE_CONFIG_FILE=true
+export DJ_HOST=db.example.com
+export DJ_USER=$(vault read -field=username secret/datajoint)
+export DJ_PASS=$(vault read -field=password secret/datajoint)
+export DJ_STORES="$(vault read -format=json -field=stores secret/datajoint)"
+```
+
+With `DJ_IGNORE_CONFIG_FILE=true`, DataJoint skips:
+
+- the recursive parent-directory search for `datajoint.json`
+- the project `.secrets/` directory
+- the Docker/Kubernetes `/run/secrets/datajoint/` directory
+
+Only env vars (`DJ_HOST`, `DJ_USER`, `DJ_PASS`, `DJ_STORES`, …) and built-in defaults apply. No file under any parent directory of the working directory can contribute to config.
 
 ## Security Best Practices
 
@@ -221,8 +267,12 @@ chmod 600 .secrets/datajoint.json
 # Use environment variables from secure sources
 export DJ_USER=$(vault read -field=username secret/datajoint/db)
 export DJ_PASS=$(vault read -field=password secret/datajoint/db)
-export DJ_STORES_MAIN_ACCESS_KEY=$(vault read -field=access_key secret/datajoint/s3)
-export DJ_STORES_MAIN_SECRET_KEY=$(vault read -field=secret_key secret/datajoint/s3)
+
+# Stores: one JSON-encoded env var (new in 2.2.4)
+export DJ_STORES=$(vault read -format=json -field=stores secret/datajoint)
+
+# Optional: guarantee no file on disk contributes to config (new in 2.2.4)
+export DJ_IGNORE_CONFIG_FILE=true
 ```
 
 ### CI/CD Environment
