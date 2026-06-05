@@ -4,7 +4,7 @@ This specification defines the DataJoint Storage Adapter plugin contract for add
 
 For attribute-level codecs (e.g. NetworkX graphs, Parquet, Zarr), see [Codec API](codec-api.md).
 
-!!! version-added "New in 2.2.3"
+!!! version-added "New in 2.2.4"
     The `datajoint.storage` entry-point group is now part of the public API for third-party adapters. (The built-in `file`, `s3`, `gcs`, and `azure` protocols continue to be served by `StorageBackend._create_filesystem()`; migrating them onto this contract is tracked separately.)
 
 ## Overview
@@ -33,10 +33,7 @@ You do **not** need an adapter for `s3`, `gcs`, `azure`, or `file` — those are
 
 ## The `StorageAdapter` Base Class
 
-All storage adapters inherit from `dj.StorageAdapter`.
-
-!!! note "Available in datajoint ≥ 2.2.4"
-    The `dj.StorageAdapter` / `dj.get_storage_adapter()` shortcuts are exposed at the top-level in datajoint 2.2.4 and later. On 2.2.3, import them via `from datajoint.storage_adapter import StorageAdapter, get_storage_adapter`.
+All storage adapters inherit from `dj.StorageAdapter`:
 
 ```python
 from abc import abstractmethod
@@ -119,7 +116,7 @@ Field names beyond the common keys are adapter-defined. The adapter's `required_
 
 The same store can be configured via `DJ_STORES` (env-var-only deployments) — see [Configure Storage](../../how-to/configure-storage.md#configuring-stores-via-environment-variables).
 
-Per-store secrets in `.secrets/stores.<name>.<attr>` use the adapter's field names (e.g. `.secrets/stores.uc.token`). *(new in 2.2.3 — previously only `access_key`/`secret_key` were honored.)*
+Per-store secrets in `.secrets/stores.<name>.<attr>` use the adapter's field names (e.g. `.secrets/stores.uc.token`). *(new in 2.2.4 — previously only `access_key`/`secret_key` were honored.)*
 
 ## Plugin packaging
 
@@ -140,7 +137,7 @@ dj-databricks-storage/
 [project]
 name = "dj-databricks-storage"
 version = "0.1.0"
-dependencies = ["datajoint>=2.2.3", "fsspec", "databricks-sdk"]
+dependencies = ["datajoint>=2.2.4", "fsspec", "databricks-sdk"]
 
 [project.entry-points."datajoint.storage"]
 databricks = "dj_databricks_storage.adapter:DatabricksVolumesAdapter"

@@ -145,10 +145,10 @@ If table lacks partition attributes, it follows normal path structure.
 ├── stores.main.secret_key
 ├── stores.archive.access_key
 ├── stores.archive.secret_key
-└── stores.uc.token            # any stores.<name>.<attr> file (new in 2.2.3)
+└── stores.uc.token            # any stores.<name>.<attr> file (new in 2.2.4)
 ```
 
-!!! version-added "New in 2.2.3"
+!!! version-added "New in 2.2.4"
     Any `stores.<name>.<attr>` file is loaded, not only `access_key` / `secret_key`. This supports plugin-registered adapters with arbitrary field names (e.g. a Bearer `token`). See [Storage Adapter API](specs/storage-adapter-api.md).
 
 ## Jobs Settings
@@ -182,8 +182,8 @@ If table lacks partition attributes, it follows normal path structure.
 | `cache` | — | `None` | Path for query result cache |
 | `query_cache` | — | `None` | Path for compiled query cache |
 | `download_path` | — | `.` | Download location for attachments/filepaths |
-| `stores` | `DJ_STORES` | `{}` | JSON-encoded `stores` dict. Replaces the `stores` block from `datajoint.json`. *(new in 2.2.3)* |
-| `ignore_config_file` | `DJ_IGNORE_CONFIG_FILE` | `False` | Skip `datajoint.json` and the secrets directory. *(new in 2.2.3)* |
+| `stores` | `DJ_STORES` | `{}` | JSON-encoded `stores` dict. Replaces the `stores` block from `datajoint.json`. *(new in 2.2.4)* |
+| `ignore_config_file` | `DJ_IGNORE_CONFIG_FILE` | `False` | Skip `datajoint.json` and the secrets directory. *(new in 2.2.4)* |
 
 ## Example Configuration
 
@@ -250,7 +250,7 @@ export DJ_USER=analyst
 export DJ_PASS=secret
 export DJ_DATABASE_NAME=my_database  # PostgreSQL only (new in 2.2.1)
 
-# Stores (new in 2.2.3) — JSON-encoded copy of the stores block
+# Stores (new in 2.2.4) — JSON-encoded copy of the stores block
 export DJ_STORES='{
   "default": "main",
   "main": {
@@ -263,11 +263,11 @@ export DJ_STORES='{
   }
 }'
 
-# Skip datajoint.json and .secrets/ entirely (new in 2.2.3)
+# Skip datajoint.json and .secrets/ entirely (new in 2.2.4)
 export DJ_IGNORE_CONFIG_FILE=true
 ```
 
-!!! version-added "New in 2.2.3"
+!!! version-added "New in 2.2.4"
     `DJ_STORES` carries a JSON-encoded copy of the `stores` block. `DJ_IGNORE_CONFIG_FILE=true` skips `datajoint.json`, the project `.secrets/`, and `/run/secrets/datajoint/` — useful for env-var-only deployments (Kubernetes pods, the DataJoint platform). See [Manage Secrets](../how-to/manage-secrets.md#env-var-only-deployments).
 
 ## Programmatic Access

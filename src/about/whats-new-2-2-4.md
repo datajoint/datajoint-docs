@@ -1,23 +1,23 @@
-# What's New in DataJoint 2.2.3
+# What's New in DataJoint 2.2.4
 
-DataJoint 2.2.3 introduces **env-var-only configuration of storage**, **a public plugin-adapter contract for third-party storage protocols**, and tightens credential loading for files.
+DataJoint 2.2.4 introduces **env-var-only configuration of storage**, **a public plugin-adapter contract for third-party storage protocols**, and tightens credential loading for files.
 
-> **Upgrading from 2.2.0–2.2.2?** No breaking changes for projects using `datajoint.json` or `.secrets/`. The new env vars are purely additive.
+> **Upgrading from 2.2.0–2.2.3?** No breaking changes for projects using `datajoint.json` or `.secrets/`. The new env vars are purely additive.
 
 ## Overview
 
-The DataJoint platform — and many production deployments generally — provision configuration entirely from environment variables: there is no `datajoint.json` in the container image and no `.secrets/` directory on disk. Until 2.2.3, this worked for the database connection (`DJ_HOST`, `DJ_USER`, `DJ_PASS`, …) but **not** for object stores: per-store credentials had to be configured through `datajoint.json` or `.secrets/stores.<name>.<attr>` files.
+The DataJoint platform — and many production deployments generally — provision configuration entirely from environment variables: there is no `datajoint.json` in the container image and no `.secrets/` directory on disk. Until 2.2.4, this worked for the database connection (`DJ_HOST`, `DJ_USER`, `DJ_PASS`, …) but **not** for object stores: per-store credentials had to be configured through `datajoint.json` or `.secrets/stores.<name>.<attr>` files.
 
-DataJoint 2.2.3 closes that gap with two new env vars, both purely additive:
+DataJoint 2.2.4 closes that gap with two new env vars, both purely additive:
 
 - `DJ_STORES` — a JSON-encoded copy of the entire `stores` dict, in the same shape used in `datajoint.json`.
 - `DJ_IGNORE_CONFIG_FILE` — a boolean flag that skips both `datajoint.json` and the secrets directory entirely.
 
-The 2.2.3 release also formalizes the **storage-adapter plugin contract** (`datajoint.storage` entry-point group), which had been used internally since 2.0 but lacked a published spec. Third-party packages can now register storage protocols (Databricks Unity Catalog Volumes, custom HTTP-based stores, lab-specific archive systems, …) by subclassing `dj.StorageAdapter` and declaring an entry point.
+The 2.2.4 release also formalizes the **storage-adapter plugin contract** (`datajoint.storage` entry-point group), which had been used internally since 2.0 but lacked a published spec. Third-party packages can now register storage protocols (Databricks Unity Catalog Volumes, custom HTTP-based stores, lab-specific archive systems, …) by subclassing `dj.StorageAdapter` and declaring an entry point.
 
 ## `DJ_STORES` — JSON-encoded stores configuration
 
-!!! version-added "New in 2.2.3"
+!!! version-added "New in 2.2.4"
     `DJ_STORES` accepts a JSON object identical to the `stores` block of `datajoint.json`.
 
 A single env var carries the entire `stores` dict. The format matches what users already write in `datajoint.json`, so config can be moved between file and env var by copy-paste — no per-field naming scheme to learn.
@@ -70,7 +70,7 @@ ValueError: DJ_STORES contains invalid JSON: Expecting property name enclosed in
 
 ## `DJ_IGNORE_CONFIG_FILE` — skip files entirely
 
-!!! version-added "New in 2.2.3"
+!!! version-added "New in 2.2.4"
     Set `DJ_IGNORE_CONFIG_FILE=true` to skip `datajoint.json` and the secrets directory.
 
 For env-var-only deployments — Kubernetes pods, Lambda functions, the DataJoint platform — set:
@@ -93,12 +93,12 @@ Only env vars (`DJ_HOST`, `DJ_USER`, `DJ_PASS`, `DJ_STORES`, …) and defaults a
 
 ## `.secrets/stores.<name>.<attr>` accepts any attribute
 
-!!! version-added "New in 2.2.3"
+!!! version-added "New in 2.2.4"
     Any `.secrets/stores.<name>.<attr>` file loads into `dj.config["stores"][<name>][<attr>]`, not just `access_key` / `secret_key`.
 
 Previously, only `.secrets/stores.<name>.access_key` and `.secrets/stores.<name>.secret_key` were honored. Plugin-registered adapters often need other field names — a Databricks adapter wants a Bearer `token`, an HTTP adapter might want `api_key`, etc.
 
-In 2.2.3, any file matching `stores.<name>.<attr>` under the secrets directory is loaded:
+In 2.2.4, any file matching `stores.<name>.<attr>` under the secrets directory is loaded:
 
 ```
 .secrets/
@@ -111,7 +111,7 @@ Config-file values and `DJ_STORES` still take precedence — secrets only fill a
 
 ## Storage-adapter plugin contract
 
-!!! version-added "New in 2.2.3"
+!!! version-added "New in 2.2.4"
     The `datajoint.storage` entry-point group is now part of the public API.
 
 Third-party packages can register additional storage protocols (Databricks Unity Catalog Volumes, custom HTTP-based stores, lab archive systems) by declaring an entry point. The built-in `file`, `s3`, `gcs`, and `azure` protocols continue to be served by the existing internal dispatch in `StorageBackend`; migrating them onto the public adapter contract is tracked separately.
@@ -129,7 +129,7 @@ See [Storage Adapter API](../reference/specs/storage-adapter-api.md) for the ful
 ## See Also
 
 - [What's New in 2.2](whats-new-22.md) — Previous release (isolated instances, thread-safe mode, graph-driven cascade)
-- [Release Notes (v2.2.3)](https://github.com/datajoint/datajoint-python/releases/tag/v2.2.3) — GitHub changelog
+- [Release Notes (v2.2.4)](https://github.com/datajoint/datajoint-python/releases/tag/v2.2.4) — GitHub changelog
 - [Manage Secrets](../how-to/manage-secrets.md) — Updated for `DJ_STORES` and `DJ_IGNORE_CONFIG_FILE`
 - [Configure Object Storage](../how-to/configure-storage.md) — Env-var-only deployments
 - [Storage Adapter API](../reference/specs/storage-adapter-api.md) — Plugin contract
