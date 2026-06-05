@@ -114,7 +114,7 @@ Config-file values and `DJ_STORES` still take precedence — secrets only fill a
 !!! version-added "New in 2.2.3"
     The `datajoint.storage` entry-point group is now part of the public API.
 
-DataJoint's built-in `file`, `s3`, `gcs`, and `azure` protocols are themselves `StorageAdapter` subclasses. Third-party packages can register additional protocols by declaring an entry point:
+Third-party packages can register additional storage protocols (Databricks Unity Catalog Volumes, custom HTTP-based stores, lab archive systems) by declaring an entry point. The built-in `file`, `s3`, `gcs`, and `azure` protocols continue to be served by the existing internal dispatch in `StorageBackend`; migrating them onto the public adapter contract is tracked separately.
 
 ```toml
 # pyproject.toml of a plugin package

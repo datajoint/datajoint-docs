@@ -5,7 +5,7 @@ This specification defines the DataJoint Storage Adapter plugin contract for add
 For attribute-level codecs (e.g. NetworkX graphs, Parquet, Zarr), see [Codec API](codec-api.md).
 
 !!! version-added "New in 2.2.3"
-    The `datajoint.storage` entry-point group is now part of the public API. DataJoint's built-in `file`, `s3`, `gcs`, and `azure` protocols use the same contract.
+    The `datajoint.storage` entry-point group is now part of the public API for third-party adapters. (The built-in `file`, `s3`, `gcs`, and `azure` protocols continue to be served by `StorageBackend._create_filesystem()`; migrating them onto this contract is tracked separately.)
 
 ## Overview
 
@@ -33,7 +33,10 @@ You do **not** need an adapter for `s3`, `gcs`, `azure`, or `file` — those are
 
 ## The `StorageAdapter` Base Class
 
-All storage adapters inherit from `dj.StorageAdapter`:
+All storage adapters inherit from `dj.StorageAdapter`.
+
+!!! note "Available in datajoint ≥ 2.2.4"
+    The `dj.StorageAdapter` / `dj.get_storage_adapter()` shortcuts are exposed at the top-level in datajoint 2.2.4 and later. On 2.2.3, import them via `from datajoint.storage_adapter import StorageAdapter, get_storage_adapter`.
 
 ```python
 from abc import abstractmethod
@@ -197,17 +200,6 @@ dj.config["stores"]["uc"] = {
     "location": "experiments/2026",
 }
 ```
-
-## Built-in adapters
-
-DataJoint ships these built-in storage adapters as references. Their source lives in the `datajoint-python` package and follows the same contract third-party adapters use.
-
-| Protocol | Adapter class | Required keys | Notes |
-|----------|--------------|---------------|-------|
-| `file` | `FileAdapter` | — | Local or NFS-mounted paths |
-| `s3` | `S3Adapter` | `endpoint`, `bucket`, `access_key`, `secret_key` | AWS S3, MinIO, any S3-compatible backend |
-| `gcs` | `GCSAdapter` | `bucket`, `token` | Google Cloud Storage |
-| `azure` | `AzureAdapter` | `container`, `account_name`, `account_key` | Azure Blob Storage |
 
 ## Credential hygiene
 

@@ -85,7 +85,7 @@ export DJ_HOST=db.example.com
 export DJ_USER=myuser
 export DJ_PASS=mypassword
 export DJ_PORT=3306
-export DJ_TLS=true
+export DJ_USE_TLS=true
 ```
 
 ### Option 3: Programmatic Configuration
