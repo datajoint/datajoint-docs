@@ -175,22 +175,26 @@ Equivalent to `insert((row,), **kwargs)`.
 
 ### 2.9 Staged Insert for Large Objects
 
-For large objects (Zarr arrays, HDF5 files), use staged insert to write directly to object storage. The lifecycle, codec protocol, atomicity model, and codec compatibility matrix are specified in detail in [Staged Insert Specification](staged-insert.md).
+For multi-file `<object@>` payloads written incrementally (Zarr arrays from a stream, HDF5 files, ad-hoc file collections), use staged insert to write directly to object storage. The lifecycle, path and metadata contracts, atomicity model, and concurrency rules are specified in detail in [Staged Insert Specification](staged-insert.md).
 
 ```python
 with table.staged_insert1 as staged:
-    # Set primary key and metadata
+    # 1. Set primary key first — the canonical object path depends on it
     staged.rec["session_id"] = 123
-    staged.rec["timestamp"] = datetime.now()
 
-    # Write large data directly to storage
-    zarr_path = staged.store("raw_data", ".zarr")
-    z = zarr.open(zarr_path, mode="w")
-    z[:] = large_array
-    staged.rec["raw_data"] = z
+    # 2. Get a write handle for the <object@> field
+    store = staged.store("raw_data", ".zarr")
 
-# Row automatically inserted on successful exit
-# Storage cleaned up if exception occurs
+    # 3. Write incrementally
+    z = zarr.open(store, mode="w", shape=..., chunks=..., dtype="uint16")
+    for i in range(n):
+        z[i] = next_frame()
+
+    # 4. Set any remaining non-object attributes
+    staged.rec["n_frames"] = n
+
+# On clean exit: framework computes metadata for raw_data, row is inserted
+# On exception: staged object is removed, no row is inserted
 ```
 
 ---
