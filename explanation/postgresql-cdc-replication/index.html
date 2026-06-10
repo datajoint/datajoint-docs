@@ -8,31 +8,31 @@
       
       
       
-        <link rel="canonical" href="https://docs.datajoint.com/tutorials/">
+        <link rel="canonical" href="https://docs.datajoint.com/explanation/postgresql-cdc-replication/">
       
       
-        <link rel="prev" href="../explanation/postgresql-cdc-replication/">
+        <link rel="prev" href="../custom-codecs/">
       
       
-        <link rel="next" href="basics/01-first-pipeline/">
+        <link rel="next" href="../../tutorials/">
       
       
         
       
       
-      <link rel="icon" href="../assets/images/company-logo-blue.png">
+      <link rel="icon" href="../../assets/images/company-logo-blue.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
     
     
       
-        <title>Tutorials - DataJoint Documentation</title>
+        <title>PostgreSQL CDC and Replica Identity - DataJoint Documentation</title>
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
       
         
-        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
       
       
 
@@ -51,11 +51,11 @@
       
     
     
-      <link rel="stylesheet" href="../assets/_mkdocstrings.css">
+      <link rel="stylesheet" href="../../assets/_mkdocstrings.css">
     
-      <link rel="stylesheet" href="../assets/stylesheets/extra.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/extra.css">
     
-    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -105,7 +105,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#tutorials" class="md-skip">
+        <a href="#postgresql-cdc-and-replica-identity" class="md-skip">
           Skip to content
         </a>
       
@@ -148,7 +148,7 @@
 
 <header class="md-header md-header--shadow" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href=".." title="DataJoint Documentation" class="md-header__button md-logo" aria-label="DataJoint Documentation" data-md-component="logo">
+    <a href="../.." title="DataJoint Documentation" class="md-header__button md-logo" aria-label="DataJoint Documentation" data-md-component="logo">
       
   
   <?xml version="1.0" encoding="utf-8"?>
@@ -178,7 +178,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Tutorials
+              PostgreSQL CDC and Replica Identity
             
           </span>
         </div>
@@ -294,7 +294,7 @@
 
 <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href=".." title="DataJoint Documentation" class="md-nav__button md-logo" aria-label="DataJoint Documentation" data-md-component="logo">
+    <a href="../.." title="DataJoint Documentation" class="md-nav__button md-logo" aria-label="DataJoint Documentation" data-md-component="logo">
       
   
   <?xml version="1.0" encoding="utf-8"?>
@@ -334,7 +334,7 @@
   
   
     <li class="md-nav__item">
-      <a href=".." class="md-nav__link">
+      <a href="../.." class="md-nav__link">
         
   
   
@@ -358,8 +358,10 @@
       
   
   
+    
   
   
+  
     
     
       
@@ -382,15 +384,15 @@
       
     
     
-    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../explanation/" class="md-nav__link ">
+            <a href="../" class="md-nav__link ">
               
   
   
@@ -414,7 +416,7 @@
             
           </div>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_2">
             <span class="md-nav__icon md-icon"></span>
             
@@ -487,7 +489,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../explanation/data-pipelines/" class="md-nav__link">
+      <a href="../data-pipelines/" class="md-nav__link">
         
   
   
@@ -515,7 +517,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../explanation/faq/" class="md-nav__link">
+      <a href="../faq/" class="md-nav__link">
         
   
   
@@ -610,7 +612,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../explanation/relational-workflow-model/" class="md-nav__link">
+      <a href="../relational-workflow-model/" class="md-nav__link">
         
   
   
@@ -638,7 +640,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../explanation/entity-integrity/" class="md-nav__link">
+      <a href="../entity-integrity/" class="md-nav__link">
         
   
   
@@ -666,7 +668,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../explanation/normalization/" class="md-nav__link">
+      <a href="../normalization/" class="md-nav__link">
         
   
   
@@ -694,7 +696,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../explanation/computation-model/" class="md-nav__link">
+      <a href="../computation-model/" class="md-nav__link">
         
   
   
@@ -785,7 +787,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../explanation/query-algebra/" class="md-nav__link">
+      <a href="../query-algebra/" class="md-nav__link">
         
   
   
@@ -813,7 +815,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../explanation/semantic-matching/" class="md-nav__link">
+      <a href="../semantic-matching/" class="md-nav__link">
         
   
   
@@ -904,7 +906,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../explanation/type-system/" class="md-nav__link">
+      <a href="../type-system/" class="md-nav__link">
         
   
   
@@ -932,7 +934,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../explanation/custom-codecs/" class="md-nav__link">
+      <a href="../custom-codecs/" class="md-nav__link">
         
   
   
@@ -965,8 +967,10 @@
                 
   
   
+    
   
   
+  
     
     
       
@@ -978,11 +982,11 @@
       
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_5" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_5" checked>
         
           
           <label class="md-nav__link" for="__nav_2_5" id="__nav_2_5_label" tabindex="0">
@@ -1003,7 +1007,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_5_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_5_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_2_5">
             <span class="md-nav__icon md-icon"></span>
             
@@ -1018,10 +1022,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../explanation/postgresql-cdc-replication/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PostgreSQL CDC and Replica Identity
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -1037,6 +1068,92 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#what-is-replica-identity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What is REPLICA IDENTITY?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#why-cdc-consumers-care" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why CDC consumers care
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cost-considerations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cost considerations
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#compliance-considerations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compliance considerations
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-datajoint-integrates-this" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How DataJoint integrates this
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#related" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Related
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -1061,10 +1178,8 @@
       
   
   
-    
   
   
-  
     
     
       
@@ -1085,15 +1200,15 @@
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="./" class="md-nav__link md-nav__link--active">
+            <a href="../../tutorials/" class="md-nav__link ">
               
   
   
@@ -1111,13 +1226,13 @@
             </a>
             
               
-              <label class="md-nav__link md-nav__link--active" for="__nav_3" id="__nav_3_label" tabindex="">
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="">
                 <span class="md-nav__icon md-icon"></span>
               </label>
             
           </div>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_3">
             <span class="md-nav__icon md-icon"></span>
             
@@ -1198,7 +1313,7 @@
   
   
     <li class="md-nav__item">
-      <a href="basics/01-first-pipeline/" class="md-nav__link">
+      <a href="../../tutorials/basics/01-first-pipeline/" class="md-nav__link">
         
   
   
@@ -1226,7 +1341,7 @@
   
   
     <li class="md-nav__item">
-      <a href="basics/02-schema-design/" class="md-nav__link">
+      <a href="../../tutorials/basics/02-schema-design/" class="md-nav__link">
         
   
   
@@ -1254,7 +1369,7 @@
   
   
     <li class="md-nav__item">
-      <a href="basics/03-data-entry/" class="md-nav__link">
+      <a href="../../tutorials/basics/03-data-entry/" class="md-nav__link">
         
   
   
@@ -1282,7 +1397,7 @@
   
   
     <li class="md-nav__item">
-      <a href="basics/04-queries/" class="md-nav__link">
+      <a href="../../tutorials/basics/04-queries/" class="md-nav__link">
         
   
   
@@ -1310,7 +1425,7 @@
   
   
     <li class="md-nav__item">
-      <a href="basics/05-computation/" class="md-nav__link">
+      <a href="../../tutorials/basics/05-computation/" class="md-nav__link">
         
   
   
@@ -1338,7 +1453,7 @@
   
   
     <li class="md-nav__item">
-      <a href="basics/06-object-storage/" class="md-nav__link">
+      <a href="../../tutorials/basics/06-object-storage/" class="md-nav__link">
         
   
   
@@ -1435,7 +1550,7 @@
   
   
     <li class="md-nav__item">
-      <a href="examples/university/" class="md-nav__link">
+      <a href="../../tutorials/examples/university/" class="md-nav__link">
         
   
   
@@ -1463,7 +1578,7 @@
   
   
     <li class="md-nav__item">
-      <a href="examples/hotel-reservations/" class="md-nav__link">
+      <a href="../../tutorials/examples/hotel-reservations/" class="md-nav__link">
         
   
   
@@ -1491,7 +1606,7 @@
   
   
     <li class="md-nav__item">
-      <a href="examples/languages/" class="md-nav__link">
+      <a href="../../tutorials/examples/languages/" class="md-nav__link">
         
   
   
@@ -1519,7 +1634,7 @@
   
   
     <li class="md-nav__item">
-      <a href="examples/fractal-pipeline/" class="md-nav__link">
+      <a href="../../tutorials/examples/fractal-pipeline/" class="md-nav__link">
         
   
   
@@ -1547,7 +1662,7 @@
   
   
     <li class="md-nav__item">
-      <a href="examples/blob-detection/" class="md-nav__link">
+      <a href="../../tutorials/examples/blob-detection/" class="md-nav__link">
         
   
   
@@ -1642,7 +1757,7 @@
   
   
     <li class="md-nav__item">
-      <a href="domain/calcium-imaging/calcium-imaging/" class="md-nav__link">
+      <a href="../../tutorials/domain/calcium-imaging/calcium-imaging/" class="md-nav__link">
         
   
   
@@ -1670,7 +1785,7 @@
   
   
     <li class="md-nav__item">
-      <a href="domain/electrophysiology/electrophysiology/" class="md-nav__link">
+      <a href="../../tutorials/domain/electrophysiology/electrophysiology/" class="md-nav__link">
         
   
   
@@ -1698,7 +1813,7 @@
   
   
     <li class="md-nav__item">
-      <a href="domain/electrophysiology/ephys-with-npy/" class="md-nav__link">
+      <a href="../../tutorials/domain/electrophysiology/ephys-with-npy/" class="md-nav__link">
         
   
   
@@ -1726,7 +1841,7 @@
   
   
     <li class="md-nav__item">
-      <a href="domain/allen-ccf/allen-ccf/" class="md-nav__link">
+      <a href="../../tutorials/domain/allen-ccf/allen-ccf/" class="md-nav__link">
         
   
   
@@ -1823,7 +1938,7 @@
   
   
     <li class="md-nav__item">
-      <a href="advanced/sql-comparison/" class="md-nav__link">
+      <a href="../../tutorials/advanced/sql-comparison/" class="md-nav__link">
         
   
   
@@ -1851,7 +1966,7 @@
   
   
     <li class="md-nav__item">
-      <a href="advanced/json-type/" class="md-nav__link">
+      <a href="../../tutorials/advanced/json-type/" class="md-nav__link">
         
   
   
@@ -1879,7 +1994,7 @@
   
   
     <li class="md-nav__item">
-      <a href="advanced/distributed/" class="md-nav__link">
+      <a href="../../tutorials/advanced/distributed/" class="md-nav__link">
         
   
   
@@ -1907,7 +2022,7 @@
   
   
     <li class="md-nav__item">
-      <a href="advanced/custom-codecs/" class="md-nav__link">
+      <a href="../../tutorials/advanced/custom-codecs/" class="md-nav__link">
         
   
   
@@ -1935,7 +2050,7 @@
   
   
     <li class="md-nav__item">
-      <a href="advanced/instances/" class="md-nav__link">
+      <a href="../../tutorials/advanced/instances/" class="md-nav__link">
         
   
   
@@ -2013,7 +2128,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../how-to/" class="md-nav__link ">
+            <a href="../../how-to/" class="md-nav__link ">
               
   
   
@@ -2118,7 +2233,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../how-to/installation/" class="md-nav__link">
+      <a href="../../how-to/installation/" class="md-nav__link">
         
   
   
@@ -2146,7 +2261,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../how-to/manage-secrets/" class="md-nav__link">
+      <a href="../../how-to/manage-secrets/" class="md-nav__link">
         
   
   
@@ -2174,7 +2289,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../how-to/configure-database/" class="md-nav__link">
+      <a href="../../how-to/configure-database/" class="md-nav__link">
         
   
   
@@ -2202,7 +2317,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../how-to/use-instances/" class="md-nav__link">
+      <a href="../../how-to/use-instances/" class="md-nav__link">
         
   
   
@@ -2230,7 +2345,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../how-to/configure-storage/" class="md-nav__link">
+      <a href="../../how-to/configure-storage/" class="md-nav__link">
         
   
   
@@ -2258,7 +2373,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../how-to/use-cli/" class="md-nav__link">
+      <a href="../../how-to/use-cli/" class="md-nav__link">
         
   
   
@@ -2355,7 +2470,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../how-to/define-tables/" class="md-nav__link">
+      <a href="../../how-to/define-tables/" class="md-nav__link">
         
   
   
@@ -2383,7 +2498,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../how-to/model-relationships/" class="md-nav__link">
+      <a href="../../how-to/model-relationships/" class="md-nav__link">
         
   
   
@@ -2411,7 +2526,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../how-to/master-part/" class="md-nav__link">
+      <a href="../../how-to/master-part/" class="md-nav__link">
         
   
   
@@ -2439,7 +2554,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../how-to/design-primary-keys/" class="md-nav__link">
+      <a href="../../how-to/design-primary-keys/" class="md-nav__link">
         
   
   
@@ -2467,7 +2582,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../how-to/read-diagrams/" class="md-nav__link">
+      <a href="../../how-to/read-diagrams/" class="md-nav__link">
         
   
   
@@ -2558,7 +2673,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../how-to/manage-pipeline-project/" class="md-nav__link">
+      <a href="../../how-to/manage-pipeline-project/" class="md-nav__link">
         
   
   
@@ -2586,7 +2701,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../how-to/deploy-production/" class="md-nav__link">
+      <a href="../../how-to/deploy-production/" class="md-nav__link">
         
   
   
@@ -2681,7 +2796,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../how-to/insert-data/" class="md-nav__link">
+      <a href="../../how-to/insert-data/" class="md-nav__link">
         
   
   
@@ -2709,7 +2824,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../how-to/query-data/" class="md-nav__link">
+      <a href="../../how-to/query-data/" class="md-nav__link">
         
   
   
@@ -2737,7 +2852,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../how-to/fetch-results/" class="md-nav__link">
+      <a href="../../how-to/fetch-results/" class="md-nav__link">
         
   
   
@@ -2765,7 +2880,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../how-to/delete-data/" class="md-nav__link">
+      <a href="../../how-to/delete-data/" class="md-nav__link">
         
   
   
@@ -2860,7 +2975,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../how-to/run-computations/" class="md-nav__link">
+      <a href="../../how-to/run-computations/" class="md-nav__link">
         
   
   
@@ -2888,7 +3003,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../how-to/distributed-computing/" class="md-nav__link">
+      <a href="../../how-to/distributed-computing/" class="md-nav__link">
         
   
   
@@ -2916,7 +3031,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../how-to/handle-errors/" class="md-nav__link">
+      <a href="../../how-to/handle-errors/" class="md-nav__link">
         
   
   
@@ -2944,7 +3059,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../how-to/monitor-progress/" class="md-nav__link">
+      <a href="../../how-to/monitor-progress/" class="md-nav__link">
         
   
   
@@ -3049,7 +3164,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../how-to/object-storage-overview/" class="md-nav__link">
+      <a href="../../how-to/object-storage-overview/" class="md-nav__link">
         
   
   
@@ -3077,7 +3192,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../how-to/choose-storage-type/" class="md-nav__link">
+      <a href="../../how-to/choose-storage-type/" class="md-nav__link">
         
   
   
@@ -3105,7 +3220,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../how-to/use-object-storage/" class="md-nav__link">
+      <a href="../../how-to/use-object-storage/" class="md-nav__link">
         
   
   
@@ -3133,7 +3248,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../how-to/staged-insert/" class="md-nav__link">
+      <a href="../../how-to/staged-insert/" class="md-nav__link">
         
   
   
@@ -3161,7 +3276,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../how-to/use-npy-codec/" class="md-nav__link">
+      <a href="../../how-to/use-npy-codec/" class="md-nav__link">
         
   
   
@@ -3189,7 +3304,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../how-to/use-plugin-codecs/" class="md-nav__link">
+      <a href="../../how-to/use-plugin-codecs/" class="md-nav__link">
         
   
   
@@ -3217,7 +3332,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../how-to/create-custom-codec/" class="md-nav__link">
+      <a href="../../how-to/create-custom-codec/" class="md-nav__link">
         
   
   
@@ -3245,7 +3360,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../how-to/manage-large-data/" class="md-nav__link">
+      <a href="../../how-to/manage-large-data/" class="md-nav__link">
         
   
   
@@ -3273,7 +3388,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../how-to/garbage-collection/" class="md-nav__link">
+      <a href="../../how-to/garbage-collection/" class="md-nav__link">
         
   
   
@@ -3366,7 +3481,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../how-to/migrate-to-v20/" class="md-nav__link">
+      <a href="../../how-to/migrate-to-v20/" class="md-nav__link">
         
   
   
@@ -3394,7 +3509,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../how-to/alter-tables/" class="md-nav__link">
+      <a href="../../how-to/alter-tables/" class="md-nav__link">
         
   
   
@@ -3422,7 +3537,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../how-to/backup-restore/" class="md-nav__link">
+      <a href="../../how-to/backup-restore/" class="md-nav__link">
         
   
   
@@ -3511,7 +3626,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../how-to/testing/" class="md-nav__link">
+      <a href="../../how-to/testing/" class="md-nav__link">
         
   
   
@@ -3587,7 +3702,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../reference/" class="md-nav__link ">
+            <a href="../../reference/" class="md-nav__link ">
               
   
   
@@ -3657,7 +3772,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../reference/specs/" class="md-nav__link ">
+            <a href="../../reference/specs/" class="md-nav__link ">
               
   
   
@@ -3699,7 +3814,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../reference/specs/database-backends/" class="md-nav__link">
+      <a href="../../reference/specs/database-backends/" class="md-nav__link">
         
   
   
@@ -3784,7 +3899,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../reference/specs/table-declaration/" class="md-nav__link">
+      <a href="../../reference/specs/table-declaration/" class="md-nav__link">
         
   
   
@@ -3812,7 +3927,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../reference/specs/master-part/" class="md-nav__link">
+      <a href="../../reference/specs/master-part/" class="md-nav__link">
         
   
   
@@ -3840,7 +3955,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../reference/specs/virtual-schemas/" class="md-nav__link">
+      <a href="../../reference/specs/virtual-schemas/" class="md-nav__link">
         
   
   
@@ -3937,7 +4052,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../reference/specs/query-algebra/" class="md-nav__link">
+      <a href="../../reference/specs/query-algebra/" class="md-nav__link">
         
   
   
@@ -3965,7 +4080,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../reference/specs/semantic-matching/" class="md-nav__link">
+      <a href="../../reference/specs/semantic-matching/" class="md-nav__link">
         
   
   
@@ -3993,7 +4108,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../reference/specs/primary-keys/" class="md-nav__link">
+      <a href="../../reference/specs/primary-keys/" class="md-nav__link">
         
   
   
@@ -4021,7 +4136,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../reference/specs/fetch-api/" class="md-nav__link">
+      <a href="../../reference/specs/fetch-api/" class="md-nav__link">
         
   
   
@@ -4049,7 +4164,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../reference/specs/diagram/" class="md-nav__link">
+      <a href="../../reference/specs/diagram/" class="md-nav__link">
         
   
   
@@ -4144,7 +4259,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../reference/specs/type-system/" class="md-nav__link">
+      <a href="../../reference/specs/type-system/" class="md-nav__link">
         
   
   
@@ -4172,7 +4287,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../reference/specs/codec-api/" class="md-nav__link">
+      <a href="../../reference/specs/codec-api/" class="md-nav__link">
         
   
   
@@ -4200,7 +4315,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../reference/specs/npy-codec/" class="md-nav__link">
+      <a href="../../reference/specs/npy-codec/" class="md-nav__link">
         
   
   
@@ -4228,7 +4343,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../reference/specs/storage-adapter-api/" class="md-nav__link">
+      <a href="../../reference/specs/storage-adapter-api/" class="md-nav__link">
         
   
   
@@ -4323,7 +4438,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../reference/specs/data-manipulation/" class="md-nav__link">
+      <a href="../../reference/specs/data-manipulation/" class="md-nav__link">
         
   
   
@@ -4351,7 +4466,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../reference/specs/autopopulate/" class="md-nav__link">
+      <a href="../../reference/specs/autopopulate/" class="md-nav__link">
         
   
   
@@ -4379,7 +4494,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../reference/specs/job-metadata/" class="md-nav__link">
+      <a href="../../reference/specs/job-metadata/" class="md-nav__link">
         
   
   
@@ -4407,7 +4522,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../reference/specs/object-store-configuration/" class="md-nav__link">
+      <a href="../../reference/specs/object-store-configuration/" class="md-nav__link">
         
   
   
@@ -4496,7 +4611,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../reference/specs/deploy-operations/" class="md-nav__link">
+      <a href="../../reference/specs/deploy-operations/" class="md-nav__link">
         
   
   
@@ -4593,7 +4708,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../reference/specs/thread-safe-mode/" class="md-nav__link">
+      <a href="../../reference/specs/thread-safe-mode/" class="md-nav__link">
         
   
   
@@ -4629,7 +4744,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../reference/configuration/" class="md-nav__link">
+      <a href="../../reference/configuration/" class="md-nav__link">
         
   
   
@@ -4657,7 +4772,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../reference/definition-syntax/" class="md-nav__link">
+      <a href="../../reference/definition-syntax/" class="md-nav__link">
         
   
   
@@ -4685,7 +4800,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../reference/operators/" class="md-nav__link">
+      <a href="../../reference/operators/" class="md-nav__link">
         
   
   
@@ -4713,7 +4828,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../reference/errors/" class="md-nav__link">
+      <a href="../../reference/errors/" class="md-nav__link">
         
   
   
@@ -4741,7 +4856,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../elements/" class="md-nav__link">
+      <a href="../../elements/" class="md-nav__link">
         
   
   
@@ -4799,7 +4914,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../api/" class="md-nav__link ">
+            <a href="../../api/" class="md-nav__link ">
               
   
   
@@ -4841,7 +4956,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../api/datajoint/" class="md-nav__link">
+      <a href="../../api/datajoint/" class="md-nav__link">
         
   
   
@@ -4913,7 +5028,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../api/datajoint/" class="md-nav__link ">
+            <a href="../../api/datajoint/" class="md-nav__link ">
               
   
   
@@ -4955,7 +5070,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../api/datajoint/blob/" class="md-nav__link">
+      <a href="../../api/datajoint/blob/" class="md-nav__link">
         
   
   
@@ -4983,7 +5098,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../api/datajoint/codecs/" class="md-nav__link">
+      <a href="../../api/datajoint/codecs/" class="md-nav__link">
         
   
   
@@ -5011,7 +5126,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../api/datajoint/connection/" class="md-nav__link">
+      <a href="../../api/datajoint/connection/" class="md-nav__link">
         
   
   
@@ -5039,7 +5154,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../api/datajoint/diagram/" class="md-nav__link">
+      <a href="../../api/datajoint/diagram/" class="md-nav__link">
         
   
   
@@ -5067,7 +5182,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../api/datajoint/errors/" class="md-nav__link">
+      <a href="../../api/datajoint/errors/" class="md-nav__link">
         
   
   
@@ -5095,7 +5210,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../api/datajoint/expression/" class="md-nav__link">
+      <a href="../../api/datajoint/expression/" class="md-nav__link">
         
   
   
@@ -5123,7 +5238,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../api/datajoint/hash_registry/" class="md-nav__link">
+      <a href="../../api/datajoint/hash_registry/" class="md-nav__link">
         
   
   
@@ -5151,7 +5266,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../api/datajoint/heading/" class="md-nav__link">
+      <a href="../../api/datajoint/heading/" class="md-nav__link">
         
   
   
@@ -5179,7 +5294,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../api/datajoint/jobs/" class="md-nav__link">
+      <a href="../../api/datajoint/jobs/" class="md-nav__link">
         
   
   
@@ -5207,7 +5322,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../api/datajoint/migrate/" class="md-nav__link">
+      <a href="../../api/datajoint/migrate/" class="md-nav__link">
         
   
   
@@ -5235,7 +5350,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../api/datajoint/schemas/" class="md-nav__link">
+      <a href="../../api/datajoint/schemas/" class="md-nav__link">
         
   
   
@@ -5263,7 +5378,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../api/datajoint/settings/" class="md-nav__link">
+      <a href="../../api/datajoint/settings/" class="md-nav__link">
         
   
   
@@ -5291,7 +5406,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../api/datajoint/table/" class="md-nav__link">
+      <a href="../../api/datajoint/table/" class="md-nav__link">
         
   
   
@@ -5319,7 +5434,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../api/datajoint/user_tables/" class="md-nav__link">
+      <a href="../../api/datajoint/user_tables/" class="md-nav__link">
         
   
   
@@ -5401,7 +5516,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../about/" class="md-nav__link ">
+            <a href="../../about/" class="md-nav__link ">
               
   
   
@@ -5443,7 +5558,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../about/whats-new-2-2-4/" class="md-nav__link">
+      <a href="../../about/whats-new-2-2-4/" class="md-nav__link">
         
   
   
@@ -5471,7 +5586,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../about/whats-new-22/" class="md-nav__link">
+      <a href="../../about/whats-new-22/" class="md-nav__link">
         
   
   
@@ -5499,7 +5614,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../about/whats-new-21/" class="md-nav__link">
+      <a href="../../about/whats-new-21/" class="md-nav__link">
         
   
   
@@ -5527,7 +5642,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../about/whats-new-2/" class="md-nav__link">
+      <a href="../../about/whats-new-2/" class="md-nav__link">
         
   
   
@@ -5555,7 +5670,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../about/history/" class="md-nav__link">
+      <a href="../../about/history/" class="md-nav__link">
         
   
   
@@ -5583,7 +5698,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../about/versioning/" class="md-nav__link">
+      <a href="../../about/versioning/" class="md-nav__link">
         
   
   
@@ -5639,7 +5754,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../about/citation/" class="md-nav__link">
+      <a href="../../about/citation/" class="md-nav__link">
         
   
   
@@ -5667,7 +5782,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../about/publications/" class="md-nav__link">
+      <a href="../../about/publications/" class="md-nav__link">
         
   
   
@@ -5695,7 +5810,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../about/contributing/" class="md-nav__link">
+      <a href="../../about/contributing/" class="md-nav__link">
         
   
   
@@ -5750,10 +5865,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#quick-start" class="md-nav__link">
+  <a href="#what-is-replica-identity" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Quick Start
+        What is REPLICA IDENTITY?
       
     </span>
   </a>
@@ -5761,71 +5876,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#learning-paths" class="md-nav__link">
+  <a href="#why-cdc-consumers-care" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Learning Paths
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Learning Paths">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#new-to-datajoint" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        🌱 New to DataJoint
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#building-production-pipelines" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        🚀 Building Production Pipelines
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#domain-specific-applications" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        🧪 Domain-Specific Applications
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#extending-datajoint" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        🔧 Extending DataJoint
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#basics" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Basics
+        Why CDC consumers care
       
     </span>
   </a>
@@ -5833,10 +5887,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#examples" class="md-nav__link">
+  <a href="#cost-considerations" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Examples
+        Cost considerations
       
     </span>
   </a>
@@ -5844,10 +5898,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#domain-tutorials" class="md-nav__link">
+  <a href="#compliance-considerations" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Domain Tutorials
+        Compliance considerations
       
     </span>
   </a>
@@ -5855,10 +5909,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#advanced-topics" class="md-nav__link">
+  <a href="#how-datajoint-integrates-this" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Advanced Topics
+        How DataJoint integrates this
       
     </span>
   </a>
@@ -5866,10 +5920,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#running-the-tutorials" class="md-nav__link">
+  <a href="#related" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Running the Tutorials
+        Related
       
     </span>
   </a>
@@ -5896,181 +5950,147 @@
   
 
 
-<h1 id="tutorials">Tutorials<a class="headerlink" href="#tutorials" title="Permanent link">&para;</a></h1>
-<p>Learn DataJoint by building real pipelines.</p>
-<p>These tutorials guide you through building data pipelines step by step. Each tutorial
-is a Jupyter notebook that you can run interactively. Start with the basics and
-progress to domain-specific and advanced topics.</p>
-<h2 id="quick-start">Quick Start<a class="headerlink" href="#quick-start" title="Permanent link">&para;</a></h2>
-<p>Install DataJoint:</p>
-<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>datajoint
-</code></pre></div>
-<p>Configure database credentials in your project (see <a href="../reference/configuration/">Configuration</a>):</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Create datajoint.json for non-sensitive settings</span>
-<span class="nb">echo</span><span class="w"> </span><span class="s1">&#39;{&quot;database&quot;: {&quot;host&quot;: &quot;localhost&quot;, &quot;port&quot;: 3306}}&#39;</span><span class="w"> </span>&gt;<span class="w"> </span>datajoint.json
-
-<span class="c1"># Create secrets directory for credentials</span>
-mkdir<span class="w"> </span>-p<span class="w"> </span>.secrets
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;root&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>.secrets/database.user
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;password&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>.secrets/database.password
-</code></pre></div>
-<p>Define and populate a simple pipeline:</p>
+<h1 id="postgresql-cdc-and-replica-identity">PostgreSQL CDC and Replica Identity<a class="headerlink" href="#postgresql-cdc-and-replica-identity" title="Permanent link">&para;</a></h1>
+<p>This page explains how DataJoint integrates with <strong>change-data-capture (CDC)</strong> consumers on PostgreSQL — what <code>REPLICA IDENTITY</code> is, why some CDC tools require <code>FULL</code>, and how to configure a DataJoint schema for downstream replication.</p>
+<div class="admonition version-added">
+<p class="admonition-title">New in DataJoint 2.3</p>
+<p>The <code>datajoint.deploy</code> module — including <code>set_replica_identity</code> — ships in DataJoint 2.3. PostgreSQL <code>REPLICA IDENTITY</code> configuration was not part of the framework in earlier releases; users on 2.2.x must apply the <code>ALTER TABLE</code> statements manually.</p>
+</div>
+<p>For the normative API specification, see <a href="../../reference/specs/deploy-operations/">Deployment Operations</a>.</p>
+<h2 id="what-is-replica-identity">What is REPLICA IDENTITY?<a class="headerlink" href="#what-is-replica-identity" title="Permanent link">&para;</a></h2>
+<p>PostgreSQL records every data change in its write-ahead log (WAL). When a row is <code>UPDATE</code>d or <code>DELETE</code>d, the <strong>old version</strong> of the row must be representable in WAL so logical replication consumers can identify which row changed. <code>REPLICA IDENTITY</code> is a per-table setting that controls how much of the old row is logged:</p>
+<table>
+<thead>
+<tr>
+<th>Setting</th>
+<th>Old row contents logged</th>
+<th>WAL cost on UPDATE/DELETE</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>DEFAULT</code></td>
+<td>Primary-key columns only</td>
+<td>Minimal</td>
+</tr>
+<tr>
+<td><code>FULL</code></td>
+<td>Entire old row, all columns</td>
+<td>Higher (proportional to row width, including TOASTed columns)</td>
+</tr>
+<tr>
+<td><code>NOTHING</code></td>
+<td>Nothing — disables logical replication for the table</td>
+<td>n/a</td>
+</tr>
+<tr>
+<td><code>USING INDEX</code></td>
+<td>Columns of a specified unique index</td>
+<td>Between <code>DEFAULT</code> and <code>FULL</code></td>
+</tr>
+</tbody>
+</table>
+<p><code>INSERT</code> is unaffected — the full new row is always written to WAL regardless of the setting. Only the <strong>pre-image</strong> (old row state) for updates and deletes is governed by <code>REPLICA IDENTITY</code>.</p>
+<p>The <code>ALTER TABLE … REPLICA IDENTITY …</code> statement is metadata-only and instant: it changes how subsequent updates are logged but does not rewrite any data. Re-applying the same setting is a no-op at the storage layer.</p>
+<h2 id="why-cdc-consumers-care">Why CDC consumers care<a class="headerlink" href="#why-cdc-consumers-care" title="Permanent link">&para;</a></h2>
+<p>Logical replication subscribers — including most CDC pipelines — reconstruct downstream tables (or event streams) from WAL. For deletes and updates, they need enough information about the old row to identify it on the other side. With <code>REPLICA IDENTITY DEFAULT</code>, the subscriber gets only the primary key — enough to match the row but <strong>not enough to reconstruct its prior column values</strong>.</p>
+<p>Most modern CDC tools work fine with <code>DEFAULT</code> when tables have a primary key:</p>
+<table>
+<thead>
+<tr>
+<th>CDC Tool</th>
+<th><code>FULL</code> required?</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Debezium</td>
+<td>No</td>
+<td>Recommends <code>DEFAULT</code> for performance</td>
+</tr>
+<tr>
+<td>Azure CDC</td>
+<td>No</td>
+<td>Recommends against <code>FULL</code></td>
+</tr>
+<tr>
+<td>ClickHouse ClickPipes</td>
+<td>No</td>
+<td><code>DEFAULT</code> is fine when PK exists</td>
+</tr>
+<tr>
+<td><strong>Databricks Lakehouse Sync</strong></td>
+<td><strong>Yes</strong></td>
+<td>Tables without <code>FULL</code> are silently skipped — the table is not replicated, with no error</td>
+</tr>
+</tbody>
+</table>
+<p>Databricks Lakehouse Sync is the load-bearing case. It needs the full pre-image to drive Slowly-Changing-Dimension (SCD Type 2) history downstream, and tables that lack <code>REPLICA IDENTITY FULL</code> are dropped from the sync entirely. There is no error or warning at sync time; the table simply does not appear in the destination. This silent-failure mode is what motivates DataJoint's first-class deploy helper.</p>
+<h2 id="cost-considerations">Cost considerations<a class="headerlink" href="#cost-considerations" title="Permanent link">&para;</a></h2>
+<p>The <code>ALTER</code> itself is free. The cost lives in subsequent WAL volume on <code>UPDATE</code> and <code>DELETE</code>. Under <code>FULL</code>, every modified row writes its <strong>entire prior contents</strong> to WAL — including any TOASTed <code>bytea</code> columns that were unchanged by the operation.</p>
+<p>For DataJoint's workload, this is usually negligible:</p>
+<ul>
+<li><strong>Inserts are unaffected.</strong> DataJoint pipelines are insert-append dominated; this is the common case.</li>
+<li><strong>Updates are rare and surgical.</strong> <code>update1()</code> is intended for occasional metadata corrections, not bulk modification.</li>
+<li><strong>The notable scenario is bulk delete on tables with <code>&lt;blob&gt;</code> columns.</strong> A delete of <em>N</em> rows × <em>B</em>-byte blobs writes ≈ <em>N × B</em> bytes of WAL. For a delete of 100 rows × 10 MB blobs, that's a ~1 GB WAL burst — transient (cleared at the next checkpoint) but real.</li>
+</ul>
+<p>The cost is bounded by what you actually update or delete, not by table size at rest. For pipelines that rarely modify data after insert, <code>FULL</code> is effectively free.</p>
+<h2 id="compliance-considerations">Compliance considerations<a class="headerlink" href="#compliance-considerations" title="Permanent link">&para;</a></h2>
+<p>Under <code>DEFAULT</code>, only primary-key values appear in WAL — so even if WAL is exposed to a wider audience than the database itself, sensitive non-key columns don't leak through replication channels.</p>
+<p>Under <code>FULL</code>, the entire row appears in WAL — including any column that may carry PHI, PII, or otherwise sensitive data. Whether this matters depends on <strong>who can read WAL</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Environment</th>
+<th>WAL access</th>
+<th>Practical risk of <code>FULL</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Self-hosted PostgreSQL</td>
+<td>Filesystem access + logical-replication subscribers can read WAL</td>
+<td>Real — treat as sensitive surface</td>
+</tr>
+<tr>
+<td>Managed PostgreSQL (RDS, Lakebase) with logical replication to a single trusted subscriber</td>
+<td>WAL stays inside the managed environment</td>
+<td>Bounded to the subscriber's security boundary</td>
+</tr>
+</tbody>
+</table>
+<p><code>FULL</code> should be applied <strong>intentionally</strong>, not by default, on tables that hold sensitive columns. DataJoint does not enable it automatically — the <code>set_replica_identity</code> helper is explicitly opt-in.</p>
+<h2 id="how-datajoint-integrates-this">How DataJoint integrates this<a class="headerlink" href="#how-datajoint-integrates-this" title="Permanent link">&para;</a></h2>
+<p><code>REPLICA IDENTITY</code> is a <strong>deployment-environment concern</strong>: two installs of the same DataJoint pipeline can legitimately want different settings (one for CDC, one not). It is not part of the schema definition — declaring a table does not commit to a replica-identity mode.</p>
+<p>The integration is a single function in the <code>datajoint.deploy</code> module: <code>set_replica_identity(target, mode, dry_run)</code>. It applies the ALTER across a Schema or a single Table, supports a dry-run preview, and raises a clear error on non-PostgreSQL backends.</p>
+<p>A representative workflow for adding a Databricks Lakehouse Sync consumer to an existing pipeline:</p>
 <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">datajoint</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dj</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">datajoint</span><span class="w"> </span><span class="kn">import</span> <span class="n">deploy</span>
 
-<span class="n">schema</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">Schema</span><span class="p">(</span><span class="s1">&#39;my_pipeline&#39;</span><span class="p">)</span>
+<span class="n">schema</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">Schema</span><span class="p">(</span><span class="s2">&quot;acquisition&quot;</span><span class="p">)</span>
+<span class="n">schema</span><span class="o">.</span><span class="n">activate</span><span class="p">()</span>  <span class="c1"># existing pipeline; tables already declared</span>
 
-<span class="nd">@schema</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">Subject</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
-<span class="s2">    subject_id : int32</span>
-<span class="s2">    ---</span>
-<span class="s2">    name : varchar(100)</span>
-<span class="s2">    date_of_birth : date</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="c1"># Preview what would change.</span>
+<span class="n">plan</span> <span class="o">=</span> <span class="n">deploy</span><span class="o">.</span><span class="n">set_replica_identity</span><span class="p">(</span><span class="n">schema</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;full&quot;</span><span class="p">,</span> <span class="n">dry_run</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Would alter </span><span class="si">{</span><span class="n">plan</span><span class="p">[</span><span class="s1">&#39;tables_analyzed&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> tables:&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">ddl</span> <span class="ow">in</span> <span class="n">plan</span><span class="p">[</span><span class="s2">&quot;ddl&quot;</span><span class="p">]:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="n">ddl</span><span class="p">)</span>
 
-<span class="nd">@schema</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">Session</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
-<span class="s2">    -&gt; Subject</span>
-<span class="s2">    session_idx : int16</span>
-<span class="s2">    ---</span>
-<span class="s2">    session_date : date</span>
-<span class="s2">    &quot;&quot;&quot;</span>
-
-<span class="nd">@schema</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">SessionAnalysis</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Computed</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
-<span class="s2">    -&gt; Session</span>
-<span class="s2">    ---</span>
-<span class="s2">    result : float64</span>
-<span class="s2">    &quot;&quot;&quot;</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">make</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
-        <span class="c1"># Compute result for this session</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="o">**</span><span class="n">key</span><span class="p">,</span> <span class="s1">&#39;result&#39;</span><span class="p">:</span> <span class="mf">42.0</span><span class="p">})</span>
-
-<span class="c1"># Insert data</span>
-<span class="n">Subject</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="s1">&#39;subject_id&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;M001&#39;</span><span class="p">,</span> <span class="s1">&#39;date_of_birth&#39;</span><span class="p">:</span> <span class="s1">&#39;2026-01-15&#39;</span><span class="p">})</span>
-<span class="n">Session</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="s1">&#39;subject_id&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;session_idx&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;session_date&#39;</span><span class="p">:</span> <span class="s1">&#39;2026-01-06&#39;</span><span class="p">})</span>
-
-<span class="c1"># Run computations</span>
-<span class="n">SessionAnalysis</span><span class="o">.</span><span class="n">populate</span><span class="p">()</span>
+<span class="c1"># Apply.</span>
+<span class="n">deploy</span><span class="o">.</span><span class="n">set_replica_identity</span><span class="p">(</span><span class="n">schema</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;full&quot;</span><span class="p">,</span> <span class="n">dry_run</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 </code></pre></div>
-<p>Continue learning with the structured tutorials below.</p>
-<h2 id="learning-paths">Learning Paths<a class="headerlink" href="#learning-paths" title="Permanent link">&para;</a></h2>
-<p>Choose your learning path based on your goals:</p>
-<h3 id="new-to-datajoint">🌱 New to DataJoint<a class="headerlink" href="#new-to-datajoint" title="Permanent link">&para;</a></h3>
-<p><strong>Goal:</strong> Understand core concepts and build your first pipeline</p>
-<p><strong>Path:</strong></p>
-<ol>
-<li><a href="basics/01-first-pipeline/">First Pipeline</a> — 30 min — Tables, queries, four core operations</li>
-<li><a href="basics/02-schema-design/">Schema Design</a> — 45 min — Primary keys, relationships, table tiers</li>
-<li><a href="basics/03-data-entry/">Data Entry</a> — 30 min — Inserting and managing data</li>
-<li><a href="basics/04-queries/">Queries</a> — 45 min — Operators, restrictions, projections</li>
-<li>Try an example: <a href="examples/university/">University Database</a> — Complete pipeline with realistic data</li>
-</ol>
-<p><strong>Next:</strong> Read <a href="../explanation/relational-workflow-model/">Relational Workflow Model</a> to understand the conceptual foundation.</p>
-<hr />
-<h3 id="building-production-pipelines">🚀 Building Production Pipelines<a class="headerlink" href="#building-production-pipelines" title="Permanent link">&para;</a></h3>
-<p><strong>Goal:</strong> Create automated, scalable data processing workflows</p>
-<p><strong>Prerequisites:</strong> Complete basics above or have equivalent experience</p>
-<p><strong>Path:</strong></p>
-<ol>
-<li><a href="basics/05-computation/">Computation</a> — Automated processing with Imported/Computed tables</li>
-<li><a href="basics/06-object-storage/">Object Storage</a> — Handle large data (arrays, files, images)</li>
-<li><a href="advanced/distributed/">Distributed Computing</a> — Multi-worker parallel execution</li>
-<li>Practice: <a href="examples/fractal-pipeline/">Fractal Pipeline</a> or <a href="examples/blob-detection/">Blob Detection</a></li>
-</ol>
-<p><strong>Next:</strong></p>
-<ul>
-<li><a href="../how-to/run-computations/">Run Computations</a> — populate() usage patterns</li>
-<li><a href="../how-to/distributed-computing/">Distributed Computing</a> — Cluster deployment</li>
-<li><a href="../how-to/handle-errors/">Handle Errors</a> — Job management and recovery</li>
-</ul>
-<hr />
-<h3 id="domain-specific-applications">🧪 Domain-Specific Applications<a class="headerlink" href="#domain-specific-applications" title="Permanent link">&para;</a></h3>
-<p><strong>Goal:</strong> Build scientific data pipelines for your field</p>
-<p><strong>Prerequisites:</strong> Complete basics, understand computation model</p>
-<p><strong>Production Software: <a href="https://docs.datajoint.com/elements/">DataJoint Elements</a></strong></p>
-<p>Standard pipelines for neurophysiology experiments, actively used in many labs worldwide. These are not tutorials—they are production-ready modular pipelines for calcium imaging, electrophysiology, array ephys, optogenetics, and more.</p>
-<p><strong>Learning tutorials (neuroscience):</strong></p>
-<ul>
-<li><a href="domain/calcium-imaging/calcium-imaging/">Calcium Imaging</a> — Import movies, segment cells, extract traces</li>
-<li><a href="domain/electrophysiology/electrophysiology/">Electrophysiology</a> — Import recordings, spike detection, waveforms</li>
-<li><a href="domain/allen-ccf/allen-ccf/">Allen CCF</a> — Hierarchical brain atlas ontology</li>
-</ul>
-<p><strong>Complete demo pipeline:</strong></p>
-<ul>
-<li><a href="https://github.com/datajoint/lcms-demo">LC-MS Demo</a> — Liquid chromatography-mass spectrometry pipeline showcasing DataJoint best practices with PostgreSQL: sample tracking, scan acquisition, mass spectral analysis, and parameterized peak detection</li>
-</ul>
-<p><strong>General patterns:</strong></p>
-<ul>
-<li><a href="examples/hotel-reservations/">Hotel Reservations</a> — Booking systems with resource management</li>
-<li><a href="examples/languages/">Languages &amp; Proficiency</a> — Many-to-many relationships</li>
-</ul>
-<hr />
-<h3 id="extending-datajoint">🔧 Extending DataJoint<a class="headerlink" href="#extending-datajoint" title="Permanent link">&para;</a></h3>
-<p><strong>Goal:</strong> Customize DataJoint for specialized needs</p>
-<p><strong>Prerequisites:</strong> Proficient with basics and production pipelines</p>
-<p><strong>Path:</strong></p>
-<ol>
-<li><a href="advanced/custom-codecs/">Custom Codecs</a> — Create domain-specific data types</li>
-<li><a href="advanced/json-type/">JSON Data Type</a> — Semi-structured data patterns</li>
-<li><a href="advanced/sql-comparison/">SQL Comparison</a> — Understand DataJoint's query algebra</li>
-</ol>
-<p><strong>Next:</strong></p>
-<ul>
-<li><a href="../reference/specs/codec-api/">Codec API</a> — Complete codec specification</li>
-<li><a href="../how-to/create-custom-codec/">Create Custom Codec</a> — Step-by-step codec development</li>
-</ul>
-<hr />
-<h2 id="basics">Basics<a class="headerlink" href="#basics" title="Permanent link">&para;</a></h2>
-<p>Core concepts for getting started with DataJoint:</p>
-<ol>
-<li><a href="basics/01-first-pipeline/">First Pipeline</a> — Tables, queries, and the four core operations</li>
-<li><a href="basics/02-schema-design/">Schema Design</a> — Primary keys, relationships, and table tiers</li>
-<li><a href="basics/03-data-entry/">Data Entry</a> — Inserting and managing data</li>
-<li><a href="basics/04-queries/">Queries</a> — Operators and fetching results</li>
-<li><a href="basics/05-computation/">Computation</a> — Imported and Computed tables</li>
-<li><a href="basics/06-object-storage/">Object Storage</a> — Blobs, attachments, and object stores</li>
-</ol>
-<h2 id="examples">Examples<a class="headerlink" href="#examples" title="Permanent link">&para;</a></h2>
-<p>Complete pipelines demonstrating DataJoint patterns:</p>
-<ul>
-<li><a href="examples/university/">University Database</a> — Academic records with students, courses, and grades</li>
-<li><a href="examples/hotel-reservations/">Hotel Reservations</a> — Booking system with rooms, guests, and reservations</li>
-<li><a href="examples/languages/">Languages &amp; Proficiency</a> — Language skills tracking with many-to-many relationships</li>
-<li><a href="examples/fractal-pipeline/">Fractal Pipeline</a> — Iterative computation and parameter sweeps</li>
-<li><a href="examples/blob-detection/">Blob Detection</a> — Image processing with automated computation</li>
-</ul>
-<h2 id="domain-tutorials">Domain Tutorials<a class="headerlink" href="#domain-tutorials" title="Permanent link">&para;</a></h2>
-<p>Real-world scientific pipelines:</p>
-<ul>
-<li><a href="domain/calcium-imaging/calcium-imaging/">Calcium Imaging</a> — Import TIFF movies, segment cells, extract fluorescence traces</li>
-<li><a href="domain/electrophysiology/electrophysiology/">Electrophysiology</a> — Import recordings, detect spikes, extract waveforms</li>
-<li><a href="domain/electrophysiology/ephys-with-npy/">Electrophysiology with Object Storage</a> — Neural data with <code>&lt;npy@&gt;</code> lazy loading</li>
-<li><a href="domain/allen-ccf/allen-ccf/">Allen CCF</a> — Brain atlas with hierarchical region ontology</li>
-</ul>
-<h2 id="advanced-topics">Advanced Topics<a class="headerlink" href="#advanced-topics" title="Permanent link">&para;</a></h2>
-<p>Extending DataJoint for specialized use cases:</p>
-<ul>
-<li><a href="advanced/sql-comparison/">SQL Comparison</a> — DataJoint for SQL users</li>
-<li><a href="advanced/json-type/">JSON Data Type</a> — Semi-structured data in tables</li>
-<li><a href="advanced/distributed/">Distributed Computing</a> — Multi-process and cluster workflows</li>
-<li><a href="advanced/custom-codecs/">Custom Codecs</a> — Extending the type system</li>
-</ul>
-<h2 id="running-the-tutorials">Running the Tutorials<a class="headerlink" href="#running-the-tutorials" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><span class="c1"># Clone the repository</span>
-git<span class="w"> </span>clone<span class="w"> </span>https://github.com/datajoint/datajoint-docs.git
-<span class="nb">cd</span><span class="w"> </span>datajoint-docs
-
-<span class="c1"># Start the tutorial environment</span>
-docker<span class="w"> </span>compose<span class="w"> </span>up<span class="w"> </span>-d
-
-<span class="c1"># Launch Jupyter</span>
-jupyter<span class="w"> </span>lab<span class="w"> </span>src/tutorials/
+<p>Because the operation is idempotent — re-applying the same mode is a no-op at the storage layer — a CI/CD pipeline can include it in the deploy hook for every release without accumulating side effects. New tables added in a future release pick up the setting on the next deploy.</p>
+<p>To revert (for example, to reduce WAL volume after a CDC consumer is decommissioned):</p>
+<div class="highlight"><pre><span></span><code><span class="n">deploy</span><span class="o">.</span><span class="n">set_replica_identity</span><span class="p">(</span><span class="n">schema</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;default&quot;</span><span class="p">,</span> <span class="n">dry_run</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 </code></pre></div>
-<p>All tutorials use a local MySQL database that resets between sessions.</p>
+<p><code>set_replica_identity</code> is PostgreSQL-only by design — there is no MySQL equivalent of <code>REPLICA IDENTITY</code>, since MySQL's binlog-based CDC follows different mechanics. Calling it against a MySQL connection raises <code>DataJointError</code> rather than warning quietly.</p>
+<h2 id="related">Related<a class="headerlink" href="#related" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Specification: <a href="../../reference/specs/deploy-operations/">Deployment Operations</a> — normative API</li>
+<li>PostgreSQL: <a href="https://www.postgresql.org/docs/current/logical-replication-publication.html">Logical Replication — Replica Identity</a></li>
+<li>Databricks: <a href="https://docs.databricks.com/aws/en/oltp/projects/lakehouse-sync">Lakehouse Sync</a></li>
+</ul>
 
 
 
@@ -6210,12 +6230,12 @@ jupyter<span class="w"> </span>lab<span class="w"> </span>src/tutorials/
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.sections", "navigation.indexes", "toc.follow", "announce.dismiss"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.sections", "navigation.indexes", "toc.follow", "announce.dismiss"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
       
-        <script src="../javascripts/mathjax.js"></script>
+        <script src="../../javascripts/mathjax.js"></script>
       
         <script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
       

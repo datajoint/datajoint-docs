@@ -1,6 +1,6 @@
 # DataJoint Documentation (Full)
 
-Generated: 2026-06-05 22:15:32 UTC
+Generated: 2026-06-10 23:31:22 UTC
 Commit: unknown
 Branch: unknown
 
@@ -1842,6 +1842,115 @@ class HousingAssignment(dj.Manual):
 - Is this a relationship or event? (Yes → association/event table)
 
 Following these principles achieves **full workflow entity normalization** where each table represents a single, well-defined entity type entered at a specific workflow step.
+
+
+---
+## File: explanation/postgresql-cdc-replication.md
+
+# PostgreSQL CDC and Replica Identity
+
+This page explains how DataJoint integrates with **change-data-capture (CDC)** consumers on PostgreSQL — what `REPLICA IDENTITY` is, why some CDC tools require `FULL`, and how to configure a DataJoint schema for downstream replication.
+
+!!! version-added "New in DataJoint 2.3"
+    The `datajoint.deploy` module — including `set_replica_identity` — ships in DataJoint 2.3. PostgreSQL `REPLICA IDENTITY` configuration was not part of the framework in earlier releases; users on 2.2.x must apply the `ALTER TABLE` statements manually.
+
+For the normative API specification, see [Deployment Operations](../reference/specs/deploy-operations.md).
+
+## What is REPLICA IDENTITY?
+
+PostgreSQL records every data change in its write-ahead log (WAL). When a row is `UPDATE`d or `DELETE`d, the **old version** of the row must be representable in WAL so logical replication consumers can identify which row changed. `REPLICA IDENTITY` is a per-table setting that controls how much of the old row is logged:
+
+| Setting | Old row contents logged | WAL cost on UPDATE/DELETE |
+|---|---|---|
+| `DEFAULT` | Primary-key columns only | Minimal |
+| `FULL` | Entire old row, all columns | Higher (proportional to row width, including TOASTed columns) |
+| `NOTHING` | Nothing — disables logical replication for the table | n/a |
+| `USING INDEX` | Columns of a specified unique index | Between `DEFAULT` and `FULL` |
+
+`INSERT` is unaffected — the full new row is always written to WAL regardless of the setting. Only the **pre-image** (old row state) for updates and deletes is governed by `REPLICA IDENTITY`.
+
+The `ALTER TABLE … REPLICA IDENTITY …` statement is metadata-only and instant: it changes how subsequent updates are logged but does not rewrite any data. Re-applying the same setting is a no-op at the storage layer.
+
+## Why CDC consumers care
+
+Logical replication subscribers — including most CDC pipelines — reconstruct downstream tables (or event streams) from WAL. For deletes and updates, they need enough information about the old row to identify it on the other side. With `REPLICA IDENTITY DEFAULT`, the subscriber gets only the primary key — enough to match the row but **not enough to reconstruct its prior column values**.
+
+Most modern CDC tools work fine with `DEFAULT` when tables have a primary key:
+
+| CDC Tool | `FULL` required? | Notes |
+|---|---|---|
+| Debezium | No | Recommends `DEFAULT` for performance |
+| Azure CDC | No | Recommends against `FULL` |
+| ClickHouse ClickPipes | No | `DEFAULT` is fine when PK exists |
+| **Databricks Lakehouse Sync** | **Yes** | Tables without `FULL` are silently skipped — the table is not replicated, with no error |
+
+Databricks Lakehouse Sync is the load-bearing case. It needs the full pre-image to drive Slowly-Changing-Dimension (SCD Type 2) history downstream, and tables that lack `REPLICA IDENTITY FULL` are dropped from the sync entirely. There is no error or warning at sync time; the table simply does not appear in the destination. This silent-failure mode is what motivates DataJoint's first-class deploy helper.
+
+## Cost considerations
+
+The `ALTER` itself is free. The cost lives in subsequent WAL volume on `UPDATE` and `DELETE`. Under `FULL`, every modified row writes its **entire prior contents** to WAL — including any TOASTed `bytea` columns that were unchanged by the operation.
+
+For DataJoint's workload, this is usually negligible:
+
+- **Inserts are unaffected.** DataJoint pipelines are insert-append dominated; this is the common case.
+- **Updates are rare and surgical.** `update1()` is intended for occasional metadata corrections, not bulk modification.
+- **The notable scenario is bulk delete on tables with `<blob>` columns.** A delete of *N* rows × *B*-byte blobs writes ≈ *N × B* bytes of WAL. For a delete of 100 rows × 10 MB blobs, that's a ~1 GB WAL burst — transient (cleared at the next checkpoint) but real.
+
+The cost is bounded by what you actually update or delete, not by table size at rest. For pipelines that rarely modify data after insert, `FULL` is effectively free.
+
+## Compliance considerations
+
+Under `DEFAULT`, only primary-key values appear in WAL — so even if WAL is exposed to a wider audience than the database itself, sensitive non-key columns don't leak through replication channels.
+
+Under `FULL`, the entire row appears in WAL — including any column that may carry PHI, PII, or otherwise sensitive data. Whether this matters depends on **who can read WAL**:
+
+| Environment | WAL access | Practical risk of `FULL` |
+|---|---|---|
+| Self-hosted PostgreSQL | Filesystem access + logical-replication subscribers can read WAL | Real — treat as sensitive surface |
+| Managed PostgreSQL (RDS, Lakebase) with logical replication to a single trusted subscriber | WAL stays inside the managed environment | Bounded to the subscriber's security boundary |
+
+`FULL` should be applied **intentionally**, not by default, on tables that hold sensitive columns. DataJoint does not enable it automatically — the `set_replica_identity` helper is explicitly opt-in.
+
+## How DataJoint integrates this
+
+`REPLICA IDENTITY` is a **deployment-environment concern**: two installs of the same DataJoint pipeline can legitimately want different settings (one for CDC, one not). It is not part of the schema definition — declaring a table does not commit to a replica-identity mode.
+
+The integration is a single function in the `datajoint.deploy` module: `set_replica_identity(target, mode, dry_run)`. It applies the ALTER across a Schema or a single Table, supports a dry-run preview, and raises a clear error on non-PostgreSQL backends.
+
+A representative workflow for adding a Databricks Lakehouse Sync consumer to an existing pipeline:
+
+```python
+import datajoint as dj
+from datajoint import deploy
+
+schema = dj.Schema("acquisition")
+schema.activate()  # existing pipeline; tables already declared
+
+# Preview what would change.
+plan = deploy.set_replica_identity(schema, mode="full", dry_run=True)
+print(f"Would alter {plan['tables_analyzed']} tables:")
+for ddl in plan["ddl"]:
+    print(" ", ddl)
+
+# Apply.
+deploy.set_replica_identity(schema, mode="full", dry_run=False)
+```
+
+Because the operation is idempotent — re-applying the same mode is a no-op at the storage layer — a CI/CD pipeline can include it in the deploy hook for every release without accumulating side effects. New tables added in a future release pick up the setting on the next deploy.
+
+To revert (for example, to reduce WAL volume after a CDC consumer is decommissioned):
+
+```python
+deploy.set_replica_identity(schema, mode="default", dry_run=False)
+```
+
+`set_replica_identity` is PostgreSQL-only by design — there is no MySQL equivalent of `REPLICA IDENTITY`, since MySQL's binlog-based CDC follows different mechanics. Calling it against a MySQL connection raises `DataJointError` rather than warning quietly.
+
+## Related
+
+- Specification: [Deployment Operations](../reference/specs/deploy-operations.md) — normative API
+- PostgreSQL: [Logical Replication — Replica Identity](https://www.postgresql.org/docs/current/logical-replication-publication.html)
+- Databricks: [Lakehouse Sync](https://docs.databricks.com/aws/en/oltp/projects/lakehouse-sync)
 
 
 ---
@@ -28082,6 +28191,118 @@ Schema definitions are portable—the same Python class definitions work on both
 - [Configure Database](../../how-to/configure-database.md/) — Connection setup
 - [Type System](type-system.md) — Core type definitions
 - [Table Declaration](table-declaration.md) — Definition syntax
+
+
+---
+## File: reference/specs/deploy-operations.md
+
+# Deployment Operations Specification
+
+This document specifies the `datajoint.deploy` module — idempotent, re-runnable operations that configure an existing schema for its **deployment environment** (CDC tools, replication, role grants, performance tuning).
+
+For one-shot schema-evolution operations (column migrations, lineage repair, retroactive job-metadata columns), see `datajoint.migrate` (referenced in the [Data Manipulation Specification](data-manipulation.md)).
+
+!!! version-added "New in 2.3"
+    The `datajoint.deploy` module is introduced in DataJoint 2.3, beginning with `set_replica_identity` for PostgreSQL CDC integration.
+
+## Scope: migration vs. deployment
+
+DataJoint exposes two categories of operational helpers. The distinction is **load-bearing** — applying the wrong one at the wrong time produces inconsistent state.
+
+| | `datajoint.migrate` | `datajoint.deploy` |
+|---|---|---|
+| **Purpose** | Schema/state evolution, fixing legacy | Configure an environment for a consumer's requirements |
+| **Cadence** | One-shot transitions | Idempotent, re-runnable in deploy hooks |
+| **Trigger** | Schema definition changed, or repair needed | Environment changes (new CDC consumer, replication topology) |
+| **Examples** | `migrate_columns`, `add_job_metadata_columns`, `rebuild_lineage` | `set_replica_identity` |
+
+A deployment operation must be safe to call repeatedly without accumulating side effects: re-running it brings the environment to the same end state and is a no-op when already there.
+
+## `set_replica_identity`
+
+Apply `ALTER TABLE ... REPLICA IDENTITY DEFAULT|FULL` to every user table in a schema, or to a single table, on PostgreSQL.
+
+### Signature
+
+```python
+def set_replica_identity(
+    target: Schema | Table,
+    mode: Literal["default", "full"] = "full",
+    dry_run: bool = True,
+) -> dict
+```
+
+### Parameters
+
+| Name | Type | Default | Description |
+|---|---|---|---|
+| `target` | `Schema` or `Table` (class or instance) | — | Schema (all user tables) or a single table. |
+| `mode` | `str` | `"full"` | `"default"` (PK only) or `"full"` (entire old row). |
+| `dry_run` | `bool` | `True` | If `True`, collect DDL but do not execute. |
+
+### Return value
+
+A dict:
+
+| Key | Type | Description |
+|---|---|---|
+| `tables_analyzed` | `int` | Number of tables considered. |
+| `tables_modified` | `int` | Tables on which the ALTER ran. `0` when `dry_run=True`. |
+| `ddl` | `list[str]` | DDL statements that were (or would be) executed. |
+
+### Errors
+
+| Condition | Behavior |
+|---|---|
+| Connection's adapter is not PostgreSQL | `DataJointError`: `"set_replica_identity is PostgreSQL-only; …"` |
+| `mode` is not `"default"` or `"full"` | `DataJointError`: `"mode must be 'default' or 'full'; …"` |
+| `target` is not a `Schema` or `Table` | `DataJointError`: `"target must be a Schema or Table class/instance; …"` |
+
+### Behavior
+
+For each user table in the target (excluding `~`-prefixed hidden tables), the function builds `ALTER TABLE "{schema}"."{table}" REPLICA IDENTITY {MODE}` via the PostgreSQL adapter's `replica_identity_ddl()` and either records it (dry-run) or executes it on the connection.
+
+Both `default` and `full` produce explicit `ALTER` statements. `default` is **not** treated as a no-op — it actively resets the table to PostgreSQL's default, which is the right semantics when reverting from `FULL`.
+
+The underlying ALTER is metadata-only, instant, and idempotent at the PostgreSQL layer (re-applying the same mode is a no-op at the storage layer).
+
+## Design rationale
+
+Three structural decisions distinguish `dj.deploy` from alternatives that were considered and rejected. Each is informed by the failure modes the alternative would have produced.
+
+### 1. Migration-only, not auto-emit on `declare()`
+
+[Issue #1447](https://github.com/datajoint/datajoint-python/issues/1447) originally proposed two mechanisms — a `database.replica_identity` config flag applied automatically during `declare()`, plus a utility for existing tables. We collapsed to migration-only. Two mechanisms would produce **mixed state**: a deployment with the config set, applied mid-cycle, would have new tables at `FULL` and old tables at `DEFAULT` until someone remembered to run the migration. One mechanism is the only path that converges.
+
+### 2. Not in `dj.migrate`
+
+`dj.migrate` covers one-shot schema-evolution operations: fix lineage, add job-metadata columns, transform external store layouts. `set_replica_identity` is not a one-shot transition — a fresh declare in a staging environment may need it re-applied; deploy hooks may run it on every release. The cadence and trigger differ, and conflating them in one module obscures the difference.
+
+### 3. New module for an emerging category
+
+`set_replica_identity` is the first of a category. Plausible siblings, as needs arise:
+
+- Publication membership for PostgreSQL logical replication (`CREATE PUBLICATION … FOR TABLE …`).
+- Maintenance: `vacuum_analyze`, `reindex`, table-level autovacuum parameters.
+- Role/grant management for shared environments.
+
+Creating `dj.deploy` now — with one inhabitant — gives those future helpers a clear home and keeps `dj.migrate` focused. The cost is one file; the alternative is an indefinite period of "where do I put this?" for every operational helper.
+
+## Idempotency and re-running
+
+Every function in `datajoint.deploy` must be safe to re-run. `set_replica_identity` satisfies this because:
+
+1. The DDL is generated freshly each call.
+2. The PostgreSQL ALTER is metadata-only and applying the same mode again is a no-op at the storage layer.
+3. The dry-run path produces a complete preview without executing.
+
+Deploy hooks may call `set_replica_identity(schema, mode="full", dry_run=False)` on every release without accumulating side effects.
+
+## Related
+
+- Explanation: [PostgreSQL CDC and Replica Identity](../../explanation/postgresql-cdc-replication.md)
+- Data Manipulation Specification: [Data Manipulation](data-manipulation.md) (insert / update / delete; not deployment-time)
+- PostgreSQL: [Logical Replication — Replica Identity](https://www.postgresql.org/docs/current/logical-replication-publication.html)
 
 
 ---
