@@ -988,6 +988,34 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#the-lineage-table" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The ~lineage table
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The ~lineage table">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#manual-lineage-rebuild" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Manual lineage rebuild
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#examples" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -6134,6 +6162,34 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#the-lineage-table" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The ~lineage table
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The ~lineage table">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#manual-lineage-rebuild" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Manual lineage rebuild
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#examples" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -6454,6 +6510,34 @@ Use .proj() to rename one of the attributes.
 </code></pre></div></p>
 </li>
 </ol>
+<h2 id="the-lineage-table">The <code>~lineage</code> table<a class="headerlink" href="#the-lineage-table" title="Permanent link">&para;</a></h2>
+<p>Lineage is stored per-schema in a hidden table called <code>~lineage</code>. DataJoint writes one row per <code>(table, attribute)</code> pair recording the lineage string for that attribute, and consults <code>~lineage</code> whenever it needs to compare lineages across query expressions.</p>
+<p><code>~lineage</code> is maintained as part of normal table declaration:</p>
+<ul>
+<li>Declaring a new table inserts its lineage rows as the last step of <code>Table.declare()</code>.</li>
+<li>When <code>@schema(MyTable)</code> runs on an already-declared table, DataJoint checks the heading's loaded lineage values for the symptom of missing rows — any primary-key attribute with <code>lineage=None</code>. The check is in memory, against values already loaded when the heading was constructed, so a healthy schema pays zero additional database queries on re-decoration. If the check fires, DataJoint refreshes the table's <code>~lineage</code> rows from the current foreign-key definition. <em>(New in DataJoint 2.3.)</em></li>
+</ul>
+<p>This automatic check addresses the load-bearing failure mode: a partial declare or an upgrade that left some rows missing entirely. <strong>It does not auto-heal stale-but-non-None entries</strong> (e.g. older DataJoint versions that wrote lineage strings in a slightly different format). Those still require a manual rebuild — see below.</p>
+<h3 id="manual-lineage-rebuild">Manual lineage rebuild<a class="headerlink" href="#manual-lineage-rebuild" title="Permanent link">&para;</a></h3>
+<p>When the in-memory check is not enough — stale rows that exist but carry the wrong value, schemas whose tables have not been re-decorated under DataJoint 2.3+, or schemas in <code>create_tables=False</code> production mode — call <code>schema.rebuild_lineage()</code> or the equivalent migration helper:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">datajoint</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dj</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">datajoint</span><span class="w"> </span><span class="kn">import</span> <span class="n">migrate</span>
+
+<span class="n">schema</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">Schema</span><span class="p">(</span><span class="s2">&quot;my_schema&quot;</span><span class="p">)</span>
+
+<span class="c1"># Option 1: instance method</span>
+<span class="n">schema</span><span class="o">.</span><span class="n">rebuild_lineage</span><span class="p">()</span>
+
+<span class="c1"># Option 2: migration helper with dry-run preview</span>
+<span class="n">migrate</span><span class="o">.</span><span class="n">rebuild_lineage</span><span class="p">(</span><span class="n">schema</span><span class="p">,</span> <span class="n">dry_run</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>   <span class="c1"># show what would change</span>
+<span class="n">migrate</span><span class="o">.</span><span class="n">rebuild_lineage</span><span class="p">(</span><span class="n">schema</span><span class="p">,</span> <span class="n">dry_run</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>  <span class="c1"># apply</span>
+</code></pre></div>
+<p>This is also the recovery path when a join fails with:</p>
+<div class="highlight"><pre><span></span><code>DataJointError: Cannot join on attribute `X`: lineage missing on one side
+(None vs ...). This usually indicates a stale `~lineage` entry from an older
+DataJoint version or an incomplete declare. Run `schema.rebuild_lineage()` ...
+</code></pre></div>
+<p><code>rebuild_lineage()</code> is safe to run on a healthy schema — it's idempotent and produces the same end state regardless of starting condition.</p>
 <h2 id="examples">Examples<a class="headerlink" href="#examples" title="Permanent link">&para;</a></h2>
 <h3 id="valid-join-shared-lineage">Valid Join (Shared Lineage)<a class="headerlink" href="#valid-join-shared-lineage" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">Student</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>

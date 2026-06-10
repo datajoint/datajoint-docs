@@ -6723,18 +6723,28 @@
 <span class="s2">    &quot;&quot;&quot;</span>
 </code></pre></div></p>
 <h3 id="rebuilding-lineage-for-existing-schemas">Rebuilding Lineage for Existing Schemas<a class="headerlink" href="#rebuilding-lineage-for-existing-schemas" title="Permanent link">&para;</a></h3>
-<p>If you have existing schemas created before DataJoint 2.0, rebuild their lineage tables:</p>
+<div class="admonition version-added">
+<p class="admonition-title">New in 2.3</p>
+<p><code>@schema</code> decoration now performs an <strong>in-memory check</strong> for missing <code>~lineage</code> rows when a table is already declared. The check inspects the heading's loaded lineage values (no extra DB queries on healthy schemas); if any primary-key attribute has <code>lineage=None</code>, the table's rows are refreshed automatically from the current foreign-key definition. This auto-heals the most common failure mode (partial declares, upgrades that left rows missing) without user action. The explicit <code>rebuild_lineage()</code> utility remains the path for cases the in-memory check cannot reach (see below).</p>
+</div>
+<p>If your schema has any of the limitations below — or you want to apply a clean reset — rebuild explicitly:</p>
 <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">datajoint</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dj</span>
 
 <span class="c1"># Connect and get your schema</span>
 <span class="n">schema</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">Schema</span><span class="p">(</span><span class="s1">&#39;my_database&#39;</span><span class="p">)</span>
 
-<span class="c1"># Rebuild lineage (do this once per schema)</span>
+<span class="c1"># Rebuild lineage</span>
 <span class="n">schema</span><span class="o">.</span><span class="n">rebuild_lineage</span><span class="p">()</span>
 
 <span class="c1"># Restart Python kernel to pick up changes</span>
 </code></pre></div>
 <p><strong>Important</strong>: If your schema references tables in other schemas, rebuild those upstream schemas first.</p>
+<p><strong>When you still need to call this explicitly:</strong></p>
+<ul>
+<li><strong>Stale-but-non-None rows.</strong> The 2.3 in-memory check fires only on missing rows (<code>lineage=None</code>). DataJoint versions older than 2.3 that wrote lineage strings in a different format leave non-None rows that look healthy to the check but no longer match what current code computes. Symptom: a join error of the form <code>different lineages (a.b.c vs a.b.c)</code> (values look right but compare unequal). Fix: <code>rebuild_lineage()</code>.</li>
+<li><strong>Production mode (<code>create_tables=False</code>).</strong> The auto-heal is suppressed when the schema disallows table creation, to keep production deployments read-only. Migrations to production should rebuild lineage before flipping the flag.</li>
+<li><strong>Cross-schema upstream changes.</strong> When an upstream schema's lineage was rebuilt, downstream schemas don't automatically pick up the new strings until they're re-decorated. Running <code>rebuild_lineage()</code> on the downstream schema propagates the change.</li>
+</ul>
 <hr />
 <h2 id="api-reference">API Reference<a class="headerlink" href="#api-reference" title="Permanent link">&para;</a></h2>
 <h3 id="schema-methods">Schema Methods<a class="headerlink" href="#schema-methods" title="Permanent link">&para;</a></h3>
