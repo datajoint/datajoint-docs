@@ -1,47 +1,52 @@
 # Entity Integrity
 
-**Entity integrity** ensures a one-to-one correspondence between real-world
-entities and their database records. This is the foundation of reliable data
-management.
+## Formal definition
 
-## The Core Guarantee
+**Entity integrity** is the guarantee of a **one-to-one correspondence**
+between real-world entities and their representations in the database:
 
-- Each real-world entity → exactly one database record
-- Each database record → exactly one real-world entity
+- Each real-world entity corresponds to **exactly one** database record.
+- Each database record corresponds to **exactly one** real-world entity.
 
-Without entity integrity, databases become unreliable:
+The correspondence is *bidirectional*. A primary-key constraint alone is not
+sufficient; uniqueness inside the database is only half the requirement.
 
-| Integrity Failure | Consequence |
-|-------------------|-------------|
-| Same entity, multiple records | Fragmented data, conflicting information |
-| Multiple entities, same record | Mixed data, privacy violations |
-| Cannot match entity to record | Lost data, broken workflows |
+## Two required components
 
-## The Three Questions
+Entity integrity requires both an external mechanism and an internal one.
+Neither suffices on its own.
 
-When designing a primary key, answer these three questions:
+| Component | Where it lives | What it does |
+|---|---|---|
+| **Real-world identification process** | Outside the database | Establishes and maintains a reliable, unique association between each real-world entity and its identifier (ear tag, student ID, VIN, ISBN, SSN). |
+| **Database uniqueness constraint** | Inside the database | Enforces — via the primary key — that no two records share the same identifier. |
 
-### 1. How do I prevent duplicate records?
+The database can enforce uniqueness but cannot create it. The real-world
+identification process is what links a physical entity to its identifier in
+the first place; the database mirrors and protects that association.
 
-Ensure the same entity cannot appear twice in the table.
+## The three questions
 
-### 2. How do I prevent record sharing?
+When designing the primary key for a table, answer all three:
 
-Ensure different entities cannot share the same record.
+1. **How do I prevent duplicate records?** — The same entity must not appear
+   twice. The primary-key constraint handles this once the entity has been
+   identified.
+2. **How do I prevent record sharing?** — Two different entities must not
+   share the same record. This is what the real-world identification process
+   prevents; the database alone cannot.
+3. **How do I match an entity to its record?** — When an entity arrives, how
+   do I find the record that represents it? This depends on the
+   identification mechanism — ear tag, barcode, government ID, token issued
+   at first contact.
 
-### 3. How do I match entities to records?
-
-When an entity arrives, how do I find its corresponding record?
-
-## Example: Laboratory Mouse Database
-
-Consider a neuroscience lab tracking mice:
+## Example: laboratory mouse database
 
 | Question | Answer |
 |----------|--------|
-| Prevent duplicates? | Each mouse gets a unique ear tag at arrival; database rejects duplicate tags |
-| Prevent sharing? | Ear tags are never reused; retired tags are archived |
-| Match entities? | Read the ear tag → look up record by primary key |
+| Prevent duplicates? | Each mouse gets a unique ear tag at arrival; the database rejects duplicate tags. |
+| Prevent sharing? | Ear tags are never reused; retired tags are archived. |
+| Match entity to record? | Read the ear tag → look up the record by primary key. |
 
 ```python
 @schema
@@ -55,24 +60,62 @@ class Mouse(dj.Manual):
     """
 ```
 
-The database enforces the first two questions through the primary key constraint.
-The third question requires a **physical identification system**—ear tags,
-barcodes, or RFID chips that link physical entities to database records.
+The database enforces the first question through the primary-key constraint.
+The second and third questions require a **physical identification system**
+— ear tags, microchips, barcodes, RFID — that links physical entities to
+their identifiers. Without that, the database is enforcing uniqueness of an
+identifier with no reliable connection to anything real.
 
-## Primary Key Requirements
+## Primary-key requirements
 
-In DataJoint, every table must have a primary key. Primary key attributes:
+Every DataJoint table must have a primary key. Primary-key attributes:
 
-- **Cannot be NULL** — Every entity must be identifiable
-- **Must be unique** — No two entities share the same key
-- **Cannot be changed** — Keys are immutable after insertion
-- **Declared above the `---` line** — Syntactic convention
+- **Cannot be NULL** — every entity must be identifiable.
+- **Must be unique** — no two entities share the same key.
+- **Cannot be changed** — keys are immutable after insertion.
+- **Declared above the `---`** in the table definition.
 
-## Natural Keys vs. Surrogate Keys
+### Explicit keys, no auto-increment
 
-### Natural Keys
+DataJoint requires every primary-key value to be provided explicitly at
+insertion. There is no `AUTO_INCREMENT`. This is a deliberate choice that
+follows from the formal definition above:
 
-Use attributes that naturally identify entities in your domain:
+- **Identification before insertion.** The client must commit to *which*
+  entity it is inserting. Auto-increment treats the key as a row number —
+  the database invents an identifier the client never sees — which breaks
+  the bidirectional mapping at the point of entry.
+- **Duplicate detection.** Running the same insertion twice with the same
+  explicit key produces a key collision rather than two records for one
+  entity. Auto-increment would silently insert twice.
+- **Composite keys.** Auto-increment is incompatible with composite primary
+  keys, which DataJoint uses extensively for hierarchical entities.
+- **Reproducibility.** Re-building a pipeline from sources should produce
+  the same identifiers; auto-increment makes them depend on insertion
+  order.
+
+For surrogate keys, generate values client-side (UUID, ULID, NanoID, or a
+client-side counter) before insertion.
+
+## Natural keys and surrogate keys
+
+A primary key can be **natural** or **surrogate** depending on whether the
+identifier is used outside the database.
+
+### Natural keys
+
+A **natural key** is an identifier used *outside* the database to refer to
+the entity. It requires a real-world mechanism — ear tag, ID card, VIN — to
+establish and maintain the entity-to-identifier association. Examples:
+
+- External standards: ISBN, VIN, ISO RFID identifiers for animals
+- Government systems: SSN, passport numbers
+- Institutional systems: student IDs, employee numbers
+- Lab systems: animal IDs printed on ear tags, sample IDs on barcoded vials
+
+Even when an identifier is *generated* by the database or a management
+system, it functions as a natural key as soon as it is printed on a label
+and used in the real world to refer to the entity.
 
 ```python
 @schema
@@ -85,100 +128,89 @@ class Gene(dj.Lookup):
     """
 ```
 
-**Advantages:**
+### Surrogate keys
 
-- Meaningful to humans
-- Self-documenting
-- No additional lookup needed
+A **surrogate key** is an identifier used *only inside* the database. Users
+do not see or reference it. Surrogate keys are appropriate for:
 
-### Surrogate Keys
+- Entities with no physical counterpart (internal records, system events).
+- Privacy-sensitive contexts where natural identifiers should not be stored.
+- Internal references that never leave the system.
 
-A **surrogate key** is an identifier used *primarily inside* the database, with minimal or no exposure to end users. Users typically don't search for entities by surrogate keys or use them in conversation.
+Surrogate keys do not require an external identification system precisely
+because they are never used to match physical entities to records. The
+database still enforces their uniqueness, but the "real-world process" half
+of entity integrity does not apply.
 
 ```python
 @schema
 class InternalRecord(dj.Manual):
     definition = """
-    record_id : uuid    # internal identifier, not exposed to users
+    record_id : uuid    # internal identifier
     ---
     created_timestamp : datetime(3)
     data : <blob>
     """
 ```
 
-**Key distinction from natural keys:** Surrogate keys don't require external identification systems because users don't need to match physical entities to records by these keys.
+Prefer natural keys when a stable, meaningful identifier exists; use
+surrogates when no natural identifier is available or when privacy requires
+it.
 
-**When surrogate keys are appropriate:**
+## Composite keys
 
-- Entities that exist only within the system (no physical counterpart)
-- Privacy-sensitive contexts where natural identifiers shouldn't be stored
-- Internal system records that users never reference directly
-
-**Generating surrogate keys:** DataJoint requires explicit key values rather than database-generated auto-increment. This is intentional:
-
-- Auto-increment encourages treating keys as "row numbers" rather than entity identifiers
-- It's incompatible with composite keys, which DataJoint uses extensively
-- It breaks reproducibility (different IDs when rebuilding pipelines)
-- It prevents the client-server handshake needed for proper entity integrity
-
-Use client-side generation instead:
-
-- **UUIDs** — Generate with `uuid.uuid4()` before insertion
-- **ULIDs** — Sortable unique IDs
-- **Client-side counters** — Query max value and increment
-
-**DataJoint recommendation:** Prefer natural keys when they're stable and
-meaningful. Use surrogates only when no natural identifier exists or for
-privacy-sensitive contexts.
-
-## Composite Keys
-
-When no single attribute uniquely identifies an entity, combine multiple
-attributes:
+When no single attribute uniquely identifies an entity within a table,
+combine multiple attributes. Composite keys most often arise from inheriting
+foreign keys: a child entity is identified within the context of its parent.
 
 ```python
 @schema
 class Recording(dj.Manual):
     definition = """
     -> Session
-    recording_idx : int32   # Recording number within session
+    recording_idx : int32   # recording number within session
     ---
     duration : float32       # seconds
     """
 ```
 
-Here, `(subject_id, session_idx, recording_idx)` together form the primary key.
-Neither alone would be unique.
+Here `(subject_id, session_idx, recording_idx)` together form the primary
+key. Neither attribute alone would identify a recording across the table.
 
-## Foreign Keys and Dependencies
+## Foreign keys
 
-Foreign keys in DataJoint serve dual purposes:
+A foreign key serves two distinct purposes in DataJoint:
 
-1. **Referential integrity** — Ensures referenced entities exist
-2. **Workflow dependency** — Declares that this entity depends on another
+1. **Referential integrity.** The referenced entity must exist.
+2. **Workflow dependency.** This entity depends on another in the pipeline
+   DAG.
 
 ```python
 @schema
 class Segmentation(dj.Computed):
     definition = """
-    -> Scan           # Depends on Scan
+    -> Scan
     ---
-    num_cells : int64
+    n_cells : int64
     """
 ```
 
-The arrow `->` inherits the primary key from `Scan` and establishes both
-referential integrity and workflow dependency.
+The arrow `->` inherits the primary key of `Scan` into `Segmentation`,
+establishes the foreign-key constraint, and declares the workflow dependency
+in a single statement.
 
-## Schema Dimensions
+## Schema dimensions
 
-A **dimension** is an independent axis of variation in your data. The fundamental principle:
+A **dimension** is an independent axis of variation in the data. The rule:
 
-> **Any table that introduces a new primary key attribute introduces a new dimension.**
+> **Any table that introduces a new primary-key attribute introduces a new
+> dimension.**
 
-This is true whether the table has only new attributes or also inherits attributes from foreign keys. The key is simply: new primary key attribute = new dimension.
+The rule applies whether the table has only new attributes or also inherits
+attributes through foreign keys. A new primary-key attribute means a new
+dimension.
 
-### Tables That Introduce Dimensions
+### Tables that introduce dimensions
 
 ```python
 @schema
@@ -192,8 +224,8 @@ class Subject(dj.Manual):
 @schema
 class Session(dj.Manual):
     definition = """
-    -> Subject                 # Inherits subject_id
-    session_idx : int32       # NEW dimension: session_idx
+    -> Subject                 # inherits subject_id
+    session_idx : int32        # NEW dimension: session_idx
     ---
     session_date : date
     """
@@ -201,43 +233,46 @@ class Session(dj.Manual):
 @schema
 class Trial(dj.Manual):
     definition = """
-    -> Session                 # Inherits subject_id, session_idx
-    trial_idx : int32         # NEW dimension: trial_idx
+    -> Session                 # inherits subject_id, session_idx
+    trial_idx : int32          # NEW dimension: trial_idx
     ---
     outcome : enum('success', 'fail')
     """
 ```
 
-**All three tables introduce dimensions:**
+All three tables introduce dimensions:
 
-- `Subject` introduces `subject_id` dimension
-- `Session` introduces `session_idx` dimension (even though it also inherits `subject_id`)
-- `Trial` introduces `trial_idx` dimension (even though it also inherits `subject_id`, `session_idx`)
+- `Subject` introduces `subject_id`
+- `Session` introduces `session_idx` (and inherits `subject_id`)
+- `Trial` introduces `trial_idx` (and inherits both)
 
-In schema diagrams, tables that introduce at least one new dimension have **underlined names**.
+In schema diagrams, tables that introduce at least one new dimension have
+**underlined names**.
 
-### Tables That Don't Introduce Dimensions
+### Tables that don't introduce dimensions
 
-A table introduces **no dimensions** when its entire primary key comes from foreign keys:
+When the entire primary key comes from foreign keys, the table extends an
+existing dimension rather than introducing a new one:
 
 ```python
 @schema
 class SubjectProfile(dj.Manual):
     definition = """
-    -> Subject                 # Inherits subject_id only
+    -> Subject                 # PK = (subject_id) only
     ---
     weight : float32
     """
 ```
 
-`SubjectProfile` doesn't introduce any new primary key attribute—it extends the `Subject` dimension with additional attributes. There's exactly one profile per subject.
+`SubjectProfile` represents a one-to-one extension of `Subject` — exactly
+one profile per subject. In schema diagrams, such tables have
+**non-underlined names**.
 
-In schema diagrams, these tables have **non-underlined names**.
+### Computed tables never introduce dimensions
 
-### Computed Tables and Dimensions
-
-**Computed tables never introduce dimensions.** Their primary key is entirely
-inherited from their dependencies:
+A `Computed` table's primary key is fully inherited from its dependencies.
+New entity types are introduced by Manual or Lookup tables, not by
+computation:
 
 ```python
 @schema
@@ -250,88 +285,117 @@ class SessionSummary(dj.Computed):
     """
 ```
 
-This makes sense—computed tables derive data from existing entities rather
-than introducing new ones.
+### Part tables CAN introduce dimensions
 
-### Part Tables CAN Introduce Dimensions
-
-Unlike computed tables, **part tables can introduce new dimensions**:
+Unlike Computed master tables, part tables can introduce new dimensions
+when a single computation produces multiple related results:
 
 ```python
 @schema
 class Detection(dj.Computed):
     definition = """
-    -> Image                   # Inherits image_id
-    -> DetectionParams         # Inherits params_id
+    -> Image
+    -> DetectionParams
     ---
     num_blobs : int64
     """
 
     class Blob(dj.Part):
         definition = """
-        -> master              # Inherits (image_id, params_id)
-        blob_idx : int32      # NEW dimension within detection
+        -> master              # inherits (image_id, params_id)
+        blob_idx : int32       # NEW dimension within detection
         ---
         x : float32
         y : float32
         """
 ```
 
-`Detection` inherits dimensions (no underline in diagram), but `Detection.Blob`
-introduces a new dimension (`blob_idx`) for individual blobs within each
-detection.
+`Detection` inherits its dimensions; `Detection.Blob` introduces `blob_idx`
+to identify individual blobs within each detection.
 
-### Dimensions and Attribute Lineage
+### Dimensions and attribute lineage
 
-Every foreign key attribute traces back to the dimension where it was first
-defined. This is called **attribute lineage**:
+Every foreign-key attribute traces back to the dimension where it was first
+defined. This trace is called **attribute lineage**:
 
 ```
 Subject.subject_id      → myschema.subject.subject_id (origin)
-Session.subject_id      → myschema.subject.subject_id (inherited via foreign key)
+Session.subject_id      → myschema.subject.subject_id (inherited via FK)
 Session.session_idx     → myschema.session.session_idx (origin)
-Trial.subject_id        → myschema.subject.subject_id (inherited via foreign key)
-Trial.session_idx       → myschema.session.session_idx (inherited via foreign key)
+Trial.subject_id        → myschema.subject.subject_id (inherited via FK)
+Trial.session_idx       → myschema.session.session_idx (inherited via FK)
 Trial.trial_idx         → myschema.trial.trial_idx (origin)
 ```
 
-Lineage enables **semantic matching**—DataJoint only joins attributes that
-trace back to the same dimension. Two attributes named `id` from different
-dimensions cannot be accidentally joined.
+Lineage enables **semantic matching** — DataJoint joins attributes only
+when they trace back to the same dimension. Two `id` attributes from
+different dimensions cannot be accidentally joined.
 
-See [Semantic Matching](../reference/specs/semantic-matching.md/) for details.
+See [Semantic Matching](semantic-matching.md) for the full mechanism.
 
-### Recognizing Dimensions in Diagrams
-
-In schema diagrams:
+### Recognizing dimensions in diagrams
 
 | Visual | Meaning |
 |--------|---------|
-| **Underlined name** | Introduces at least one new dimension |
-| Non-underlined name | All PK attributes inherited (no new dimensions) |
+| **Underlined table name** | Introduces at least one new dimension |
+| Non-underlined table name | All PK attributes inherited (no new dimensions) |
 | **Thick solid line** | One-to-one extension (no new dimension) |
-| **Thin solid line** | Containment (may introduce dimension) |
+| Thin solid line | Containment (may introduce a dimension) |
 
-Common dimensions in neuroscience:
+## Partial entity integrity
 
-- **Subject** — Who/what is being studied
-- **Session** — When data was collected
-- **Trial** — Individual experimental unit
-- **Modality** — Type of data (ephys, imaging, behavior)
-- **Parameter set** — Configuration for analysis
+Some applications need only one direction of the 1:1 mapping:
 
-Understanding dimensions helps design schemas that naturally express your
-experimental structure and ensures correct joins through semantic matching.
+- **Record → entity (uniqueness only).** Each record corresponds to at most
+  one entity, but an entity may have multiple records.
+- **Entity → record (completeness only).** Each entity has a record, but
+  records may be shared.
 
-## Best Practices
+A social platform might ensure each account ties to at most one person
+(record→entity) without preventing one person from creating multiple
+accounts (entity→record not enforced). Design the primary key to match the
+actual requirement — full bidirectional integrity is sometimes more than
+the application needs.
 
-1. **Answer the three questions** before designing any table
-2. **Choose stable identifiers** that won't need to change
-3. **Keep keys minimal** — Include only what's necessary for uniqueness
-4. **Document key semantics** — Explain what the key represents
-5. **Consider downstream queries** — Keys affect join performance
+## When no natural key exists
 
-## Common Mistakes
+When no external identifier exists and no real-world mechanism maintains
+the entity-to-record association, full entity integrity is still possible
+through a multi-step identification process:
+
+1. Generate a unique token at the time of first contact.
+2. Deliver the token to the entity (email, printed card, RFID badge).
+3. Require the token for all subsequent interactions.
+4. Trust the external process to maintain the association.
+
+The token then functions as a natural key — as long as the external process
+reliably maintains it. The database enforces uniqueness; the process
+enforces the entity-to-token binding.
+
+## What the database can and cannot do
+
+| The database CAN | The database CANNOT |
+|---|---|
+| Enforce that no two records share a primary key | Verify that a record represents the intended real-world entity |
+| Reject inserts that violate foreign-key constraints | Prevent one entity from having two records (without an external mechanism) |
+| Cascade deletes through workflow dependencies | Create real-world identifiers — only mirror and enforce them |
+
+Entity integrity for real-world entities **always requires some external
+identification process** alongside the database constraints — whether it is
+ear tags on mice, ID cards for students, barcodes on samples, or a
+token-issuance protocol for anonymous respondents.
+
+## Best practices
+
+1. **Answer the three questions** before designing any table.
+2. **Choose stable identifiers** that will not need to change.
+3. **Keep keys minimal** — include only what is necessary for uniqueness.
+4. **Document key semantics** — explain what the key represents in the
+   real world.
+5. **Match the application's actual integrity requirement** — full,
+   partial, or token-based.
+
+## Common mistakes
 
 ### Too few key attributes
 
@@ -341,7 +405,7 @@ class Trial(dj.Manual):
     definition = """
     experiment_id : int64
     ---
-    trial_number : int32   # Should be part of key!
+    trial_number : int32   # Should be part of the key!
     result : float32
     """
 ```
@@ -353,7 +417,7 @@ class Trial(dj.Manual):
 class Measurement(dj.Manual):
     definition = """
     subject_id : int64
-    timestamp : datetime(6)   # Microsecond precision
+    timestamp : datetime(6)   # Microsecond precision destroys entity identity
     ---
     value : float32
     """
@@ -373,11 +437,26 @@ class Patient(dj.Manual):
 
 ## Summary
 
-Entity integrity is maintained by:
+Entity integrity is the bidirectional one-to-one correspondence between
+real-world entities and their database records. It rests on **two required
+components**: a real-world identification process that creates the
+association, and a database uniqueness constraint that enforces it. Neither
+component alone is enough.
 
-1. **Primary keys** that uniquely identify each entity
-2. **Foreign keys** that establish valid references
-3. **Physical systems** that link real-world entities to records
+The three questions — *how do I prevent duplicates, prevent record sharing,
+and match entities to records?* — operationalize this definition. The
+primary key, declared above the `---` separator and supplied explicitly at
+insertion, is the database's half of the answer. The real-world process is
+yours to design.
 
-The three questions framework ensures your primary keys provide meaningful,
-stable identification for your domain entities.
+## See also
+
+- [Normalization](normalization.md) — entity normalization and the workflow
+  test
+- [Computation Model](computation-model.md) — how cascade deletes and
+  populate preserve integrity through the pipeline
+- [Semantic Matching](semantic-matching.md) — joins resolved by attribute
+  lineage through schema dimensions
+- [Relational Workflow Model](relational-workflow-model.md) — the
+  conceptual frame in which entity integrity is one of several integrity
+  guarantees
