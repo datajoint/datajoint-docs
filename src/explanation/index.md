@@ -40,6 +40,16 @@ and scalable.
 
     AutoPopulate and Jobs 2.0. Automated, reproducible, distributed computation.
 
+-   :material-file-document-edit: **[Schema as a Workflow Specification](schema-as-workflow-specification.md)**
+
+    The schema as a formal language for expressing scientific workflows.
+    Grammar, semantics, algebra, and machine-readability.
+
+-   :material-compare-horizontal: **[Comparison to Workflow Languages](comparison-to-workflow-languages.md)**
+
+    How DataJoint relates to CWL, Snakemake, Nextflow, Airflow, and other
+    workflow tools. What each offers, what each omits, and when to use both.
+
 -   :material-puzzle: **[Custom Codecs](custom-codecs.md)**
 
     Extend DataJoint with domain-specific types. The codec extensibility system.
