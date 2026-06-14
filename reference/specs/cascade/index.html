@@ -5,12 +5,12 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width,initial-scale=1" name="viewport"/>
-<link href="https://docs.datajoint.com/api/datajoint/diagram/" rel="canonical"/>
-<link href="../connection/" rel="prev"/>
-<link href="../errors/" rel="next"/>
+<link href="https://docs.datajoint.com/reference/specs/cascade/" rel="canonical"/>
+<link href="../staged-insert/" rel="prev"/>
+<link href="../autopopulate/" rel="next"/>
 <link href="../../../assets/images/company-logo-blue.png" rel="icon"/>
 <meta content="mkdocs-1.6.1, mkdocs-material-9.7.6" name="generator"/>
-<title>Diagram - DataJoint Documentation</title>
+<title>Cascade - DataJoint Documentation</title>
 <link href="../../../assets/stylesheets/main.484c7ddc.min.css" rel="stylesheet"/>
 <link href="../../../assets/stylesheets/palette.ab4e12ef.min.css" rel="stylesheet"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
@@ -46,7 +46,7 @@
 <input autocomplete="off" class="md-toggle" data-md-toggle="search" id="__search" type="checkbox"/>
 <label class="md-overlay" for="__drawer"></label>
 <div data-md-component="skip">
-<a class="md-skip" href="#diagram">
+<a class="md-skip" href="#cascade-specification">
           Skip to content
         </a>
 </div>
@@ -98,7 +98,7 @@
 <div class="md-header__topic" data-md-component="header-topic">
 <span class="md-ellipsis">
             
-              Diagram
+              Cascade
             
           </span>
 </div>
@@ -1514,10 +1514,10 @@
 </ul>
 </nav>
 </li>
-<li class="md-nav__item md-nav__item--section md-nav__item--nested">
-<input class="md-nav__toggle md-toggle" id="__nav_5" type="checkbox"/>
+<li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+<input checked="" class="md-nav__toggle md-toggle" id="__nav_5" type="checkbox"/>
 <div class="md-nav__link md-nav__container">
-<a class="md-nav__link" href="../../../reference/">
+<a class="md-nav__link" href="../../">
 <span class="md-ellipsis">
     
   
@@ -1531,7 +1531,7 @@
 <span class="md-nav__icon md-icon"></span>
 </label>
 </div>
-<nav aria-expanded="false" aria-labelledby="__nav_5_label" class="md-nav" data-md-level="1">
+<nav aria-expanded="true" aria-labelledby="__nav_5_label" class="md-nav" data-md-level="1">
 <label class="md-nav__title" for="__nav_5">
 <span class="md-nav__icon md-icon"></span>
             
@@ -1541,10 +1541,10 @@
 
           </label>
 <ul class="md-nav__list" data-md-scrollfix="">
-<li class="md-nav__item md-nav__item--nested">
-<input class="md-nav__toggle md-toggle" id="__nav_5_1" type="checkbox"/>
+<li class="md-nav__item md-nav__item--active md-nav__item--nested">
+<input checked="" class="md-nav__toggle md-toggle" id="__nav_5_1" type="checkbox"/>
 <div class="md-nav__link md-nav__container">
-<a class="md-nav__link" href="../../../reference/specs/">
+<a class="md-nav__link" href="../">
 <span class="md-ellipsis">
     
   
@@ -1558,7 +1558,7 @@
 <span class="md-nav__icon md-icon"></span>
 </label>
 </div>
-<nav aria-expanded="false" aria-labelledby="__nav_5_1_label" class="md-nav" data-md-level="2">
+<nav aria-expanded="true" aria-labelledby="__nav_5_1_label" class="md-nav" data-md-level="2">
 <label class="md-nav__title" for="__nav_5_1">
 <span class="md-nav__icon md-icon"></span>
             
@@ -1569,7 +1569,7 @@
           </label>
 <ul class="md-nav__list" data-md-scrollfix="">
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../../reference/specs/database-backends/">
+<a class="md-nav__link" href="../database-backends/">
 <span class="md-ellipsis">
     
   
@@ -1604,7 +1604,7 @@
           </label>
 <ul class="md-nav__list" data-md-scrollfix="">
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../../reference/specs/table-declaration/">
+<a class="md-nav__link" href="../table-declaration/">
 <span class="md-ellipsis">
     
   
@@ -1616,7 +1616,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../../reference/specs/master-part/">
+<a class="md-nav__link" href="../master-part/">
 <span class="md-ellipsis">
     
   
@@ -1628,7 +1628,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../../reference/specs/virtual-schemas/">
+<a class="md-nav__link" href="../virtual-schemas/">
 <span class="md-ellipsis">
     
   
@@ -1666,7 +1666,7 @@
           </label>
 <ul class="md-nav__list" data-md-scrollfix="">
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../../reference/specs/query-algebra/">
+<a class="md-nav__link" href="../query-algebra/">
 <span class="md-ellipsis">
     
   
@@ -1678,7 +1678,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../../reference/specs/semantic-matching/">
+<a class="md-nav__link" href="../semantic-matching/">
 <span class="md-ellipsis">
     
   
@@ -1690,7 +1690,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../../reference/specs/primary-keys/">
+<a class="md-nav__link" href="../primary-keys/">
 <span class="md-ellipsis">
     
   
@@ -1702,7 +1702,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../../reference/specs/fetch-api/">
+<a class="md-nav__link" href="../fetch-api/">
 <span class="md-ellipsis">
     
   
@@ -1714,7 +1714,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../../reference/specs/diagram/">
+<a class="md-nav__link" href="../diagram/">
 <span class="md-ellipsis">
     
   
@@ -1752,7 +1752,7 @@
           </label>
 <ul class="md-nav__list" data-md-scrollfix="">
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../../reference/specs/type-system/">
+<a class="md-nav__link" href="../type-system/">
 <span class="md-ellipsis">
     
   
@@ -1764,7 +1764,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../../reference/specs/codec-api/">
+<a class="md-nav__link" href="../codec-api/">
 <span class="md-ellipsis">
     
   
@@ -1776,7 +1776,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../../reference/specs/npy-codec/">
+<a class="md-nav__link" href="../npy-codec/">
 <span class="md-ellipsis">
     
   
@@ -1788,7 +1788,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../../reference/specs/storage-adapter-api/">
+<a class="md-nav__link" href="../storage-adapter-api/">
 <span class="md-ellipsis">
     
   
@@ -1802,8 +1802,8 @@
 </ul>
 </nav>
 </li>
-<li class="md-nav__item md-nav__item--nested">
-<input class="md-nav__toggle md-toggle" id="__nav_5_1_5" type="checkbox"/>
+<li class="md-nav__item md-nav__item--active md-nav__item--nested">
+<input checked="" class="md-nav__toggle md-toggle" id="__nav_5_1_5" type="checkbox"/>
 <label class="md-nav__link" for="__nav_5_1_5" id="__nav_5_1_5_label" tabindex="0">
 <span class="md-ellipsis">
     
@@ -1815,7 +1815,7 @@
   </span>
 <span class="md-nav__icon md-icon"></span>
 </label>
-<nav aria-expanded="false" aria-labelledby="__nav_5_1_5_label" class="md-nav" data-md-level="3">
+<nav aria-expanded="true" aria-labelledby="__nav_5_1_5_label" class="md-nav" data-md-level="3">
 <label class="md-nav__title" for="__nav_5_1_5">
 <span class="md-nav__icon md-icon"></span>
             
@@ -1826,7 +1826,7 @@
           </label>
 <ul class="md-nav__list" data-md-scrollfix="">
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../../reference/specs/data-manipulation/">
+<a class="md-nav__link" href="../data-manipulation/">
 <span class="md-ellipsis">
     
   
@@ -1838,7 +1838,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../../reference/specs/staged-insert/">
+<a class="md-nav__link" href="../staged-insert/">
 <span class="md-ellipsis">
     
   
@@ -1849,8 +1849,20 @@
   </span>
 </a>
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../../../reference/specs/cascade/">
+<li class="md-nav__item md-nav__item--active">
+<input class="md-nav__toggle md-toggle" id="__toc" type="checkbox"/>
+<label class="md-nav__link md-nav__link--active" for="__toc">
+<span class="md-ellipsis">
+    
+  
+    Cascade
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<a class="md-nav__link md-nav__link--active" href="./">
 <span class="md-ellipsis">
     
   
@@ -1860,9 +1872,191 @@
     
   </span>
 </a>
+<nav aria-label="Table of contents" class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">
+<span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#overview">
+<span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+</a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../../reference/specs/autopopulate/">
+<a class="md-nav__link" href="#dependency-graph">
+<span class="md-ellipsis">
+      
+        Dependency graph
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#restriction-propagation-rules">
+<span class="md-ellipsis">
+      
+        Restriction propagation rules
+      
+    </span>
+</a>
+<nav aria-label="Restriction propagation rules" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#forward-propagation-parent-child">
+<span class="md-ellipsis">
+      
+        Forward propagation (parent → child)
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#upward-propagation-child-parent">
+<span class="md-ellipsis">
+      
+        Upward propagation (child → parent)
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#cascade-flow">
+<span class="md-ellipsis">
+      
+        Cascade flow
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#part_integrity-modes">
+<span class="md-ellipsis">
+      
+        part_integrity modes
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#part-to-master-upward-propagation">
+<span class="md-ellipsis">
+      
+        Part-to-Master upward propagation
+      
+    </span>
+</a>
+<nav aria-label="Part-to-Master upward propagation" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#identifying-the-master">
+<span class="md-ellipsis">
+      
+        Identifying the Master
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#walking-the-fk-path">
+<span class="md-ellipsis">
+      
+        Walking the FK path
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#materialization-at-the-master">
+<span class="md-ellipsis">
+      
+        Materialization at the Master
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#seed-is-part-case">
+<span class="md-ellipsis">
+      
+        Seed-is-Part case
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#worked-examples">
+<span class="md-ellipsis">
+      
+        Worked examples
+      
+    </span>
+</a>
+<nav aria-label="Worked examples" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#example-1-part-of-part-with-renamed-fk">
+<span class="md-ellipsis">
+      
+        Example 1: Part-of-Part with renamed FK
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#example-2-part-of-part-with-no-master-reference-in-partb">
+<span class="md-ellipsis">
+      
+        Example 2: Part-of-Part with no Master reference in PartB
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#algorithmic-complexity">
+<span class="md-ellipsis">
+      
+        Algorithmic complexity
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#what-is-not-part-of-this-specification">
+<span class="md-ellipsis">
+      
+        What is not part of this specification
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#references">
+<span class="md-ellipsis">
+      
+        References
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../autopopulate/">
 <span class="md-ellipsis">
     
   
@@ -1874,7 +2068,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../../reference/specs/job-metadata/">
+<a class="md-nav__link" href="../job-metadata/">
 <span class="md-ellipsis">
     
   
@@ -1886,7 +2080,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../../reference/specs/object-store-configuration/">
+<a class="md-nav__link" href="../object-store-configuration/">
 <span class="md-ellipsis">
     
   
@@ -1924,7 +2118,7 @@
           </label>
 <ul class="md-nav__list" data-md-scrollfix="">
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../../reference/specs/deploy-operations/">
+<a class="md-nav__link" href="../deploy-operations/">
 <span class="md-ellipsis">
     
   
@@ -1965,7 +2159,7 @@
           </label>
 <ul class="md-nav__list" data-md-scrollfix="">
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../../reference/specs/thread-safe-mode/">
+<a class="md-nav__link" href="../thread-safe-mode/">
 <span class="md-ellipsis">
     
   
@@ -1980,7 +2174,7 @@
 </nav>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../../reference/configuration/">
+<a class="md-nav__link" href="../../configuration/">
 <span class="md-ellipsis">
     
   
@@ -1992,7 +2186,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../../reference/definition-syntax/">
+<a class="md-nav__link" href="../../definition-syntax/">
 <span class="md-ellipsis">
     
   
@@ -2004,7 +2198,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../../reference/operators/">
+<a class="md-nav__link" href="../../operators/">
 <span class="md-ellipsis">
     
   
@@ -2016,7 +2210,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../../reference/errors/">
+<a class="md-nav__link" href="../../errors/">
 <span class="md-ellipsis">
     
   
@@ -2042,10 +2236,10 @@
 </ul>
 </nav>
 </li>
-<li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
-<input checked="" class="md-nav__toggle md-toggle" id="__nav_6" type="checkbox"/>
+<li class="md-nav__item md-nav__item--section md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_6" type="checkbox"/>
 <div class="md-nav__link md-nav__container">
-<a class="md-nav__link" href="../../">
+<a class="md-nav__link" href="../../../api/">
 <span class="md-ellipsis">
     
   
@@ -2059,7 +2253,7 @@
 <span class="md-nav__icon md-icon"></span>
 </label>
 </div>
-<nav aria-expanded="true" aria-labelledby="__nav_6_label" class="md-nav" data-md-level="1">
+<nav aria-expanded="false" aria-labelledby="__nav_6_label" class="md-nav" data-md-level="1">
 <label class="md-nav__title" for="__nav_6">
 <span class="md-nav__icon md-icon"></span>
             
@@ -2070,7 +2264,7 @@
           </label>
 <ul class="md-nav__list" data-md-scrollfix="">
 <li class="md-nav__item">
-<a class="md-nav__link" href="../">
+<a class="md-nav__link" href="../../../api/datajoint/">
 <span class="md-ellipsis">
     
   
@@ -2081,10 +2275,10 @@
   </span>
 </a>
 </li>
-<li class="md-nav__item md-nav__item--active md-nav__item--nested">
-<input checked="" class="md-nav__toggle md-toggle" id="__nav_6_2" type="checkbox"/>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_6_2" type="checkbox"/>
 <div class="md-nav__link md-nav__container">
-<a class="md-nav__link" href="../">
+<a class="md-nav__link" href="../../../api/datajoint/">
 <span class="md-ellipsis">
     
   
@@ -2098,7 +2292,7 @@
 <span class="md-nav__icon md-icon"></span>
 </label>
 </div>
-<nav aria-expanded="true" aria-labelledby="__nav_6_2_label" class="md-nav" data-md-level="2">
+<nav aria-expanded="false" aria-labelledby="__nav_6_2_label" class="md-nav" data-md-level="2">
 <label class="md-nav__title" for="__nav_6_2">
 <span class="md-nav__icon md-icon"></span>
             
@@ -2109,7 +2303,7 @@
           </label>
 <ul class="md-nav__list" data-md-scrollfix="">
 <li class="md-nav__item">
-<a class="md-nav__link" href="../blob/">
+<a class="md-nav__link" href="../../../api/datajoint/blob/">
 <span class="md-ellipsis">
     
   
@@ -2121,7 +2315,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../codecs/">
+<a class="md-nav__link" href="../../../api/datajoint/codecs/">
 <span class="md-ellipsis">
     
   
@@ -2133,7 +2327,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../connection/">
+<a class="md-nav__link" href="../../../api/datajoint/connection/">
 <span class="md-ellipsis">
     
   
@@ -2144,20 +2338,8 @@
   </span>
 </a>
 </li>
-<li class="md-nav__item md-nav__item--active">
-<input class="md-nav__toggle md-toggle" id="__toc" type="checkbox"/>
-<label class="md-nav__link md-nav__link--active" for="__toc">
-<span class="md-ellipsis">
-    
-  
-    Diagram
-  
-
-    
-  </span>
-<span class="md-nav__icon md-icon"></span>
-</label>
-<a class="md-nav__link md-nav__link--active" href="./">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../api/datajoint/diagram/">
 <span class="md-ellipsis">
     
   
@@ -2167,129 +2349,9 @@
     
   </span>
 </a>
-<nav aria-label="Table of contents" class="md-nav md-nav--secondary">
-<label class="md-nav__title" for="__toc">
-<span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
-<li class="md-nav__item">
-<a class="md-nav__link" href="#datajoint.diagram">
-<span class="md-ellipsis">
-      
-        diagram
-      
-    </span>
-</a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#datajoint.diagram.Diagram">
-<span class="md-ellipsis">
-      
-        Diagram
-      
-    </span>
-</a>
-<nav aria-label="Diagram" class="md-nav">
-<ul class="md-nav__list">
-<li class="md-nav__item">
-<a class="md-nav__link" href="#datajoint.diagram.Diagram.from_sequence">
-<span class="md-ellipsis">
-      
-        from_sequence
-      
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#datajoint.diagram.Diagram.add_parts">
-<span class="md-ellipsis">
-      
-        add_parts
-      
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#datajoint.diagram.Diagram.collapse">
-<span class="md-ellipsis">
-      
-        collapse
-      
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#datajoint.diagram.Diagram.cascade">
-<span class="md-ellipsis">
-      
-        cascade
-      
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#datajoint.diagram.Diagram.restrict">
-<span class="md-ellipsis">
-      
-        restrict
-      
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#datajoint.diagram.Diagram.counts">
-<span class="md-ellipsis">
-      
-        counts
-      
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#datajoint.diagram.Diagram.prune">
-<span class="md-ellipsis">
-      
-        prune
-      
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#datajoint.diagram.Diagram.make_dot">
-<span class="md-ellipsis">
-      
-        make_dot
-      
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#datajoint.diagram.Diagram.make_mermaid">
-<span class="md-ellipsis">
-      
-        make_mermaid
-      
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#datajoint.diagram.Diagram.save">
-<span class="md-ellipsis">
-      
-        save
-      
-    </span>
-</a>
-</li>
-</ul>
-</nav>
-</li>
-</ul>
-</nav>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../errors/">
+<a class="md-nav__link" href="../../../api/datajoint/errors/">
 <span class="md-ellipsis">
     
   
@@ -2301,7 +2363,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../expression/">
+<a class="md-nav__link" href="../../../api/datajoint/expression/">
 <span class="md-ellipsis">
     
   
@@ -2313,7 +2375,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../hash_registry/">
+<a class="md-nav__link" href="../../../api/datajoint/hash_registry/">
 <span class="md-ellipsis">
     
   
@@ -2325,7 +2387,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../heading/">
+<a class="md-nav__link" href="../../../api/datajoint/heading/">
 <span class="md-ellipsis">
     
   
@@ -2337,7 +2399,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../jobs/">
+<a class="md-nav__link" href="../../../api/datajoint/jobs/">
 <span class="md-ellipsis">
     
   
@@ -2349,7 +2411,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../migrate/">
+<a class="md-nav__link" href="../../../api/datajoint/migrate/">
 <span class="md-ellipsis">
     
   
@@ -2361,7 +2423,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../schemas/">
+<a class="md-nav__link" href="../../../api/datajoint/schemas/">
 <span class="md-ellipsis">
     
   
@@ -2373,7 +2435,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../settings/">
+<a class="md-nav__link" href="../../../api/datajoint/settings/">
 <span class="md-ellipsis">
     
   
@@ -2385,7 +2447,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../table/">
+<a class="md-nav__link" href="../../../api/datajoint/table/">
 <span class="md-ellipsis">
     
   
@@ -2397,7 +2459,7 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../user_tables/">
+<a class="md-nav__link" href="../../../api/datajoint/user_tables/">
 <span class="md-ellipsis">
     
   
@@ -2579,116 +2641,178 @@
     </label>
 <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
 <li class="md-nav__item">
-<a class="md-nav__link" href="#datajoint.diagram">
+<a class="md-nav__link" href="#overview">
 <span class="md-ellipsis">
       
-        diagram
+        Overview
       
     </span>
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#datajoint.diagram.Diagram">
+<a class="md-nav__link" href="#dependency-graph">
 <span class="md-ellipsis">
       
-        Diagram
+        Dependency graph
       
     </span>
 </a>
-<nav aria-label="Diagram" class="md-nav">
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#restriction-propagation-rules">
+<span class="md-ellipsis">
+      
+        Restriction propagation rules
+      
+    </span>
+</a>
+<nav aria-label="Restriction propagation rules" class="md-nav">
 <ul class="md-nav__list">
 <li class="md-nav__item">
-<a class="md-nav__link" href="#datajoint.diagram.Diagram.from_sequence">
+<a class="md-nav__link" href="#forward-propagation-parent-child">
 <span class="md-ellipsis">
       
-        from_sequence
+        Forward propagation (parent → child)
       
     </span>
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#datajoint.diagram.Diagram.add_parts">
+<a class="md-nav__link" href="#upward-propagation-child-parent">
 <span class="md-ellipsis">
       
-        add_parts
-      
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#datajoint.diagram.Diagram.collapse">
-<span class="md-ellipsis">
-      
-        collapse
-      
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#datajoint.diagram.Diagram.cascade">
-<span class="md-ellipsis">
-      
-        cascade
-      
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#datajoint.diagram.Diagram.restrict">
-<span class="md-ellipsis">
-      
-        restrict
-      
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#datajoint.diagram.Diagram.counts">
-<span class="md-ellipsis">
-      
-        counts
-      
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#datajoint.diagram.Diagram.prune">
-<span class="md-ellipsis">
-      
-        prune
-      
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#datajoint.diagram.Diagram.make_dot">
-<span class="md-ellipsis">
-      
-        make_dot
-      
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#datajoint.diagram.Diagram.make_mermaid">
-<span class="md-ellipsis">
-      
-        make_mermaid
-      
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#datajoint.diagram.Diagram.save">
-<span class="md-ellipsis">
-      
-        save
+        Upward propagation (child → parent)
       
     </span>
 </a>
 </li>
 </ul>
 </nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#cascade-flow">
+<span class="md-ellipsis">
+      
+        Cascade flow
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#part_integrity-modes">
+<span class="md-ellipsis">
+      
+        part_integrity modes
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#part-to-master-upward-propagation">
+<span class="md-ellipsis">
+      
+        Part-to-Master upward propagation
+      
+    </span>
+</a>
+<nav aria-label="Part-to-Master upward propagation" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#identifying-the-master">
+<span class="md-ellipsis">
+      
+        Identifying the Master
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#walking-the-fk-path">
+<span class="md-ellipsis">
+      
+        Walking the FK path
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#materialization-at-the-master">
+<span class="md-ellipsis">
+      
+        Materialization at the Master
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#seed-is-part-case">
+<span class="md-ellipsis">
+      
+        Seed-is-Part case
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#worked-examples">
+<span class="md-ellipsis">
+      
+        Worked examples
+      
+    </span>
+</a>
+<nav aria-label="Worked examples" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#example-1-part-of-part-with-renamed-fk">
+<span class="md-ellipsis">
+      
+        Example 1: Part-of-Part with renamed FK
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#example-2-part-of-part-with-no-master-reference-in-partb">
+<span class="md-ellipsis">
+      
+        Example 2: Part-of-Part with no Master reference in PartB
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#algorithmic-complexity">
+<span class="md-ellipsis">
+      
+        Algorithmic complexity
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#what-is-not-part-of-this-specification">
+<span class="md-ellipsis">
+      
+        What is not part of this specification
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#references">
+<span class="md-ellipsis">
+      
+        References
+      
+    </span>
+</a>
 </li>
 </ul>
 </nav>
@@ -2697,665 +2821,238 @@
 </div>
 <div class="md-content" data-md-component="content">
 <article class="md-content__inner md-typeset">
-<h1 id="diagram">Diagram<a class="headerlink" href="#diagram" title="Permanent link">¶</a></h1>
-<p>Schema visualization</p>
-<div class="doc doc-object doc-module">
-<a id="datajoint.diagram"></a>
-<div class="doc doc-contents first">
-<p>Diagram for DataJoint schemas.</p>
-<p>This module provides the Diagram class for constructing derived views of the
-dependency graph. Diagram supports set operators (+, -, *) for selecting subsets
-of tables, restriction propagation (cascade, restrict) for selecting subsets of
-data, and inspection (counts, prune) for viewing those selections.</p>
-<p>Mutation operations (delete, drop) live in Table, which uses Diagram internally
-for graph computation.</p>
-<p>Visualization methods (draw, make_dot, make_svg, etc.) require matplotlib and
-pygraphviz. All other methods are always available.</p>
-<div class="doc doc-children">
-<div class="doc doc-object doc-class">
-<h2 class="doc doc-heading" id="datajoint.diagram.Diagram">
-<span class="doc doc-object-name doc-class-name">Diagram</span>
-<a class="headerlink" href="#datajoint.diagram.Diagram" title="Permanent link">¶</a></h2>
-<div class="doc doc-contents">
-<p class="doc doc-class-bases">
-              Bases: <code><span title="networkx.DiGraph">DiGraph</span></code></p>
-<p>Schema diagram as a directed acyclic graph (DAG).</p>
-<p>Visualizes tables and foreign key relationships derived from
-<code>connection.dependencies</code>.</p>
-<p><span class="doc-section-title">Parameters:</span></p>
-<table>
-<thead>
-<tr>
-<th>Name</th>
-<th>Type</th>
-<th>Description</th>
-<th>Default</th>
-</tr>
-</thead>
-<tbody>
-<tr class="doc-section-item">
-<td>
-<code>source</code>
-</td>
-<td>
-<code>Table, Schema, or module</code>
-</td>
-<td>
-<div class="doc-md-description">
-<p>A table object, table class, schema, or module with a schema.</p>
-</div>
-</td>
-<td>
-<em>required</em>
-</td>
-</tr>
-<tr class="doc-section-item">
-<td>
-<code>context</code>
-</td>
-<td>
-<code><span title="dict">dict</span></code>
-</td>
-<td>
-<div class="doc-md-description">
-<p>Namespace for resolving table class names. If None, uses caller's
-frame globals/locals.</p>
-</div>
-</td>
-<td>
-<code>None</code>
-</td>
-</tr>
-</tbody>
-</table>
-<p><span class="doc-section-title">Examples:</span></p>
-<div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">diag</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">Diagram</span><span class="p">(</span><span class="n">schema</span><span class="o">.</span><span class="n">MyTable</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">diag</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
-</code></pre></div>
-<p>Operators:</p>
+<h1 id="cascade-specification">Cascade Specification<a class="headerlink" href="#cascade-specification" title="Permanent link">¶</a></h1>
+<p>This document specifies how DataJoint propagates restrictions across the foreign-key (FK) graph for <strong>cascade delete</strong> and <strong>cascade preview</strong> operations. It defines the propagation rules, the role of <code>part_integrity</code>, and the Part-to-Master upward propagation that handles renamed FKs and Part-of-Part chains.</p>
+<p>For the user-facing entry points, see <a href="../../../how-to/delete-data/">Delete Data</a>. For dependent concepts, see <a href="../master-part/">Master-Part</a>, <a href="../diagram/">Diagram</a>, and <a href="../data-manipulation/">Data Manipulation</a>.</p>
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">¶</a></h2>
+<p>A <em>cascade</em> starts at a (possibly restricted) <strong>seed</strong> table and propagates the restriction to every table that depends on it via foreign keys, so that a delete or preview affects all dependents consistently. Cascade is invoked by:</p>
 <ul>
-<li><code>diag1 + diag2</code> - union of diagrams</li>
-<li><code>diag1 - diag2</code> - difference of diagrams</li>
-<li><code>diag1 * diag2</code> - intersection of diagrams</li>
-<li><code>diag + n</code> - expand n levels of successors (children)</li>
-<li><code>diag - n</code> - expand n levels of predecessors (parents)</li>
+<li><code>Table.delete(part_integrity=...)</code> — executes the cascade as a delete.</li>
+<li><code>Diagram.cascade(table_expr, part_integrity=...).counts()</code> — preview, no mutation.</li>
 </ul>
-<div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">dj</span><span class="o">.</span><span class="n">Diagram</span><span class="p">(</span><span class="n">schema</span><span class="o">.</span><span class="n">Table</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">-</span> <span class="mi">1</span>  <span class="c1"># immediate ancestors and descendants</span>
-</code></pre></div>
-<details class="note" open="">
-<summary>Notes</summary>
-<p><code>diagram + 1 - 1</code> may differ from <code>diagram - 1 + 1</code>.
-Only tables in activated schemas are displayed. To include tables in
-downstream schemas that depend on the current schema but haven't been
-explicitly activated::</p>
-<pre><code>conn.dependencies.load_all_downstream()
-dj.Diagram(schema)  # now includes all downstream schemas
+<p>Both follow the same propagation rules; only the terminal step (delete vs. count) differs.</p>
+<h2 id="dependency-graph">Dependency graph<a class="headerlink" href="#dependency-graph" title="Permanent link">¶</a></h2>
+<p>DataJoint loads its FK structure into a directed acyclic graph (<code>Connection.dependencies</code>, a <code>networkx.DiGraph</code>). The graph encodes two kinds of structure:</p>
+<table>
+<thead>
+<tr>
+<th>Element</th>
+<th>Encodes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Node</strong></td>
+<td>A table, named by its fully-qualified SQL identifier (e.g. <code>`schema`.`table_name`</code>). The graph stores the table's primary key set as node data.</td>
+</tr>
+<tr>
+<td><strong>Edge <code>parent → child</code></strong></td>
+<td>An FK constraint from <code>child</code> to <code>parent</code>. Edge data: <code>attr_map</code> (dict mapping child's FK columns → parent's referenced columns), <code>aliased</code> (true iff any column was renamed), <code>primary</code> (true iff the FK is in the child's primary key).</td>
+</tr>
+<tr>
+<td><strong>Alias node</strong></td>
+<td>Inserted between a <code>parent</code> and <code>child</code> when the FK is <code>aliased=True</code>. Named by an integer-string (<code>"1"</code>, <code>"2"</code>, …) to distinguish from real table nodes. Both half-edges (<code>parent → alias</code>, <code>alias → child</code>) carry the same <code>attr_map</code> and <code>aliased</code> props. Treat as transparent when walking.</td>
+</tr>
+</tbody>
+</table>
+<p>The cascade engine operates on a copy of this graph (the <code>Diagram</code> class), recording per-table restrictions in <code>_cascade_restrictions</code> and the set of restricted attributes in <code>_restriction_attrs</code>.</p>
+<h2 id="restriction-propagation-rules">Restriction propagation rules<a class="headerlink" href="#restriction-propagation-rules" title="Permanent link">¶</a></h2>
+<p>When propagating a restriction across an edge <code>parent → child</code>, one of three rules applies. The rule depends on whether the FK renames columns (<code>aliased</code>) and on whether the parent's currently-restricted attributes (<code>parent_attrs</code>) are contained in the child's primary key (<code>child_pk</code>).</p>
+<h3 id="forward-propagation-parent-child">Forward propagation (parent → child)<a class="headerlink" href="#forward-propagation-parent-child" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>Rule</th>
+<th>Trigger</th>
+<th>Effect on child</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>F1. Copy</strong></td>
+<td><code>not aliased and parent_attrs ⊆ child_pk</code></td>
+<td>Child inherits the parent's restriction directly (same attribute names; literal restriction values copy as-is).</td>
+</tr>
+<tr>
+<td><strong>F2. Aliased rename</strong></td>
+<td><code>aliased</code></td>
+<td>Child's restriction is <code>parent.proj(**{fk_col: parent_col for fk_col, parent_col in attr_map.items()})</code> — the parent expression with columns renamed to match the child's column names.</td>
+</tr>
+<tr>
+<td><strong>F3. Project</strong></td>
+<td><code>not aliased and parent_attrs ⊄ child_pk</code></td>
+<td>Child's restriction is <code>parent.proj()</code> — the parent projected to its primary key.</td>
+</tr>
+</tbody>
+</table>
+<p>After applying the rule, the child's restricted-attributes set is updated to track what's now constrained on it. The child becomes a propagation source for its own children in the next pass.</p>
+<h3 id="upward-propagation-child-parent">Upward propagation (child → parent)<a class="headerlink" href="#upward-propagation-child-parent" title="Permanent link">¶</a></h3>
+<p>Symmetric inverses of the forward rules. Used by <code>part_integrity="cascade"</code> to propagate a Part's restriction up to its Master through the FK chain. Edge metadata is the same; the direction of travel is reversed.</p>
+<table>
+<thead>
+<tr>
+<th>Rule</th>
+<th>Trigger</th>
+<th>Effect on parent</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>U1. Copy</strong></td>
+<td><code>not aliased and child_attrs ⊆ parent_pk</code></td>
+<td>Parent inherits the child's restriction directly (shared attribute names).</td>
+</tr>
+<tr>
+<td><strong>U2. Aliased reverse-rename</strong></td>
+<td><code>aliased</code></td>
+<td>Parent's restriction is <code>child.proj(**{parent_col: fk_col for fk_col, parent_col in attr_map.items()})</code> — the child expression with FK columns renamed back to the parent's column names.</td>
+</tr>
+<tr>
+<td><strong>U3. Project</strong></td>
+<td><code>not aliased and child_attrs ⊄ parent_pk</code></td>
+<td>Parent's restriction is <code>child.proj()</code> — the child projected to attributes in the parent's primary key.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="cascade-flow">Cascade flow<a class="headerlink" href="#cascade-flow" title="Permanent link">¶</a></h2>
+<pre class="mermaid"><code>flowchart TB
+    A[seed table_expr] --&gt; B[Diagram.cascade]
+    B --&gt; C{seed is a Part?<br/>part_integrity=cascade?}
+    C -- yes --&gt; D[Upward walk:<br/>_propagate_part_to_master]
+    C -- no --&gt; E[Forward propagation<br/>over descendants]
+    D --&gt; E
+    E --&gt; F{any new master pulled in?}
+    F -- yes --&gt; E
+    F -- no --&gt; G[Build subgraph,<br/>count or delete]
 </code></pre>
-<p><code>Diagram.cascade()</code> calls <code>load_all_downstream()</code> automatically.</p>
-<p>Layout direction is controlled via <code>dj.config.display.diagram_direction</code>
-(default <code>"TB"</code>). Use <code>dj.config.override()</code> to change temporarily::</p>
-<pre><code>with dj.config.override(display_diagram_direction="LR"):
-    dj.Diagram(schema).draw()
-</code></pre>
-</details>
-<div class="doc doc-children">
-<div class="doc doc-object doc-function">
-<h3 class="doc doc-heading" id="datajoint.diagram.Diagram.from_sequence">
-<span class="doc doc-object-name doc-function-name">from_sequence</span>
-<span class="doc doc-labels">
-<small class="doc doc-label doc-label-classmethod"><code>classmethod</code></small>
-</span>
-<a class="headerlink" href="#datajoint.diagram.Diagram.from_sequence" title="Permanent link">¶</a></h3>
-<div class="doc-signature highlight"><pre><span></span><code><span class="nf">from_sequence</span><span class="p">(</span><span class="n">sequence</span><span class="p">)</span>
-</code></pre></div>
-<div class="doc doc-contents">
-<p>Create combined Diagram from a sequence of sources.</p>
-<p><span class="doc-section-title">Parameters:</span></p>
+<p>The engine performs <strong>multiple passes</strong> when <code>part_integrity="cascade"</code> is in effect: each pass forward-propagates over all <code>allowed_nodes</code>, and a pass may pull in a new master (with its descendants) that requires another pass. The loop terminates because the graph is a DAG and only finitely many nodes can be added.</p>
+<h2 id="part_integrity-modes"><code>part_integrity</code> modes<a class="headerlink" href="#part_integrity-modes" title="Permanent link">¶</a></h2>
+<p>Master-Part integrity reflects the contract that a Master row exists for every Part row that references it. Three modes govern how cascade enforces or relaxes that contract:</p>
 <table>
 <thead>
 <tr>
-<th>Name</th>
-<th>Type</th>
-<th>Description</th>
-<th>Default</th>
+<th>Mode</th>
+<th>Behavior</th>
 </tr>
 </thead>
 <tbody>
-<tr class="doc-section-item">
-<td>
-<code>sequence</code>
-</td>
-<td>
-<code><span title="iterable">iterable</span></code>
-</td>
-<td>
-<div class="doc-md-description">
-<p>Sequence of table objects, classes, or schemas.</p>
-</div>
-</td>
-<td>
-<em>required</em>
-</td>
-</tr>
-</tbody>
-</table>
-<p><span class="doc-section-title">Returns:</span></p>
-<table>
-<thead>
 <tr>
-<th>Type</th>
-<th>Description</th>
+<td><code>"enforce"</code> (default)</td>
+<td>If a delete would remove a Part row without removing the corresponding Master row, the entire delete is rolled back with <code>DataJointError</code>. The Master row is checked <strong>after</strong> the delete; the integrity violation is detected post-hoc and reversed.</td>
 </tr>
-</thead>
-<tbody>
-<tr class="doc-section-item">
-<td>
-<code><a class="autorefs autorefs-internal" href="#datajoint.diagram.Diagram" title="Diagram (datajoint.diagram.Diagram)">Diagram</a></code>
-</td>
-<td>
-<div class="doc-md-description">
-<p>Union of diagrams: <code>Diagram(arg1) + ... + Diagram(argn)</code>.</p>
-</div>
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<div class="doc doc-object doc-function">
-<h3 class="doc doc-heading" id="datajoint.diagram.Diagram.add_parts">
-<span class="doc doc-object-name doc-function-name">add_parts</span>
-<a class="headerlink" href="#datajoint.diagram.Diagram.add_parts" title="Permanent link">¶</a></h3>
-<div class="doc-signature highlight"><pre><span></span><code><span class="nf">add_parts</span><span class="p">()</span>
-</code></pre></div>
-<div class="doc doc-contents">
-<p>Add part tables of all masters already in the diagram.</p>
-<p><span class="doc-section-title">Returns:</span></p>
-<table>
-<thead>
 <tr>
-<th>Type</th>
-<th>Description</th>
+<td><code>"ignore"</code></td>
+<td>No upward propagation; no post-check. Use when the Master row is intentionally preserved and the user has accepted that Part rows may be orphaned. Caller is responsible for the consequences.</td>
 </tr>
-</thead>
-<tbody>
-<tr class="doc-section-item">
-<td>
-<code><a class="autorefs autorefs-internal" href="#datajoint.diagram.Diagram" title="Diagram (datajoint.diagram.Diagram)">Diagram</a></code>
-</td>
-<td>
-<div class="doc-md-description">
-<p>New diagram with part tables included.</p>
-</div>
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<div class="doc doc-object doc-function">
-<h3 class="doc doc-heading" id="datajoint.diagram.Diagram.collapse">
-<span class="doc doc-object-name doc-function-name">collapse</span>
-<a class="headerlink" href="#datajoint.diagram.Diagram.collapse" title="Permanent link">¶</a></h3>
-<div class="doc-signature highlight"><pre><span></span><code><span class="nf">collapse</span><span class="p">()</span>
-</code></pre></div>
-<div class="doc doc-contents">
-<p>Mark all nodes in this diagram as collapsed.</p>
-<p>Collapsed nodes are shown as a single node per schema. When combined
-with other diagrams using <code>+</code>, expanded nodes win: if a node is
-expanded in either operand, it remains expanded in the result.</p>
-<p><span class="doc-section-title">Returns:</span></p>
-<table>
-<thead>
 <tr>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="doc-section-item">
-<td>
-<code><a class="autorefs autorefs-internal" href="#datajoint.diagram.Diagram" title="Diagram (datajoint.diagram.Diagram)">Diagram</a></code>
-</td>
-<td>
-<div class="doc-md-description">
-<p>A copy of this diagram with all nodes collapsed.</p>
-</div>
-</td>
+<td><code>"cascade"</code></td>
+<td><strong>Upward propagation enabled.</strong> When cascade reaches a Part, the Master is also restricted (via the upward rules below), and the Master then forward-cascades back down to <strong>all</strong> its Parts (siblings of the originating Part included). Used when the user wants the master-part group treated atomically.</td>
 </tr>
 </tbody>
 </table>
-<p><span class="doc-section-title">Examples:</span></p>
-<div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Show schema1 expanded, schema2 collapsed into single nodes</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">dj</span><span class="o">.</span><span class="n">Diagram</span><span class="p">(</span><span class="n">schema1</span><span class="p">)</span> <span class="o">+</span> <span class="n">dj</span><span class="o">.</span><span class="n">Diagram</span><span class="p">(</span><span class="n">schema2</span><span class="p">)</span><span class="o">.</span><span class="n">collapse</span><span class="p">()</span>
+<p>This document focuses on the <code>"cascade"</code> mode; the <code>"enforce"</code> and <code>"ignore"</code> modes do not change the propagation graph.</p>
+<h2 id="part-to-master-upward-propagation">Part-to-Master upward propagation<a class="headerlink" href="#part-to-master-upward-propagation" title="Permanent link">¶</a></h2>
+<p>When <code>part_integrity="cascade"</code> and the cascade reaches (or starts at) a Part node, the engine triggers an <strong>upward walk</strong> of the FK graph from the Part to its Master, applying the upward rules (U1, U2, U3) at each edge.</p>
+<h3 id="identifying-the-master">Identifying the Master<a class="headerlink" href="#identifying-the-master" title="Permanent link">¶</a></h3>
+<p>The Master is identified by <strong>naming convention</strong> via <code>dependencies.extract_master</code>: a Part table's SQL name ends in <code>master__partname</code>, and the Master is the prefix before the <code>__</code>. The graph must contain a node with that Master name; otherwise the upward walk is skipped.</p>
+<h3 id="walking-the-fk-path">Walking the FK path<a class="headerlink" href="#walking-the-fk-path" title="Permanent link">¶</a></h3>
+<p>The walk uses <code>nx.shortest_path(master, part)</code> to find the FK chain from Master to Part:</p>
+<div class="highlight"><pre><span></span><code>Master → [intermediate Part(s)] → Part
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Collapse all three schemas together</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Diagram</span><span class="p">(</span><span class="n">schema1</span><span class="p">)</span> <span class="o">+</span> <span class="n">dj</span><span class="o">.</span><span class="n">Diagram</span><span class="p">(</span><span class="n">schema2</span><span class="p">)</span> <span class="o">+</span> <span class="n">dj</span><span class="o">.</span><span class="n">Diagram</span><span class="p">(</span><span class="n">schema3</span><span class="p">))</span><span class="o">.</span><span class="n">collapse</span><span class="p">()</span>
+<p>Alias nodes (<code>"1"</code>, <code>"2"</code>, …) on the path are skipped — both half-edges carry the same <code>attr_map</code> and <code>aliased</code> props, so the engine reads props from one and reasons about the real edge. Each real edge along the walk fires one upward rule (U1, U2, or U3) per the edge's metadata. <strong>Intermediate Parts in a Part-of-Part chain are restricted along the way</strong> — not only the Master.</p>
+<h3 id="materialization-at-the-master">Materialization at the Master<a class="headerlink" href="#materialization-at-the-master" title="Permanent link">¶</a></h3>
+<p>After the upward walk completes, the Master's accumulated restrictions are <strong>materialized</strong> to a literal value tuple via <code>(master_ft &amp; restrictions).proj().to_arrays()</code> and stored as a single condition. Subsequent forward propagation from the Master back down to its other Parts then generates <code>WHERE pk IN (literal-list)</code> rather than <code>WHERE pk IN (SELECT ... FROM &lt;originating-part&gt;)</code>.</p>
+<p><strong>Why materialization matters.</strong> Without this step, the Master's restriction would be a <code>QueryExpression</code> referencing the same Part being deleted. When the Master forward-cascades back to its Parts (including the originating Part), the generated DELETE contains a subquery against the table being modified — which MySQL forbids ("error 1093: You can't specify target table 'T' for update in FROM clause"). Materializing converts the restriction into a static value set, which both backends accept.</p>
+<p>Intermediate Parts in the chain are <strong>not</strong> materialized — they appear only as restrictions on the path, not as forward-cascade sources, so the self-reference issue doesn't arise there.</p>
+<h2 id="seed-is-part-case">Seed-is-Part case<a class="headerlink" href="#seed-is-part-case" title="Permanent link">¶</a></h2>
+<p>When <code>Table.delete(part_integrity="cascade")</code> is invoked on a Part directly (e.g. <code>Master.PartB.delete(part_integrity="cascade")</code>), the cascade seed is the Part itself. A leaf Part has no out-edges, so the main propagation loop — which fires the <code>part_integrity</code> block from inside the <code>out_edges</code> iteration — would not trigger.</p>
+<p>The engine handles this case by invoking the upward walk explicitly for the seed before the main loop runs. After the walk pulls in the Master and any intermediate Parts, the main loop then forward-cascades from the Master to its remaining descendants in the usual way.</p>
+<h2 id="worked-examples">Worked examples<a class="headerlink" href="#worked-examples" title="Permanent link">¶</a></h2>
+<h3 id="example-1-part-of-part-with-renamed-fk">Example 1: Part-of-Part with renamed FK<a class="headerlink" href="#example-1-part-of-part-with-renamed-fk" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">datajoint</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dj</span>
+
+<span class="n">schema</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">Schema</span><span class="p">(</span><span class="s2">"imaging"</span><span class="p">)</span>
+
+<span class="nd">@schema</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Subject</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
+<span class="s2">    subject_id : int32</span>
+<span class="s2">    """</span>
+
+    <span class="k">class</span><span class="w"> </span><span class="nc">Session</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Part</span><span class="p">):</span>
+        <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
+<span class="s2">        -&gt; master</span>
+<span class="s2">        session_id : int32</span>
+<span class="s2">        """</span>
+
+    <span class="k">class</span><span class="w"> </span><span class="nc">Recording</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Part</span><span class="p">):</span>
+        <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
+<span class="s2">        -&gt; Subject.Session.proj(src_subject='subject_id', src_session='session_id')</span>
+<span class="s2">        recording_id : int32</span>
+<span class="s2">        """</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Expand one table from collapsed schema</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">dj</span><span class="o">.</span><span class="n">Diagram</span><span class="p">(</span><span class="n">schema</span><span class="p">)</span><span class="o">.</span><span class="n">collapse</span><span class="p">()</span> <span class="o">+</span> <span class="n">dj</span><span class="o">.</span><span class="n">Diagram</span><span class="p">(</span><span class="n">SingleTable</span><span class="p">)</span>
+<p><code>Recording</code>'s columns are <code>{src_subject, src_session, recording_id}</code> — none of them are named <code>subject_id</code>. The FK from <code>Subject.Session → Subject.Recording</code> is aliased.</p>
+<p>When <code>(Subject.Recording &amp; {"recording_id": 5}).delete(part_integrity="cascade")</code> runs:</p>
+<ol>
+<li><strong>Seed-is-Part check.</strong> <code>extract_master(Recording) == Subject</code>. Trigger the upward walk.</li>
+<li><strong>FK path.</strong> <code>shortest_path(Subject, Recording) = [Subject, Subject.Session, alias_node, Subject.Recording]</code> → real path <code>[Subject, Subject.Session, Subject.Recording]</code>.</li>
+<li><strong>Walk reversed.</strong><ul>
+<li>Edge <code>Subject.Session → Subject.Recording</code>: <code>aliased=True</code>. Apply <strong>U2</strong> — <code>Subject.Session</code> is restricted by <code>Subject.Recording.proj(subject_id='src_subject', session_id='src_session')</code>.</li>
+<li>Edge <code>Subject → Subject.Session</code>: <code>aliased=False</code>, <code>child_attrs={subject_id, session_id} ⊆ parent_pk={subject_id}</code>? No (<code>session_id</code> not in parent pk). Apply <strong>U3</strong> — <code>Subject</code> is restricted by <code>Subject.Session.proj()</code> (projected to <code>subject_id</code>).</li>
+</ul>
+</li>
+<li><strong>Materialize Master.</strong> <code>Subject</code>'s restriction is fetched into a value tuple; replaces the chained <code>QueryExpression</code>.</li>
+<li><strong>Forward pass.</strong> Master forward-cascades back down to <code>Subject.Session</code> and <code>Subject.Recording</code> (and any sibling Parts not on the original path), now with the materialized restriction.</li>
+</ol>
+<p>Without the FK walk (the pre-fix behavior), the engine joined <code>subject_ft.proj() &amp; recording_ft.proj()</code> on shared attribute names. <code>Subject</code> has <code>subject_id</code>; <code>Recording</code> has <code>src_subject</code>. No shared columns → empty restriction → Master not restricted. This is the failure mode from <a href="https://github.com/datajoint/datajoint-python/issues/1429">#1429</a> Case 1.</p>
+<h3 id="example-2-part-of-part-with-no-master-reference-in-partb">Example 2: Part-of-Part with no Master reference in PartB<a class="headerlink" href="#example-2-part-of-part-with-no-master-reference-in-partb" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><span class="nd">@schema</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Master</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
+<span class="s2">    master_id : int32</span>
+<span class="s2">    """</span>
+
+    <span class="k">class</span><span class="w"> </span><span class="nc">PartA</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Part</span><span class="p">):</span>
+        <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
+<span class="s2">        -&gt; master</span>
+<span class="s2">        part_a_id : int32</span>
+<span class="s2">        """</span>
+
+    <span class="k">class</span><span class="w"> </span><span class="nc">PartB</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Part</span><span class="p">):</span>
+        <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
+<span class="s2">        -&gt; Master.PartA</span>
+<span class="s2">        part_b_id : int32</span>
+<span class="s2">        """</span>
 </code></pre></div>
-</div>
-</div>
-<div class="doc doc-object doc-function">
-<h3 class="doc doc-heading" id="datajoint.diagram.Diagram.cascade">
-<span class="doc doc-object-name doc-function-name">cascade</span>
-<span class="doc doc-labels">
-<small class="doc doc-label doc-label-classmethod"><code>classmethod</code></small>
-</span>
-<a class="headerlink" href="#datajoint.diagram.Diagram.cascade" title="Permanent link">¶</a></h3>
-<div class="doc-signature highlight"><pre><span></span><code><span class="nf">cascade</span><span class="p">(</span><span class="n">table_expr</span><span class="p">,</span> <span class="n">part_integrity</span><span class="o">=</span><span class="s1">'enforce'</span><span class="p">)</span>
-</code></pre></div>
-<div class="doc doc-contents">
-<p>Create a cascade diagram for a table expression.</p>
-<p>Builds a Diagram from the table's dependency graph, includes all
-descendants (across all loaded schemas), and propagates the
-restriction downstream using OR convergence — a child row is
-affected if <em>any</em> restricted ancestor taints it.</p>
-<p><span class="doc-section-title">Parameters:</span></p>
-<table>
-<thead>
-<tr>
-<th>Name</th>
-<th>Type</th>
-<th>Description</th>
-<th>Default</th>
-</tr>
-</thead>
-<tbody>
-<tr class="doc-section-item">
-<td>
-<code>table_expr</code>
-</td>
-<td>
-<code><span title="QueryExpression">QueryExpression</span></code>
-</td>
-<td>
-<div class="doc-md-description">
-<p>A (possibly restricted) table expression
-(e.g., <code>Session &amp; 'subject_id=1'</code>).</p>
-</div>
-</td>
-<td>
-<em>required</em>
-</td>
-</tr>
-<tr class="doc-section-item">
-<td>
-<code>part_integrity</code>
-</td>
-<td>
-<code><span title="str">str</span></code>
-</td>
-<td>
-<div class="doc-md-description">
-<p><code>"enforce"</code> (default), <code>"ignore"</code>, or <code>"cascade"</code>.</p>
-</div>
-</td>
-<td>
-<code>'enforce'</code>
-</td>
-</tr>
-</tbody>
-</table>
-<p><span class="doc-section-title">Returns:</span></p>
-<table>
-<thead>
-<tr>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="doc-section-item">
-<td>
-<code><a class="autorefs autorefs-internal" href="#datajoint.diagram.Diagram" title="Diagram (datajoint.diagram.Diagram)">Diagram</a></code>
-</td>
-<td>
-<div class="doc-md-description">
-<p>New Diagram with cascade restrictions applied, trimmed to
-the seed table and its affected descendants.</p>
-</div>
-</td>
-</tr>
-</tbody>
-</table>
-<p><span class="doc-section-title">Examples:</span></p>
-<div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Preview cascade impact across all downstream schemas</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">dj</span><span class="o">.</span><span class="n">Diagram</span><span class="o">.</span><span class="n">cascade</span><span class="p">(</span><span class="n">Session</span> <span class="o">&amp;</span> <span class="s1">'subject_id=1'</span><span class="p">)</span><span class="o">.</span><span class="n">counts</span><span class="p">()</span>
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Inspect the cascade subgraph</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">dj</span><span class="o">.</span><span class="n">Diagram</span><span class="o">.</span><span class="n">cascade</span><span class="p">(</span><span class="n">Session</span> <span class="o">&amp;</span> <span class="s1">'subject_id=1'</span><span class="p">)</span>
-</code></pre></div>
-</div>
-</div>
-<div class="doc doc-object doc-function">
-<h3 class="doc doc-heading" id="datajoint.diagram.Diagram.restrict">
-<span class="doc doc-object-name doc-function-name">restrict</span>
-<a class="headerlink" href="#datajoint.diagram.Diagram.restrict" title="Permanent link">¶</a></h3>
-<div class="doc-signature highlight"><pre><span></span><code><span class="nf">restrict</span><span class="p">(</span><span class="n">table_expr</span><span class="p">)</span>
-</code></pre></div>
-<div class="doc doc-contents">
-<p>Apply restrict condition and propagate downstream.</p>
-<p>AND at convergence — a child row is included only if it satisfies
-<em>all</em> restricted ancestors. Used for export. Can be chained.</p>
-<p>Cannot be called on a Diagram produced by <code>Diagram.cascade()</code>.</p>
-<p><span class="doc-section-title">Parameters:</span></p>
-<table>
-<thead>
-<tr>
-<th>Name</th>
-<th>Type</th>
-<th>Description</th>
-<th>Default</th>
-</tr>
-</thead>
-<tbody>
-<tr class="doc-section-item">
-<td>
-<code>table_expr</code>
-</td>
-<td>
-<code><span title="QueryExpression">QueryExpression</span></code>
-</td>
-<td>
-<div class="doc-md-description">
-<p>A restricted table expression.</p>
-</div>
-</td>
-<td>
-<em>required</em>
-</td>
-</tr>
-</tbody>
-</table>
-<p><span class="doc-section-title">Returns:</span></p>
-<table>
-<thead>
-<tr>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="doc-section-item">
-<td>
-<code><a class="autorefs autorefs-internal" href="#datajoint.diagram.Diagram" title="Diagram (datajoint.diagram.Diagram)">Diagram</a></code>
-</td>
-<td>
-<div class="doc-md-description">
-<p>New Diagram with restrict conditions applied.</p>
-</div>
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<div class="doc doc-object doc-function">
-<h3 class="doc doc-heading" id="datajoint.diagram.Diagram.counts">
-<span class="doc doc-object-name doc-function-name">counts</span>
-<a class="headerlink" href="#datajoint.diagram.Diagram.counts" title="Permanent link">¶</a></h3>
-<div class="doc-signature highlight"><pre><span></span><code><span class="nf">counts</span><span class="p">()</span>
-</code></pre></div>
-<div class="doc doc-contents">
-<p>Return affected row counts per table without modifying data.</p>
-<p><span class="doc-section-title">Returns:</span></p>
-<table>
-<thead>
-<tr>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="doc-section-item">
-<td>
-<code><span title="dict">dict</span>[<span title="str">str</span>, <span title="int">int</span>]</code>
-</td>
-<td>
-<div class="doc-md-description">
-<p>Mapping of full table name to affected row count.</p>
-</div>
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<div class="doc doc-object doc-function">
-<h3 class="doc doc-heading" id="datajoint.diagram.Diagram.prune">
-<span class="doc doc-object-name doc-function-name">prune</span>
-<a class="headerlink" href="#datajoint.diagram.Diagram.prune" title="Permanent link">¶</a></h3>
-<div class="doc-signature highlight"><pre><span></span><code><span class="nf">prune</span><span class="p">()</span>
-</code></pre></div>
-<div class="doc doc-contents">
-<p>Remove tables with zero matching rows from the diagram.</p>
-<p>Without prior restrictions, removes physically empty tables.
-After <code>restrict()</code>, removes tables where the restricted query
-yields zero rows. Cannot be used on a cascade Diagram (cascade
-is for delete, where zero-count tables must remain in the graph
-to handle concurrent inserts safely).</p>
-<p><span class="doc-section-title">Returns:</span></p>
-<table>
-<thead>
-<tr>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="doc-section-item">
-<td>
-<code><a class="autorefs autorefs-internal" href="#datajoint.diagram.Diagram" title="Diagram (datajoint.diagram.Diagram)">Diagram</a></code>
-</td>
-<td>
-<div class="doc-md-description">
-<p>New Diagram with empty tables removed.</p>
-</div>
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<div class="doc doc-object doc-function">
-<h3 class="doc doc-heading" id="datajoint.diagram.Diagram.make_dot">
-<span class="doc doc-object-name doc-function-name">make_dot</span>
-<a class="headerlink" href="#datajoint.diagram.Diagram.make_dot" title="Permanent link">¶</a></h3>
-<div class="doc-signature highlight"><pre><span></span><code><span class="nf">make_dot</span><span class="p">()</span>
-</code></pre></div>
-<div class="doc doc-contents">
-<p>Generate a pydot graph object.</p>
-<p><span class="doc-section-title">Returns:</span></p>
-<table>
-<thead>
-<tr>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="doc-section-item">
-<td>
-<code><span title="pydot.Dot">Dot</span></code>
-</td>
-<td>
-<div class="doc-md-description">
-<p>The graph object ready for rendering.</p>
-</div>
-</td>
-</tr>
-</tbody>
-</table>
-<p><span class="doc-section-title">Raises:</span></p>
-<table>
-<thead>
-<tr>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="doc-section-item">
-<td>
-<code><a class="autorefs autorefs-internal" href="../errors/#datajoint.errors.DataJointError" title="DataJointError (datajoint.errors.DataJointError)">DataJointError</a></code>
-</td>
-<td>
-<div class="doc-md-description">
-<p>If pygraphviz/pydot is not installed.</p>
-</div>
-</td>
-</tr>
-</tbody>
-</table>
-<details class="note" open="">
-<summary>Notes</summary>
-<p>Layout direction is controlled via <code>dj.config.display.diagram_direction</code>.
-Tables are grouped by schema, with the Python module name shown as the
-group label when available.</p>
-</details>
-</div>
-</div>
-<div class="doc doc-object doc-function">
-<h3 class="doc doc-heading" id="datajoint.diagram.Diagram.make_mermaid">
-<span class="doc doc-object-name doc-function-name">make_mermaid</span>
-<a class="headerlink" href="#datajoint.diagram.Diagram.make_mermaid" title="Permanent link">¶</a></h3>
-<div class="doc-signature highlight"><pre><span></span><code><span class="nf">make_mermaid</span><span class="p">()</span>
-</code></pre></div>
-<div class="doc doc-contents">
-<p>Generate Mermaid diagram syntax.</p>
-<p>Produces a flowchart in Mermaid syntax that can be rendered in
-Markdown documentation, GitHub, or <a href="https://mermaid.live">https://mermaid.live</a>.</p>
-<p><span class="doc-section-title">Returns:</span></p>
-<table>
-<thead>
-<tr>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="doc-section-item">
-<td>
-<code><span title="str">str</span></code>
-</td>
-<td>
-<div class="doc-md-description">
-<p>Mermaid flowchart syntax.</p>
-</div>
-</td>
-</tr>
-</tbody>
-</table>
-<details class="note" open="">
-<summary>Notes</summary>
-<p>Layout direction is controlled via <code>dj.config.display.diagram_direction</code>.
-Tables are grouped by schema using Mermaid subgraphs, with the Python
-module name shown as the group label when available.</p>
-</details>
-<p><span class="doc-section-title">Examples:</span></p>
-<div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Diagram</span><span class="p">(</span><span class="n">schema</span><span class="p">)</span><span class="o">.</span><span class="n">make_mermaid</span><span class="p">())</span>
-<span class="go">flowchart TB</span>
-<span class="go">    subgraph my_pipeline</span>
-<span class="go">        Mouse[Mouse]:::manual</span>
-<span class="go">        Session[Session]:::manual</span>
-<span class="go">        Neuron([Neuron]):::computed</span>
-<span class="go">    end</span>
-<span class="go">    Mouse --&gt; Session</span>
-<span class="go">    Session --&gt; Neuron</span>
-</code></pre></div>
-</div>
-</div>
-<div class="doc doc-object doc-function">
-<h3 class="doc doc-heading" id="datajoint.diagram.Diagram.save">
-<span class="doc doc-object-name doc-function-name">save</span>
-<a class="headerlink" href="#datajoint.diagram.Diagram.save" title="Permanent link">¶</a></h3>
-<div class="doc-signature highlight"><pre><span></span><code><span class="nf">save</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
-</code></pre></div>
-<div class="doc doc-contents">
-<p>Save diagram to file.</p>
-<p><span class="doc-section-title">Parameters:</span></p>
-<table>
-<thead>
-<tr>
-<th>Name</th>
-<th>Type</th>
-<th>Description</th>
-<th>Default</th>
-</tr>
-</thead>
-<tbody>
-<tr class="doc-section-item">
-<td>
-<code>filename</code>
-</td>
-<td>
-<code><span title="str">str</span></code>
-</td>
-<td>
-<div class="doc-md-description">
-<p>Output filename.</p>
-</div>
-</td>
-<td>
-<em>required</em>
-</td>
-</tr>
-<tr class="doc-section-item">
-<td>
-<code>format</code>
-</td>
-<td>
-<code><span title="str">str</span></code>
-</td>
-<td>
-<div class="doc-md-description">
-<p>File format (<code>'png'</code>, <code>'svg'</code>, or <code>'mermaid'</code>).
-Inferred from extension if None.</p>
-</div>
-</td>
-<td>
-<code>None</code>
-</td>
-</tr>
-</tbody>
-</table>
-<p><span class="doc-section-title">Raises:</span></p>
-<table>
-<thead>
-<tr>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="doc-section-item">
-<td>
-<code><a class="autorefs autorefs-internal" href="../errors/#datajoint.errors.DataJointError" title="DataJointError (datajoint.errors.DataJointError)">DataJointError</a></code>
-</td>
-<td>
-<div class="doc-md-description">
-<p>If format is unsupported.</p>
-</div>
-</td>
-</tr>
-</tbody>
-</table>
-<details class="note" open="">
-<summary>Notes</summary>
-<p>Layout direction is controlled via <code>dj.config.display.diagram_direction</code>.
-Tables are grouped by schema, with the Python module name shown as the
-group label when available.</p>
-</details>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
+<p><code>PartB</code>'s definition references <code>Master.PartA</code>, not <code>master</code> directly. The FK chain Master → PartA → PartB still exists in the dependency graph (PartA's FK to Master is <code>aliased=False</code>; PartA → PartB is also <code>aliased=False</code>).</p>
+<p>For <code>(Master.PartB &amp; {"master_id": 1}).delete(part_integrity="cascade")</code>:</p>
+<ol>
+<li>Upward walk: PartB → PartA → Master.<ul>
+<li>Edge PartA → PartB: <code>aliased=False</code>, <code>child_attrs ⊆ parent_pk</code>? <code>child_attrs = {master_id}</code>, <code>parent_pk = {master_id, part_a_id}</code>. Yes ⊆. Apply <strong>U1</strong> — <code>PartA</code> inherits <code>PartB</code>'s restriction directly.</li>
+<li>Edge Master → PartA: <code>aliased=False</code>, <code>child_attrs = {master_id} ⊆ parent_pk = {master_id}</code>. Apply <strong>U1</strong> — <code>Master</code> inherits <code>PartA</code>'s restriction.</li>
+</ul>
+</li>
+<li>Materialize Master.</li>
+<li>Forward cascade Master → PartA → PartB picks up all sibling rows under <code>master_id=1</code>.</li>
+</ol>
+<p>Without the FK walk (the pre-fix behavior), the engine jumped directly from PartB to Master via <code>master_ft.proj() &amp; partB_ft.proj()</code>. PartA was never restricted, and the chain semantics were silently incorrect. This is <a href="https://github.com/datajoint/datajoint-python/issues/1429">#1429</a> Case 2.</p>
+<h2 id="algorithmic-complexity">Algorithmic complexity<a class="headerlink" href="#algorithmic-complexity" title="Permanent link">¶</a></h2>
+<p>For a cascade subgraph with N nodes and E edges, propagation runs in at most O(N · E) edge visits per pass, with at most one pass per master pulled in by upward propagation. For typical schemas (small Master-Part groups, shallow chains), the cost is dominated by the materialization fetch at the Master — one <code>SELECT ... FROM master_ft</code> over the restricted master rows.</p>
+<h2 id="what-is-not-part-of-this-specification">What is not part of this specification<a class="headerlink" href="#what-is-not-part-of-this-specification" title="Permanent link">¶</a></h2>
+<ul>
+<li><strong><code>Diagram.trace()</code></strong> for general upstream restriction propagation: a related but distinct feature tracked in <a href="https://github.com/datajoint/datajoint-python/issues/1423">#1423</a>. <code>trace()</code> exposes upstream propagation as a first-class operator; the cascade engine's upward walk above is a closed implementation detail of <code>part_integrity="cascade"</code>.</li>
+<li><strong>Custom propagation rules</strong> (user-defined): not supported. The three forward and three upward rules cover the cases the FK graph can produce.</li>
+<li><strong>Cross-schema cascade</strong>: handled by <code>dependencies.load_all_downstream()</code> called from <code>Diagram.cascade()</code>; orthogonal to the propagation rules described here.</li>
+</ul>
+<h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">¶</a></h2>
+<ul>
+<li>Source: <code>src/datajoint/diagram.py</code> — <code>Diagram.cascade</code>, <code>_propagate_restrictions</code>, <code>_apply_propagation_rule</code>, <code>_apply_propagation_rule_upward</code>, <code>_propagate_part_to_master</code>.</li>
+<li>Source: <code>src/datajoint/dependencies.py</code> — graph construction, <code>extract_master</code>, alias node insertion.</li>
+<li>Issue: <a href="https://github.com/datajoint/datajoint-python/issues/1429">datajoint-python #1429</a> — bug report and motivating examples for the upward propagation rules.</li>
+<li><a href="../master-part/">Master-Part Specification</a> — Part-Master contract.</li>
+<li><a href="../diagram/">Diagram Specification</a> — graph operations on the dependency graph.</li>
+<li><a href="../data-manipulation/">Data Manipulation Specification</a> — <code>delete()</code> and <code>delete_quick()</code> user-facing API.</li>
+</ul>
 </article>
 </div>
 <script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
@@ -3419,5 +3116,8 @@ group label when available.</p>
 <script src="../../../javascripts/mathjax.js"></script>
 <script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
 <script src="https://js-na1.hs-scripts.com/23133402.js"></script>
-</body>
+<script type="module">import mermaid from "https://unpkg.com/mermaid@10.4.0/dist/mermaid.esm.min.mjs";
+window.mermaidConfig = {default: {
+    startOnLoad: false
+}};</script></body>
 </html>
