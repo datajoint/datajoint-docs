@@ -50,21 +50,27 @@ specification of the work.
 
 ## A worked example
 
+Diagrams in this documentation use the same notation as `dj.Diagram` in
+`datajoint-python`: **Manual** tables are green rectangles, **Lookup**
+tables are plain text, **Imported** tables are blue ovals, and **Computed**
+tables are red ovals. Tier is conveyed by shape and color — the node
+itself carries only the table name.
+
 ```mermaid
 graph TD
-    Mouse["Mouse<br/><i>Manual</i>"]:::manual
-    Session["Session<br/><i>Manual</i>"]:::manual
-    Scan["Scan<br/><i>Manual</i>"]:::manual
-    SegParam["SegmentationParam<br/><i>Lookup</i>"]:::lookup
-    AvgFrame["AverageFrame<br/><i>Imported</i> &mdash; make()"]:::imported
-    Segmentation["Segmentation<br/><i>Computed</i> &mdash; make()"]:::computed
-    Fluorescence["Fluorescence<br/><i>Imported</i> &mdash; make()"]:::imported
+    Mouse["Mouse"]:::manual
+    Session["Session"]:::manual
+    Scan["Scan"]:::manual
+    SegParam["SegmentationParam"]:::lookup
+    AvgFrame(["AverageFrame"]):::imported
+    Segmentation(["Segmentation"]):::computed
+    Fluorescence(["Fluorescence"]):::imported
 
     Mouse --> Session --> Scan --> AvgFrame --> Segmentation --> Fluorescence
     SegParam --> Segmentation
 
     classDef manual    fill:#c8e6c9,stroke:#2e7d32,color:#1b5e20;
-    classDef lookup    fill:#e0e0e0,stroke:#616161,color:#212121;
+    classDef lookup    fill:none,stroke:none,color:#212121;
     classDef imported  fill:#bbdefb,stroke:#1565c0,color:#0d47a1;
     classDef computed  fill:#ffcdd2,stroke:#c62828,color:#b71c1c;
 ```
