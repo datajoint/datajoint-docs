@@ -761,6 +761,10 @@
       
         
       
+        
+      
+        
+      
     
     
     
@@ -902,6 +906,62 @@
     
   
     Computation Model
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../schema-as-workflow-specification/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Schema as a Workflow Specification
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../comparison-to-workflow-languages/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Comparison to Workflow Languages
   
 
     
@@ -6369,68 +6429,8 @@
 </table>
 <p>DataJoint can be considered an <strong>ORM specialized for scientific databases</strong>—purpose-built for structured experimental data and computational workflows where reproducibility and <a href="../entity-integrity/">data integrity</a> are paramount.</p>
 <h2 id="is-datajoint-a-workflow-management-system">Is DataJoint a Workflow Management System?<a class="headerlink" href="#is-datajoint-a-workflow-management-system" title="Permanent link">&para;</a></h2>
-<p>Not exactly. DataJoint and workflow management systems (Airflow, Prefect, Flyte, Nextflow, Snakemake) solve related but distinct problems:</p>
-<table>
-<thead>
-<tr>
-<th>Aspect</th>
-<th>Workflow Managers</th>
-<th>DataJoint</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Core abstraction</td>
-<td>Tasks and DAGs</td>
-<td>Tables and dependencies</td>
-</tr>
-<tr>
-<td>State management</td>
-<td>External (files, databases)</td>
-<td>Integrated (relational database)</td>
-</tr>
-<tr>
-<td>Scheduling</td>
-<td>Built-in schedulers</td>
-<td>External (or manual <code>populate()</code>)</td>
-</tr>
-<tr>
-<td>Distributed execution</td>
-<td>Built-in</td>
-<td>Via external tools</td>
-</tr>
-<tr>
-<td>Data model</td>
-<td>Unstructured (files, blobs)</td>
-<td>Structured (relational schema)</td>
-</tr>
-<tr>
-<td>Query capability</td>
-<td>Limited</td>
-<td>Full relational algebra</td>
-</tr>
-</tbody>
-</table>
-<p><strong>DataJoint excels at:</strong></p>
-<ul>
-<li>Defining <em>what</em> needs to be computed based on data dependencies</li>
-<li>Ensuring computations are never duplicated</li>
-<li>Maintaining referential integrity across pipeline stages</li>
-<li>Querying intermediate and final results</li>
-</ul>
-<p><strong>Workflow managers excel at:</strong></p>
-<ul>
-<li>Scheduling and orchestrating job execution</li>
-<li>Distributing work across clusters</li>
-<li>Retry logic and failure handling</li>
-<li>Resource management</li>
-</ul>
-<p><strong>They complement each other.</strong> DataJoint formalizes data dependencies so that external schedulers can effectively manage computational tasks. A common pattern:</p>
-<ol>
-<li>DataJoint defines the pipeline structure and tracks what's computed</li>
-<li>A workflow manager (or simple cron/SLURM scripts) calls <a href="../computation-model/"><code>populate()</code></a> on a schedule</li>
-<li>DataJoint determines what work remains and executes it</li>
-</ol>
+<p>Not exactly — and the two compose rather than compete. DataJoint formalizes the data layer (schema, dependencies, computation, integrity) while workflow managers (Airflow, Argo, Prefect, Dagster, Nextflow, Snakemake, CWL) orchestrate task scheduling and resource allocation. A common production pattern is DataJoint inside an Airflow / Argo / Prefect orchestration: DataJoint owns the data and computation model; the orchestrator owns scheduling, retries, and resource policy.</p>
+<p>For the structural comparison — what each category offers, what each omits, the convertibility between them, and guidance on when to use which — see <a href="../comparison-to-workflow-languages/">Comparison to Workflow Languages</a>.</p>
 <h2 id="is-datajoint-a-lakehouse">Is DataJoint a Lakehouse?<a class="headerlink" href="#is-datajoint-a-lakehouse" title="Permanent link">&para;</a></h2>
 <p>DataJoint and lakehouses share goals—integrating structured data management with scalable storage and computation. However, they differ in approach:</p>
 <table>

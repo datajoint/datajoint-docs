@@ -1,6 +1,6 @@
 # DataJoint Documentation (Full)
 
-Generated: 2026-06-14 14:55:39 UTC
+Generated: 2026-06-14 15:49:42 UTC
 Commit: unknown
 Branch: unknown
 
@@ -14,6 +14,139 @@ Branch: unknown
 ============================================================
 # Concepts
 ============================================================
+
+
+---
+## File: explanation/comparison-to-workflow-languages.md
+
+# Comparison to Workflow Languages
+
+DataJoint and workflow languages are often compared because both express
+pipelines as directed graphs of computational steps. The comparison is not
+"which is best" — these tools were designed for different problems, with
+different assumptions about where data structure lives. This page lays out
+where each category fits in the broader landscape and what DataJoint adds
+on top.
+
+## The landscape
+
+The systems usually grouped with DataJoint divide cleanly into two
+categories with distinct design centers, plus two adjacent categories that
+solve different problems entirely.
+
+| Category | Examples | Design center |
+|---|---|---|
+| **File-based workflow systems** | CWL, Snakemake, Nextflow | File-passing between steps; scheduler-agnostic; portability-first |
+| **Task orchestrators** | Airflow, Argo Workflows, Prefect, Dagster | DAG of tasks; execution-focused; data-agnostic |
+| Data catalogs | DataHub, Atlan, Marquez | Describe data after it lands |
+| Lakehouses | Delta, Iceberg, Hudi | Optimize analytical queries over stored tables |
+
+The two adjacent categories — catalogs and lakehouses — appear in the same
+conversations but address different concerns. Catalogs describe and tag
+data that already exists; lakehouses optimize analytical access to it.
+Neither specifies how the data was produced. They compose with DataJoint
+rather than competing with it.
+
+## Side-by-side comparison
+
+| Concern | File-based workflows | Task orchestrators | DataJoint |
+|---|---|---|---|
+| Data structure / schema | — (files are opaque) | — (tasks pass artifacts) | Declared in schema |
+| Type system | File-type tags | Python objects | Extensible, pluggable codecs |
+| Foreign-key integrity | — | — | Enforced |
+| Computation specification | Workflow file (CWL/SMK/NF) | Task functions in code | `make()` declared in schema |
+| Execution order | Step DAG in workflow file | Task DAG in code | Foreign-key DAG in schema |
+| Provenance recording | Reconstructed from run logs | Task-level run history | Structural (FK chain) |
+| Drift detection | Out of scope | Out of scope | Cascade on upstream change |
+| Query interface | Filesystem + ad hoc | Task metadata UI | Five-operator algebra |
+| Retry / idempotence | Step-level rerun | Task-level retry | Per-entity, key-driven |
+
+## What workflow languages offer
+
+The decoupled architectures embodied by CWL, Snakemake, Nextflow, Airflow,
+Argo, Prefect, and Dagster have real and lasting advantages. Portability
+across compute backends — any tool that reads files works — is a first-class
+property. Independent evolution of data and computation layers lets
+analysis code change without touching a data model, and lets the compute
+engine swap freely between Spark, Dask, GPU clusters, or HPC schedulers.
+Language-agnosticism keeps the workflow specification readable across
+teams. Decoupling aligns naturally with organizational boundaries: data
+engineers, scientists, and DevOps can evolve their layers independently.
+These are the right trade-offs when portability and decoupling are the
+top priorities.
+
+## What they omit
+
+What these systems share is what they decline to specify: a formal
+data-structure layer. There are no typed schemas across pipeline stages,
+no foreign keys binding intermediate results, no algebraic query surface
+over what the pipeline has produced. Provenance is reconstructed from run
+logs and filenames rather than enforced by structure. Entity-level lineage
+— which subject or sample or session produced a result — is implicit in
+directory conventions and scatter patterns rather than declared. Drift in
+upstream inputs is not detectable as a structural fact; it is something a
+human notices and chases down. These omissions are deliberate: keeping the
+data-structure layer out of scope is what makes the workflow language
+portable.
+
+## DataJoint's deliberate trade-off
+
+DataJoint accepts tighter coupling on purpose. The cost is framework
+commitment — the data model, the schema, and the execution semantics live
+in one system. The benefit is one formal model in which data structure,
+the data itself, the computation that produced it, the dependencies
+between computations, and the integrity constraints that govern all of it
+are jointly queryable and machine-readable. Every question an analyst,
+engineer, or AI agent might pose about the work — *what is this, where
+did it come from, what depends on it, what must hold for it to be valid,
+what would change if I touched the input* — is answerable by query against
+a single formal model. For scientific workflows where data and computation
+cannot be cleanly separated without losing the science, this is the
+trade-off worth taking. The argument is developed at length in
+[Yatsenko & Nguyen, 2026](https://arxiv.org/abs/2602.16585), Section 5.
+
+## Convertibility
+
+The two categories are not mutually exclusive at the structural level. Any
+CWL workflow can be mechanically converted to a DataJoint schema: each tool
+step becomes a Computed table, the step DAG becomes a foreign-key chain,
+and the scatter/gather patterns map onto primary keys. The conversion is
+reversible — a DataJoint schema exports to CWL or Nextflow DSL2 with one
+table per process and channel wiring mirroring the FK chain. The internal
+conversion exercise on the GATK whole-genome-sequencing pipeline from the
+Arvados tutorial — 20 CWL files, 13 tool steps after flattening —
+demonstrates this in practice.
+
+The conversion is not symmetric in information content. CWL→DataJoint
+adds the data-structure layer (entity names, typed primary keys, gather
+group keys) that the workflow language leaves implicit; a short
+annotation supplies these. DataJoint→CWL discards that layer, leaving the
+DAG and the per-step containers. In this sense the relational workflow
+model is a superset of what a workflow language specifies: the workflow
+language describes the DAG; DataJoint describes the DAG plus the data
+structure.
+
+## When to choose what
+
+- **Choose a workflow language** when portability across compute backends
+  is the top priority, the data structure is incidental to the work, and
+  the team is prepared to write its own catalog or lineage layer
+  separately.
+- **Choose DataJoint** when the data and the computation cannot cleanly
+  separate, when provenance, lineage, and integrity must be structural
+  rather than reconstructed, and when agents need a single machine-readable
+  model of the pipeline.
+- **Use both.** DataJoint inside an Airflow, Argo, or Prefect orchestration
+  is a common production pattern: DataJoint owns the data and computation
+  model; the orchestrator owns scheduling, resource allocation, and retry
+  policy. The two layers do not compete; they compose.
+
+## See also
+
+- [Relational Workflow Model](relational-workflow-model.md) — the conceptual basis for treating the schema as the pipeline specification
+- [Schema as a Workflow Specification](schema-as-workflow-specification.md) — the formal language properties (grammar, semantics, algebra) that make the schema queryable as a pipeline spec
+- [Computation Model](computation-model.md) — the `make()` contract and `populate()`
+- [Semantic Matching](semantic-matching.md) — lineage-based join resolution that workflow languages cannot express
 
 
 ---
@@ -847,17 +980,9 @@ Throughout this process, the schema definition remains the single source of trut
 
 ## Comparing Approaches
 
-| Aspect | File-Based Approach | DataJoint Pipeline |
-|--------|--------------------|--------------------|
-| **Data Structure** | Implicit in filenames/folders | Explicit in schema definition |
-| **Dependencies** | Encoded in scripts | Declared through foreign keys |
-| **Provenance** | Manual tracking | Automatic through referential integrity |
-| **Reproducibility** | Requires careful discipline | Built into the model |
-| **Collaboration** | File sharing/conflicts | Concurrent database access |
-| **Queries** | Custom scripts per question | Composable query algebra |
-| **Scalability** | Limited by filesystem | Database + object-augmented storage |
+The pipeline approach requires upfront investment in schema design. Compared to a file-based approach where data structure is implicit in filenames, dependencies are encoded in scripts, and provenance must be tracked manually, a DataJoint pipeline makes all of those explicit in the schema — and pays the investment back in reproducibility, query power, and collaboration as projects scale.
 
-The pipeline approach requires upfront investment in schema design. This investment pays dividends through reduced errors, improved reproducibility, and efficient collaboration as projects scale.
+For a detailed structural comparison against file-based workflow systems (CWL, Snakemake, Nextflow) and task orchestrators (Airflow, Argo, Prefect, Dagster), and for guidance on when the two layers complement rather than substitute each other, see [Comparison to Workflow Languages](comparison-to-workflow-languages.md).
 
 ## Summary
 
@@ -1394,36 +1519,9 @@ DataJoint can be considered an **ORM specialized for scientific databases**—pu
 
 ## Is DataJoint a Workflow Management System?
 
-Not exactly. DataJoint and workflow management systems (Airflow, Prefect, Flyte, Nextflow, Snakemake) solve related but distinct problems:
+Not exactly — and the two compose rather than compete. DataJoint formalizes the data layer (schema, dependencies, computation, integrity) while workflow managers (Airflow, Argo, Prefect, Dagster, Nextflow, Snakemake, CWL) orchestrate task scheduling and resource allocation. A common production pattern is DataJoint inside an Airflow / Argo / Prefect orchestration: DataJoint owns the data and computation model; the orchestrator owns scheduling, retries, and resource policy.
 
-| Aspect | Workflow Managers | DataJoint |
-|--------|-------------------|-----------|
-| Core abstraction | Tasks and DAGs | Tables and dependencies |
-| State management | External (files, databases) | Integrated (relational database) |
-| Scheduling | Built-in schedulers | External (or manual `populate()`) |
-| Distributed execution | Built-in | Via external tools |
-| Data model | Unstructured (files, blobs) | Structured (relational schema) |
-| Query capability | Limited | Full relational algebra |
-
-**DataJoint excels at:**
-
-- Defining *what* needs to be computed based on data dependencies
-- Ensuring computations are never duplicated
-- Maintaining referential integrity across pipeline stages
-- Querying intermediate and final results
-
-**Workflow managers excel at:**
-
-- Scheduling and orchestrating job execution
-- Distributing work across clusters
-- Retry logic and failure handling
-- Resource management
-
-**They complement each other.** DataJoint formalizes data dependencies so that external schedulers can effectively manage computational tasks. A common pattern:
-
-1. DataJoint defines the pipeline structure and tracks what's computed
-2. A workflow manager (or simple cron/SLURM scripts) calls [`populate()`](computation-model.md) on a schedule
-3. DataJoint determines what work remains and executes it
+For the structural comparison — what each category offers, what each omits, the convertibility between them, and guidance on when to use which — see [Comparison to Workflow Languages](comparison-to-workflow-languages.md).
 
 ## Is DataJoint a Lakehouse?
 
@@ -1542,6 +1640,16 @@ and scalable.
 -   :material-cog-play: **[Computation Model](computation-model.md)**
 
     AutoPopulate and Jobs 2.0. Automated, reproducible, distributed computation.
+
+-   :material-file-document-edit: **[Schema as a Workflow Specification](schema-as-workflow-specification.md)**
+
+    The schema as a formal language for expressing scientific workflows.
+    Grammar, semantics, algebra, and machine-readability.
+
+-   :material-compare-horizontal: **[Comparison to Workflow Languages](comparison-to-workflow-languages.md)**
+
+    How DataJoint relates to CWL, Snakemake, Nextflow, Airflow, and other
+    workflow tools. What each offers, what each omits, and when to use both.
 
 -   :material-puzzle: **[Custom Codecs](custom-codecs.md)**
 
@@ -2406,6 +2514,236 @@ databases—not merely as storage systems but as computational substrates. By
 interpreting tables as workflow steps and foreign keys as execution
 dependencies, the schema becomes a complete specification of how data is
 derived, not just what data exists.
+
+
+---
+## File: explanation/schema-as-workflow-specification.md
+
+# Schema as a Workflow Specification
+
+The **Relational Workflow Model** is DataJoint's major innovation — the
+central conceptual contribution that distinguishes it from every other
+tool in its category. Workflow languages sequence computations.
+Catalogs describe data after it lands. Lakehouses optimize analytical
+reads. The Relational Workflow Model fuses all four concerns — data
+structure, dependency, computation, and integrity — into a single formal
+system in which the **schema is the specification of the work**.
+
+This page describes the schema as that formal language. It has a
+grammar, a typed semantics, an algebra, and a machine-readable
+introspection surface. It is not Python plumbing wrapped around a
+database — Python is the host language, but the schema itself is a
+declarative specification that the engine reads, validates, and
+executes against. Everything substantive about the pipeline — what
+entities exist, how they are derived, what types they carry, what
+depends on what — is in the schema, not scattered across application
+code, configuration files, and external orchestrator manifests.
+
+## Why a formal language matters
+
+A formal specification can be parsed, validated, exported, diffed,
+audited, and reasoned about by tools that did not write it. Workflow
+fragments expressed in general-purpose code cannot. For interoperability
+with external governance systems, for agents that must understand a
+pipeline before acting on it, for reviewers reconstructing what a
+result means months later, and for the engine itself enforcing
+consistency, the schema needs to be a declarative artifact with stable
+semantics.
+
+## Grammar
+
+A DataJoint schema is declared as a set of table definitions. Each
+table carries a tier — `Manual`, `Lookup`, `Imported`, or `Computed` —
+and a `definition` string that uses a compact DDL. The DDL distinguishes
+primary key attributes (above `---`) from secondary attributes (below
+`---`), declares attribute types, and writes foreign keys as
+`-> ReferencedTable`. A faithful excerpt from a calcium-imaging
+pipeline:
+
+```python
+@schema
+class Scan(dj.Manual):
+    definition = """
+    -> Session
+    scan_idx     : int32          # scan within session
+    ---
+    depth_um     : float32        # cortical depth
+    nframes      : int32
+    """
+
+@schema
+class AverageFrame(dj.Imported):
+    definition = """
+    -> Scan
+    ---
+    avg_frame    : <npy@raw>      # mean fluorescence frame
+    """
+
+    def make(self, key):
+        ...
+
+@schema
+class SegmentationParam(dj.Lookup):
+    definition = """
+    param_set_id : int32
+    ---
+    method       : enum('cellpose', 'suite2p')
+    diameter_um  : float32
+    """
+
+@schema
+class Segmentation(dj.Computed):
+    definition = """
+    -> AverageFrame
+    -> SegmentationParam
+    ---
+    n_cells      : int32
+    masks        : <object@raw>   # cell masks, lazy reference
+    """
+
+    def make(self, key):
+        ...
+```
+
+Every element of this excerpt is part of the formal language. The
+tier (`dj.Computed`) is a semantic decoration: the engine will populate
+this table automatically by invoking `make()` for every upstream key.
+The arrows are typed foreign keys that inherit the referenced table's
+primary key into the current one — they are simultaneously referential
+integrity constraints and execution-order edges in the dependency DAG.
+The `---` separator partitions identifying attributes from descriptive
+ones. Type expressions (`float32`, `enum(...)`, `<npy@raw>`,
+`<object@raw>`) bind each column to a codec in the type system. The
+diamond fan-in on `Segmentation` — depending on both `AverageFrame`
+and `SegmentationParam` — declares that every average frame is to be
+segmented with every parameter set, automatically, without an external
+manifest.
+
+## Semantics
+
+A row in `Segmentation` exists if and only if three conditions hold:
+
+1. The upstream key exists — both an `AverageFrame` row and a
+   `SegmentationParam` row, identified by the inherited primary key
+   attributes.
+2. `Segmentation.make(key)` has run to completion and inserted the row.
+3. The inserted row satisfies the declared types and constraints.
+
+The `make()` method is the typed function the schema declares from
+upstream key to artifact: it receives the primary key of one entity,
+fetches its inputs by query, produces the result, and inserts exactly
+one row. Each inserted row records the git hash of the `make()` source
+that produced it — code provenance is part of the schema's structural
+footprint, not an audit artifact bolted on afterward. The
+[Computation Model](computation-model.md) page covers the full `make()`
+/ `populate()` contract, including the three-part pattern for long
+computations.
+
+## The query algebra
+
+The schema's queryable surface is a closed five-operator algebra:
+**restrict (`&`)**, **join (`*`)**, **project (`.proj()`)**,
+**aggregate (`.aggr()`)**, and **union (`+`)**. The defining property
+is *algebraic closure*: every operator takes entity sets to entity sets
+with a well-defined primary key, so any expression is itself a valid
+operand for the next operator. Entity integrity is preserved under
+composition. This is what lets the schema be both a specification and a
+queryable object — the same algebra that retrieves data also traces
+provenance and derives the key source for the next `populate()`. See
+[Query Algebra](query-algebra.md) and
+[Semantic Matching](semantic-matching.md) for operator semantics and
+the lineage-based join rule that prevents accidental matches on
+coincidentally-named columns.
+
+## Types
+
+Attribute types are drawn from a three-layer system: native database
+types, portable core types (`int32`, `float64`, `varchar`, `uuid`,
+`json`, `bytes`, `datetime`), and a layer of pluggable codecs declared
+in angle brackets (`<blob>`, `<npy@store>`, `<object@store>`,
+`<attach@store>`, and third-party codecs registered via Python entry
+points). Codecs unify in-database storage and object-store references
+under one declarative syntax. Lazy references — `NpyRef`, `ObjectRef` —
+let a query return metadata (shape, dtype, path) without downloading
+payloads, so large scientific objects participate in the schema without
+forcing eager I/O. See [Type System](type-system.md).
+
+## Self-healing operational semantics
+
+Workflow orchestrators sequence tasks; the schema specifies states.
+`populate()` reads the schema, computes the *key source* — the set of
+upstream keys not yet present in a Computed or Imported table — and
+invokes `make()` on each missing entity until the table is in
+compliance with its declared dependencies. The engine brings the world
+into agreement with the specification, not the other way around. Runs
+are idempotent by construction: already-populated keys are skipped,
+failed jobs are retried, and parallel workers reserve keys atomically
+through the Jobs 2.0 mechanism. Deleting an upstream entity cascades
+through foreign keys, removing dependent results so the next
+`populate()` derives them afresh from valid inputs. The schema, not a
+separate scheduler manifest, is the source of execution truth.
+
+## Machine-readability and export
+
+Because the schema is a declarative artifact, it is fully
+introspectable. The list of tables, their tiers, attributes, types,
+foreign keys, indexes, and the dependency graph itself are queryable
+through the same API used for data — `schema.list_tables()`,
+`Table().heading`, `Table().describe()`, `dj.Diagram(schema)`. The
+dependency graph is a first-class object: tools can traverse it,
+restrict it, and reason about it without parsing source code.
+
+Export pathways follow directly:
+
+- **Diagrams** — render to DOT or Mermaid for visual review.
+- **Structured spec** — emit the schema as YAML or JSON for tooling
+  that does not speak Python.
+- **Lineage standards** — map foreign-key edges and `make()` records
+  to W3C PROV, OpenLineage, or PROV-O for governance and catalog
+  integration. The mapping is a translation, not a reconstruction,
+  because the lineage graph is already in the schema.
+- **Workflow languages** — CWL, Snakemake, and Nextflow workflows are
+  expressible as schema subgraphs with the data-structure layer added;
+  conversion is mechanical.
+
+## The schema as control plane
+
+Networking distinguishes the data plane — packets in flight — from the
+control plane — the routing tables, ARP tables, and BGP state that
+decide where the packets go. The schema is the **control plane of the
+data**: a declarative, queryable, enforceable, observable description
+of what exists, what depends on what, and what must hold for the system
+to be valid. The rows are the data plane; the schema describes and
+governs them. The two share one substrate, but the control surface is
+explicit, inspectable, and standards-mappable — the property that lets
+external systems, human reviewers, and automated agents reason about
+the pipeline from a single source of truth.
+
+## See also
+
+- [The Relational Workflow Model](relational-workflow-model.md) — the
+  conceptual foundation this page formalizes
+- [Computation Model](computation-model.md) — `make()`, `populate()`,
+  Jobs 2.0
+- [Query Algebra](query-algebra.md) — the five operators and algebraic
+  closure
+- [Type System](type-system.md) — core types and pluggable codecs
+- [Semantic Matching](semantic-matching.md) — lineage-based join
+  resolution
+- [Entity Integrity](entity-integrity.md) — primary keys and cascading
+  guarantees
+- [Comparison to Workflow Languages](comparison-to-workflow-languages.md)
+  — how the schema relates to CWL, Snakemake, Nextflow, and Airflow
+- [Define Tables](../how-to/define-tables.md) — declaring schema
+  elements
+- [Run Computations](../how-to/run-computations.md) — executing the
+  schema
+
+The Relational Workflow Model and the schema language it generates are
+formally defined in
+[Yatsenko & Nguyen, 2026](https://arxiv.org/abs/2602.16585); the schema
+definition language and query algebra were first formalized in
+[Yatsenko et al., 2018](https://doi.org/10.48550/arXiv.1807.11104).
 
 
 ---

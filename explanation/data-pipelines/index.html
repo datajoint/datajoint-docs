@@ -745,6 +745,10 @@
       
         
       
+        
+      
+        
+      
     
     
     
@@ -886,6 +890,62 @@
     
   
     Computation Model
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../schema-as-workflow-specification/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Schema as a Workflow Specification
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../comparison-to-workflow-languages/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Comparison to Workflow Languages
   
 
     
@@ -6300,53 +6360,8 @@
 </ol>
 <p>Throughout this process, the schema definition remains the single source of truth.</p>
 <h2 id="comparing-approaches">Comparing Approaches<a class="headerlink" href="#comparing-approaches" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Aspect</th>
-<th>File-Based Approach</th>
-<th>DataJoint Pipeline</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>Data Structure</strong></td>
-<td>Implicit in filenames/folders</td>
-<td>Explicit in schema definition</td>
-</tr>
-<tr>
-<td><strong>Dependencies</strong></td>
-<td>Encoded in scripts</td>
-<td>Declared through foreign keys</td>
-</tr>
-<tr>
-<td><strong>Provenance</strong></td>
-<td>Manual tracking</td>
-<td>Automatic through referential integrity</td>
-</tr>
-<tr>
-<td><strong>Reproducibility</strong></td>
-<td>Requires careful discipline</td>
-<td>Built into the model</td>
-</tr>
-<tr>
-<td><strong>Collaboration</strong></td>
-<td>File sharing/conflicts</td>
-<td>Concurrent database access</td>
-</tr>
-<tr>
-<td><strong>Queries</strong></td>
-<td>Custom scripts per question</td>
-<td>Composable query algebra</td>
-</tr>
-<tr>
-<td><strong>Scalability</strong></td>
-<td>Limited by filesystem</td>
-<td>Database + object-augmented storage</td>
-</tr>
-</tbody>
-</table>
-<p>The pipeline approach requires upfront investment in schema design. This investment pays dividends through reduced errors, improved reproducibility, and efficient collaboration as projects scale.</p>
+<p>The pipeline approach requires upfront investment in schema design. Compared to a file-based approach where data structure is implicit in filenames, dependencies are encoded in scripts, and provenance must be tracked manually, a DataJoint pipeline makes all of those explicit in the schema — and pays the investment back in reproducibility, query power, and collaboration as projects scale.</p>
+<p>For a detailed structural comparison against file-based workflow systems (CWL, Snakemake, Nextflow) and task orchestrators (Airflow, Argo, Prefect, Dagster), and for guidance on when the two layers complement rather than substitute each other, see <a href="../comparison-to-workflow-languages/">Comparison to Workflow Languages</a>.</p>
 <h2 id="summary">Summary<a class="headerlink" href="#summary" title="Permanent link">&para;</a></h2>
 <p>Scientific data pipelines extend the Relational Workflow Model into complete data operations systems:</p>
 <ul>

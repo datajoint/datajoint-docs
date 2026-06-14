@@ -8,31 +8,31 @@
       
       
       
-        <link rel="canonical" href="https://docs.datajoint.com/tutorials/">
+        <link rel="canonical" href="https://docs.datajoint.com/explanation/schema-as-workflow-specification/">
       
       
-        <link rel="prev" href="../explanation/postgresql-cdc-replication/">
+        <link rel="prev" href="../computation-model/">
       
       
-        <link rel="next" href="basics/01-first-pipeline/">
+        <link rel="next" href="../comparison-to-workflow-languages/">
       
       
         
       
       
-      <link rel="icon" href="../assets/images/company-logo-blue.png">
+      <link rel="icon" href="../../assets/images/company-logo-blue.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
     
     
       
-        <title>Tutorials - DataJoint Documentation</title>
+        <title>Schema as a Workflow Specification - DataJoint Documentation</title>
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
       
         
-        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
       
       
 
@@ -51,11 +51,11 @@
       
     
     
-      <link rel="stylesheet" href="../assets/_mkdocstrings.css">
+      <link rel="stylesheet" href="../../assets/_mkdocstrings.css">
     
-      <link rel="stylesheet" href="../assets/stylesheets/extra.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/extra.css">
     
-    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -105,7 +105,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#tutorials" class="md-skip">
+        <a href="#schema-as-a-workflow-specification" class="md-skip">
           Skip to content
         </a>
       
@@ -148,7 +148,7 @@
 
 <header class="md-header md-header--shadow" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href=".." title="DataJoint Documentation" class="md-header__button md-logo" aria-label="DataJoint Documentation" data-md-component="logo">
+    <a href="../.." title="DataJoint Documentation" class="md-header__button md-logo" aria-label="DataJoint Documentation" data-md-component="logo">
       
   
   <?xml version="1.0" encoding="utf-8"?>
@@ -178,7 +178,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Tutorials
+              Schema as a Workflow Specification
             
           </span>
         </div>
@@ -294,7 +294,7 @@
 
 <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href=".." title="DataJoint Documentation" class="md-nav__button md-logo" aria-label="DataJoint Documentation" data-md-component="logo">
+    <a href="../.." title="DataJoint Documentation" class="md-nav__button md-logo" aria-label="DataJoint Documentation" data-md-component="logo">
       
   
   <?xml version="1.0" encoding="utf-8"?>
@@ -334,7 +334,7 @@
   
   
     <li class="md-nav__item">
-      <a href=".." class="md-nav__link">
+      <a href="../.." class="md-nav__link">
         
   
   
@@ -358,8 +358,10 @@
       
   
   
+    
   
   
+  
     
     
       
@@ -382,15 +384,15 @@
       
     
     
-    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../explanation/" class="md-nav__link ">
+            <a href="../" class="md-nav__link ">
               
   
   
@@ -414,7 +416,7 @@
             
           </div>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_2">
             <span class="md-nav__icon md-icon"></span>
             
@@ -487,7 +489,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../explanation/data-pipelines/" class="md-nav__link">
+      <a href="../data-pipelines/" class="md-nav__link">
         
   
   
@@ -515,7 +517,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../explanation/faq/" class="md-nav__link">
+      <a href="../faq/" class="md-nav__link">
         
   
   
@@ -548,8 +550,10 @@
                 
   
   
+    
   
   
+  
     
     
       
@@ -571,11 +575,11 @@
       
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2" checked>
         
           
           <label class="md-nav__link" for="__nav_2_2" id="__nav_2_2_label" tabindex="0">
@@ -596,7 +600,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_2_2">
             <span class="md-nav__icon md-icon"></span>
             
@@ -614,7 +618,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../explanation/relational-workflow-model/" class="md-nav__link">
+      <a href="../relational-workflow-model/" class="md-nav__link">
         
   
   
@@ -642,7 +646,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../explanation/entity-integrity/" class="md-nav__link">
+      <a href="../entity-integrity/" class="md-nav__link">
         
   
   
@@ -670,7 +674,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../explanation/normalization/" class="md-nav__link">
+      <a href="../normalization/" class="md-nav__link">
         
   
   
@@ -698,7 +702,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../explanation/computation-model/" class="md-nav__link">
+      <a href="../computation-model/" class="md-nav__link">
         
   
   
@@ -723,10 +727,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../explanation/schema-as-workflow-specification/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Schema as a Workflow Specification
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -742,6 +773,125 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#why-a-formal-language-matters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why a formal language matters
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#grammar" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Grammar
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#semantics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Semantics
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-query-algebra" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The query algebra
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Types
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#self-healing-operational-semantics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Self-healing operational semantics
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#machine-readability-and-export" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Machine-readability and export
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-schema-as-control-plane" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The schema as control plane
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#see-also" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        See also
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -754,7 +904,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../explanation/comparison-to-workflow-languages/" class="md-nav__link">
+      <a href="../comparison-to-workflow-languages/" class="md-nav__link">
         
   
   
@@ -845,7 +995,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../explanation/query-algebra/" class="md-nav__link">
+      <a href="../query-algebra/" class="md-nav__link">
         
   
   
@@ -873,7 +1023,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../explanation/semantic-matching/" class="md-nav__link">
+      <a href="../semantic-matching/" class="md-nav__link">
         
   
   
@@ -964,7 +1114,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../explanation/type-system/" class="md-nav__link">
+      <a href="../type-system/" class="md-nav__link">
         
   
   
@@ -992,7 +1142,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../explanation/custom-codecs/" class="md-nav__link">
+      <a href="../custom-codecs/" class="md-nav__link">
         
   
   
@@ -1081,7 +1231,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../explanation/postgresql-cdc-replication/" class="md-nav__link">
+      <a href="../postgresql-cdc-replication/" class="md-nav__link">
         
   
   
@@ -1121,10 +1271,8 @@
       
   
   
-    
   
   
-  
     
     
       
@@ -1145,15 +1293,15 @@
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="./" class="md-nav__link md-nav__link--active">
+            <a href="../../tutorials/" class="md-nav__link ">
               
   
   
@@ -1171,13 +1319,13 @@
             </a>
             
               
-              <label class="md-nav__link md-nav__link--active" for="__nav_3" id="__nav_3_label" tabindex="">
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="">
                 <span class="md-nav__icon md-icon"></span>
               </label>
             
           </div>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_3">
             <span class="md-nav__icon md-icon"></span>
             
@@ -1258,7 +1406,7 @@
   
   
     <li class="md-nav__item">
-      <a href="basics/01-first-pipeline/" class="md-nav__link">
+      <a href="../../tutorials/basics/01-first-pipeline/" class="md-nav__link">
         
   
   
@@ -1286,7 +1434,7 @@
   
   
     <li class="md-nav__item">
-      <a href="basics/02-schema-design/" class="md-nav__link">
+      <a href="../../tutorials/basics/02-schema-design/" class="md-nav__link">
         
   
   
@@ -1314,7 +1462,7 @@
   
   
     <li class="md-nav__item">
-      <a href="basics/03-data-entry/" class="md-nav__link">
+      <a href="../../tutorials/basics/03-data-entry/" class="md-nav__link">
         
   
   
@@ -1342,7 +1490,7 @@
   
   
     <li class="md-nav__item">
-      <a href="basics/04-queries/" class="md-nav__link">
+      <a href="../../tutorials/basics/04-queries/" class="md-nav__link">
         
   
   
@@ -1370,7 +1518,7 @@
   
   
     <li class="md-nav__item">
-      <a href="basics/05-computation/" class="md-nav__link">
+      <a href="../../tutorials/basics/05-computation/" class="md-nav__link">
         
   
   
@@ -1398,7 +1546,7 @@
   
   
     <li class="md-nav__item">
-      <a href="basics/06-object-storage/" class="md-nav__link">
+      <a href="../../tutorials/basics/06-object-storage/" class="md-nav__link">
         
   
   
@@ -1495,7 +1643,7 @@
   
   
     <li class="md-nav__item">
-      <a href="examples/university/" class="md-nav__link">
+      <a href="../../tutorials/examples/university/" class="md-nav__link">
         
   
   
@@ -1523,7 +1671,7 @@
   
   
     <li class="md-nav__item">
-      <a href="examples/hotel-reservations/" class="md-nav__link">
+      <a href="../../tutorials/examples/hotel-reservations/" class="md-nav__link">
         
   
   
@@ -1551,7 +1699,7 @@
   
   
     <li class="md-nav__item">
-      <a href="examples/languages/" class="md-nav__link">
+      <a href="../../tutorials/examples/languages/" class="md-nav__link">
         
   
   
@@ -1579,7 +1727,7 @@
   
   
     <li class="md-nav__item">
-      <a href="examples/fractal-pipeline/" class="md-nav__link">
+      <a href="../../tutorials/examples/fractal-pipeline/" class="md-nav__link">
         
   
   
@@ -1607,7 +1755,7 @@
   
   
     <li class="md-nav__item">
-      <a href="examples/blob-detection/" class="md-nav__link">
+      <a href="../../tutorials/examples/blob-detection/" class="md-nav__link">
         
   
   
@@ -1702,7 +1850,7 @@
   
   
     <li class="md-nav__item">
-      <a href="domain/calcium-imaging/calcium-imaging/" class="md-nav__link">
+      <a href="../../tutorials/domain/calcium-imaging/calcium-imaging/" class="md-nav__link">
         
   
   
@@ -1730,7 +1878,7 @@
   
   
     <li class="md-nav__item">
-      <a href="domain/electrophysiology/electrophysiology/" class="md-nav__link">
+      <a href="../../tutorials/domain/electrophysiology/electrophysiology/" class="md-nav__link">
         
   
   
@@ -1758,7 +1906,7 @@
   
   
     <li class="md-nav__item">
-      <a href="domain/electrophysiology/ephys-with-npy/" class="md-nav__link">
+      <a href="../../tutorials/domain/electrophysiology/ephys-with-npy/" class="md-nav__link">
         
   
   
@@ -1786,7 +1934,7 @@
   
   
     <li class="md-nav__item">
-      <a href="domain/allen-ccf/allen-ccf/" class="md-nav__link">
+      <a href="../../tutorials/domain/allen-ccf/allen-ccf/" class="md-nav__link">
         
   
   
@@ -1883,7 +2031,7 @@
   
   
     <li class="md-nav__item">
-      <a href="advanced/sql-comparison/" class="md-nav__link">
+      <a href="../../tutorials/advanced/sql-comparison/" class="md-nav__link">
         
   
   
@@ -1911,7 +2059,7 @@
   
   
     <li class="md-nav__item">
-      <a href="advanced/json-type/" class="md-nav__link">
+      <a href="../../tutorials/advanced/json-type/" class="md-nav__link">
         
   
   
@@ -1939,7 +2087,7 @@
   
   
     <li class="md-nav__item">
-      <a href="advanced/distributed/" class="md-nav__link">
+      <a href="../../tutorials/advanced/distributed/" class="md-nav__link">
         
   
   
@@ -1967,7 +2115,7 @@
   
   
     <li class="md-nav__item">
-      <a href="advanced/custom-codecs/" class="md-nav__link">
+      <a href="../../tutorials/advanced/custom-codecs/" class="md-nav__link">
         
   
   
@@ -1995,7 +2143,7 @@
   
   
     <li class="md-nav__item">
-      <a href="advanced/instances/" class="md-nav__link">
+      <a href="../../tutorials/advanced/instances/" class="md-nav__link">
         
   
   
@@ -2073,7 +2221,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../how-to/" class="md-nav__link ">
+            <a href="../../how-to/" class="md-nav__link ">
               
   
   
@@ -2178,7 +2326,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../how-to/installation/" class="md-nav__link">
+      <a href="../../how-to/installation/" class="md-nav__link">
         
   
   
@@ -2206,7 +2354,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../how-to/manage-secrets/" class="md-nav__link">
+      <a href="../../how-to/manage-secrets/" class="md-nav__link">
         
   
   
@@ -2234,7 +2382,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../how-to/configure-database/" class="md-nav__link">
+      <a href="../../how-to/configure-database/" class="md-nav__link">
         
   
   
@@ -2262,7 +2410,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../how-to/use-instances/" class="md-nav__link">
+      <a href="../../how-to/use-instances/" class="md-nav__link">
         
   
   
@@ -2290,7 +2438,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../how-to/configure-storage/" class="md-nav__link">
+      <a href="../../how-to/configure-storage/" class="md-nav__link">
         
   
   
@@ -2318,7 +2466,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../how-to/use-cli/" class="md-nav__link">
+      <a href="../../how-to/use-cli/" class="md-nav__link">
         
   
   
@@ -2415,7 +2563,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../how-to/define-tables/" class="md-nav__link">
+      <a href="../../how-to/define-tables/" class="md-nav__link">
         
   
   
@@ -2443,7 +2591,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../how-to/model-relationships/" class="md-nav__link">
+      <a href="../../how-to/model-relationships/" class="md-nav__link">
         
   
   
@@ -2471,7 +2619,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../how-to/master-part/" class="md-nav__link">
+      <a href="../../how-to/master-part/" class="md-nav__link">
         
   
   
@@ -2499,7 +2647,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../how-to/design-primary-keys/" class="md-nav__link">
+      <a href="../../how-to/design-primary-keys/" class="md-nav__link">
         
   
   
@@ -2527,7 +2675,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../how-to/read-diagrams/" class="md-nav__link">
+      <a href="../../how-to/read-diagrams/" class="md-nav__link">
         
   
   
@@ -2618,7 +2766,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../how-to/manage-pipeline-project/" class="md-nav__link">
+      <a href="../../how-to/manage-pipeline-project/" class="md-nav__link">
         
   
   
@@ -2646,7 +2794,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../how-to/deploy-production/" class="md-nav__link">
+      <a href="../../how-to/deploy-production/" class="md-nav__link">
         
   
   
@@ -2741,7 +2889,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../how-to/insert-data/" class="md-nav__link">
+      <a href="../../how-to/insert-data/" class="md-nav__link">
         
   
   
@@ -2769,7 +2917,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../how-to/query-data/" class="md-nav__link">
+      <a href="../../how-to/query-data/" class="md-nav__link">
         
   
   
@@ -2797,7 +2945,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../how-to/fetch-results/" class="md-nav__link">
+      <a href="../../how-to/fetch-results/" class="md-nav__link">
         
   
   
@@ -2825,7 +2973,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../how-to/delete-data/" class="md-nav__link">
+      <a href="../../how-to/delete-data/" class="md-nav__link">
         
   
   
@@ -2920,7 +3068,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../how-to/run-computations/" class="md-nav__link">
+      <a href="../../how-to/run-computations/" class="md-nav__link">
         
   
   
@@ -2948,7 +3096,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../how-to/distributed-computing/" class="md-nav__link">
+      <a href="../../how-to/distributed-computing/" class="md-nav__link">
         
   
   
@@ -2976,7 +3124,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../how-to/handle-errors/" class="md-nav__link">
+      <a href="../../how-to/handle-errors/" class="md-nav__link">
         
   
   
@@ -3004,7 +3152,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../how-to/monitor-progress/" class="md-nav__link">
+      <a href="../../how-to/monitor-progress/" class="md-nav__link">
         
   
   
@@ -3109,7 +3257,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../how-to/object-storage-overview/" class="md-nav__link">
+      <a href="../../how-to/object-storage-overview/" class="md-nav__link">
         
   
   
@@ -3137,7 +3285,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../how-to/choose-storage-type/" class="md-nav__link">
+      <a href="../../how-to/choose-storage-type/" class="md-nav__link">
         
   
   
@@ -3165,7 +3313,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../how-to/use-object-storage/" class="md-nav__link">
+      <a href="../../how-to/use-object-storage/" class="md-nav__link">
         
   
   
@@ -3193,7 +3341,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../how-to/staged-insert/" class="md-nav__link">
+      <a href="../../how-to/staged-insert/" class="md-nav__link">
         
   
   
@@ -3221,7 +3369,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../how-to/use-npy-codec/" class="md-nav__link">
+      <a href="../../how-to/use-npy-codec/" class="md-nav__link">
         
   
   
@@ -3249,7 +3397,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../how-to/use-plugin-codecs/" class="md-nav__link">
+      <a href="../../how-to/use-plugin-codecs/" class="md-nav__link">
         
   
   
@@ -3277,7 +3425,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../how-to/create-custom-codec/" class="md-nav__link">
+      <a href="../../how-to/create-custom-codec/" class="md-nav__link">
         
   
   
@@ -3305,7 +3453,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../how-to/manage-large-data/" class="md-nav__link">
+      <a href="../../how-to/manage-large-data/" class="md-nav__link">
         
   
   
@@ -3333,7 +3481,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../how-to/garbage-collection/" class="md-nav__link">
+      <a href="../../how-to/garbage-collection/" class="md-nav__link">
         
   
   
@@ -3426,7 +3574,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../how-to/migrate-to-v20/" class="md-nav__link">
+      <a href="../../how-to/migrate-to-v20/" class="md-nav__link">
         
   
   
@@ -3454,7 +3602,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../how-to/alter-tables/" class="md-nav__link">
+      <a href="../../how-to/alter-tables/" class="md-nav__link">
         
   
   
@@ -3482,7 +3630,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../how-to/backup-restore/" class="md-nav__link">
+      <a href="../../how-to/backup-restore/" class="md-nav__link">
         
   
   
@@ -3571,7 +3719,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../how-to/testing/" class="md-nav__link">
+      <a href="../../how-to/testing/" class="md-nav__link">
         
   
   
@@ -3647,7 +3795,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../reference/" class="md-nav__link ">
+            <a href="../../reference/" class="md-nav__link ">
               
   
   
@@ -3717,7 +3865,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../reference/specs/" class="md-nav__link ">
+            <a href="../../reference/specs/" class="md-nav__link ">
               
   
   
@@ -3759,7 +3907,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../reference/specs/database-backends/" class="md-nav__link">
+      <a href="../../reference/specs/database-backends/" class="md-nav__link">
         
   
   
@@ -3844,7 +3992,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../reference/specs/table-declaration/" class="md-nav__link">
+      <a href="../../reference/specs/table-declaration/" class="md-nav__link">
         
   
   
@@ -3872,7 +4020,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../reference/specs/master-part/" class="md-nav__link">
+      <a href="../../reference/specs/master-part/" class="md-nav__link">
         
   
   
@@ -3900,7 +4048,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../reference/specs/virtual-schemas/" class="md-nav__link">
+      <a href="../../reference/specs/virtual-schemas/" class="md-nav__link">
         
   
   
@@ -3997,7 +4145,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../reference/specs/query-algebra/" class="md-nav__link">
+      <a href="../../reference/specs/query-algebra/" class="md-nav__link">
         
   
   
@@ -4025,7 +4173,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../reference/specs/semantic-matching/" class="md-nav__link">
+      <a href="../../reference/specs/semantic-matching/" class="md-nav__link">
         
   
   
@@ -4053,7 +4201,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../reference/specs/primary-keys/" class="md-nav__link">
+      <a href="../../reference/specs/primary-keys/" class="md-nav__link">
         
   
   
@@ -4081,7 +4229,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../reference/specs/fetch-api/" class="md-nav__link">
+      <a href="../../reference/specs/fetch-api/" class="md-nav__link">
         
   
   
@@ -4109,7 +4257,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../reference/specs/diagram/" class="md-nav__link">
+      <a href="../../reference/specs/diagram/" class="md-nav__link">
         
   
   
@@ -4204,7 +4352,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../reference/specs/type-system/" class="md-nav__link">
+      <a href="../../reference/specs/type-system/" class="md-nav__link">
         
   
   
@@ -4232,7 +4380,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../reference/specs/codec-api/" class="md-nav__link">
+      <a href="../../reference/specs/codec-api/" class="md-nav__link">
         
   
   
@@ -4260,7 +4408,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../reference/specs/npy-codec/" class="md-nav__link">
+      <a href="../../reference/specs/npy-codec/" class="md-nav__link">
         
   
   
@@ -4288,7 +4436,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../reference/specs/storage-adapter-api/" class="md-nav__link">
+      <a href="../../reference/specs/storage-adapter-api/" class="md-nav__link">
         
   
   
@@ -4387,7 +4535,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../reference/specs/data-manipulation/" class="md-nav__link">
+      <a href="../../reference/specs/data-manipulation/" class="md-nav__link">
         
   
   
@@ -4415,7 +4563,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../reference/specs/staged-insert/" class="md-nav__link">
+      <a href="../../reference/specs/staged-insert/" class="md-nav__link">
         
   
   
@@ -4443,7 +4591,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../reference/specs/cascade/" class="md-nav__link">
+      <a href="../../reference/specs/cascade/" class="md-nav__link">
         
   
   
@@ -4471,7 +4619,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../reference/specs/autopopulate/" class="md-nav__link">
+      <a href="../../reference/specs/autopopulate/" class="md-nav__link">
         
   
   
@@ -4499,7 +4647,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../reference/specs/job-metadata/" class="md-nav__link">
+      <a href="../../reference/specs/job-metadata/" class="md-nav__link">
         
   
   
@@ -4527,7 +4675,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../reference/specs/object-store-configuration/" class="md-nav__link">
+      <a href="../../reference/specs/object-store-configuration/" class="md-nav__link">
         
   
   
@@ -4616,7 +4764,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../reference/specs/deploy-operations/" class="md-nav__link">
+      <a href="../../reference/specs/deploy-operations/" class="md-nav__link">
         
   
   
@@ -4713,7 +4861,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../reference/specs/thread-safe-mode/" class="md-nav__link">
+      <a href="../../reference/specs/thread-safe-mode/" class="md-nav__link">
         
   
   
@@ -4749,7 +4897,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../reference/configuration/" class="md-nav__link">
+      <a href="../../reference/configuration/" class="md-nav__link">
         
   
   
@@ -4777,7 +4925,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../reference/definition-syntax/" class="md-nav__link">
+      <a href="../../reference/definition-syntax/" class="md-nav__link">
         
   
   
@@ -4805,7 +4953,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../reference/operators/" class="md-nav__link">
+      <a href="../../reference/operators/" class="md-nav__link">
         
   
   
@@ -4833,7 +4981,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../reference/errors/" class="md-nav__link">
+      <a href="../../reference/errors/" class="md-nav__link">
         
   
   
@@ -4861,7 +5009,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../elements/" class="md-nav__link">
+      <a href="../../elements/" class="md-nav__link">
         
   
   
@@ -4919,7 +5067,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../api/" class="md-nav__link ">
+            <a href="../../api/" class="md-nav__link ">
               
   
   
@@ -4961,7 +5109,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../api/datajoint/" class="md-nav__link">
+      <a href="../../api/datajoint/" class="md-nav__link">
         
   
   
@@ -5033,7 +5181,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../api/datajoint/" class="md-nav__link ">
+            <a href="../../api/datajoint/" class="md-nav__link ">
               
   
   
@@ -5075,7 +5223,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../api/datajoint/blob/" class="md-nav__link">
+      <a href="../../api/datajoint/blob/" class="md-nav__link">
         
   
   
@@ -5103,7 +5251,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../api/datajoint/codecs/" class="md-nav__link">
+      <a href="../../api/datajoint/codecs/" class="md-nav__link">
         
   
   
@@ -5131,7 +5279,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../api/datajoint/connection/" class="md-nav__link">
+      <a href="../../api/datajoint/connection/" class="md-nav__link">
         
   
   
@@ -5159,7 +5307,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../api/datajoint/diagram/" class="md-nav__link">
+      <a href="../../api/datajoint/diagram/" class="md-nav__link">
         
   
   
@@ -5187,7 +5335,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../api/datajoint/errors/" class="md-nav__link">
+      <a href="../../api/datajoint/errors/" class="md-nav__link">
         
   
   
@@ -5215,7 +5363,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../api/datajoint/expression/" class="md-nav__link">
+      <a href="../../api/datajoint/expression/" class="md-nav__link">
         
   
   
@@ -5243,7 +5391,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../api/datajoint/hash_registry/" class="md-nav__link">
+      <a href="../../api/datajoint/hash_registry/" class="md-nav__link">
         
   
   
@@ -5271,7 +5419,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../api/datajoint/heading/" class="md-nav__link">
+      <a href="../../api/datajoint/heading/" class="md-nav__link">
         
   
   
@@ -5299,7 +5447,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../api/datajoint/jobs/" class="md-nav__link">
+      <a href="../../api/datajoint/jobs/" class="md-nav__link">
         
   
   
@@ -5327,7 +5475,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../api/datajoint/migrate/" class="md-nav__link">
+      <a href="../../api/datajoint/migrate/" class="md-nav__link">
         
   
   
@@ -5355,7 +5503,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../api/datajoint/schemas/" class="md-nav__link">
+      <a href="../../api/datajoint/schemas/" class="md-nav__link">
         
   
   
@@ -5383,7 +5531,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../api/datajoint/settings/" class="md-nav__link">
+      <a href="../../api/datajoint/settings/" class="md-nav__link">
         
   
   
@@ -5411,7 +5559,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../api/datajoint/table/" class="md-nav__link">
+      <a href="../../api/datajoint/table/" class="md-nav__link">
         
   
   
@@ -5439,7 +5587,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../api/datajoint/user_tables/" class="md-nav__link">
+      <a href="../../api/datajoint/user_tables/" class="md-nav__link">
         
   
   
@@ -5521,7 +5669,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../about/" class="md-nav__link ">
+            <a href="../../about/" class="md-nav__link ">
               
   
   
@@ -5563,7 +5711,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../about/whats-new-2-2-4/" class="md-nav__link">
+      <a href="../../about/whats-new-2-2-4/" class="md-nav__link">
         
   
   
@@ -5591,7 +5739,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../about/whats-new-22/" class="md-nav__link">
+      <a href="../../about/whats-new-22/" class="md-nav__link">
         
   
   
@@ -5619,7 +5767,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../about/whats-new-21/" class="md-nav__link">
+      <a href="../../about/whats-new-21/" class="md-nav__link">
         
   
   
@@ -5647,7 +5795,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../about/whats-new-2/" class="md-nav__link">
+      <a href="../../about/whats-new-2/" class="md-nav__link">
         
   
   
@@ -5675,7 +5823,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../about/history/" class="md-nav__link">
+      <a href="../../about/history/" class="md-nav__link">
         
   
   
@@ -5703,7 +5851,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../about/versioning/" class="md-nav__link">
+      <a href="../../about/versioning/" class="md-nav__link">
         
   
   
@@ -5759,7 +5907,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../about/citation/" class="md-nav__link">
+      <a href="../../about/citation/" class="md-nav__link">
         
   
   
@@ -5787,7 +5935,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../about/publications/" class="md-nav__link">
+      <a href="../../about/publications/" class="md-nav__link">
         
   
   
@@ -5815,7 +5963,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../about/contributing/" class="md-nav__link">
+      <a href="../../about/contributing/" class="md-nav__link">
         
   
   
@@ -5870,10 +6018,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#quick-start" class="md-nav__link">
+  <a href="#why-a-formal-language-matters" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Quick Start
+        Why a formal language matters
       
     </span>
   </a>
@@ -5881,71 +6029,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#learning-paths" class="md-nav__link">
+  <a href="#grammar" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Learning Paths
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Learning Paths">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#new-to-datajoint" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        🌱 New to DataJoint
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#building-production-pipelines" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        🚀 Building Production Pipelines
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#domain-specific-applications" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        🧪 Domain-Specific Applications
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#extending-datajoint" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        🔧 Extending DataJoint
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#basics" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Basics
+        Grammar
       
     </span>
   </a>
@@ -5953,10 +6040,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#examples" class="md-nav__link">
+  <a href="#semantics" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Examples
+        Semantics
       
     </span>
   </a>
@@ -5964,10 +6051,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#domain-tutorials" class="md-nav__link">
+  <a href="#the-query-algebra" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Domain Tutorials
+        The query algebra
       
     </span>
   </a>
@@ -5975,10 +6062,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#advanced-topics" class="md-nav__link">
+  <a href="#types" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Advanced Topics
+        Types
       
     </span>
   </a>
@@ -5986,10 +6073,43 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#running-the-tutorials" class="md-nav__link">
+  <a href="#self-healing-operational-semantics" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Running the Tutorials
+        Self-healing operational semantics
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#machine-readability-and-export" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Machine-readability and export
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-schema-as-control-plane" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The schema as control plane
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#see-also" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        See also
       
     </span>
   </a>
@@ -6016,181 +6136,209 @@
   
 
 
-<h1 id="tutorials">Tutorials<a class="headerlink" href="#tutorials" title="Permanent link">&para;</a></h1>
-<p>Learn DataJoint by building real pipelines.</p>
-<p>These tutorials guide you through building data pipelines step by step. Each tutorial
-is a Jupyter notebook that you can run interactively. Start with the basics and
-progress to domain-specific and advanced topics.</p>
-<h2 id="quick-start">Quick Start<a class="headerlink" href="#quick-start" title="Permanent link">&para;</a></h2>
-<p>Install DataJoint:</p>
-<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>datajoint
-</code></pre></div>
-<p>Configure database credentials in your project (see <a href="../reference/configuration/">Configuration</a>):</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Create datajoint.json for non-sensitive settings</span>
-<span class="nb">echo</span><span class="w"> </span><span class="s1">&#39;{&quot;database&quot;: {&quot;host&quot;: &quot;localhost&quot;, &quot;port&quot;: 3306}}&#39;</span><span class="w"> </span>&gt;<span class="w"> </span>datajoint.json
-
-<span class="c1"># Create secrets directory for credentials</span>
-mkdir<span class="w"> </span>-p<span class="w"> </span>.secrets
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;root&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>.secrets/database.user
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;password&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>.secrets/database.password
-</code></pre></div>
-<p>Define and populate a simple pipeline:</p>
-<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">datajoint</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dj</span>
-
-<span class="n">schema</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">Schema</span><span class="p">(</span><span class="s1">&#39;my_pipeline&#39;</span><span class="p">)</span>
-
-<span class="nd">@schema</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">Subject</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
-<span class="s2">    subject_id : int32</span>
-<span class="s2">    ---</span>
-<span class="s2">    name : varchar(100)</span>
-<span class="s2">    date_of_birth : date</span>
-<span class="s2">    &quot;&quot;&quot;</span>
-
-<span class="nd">@schema</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">Session</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
-<span class="s2">    -&gt; Subject</span>
-<span class="s2">    session_idx : int16</span>
-<span class="s2">    ---</span>
-<span class="s2">    session_date : date</span>
-<span class="s2">    &quot;&quot;&quot;</span>
-
-<span class="nd">@schema</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">SessionAnalysis</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Computed</span><span class="p">):</span>
+<h1 id="schema-as-a-workflow-specification">Schema as a Workflow Specification<a class="headerlink" href="#schema-as-a-workflow-specification" title="Permanent link">&para;</a></h1>
+<p>The <strong>Relational Workflow Model</strong> is DataJoint's major innovation — the
+central conceptual contribution that distinguishes it from every other
+tool in its category. Workflow languages sequence computations.
+Catalogs describe data after it lands. Lakehouses optimize analytical
+reads. The Relational Workflow Model fuses all four concerns — data
+structure, dependency, computation, and integrity — into a single formal
+system in which the <strong>schema is the specification of the work</strong>.</p>
+<p>This page describes the schema as that formal language. It has a
+grammar, a typed semantics, an algebra, and a machine-readable
+introspection surface. It is not Python plumbing wrapped around a
+database — Python is the host language, but the schema itself is a
+declarative specification that the engine reads, validates, and
+executes against. Everything substantive about the pipeline — what
+entities exist, how they are derived, what types they carry, what
+depends on what — is in the schema, not scattered across application
+code, configuration files, and external orchestrator manifests.</p>
+<h2 id="why-a-formal-language-matters">Why a formal language matters<a class="headerlink" href="#why-a-formal-language-matters" title="Permanent link">&para;</a></h2>
+<p>A formal specification can be parsed, validated, exported, diffed,
+audited, and reasoned about by tools that did not write it. Workflow
+fragments expressed in general-purpose code cannot. For interoperability
+with external governance systems, for agents that must understand a
+pipeline before acting on it, for reviewers reconstructing what a
+result means months later, and for the engine itself enforcing
+consistency, the schema needs to be a declarative artifact with stable
+semantics.</p>
+<h2 id="grammar">Grammar<a class="headerlink" href="#grammar" title="Permanent link">&para;</a></h2>
+<p>A DataJoint schema is declared as a set of table definitions. Each
+table carries a tier — <code>Manual</code>, <code>Lookup</code>, <code>Imported</code>, or <code>Computed</code> —
+and a <code>definition</code> string that uses a compact DDL. The DDL distinguishes
+primary key attributes (above <code>---</code>) from secondary attributes (below
+<code>---</code>), declares attribute types, and writes foreign keys as
+<code>-&gt; ReferencedTable</code>. A faithful excerpt from a calcium-imaging
+pipeline:</p>
+<div class="highlight"><pre><span></span><code><span class="nd">@schema</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Scan</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
     <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
 <span class="s2">    -&gt; Session</span>
+<span class="s2">    scan_idx     : int32          # scan within session</span>
 <span class="s2">    ---</span>
-<span class="s2">    result : float64</span>
+<span class="s2">    depth_um     : float32        # cortical depth</span>
+<span class="s2">    nframes      : int32</span>
+<span class="s2">    &quot;&quot;&quot;</span>
+
+<span class="nd">@schema</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">AverageFrame</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Imported</span><span class="p">):</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">    -&gt; Scan</span>
+<span class="s2">    ---</span>
+<span class="s2">    avg_frame    : &lt;npy@raw&gt;      # mean fluorescence frame</span>
 <span class="s2">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">make</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
-        <span class="c1"># Compute result for this session</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="o">**</span><span class="n">key</span><span class="p">,</span> <span class="s1">&#39;result&#39;</span><span class="p">:</span> <span class="mf">42.0</span><span class="p">})</span>
+        <span class="o">...</span>
 
-<span class="c1"># Insert data</span>
-<span class="n">Subject</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="s1">&#39;subject_id&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;M001&#39;</span><span class="p">,</span> <span class="s1">&#39;date_of_birth&#39;</span><span class="p">:</span> <span class="s1">&#39;2026-01-15&#39;</span><span class="p">})</span>
-<span class="n">Session</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="s1">&#39;subject_id&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;session_idx&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;session_date&#39;</span><span class="p">:</span> <span class="s1">&#39;2026-01-06&#39;</span><span class="p">})</span>
+<span class="nd">@schema</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">SegmentationParam</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Lookup</span><span class="p">):</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">    param_set_id : int32</span>
+<span class="s2">    ---</span>
+<span class="s2">    method       : enum(&#39;cellpose&#39;, &#39;suite2p&#39;)</span>
+<span class="s2">    diameter_um  : float32</span>
+<span class="s2">    &quot;&quot;&quot;</span>
 
-<span class="c1"># Run computations</span>
-<span class="n">SessionAnalysis</span><span class="o">.</span><span class="n">populate</span><span class="p">()</span>
+<span class="nd">@schema</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Segmentation</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Computed</span><span class="p">):</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">    -&gt; AverageFrame</span>
+<span class="s2">    -&gt; SegmentationParam</span>
+<span class="s2">    ---</span>
+<span class="s2">    n_cells      : int32</span>
+<span class="s2">    masks        : &lt;object@raw&gt;   # cell masks, lazy reference</span>
+<span class="s2">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">make</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+        <span class="o">...</span>
 </code></pre></div>
-<p>Continue learning with the structured tutorials below.</p>
-<h2 id="learning-paths">Learning Paths<a class="headerlink" href="#learning-paths" title="Permanent link">&para;</a></h2>
-<p>Choose your learning path based on your goals:</p>
-<h3 id="new-to-datajoint">🌱 New to DataJoint<a class="headerlink" href="#new-to-datajoint" title="Permanent link">&para;</a></h3>
-<p><strong>Goal:</strong> Understand core concepts and build your first pipeline</p>
-<p><strong>Path:</strong></p>
+<p>Every element of this excerpt is part of the formal language. The
+tier (<code>dj.Computed</code>) is a semantic decoration: the engine will populate
+this table automatically by invoking <code>make()</code> for every upstream key.
+The arrows are typed foreign keys that inherit the referenced table's
+primary key into the current one — they are simultaneously referential
+integrity constraints and execution-order edges in the dependency DAG.
+The <code>---</code> separator partitions identifying attributes from descriptive
+ones. Type expressions (<code>float32</code>, <code>enum(...)</code>, <code>&lt;npy@raw&gt;</code>,
+<code>&lt;object@raw&gt;</code>) bind each column to a codec in the type system. The
+diamond fan-in on <code>Segmentation</code> — depending on both <code>AverageFrame</code>
+and <code>SegmentationParam</code> — declares that every average frame is to be
+segmented with every parameter set, automatically, without an external
+manifest.</p>
+<h2 id="semantics">Semantics<a class="headerlink" href="#semantics" title="Permanent link">&para;</a></h2>
+<p>A row in <code>Segmentation</code> exists if and only if three conditions hold:</p>
 <ol>
-<li><a href="basics/01-first-pipeline/">First Pipeline</a> — 30 min — Tables, queries, four core operations</li>
-<li><a href="basics/02-schema-design/">Schema Design</a> — 45 min — Primary keys, relationships, table tiers</li>
-<li><a href="basics/03-data-entry/">Data Entry</a> — 30 min — Inserting and managing data</li>
-<li><a href="basics/04-queries/">Queries</a> — 45 min — Operators, restrictions, projections</li>
-<li>Try an example: <a href="examples/university/">University Database</a> — Complete pipeline with realistic data</li>
+<li>The upstream key exists — both an <code>AverageFrame</code> row and a
+   <code>SegmentationParam</code> row, identified by the inherited primary key
+   attributes.</li>
+<li><code>Segmentation.make(key)</code> has run to completion and inserted the row.</li>
+<li>The inserted row satisfies the declared types and constraints.</li>
 </ol>
-<p><strong>Next:</strong> Read <a href="../explanation/relational-workflow-model/">Relational Workflow Model</a> to understand the conceptual foundation.</p>
-<hr />
-<h3 id="building-production-pipelines">🚀 Building Production Pipelines<a class="headerlink" href="#building-production-pipelines" title="Permanent link">&para;</a></h3>
-<p><strong>Goal:</strong> Create automated, scalable data processing workflows</p>
-<p><strong>Prerequisites:</strong> Complete basics above or have equivalent experience</p>
-<p><strong>Path:</strong></p>
-<ol>
-<li><a href="basics/05-computation/">Computation</a> — Automated processing with Imported/Computed tables</li>
-<li><a href="basics/06-object-storage/">Object Storage</a> — Handle large data (arrays, files, images)</li>
-<li><a href="advanced/distributed/">Distributed Computing</a> — Multi-worker parallel execution</li>
-<li>Practice: <a href="examples/fractal-pipeline/">Fractal Pipeline</a> or <a href="examples/blob-detection/">Blob Detection</a></li>
-</ol>
-<p><strong>Next:</strong></p>
+<p>The <code>make()</code> method is the typed function the schema declares from
+upstream key to artifact: it receives the primary key of one entity,
+fetches its inputs by query, produces the result, and inserts exactly
+one row. Each inserted row records the git hash of the <code>make()</code> source
+that produced it — code provenance is part of the schema's structural
+footprint, not an audit artifact bolted on afterward. The
+<a href="../computation-model/">Computation Model</a> page covers the full <code>make()</code>
+/ <code>populate()</code> contract, including the three-part pattern for long
+computations.</p>
+<h2 id="the-query-algebra">The query algebra<a class="headerlink" href="#the-query-algebra" title="Permanent link">&para;</a></h2>
+<p>The schema's queryable surface is a closed five-operator algebra:
+<strong>restrict (<code>&amp;</code>)</strong>, <strong>join (<code>*</code>)</strong>, <strong>project (<code>.proj()</code>)</strong>,
+<strong>aggregate (<code>.aggr()</code>)</strong>, and <strong>union (<code>+</code>)</strong>. The defining property
+is <em>algebraic closure</em>: every operator takes entity sets to entity sets
+with a well-defined primary key, so any expression is itself a valid
+operand for the next operator. Entity integrity is preserved under
+composition. This is what lets the schema be both a specification and a
+queryable object — the same algebra that retrieves data also traces
+provenance and derives the key source for the next <code>populate()</code>. See
+<a href="../query-algebra/">Query Algebra</a> and
+<a href="../semantic-matching/">Semantic Matching</a> for operator semantics and
+the lineage-based join rule that prevents accidental matches on
+coincidentally-named columns.</p>
+<h2 id="types">Types<a class="headerlink" href="#types" title="Permanent link">&para;</a></h2>
+<p>Attribute types are drawn from a three-layer system: native database
+types, portable core types (<code>int32</code>, <code>float64</code>, <code>varchar</code>, <code>uuid</code>,
+<code>json</code>, <code>bytes</code>, <code>datetime</code>), and a layer of pluggable codecs declared
+in angle brackets (<code>&lt;blob&gt;</code>, <code>&lt;npy@store&gt;</code>, <code>&lt;object@store&gt;</code>,
+<code>&lt;attach@store&gt;</code>, and third-party codecs registered via Python entry
+points). Codecs unify in-database storage and object-store references
+under one declarative syntax. Lazy references — <code>NpyRef</code>, <code>ObjectRef</code> —
+let a query return metadata (shape, dtype, path) without downloading
+payloads, so large scientific objects participate in the schema without
+forcing eager I/O. See <a href="../type-system/">Type System</a>.</p>
+<h2 id="self-healing-operational-semantics">Self-healing operational semantics<a class="headerlink" href="#self-healing-operational-semantics" title="Permanent link">&para;</a></h2>
+<p>Workflow orchestrators sequence tasks; the schema specifies states.
+<code>populate()</code> reads the schema, computes the <em>key source</em> — the set of
+upstream keys not yet present in a Computed or Imported table — and
+invokes <code>make()</code> on each missing entity until the table is in
+compliance with its declared dependencies. The engine brings the world
+into agreement with the specification, not the other way around. Runs
+are idempotent by construction: already-populated keys are skipped,
+failed jobs are retried, and parallel workers reserve keys atomically
+through the Jobs 2.0 mechanism. Deleting an upstream entity cascades
+through foreign keys, removing dependent results so the next
+<code>populate()</code> derives them afresh from valid inputs. The schema, not a
+separate scheduler manifest, is the source of execution truth.</p>
+<h2 id="machine-readability-and-export">Machine-readability and export<a class="headerlink" href="#machine-readability-and-export" title="Permanent link">&para;</a></h2>
+<p>Because the schema is a declarative artifact, it is fully
+introspectable. The list of tables, their tiers, attributes, types,
+foreign keys, indexes, and the dependency graph itself are queryable
+through the same API used for data — <code>schema.list_tables()</code>,
+<code>Table().heading</code>, <code>Table().describe()</code>, <code>dj.Diagram(schema)</code>. The
+dependency graph is a first-class object: tools can traverse it,
+restrict it, and reason about it without parsing source code.</p>
+<p>Export pathways follow directly:</p>
 <ul>
-<li><a href="../how-to/run-computations/">Run Computations</a> — populate() usage patterns</li>
-<li><a href="../how-to/distributed-computing/">Distributed Computing</a> — Cluster deployment</li>
-<li><a href="../how-to/handle-errors/">Handle Errors</a> — Job management and recovery</li>
+<li><strong>Diagrams</strong> — render to DOT or Mermaid for visual review.</li>
+<li><strong>Structured spec</strong> — emit the schema as YAML or JSON for tooling
+  that does not speak Python.</li>
+<li><strong>Lineage standards</strong> — map foreign-key edges and <code>make()</code> records
+  to W3C PROV, OpenLineage, or PROV-O for governance and catalog
+  integration. The mapping is a translation, not a reconstruction,
+  because the lineage graph is already in the schema.</li>
+<li><strong>Workflow languages</strong> — CWL, Snakemake, and Nextflow workflows are
+  expressible as schema subgraphs with the data-structure layer added;
+  conversion is mechanical.</li>
 </ul>
-<hr />
-<h3 id="domain-specific-applications">🧪 Domain-Specific Applications<a class="headerlink" href="#domain-specific-applications" title="Permanent link">&para;</a></h3>
-<p><strong>Goal:</strong> Build scientific data pipelines for your field</p>
-<p><strong>Prerequisites:</strong> Complete basics, understand computation model</p>
-<p><strong>Production Software: <a href="https://docs.datajoint.com/elements/">DataJoint Elements</a></strong></p>
-<p>Standard pipelines for neurophysiology experiments, actively used in many labs worldwide. These are not tutorials—they are production-ready modular pipelines for calcium imaging, electrophysiology, array ephys, optogenetics, and more.</p>
-<p><strong>Learning tutorials (neuroscience):</strong></p>
+<h2 id="the-schema-as-control-plane">The schema as control plane<a class="headerlink" href="#the-schema-as-control-plane" title="Permanent link">&para;</a></h2>
+<p>Networking distinguishes the data plane — packets in flight — from the
+control plane — the routing tables, ARP tables, and BGP state that
+decide where the packets go. The schema is the <strong>control plane of the
+data</strong>: a declarative, queryable, enforceable, observable description
+of what exists, what depends on what, and what must hold for the system
+to be valid. The rows are the data plane; the schema describes and
+governs them. The two share one substrate, but the control surface is
+explicit, inspectable, and standards-mappable — the property that lets
+external systems, human reviewers, and automated agents reason about
+the pipeline from a single source of truth.</p>
+<h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
 <ul>
-<li><a href="domain/calcium-imaging/calcium-imaging/">Calcium Imaging</a> — Import movies, segment cells, extract traces</li>
-<li><a href="domain/electrophysiology/electrophysiology/">Electrophysiology</a> — Import recordings, spike detection, waveforms</li>
-<li><a href="domain/allen-ccf/allen-ccf/">Allen CCF</a> — Hierarchical brain atlas ontology</li>
+<li><a href="../relational-workflow-model/">The Relational Workflow Model</a> — the
+  conceptual foundation this page formalizes</li>
+<li><a href="../computation-model/">Computation Model</a> — <code>make()</code>, <code>populate()</code>,
+  Jobs 2.0</li>
+<li><a href="../query-algebra/">Query Algebra</a> — the five operators and algebraic
+  closure</li>
+<li><a href="../type-system/">Type System</a> — core types and pluggable codecs</li>
+<li><a href="../semantic-matching/">Semantic Matching</a> — lineage-based join
+  resolution</li>
+<li><a href="../entity-integrity/">Entity Integrity</a> — primary keys and cascading
+  guarantees</li>
+<li><a href="../comparison-to-workflow-languages/">Comparison to Workflow Languages</a>
+  — how the schema relates to CWL, Snakemake, Nextflow, and Airflow</li>
+<li><a href="../../how-to/define-tables/">Define Tables</a> — declaring schema
+  elements</li>
+<li><a href="../../how-to/run-computations/">Run Computations</a> — executing the
+  schema</li>
 </ul>
-<p><strong>Complete demo pipeline:</strong></p>
-<ul>
-<li><a href="https://github.com/datajoint/lcms-demo">LC-MS Demo</a> — Liquid chromatography-mass spectrometry pipeline showcasing DataJoint best practices with PostgreSQL: sample tracking, scan acquisition, mass spectral analysis, and parameterized peak detection</li>
-</ul>
-<p><strong>General patterns:</strong></p>
-<ul>
-<li><a href="examples/hotel-reservations/">Hotel Reservations</a> — Booking systems with resource management</li>
-<li><a href="examples/languages/">Languages &amp; Proficiency</a> — Many-to-many relationships</li>
-</ul>
-<hr />
-<h3 id="extending-datajoint">🔧 Extending DataJoint<a class="headerlink" href="#extending-datajoint" title="Permanent link">&para;</a></h3>
-<p><strong>Goal:</strong> Customize DataJoint for specialized needs</p>
-<p><strong>Prerequisites:</strong> Proficient with basics and production pipelines</p>
-<p><strong>Path:</strong></p>
-<ol>
-<li><a href="advanced/custom-codecs/">Custom Codecs</a> — Create domain-specific data types</li>
-<li><a href="advanced/json-type/">JSON Data Type</a> — Semi-structured data patterns</li>
-<li><a href="advanced/sql-comparison/">SQL Comparison</a> — Understand DataJoint's query algebra</li>
-</ol>
-<p><strong>Next:</strong></p>
-<ul>
-<li><a href="../reference/specs/codec-api/">Codec API</a> — Complete codec specification</li>
-<li><a href="../how-to/create-custom-codec/">Create Custom Codec</a> — Step-by-step codec development</li>
-</ul>
-<hr />
-<h2 id="basics">Basics<a class="headerlink" href="#basics" title="Permanent link">&para;</a></h2>
-<p>Core concepts for getting started with DataJoint:</p>
-<ol>
-<li><a href="basics/01-first-pipeline/">First Pipeline</a> — Tables, queries, and the four core operations</li>
-<li><a href="basics/02-schema-design/">Schema Design</a> — Primary keys, relationships, and table tiers</li>
-<li><a href="basics/03-data-entry/">Data Entry</a> — Inserting and managing data</li>
-<li><a href="basics/04-queries/">Queries</a> — Operators and fetching results</li>
-<li><a href="basics/05-computation/">Computation</a> — Imported and Computed tables</li>
-<li><a href="basics/06-object-storage/">Object Storage</a> — Blobs, attachments, and object stores</li>
-</ol>
-<h2 id="examples">Examples<a class="headerlink" href="#examples" title="Permanent link">&para;</a></h2>
-<p>Complete pipelines demonstrating DataJoint patterns:</p>
-<ul>
-<li><a href="examples/university/">University Database</a> — Academic records with students, courses, and grades</li>
-<li><a href="examples/hotel-reservations/">Hotel Reservations</a> — Booking system with rooms, guests, and reservations</li>
-<li><a href="examples/languages/">Languages &amp; Proficiency</a> — Language skills tracking with many-to-many relationships</li>
-<li><a href="examples/fractal-pipeline/">Fractal Pipeline</a> — Iterative computation and parameter sweeps</li>
-<li><a href="examples/blob-detection/">Blob Detection</a> — Image processing with automated computation</li>
-</ul>
-<h2 id="domain-tutorials">Domain Tutorials<a class="headerlink" href="#domain-tutorials" title="Permanent link">&para;</a></h2>
-<p>Real-world scientific pipelines:</p>
-<ul>
-<li><a href="domain/calcium-imaging/calcium-imaging/">Calcium Imaging</a> — Import TIFF movies, segment cells, extract fluorescence traces</li>
-<li><a href="domain/electrophysiology/electrophysiology/">Electrophysiology</a> — Import recordings, detect spikes, extract waveforms</li>
-<li><a href="domain/electrophysiology/ephys-with-npy/">Electrophysiology with Object Storage</a> — Neural data with <code>&lt;npy@&gt;</code> lazy loading</li>
-<li><a href="domain/allen-ccf/allen-ccf/">Allen CCF</a> — Brain atlas with hierarchical region ontology</li>
-</ul>
-<h2 id="advanced-topics">Advanced Topics<a class="headerlink" href="#advanced-topics" title="Permanent link">&para;</a></h2>
-<p>Extending DataJoint for specialized use cases:</p>
-<ul>
-<li><a href="advanced/sql-comparison/">SQL Comparison</a> — DataJoint for SQL users</li>
-<li><a href="advanced/json-type/">JSON Data Type</a> — Semi-structured data in tables</li>
-<li><a href="advanced/distributed/">Distributed Computing</a> — Multi-process and cluster workflows</li>
-<li><a href="advanced/custom-codecs/">Custom Codecs</a> — Extending the type system</li>
-</ul>
-<h2 id="running-the-tutorials">Running the Tutorials<a class="headerlink" href="#running-the-tutorials" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><span class="c1"># Clone the repository</span>
-git<span class="w"> </span>clone<span class="w"> </span>https://github.com/datajoint/datajoint-docs.git
-<span class="nb">cd</span><span class="w"> </span>datajoint-docs
-
-<span class="c1"># Start the tutorial environment</span>
-docker<span class="w"> </span>compose<span class="w"> </span>up<span class="w"> </span>-d
-
-<span class="c1"># Launch Jupyter</span>
-jupyter<span class="w"> </span>lab<span class="w"> </span>src/tutorials/
-</code></pre></div>
-<p>All tutorials use a local MySQL database that resets between sessions.</p>
+<p>The Relational Workflow Model and the schema language it generates are
+formally defined in
+<a href="https://arxiv.org/abs/2602.16585">Yatsenko &amp; Nguyen, 2026</a>; the schema
+definition language and query algebra were first formalized in
+<a href="https://doi.org/10.48550/arXiv.1807.11104">Yatsenko et al., 2018</a>.</p>
 
 
 
@@ -6330,12 +6478,12 @@ jupyter<span class="w"> </span>lab<span class="w"> </span>src/tutorials/
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.sections", "navigation.indexes", "toc.follow", "announce.dismiss"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.sections", "navigation.indexes", "toc.follow", "announce.dismiss"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
       
-        <script src="../javascripts/mathjax.js"></script>
+        <script src="../../javascripts/mathjax.js"></script>
       
         <script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
       
