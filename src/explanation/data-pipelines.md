@@ -148,17 +148,9 @@ Throughout this process, the schema definition remains the single source of trut
 
 ## Comparing Approaches
 
-| Aspect | File-Based Approach | DataJoint Pipeline |
-|--------|--------------------|--------------------|
-| **Data Structure** | Implicit in filenames/folders | Explicit in schema definition |
-| **Dependencies** | Encoded in scripts | Declared through foreign keys |
-| **Provenance** | Manual tracking | Automatic through referential integrity |
-| **Reproducibility** | Requires careful discipline | Built into the model |
-| **Collaboration** | File sharing/conflicts | Concurrent database access |
-| **Queries** | Custom scripts per question | Composable query algebra |
-| **Scalability** | Limited by filesystem | Database + object-augmented storage |
+The pipeline approach requires upfront investment in schema design. Compared to a file-based approach where data structure is implicit in filenames, dependencies are encoded in scripts, and provenance must be tracked manually, a DataJoint pipeline makes all of those explicit in the schema — and pays the investment back in reproducibility, query power, and collaboration as projects scale.
 
-The pipeline approach requires upfront investment in schema design. This investment pays dividends through reduced errors, improved reproducibility, and efficient collaboration as projects scale.
+For a detailed structural comparison against file-based workflow systems (CWL, Snakemake, Nextflow) and task orchestrators (Airflow, Argo, Prefect, Dagster), and for guidance on when the two layers complement rather than substitute each other, see [Comparison to Workflow Languages](comparison-to-workflow-languages.md).
 
 ## Summary
 

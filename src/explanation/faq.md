@@ -124,36 +124,9 @@ DataJoint can be considered an **ORM specialized for scientific databases**—pu
 
 ## Is DataJoint a Workflow Management System?
 
-Not exactly. DataJoint and workflow management systems (Airflow, Prefect, Flyte, Nextflow, Snakemake) solve related but distinct problems:
+Not exactly — and the two compose rather than compete. DataJoint formalizes the data layer (schema, dependencies, computation, integrity) while workflow managers (Airflow, Argo, Prefect, Dagster, Nextflow, Snakemake, CWL) orchestrate task scheduling and resource allocation. A common production pattern is DataJoint inside an Airflow / Argo / Prefect orchestration: DataJoint owns the data and computation model; the orchestrator owns scheduling, retries, and resource policy.
 
-| Aspect | Workflow Managers | DataJoint |
-|--------|-------------------|-----------|
-| Core abstraction | Tasks and DAGs | Tables and dependencies |
-| State management | External (files, databases) | Integrated (relational database) |
-| Scheduling | Built-in schedulers | External (or manual `populate()`) |
-| Distributed execution | Built-in | Via external tools |
-| Data model | Unstructured (files, blobs) | Structured (relational schema) |
-| Query capability | Limited | Full relational algebra |
-
-**DataJoint excels at:**
-
-- Defining *what* needs to be computed based on data dependencies
-- Ensuring computations are never duplicated
-- Maintaining referential integrity across pipeline stages
-- Querying intermediate and final results
-
-**Workflow managers excel at:**
-
-- Scheduling and orchestrating job execution
-- Distributing work across clusters
-- Retry logic and failure handling
-- Resource management
-
-**They complement each other.** DataJoint formalizes data dependencies so that external schedulers can effectively manage computational tasks. A common pattern:
-
-1. DataJoint defines the pipeline structure and tracks what's computed
-2. A workflow manager (or simple cron/SLURM scripts) calls [`populate()`](computation-model.md) on a schedule
-3. DataJoint determines what work remains and executes it
+For the structural comparison — what each category offers, what each omits, the convertibility between them, and guidance on when to use which — see [Comparison to Workflow Languages](comparison-to-workflow-languages.md).
 
 ## Is DataJoint a Lakehouse?
 
