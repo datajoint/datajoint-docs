@@ -83,22 +83,13 @@ schema are the same object.
 
 ## The deliberate trade-off
 
-Decoupled architectures have legitimate advantages. File-based workflow
-systems optimize for portability — any tool that reads files works.
-Orchestrators evolve independently of the data model. Lakehouses give
-analytics teams a layer that doesn't bind them to upstream pipeline
-choices. These are the right trade-offs for many use cases.
-
-DataJoint accepts tighter coupling deliberately. The cost is framework
-commitment. The benefit is one system that knows the data structure, the
-data, the computation that produced it, the dependencies between
-computations, and the integrity constraints that govern all of it.
-Everything an analyst, an engineer, or an AI agent might ask about the
-work — *what is this, where did it come from, what depends on it, what
-must hold for it to be valid, what would change if I touched the input* —
-is answerable by query against a single formal model. For scientific
-workflows where the data and the computation cannot be cleanly separated
-without losing the science, this is the right trade-off.
+DataJoint accepts tighter coupling deliberately, in exchange for one
+formal system that spans data structure, computation, dependencies, and
+integrity. See
+[Comparison to Workflow Languages](comparison-to-workflow-languages.md)
+for the structural treatment — what file-based workflows and task
+orchestrators each offer, what each omits, and when to use them
+alongside DataJoint.
 
 ## Substrate consequences
 
