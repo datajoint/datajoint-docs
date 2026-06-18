@@ -1,52 +1,14 @@
 # The Relational Workflow Model
 
-The relational model has historically admitted two interpretations. Codd's
-mathematical foundation (1970) views tables as logical predicates and rows
-as true propositions — rigorous but abstract. Chen's Entity-Relationship
-Model (1976) views tables as entity types or relationships — intuitive for
-domain modeling, but silent on how entities come into being. The
-**Relational Workflow Model** introduces a third interpretation: tables
-represent workflow steps, rows represent workflow artifacts, and foreign
-keys prescribe execution order. The schema specifies not only *what* data
-exists but *how* it is derived — a single formal system in which data
-structure, computational dependencies, and integrity constraints are all
-queryable, enforceable, and machine-readable.
-
-This unification is what makes DataJoint a *computational substrate* rather
-than a database in the conventional sense. Each surrounding category of
-tools is good at part of the problem and silent on the rest. File-based
-workflow systems (CWL, Snakemake, Nextflow) offer flexibility but fragment
-provenance across the filesystem and configuration. Task-centric
-orchestrators (Airflow, Argo, Prefect) manage execution but remain agnostic
-to data structure. Data catalogs (DataHub, Atlan, Marquez) describe data
-after it lands. Lakehouses (Delta, Iceberg, Hudi) optimize analytical
-queries but treat computation as external. The Relational Workflow Model
-is the deliberate trade-off: framework commitment in exchange for one
-formal system that addresses all four concerns at once.
-
-## Three interpretations of the relational model
-
-| Aspect | Mathematical (Codd) | Entity-Relationship (Chen) | **Relational Workflow (DataJoint)** |
-|--------|---------------------|----------------------------|-------------------------------------|
-| **Core question** | What functional dependencies exist? | What entity types exist? | **When and how are entities created?** |
-| **Table semantics** | Logical predicate | Entity or relationship | **Workflow step** |
-| **Row semantics** | True proposition | Entity instance | **Workflow artifact** |
-| **Foreign keys** | Referential integrity | Relationship | **Execution order** |
-| **Computation** | Not addressed | Not addressed | **Declared in schema** |
-| **Provenance** | Not addressed | Not addressed | **Structural** |
-| **Implementation gap** | High | High | **None** |
-
-## Four shifts from the classical relational model
-
-- **Tables represent workflow steps**, not merely categories of records.
-- **Rows represent workflow artifacts**, each with provenance to its inputs.
-- **Foreign keys prescribe execution order**, not only referential integrity — the dependency graph *is* the pipeline DAG, enforced by the database.
-- **Computed and Imported tables carry their own `make()` methods**, declaring derivation logic in the schema itself, not in an external workflow file.
-
-The schema is therefore *active*, not passive. A row exists in a Computed
-table if and only if its upstream key exists, its `make()` has run, and its
-result satisfies the declared constraints. The schema is the executable
-specification of the work.
+The **Relational Workflow Model** interprets tables as workflow steps,
+rows as workflow artifacts, and foreign keys as execution order. The
+schema specifies not only *what* data exists but *how* it is derived —
+a single formal system in which data structure, computational
+dependencies, and integrity constraints are all queryable, enforceable,
+and machine-readable. This unification is what makes DataJoint a
+*computational substrate* rather than a database in the conventional
+sense. The worked example below shows the model in action; its place in
+the lineage of relational modeling follows.
 
 ## A worked example
 
@@ -86,6 +48,43 @@ extracts per-ROI time-series traces from each segmentation. No external
 scheduler is consulted: the foreign-key graph dictates what may run, what
 must run first, and what already exists. The pipeline DAG and the database
 schema are the same object.
+
+## Three interpretations of the relational model
+
+The relational model has historically admitted two interpretations. Codd's
+mathematical foundation (1970) views tables as logical predicates and rows
+as true propositions — rigorous but abstract. Chen's Entity-Relationship
+Model (1976) views tables as entity types or relationships — intuitive
+for domain modeling, but silent on how entities come into being. The
+Relational Workflow Model adds a third, the one the worked example
+above illustrates.
+
+| Aspect | Mathematical (Codd) | Entity-Relationship (Chen) | **Relational Workflow (DataJoint)** |
+|--------|---------------------|----------------------------|-------------------------------------|
+| **Core question** | What functional dependencies exist? | What entity types exist? | **When and how are entities created?** |
+| **Table semantics** | Logical predicate | Entity or relationship | **Workflow step** |
+| **Row semantics** | True proposition | Entity instance | **Workflow artifact** |
+| **Foreign keys** | Referential integrity | Relationship | **Execution order** |
+| **Computation** | Not addressed | Not addressed | **Declared in schema** |
+| **Provenance** | Not addressed | Not addressed | **Structural** |
+| **Implementation gap** | High | High | **None** |
+
+## A semantic interpretation, not a departure
+
+The Relational Workflow Model layers a semantic interpretation on the
+classical relational model; it does not replace any of it. Tables, rows,
+primary and foreign keys, normalization, and the query algebra keep
+their classical meaning. The model adds four readings on top:
+
+- Tables also represent **workflow steps**.
+- Rows also represent **workflow artifacts**, carrying provenance to their inputs.
+- Foreign keys also prescribe **execution order** — the dependency graph *is* the pipeline DAG, enforced by the database.
+- **Computed and Imported tables carry their own `make()` methods**, declaring derivation logic in the schema itself rather than in an external workflow file.
+
+Under this interpretation the schema becomes *active*. A row exists in a
+Computed table if and only if its upstream key exists, its `make()` has
+run, and its result satisfies the declared constraints. The schema is the
+executable specification of the work.
 
 ## The deliberate trade-off
 
@@ -197,10 +196,14 @@ proper entity set with clear identity — distinguishes DataJoint's algebra
 from SQL, where query results lack both a well-defined primary key and a
 clear entity type.
 
-## From transactions to transformations
+## Two readings of the same schema
 
-| Traditional view | Workflow view |
-|------------------|---------------|
+The classical relational reading and the workflow reading hold
+simultaneously — they are interpretive lenses on the same schema, not
+incompatible designs.
+
+| Classical reading | Workflow reading |
+|-------------------|------------------|
 | Tables store data | Tables represent workflow steps |
 | Rows are records | Rows are workflow artifacts |
 | Foreign keys enforce consistency | Foreign keys prescribe execution order |
