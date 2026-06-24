@@ -425,10 +425,20 @@ print(dj.config)
 
 # Check specific setting
 print(dj.config['database.user'])
-
-# See where value came from
-print(dj.config._config_sources)  # Not a real attribute, just conceptual
 ```
+
+**Find which files were picked up:**
+
+```python
+from datajoint.settings import find_config_file, find_secrets_dir
+
+config_path = find_config_file()
+print("config file:", config_path)
+print("secrets dir:", find_secrets_dir(config_path))
+```
+
+If `find_config_file()` returns `None`, no `datajoint.json` was found via the
+upward search — values come from environment variables and defaults only.
 
 ### Permission Errors
 
@@ -455,10 +465,25 @@ conn = dj.conn(reset=True)
 
 ### Accidentally Committed Secrets
 
-**Immediate actions:**
+!!! warning "Assume the secret is compromised"
+    Once a credential reaches a remote branch, treat it as public. Anyone with
+    repository access — and any service that mirrors or caches commits — may
+    already have it. Rewriting git history does **not** un-leak the secret;
+    rotation does.
 
-1. **Rotate credentials immediately**
-2. Remove from git history:
+**Step 1 — Rotate every exposed credential first.** Do this before touching
+git history; until rotation completes, the leaked secret is still valid.
+
+- Database users (`database.user` / `database.password`): change the password
+  on the server, then update your local `.secrets/datajoint.json`.
+- Object-store credentials (`stores.<name>.access_key` / `secret_key`, or the
+  equivalent in your cloud provider): issue new keys and revoke the old ones.
+- Any third-party tokens that appeared in the same file.
+- Audit recent access logs (DB connection log, S3 access log) for unfamiliar
+  IPs or unexpected activity during the exposure window.
+
+**Step 2 — Remove from git history.** After rotation, scrub the file so old
+clones don't leak it further:
 
 ```bash
 # Remove file from history
@@ -470,7 +495,7 @@ git filter-branch --force --index-filter \
 git push origin --force --all
 ```
 
-3. **Verify removal:**
+**Step 3 — Verify removal:**
 
 ```bash
 git log --all --full-history -- .secrets/datajoint.json
