@@ -1,6 +1,6 @@
 # DataJoint Documentation
 
-Official documentation for [DataJoint](https://github.com/datajoint/datajoint-python) 2.0 — an open-source framework for building scientific data pipelines.
+Official documentation for [DataJoint](https://github.com/datajoint/datajoint-python) 2.0+ — an open-source framework for building scientific data pipelines.
 
 **📖 Live site:** https://docs.datajoint.com
 

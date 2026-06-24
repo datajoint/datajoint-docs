@@ -12,7 +12,7 @@ Development and production environments have different requirements:
 | Naming | Ad-hoc schema names | Consistent project prefixes |
 | Configuration | Local settings | Environment-based |
 
-DataJoint 2.0 provides settings to enforce production discipline.
+DataJoint 2.0+ provides settings to enforce production discipline.
 
 ## Prevent Automatic Table Creation
 

@@ -2,7 +2,7 @@
 
 Install DataJoint Python and set up your environment.
 
-## Install DataJoint 2.0
+## Install DataJoint 2.0+
 
 ```bash
 pip install datajoint

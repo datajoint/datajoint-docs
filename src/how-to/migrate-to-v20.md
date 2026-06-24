@@ -1,6 +1,6 @@
 # Migrate to DataJoint 2.0
 
-Upgrade existing pipelines from legacy DataJoint (pre-2.0) to DataJoint 2.0.
+Upgrade existing pipelines from legacy DataJoint (pre-2.0) to DataJoint 2.0+.
 
 > **This guide is optimized for AI coding assistants.** Point your AI agent at this
 > document and it will execute the migration with your oversight.
@@ -13,14 +13,14 @@ Upgrade existing pipelines from legacy DataJoint (pre-2.0) to DataJoint 2.0.
 
 ### System Requirements
 
-| Component | Legacy (pre-2.0) | DataJoint 2.0 |
+| Component | Legacy (pre-2.0) | DataJoint 2.0+ |
 |-----------|-----------------|---------------|
 | **Python** | 3.8+ | **3.10+** |
 | **MySQL** | 5.7+ | **8.0+** |
 | **Character encoding** | (varies) | **UTF-8 (utf8mb4)** |
 | **Collation** | (varies) | **utf8mb4_bin** |
 
-**Action required:** Upgrade your Python environment and MySQL server before installing DataJoint 2.0.
+**Action required:** Upgrade your Python environment and MySQL server before installing DataJoint 2.0+.
 
 **Character encoding and collation:** DataJoint 2.0 standardizes on UTF-8 encoding with binary collation (case-sensitive comparisons). This is configured **server-wide** and is assumed by DataJoint:
 
