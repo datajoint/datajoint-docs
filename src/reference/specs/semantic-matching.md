@@ -65,7 +65,10 @@ class Student(dj.Manual):
 
 ### Rebuilding Lineage for Existing Schemas
 
-If you have existing schemas created before DataJoint 2.0, rebuild their lineage tables:
+!!! version-added "New in 2.3"
+    `@schema` decoration now performs an **in-memory check** for missing `~lineage` rows when a table is already declared. The check inspects the heading's loaded lineage values (no extra DB queries on healthy schemas); if any primary-key attribute has `lineage=None`, the table's rows are refreshed automatically from the current foreign-key definition. This auto-heals the most common failure mode (partial declares, upgrades that left rows missing) without user action. The explicit `rebuild_lineage()` utility remains the path for cases the in-memory check cannot reach (see below).
+
+If your schema has any of the limitations below — or you want to apply a clean reset — rebuild explicitly:
 
 ```python
 import datajoint as dj
@@ -73,13 +76,19 @@ import datajoint as dj
 # Connect and get your schema
 schema = dj.Schema('my_database')
 
-# Rebuild lineage (do this once per schema)
+# Rebuild lineage
 schema.rebuild_lineage()
 
 # Restart Python kernel to pick up changes
 ```
 
 **Important**: If your schema references tables in other schemas, rebuild those upstream schemas first.
+
+**When you still need to call this explicitly:**
+
+- **Stale-but-non-None rows.** The 2.3 in-memory check fires only on missing rows (`lineage=None`). DataJoint versions older than 2.3 that wrote lineage strings in a different format leave non-None rows that look healthy to the check but no longer match what current code computes. Symptom: a join error of the form `different lineages (a.b.c vs a.b.c)` (values look right but compare unequal). Fix: `rebuild_lineage()`.
+- **Production mode (`create_tables=False`).** The auto-heal is suppressed when the schema disallows table creation, to keep production deployments read-only. Migrations to production should rebuild lineage before flipping the flag.
+- **Cross-schema upstream changes.** When an upstream schema's lineage was rebuilt, downstream schemas don't automatically pick up the new strings until they're re-decorated. Running `rebuild_lineage()` on the downstream schema propagates the change.
 
 ---
 

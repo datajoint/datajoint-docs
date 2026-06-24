@@ -158,6 +158,45 @@ This means you're trying to join tables that have a namesake attribute (`id`) wi
        """
    ```
 
+## The `~lineage` table
+
+Lineage is stored per-schema in a hidden table called `~lineage`. DataJoint writes one row per `(table, attribute)` pair recording the lineage string for that attribute, and consults `~lineage` whenever it needs to compare lineages across query expressions.
+
+`~lineage` is maintained as part of normal table declaration:
+
+- Declaring a new table inserts its lineage rows as the last step of `Table.declare()`.
+- When `@schema(MyTable)` runs on an already-declared table, DataJoint checks the heading's loaded lineage values for the symptom of missing rows — any primary-key attribute with `lineage=None`. The check is in memory, against values already loaded when the heading was constructed, so a healthy schema pays zero additional database queries on re-decoration. If the check fires, DataJoint refreshes the table's `~lineage` rows from the current foreign-key definition. *(New in DataJoint 2.3.)*
+
+This automatic check addresses the load-bearing failure mode: a partial declare or an upgrade that left some rows missing entirely. **It does not auto-heal stale-but-non-None entries** (e.g. older DataJoint versions that wrote lineage strings in a slightly different format). Those still require a manual rebuild — see below.
+
+### Manual lineage rebuild
+
+When the in-memory check is not enough — stale rows that exist but carry the wrong value, schemas whose tables have not been re-decorated under DataJoint 2.3+, or schemas in `create_tables=False` production mode — call `schema.rebuild_lineage()` or the equivalent migration helper:
+
+```python
+import datajoint as dj
+from datajoint import migrate
+
+schema = dj.Schema("my_schema")
+
+# Option 1: instance method
+schema.rebuild_lineage()
+
+# Option 2: migration helper with dry-run preview
+migrate.rebuild_lineage(schema, dry_run=True)   # show what would change
+migrate.rebuild_lineage(schema, dry_run=False)  # apply
+```
+
+This is also the recovery path when a join fails with:
+
+```
+DataJointError: Cannot join on attribute `X`: lineage missing on one side
+(None vs ...). This usually indicates a stale `~lineage` entry from an older
+DataJoint version or an incomplete declare. Run `schema.rebuild_lineage()` ...
+```
+
+`rebuild_lineage()` is safe to run on a healthy schema — it's idempotent and produces the same end state regardless of starting condition.
+
 ## Examples
 
 ### Valid Join (Shared Lineage)
