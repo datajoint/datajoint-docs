@@ -6,7 +6,7 @@ This document specifies three interlocking features that together close DataJoin
 2. **`self.upstream`** — a property on `AutoPopulate` tables that exposes the trace for the current `key` during `make()` execution.
 3. **`dj.config["strict_provenance"]`** — a runtime flag that checks the upstream-only convention inside `make()` (read only from `self.upstream`, write only to `self` and its Parts).
 
-The three are designed as a unit. `trace` is the underlying graph operation; `self.upstream` is the ergonomic surface for `make()`; `strict_provenance` is the enforcement layer that raises the convention from documentation to a checked default — a best-effort runtime guardrail, with comprehensive checking delegated to code inspection (see §3).
+The three are designed as a unit. `trace` is the underlying graph operation; `self.upstream` is the ergonomic surface for `make()`; `strict_provenance` is the enforcement layer that raises the convention from documentation to a checked default — a best-effort runtime guardrail in the open-source core, with comprehensive checking delegated to code inspection in the DataJoint platform's code-deployment CI/CD (see §3).
 
 !!! version-added "New in DataJoint 2.3"
     Introduced together. Existing code that does not use these features is unaffected; `strict_provenance` defaults to `False`.
@@ -255,7 +255,7 @@ They do **not** constitute a security or correctness boundary:
 - Raw SQL (`connection.query(...)`), a second client or process, a database console, a BI tool, or a non-Python binding all bypass the checks entirely.
 - Within the Python client, the read check currently allows a direct read of a *declared* ancestor just as it allows reads through `self.upstream` — it flags reads of tables *outside* the allowed set, not the channel used to reach one inside it (see the note under [Read enforcement](#read-enforcement)).
 
-Comprehensive enforcement — verifying that a `make()` reads only from its declared ancestors and writes only to its target, across every access path — is fundamentally a **code-inspection problem, not a runtime-interception one.** The intended direction is platform-side inspection of `make()` source: static checks where they are sound, and agentic review for the dynamic cases static analysis cannot decide, performed at authoring / CI / deploy time. The runtime guardrail complements that by catching accidental drift during development; it does not replace it. See [What is not in this specification](#what-is-not-in-this-specification).
+Comprehensive enforcement — verifying that a `make()` reads only from its declared ancestors and writes only to its target, across every access path — is fundamentally a **code-inspection problem, not a runtime-interception one.** That inspection is performed by the **DataJoint platform's code-deployment CI/CD process — not by the open-source core framework**. When pipeline code is deployed through the platform, its `make()` source is inspected there: static checks where they are sound, and agentic review for the dynamic cases static analysis cannot decide. The open-source `strict_provenance` guardrail complements that by catching accidental drift during local development; it does not replace it, and the core framework does not attempt code inspection itself. See [What is not in this specification](#what-is-not-in-this-specification).
 
 ### Read enforcement
 
@@ -404,7 +404,7 @@ Properties the trinity is designed to uphold in strict mode:
 - Every column in `Spectrum.fetch1(key)` should be derived from data accessible via `Diagram.trace(Spectrum & key)` — no undeclared dependencies.
 - Every row in `Spectrum` and `Spectrum.Bin` was inserted by a `make()` whose `key` matched — no misattributed rows.
 
-The runtime guardrail makes accidental violations of the first property visible during development, and checks the second (key consistency) on the DataJoint insert path. Neither is an airtight guarantee against out-of-band access (see [Enforcement model and its limits](#enforcement-model-and-its-limits)). Downstream provenance tooling — row-level lineage views, CDC publishers, audit logs — should treat these as strong conventions backed by best-effort runtime checks and, on the platform, by code inspection — not as invariants that hold regardless of how the data was written.
+The runtime guardrail makes accidental violations of the first property visible during development, and checks the second (key consistency) on the DataJoint insert path. Neither is an airtight guarantee against out-of-band access (see [Enforcement model and its limits](#enforcement-model-and-its-limits)). Downstream provenance tooling — row-level lineage views, CDC publishers, audit logs — should treat these as strong conventions backed by the core framework's best-effort runtime checks and, where the pipeline is deployed through the DataJoint platform, by the code inspection its deployment CI/CD performs — not as invariants that hold regardless of how the data was written.
 
 ## Migration path
 
@@ -414,13 +414,13 @@ Teams adopt the trinity incrementally:
 2. **Start using `self.upstream` in new `make()` implementations.** Reads become ergonomic; nothing else changes.
 3. **Migrate existing `make()` implementations** as opportunity allows. Replace `(Upstream & key).fetch(...)` with `self.upstream[Upstream].fetch(...)`. No semantic difference at this stage.
 4. **Enable `strict_provenance=True` in staging.** Identify and fix any undeclared dependencies the runtime check surfaces.
-5. **Enable in production.** The runtime guardrail is active; pair it with platform-side code inspection for coverage beyond the Python client.
+5. **Enable in production.** The runtime guardrail is active; when pipeline code is deployed through the DataJoint platform, its code-deployment CI/CD adds code inspection for coverage beyond the Python client.
 
 Steps (3) and (4) are where most of the work lies — the runtime check is the mechanism that surfaces the actual undeclared dependencies in a pipeline. Teams with clean conventions will find few violations; teams with debugging fetches scattered through `make()` will find more. Either way, the cost is bounded by the size of the existing `make()` surface.
 
 ## What is not in this specification
 
-- **Comprehensive enforcement via code inspection.** The runtime check is the only enforcement mechanism *shipping in 2.3*, and it is a best-effort client-side guardrail (see [Enforcement model and its limits](#enforcement-model-and-its-limits)). Turning provenance into a property checked across all access paths is a code-inspection problem — static analysis where sound, and platform-side agentic review for the dynamic cases — performed at authoring / CI / deploy time. This is the intended direction but is out of scope for the 2.3 runtime feature.
+- **Comprehensive enforcement via code inspection.** The runtime check is the only enforcement mechanism in the open-source core framework, and it is a best-effort client-side guardrail (see [Enforcement model and its limits](#enforcement-model-and-its-limits)). Turning provenance into a property checked across all access paths is a code-inspection problem — static analysis where sound, and agentic review for the dynamic cases — and is performed by the **DataJoint platform's code-deployment CI/CD process**, not the open-source framework. It is out of scope for the open-source `strict_provenance` feature, which does not attempt code inspection.
 - **Server-side enforcement.** Scoping database grants, per-`make` views, or row-level security to `{ancestors, self, self.Parts}` for the duration of a `make()` would be a true boundary rather than a guardrail. It is a larger, separate effort and is not part of 2.3.
 - **Flipping the default to `True`**. Whether (and when) `strict_provenance` becomes the default is a separate decision for a future major release.
 - **Row-level provenance metadata in storage**. The trinity provides the *graph operation* and the *runtime check*; persisting per-row provenance projections (the dj-delta-style silver-layer features) is a downstream consumer concern, tracked separately.
