@@ -109,7 +109,7 @@ class FloatArrayCodec(dj.Codec):
     name = "float_array"
 
     def get_dtype(self, is_store: bool) -> str:
-        return "longblob" if not is_store else "<hash@>"
+        return "longblob" if not is_store else "<hash>"
 
     def encode(self, value, *, key=None, store_name=None) -> bytes:
         return np.asarray(value, dtype=np.float64).tobytes()
