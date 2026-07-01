@@ -68,6 +68,8 @@ Both `default` and `full` produce explicit `ALTER` statements. `default` is **no
 
 The underlying ALTER is metadata-only, instant, and idempotent at the PostgreSQL layer (re-applying the same mode is a no-op at the storage layer).
 
+The operation is **not atomic**: tables are altered one at a time, so if execution raises on table _N_ of _M_, the first _N_−1 ALTERs have already committed and the exception propagates without returning a summary — re-run to converge (each ALTER is idempotent).
+
 ## Design rationale
 
 Three structural decisions distinguish `dj.deploy` from alternatives that were considered and rejected. Each is informed by the failure modes the alternative would have produced.
