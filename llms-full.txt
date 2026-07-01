@@ -1,6 +1,6 @@
 # DataJoint Documentation (Full)
 
-Generated: 2026-07-01 15:49:45 UTC
+Generated: 2026-07-01 15:52:42 UTC
 Commit: unknown
 Branch: unknown
 
@@ -6929,7 +6929,7 @@ dj.U('species') & Subject
 
 ## Fetching Data
 
-DataJoint 2.0 provides explicit methods for different output formats.
+DataJoint 2.0+ provides explicit methods for different output formats.
 
 ### `to_dicts()` — List of Dictionaries
 
@@ -15272,7 +15272,7 @@ Development and production environments have different requirements:
 | Naming | Ad-hoc schema names | Consistent project prefixes |
 | Configuration | Local settings | Environment-based |
 
-DataJoint 2.0 provides settings to enforce production discipline.
+DataJoint 2.0+ provides settings to enforce production discipline.
 
 ## Prevent Automatic Table Creation
 
@@ -16774,7 +16774,7 @@ if Subject.validate(rows):
 
 Install DataJoint Python and set up your environment.
 
-## Install DataJoint 2.0
+## Install DataJoint 2.0+
 
 ```bash
 pip install datajoint
@@ -17916,10 +17916,20 @@ print(dj.config)
 
 # Check specific setting
 print(dj.config['database.user'])
-
-# See where value came from
-print(dj.config._config_sources)  # Not a real attribute, just conceptual
 ```
+
+**Find which files were picked up:**
+
+```python
+from datajoint.settings import find_config_file, find_secrets_dir
+
+config_path = find_config_file()
+print("config file:", config_path)
+print("secrets dir:", find_secrets_dir(config_path))
+```
+
+If `find_config_file()` returns `None`, no `datajoint.json` was found via the
+upward search — values come from environment variables and defaults only.
 
 ### Permission Errors
 
@@ -17946,10 +17956,25 @@ conn = dj.conn(reset=True)
 
 ### Accidentally Committed Secrets
 
-**Immediate actions:**
+!!! warning "Assume the secret is compromised"
+    Once a credential reaches a remote branch, treat it as public. Anyone with
+    repository access — and any service that mirrors or caches commits — may
+    already have it. Rewriting git history does **not** un-leak the secret;
+    rotation does.
 
-1. **Rotate credentials immediately**
-2. Remove from git history:
+**Step 1 — Rotate every exposed credential first.** Do this before touching
+git history; until rotation completes, the leaked secret is still valid.
+
+- Database users (`database.user` / `database.password`): change the password
+  on the server, then update your local `.secrets/datajoint.json`.
+- Object-store credentials (`stores.<name>.access_key` / `secret_key`, or the
+  equivalent in your cloud provider): issue new keys and revoke the old ones.
+- Any third-party tokens that appeared in the same file.
+- Audit recent access logs (DB connection log, S3 access log) for unfamiliar
+  IPs or unexpected activity during the exposure window.
+
+**Step 2 — Remove from git history.** After rotation, scrub the file so old
+clones don't leak it further:
 
 ```bash
 # Remove file from history
@@ -17961,7 +17986,7 @@ git filter-branch --force --index-filter \
 git push origin --force --all
 ```
 
-3. **Verify removal:**
+**Step 3 — Verify removal:**
 
 ```bash
 git log --all --full-history -- .secrets/datajoint.json
@@ -18246,7 +18271,7 @@ schema.drop(prompt=False)
 
 # Migrate to DataJoint 2.0
 
-Upgrade existing pipelines from legacy DataJoint (pre-2.0) to DataJoint 2.0.
+Upgrade existing pipelines from legacy DataJoint (pre-2.0) to DataJoint 2.0+.
 
 > **This guide is optimized for AI coding assistants.** Point your AI agent at this
 > document and it will execute the migration with your oversight.
@@ -18259,14 +18284,14 @@ Upgrade existing pipelines from legacy DataJoint (pre-2.0) to DataJoint 2.0.
 
 ### System Requirements
 
-| Component | Legacy (pre-2.0) | DataJoint 2.0 |
+| Component | Legacy (pre-2.0) | DataJoint 2.0+ |
 |-----------|-----------------|---------------|
 | **Python** | 3.8+ | **3.10+** |
 | **MySQL** | 5.7+ | **8.0+** |
 | **Character encoding** | (varies) | **UTF-8 (utf8mb4)** |
 | **Collation** | (varies) | **utf8mb4_bin** |
 
-**Action required:** Upgrade your Python environment and MySQL server before installing DataJoint 2.0.
+**Action required:** Upgrade your Python environment and MySQL server before installing DataJoint 2.0+.
 
 **Character encoding and collation:** DataJoint 2.0 standardizes on UTF-8 encoding with binary collation (case-sensitive comparisons). This is configured **server-wide** and is assumed by DataJoint:
 
@@ -29610,7 +29635,7 @@ If visualization dependencies are missing, `dj.Diagram` displays a warning and p
 ---
 ## File: reference/specs/fetch-api.md
 
-# DataJoint 2.0 Fetch API Specification
+# DataJoint 2.0+ Fetch API Specification
 
 ## Overview
 
@@ -31134,7 +31159,7 @@ DataJoint's Object-Augmented Schema (OAS) integrates relational tables with obje
 
 ### Storage Models
 
-DataJoint 2.0 supports three storage models, all sharing the same store configuration:
+DataJoint 2.0+ supports three storage models, all sharing the same store configuration:
 
 | Model | Data Types | Path Structure | Integration | Use Case |
 |-------|------------|----------------|-------------|----------|

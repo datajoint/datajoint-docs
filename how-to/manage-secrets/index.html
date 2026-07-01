@@ -7303,10 +7303,16 @@ chmod<span class="w"> </span><span class="m">600</span><span class="w"> </span>.
 
 <span class="c1"># Check specific setting</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;database.user&#39;</span><span class="p">])</span>
-
-<span class="c1"># See where value came from</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">_config_sources</span><span class="p">)</span>  <span class="c1"># Not a real attribute, just conceptual</span>
 </code></pre></div>
+<p><strong>Find which files were picked up:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">datajoint.settings</span><span class="w"> </span><span class="kn">import</span> <span class="n">find_config_file</span><span class="p">,</span> <span class="n">find_secrets_dir</span>
+
+<span class="n">config_path</span> <span class="o">=</span> <span class="n">find_config_file</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;config file:&quot;</span><span class="p">,</span> <span class="n">config_path</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;secrets dir:&quot;</span><span class="p">,</span> <span class="n">find_secrets_dir</span><span class="p">(</span><span class="n">config_path</span><span class="p">))</span>
+</code></pre></div>
+<p>If <code>find_config_file()</code> returns <code>None</code>, no <code>datajoint.json</code> was found via the
+upward search — values come from environment variables and defaults only.</p>
 <h3 id="permission-errors">Permission Errors<a class="headerlink" href="#permission-errors" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># Fix .secrets/ permissions</span>
 chmod<span class="w"> </span><span class="m">700</span><span class="w"> </span>.secrets
@@ -7325,11 +7331,26 @@ chmod<span class="w"> </span><span class="m">600</span><span class="w"> </span>.
 <span class="n">conn</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">conn</span><span class="p">(</span><span class="n">reset</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </code></pre></div>
 <h3 id="accidentally-committed-secrets">Accidentally Committed Secrets<a class="headerlink" href="#accidentally-committed-secrets" title="Permanent link">&para;</a></h3>
-<p><strong>Immediate actions:</strong></p>
-<ol>
-<li><strong>Rotate credentials immediately</strong></li>
-<li>Remove from git history:</li>
-</ol>
+<div class="admonition warning">
+<p class="admonition-title">Assume the secret is compromised</p>
+<p>Once a credential reaches a remote branch, treat it as public. Anyone with
+repository access — and any service that mirrors or caches commits — may
+already have it. Rewriting git history does <strong>not</strong> un-leak the secret;
+rotation does.</p>
+</div>
+<p><strong>Step 1 — Rotate every exposed credential first.</strong> Do this before touching
+git history; until rotation completes, the leaked secret is still valid.</p>
+<ul>
+<li>Database users (<code>database.user</code> / <code>database.password</code>): change the password
+  on the server, then update your local <code>.secrets/datajoint.json</code>.</li>
+<li>Object-store credentials (<code>stores.&lt;name&gt;.access_key</code> / <code>secret_key</code>, or the
+  equivalent in your cloud provider): issue new keys and revoke the old ones.</li>
+<li>Any third-party tokens that appeared in the same file.</li>
+<li>Audit recent access logs (DB connection log, S3 access log) for unfamiliar
+  IPs or unexpected activity during the exposure window.</li>
+</ul>
+<p><strong>Step 2 — Remove from git history.</strong> After rotation, scrub the file so old
+clones don't leak it further:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Remove file from history</span>
 git<span class="w"> </span>filter-branch<span class="w"> </span>--force<span class="w"> </span>--index-filter<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span><span class="s2">&quot;git rm --cached --ignore-unmatch .secrets/datajoint.json&quot;</span><span class="w"> </span><span class="se">\</span>
@@ -7338,9 +7359,7 @@ git<span class="w"> </span>filter-branch<span class="w"> </span>--force<span cla
 <span class="c1"># Force push (coordinate with team!)</span>
 git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </span>--force<span class="w"> </span>--all
 </code></pre></div>
-<ol>
-<li><strong>Verify removal:</strong></li>
-</ol>
+<p><strong>Step 3 — Verify removal:</strong></p>
 <div class="highlight"><pre><span></span><code>git<span class="w"> </span>log<span class="w"> </span>--all<span class="w"> </span>--full-history<span class="w"> </span>--<span class="w"> </span>.secrets/datajoint.json
 </code></pre></div>
 <h2 id="configuration-templates">Configuration Templates<a class="headerlink" href="#configuration-templates" title="Permanent link">&para;</a></h2>
