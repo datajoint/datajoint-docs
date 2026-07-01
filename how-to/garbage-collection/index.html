@@ -6410,6 +6410,16 @@ remain. This is by design:</p>
   operations</li>
 </ul>
 <p>Run garbage collection periodically to reclaim storage space.</p>
+<div class="admonition note">
+<p class="admonition-title">Concurrency semantics</p>
+<p>Garbage collection is single-pass and best-effort: it scans references,
+then deletes objects the scan did not see referenced. If a row is inserted
+between the scan and the delete, the object it references can be deleted
+even though it is now in use — leaving the new row with a dangling
+reference. A future release will add quarantine-based serialization to
+close this window. Until then, prefer running GC during quiet periods, and
+treat any single GC pass as best-effort rather than transactionally safe.</p>
+</div>
 <h2 id="basic-usage">Basic Usage<a class="headerlink" href="#basic-usage" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">datajoint</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dj</span>
 
