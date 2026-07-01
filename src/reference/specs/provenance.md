@@ -4,9 +4,9 @@ This document specifies three interlocking features that together close DataJoin
 
 1. **`Diagram.trace(table_expr)`** — the upstream mirror of `Diagram.cascade()`; walks the FK graph from a restricted table expression to every ancestor.
 2. **`self.upstream`** — a property on `AutoPopulate` tables that exposes the trace for the current `key` during `make()` execution.
-3. **`dj.config["strict_provenance"]`** — a runtime flag that enforces the upstream-only convention inside `make()` (read only from `self.upstream`, write only to `self` and its Parts).
+3. **`dj.config["strict_provenance"]`** — a runtime flag that checks the upstream-only convention inside `make()` (read only from `self.upstream`, write only to `self` and its Parts).
 
-The three are designed as a unit. `trace` is the underlying graph operation; `self.upstream` is the ergonomic surface for `make()`; `strict_provenance` is the enforcement layer that turns the convention into a runtime guarantee.
+The three are designed as a unit. `trace` is the underlying graph operation; `self.upstream` is the ergonomic surface for `make()`; `strict_provenance` is the enforcement layer that raises the convention from documentation to a checked default — a best-effort runtime guardrail, with comprehensive checking delegated to code inspection (see §3).
 
 !!! version-added "New in DataJoint 2.3"
     Introduced together. Existing code that does not use these features is unaffected; `strict_provenance` defaults to `False`.
@@ -15,15 +15,15 @@ For the related downstream operation, see [Cascade Specification](cascade.md). F
 
 ## Why this exists
 
-DataJoint's provenance guarantee — that every computed row can be traced back to the exact upstream rows it was derived from — rests on the convention that `make(self, key)` only reads from declared upstream dependencies. Today the framework **defines** this convention but does not **enforce** it: a `make()` can `fetch()` from any table, making the undeclared dependency invisible to the FK graph and breaking the provenance claim downstream.
+DataJoint's provenance guarantee — that every computed row can be traced back to the exact upstream rows it was derived from — rests on the convention that `make(self, key)` only reads from declared upstream dependencies. Today the framework **defines** this convention but does not **check** it: a `make()` can `fetch()` from any table, making the undeclared dependency invisible to the FK graph and breaking the provenance claim downstream.
 
 Closing the loop requires three pieces working together:
 
 1. A way to **construct** the upstream view as a query object: `Diagram.trace()`.
 2. A way to **expose** that view ergonomically inside `make()` so users naturally do the right thing: `self.upstream`.
-3. A way to **enforce** that nothing else is read or written: `strict_provenance`.
+3. A way to **check** that nothing else is read or written: `strict_provenance`.
 
-Without (1), downstream tools that need row-level provenance (data-lineage viewers, CDC publishers, audit logs) have to reimplement the FK walk themselves — repeatedly, with subtly different bugs. Without (2), even users who follow the convention write awkward boilerplate (`(Upstream & key).fetch1(...)` everywhere). Without (3), the convention can be silently violated and downstream provenance claims become best-effort rather than guarantees.
+Without (1), downstream tools that need row-level provenance (data-lineage viewers, CDC publishers, audit logs) have to reimplement the FK walk themselves — repeatedly, with subtly different bugs. Without (2), even users who follow the convention write awkward boilerplate (`(Upstream & key).fetch1(...)` everywhere). Without (3), the convention can be silently violated and the violation stays invisible until it corrupts a downstream provenance claim.
 
 ## Concepts
 
@@ -37,7 +37,7 @@ Without (1), downstream tools that need row-level provenance (data-lineage viewe
 | `Diagram.restrict(expr)` | downstream | AND — must satisfy all FK paths | What satisfies all of these conditions? |
 | `Diagram.trace(expr)` | **upstream** | **OR** — any FK path contributes | What contributed to these rows? |
 
-`trace` uses OR convergence because an ancestor entity contributes to a child row if it appears via *any* FK path. (The AND-flavored upstream analog — "ancestors that contributed via *every* path" — is not a useful query and is not provided.)
+`trace` uses OR convergence because an ancestor entity contributes to a child row if it appears via *any* FK path. (An AND-flavored upstream analog — "ancestors that contributed via *every* path" — is not provided in 2.3.)
 
 ### Reusing the propagation primitives
 
@@ -55,11 +55,11 @@ Read from self's declared upstream dependencies; write to self (and its Parts).
 
 The convention defines the **provenance boundary**: data flows in from declared ancestors and out to the target table and its Parts. Anything that crosses this boundary in another direction breaks the provenance claim — a `fetch` from an undeclared table makes that dependency invisible; an `insert` into another table sneaks rows past the FK graph.
 
-The trinity makes this boundary explicit and (optionally) enforced:
+The trinity makes this boundary explicit and (optionally) checked:
 
-- **`self.upstream`** is the only blessed read channel. Reading from `self.upstream[Ancestor]` is provenance-safe by construction.
+- **`self.upstream`** is the blessed read channel. Reading through it keeps every dependency visible to the FK graph.
 - **`self`** (and its Parts) is the only blessed write target.
-- **`strict_provenance=True`** enforces both.
+- **`strict_provenance=True`** checks both at runtime — a best-effort guardrail, not an airtight boundary (see §3).
 
 ## 1. `Diagram.trace(table_expr)`
 
@@ -81,7 +81,7 @@ Returns a `Diagram` instance whose nodes are the seed and all of its ancestors (
 
 `trace` mirrors `cascade`:
 
-1. Load the dependency graph via `connection.dependencies.load_all_upstream()` (the upstream analog of `load_all_downstream` — discovers all schemas reachable via reverse FK edges from the seed's schema).
+1. Load the dependency graph via `connection.dependencies.load_all_upstream()` — the upstream analog of `load_all_downstream`, introduced with `Diagram.trace` ([#1423](https://github.com/datajoint/datajoint-python/issues/1423)). It discovers all schemas reachable via reverse FK edges from the seed's schema.
 2. Take the seed's restriction and propagate it **upstream** along the FK graph. For each edge `parent → child`, when the child has a restriction, apply the upward rule (`U1`, `U2`, or `U3` per the cascade spec) to derive the parent's restriction.
 3. Trim the resulting graph to **seed + ancestors only**. Descendants of the seed and unrelated ancestors are not included.
 4. Convergence is **OR**: an ancestor entity is included if reachable through *any* FK path from the seed (consistent with how a child row "comes from" any of its FK parents).
@@ -110,9 +110,8 @@ Requesting a table that is not an ancestor (or the seed itself) of `table_expr` 
 
 | Method | Behavior |
 |---|---|
-| `trace.counts()` | Dict mapping each ancestor's full table name to the count of contributing rows under the seed's restriction. Mirror of `cascade.counts()`. |
-| `trace.heading()` | Aggregated heading across all ancestor tables, grouped by table. Useful for displaying the full provenance schema for a row. |
-| `iter(trace)` | Iterate over pre-restricted ancestor `FreeTable`s in topological order (deepest ancestors first). |
+| `trace.counts()` | `dict[str, int]` mapping each contributing table's full table name (e.g. `` `imaging`.`subject` ``) to its row count under the seed's restriction. Includes the seed alongside its ancestors. Mirror of `cascade.counts()`. |
+| `iter(trace)` | Iterate over pre-restricted `FreeTable`s in topological order (parents/roots first). |
 
 All `QueryExpression` operators (`join`, `aggr`, `proj`, `restrict`, `&`, `*`) work on the values returned by `trace[T]`. The trace is a *view* into the graph; the returned `QueryExpression`s are first-class.
 
@@ -173,7 +172,10 @@ trace[Session].fetch1("session_date")         # date of session 5
 trace[Scan].fetch1("scan_id")                 # 2
 trace[ExtractTraces].fetch1("trace")          # the trace that produced this Summary
 
-trace.counts()                                # {Subject: 1, Session: 1, Scan: 1, ExtractTraces: 1, Summary: 1}
+trace.counts()
+# keyed by full table name; the seed (Summary) is included alongside its ancestors:
+# {'`imaging`.`subject`': 1, '`imaging`.`session`': 1, '`imaging`.`_scan`': 1,
+#  '`imaging`.`__extract_traces`': 1, '`imaging`.`__summary`': 1}
 ```
 
 For a renamed-FK case (paralleling [Cascade Spec §Worked Example 1](cascade.md#example-1-part-of-part-with-renamed-fk)), the upward rules reverse the rename so `trace[Ancestor]` returns the ancestor with its native column names regardless of how the seed's columns are named.
@@ -184,7 +186,7 @@ For a renamed-FK case (paralleling [Cascade Spec §Worked Example 1](cascade.md#
 
 The framework constructs `self.upstream = Diagram.trace(self & key)` immediately before invoking the user-defined `make(self, key)`. The construction happens once per `make()` call; `self.upstream` is a regular attribute on the bound `self` instance for the duration of the call.
 
-The construction is **lazy** in the sense that the underlying SQL is not issued until the user accesses an ancestor: `self.upstream[Session]` builds a `QueryExpression`, and `.fetch1()` on that expression triggers a SELECT.
+The construction is **lazy** in the sense that the underlying SQL is not issued until the user accesses an ancestor: `self.upstream[Session]` builds a `QueryExpression`, and `.fetch1()` on that expression triggers a SELECT. The trace diagram is built once per `make()` call, but fetch results are not cached — each `self.upstream[T]` access returns a fresh `QueryExpression`, so reading the same ancestor twice issues two SELECTs.
 
 ### What it returns
 
@@ -195,7 +197,7 @@ The construction is **lazy** in the sense that the underlying SQL is not issued 
 `self.upstream` exposes:
 
 - All declared ancestors of `self` (transitively, including renamed-FK chains).
-- The Parts of any ancestor included by the FK graph.
+- The Parts of ancestors that themselves lie on an FK path to `self` — a Part is included only when it is genuinely reachable through the FK graph, not merely because its master is an ancestor.
 
 Requesting any table outside this set raises `DataJointError` — including tables that exist in the schema but are not ancestors of `self`. This is the same guarantee `Diagram.trace(...)` provides; `self.upstream` is just the per-`make()` instance of it.
 
@@ -232,7 +234,7 @@ def make(self, key):
     ...
 ```
 
-`make_kwargs` and `key` are unaffected. Existing `make()` implementations that never reference `self.upstream` behave identically to today.
+The `key` argument to `make()` — and any `make_kwargs` optionally forwarded through `populate(..., make_kwargs=...)` — are unaffected. Existing `make()` implementations that never reference `self.upstream` behave identically to today.
 
 ## 3. `dj.config["strict_provenance"]`
 
@@ -240,9 +242,20 @@ def make(self, key):
 
 | Key | Type | Default | Description |
 |---|---|---|---|
-| `strict_provenance` | `bool` | `False` | When `True`, enforces upstream-only reads and target-only writes inside `make()`. |
+| `strict_provenance` | `bool` | `False` | When `True`, checks upstream-only reads and target-only writes inside `make()`. |
 
-The flag is read at the start of each `make()` invocation. Changing it between invocations is supported; concurrent populates with different flag values are not (the value seen depends on thread-local context — see Implementation notes).
+The flag is read from the global `dj.config` at the start of each `make()` invocation and captured into a per-call enforcement context stored in a `contextvars.ContextVar`, so the active context follows the executing task rather than being shared as global mutable state. Because the config value itself is process-global, concurrent populates in the same process cannot run with different `strict_provenance` values — each `make()` sees whatever the config holds when it begins.
+
+### Enforcement model and its limits
+
+The runtime checks below are a **best-effort development guardrail, not an airtight boundary.** They are wired into DataJoint's Python query and insert paths (`assert_read_allowed` runs from `QueryExpression.cursor`, before SQL is issued; the write check runs on the insert path), so they only observe access that goes **through the DataJoint Python client.** They intentionally catch the common, accidental failure mode — a `make()` that reads an *undeclared* dependency — and are what surfaces real violations when a team enables the flag in staging (see [Migration path](#migration-path)).
+
+They do **not** constitute a security or correctness boundary:
+
+- Raw SQL (`connection.query(...)`), a second client or process, a database console, a BI tool, or a non-Python binding all bypass the checks entirely.
+- Within the Python client, the read check currently allows a direct read of a *declared* ancestor just as it allows reads through `self.upstream` — it flags reads of tables *outside* the allowed set, not the channel used to reach one inside it (see the note under [Read enforcement](#read-enforcement)).
+
+Comprehensive enforcement — verifying that a `make()` reads only from its declared ancestors and writes only to its target, across every access path — is fundamentally a **code-inspection problem, not a runtime-interception one.** The intended direction is platform-side inspection of `make()` source: static checks where they are sound, and agentic review for the dynamic cases static analysis cannot decide, performed at authoring / CI / deploy time. The runtime guardrail complements that by catching accidental drift during development; it does not replace it. See [What is not in this specification](#what-is-not-in-this-specification).
 
 ### Read enforcement
 
@@ -252,11 +265,14 @@ When `strict_provenance=True` and a `make()` is executing:
 |---|---|
 | `self.upstream[Ancestor].fetch(...)` (or any other fetch method) | **Allowed** |
 | `self.upstream[Ancestor] & condition` then fetch | **Allowed** |
-| `(SomeTable & key).fetch(...)` where `SomeTable` is an ancestor | **Blocked** — raises `DataJointError`. The user must go through `self.upstream`. |
-| `(SomeTable & ...).fetch(...)` where `SomeTable` is **not** an ancestor of `self` | **Blocked** |
+| `(SomeTable & key).fetch(...)` where `SomeTable` is a declared ancestor | **Allowed** in 2.3 — a direct read of a declared ancestor is not distinguished from a read through `self.upstream` (see note). `self.upstream` remains the recommended, provenance-safe channel. |
+| `(SomeTable & ...).fetch(...)` where `SomeTable` is **not** a declared ancestor of `self` | **Blocked** — raises `DataJointError`. |
 | Reading `self` or `self.PartName` | **Allowed** — the target's own state may be inspected mid-`make()`. |
 
 The check is at fetch time, not at table-expression construction time. Building a `QueryExpression` is free; executing it (calling `fetch`, `fetch1`, `to_arrays`, etc.) is gated.
+
+!!! note "What the read check does and does not distinguish"
+    The check flags reads of tables **outside** the allowed set (declared ancestors, `self`, and `self`'s Parts) — i.e. undeclared dependencies. It does **not** yet distinguish a read that came *through* `self.upstream[Ancestor]` from a direct read of the same ancestor via a plain expression; both are allowed. Tightening this to require the `self.upstream` channel needs an attribution marker propagated through query composition and is deferred to a follow-up. For declared ancestors, treat `self.upstream` as the recommended pattern, not a currently-enforced one.
 
 ### Write enforcement
 
@@ -268,6 +284,8 @@ When `strict_provenance=True` and a `make()` is executing:
 | `self.PartName.insert(rows)` | **Allowed** (with key-consistency check) |
 | `SomeOtherTable.insert(...)` | **Blocked** — raises `DataJointError`. |
 | Reading from `self.upstream[Ancestor]` and writing to `Ancestor` | **Blocked** — `Ancestor` is not `self`. |
+
+As with reads, the write check is wired into the DataJoint insert path and so shares the same client-side limits described in [Enforcement model and its limits](#enforcement-model-and-its-limits).
 
 ### Key consistency
 
@@ -284,7 +302,7 @@ This prevents a `make()` from inserting rows for entities it wasn't called with 
 
 ### Why opt-in
 
-`strict_provenance` is an **operational** flag — a property of how a deployment runs, not of the schema definition. Teams may want it on in production (where provenance guarantees back downstream claims) and off during development (where ad-hoc `fetch`/`insert` from `make()` is a useful debugging affordance). Opting in is a deliberate deployment choice. Forcing it on would break existing pipelines without giving teams the tools to migrate incrementally.
+`strict_provenance` is an **operational** flag — a property of how a deployment runs, not of the schema definition. Teams may want it on in production (where provenance checks back downstream claims) and off during development (where ad-hoc `fetch`/`insert` from `make()` is a useful debugging affordance). Opting in is a deliberate deployment choice. Forcing it on would break existing pipelines without giving teams the tools to migrate incrementally.
 
 A future major release may flip the default; that decision is out of scope for 2.3.
 
@@ -309,32 +327,40 @@ def make(self, key):
         self.Bin.insert1({**key, "bin_id": bin_id, "energy": float(energy)})
 ```
 
-A `make()` that **violates** strict provenance:
+A `make()` that **violates** strict provenance (here `self` is `Spectrum`, whose key is `{"recording_id": 5}`):
 
 ```python
 def make(self, key):
-    # ERROR: reading a table not in self.upstream
-    rate = (Recording & key).fetch1("sampling_rate")
-    # → DataJointError: Recording is reachable but read outside self.upstream
-    #   (strict_provenance=True disallows direct reads from ancestor tables).
+    # ERROR: reading a table that is not a declared ancestor of self
+    label = (UnrelatedTable & key).fetch1("label")
+    # → DataJointError: strict_provenance=True: read from undeclared table(s)
+    #   ['`analysis`.`unrelated_table`'] is not permitted inside make(). Use
+    #   self.upstream[T] for declared ancestors, or declare a foreign-key
+    #   dependency on the table you want to read.
+    #
+    # (A *direct* read of a declared ancestor — e.g. (Recording & key) — is
+    #  NOT blocked in 2.3; only undeclared tables are. Prefer self.upstream.)
 
     # ERROR: writing to a table that isn't self or self's Parts
     AuditLog.insert1({"event": "populated_spectrum"})
-    # → DataJointError: AuditLog is not self or one of self's Parts.
+    # → DataJointError: strict_provenance=True: insert into '`analysis`.`audit_log`'
+    #   is not permitted inside make() for '`analysis`.`__spectrum`'. Only the
+    #   target table and its Part tables may be written.
 
     # ERROR: writing a row whose key doesn't match the current key
-    self.insert1({"subject_id": 99, "spectrum": ...})
-    # → DataJointError: row primary key {'subject_id': 99} does not match
-    #   the current key {'subject_id': key['subject_id'], ...}.
+    self.insert1({"recording_id": 99, "spectrum": ...})
+    # → DataJointError: strict_provenance=True: inserted row's 'recording_id'=99
+    #   does not match the current make() key's 'recording_id'=5. Inserts must
+    #   be consistent with the key being populated.
 ```
 
 ## Integration: the full provenance loop
 
-The trinity composes into a single guarantee:
+The trinity composes into a single provenance story:
 
 1. `Diagram.trace()` defines the upstream view as a first-class query object.
 2. `self.upstream` exposes the per-`key` slice of that view inside `make()`.
-3. `strict_provenance` ensures `make()` reads only from that slice and writes only to `self`.
+3. `strict_provenance` checks (best-effort) that `make()` reads only from that slice and writes only to `self`.
 
 End-to-end, with all three engaged:
 
@@ -373,11 +399,12 @@ class Spectrum(dj.Computed):
         ])
 ```
 
-Properties guaranteed in strict mode:
+Properties the trinity is designed to uphold in strict mode:
 
-- Every column in `Spectrum.fetch1(key)` is derived from data accessible via `Diagram.trace(Spectrum & key)`. No undeclared dependencies.
-- Every row in `Spectrum` and `Spectrum.Bin` was inserted by a `make()` whose `key` matched. No misattributed rows.
-- Downstream provenance tooling — row-level lineage views, CDC publishers, audit logs — can rely on these properties statically rather than as best-effort.
+- Every column in `Spectrum.fetch1(key)` should be derived from data accessible via `Diagram.trace(Spectrum & key)` — no undeclared dependencies.
+- Every row in `Spectrum` and `Spectrum.Bin` was inserted by a `make()` whose `key` matched — no misattributed rows.
+
+The runtime guardrail makes accidental violations of the first property visible during development, and checks the second (key consistency) on the DataJoint insert path. Neither is an airtight guarantee against out-of-band access (see [Enforcement model and its limits](#enforcement-model-and-its-limits)). Downstream provenance tooling — row-level lineage views, CDC publishers, audit logs — should treat these as strong conventions backed by best-effort runtime checks and, on the platform, by code inspection — not as invariants that hold regardless of how the data was written.
 
 ## Migration path
 
@@ -387,19 +414,20 @@ Teams adopt the trinity incrementally:
 2. **Start using `self.upstream` in new `make()` implementations.** Reads become ergonomic; nothing else changes.
 3. **Migrate existing `make()` implementations** as opportunity allows. Replace `(Upstream & key).fetch(...)` with `self.upstream[Upstream].fetch(...)`. No semantic difference at this stage.
 4. **Enable `strict_provenance=True` in staging.** Identify and fix any undeclared dependencies the runtime check surfaces.
-5. **Enable in production.** Provenance guarantees now hold by construction.
+5. **Enable in production.** The runtime guardrail is active; pair it with platform-side code inspection for coverage beyond the Python client.
 
 Steps (3) and (4) are where most of the work lies — the runtime check is the mechanism that surfaces the actual undeclared dependencies in a pipeline. Teams with clean conventions will find few violations; teams with debugging fetches scattered through `make()` will find more. Either way, the cost is bounded by the size of the existing `make()` surface.
 
 ## What is not in this specification
 
-- **Static analysis of `make()`**. The runtime check is the only enforcement mechanism in 2.3; analyzing `make()` bodies offline to flag potential violations is future work.
+- **Comprehensive enforcement via code inspection.** The runtime check is the only enforcement mechanism *shipping in 2.3*, and it is a best-effort client-side guardrail (see [Enforcement model and its limits](#enforcement-model-and-its-limits)). Turning provenance into a property checked across all access paths is a code-inspection problem — static analysis where sound, and platform-side agentic review for the dynamic cases — performed at authoring / CI / deploy time. This is the intended direction but is out of scope for the 2.3 runtime feature.
+- **Server-side enforcement.** Scoping database grants, per-`make` views, or row-level security to `{ancestors, self, self.Parts}` for the duration of a `make()` would be a true boundary rather than a guardrail. It is a larger, separate effort and is not part of 2.3.
 - **Flipping the default to `True`**. Whether (and when) `strict_provenance` becomes the default is a separate decision for a future major release.
-- **Row-level provenance metadata in storage**. The trinity provides the *graph operation* and the *enforcement*; persisting per-row provenance projections (the dj-delta-style silver-layer features) is a downstream consumer concern, tracked separately.
+- **Row-level provenance metadata in storage**. The trinity provides the *graph operation* and the *runtime check*; persisting per-row provenance projections (the dj-delta-style silver-layer features) is a downstream consumer concern, tracked separately.
 
 ## References
 
-- Source (to land in 2.3, against this spec): `src/datajoint/diagram.py` (`Diagram.trace`), `src/datajoint/autopopulate.py` (`AutoPopulate.upstream`), `src/datajoint/settings.py` (config), `src/datajoint/expression.py` and `src/datajoint/table.py` (runtime gates).
+- Source (to land in 2.3, against this spec): `src/datajoint/diagram.py` (`Diagram.trace`), `src/datajoint/autopopulate.py` (`AutoPopulate.upstream`), `src/datajoint/settings.py` (config), `src/datajoint/provenance.py` (runtime checks). Implementation branches: [#1471](https://github.com/datajoint/datajoint-python/pull/1471), [#1473](https://github.com/datajoint/datajoint-python/pull/1473), [#1474](https://github.com/datajoint/datajoint-python/pull/1474).
 - Issues: [#1423](https://github.com/datajoint/datajoint-python/issues/1423) (Diagram.trace), [#1424](https://github.com/datajoint/datajoint-python/issues/1424) (self.upstream), [#1425](https://github.com/datajoint/datajoint-python/issues/1425) (strict_provenance).
 - [Cascade Specification](cascade.md) — propagation rules (F1/F2/F3 forward, U1/U2/U3 upward) shared with `trace`.
 - [AutoPopulate Specification](autopopulate.md) — `make()` execution model.
