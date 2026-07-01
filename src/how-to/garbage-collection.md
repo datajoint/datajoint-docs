@@ -16,6 +16,15 @@ remain. This is by design:
 
 Run garbage collection periodically to reclaim storage space.
 
+!!! note "Concurrency semantics"
+    Garbage collection is single-pass and best-effort: it scans references,
+    then deletes objects the scan did not see referenced. If a row is inserted
+    between the scan and the delete, the object it references can be deleted
+    even though it is now in use — leaving the new row with a dangling
+    reference. A future release will add quarantine-based serialization to
+    close this window. Until then, prefer running GC during quiet periods, and
+    treat any single GC pass as best-effort rather than transactionally safe.
+
 ## Basic Usage
 
 ```python
