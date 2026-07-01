@@ -8,7 +8,7 @@ DataJoint's Object-Augmented Schema (OAS) integrates relational tables with obje
 
 ### Storage Models
 
-DataJoint 2.0 supports three storage models, all sharing the same store configuration:
+DataJoint 2.0+ supports three storage models, all sharing the same store configuration:
 
 | Model | Data Types | Path Structure | Integration | Use Case |
 |-------|------------|----------------|-------------|----------|
