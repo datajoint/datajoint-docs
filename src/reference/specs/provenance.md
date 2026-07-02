@@ -6,7 +6,7 @@ This document specifies three interlocking features that together close DataJoin
 2. **`self.upstream`** — a property on `AutoPopulate` tables that exposes the trace for the current `key` during `make()` execution.
 3. **`dj.config["strict_provenance"]`** — a runtime flag that checks the upstream-only convention inside `make()` (read only from `self.upstream`, write only to `self` and its Parts).
 
-The three are designed as a unit. `trace` is the underlying graph operation; `self.upstream` is the ergonomic surface for `make()`; `strict_provenance` is the enforcement layer that raises the convention from documentation to a checked default — a best-effort runtime guardrail in the open-source core, with comprehensive checking delegated to code inspection in the DataJoint platform's code-deployment CI/CD (see §3).
+The three are designed as a unit. `trace` is the underlying graph operation; `self.upstream` is the ergonomic surface for `make()`; `strict_provenance` is the enforcement layer that turns the convention from unenforced documentation into an opt-in runtime check — a best-effort guardrail in the open-source core, with comprehensive checking delegated to code inspection in the DataJoint platform's code-deployment CI/CD (see §3).
 
 !!! version-added "New in DataJoint 2.3"
     Introduced together. Existing code that does not use these features is unaffected; `strict_provenance` defaults to `False`.
@@ -101,8 +101,10 @@ trace[ExtractTraces].to_arrays("trace")
 
 The argument may be:
 
-- **A Table subclass** (e.g. `Session`) — returns the pre-restricted ancestor table as a `QueryExpression`.
-- **A string** giving a table's fully-qualified or class name (e.g. `"experiment.Session"` or `"Session"`) — returns the pre-restricted ancestor as a `FreeTable`.
+- **A Table subclass** (e.g. `Session`) — convenient when the class is in scope.
+- **A string** giving a table's fully-qualified or class name (e.g. `"experiment.Session"` or `"Session"`) — for when it isn't.
+
+In both cases the result is the ancestor pre-restricted through the FK join path, returned as a `FreeTable` (a full `QueryExpression`, so every query operator and the fetch API apply).
 
 Requesting a table that is not an ancestor (or the seed itself) of `table_expr` raises `DataJointError`. This is the same guarantee that `cascade` provides for descendants.
 
@@ -298,6 +300,8 @@ Every row inserted into `self` or `self`'s Parts must have a primary key consist
 
 This prevents a `make()` from inserting rows for entities it wasn't called with — closing the last loophole where one entity's `make()` could silently produce data attributed to another.
 
+The key-consistency check applies to **dict-style rows**. Positional rows (tuples, numpy records) carry no attribute names to check against the current `key`, so they pass unchecked — dict inserts are the provenance-safe form under strict mode.
+
 ### Default behavior
 
 `strict_provenance=False` (the default) leaves all `make()` behavior unchanged. No deprecation warning, no soft enforcement, no compatibility shim. Existing pipelines run identically.
@@ -429,7 +433,7 @@ Steps (3) and (4) are where most of the work lies — the runtime check is the m
 
 ## References
 
-- Source (to land in 2.3, against this spec): `src/datajoint/diagram.py` (`Diagram.trace`), `src/datajoint/autopopulate.py` (`AutoPopulate.upstream`), `src/datajoint/settings.py` (config), `src/datajoint/provenance.py` (runtime checks). Implementation branches: [#1471](https://github.com/datajoint/datajoint-python/pull/1471), [#1473](https://github.com/datajoint/datajoint-python/pull/1473), [#1474](https://github.com/datajoint/datajoint-python/pull/1474).
+- Source (shipped in 2.3): `src/datajoint/diagram.py` (`Diagram.trace`), `src/datajoint/autopopulate.py` (`AutoPopulate.upstream`), `src/datajoint/settings.py` (config), `src/datajoint/provenance.py` (runtime checks). Implemented in [#1471](https://github.com/datajoint/datajoint-python/pull/1471) (trace), [#1473](https://github.com/datajoint/datajoint-python/pull/1473) (self.upstream), [#1474](https://github.com/datajoint/datajoint-python/pull/1474) (strict_provenance), building on the cascade rules from [#1468](https://github.com/datajoint/datajoint-python/pull/1468).
 - Issues: [#1423](https://github.com/datajoint/datajoint-python/issues/1423) (Diagram.trace), [#1424](https://github.com/datajoint/datajoint-python/issues/1424) (self.upstream), [#1425](https://github.com/datajoint/datajoint-python/issues/1425) (strict_provenance).
 - [Cascade Specification](cascade.md) — propagation rules (F1/F2/F3 forward, U1/U2/U3 upward) shared with `trace`.
 - [AutoPopulate Specification](autopopulate.md) — `make()` execution model.
