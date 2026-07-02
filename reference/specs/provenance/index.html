@@ -8,31 +8,31 @@
       
       
       
-        <link rel="canonical" href="https://docs.datajoint.com/how-to/installation/">
+        <link rel="canonical" href="https://docs.datajoint.com/reference/specs/provenance/">
       
       
-        <link rel="prev" href="../">
+        <link rel="prev" href="../autopopulate/">
       
       
-        <link rel="next" href="../manage-secrets/">
+        <link rel="next" href="../job-metadata/">
       
       
         
       
       
-      <link rel="icon" href="../../assets/images/company-logo-blue.png">
+      <link rel="icon" href="../../../assets/images/company-logo-blue.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
     
     
       
-        <title>Installation - DataJoint Documentation</title>
+        <title>Provenance Trace & Strict Provenance - DataJoint Documentation</title>
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.484c7ddc.min.css">
       
         
-        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
       
       
 
@@ -51,11 +51,11 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/_mkdocstrings.css">
+      <link rel="stylesheet" href="../../../assets/_mkdocstrings.css">
     
-      <link rel="stylesheet" href="../../assets/stylesheets/extra.css">
+      <link rel="stylesheet" href="../../../assets/stylesheets/extra.css">
     
-    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -105,7 +105,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#installation" class="md-skip">
+        <a href="#provenance-trace-selfupstream-and-strict-provenance-make-specification" class="md-skip">
           Skip to content
         </a>
       
@@ -148,7 +148,7 @@
 
 <header class="md-header md-header--shadow" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="../.." title="DataJoint Documentation" class="md-header__button md-logo" aria-label="DataJoint Documentation" data-md-component="logo">
+    <a href="../../.." title="DataJoint Documentation" class="md-header__button md-logo" aria-label="DataJoint Documentation" data-md-component="logo">
       
   
   <?xml version="1.0" encoding="utf-8"?>
@@ -178,7 +178,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Installation
+              Provenance Trace & Strict Provenance
             
           </span>
         </div>
@@ -294,7 +294,7 @@
 
 <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="../.." title="DataJoint Documentation" class="md-nav__button md-logo" aria-label="DataJoint Documentation" data-md-component="logo">
+    <a href="../../.." title="DataJoint Documentation" class="md-nav__button md-logo" aria-label="DataJoint Documentation" data-md-component="logo">
       
   
   <?xml version="1.0" encoding="utf-8"?>
@@ -334,7 +334,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../.." class="md-nav__link">
+      <a href="../../.." class="md-nav__link">
         
   
   
@@ -390,7 +390,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../explanation/" class="md-nav__link ">
+            <a href="../../../explanation/" class="md-nav__link ">
               
   
   
@@ -487,7 +487,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../explanation/data-pipelines/" class="md-nav__link">
+      <a href="../../../explanation/data-pipelines/" class="md-nav__link">
         
   
   
@@ -515,7 +515,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../explanation/faq/" class="md-nav__link">
+      <a href="../../../explanation/faq/" class="md-nav__link">
         
   
   
@@ -614,7 +614,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../explanation/relational-workflow-model/" class="md-nav__link">
+      <a href="../../../explanation/relational-workflow-model/" class="md-nav__link">
         
   
   
@@ -642,7 +642,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../explanation/entity-integrity/" class="md-nav__link">
+      <a href="../../../explanation/entity-integrity/" class="md-nav__link">
         
   
   
@@ -670,7 +670,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../explanation/normalization/" class="md-nav__link">
+      <a href="../../../explanation/normalization/" class="md-nav__link">
         
   
   
@@ -698,7 +698,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../explanation/computation-model/" class="md-nav__link">
+      <a href="../../../explanation/computation-model/" class="md-nav__link">
         
   
   
@@ -726,7 +726,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../explanation/schema-as-workflow-specification/" class="md-nav__link">
+      <a href="../../../explanation/schema-as-workflow-specification/" class="md-nav__link">
         
   
   
@@ -754,7 +754,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../explanation/comparison-to-workflow-languages/" class="md-nav__link">
+      <a href="../../../explanation/comparison-to-workflow-languages/" class="md-nav__link">
         
   
   
@@ -845,7 +845,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../explanation/query-algebra/" class="md-nav__link">
+      <a href="../../../explanation/query-algebra/" class="md-nav__link">
         
   
   
@@ -873,7 +873,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../explanation/semantic-matching/" class="md-nav__link">
+      <a href="../../../explanation/semantic-matching/" class="md-nav__link">
         
   
   
@@ -966,7 +966,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../explanation/type-system/" class="md-nav__link">
+      <a href="../../../explanation/type-system/" class="md-nav__link">
         
   
   
@@ -994,7 +994,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../explanation/custom-codecs/" class="md-nav__link">
+      <a href="../../../explanation/custom-codecs/" class="md-nav__link">
         
   
   
@@ -1022,7 +1022,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../explanation/spark-adapters/" class="md-nav__link">
+      <a href="../../../explanation/spark-adapters/" class="md-nav__link">
         
   
   
@@ -1111,7 +1111,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../explanation/postgresql-cdc-replication/" class="md-nav__link">
+      <a href="../../../explanation/postgresql-cdc-replication/" class="md-nav__link">
         
   
   
@@ -1181,7 +1181,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../tutorials/" class="md-nav__link ">
+            <a href="../../../tutorials/" class="md-nav__link ">
               
   
   
@@ -1286,7 +1286,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../tutorials/basics/01-first-pipeline/" class="md-nav__link">
+      <a href="../../../tutorials/basics/01-first-pipeline/" class="md-nav__link">
         
   
   
@@ -1314,7 +1314,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../tutorials/basics/02-schema-design/" class="md-nav__link">
+      <a href="../../../tutorials/basics/02-schema-design/" class="md-nav__link">
         
   
   
@@ -1342,7 +1342,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../tutorials/basics/03-data-entry/" class="md-nav__link">
+      <a href="../../../tutorials/basics/03-data-entry/" class="md-nav__link">
         
   
   
@@ -1370,7 +1370,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../tutorials/basics/04-queries/" class="md-nav__link">
+      <a href="../../../tutorials/basics/04-queries/" class="md-nav__link">
         
   
   
@@ -1398,7 +1398,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../tutorials/basics/05-computation/" class="md-nav__link">
+      <a href="../../../tutorials/basics/05-computation/" class="md-nav__link">
         
   
   
@@ -1426,7 +1426,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../tutorials/basics/06-object-storage/" class="md-nav__link">
+      <a href="../../../tutorials/basics/06-object-storage/" class="md-nav__link">
         
   
   
@@ -1523,7 +1523,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../tutorials/examples/university/" class="md-nav__link">
+      <a href="../../../tutorials/examples/university/" class="md-nav__link">
         
   
   
@@ -1551,7 +1551,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../tutorials/examples/hotel-reservations/" class="md-nav__link">
+      <a href="../../../tutorials/examples/hotel-reservations/" class="md-nav__link">
         
   
   
@@ -1579,7 +1579,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../tutorials/examples/languages/" class="md-nav__link">
+      <a href="../../../tutorials/examples/languages/" class="md-nav__link">
         
   
   
@@ -1607,7 +1607,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../tutorials/examples/fractal-pipeline/" class="md-nav__link">
+      <a href="../../../tutorials/examples/fractal-pipeline/" class="md-nav__link">
         
   
   
@@ -1635,7 +1635,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../tutorials/examples/blob-detection/" class="md-nav__link">
+      <a href="../../../tutorials/examples/blob-detection/" class="md-nav__link">
         
   
   
@@ -1730,7 +1730,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../tutorials/domain/calcium-imaging/calcium-imaging/" class="md-nav__link">
+      <a href="../../../tutorials/domain/calcium-imaging/calcium-imaging/" class="md-nav__link">
         
   
   
@@ -1758,7 +1758,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../tutorials/domain/electrophysiology/electrophysiology/" class="md-nav__link">
+      <a href="../../../tutorials/domain/electrophysiology/electrophysiology/" class="md-nav__link">
         
   
   
@@ -1786,7 +1786,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../tutorials/domain/electrophysiology/ephys-with-npy/" class="md-nav__link">
+      <a href="../../../tutorials/domain/electrophysiology/ephys-with-npy/" class="md-nav__link">
         
   
   
@@ -1814,7 +1814,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../tutorials/domain/allen-ccf/allen-ccf/" class="md-nav__link">
+      <a href="../../../tutorials/domain/allen-ccf/allen-ccf/" class="md-nav__link">
         
   
   
@@ -1911,7 +1911,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../tutorials/advanced/sql-comparison/" class="md-nav__link">
+      <a href="../../../tutorials/advanced/sql-comparison/" class="md-nav__link">
         
   
   
@@ -1939,7 +1939,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../tutorials/advanced/json-type/" class="md-nav__link">
+      <a href="../../../tutorials/advanced/json-type/" class="md-nav__link">
         
   
   
@@ -1967,7 +1967,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../tutorials/advanced/distributed/" class="md-nav__link">
+      <a href="../../../tutorials/advanced/distributed/" class="md-nav__link">
         
   
   
@@ -1995,7 +1995,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../tutorials/advanced/custom-codecs/" class="md-nav__link">
+      <a href="../../../tutorials/advanced/custom-codecs/" class="md-nav__link">
         
   
   
@@ -2023,7 +2023,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../tutorials/advanced/instances/" class="md-nav__link">
+      <a href="../../../tutorials/advanced/instances/" class="md-nav__link">
         
   
   
@@ -2063,10 +2063,8 @@
       
   
   
-    
   
   
-  
     
     
       
@@ -2095,15 +2093,15 @@
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../" class="md-nav__link ">
+            <a href="../../../how-to/" class="md-nav__link ">
               
   
   
@@ -2127,7 +2125,7 @@
             
           </div>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_4">
             <span class="md-nav__icon md-icon"></span>
             
@@ -2142,10 +2140,8 @@
                 
   
   
-    
   
   
-  
     
     
       
@@ -2167,11 +2163,11 @@
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_1" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_1" >
         
           
           <label class="md-nav__link" for="__nav_4_1" id="__nav_4_1_label" tabindex="0">
@@ -2192,7 +2188,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_1_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_1_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_4_1">
             <span class="md-nav__icon md-icon"></span>
             
@@ -2207,37 +2203,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Installation
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../../../how-to/installation/" class="md-nav__link">
         
   
   
@@ -2253,187 +2222,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#install-datajoint-20" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Install DataJoint 2.0+
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#verify-installation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Verify Installation
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Verify Installation">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#if-you-have-an-older-version" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        If You Have an Older Version
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#database-server" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Database Server
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Database Server">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#local-development-docker" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Local Development (Docker)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#datajointcom-recommended" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        DataJoint.com (Recommended)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#self-managed-cloud-databases" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Self-Managed Cloud Databases
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#requirements" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Requirements
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#troubleshooting" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Troubleshooting
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Troubleshooting">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#pymysql-connection-errors" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        pymysql connection errors
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#psycopg2-connection-errors" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        psycopg2 connection errors
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#ssltls-connection-issues" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        SSL/TLS connection issues
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#permission-denied" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Permission denied
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -2446,7 +2234,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../manage-secrets/" class="md-nav__link">
+      <a href="../../../how-to/manage-secrets/" class="md-nav__link">
         
   
   
@@ -2474,7 +2262,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../configure-database/" class="md-nav__link">
+      <a href="../../../how-to/configure-database/" class="md-nav__link">
         
   
   
@@ -2502,7 +2290,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../use-instances/" class="md-nav__link">
+      <a href="../../../how-to/use-instances/" class="md-nav__link">
         
   
   
@@ -2530,7 +2318,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../configure-storage/" class="md-nav__link">
+      <a href="../../../how-to/configure-storage/" class="md-nav__link">
         
   
   
@@ -2558,7 +2346,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../use-cli/" class="md-nav__link">
+      <a href="../../../how-to/use-cli/" class="md-nav__link">
         
   
   
@@ -2655,7 +2443,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../define-tables/" class="md-nav__link">
+      <a href="../../../how-to/define-tables/" class="md-nav__link">
         
   
   
@@ -2683,7 +2471,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../model-relationships/" class="md-nav__link">
+      <a href="../../../how-to/model-relationships/" class="md-nav__link">
         
   
   
@@ -2711,7 +2499,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../master-part/" class="md-nav__link">
+      <a href="../../../how-to/master-part/" class="md-nav__link">
         
   
   
@@ -2739,7 +2527,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../design-primary-keys/" class="md-nav__link">
+      <a href="../../../how-to/design-primary-keys/" class="md-nav__link">
         
   
   
@@ -2767,7 +2555,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../read-diagrams/" class="md-nav__link">
+      <a href="../../../how-to/read-diagrams/" class="md-nav__link">
         
   
   
@@ -2858,7 +2646,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../manage-pipeline-project/" class="md-nav__link">
+      <a href="../../../how-to/manage-pipeline-project/" class="md-nav__link">
         
   
   
@@ -2886,7 +2674,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../deploy-production/" class="md-nav__link">
+      <a href="../../../how-to/deploy-production/" class="md-nav__link">
         
   
   
@@ -2981,7 +2769,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../insert-data/" class="md-nav__link">
+      <a href="../../../how-to/insert-data/" class="md-nav__link">
         
   
   
@@ -3009,7 +2797,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../query-data/" class="md-nav__link">
+      <a href="../../../how-to/query-data/" class="md-nav__link">
         
   
   
@@ -3037,7 +2825,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../fetch-results/" class="md-nav__link">
+      <a href="../../../how-to/fetch-results/" class="md-nav__link">
         
   
   
@@ -3065,7 +2853,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../delete-data/" class="md-nav__link">
+      <a href="../../../how-to/delete-data/" class="md-nav__link">
         
   
   
@@ -3160,7 +2948,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../run-computations/" class="md-nav__link">
+      <a href="../../../how-to/run-computations/" class="md-nav__link">
         
   
   
@@ -3188,7 +2976,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../distributed-computing/" class="md-nav__link">
+      <a href="../../../how-to/distributed-computing/" class="md-nav__link">
         
   
   
@@ -3216,7 +3004,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../handle-errors/" class="md-nav__link">
+      <a href="../../../how-to/handle-errors/" class="md-nav__link">
         
   
   
@@ -3244,7 +3032,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../monitor-progress/" class="md-nav__link">
+      <a href="../../../how-to/monitor-progress/" class="md-nav__link">
         
   
   
@@ -3349,7 +3137,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../object-storage-overview/" class="md-nav__link">
+      <a href="../../../how-to/object-storage-overview/" class="md-nav__link">
         
   
   
@@ -3377,7 +3165,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../choose-storage-type/" class="md-nav__link">
+      <a href="../../../how-to/choose-storage-type/" class="md-nav__link">
         
   
   
@@ -3405,7 +3193,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../use-object-storage/" class="md-nav__link">
+      <a href="../../../how-to/use-object-storage/" class="md-nav__link">
         
   
   
@@ -3433,7 +3221,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../staged-insert/" class="md-nav__link">
+      <a href="../../../how-to/staged-insert/" class="md-nav__link">
         
   
   
@@ -3461,7 +3249,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../use-npy-codec/" class="md-nav__link">
+      <a href="../../../how-to/use-npy-codec/" class="md-nav__link">
         
   
   
@@ -3489,7 +3277,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../use-plugin-codecs/" class="md-nav__link">
+      <a href="../../../how-to/use-plugin-codecs/" class="md-nav__link">
         
   
   
@@ -3517,7 +3305,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../create-custom-codec/" class="md-nav__link">
+      <a href="../../../how-to/create-custom-codec/" class="md-nav__link">
         
   
   
@@ -3545,7 +3333,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../manage-large-data/" class="md-nav__link">
+      <a href="../../../how-to/manage-large-data/" class="md-nav__link">
         
   
   
@@ -3573,7 +3361,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../garbage-collection/" class="md-nav__link">
+      <a href="../../../how-to/garbage-collection/" class="md-nav__link">
         
   
   
@@ -3666,7 +3454,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../migrate-to-v20/" class="md-nav__link">
+      <a href="../../../how-to/migrate-to-v20/" class="md-nav__link">
         
   
   
@@ -3694,7 +3482,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../alter-tables/" class="md-nav__link">
+      <a href="../../../how-to/alter-tables/" class="md-nav__link">
         
   
   
@@ -3722,7 +3510,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../backup-restore/" class="md-nav__link">
+      <a href="../../../how-to/backup-restore/" class="md-nav__link">
         
   
   
@@ -3811,7 +3599,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../testing/" class="md-nav__link">
+      <a href="../../../how-to/testing/" class="md-nav__link">
         
   
   
@@ -3851,8 +3639,10 @@
       
   
   
+    
   
   
+  
     
     
       
@@ -3879,15 +3669,15 @@
       
     
     
-    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../reference/" class="md-nav__link ">
+            <a href="../../" class="md-nav__link ">
               
   
   
@@ -3911,7 +3701,7 @@
             
           </div>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_5">
             <span class="md-nav__icon md-icon"></span>
             
@@ -3926,8 +3716,10 @@
                 
   
   
+    
   
   
+  
     
     
       
@@ -3949,15 +3741,15 @@
       
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_1" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_1" checked>
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../reference/specs/" class="md-nav__link ">
+            <a href="../" class="md-nav__link ">
               
   
   
@@ -3981,7 +3773,7 @@
             
           </div>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_1_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_1_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_5_1">
             <span class="md-nav__icon md-icon"></span>
             
@@ -3999,7 +3791,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/specs/database-backends/" class="md-nav__link">
+      <a href="../database-backends/" class="md-nav__link">
         
   
   
@@ -4084,7 +3876,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/specs/table-declaration/" class="md-nav__link">
+      <a href="../table-declaration/" class="md-nav__link">
         
   
   
@@ -4112,7 +3904,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/specs/master-part/" class="md-nav__link">
+      <a href="../master-part/" class="md-nav__link">
         
   
   
@@ -4140,7 +3932,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/specs/virtual-schemas/" class="md-nav__link">
+      <a href="../virtual-schemas/" class="md-nav__link">
         
   
   
@@ -4237,7 +4029,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/specs/query-algebra/" class="md-nav__link">
+      <a href="../query-algebra/" class="md-nav__link">
         
   
   
@@ -4265,7 +4057,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/specs/semantic-matching/" class="md-nav__link">
+      <a href="../semantic-matching/" class="md-nav__link">
         
   
   
@@ -4293,7 +4085,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/specs/primary-keys/" class="md-nav__link">
+      <a href="../primary-keys/" class="md-nav__link">
         
   
   
@@ -4321,7 +4113,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/specs/fetch-api/" class="md-nav__link">
+      <a href="../fetch-api/" class="md-nav__link">
         
   
   
@@ -4349,7 +4141,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/specs/diagram/" class="md-nav__link">
+      <a href="../diagram/" class="md-nav__link">
         
   
   
@@ -4446,7 +4238,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/specs/type-system/" class="md-nav__link">
+      <a href="../type-system/" class="md-nav__link">
         
   
   
@@ -4474,7 +4266,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/specs/codec-api/" class="md-nav__link">
+      <a href="../codec-api/" class="md-nav__link">
         
   
   
@@ -4502,7 +4294,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/specs/npy-codec/" class="md-nav__link">
+      <a href="../npy-codec/" class="md-nav__link">
         
   
   
@@ -4530,7 +4322,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/specs/spark-adapter/" class="md-nav__link">
+      <a href="../spark-adapter/" class="md-nav__link">
         
   
   
@@ -4558,7 +4350,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/specs/storage-adapter-api/" class="md-nav__link">
+      <a href="../storage-adapter-api/" class="md-nav__link">
         
   
   
@@ -4591,8 +4383,10 @@
                 
   
   
+    
   
   
+  
     
     
       
@@ -4616,11 +4410,11 @@
       
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_1_5" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_1_5" checked>
         
           
           <label class="md-nav__link" for="__nav_5_1_5" id="__nav_5_1_5_label" tabindex="0">
@@ -4641,7 +4435,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_5_1_5_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_5_1_5_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_5_1_5">
             <span class="md-nav__icon md-icon"></span>
             
@@ -4659,7 +4453,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/specs/data-manipulation/" class="md-nav__link">
+      <a href="../data-manipulation/" class="md-nav__link">
         
   
   
@@ -4687,7 +4481,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/specs/staged-insert/" class="md-nav__link">
+      <a href="../staged-insert/" class="md-nav__link">
         
   
   
@@ -4715,7 +4509,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/specs/cascade/" class="md-nav__link">
+      <a href="../cascade/" class="md-nav__link">
         
   
   
@@ -4743,7 +4537,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/specs/autopopulate/" class="md-nav__link">
+      <a href="../autopopulate/" class="md-nav__link">
         
   
   
@@ -4768,10 +4562,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../../reference/specs/provenance/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Provenance Trace & Strict Provenance
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -4787,6 +4608,369 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#why-this-exists" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why this exists
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#concepts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Concepts
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Concepts">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#trace-as-the-upstream-mirror-of-cascade" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Trace as the upstream mirror of cascade
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reusing-the-propagation-primitives" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reusing the propagation primitives
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-make-provenance-boundary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The make() provenance boundary
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-diagramtracetable_expr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Diagram.trace(table_expr)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. Diagram.trace(table_expr)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#signature" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Signature
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#behavior" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Behavior
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#indexing-tracet" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Indexing: trace[T]
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#other-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Other methods
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Examples
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-selfupstream-inside-make" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. self.upstream inside make()
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. self.upstream inside make()">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#where-its-set" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Where it's set
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-it-returns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What it returns
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#allowed-table-set" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Allowed table set
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#examples_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Examples
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-djconfigstrict_provenance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. dj.config["strict_provenance"]
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. dj.config[&#34;strict_provenance&#34;]">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#config-key" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Config key
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enforcement-model-and-its-limits" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Enforcement model and its limits
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#read-enforcement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Read enforcement
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#write-enforcement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Write enforcement
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#key-consistency" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key consistency
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#default-behavior" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Default behavior
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-opt-in" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why opt-in
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#examples_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Examples
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#integration-the-full-provenance-loop" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Integration: the full provenance loop
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#migration-path" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Migration path
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-is-not-in-this-specification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What is not in this specification
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        References
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -4799,7 +4983,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/specs/job-metadata/" class="md-nav__link">
+      <a href="../job-metadata/" class="md-nav__link">
         
   
   
@@ -4827,7 +5011,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/specs/object-store-configuration/" class="md-nav__link">
+      <a href="../object-store-configuration/" class="md-nav__link">
         
   
   
@@ -4916,7 +5100,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/specs/deploy-operations/" class="md-nav__link">
+      <a href="../deploy-operations/" class="md-nav__link">
         
   
   
@@ -5013,7 +5197,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/specs/thread-safe-mode/" class="md-nav__link">
+      <a href="../thread-safe-mode/" class="md-nav__link">
         
   
   
@@ -5049,7 +5233,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/configuration/" class="md-nav__link">
+      <a href="../../configuration/" class="md-nav__link">
         
   
   
@@ -5077,7 +5261,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/definition-syntax/" class="md-nav__link">
+      <a href="../../definition-syntax/" class="md-nav__link">
         
   
   
@@ -5105,7 +5289,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/operators/" class="md-nav__link">
+      <a href="../../operators/" class="md-nav__link">
         
   
   
@@ -5133,7 +5317,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/errors/" class="md-nav__link">
+      <a href="../../errors/" class="md-nav__link">
         
   
   
@@ -5161,7 +5345,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../elements/" class="md-nav__link">
+      <a href="../../../elements/" class="md-nav__link">
         
   
   
@@ -5219,7 +5403,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../api/" class="md-nav__link ">
+            <a href="../../../api/" class="md-nav__link ">
               
   
   
@@ -5261,7 +5445,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../api/datajoint/" class="md-nav__link">
+      <a href="../../../api/datajoint/" class="md-nav__link">
         
   
   
@@ -5333,7 +5517,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../api/datajoint/" class="md-nav__link ">
+            <a href="../../../api/datajoint/" class="md-nav__link ">
               
   
   
@@ -5375,7 +5559,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../api/datajoint/blob/" class="md-nav__link">
+      <a href="../../../api/datajoint/blob/" class="md-nav__link">
         
   
   
@@ -5403,7 +5587,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../api/datajoint/codecs/" class="md-nav__link">
+      <a href="../../../api/datajoint/codecs/" class="md-nav__link">
         
   
   
@@ -5431,7 +5615,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../api/datajoint/connection/" class="md-nav__link">
+      <a href="../../../api/datajoint/connection/" class="md-nav__link">
         
   
   
@@ -5459,7 +5643,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../api/datajoint/diagram/" class="md-nav__link">
+      <a href="../../../api/datajoint/diagram/" class="md-nav__link">
         
   
   
@@ -5487,7 +5671,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../api/datajoint/errors/" class="md-nav__link">
+      <a href="../../../api/datajoint/errors/" class="md-nav__link">
         
   
   
@@ -5515,7 +5699,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../api/datajoint/expression/" class="md-nav__link">
+      <a href="../../../api/datajoint/expression/" class="md-nav__link">
         
   
   
@@ -5543,7 +5727,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../api/datajoint/hash_registry/" class="md-nav__link">
+      <a href="../../../api/datajoint/hash_registry/" class="md-nav__link">
         
   
   
@@ -5571,7 +5755,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../api/datajoint/heading/" class="md-nav__link">
+      <a href="../../../api/datajoint/heading/" class="md-nav__link">
         
   
   
@@ -5599,7 +5783,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../api/datajoint/jobs/" class="md-nav__link">
+      <a href="../../../api/datajoint/jobs/" class="md-nav__link">
         
   
   
@@ -5627,7 +5811,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../api/datajoint/migrate/" class="md-nav__link">
+      <a href="../../../api/datajoint/migrate/" class="md-nav__link">
         
   
   
@@ -5655,7 +5839,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../api/datajoint/schemas/" class="md-nav__link">
+      <a href="../../../api/datajoint/schemas/" class="md-nav__link">
         
   
   
@@ -5683,7 +5867,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../api/datajoint/settings/" class="md-nav__link">
+      <a href="../../../api/datajoint/settings/" class="md-nav__link">
         
   
   
@@ -5711,7 +5895,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../api/datajoint/table/" class="md-nav__link">
+      <a href="../../../api/datajoint/table/" class="md-nav__link">
         
   
   
@@ -5739,7 +5923,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../api/datajoint/user_tables/" class="md-nav__link">
+      <a href="../../../api/datajoint/user_tables/" class="md-nav__link">
         
   
   
@@ -5821,7 +6005,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../about/" class="md-nav__link ">
+            <a href="../../../about/" class="md-nav__link ">
               
   
   
@@ -5863,7 +6047,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../about/whats-new-2-2-4/" class="md-nav__link">
+      <a href="../../../about/whats-new-2-2-4/" class="md-nav__link">
         
   
   
@@ -5891,7 +6075,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../about/whats-new-22/" class="md-nav__link">
+      <a href="../../../about/whats-new-22/" class="md-nav__link">
         
   
   
@@ -5919,7 +6103,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../about/whats-new-21/" class="md-nav__link">
+      <a href="../../../about/whats-new-21/" class="md-nav__link">
         
   
   
@@ -5947,7 +6131,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../about/whats-new-2/" class="md-nav__link">
+      <a href="../../../about/whats-new-2/" class="md-nav__link">
         
   
   
@@ -5975,7 +6159,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../about/history/" class="md-nav__link">
+      <a href="../../../about/history/" class="md-nav__link">
         
   
   
@@ -6003,7 +6187,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../about/versioning/" class="md-nav__link">
+      <a href="../../../about/versioning/" class="md-nav__link">
         
   
   
@@ -6059,7 +6243,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../about/citation/" class="md-nav__link">
+      <a href="../../../about/citation/" class="md-nav__link">
         
   
   
@@ -6087,7 +6271,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../about/publications/" class="md-nav__link">
+      <a href="../../../about/publications/" class="md-nav__link">
         
   
   
@@ -6115,7 +6299,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../about/contributing/" class="md-nav__link">
+      <a href="../../../about/contributing/" class="md-nav__link">
         
   
   
@@ -6170,10 +6354,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#install-datajoint-20" class="md-nav__link">
+  <a href="#why-this-exists" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Install DataJoint 2.0+
+        Why this exists
       
     </span>
   </a>
@@ -6181,22 +6365,44 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#verify-installation" class="md-nav__link">
+  <a href="#concepts" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Verify Installation
+        Concepts
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Verify Installation">
+    <nav class="md-nav" aria-label="Concepts">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#if-you-have-an-older-version" class="md-nav__link">
+  <a href="#trace-as-the-upstream-mirror-of-cascade" class="md-nav__link">
     <span class="md-ellipsis">
       
-        If You Have an Older Version
+        Trace as the upstream mirror of cascade
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reusing-the-propagation-primitives" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reusing the propagation primitives
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-make-provenance-boundary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The make() provenance boundary
       
     </span>
   </a>
@@ -6209,22 +6415,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#database-server" class="md-nav__link">
+  <a href="#1-diagramtracetable_expr" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Database Server
+        1. Diagram.trace(table_expr)
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Database Server">
+    <nav class="md-nav" aria-label="1. Diagram.trace(table_expr)">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#local-development-docker" class="md-nav__link">
+  <a href="#signature" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Local Development (Docker)
+        Signature
       
     </span>
   </a>
@@ -6232,10 +6438,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#datajointcom-recommended" class="md-nav__link">
+  <a href="#behavior" class="md-nav__link">
     <span class="md-ellipsis">
       
-        DataJoint.com (Recommended)
+        Behavior
       
     </span>
   </a>
@@ -6243,10 +6449,32 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#self-managed-cloud-databases" class="md-nav__link">
+  <a href="#indexing-tracet" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Self-Managed Cloud Databases
+        Indexing: trace[T]
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#other-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Other methods
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Examples
       
     </span>
   </a>
@@ -6259,33 +6487,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#requirements" class="md-nav__link">
+  <a href="#2-selfupstream-inside-make" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Requirements
+        2. self.upstream inside make()
       
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#troubleshooting" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Troubleshooting
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Troubleshooting">
+    <nav class="md-nav" aria-label="2. self.upstream inside make()">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#pymysql-connection-errors" class="md-nav__link">
+  <a href="#where-its-set" class="md-nav__link">
     <span class="md-ellipsis">
       
-        pymysql connection errors
+        Where it's set
       
     </span>
   </a>
@@ -6293,10 +6510,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#psycopg2-connection-errors" class="md-nav__link">
+  <a href="#what-it-returns" class="md-nav__link">
     <span class="md-ellipsis">
       
-        psycopg2 connection errors
+        What it returns
       
     </span>
   </a>
@@ -6304,10 +6521,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#ssltls-connection-issues" class="md-nav__link">
+  <a href="#allowed-table-set" class="md-nav__link">
     <span class="md-ellipsis">
       
-        SSL/TLS connection issues
+        Allowed table set
       
     </span>
   </a>
@@ -6315,10 +6532,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#permission-denied" class="md-nav__link">
+  <a href="#examples_1" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Permission denied
+        Examples
       
     </span>
   </a>
@@ -6327,6 +6544,155 @@
         
       </ul>
     </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-djconfigstrict_provenance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. dj.config["strict_provenance"]
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. dj.config[&#34;strict_provenance&#34;]">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#config-key" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Config key
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enforcement-model-and-its-limits" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Enforcement model and its limits
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#read-enforcement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Read enforcement
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#write-enforcement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Write enforcement
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#key-consistency" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key consistency
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#default-behavior" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Default behavior
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-opt-in" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why opt-in
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#examples_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Examples
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#integration-the-full-provenance-loop" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Integration: the full provenance loop
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#migration-path" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Migration path
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-is-not-in-this-specification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What is not in this specification
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        References
+      
+    </span>
+  </a>
   
 </li>
       
@@ -6350,112 +6716,461 @@
   
 
 
-<h1 id="installation">Installation<a class="headerlink" href="#installation" title="Permanent link">&para;</a></h1>
-<p>Install DataJoint Python and set up your environment.</p>
-<h2 id="install-datajoint-20">Install DataJoint 2.0+<a class="headerlink" href="#install-datajoint-20" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>datajoint
-</code></pre></div>
-<p><strong>With optional dependencies:</strong></p>
-<div class="highlight"><pre><span></span><code><span class="c1"># For diagram visualization (matplotlib, ipython)</span>
-pip<span class="w"> </span>install<span class="w"> </span>datajoint<span class="o">[</span>viz<span class="o">]</span>
-
-<span class="c1"># For polars DataFrame support</span>
-pip<span class="w"> </span>install<span class="w"> </span>datajoint<span class="o">[</span>polars<span class="o">]</span>
-
-<span class="c1"># For the PostgreSQL backend (psycopg2-binary) — added in 2.1</span>
-pip<span class="w"> </span>install<span class="w"> </span>datajoint<span class="o">[</span>postgres<span class="o">]</span>
-
-<span class="c1"># For cloud storage backends</span>
-pip<span class="w"> </span>install<span class="w"> </span>datajoint<span class="o">[</span>s3<span class="o">]</span><span class="w">    </span><span class="c1"># AWS S3</span>
-pip<span class="w"> </span>install<span class="w"> </span>datajoint<span class="o">[</span>gcs<span class="o">]</span><span class="w">   </span><span class="c1"># Google Cloud Storage</span>
-pip<span class="w"> </span>install<span class="w"> </span>datajoint<span class="o">[</span>azure<span class="o">]</span><span class="w"> </span><span class="c1"># Azure Blob Storage</span>
-</code></pre></div>
-<div class="admonition note">
-<p class="admonition-title">Upgrading from 0.14.x?</p>
-<p>See the <a href="../migrate-to-v20/">Migration Guide</a> for breaking changes and upgrade instructions.
-Legacy documentation for 0.14.x is available at <a href="https://datajoint.github.io/datajoint-python">datajoint.github.io</a>.</p>
+<h1 id="provenance-trace-selfupstream-and-strict-provenance-make-specification">Provenance: Trace, <code>self.upstream</code>, and Strict-Provenance <code>make()</code> — Specification<a class="headerlink" href="#provenance-trace-selfupstream-and-strict-provenance-make-specification" title="Permanent link">&para;</a></h1>
+<p>This document specifies three interlocking features that together close DataJoint's provenance loop:</p>
+<ol>
+<li><strong><code>Diagram.trace(table_expr)</code></strong> — the upstream mirror of <code>Diagram.cascade()</code>; walks the FK graph from a restricted table expression to every ancestor.</li>
+<li><strong><code>self.upstream</code></strong> — a property on <code>AutoPopulate</code> tables that exposes the trace for the current <code>key</code> during <code>make()</code> execution.</li>
+<li><strong><code>dj.config["strict_provenance"]</code></strong> — a runtime flag that checks the upstream-only convention inside <code>make()</code> (read only from <code>self.upstream</code>, write only to <code>self</code> and its Parts).</li>
+</ol>
+<p>The three are designed as a unit. <code>trace</code> is the underlying graph operation; <code>self.upstream</code> is the ergonomic surface for <code>make()</code>; <code>strict_provenance</code> is the enforcement layer that turns the convention from unenforced documentation into an opt-in runtime check — a best-effort guardrail in the open-source core, with comprehensive checking delegated to code inspection in the DataJoint platform's code-deployment CI/CD (see §3).</p>
+<div class="admonition version-added">
+<p class="admonition-title">New in DataJoint 2.3</p>
+<p>Introduced together. Existing code that does not use these features is unaffected; <code>strict_provenance</code> defaults to <code>False</code>.</p>
 </div>
-<h2 id="verify-installation">Verify Installation<a class="headerlink" href="#verify-installation" title="Permanent link">&para;</a></h2>
-<p>Check your installed version:</p>
-<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">datajoint</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dj</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">__version__</span><span class="p">)</span>
-</code></pre></div>
-<p><strong>Expected output for this documentation:</strong></p>
-<ul>
-<li><code>2.0.0</code> or higher — You're ready to follow this documentation</li>
-<li><code>0.14.x</code> or lower — You have the stable version, use <a href="https://datajoint.github.io/datajoint-python">legacy docs</a> instead</li>
-</ul>
-<h3 id="if-you-have-an-older-version">If You Have an Older Version<a class="headerlink" href="#if-you-have-an-older-version" title="Permanent link">&para;</a></h3>
+<p>For the related downstream operation, see <a href="../cascade/">Cascade Specification</a>. For <code>make()</code> itself, see <a href="../autopopulate/">AutoPopulate Specification</a>.</p>
+<h2 id="why-this-exists">Why this exists<a class="headerlink" href="#why-this-exists" title="Permanent link">&para;</a></h2>
+<p>DataJoint's provenance guarantee — that every computed row can be traced back to the exact upstream rows it was derived from — rests on the convention that <code>make(self, key)</code> only reads from declared upstream dependencies. Today the framework <strong>defines</strong> this convention but does not <strong>check</strong> it: a <code>make()</code> can <code>fetch()</code> from any table, making the undeclared dependency invisible to the FK graph and breaking the provenance claim downstream.</p>
+<p>Closing the loop requires three pieces working together:</p>
+<ol>
+<li>A way to <strong>construct</strong> the upstream view as a query object: <code>Diagram.trace()</code>.</li>
+<li>A way to <strong>expose</strong> that view ergonomically inside <code>make()</code> so users naturally do the right thing: <code>self.upstream</code>.</li>
+<li>A way to <strong>check</strong> that nothing else is read or written: <code>strict_provenance</code>.</li>
+</ol>
+<p>Without (1), downstream tools that need row-level provenance (data-lineage viewers, CDC publishers, audit logs) have to reimplement the FK walk themselves — repeatedly, with subtly different bugs. Without (2), even users who follow the convention write awkward boilerplate (<code>(Upstream &amp; key).fetch1(...)</code> everywhere). Without (3), the convention can be silently violated and the violation stays invisible until it corrupts a downstream provenance claim.</p>
+<h2 id="concepts">Concepts<a class="headerlink" href="#concepts" title="Permanent link">&para;</a></h2>
+<h3 id="trace-as-the-upstream-mirror-of-cascade">Trace as the upstream mirror of cascade<a class="headerlink" href="#trace-as-the-upstream-mirror-of-cascade" title="Permanent link">&para;</a></h3>
+<p><code>Diagram.cascade()</code> walks <strong>downstream</strong> from a restricted seed and answers <em>"what is affected if these rows are deleted?"</em> <code>Diagram.trace()</code> walks <strong>upstream</strong> and answers <em>"what contributed to these rows?"</em>. The two share the same dependency graph, the same alias-node mechanism, and most of the same propagation machinery — only the direction differs.</p>
 <table>
 <thead>
 <tr>
-<th>Your Situation</th>
-<th>Action</th>
+<th>Method</th>
+<th>Direction</th>
+<th>Convergence</th>
+<th>Question answered</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Installed 0.14.x, want to upgrade</td>
-<td><code>pip install --upgrade datajoint</code></td>
+<td><code>Diagram.cascade(expr)</code></td>
+<td>downstream</td>
+<td>OR — any FK path taints</td>
+<td>What's affected if these rows are deleted?</td>
 </tr>
 <tr>
-<td>Have existing 0.14.x pipeline to upgrade</td>
-<td>Follow <a href="../migrate-to-v20/">Migration Guide</a></td>
+<td><code>Diagram.restrict(expr)</code></td>
+<td>downstream</td>
+<td>AND — must satisfy all FK paths</td>
+<td>What satisfies all of these conditions?</td>
+</tr>
+<tr>
+<td><code>Diagram.trace(expr)</code></td>
+<td><strong>upstream</strong></td>
+<td><strong>OR</strong> — any FK path contributes</td>
+<td>What contributed to these rows?</td>
 </tr>
 </tbody>
 </table>
-<h2 id="database-server">Database Server<a class="headerlink" href="#database-server" title="Permanent link">&para;</a></h2>
-<p>DataJoint connects to either MySQL or PostgreSQL. MySQL has been supported since the original release; PostgreSQL support was added in <strong>2.1</strong>, and the <code>database.name</code> setting for selecting a non-default PostgreSQL database was added in <strong>2.2.1</strong>. See <a href="../configure-database/#postgresql-backend">Configure Database Connection</a> for the full configuration reference.</p>
-<h3 id="local-development-docker">Local Development (Docker)<a class="headerlink" href="#local-development-docker" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># MySQL</span>
-docker<span class="w"> </span>run<span class="w"> </span>-d<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--name<span class="w"> </span>datajoint-db<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-p<span class="w"> </span><span class="m">3306</span>:3306<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-e<span class="w"> </span><span class="nv">MYSQL_ROOT_PASSWORD</span><span class="o">=</span>simple<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>mysql:8.0
+<p><code>trace</code> uses OR convergence because an ancestor entity contributes to a child row if it appears via <em>any</em> FK path. (An AND-flavored upstream analog — "ancestors that contributed via <em>every</em> path" — is not provided in 2.3.)</p>
+<h3 id="reusing-the-propagation-primitives">Reusing the propagation primitives<a class="headerlink" href="#reusing-the-propagation-primitives" title="Permanent link">&para;</a></h3>
+<p><code>trace</code> applies the <strong>upward propagation rules</strong> (<code>U1</code>, <code>U2</code>, <code>U3</code>) defined in the <a href="../cascade/#upward-propagation-child-parent">Cascade Specification</a>, which are the symmetric inverses of <code>cascade</code>'s forward rules. Renamed FKs (<code>.proj()</code>) are reversed via U2; Part-of-Part chains are walked through naturally; alias nodes in the graph are transparent.</p>
+<p>This is why <code>trace</code> cannot ship before the upward primitives exist in the codebase. As of DataJoint 2.3, the primitives are in place (added with <a href="https://github.com/datajoint/datajoint-python/pull/1468">#1429's cascade fix</a>), and <code>trace</code> is a direct consumer.</p>
+<h3 id="the-make-provenance-boundary">The <code>make()</code> provenance boundary<a class="headerlink" href="#the-make-provenance-boundary" title="Permanent link">&para;</a></h3>
+<p>DataJoint's <code>make(self, key)</code> convention has always been:</p>
+<div class="highlight"><pre><span></span><code>Read from self&#39;s declared upstream dependencies; write to self (and its Parts).
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><span class="c1"># PostgreSQL (added in 2.1)</span>
-docker<span class="w"> </span>run<span class="w"> </span>-d<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--name<span class="w"> </span>datajoint-db<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-p<span class="w"> </span><span class="m">5432</span>:5432<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-e<span class="w"> </span><span class="nv">POSTGRES_PASSWORD</span><span class="o">=</span>simple<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>postgres:15
-</code></pre></div>
-<h3 id="datajointcom-recommended">DataJoint.com (Recommended)<a class="headerlink" href="#datajointcom-recommended" title="Permanent link">&para;</a></h3>
-<p><a href="https://datajoint.com">DataJoint.com</a> provides fully managed infrastructure for scientific data pipelines—cloud or on-premises—with comprehensive support, automatic backups, object storage, and team collaboration features.</p>
-<h3 id="self-managed-cloud-databases">Self-Managed Cloud Databases<a class="headerlink" href="#self-managed-cloud-databases" title="Permanent link">&para;</a></h3>
+<p>The convention defines the <strong>provenance boundary</strong>: data flows in from declared ancestors and out to the target table and its Parts. Anything that crosses this boundary in another direction breaks the provenance claim — a <code>fetch</code> from an undeclared table makes that dependency invisible; an <code>insert</code> into another table sneaks rows past the FK graph.</p>
+<p>The trinity makes this boundary explicit and (optionally) checked:</p>
 <ul>
-<li><strong>Amazon RDS</strong> — MySQL, Aurora MySQL, PostgreSQL, or Aurora PostgreSQL</li>
-<li><strong>Google Cloud SQL</strong> — MySQL or PostgreSQL</li>
-<li><strong>Azure Database</strong> — MySQL or PostgreSQL</li>
+<li><strong><code>self.upstream</code></strong> is the blessed read channel. Reading through it keeps every dependency visible to the FK graph.</li>
+<li><strong><code>self</code></strong> (and its Parts) is the only blessed write target.</li>
+<li><strong><code>strict_provenance=True</code></strong> checks both at runtime — a best-effort guardrail, not an airtight boundary (see §3).</li>
 </ul>
-<p>See <a href="../configure-database/">Configure Database Connection</a> for connection setup.</p>
-<h2 id="requirements">Requirements<a class="headerlink" href="#requirements" title="Permanent link">&para;</a></h2>
+<h2 id="1-diagramtracetable_expr">1. <code>Diagram.trace(table_expr)</code><a class="headerlink" href="#1-diagramtracetable_expr" title="Permanent link">&para;</a></h2>
+<h3 id="signature">Signature<a class="headerlink" href="#signature" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="nd">@classmethod</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">trace</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">table_expr</span><span class="p">:</span> <span class="n">QueryExpression</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Diagram</span><span class="p">:</span>
+    <span class="o">...</span>
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>table_expr</code></td>
+<td><code>QueryExpression</code></td>
+<td>A (possibly restricted) table expression. The trace propagates this restriction upstream through the FK graph.</td>
+</tr>
+</tbody>
+</table>
+<p>Returns a <code>Diagram</code> instance whose nodes are the seed and all of its ancestors (across all loaded schemas), each carrying a restriction derived from the seed.</p>
+<h3 id="behavior">Behavior<a class="headerlink" href="#behavior" title="Permanent link">&para;</a></h3>
+<p><code>trace</code> mirrors <code>cascade</code>:</p>
+<ol>
+<li>Load the dependency graph via <code>connection.dependencies.load_all_upstream()</code> — the upstream analog of <code>load_all_downstream</code>, introduced with <code>Diagram.trace</code> (<a href="https://github.com/datajoint/datajoint-python/issues/1423">#1423</a>). It discovers all schemas reachable via reverse FK edges from the seed's schema.</li>
+<li>Take the seed's restriction and propagate it <strong>upstream</strong> along the FK graph. For each edge <code>parent → child</code>, when the child has a restriction, apply the upward rule (<code>U1</code>, <code>U2</code>, or <code>U3</code> per the cascade spec) to derive the parent's restriction.</li>
+<li>Trim the resulting graph to <strong>seed + ancestors only</strong>. Descendants of the seed and unrelated ancestors are not included.</li>
+<li>Convergence is <strong>OR</strong>: an ancestor entity is included if reachable through <em>any</em> FK path from the seed (consistent with how a child row "comes from" any of its FK parents).</li>
+</ol>
+<p>The graph traversal is dual to <code>cascade</code>'s. <code>cascade</code> walks <code>seed + descendants(seed)</code>; <code>trace</code> walks <code>seed + ancestors(seed)</code>. Both apply rules edge-by-edge; both terminate because the dependency graph is a DAG.</p>
+<h3 id="indexing-tracet">Indexing: <code>trace[T]</code><a class="headerlink" href="#indexing-tracet" title="Permanent link">&para;</a></h3>
+<p>The primary user-facing operation. Returns the ancestor's table pre-restricted through the FK join path.</p>
+<div class="highlight"><pre><span></span><code><span class="n">trace</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">Diagram</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="n">MyChild</span> <span class="o">&amp;</span> <span class="n">key</span><span class="p">)</span>
+<span class="n">session</span> <span class="o">=</span> <span class="n">trace</span><span class="p">[</span><span class="n">Session</span><span class="p">]</span>              <span class="c1"># QueryExpression: Session restricted to ancestors of MyChild &amp; key</span>
+<span class="n">session</span><span class="o">.</span><span class="n">fetch1</span><span class="p">(</span><span class="s2">&quot;session_date&quot;</span><span class="p">)</span>
+<span class="n">trace</span><span class="p">[</span><span class="n">ExtractTraces</span><span class="p">]</span><span class="o">.</span><span class="n">to_arrays</span><span class="p">(</span><span class="s2">&quot;trace&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p>The argument may be:</p>
 <ul>
-<li>Python 3.10+</li>
-<li>MySQL 8.0.13+ or PostgreSQL 15+</li>
-<li>Network access to database server</li>
+<li><strong>A Table subclass</strong> (e.g. <code>Session</code>) — convenient when the class is in scope.</li>
+<li><strong>A string</strong> giving a table's fully-qualified or class name (e.g. <code>"experiment.Session"</code> or <code>"Session"</code>) — for when it isn't.</li>
 </ul>
-<h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
-<h3 id="pymysql-connection-errors"><code>pymysql</code> connection errors<a class="headerlink" href="#pymysql-connection-errors" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>pymysql<span class="w"> </span>--force-reinstall
+<p>In both cases the result is the ancestor pre-restricted through the FK join path, returned as a <code>FreeTable</code> (a full <code>QueryExpression</code>, so every query operator and the fetch API apply).</p>
+<p>Requesting a table that is not an ancestor (or the seed itself) of <code>table_expr</code> raises <code>DataJointError</code>. This is the same guarantee that <code>cascade</code> provides for descendants.</p>
+<h3 id="other-methods">Other methods<a class="headerlink" href="#other-methods" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Behavior</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>trace.counts()</code></td>
+<td><code>dict[str, int]</code> mapping each contributing table's full table name (e.g. <code>`imaging`.`subject`</code>) to its row count under the seed's restriction. Includes the seed alongside its ancestors. Mirror of <code>cascade.counts()</code>.</td>
+</tr>
+<tr>
+<td><code>iter(trace)</code></td>
+<td>Iterate over pre-restricted <code>FreeTable</code>s in topological order (parents/roots first).</td>
+</tr>
+</tbody>
+</table>
+<p>All <code>QueryExpression</code> operators (<code>join</code>, <code>aggr</code>, <code>proj</code>, <code>restrict</code>, <code>&amp;</code>, <code>*</code>) work on the values returned by <code>trace[T]</code>. The trace is a <em>view</em> into the graph; the returned <code>QueryExpression</code>s are first-class.</p>
+<h3 id="examples">Examples<a class="headerlink" href="#examples" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">datajoint</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dj</span>
+
+<span class="n">schema</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">Schema</span><span class="p">(</span><span class="s2">&quot;imaging&quot;</span><span class="p">)</span>
+
+<span class="nd">@schema</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Subject</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">    subject_id : int32</span>
+<span class="s2">    &quot;&quot;&quot;</span>
+
+<span class="nd">@schema</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Session</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">    -&gt; Subject</span>
+<span class="s2">    session_id : int32</span>
+<span class="s2">    ---</span>
+<span class="s2">    session_date : date</span>
+<span class="s2">    &quot;&quot;&quot;</span>
+
+<span class="nd">@schema</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Scan</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Imported</span><span class="p">):</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">    -&gt; Session</span>
+<span class="s2">    scan_id : int32</span>
+<span class="s2">    &quot;&quot;&quot;</span>
+
+<span class="nd">@schema</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ExtractTraces</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Computed</span><span class="p">):</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">    -&gt; Scan</span>
+<span class="s2">    ---</span>
+<span class="s2">    trace : float64</span>
+<span class="s2">    &quot;&quot;&quot;</span>
+
+<span class="nd">@schema</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Summary</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Computed</span><span class="p">):</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">    -&gt; ExtractTraces</span>
+<span class="s2">    ---</span>
+<span class="s2">    summary_stat : float64</span>
+<span class="s2">    &quot;&quot;&quot;</span>
 </code></pre></div>
-<h3 id="psycopg2-connection-errors"><code>psycopg2</code> connection errors<a class="headerlink" href="#psycopg2-connection-errors" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>datajoint<span class="o">[</span>postgres<span class="o">]</span><span class="w"> </span>--force-reinstall
+<p>Given a populated <code>Summary</code> row, the trace reaches every ancestor:</p>
+<div class="highlight"><pre><span></span><code><span class="n">key</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;subject_id&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;session_id&quot;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span> <span class="s2">&quot;scan_id&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">}</span>
+<span class="n">trace</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">Diagram</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="n">Summary</span> <span class="o">&amp;</span> <span class="n">key</span><span class="p">)</span>
+
+<span class="n">trace</span><span class="p">[</span><span class="n">Subject</span><span class="p">]</span><span class="o">.</span><span class="n">fetch1</span><span class="p">(</span><span class="s2">&quot;subject_id&quot;</span><span class="p">)</span>           <span class="c1"># 1</span>
+<span class="n">trace</span><span class="p">[</span><span class="n">Session</span><span class="p">]</span><span class="o">.</span><span class="n">fetch1</span><span class="p">(</span><span class="s2">&quot;session_date&quot;</span><span class="p">)</span>         <span class="c1"># date of session 5</span>
+<span class="n">trace</span><span class="p">[</span><span class="n">Scan</span><span class="p">]</span><span class="o">.</span><span class="n">fetch1</span><span class="p">(</span><span class="s2">&quot;scan_id&quot;</span><span class="p">)</span>                 <span class="c1"># 2</span>
+<span class="n">trace</span><span class="p">[</span><span class="n">ExtractTraces</span><span class="p">]</span><span class="o">.</span><span class="n">fetch1</span><span class="p">(</span><span class="s2">&quot;trace&quot;</span><span class="p">)</span>          <span class="c1"># the trace that produced this Summary</span>
+
+<span class="n">trace</span><span class="o">.</span><span class="n">counts</span><span class="p">()</span>
+<span class="c1"># keyed by full table name; the seed (Summary) is included alongside its ancestors:</span>
+<span class="c1"># {&#39;`imaging`.`subject`&#39;: 1, &#39;`imaging`.`session`&#39;: 1, &#39;`imaging`.`_scan`&#39;: 1,</span>
+<span class="c1">#  &#39;`imaging`.`__extract_traces`&#39;: 1, &#39;`imaging`.`__summary`&#39;: 1}</span>
 </code></pre></div>
-<p>The PostgreSQL backend (added in 2.1) requires the <code>postgres</code> extra, which installs <code>psycopg2-binary</code>.</p>
-<h3 id="ssltls-connection-issues">SSL/TLS connection issues<a class="headerlink" href="#ssltls-connection-issues" title="Permanent link">&para;</a></h3>
-<p>Set <code>use_tls=False</code> for local development:</p>
-<div class="highlight"><pre><span></span><code><span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;database.use_tls&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+<p>For a renamed-FK case (paralleling <a href="../cascade/#example-1-part-of-part-with-renamed-fk">Cascade Spec §Worked Example 1</a>), the upward rules reverse the rename so <code>trace[Ancestor]</code> returns the ancestor with its native column names regardless of how the seed's columns are named.</p>
+<h2 id="2-selfupstream-inside-make">2. <code>self.upstream</code> inside <code>make()</code><a class="headerlink" href="#2-selfupstream-inside-make" title="Permanent link">&para;</a></h2>
+<h3 id="where-its-set">Where it's set<a class="headerlink" href="#where-its-set" title="Permanent link">&para;</a></h3>
+<p>The framework constructs <code>self.upstream = Diagram.trace(self &amp; key)</code> immediately before invoking the user-defined <code>make(self, key)</code>. The construction happens once per <code>make()</code> call; <code>self.upstream</code> is a regular attribute on the bound <code>self</code> instance for the duration of the call.</p>
+<p>The construction is <strong>lazy</strong> in the sense that the underlying SQL is not issued until the user accesses an ancestor: <code>self.upstream[Session]</code> builds a <code>QueryExpression</code>, and <code>.fetch1()</code> on that expression triggers a SELECT. The trace diagram is built once per <code>make()</code> call, but fetch results are not cached — each <code>self.upstream[T]</code> access returns a fresh <code>QueryExpression</code>, so reading the same ancestor twice issues two SELECTs.</p>
+<h3 id="what-it-returns">What it returns<a class="headerlink" href="#what-it-returns" title="Permanent link">&para;</a></h3>
+<p><code>self.upstream[T]</code> returns the same value <code>dj.Diagram.trace(self &amp; key)[T]</code> would return — the ancestor table pre-restricted to the rows that contributed to the current <code>key</code>. All <code>QueryExpression</code> operators work; the standard fetch API (<code>fetch</code>, <code>fetch1</code>, <code>to_arrays</code>, <code>to_dicts</code>, <code>to_pandas</code>) is fully supported.</p>
+<h3 id="allowed-table-set">Allowed table set<a class="headerlink" href="#allowed-table-set" title="Permanent link">&para;</a></h3>
+<p><code>self.upstream</code> exposes:</p>
+<ul>
+<li>All declared ancestors of <code>self</code> (transitively, including renamed-FK chains).</li>
+<li>The Parts of ancestors that themselves lie on an FK path to <code>self</code> — a Part is included only when it is genuinely reachable through the FK graph, not merely because its master is an ancestor.</li>
+</ul>
+<p>Requesting any table outside this set raises <code>DataJointError</code> — including tables that exist in the schema but are not ancestors of <code>self</code>. This is the same guarantee <code>Diagram.trace(...)</code> provides; <code>self.upstream</code> is just the per-<code>make()</code> instance of it.</p>
+<h3 id="examples_1">Examples<a class="headerlink" href="#examples_1" title="Permanent link">&para;</a></h3>
+<p>Without <code>strict_provenance</code> (the default), <code>self.upstream</code> is a convenience — the same data is reachable via <code>(Upstream &amp; key).fetch1(...)</code>. The win is ergonomic:</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">make</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+    <span class="c1"># All upstream reads pre-restricted to the current key</span>
+    <span class="n">session_date</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">upstream</span><span class="p">[</span><span class="n">Session</span><span class="p">]</span><span class="o">.</span><span class="n">fetch1</span><span class="p">(</span><span class="s2">&quot;session_date&quot;</span><span class="p">)</span>
+    <span class="n">traces</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">upstream</span><span class="p">[</span><span class="n">ExtractTraces</span><span class="p">]</span><span class="o">.</span><span class="n">to_arrays</span><span class="p">(</span><span class="s2">&quot;trace&quot;</span><span class="p">)</span>
+    <span class="n">summary</span> <span class="o">=</span> <span class="n">compute</span><span class="p">(</span><span class="n">traces</span><span class="p">,</span> <span class="n">session_date</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="o">**</span><span class="n">key</span><span class="p">,</span> <span class="s2">&quot;summary_stat&quot;</span><span class="p">:</span> <span class="n">summary</span><span class="p">})</span>
 </code></pre></div>
-<h3 id="permission-denied">Permission denied<a class="headerlink" href="#permission-denied" title="Permanent link">&para;</a></h3>
-<p>Ensure your database user has appropriate privileges:</p>
-<div class="highlight"><pre><span></span><code><span class="c1">-- MySQL</span>
-<span class="k">GRANT</span><span class="w"> </span><span class="k">ALL</span><span class="w"> </span><span class="k">PRIVILEGES</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="o">`</span><span class="n">your_schema</span><span class="o">%`</span><span class="p">.</span><span class="o">*</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="s1">&#39;username&#39;</span><span class="o">@</span><span class="s1">&#39;%&#39;</span><span class="p">;</span>
+<p>Multi-ancestor reads remain natural:</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">make</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+    <span class="c1"># Aggregate one ancestor restricted by another, all still pre-keyed</span>
+    <span class="n">counts</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">upstream</span><span class="p">[</span><span class="n">Session</span><span class="p">]</span><span class="o">.</span><span class="n">aggr</span><span class="p">(</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">upstream</span><span class="p">[</span><span class="n">Scan</span><span class="p">],</span> <span class="n">n</span><span class="o">=</span><span class="s2">&quot;count(scan_id)&quot;</span>
+    <span class="p">)</span><span class="o">.</span><span class="n">fetch</span><span class="p">(</span><span class="s2">&quot;n&quot;</span><span class="p">,</span> <span class="n">as_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="o">...</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><span class="c1">-- PostgreSQL</span>
-<span class="k">GRANT</span><span class="w"> </span><span class="k">ALL</span><span class="w"> </span><span class="k">PRIVILEGES</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">DATABASE</span><span class="w"> </span><span class="n">my_db</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">username</span><span class="p">;</span>
+<p>Part tables of ancestors are accessible:</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">make</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+    <span class="c1"># If an ancestor has Parts, they appear in the trace too</span>
+    <span class="n">annotations</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">upstream</span><span class="p">[</span><span class="n">Session</span><span class="o">.</span><span class="n">Annotation</span><span class="p">]</span><span class="o">.</span><span class="n">fetch</span><span class="p">(</span><span class="n">as_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="o">...</span>
 </code></pre></div>
+<p>The <code>key</code> argument to <code>make()</code> — and any <code>make_kwargs</code> optionally forwarded through <code>populate(..., make_kwargs=...)</code> — are unaffected. Existing <code>make()</code> implementations that never reference <code>self.upstream</code> behave identically to today.</p>
+<h2 id="3-djconfigstrict_provenance">3. <code>dj.config["strict_provenance"]</code><a class="headerlink" href="#3-djconfigstrict_provenance" title="Permanent link">&para;</a></h2>
+<h3 id="config-key">Config key<a class="headerlink" href="#config-key" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>strict_provenance</code></td>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td>When <code>True</code>, checks upstream-only reads and target-only writes inside <code>make()</code>.</td>
+</tr>
+</tbody>
+</table>
+<p>The flag is read from the global <code>dj.config</code> at the start of each <code>make()</code> invocation and captured into a per-call enforcement context stored in a <code>contextvars.ContextVar</code>, so the active context follows the executing task rather than being shared as global mutable state. Because the config value itself is process-global, concurrent populates in the same process cannot run with different <code>strict_provenance</code> values — each <code>make()</code> sees whatever the config holds when it begins.</p>
+<h3 id="enforcement-model-and-its-limits">Enforcement model and its limits<a class="headerlink" href="#enforcement-model-and-its-limits" title="Permanent link">&para;</a></h3>
+<p>The runtime checks below are a <strong>best-effort development guardrail, not an airtight boundary.</strong> They are wired into DataJoint's Python query and insert paths (<code>assert_read_allowed</code> runs from <code>QueryExpression.cursor</code>, before SQL is issued; the write check runs on the insert path), so they only observe access that goes <strong>through the DataJoint Python client.</strong> They intentionally catch the common, accidental failure mode — a <code>make()</code> that reads an <em>undeclared</em> dependency — and are what surfaces real violations when a team enables the flag in staging (see <a href="#migration-path">Migration path</a>).</p>
+<p>They do <strong>not</strong> constitute a security or correctness boundary:</p>
+<ul>
+<li>Raw SQL (<code>connection.query(...)</code>), a second client or process, a database console, a BI tool, or a non-Python binding all bypass the checks entirely.</li>
+<li>Within the Python client, the read check currently allows a direct read of a <em>declared</em> ancestor just as it allows reads through <code>self.upstream</code> — it flags reads of tables <em>outside</em> the allowed set, not the channel used to reach one inside it (see the note under <a href="#read-enforcement">Read enforcement</a>).</li>
+<li><strong>Existence and count idioms bypass the read gate.</strong> <code>len(q)</code>, <code>bool(q)</code>, and <code>item in q</code> issue their <code>COUNT</code>/<code>EXISTS</code> SQL directly rather than through the gated fetch path, so a read of an undeclared table via <code>len(Undeclared &amp; key)</code>, <code>bool(Undeclared &amp; cond)</code>, or <code>key in Undeclared</code> is <strong>not</strong> caught. Only the <code>fetch</code>/<code>fetch1</code>/<code>to_arrays</code>/iteration path is gated.</li>
+<li><strong>Restriction-by-table is not analyzed.</strong> A semijoin restriction such as <code>Ancestor &amp; Undeclared</code> renders <code>Undeclared</code> as an <code>IN (subquery)</code> in the <code>WHERE</code> clause, which the gate's base-table analysis does not inspect — so an undeclared table used only as a restriction operand passes. (Joins <em>are</em> caught, because they extend the query's support; restrictions are not.)</li>
+</ul>
+<p>Comprehensive enforcement — verifying that a <code>make()</code> reads only from its declared ancestors and writes only to its target, across every access path — is fundamentally a <strong>code-inspection problem, not a runtime-interception one.</strong> That inspection is performed by the <strong>DataJoint platform's code-deployment CI/CD process — not by the open-source core framework</strong>. When pipeline code is deployed through the platform, its CI/CD <strong>combines these runtime provenance checks with agentic review of the <code>make()</code> source</strong> (backed by static analysis where it is sound) to cover the paths the runtime guardrail cannot — including the client-side gaps listed above (existence/count idioms, restriction-by-table, and access outside the Python client). The open-source <code>strict_provenance</code> guardrail complements that by catching accidental drift during local development; it does not replace it, and the core framework does not attempt code inspection itself. See <a href="#what-is-not-in-this-specification">What is not in this specification</a>.</p>
+<h3 id="read-enforcement">Read enforcement<a class="headerlink" href="#read-enforcement" title="Permanent link">&para;</a></h3>
+<p>When <code>strict_provenance=True</code> and a <code>make()</code> is executing:</p>
+<table>
+<thead>
+<tr>
+<th>Read attempt</th>
+<th>Outcome</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>self.upstream[Ancestor].fetch(...)</code> (or any other fetch method)</td>
+<td><strong>Allowed</strong></td>
+</tr>
+<tr>
+<td><code>self.upstream[Ancestor] &amp; condition</code> then fetch</td>
+<td><strong>Allowed</strong></td>
+</tr>
+<tr>
+<td><code>(SomeTable &amp; key).fetch(...)</code> where <code>SomeTable</code> is a declared ancestor</td>
+<td><strong>Allowed</strong> in 2.3 — a direct read of a declared ancestor is not distinguished from a read through <code>self.upstream</code> (see note). <code>self.upstream</code> remains the recommended, provenance-safe channel.</td>
+</tr>
+<tr>
+<td><code>(SomeTable &amp; ...).fetch(...)</code> where <code>SomeTable</code> is <strong>not</strong> a declared ancestor of <code>self</code></td>
+<td><strong>Blocked</strong> — raises <code>DataJointError</code>.</td>
+</tr>
+<tr>
+<td>Reading <code>self</code> or <code>self.PartName</code></td>
+<td><strong>Allowed</strong> — the target's own state may be inspected mid-<code>make()</code>.</td>
+</tr>
+</tbody>
+</table>
+<p>The check is at fetch time, not at table-expression construction time. Building a <code>QueryExpression</code> is free; executing it (calling <code>fetch</code>, <code>fetch1</code>, <code>to_arrays</code>, etc.) is gated.</p>
+<div class="admonition note">
+<p class="admonition-title">What the read check does and does not distinguish</p>
+<p>The check flags reads of tables <strong>outside</strong> the allowed set (declared ancestors, <code>self</code>, and <code>self</code>'s Parts) — i.e. undeclared dependencies. It does <strong>not</strong> yet distinguish a read that came <em>through</em> <code>self.upstream[Ancestor]</code> from a direct read of the same ancestor via a plain expression; both are allowed. Tightening this to require the <code>self.upstream</code> channel needs an attribution marker propagated through query composition and is deferred to a follow-up. For declared ancestors, treat <code>self.upstream</code> as the recommended pattern, not a currently-enforced one.</p>
+</div>
+<h3 id="write-enforcement">Write enforcement<a class="headerlink" href="#write-enforcement" title="Permanent link">&para;</a></h3>
+<p>When <code>strict_provenance=True</code> and a <code>make()</code> is executing:</p>
+<table>
+<thead>
+<tr>
+<th>Write attempt</th>
+<th>Outcome</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>self.insert1(row)</code></td>
+<td><strong>Allowed</strong> (with key-consistency check, see below)</td>
+</tr>
+<tr>
+<td><code>self.PartName.insert(rows)</code></td>
+<td><strong>Allowed</strong> (with key-consistency check)</td>
+</tr>
+<tr>
+<td><code>SomeOtherTable.insert(...)</code></td>
+<td><strong>Blocked</strong> — raises <code>DataJointError</code>.</td>
+</tr>
+<tr>
+<td>Reading from <code>self.upstream[Ancestor]</code> and writing to <code>Ancestor</code></td>
+<td><strong>Blocked</strong> — <code>Ancestor</code> is not <code>self</code>.</td>
+</tr>
+</tbody>
+</table>
+<p>As with reads, the write check is wired into the DataJoint insert path and so shares the same client-side limits described in <a href="#enforcement-model-and-its-limits">Enforcement model and its limits</a>.</p>
+<h3 id="key-consistency">Key consistency<a class="headerlink" href="#key-consistency" title="Permanent link">&para;</a></h3>
+<p>Every row inserted into <code>self</code> or <code>self</code>'s Parts must have a primary key consistent with the current <code>key</code>:</p>
+<ul>
+<li>For attributes that overlap with <code>key</code> (i.e. <code>self</code>'s primary key attributes that the AutoPopulate framework provided), the row's values must equal <code>key</code>'s values.</li>
+<li>For Part-specific PK attributes (additional columns beyond <code>key</code>), any value is allowed.</li>
+</ul>
+<p>This prevents a <code>make()</code> from inserting rows for entities it wasn't called with — closing the last loophole where one entity's <code>make()</code> could silently produce data attributed to another.</p>
+<p>The key-consistency check applies to <strong>dict-style rows</strong>. Positional rows (tuples, numpy records) carry no attribute names to check against the current <code>key</code>, so they pass unchecked — dict inserts are the provenance-safe form under strict mode.</p>
+<h3 id="default-behavior">Default behavior<a class="headerlink" href="#default-behavior" title="Permanent link">&para;</a></h3>
+<p><code>strict_provenance=False</code> (the default) leaves all <code>make()</code> behavior unchanged. No deprecation warning, no soft enforcement, no compatibility shim. Existing pipelines run identically.</p>
+<h3 id="why-opt-in">Why opt-in<a class="headerlink" href="#why-opt-in" title="Permanent link">&para;</a></h3>
+<p><code>strict_provenance</code> is an <strong>operational</strong> flag — a property of how a deployment runs, not of the schema definition. Teams may want it on in production (where provenance checks back downstream claims) and off during development (where ad-hoc <code>fetch</code>/<code>insert</code> from <code>make()</code> is a useful debugging affordance). Opting in is a deliberate deployment choice. Forcing it on would break existing pipelines without giving teams the tools to migrate incrementally.</p>
+<p>A future major release may flip the default; that decision is out of scope for 2.3.</p>
+<h3 id="examples_2">Examples<a class="headerlink" href="#examples_2" title="Permanent link">&para;</a></h3>
+<p>A <code>make()</code> that complies with strict provenance:</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">make</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+    <span class="c1"># All reads through self.upstream</span>
+    <span class="n">rate</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">upstream</span><span class="p">[</span><span class="n">Recording</span><span class="p">]</span><span class="o">.</span><span class="n">fetch1</span><span class="p">(</span><span class="s2">&quot;sampling_rate&quot;</span><span class="p">)</span>
+    <span class="n">samples</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">upstream</span><span class="p">[</span><span class="n">Recording</span><span class="p">]</span><span class="o">.</span><span class="n">to_arrays</span><span class="p">(</span><span class="s2">&quot;signal&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Compute</span>
+    <span class="n">spectrum</span> <span class="o">=</span> <span class="n">compute_spectrum</span><span class="p">(</span><span class="n">samples</span><span class="p">,</span> <span class="n">rate</span><span class="p">)</span>
+
+    <span class="c1"># Write to self only, with key</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="o">**</span><span class="n">key</span><span class="p">,</span> <span class="s2">&quot;spectrum&quot;</span><span class="p">:</span> <span class="n">spectrum</span><span class="p">})</span>
+
+    <span class="c1"># Part write — also scoped to current key</span>
+    <span class="k">for</span> <span class="n">bin_id</span><span class="p">,</span> <span class="n">energy</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">spectrum</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Bin</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="o">**</span><span class="n">key</span><span class="p">,</span> <span class="s2">&quot;bin_id&quot;</span><span class="p">:</span> <span class="n">bin_id</span><span class="p">,</span> <span class="s2">&quot;energy&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">energy</span><span class="p">)})</span>
+</code></pre></div>
+<p>A <code>make()</code> that <strong>violates</strong> strict provenance (here <code>self</code> is <code>Spectrum</code>, whose key is <code>{"recording_id": 5}</code>):</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">make</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+    <span class="c1"># ERROR: reading a table that is not a declared ancestor of self</span>
+    <span class="n">label</span> <span class="o">=</span> <span class="p">(</span><span class="n">UnrelatedTable</span> <span class="o">&amp;</span> <span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">fetch1</span><span class="p">(</span><span class="s2">&quot;label&quot;</span><span class="p">)</span>
+    <span class="c1"># → DataJointError: strict_provenance=True: read from undeclared table(s)</span>
+    <span class="c1">#   [&#39;`analysis`.`unrelated_table`&#39;] is not permitted inside make(). Use</span>
+    <span class="c1">#   self.upstream[T] for declared ancestors, or declare a foreign-key</span>
+    <span class="c1">#   dependency on the table you want to read.</span>
+    <span class="c1">#</span>
+    <span class="c1"># (A *direct* read of a declared ancestor — e.g. (Recording &amp; key) — is</span>
+    <span class="c1">#  NOT blocked in 2.3; only undeclared tables are. Prefer self.upstream.)</span>
+
+    <span class="c1"># ERROR: writing to a table that isn&#39;t self or self&#39;s Parts</span>
+    <span class="n">AuditLog</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="s2">&quot;event&quot;</span><span class="p">:</span> <span class="s2">&quot;populated_spectrum&quot;</span><span class="p">})</span>
+    <span class="c1"># → DataJointError: strict_provenance=True: insert into &#39;`analysis`.`audit_log`&#39;</span>
+    <span class="c1">#   is not permitted inside make() for &#39;`analysis`.`__spectrum`&#39;. Only the</span>
+    <span class="c1">#   target table and its Part tables may be written.</span>
+
+    <span class="c1"># ERROR: writing a row whose key doesn&#39;t match the current key</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="s2">&quot;recording_id&quot;</span><span class="p">:</span> <span class="mi">99</span><span class="p">,</span> <span class="s2">&quot;spectrum&quot;</span><span class="p">:</span> <span class="o">...</span><span class="p">})</span>
+    <span class="c1"># → DataJointError: strict_provenance=True: inserted row&#39;s &#39;recording_id&#39;=99</span>
+    <span class="c1">#   does not match the current make() key&#39;s &#39;recording_id&#39;=5. Inserts must</span>
+    <span class="c1">#   be consistent with the key being populated.</span>
+</code></pre></div>
+<h2 id="integration-the-full-provenance-loop">Integration: the full provenance loop<a class="headerlink" href="#integration-the-full-provenance-loop" title="Permanent link">&para;</a></h2>
+<p>The trinity composes into a single provenance story:</p>
+<ol>
+<li><code>Diagram.trace()</code> defines the upstream view as a first-class query object.</li>
+<li><code>self.upstream</code> exposes the per-<code>key</code> slice of that view inside <code>make()</code>.</li>
+<li><code>strict_provenance</code> checks (best-effort) that <code>make()</code> reads only from that slice and writes only to <code>self</code>.</li>
+</ol>
+<p>End-to-end, with all three engaged:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">datajoint</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dj</span>
+<span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;strict_provenance&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+
+<span class="nd">@schema</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Spectrum</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Computed</span><span class="p">):</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">    -&gt; Recording</span>
+<span class="s2">    ---</span>
+<span class="s2">    spectrum : longblob</span>
+<span class="s2">    &quot;&quot;&quot;</span>
+
+    <span class="k">class</span><span class="w"> </span><span class="nc">Bin</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Part</span><span class="p">):</span>
+        <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">        -&gt; master</span>
+<span class="s2">        bin_id : int32</span>
+<span class="s2">        ---</span>
+<span class="s2">        energy : float64</span>
+<span class="s2">        &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">make</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+        <span class="c1"># Pure provenance-safe reads</span>
+        <span class="n">rate</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">upstream</span><span class="p">[</span><span class="n">Recording</span><span class="p">]</span><span class="o">.</span><span class="n">fetch1</span><span class="p">(</span><span class="s2">&quot;sampling_rate&quot;</span><span class="p">)</span>
+        <span class="n">samples</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">upstream</span><span class="p">[</span><span class="n">Recording</span><span class="p">]</span><span class="o">.</span><span class="n">to_arrays</span><span class="p">(</span><span class="s2">&quot;signal&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Compute</span>
+        <span class="n">spectrum</span> <span class="o">=</span> <span class="n">compute_spectrum</span><span class="p">(</span><span class="n">samples</span><span class="p">,</span> <span class="n">rate</span><span class="p">)</span>
+
+        <span class="c1"># Scoped writes</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="o">**</span><span class="n">key</span><span class="p">,</span> <span class="s2">&quot;spectrum&quot;</span><span class="p">:</span> <span class="n">spectrum</span><span class="p">})</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Bin</span><span class="o">.</span><span class="n">insert</span><span class="p">([</span>
+            <span class="p">{</span><span class="o">**</span><span class="n">key</span><span class="p">,</span> <span class="s2">&quot;bin_id&quot;</span><span class="p">:</span> <span class="n">i</span><span class="p">,</span> <span class="s2">&quot;energy&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">e</span><span class="p">)}</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">e</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">spectrum</span><span class="p">)</span>
+        <span class="p">])</span>
+</code></pre></div>
+<p>Properties the trinity is designed to uphold in strict mode:</p>
+<ul>
+<li>Every column in <code>Spectrum.fetch1(key)</code> should be derived from data accessible via <code>Diagram.trace(Spectrum &amp; key)</code> — no undeclared dependencies.</li>
+<li>Every row in <code>Spectrum</code> and <code>Spectrum.Bin</code> was inserted by a <code>make()</code> whose <code>key</code> matched — no misattributed rows.</li>
+</ul>
+<p>The runtime guardrail makes accidental violations of the first property visible during development, and checks the second (key consistency) on the DataJoint insert path. Neither is an airtight guarantee against out-of-band access (see <a href="#enforcement-model-and-its-limits">Enforcement model and its limits</a>). Downstream provenance tooling — row-level lineage views, CDC publishers, audit logs — should treat these as strong conventions backed by the core framework's best-effort runtime checks and, where the pipeline is deployed through the DataJoint platform, by the code inspection its deployment CI/CD performs — not as invariants that hold regardless of how the data was written.</p>
+<h2 id="migration-path">Migration path<a class="headerlink" href="#migration-path" title="Permanent link">&para;</a></h2>
+<p>Teams adopt the trinity incrementally:</p>
+<ol>
+<li><strong>Upgrade to 2.3.</strong> The new APIs are available; <code>strict_provenance</code> defaults to off. Existing code is unaffected.</li>
+<li><strong>Start using <code>self.upstream</code> in new <code>make()</code> implementations.</strong> Reads become ergonomic; nothing else changes.</li>
+<li><strong>Migrate existing <code>make()</code> implementations</strong> as opportunity allows. Replace <code>(Upstream &amp; key).fetch(...)</code> with <code>self.upstream[Upstream].fetch(...)</code>. No semantic difference at this stage.</li>
+<li><strong>Enable <code>strict_provenance=True</code> in staging.</strong> Identify and fix any undeclared dependencies the runtime check surfaces.</li>
+<li><strong>Enable in production.</strong> The runtime guardrail is active; when pipeline code is deployed through the DataJoint platform, its code-deployment CI/CD adds code inspection for coverage beyond the Python client.</li>
+</ol>
+<p>Steps (3) and (4) are where most of the work lies — the runtime check is the mechanism that surfaces the actual undeclared dependencies in a pipeline. Teams with clean conventions will find few violations; teams with debugging fetches scattered through <code>make()</code> will find more. Either way, the cost is bounded by the size of the existing <code>make()</code> surface.</p>
+<h2 id="what-is-not-in-this-specification">What is not in this specification<a class="headerlink" href="#what-is-not-in-this-specification" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>Comprehensive enforcement via code inspection.</strong> The runtime check is the only enforcement mechanism in the open-source core framework, and it is a best-effort client-side guardrail (see <a href="#enforcement-model-and-its-limits">Enforcement model and its limits</a>). Turning provenance into a property checked across all access paths is a code-inspection problem — static analysis where sound, and agentic review for the dynamic cases — and is performed by the <strong>DataJoint platform's code-deployment CI/CD process</strong>, not the open-source framework. It is out of scope for the open-source <code>strict_provenance</code> feature, which does not attempt code inspection.</li>
+<li><strong>Server-side enforcement.</strong> Scoping database grants, per-<code>make</code> views, or row-level security to <code>{ancestors, self, self.Parts}</code> for the duration of a <code>make()</code> would be a true boundary rather than a guardrail. It is a larger, separate effort and is not part of 2.3.</li>
+<li><strong>Flipping the default to <code>True</code></strong>. Whether (and when) <code>strict_provenance</code> becomes the default is a separate decision for a future major release.</li>
+<li><strong>Row-level provenance metadata in storage</strong>. The trinity provides the <em>graph operation</em> and the <em>runtime check</em>; persisting per-row provenance projections (the dj-delta-style silver-layer features) is a downstream consumer concern, tracked separately.</li>
+</ul>
+<h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Source (shipped in 2.3): <code>src/datajoint/diagram.py</code> (<code>Diagram.trace</code>), <code>src/datajoint/autopopulate.py</code> (<code>AutoPopulate.upstream</code>), <code>src/datajoint/settings.py</code> (config), <code>src/datajoint/provenance.py</code> (runtime checks). Implemented in <a href="https://github.com/datajoint/datajoint-python/pull/1471">#1471</a> (trace), <a href="https://github.com/datajoint/datajoint-python/pull/1473">#1473</a> (self.upstream), <a href="https://github.com/datajoint/datajoint-python/pull/1474">#1474</a> (strict_provenance), building on the cascade rules from <a href="https://github.com/datajoint/datajoint-python/pull/1468">#1468</a>.</li>
+<li>Issues: <a href="https://github.com/datajoint/datajoint-python/issues/1423">#1423</a> (Diagram.trace), <a href="https://github.com/datajoint/datajoint-python/issues/1424">#1424</a> (self.upstream), <a href="https://github.com/datajoint/datajoint-python/issues/1425">#1425</a> (strict_provenance).</li>
+<li><a href="../cascade/">Cascade Specification</a> — propagation rules (F1/F2/F3 forward, U1/U2/U3 upward) shared with <code>trace</code>.</li>
+<li><a href="../autopopulate/">AutoPopulate Specification</a> — <code>make()</code> execution model.</li>
+<li><a href="../diagram/">Diagram Specification</a> — graph operations on the dependency graph.</li>
+<li><a href="../../../explanation/entity-integrity/">Entity Integrity</a> — schema dimensions and FK semantics.</li>
+</ul>
 
 
 
@@ -6595,12 +7310,12 @@ docker<span class="w"> </span>run<span class="w"> </span>-d<span class="w"> </sp
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.sections", "navigation.indexes", "toc.follow", "announce.dismiss"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.sections", "navigation.indexes", "toc.follow", "announce.dismiss"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
       
-        <script src="../../javascripts/mathjax.js"></script>
+        <script src="../../../javascripts/mathjax.js"></script>
       
         <script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
       
