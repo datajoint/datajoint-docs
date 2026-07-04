@@ -317,7 +317,28 @@ def make(self, key):
 
 **Upstream-only convention:** Inside `make()`, fetch only from tables that are strictly upstream in the pipeline—tables referenced by foreign keys in the definition, their ancestors, and their part tables. This ensures reproducibility: computed results depend only on their declared dependencies.
 
-This convention is not currently enforced programmatically but is critical for pipeline integrity. Some pipelines violate this rule for operational reasons, which makes them non-reproducible. A future release may programmatically enforce upstream-only fetches inside `make()`.
+As of DataJoint 2.3, this convention is checked (opt-in) at runtime: setting `dj.config["strict_provenance"] = True` makes reads from undeclared tables and writes to tables other than `self` (and its Parts) raise `DataJointError` inside `make()`. The check is a best-effort development guardrail; see the [Provenance Specification](provenance.md) for the enforcement model and its documented limits.
+
+### 4.3.1 `self.upstream`: Pre-Restricted Ancestor Access
+
+Inside `make()`, the framework provides `self.upstream` — a pre-constructed `Diagram.trace(self & key)` — as the ergonomic way to read declared ancestors without manual `& key` restriction:
+
+```python
+def make(self, key):
+    # Each ancestor arrives pre-restricted to the rows that contributed to this key
+    rate = self.upstream[Recording].fetch1('sampling_rate')
+    trials = self.upstream[Trial].to_dicts()
+    self.insert1({**key, 'result': compute(trials, rate)})
+```
+
+Behavior:
+
+- **Lifecycle:** `self.upstream` is set to `Diagram.trace(self & key)` immediately before `make()` is invoked and cleared afterward — including when `make()` raises. Accessing it outside `make()` raises `DataJointError`.
+- **Lazy:** the trace diagram is built once per `make()` call; no SQL fires until an ancestor is accessed and fetched. Fetch results are not cached — reading the same ancestor twice issues two queries.
+- **Tripartite:** `self.upstream` is available across all tripartite phases (`make_fetch`, `make_compute`, `make_insert`) of the same `make()` call.
+- **Scope:** it exposes declared ancestors only. A table's own Parts are descendants, not ancestors — read them directly as `self.PartName`.
+
+See [Provenance Specification §2](provenance.md#2-selfupstream-inside-make) for the normative semantics.
 
 ### 4.4 Tripartite Make Pattern
 

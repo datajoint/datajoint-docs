@@ -8,7 +8,7 @@ DataJoint 2.3 introduces the **provenance trinity** — `Diagram.trace`, `self.u
 
 ## Overview
 
-DataJoint's provenance guarantee rests on the convention that `make(self, key)` reads only from declared upstream dependencies and writes only to `self` (and its Parts). The framework has always *defined* this boundary but never *checked* it: a `make()` could `fetch()` from any table, making the dependency invisible to the foreign-key graph and silently breaking the provenance claim downstream.
+DataJoint's provenance model rests on the convention that `make(self, key)` reads only from declared upstream dependencies and writes only to `self` (and its Parts). The framework has always *defined* this boundary but never *checked* it: a `make()` could `fetch()` from any table, making the dependency invisible to the foreign-key graph and silently breaking the provenance claim downstream.
 
 The 2.3 trinity closes that loop with three pieces designed as a unit:
 
