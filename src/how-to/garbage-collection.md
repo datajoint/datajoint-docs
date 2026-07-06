@@ -30,12 +30,16 @@ Run garbage collection periodically to reclaim storage space.
 ```python
 import datajoint as dj
 
+# A collector is bound to one store (default store shown here)
+collector = dj.gc.GarbageCollector()
+
 # Scan for orphaned items (read-only)
-stats = dj.gc.scan(schema1, schema2)
-print(f"{stats['orphaned']} orphaned, {stats['orphaned_bytes'] / 1e6:.1f} MB reclaimable")
+stats = collector.scan(schema1, schema2)
+orphaned = stats['hash_orphaned'] + stats['schema_paths_orphaned']
+print(f"{orphaned} orphaned items")
 
 # Remove orphaned items
-stats = dj.gc.collect(schema1, schema2, dry_run=False)
+stats = collector.collect(schema1, schema2, dry_run=False)
 print(f"Deleted {stats['deleted']} items, freed {stats['bytes_freed'] / 1e6:.1f} MB")
 ```
 
@@ -45,11 +49,13 @@ Always scan first to see what would be deleted:
 
 ```python
 # Check what's orphaned
-stats = dj.gc.scan(my_schema)
+collector = dj.gc.GarbageCollector()
+stats = collector.scan(my_schema)
 
 print(f"Hash-addressed orphaned: {stats['hash_orphaned']}")
 print(f"Schema paths orphaned: {stats['schema_paths_orphaned']}")
-print(f"Total bytes: {stats['orphaned_bytes'] / 1e6:.1f} MB")
+bytes_reclaimable = stats['hash_orphaned_bytes'] + stats['schema_paths_orphaned_bytes']
+print(f"Reclaimable: {bytes_reclaimable / 1e6:.1f} MB")
 ```
 
 ## Dry Run Mode
@@ -58,50 +64,50 @@ The default `dry_run=True` reports what would be deleted without deleting:
 
 ```python
 # Safe: reports how many items would be deleted (deletes nothing).
-# For the per-item paths and reclaimable bytes, use dj.gc.scan() instead —
+# For the per-item paths and reclaimable bytes, use scan() instead —
 # collect(dry_run=True) reports bytes_freed as 0 because nothing was removed.
-stats = dj.gc.collect(my_schema, dry_run=True)
-print(f"{stats['orphaned']} items would be deleted")
+collector = dj.gc.GarbageCollector()
+stats = collector.collect(my_schema, dry_run=True)
+print(f"{stats['hash_orphaned'] + stats['schema_paths_orphaned']} items would be deleted")
 
 # After review, actually delete
-stats = dj.gc.collect(my_schema, dry_run=False)
+stats = collector.collect(my_schema, dry_run=False)
 ```
 
 ## Multiple Schemas
 
-If your data spans multiple schemas, scan all of them together:
+Every managed path embeds the schema name (`{hash_prefix}/{schema}/...` and
+`{schema_prefix}/{schema}/...`), so garbage collection is **per-schema**: each
+schema is scanned against its own subtree. You may pass any subset of the
+schemas sharing a store — a schema not passed is simply not scanned; its live
+objects are never seen and never at risk.
 
 ```python
-# Important: include ALL schemas that might share storage
-stats = dj.gc.collect(
-    schema_raw,
-    schema_processed,
-    schema_analysis,
-    dry_run=False
-)
+collector = dj.gc.GarbageCollector()
+
+# Clean several schemas at once...
+stats = collector.collect(schema_raw, schema_processed, schema_analysis, dry_run=False)
+
+# ...or just one — safe even when others share the same store
+stats = collector.collect(schema_raw, dry_run=False)
 ```
 
-!!! warning "Per-schema paths and multi-schema stores"
-    Every hash-addressed path embeds the schema name
-    (`{hash_prefix}/{schema}/{hash}`), so deduplication is scoped **within**
-    each schema and every stored object is attributable to the schema that
-    wrote it. Orphan detection, however, lists the **entire store** on the
-    storage side: a schema that uses the store but is not passed to
-    `scan()`/`collect()` has its live objects misclassified as orphans —
-    and deleted. Always pass **every** schema that uses the store. The same
-    per-schema attribution is what makes leftovers of fully dropped schemas
-    identifiable and reclaimable by a later `collect()`.
+!!! note "Per-schema attribution"
+    Because every path embeds its schema, deduplication is scoped within each
+    schema and every stored object is attributable to the schema that wrote it.
+    That is also what lets a later `collect()` reclaim the leftovers of a fully
+    dropped schema — pass a schema object bound to that (now empty) database.
 
 ## Named Stores
 
 If you use multiple named stores, specify which to clean:
 
 ```python
-# Clean specific store
-stats = dj.gc.collect(my_schema, store_name='archive', dry_run=False)
+# Clean a specific store — bind the collector to it
+stats = dj.gc.GarbageCollector(store='archive').collect(my_schema, dry_run=False)
 
-# Or clean default store
-stats = dj.gc.collect(my_schema, dry_run=False)  # uses default store
+# Or the default store
+stats = dj.gc.GarbageCollector().collect(my_schema, dry_run=False)
 ```
 
 ## Verbose Mode
@@ -109,17 +115,17 @@ stats = dj.gc.collect(my_schema, dry_run=False)  # uses default store
 See detailed progress:
 
 ```python
-stats = dj.gc.collect(
+stats = dj.gc.GarbageCollector().collect(
     my_schema,
     dry_run=False,
-    verbose=True  # logs each deletion
+    verbose=True,  # logs each deletion
 )
 ```
 
 ## Understanding the Statistics
 
 ```python
-stats = dj.gc.scan(my_schema)
+stats = dj.gc.GarbageCollector().scan(my_schema)
 
 # Hash-addressed storage (<blob@>, <attach@>, <hash@>)
 stats['hash_referenced']      # Items still in database
@@ -133,11 +139,8 @@ stats['schema_paths_stored']      # Paths in storage
 stats['schema_paths_orphaned']    # Unreferenced paths
 stats['schema_paths_orphaned_bytes']
 
-# Totals
-stats['referenced']   # Total referenced items
-stats['stored']       # Total stored items
-stats['orphaned']     # Total orphaned items
-stats['orphaned_bytes']
+# Combine the two sections yourself if you want a grand total, e.g.
+# stats['hash_orphaned'] + stats['schema_paths_orphaned']
 ```
 
 ## Scheduled Collection
@@ -149,10 +152,10 @@ Run GC periodically in production:
 import datajoint as dj
 from myproject import schema1, schema2, schema3
 
-stats = dj.gc.collect(
+stats = dj.gc.GarbageCollector().collect(
     schema1, schema2, schema3,
     dry_run=False,
-    verbose=True
+    verbose=True,
 )
 
 if stats['errors'] > 0:
@@ -216,10 +219,10 @@ DataJoint uses two storage patterns:
 
 ```python
 # Wrong
-dj.gc.scan()
+dj.gc.GarbageCollector().scan()
 
 # Right
-dj.gc.scan(my_schema)
+dj.gc.GarbageCollector().scan(my_schema)
 ```
 
 ### Storage not decreasing
