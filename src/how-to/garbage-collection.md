@@ -35,7 +35,7 @@ collector = dj.gc.GarbageCollector(schema1, schema2)
 
 # Read-only report — collect(dry_run=True) is the default and deletes nothing
 stats = collector.collect()
-orphaned = stats['hash_orphaned'] + stats['schema_paths_orphaned']
+orphaned = stats['hash_paths_orphaned'] + stats['schema_paths_orphaned']
 print(f"{orphaned} orphaned items")
 
 # Actually remove the orphaned items
@@ -52,9 +52,9 @@ Always scan first to see what would be deleted:
 collector = dj.gc.GarbageCollector(my_schema)
 stats = collector.collect()
 
-print(f"Hash-addressed orphaned: {stats['hash_orphaned']}")
+print(f"Hash-addressed orphaned: {stats['hash_paths_orphaned']}")
 print(f"Schema paths orphaned: {stats['schema_paths_orphaned']}")
-bytes_reclaimable = stats['hash_orphaned_bytes'] + stats['schema_paths_orphaned_bytes']
+bytes_reclaimable = stats['hash_paths_orphaned_bytes'] + stats['schema_paths_orphaned_bytes']
 print(f"Reclaimable: {bytes_reclaimable / 1e6:.1f} MB")
 ```
 
@@ -68,7 +68,7 @@ The default `dry_run=True` reports what would be deleted without deleting:
 # and the deleted counts stay 0 until you actually collect.
 collector = dj.gc.GarbageCollector(my_schema)
 stats = collector.collect()  # dry_run=True
-print(f"{stats['hash_orphaned'] + stats['schema_paths_orphaned']} items would be deleted")
+print(f"{stats['hash_paths_orphaned'] + stats['schema_paths_orphaned']} items would be deleted")
 
 # After review, actually delete
 stats = collector.collect(dry_run=False)
@@ -125,10 +125,10 @@ stats = dj.gc.GarbageCollector(my_schema).collect(
 stats = dj.gc.GarbageCollector(my_schema).collect()  # dry_run=True default
 
 # Hash-addressed storage (<blob@>, <attach@>, <hash@>)
-stats['hash_referenced']      # Items still in database
-stats['hash_stored']          # Items in storage
-stats['hash_orphaned']        # Unreferenced (can be deleted)
-stats['hash_orphaned_bytes']  # Size of orphaned items
+stats['hash_paths_referenced']      # Items still in database
+stats['hash_paths_stored']          # Items in storage
+stats['hash_paths_orphaned']        # Unreferenced (can be deleted)
+stats['hash_paths_orphaned_bytes']  # Size of orphaned items
 
 # Schema-addressed storage (<object@>, <npy@>)
 stats['schema_paths_referenced']  # Paths still in database
@@ -137,7 +137,7 @@ stats['schema_paths_orphaned']    # Unreferenced paths
 stats['schema_paths_orphaned_bytes']
 
 # Combine the two sections yourself if you want a grand total, e.g.
-# stats['hash_orphaned'] + stats['schema_paths_orphaned']
+# stats['hash_paths_orphaned'] + stats['schema_paths_orphaned']
 ```
 
 ## Scheduled Collection

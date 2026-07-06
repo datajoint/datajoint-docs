@@ -120,7 +120,7 @@ collector = dj.gc.GarbageCollector(my_schema)
 
 # Read-only report (collect defaults to dry_run=True)
 stats = collector.collect()
-print(f"{stats['hash_orphaned'] + stats['schema_paths_orphaned']} orphaned items")
+print(f"{stats['hash_paths_orphaned'] + stats['schema_paths_orphaned']} orphaned items")
 
 # Remove orphaned items
 stats = collector.collect(dry_run=False)
