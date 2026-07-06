@@ -79,10 +79,16 @@ stats = dj.gc.collect(
 )
 ```
 
-!!! note "Per-schema deduplication"
-    Hash-addressed storage is deduplicated **within** each schema. Different
-    schemas have independent storage, so you only need to scan schemas that
-    share the same database.
+!!! warning "Per-schema paths and multi-schema stores"
+    Every hash-addressed path embeds the schema name
+    (`{hash_prefix}/{schema}/{hash}`), so deduplication is scoped **within**
+    each schema and every stored object is attributable to the schema that
+    wrote it. Orphan detection, however, lists the **entire store** on the
+    storage side: a schema that uses the store but is not passed to
+    `scan()`/`collect()` has its live objects misclassified as orphans —
+    and deleted. Always pass **every** schema that uses the store. The same
+    per-schema attribution is what makes leftovers of fully dropped schemas
+    identifiable and reclaimable by a later `collect()`.
 
 ## Named Stores
 
@@ -160,32 +166,47 @@ DataJoint uses two storage patterns:
 ### Hash-Addressed (`<blob@>`, `<attach@>`, `<hash@>`)
 
 ```
-_hash/
+{hash_prefix}/                     # store setting, default: _hash/
   {schema}/
     ab/
       cd/
         abcdefghij...  # Content identified by Base32-encoded MD5 hash
 ```
 
-- Duplicate content shares storage within each schema
+- The section location comes from the store's `hash_prefix` setting
+  (default `_hash`) — the same value the writer uses, so scanner and writer
+  cannot drift
+- Duplicate content shares storage within each schema — the schema name is
+  part of every path, which is what scopes deduplication and lets GC
+  attribute each stored object to a schema
 - Paths are stored in metadata—safe from config changes
 - Cannot delete until no rows reference the content
-- GC compares stored paths against filesystem
+- GC compares stored paths against the filesystem
 
 ### Schema-Addressed (`<object@>`, `<npy@>`)
 
 ```
-myschema/
-  mytable/
-    primary_key_values/
-      attribute_name/
-        data.zarr/
-        data.npy
+{schema_prefix}/                   # store setting, default: _schema/
+  {schema}/
+    {table}/
+      {primary_key_values}/
+        {attribute}_{token}.npy         # single-file object
+        {attribute}_{token}.zarr/       # folder object (many files)
+        {attribute}_{token}.zarr.manifest.json
 ```
 
-- Each row has unique path based on schema structure
-- Paths mirror database organization
-- GC removes paths not referenced by any row
+- The section location comes from the store's `schema_prefix` setting
+  (default `_schema`). DataJoint 2.3.0 and earlier wrote these objects at
+  root level (`{schema}/...`); GC lists both layouts, so legacy objects
+  remain reclaimable
+- Every write gets a unique random token, so multiple versions of a row's
+  object can coexist; GC reclaims superseded tokens
+- Orphan matching is coverage-based: a stored file is live if it **is** a
+  referenced path, lies **under** a referenced folder object, or is its
+  `.manifest.json` sidecar — live folder objects are never partially
+  collected
+- GC never touches the store's declared `filepath_prefix` namespace
+  (user-managed `<filepath@>` files)
 
 ## Troubleshooting
 

@@ -246,7 +246,7 @@ returns the appropriate dtype based on storage mode:
 
 Schema-addressed OAS storage for complex, multi-part objects (files, folders, Zarr arrays, HDF5):
 
-- **Schema-addressed**: Path mirrors database structure: `{schema}/{table}/{pk}/{attribute}/`
+- **Schema-addressed**: Path mirrors database structure within the store's schema section: `{schema_prefix}/{schema}/{table}/{pk}/{attribute}_{token}` (`schema_prefix` defaults to `_schema`)
 - **Complex objects**: Can store directory structures with multiple files (e.g., Zarr arrays)
 - One-to-one relationship with table row
 - Deleted when row is deleted
@@ -297,17 +297,23 @@ Hash-addressed storage with deduplication for individual, atomic objects:
 - **Per-project scope**: content is shared across all schemas in a project (not per-schema)
 - Many-to-one: multiple rows (even across schemas) can reference same content
 - Reference counted for garbage collection
-- Deduplication: identical content stored once across the entire project
+- Deduplication: identical content stored once **per schema** — the schema name is part of every hash path, which scopes deduplication and lets garbage collection attribute each stored object to its schema
 - **dtype**: `json` (stores hash, store name, size, metadata)
 
 ```
 store_root/
-├── {schema}/{table}/{pk}/     # schema-addressed storage
-│   └── {attribute}/
+├── {schema_prefix}/               # default _schema/ — schema-addressed storage
+│   └── {schema}/{table}/{pk}/
+│       └── {attribute}_{token}[.ext]
 │
-└── _hash/                     # hash-addressed storage
-    └── {hash[:2]}/{hash[2:4]}/{hash}
+└── {hash_prefix}/                 # default _hash/ — hash-addressed storage
+    └── {schema}/
+        └── {hash[:2]}/{hash[2:4]}/{hash}
 ```
+
+Section prefixes come from the store settings (`hash_prefix`, `schema_prefix`;
+see [Object Store Configuration](object-store-configuration.md#section-prefixes)).
+Both sections embed the schema name in every path.
 
 #### Implementation
 
@@ -593,15 +599,15 @@ Users can define custom codecs for domain-specific data. See the [Codec API Spec
 | Type | get_dtype | Resolves To | Storage Location | Dedup | Returns |
 |------|-----------|-------------|------------------|-------|---------|
 | `<blob>` | `bytes` | `LONGBLOB`/`BYTEA` | Database | No | Python object |
-| `<blob@>` | `<hash>` | `json` | `_hash/{hash}` | Yes | Python object |
-| `<blob@s>` | `<hash>` | `json` | `_hash/{hash}` | Yes | Python object |
+| `<blob@>` | `<hash>` | `json` | `{hash_prefix}/{schema}/{hash}` | Yes | Python object |
+| `<blob@s>` | `<hash>` | `json` | `{hash_prefix}/{schema}/{hash}` | Yes | Python object |
 | `<attach>` | `bytes` | `LONGBLOB`/`BYTEA` | Database | No | Local file path |
-| `<attach@>` | `<hash>` | `json` | `_hash/{hash}` | Yes | Local file path |
-| `<attach@s>` | `<hash>` | `json` | `_hash/{hash}` | Yes | Local file path |
-| `<object@>` | `json` | `JSON`/`JSONB` | `{schema}/{table}/{pk}/` | No | ObjectRef |
-| `<object@s>` | `json` | `JSON`/`JSONB` | `{schema}/{table}/{pk}/` | No | ObjectRef |
-| `<hash@>` | `json` | `JSON`/`JSONB` | `_hash/{hash}` | Yes | bytes |
-| `<hash@s>` | `json` | `JSON`/`JSONB` | `_hash/{hash}` | Yes | bytes |
+| `<attach@>` | `<hash>` | `json` | `{hash_prefix}/{schema}/{hash}` | Yes | Local file path |
+| `<attach@s>` | `<hash>` | `json` | `{hash_prefix}/{schema}/{hash}` | Yes | Local file path |
+| `<object@>` | `json` | `JSON`/`JSONB` | `{schema_prefix}/{schema}/{table}/{pk}/` | No | ObjectRef |
+| `<object@s>` | `json` | `JSON`/`JSONB` | `{schema_prefix}/{schema}/{table}/{pk}/` | No | ObjectRef |
+| `<hash@>` | `json` | `JSON`/`JSONB` | `{hash_prefix}/{schema}/{hash}` | Yes | bytes |
+| `<hash@s>` | `json` | `JSON`/`JSONB` | `{hash_prefix}/{schema}/{hash}` | Yes | bytes |
 | `<filepath@s>` | `json` | `JSON`/`JSONB` | Configured store | No | ObjectRef |
 
 ## Garbage Collection for Hash Storage

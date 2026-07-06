@@ -55,10 +55,10 @@ The primary key must be fully set on `staged.rec` before `staged.store()` or `st
 Staged objects are written at the canonical schema-addressed path from the first byte. There is no intermediate staging location: the object exists at its final path during the write and is deleted from there if the block exits with an exception.
 
 ```
-{location}/{schema}/{table}/{pk_serialized}/{field}_{token}{ext}
+{location}/{schema_prefix}/{schema}/{table}/{pk_serialized}/{field}_{token}{ext}
 ```
 
-Built by `storage.build_object_path`. `{location}` is the configured store base, `{token}` is a random suffix of `token_length` characters (default 8, per the store spec), `{pk_serialized}` is the serialized primary key, and partitioning follows the store's `partition_pattern`.
+Built by `storage.build_object_path`. `{location}` is the configured store base, `{schema_prefix}` is the store's schema-addressed section (default `_schema`), `{token}` is a random suffix of `token_length` characters (default 8, per the store spec), `{pk_serialized}` is the serialized primary key, and partitioning follows the store's `partition_pattern`.
 
 ## Metadata contract
 

@@ -146,6 +146,31 @@ Each store is divided into sections controlled by prefix configuration. The `*_p
    - `null` (default): filepaths can use any path except reserved sections
    - `"some/prefix"`: all filepaths must start with this prefix
 
+**Consumption (normative):** the prefix values are read from the store spec
+by every component that touches managed storage — the writers (`put_hash`,
+`build_object_path`), garbage collection (which scans the configured
+`hash_prefix` section and never enters the configured `filepath_prefix`
+namespace), and `<filepath@>` validation. Defaults are applied to **every**
+store spec, including plugin protocols, when the spec is resolved
+(`get_store_spec`), and there are no component-level fallbacks — all
+components always observe the same values.
+
+**Hash paths embed the schema:** `{hash_prefix}/{schema}/{hash}`.
+Deduplication is therefore scoped **per schema**, and every stored object is
+attributable to the schema that wrote it. Garbage collection depends on this
+attribution; because storage-side listing covers the whole section across
+all schemas, a `collect()` must be given every schema that uses the store
+(see [Clean Up Object Storage](../../how-to/garbage-collection.md)).
+
+**Changing prefixes on a store that already holds data** is not recommended:
+existing objects remain readable (each row's metadata records its full
+path), but garbage collection scans only the currently configured sections —
+objects under a previous prefix are not reclamation candidates until the
+setting is restored — and hash deduplication will not match content stored
+under the old prefix. Schema-addressed objects written by DataJoint 2.3.0
+and earlier live at root-level `{schema}/...` paths; garbage collection
+lists both layouts.
+
 **Example with custom prefixes:**
 
 ```json
@@ -362,12 +387,12 @@ Experiment.insert1({'experiment_id': 1, 'data': my_data})
 
 **Path structure (no partitioning):**
 ```
-{location}/{schema_prefix}/{schema_name}/{table_name}/{key_string}/{field_name}.{token}.{ext}
+{location}/{schema_prefix}/{schema_name}/{table_name}/{key_string}/{field_name}_{token}{ext}
 ```
 
 **With partitioning:**
 ```
-{location}/{schema_prefix}/{partition_path}/{schema_name}/{table_name}/{remaining_key}/{field_name}.{token}.{ext}
+{location}/{schema_prefix}/{partition_path}/{schema_name}/{table_name}/{remaining_key}/{field_name}_{token}{ext}
 ```
 
 **Algorithm:**
