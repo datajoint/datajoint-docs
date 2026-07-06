@@ -115,9 +115,9 @@ import datajoint as dj
 # Objects are NOT automatically deleted with rows
 (MyTable & old_data).delete()
 
-# Scan for orphaned items
+# Scan for orphaned items (read-only)
 stats = dj.gc.scan(my_schema)
-print(dj.gc.format_stats(stats))
+print(f"{stats['orphaned']} orphaned, {stats['orphaned_bytes'] / 1e6:.1f} MB reclaimable")
 
 # Remove orphaned items
 stats = dj.gc.collect(my_schema, dry_run=False)

@@ -30,13 +30,13 @@ Run garbage collection periodically to reclaim storage space.
 ```python
 import datajoint as dj
 
-# Scan for orphaned items (dry run)
+# Scan for orphaned items (read-only)
 stats = dj.gc.scan(schema1, schema2)
-print(dj.gc.format_stats(stats))
+print(f"{stats['orphaned']} orphaned, {stats['orphaned_bytes'] / 1e6:.1f} MB reclaimable")
 
 # Remove orphaned items
 stats = dj.gc.collect(schema1, schema2, dry_run=False)
-print(dj.gc.format_stats(stats))
+print(f"Deleted {stats['deleted']} items, freed {stats['bytes_freed'] / 1e6:.1f} MB")
 ```
 
 ## Scan Before Collecting
@@ -57,9 +57,11 @@ print(f"Total bytes: {stats['orphaned_bytes'] / 1e6:.1f} MB")
 The default `dry_run=True` reports what would be deleted without deleting:
 
 ```python
-# Safe: shows what would be deleted
+# Safe: reports how many items would be deleted (deletes nothing).
+# For the per-item paths and reclaimable bytes, use dj.gc.scan() instead —
+# collect(dry_run=True) reports bytes_freed as 0 because nothing was removed.
 stats = dj.gc.collect(my_schema, dry_run=True)
-print(dj.gc.format_stats(stats))
+print(f"{stats['orphaned']} items would be deleted")
 
 # After review, actually delete
 stats = dj.gc.collect(my_schema, dry_run=False)
