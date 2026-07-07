@@ -291,11 +291,11 @@ class ObjectCodec(SchemaCodec):
 
 Hash-addressed storage with deduplication for individual, atomic objects:
 
-- **Hash-addressed**: Path derived from content hash: `_hash/{hash[:2]}/{hash[2:4]}/{hash}`
+- **Hash-addressed**: Path derived from content hash, with the schema name embedded: `{hash_prefix}/{schema}/{hash}`
 - **Individual/atomic objects only**: Stores single files or serialized blobs (not directory structures)
 - Cannot handle complex multi-part objects like Zarr arrays—use `<object@>` for those
-- **Per-project scope**: content is shared across all schemas in a project (not per-schema)
-- Many-to-one: multiple rows (even across schemas) can reference same content
+- **Per-schema scope**: content is deduplicated within each schema (the schema name is part of every hash path)
+- Many-to-one: multiple rows within the same schema can reference the same content
 - Reference counted for garbage collection
 - Deduplication: identical content stored once **per schema** — the schema name is part of every hash path, which scopes deduplication and lets garbage collection attribute each stored object to its schema
 - **dtype**: `json` (stores hash, store name, size, metadata)

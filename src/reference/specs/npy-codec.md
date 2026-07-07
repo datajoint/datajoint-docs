@@ -192,7 +192,7 @@ storage that reflects your data model.
 {schema_prefix}/{schema}/{table}/{primary_key_values}/{attribute}_{token}.npy
 ```
 
-Example: `lab_ephys/recording/recording_id=1/waveform.npy`
+Example: `_schema/lab_ephys/recording/recording_id=1/waveform_x8f2a9b1.npy`
 
 This schema-addressed layout means you can browse the object store and understand
 the organization because it mirrors your database schema.
@@ -203,7 +203,7 @@ The database column stores:
 
 ```json
 {
-  "path": "lab_ephys/recording/recording_id=1/waveform.npy",
+  "path": "_schema/lab_ephys/recording/recording_id=1/waveform_x8f2a9b1.npy",
   "store": "main",
   "dtype": "float64",
   "shape": [1000, 32]
