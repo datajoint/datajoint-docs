@@ -166,8 +166,13 @@ schema (`contents`), it is a **Lookup**; if it arrives at runtime, it is a
 **Manual** table. A common mistake is to use a Lookup for data that is actually
 entered at runtime (for example, filled in through a dashboard form). If a
 table's rows do not come from its committed `contents`, it belongs in the
-**Manual** tier. This keeps Lookup content reproducible across deployments — it
-travels with the code — while runtime data lives where it can be entered.
+**Manual** tier.
+
+Because Lookup content lives in the code, **changing it is a code change**:
+you edit `contents` and redeploy, so updates flow through the same
+review-and-deploy (CI/CD) process as any other schema change — versioned and
+reproducible across deployments. Manual content, by contrast, is entered at
+runtime and never touches the codebase.
 
 ### Master-part relationships
 

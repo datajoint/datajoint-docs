@@ -259,7 +259,9 @@ Both tiers hold rows that are *entered* rather than computed, so the question is
 - Use **`dj.Lookup`** when the rows are part of the schema's design and belong in
   the code — parameter sets, method definitions, controlled vocabularies,
   enumerations. They are declared in `contents`, versioned with the table, and
-  identical in every deployment until the code changes.
+  identical in every deployment until the code changes. Updating a Lookup means
+  editing `contents` and redeploying — the change flows through your normal CI/CD
+  process, not a runtime insert.
 - Use **`dj.Manual`** when the rows are entered at runtime and are specific to a
   project or experiment — subjects, sessions, samples, or anything typed into a
   form, ingested from a file, or read from an instrument.
