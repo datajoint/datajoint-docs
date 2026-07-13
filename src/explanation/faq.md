@@ -149,7 +149,7 @@ A **lakehouse** merges data lake flexibility with data warehouse structure, opti
 - Data integrity and reproducibility
 - Traceability within structured scientific datasets
 
-DataJoint can complement lakehouse architectures—using object storage for large files while maintaining relational structure for metadata and provenance.
+DataJoint can complement lakehouse architectures—using object storage for large files while maintaining relational structure for metadata and lineage.
 
 ## Does DataJoint Require SQL Knowledge?
 

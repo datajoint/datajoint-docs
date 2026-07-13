@@ -66,7 +66,7 @@ above illustrates.
 | **Row semantics** | True proposition | Entity instance | **Workflow artifact** |
 | **Foreign keys** | Referential integrity | Relationship | **Execution order** |
 | **Computation** | Not addressed | Not addressed | **Declared in schema** |
-| **Provenance** | Not addressed | Not addressed | **Structural** |
+| **Data lineage** | Not addressed | Not addressed | **Structural** |
 | **Implementation gap** | High | High | **None** |
 
 ## A semantic interpretation, not a departure
@@ -77,7 +77,7 @@ primary and foreign keys, normalization, and the query algebra keep
 their classical meaning. The model adds four readings on top:
 
 - Tables also represent **workflow steps**.
-- Rows also represent **workflow artifacts**, carrying provenance to their inputs.
+- Rows also represent **workflow artifacts**, traceable to their inputs.
 - Foreign keys also prescribe **execution order** — the dependency graph *is* the pipeline DAG, enforced by the database.
 - **Computed and Imported tables carry their own `make()` methods**, declaring derivation logic in the schema itself rather than in an external workflow file.
 
@@ -98,8 +98,8 @@ alongside DataJoint.
 
 ## Substrate consequences
 
-Because dependencies are declared before any computation runs, provenance
-and lineage become **properties of the substrate**, not artifacts assembled
+Because dependencies are declared before any computation runs, lineage
+and reproducibility become **properties of the substrate**, not artifacts assembled
 after the fact. Every row in `Segmentation` is reachable by foreign key
 from the exact `AverageFrame` and `SegmentationParam` that produced it;
 cascade deletes remove dependent results when their inputs become invalid.
@@ -165,7 +165,7 @@ at the workflow step the table represents*. A `Session` table holds
 attributes known when the session is entered (date, experimenter,
 subject); analysis parameters determined later belong in Computed tables
 that depend on `Session`. The discipline prevents tables that accumulate
-attributes from different workflow stages, obscuring provenance and
+attributes from different workflow stages, obscuring lineage and
 complicating updates.
 
 ### Entity integrity
@@ -209,7 +209,7 @@ incompatible designs.
 | Foreign keys enforce consistency | Foreign keys prescribe execution order |
 | Updates modify state | Computations create new states |
 | Schemas organize storage | Schemas specify pipelines |
-| Queries retrieve data | Queries trace provenance |
+| Queries retrieve data | Queries trace lineage |
 
 ## Further reading
 
