@@ -30,8 +30,8 @@ class MyTable(dj.Manual):
 
 | Type | Base Class | Purpose |
 |------|------------|---------|
-| Manual | `dj.Manual` | User-entered data |
-| Lookup | `dj.Lookup` | Reference data with `contents` |
+| Manual | `dj.Manual` | Data entered at runtime (users, forms, instruments, imports) |
+| Lookup | `dj.Lookup` | Reference data defined in the schema via `contents` |
 | Imported | `dj.Imported` | Data from external sources |
 | Computed | `dj.Computed` | Derived data |
 | Part | `dj.Part` | Child of master table |
@@ -250,6 +250,23 @@ class TaskType(dj.Lookup):
         {'task_type': 'discrimination', 'description': 'Distinguish between stimuli'},
     ]
 ```
+
+### Manual or Lookup?
+
+Both tiers hold rows that are *entered* rather than computed, so the question is
+**where a row comes from**:
+
+- Use **`dj.Lookup`** when the rows are part of the schema's design and belong in
+  the code — parameter sets, method definitions, controlled vocabularies,
+  enumerations. They are declared in `contents`, versioned with the table, and
+  identical in every deployment until the code changes.
+- Use **`dj.Manual`** when the rows are entered at runtime and are specific to a
+  project or experiment — subjects, sessions, samples, or anything typed into a
+  form, ingested from a file, or read from an instrument.
+
+If you find yourself populating a "Lookup" table at runtime (for example, from a
+dashboard form) rather than from its committed `contents`, make it `dj.Manual`
+instead — its rows are runtime data, not part of the schema definition.
 
 ## Part Tables
 
