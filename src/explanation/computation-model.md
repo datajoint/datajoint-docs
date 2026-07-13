@@ -47,6 +47,34 @@ DataJoint guarantees:
 - Failed computations can be retried
 - Parallel execution is safe
 
+### Why the contract matters
+
+These guarantees hold because a well-behaved `make()` observes a small set of
+rules — the **make() reproducibility contract** (specified in full in the
+[AutoPopulate reference](../reference/specs/autopopulate.md#43-the-make-reproducibility-contract)).
+The organizing idea is a single **read/write boundary**: a `make(key)` reads only
+from its declared upstream dependencies, restricted to the current `key`, and
+writes only to `self` and its Part tables. Because each call sees a fixed,
+key-restricted slice of the pipeline and shares no state with other calls, every
+computed row is *self-contained* — produced by one `make()` over a specific set
+of declared inputs — which is exactly what makes results reproducible and
+`populate()` safe to run in parallel.
+
+This boundary is why the auto-populated tiers split into two:
+
+- **Computed** tables derive entirely from other pipeline tables. Every input is
+  itself tracked under referential integrity, so a Computed result is
+  reproducible from within the pipeline alone — re-running `make()` on the same
+  upstream data yields the same result.
+- **Imported** tables read a source the pipeline does *not* track (a file, an
+  instrument, an API). They cannot be reproduced from the pipeline alone, so an
+  Imported `make()` is responsible for recording the source's identity (path,
+  checksum, endpoint, external record ID) alongside the row.
+
+**Manual** and **Lookup** tables are not auto-populated; they are the entry points
+where a pipeline's data originates and where every downstream `make()` chain
+ultimately begins.
+
 ## Key Source
 
 The **key source** determines what needs to be computed:
