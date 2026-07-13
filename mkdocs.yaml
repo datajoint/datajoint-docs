@@ -181,6 +181,11 @@ theme:
         name: Switch to light mode
 plugins:
   - search
+  - redirects:
+      redirect_maps:
+        # provenance.md was renamed to trace.md when the provenance framing
+        # was retired; keep the published URL working.
+        reference/specs/provenance.md: reference/specs/trace.md
   - mermaid2
   - section-index
   - autorefs
