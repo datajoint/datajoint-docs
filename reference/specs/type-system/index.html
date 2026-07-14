@@ -7544,7 +7544,7 @@ returns the appropriate dtype based on storage mode:</p>
 <p><strong>Built-in codec. Store only.</strong></p>
 <p>Schema-addressed OAS storage for complex, multi-part objects (files, folders, Zarr arrays, HDF5):</p>
 <ul>
-<li><strong>Schema-addressed</strong>: Path mirrors database structure: <code>{schema}/{table}/{pk}/{attribute}/</code></li>
+<li><strong>Schema-addressed</strong>: Path mirrors database structure within the store's schema section: <code>{schema_prefix}/{schema}/{table}/{pk}/{attribute}_{token}</code> (<code>schema_prefix</code> defaults to <code>_schema</code>)</li>
 <li><strong>Complex objects</strong>: Can store directory structures with multiple files (e.g., Zarr arrays)</li>
 <li>One-to-one relationship with table row</li>
 <li>Deleted when row is deleted</li>
@@ -7582,22 +7582,27 @@ returns the appropriate dtype based on storage mode:</p>
 <p><strong>Built-in codec. Store only.</strong></p>
 <p>Hash-addressed storage with deduplication for individual, atomic objects:</p>
 <ul>
-<li><strong>Hash-addressed</strong>: Path derived from content hash: <code>_hash/{hash[:2]}/{hash[2:4]}/{hash}</code></li>
+<li><strong>Hash-addressed</strong>: Path derived from content hash, with the schema name embedded: <code>{hash_prefix}/{schema}/{hash}</code></li>
 <li><strong>Individual/atomic objects only</strong>: Stores single files or serialized blobs (not directory structures)</li>
 <li>Cannot handle complex multi-part objects like Zarr arrays—use <code>&lt;object@&gt;</code> for those</li>
-<li><strong>Per-project scope</strong>: content is shared across all schemas in a project (not per-schema)</li>
-<li>Many-to-one: multiple rows (even across schemas) can reference same content</li>
+<li><strong>Per-schema scope</strong>: content is deduplicated within each schema (the schema name is part of every hash path)</li>
+<li>Many-to-one: multiple rows within the same schema can reference the same content</li>
 <li>Reference counted for garbage collection</li>
-<li>Deduplication: identical content stored once across the entire project</li>
+<li>Deduplication: identical content stored once <strong>per schema</strong> — the schema name is part of every hash path, which scopes deduplication and lets garbage collection attribute each stored object to its schema</li>
 <li><strong>dtype</strong>: <code>json</code> (stores hash, store name, size, metadata)</li>
 </ul>
 <div class="highlight"><pre><span></span><code>store_root/
-├── {schema}/{table}/{pk}/     # schema-addressed storage
-│   └── {attribute}/
+├── {schema_prefix}/               # default _schema/ — schema-addressed storage
+│   └── {schema}/{table}/{pk}/
+│       └── {attribute}_{token}[.ext]
 │
-└── _hash/                     # hash-addressed storage
-    └── {hash[:2]}/{hash[2:4]}/{hash}
+└── {hash_prefix}/                 # default _hash/ — hash-addressed storage
+    └── {schema}/
+        └── {hash[:2]}/{hash[2:4]}/{hash}
 </code></pre></div>
+<p>Section prefixes come from the store settings (<code>hash_prefix</code>, <code>schema_prefix</code>;
+see <a href="../object-store-configuration/#section-prefixes">Object Store Configuration</a>).
+Both sections embed the schema name in every path.</p>
 <h4 id="implementation_1">Implementation<a class="headerlink" href="#implementation_1" title="Permanent link">&para;</a></h4>
 <div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">HashCodec</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Codec</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Hash-addressed storage. Store only.&quot;&quot;&quot;</span>
@@ -7913,7 +7918,7 @@ just use <code>varchar</code>. A string is simpler and more transparent.</p>
 <td><code>&lt;blob@&gt;</code></td>
 <td><code>&lt;hash&gt;</code></td>
 <td><code>json</code></td>
-<td><code>_hash/{hash}</code></td>
+<td><code>{hash_prefix}/{schema}/{hash}</code></td>
 <td>Yes</td>
 <td>Python object</td>
 </tr>
@@ -7921,7 +7926,7 @@ just use <code>varchar</code>. A string is simpler and more transparent.</p>
 <td><code>&lt;blob@s&gt;</code></td>
 <td><code>&lt;hash&gt;</code></td>
 <td><code>json</code></td>
-<td><code>_hash/{hash}</code></td>
+<td><code>{hash_prefix}/{schema}/{hash}</code></td>
 <td>Yes</td>
 <td>Python object</td>
 </tr>
@@ -7937,7 +7942,7 @@ just use <code>varchar</code>. A string is simpler and more transparent.</p>
 <td><code>&lt;attach@&gt;</code></td>
 <td><code>&lt;hash&gt;</code></td>
 <td><code>json</code></td>
-<td><code>_hash/{hash}</code></td>
+<td><code>{hash_prefix}/{schema}/{hash}</code></td>
 <td>Yes</td>
 <td>Local file path</td>
 </tr>
@@ -7945,7 +7950,7 @@ just use <code>varchar</code>. A string is simpler and more transparent.</p>
 <td><code>&lt;attach@s&gt;</code></td>
 <td><code>&lt;hash&gt;</code></td>
 <td><code>json</code></td>
-<td><code>_hash/{hash}</code></td>
+<td><code>{hash_prefix}/{schema}/{hash}</code></td>
 <td>Yes</td>
 <td>Local file path</td>
 </tr>
@@ -7953,7 +7958,7 @@ just use <code>varchar</code>. A string is simpler and more transparent.</p>
 <td><code>&lt;object@&gt;</code></td>
 <td><code>json</code></td>
 <td><code>JSON</code>/<code>JSONB</code></td>
-<td><code>{schema}/{table}/{pk}/</code></td>
+<td><code>{schema_prefix}/{schema}/{table}/{pk}/</code></td>
 <td>No</td>
 <td>ObjectRef</td>
 </tr>
@@ -7961,7 +7966,7 @@ just use <code>varchar</code>. A string is simpler and more transparent.</p>
 <td><code>&lt;object@s&gt;</code></td>
 <td><code>json</code></td>
 <td><code>JSON</code>/<code>JSONB</code></td>
-<td><code>{schema}/{table}/{pk}/</code></td>
+<td><code>{schema_prefix}/{schema}/{table}/{pk}/</code></td>
 <td>No</td>
 <td>ObjectRef</td>
 </tr>
@@ -7969,7 +7974,7 @@ just use <code>varchar</code>. A string is simpler and more transparent.</p>
 <td><code>&lt;hash@&gt;</code></td>
 <td><code>json</code></td>
 <td><code>JSON</code>/<code>JSONB</code></td>
-<td><code>_hash/{hash}</code></td>
+<td><code>{hash_prefix}/{schema}/{hash}</code></td>
 <td>Yes</td>
 <td>bytes</td>
 </tr>
@@ -7977,7 +7982,7 @@ just use <code>varchar</code>. A string is simpler and more transparent.</p>
 <td><code>&lt;hash@s&gt;</code></td>
 <td><code>json</code></td>
 <td><code>JSON</code>/<code>JSONB</code></td>
-<td><code>_hash/{hash}</code></td>
+<td><code>{hash_prefix}/{schema}/{hash}</code></td>
 <td>Yes</td>
 <td>bytes</td>
 </tr>

@@ -6483,72 +6483,83 @@ treat any single GC pass as best-effort rather than transactionally safe.</p>
 <h2 id="basic-usage">Basic Usage<a class="headerlink" href="#basic-usage" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">datajoint</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dj</span>
 
-<span class="c1"># Scan for orphaned items (dry run)</span>
-<span class="n">stats</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">gc</span><span class="o">.</span><span class="n">scan</span><span class="p">(</span><span class="n">schema1</span><span class="p">,</span> <span class="n">schema2</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">gc</span><span class="o">.</span><span class="n">format_stats</span><span class="p">(</span><span class="n">stats</span><span class="p">))</span>
+<span class="c1"># A collector is bound to its schemas and one store (default store shown here)</span>
+<span class="n">collector</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">gc</span><span class="o">.</span><span class="n">GarbageCollector</span><span class="p">(</span><span class="n">schema1</span><span class="p">,</span> <span class="n">schema2</span><span class="p">)</span>
 
-<span class="c1"># Remove orphaned items</span>
-<span class="n">stats</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">gc</span><span class="o">.</span><span class="n">collect</span><span class="p">(</span><span class="n">schema1</span><span class="p">,</span> <span class="n">schema2</span><span class="p">,</span> <span class="n">dry_run</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">gc</span><span class="o">.</span><span class="n">format_stats</span><span class="p">(</span><span class="n">stats</span><span class="p">))</span>
+<span class="c1"># Read-only report — collect(dry_run=True) is the default and deletes nothing</span>
+<span class="n">stats</span> <span class="o">=</span> <span class="n">collector</span><span class="o">.</span><span class="n">collect</span><span class="p">()</span>
+<span class="n">orphaned</span> <span class="o">=</span> <span class="n">stats</span><span class="p">[</span><span class="s1">&#39;hash_paths_orphaned&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">stats</span><span class="p">[</span><span class="s1">&#39;schema_paths_orphaned&#39;</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">orphaned</span><span class="si">}</span><span class="s2"> orphaned items&quot;</span><span class="p">)</span>
+
+<span class="c1"># Actually remove the orphaned items</span>
+<span class="n">stats</span> <span class="o">=</span> <span class="n">collector</span><span class="o">.</span><span class="n">collect</span><span class="p">(</span><span class="n">dry_run</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Deleted </span><span class="si">{</span><span class="n">stats</span><span class="p">[</span><span class="s1">&#39;deleted&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> items, freed </span><span class="si">{</span><span class="n">stats</span><span class="p">[</span><span class="s1">&#39;bytes_freed&#39;</span><span class="p">]</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mf">1e6</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> MB&quot;</span><span class="p">)</span>
 </code></pre></div>
 <h2 id="scan-before-collecting">Scan Before Collecting<a class="headerlink" href="#scan-before-collecting" title="Permanent link">&para;</a></h2>
 <p>Always scan first to see what would be deleted:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Check what&#39;s orphaned</span>
-<span class="n">stats</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">gc</span><span class="o">.</span><span class="n">scan</span><span class="p">(</span><span class="n">my_schema</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># Preview: the default dry_run=True reports without deleting</span>
+<span class="n">collector</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">gc</span><span class="o">.</span><span class="n">GarbageCollector</span><span class="p">(</span><span class="n">my_schema</span><span class="p">)</span>
+<span class="n">stats</span> <span class="o">=</span> <span class="n">collector</span><span class="o">.</span><span class="n">collect</span><span class="p">()</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Hash-addressed orphaned: </span><span class="si">{</span><span class="n">stats</span><span class="p">[</span><span class="s1">&#39;hash_orphaned&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Hash-addressed orphaned: </span><span class="si">{</span><span class="n">stats</span><span class="p">[</span><span class="s1">&#39;hash_paths_orphaned&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Schema paths orphaned: </span><span class="si">{</span><span class="n">stats</span><span class="p">[</span><span class="s1">&#39;schema_paths_orphaned&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Total bytes: </span><span class="si">{</span><span class="n">stats</span><span class="p">[</span><span class="s1">&#39;orphaned_bytes&#39;</span><span class="p">]</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mf">1e6</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> MB&quot;</span><span class="p">)</span>
+<span class="n">bytes_reclaimable</span> <span class="o">=</span> <span class="n">stats</span><span class="p">[</span><span class="s1">&#39;hash_paths_orphaned_bytes&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">stats</span><span class="p">[</span><span class="s1">&#39;schema_paths_orphaned_bytes&#39;</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Reclaimable: </span><span class="si">{</span><span class="n">bytes_reclaimable</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mf">1e6</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> MB&quot;</span><span class="p">)</span>
 </code></pre></div>
 <h2 id="dry-run-mode">Dry Run Mode<a class="headerlink" href="#dry-run-mode" title="Permanent link">&para;</a></h2>
 <p>The default <code>dry_run=True</code> reports what would be deleted without deleting:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Safe: shows what would be deleted</span>
-<span class="n">stats</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">gc</span><span class="o">.</span><span class="n">collect</span><span class="p">(</span><span class="n">my_schema</span><span class="p">,</span> <span class="n">dry_run</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">gc</span><span class="o">.</span><span class="n">format_stats</span><span class="p">(</span><span class="n">stats</span><span class="p">))</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># dry_run=True (the default) is a full read-only report — it lists the exact</span>
+<span class="c1"># orphaned paths and reclaimable bytes and deletes nothing. Only bytes_freed</span>
+<span class="c1"># and the deleted counts stay 0 until you actually collect.</span>
+<span class="n">collector</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">gc</span><span class="o">.</span><span class="n">GarbageCollector</span><span class="p">(</span><span class="n">my_schema</span><span class="p">)</span>
+<span class="n">stats</span> <span class="o">=</span> <span class="n">collector</span><span class="o">.</span><span class="n">collect</span><span class="p">()</span>  <span class="c1"># dry_run=True</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">stats</span><span class="p">[</span><span class="s1">&#39;hash_paths_orphaned&#39;</span><span class="p">]</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">stats</span><span class="p">[</span><span class="s1">&#39;schema_paths_orphaned&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> items would be deleted&quot;</span><span class="p">)</span>
 
 <span class="c1"># After review, actually delete</span>
-<span class="n">stats</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">gc</span><span class="o">.</span><span class="n">collect</span><span class="p">(</span><span class="n">my_schema</span><span class="p">,</span> <span class="n">dry_run</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">stats</span> <span class="o">=</span> <span class="n">collector</span><span class="o">.</span><span class="n">collect</span><span class="p">(</span><span class="n">dry_run</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 </code></pre></div>
 <h2 id="multiple-schemas">Multiple Schemas<a class="headerlink" href="#multiple-schemas" title="Permanent link">&para;</a></h2>
-<p>If your data spans multiple schemas, scan all of them together:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Important: include ALL schemas that might share storage</span>
-<span class="n">stats</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">gc</span><span class="o">.</span><span class="n">collect</span><span class="p">(</span>
-    <span class="n">schema_raw</span><span class="p">,</span>
-    <span class="n">schema_processed</span><span class="p">,</span>
-    <span class="n">schema_analysis</span><span class="p">,</span>
-    <span class="n">dry_run</span><span class="o">=</span><span class="kc">False</span>
-<span class="p">)</span>
+<p>Every managed path embeds the schema name (<code>{hash_prefix}/{schema}/...</code> and
+<code>{schema_prefix}/{schema}/...</code>), so garbage collection is <strong>per-schema</strong>: each
+schema is scanned against its own subtree. You may pass any subset of the
+schemas sharing a store — a schema not passed is simply not scanned; its live
+objects are never seen and never at risk.</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Clean several schemas at once...</span>
+<span class="n">stats</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">gc</span><span class="o">.</span><span class="n">GarbageCollector</span><span class="p">(</span><span class="n">schema_raw</span><span class="p">,</span> <span class="n">schema_processed</span><span class="p">,</span> <span class="n">schema_analysis</span><span class="p">)</span><span class="o">.</span><span class="n">collect</span><span class="p">(</span><span class="n">dry_run</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+<span class="c1"># ...or just one — safe even when others share the same store</span>
+<span class="n">stats</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">gc</span><span class="o">.</span><span class="n">GarbageCollector</span><span class="p">(</span><span class="n">schema_raw</span><span class="p">)</span><span class="o">.</span><span class="n">collect</span><span class="p">(</span><span class="n">dry_run</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 </code></pre></div>
 <div class="admonition note">
-<p class="admonition-title">Per-schema deduplication</p>
-<p>Hash-addressed storage is deduplicated <strong>within</strong> each schema. Different
-schemas have independent storage, so you only need to scan schemas that
-share the same database.</p>
+<p class="admonition-title">Per-schema attribution</p>
+<p>Because every path embeds its schema, deduplication is scoped within each
+schema and every stored object is attributable to the schema that wrote it.
+That is also what lets a later <code>collect()</code> reclaim the leftovers of a fully
+dropped schema — pass a schema object bound to that (now empty) database.</p>
 </div>
 <h2 id="named-stores">Named Stores<a class="headerlink" href="#named-stores" title="Permanent link">&para;</a></h2>
 <p>If you use multiple named stores, specify which to clean:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Clean specific store</span>
-<span class="n">stats</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">gc</span><span class="o">.</span><span class="n">collect</span><span class="p">(</span><span class="n">my_schema</span><span class="p">,</span> <span class="n">store_name</span><span class="o">=</span><span class="s1">&#39;archive&#39;</span><span class="p">,</span> <span class="n">dry_run</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># Clean a specific store — bind the collector to it</span>
+<span class="n">stats</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">gc</span><span class="o">.</span><span class="n">GarbageCollector</span><span class="p">(</span><span class="n">my_schema</span><span class="p">,</span> <span class="n">store</span><span class="o">=</span><span class="s1">&#39;archive&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">collect</span><span class="p">(</span><span class="n">dry_run</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
-<span class="c1"># Or clean default store</span>
-<span class="n">stats</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">gc</span><span class="o">.</span><span class="n">collect</span><span class="p">(</span><span class="n">my_schema</span><span class="p">,</span> <span class="n">dry_run</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>  <span class="c1"># uses default store</span>
+<span class="c1"># Or the default store</span>
+<span class="n">stats</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">gc</span><span class="o">.</span><span class="n">GarbageCollector</span><span class="p">(</span><span class="n">my_schema</span><span class="p">)</span><span class="o">.</span><span class="n">collect</span><span class="p">(</span><span class="n">dry_run</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 </code></pre></div>
 <h2 id="verbose-mode">Verbose Mode<a class="headerlink" href="#verbose-mode" title="Permanent link">&para;</a></h2>
 <p>See detailed progress:</p>
-<div class="highlight"><pre><span></span><code><span class="n">stats</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">gc</span><span class="o">.</span><span class="n">collect</span><span class="p">(</span>
-    <span class="n">my_schema</span><span class="p">,</span>
+<div class="highlight"><pre><span></span><code><span class="n">stats</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">gc</span><span class="o">.</span><span class="n">GarbageCollector</span><span class="p">(</span><span class="n">my_schema</span><span class="p">)</span><span class="o">.</span><span class="n">collect</span><span class="p">(</span>
     <span class="n">dry_run</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-    <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span>  <span class="c1"># logs each deletion</span>
+    <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>  <span class="c1"># logs each deletion</span>
 <span class="p">)</span>
 </code></pre></div>
 <h2 id="understanding-the-statistics">Understanding the Statistics<a class="headerlink" href="#understanding-the-statistics" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><span class="n">stats</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">gc</span><span class="o">.</span><span class="n">scan</span><span class="p">(</span><span class="n">my_schema</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><span class="n">stats</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">gc</span><span class="o">.</span><span class="n">GarbageCollector</span><span class="p">(</span><span class="n">my_schema</span><span class="p">)</span><span class="o">.</span><span class="n">collect</span><span class="p">()</span>  <span class="c1"># dry_run=True default</span>
 
 <span class="c1"># Hash-addressed storage (&lt;blob@&gt;, &lt;attach@&gt;, &lt;hash@&gt;)</span>
-<span class="n">stats</span><span class="p">[</span><span class="s1">&#39;hash_referenced&#39;</span><span class="p">]</span>      <span class="c1"># Items still in database</span>
-<span class="n">stats</span><span class="p">[</span><span class="s1">&#39;hash_stored&#39;</span><span class="p">]</span>          <span class="c1"># Items in storage</span>
-<span class="n">stats</span><span class="p">[</span><span class="s1">&#39;hash_orphaned&#39;</span><span class="p">]</span>        <span class="c1"># Unreferenced (can be deleted)</span>
-<span class="n">stats</span><span class="p">[</span><span class="s1">&#39;hash_orphaned_bytes&#39;</span><span class="p">]</span>  <span class="c1"># Size of orphaned items</span>
+<span class="n">stats</span><span class="p">[</span><span class="s1">&#39;hash_paths_referenced&#39;</span><span class="p">]</span>      <span class="c1"># Items still in database</span>
+<span class="n">stats</span><span class="p">[</span><span class="s1">&#39;hash_paths_stored&#39;</span><span class="p">]</span>          <span class="c1"># Items in storage</span>
+<span class="n">stats</span><span class="p">[</span><span class="s1">&#39;hash_paths_orphaned&#39;</span><span class="p">]</span>        <span class="c1"># Unreferenced (can be deleted)</span>
+<span class="n">stats</span><span class="p">[</span><span class="s1">&#39;hash_paths_orphaned_bytes&#39;</span><span class="p">]</span>  <span class="c1"># Size of orphaned items</span>
 
 <span class="c1"># Schema-addressed storage (&lt;object@&gt;, &lt;npy@&gt;)</span>
 <span class="n">stats</span><span class="p">[</span><span class="s1">&#39;schema_paths_referenced&#39;</span><span class="p">]</span>  <span class="c1"># Paths still in database</span>
@@ -6556,11 +6567,8 @@ share the same database.</p>
 <span class="n">stats</span><span class="p">[</span><span class="s1">&#39;schema_paths_orphaned&#39;</span><span class="p">]</span>    <span class="c1"># Unreferenced paths</span>
 <span class="n">stats</span><span class="p">[</span><span class="s1">&#39;schema_paths_orphaned_bytes&#39;</span><span class="p">]</span>
 
-<span class="c1"># Totals</span>
-<span class="n">stats</span><span class="p">[</span><span class="s1">&#39;referenced&#39;</span><span class="p">]</span>   <span class="c1"># Total referenced items</span>
-<span class="n">stats</span><span class="p">[</span><span class="s1">&#39;stored&#39;</span><span class="p">]</span>       <span class="c1"># Total stored items</span>
-<span class="n">stats</span><span class="p">[</span><span class="s1">&#39;orphaned&#39;</span><span class="p">]</span>     <span class="c1"># Total orphaned items</span>
-<span class="n">stats</span><span class="p">[</span><span class="s1">&#39;orphaned_bytes&#39;</span><span class="p">]</span>
+<span class="c1"># Combine the two sections yourself if you want a grand total, e.g.</span>
+<span class="c1"># stats[&#39;hash_paths_orphaned&#39;] + stats[&#39;schema_paths_orphaned&#39;]</span>
 </code></pre></div>
 <h2 id="scheduled-collection">Scheduled Collection<a class="headerlink" href="#scheduled-collection" title="Permanent link">&para;</a></h2>
 <p>Run GC periodically in production:</p>
@@ -6568,10 +6576,9 @@ share the same database.</p>
 <span class="kn">import</span><span class="w"> </span><span class="nn">datajoint</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dj</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">myproject</span><span class="w"> </span><span class="kn">import</span> <span class="n">schema1</span><span class="p">,</span> <span class="n">schema2</span><span class="p">,</span> <span class="n">schema3</span>
 
-<span class="n">stats</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">gc</span><span class="o">.</span><span class="n">collect</span><span class="p">(</span>
-    <span class="n">schema1</span><span class="p">,</span> <span class="n">schema2</span><span class="p">,</span> <span class="n">schema3</span><span class="p">,</span>
+<span class="n">stats</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">gc</span><span class="o">.</span><span class="n">GarbageCollector</span><span class="p">(</span><span class="n">schema1</span><span class="p">,</span> <span class="n">schema2</span><span class="p">,</span> <span class="n">schema3</span><span class="p">)</span><span class="o">.</span><span class="n">collect</span><span class="p">(</span>
     <span class="n">dry_run</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-    <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span>
+    <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
 <span class="p">)</span>
 
 <span class="k">if</span> <span class="n">stats</span><span class="p">[</span><span class="s1">&#39;errors&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
@@ -6582,38 +6589,53 @@ share the same database.</p>
 <h2 id="how-storage-addressing-works">How Storage Addressing Works<a class="headerlink" href="#how-storage-addressing-works" title="Permanent link">&para;</a></h2>
 <p>DataJoint uses two storage patterns:</p>
 <h3 id="hash-addressed-blob-attach-hash">Hash-Addressed (<code>&lt;blob@&gt;</code>, <code>&lt;attach@&gt;</code>, <code>&lt;hash@&gt;</code>)<a class="headerlink" href="#hash-addressed-blob-attach-hash" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code>_hash/
+<div class="highlight"><pre><span></span><code>{hash_prefix}/                     # store setting, default: _hash/
   {schema}/
     ab/
       cd/
         abcdefghij...  # Content identified by Base32-encoded MD5 hash
 </code></pre></div>
 <ul>
-<li>Duplicate content shares storage within each schema</li>
+<li>The section location comes from the store's <code>hash_prefix</code> setting
+  (default <code>_hash</code>) — the same value the writer uses, so scanner and writer
+  cannot drift</li>
+<li>Duplicate content shares storage within each schema — the schema name is
+  part of every path, which is what scopes deduplication and lets GC
+  attribute each stored object to a schema</li>
 <li>Paths are stored in metadata—safe from config changes</li>
 <li>Cannot delete until no rows reference the content</li>
-<li>GC compares stored paths against filesystem</li>
+<li>GC compares stored paths against the filesystem</li>
 </ul>
 <h3 id="schema-addressed-object-npy">Schema-Addressed (<code>&lt;object@&gt;</code>, <code>&lt;npy@&gt;</code>)<a class="headerlink" href="#schema-addressed-object-npy" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code>myschema/
-  mytable/
-    primary_key_values/
-      attribute_name/
-        data.zarr/
-        data.npy
+<div class="highlight"><pre><span></span><code>{schema_prefix}/                   # store setting, default: _schema/
+  {schema}/
+    {table}/
+      {primary_key_values}/
+        {attribute}_{token}.npy         # single-file object
+        {attribute}_{token}.zarr/       # folder object (many files)
+        {attribute}_{token}.zarr.manifest.json
 </code></pre></div>
 <ul>
-<li>Each row has unique path based on schema structure</li>
-<li>Paths mirror database organization</li>
-<li>GC removes paths not referenced by any row</li>
+<li>The section location comes from the store's <code>schema_prefix</code> setting
+  (default <code>_schema</code>). DataJoint 2.3.0 and earlier wrote these objects at
+  root level (<code>{schema}/...</code>); GC lists both layouts, so legacy objects
+  remain reclaimable</li>
+<li>Every write gets a unique random token, so multiple versions of a row's
+  object can coexist; GC reclaims superseded tokens</li>
+<li>Orphan matching is coverage-based: a stored file is live if it <strong>is</strong> a
+  referenced path, lies <strong>under</strong> a referenced folder object, or is its
+  <code>.manifest.json</code> sidecar — live folder objects are never partially
+  collected</li>
+<li>GC never touches the store's declared <code>filepath_prefix</code> namespace
+  (user-managed <code>&lt;filepath@&gt;</code> files)</li>
 </ul>
 <h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
 <h3 id="at-least-one-schema-must-be-provided">"At least one schema must be provided"<a class="headerlink" href="#at-least-one-schema-must-be-provided" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># Wrong</span>
-<span class="n">dj</span><span class="o">.</span><span class="n">gc</span><span class="o">.</span><span class="n">scan</span><span class="p">()</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># Wrong — no schemas</span>
+<span class="n">dj</span><span class="o">.</span><span class="n">gc</span><span class="o">.</span><span class="n">GarbageCollector</span><span class="p">()</span>
 
-<span class="c1"># Right</span>
-<span class="n">dj</span><span class="o">.</span><span class="n">gc</span><span class="o">.</span><span class="n">scan</span><span class="p">(</span><span class="n">my_schema</span><span class="p">)</span>
+<span class="c1"># Right — schemas go in the constructor</span>
+<span class="n">dj</span><span class="o">.</span><span class="n">gc</span><span class="o">.</span><span class="n">GarbageCollector</span><span class="p">(</span><span class="n">my_schema</span><span class="p">)</span><span class="o">.</span><span class="n">collect</span><span class="p">()</span>
 </code></pre></div>
 <h3 id="storage-not-decreasing">Storage not decreasing<a class="headerlink" href="#storage-not-decreasing" title="Permanent link">&para;</a></h3>
 <p>Check that you're scanning all schemas:</p>

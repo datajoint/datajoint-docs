@@ -3316,12 +3316,12 @@ database efficiency with Python convenience.</p>
 <li><strong>Memory mapping</strong>: <code>ref.load(mmap_mode='r')</code> for random access to large arrays</li>
 </ul>
 <h3 id="object-schema-addressed-storage"><code>&lt;object@&gt;</code> — Schema-Addressed Storage<a class="headerlink" href="#object-schema-addressed-storage" title="Permanent link">¶</a></h3>
-<p>Schema-addressed storage for files and folders. Path mirrors the database structure: <code>{schema}/{table}/{pk}/{attribute}</code>.</p>
+<p>Schema-addressed storage for files and folders. Path mirrors the database structure within the store's schema-addressed section: <code>{schema_prefix}/{schema}/{table}/{pk}/{attribute}_{token}</code> (<code>schema_prefix</code> defaults to <code>_schema</code>).</p>
 <div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">RecordingAnalysis</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Computed</span><span class="p">):</span>
     <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    -&gt; Recording</span>
 <span class="s2">    ---</span>
-<span class="s2">    results : &lt;object@&gt;       # Stored at </span><span class="si">{schema}</span><span class="s2">/</span><span class="si">{table}</span><span class="s2">/</span><span class="si">{pk}</span><span class="s2">/results/</span>
+<span class="s2">    results : &lt;object@&gt;       # Stored at _schema/</span><span class="si">{schema}</span><span class="s2">/</span><span class="si">{table}</span><span class="s2">/</span><span class="si">{pk}</span><span class="s2">/results_</span><span class="si">{token}</span><span class="s2">/</span>
 <span class="s2">    """</span>
 </code></pre></div>
 <p>Accepts files, folders, or bytes. Returns <code>ObjectRef</code> for lazy access.</p>
@@ -3336,8 +3336,8 @@ database efficiency with Python convenience.</p>
 </code></pre></div>
 <h2 id="storage-modes">Storage Modes<a class="headerlink" href="#storage-modes" title="Permanent link">¶</a></h2>
 <p>Object store codecs use one of two addressing schemes:</p>
-<p><strong>Hash-addressed</strong> — Path derived from content hash (e.g., <code>_hash/ab/cd/abcd1234...</code>). Provides automatic deduplication—identical content stored once. Used by <code>&lt;blob@&gt;</code>, <code>&lt;attach@&gt;</code>, <code>&lt;hash@&gt;</code>.</p>
-<p><strong>Schema-addressed</strong> — Path mirrors database structure: <code>{schema}/{table}/{pk}/{attribute}</code>. Human-readable, browsable paths that reflect your data organization. No deduplication. Used by <code>&lt;object@&gt;</code>, <code>&lt;npy@&gt;</code>, and plugin codecs (<code>&lt;zarr@&gt;</code>, <code>&lt;figpack@&gt;</code>, <code>&lt;photon@&gt;</code>).</p>
+<p><strong>Hash-addressed</strong> — Path derived from content hash, with the schema name embedded (e.g., <code>_hash/{schema}/ab/cd/abcd1234...</code>; section configurable via <code>hash_prefix</code>). Provides automatic deduplication—identical content stored once <strong>per schema</strong>. Used by <code>&lt;blob@&gt;</code>, <code>&lt;attach@&gt;</code>, <code>&lt;hash@&gt;</code>.</p>
+<p><strong>Schema-addressed</strong> — Path mirrors database structure: <code>_schema/{schema}/{table}/{pk}/{attribute}_{token}</code> (section configurable via <code>schema_prefix</code>). Human-readable, browsable paths that reflect your data organization. No deduplication. Used by <code>&lt;object@&gt;</code>, <code>&lt;npy@&gt;</code>, and plugin codecs (<code>&lt;zarr@&gt;</code>, <code>&lt;figpack@&gt;</code>, <code>&lt;photon@&gt;</code>).</p>
 <table>
 <thead>
 <tr>

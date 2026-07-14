@@ -6246,10 +6246,10 @@
 <p>This module provides hash-addressed storage with deduplication for the <code>&lt;hash&gt;</code>
 codec. Content is identified by a Base32-encoded MD5 hash and stored with
 per-schema isolation::</p>
-<pre><code>_hash/{schema}/{hash}
+<pre><code>{hash_prefix}/{schema}/{hash}          (hash_prefix defaults to _hash)
 </code></pre>
 <p>With optional subfolding (configured per-store)::</p>
-<pre><code>_hash/{schema}/{fold1}/{fold2}/{hash}
+<pre><code>{hash_prefix}/{schema}/{fold1}/{fold2}/{hash}
 </code></pre>
 <p>Subfolding creates directory hierarchies to improve performance on filesystems
 that struggle with large directories (ext3, FAT32, NFS). Modern filesystems
@@ -6263,7 +6263,7 @@ that struggle with large directories (ext3, FAT32, NFS). Modern filesystems
 existing data. The path stored at insert time is always used for retrieval.</p>
 <p>Hash-addressed storage is used by <code>&lt;hash@&gt;</code>, <code>&lt;blob@&gt;</code>, and <code>&lt;attach@&gt;</code> types.
 Deduplication occurs within each schema. Deletion requires garbage collection
-via <code>dj.gc.collect()</code>.</p>
+via <code>dj.gc.GarbageCollector</code>.</p>
 
 
 <details class="see-also" open>
@@ -6386,17 +6386,17 @@ via <code>dj.gc.collect()</code>.</p>
 
 
 <a href="#datajoint.hash_registry.build_hash_path" class="headerlink" title="Permanent link">&para;</a></h2>
-<div class="doc-signature highlight"><pre><span></span><code><span class="nf">build_hash_path</span><span class="p">(</span><span class="n">content_hash</span><span class="p">,</span> <span class="n">schema_name</span><span class="p">,</span> <span class="n">subfolding</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">build_hash_path</span><span class="p">(</span><span class="n">content_hash</span><span class="p">,</span> <span class="n">schema_name</span><span class="p">,</span> <span class="n">subfolding</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">hash_prefix</span><span class="p">)</span>
 </code></pre></div>
 
     <div class="doc doc-contents ">
 
         <p>Build the storage path for hash-addressed storage.</p>
 <p>Path structure without subfolding::</p>
-<pre><code>_hash/{schema}/{hash}
+<pre><code>{hash_prefix}/{schema}/{hash}          (hash_prefix defaults to _hash)
 </code></pre>
 <p>Path structure with subfolding (e.g., (2, 2))::</p>
-<pre><code>_hash/{schema}/{fold1}/{fold2}/{hash}
+<pre><code>{hash_prefix}/{schema}/{fold1}/{fold2}/{hash}
 </code></pre>
 
 
@@ -6457,6 +6457,24 @@ via <code>dj.gc.collect()</code>.</p>
             </td>
             <td>
                   <code>None</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>hash_prefix</code>
+            </td>
+            <td>
+                  <code><span title="str">str</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Section prefix from the store's <code>hash_prefix</code> setting. There is no
+fallback here by design: settings (<code>get_store_spec</code>) is the single
+source of the <code>"_hash"</code> default, applied to every store spec.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
             </td>
           </tr>
       </tbody>

@@ -6981,7 +6981,7 @@ build/
 </code></pre></div>
 <h3 id="considerations_1">Considerations<a class="headerlink" href="#considerations_1" title="Permanent link">&para;</a></h3>
 <ul>
-<li>Object paths include schema name: <code>{project}/{schema}/{table}/...</code></li>
+<li>Object paths include the schema name: <code>{project}/{schema_prefix}/{schema}/{table}/...</code> — the schema is embedded in every managed path (both sections), which scopes hash deduplication per schema and lets garbage collection attribute stored objects to schemas</li>
 <li>Users need read access to fetch blobs from upstream schemas</li>
 <li>Content-addressed storage (<code>&lt;blob@&gt;</code>) shares objects across tables</li>
 <li>Garbage collection requires coordinated delete permissions</li>

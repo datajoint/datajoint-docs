@@ -6815,17 +6815,17 @@
 <p><strong>How storage methods use stores:</strong></p>
 <ul>
 <li><strong>Hash-addressed</strong> (<code>&lt;blob@&gt;</code>, <code>&lt;attach@&gt;</code>): <code>{location}/{hash_prefix}/{schema}/{hash}</code> with optional subfolding</li>
-<li><strong>Schema-addressed</strong> (<code>&lt;object@&gt;</code>, <code>&lt;npy@&gt;</code>): <code>{location}/{schema_prefix}/{partition}/{schema}/{table}/{key}/{field}.{token}.{ext}</code> with optional partitioning</li>
+<li><strong>Schema-addressed</strong> (<code>&lt;object@&gt;</code>, <code>&lt;npy@&gt;</code>): <code>{location}/{schema_prefix}/{partition}/{schema}/{table}/{key}/{field}_{token}{ext}</code> with optional partitioning</li>
 <li><strong>Filepath</strong> (<code>&lt;filepath@&gt;</code>): <code>{location}/{filepath_prefix}/{user_path}</code> (user-managed, cannot use hash or schema prefixes)</li>
 </ul>
 <p>All storage methods share the same stores and default store. DataJoint reserves the configured <code>hash_prefix</code> and <code>schema_prefix</code> sections for managed storage; <code>&lt;filepath@&gt;</code> references can use any other paths (unless <code>filepath_prefix</code> is configured to restrict them).</p>
 <p><strong>Path structure examples:</strong></p>
 <p>Without partitioning:
 <div class="highlight"><pre><span></span><code>{location}/_hash/{schema}/ab/cd/abcd1234...                    # hash-addressed with subfolding
-{location}/_schema/{schema}/{table}/{key}/data.x8f2a9b1.zarr   # schema-addressed, no partitioning
+{location}/_schema/{schema}/{table}/{key}/data_x8f2a9b1.zarr   # schema-addressed, no partitioning
 </code></pre></div></p>
 <p>With <code>partition_pattern: "subject_id/session_date"</code>:
-<div class="highlight"><pre><span></span><code>{location}/_schema/subject_id=042/session_date=2024-01-15/{schema}/{table}/{remaining_key}/data.x8f2a9b1.zarr
+<div class="highlight"><pre><span></span><code>{location}/_schema/subject_id=042/session_date=2024-01-15/{schema}/{table}/{remaining_key}/data_x8f2a9b1.zarr
 </code></pre></div></p>
 <p>If table lacks partition attributes, it follows normal path structure.</p>
 <p><strong>Credentials should be stored in secrets:</strong></p>

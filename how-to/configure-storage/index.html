@@ -6704,7 +6704,7 @@
 <div class="highlight"><pre><span></span><code>_hash/{schema}/ab/cd/abcdefghijklmnopqrstuvwxyz
 </code></pre></div>
 <p>Schema-addressed storage (<code>&lt;object@&gt;</code>, <code>&lt;npy@&gt;</code>) does not use subfolding—it uses key-based paths:</p>
-<div class="highlight"><pre><span></span><code>{location}/_schema/{partition}/{schema}/{table}/{key}/{field_name}.{token}.{ext}
+<div class="highlight"><pre><span></span><code>{location}/_schema/{partition}/{schema}/{table}/{key}/{field_name}_{token}{ext}
 </code></pre></div>
 <h3 id="filesystem-recommendations">Filesystem Recommendations<a class="headerlink" href="#filesystem-recommendations" title="Permanent link">&para;</a></h3>
 <table>
@@ -6795,7 +6795,7 @@ Modern local filesystems and cloud object storage work well without subfolding.<
 <li><strong>Integration with fsspec</strong> for streaming access</li>
 </ul>
 <h2 id="customizing-storage-sections">Customizing Storage Sections<a class="headerlink" href="#customizing-storage-sections" title="Permanent link">&para;</a></h2>
-<p>Each store is divided into sections for different storage types. By default, DataJoint uses <code>_hash/</code> for hash-addressed storage and <code>_schema/</code> for schema-addressed storage. You can customize the path prefix for each section using the <code>*_prefix</code> configuration parameters to map DataJoint to existing storage layouts:</p>
+<p>Each store is divided into sections for different storage types. By default, DataJoint uses <code>_hash/</code> for hash-addressed storage and <code>_schema/</code> for schema-addressed storage. You can customize the path prefix for each section using the <code>*_prefix</code> configuration parameters to map DataJoint to existing storage layouts. Writers, garbage collection, and <code>&lt;filepath@&gt;</code> validation all read the same per-store values, so a relocated section stays consistent end to end:</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;stores&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="nt">&quot;legacy&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
@@ -6814,6 +6814,14 @@ Modern local filesystems and cloud object storage work well without subfolding.<
 <li>The <code>hash_prefix</code> and <code>schema_prefix</code> sections are reserved for DataJoint-managed storage</li>
 <li>The <code>filepath_prefix</code> is optional (<code>null</code> = unrestricted, or set a required prefix)</li>
 </ul>
+<div class="admonition warning">
+<p class="admonition-title">Changing prefixes on an existing store</p>
+<p>Set the prefixes when the store is first configured. Changing them on a
+store that already holds data leaves existing objects readable (their
+paths are recorded in each row's metadata), but garbage collection scans
+only the currently configured sections, and hash deduplication will not
+match content stored under an old prefix.</p>
+</div>
 <p><strong>Example with hierarchical layout:</strong></p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;stores&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>

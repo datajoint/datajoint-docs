@@ -2808,9 +2808,9 @@
 <p>The primary key must be fully set on <code>staged.rec</code> before <code>staged.store()</code> or <code>staged.open()</code> is called — the canonical object path is derived from the primary key. Calling either method before the primary key is set raises <code>DataJointError</code>.</p>
 <h2 id="path-construction-normative">Path construction (normative)<a class="headerlink" href="#path-construction-normative" title="Permanent link">¶</a></h2>
 <p>Staged objects are written at the canonical schema-addressed path from the first byte. There is no intermediate staging location: the object exists at its final path during the write and is deleted from there if the block exits with an exception.</p>
-<div class="highlight"><pre><span></span><code>{location}/{schema}/{table}/{pk_serialized}/{field}_{token}{ext}
+<div class="highlight"><pre><span></span><code>{location}/{schema_prefix}/{schema}/{table}/{pk_serialized}/{field}_{token}{ext}
 </code></pre></div>
-<p>Built by <code>storage.build_object_path</code>. <code>{location}</code> is the configured store base, <code>{token}</code> is a random suffix of <code>token_length</code> characters (default 8, per the store spec), <code>{pk_serialized}</code> is the serialized primary key, and partitioning follows the store's <code>partition_pattern</code>.</p>
+<p>Built by <code>storage.build_object_path</code>. <code>{location}</code> is the configured store base, <code>{schema_prefix}</code> is the store's schema-addressed section (default <code>_schema</code>), <code>{token}</code> is a random suffix of <code>token_length</code> characters (default 8, per the store spec), <code>{pk_serialized}</code> is the serialized primary key, and partitioning follows the store's <code>partition_pattern</code>.</p>
 <h2 id="metadata-contract">Metadata contract<a class="headerlink" href="#metadata-contract" title="Permanent link">¶</a></h2>
 <p>On clean exit, the framework computes a metadata dict structurally equal to what <code>ObjectCodec.encode</code> (<code>builtin_codecs/object.py:166-174</code>) would produce for the same content, and assigns it to <code>staged.rec[field]</code> before <code>insert1</code>:</p>
 <div class="highlight"><pre><span></span><code>{path, store, size, ext, is_dir, item_count, timestamp}

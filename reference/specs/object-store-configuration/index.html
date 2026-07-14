@@ -7279,6 +7279,28 @@
 3. <code>filepath_prefix</code> is optional:
    - <code>null</code> (default): filepaths can use any path except reserved sections
    - <code>"some/prefix"</code>: all filepaths must start with this prefix</p>
+<p><strong>Consumption (normative):</strong> the prefix values are read from the store spec
+by every component that touches managed storage — the writers (<code>put_hash</code>,
+<code>build_object_path</code>), garbage collection (which scans the configured
+<code>hash_prefix</code> section and never enters the configured <code>filepath_prefix</code>
+namespace), and <code>&lt;filepath@&gt;</code> validation. Defaults are applied to <strong>every</strong>
+store spec, including plugin protocols, when the spec is resolved
+(<code>get_store_spec</code>), and there are no component-level fallbacks — all
+components always observe the same values.</p>
+<p><strong>Hash paths embed the schema:</strong> <code>{hash_prefix}/{schema}/{hash}</code>.
+Deduplication is therefore scoped <strong>per schema</strong>, and every stored object is
+attributable to the schema that wrote it. Garbage collection depends on this
+attribution; because storage-side listing covers the whole section across
+all schemas, a <code>collect()</code> must be given every schema that uses the store
+(see <a href="../../../how-to/garbage-collection/">Clean Up Object Storage</a>).</p>
+<p><strong>Changing prefixes on a store that already holds data</strong> is not recommended:
+existing objects remain readable (each row's metadata records its full
+path), but garbage collection scans only the currently configured sections —
+objects under a previous prefix are not reclamation candidates until the
+setting is restored — and hash deduplication will not match content stored
+under the old prefix. Schema-addressed objects written by DataJoint 2.3.0
+and earlier live at root-level <code>{schema}/...</code> paths; garbage collection
+lists both layouts.</p>
 <p><strong>Example with custom prefixes:</strong></p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;hash_prefix&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;content_addressed&quot;</span><span class="p">,</span>
@@ -7443,10 +7465,10 @@ git<span class="w"> </span>check-ignore<span class="w"> </span>.secrets/database
 <h3 id="schema-addressed-storage">Schema-Addressed Storage<a class="headerlink" href="#schema-addressed-storage" title="Permanent link">&para;</a></h3>
 <p><strong>Data types:</strong> <code>&lt;object@store&gt;</code>, <code>&lt;npy@store&gt;</code></p>
 <p><strong>Path structure (no partitioning):</strong>
-<div class="highlight"><pre><span></span><code>{location}/{schema_prefix}/{schema_name}/{table_name}/{key_string}/{field_name}.{token}.{ext}
+<div class="highlight"><pre><span></span><code>{location}/{schema_prefix}/{schema_name}/{table_name}/{key_string}/{field_name}_{token}{ext}
 </code></pre></div></p>
 <p><strong>With partitioning:</strong>
-<div class="highlight"><pre><span></span><code>{location}/{schema_prefix}/{partition_path}/{schema_name}/{table_name}/{remaining_key}/{field_name}.{token}.{ext}
+<div class="highlight"><pre><span></span><code>{location}/{schema_prefix}/{partition_path}/{schema_name}/{table_name}/{remaining_key}/{field_name}_{token}{ext}
 </code></pre></div></p>
 <p><strong>Algorithm:</strong></p>
 <ol>

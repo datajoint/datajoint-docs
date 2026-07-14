@@ -5500,6 +5500,28 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#datajoint.heading.Attribute.is_hash_object" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        is_hash_object
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#datajoint.heading.Attribute.is_schema_object" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        is_schema_object
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -5610,6 +5632,28 @@
     <span class="md-ellipsis">
       
         non_blobs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#datajoint.heading.Heading.hash_objects" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        hash_objects
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#datajoint.heading.Heading.schema_objects" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        schema_objects
       
     </span>
   </a>
@@ -6403,6 +6447,28 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#datajoint.heading.Attribute.is_hash_object" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        is_hash_object
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#datajoint.heading.Attribute.is_schema_object" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        is_schema_object
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -6513,6 +6579,28 @@
     <span class="md-ellipsis">
       
         non_blobs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#datajoint.heading.Heading.hash_objects" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        hash_objects
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#datajoint.heading.Heading.schema_objects" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        schema_objects
       
     </span>
   </a>
@@ -7053,6 +7141,73 @@ Default values are not included.</p>
 
 
 
+
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="datajoint.heading.Attribute.is_hash_object" class="doc doc-heading">
+            <span class="doc doc-object-name doc-attribute-name">is_hash_object</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-property"><code>property</code></small>
+  </span>
+
+<a href="#datajoint.heading.Attribute.is_hash_object" class="headerlink" title="Permanent link">&para;</a></h3>
+<div class="doc-signature highlight"><pre><span></span><code><span class="n">is_hash_object</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>True if the value is stored in external hash-addressed storage.</p>
+<p>Covers <code>&lt;hash@&gt;</code> (external-only) and <code>&lt;blob@&gt;</code>/<code>&lt;attach@&gt;</code> <em>with</em>
+a store. Inline <code>&lt;blob&gt;</code>/<code>&lt;attach&gt;</code> (no store) return False — their
+bytes live in the column, so there is nothing in object storage to
+collect. The <code>store is not None</code> test mirrors the framework's own
+<code>is_store</code> determination (see <code>declare</code>/<code>Heading</code> compilation).</p>
+
+    </div>
+
+</div>
+
+
+
+
+
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="datajoint.heading.Attribute.is_schema_object" class="doc doc-heading">
+            <span class="doc doc-object-name doc-attribute-name">is_schema_object</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-property"><code>property</code></small>
+  </span>
+
+<a href="#datajoint.heading.Attribute.is_schema_object" class="headerlink" title="Permanent link">&para;</a></h3>
+<div class="doc-signature highlight"><pre><span></span><code><span class="n">is_schema_object</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>True if the value is stored in schema-addressed storage.</p>
+<p>Covers <code>&lt;object@&gt;</code>, <code>&lt;npy@&gt;</code>, and any custom <code>SchemaCodec</code>
+subclass — recognized by codec <em>type</em>, not name, so third-party codecs
+are included (see #1469). Schema-addressed storage is external-only, so
+no store guard is needed.</p>
+
+    </div>
+
+</div>
+
+
+
+
   </div>
 
     </div>
@@ -7499,6 +7654,66 @@ through functional dependencies.</p>
     <div class="doc doc-contents ">
 
         <p>Attributes that are not blobs or JSON.</p>
+
+    </div>
+
+</div>
+
+
+
+
+
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="datajoint.heading.Heading.hash_objects" class="doc doc-heading">
+            <span class="doc doc-object-name doc-attribute-name">hash_objects</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-property"><code>property</code></small>
+  </span>
+
+<a href="#datajoint.heading.Heading.hash_objects" class="headerlink" title="Permanent link">&para;</a></h3>
+<div class="doc-signature highlight"><pre><span></span><code><span class="n">hash_objects</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Names of attributes stored in external hash-addressed storage (<code>&lt;hash@&gt;</code>,
+external <code>&lt;blob@&gt;</code>/<code>&lt;attach@&gt;</code>). See :attr:<code>Attribute.is_hash_object</code>.</p>
+
+    </div>
+
+</div>
+
+
+
+
+
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="datajoint.heading.Heading.schema_objects" class="doc doc-heading">
+            <span class="doc doc-object-name doc-attribute-name">schema_objects</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-property"><code>property</code></small>
+  </span>
+
+<a href="#datajoint.heading.Heading.schema_objects" class="headerlink" title="Permanent link">&para;</a></h3>
+<div class="doc-signature highlight"><pre><span></span><code><span class="n">schema_objects</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Names of attributes stored in schema-addressed storage (<code>&lt;object@&gt;</code>,
+<code>&lt;npy@&gt;</code>, custom <code>SchemaCodec</code>). See :attr:<code>Attribute.is_schema_object</code>.</p>
 
     </div>
 

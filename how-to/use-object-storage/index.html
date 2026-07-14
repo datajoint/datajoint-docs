@@ -6659,7 +6659,7 @@
 <h2 id="schema-addressed-storage">Schema-Addressed Storage<a class="headerlink" href="#schema-addressed-storage" title="Permanent link">&para;</a></h2>
 <p><code>&lt;npy@&gt;</code> and <code>&lt;object@&gt;</code> use <strong>schema-addressed</strong> storage:</p>
 <ul>
-<li>Objects stored at paths that mirror database schema: <code>{schema}/{table}/{pk}/{attribute}.npy</code></li>
+<li>Objects stored under the store's schema-addressed section at paths that mirror the database schema: <code>_schema/{schema}/{table}/{pk}/{attribute}_{token}.npy</code> (section configurable via <code>schema_prefix</code>)</li>
 <li>Browsable organization in object storage</li>
 <li>One object per entity (no deduplication)</li>
 <li>Supports lazy loading with metadata access</li>

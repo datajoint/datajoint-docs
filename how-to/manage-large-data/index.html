@@ -6450,12 +6450,15 @@ collection periodically:</p>
 <span class="c1"># Objects are NOT automatically deleted with rows</span>
 <span class="p">(</span><span class="n">MyTable</span> <span class="o">&amp;</span> <span class="n">old_data</span><span class="p">)</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
 
-<span class="c1"># Scan for orphaned items</span>
-<span class="n">stats</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">gc</span><span class="o">.</span><span class="n">scan</span><span class="p">(</span><span class="n">my_schema</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">gc</span><span class="o">.</span><span class="n">format_stats</span><span class="p">(</span><span class="n">stats</span><span class="p">))</span>
+<span class="c1"># A collector is bound to its schemas and one store</span>
+<span class="n">collector</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">gc</span><span class="o">.</span><span class="n">GarbageCollector</span><span class="p">(</span><span class="n">my_schema</span><span class="p">)</span>
+
+<span class="c1"># Read-only report (collect defaults to dry_run=True)</span>
+<span class="n">stats</span> <span class="o">=</span> <span class="n">collector</span><span class="o">.</span><span class="n">collect</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">stats</span><span class="p">[</span><span class="s1">&#39;hash_paths_orphaned&#39;</span><span class="p">]</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">stats</span><span class="p">[</span><span class="s1">&#39;schema_paths_orphaned&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> orphaned items&quot;</span><span class="p">)</span>
 
 <span class="c1"># Remove orphaned items</span>
-<span class="n">stats</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">gc</span><span class="o">.</span><span class="n">collect</span><span class="p">(</span><span class="n">my_schema</span><span class="p">,</span> <span class="n">dry_run</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">stats</span> <span class="o">=</span> <span class="n">collector</span><span class="o">.</span><span class="n">collect</span><span class="p">(</span><span class="n">dry_run</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 </code></pre></div>
 <p>See <a href="../garbage-collection/">Clean Up Object Storage</a> for details.</p>
 <h2 id="monitor-storage-usage">Monitor Storage Usage<a class="headerlink" href="#monitor-storage-usage" title="Permanent link">&para;</a></h2>

@@ -1,6 +1,6 @@
 # DataJoint Documentation (Full)
 
-Generated: 2026-07-02 20:28:05 UTC
+Generated: 2026-07-14 20:25:55 UTC
 Commit: unknown
 Branch: unknown
 
@@ -3587,14 +3587,14 @@ result = np.mean(ref)  # Downloads automatically
 
 ### `<object@>` — Schema-Addressed Storage
 
-Schema-addressed storage for files and folders. Path mirrors the database structure: `{schema}/{table}/{pk}/{attribute}`.
+Schema-addressed storage for files and folders. Path mirrors the database structure within the store's schema-addressed section: `{schema_prefix}/{schema}/{table}/{pk}/{attribute}_{token}` (`schema_prefix` defaults to `_schema`).
 
 ```python
 class RecordingAnalysis(dj.Computed):
     definition = """
     -> Recording
     ---
-    results : <object@>       # Stored at {schema}/{table}/{pk}/results/
+    results : <object@>       # Stored at _schema/{schema}/{table}/{pk}/results_{token}/
     """
 ```
 
@@ -3617,9 +3617,9 @@ class RawData(dj.Manual):
 
 Object store codecs use one of two addressing schemes:
 
-**Hash-addressed** — Path derived from content hash (e.g., `_hash/ab/cd/abcd1234...`). Provides automatic deduplication—identical content stored once. Used by `<blob@>`, `<attach@>`, `<hash@>`.
+**Hash-addressed** — Path derived from content hash, with the schema name embedded (e.g., `_hash/{schema}/ab/cd/abcd1234...`; section configurable via `hash_prefix`). Provides automatic deduplication—identical content stored once **per schema**. Used by `<blob@>`, `<attach@>`, `<hash@>`.
 
-**Schema-addressed** — Path mirrors database structure: `{schema}/{table}/{pk}/{attribute}`. Human-readable, browsable paths that reflect your data organization. No deduplication. Used by `<object@>`, `<npy@>`, and plugin codecs (`<zarr@>`, `<figpack@>`, `<photon@>`).
+**Schema-addressed** — Path mirrors database structure: `_schema/{schema}/{table}/{pk}/{attribute}_{token}` (section configurable via `schema_prefix`). Human-readable, browsable paths that reflect your data organization. No deduplication. Used by `<object@>`, `<npy@>`, and plugin codecs (`<zarr@>`, `<figpack@>`, `<photon@>`).
 
 | Mode | Database | Object Store | Deduplication | Use Case |
 |------|----------|--------------|---------------|----------|
@@ -13282,7 +13282,7 @@ file : <attach@>            # File attachments
 
 ### Schema-Addressed: `<npy@>` or `<object@>`
 
-**Storage:** Object store at `{store}/_schema/{schema}/{table}/{key}/{field}.{token}.ext`
+**Storage:** Object store at `{store}/_schema/{schema}/{table}/{key}/{field}_{token}.ext`
 
 **Syntax:**
 ```python
@@ -14233,7 +14233,7 @@ _hash/{schema}/ab/cd/abcdefghijklmnopqrstuvwxyz
 Schema-addressed storage (`<object@>`, `<npy@>`) does not use subfolding—it uses key-based paths:
 
 ```
-{location}/_schema/{partition}/{schema}/{table}/{key}/{field_name}.{token}.{ext}
+{location}/_schema/{partition}/{schema}/{table}/{key}/{field_name}_{token}{ext}
 ```
 
 ### Filesystem Recommendations
@@ -14280,7 +14280,7 @@ This unified approach enables:
 
 ## Customizing Storage Sections
 
-Each store is divided into sections for different storage types. By default, DataJoint uses `_hash/` for hash-addressed storage and `_schema/` for schema-addressed storage. You can customize the path prefix for each section using the `*_prefix` configuration parameters to map DataJoint to existing storage layouts:
+Each store is divided into sections for different storage types. By default, DataJoint uses `_hash/` for hash-addressed storage and `_schema/` for schema-addressed storage. You can customize the path prefix for each section using the `*_prefix` configuration parameters to map DataJoint to existing storage layouts. Writers, garbage collection, and `<filepath@>` validation all read the same per-store values, so a relocated section stays consistent end to end:
 
 ```json
 {
@@ -14301,6 +14301,13 @@ Each store is divided into sections for different storage types. By default, Dat
 - Sections must be mutually exclusive (path prefixes cannot nest)
 - The `hash_prefix` and `schema_prefix` sections are reserved for DataJoint-managed storage
 - The `filepath_prefix` is optional (`null` = unrestricted, or set a required prefix)
+
+!!! warning "Changing prefixes on an existing store"
+    Set the prefixes when the store is first configured. Changing them on a
+    store that already holds data leaves existing objects readable (their
+    paths are recorded in each row's metadata), but garbage collection scans
+    only the currently configured sections, and hash deduplication will not
+    match content stored under an old prefix.
 
 **Example with hierarchical layout:**
 
@@ -16156,13 +16163,17 @@ Run garbage collection periodically to reclaim storage space.
 ```python
 import datajoint as dj
 
-# Scan for orphaned items (dry run)
-stats = dj.gc.scan(schema1, schema2)
-print(dj.gc.format_stats(stats))
+# A collector is bound to its schemas and one store (default store shown here)
+collector = dj.gc.GarbageCollector(schema1, schema2)
 
-# Remove orphaned items
-stats = dj.gc.collect(schema1, schema2, dry_run=False)
-print(dj.gc.format_stats(stats))
+# Read-only report — collect(dry_run=True) is the default and deletes nothing
+stats = collector.collect()
+orphaned = stats['hash_paths_orphaned'] + stats['schema_paths_orphaned']
+print(f"{orphaned} orphaned items")
+
+# Actually remove the orphaned items
+stats = collector.collect(dry_run=False)
+print(f"Deleted {stats['deleted']} items, freed {stats['bytes_freed'] / 1e6:.1f} MB")
 ```
 
 ## Scan Before Collecting
@@ -16170,12 +16181,14 @@ print(dj.gc.format_stats(stats))
 Always scan first to see what would be deleted:
 
 ```python
-# Check what's orphaned
-stats = dj.gc.scan(my_schema)
+# Preview: the default dry_run=True reports without deleting
+collector = dj.gc.GarbageCollector(my_schema)
+stats = collector.collect()
 
-print(f"Hash-addressed orphaned: {stats['hash_orphaned']}")
+print(f"Hash-addressed orphaned: {stats['hash_paths_orphaned']}")
 print(f"Schema paths orphaned: {stats['schema_paths_orphaned']}")
-print(f"Total bytes: {stats['orphaned_bytes'] / 1e6:.1f} MB")
+bytes_reclaimable = stats['hash_paths_orphaned_bytes'] + stats['schema_paths_orphaned_bytes']
+print(f"Reclaimable: {bytes_reclaimable / 1e6:.1f} MB")
 ```
 
 ## Dry Run Mode
@@ -16183,43 +16196,49 @@ print(f"Total bytes: {stats['orphaned_bytes'] / 1e6:.1f} MB")
 The default `dry_run=True` reports what would be deleted without deleting:
 
 ```python
-# Safe: shows what would be deleted
-stats = dj.gc.collect(my_schema, dry_run=True)
-print(dj.gc.format_stats(stats))
+# dry_run=True (the default) is a full read-only report — it lists the exact
+# orphaned paths and reclaimable bytes and deletes nothing. Only bytes_freed
+# and the deleted counts stay 0 until you actually collect.
+collector = dj.gc.GarbageCollector(my_schema)
+stats = collector.collect()  # dry_run=True
+print(f"{stats['hash_paths_orphaned'] + stats['schema_paths_orphaned']} items would be deleted")
 
 # After review, actually delete
-stats = dj.gc.collect(my_schema, dry_run=False)
+stats = collector.collect(dry_run=False)
 ```
 
 ## Multiple Schemas
 
-If your data spans multiple schemas, scan all of them together:
+Every managed path embeds the schema name (`{hash_prefix}/{schema}/...` and
+`{schema_prefix}/{schema}/...`), so garbage collection is **per-schema**: each
+schema is scanned against its own subtree. You may pass any subset of the
+schemas sharing a store — a schema not passed is simply not scanned; its live
+objects are never seen and never at risk.
 
 ```python
-# Important: include ALL schemas that might share storage
-stats = dj.gc.collect(
-    schema_raw,
-    schema_processed,
-    schema_analysis,
-    dry_run=False
-)
+# Clean several schemas at once...
+stats = dj.gc.GarbageCollector(schema_raw, schema_processed, schema_analysis).collect(dry_run=False)
+
+# ...or just one — safe even when others share the same store
+stats = dj.gc.GarbageCollector(schema_raw).collect(dry_run=False)
 ```
 
-!!! note "Per-schema deduplication"
-    Hash-addressed storage is deduplicated **within** each schema. Different
-    schemas have independent storage, so you only need to scan schemas that
-    share the same database.
+!!! note "Per-schema attribution"
+    Because every path embeds its schema, deduplication is scoped within each
+    schema and every stored object is attributable to the schema that wrote it.
+    That is also what lets a later `collect()` reclaim the leftovers of a fully
+    dropped schema — pass a schema object bound to that (now empty) database.
 
 ## Named Stores
 
 If you use multiple named stores, specify which to clean:
 
 ```python
-# Clean specific store
-stats = dj.gc.collect(my_schema, store_name='archive', dry_run=False)
+# Clean a specific store — bind the collector to it
+stats = dj.gc.GarbageCollector(my_schema, store='archive').collect(dry_run=False)
 
-# Or clean default store
-stats = dj.gc.collect(my_schema, dry_run=False)  # uses default store
+# Or the default store
+stats = dj.gc.GarbageCollector(my_schema).collect(dry_run=False)
 ```
 
 ## Verbose Mode
@@ -16227,23 +16246,22 @@ stats = dj.gc.collect(my_schema, dry_run=False)  # uses default store
 See detailed progress:
 
 ```python
-stats = dj.gc.collect(
-    my_schema,
+stats = dj.gc.GarbageCollector(my_schema).collect(
     dry_run=False,
-    verbose=True  # logs each deletion
+    verbose=True,  # logs each deletion
 )
 ```
 
 ## Understanding the Statistics
 
 ```python
-stats = dj.gc.scan(my_schema)
+stats = dj.gc.GarbageCollector(my_schema).collect()  # dry_run=True default
 
 # Hash-addressed storage (<blob@>, <attach@>, <hash@>)
-stats['hash_referenced']      # Items still in database
-stats['hash_stored']          # Items in storage
-stats['hash_orphaned']        # Unreferenced (can be deleted)
-stats['hash_orphaned_bytes']  # Size of orphaned items
+stats['hash_paths_referenced']      # Items still in database
+stats['hash_paths_stored']          # Items in storage
+stats['hash_paths_orphaned']        # Unreferenced (can be deleted)
+stats['hash_paths_orphaned_bytes']  # Size of orphaned items
 
 # Schema-addressed storage (<object@>, <npy@>)
 stats['schema_paths_referenced']  # Paths still in database
@@ -16251,11 +16269,8 @@ stats['schema_paths_stored']      # Paths in storage
 stats['schema_paths_orphaned']    # Unreferenced paths
 stats['schema_paths_orphaned_bytes']
 
-# Totals
-stats['referenced']   # Total referenced items
-stats['stored']       # Total stored items
-stats['orphaned']     # Total orphaned items
-stats['orphaned_bytes']
+# Combine the two sections yourself if you want a grand total, e.g.
+# stats['hash_paths_orphaned'] + stats['schema_paths_orphaned']
 ```
 
 ## Scheduled Collection
@@ -16267,10 +16282,9 @@ Run GC periodically in production:
 import datajoint as dj
 from myproject import schema1, schema2, schema3
 
-stats = dj.gc.collect(
-    schema1, schema2, schema3,
+stats = dj.gc.GarbageCollector(schema1, schema2, schema3).collect(
     dry_run=False,
-    verbose=True
+    verbose=True,
 )
 
 if stats['errors'] > 0:
@@ -16286,43 +16300,58 @@ DataJoint uses two storage patterns:
 ### Hash-Addressed (`<blob@>`, `<attach@>`, `<hash@>`)
 
 ```
-_hash/
+{hash_prefix}/                     # store setting, default: _hash/
   {schema}/
     ab/
       cd/
         abcdefghij...  # Content identified by Base32-encoded MD5 hash
 ```
 
-- Duplicate content shares storage within each schema
+- The section location comes from the store's `hash_prefix` setting
+  (default `_hash`) — the same value the writer uses, so scanner and writer
+  cannot drift
+- Duplicate content shares storage within each schema — the schema name is
+  part of every path, which is what scopes deduplication and lets GC
+  attribute each stored object to a schema
 - Paths are stored in metadata—safe from config changes
 - Cannot delete until no rows reference the content
-- GC compares stored paths against filesystem
+- GC compares stored paths against the filesystem
 
 ### Schema-Addressed (`<object@>`, `<npy@>`)
 
 ```
-myschema/
-  mytable/
-    primary_key_values/
-      attribute_name/
-        data.zarr/
-        data.npy
+{schema_prefix}/                   # store setting, default: _schema/
+  {schema}/
+    {table}/
+      {primary_key_values}/
+        {attribute}_{token}.npy         # single-file object
+        {attribute}_{token}.zarr/       # folder object (many files)
+        {attribute}_{token}.zarr.manifest.json
 ```
 
-- Each row has unique path based on schema structure
-- Paths mirror database organization
-- GC removes paths not referenced by any row
+- The section location comes from the store's `schema_prefix` setting
+  (default `_schema`). DataJoint 2.3.0 and earlier wrote these objects at
+  root level (`{schema}/...`); GC lists both layouts, so legacy objects
+  remain reclaimable
+- Every write gets a unique random token, so multiple versions of a row's
+  object can coexist; GC reclaims superseded tokens
+- Orphan matching is coverage-based: a stored file is live if it **is** a
+  referenced path, lies **under** a referenced folder object, or is its
+  `.manifest.json` sidecar — live folder objects are never partially
+  collected
+- GC never touches the store's declared `filepath_prefix` namespace
+  (user-managed `<filepath@>` files)
 
 ## Troubleshooting
 
 ### "At least one schema must be provided"
 
 ```python
-# Wrong
-dj.gc.scan()
+# Wrong — no schemas
+dj.gc.GarbageCollector()
 
-# Right
-dj.gc.scan(my_schema)
+# Right — schemas go in the constructor
+dj.gc.GarbageCollector(my_schema).collect()
 ```
 
 ### Storage not decreasing
@@ -17034,12 +17063,15 @@ import datajoint as dj
 # Objects are NOT automatically deleted with rows
 (MyTable & old_data).delete()
 
-# Scan for orphaned items
-stats = dj.gc.scan(my_schema)
-print(dj.gc.format_stats(stats))
+# A collector is bound to its schemas and one store
+collector = dj.gc.GarbageCollector(my_schema)
+
+# Read-only report (collect defaults to dry_run=True)
+stats = collector.collect()
+print(f"{stats['hash_paths_orphaned'] + stats['schema_paths_orphaned']} orphaned items")
 
 # Remove orphaned items
-stats = dj.gc.collect(my_schema, dry_run=False)
+stats = collector.collect(dry_run=False)
 ```
 
 See [Clean Up Object Storage](garbage-collection.md) for details.
@@ -17396,7 +17428,7 @@ A DataJoint project creates a structured storage pattern:
 
 ### Considerations
 
-- Object paths include schema name: `{project}/{schema}/{table}/...`
+- Object paths include the schema name: `{project}/{schema_prefix}/{schema}/{table}/...` — the schema is embedded in every managed path (both sections), which scopes hash deduplication per schema and lets garbage collection attribute stored objects to schemas
 - Users need read access to fetch blobs from upstream schemas
 - Content-addressed storage (`<blob@>`) shares objects across tables
 - Garbage collection requires coordinated delete permissions
@@ -24159,7 +24191,7 @@ Table.insert1({'id': 2, 'array': data})  # References same object
 
 `<npy@>` and `<object@>` use **schema-addressed** storage:
 
-- Objects stored at paths that mirror database schema: `{schema}/{table}/{pk}/{attribute}.npy`
+- Objects stored under the store's schema-addressed section at paths that mirror the database schema: `_schema/{schema}/{table}/{pk}/{attribute}_{token}.npy` (section configurable via `schema_prefix`)
 - Browsable organization in object storage
 - One object per entity (no deduplication)
 - Supports lazy loading with metadata access
@@ -25107,7 +25139,7 @@ Prefixes must be mutually exclusive (no prefix can be a parent/child of another)
 **How storage methods use stores:**
 
 - **Hash-addressed** (`<blob@>`, `<attach@>`): `{location}/{hash_prefix}/{schema}/{hash}` with optional subfolding
-- **Schema-addressed** (`<object@>`, `<npy@>`): `{location}/{schema_prefix}/{partition}/{schema}/{table}/{key}/{field}.{token}.{ext}` with optional partitioning
+- **Schema-addressed** (`<object@>`, `<npy@>`): `{location}/{schema_prefix}/{partition}/{schema}/{table}/{key}/{field}_{token}{ext}` with optional partitioning
 - **Filepath** (`<filepath@>`): `{location}/{filepath_prefix}/{user_path}` (user-managed, cannot use hash or schema prefixes)
 
 All storage methods share the same stores and default store. DataJoint reserves the configured `hash_prefix` and `schema_prefix` sections for managed storage; `<filepath@>` references can use any other paths (unless `filepath_prefix` is configured to restrict them).
@@ -25117,12 +25149,12 @@ All storage methods share the same stores and default store. DataJoint reserves 
 Without partitioning:
 ```
 {location}/_hash/{schema}/ab/cd/abcd1234...                    # hash-addressed with subfolding
-{location}/_schema/{schema}/{table}/{key}/data.x8f2a9b1.zarr   # schema-addressed, no partitioning
+{location}/_schema/{schema}/{table}/{key}/data_x8f2a9b1.zarr   # schema-addressed, no partitioning
 ```
 
 With `partition_pattern: "subject_id/session_date"`:
 ```
-{location}/_schema/subject_id=042/session_date=2024-01-15/{schema}/{table}/{remaining_key}/data.x8f2a9b1.zarr
+{location}/_schema/subject_id=042/session_date=2024-01-15/{schema}/{table}/{remaining_key}/data_x8f2a9b1.zarr
 ```
 
 If table lacks partition attributes, it follows normal path structure.
@@ -30879,7 +30911,7 @@ and transparent numpy integration via the `__array__` protocol.
 **Key characteristics:**
 
 - **Store only**: Requires `@` modifier (`<npy@>` or `<npy@store>`)
-- **Schema-addressed**: Paths mirror database structure (`{schema}/{table}/{pk}/{attr}.npy`)
+- **Schema-addressed**: Paths mirror database structure within the store's schema section (`{schema_prefix}/{schema}/{table}/{pk}/{attr}_{token}.npy`; `schema_prefix` defaults to `_schema`)
 - **Lazy loading**: Shape/dtype available without download
 - **Transparent**: Use directly in numpy operations
 - **Portable**: Standard `.npy` format readable by numpy, MATLAB, etc.
@@ -30935,7 +30967,7 @@ ref.dtype    # numpy.dtype: float64
 ref.ndim     # int: 2
 ref.size     # int: 32000
 ref.nbytes   # int: 256000 (estimated)
-ref.path     # str: "my_schema/recording/recording_id=1/waveform.npy"
+ref.path     # str: "_schema/my_schema/recording/recording_id=1/waveform_x8f2a9b1.npy"
 ref.store    # str or None: store name
 ref.is_loaded  # bool: False (until loaded)
 ```
@@ -31056,10 +31088,10 @@ storage that reflects your data model.
 ### Schema-Addressed Path Construction
 
 ```
-{schema}/{table}/{primary_key_values}/{attribute}.npy
+{schema_prefix}/{schema}/{table}/{primary_key_values}/{attribute}_{token}.npy
 ```
 
-Example: `lab_ephys/recording/recording_id=1/waveform.npy`
+Example: `_schema/lab_ephys/recording/recording_id=1/waveform_x8f2a9b1.npy`
 
 This schema-addressed layout means you can browse the object store and understand
 the organization because it mirrors your database schema.
@@ -31070,7 +31102,7 @@ The database column stores:
 
 ```json
 {
-  "path": "lab_ephys/recording/recording_id=1/waveform.npy",
+  "path": "_schema/lab_ephys/recording/recording_id=1/waveform_x8f2a9b1.npy",
   "store": "main",
   "dtype": "float64",
   "shape": [1000, 32]
@@ -31104,10 +31136,10 @@ Files are stored at predictable paths and can be accessed directly:
 ```python
 # Get the storage path
 ref = (Recording & 'recording_id=1').fetch1('waveform')
-print(ref.path)  # "my_schema/recording/recording_id=1/waveform.npy"
+print(ref.path)  # "_schema/my_schema/recording/recording_id=1/waveform_x8f2a9b1.npy"
 
 # Load directly with numpy (if you have store access)
-arr = np.load('/path/to/store/my_schema/recording/recording_id=1/waveform.npy')
+arr = np.load('/path/to/store/_schema/my_schema/recording/recording_id=1/waveform_x8f2a9b1.npy')
 ```
 
 ## Comparison with Other Codecs
@@ -31307,6 +31339,31 @@ Each store is divided into sections controlled by prefix configuration. The `*_p
 3. `filepath_prefix` is optional:
    - `null` (default): filepaths can use any path except reserved sections
    - `"some/prefix"`: all filepaths must start with this prefix
+
+**Consumption (normative):** the prefix values are read from the store spec
+by every component that touches managed storage — the writers (`put_hash`,
+`build_object_path`), garbage collection (which scans the configured
+`hash_prefix` section and never enters the configured `filepath_prefix`
+namespace), and `<filepath@>` validation. Defaults are applied to **every**
+store spec, including plugin protocols, when the spec is resolved
+(`get_store_spec`), and there are no component-level fallbacks — all
+components always observe the same values.
+
+**Hash paths embed the schema:** `{hash_prefix}/{schema}/{hash}`.
+Deduplication is therefore scoped **per schema**, and every stored object is
+attributable to the schema that wrote it. Garbage collection depends on this
+attribution; because storage-side listing covers the whole section across
+all schemas, a `collect()` must be given every schema that uses the store
+(see [Clean Up Object Storage](../../how-to/garbage-collection.md)).
+
+**Changing prefixes on a store that already holds data** is not recommended:
+existing objects remain readable (each row's metadata records its full
+path), but garbage collection scans only the currently configured sections —
+objects under a previous prefix are not reclamation candidates until the
+setting is restored — and hash deduplication will not match content stored
+under the old prefix. Schema-addressed objects written by DataJoint 2.3.0
+and earlier live at root-level `{schema}/...` paths; garbage collection
+lists both layouts.
 
 **Example with custom prefixes:**
 
@@ -31524,12 +31581,12 @@ Experiment.insert1({'experiment_id': 1, 'data': my_data})
 
 **Path structure (no partitioning):**
 ```
-{location}/{schema_prefix}/{schema_name}/{table_name}/{key_string}/{field_name}.{token}.{ext}
+{location}/{schema_prefix}/{schema_name}/{table_name}/{key_string}/{field_name}_{token}{ext}
 ```
 
 **With partitioning:**
 ```
-{location}/{schema_prefix}/{partition_path}/{schema_name}/{table_name}/{remaining_key}/{field_name}.{token}.{ext}
+{location}/{schema_prefix}/{partition_path}/{schema_name}/{table_name}/{remaining_key}/{field_name}_{token}{ext}
 ```
 
 **Algorithm:**
@@ -34516,10 +34573,10 @@ The primary key must be fully set on `staged.rec` before `staged.store()` or `st
 Staged objects are written at the canonical schema-addressed path from the first byte. There is no intermediate staging location: the object exists at its final path during the write and is deleted from there if the block exits with an exception.
 
 ```
-{location}/{schema}/{table}/{pk_serialized}/{field}_{token}{ext}
+{location}/{schema_prefix}/{schema}/{table}/{pk_serialized}/{field}_{token}{ext}
 ```
 
-Built by `storage.build_object_path`. `{location}` is the configured store base, `{token}` is a random suffix of `token_length` characters (default 8, per the store spec), `{pk_serialized}` is the serialized primary key, and partitioning follows the store's `partition_pattern`.
+Built by `storage.build_object_path`. `{location}` is the configured store base, `{schema_prefix}` is the store's schema-addressed section (default `_schema`), `{token}` is a random suffix of `token_length` characters (default 8, per the store spec), `{pk_serialized}` is the serialized primary key, and partitioning follows the store's `partition_pattern`.
 
 ## Metadata contract
 
@@ -36090,7 +36147,7 @@ returns the appropriate dtype based on storage mode:
 
 Schema-addressed OAS storage for complex, multi-part objects (files, folders, Zarr arrays, HDF5):
 
-- **Schema-addressed**: Path mirrors database structure: `{schema}/{table}/{pk}/{attribute}/`
+- **Schema-addressed**: Path mirrors database structure within the store's schema section: `{schema_prefix}/{schema}/{table}/{pk}/{attribute}_{token}` (`schema_prefix` defaults to `_schema`)
 - **Complex objects**: Can store directory structures with multiple files (e.g., Zarr arrays)
 - One-to-one relationship with table row
 - Deleted when row is deleted
@@ -36135,23 +36192,29 @@ class ObjectCodec(SchemaCodec):
 
 Hash-addressed storage with deduplication for individual, atomic objects:
 
-- **Hash-addressed**: Path derived from content hash: `_hash/{hash[:2]}/{hash[2:4]}/{hash}`
+- **Hash-addressed**: Path derived from content hash, with the schema name embedded: `{hash_prefix}/{schema}/{hash}`
 - **Individual/atomic objects only**: Stores single files or serialized blobs (not directory structures)
 - Cannot handle complex multi-part objects like Zarr arrays—use `<object@>` for those
-- **Per-project scope**: content is shared across all schemas in a project (not per-schema)
-- Many-to-one: multiple rows (even across schemas) can reference same content
+- **Per-schema scope**: content is deduplicated within each schema (the schema name is part of every hash path)
+- Many-to-one: multiple rows within the same schema can reference the same content
 - Reference counted for garbage collection
-- Deduplication: identical content stored once across the entire project
+- Deduplication: identical content stored once **per schema** — the schema name is part of every hash path, which scopes deduplication and lets garbage collection attribute each stored object to its schema
 - **dtype**: `json` (stores hash, store name, size, metadata)
 
 ```
 store_root/
-├── {schema}/{table}/{pk}/     # schema-addressed storage
-│   └── {attribute}/
+├── {schema_prefix}/               # default _schema/ — schema-addressed storage
+│   └── {schema}/{table}/{pk}/
+│       └── {attribute}_{token}[.ext]
 │
-└── _hash/                     # hash-addressed storage
-    └── {hash[:2]}/{hash[2:4]}/{hash}
+└── {hash_prefix}/                 # default _hash/ — hash-addressed storage
+    └── {schema}/
+        └── {hash[:2]}/{hash[2:4]}/{hash}
 ```
+
+Section prefixes come from the store settings (`hash_prefix`, `schema_prefix`;
+see [Object Store Configuration](object-store-configuration.md#section-prefixes)).
+Both sections embed the schema name in every path.
 
 #### Implementation
 
@@ -36437,15 +36500,15 @@ Users can define custom codecs for domain-specific data. See the [Codec API Spec
 | Type | get_dtype | Resolves To | Storage Location | Dedup | Returns |
 |------|-----------|-------------|------------------|-------|---------|
 | `<blob>` | `bytes` | `LONGBLOB`/`BYTEA` | Database | No | Python object |
-| `<blob@>` | `<hash>` | `json` | `_hash/{hash}` | Yes | Python object |
-| `<blob@s>` | `<hash>` | `json` | `_hash/{hash}` | Yes | Python object |
+| `<blob@>` | `<hash>` | `json` | `{hash_prefix}/{schema}/{hash}` | Yes | Python object |
+| `<blob@s>` | `<hash>` | `json` | `{hash_prefix}/{schema}/{hash}` | Yes | Python object |
 | `<attach>` | `bytes` | `LONGBLOB`/`BYTEA` | Database | No | Local file path |
-| `<attach@>` | `<hash>` | `json` | `_hash/{hash}` | Yes | Local file path |
-| `<attach@s>` | `<hash>` | `json` | `_hash/{hash}` | Yes | Local file path |
-| `<object@>` | `json` | `JSON`/`JSONB` | `{schema}/{table}/{pk}/` | No | ObjectRef |
-| `<object@s>` | `json` | `JSON`/`JSONB` | `{schema}/{table}/{pk}/` | No | ObjectRef |
-| `<hash@>` | `json` | `JSON`/`JSONB` | `_hash/{hash}` | Yes | bytes |
-| `<hash@s>` | `json` | `JSON`/`JSONB` | `_hash/{hash}` | Yes | bytes |
+| `<attach@>` | `<hash>` | `json` | `{hash_prefix}/{schema}/{hash}` | Yes | Local file path |
+| `<attach@s>` | `<hash>` | `json` | `{hash_prefix}/{schema}/{hash}` | Yes | Local file path |
+| `<object@>` | `json` | `JSON`/`JSONB` | `{schema_prefix}/{schema}/{table}/{pk}/` | No | ObjectRef |
+| `<object@s>` | `json` | `JSON`/`JSONB` | `{schema_prefix}/{schema}/{table}/{pk}/` | No | ObjectRef |
+| `<hash@>` | `json` | `JSON`/`JSONB` | `{hash_prefix}/{schema}/{hash}` | Yes | bytes |
+| `<hash@s>` | `json` | `JSON`/`JSONB` | `{hash_prefix}/{schema}/{hash}` | Yes | bytes |
 | `<filepath@s>` | `json` | `JSON`/`JSONB` | Configured store | No | ObjectRef |
 
 ## Garbage Collection for Hash Storage

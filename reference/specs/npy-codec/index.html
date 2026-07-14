@@ -6556,7 +6556,7 @@ and transparent numpy integration via the <code>__array__</code> protocol.</p>
 <p><strong>Key characteristics:</strong></p>
 <ul>
 <li><strong>Store only</strong>: Requires <code>@</code> modifier (<code>&lt;npy@&gt;</code> or <code>&lt;npy@store&gt;</code>)</li>
-<li><strong>Schema-addressed</strong>: Paths mirror database structure (<code>{schema}/{table}/{pk}/{attr}.npy</code>)</li>
+<li><strong>Schema-addressed</strong>: Paths mirror database structure within the store's schema section (<code>{schema_prefix}/{schema}/{table}/{pk}/{attr}_{token}.npy</code>; <code>schema_prefix</code> defaults to <code>_schema</code>)</li>
 <li><strong>Lazy loading</strong>: Shape/dtype available without download</li>
 <li><strong>Transparent</strong>: Use directly in numpy operations</li>
 <li><strong>Portable</strong>: Standard <code>.npy</code> format readable by numpy, MATLAB, etc.</li>
@@ -6603,7 +6603,7 @@ and transparent numpy integration via the <code>__array__</code> protocol.</p>
 <span class="n">ref</span><span class="o">.</span><span class="n">ndim</span>     <span class="c1"># int: 2</span>
 <span class="n">ref</span><span class="o">.</span><span class="n">size</span>     <span class="c1"># int: 32000</span>
 <span class="n">ref</span><span class="o">.</span><span class="n">nbytes</span>   <span class="c1"># int: 256000 (estimated)</span>
-<span class="n">ref</span><span class="o">.</span><span class="n">path</span>     <span class="c1"># str: &quot;my_schema/recording/recording_id=1/waveform.npy&quot;</span>
+<span class="n">ref</span><span class="o">.</span><span class="n">path</span>     <span class="c1"># str: &quot;_schema/my_schema/recording/recording_id=1/waveform_x8f2a9b1.npy&quot;</span>
 <span class="n">ref</span><span class="o">.</span><span class="n">store</span>    <span class="c1"># str or None: store name</span>
 <span class="n">ref</span><span class="o">.</span><span class="n">is_loaded</span>  <span class="c1"># bool: False (until loaded)</span>
 </code></pre></div>
@@ -6691,15 +6691,15 @@ storage that reflects your data model.</p>
 <li>Extension: <code>.npy</code></li>
 </ul>
 <h3 id="schema-addressed-path-construction">Schema-Addressed Path Construction<a class="headerlink" href="#schema-addressed-path-construction" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code>{schema}/{table}/{primary_key_values}/{attribute}.npy
+<div class="highlight"><pre><span></span><code>{schema_prefix}/{schema}/{table}/{primary_key_values}/{attribute}_{token}.npy
 </code></pre></div>
-<p>Example: <code>lab_ephys/recording/recording_id=1/waveform.npy</code></p>
+<p>Example: <code>_schema/lab_ephys/recording/recording_id=1/waveform_x8f2a9b1.npy</code></p>
 <p>This schema-addressed layout means you can browse the object store and understand
 the organization because it mirrors your database schema.</p>
 <h3 id="json-metadata">JSON Metadata<a class="headerlink" href="#json-metadata" title="Permanent link">&para;</a></h3>
 <p>The database column stores:</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;path&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;lab_ephys/recording/recording_id=1/waveform.npy&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;path&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;_schema/lab_ephys/recording/recording_id=1/waveform_x8f2a9b1.npy&quot;</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;store&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;main&quot;</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;dtype&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;float64&quot;</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;shape&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mi">1000</span><span class="p">,</span><span class="w"> </span><span class="mi">32</span><span class="p">]</span>
@@ -6726,10 +6726,10 @@ the organization because it mirrors your database schema.</p>
 <p>Files are stored at predictable paths and can be accessed directly:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Get the storage path</span>
 <span class="n">ref</span> <span class="o">=</span> <span class="p">(</span><span class="n">Recording</span> <span class="o">&amp;</span> <span class="s1">&#39;recording_id=1&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">fetch1</span><span class="p">(</span><span class="s1">&#39;waveform&#39;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">ref</span><span class="o">.</span><span class="n">path</span><span class="p">)</span>  <span class="c1"># &quot;my_schema/recording/recording_id=1/waveform.npy&quot;</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">ref</span><span class="o">.</span><span class="n">path</span><span class="p">)</span>  <span class="c1"># &quot;_schema/my_schema/recording/recording_id=1/waveform_x8f2a9b1.npy&quot;</span>
 
 <span class="c1"># Load directly with numpy (if you have store access)</span>
-<span class="n">arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s1">&#39;/path/to/store/my_schema/recording/recording_id=1/waveform.npy&#39;</span><span class="p">)</span>
+<span class="n">arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s1">&#39;/path/to/store/_schema/my_schema/recording/recording_id=1/waveform_x8f2a9b1.npy&#39;</span><span class="p">)</span>
 </code></pre></div>
 <h2 id="comparison-with-other-codecs">Comparison with Other Codecs<a class="headerlink" href="#comparison-with-other-codecs" title="Permanent link">&para;</a></h2>
 <table>
