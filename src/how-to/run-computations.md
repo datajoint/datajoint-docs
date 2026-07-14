@@ -246,48 +246,8 @@ class FilteredComputation(dj.Computed):
 | `reserve_jobs` | `False` | Reserve jobs for distributed computing |
 | `suppress_errors` | `False` | Continue on errors |
 
-## Provenance-safe make() (strict provenance)
-
-A `make()` is provenance-safe when it reads only from its declared upstream dependencies and writes only to `self` (and its Parts). DataJoint 2.3 gives you an ergonomic read channel and an opt-in runtime guardrail to keep it that way.
-
-### Read ancestors through `self.upstream`
-
-Inside `make()`, `self.upstream[T]` returns the ancestor table `T` pre-restricted to the rows that contributed to the current `key`:
-
-```python
-def make(self, key):
-    # Reads pre-restricted to the current key — no manual `& key`
-    rate = self.upstream[Recording].fetch1('sampling_rate')
-    samples = self.upstream[Recording].to_arrays('signal')
-
-    result = compute_spectrum(samples, rate)
-    self.insert1({**key, 'spectrum': result})
-```
-
-`self.upstream` exposes declared ancestors only. To read your table's **own** Parts mid-`make()`, use `self.PartName` directly — that is permitted under strict mode.
-
-### Roll out `strict_provenance` in stages
-
-`dj.config["strict_provenance"]` defaults to `False`, so nothing changes until you opt in. Adopt it incrementally:
-
-1. **Enable it in staging** and run your pipeline:
-
-    ```python
-    dj.config["strict_provenance"] = True
-    ```
-
-2. **Fix the undeclared reads the guardrail surfaces.** Each violation raises a `DataJointError` naming the offending table. Either route the read through `self.upstream[T]` (if `T` is a declared ancestor) or declare the missing foreign-key dependency.
-3. **Enable it in production** once staging is clean.
-
-### What the guardrail does and does not catch
-
-When `strict_provenance=True`, DataJoint checks — through the Python client — that a `make()` reads only from declared ancestors and writes (`insert`/`insert1`/`update1`) only to `self` and its Parts, with each written row's key consistent with the current `key`.
-
-It is a **best-effort development guardrail, not an airtight boundary.** Raw SQL, other clients, existence/count idioms (`len(q)`, `bool(q)`, `key in q`), restriction-by-table, and `delete()` are **not** intercepted. See the [Provenance Spec — Enforcement model and its limits](../reference/specs/provenance.md#enforcement-model-and-its-limits) for the full list, and the [Provenance Specification](../reference/specs/provenance.md) for the migration path in detail.
-
 ## See Also
 
 - [Computation Model](../explanation/computation-model.md/) — How computation works
-- [Provenance Specification](../reference/specs/provenance.md) — `Diagram.trace`, `self.upstream`, `strict_provenance`
 - [Distributed Computing](distributed-computing.md) — Multi-worker setup
 - [Handle Errors](handle-errors.md) — Error recovery

@@ -317,7 +317,7 @@ def make(self, key):
 
 **Upstream-only convention:** Inside `make()`, fetch only from tables that are strictly upstream in the pipeline—tables referenced by foreign keys in the definition, their ancestors, and their part tables. This ensures reproducibility: computed results depend only on their declared dependencies.
 
-As of DataJoint 2.3, this convention is checked (opt-in) at runtime: setting `dj.config["strict_provenance"] = True` makes reads from undeclared tables and writes to tables other than `self` (and its Parts) raise `DataJointError` inside `make()`. The check is a best-effort development guardrail; see the [Provenance Specification](provenance.md) for the enforcement model and its documented limits.
+The core framework does not enforce this convention at runtime; it defines the reproducibility contract that `make()` bodies are expected to honor. Use the `self.upstream` helper (below) to read declared ancestors ergonomically, without manual `& key` restriction.
 
 ### 4.3.1 `self.upstream`: Pre-Restricted Ancestor Access
 

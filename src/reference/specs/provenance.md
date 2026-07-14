@@ -15,7 +15,7 @@ For the related downstream operation, see [Cascade Specification](cascade.md). F
 
 ## Why this exists
 
-DataJoint's provenance model — that every computed row can be traced back to the exact upstream rows it was derived from — rests on the convention that `make(self, key)` only reads from declared upstream dependencies. Today the framework **defines** this convention but does not **check** it: a `make()` can `fetch()` from any table, making the undeclared dependency invisible to the FK graph and breaking the provenance claim downstream.
+DataJoint's provenance guarantee — that every computed row can be traced back to the exact upstream rows it was derived from — rests on the convention that `make(self, key)` only reads from declared upstream dependencies. Today the framework **defines** this convention but does not **check** it: a `make()` can `fetch()` from any table, making the undeclared dependency invisible to the FK graph and breaking the provenance claim downstream.
 
 Closing the loop requires three pieces working together:
 
@@ -203,11 +203,6 @@ The construction is **lazy** in the sense that the underlying SQL is not issued 
 
 Requesting any table outside this set raises `DataJointError` — including tables that exist in the schema but are not ancestors of `self`. This is the same guarantee `Diagram.trace(...)` provides; `self.upstream` is just the per-`make()` instance of it.
 
-`self.upstream` exposes ancestors only; a table's **own** Parts are not reachable via `self.upstream[...]` (they are descendants). Inside `make()`, read your own Parts directly as `self.PartName` — permitted under strict mode.
-
-!!! note "Merge/master-part boundaries"
-    Trace (and therefore `self.upstream`) walks ancestor FK edges only. It does **not** descend from an ancestor Master into that Master's Parts — an ancestor's Part is included only when the Part itself lies on the FK path to the seed. In a merge-table shape `Parent → Master.Part → Master → Child`, `trace(Child & key)` reaches `Master` but neither `Master.Part` nor `Parent`.
-
 ### Examples
 
 Without `strict_provenance` (the default), `self.upstream` is a convenience — the same data is reachable via `(Upstream & key).fetch1(...)`. The win is ergonomic:
@@ -251,7 +246,7 @@ The `key` argument to `make()` — and any `make_kwargs` optionally forwarded th
 |---|---|---|---|
 | `strict_provenance` | `bool` | `False` | When `True`, checks upstream-only reads and target-only writes inside `make()`. |
 
-The flag is read from the connection's config (`connection._config`, normally the global `dj.config`) at the start of each `make()` invocation and captured into a per-call enforcement context stored in a `contextvars.ContextVar`, so the active context follows the executing task rather than being shared as global mutable state. Because the config value itself is process-global, concurrent populates in the same process cannot run with different `strict_provenance` values — each `make()` sees whatever the config holds when it begins.
+The flag is read from the global `dj.config` at the start of each `make()` invocation and captured into a per-call enforcement context stored in a `contextvars.ContextVar`, so the active context follows the executing task rather than being shared as global mutable state. Because the config value itself is process-global, concurrent populates in the same process cannot run with different `strict_provenance` values — each `make()` sees whatever the config holds when it begins.
 
 ### Enforcement model and its limits
 
@@ -261,9 +256,8 @@ They do **not** constitute a security or correctness boundary:
 
 - Raw SQL (`connection.query(...)`), a second client or process, a database console, a BI tool, or a non-Python binding all bypass the checks entirely.
 - Within the Python client, the read check currently allows a direct read of a *declared* ancestor just as it allows reads through `self.upstream` — it flags reads of tables *outside* the allowed set, not the channel used to reach one inside it (see the note under [Read enforcement](#read-enforcement)).
-- **Existence and count idioms bypass the read gate.** `len(q)`, `bool(q)`, and `item in q` issue their `COUNT`/`EXISTS` SQL directly rather than through the gated fetch path, so a read of an undeclared table via `len(Undeclared & key)`, `bool(Undeclared & cond)`, or `key in Undeclared` is **not** caught. Only the `fetch`/`fetch1`/`to_arrays`/iteration path is gated. The same bypass applies to `Aggregation` and `Union` results (e.g. `len(dj.U(...).aggr(Undeclared, ...))` bypasses the gate even though `.fetch()` on the same expression is gated).
+- **Existence and count idioms bypass the read gate.** `len(q)`, `bool(q)`, and `item in q` issue their `COUNT`/`EXISTS` SQL directly rather than through the gated fetch path, so a read of an undeclared table via `len(Undeclared & key)`, `bool(Undeclared & cond)`, or `key in Undeclared` is **not** caught. Only the `fetch`/`fetch1`/`to_arrays`/iteration path is gated.
 - **Restriction-by-table is not analyzed.** A semijoin restriction such as `Ancestor & Undeclared` renders `Undeclared` as an `IN (subquery)` in the `WHERE` clause, which the gate's base-table analysis does not inspect — so an undeclared table used only as a restriction operand passes. (Joins *are* caught, because they extend the query's support; restrictions are not.)
-- **Deletes are not gated.** `delete()` / `delete_quick()` inside `make()` are not intercepted by the runtime checks — a `make()` can delete rows from any table. The write checks cover `insert`/`insert1` and `update1` only.
 
 Comprehensive enforcement — verifying that a `make()` reads only from its declared ancestors and writes only to its target, across every access path — is fundamentally a **code-inspection problem, not a runtime-interception one.** That inspection is performed by the **DataJoint platform's code-deployment CI/CD process — not by the open-source core framework**. When pipeline code is deployed through the platform, its CI/CD **combines these runtime provenance checks with agentic review of the `make()` source** (backed by static analysis where it is sound) to cover the paths the runtime guardrail cannot — including the client-side gaps listed above (existence/count idioms, restriction-by-table, and access outside the Python client). The open-source `strict_provenance` guardrail complements that by catching accidental drift during local development; it does not replace it, and the core framework does not attempt code inspection itself. See [What is not in this specification](#what-is-not-in-this-specification).
 
@@ -293,11 +287,7 @@ When `strict_provenance=True` and a `make()` is executing:
 | `self.insert1(row)` | **Allowed** (with key-consistency check, see below) |
 | `self.PartName.insert(rows)` | **Allowed** (with key-consistency check) |
 | `SomeOtherTable.insert(...)` | **Blocked** — raises `DataJointError`. |
-| `self.update1(row)` | **Allowed** (with key-consistency check) |
-| `SomeOtherTable.update1(...)` | **Blocked** — raises `DataJointError`. |
 | Reading from `self.upstream[Ancestor]` and writing to `Ancestor` | **Blocked** — `Ancestor` is not `self`. |
-
-`update1` is gated like insert — the target must be `self` or one of its Parts, and the updated row's key columns must match the current `key`. The blocked-update error reads: `strict_provenance=True: update1 on '<table>' is not permitted inside make() for '<target>'. Only the target table and its Part tables may be written.`
 
 As with reads, the write check is wired into the DataJoint insert path and so shares the same client-side limits described in [Enforcement model and its limits](#enforcement-model-and-its-limits).
 
@@ -311,10 +301,6 @@ Every row inserted into `self` or `self`'s Parts must have a primary key consist
 This prevents a `make()` from inserting rows for entities it wasn't called with — closing the last loophole where one entity's `make()` could silently produce data attributed to another.
 
 The key-consistency check applies to **dict-style rows**. Positional rows (tuples, numpy records) carry no attribute names to check against the current `key`, so they pass unchecked — dict inserts are the provenance-safe form under strict mode.
-
-A second exception is server-side inserts: **`INSERT … SELECT` (inserting from a `QueryExpression`) runs entirely server-side; its rows never materialize client-side, so per-row key consistency is not applied on that path** (the target check still governs the destination).
-
-The same key-consistency rule governs updates. For `update1`, a mismatched key raises: `strict_provenance=True: updated row's '<k>'=<v> does not match the current make() key's '<k>'=<v>. Updates must be consistent with the key being populated.`
 
 ### Default behavior
 
