@@ -12,7 +12,7 @@ and transparent numpy integration via the `__array__` protocol.
 **Key characteristics:**
 
 - **Store only**: Requires `@` modifier (`<npy@>` or `<npy@store>`)
-- **Schema-addressed**: Paths mirror database structure (`{schema}/{table}/{pk}/{attr}.npy`)
+- **Schema-addressed**: Paths mirror database structure within the store's schema section (`{schema_prefix}/{schema}/{table}/{pk}/{attr}_{token}.npy`; `schema_prefix` defaults to `_schema`)
 - **Lazy loading**: Shape/dtype available without download
 - **Transparent**: Use directly in numpy operations
 - **Portable**: Standard `.npy` format readable by numpy, MATLAB, etc.
@@ -68,7 +68,7 @@ ref.dtype    # numpy.dtype: float64
 ref.ndim     # int: 2
 ref.size     # int: 32000
 ref.nbytes   # int: 256000 (estimated)
-ref.path     # str: "my_schema/recording/recording_id=1/waveform.npy"
+ref.path     # str: "_schema/my_schema/recording/recording_id=1/waveform_x8f2a9b1.npy"
 ref.store    # str or None: store name
 ref.is_loaded  # bool: False (until loaded)
 ```
@@ -189,10 +189,10 @@ storage that reflects your data model.
 ### Schema-Addressed Path Construction
 
 ```
-{schema}/{table}/{primary_key_values}/{attribute}.npy
+{schema_prefix}/{schema}/{table}/{primary_key_values}/{attribute}_{token}.npy
 ```
 
-Example: `lab_ephys/recording/recording_id=1/waveform.npy`
+Example: `_schema/lab_ephys/recording/recording_id=1/waveform_x8f2a9b1.npy`
 
 This schema-addressed layout means you can browse the object store and understand
 the organization because it mirrors your database schema.
@@ -203,7 +203,7 @@ The database column stores:
 
 ```json
 {
-  "path": "lab_ephys/recording/recording_id=1/waveform.npy",
+  "path": "_schema/lab_ephys/recording/recording_id=1/waveform_x8f2a9b1.npy",
   "store": "main",
   "dtype": "float64",
   "shape": [1000, 32]
@@ -237,10 +237,10 @@ Files are stored at predictable paths and can be accessed directly:
 ```python
 # Get the storage path
 ref = (Recording & 'recording_id=1').fetch1('waveform')
-print(ref.path)  # "my_schema/recording/recording_id=1/waveform.npy"
+print(ref.path)  # "_schema/my_schema/recording/recording_id=1/waveform_x8f2a9b1.npy"
 
 # Load directly with numpy (if you have store access)
-arr = np.load('/path/to/store/my_schema/recording/recording_id=1/waveform.npy')
+arr = np.load('/path/to/store/_schema/my_schema/recording/recording_id=1/waveform_x8f2a9b1.npy')
 ```
 
 ## Comparison with Other Codecs

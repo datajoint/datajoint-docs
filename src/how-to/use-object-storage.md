@@ -134,7 +134,7 @@ Table.insert1({'id': 2, 'array': data})  # References same object
 
 `<npy@>` and `<object@>` use **schema-addressed** storage:
 
-- Objects stored at paths that mirror database schema: `{schema}/{table}/{pk}/{attribute}.npy`
+- Objects stored under the store's schema-addressed section at paths that mirror the database schema: `_schema/{schema}/{table}/{pk}/{attribute}_{token}.npy` (section configurable via `schema_prefix`)
 - Browsable organization in object storage
 - One object per entity (no deduplication)
 - Supports lazy loading with metadata access
