@@ -298,7 +298,28 @@ def make(self, key):
 - **Atomic**: Runs within a transaction—all or nothing
 - **Self-contained**: Should not depend on external state that changes
 
-### 4.3 Accessing Source Data
+These requirements are the surface of a broader rule set — the make() reproducibility contract (§4.3) — that keeps every computed row traceable to its declared inputs.
+
+### 4.3 The make() reproducibility contract
+
+The value of an auto-populated table is that every one of its rows is a *reproducible* result: re-running `make()` on the same upstream data yields the same output. That guarantee rests on a small set of rules — the **make() reproducibility contract** — that every `make()` should observe. The rules apply to both `dj.Computed` and `dj.Imported` tables.
+
+1. **Populate-only.** Rows are produced only by `make()`, invoked through `populate()` — never inserted directly. Direct inserts into an auto-populated table are rejected at runtime.
+
+2. **One entity per call, computed in isolation.** A single `make(key)` computes exactly one master entity — the one named by `key` — plus its Part rows. Calls share no state and assume no ordering: a `make()` must not read other rows of its own table, nor compute a quantity that spans invocations (for example, a running statistic over the table's other entries). This isolation is what makes `populate()` embarrassingly parallel and each result self-contained.
+
+3. **Read only upstream, restricted to the job.** A `make(key)` fetches only from tables upstream of the target — the declared ancestors reachable by following the foreign keys embedded in the primary key — and only the rows reachable from the current `key`. This key-restricted set of ancestors is the entity's *upstream cone*, exposed as `self.upstream` (see [§4.4](#44-accessing-source-data)). Reading anything else — a table that is not an ancestor, or entities under a different `key` — breaks the contract and makes the result depend on data the pipeline does not track.
+
+4. **Write the result to `self` and its Parts.** The derived result is inserted into `self` and the table's Part tables, atomically, as one unit. A `make()` *may* also write to other destinations — other Manual tables, files, external systems (the *fan-out* pattern) — but such writes leave the pipeline's dependency graph, so the `make()` must record the source identity at each destination (as it would at any Manual-table entry point) to keep that data traceable.
+
+5. **No other result-affecting input.** Anything that changes *what* is computed must enter through a declared upstream table (typically a Lookup or Manual parameter table), so it is part of the dependency graph. `make_kwargs` forwarded through `populate(make_kwargs=...)` may *orchestrate* a run (batching, parallelism, logging) but must never *parameterize* the result — see [§4.6](#46-additional-make-arguments).
+
+In one line: **read from `self.upstream`, write to `self`.** The read/write boundary is what makes each computed result self-contained and reproducible — every row was produced by a specific `make()` call over a specific, declared, key-restricted set of upstream entities.
+
+!!! note "How the contract is upheld"
+    The contract has historically been a **convention** — observed by discipline, not enforced. DataJoint 2.3 adds an ergonomic read surface that makes it easy to follow and to inspect: `self.upstream` gives each `make()` its key-restricted upstream cone directly, and [`Diagram.trace`](diagram.md) walks the same ancestry for any row after the fact. The framework does not itself enforce the contract at runtime; observing it remains the pipeline author's responsibility.
+
+### 4.4 Accessing Source Data
 
 ```python
 def make(self, key):
@@ -315,11 +336,21 @@ def make(self, key):
     combined = (TableA * TableB & key).to_dicts()
 ```
 
-**Upstream-only convention:** Inside `make()`, fetch only from tables that are strictly upstream in the pipeline—tables referenced by foreign keys in the definition, their ancestors, and their part tables. This ensures reproducibility: computed results depend only on their declared dependencies.
+**Upstream-only reads (contract rule 3).** Inside `make()`, fetch only from tables that are strictly upstream of the target—tables referenced by foreign keys in the definition, their ancestors, and their part tables—and only the rows reachable from the current `key`. This is rule 3 of the [make() reproducibility contract](#43-the-make-reproducibility-contract): computed results depend only on their declared, key-restricted dependencies.
 
-This convention is not currently enforced programmatically but is critical for pipeline integrity. Some pipelines violate this rule for operational reasons, which makes them non-reproducible. A future release may programmatically enforce upstream-only fetches inside `make()`.
+The recommended way to read upstream is `self.upstream`, which exposes exactly the entity's key-restricted upstream cone:
 
-### 4.4 Tripartite Make Pattern
+```python
+def make(self, key):
+    # self.upstream[T] returns ancestor T, pre-restricted to the current key
+    rate = self.upstream[Recording].fetch1("sampling_rate")
+    samples = self.upstream[Recording].to_arrays("signal")
+    self.insert1({**key, "spectrum": compute_spectrum(samples, rate)})
+```
+
+DataJoint 2.3 introduced `self.upstream` (and the underlying [`Diagram.trace`](diagram.md)) to make this convention easy to follow and to inspect. The framework does not enforce it at runtime, so keeping reads within the upstream cone remains the pipeline author's responsibility; a `make()` that reads outside it produces results the pipeline cannot reproduce.
+
+### 4.5 Tripartite Make Pattern
 
 For long-running computations, use the tripartite pattern to separate fetch, compute, and insert phases. This enables better transaction management for jobs that take minutes or hours.
 
@@ -374,7 +405,7 @@ def make(self, key):
 - You want to avoid holding database locks during computation
 - Working with external resources (files, APIs) that may be slow
 
-### 4.5 Additional make() Arguments
+### 4.6 Additional make() Arguments
 
 Pass extra arguments via `make_kwargs`:
 
@@ -405,7 +436,7 @@ def make_fetch(self, key, verbose=False, **kwargs):
     return (Source & key).fetch1('data')
 ```
 
-**Anti-pattern warning:** Passing arguments that affect the computed result breaks reproducibility—all inputs should come from `fetch` calls inside `make()`. If a parameter affects results, it should be stored in a lookup table and referenced via foreign key.
+**Anti-pattern warning (contract rule 5):** Passing arguments that affect the computed result breaks reproducibility—every result-affecting input must enter through a declared upstream table, not `make_kwargs` (see [make() reproducibility contract](#43-the-make-reproducibility-contract), rule 5). If a parameter affects results, store it in a lookup table and reference it via foreign key.
 
 **Acceptable use:** Directives that don't affect results, such as:
 - `verbose=True` for logging
