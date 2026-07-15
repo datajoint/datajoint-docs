@@ -289,6 +289,27 @@ referential integrity is preserved by re-fetching and verifying inputs before
 insertion. If upstream data changed during computation, the job is cancelled
 rather than inserting inconsistent results.
 
+### Phase responsibilities
+
+Splitting `make()` into three phases extends the reproducibility contract with a
+strict division of labor — each phase does exactly one thing:
+
+- **`make_fetch(key)` — reads only.** Fetches the entity's upstream cone and
+  returns it. It performs no computation and no writes, and it must be
+  idempotent (DataJoint calls it twice — the re-fetch above).
+- **`make_compute(key, fetched)` — pure.** Computes the result from the fetched
+  inputs alone. It neither reads the database nor writes to it, so its output
+  depends only on its arguments.
+- **`make_insert(key, fetched, computed)` — writes only.** Inserts the result
+  into `self` and its Part tables. It performs no fetching or computation.
+
+This keeps the make() reproducibility contract intact under the split: reads
+still come only from the upstream cone (in `make_fetch`), writes still go only to
+`self` and its Parts (in `make_insert`), and the computation between them is a
+deterministic function of the fetched inputs. It also makes the read and compute
+steps **safely testable in isolation** (see [Best Practices](#best-practices)),
+since neither touches the database as a side effect.
+
 ### Benefits
 
 | Aspect | Standard `make()` | Three-Part Pattern |
@@ -374,6 +395,19 @@ bypasses `populate()`: it runs **outside** the per-key transaction, so a partial
 or failed `make()` is not rolled back and can leave the table inconsistent; it
 also skips job reservation and error capture, and writes to the database as an
 uncontrolled side effect rather than as a managed, atomic unit.
+
+If your table uses the [three-part make](#the-three-part-make-model), you *can*
+test the read and compute steps directly and safely: `make_fetch(key)` only reads
+and `make_compute(key, fetched)` is pure, so neither writes to the database.
+Reserve `populate()` for exercising the write step (`make_insert`):
+
+```python
+# Safe: neither call writes to the database
+fetched = MyTable().make_fetch(key)
+computed = MyTable().make_compute(key, fetched)
+# Then exercise the full path (including make_insert) through populate()
+MyTable.populate(key, max_calls=1)
+```
 
 !!! note "Future: a no-insert debug mode"
     Calling `make()` directly could become a safe way to dry-run a computation
