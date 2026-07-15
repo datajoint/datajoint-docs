@@ -350,6 +350,13 @@ def make(self, key):
 
 DataJoint 2.3 introduced `self.upstream` (and the underlying [`Diagram.trace`](diagram.md)) to make this convention easy to follow and to inspect. The framework does not enforce it at runtime, so keeping reads within the upstream cone remains the pipeline author's responsibility; a `make()` that reads outside it produces results the pipeline cannot reproduce.
 
+`self.upstream` behavior:
+
+- **Lifecycle:** `self.upstream` is set to `Diagram.trace(self & key)` immediately before `make()` is invoked and cleared afterward — including when `make()` raises. Accessing it outside `make()` raises `DataJointError`.
+- **Lazy:** the trace diagram is built once per `make()` call; no SQL fires until an ancestor is accessed and fetched. Fetch results are not cached — reading the same ancestor twice issues two queries.
+- **Tripartite:** `self.upstream` is available across all tripartite phases (`make_fetch`, `make_compute`, `make_insert`) of the same `make()` call.
+- **Scope:** it exposes declared ancestors only. A table's own Parts are descendants, not ancestors — read them directly as `self.PartName`.
+
 ### 4.5 Tripartite Make Pattern
 
 For long-running computations, use the tripartite pattern to separate fetch, compute, and insert phases. This enables better transaction management for jobs that take minutes or hours.

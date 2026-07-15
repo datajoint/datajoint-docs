@@ -143,7 +143,7 @@ Create a cascade diagram for delete. Builds a complete dependency graph from the
 
 | Value | Behavior |
 |-------|----------|
-| `"enforce"` | Error if parts would be deleted before masters |
+| `"enforce"` | Default. The preview itself never errors; master-part integrity is enforced by `Table.delete()`'s post-check, which rolls back the delete if part rows would be removed without their masters (see [Cascade Spec](cascade.md#part_integrity-modes)). |
 | `"ignore"` | Allow deleting parts without masters |
 | `"cascade"` | Propagate restriction upward from part to master, then re-propagate downstream to all sibling parts |
 
@@ -153,6 +153,32 @@ With `"cascade"`, the restriction flows **upward** from a part table to its mast
 # Preview cascade impact across all loaded schemas
 dj.Diagram.cascade(Session & {'subject_id': 'M001'}).counts()
 ```
+
+`part_integrity` accepts only `"enforce"`, `"ignore"`, or `"cascade"`; any other value raises `ValueError`.
+
+### `Diagram.trace()` (class method)
+
+```python
+dj.Diagram.trace(table_expr)
+```
+
+The **upstream mirror of `cascade()`**. Where `cascade()` walks downstream to every descendant, `trace()` walks **upstream** from a (possibly restricted) table expression to every ancestor across all loaded schemas, propagating the restriction along the way. Like `cascade()`, convergence is **OR** — an ancestor is included if reachable through *any* FK path from the seed.
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `table_expr` | QueryExpression | — | A restricted table expression whose ancestry is traced |
+
+**Returns:** New `Diagram` containing the seed and its ancestors, each pre-restricted through the FK join path.
+
+Access a pre-restricted ancestor by indexing the trace:
+
+```python
+trace = dj.Diagram.trace(MyChild & key)
+session = trace[Session]              # Session restricted to ancestors of MyChild & key
+session.fetch1('session_date')
+```
+
+`trace()` reuses the same **upward propagation rules** (U1/U2/U3) documented in the [Cascade Spec](cascade.md#upward-propagation-child-parent). The [Upstream Trace Specification §1](trace.md#1-diagramtracetable_expr) is the normative spec for its API and semantics; inside `make()`, `self.upstream` is the per-`key` instance of a trace.
 
 ### `restrict()`
 
