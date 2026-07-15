@@ -115,12 +115,15 @@ import datajoint as dj
 # Objects are NOT automatically deleted with rows
 (MyTable & old_data).delete()
 
-# Scan for orphaned items
-stats = dj.gc.scan(my_schema)
-print(dj.gc.format_stats(stats))
+# A collector is bound to its schemas and one store
+collector = dj.gc.GarbageCollector(my_schema)
+
+# Read-only report (collect defaults to dry_run=True)
+stats = collector.collect()
+print(f"{stats['hash_paths_orphaned'] + stats['schema_paths_orphaned']} orphaned items")
 
 # Remove orphaned items
-stats = dj.gc.collect(my_schema, dry_run=False)
+stats = collector.collect(dry_run=False)
 ```
 
 See [Clean Up Object Storage](garbage-collection.md) for details.

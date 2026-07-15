@@ -117,7 +117,7 @@ Prefixes must be mutually exclusive (no prefix can be a parent/child of another)
 **How storage methods use stores:**
 
 - **Hash-addressed** (`<blob@>`, `<attach@>`): `{location}/{hash_prefix}/{schema}/{hash}` with optional subfolding
-- **Schema-addressed** (`<object@>`, `<npy@>`): `{location}/{schema_prefix}/{partition}/{schema}/{table}/{key}/{field}.{token}.{ext}` with optional partitioning
+- **Schema-addressed** (`<object@>`, `<npy@>`): `{location}/{schema_prefix}/{partition}/{schema}/{table}/{key}/{field}_{token}{ext}` with optional partitioning
 - **Filepath** (`<filepath@>`): `{location}/{filepath_prefix}/{user_path}` (user-managed, cannot use hash or schema prefixes)
 
 All storage methods share the same stores and default store. DataJoint reserves the configured `hash_prefix` and `schema_prefix` sections for managed storage; `<filepath@>` references can use any other paths (unless `filepath_prefix` is configured to restrict them).
@@ -127,12 +127,12 @@ All storage methods share the same stores and default store. DataJoint reserves 
 Without partitioning:
 ```
 {location}/_hash/{schema}/ab/cd/abcd1234...                    # hash-addressed with subfolding
-{location}/_schema/{schema}/{table}/{key}/data.x8f2a9b1.zarr   # schema-addressed, no partitioning
+{location}/_schema/{schema}/{table}/{key}/data_x8f2a9b1.zarr   # schema-addressed, no partitioning
 ```
 
 With `partition_pattern: "subject_id/session_date"`:
 ```
-{location}/_schema/subject_id=042/session_date=2024-01-15/{schema}/{table}/{remaining_key}/data.x8f2a9b1.zarr
+{location}/_schema/subject_id=042/session_date=2024-01-15/{schema}/{table}/{remaining_key}/data_x8f2a9b1.zarr
 ```
 
 If table lacks partition attributes, it follows normal path structure.
