@@ -49,8 +49,8 @@ from, and the operational metadata around that arrival. That origin record is
 captured at the pipeline's entry-point tables: a Manual insert or an Imported
 `make()` records the source identity alongside the data, exactly as at any
 manual data-entry point. A single ingestion step may populate several such
-tables that carry no foreign-key dependency on each other (the *fan-out*
-pattern), each recording its own origin.
+tables that carry no foreign-key dependency on the loader (the
+[fan-out ingestion pattern](fan-out-ingestion.md)), each recording its own origin.
 
 Formalizing and standardizing that external-origin record — retention, actors,
 audit trails, cross-system exchange — is the province of dedicated provenance
@@ -72,5 +72,6 @@ industry provenance standards is ensured by the DataJoint Platform.
 
 - [Relational Workflow Model](relational-workflow-model.md) — the conceptual basis for treating the schema as the pipeline specification
 - [Entity Integrity](entity-integrity.md) — the referential-integrity guarantees that make lineage structural
-- [Computation Model](computation-model.md) — the `make()` reproducibility contract
+- [Computation Model](computation-model.md) — the `make()` contract and `populate()`
+- [Fan-Out Ingestion](fan-out-ingestion.md) — how one source populates several entry-point tables, and where origin is recorded
 - [Comparison to Workflow Languages](comparison-to-workflow-languages.md) — the companion comparison for pipeline and orchestration tools
