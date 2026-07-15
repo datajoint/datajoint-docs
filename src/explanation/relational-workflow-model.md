@@ -66,7 +66,7 @@ above illustrates.
 | **Row semantics** | True proposition | Entity instance | **Workflow artifact** |
 | **Foreign keys** | Referential integrity | Relationship | **Execution order** |
 | **Computation** | Not addressed | Not addressed | **Declared in schema** |
-| **Provenance** | Not addressed | Not addressed | **Structural** |
+| **Data lineage** | Not addressed | Not addressed | **Structural** |
 | **Implementation gap** | High | High | **None** |
 
 ## A semantic interpretation, not a departure
@@ -77,7 +77,7 @@ primary and foreign keys, normalization, and the query algebra keep
 their classical meaning. The model adds four readings on top:
 
 - Tables also represent **workflow steps**.
-- Rows also represent **workflow artifacts**, carrying provenance to their inputs.
+- Rows also represent **workflow artifacts**, traceable to their inputs.
 - Foreign keys also prescribe **execution order** — the dependency graph *is* the pipeline DAG, enforced by the database.
 - **Computed and Imported tables carry their own `make()` methods**, declaring derivation logic in the schema itself rather than in an external workflow file.
 
@@ -98,8 +98,8 @@ alongside DataJoint.
 
 ## Substrate consequences
 
-Because dependencies are declared before any computation runs, provenance
-and lineage become **properties of the substrate**, not artifacts assembled
+Because dependencies are declared before any computation runs, lineage
+and reproducibility become **properties of the substrate**, not artifacts assembled
 after the fact. Every row in `Segmentation` is reachable by foreign key
 from the exact `AverageFrame` and `SegmentationParam` that produced it;
 cascade deletes remove dependent results when their inputs become invalid.
@@ -134,14 +134,45 @@ Tables are classified into tiers by data-entry mode:
 
 | Tier | Role | `make()` |
 |------|------|----------|
-| **Manual** | Receive direct user entry | No |
-| **Lookup** | Hold reference data | No |
+| **Manual** | Rows entered at runtime from outside the pipeline (people, forms, instruments, imports) | No |
+| **Lookup** | Reference rows defined in the schema itself via `contents` | No |
 | **Imported** | Reach out to data sources outside DataJoint (instruments, ELNs, external databases) | Yes |
 | **Computed** | Derive their contents entirely from upstream DataJoint tables | Yes |
 
 Imported and Computed tables define computations via `make()` methods. The
 `make()` method specifies how each entity is derived — declared within the
 table definition, not in an external workflow file.
+
+#### Manual vs. Lookup
+
+Manual and Lookup tables are both **entry points** — their rows are entered
+rather than derived by a `make()` — but they differ in *where the rows come
+from*:
+
+- A **Manual** table's rows arrive at **runtime**, from outside the pipeline: a
+  person typing into a form, a LIMS, an instrument, or an import from another
+  system. Its contents are specific to a particular project or experiment and
+  differ from one deployment to the next. Manual tables are the pipeline's origin
+  points — e.g. `Mouse`, `Session`, `Scan`.
+- A **Lookup** table's rows are **part of the schema definition**, declared in
+  code through the `contents` attribute and versioned alongside the table. Its
+  contents are the same wherever the schema is deployed and change only when the
+  code changes. Use it for reference values that belong to the pipeline's design:
+  parameter sets, method definitions, controlled vocabularies, enumerations —
+  e.g. `SegmentationParam`.
+
+The quick test is *where does a row come from?* If it is fixed in the committed
+schema (`contents`), it is a **Lookup**; if it arrives at runtime, it is a
+**Manual** table. A common mistake is to use a Lookup for data that is actually
+entered at runtime (for example, filled in through a dashboard form). If a
+table's rows do not come from its committed `contents`, it belongs in the
+**Manual** tier.
+
+Because Lookup content lives in the code, **changing it is a code change**:
+you edit `contents` and redeploy, so updates flow through the same
+review-and-deploy (CI/CD) process as any other schema change — versioned and
+reproducible across deployments. Manual content, by contrast, is entered at
+runtime and never touches the codebase.
 
 ### Master-part relationships
 
@@ -165,7 +196,7 @@ at the workflow step the table represents*. A `Session` table holds
 attributes known when the session is entered (date, experimenter,
 subject); analysis parameters determined later belong in Computed tables
 that depend on `Session`. The discipline prevents tables that accumulate
-attributes from different workflow stages, obscuring provenance and
+attributes from different workflow stages, obscuring lineage and
 complicating updates.
 
 ### Entity integrity
@@ -209,7 +240,7 @@ incompatible designs.
 | Foreign keys enforce consistency | Foreign keys prescribe execution order |
 | Updates modify state | Computations create new states |
 | Schemas organize storage | Schemas specify pipelines |
-| Queries retrieve data | Queries trace provenance |
+| Queries retrieve data | Queries trace lineage |
 
 ## Further reading
 

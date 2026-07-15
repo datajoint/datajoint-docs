@@ -191,7 +191,7 @@ For a cascade subgraph with N nodes and E edges, propagation runs in at most O(N
 
 ## What is not part of this specification
 
-- **`Diagram.trace()`** for general upstream restriction propagation: a related but distinct feature that **shipped in 2.3** and reuses the same upward rules (U1/U2/U3) defined above. `trace()` exposes upstream propagation as a first-class operator; the cascade engine's upward walk in this document is the same machinery applied inside `part_integrity="cascade"`. See the [Provenance Specification](provenance.md) for `trace`'s API and semantics.
+- **`Diagram.trace()`** for general upstream restriction propagation: a related but distinct feature that **shipped in 2.3** and reuses the same upward rules (U1/U2/U3) defined above. `trace()` exposes upstream propagation as a first-class operator; the cascade engine's upward walk in this document is the same machinery applied inside `part_integrity="cascade"`. See the [Upstream Trace Specification](trace.md) for `trace`'s API and semantics.
 - **Custom propagation rules** (user-defined): not supported. The three forward and three upward rules cover the cases the FK graph can produce.
 - **Cross-schema cascade**: handled by `dependencies.load_all_downstream()` called from `Diagram.cascade()`; orthogonal to the propagation rules described here.
 

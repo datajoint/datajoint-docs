@@ -23,8 +23,8 @@ class TableName(dj.Manual):
 
 | Tier | Base Class | Table Prefix | Purpose |
 |------|------------|--------------|---------|
-| Manual | `dj.Manual` | (none) | User-entered data |
-| Lookup | `dj.Lookup` | `#` | Reference/enumeration data |
+| Manual | `dj.Manual` | (none) | Data entered at runtime (users, instruments, imports) |
+| Lookup | `dj.Lookup` | `#` | Reference data defined in the schema via `contents` |
 | Imported | `dj.Imported` | `_` | Data from external sources |
 | Computed | `dj.Computed` | `__` | Derived from other tables |
 | Part | `dj.Part` | `master__` | Detail records of master table |

@@ -18,7 +18,7 @@ Key characteristics:
 - **Automatic dependency tracking** — Foreign keys encode workflow dependencies
 - **Built-in computation** — Imported and Computed tables run automatically
 - **Data integrity** — Referential integrity and transaction support
-- **Reproducibility** — Immutable data with full provenance
+- **Reproducibility** — Immutable data with full lineage
 
 ## History
 

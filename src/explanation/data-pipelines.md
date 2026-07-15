@@ -6,7 +6,7 @@ A **scientific data pipeline** extends beyond a database with computations. It i
 - Integrates diverse tools for data entry, visualization, and analysis
 - Provides infrastructure for secure, scalable computation
 - Enables collaboration across teams and institutions
-- Supports reproducibility and provenance tracking throughout
+- Supports reproducibility and data lineage throughout
 
 ## Pipeline Architecture
 
@@ -46,7 +46,7 @@ This dual structure ensures that both code dependencies and data dependencies fl
 This constraint is fundamental to DataJoint's design. It ensures:
 
 - **Unidirectional data flow** — Data enters at the top and flows downstream
-- **Clear provenance** — Every result traces back to its inputs
+- **Clear lineage** — Every result traces back to its inputs
 - **Safe deletion** — Cascading deletes follow the DAG without cycles
 - **Predictable computation** — `populate()` can determine correct execution order
 
@@ -148,7 +148,7 @@ Throughout this process, the schema definition remains the single source of trut
 
 ## Comparing Approaches
 
-The pipeline approach requires upfront investment in schema design. Compared to a file-based approach where data structure is implicit in filenames, dependencies are encoded in scripts, and provenance must be tracked manually, a DataJoint pipeline makes all of those explicit in the schema — and pays the investment back in reproducibility, query power, and collaboration as projects scale.
+The pipeline approach requires upfront investment in schema design. Compared to a file-based approach where data structure is implicit in filenames, dependencies are encoded in scripts, and lineage must be tracked manually, a DataJoint pipeline makes all of those explicit in the schema — and pays the investment back in reproducibility, query power, and collaboration as projects scale.
 
 For a detailed structural comparison against file-based workflow systems (CWL, Snakemake, Nextflow) and task orchestrators (Airflow, Argo, Prefect, Dagster), and for guidance on when the two layers complement rather than substitute each other, see [Comparison to Workflow Languages](comparison-to-workflow-languages.md).
 
@@ -160,7 +160,7 @@ Scientific data pipelines extend the Relational Workflow Model into complete dat
 - **DAG Structure** — Unidirectional flow of data and dependencies
 - **Object-Augmented Schemas** — Scalable storage with relational semantics
 
-The schema remains central—defining data structures, dependencies, and computational flow. This pipeline-centric approach lets teams focus on their science while the system handles data integrity, provenance, and reproducibility automatically.
+The schema remains central—defining data structures, dependencies, and computational flow. This pipeline-centric approach lets teams focus on their science while the system handles data integrity, lineage, and reproducibility automatically.
 
 ## See Also
 

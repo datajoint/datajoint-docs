@@ -239,7 +239,7 @@ class HousingAssignment(dj.Manual):
 3. **Join efficiency** — Normalized tables with proper keys enable efficient
    joins through the workflow graph
 
-4. **Clear provenance** — Each table represents a distinct workflow step,
+4. **Clear lineage** — Each table represents a distinct workflow step,
    making data lineage clear
 
 ## Summary
