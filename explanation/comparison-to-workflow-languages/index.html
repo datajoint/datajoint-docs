@@ -4698,14 +4698,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/specs/provenance/" class="md-nav__link">
+      <a href="../../reference/specs/trace/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Provenance Trace & Strict Provenance
+    Upstream Trace
   
 
     
@@ -6323,7 +6323,7 @@ rather than competing with it.</p>
 <td>Foreign-key DAG in schema</td>
 </tr>
 <tr>
-<td>Provenance recording</td>
+<td>Lineage recording</td>
 <td>Reconstructed from run logs</td>
 <td>Task-level run history</td>
 <td>Structural (FK chain)</td>
@@ -6364,7 +6364,7 @@ top priorities.</p>
 <p>What these systems share is what they decline to specify: a formal
 data-structure layer. There are no typed schemas across pipeline stages,
 no foreign keys binding intermediate results, no algebraic query surface
-over what the pipeline has produced. Provenance is reconstructed from run
+over what the pipeline has produced. Lineage is reconstructed from run
 logs and filenames rather than enforced by structure. Entity-level lineage
 — which subject or sample or session produced a result — is implicit in
 directory conventions and scatter patterns rather than declared. Drift in
@@ -6411,7 +6411,7 @@ structure.</p>
   the team is prepared to write its own catalog or lineage layer
   separately.</li>
 <li><strong>Choose DataJoint</strong> when the data and the computation cannot cleanly
-  separate, when provenance, lineage, and integrity must be structural
+  separate, when lineage and integrity must be structural
   rather than reconstructed, and when agents need a single machine-readable
   model of the pipeline.</li>
 <li><strong>Use both.</strong> DataJoint inside an Airflow, Argo, or Prefect orchestration

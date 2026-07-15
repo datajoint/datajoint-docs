@@ -4709,14 +4709,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/specs/provenance/" class="md-nav__link">
+      <a href="../../reference/specs/trace/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Provenance Trace & Strict Provenance
+    Upstream Trace
   
 
     
@@ -6359,8 +6359,8 @@ manifest.</p>
 upstream key to artifact: it receives the primary key of one entity,
 fetches its inputs by query, produces the result, and inserts exactly
 one row. Each inserted row records the git hash of the <code>make()</code> source
-that produced it — code provenance is part of the schema's structural
-footprint, not an audit artifact bolted on afterward. The
+that produced it — the identity of the code that produced each row is part of
+the schema's structural footprint, not an audit artifact bolted on afterward. The
 <a href="../computation-model/">Computation Model</a> page covers the full <code>make()</code>
 / <code>populate()</code> contract, including the three-part pattern for long
 computations.</p>
@@ -6373,7 +6373,7 @@ with a well-defined primary key, so any expression is itself a valid
 operand for the next operator. Entity integrity is preserved under
 composition. This is what lets the schema be both a specification and a
 queryable object — the same algebra that retrieves data also traces
-provenance and derives the key source for the next <code>populate()</code>. See
+lineage and derives the key source for the next <code>populate()</code>. See
 <a href="../query-algebra/">Query Algebra</a> and
 <a href="../semantic-matching/">Semantic Matching</a> for operator semantics and
 the lineage-based join rule that prevents accidental matches on

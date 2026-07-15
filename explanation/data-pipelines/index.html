@@ -4743,14 +4743,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/specs/provenance/" class="md-nav__link">
+      <a href="../../reference/specs/trace/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Provenance Trace & Strict Provenance
+    Upstream Trace
   
 
     
@@ -6331,7 +6331,7 @@
 <li>Integrates diverse tools for data entry, visualization, and analysis</li>
 <li>Provides infrastructure for secure, scalable computation</li>
 <li>Enables collaboration across teams and institutions</li>
-<li>Supports reproducibility and provenance tracking throughout</li>
+<li>Supports reproducibility and data lineage throughout</li>
 </ul>
 <h2 id="pipeline-architecture">Pipeline Architecture<a class="headerlink" href="#pipeline-architecture" title="Permanent link">&para;</a></h2>
 <p>At the heart of every DataJoint pipeline is an <strong>open-source core</strong> of three components that handle schema, computation, and storage. The managed <strong>DataJoint Platform</strong> extends this core with services for AI access, data ingestion, exploration, security, collaboration, and visualization.</p>
@@ -6377,7 +6377,7 @@
 <p>This constraint is fundamental to DataJoint's design. It ensures:</p>
 <ul>
 <li><strong>Unidirectional data flow</strong> — Data enters at the top and flows downstream</li>
-<li><strong>Clear provenance</strong> — Every result traces back to its inputs</li>
+<li><strong>Clear lineage</strong> — Every result traces back to its inputs</li>
 <li><strong>Safe deletion</strong> — Cascading deletes follow the DAG without cycles</li>
 <li><strong>Predictable computation</strong> — <code>populate()</code> can determine correct execution order</li>
 </ul>
@@ -6480,7 +6480,7 @@
 </ol>
 <p>Throughout this process, the schema definition remains the single source of truth.</p>
 <h2 id="comparing-approaches">Comparing Approaches<a class="headerlink" href="#comparing-approaches" title="Permanent link">&para;</a></h2>
-<p>The pipeline approach requires upfront investment in schema design. Compared to a file-based approach where data structure is implicit in filenames, dependencies are encoded in scripts, and provenance must be tracked manually, a DataJoint pipeline makes all of those explicit in the schema — and pays the investment back in reproducibility, query power, and collaboration as projects scale.</p>
+<p>The pipeline approach requires upfront investment in schema design. Compared to a file-based approach where data structure is implicit in filenames, dependencies are encoded in scripts, and lineage must be tracked manually, a DataJoint pipeline makes all of those explicit in the schema — and pays the investment back in reproducibility, query power, and collaboration as projects scale.</p>
 <p>For a detailed structural comparison against file-based workflow systems (CWL, Snakemake, Nextflow) and task orchestrators (Airflow, Argo, Prefect, Dagster), and for guidance on when the two layers complement rather than substitute each other, see <a href="../comparison-to-workflow-languages/">Comparison to Workflow Languages</a>.</p>
 <h2 id="summary">Summary<a class="headerlink" href="#summary" title="Permanent link">&para;</a></h2>
 <p>Scientific data pipelines extend the Relational Workflow Model into complete data operations systems:</p>
@@ -6489,7 +6489,7 @@
 <li><strong>DAG Structure</strong> — Unidirectional flow of data and dependencies</li>
 <li><strong>Object-Augmented Schemas</strong> — Scalable storage with relational semantics</li>
 </ul>
-<p>The schema remains central—defining data structures, dependencies, and computational flow. This pipeline-centric approach lets teams focus on their science while the system handles data integrity, provenance, and reproducibility automatically.</p>
+<p>The schema remains central—defining data structures, dependencies, and computational flow. This pipeline-centric approach lets teams focus on their science while the system handles data integrity, lineage, and reproducibility automatically.</p>
 <h2 id="see-also">See Also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
 <ul>
 <li><a href="../relational-workflow-model/">Relational Workflow Model</a> — The conceptual foundation</li>

@@ -2076,11 +2076,11 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="../../reference/specs/provenance/">
+<a class="md-nav__link" href="../../reference/specs/trace/">
 <span class="md-ellipsis">
     
   
-    Provenance Trace &amp; Strict Provenance
+    Upstream Trace
   
 
     
@@ -2906,7 +2906,7 @@ above illustrates.</p>
 <td><strong>Declared in schema</strong></td>
 </tr>
 <tr>
-<td><strong>Provenance</strong></td>
+<td><strong>Data lineage</strong></td>
 <td>Not addressed</td>
 <td>Not addressed</td>
 <td><strong>Structural</strong></td>
@@ -2926,7 +2926,7 @@ primary and foreign keys, normalization, and the query algebra keep
 their classical meaning. The model adds four readings on top:</p>
 <ul>
 <li>Tables also represent <strong>workflow steps</strong>.</li>
-<li>Rows also represent <strong>workflow artifacts</strong>, carrying provenance to their inputs.</li>
+<li>Rows also represent <strong>workflow artifacts</strong>, traceable to their inputs.</li>
 <li>Foreign keys also prescribe <strong>execution order</strong> — the dependency graph <em>is</em> the pipeline DAG, enforced by the database.</li>
 <li><strong>Computed and Imported tables carry their own <code>make()</code> methods</strong>, declaring derivation logic in the schema itself rather than in an external workflow file.</li>
 </ul>
@@ -2943,8 +2943,8 @@ for the structural treatment — what file-based workflows and task
 orchestrators each offer, what each omits, and when to use them
 alongside DataJoint.</p>
 <h2 id="substrate-consequences">Substrate consequences<a class="headerlink" href="#substrate-consequences" title="Permanent link">¶</a></h2>
-<p>Because dependencies are declared before any computation runs, provenance
-and lineage become <strong>properties of the substrate</strong>, not artifacts assembled
+<p>Because dependencies are declared before any computation runs, lineage
+and reproducibility become <strong>properties of the substrate</strong>, not artifacts assembled
 after the fact. Every row in <code>Segmentation</code> is reachable by foreign key
 from the exact <code>AverageFrame</code> and <code>SegmentationParam</code> that produced it;
 cascade deletes remove dependent results when their inputs become invalid.
@@ -3025,7 +3025,7 @@ at the workflow step the table represents</em>. A <code>Session</code> table hol
 attributes known when the session is entered (date, experimenter,
 subject); analysis parameters determined later belong in Computed tables
 that depend on <code>Session</code>. The discipline prevents tables that accumulate
-attributes from different workflow stages, obscuring provenance and
+attributes from different workflow stages, obscuring lineage and
 complicating updates.</p>
 <h3 id="entity-integrity">Entity integrity<a class="headerlink" href="#entity-integrity" title="Permanent link">¶</a></h3>
 <p>All data is represented as well-formed entity sets with primary keys
@@ -3112,7 +3112,7 @@ incompatible designs.</p>
 </tr>
 <tr>
 <td>Queries retrieve data</td>
-<td>Queries trace provenance</td>
+<td>Queries trace lineage</td>
 </tr>
 </tbody>
 </table>

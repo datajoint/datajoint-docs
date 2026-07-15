@@ -4559,14 +4559,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/specs/provenance/" class="md-nav__link">
+      <a href="../../reference/specs/trace/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Provenance Trace & Strict Provenance
+    Upstream Trace
   
 
     
@@ -5726,15 +5726,15 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#the-provenance-trinity" class="md-nav__link">
+  <a href="#upstream-trace-and-selfupstream" class="md-nav__link">
     <span class="md-ellipsis">
       
-        The Provenance Trinity
+        Upstream Trace and self.upstream
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="The Provenance Trinity">
+    <nav class="md-nav" aria-label="Upstream Trace and self.upstream">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -5760,21 +5760,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#strict_provenance-an-opt-in-runtime-guardrail" class="md-nav__link">
+  <a href="#adopting-selfupstream-incrementally" class="md-nav__link">
     <span class="md-ellipsis">
       
-        strict_provenance — an opt-in runtime guardrail
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#adopting-the-trinity-incrementally" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Adopting the trinity incrementally
+        Adopting self.upstream incrementally
       
     </span>
   </a>
@@ -6175,15 +6164,15 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#the-provenance-trinity" class="md-nav__link">
+  <a href="#upstream-trace-and-selfupstream" class="md-nav__link">
     <span class="md-ellipsis">
       
-        The Provenance Trinity
+        Upstream Trace and self.upstream
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="The Provenance Trinity">
+    <nav class="md-nav" aria-label="Upstream Trace and self.upstream">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -6209,21 +6198,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#strict_provenance-an-opt-in-runtime-guardrail" class="md-nav__link">
+  <a href="#adopting-selfupstream-incrementally" class="md-nav__link">
     <span class="md-ellipsis">
       
-        strict_provenance — an opt-in runtime guardrail
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#adopting-the-trinity-incrementally" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Adopting the trinity incrementally
+        Adopting self.upstream incrementally
       
     </span>
   </a>
@@ -6311,20 +6289,18 @@
 
 
 <h1 id="whats-new-in-datajoint-23">What's New in DataJoint 2.3<a class="headerlink" href="#whats-new-in-datajoint-23" title="Permanent link">&para;</a></h1>
-<p>DataJoint 2.3 introduces the <strong>provenance trinity</strong> — <code>Diagram.trace</code>, <code>self.upstream</code>, and <code>strict_provenance</code> — which together turn "a computed row can be traced to the exact upstream rows it came from" from a convention into something the framework helps construct and check. It also ships the <strong>SparkAdapter Codec Protocol</strong> for typed rendering to Spark-native types, <strong><code>dj.deploy.set_replica_identity</code></strong> for PostgreSQL change-data-capture, and a <strong>cascade fix</strong> for Part-of-Part and renamed-foreign-key chains.</p>
+<p>DataJoint 2.3 adds a first-class <strong>upstream read surface</strong> — <code>Diagram.trace</code> and <code>self.upstream</code> — which make "a computed row derives only from its declared upstream inputs" easy to follow inside <code>make()</code> and easy to query afterward. It also ships the <strong>SparkAdapter Codec Protocol</strong> for typed rendering to Spark-native types, <strong><code>dj.deploy.set_replica_identity</code></strong> for PostgreSQL change-data-capture, and a <strong>cascade fix</strong> for Part-of-Part and renamed-foreign-key chains.</p>
 <blockquote>
-<p><strong>Upgrading from 2.0, 2.1, or 2.2?</strong> No breaking changes. Everything here is additive, and <code>strict_provenance</code> defaults to off — existing pipelines run identically.</p>
+<p><strong>Upgrading from 2.0, 2.1, or 2.2?</strong> No breaking changes. Everything here is additive — existing pipelines run identically.</p>
 <p><strong>Citation:</strong> Yatsenko D, Nguyen TT. <em>DataJoint 2.0: A Computational Substrate for Agentic Scientific Workflows.</em> arXiv:2602.16585. 2026. <a href="https://doi.org/10.48550/arXiv.2602.16585">doi:10.48550/arXiv.2602.16585</a></p>
 </blockquote>
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>DataJoint's provenance guarantee rests on the convention that <code>make(self, key)</code> reads only from declared upstream dependencies and writes only to <code>self</code> (and its Parts). The framework has always <em>defined</em> this boundary but never <em>checked</em> it: a <code>make()</code> could <code>fetch()</code> from any table, making the dependency invisible to the foreign-key graph and silently breaking the provenance claim downstream.</p>
-<p>The 2.3 trinity closes that loop with three pieces designed as a unit:</p>
+<p>A computed row is reproducible only when <code>make(self, key)</code> reads only from its declared upstream dependencies and writes only to <code>self</code> (and its Parts). DataJoint 2.3 makes that read/write boundary easy to follow — and the resulting data lineage easy to query — with two features designed as a unit:</p>
 <ol>
 <li><strong><code>Diagram.trace()</code></strong> constructs the upstream view as a first-class query object.</li>
 <li><strong><code>self.upstream</code></strong> exposes that view ergonomically inside <code>make()</code>.</li>
-<li><strong><code>strict_provenance</code></strong> checks (best-effort) that nothing else is read or written.</li>
 </ol>
-<h2 id="the-provenance-trinity">The Provenance Trinity<a class="headerlink" href="#the-provenance-trinity" title="Permanent link">&para;</a></h2>
+<h2 id="upstream-trace-and-selfupstream">Upstream Trace and <code>self.upstream</code><a class="headerlink" href="#upstream-trace-and-selfupstream" title="Permanent link">&para;</a></h2>
 <h3 id="diagramtrace-the-upstream-mirror-of-cascade"><code>Diagram.trace()</code> — the upstream mirror of <code>cascade</code><a class="headerlink" href="#diagramtrace-the-upstream-mirror-of-cascade" title="Permanent link">&para;</a></h3>
 <p><code>Diagram.cascade()</code> walks <strong>downstream</strong> and answers <em>"what is affected if these rows are deleted?"</em> <code>Diagram.trace()</code> walks <strong>upstream</strong> and answers <em>"what contributed to these rows?"</em> — reusing the same dependency graph and (inverted) propagation rules.</p>
 <div class="highlight"><pre><span></span><code><span class="n">key</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;subject_id&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;session_id&quot;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span> <span class="s2">&quot;scan_id&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">}</span>
@@ -6346,25 +6322,12 @@
         <span class="n">samples</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">upstream</span><span class="p">[</span><span class="n">Recording</span><span class="p">]</span><span class="o">.</span><span class="n">to_arrays</span><span class="p">(</span><span class="s2">&quot;signal&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="o">**</span><span class="n">key</span><span class="p">,</span> <span class="s2">&quot;spectrum&quot;</span><span class="p">:</span> <span class="n">compute_spectrum</span><span class="p">(</span><span class="n">samples</span><span class="p">,</span> <span class="n">rate</span><span class="p">)})</span>
 </code></pre></div>
-<p>Construction is lazy — the SQL fires only when you access an ancestor and fetch. Outside <code>make()</code>, accessing <code>self.upstream</code> raises a clear error. Even without <code>strict_provenance</code>, it's a pure ergonomic win over <code>(Recording &amp; key).fetch1(...)</code>.</p>
-<h3 id="strict_provenance-an-opt-in-runtime-guardrail"><code>strict_provenance</code> — an opt-in runtime guardrail<a class="headerlink" href="#strict_provenance-an-opt-in-runtime-guardrail" title="Permanent link">&para;</a></h3>
-<p>Setting the flag makes the provenance boundary checked at runtime:</p>
-<div class="highlight"><pre><span></span><code><span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;strict_provenance&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
-</code></pre></div>
-<p>When enabled, inside a <code>make()</code>:</p>
-<ul>
-<li><strong>Reads</strong> of tables outside the declared-ancestor set (plus <code>self</code> and its Parts) raise <code>DataJointError</code>.</li>
-<li><strong>Writes</strong> to anything other than <code>self</code> and its Parts raise <code>DataJointError</code>.</li>
-<li><strong>Key consistency</strong> is checked: rows inserted into <code>self</code>/Parts must carry primary-key values consistent with the current <code>key</code>.</li>
-</ul>
-<p><code>strict_provenance</code> is an <strong>operational</strong> flag — a property of how a deployment runs, not of the schema. It's a <strong>best-effort development guardrail</strong>, not an airtight boundary: it observes access through the DataJoint Python client and is designed to surface <em>accidental</em> undeclared dependencies (turn it on in staging, fix what it flags). Comprehensive enforcement across every access path is handled on the DataJoint platform, which combines these runtime checks with agentic review of <code>make()</code> source in its code-deployment CI/CD. See the <a href="../../reference/specs/provenance/">Provenance Specification</a> for the exact enforcement model and its documented limits.</p>
-<h3 id="adopting-the-trinity-incrementally">Adopting the trinity incrementally<a class="headerlink" href="#adopting-the-trinity-incrementally" title="Permanent link">&para;</a></h3>
+<p>Construction is lazy — the SQL fires only when you access an ancestor and fetch. Outside <code>make()</code>, accessing <code>self.upstream</code> raises a clear error. It's a pure ergonomic win over <code>(Recording &amp; key).fetch1(...)</code>, and it keeps the read inside the declared upstream — which is what makes the result reproducible. See the <a href="../../reference/specs/autopopulate/#43-the-make-reproducibility-contract">make() reproducibility contract</a> for the full rule set.</p>
+<h3 id="adopting-selfupstream-incrementally">Adopting <code>self.upstream</code> incrementally<a class="headerlink" href="#adopting-selfupstream-incrementally" title="Permanent link">&para;</a></h3>
 <ol>
-<li>Upgrade to 2.3 — the APIs are available; <code>strict_provenance</code> stays off.</li>
+<li>Upgrade to 2.3 — the new APIs are available; existing code is unaffected.</li>
 <li>Use <code>self.upstream</code> in new <code>make()</code> implementations.</li>
-<li>Migrate existing <code>make()</code> reads from <code>(Upstream &amp; key).fetch(...)</code> to <code>self.upstream[Upstream].fetch(...)</code>.</li>
-<li>Enable <code>strict_provenance=True</code> in staging and fix the undeclared dependencies it surfaces.</li>
-<li>Enable in production.</li>
+<li>Migrate existing <code>make()</code> reads from <code>(Upstream &amp; key).fetch(...)</code> to <code>self.upstream[Upstream].fetch(...)</code> — no semantic change, but the read is now visibly confined to the declared upstream.</li>
 </ol>
 <h2 id="sparkadapter-codec-protocol">SparkAdapter Codec Protocol<a class="headerlink" href="#sparkadapter-codec-protocol" title="Permanent link">&para;</a></h2>
 <p>DataJoint's <code>&lt;blob@&gt;</code> codec stores arbitrary Python values as serialized binary — general, but opaque to consumers that need typed access at query time (Spark SQL, Delta Sharing, BI tools). The <strong>SparkAdapter</strong> Protocol is the minimum framework-side contract that lets a codec declare its decoded values can be expressed as Spark-native types (primitives, lists, dicts, and nested combinations):</p>
@@ -6396,7 +6359,7 @@
 </ul>
 <h2 id="see-also">See Also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
 <ul>
-<li><a href="../../reference/specs/provenance/">Provenance Specification</a> — <code>trace</code>, <code>self.upstream</code>, and <code>strict_provenance</code> in full</li>
+<li><a href="../../reference/specs/trace/">Upstream Trace Specification</a> — <code>Diagram.trace</code> and <code>self.upstream</code> in full</li>
 <li><a href="../../reference/specs/spark-adapter/">SparkAdapter Codec Protocol</a> — typed rendering to Spark-native types</li>
 <li><a href="../../reference/specs/deploy-operations/">Deployment Operations</a> — the <code>dj.deploy</code> module</li>
 <li><a href="../../reference/specs/cascade/">Cascade Specification</a> — propagation rules shared with <code>trace</code></li>
