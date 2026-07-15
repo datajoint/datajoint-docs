@@ -257,15 +257,19 @@ class SignalAverage(dj.Computed):
         raw_signal = (RawSignal & key).fetch1("signal")
         return (raw_signal,)
 
-    def make_compute(self, key, fetched):
-        """Step 2: Perform computation (outside transaction)"""
-        (raw_signal,) = fetched
+    def make_compute(self, key, raw_signal):
+        """Step 2: Perform computation (outside transaction).
+
+        The tuple returned by make_fetch is unpacked into positional args here.
+        """
         avg = raw_signal.mean()
         return (avg,)
 
-    def make_insert(self, key, fetched, computed):
-        """Step 3: Insert results (inside brief transaction)"""
-        (avg,) = computed
+    def make_insert(self, key, avg):
+        """Step 3: Insert results (inside brief transaction).
+
+        The tuple returned by make_compute is unpacked into positional args here.
+        """
         self.insert1({**key, "avg_signal": avg})
 ```
 
@@ -274,15 +278,14 @@ class SignalAverage(dj.Computed):
 DataJoint executes the three parts with verification:
 
 ```
-fetched = make_fetch(key)              # Outside transaction
-computed = make_compute(key, fetched)  # Outside transaction
+fetched = make_fetch(key)              # a tuple; outside transaction
+computed = make_compute(key, *fetched) # tuple unpacked; outside transaction
 
 <begin transaction>
-fetched_again = make_fetch(key)        # Re-fetch to verify
-if fetched != fetched_again:
-    <rollback>                         # Inputs changed—abort
+if make_fetch(key) != fetched:         # re-fetch and hash-verify inputs
+    <rollback>                         # inputs changed—abort
 else:
-    make_insert(key, fetched, computed)
+    make_insert(key, *computed)        # computed tuple unpacked
     <commit>
 ```
 
@@ -309,12 +312,12 @@ matters when a computation doesn't fit the clean split:
   its output is **hash-verified** against the first call to catch inputs that
   changed mid-computation — so the two calls must return byte-identical data, and
   it must have no write side effects.
-- **`make_compute(key, fetched)` must neither fetch nor insert, but need not be
+- **`make_compute(key, *fetched)` must neither fetch nor insert, but need not be
   deterministic.** It runs outside the transaction and depends only on the values
   `make_fetch` returned (no database access). Because its output is inserted once
   and never re-verified, it *may* use stochastic functions (random initialization,
   sampling) — unlike `make_fetch`, it need not be bitwise reproducible.
-- **`make_insert(key, fetched, computed)` inserts the result** into `self` and its
+- **`make_insert(key, *computed)` inserts the result** into `self` and its
   Part tables. It *always* runs inside the transaction, so it may additionally
   fetch data or compute there — those reads and the write are covered by the same
   transaction, so this does not break the model.
@@ -417,13 +420,13 @@ uncontrolled side effect rather than as a managed, atomic unit.
 
 If your table uses the [three-part make](#the-three-part-make-model), you *can*
 test the fetch and compute steps directly and safely: `make_fetch(key)` performs
-no inserts and `make_compute(key, fetched)` is pure, so neither writes to the
+no inserts and `make_compute(key, *fetched)` is pure, so neither writes to the
 database. Reserve `populate()` for exercising the insert step (`make_insert`):
 
 ```python
 # Safe: neither call writes to the database
 fetched = MyTable().make_fetch(key)
-computed = MyTable().make_compute(key, fetched)
+computed = MyTable().make_compute(key, *fetched)
 # Then exercise the full path (including make_insert) through populate()
 MyTable.populate(key, max_calls=1)
 ```

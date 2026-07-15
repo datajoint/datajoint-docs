@@ -369,8 +369,8 @@ For long-running computations, use the tripartite pattern to separate fetch, com
 **Phase contract.** The simple convention is one job per phase: `make_fetch` only fetches, `make_compute` only computes, and `make_insert` only inserts. The precise requirements the [make() reproducibility contract](#43-the-make-reproducibility-contract) places on the split — observed by the author and checked by validation, not enforced at runtime — are:
 
 - **`make_fetch(key)` must not insert, and must be bitwise reproducible.** It fetches the entity's inputs (and may perform *deterministic* computation), then returns them. It runs *outside* the transaction and is re-run *inside* it, where its output is **hash-verified** against the first call to detect inputs that changed mid-computation — so the two calls must return byte-identical data. It must also have no write side effects.
-- **`make_compute(key, fetched)` must neither fetch nor insert, but need not be deterministic.** It runs outside the transaction and depends only on the values `make_fetch` returned (no database access). Because its output is inserted once and never re-verified, it *may* use stochastic functions (random initialization, sampling, non-deterministic solvers) — unlike `make_fetch`, its result need not be bitwise reproducible.
-- **`make_insert(key, fetched, computed)` inserts the result** into `self` and its Part tables. It *always* runs inside the transaction, so it may additionally fetch or compute there without breaking the model.
+- **`make_compute(key, *fetched)` must neither fetch nor insert, but need not be deterministic.** It runs outside the transaction and depends only on the values `make_fetch` returned (no database access). Because its output is inserted once and never re-verified, it *may* use stochastic functions (random initialization, sampling, non-deterministic solvers) — unlike `make_fetch`, its result need not be bitwise reproducible.
+- **`make_insert(key, *computed)` inserts the result** into `self` and its Part tables. It *always* runs inside the transaction, so it may additionally fetch or compute there without breaking the model.
 
 Because `make_fetch` performs no writes and `make_compute` touches no database, both can be called and tested directly and safely; only `make_insert` (and full `populate()`) writes.
 
@@ -386,19 +386,22 @@ class HeavyComputation(dj.Computed):
     """
 
     def make_fetch(self, key, **kwargs):
-        """Fetch all required data (runs in transaction).
+        """Fetch all required data (runs outside the transaction; re-run and
+        hash-verified inside it).
 
         kwargs are passed from populate(make_kwargs={...}).
+        Return a tuple — it is unpacked into make_compute's positional args.
         """
-        return (Recording & key).fetch1('raw_data')
+        return ((Recording & key).fetch1('raw_data'),)
 
     def make_compute(self, key, data):
         """Perform computation (runs outside transaction)."""
-        # Long-running computation - no database locks held
-        return heavy_algorithm(data)
+        # Long-running computation - no database locks held.
+        # Return a tuple — unpacked into make_insert's positional args.
+        return (heavy_algorithm(data),)
 
     def make_insert(self, key, result):
-        """Insert results (runs in transaction)."""
+        """Insert results (runs inside the transaction)."""
         self.insert1({**key, 'result': result})
 ```
 
