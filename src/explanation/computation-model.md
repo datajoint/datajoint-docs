@@ -75,9 +75,11 @@ of declared inputs — which is exactly what makes results reproducible and
 This boundary is why the auto-populated tiers split into two:
 
 - **Computed** tables derive entirely from other pipeline tables. Every input is
-  itself tracked under referential integrity, so a Computed result is
-  reproducible from within the pipeline alone — re-running `make()` on the same
-  upstream data yields the same result.
+  itself tracked under referential integrity, so a Computed result is fully
+  traceable within the pipeline — re-running `make()` derives it from the same
+  declared inputs. It is bitwise-identical only if the computation is
+  deterministic; stochastic computations are allowed (see the
+  [reproducibility contract](../reference/specs/autopopulate.md#43-the-make-reproducibility-contract)).
 - **Imported** tables read a source the pipeline does *not* track (a file, an
   instrument, an API). They cannot be reproduced from the pipeline alone, so an
   Imported `make()` is responsible for recording the source's identity (path,

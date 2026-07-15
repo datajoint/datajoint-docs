@@ -302,7 +302,7 @@ These requirements are the surface of a broader rule set — the make() reproduc
 
 ### 4.3 The make() reproducibility contract
 
-The value of an auto-populated table is that every one of its rows is a *reproducible* result: re-running `make()` on the same upstream data yields the same output. That guarantee rests on a small set of rules — the **make() reproducibility contract** — that every `make()` should observe. The rules apply to both `dj.Computed` and `dj.Imported` tables.
+The value of an auto-populated table is that every one of its rows is a *reproducible* result — **fully traceable to its declared inputs**: the row is derived solely from its declared, key-restricted upstream inputs plus the recorded `make()` code, with nothing entering from outside the dependency graph. That guarantee rests on a small set of rules — the **make() reproducibility contract** — that every `make()` should observe. The rules apply to both `dj.Computed` and `dj.Imported` tables.
 
 1. **Populate-only.** Rows are produced only by `make()`, invoked through `populate()` — never inserted directly. Direct inserts into an auto-populated table are rejected at runtime.
 
@@ -320,6 +320,9 @@ In one line: **read from `self.upstream`, write to `self`.** The read/write boun
 
 !!! note "How the contract is upheld"
     The contract has historically been a **convention** — observed by discipline, not enforced. DataJoint 2.3 adds an ergonomic read surface that makes it easy to follow and to inspect: `self.upstream` gives each `make()` its key-restricted upstream cone directly, and [`Diagram.trace`](diagram.md) walks the same ancestry for any row after the fact. The framework does not itself enforce the contract at runtime; observing it remains the pipeline author's responsibility.
+
+!!! note "Reproducibility means tracked derivation, not bitwise determinism"
+    The contract guarantees that every row is **derived only from its declared, key-restricted upstream inputs** — its derivation is fully tracked — not that `make()` is bitwise deterministic. **Stochastic computations are fully allowed.** Optimization and machine-learning algorithms are frequently non-deterministic, and DataJoint's model does not oppose this: re-running such a `make()` produces an equally valid, equally-traceable result, just not a byte-identical one. Bitwise reproducibility holds *only if the computation itself is reproducible* — for that, the pipeline author must control the sources of nondeterminism (fix random seeds, pin library versions, and so on). In the [tripartite pattern](#45-tripartite-make-pattern) this is why nondeterministic work belongs in `make_compute` (run once, never re-verified) and never in `make_fetch` (re-run and hash-verified, so it must be bitwise reproducible).
 
 ### 4.4 Accessing Source Data
 
