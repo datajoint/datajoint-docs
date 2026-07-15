@@ -451,6 +451,7 @@ MyTable.populate(key, max_calls=1)
 **Specifications**
 
 - [AutoPopulate](../reference/specs/autopopulate.md) — normative spec for `key_source`, the [make() reproducibility contract](../reference/specs/autopopulate.md#43-the-make-reproducibility-contract), the tripartite pattern, and job reservation.
+- [Upstream Trace](../reference/specs/trace.md) — `Diagram.trace` and `self.upstream`, the read surface for declared upstream inside `make()`.
 - [Cascade](../reference/specs/cascade.md) — restriction propagation and master–part integrity for cascading deletes.
 - [Diagram](../reference/specs/diagram.md) — the dependency graph that `populate()` and `key_source` are computed from.
 
@@ -463,3 +464,5 @@ MyTable.populate(key, max_calls=1)
 
 - [Relational workflow model](relational-workflow-model.md) — how computation fits DataJoint's data model.
 - [Data pipelines](data-pipelines.md) — the pipeline abstraction that auto-populated tables extend.
+- [Fan-out ingestion](fan-out-ingestion.md) — one ingestion step populating several entry-point tables, and where origin is recorded.
+- [Comparison to provenance systems](comparison-to-provenance-systems.md) — how DataJoint's structural lineage relates to dedicated provenance tooling.
