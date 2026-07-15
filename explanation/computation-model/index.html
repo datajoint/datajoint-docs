@@ -512,6 +512,15 @@
 </a>
 </li>
 <li class="md-nav__item">
+<a class="md-nav__link" href="#phase-responsibilities">
+<span class="md-ellipsis">
+      
+        Phase responsibilities
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
 <a class="md-nav__link" href="#benefits">
 <span class="md-ellipsis">
       
@@ -561,19 +570,19 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#3-use-transactions-for-multi-row-inserts">
+<a class="md-nav__link" href="#3-dont-open-a-transaction-inside-make">
 <span class="md-ellipsis">
       
-        3. Use Transactions for Multi-Row Inserts
+        3. Don't Open a Transaction Inside make()
       
     </span>
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#4-test-with-single-keys-first">
+<a class="md-nav__link" href="#4-test-on-one-entity-with-populate-not-make-directly">
 <span class="md-ellipsis">
       
-        4. Test with Single Keys First
+        4. Test on One Entity with populate(), Not make() Directly
       
     </span>
 </a>
@@ -586,6 +595,15 @@
 <span class="md-ellipsis">
       
         Summary
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#see-also">
+<span class="md-ellipsis">
+      
+        See also
       
     </span>
 </a>
@@ -2930,6 +2948,15 @@
 </a>
 </li>
 <li class="md-nav__item">
+<a class="md-nav__link" href="#phase-responsibilities">
+<span class="md-ellipsis">
+      
+        Phase responsibilities
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
 <a class="md-nav__link" href="#benefits">
 <span class="md-ellipsis">
       
@@ -2979,19 +3006,19 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#3-use-transactions-for-multi-row-inserts">
+<a class="md-nav__link" href="#3-dont-open-a-transaction-inside-make">
 <span class="md-ellipsis">
       
-        3. Use Transactions for Multi-Row Inserts
+        3. Don't Open a Transaction Inside make()
       
     </span>
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#4-test-with-single-keys-first">
+<a class="md-nav__link" href="#4-test-on-one-entity-with-populate-not-make-directly">
 <span class="md-ellipsis">
       
-        4. Test with Single Keys First
+        4. Test on One Entity with populate(), Not make() Directly
       
     </span>
 </a>
@@ -3004,6 +3031,15 @@
 <span class="md-ellipsis">
       
         Summary
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#see-also">
+<span class="md-ellipsis">
+      
+        See also
       
     </span>
 </a>
@@ -3051,6 +3087,18 @@ populate themselves based on upstream data.</p>
 <li><strong>Computes</strong> results for that entity</li>
 <li><strong>Inserts</strong> results into the table</li>
 </ol>
+<p>Those three steps are the basic mechanics. Beyond them, a well-behaved <code>make()</code>
+observes the full <strong>make() reproducibility contract</strong> — five rules that keep every
+result reproducible and <code>populate()</code> safely parallel:</p>
+<ol>
+<li><strong>Populate-only</strong> — rows are produced only by <code>make()</code> through <code>populate()</code>, never inserted directly.</li>
+<li><strong>One entity per call, in isolation</strong> — a <code>make(key)</code> computes exactly the entity named by <code>key</code> (plus its Part rows) and shares no state across calls.</li>
+<li><strong>Read only the upstream cone</strong> — fetch only declared ancestors, restricted to the current <code>key</code> (exposed as <code>self.upstream</code>).</li>
+<li><strong>Write only to <code>self</code> and its Parts</strong> — atomically, as one unit; any fan-out write elsewhere must record the source identity.</li>
+<li><strong>No other result-affecting input</strong> — anything that changes <em>what</em> is computed must enter through a declared upstream table.</li>
+</ol>
+<p>The full contract — with rationale and the enforcement model — is specified in the
+<a href="../../reference/specs/autopopulate/#43-the-make-reproducibility-contract">AutoPopulate reference §4.3, "The make() reproducibility contract"</a>.</p>
 <p>DataJoint guarantees:</p>
 <ul>
 <li><code>make()</code> is called once per upstream entity</li>
@@ -3059,8 +3107,7 @@ populate themselves based on upstream data.</p>
 </ul>
 <h3 id="why-the-contract-matters">Why the contract matters<a class="headerlink" href="#why-the-contract-matters" title="Permanent link">¶</a></h3>
 <p>These guarantees hold because a well-behaved <code>make()</code> observes a small set of
-rules — the <strong>make() reproducibility contract</strong> (specified in full in the
-<a href="../../reference/specs/autopopulate/#43-the-make-reproducibility-contract">AutoPopulate reference</a>).
+rules — the <strong>make() reproducibility contract</strong> listed above.
 The organizing idea is a single <strong>read/write boundary</strong>: a <code>make(key)</code> reads only
 from its declared upstream dependencies, restricted to the current <code>key</code>, and
 writes only to <code>self</code> and its Part tables. Because each call sees a fixed,
@@ -3071,9 +3118,11 @@ of declared inputs — which is exactly what makes results reproducible and
 <p>This boundary is why the auto-populated tiers split into two:</p>
 <ul>
 <li><strong>Computed</strong> tables derive entirely from other pipeline tables. Every input is
-  itself tracked under referential integrity, so a Computed result is
-  reproducible from within the pipeline alone — re-running <code>make()</code> on the same
-  upstream data yields the same result.</li>
+  itself tracked under referential integrity, so a Computed result is fully
+  traceable within the pipeline — re-running <code>make()</code> derives it from the same
+  declared inputs. It is bitwise-identical only if the computation is
+  deterministic; stochastic computations are allowed (see the
+  <a href="../../reference/specs/autopopulate/#43-the-make-reproducibility-contract">reproducibility contract</a>).</li>
 <li><strong>Imported</strong> tables read a source the pipeline does <em>not</em> track (a file, an
   instrument, an API). They cannot be reproduced from the pipeline alone, so an
   Imported <code>make()</code> is responsible for recording the source's identity (path,
@@ -3235,34 +3284,72 @@ the transaction:</p>
         <span class="n">raw_signal</span> <span class="o">=</span> <span class="p">(</span><span class="n">RawSignal</span> <span class="o">&amp;</span> <span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">fetch1</span><span class="p">(</span><span class="s2">"signal"</span><span class="p">)</span>
         <span class="k">return</span> <span class="p">(</span><span class="n">raw_signal</span><span class="p">,)</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">make_compute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">fetched</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">"""Step 2: Perform computation (outside transaction)"""</span>
-        <span class="p">(</span><span class="n">raw_signal</span><span class="p">,)</span> <span class="o">=</span> <span class="n">fetched</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">make_compute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">raw_signal</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Step 2: Perform computation (outside transaction).</span>
+
+<span class="sd">        The tuple returned by make_fetch is unpacked into positional args here.</span>
+<span class="sd">        """</span>
         <span class="n">avg</span> <span class="o">=</span> <span class="n">raw_signal</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
         <span class="k">return</span> <span class="p">(</span><span class="n">avg</span><span class="p">,)</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">make_insert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">fetched</span><span class="p">,</span> <span class="n">computed</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">"""Step 3: Insert results (inside brief transaction)"""</span>
-        <span class="p">(</span><span class="n">avg</span><span class="p">,)</span> <span class="o">=</span> <span class="n">computed</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">make_insert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">avg</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Step 3: Insert results (inside brief transaction).</span>
+
+<span class="sd">        The tuple returned by make_compute is unpacked into positional args here.</span>
+<span class="sd">        """</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="o">**</span><span class="n">key</span><span class="p">,</span> <span class="s2">"avg_signal"</span><span class="p">:</span> <span class="n">avg</span><span class="p">})</span>
 </code></pre></div>
 <h3 id="how-it-works">How It Works<a class="headerlink" href="#how-it-works" title="Permanent link">¶</a></h3>
 <p>DataJoint executes the three parts with verification:</p>
-<div class="highlight"><pre><span></span><code>fetched = make_fetch(key)              # Outside transaction
-computed = make_compute(key, fetched)  # Outside transaction
+<div class="highlight"><pre><span></span><code>fetched = make_fetch(key)              # a tuple; outside transaction
+computed = make_compute(key, *fetched) # tuple unpacked; outside transaction
 
 &lt;begin transaction&gt;
-fetched_again = make_fetch(key)        # Re-fetch to verify
-if fetched != fetched_again:
-    &lt;rollback&gt;                         # Inputs changed—abort
+if make_fetch(key) != fetched:         # re-fetch and hash-verify inputs
+    &lt;rollback&gt;                         # inputs changed—abort
 else:
-    make_insert(key, fetched, computed)
+    make_insert(key, *computed)        # computed tuple unpacked
     &lt;commit&gt;
 </code></pre></div>
 <p>The key insight: <strong>the computation runs outside any transaction</strong>, but
 referential integrity is preserved by re-fetching and verifying inputs before
 insertion. If upstream data changed during computation, the job is cancelled
 rather than inserting inconsistent results.</p>
+<h3 id="phase-responsibilities">Phase responsibilities<a class="headerlink" href="#phase-responsibilities" title="Permanent link">¶</a></h3>
+<p><strong>The simple rule to follow: <code>make_fetch</code> only fetches, <code>make_compute</code> only
+computes, and <code>make_insert</code> only inserts.</strong> Keep each phase to its named job and
+your table is always within the contract — no further reasoning needed.</p>
+<p>These are part of the make() reproducibility contract: the framework does <strong>not</strong>
+enforce them at runtime — they are rules the pipeline author must follow, and
+against which a pipeline should be validated (at review or deploy time). The
+precise requirements are narrower than the one-job-per-phase rule above, which
+matters when a computation doesn't fit the clean split:</p>
+<ul>
+<li><strong><code>make_fetch(key)</code> must not insert, and must be bitwise reproducible.</strong> It
+  fetches the entity's inputs (and may do <em>deterministic</em> computation), then
+  returns them. It runs <em>outside</em> the transaction and is re-run <em>inside</em> it, where
+  its output is <strong>hash-verified</strong> against the first call to catch inputs that
+  changed mid-computation — so the two calls must return byte-identical data, and
+  it must have no write side effects.</li>
+<li><strong><code>make_compute(key, *fetched)</code> must neither fetch nor insert, but need not be
+  deterministic.</strong> It runs outside the transaction and depends only on the values
+  <code>make_fetch</code> returned (no database access). Because its output is inserted once
+  and never re-verified, it <em>may</em> use stochastic functions (random initialization,
+  sampling) — unlike <code>make_fetch</code>, it need not be bitwise reproducible.</li>
+<li><strong><code>make_insert(key, *computed)</code> inserts the result</strong> into <code>self</code> and its
+  Part tables. It <em>always</em> runs inside the transaction, so it may additionally
+  fetch data or compute there — those reads and the write are covered by the same
+  transaction, so this does not break the model.</li>
+</ul>
+<p>So the two requirements the contract places on the split are <strong>(a) <code>make_fetch</code>
+must not insert</strong> and <strong>(b) <code>make_compute</code> must neither fetch nor insert</strong>
+(because it runs outside the transaction) — again, observed by the author and
+checked by validation, not by the runtime. The make() reproducibility contract
+still holds overall — reads come from the upstream cone and writes go only to
+<code>self</code> and its Parts. And
+because <code>make_fetch</code> performs no writes and <code>make_compute</code> touches no database,
+both can be called and tested <strong>directly and safely</strong> (see
+<a href="#best-practices">Best Practices</a>).</p>
 <h3 id="benefits">Benefits<a class="headerlink" href="#benefits" title="Permanent link">¶</a></h3>
 <table>
 <thead>
@@ -3339,22 +3426,55 @@ time.</p>
     <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="p">(</span><span class="n">LargeTable</span> <span class="o">&amp;</span> <span class="n">key</span><span class="p">):</span>
         <span class="n">process_chunk</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s1">'data'</span><span class="p">])</span>
 </code></pre></div>
-<h3 id="3-use-transactions-for-multi-row-inserts">3. Use Transactions for Multi-Row Inserts<a class="headerlink" href="#3-use-transactions-for-multi-row-inserts" title="Permanent link">¶</a></h3>
+<h3 id="3-dont-open-a-transaction-inside-make">3. Don't Open a Transaction Inside <code>make()</code><a class="headerlink" href="#3-dont-open-a-transaction-inside-make" title="Permanent link">¶</a></h3>
+<p><code>make()</code> already runs inside a transaction: <code>populate()</code> opens one per key before
+calling <code>make()</code> and commits it only if <code>make()</code> returns without error. Everything
+a <code>make()</code> inserts — multiple rows, and inserts into Part tables — is therefore
+already atomic. It all commits together, or rolls back together if <code>make()</code> raises.
+No explicit transaction is needed:</p>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">make</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
     <span class="n">results</span> <span class="o">=</span> <span class="n">compute_multiple_results</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
-
-    <span class="c1"># All-or-nothing insertion</span>
+    <span class="c1"># Already atomic — make() runs inside a transaction managed by populate()</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">results</span><span class="p">)</span>
+</code></pre></div>
+<p>Do <strong>not</strong> open your own transaction inside <code>make()</code>. DataJoint does not support
+nested transactions, so starting one while <code>make()</code>'s transaction is already active
+raises an error:</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">make</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+    <span class="c1"># WRONG — a transaction is already in progress, so this raises an error</span>
     <span class="k">with</span> <span class="n">dj</span><span class="o">.</span><span class="n">conn</span><span class="p">()</span><span class="o">.</span><span class="n">transaction</span><span class="p">:</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">results</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">compute_multiple_results</span><span class="p">(</span><span class="n">key</span><span class="p">))</span>
 </code></pre></div>
-<h3 id="4-test-with-single-keys-first">4. Test with Single Keys First<a class="headerlink" href="#4-test-with-single-keys-first" title="Permanent link">¶</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># Test make() on one key</span>
+<h3 id="4-test-on-one-entity-with-populate-not-make-directly">4. Test on One Entity with <code>populate()</code>, Not <code>make()</code> Directly<a class="headerlink" href="#4-test-on-one-entity-with-populate-not-make-directly" title="Permanent link">¶</a></h3>
+<p>To try a computation on a single entity, restrict <code>populate()</code> and cap the call
+count. This runs the entity through the real machinery — the per-key transaction,
+error handling, and (if enabled) job reservation:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Compute just one pending entity, end-to-end</span>
 <span class="n">key</span> <span class="o">=</span> <span class="p">(</span><span class="n">Scan</span> <span class="o">-</span> <span class="n">Segmentation</span><span class="p">)</span><span class="o">.</span><span class="n">fetch1</span><span class="p">(</span><span class="s1">'KEY'</span><span class="p">)</span>
-<span class="n">Segmentation</span><span class="p">()</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
-
-<span class="c1"># Then populate all</span>
-<span class="n">Segmentation</span><span class="o">.</span><span class="n">populate</span><span class="p">()</span>
+<span class="n">Segmentation</span><span class="o">.</span><span class="n">populate</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">max_calls</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">display_progress</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </code></pre></div>
+<p>Do <strong>not</strong> call <code>make()</code> directly (e.g. <code>Segmentation().make(key)</code>) to test. It
+bypasses <code>populate()</code>: it runs <strong>outside</strong> the per-key transaction, so a partial
+or failed <code>make()</code> is not rolled back and can leave the table inconsistent; it
+also skips job reservation and error capture, and writes to the database as an
+uncontrolled side effect rather than as a managed, atomic unit.</p>
+<p>If your table uses the <a href="#the-three-part-make-model">three-part make</a>, you <em>can</em>
+test the fetch and compute steps directly and safely: <code>make_fetch(key)</code> performs
+no inserts and <code>make_compute(key, *fetched)</code> is pure, so neither writes to the
+database. Reserve <code>populate()</code> for exercising the insert step (<code>make_insert</code>):</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Safe: neither call writes to the database</span>
+<span class="n">fetched</span> <span class="o">=</span> <span class="n">MyTable</span><span class="p">()</span><span class="o">.</span><span class="n">make_fetch</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+<span class="n">computed</span> <span class="o">=</span> <span class="n">MyTable</span><span class="p">()</span><span class="o">.</span><span class="n">make_compute</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="o">*</span><span class="n">fetched</span><span class="p">)</span>
+<span class="c1"># Then exercise the full path (including make_insert) through populate()</span>
+<span class="n">MyTable</span><span class="o">.</span><span class="n">populate</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">max_calls</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</code></pre></div>
+<div class="admonition note">
+<p class="admonition-title">Future: a no-insert debug mode</p>
+<p>Calling <code>make()</code> directly could become a safe way to dry-run a computation
+once DataJoint adds a dedicated test/debug mode that runs <code>make()</code> without
+inserting. That is a planned future capability, not current behavior — today,
+a direct <code>make()</code> call really does write to the database.</p>
+</div>
 <h2 id="summary">Summary<a class="headerlink" href="#summary" title="Permanent link">¶</a></h2>
 <ol>
 <li><strong><code>make(key)</code></strong> — Computes one entity at a time</li>
@@ -3364,6 +3484,23 @@ time.</p>
 <li><strong>Cascade deletes</strong> — Maintain workflow integrity</li>
 <li><strong>Error handling</strong> — Robust retry mechanisms</li>
 </ol>
+<h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">¶</a></h2>
+<p><strong>Specifications</strong></p>
+<ul>
+<li><a href="../../reference/specs/autopopulate/">AutoPopulate</a> — normative spec for <code>key_source</code>, the <a href="../../reference/specs/autopopulate/#43-the-make-reproducibility-contract">make() reproducibility contract</a>, the tripartite pattern, and job reservation.</li>
+<li><a href="../../reference/specs/cascade/">Cascade</a> — restriction propagation and master–part integrity for cascading deletes.</li>
+<li><a href="../../reference/specs/diagram/">Diagram</a> — the dependency graph that <code>populate()</code> and <code>key_source</code> are computed from.</li>
+</ul>
+<p><strong>How-to guides</strong></p>
+<ul>
+<li><a href="../../how-to/run-computations/">Run computations</a> — practical <code>populate()</code> usage, restrictions, and options.</li>
+<li><a href="../../how-to/distributed-computing/">Distributed computing</a> — parallel and multi-worker populate with job reservation.</li>
+</ul>
+<p><strong>Related concepts</strong></p>
+<ul>
+<li><a href="../relational-workflow-model/">Relational workflow model</a> — how computation fits DataJoint's data model.</li>
+<li><a href="../data-pipelines/">Data pipelines</a> — the pipeline abstraction that auto-populated tables extend.</li>
+</ul>
 </article>
 </div>
 <script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>

@@ -4125,7 +4125,7 @@
 </ul>
 <p>These requirements are the surface of a broader rule set — the make() reproducibility contract (§4.3) — that keeps every computed row traceable to its declared inputs.</p>
 <h3 id="43-the-make-reproducibility-contract">4.3 The make() reproducibility contract<a class="headerlink" href="#43-the-make-reproducibility-contract" title="Permanent link">¶</a></h3>
-<p>The value of an auto-populated table is that every one of its rows is a <em>reproducible</em> result: re-running <code>make()</code> on the same upstream data yields the same output. That guarantee rests on a small set of rules — the <strong>make() reproducibility contract</strong> — that every <code>make()</code> should observe. The rules apply to both <code>dj.Computed</code> and <code>dj.Imported</code> tables.</p>
+<p>The value of an auto-populated table is that every one of its rows is a <em>reproducible</em> result — <strong>fully traceable to its declared inputs</strong>: the row is derived solely from its declared, key-restricted upstream inputs plus the recorded <code>make()</code> code, with nothing entering from outside the dependency graph. That guarantee rests on a small set of rules — the <strong>make() reproducibility contract</strong> — that every <code>make()</code> should observe. The rules apply to both <code>dj.Computed</code> and <code>dj.Imported</code> tables.</p>
 <ol>
 <li>
 <p><strong>Populate-only.</strong> Rows are produced only by <code>make()</code>, invoked through <code>populate()</code> — never inserted directly. Direct inserts into an auto-populated table are rejected at runtime.</p>
@@ -4144,9 +4144,14 @@
 </li>
 </ol>
 <p>In one line: <strong>read from <code>self.upstream</code>, write to <code>self</code>.</strong> The read/write boundary is what makes each computed result self-contained and reproducible — every row was produced by a specific <code>make()</code> call over a specific, declared, key-restricted set of upstream entities.</p>
+<p><strong>Tripartite extension.</strong> When <code>make()</code> is written as the <a href="#45-tripartite-make-pattern">tripartite pattern</a> (<code>make_fetch</code> / <code>make_compute</code> / <code>make_insert</code>), the contract extends to the phases: <code>make_fetch</code> must not insert, <code>make_compute</code> must neither fetch nor insert (it runs outside the transaction), and <code>make_insert</code> — which always runs inside the transaction — performs the write and may also fetch or compute. The simple convention is one job per phase; see <a href="#45-tripartite-make-pattern">§4.5</a> for details.</p>
 <div class="admonition note">
 <p class="admonition-title">How the contract is upheld</p>
 <p>The contract has historically been a <strong>convention</strong> — observed by discipline, not enforced. DataJoint 2.3 adds an ergonomic read surface that makes it easy to follow and to inspect: <code>self.upstream</code> gives each <code>make()</code> its key-restricted upstream cone directly, and <a href="../diagram/"><code>Diagram.trace</code></a> walks the same ancestry for any row after the fact. The framework does not itself enforce the contract at runtime; observing it remains the pipeline author's responsibility.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Reproducibility means tracked derivation, not bitwise determinism</p>
+<p>The contract guarantees that every row is <strong>derived only from its declared, key-restricted upstream inputs</strong> — its derivation is fully tracked — not that <code>make()</code> is bitwise deterministic. <strong>Stochastic computations are fully allowed.</strong> Optimization and machine-learning algorithms are frequently non-deterministic, and DataJoint's model does not oppose this: re-running such a <code>make()</code> produces an equally valid, equally-traceable result, just not a byte-identical one. Bitwise reproducibility holds <em>only if the computation itself is reproducible</em> — for that, the pipeline author must control the sources of nondeterminism (fix random seeds, pin library versions, and so on). In the <a href="#45-tripartite-make-pattern">tripartite pattern</a> this is why nondeterministic work belongs in <code>make_compute</code> (run once, never re-verified) and never in <code>make_fetch</code> (re-run and hash-verified, so it must be bitwise reproducible).</p>
 </div>
 <h3 id="44-accessing-source-data">4.4 Accessing Source Data<a class="headerlink" href="#44-accessing-source-data" title="Permanent link">¶</a></h3>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">make</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
@@ -4180,6 +4185,13 @@
 </ul>
 <h3 id="45-tripartite-make-pattern">4.5 Tripartite Make Pattern<a class="headerlink" href="#45-tripartite-make-pattern" title="Permanent link">¶</a></h3>
 <p>For long-running computations, use the tripartite pattern to separate fetch, compute, and insert phases. This enables better transaction management for jobs that take minutes or hours.</p>
+<p><strong>Phase contract.</strong> The simple convention is one job per phase: <code>make_fetch</code> only fetches, <code>make_compute</code> only computes, and <code>make_insert</code> only inserts. The precise requirements the <a href="#43-the-make-reproducibility-contract">make() reproducibility contract</a> places on the split — observed by the author and checked by validation, not enforced at runtime — are:</p>
+<ul>
+<li><strong><code>make_fetch(key)</code> must not insert, and must be bitwise reproducible.</strong> It fetches the entity's inputs (and may perform <em>deterministic</em> computation), then returns them. It runs <em>outside</em> the transaction and is re-run <em>inside</em> it, where its output is <strong>hash-verified</strong> against the first call to detect inputs that changed mid-computation — so the two calls must return byte-identical data. It must also have no write side effects.</li>
+<li><strong><code>make_compute(key, *fetched)</code> must neither fetch nor insert, but need not be deterministic.</strong> It runs outside the transaction and depends only on the values <code>make_fetch</code> returned (no database access). Because its output is inserted once and never re-verified, it <em>may</em> use stochastic functions (random initialization, sampling, non-deterministic solvers) — unlike <code>make_fetch</code>, its result need not be bitwise reproducible.</li>
+<li><strong><code>make_insert(key, *computed)</code> inserts the result</strong> into <code>self</code> and its Part tables. It <em>always</em> runs inside the transaction, so it may additionally fetch or compute there without breaking the model.</li>
+</ul>
+<p>Because <code>make_fetch</code> performs no writes and <code>make_compute</code> touches no database, both can be called and tested directly and safely; only <code>make_insert</code> (and full <code>populate()</code>) writes.</p>
 <p><strong>Method-based tripartite:</strong></p>
 <div class="highlight"><pre><span></span><code><span class="nd">@schema</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">HeavyComputation</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Computed</span><span class="p">):</span>
@@ -4190,19 +4202,22 @@
 <span class="s2">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">make_fetch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">"""Fetch all required data (runs in transaction).</span>
+<span class="w">        </span><span class="sd">"""Fetch all required data (runs outside the transaction; re-run and</span>
+<span class="sd">        hash-verified inside it).</span>
 
 <span class="sd">        kwargs are passed from populate(make_kwargs={...}).</span>
+<span class="sd">        Return a tuple — it is unpacked into make_compute's positional args.</span>
 <span class="sd">        """</span>
-        <span class="k">return</span> <span class="p">(</span><span class="n">Recording</span> <span class="o">&amp;</span> <span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">fetch1</span><span class="p">(</span><span class="s1">'raw_data'</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">((</span><span class="n">Recording</span> <span class="o">&amp;</span> <span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">fetch1</span><span class="p">(</span><span class="s1">'raw_data'</span><span class="p">),)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">make_compute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">"""Perform computation (runs outside transaction)."""</span>
-        <span class="c1"># Long-running computation - no database locks held</span>
-        <span class="k">return</span> <span class="n">heavy_algorithm</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="c1"># Long-running computation - no database locks held.</span>
+        <span class="c1"># Return a tuple — unpacked into make_insert's positional args.</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">heavy_algorithm</span><span class="p">(</span><span class="n">data</span><span class="p">),)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">make_insert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">result</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">"""Insert results (runs in transaction)."""</span>
+<span class="w">        </span><span class="sd">"""Insert results (runs inside the transaction)."""</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="o">**</span><span class="n">key</span><span class="p">,</span> <span class="s1">'result'</span><span class="p">:</span> <span class="n">result</span><span class="p">})</span>
 </code></pre></div>
 <p><strong>Generator-based tripartite:</strong></p>
