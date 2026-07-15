@@ -126,3 +126,4 @@ structure.
 - [Schema as a Workflow Specification](schema-as-workflow-specification.md) — the formal language properties (grammar, semantics, algebra) that make the schema queryable as a pipeline spec
 - [Computation Model](computation-model.md) — the `make()` contract and `populate()`
 - [Semantic Matching](semantic-matching.md) — lineage-based join resolution that workflow languages cannot express
+- [Comparison to Provenance Systems](comparison-to-provenance-systems.md) — the companion comparison for data-provenance and lineage tools
