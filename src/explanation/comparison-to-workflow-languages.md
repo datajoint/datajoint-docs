@@ -35,7 +35,7 @@ rather than competing with it.
 | Foreign-key integrity | — | — | Enforced |
 | Computation specification | Workflow file (CWL/SMK/NF) | Task functions in code | `make()` declared in schema |
 | Execution order | Step DAG in workflow file | Task DAG in code | Foreign-key DAG in schema |
-| Provenance recording | Reconstructed from run logs | Task-level run history | Structural (FK chain) |
+| Lineage recording | Reconstructed from run logs | Task-level run history | Structural (FK chain) |
 | Drift detection | Out of scope | Out of scope | Cascade on upstream change |
 | Query interface | Filesystem + ad hoc | Task metadata UI | Five-operator algebra |
 | Retry / idempotence | Step-level rerun | Task-level retry | Per-entity, key-driven |
@@ -59,7 +59,7 @@ top priorities.
 What these systems share is what they decline to specify: a formal
 data-structure layer. There are no typed schemas across pipeline stages,
 no foreign keys binding intermediate results, no algebraic query surface
-over what the pipeline has produced. Provenance is reconstructed from run
+over what the pipeline has produced. Lineage is reconstructed from run
 logs and filenames rather than enforced by structure. Entity-level lineage
 — which subject or sample or session produced a result — is implicit in
 directory conventions and scatter patterns rather than declared. Drift in
@@ -112,7 +112,7 @@ structure.
   the team is prepared to write its own catalog or lineage layer
   separately.
 - **Choose DataJoint** when the data and the computation cannot cleanly
-  separate, when provenance, lineage, and integrity must be structural
+  separate, when lineage and integrity must be structural
   rather than reconstructed, and when agents need a single machine-readable
   model of the pipeline.
 - **Use both.** DataJoint inside an Airflow, Argo, or Prefect orchestration
@@ -126,3 +126,4 @@ structure.
 - [Schema as a Workflow Specification](schema-as-workflow-specification.md) — the formal language properties (grammar, semantics, algebra) that make the schema queryable as a pipeline spec
 - [Computation Model](computation-model.md) — the `make()` contract and `populate()`
 - [Semantic Matching](semantic-matching.md) — lineage-based join resolution that workflow languages cannot express
+- [Comparison to Provenance Systems](comparison-to-provenance-systems.md) — the companion comparison for data-provenance and lineage tools

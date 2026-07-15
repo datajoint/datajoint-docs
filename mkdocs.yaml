@@ -16,8 +16,10 @@ nav:
           - Entity Integrity: explanation/entity-integrity.md
           - Normalization: explanation/normalization.md
           - Computation Model: explanation/computation-model.md
+          - Fan-Out Ingestion: explanation/fan-out-ingestion.md
           - Schema as a Workflow Specification: explanation/schema-as-workflow-specification.md
           - Comparison to Workflow Languages: explanation/comparison-to-workflow-languages.md
+          - Comparison to Provenance Systems: explanation/comparison-to-provenance-systems.md
       - Queries:
           - Query Algebra: explanation/query-algebra.md
           - Semantic Matching: explanation/semantic-matching.md
@@ -123,7 +125,7 @@ nav:
               - Staged Insert: reference/specs/staged-insert.md
               - Cascade: reference/specs/cascade.md
               - AutoPopulate: reference/specs/autopopulate.md
-              - Provenance Trace & Strict Provenance: reference/specs/provenance.md
+              - Upstream Trace: reference/specs/trace.md
               - Job Metadata: reference/specs/job-metadata.md
               - Object Store Configuration: reference/specs/object-store-configuration.md
           - Deployment:
@@ -181,6 +183,11 @@ theme:
         name: Switch to light mode
 plugins:
   - search
+  - redirects:
+      redirect_maps:
+        # provenance.md was renamed to trace.md when the provenance framing
+        # was retired; keep the published URL working.
+        reference/specs/provenance.md: reference/specs/trace.md
   - mermaid2
   - section-index
   - autorefs

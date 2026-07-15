@@ -7,7 +7,7 @@
 
 ## About DataJoint
 
-**DataJoint** implements the [Relational Workflow Model](explanation/relational-workflow-model.md)—a data model where your database schema defines an executable data pipeline. Tables represent workflow steps, foreign keys encode dependencies, and the system handles job management, parallel execution, and provenance tracking. [Object storage](explanation/data-pipelines.md#object-augmented-schemas) integration enables seamless handling of large scientific data.
+**DataJoint** implements the [Relational Workflow Model](explanation/relational-workflow-model.md)—a data model where your database schema defines an executable data pipeline. Tables represent workflow steps, foreign keys encode dependencies, and the system handles job management, parallel execution, and data lineage. [Object storage](explanation/data-pipelines.md#object-augmented-schemas) integration enables seamless handling of large scientific data.
 
 ![pipeline](images/pipeline.svg){: style="width:100%;max-width:1100px;"}
 
