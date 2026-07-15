@@ -316,6 +316,8 @@ The value of an auto-populated table is that every one of its rows is a *reprodu
 
 In one line: **read from `self.upstream`, write to `self`.** The read/write boundary is what makes each computed result self-contained and reproducible — every row was produced by a specific `make()` call over a specific, declared, key-restricted set of upstream entities.
 
+**Tripartite extension.** When `make()` is written as the [tripartite pattern](#45-tripartite-make-pattern) (`make_fetch` / `make_compute` / `make_insert`), the contract extends to the phases: `make_fetch` must not insert, `make_compute` must neither fetch nor insert (it runs outside the transaction), and `make_insert` — which always runs inside the transaction — performs the write and may also fetch or compute. The simple convention is one job per phase; see [§4.5](#45-tripartite-make-pattern) for details.
+
 !!! note "How the contract is upheld"
     The contract has historically been a **convention** — observed by discipline, not enforced. DataJoint 2.3 adds an ergonomic read surface that makes it easy to follow and to inspect: `self.upstream` gives each `make()` its key-restricted upstream cone directly, and [`Diagram.trace`](diagram.md) walks the same ancestry for any row after the fact. The framework does not itself enforce the contract at runtime; observing it remains the pipeline author's responsibility.
 
@@ -353,6 +355,14 @@ DataJoint 2.3 introduced `self.upstream` (and the underlying [`Diagram.trace`](d
 ### 4.5 Tripartite Make Pattern
 
 For long-running computations, use the tripartite pattern to separate fetch, compute, and insert phases. This enables better transaction management for jobs that take minutes or hours.
+
+**Phase contract.** The simple convention is one job per phase: `make_fetch` only fetches, `make_compute` only computes, and `make_insert` only inserts. The precise requirements the [make() reproducibility contract](#43-the-make-reproducibility-contract) places on the split — observed by the author and checked by validation, not enforced at runtime — are:
+
+- **`make_fetch(key)` must not insert.** It fetches the entity's inputs (and may perform some computation), then returns them. It runs *outside* the transaction and is re-run *inside* it to confirm the inputs are unchanged, so it must have no write side effects.
+- **`make_compute(key, fetched)` must neither fetch nor insert.** It also runs outside the transaction, so it must be a pure function of the values `make_fetch` returned — reproducible from its arguments alone, with no database access.
+- **`make_insert(key, fetched, computed)` inserts the result** into `self` and its Part tables. It *always* runs inside the transaction, so it may additionally fetch or compute there without breaking the model.
+
+Because `make_fetch` performs no writes and `make_compute` touches no database, both can be called and tested directly and safely; only `make_insert` (and full `populate()`) writes.
 
 **Method-based tripartite:**
 
