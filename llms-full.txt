@@ -1,6 +1,6 @@
 # DataJoint Documentation (Full)
 
-Generated: 2026-07-15 16:10:28 UTC
+Generated: 2026-07-15 18:10:11 UTC
 Commit: unknown
 Branch: unknown
 
@@ -697,6 +697,7 @@ MyTable.populate(key, max_calls=1)
 **Specifications**
 
 - [AutoPopulate](../reference/specs/autopopulate.md) — normative spec for `key_source`, the [make() reproducibility contract](../reference/specs/autopopulate.md#43-the-make-reproducibility-contract), the tripartite pattern, and job reservation.
+- [Upstream Trace](../reference/specs/trace.md) — `Diagram.trace` and `self.upstream`, the read surface for declared upstream inside `make()`.
 - [Cascade](../reference/specs/cascade.md) — restriction propagation and master–part integrity for cascading deletes.
 - [Diagram](../reference/specs/diagram.md) — the dependency graph that `populate()` and `key_source` are computed from.
 
@@ -709,6 +710,8 @@ MyTable.populate(key, max_calls=1)
 
 - [Relational workflow model](relational-workflow-model.md) — how computation fits DataJoint's data model.
 - [Data pipelines](data-pipelines.md) — the pipeline abstraction that auto-populated tables extend.
+- [Fan-out ingestion](fan-out-ingestion.md) — one ingestion step populating several entry-point tables, and where origin is recorded.
+- [Comparison to provenance systems](comparison-to-provenance-systems.md) — how DataJoint's structural lineage relates to dedicated provenance tooling.
 
 
 ---
@@ -26836,7 +26839,7 @@ The value of an auto-populated table is that every one of its rows is a *reprodu
 
 3. **Read only upstream, restricted to the job.** A `make(key)` fetches only from tables upstream of the target — the declared ancestors reachable by following the foreign keys embedded in the primary key — and only the rows reachable from the current `key`. This key-restricted set of ancestors is the entity's *upstream cone*, exposed as `self.upstream` (see [§4.4](#44-accessing-source-data)). Reading anything else — a table that is not an ancestor, or entities under a different `key` — breaks the contract and makes the result depend on data the pipeline does not track.
 
-4. **Write the result to `self` and its Parts.** The derived result is inserted into `self` and the table's Part tables, atomically, as one unit. A `make()` *may* also write to other destinations — other Manual tables, files, external systems (the *fan-out* pattern) — but such writes leave the pipeline's dependency graph, so the `make()` must record the source identity at each destination (as it would at any Manual-table entry point) to keep that data traceable.
+4. **Write the result to `self` and its Parts.** The derived result is inserted into `self` and the table's Part tables, atomically, as one unit. A `make()` *may* also write to other destinations — other Manual tables, files, external systems (the [fan-out ingestion pattern](../../explanation/fan-out-ingestion.md)) — but such writes leave the pipeline's dependency graph, so the `make()` must record the source identity at each destination (as it would at any Manual-table entry point) to keep that data traceable.
 
 5. **No other result-affecting input.** Anything that changes *what* is computed must enter through a declared upstream table (typically a Lookup or Manual parameter table), so it is part of the dependency graph. `make_kwargs` forwarded through `populate(make_kwargs=...)` may *orchestrate* a run (batching, parallelism, logging) but must never *parameterize* the result — see [§4.6](#46-additional-make-arguments).
 
@@ -38803,6 +38806,14 @@ DataJoint 2.3 adds a first-class **upstream read surface** — `Diagram.trace` a
 > **Upgrading from 2.0, 2.1, or 2.2?** No breaking changes. Everything here is additive — existing pipelines run identically.
 
 > **Citation:** Yatsenko D, Nguyen TT. *DataJoint 2.0: A Computational Substrate for Agentic Scientific Workflows.* arXiv:2602.16585. 2026. [doi:10.48550/arXiv.2602.16585](https://doi.org/10.48550/arXiv.2602.16585)
+
+## Changes in 2.3.1
+
+2.3.1 is a patch release on the 2.3 line. If you are upgrading from **2.3.0**:
+
+- **`strict_provenance` removed.** The opt-in `dj.config["strict_provenance"]` runtime guardrail that shipped in 2.3.0 has been retired. Comprehensively checking the `make()` read/write contract across every access path is a code-inspection problem rather than a runtime one, so it is validated at review or deploy time rather than by an in-process flag. The flag was off by default with no known adoption, so existing pipelines are unaffected. The ergonomic read surface — `Diagram.trace` and `self.upstream` — is unchanged, and the rules are documented as the [make() reproducibility contract](../reference/specs/autopopulate.md#43-the-make-reproducibility-contract).
+- **Python 3.14 support.** `requires-python` now spans `>=3.10,<3.15`; CI exercises both ends of the range (3.10 and 3.14).
+- **Garbage-collection fix.** `gc.collect()` now discovers codec-referenced files correctly, closing a path where live custom-codec and schema-addressed object-store files (`<object@>`, `<npy@>`) could be misclassified as orphans and deleted. See [Clean Up Object Storage](../how-to/garbage-collection.md).
 
 ## Overview
 

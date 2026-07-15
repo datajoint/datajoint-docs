@@ -5775,6 +5775,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#changes-in-231" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Changes in 2.3.1
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#overview" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -6213,6 +6224,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#changes-in-231" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Changes in 2.3.1
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#overview" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -6354,6 +6376,13 @@
 <p><strong>Upgrading from 2.0, 2.1, or 2.2?</strong> No breaking changes. Everything here is additive — existing pipelines run identically.</p>
 <p><strong>Citation:</strong> Yatsenko D, Nguyen TT. <em>DataJoint 2.0: A Computational Substrate for Agentic Scientific Workflows.</em> arXiv:2602.16585. 2026. <a href="https://doi.org/10.48550/arXiv.2602.16585">doi:10.48550/arXiv.2602.16585</a></p>
 </blockquote>
+<h2 id="changes-in-231">Changes in 2.3.1<a class="headerlink" href="#changes-in-231" title="Permanent link">&para;</a></h2>
+<p>2.3.1 is a patch release on the 2.3 line. If you are upgrading from <strong>2.3.0</strong>:</p>
+<ul>
+<li><strong><code>strict_provenance</code> removed.</strong> The opt-in <code>dj.config["strict_provenance"]</code> runtime guardrail that shipped in 2.3.0 has been retired. Comprehensively checking the <code>make()</code> read/write contract across every access path is a code-inspection problem rather than a runtime one, so it is validated at review or deploy time rather than by an in-process flag. The flag was off by default with no known adoption, so existing pipelines are unaffected. The ergonomic read surface — <code>Diagram.trace</code> and <code>self.upstream</code> — is unchanged, and the rules are documented as the <a href="../../reference/specs/autopopulate/#43-the-make-reproducibility-contract">make() reproducibility contract</a>.</li>
+<li><strong>Python 3.14 support.</strong> <code>requires-python</code> now spans <code>&gt;=3.10,&lt;3.15</code>; CI exercises both ends of the range (3.10 and 3.14).</li>
+<li><strong>Garbage-collection fix.</strong> <code>gc.collect()</code> now discovers codec-referenced files correctly, closing a path where live custom-codec and schema-addressed object-store files (<code>&lt;object@&gt;</code>, <code>&lt;npy@&gt;</code>) could be misclassified as orphans and deleted. See <a href="../../how-to/garbage-collection/">Clean Up Object Storage</a>.</li>
+</ul>
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
 <p>A computed row is reproducible only when <code>make(self, key)</code> reads only from its declared upstream dependencies and writes only to <code>self</code> (and its Parts). DataJoint 2.3 makes that read/write boundary easy to follow — and the resulting data lineage easy to query — with two features designed as a unit:</p>
 <ol>

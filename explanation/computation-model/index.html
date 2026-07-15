@@ -3488,6 +3488,7 @@ a direct <code>make()</code> call really does write to the database.</p>
 <p><strong>Specifications</strong></p>
 <ul>
 <li><a href="../../reference/specs/autopopulate/">AutoPopulate</a> — normative spec for <code>key_source</code>, the <a href="../../reference/specs/autopopulate/#43-the-make-reproducibility-contract">make() reproducibility contract</a>, the tripartite pattern, and job reservation.</li>
+<li><a href="../../reference/specs/trace/">Upstream Trace</a> — <code>Diagram.trace</code> and <code>self.upstream</code>, the read surface for declared upstream inside <code>make()</code>.</li>
 <li><a href="../../reference/specs/cascade/">Cascade</a> — restriction propagation and master–part integrity for cascading deletes.</li>
 <li><a href="../../reference/specs/diagram/">Diagram</a> — the dependency graph that <code>populate()</code> and <code>key_source</code> are computed from.</li>
 </ul>
@@ -3500,6 +3501,8 @@ a direct <code>make()</code> call really does write to the database.</p>
 <ul>
 <li><a href="../relational-workflow-model/">Relational workflow model</a> — how computation fits DataJoint's data model.</li>
 <li><a href="../data-pipelines/">Data pipelines</a> — the pipeline abstraction that auto-populated tables extend.</li>
+<li><a href="../fan-out-ingestion/">Fan-out ingestion</a> — one ingestion step populating several entry-point tables, and where origin is recorded.</li>
+<li><a href="../comparison-to-provenance-systems/">Comparison to provenance systems</a> — how DataJoint's structural lineage relates to dedicated provenance tooling.</li>
 </ul>
 </article>
 </div>
