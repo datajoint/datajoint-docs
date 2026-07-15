@@ -301,14 +301,17 @@ against which a pipeline should be validated (at review or deploy time). The
 precise requirements are narrower than the one-job-per-phase rule above, which
 matters when a computation doesn't fit the clean split:
 
-- **`make_fetch(key)` must not insert.** It fetches the entity's inputs — and may
-  do some computation — then returns them. It runs *outside* the transaction and
-  is re-run *inside* it to confirm the inputs have not changed, so it must be free
-  of write side effects.
-- **`make_compute(key, fetched)` must neither fetch nor insert.** It also runs
-  outside the transaction, so it must be a pure function of the values
-  `make_fetch` returned — reproducible from its arguments alone, with no database
-  access at all.
+- **`make_fetch(key)` must not insert, and must be bitwise reproducible.** It
+  fetches the entity's inputs (and may do *deterministic* computation), then
+  returns them. It runs *outside* the transaction and is re-run *inside* it, where
+  its output is **hash-verified** against the first call to catch inputs that
+  changed mid-computation — so the two calls must return byte-identical data, and
+  it must have no write side effects.
+- **`make_compute(key, fetched)` must neither fetch nor insert, but need not be
+  deterministic.** It runs outside the transaction and depends only on the values
+  `make_fetch` returned (no database access). Because its output is inserted once
+  and never re-verified, it *may* use stochastic functions (random initialization,
+  sampling) — unlike `make_fetch`, it need not be bitwise reproducible.
 - **`make_insert(key, fetched, computed)` inserts the result** into `self` and its
   Part tables. It *always* runs inside the transaction, so it may additionally
   fetch data or compute there — those reads and the write are covered by the same
