@@ -3,8 +3,8 @@
 DataJoint is often compared with data-provenance and data-lineage systems,
 since both answer the question *"where did this result come from?"* As with the
 [comparison to workflow languages](comparison-to-workflow-languages.md), the
-point is not which is best: they take different approaches to the same concern,
-and they interoperate rather than compete.
+point is not which is best: they address complementary, largely orthogonal
+concerns and interoperate rather than compete.
 
 ## The landscape
 
@@ -41,33 +41,40 @@ Two properties follow:
 This is the same guarantee the reproducibility contract describes: every row is
 traceable to the declared inputs it was computed from.
 
-## What DataJoint leaves to provenance systems
+## Complementary and orthogonal
 
-DataJoint tracks how results are *derived within* a pipeline. It does not try to
-own the separate concern of recording **how data first entered** the pipeline
-from outside — the file, instrument, API, or upstream system a value originated
-from, and the operational metadata around that arrival. That origin record is
-captured at the pipeline's entry-point tables: a Manual insert or an Imported
-`make()` records the source identity alongside the data, exactly as at any
-manual data-entry point. A single ingestion step may populate several such
-tables that carry no foreign-key dependency on the loader (the
+DataJoint and dedicated provenance systems address **orthogonal concerns**, and
+they **compose**. DataJoint tracks how results are *derived within* a pipeline —
+the structural lineage of the foreign-key graph. A dedicated provenance system
+records and standardizes metadata *about* data, including how it first entered
+from outside — the file, instrument, API, or upstream system a value came from,
+and the operational metadata around that arrival. Neither replaces the other:
+within-pipeline derivation and external-origin provenance are different
+questions, and a complete record often wants both.
+
+Inside DataJoint, the origin of externally-sourced data is recorded at the
+pipeline's entry-point tables — a Manual insert or an Imported `make()` records
+the source identity alongside the data, exactly as at any manual data-entry
+point. A single ingestion step may populate several such tables that carry no
+foreign-key dependency on the loader (the
 [fan-out ingestion pattern](fan-out-ingestion.md)), each recording its own origin.
 
-Formalizing and standardizing that external-origin record — retention, actors,
-audit trails, cross-system exchange — is the province of dedicated provenance
-and governance systems, and DataJoint stays deliberately neutral there. Many
-pipelines run alongside such a system and let it capture origin provenance in
-its own terms. DataJoint's part is to provide the structural lineage *within*
-the pipeline and a clean surface to interoperate, not to reimplement the
-provenance system.
+At the boundary, the two integrate **in both directions** — when explicitly
+configured:
+
+- **Inbound:** provenance records from upstream systems can be *ingested* into
+  the pipeline, so externally-sourced data arrives already carrying its origin.
+- **Outbound:** the pipeline's lineage can be *emitted* to downstream provenance,
+  catalog, and governance systems in their own terms.
+
+This integration is opt-in and configured explicitly; it is not automatic.
 
 ## Interoperability and standards
 
-The two approaches are complementary. DataJoint's lineage is internal to the
-pipeline and expressed in its own schema; for interchange with external
-governance, audit, and cataloging systems that speak industry lineage and
-provenance standards such as OpenLineage or W3C PROV, that lineage can be
-exported. Compliance with
+Interchange in either direction uses the standards the surrounding ecosystem
+speaks. DataJoint's lineage is expressed in its own schema; where it is exchanged
+with external governance, audit, and cataloging systems, it maps to industry
+lineage and provenance standards such as OpenLineage or W3C PROV. Compliance with
 industry provenance standards is ensured by the DataJoint Platform.
 
 ## See also
