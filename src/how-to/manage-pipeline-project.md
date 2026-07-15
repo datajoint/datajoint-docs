@@ -276,7 +276,7 @@ A DataJoint project creates a structured storage pattern:
 
 ### Considerations
 
-- Object paths include schema name: `{project}/{schema}/{table}/...`
+- Object paths include the schema name: `{project}/{schema_prefix}/{schema}/{table}/...` — the schema is embedded in every managed path (both sections), which scopes hash deduplication per schema and lets garbage collection attribute stored objects to schemas
 - Users need read access to fetch blobs from upstream schemas
 - Content-addressed storage (`<blob@>`) shares objects across tables
 - Garbage collection requires coordinated delete permissions
