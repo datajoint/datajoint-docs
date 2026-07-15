@@ -40,6 +40,26 @@ Two properties follow:
 This is the same guarantee the reproducibility contract describes: every row is
 traceable to the declared inputs it was computed from.
 
+## What DataJoint leaves to provenance systems
+
+DataJoint tracks how results are *derived within* a pipeline. It does not try to
+own the separate concern of recording **how data first entered** the pipeline
+from outside — the file, instrument, API, or upstream system a value originated
+from, and the operational metadata around that arrival. That origin record is
+captured at the pipeline's entry-point tables: a Manual insert or an Imported
+`make()` records the source identity alongside the data, exactly as at any
+manual data-entry point. A single ingestion step may populate several such
+tables that carry no foreign-key dependency on each other (the *fan-out*
+pattern), each recording its own origin.
+
+Formalizing and standardizing that external-origin record — retention, actors,
+audit trails, cross-system exchange — is the province of dedicated provenance
+and governance systems, and DataJoint stays deliberately neutral there. Many
+pipelines run alongside such a system and let it capture origin provenance in
+its own terms. DataJoint's part is to provide the structural lineage *within*
+the pipeline and a clean surface to interoperate, not to reimplement the
+provenance system.
+
 ## Interoperability and standards
 
 The two approaches are complementary. DataJoint's lineage is internal to the
