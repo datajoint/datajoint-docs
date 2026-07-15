@@ -1,6 +1,6 @@
 # DataJoint Documentation (Full)
 
-Generated: 2026-07-15 14:47:36 UTC
+Generated: 2026-07-15 14:48:09 UTC
 Commit: unknown
 Branch: unknown
 
@@ -2589,14 +2589,45 @@ Tables are classified into tiers by data-entry mode:
 
 | Tier | Role | `make()` |
 |------|------|----------|
-| **Manual** | Receive direct user entry | No |
-| **Lookup** | Hold reference data | No |
+| **Manual** | Rows entered at runtime from outside the pipeline (people, forms, instruments, imports) | No |
+| **Lookup** | Reference rows defined in the schema itself via `contents` | No |
 | **Imported** | Reach out to data sources outside DataJoint (instruments, ELNs, external databases) | Yes |
 | **Computed** | Derive their contents entirely from upstream DataJoint tables | Yes |
 
 Imported and Computed tables define computations via `make()` methods. The
 `make()` method specifies how each entity is derived — declared within the
 table definition, not in an external workflow file.
+
+#### Manual vs. Lookup
+
+Manual and Lookup tables are both **entry points** — their rows are entered
+rather than derived by a `make()` — but they differ in *where the rows come
+from*:
+
+- A **Manual** table's rows arrive at **runtime**, from outside the pipeline: a
+  person typing into a form, a LIMS, an instrument, or an import from another
+  system. Its contents are specific to a particular project or experiment and
+  differ from one deployment to the next. Manual tables are the pipeline's origin
+  points — e.g. `Mouse`, `Session`, `Scan`.
+- A **Lookup** table's rows are **part of the schema definition**, declared in
+  code through the `contents` attribute and versioned alongside the table. Its
+  contents are the same wherever the schema is deployed and change only when the
+  code changes. Use it for reference values that belong to the pipeline's design:
+  parameter sets, method definitions, controlled vocabularies, enumerations —
+  e.g. `SegmentationParam`.
+
+The quick test is *where does a row come from?* If it is fixed in the committed
+schema (`contents`), it is a **Lookup**; if it arrives at runtime, it is a
+**Manual** table. A common mistake is to use a Lookup for data that is actually
+entered at runtime (for example, filled in through a dashboard form). If a
+table's rows do not come from its committed `contents`, it belongs in the
+**Manual** tier.
+
+Because Lookup content lives in the code, **changing it is a code change**:
+you edit `contents` and redeploy, so updates flow through the same
+review-and-deploy (CI/CD) process as any other schema change — versioned and
+reproducible across deployments. Manual content, by contrast, is entered at
+runtime and never touches the codebase.
 
 ### Master-part relationships
 
@@ -14726,8 +14757,8 @@ class MyTable(dj.Manual):
 
 | Type | Base Class | Purpose |
 |------|------------|---------|
-| Manual | `dj.Manual` | User-entered data |
-| Lookup | `dj.Lookup` | Reference data with `contents` |
+| Manual | `dj.Manual` | Data entered at runtime (users, forms, instruments, imports) |
+| Lookup | `dj.Lookup` | Reference data defined in the schema via `contents` |
 | Imported | `dj.Imported` | Data from external sources |
 | Computed | `dj.Computed` | Derived data |
 | Part | `dj.Part` | Child of master table |
@@ -14946,6 +14977,25 @@ class TaskType(dj.Lookup):
         {'task_type': 'discrimination', 'description': 'Distinguish between stimuli'},
     ]
 ```
+
+### Manual or Lookup?
+
+Both tiers hold rows that are *entered* rather than computed, so the question is
+**where a row comes from**:
+
+- Use **`dj.Lookup`** when the rows are part of the schema's design and belong in
+  the code — parameter sets, method definitions, controlled vocabularies,
+  enumerations. They are declared in `contents`, versioned with the table, and
+  identical in every deployment until the code changes. Updating a Lookup means
+  editing `contents` and redeploying — the change flows through your normal CI/CD
+  process, not a runtime insert.
+- Use **`dj.Manual`** when the rows are entered at runtime and are specific to a
+  project or experiment — subjects, sessions, samples, or anything typed into a
+  form, ingested from a file, or read from an instrument.
+
+If you find yourself populating a "Lookup" table at runtime (for example, from a
+dashboard form) rather than from its committed `contents`, make it `dj.Manual`
+instead — its rows are runtime data, not part of the schema definition.
 
 ## Part Tables
 
@@ -34567,8 +34617,8 @@ class TableName(dj.Manual):
 
 | Tier | Base Class | Table Prefix | Purpose |
 |------|------------|--------------|---------|
-| Manual | `dj.Manual` | (none) | User-entered data |
-| Lookup | `dj.Lookup` | `#` | Reference/enumeration data |
+| Manual | `dj.Manual` | (none) | Data entered at runtime (users, instruments, imports) |
+| Lookup | `dj.Lookup` | `#` | Reference data defined in the schema via `contents` |
 | Imported | `dj.Imported` | `_` | Data from external sources |
 | Computed | `dj.Computed` | `__` | Derived from other tables |
 | Part | `dj.Part` | `master__` | Detail records of master table |

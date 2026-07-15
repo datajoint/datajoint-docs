@@ -2653,6 +2653,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Lookup Tables with Contents">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#manual-or-lookup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Manual or Lookup?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -6411,6 +6428,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Lookup Tables with Contents">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#manual-or-lookup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Manual or Lookup?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -6542,12 +6576,12 @@
 <tr>
 <td>Manual</td>
 <td><code>dj.Manual</code></td>
-<td>User-entered data</td>
+<td>Data entered at runtime (users, forms, instruments, imports)</td>
 </tr>
 <tr>
 <td>Lookup</td>
 <td><code>dj.Lookup</code></td>
-<td>Reference data with <code>contents</code></td>
+<td>Reference data defined in the schema via <code>contents</code></td>
 </tr>
 <tr>
 <td>Imported</td>
@@ -6821,6 +6855,23 @@
         <span class="p">{</span><span class="s1">&#39;task_type&#39;</span><span class="p">:</span> <span class="s1">&#39;discrimination&#39;</span><span class="p">,</span> <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;Distinguish between stimuli&#39;</span><span class="p">},</span>
     <span class="p">]</span>
 </code></pre></div>
+<h3 id="manual-or-lookup">Manual or Lookup?<a class="headerlink" href="#manual-or-lookup" title="Permanent link">&para;</a></h3>
+<p>Both tiers hold rows that are <em>entered</em> rather than computed, so the question is
+<strong>where a row comes from</strong>:</p>
+<ul>
+<li>Use <strong><code>dj.Lookup</code></strong> when the rows are part of the schema's design and belong in
+  the code — parameter sets, method definitions, controlled vocabularies,
+  enumerations. They are declared in <code>contents</code>, versioned with the table, and
+  identical in every deployment until the code changes. Updating a Lookup means
+  editing <code>contents</code> and redeploying — the change flows through your normal CI/CD
+  process, not a runtime insert.</li>
+<li>Use <strong><code>dj.Manual</code></strong> when the rows are entered at runtime and are specific to a
+  project or experiment — subjects, sessions, samples, or anything typed into a
+  form, ingested from a file, or read from an instrument.</li>
+</ul>
+<p>If you find yourself populating a "Lookup" table at runtime (for example, from a
+dashboard form) rather than from its committed <code>contents</code>, make it <code>dj.Manual</code>
+instead — its rows are runtime data, not part of the schema definition.</p>
 <h2 id="part-tables">Part Tables<a class="headerlink" href="#part-tables" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><span class="nd">@schema</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Session</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>

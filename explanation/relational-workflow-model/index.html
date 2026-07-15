@@ -394,6 +394,19 @@
       
     </span>
 </a>
+<nav aria-label="Workflow steps and table tiers" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#manual-vs-lookup">
+<span class="md-ellipsis">
+      
+        Manual vs. Lookup
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
 </li>
 <li class="md-nav__item">
 <a class="md-nav__link" href="#master-part-relationships">
@@ -2735,6 +2748,19 @@
       
     </span>
 </a>
+<nav aria-label="Workflow steps and table tiers" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#manual-vs-lookup">
+<span class="md-ellipsis">
+      
+        Manual vs. Lookup
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
 </li>
 <li class="md-nav__item">
 <a class="md-nav__link" href="#master-part-relationships">
@@ -2982,12 +3008,12 @@ work in practice.</p>
 <tbody>
 <tr>
 <td><strong>Manual</strong></td>
-<td>Receive direct user entry</td>
+<td>Rows entered at runtime from outside the pipeline (people, forms, instruments, imports)</td>
 <td>No</td>
 </tr>
 <tr>
 <td><strong>Lookup</strong></td>
-<td>Hold reference data</td>
+<td>Reference rows defined in the schema itself via <code>contents</code></td>
 <td>No</td>
 </tr>
 <tr>
@@ -3005,6 +3031,34 @@ work in practice.</p>
 <p>Imported and Computed tables define computations via <code>make()</code> methods. The
 <code>make()</code> method specifies how each entity is derived — declared within the
 table definition, not in an external workflow file.</p>
+<h4 id="manual-vs-lookup">Manual vs. Lookup<a class="headerlink" href="#manual-vs-lookup" title="Permanent link">¶</a></h4>
+<p>Manual and Lookup tables are both <strong>entry points</strong> — their rows are entered
+rather than derived by a <code>make()</code> — but they differ in <em>where the rows come
+from</em>:</p>
+<ul>
+<li>A <strong>Manual</strong> table's rows arrive at <strong>runtime</strong>, from outside the pipeline: a
+  person typing into a form, a LIMS, an instrument, or an import from another
+  system. Its contents are specific to a particular project or experiment and
+  differ from one deployment to the next. Manual tables are the pipeline's origin
+  points — e.g. <code>Mouse</code>, <code>Session</code>, <code>Scan</code>.</li>
+<li>A <strong>Lookup</strong> table's rows are <strong>part of the schema definition</strong>, declared in
+  code through the <code>contents</code> attribute and versioned alongside the table. Its
+  contents are the same wherever the schema is deployed and change only when the
+  code changes. Use it for reference values that belong to the pipeline's design:
+  parameter sets, method definitions, controlled vocabularies, enumerations —
+  e.g. <code>SegmentationParam</code>.</li>
+</ul>
+<p>The quick test is <em>where does a row come from?</em> If it is fixed in the committed
+schema (<code>contents</code>), it is a <strong>Lookup</strong>; if it arrives at runtime, it is a
+<strong>Manual</strong> table. A common mistake is to use a Lookup for data that is actually
+entered at runtime (for example, filled in through a dashboard form). If a
+table's rows do not come from its committed <code>contents</code>, it belongs in the
+<strong>Manual</strong> tier.</p>
+<p>Because Lookup content lives in the code, <strong>changing it is a code change</strong>:
+you edit <code>contents</code> and redeploy, so updates flow through the same
+review-and-deploy (CI/CD) process as any other schema change — versioned and
+reproducible across deployments. Manual content, by contrast, is entered at
+runtime and never touches the codebase.</p>
 <h3 id="master-part-relationships">Master-part relationships<a class="headerlink" href="#master-part-relationships" title="Permanent link">¶</a></h3>
 <p>Master-part relationships declare transactional grouping directly in the
 schema. The master table represents the workflow step; part tables hold
