@@ -319,15 +319,30 @@ def make(self, key):
         process_chunk(row['data'])
 ```
 
-### 3. Use Transactions for Multi-Row Inserts
+### 3. Don't Open a Transaction Inside `make()`
+
+`make()` already runs inside a transaction: `populate()` opens one per key before
+calling `make()` and commits it only if `make()` returns without error. Everything
+a `make()` inserts — multiple rows, and inserts into Part tables — is therefore
+already atomic. It all commits together, or rolls back together if `make()` raises.
+No explicit transaction is needed:
 
 ```python
 def make(self, key):
     results = compute_multiple_results(key)
+    # Already atomic — make() runs inside a transaction managed by populate()
+    self.insert(results)
+```
 
-    # All-or-nothing insertion
+Do **not** open your own transaction inside `make()`. DataJoint does not support
+nested transactions, so starting one while `make()`'s transaction is already active
+raises an error:
+
+```python
+def make(self, key):
+    # WRONG — a transaction is already in progress, so this raises an error
     with dj.conn().transaction:
-        self.insert(results)
+        self.insert(compute_multiple_results(key))
 ```
 
 ### 4. Test with Single Keys First
@@ -349,3 +364,21 @@ Segmentation.populate()
 4. **Three-part make** — For long computations without long transactions
 5. **Cascade deletes** — Maintain workflow integrity
 6. **Error handling** — Robust retry mechanisms
+
+## See also
+
+**Specifications**
+
+- [AutoPopulate](../reference/specs/autopopulate.md) — normative spec for `key_source`, the [make() reproducibility contract](../reference/specs/autopopulate.md#43-the-make-reproducibility-contract), the tripartite pattern, and job reservation.
+- [Cascade](../reference/specs/cascade.md) — restriction propagation and master–part integrity for cascading deletes.
+- [Diagram](../reference/specs/diagram.md) — the dependency graph that `populate()` and `key_source` are computed from.
+
+**How-to guides**
+
+- [Run computations](../how-to/run-computations.md) — practical `populate()` usage, restrictions, and options.
+- [Distributed computing](../how-to/distributed-computing.md) — parallel and multi-worker populate with job reservation.
+
+**Related concepts**
+
+- [Relational workflow model](relational-workflow-model.md) — how computation fits DataJoint's data model.
+- [Data pipelines](data-pipelines.md) — the pipeline abstraction that auto-populated tables extend.
