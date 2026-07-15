@@ -396,7 +396,7 @@ file : <attach@>            # File attachments
 
 ### Schema-Addressed: `<npy@>` or `<object@>`
 
-**Storage:** Object store at `{store}/_schema/{schema}/{table}/{key}/{field}.{token}.ext`
+**Storage:** Object store at `{store}/_schema/{schema}/{table}/{key}/{field}_{token}.ext`
 
 **Syntax:**
 ```python

@@ -266,14 +266,14 @@ result = np.mean(ref)  # Downloads automatically
 
 ### `<object@>` — Schema-Addressed Storage
 
-Schema-addressed storage for files and folders. Path mirrors the database structure: `{schema}/{table}/{pk}/{attribute}`.
+Schema-addressed storage for files and folders. Path mirrors the database structure within the store's schema-addressed section: `{schema_prefix}/{schema}/{table}/{pk}/{attribute}_{token}` (`schema_prefix` defaults to `_schema`).
 
 ```python
 class RecordingAnalysis(dj.Computed):
     definition = """
     -> Recording
     ---
-    results : <object@>       # Stored at {schema}/{table}/{pk}/results/
+    results : <object@>       # Stored at _schema/{schema}/{table}/{pk}/results_{token}/
     """
 ```
 
@@ -296,9 +296,9 @@ class RawData(dj.Manual):
 
 Object store codecs use one of two addressing schemes:
 
-**Hash-addressed** — Path derived from content hash (e.g., `_hash/ab/cd/abcd1234...`). Provides automatic deduplication—identical content stored once. Used by `<blob@>`, `<attach@>`, `<hash@>`.
+**Hash-addressed** — Path derived from content hash, with the schema name embedded (e.g., `_hash/{schema}/ab/cd/abcd1234...`; section configurable via `hash_prefix`). Provides automatic deduplication—identical content stored once **per schema**. Used by `<blob@>`, `<attach@>`, `<hash@>`.
 
-**Schema-addressed** — Path mirrors database structure: `{schema}/{table}/{pk}/{attribute}`. Human-readable, browsable paths that reflect your data organization. No deduplication. Used by `<object@>`, `<npy@>`, and plugin codecs (`<zarr@>`, `<figpack@>`, `<photon@>`).
+**Schema-addressed** — Path mirrors database structure: `_schema/{schema}/{table}/{pk}/{attribute}_{token}` (section configurable via `schema_prefix`). Human-readable, browsable paths that reflect your data organization. No deduplication. Used by `<object@>`, `<npy@>`, and plugin codecs (`<zarr@>`, `<figpack@>`, `<photon@>`).
 
 | Mode | Database | Object Store | Deduplication | Use Case |
 |------|----------|--------------|---------------|----------|

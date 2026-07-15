@@ -235,7 +235,7 @@ _hash/{schema}/ab/cd/abcdefghijklmnopqrstuvwxyz
 Schema-addressed storage (`<object@>`, `<npy@>`) does not use subfolding—it uses key-based paths:
 
 ```
-{location}/_schema/{partition}/{schema}/{table}/{key}/{field_name}.{token}.{ext}
+{location}/_schema/{partition}/{schema}/{table}/{key}/{field_name}_{token}{ext}
 ```
 
 ### Filesystem Recommendations
@@ -282,7 +282,7 @@ This unified approach enables:
 
 ## Customizing Storage Sections
 
-Each store is divided into sections for different storage types. By default, DataJoint uses `_hash/` for hash-addressed storage and `_schema/` for schema-addressed storage. You can customize the path prefix for each section using the `*_prefix` configuration parameters to map DataJoint to existing storage layouts:
+Each store is divided into sections for different storage types. By default, DataJoint uses `_hash/` for hash-addressed storage and `_schema/` for schema-addressed storage. You can customize the path prefix for each section using the `*_prefix` configuration parameters to map DataJoint to existing storage layouts. Writers, garbage collection, and `<filepath@>` validation all read the same per-store values, so a relocated section stays consistent end to end:
 
 ```json
 {
@@ -303,6 +303,13 @@ Each store is divided into sections for different storage types. By default, Dat
 - Sections must be mutually exclusive (path prefixes cannot nest)
 - The `hash_prefix` and `schema_prefix` sections are reserved for DataJoint-managed storage
 - The `filepath_prefix` is optional (`null` = unrestricted, or set a required prefix)
+
+!!! warning "Changing prefixes on an existing store"
+    Set the prefixes when the store is first configured. Changing them on a
+    store that already holds data leaves existing objects readable (their
+    paths are recorded in each row's metadata), but garbage collection scans
+    only the currently configured sections, and hash deduplication will not
+    match content stored under an old prefix.
 
 **Example with hierarchical layout:**
 
