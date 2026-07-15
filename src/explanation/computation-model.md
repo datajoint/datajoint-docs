@@ -41,6 +41,19 @@ The `make(self, key)` method:
 2. **Computes** results for that entity
 3. **Inserts** results into the table
 
+Those three steps are the basic mechanics. Beyond them, a well-behaved `make()`
+observes the full **make() reproducibility contract** — five rules that keep every
+result reproducible and `populate()` safely parallel:
+
+1. **Populate-only** — rows are produced only by `make()` through `populate()`, never inserted directly.
+2. **One entity per call, in isolation** — a `make(key)` computes exactly the entity named by `key` (plus its Part rows) and shares no state across calls.
+3. **Read only the upstream cone** — fetch only declared ancestors, restricted to the current `key` (exposed as `self.upstream`).
+4. **Write only to `self` and its Parts** — atomically, as one unit; any fan-out write elsewhere must record the source identity.
+5. **No other result-affecting input** — anything that changes *what* is computed must enter through a declared upstream table.
+
+The full contract — with rationale and the enforcement model — is specified in the
+[AutoPopulate reference §4.3, "The make() reproducibility contract"](../reference/specs/autopopulate.md#43-the-make-reproducibility-contract).
+
 DataJoint guarantees:
 
 - `make()` is called once per upstream entity
@@ -50,8 +63,7 @@ DataJoint guarantees:
 ### Why the contract matters
 
 These guarantees hold because a well-behaved `make()` observes a small set of
-rules — the **make() reproducibility contract** (specified in full in the
-[AutoPopulate reference](../reference/specs/autopopulate.md#43-the-make-reproducibility-contract)).
+rules — the **make() reproducibility contract** listed above.
 The organizing idea is a single **read/write boundary**: a `make(key)` reads only
 from its declared upstream dependencies, restricted to the current `key`, and
 writes only to `self` and its Part tables. Because each call sees a fixed,
