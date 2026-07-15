@@ -2116,6 +2116,15 @@
 </a>
 </li>
 <li class="md-nav__item">
+<a class="md-nav__link" href="#limitations">
+<span class="md-ellipsis">
+      
+        Limitations
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
 <a class="md-nav__link" href="#references">
 <span class="md-ellipsis">
       
@@ -2902,6 +2911,15 @@
 </a>
 </li>
 <li class="md-nav__item">
+<a class="md-nav__link" href="#limitations">
+<span class="md-ellipsis">
+      
+        Limitations
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
 <a class="md-nav__link" href="#references">
 <span class="md-ellipsis">
       
@@ -2966,8 +2984,8 @@
 <tbody>
 <tr>
 <td><strong>F1. Copy</strong></td>
-<td><code>not aliased and parent_attrs ⊆ child_pk</code></td>
-<td>Child inherits the parent's restriction directly (same attribute names; literal restriction values copy as-is).</td>
+<td><code>not aliased and parent_attrs</code> <strong>non-empty</strong> <code>and parent_attrs ⊆ child_pk</code></td>
+<td>Child inherits the parent's restriction directly (same attribute names; literal restriction values copy as-is). An empty attribute set takes rule 3.</td>
 </tr>
 <tr>
 <td><strong>F2. Aliased rename</strong></td>
@@ -2995,8 +3013,8 @@
 <tbody>
 <tr>
 <td><strong>U1. Copy</strong></td>
-<td><code>not aliased and child_attrs ⊆ parent_pk</code></td>
-<td>Parent inherits the child's restriction directly (shared attribute names).</td>
+<td><code>not aliased and child_attrs</code> <strong>non-empty</strong> <code>and child_attrs ⊆ parent_pk</code></td>
+<td>Parent inherits the child's restriction directly (shared attribute names). An empty attribute set takes rule 3.</td>
 </tr>
 <tr>
 <td><strong>U2. Aliased reverse-rename</strong></td>
@@ -3006,7 +3024,7 @@
 <tr>
 <td><strong>U3. Project</strong></td>
 <td><code>not aliased and child_attrs ⊄ parent_pk</code></td>
-<td>Parent's restriction is <code>child.proj()</code> — the child projected to attributes in the parent's primary key.</td>
+<td>Parent's restriction is <code>child.proj(*attr_map.keys())</code> — the child projected onto its FK columns (which, when non-aliased, share names with the parent's PK) so the parent restriction joins on the right columns.</td>
 </tr>
 </tbody>
 </table>
@@ -3034,7 +3052,7 @@
 <tbody>
 <tr>
 <td><code>"enforce"</code> (default)</td>
-<td>If a delete would remove a Part row without removing the corresponding Master row, the entire delete is rolled back with <code>DataJointError</code>. The Master row is checked <strong>after</strong> the delete; the integrity violation is detected post-hoc and reversed.</td>
+<td>If a delete would remove a Part row without removing the corresponding Master row, the entire delete is rolled back with <code>DataJointError</code>. The Master row is checked <strong>after</strong> the delete; the integrity violation is detected post-hoc and reversed. The <em>intent</em> is row-level (each deleted Part row should have its Master deleted), but the shipped post-check is <strong>table-level</strong> — see <a href="#limitations">Limitations</a> for the resulting rare false negatives and false positives.</td>
 </tr>
 <tr>
 <td><code>"ignore"</code></td>
@@ -3094,7 +3112,7 @@
 <li><strong>FK path.</strong> <code>shortest_path(Subject, Recording) = [Subject, Subject.Session, alias_node, Subject.Recording]</code> → real path <code>[Subject, Subject.Session, Subject.Recording]</code>.</li>
 <li><strong>Walk reversed.</strong><ul>
 <li>Edge <code>Subject.Session → Subject.Recording</code>: <code>aliased=True</code>. Apply <strong>U2</strong> — <code>Subject.Session</code> is restricted by <code>Subject.Recording.proj(subject_id='src_subject', session_id='src_session')</code>.</li>
-<li>Edge <code>Subject → Subject.Session</code>: <code>aliased=False</code>, <code>child_attrs={subject_id, session_id} ⊆ parent_pk={subject_id}</code>? No (<code>session_id</code> not in parent pk). Apply <strong>U3</strong> — <code>Subject</code> is restricted by <code>Subject.Session.proj()</code> (projected to <code>subject_id</code>).</li>
+<li>Edge <code>Subject → Subject.Session</code>: <code>aliased=False</code>, <code>child_attrs={subject_id, session_id} ⊆ parent_pk={subject_id}</code>? No (<code>session_id</code> not in parent pk). Apply <strong>U3</strong> — <code>Subject</code> is restricted by <code>Subject.Session.proj(*attr_map.keys())</code>, projecting the child onto its FK columns; for this primary FK those columns are just <code>subject_id</code>, so this is equivalent to <code>Subject.Session.proj()</code> projected to <code>subject_id</code>.</li>
 </ul>
 </li>
 <li><strong>Materialize Master.</strong> <code>Subject</code>'s restriction is fetched into a value tuple; replaces the chained <code>QueryExpression</code>.</li>
@@ -3136,9 +3154,17 @@
 <p>For a cascade subgraph with N nodes and E edges, propagation runs in at most O(N · E) edge visits per pass, with at most one pass per master pulled in by upward propagation. For typical schemas (small Master-Part groups, shallow chains), the cost is dominated by the materialization fetch at the Master — one <code>SELECT ... FROM master_ft</code> over the restricted master rows.</p>
 <h2 id="what-is-not-part-of-this-specification">What is not part of this specification<a class="headerlink" href="#what-is-not-part-of-this-specification" title="Permanent link">¶</a></h2>
 <ul>
-<li><strong><code>Diagram.trace()</code></strong> for general upstream restriction propagation: a related but distinct feature tracked in <a href="https://github.com/datajoint/datajoint-python/issues/1423">#1423</a>. <code>trace()</code> exposes upstream propagation as a first-class operator; the cascade engine's upward walk above is a closed implementation detail of <code>part_integrity="cascade"</code>.</li>
+<li><strong><code>Diagram.trace()</code></strong> for general upstream restriction propagation: a related but distinct feature that <strong>shipped in 2.3</strong> and reuses the same upward rules (U1/U2/U3) defined above. <code>trace()</code> exposes upstream propagation as a first-class operator; the cascade engine's upward walk in this document is the same machinery applied inside <code>part_integrity="cascade"</code>. See the <a href="../trace/">Upstream Trace Specification</a> for <code>trace</code>'s API and semantics.</li>
 <li><strong>Custom propagation rules</strong> (user-defined): not supported. The three forward and three upward rules cover the cases the FK graph can produce.</li>
 <li><strong>Cross-schema cascade</strong>: handled by <code>dependencies.load_all_downstream()</code> called from <code>Diagram.cascade()</code>; orthogonal to the propagation rules described here.</li>
+</ul>
+<h2 id="limitations">Limitations<a class="headerlink" href="#limitations" title="Permanent link">¶</a></h2>
+<p>The following are known, documented behaviors of the cascade engine as shipped:</p>
+<ul>
+<li><strong>Single FK path (part→master walk).</strong> The upward walk uses <code>nx.shortest_path</code> to find the FK chain from a Part to its Master. If a Part reaches its Master through multiple distinct FK chains, restrictions carried by the non-shortest paths are not applied. Workaround: use <code>part_integrity="ignore"</code> and perform the additional deletes manually.</li>
+<li><strong>Materialization memory cost.</strong> The master restriction is materialized via <code>to_arrays()</code> (to avoid MySQL error 1093, see <a href="#materialization-at-the-master">Materialization at the Master</a>). The cost is bounded by the number of distinct master rows referenced by the matching parts. Cascade <strong>preview</strong> (<code>Diagram.cascade(...).counts()</code>) pays the same materialization cost as an actual delete.</li>
+<li><strong>Empty-match sentinel.</strong> When no master rows match, the master carries an always-false restriction and appears with zero rows in <code>counts()</code> and iteration. This is by design, not an error.</li>
+<li><strong>Enforce granularity.</strong> The <code>part_integrity="enforce"</code> post-check is <strong>table-level</strong>: it verifies that <em>some</em> rows of the master table were deleted whenever part rows were, not that each deleted part row's <em>specific</em> master row was deleted. As a result, rare false negatives (an unrelated master row happened to be deleted in the same cascade, masking a genuine orphan) and false positives (deleting already-orphaned part rows whose master was removed earlier) are possible.</li>
 </ul>
 <h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">¶</a></h2>
 <ul>

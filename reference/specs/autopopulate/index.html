@@ -4171,6 +4171,13 @@
     <span class="bp">self</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="o">**</span><span class="n">key</span><span class="p">,</span> <span class="s2">"spectrum"</span><span class="p">:</span> <span class="n">compute_spectrum</span><span class="p">(</span><span class="n">samples</span><span class="p">,</span> <span class="n">rate</span><span class="p">)})</span>
 </code></pre></div>
 <p>DataJoint 2.3 introduced <code>self.upstream</code> (and the underlying <a href="../diagram/"><code>Diagram.trace</code></a>) to make this convention easy to follow and to inspect. The framework does not enforce it at runtime, so keeping reads within the upstream cone remains the pipeline author's responsibility; a <code>make()</code> that reads outside it produces results the pipeline cannot reproduce.</p>
+<p><code>self.upstream</code> behavior:</p>
+<ul>
+<li><strong>Lifecycle:</strong> <code>self.upstream</code> is set to <code>Diagram.trace(self &amp; key)</code> immediately before <code>make()</code> is invoked and cleared afterward — including when <code>make()</code> raises. Accessing it outside <code>make()</code> raises <code>DataJointError</code>.</li>
+<li><strong>Lazy:</strong> the trace diagram is built once per <code>make()</code> call; no SQL fires until an ancestor is accessed and fetched. Fetch results are not cached — reading the same ancestor twice issues two queries.</li>
+<li><strong>Tripartite:</strong> <code>self.upstream</code> is available across all tripartite phases (<code>make_fetch</code>, <code>make_compute</code>, <code>make_insert</code>) of the same <code>make()</code> call.</li>
+<li><strong>Scope:</strong> it exposes declared ancestors only. A table's own Parts are descendants, not ancestors — read them directly as <code>self.PartName</code>.</li>
+</ul>
 <h3 id="45-tripartite-make-pattern">4.5 Tripartite Make Pattern<a class="headerlink" href="#45-tripartite-make-pattern" title="Permanent link">¶</a></h3>
 <p>For long-running computations, use the tripartite pattern to separate fetch, compute, and insert phases. This enables better transaction management for jobs that take minutes or hours.</p>
 <p><strong>Method-based tripartite:</strong></p>
