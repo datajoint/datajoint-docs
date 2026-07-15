@@ -357,16 +357,29 @@ def make(self, key):
         self.insert(compute_multiple_results(key))
 ```
 
-### 4. Test with Single Keys First
+### 4. Test on One Entity with `populate()`, Not `make()` Directly
+
+To try a computation on a single entity, restrict `populate()` and cap the call
+count. This runs the entity through the real machinery — the per-key transaction,
+error handling, and (if enabled) job reservation:
 
 ```python
-# Test make() on one key
+# Compute just one pending entity, end-to-end
 key = (Scan - Segmentation).fetch1('KEY')
-Segmentation().make(key)
-
-# Then populate all
-Segmentation.populate()
+Segmentation.populate(key, max_calls=1, display_progress=True)
 ```
+
+Do **not** call `make()` directly (e.g. `Segmentation().make(key)`) to test. It
+bypasses `populate()`: it runs **outside** the per-key transaction, so a partial
+or failed `make()` is not rolled back and can leave the table inconsistent; it
+also skips job reservation and error capture, and writes to the database as an
+uncontrolled side effect rather than as a managed, atomic unit.
+
+!!! note "Future: a no-insert debug mode"
+    Calling `make()` directly could become a safe way to dry-run a computation
+    once DataJoint adds a dedicated test/debug mode that runs `make()` without
+    inserting. That is a planned future capability, not current behavior — today,
+    a direct `make()` call really does write to the database.
 
 ## Summary
 
