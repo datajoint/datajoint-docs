@@ -291,24 +291,28 @@ rather than inserting inconsistent results.
 
 ### Phase responsibilities
 
-Splitting `make()` into three phases extends the reproducibility contract with a
-strict division of labor — each phase does exactly one thing:
+The split constrains what each phase may do, but the essential rules are narrow:
 
-- **`make_fetch(key)` — reads only.** Fetches the entity's upstream cone and
-  returns it. It performs no computation and no writes, and it must be
-  idempotent (DataJoint calls it twice — the re-fetch above).
-- **`make_compute(key, fetched)` — pure.** Computes the result from the fetched
-  inputs alone. It neither reads the database nor writes to it, so its output
-  depends only on its arguments.
-- **`make_insert(key, fetched, computed)` — writes only.** Inserts the result
-  into `self` and its Part tables. It performs no fetching or computation.
+- **`make_fetch(key)` must not insert.** It fetches the entity's inputs — and may
+  do some computation — then returns them. It runs *outside* the transaction and
+  is re-run *inside* it to confirm the inputs have not changed, so it must be free
+  of write side effects.
+- **`make_compute(key, fetched)` must neither fetch nor insert.** It also runs
+  outside the transaction, so it must be a pure function of the values
+  `make_fetch` returned — reproducible from its arguments alone, with no database
+  access at all.
+- **`make_insert(key, fetched, computed)` inserts the result** into `self` and its
+  Part tables. It *always* runs inside the transaction, so it may additionally
+  fetch data or compute there — those reads and the write are covered by the same
+  transaction, so this does not break the model.
 
-This keeps the make() reproducibility contract intact under the split: reads
-still come only from the upstream cone (in `make_fetch`), writes still go only to
-`self` and its Parts (in `make_insert`), and the computation between them is a
-deterministic function of the fetched inputs. It also makes the read and compute
-steps **safely testable in isolation** (see [Best Practices](#best-practices)),
-since neither touches the database as a side effect.
+So the only hard restrictions are **(a) `make_fetch` must not insert** and
+**(b) `make_compute` must neither fetch nor insert** (because it runs outside the
+transaction). The make() reproducibility contract still holds overall — reads
+come from the upstream cone and writes go only to `self` and its Parts. And
+because `make_fetch` performs no writes and `make_compute` touches no database,
+both can be called and tested **directly and safely** (see
+[Best Practices](#best-practices)).
 
 ### Benefits
 
@@ -397,9 +401,9 @@ also skips job reservation and error capture, and writes to the database as an
 uncontrolled side effect rather than as a managed, atomic unit.
 
 If your table uses the [three-part make](#the-three-part-make-model), you *can*
-test the read and compute steps directly and safely: `make_fetch(key)` only reads
-and `make_compute(key, fetched)` is pure, so neither writes to the database.
-Reserve `populate()` for exercising the write step (`make_insert`):
+test the fetch and compute steps directly and safely: `make_fetch(key)` performs
+no inserts and `make_compute(key, fetched)` is pure, so neither writes to the
+database. Reserve `populate()` for exercising the insert step (`make_insert`):
 
 ```python
 # Safe: neither call writes to the database
