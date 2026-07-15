@@ -41,6 +41,19 @@ The `make(self, key)` method:
 2. **Computes** results for that entity
 3. **Inserts** results into the table
 
+Those three steps are the basic mechanics. Beyond them, a well-behaved `make()`
+observes the full **make() reproducibility contract** — five rules that keep every
+result reproducible and `populate()` safely parallel:
+
+1. **Populate-only** — rows are produced only by `make()` through `populate()`, never inserted directly.
+2. **One entity per call, in isolation** — a `make(key)` computes exactly the entity named by `key` (plus its Part rows) and shares no state across calls.
+3. **Read only the upstream cone** — fetch only declared ancestors, restricted to the current `key` (exposed as `self.upstream`).
+4. **Write only to `self` and its Parts** — atomically, as one unit; any fan-out write elsewhere must record the source identity.
+5. **No other result-affecting input** — anything that changes *what* is computed must enter through a declared upstream table.
+
+The full contract — with rationale and the enforcement model — is specified in the
+[AutoPopulate reference §4.3, "The make() reproducibility contract"](../reference/specs/autopopulate.md#43-the-make-reproducibility-contract).
+
 DataJoint guarantees:
 
 - `make()` is called once per upstream entity
@@ -50,8 +63,7 @@ DataJoint guarantees:
 ### Why the contract matters
 
 These guarantees hold because a well-behaved `make()` observes a small set of
-rules — the **make() reproducibility contract** (specified in full in the
-[AutoPopulate reference](../reference/specs/autopopulate.md#43-the-make-reproducibility-contract)).
+rules — the **make() reproducibility contract** listed above.
 The organizing idea is a single **read/write boundary**: a `make(key)` reads only
 from its declared upstream dependencies, restricted to the current `key`, and
 writes only to `self` and its Part tables. Because each call sees a fixed,
@@ -63,9 +75,11 @@ of declared inputs — which is exactly what makes results reproducible and
 This boundary is why the auto-populated tiers split into two:
 
 - **Computed** tables derive entirely from other pipeline tables. Every input is
-  itself tracked under referential integrity, so a Computed result is
-  reproducible from within the pipeline alone — re-running `make()` on the same
-  upstream data yields the same result.
+  itself tracked under referential integrity, so a Computed result is fully
+  traceable within the pipeline — re-running `make()` derives it from the same
+  declared inputs. It is bitwise-identical only if the computation is
+  deterministic; stochastic computations are allowed (see the
+  [reproducibility contract](../reference/specs/autopopulate.md#43-the-make-reproducibility-contract)).
 - **Imported** tables read a source the pipeline does *not* track (a file, an
   instrument, an API). They cannot be reproduced from the pipeline alone, so an
   Imported `make()` is responsible for recording the source's identity (path,
@@ -243,15 +257,19 @@ class SignalAverage(dj.Computed):
         raw_signal = (RawSignal & key).fetch1("signal")
         return (raw_signal,)
 
-    def make_compute(self, key, fetched):
-        """Step 2: Perform computation (outside transaction)"""
-        (raw_signal,) = fetched
+    def make_compute(self, key, raw_signal):
+        """Step 2: Perform computation (outside transaction).
+
+        The tuple returned by make_fetch is unpacked into positional args here.
+        """
         avg = raw_signal.mean()
         return (avg,)
 
-    def make_insert(self, key, fetched, computed):
-        """Step 3: Insert results (inside brief transaction)"""
-        (avg,) = computed
+    def make_insert(self, key, avg):
+        """Step 3: Insert results (inside brief transaction).
+
+        The tuple returned by make_compute is unpacked into positional args here.
+        """
         self.insert1({**key, "avg_signal": avg})
 ```
 
@@ -260,15 +278,14 @@ class SignalAverage(dj.Computed):
 DataJoint executes the three parts with verification:
 
 ```
-fetched = make_fetch(key)              # Outside transaction
-computed = make_compute(key, fetched)  # Outside transaction
+fetched = make_fetch(key)              # a tuple; outside transaction
+computed = make_compute(key, *fetched) # tuple unpacked; outside transaction
 
 <begin transaction>
-fetched_again = make_fetch(key)        # Re-fetch to verify
-if fetched != fetched_again:
-    <rollback>                         # Inputs changed—abort
+if make_fetch(key) != fetched:         # re-fetch and hash-verify inputs
+    <rollback>                         # inputs changed—abort
 else:
-    make_insert(key, fetched, computed)
+    make_insert(key, *computed)        # computed tuple unpacked
     <commit>
 ```
 
@@ -276,6 +293,44 @@ The key insight: **the computation runs outside any transaction**, but
 referential integrity is preserved by re-fetching and verifying inputs before
 insertion. If upstream data changed during computation, the job is cancelled
 rather than inserting inconsistent results.
+
+### Phase responsibilities
+
+**The simple rule to follow: `make_fetch` only fetches, `make_compute` only
+computes, and `make_insert` only inserts.** Keep each phase to its named job and
+your table is always within the contract — no further reasoning needed.
+
+These are part of the make() reproducibility contract: the framework does **not**
+enforce them at runtime — they are rules the pipeline author must follow, and
+against which a pipeline should be validated (at review or deploy time). The
+precise requirements are narrower than the one-job-per-phase rule above, which
+matters when a computation doesn't fit the clean split:
+
+- **`make_fetch(key)` must not insert, and must be bitwise reproducible.** It
+  fetches the entity's inputs (and may do *deterministic* computation), then
+  returns them. It runs *outside* the transaction and is re-run *inside* it, where
+  its output is **hash-verified** against the first call to catch inputs that
+  changed mid-computation — so the two calls must return byte-identical data, and
+  it must have no write side effects.
+- **`make_compute(key, *fetched)` must neither fetch nor insert, but need not be
+  deterministic.** It runs outside the transaction and depends only on the values
+  `make_fetch` returned (no database access). Because its output is inserted once
+  and never re-verified, it *may* use stochastic functions (random initialization,
+  sampling) — unlike `make_fetch`, it need not be bitwise reproducible.
+- **`make_insert(key, *computed)` inserts the result** into `self` and its
+  Part tables. It *always* runs inside the transaction, so it may additionally
+  fetch data or compute there — those reads and the write are covered by the same
+  transaction, so this does not break the model.
+
+So the two requirements the contract places on the split are **(a) `make_fetch`
+must not insert** and **(b) `make_compute` must neither fetch nor insert**
+(because it runs outside the transaction) — again, observed by the author and
+checked by validation, not by the runtime. The make() reproducibility contract
+still holds overall — reads come from the upstream cone and writes go only to
+`self` and its Parts. And
+because `make_fetch` performs no writes and `make_compute` touches no database,
+both can be called and tested **directly and safely** (see
+[Best Practices](#best-practices)).
 
 ### Benefits
 
@@ -319,27 +374,68 @@ def make(self, key):
         process_chunk(row['data'])
 ```
 
-### 3. Use Transactions for Multi-Row Inserts
+### 3. Don't Open a Transaction Inside `make()`
+
+`make()` already runs inside a transaction: `populate()` opens one per key before
+calling `make()` and commits it only if `make()` returns without error. Everything
+a `make()` inserts — multiple rows, and inserts into Part tables — is therefore
+already atomic. It all commits together, or rolls back together if `make()` raises.
+No explicit transaction is needed:
 
 ```python
 def make(self, key):
     results = compute_multiple_results(key)
-
-    # All-or-nothing insertion
-    with dj.conn().transaction:
-        self.insert(results)
+    # Already atomic — make() runs inside a transaction managed by populate()
+    self.insert(results)
 ```
 
-### 4. Test with Single Keys First
+Do **not** open your own transaction inside `make()`. DataJoint does not support
+nested transactions, so starting one while `make()`'s transaction is already active
+raises an error:
 
 ```python
-# Test make() on one key
-key = (Scan - Segmentation).fetch1('KEY')
-Segmentation().make(key)
-
-# Then populate all
-Segmentation.populate()
+def make(self, key):
+    # WRONG — a transaction is already in progress, so this raises an error
+    with dj.conn().transaction:
+        self.insert(compute_multiple_results(key))
 ```
+
+### 4. Test on One Entity with `populate()`, Not `make()` Directly
+
+To try a computation on a single entity, restrict `populate()` and cap the call
+count. This runs the entity through the real machinery — the per-key transaction,
+error handling, and (if enabled) job reservation:
+
+```python
+# Compute just one pending entity, end-to-end
+key = (Scan - Segmentation).fetch1('KEY')
+Segmentation.populate(key, max_calls=1, display_progress=True)
+```
+
+Do **not** call `make()` directly (e.g. `Segmentation().make(key)`) to test. It
+bypasses `populate()`: it runs **outside** the per-key transaction, so a partial
+or failed `make()` is not rolled back and can leave the table inconsistent; it
+also skips job reservation and error capture, and writes to the database as an
+uncontrolled side effect rather than as a managed, atomic unit.
+
+If your table uses the [three-part make](#the-three-part-make-model), you *can*
+test the fetch and compute steps directly and safely: `make_fetch(key)` performs
+no inserts and `make_compute(key, *fetched)` is pure, so neither writes to the
+database. Reserve `populate()` for exercising the insert step (`make_insert`):
+
+```python
+# Safe: neither call writes to the database
+fetched = MyTable().make_fetch(key)
+computed = MyTable().make_compute(key, *fetched)
+# Then exercise the full path (including make_insert) through populate()
+MyTable.populate(key, max_calls=1)
+```
+
+!!! note "Future: a no-insert debug mode"
+    Calling `make()` directly could become a safe way to dry-run a computation
+    once DataJoint adds a dedicated test/debug mode that runs `make()` without
+    inserting. That is a planned future capability, not current behavior — today,
+    a direct `make()` call really does write to the database.
 
 ## Summary
 
@@ -349,3 +445,21 @@ Segmentation.populate()
 4. **Three-part make** — For long computations without long transactions
 5. **Cascade deletes** — Maintain workflow integrity
 6. **Error handling** — Robust retry mechanisms
+
+## See also
+
+**Specifications**
+
+- [AutoPopulate](../reference/specs/autopopulate.md) — normative spec for `key_source`, the [make() reproducibility contract](../reference/specs/autopopulate.md#43-the-make-reproducibility-contract), the tripartite pattern, and job reservation.
+- [Cascade](../reference/specs/cascade.md) — restriction propagation and master–part integrity for cascading deletes.
+- [Diagram](../reference/specs/diagram.md) — the dependency graph that `populate()` and `key_source` are computed from.
+
+**How-to guides**
+
+- [Run computations](../how-to/run-computations.md) — practical `populate()` usage, restrictions, and options.
+- [Distributed computing](../how-to/distributed-computing.md) — parallel and multi-worker populate with job reservation.
+
+**Related concepts**
+
+- [Relational workflow model](relational-workflow-model.md) — how computation fits DataJoint's data model.
+- [Data pipelines](data-pipelines.md) — the pipeline abstraction that auto-populated tables extend.

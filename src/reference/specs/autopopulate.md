@@ -302,7 +302,7 @@ These requirements are the surface of a broader rule set — the make() reproduc
 
 ### 4.3 The make() reproducibility contract
 
-The value of an auto-populated table is that every one of its rows is a *reproducible* result: re-running `make()` on the same upstream data yields the same output. That guarantee rests on a small set of rules — the **make() reproducibility contract** — that every `make()` should observe. The rules apply to both `dj.Computed` and `dj.Imported` tables.
+The value of an auto-populated table is that every one of its rows is a *reproducible* result — **fully traceable to its declared inputs**: the row is derived solely from its declared, key-restricted upstream inputs plus the recorded `make()` code, with nothing entering from outside the dependency graph. That guarantee rests on a small set of rules — the **make() reproducibility contract** — that every `make()` should observe. The rules apply to both `dj.Computed` and `dj.Imported` tables.
 
 1. **Populate-only.** Rows are produced only by `make()`, invoked through `populate()` — never inserted directly. Direct inserts into an auto-populated table are rejected at runtime.
 
@@ -316,8 +316,13 @@ The value of an auto-populated table is that every one of its rows is a *reprodu
 
 In one line: **read from `self.upstream`, write to `self`.** The read/write boundary is what makes each computed result self-contained and reproducible — every row was produced by a specific `make()` call over a specific, declared, key-restricted set of upstream entities.
 
+**Tripartite extension.** When `make()` is written as the [tripartite pattern](#45-tripartite-make-pattern) (`make_fetch` / `make_compute` / `make_insert`), the contract extends to the phases: `make_fetch` must not insert, `make_compute` must neither fetch nor insert (it runs outside the transaction), and `make_insert` — which always runs inside the transaction — performs the write and may also fetch or compute. The simple convention is one job per phase; see [§4.5](#45-tripartite-make-pattern) for details.
+
 !!! note "How the contract is upheld"
     The contract has historically been a **convention** — observed by discipline, not enforced. DataJoint 2.3 adds an ergonomic read surface that makes it easy to follow and to inspect: `self.upstream` gives each `make()` its key-restricted upstream cone directly, and [`Diagram.trace`](diagram.md) walks the same ancestry for any row after the fact. The framework does not itself enforce the contract at runtime; observing it remains the pipeline author's responsibility.
+
+!!! note "Reproducibility means tracked derivation, not bitwise determinism"
+    The contract guarantees that every row is **derived only from its declared, key-restricted upstream inputs** — its derivation is fully tracked — not that `make()` is bitwise deterministic. **Stochastic computations are fully allowed.** Optimization and machine-learning algorithms are frequently non-deterministic, and DataJoint's model does not oppose this: re-running such a `make()` produces an equally valid, equally-traceable result, just not a byte-identical one. Bitwise reproducibility holds *only if the computation itself is reproducible* — for that, the pipeline author must control the sources of nondeterminism (fix random seeds, pin library versions, and so on). In the [tripartite pattern](#45-tripartite-make-pattern) this is why nondeterministic work belongs in `make_compute` (run once, never re-verified) and never in `make_fetch` (re-run and hash-verified, so it must be bitwise reproducible).
 
 ### 4.4 Accessing Source Data
 
@@ -361,6 +366,14 @@ DataJoint 2.3 introduced `self.upstream` (and the underlying [`Diagram.trace`](d
 
 For long-running computations, use the tripartite pattern to separate fetch, compute, and insert phases. This enables better transaction management for jobs that take minutes or hours.
 
+**Phase contract.** The simple convention is one job per phase: `make_fetch` only fetches, `make_compute` only computes, and `make_insert` only inserts. The precise requirements the [make() reproducibility contract](#43-the-make-reproducibility-contract) places on the split — observed by the author and checked by validation, not enforced at runtime — are:
+
+- **`make_fetch(key)` must not insert, and must be bitwise reproducible.** It fetches the entity's inputs (and may perform *deterministic* computation), then returns them. It runs *outside* the transaction and is re-run *inside* it, where its output is **hash-verified** against the first call to detect inputs that changed mid-computation — so the two calls must return byte-identical data. It must also have no write side effects.
+- **`make_compute(key, *fetched)` must neither fetch nor insert, but need not be deterministic.** It runs outside the transaction and depends only on the values `make_fetch` returned (no database access). Because its output is inserted once and never re-verified, it *may* use stochastic functions (random initialization, sampling, non-deterministic solvers) — unlike `make_fetch`, its result need not be bitwise reproducible.
+- **`make_insert(key, *computed)` inserts the result** into `self` and its Part tables. It *always* runs inside the transaction, so it may additionally fetch or compute there without breaking the model.
+
+Because `make_fetch` performs no writes and `make_compute` touches no database, both can be called and tested directly and safely; only `make_insert` (and full `populate()`) writes.
+
 **Method-based tripartite:**
 
 ```python
@@ -373,19 +386,22 @@ class HeavyComputation(dj.Computed):
     """
 
     def make_fetch(self, key, **kwargs):
-        """Fetch all required data (runs in transaction).
+        """Fetch all required data (runs outside the transaction; re-run and
+        hash-verified inside it).
 
         kwargs are passed from populate(make_kwargs={...}).
+        Return a tuple — it is unpacked into make_compute's positional args.
         """
-        return (Recording & key).fetch1('raw_data')
+        return ((Recording & key).fetch1('raw_data'),)
 
     def make_compute(self, key, data):
         """Perform computation (runs outside transaction)."""
-        # Long-running computation - no database locks held
-        return heavy_algorithm(data)
+        # Long-running computation - no database locks held.
+        # Return a tuple — unpacked into make_insert's positional args.
+        return (heavy_algorithm(data),)
 
     def make_insert(self, key, result):
-        """Insert results (runs in transaction)."""
+        """Insert results (runs inside the transaction)."""
         self.insert1({**key, 'result': result})
 ```
 
