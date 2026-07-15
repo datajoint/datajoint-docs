@@ -33,7 +33,8 @@ semantics.
 
 A DataJoint schema is declared as a set of table definitions. Each
 table carries a tier — `Manual`, `Lookup`, `Imported`, or `Computed` —
-and a `definition` string that uses a compact DDL. The DDL distinguishes
+and a `definition` string that uses a compact data definition language (DDL).
+The DDL distinguishes
 primary key attributes (above `---`) from secondary attributes (below
 `---`), declares attribute types, and writes foreign keys as
 `-> ReferencedTable`. A faithful excerpt from a calcium-imaging
