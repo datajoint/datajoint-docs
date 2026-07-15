@@ -291,7 +291,12 @@ rather than inserting inconsistent results.
 
 ### Phase responsibilities
 
-The split constrains what each phase may do, but the essential rules are narrow:
+**The simple rule to follow: `make_fetch` only fetches, `make_compute` only
+computes, and `make_insert` only inserts.** Keep each phase to its named job and
+your table is always within the contract — no further reasoning needed.
+
+The framework actually enforces less than that, and knowing the exact boundaries
+helps when a computation doesn't fit the clean split:
 
 - **`make_fetch(key)` must not insert.** It fetches the entity's inputs — and may
   do some computation — then returns them. It runs *outside* the transaction and
