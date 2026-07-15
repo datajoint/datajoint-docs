@@ -8,9 +8,10 @@ and they interoperate rather than compete.
 
 ## The landscape
 
-Dedicated provenance systems — the W3C **PROV** standard, OpenLineage, and the
-lineage features built into data catalogs and governance tools — record
-provenance as **metadata *about* data**. Derivation is captured during or after
+Dedicated provenance systems — the W3C **PROV** model, **OpenLineage** (a widely
+adopted open standard for lineage interchange across the data-tooling
+ecosystem), and the lineage features built into data catalogs and governance
+tools — record provenance as **metadata *about* data**. Derivation is captured during or after
 execution and stored alongside the data as logs, tags, or sidecar records;
 questions about where a result came from are answered by reading that recorded
 metadata.
@@ -64,8 +65,9 @@ provenance system.
 
 The two approaches are complementary. DataJoint's lineage is internal to the
 pipeline and expressed in its own schema; for interchange with external
-governance, audit, and cataloging systems that speak industry provenance
-standards such as W3C PROV, that lineage can be exported. Compliance with
+governance, audit, and cataloging systems that speak industry lineage and
+provenance standards such as OpenLineage or W3C PROV, that lineage can be
+exported. Compliance with
 industry provenance standards is ensured by the DataJoint Platform.
 
 ## See also
