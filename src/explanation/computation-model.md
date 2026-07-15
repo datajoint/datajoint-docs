@@ -295,8 +295,11 @@ rather than inserting inconsistent results.
 computes, and `make_insert` only inserts.** Keep each phase to its named job and
 your table is always within the contract — no further reasoning needed.
 
-The framework actually enforces less than that, and knowing the exact boundaries
-helps when a computation doesn't fit the clean split:
+These are part of the make() reproducibility contract: the framework does **not**
+enforce them at runtime — they are rules the pipeline author must follow, and
+against which a pipeline should be validated (at review or deploy time). The
+precise requirements are narrower than the one-job-per-phase rule above, which
+matters when a computation doesn't fit the clean split:
 
 - **`make_fetch(key)` must not insert.** It fetches the entity's inputs — and may
   do some computation — then returns them. It runs *outside* the transaction and
@@ -311,10 +314,12 @@ helps when a computation doesn't fit the clean split:
   fetch data or compute there — those reads and the write are covered by the same
   transaction, so this does not break the model.
 
-So the only hard restrictions are **(a) `make_fetch` must not insert** and
-**(b) `make_compute` must neither fetch nor insert** (because it runs outside the
-transaction). The make() reproducibility contract still holds overall — reads
-come from the upstream cone and writes go only to `self` and its Parts. And
+So the two requirements the contract places on the split are **(a) `make_fetch`
+must not insert** and **(b) `make_compute` must neither fetch nor insert**
+(because it runs outside the transaction) — again, observed by the author and
+checked by validation, not by the runtime. The make() reproducibility contract
+still holds overall — reads come from the upstream cone and writes go only to
+`self` and its Parts. And
 because `make_fetch` performs no writes and `make_compute` touches no database,
 both can be called and tested **directly and safely** (see
 [Best Practices](#best-practices)).
