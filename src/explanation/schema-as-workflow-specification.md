@@ -112,8 +112,8 @@ The `make()` method is the typed function the schema declares from
 upstream key to artifact: it receives the primary key of one entity,
 fetches its inputs by query, produces the result, and inserts exactly
 one row. Each inserted row records the git hash of the `make()` source
-that produced it — code provenance is part of the schema's structural
-footprint, not an audit artifact bolted on afterward. The
+that produced it — the identity of the code that produced each row is part of
+the schema's structural footprint, not an audit artifact bolted on afterward. The
 [Computation Model](computation-model.md) page covers the full `make()`
 / `populate()` contract, including the three-part pattern for long
 computations.
@@ -128,7 +128,7 @@ with a well-defined primary key, so any expression is itself a valid
 operand for the next operator. Entity integrity is preserved under
 composition. This is what lets the schema be both a specification and a
 queryable object — the same algebra that retrieves data also traces
-provenance and derives the key source for the next `populate()`. See
+lineage and derives the key source for the next `populate()`. See
 [Query Algebra](query-algebra.md) and
 [Semantic Matching](semantic-matching.md) for operator semantics and
 the lineage-based join rule that prevents accidental matches on
