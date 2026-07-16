@@ -1665,6 +1665,19 @@
       
     </span>
 </a>
+<nav aria-label="Supported Backends" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#version-support-policy">
+<span class="md-ellipsis">
+      
+        Version support policy
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
 </li>
 <li class="md-nav__item">
 <a class="md-nav__link" href="#configuration">
@@ -2691,6 +2704,19 @@
       
     </span>
 </a>
+<nav aria-label="Supported Backends" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#version-support-policy">
+<span class="md-ellipsis">
+      
+        Version support policy
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
 </li>
 <li class="md-nav__item">
 <a class="md-nav__link" href="#configuration">
@@ -2823,6 +2849,7 @@
 <tr>
 <th>Backend</th>
 <th>Minimum Version</th>
+<th>Tested in CI</th>
 <th>Default Port</th>
 <th>Status</th>
 </tr>
@@ -2831,17 +2858,38 @@
 <tr>
 <td>MySQL</td>
 <td>8.0.13</td>
+<td>8.0, 8.4 (LTS)</td>
 <td>3306</td>
 <td>Production</td>
 </tr>
 <tr>
 <td>PostgreSQL</td>
 <td>15</td>
+<td>15</td>
 <td>5432</td>
 <td>Production</td>
 </tr>
+<tr>
+<td>MariaDB</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td><strong>Not supported</strong></td>
+</tr>
 </tbody>
 </table>
+<h3 id="version-support-policy">Version support policy<a class="headerlink" href="#version-support-policy" title="Permanent link">¶</a></h3>
+<p>DataJoint targets <strong>long-term-support (LTS) database releases</strong> — the versions offered by managed
+services such as AWS RDS:</p>
+<ul>
+<li><strong>MySQL</strong> — the <strong>8.0</strong> and <strong>8.4</strong> LTS lines; CI exercises both (see
+  <a href="https://github.com/datajoint/datajoint-python/pull/1498">datajoint-python#1498</a>).</li>
+<li><strong>PostgreSQL</strong> — <strong>15</strong> and later.</li>
+<li><strong>MySQL 9.x is not a supported target.</strong> The 9.x series is a sequence of short-lived <em>Innovation</em>
+  releases — there is no 9.x LTS, and it is not offered as a standard managed-service engine. DataJoint
+  may run on it, but it is untested and support is best-effort only.</li>
+<li><strong>MariaDB is not officially supported</strong> in DataJoint 2.x; the client emits a warning on connection.</li>
+</ul>
 <h2 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">¶</a></h2>
 <p>Select the backend via configuration:</p>
 <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">datajoint</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dj</span>
