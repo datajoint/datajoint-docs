@@ -9,16 +9,17 @@ DataJoint supports multiple database backends through a unified adapter architec
 
 | Backend | Minimum Version | Tested in CI | Default Port | Status |
 |---------|-----------------|--------------|--------------|--------|
-| MySQL | 8.0.13 | 8.0 (8.4 LTS in progress — [datajoint-python#1497](https://github.com/datajoint/datajoint-python/issues/1497)) | 3306 | Production |
+| MySQL | 8.0.13 | 8.0, 8.4 (LTS) | 3306 | Production |
 | PostgreSQL | 15 | 15 | 5432 | Production |
+| MariaDB | — | — | — | **Not supported** |
 
 ### Version support policy
 
 DataJoint targets **long-term-support (LTS) database releases** — the versions offered by managed
 services such as AWS RDS:
 
-- **MySQL** — the **8.0** and **8.4** LTS lines. CI currently exercises 8.0; 8.4 coverage is tracked in
-  [datajoint-python#1497](https://github.com/datajoint/datajoint-python/issues/1497).
+- **MySQL** — the **8.0** and **8.4** LTS lines; CI exercises both (see
+  [datajoint-python#1498](https://github.com/datajoint/datajoint-python/pull/1498)).
 - **PostgreSQL** — **15** and later.
 - **MySQL 9.x is not a supported target.** The 9.x series is a sequence of short-lived *Innovation*
   releases — there is no 9.x LTS, and it is not offered as a standard managed-service engine. DataJoint
