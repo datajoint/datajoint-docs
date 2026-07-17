@@ -38,7 +38,7 @@ Two properties follow:
   cascades to the results derived from it, so the graph always reflects the data
   as it currently is.
 
-This is the same guarantee the reproducibility contract describes: every row is
+This is the same property the reproducibility contract describes: every row is
 traceable to the declared inputs it was computed from.
 
 ## Complementary and orthogonal
