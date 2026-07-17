@@ -21,7 +21,7 @@
       
       
       <link rel="icon" href="../../assets/images/company-logo-blue.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
     
     
       
@@ -29,7 +29,7 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
       
         
         <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
@@ -6381,6 +6381,7 @@
 <ul>
 <li><strong><code>strict_provenance</code> removed.</strong> The opt-in <code>dj.config["strict_provenance"]</code> runtime guardrail that shipped in 2.3.0 has been retired. Comprehensively checking the <code>make()</code> read/write contract across every access path is a code-inspection problem rather than a runtime one, so it is validated at review or deploy time rather than by an in-process flag. The flag was off by default with no known adoption, so existing pipelines are unaffected. The ergonomic read surface — <code>Diagram.trace</code> and <code>self.upstream</code> — is unchanged, and the rules are documented as the <a href="../../reference/specs/autopopulate/#43-the-make-reproducibility-contract">make() reproducibility contract</a>.</li>
 <li><strong>Python 3.14 support.</strong> <code>requires-python</code> now spans <code>&gt;=3.10,&lt;3.15</code>; CI exercises both ends of the range (3.10 and 3.14).</li>
+<li><strong>Cascade multi-part-master fix.</strong> <code>Table.delete(part_integrity="cascade")</code> now restricts the master from <em>every</em> restricted Part, closing a silent-integrity path where two Parts of the same Master reached through different foreign-key paths could leave the Master with rows that should have been deleted. See <a href="../../reference/specs/cascade/">Cascade Specification</a>.</li>
 <li><strong>Garbage-collection fix.</strong> <code>gc.collect()</code> now discovers codec-referenced files correctly, closing a path where live custom-codec and schema-addressed object-store files (<code>&lt;object@&gt;</code>, <code>&lt;npy@&gt;</code>) could be misclassified as orphans and deleted. See <a href="../../how-to/garbage-collection/">Clean Up Object Storage</a>.</li>
 </ul>
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
@@ -6453,7 +6454,7 @@
 <li><a href="../../reference/specs/deploy-operations/">Deployment Operations</a> — the <code>dj.deploy</code> module</li>
 <li><a href="../../reference/specs/cascade/">Cascade Specification</a> — propagation rules shared with <code>trace</code></li>
 <li><a href="../whats-new-22/">What's New in 2.2</a> — Previous release</li>
-<li><a href="https://github.com/datajoint/datajoint-python/releases">Release Notes (v2.3.0)</a> — GitHub changelog</li>
+<li><a href="https://github.com/datajoint/datajoint-python/releases">Release Notes (2.3.x)</a> — GitHub changelog</li>
 </ul>
 
 
@@ -6597,7 +6598,7 @@
       <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.sections", "navigation.indexes", "toc.follow", "announce.dismiss"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
       
         <script src="../../javascripts/mathjax.js"></script>
       
