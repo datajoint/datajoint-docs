@@ -12,6 +12,7 @@ DataJoint 2.3 adds a first-class **upstream read surface** — `Diagram.trace` a
 
 - **`strict_provenance` removed.** The opt-in `dj.config["strict_provenance"]` runtime guardrail that shipped in 2.3.0 has been retired. Comprehensively checking the `make()` read/write contract across every access path is a code-inspection problem rather than a runtime one, so it is validated at review or deploy time rather than by an in-process flag. The flag was off by default with no known adoption, so existing pipelines are unaffected. The ergonomic read surface — `Diagram.trace` and `self.upstream` — is unchanged, and the rules are documented as the [make() reproducibility contract](../reference/specs/autopopulate.md#43-the-make-reproducibility-contract).
 - **Python 3.14 support.** `requires-python` now spans `>=3.10,<3.15`; CI exercises both ends of the range (3.10 and 3.14).
+- **Cascade multi-part-master fix.** `Table.delete(part_integrity="cascade")` now restricts the master from *every* restricted Part, closing a silent-integrity path where two Parts of the same Master reached through different foreign-key paths could leave the Master with rows that should have been deleted. Invalid `part_integrity` values now raise `ValueError`. See [Cascade Specification](../reference/specs/cascade.md).
 - **Garbage-collection fix.** `gc.collect()` now discovers codec-referenced files correctly, closing a path where live custom-codec and schema-addressed object-store files (`<object@>`, `<npy@>`) could be misclassified as orphans and deleted. See [Clean Up Object Storage](../how-to/garbage-collection.md).
 
 ## Overview
@@ -105,4 +106,4 @@ It is PostgreSQL-only (raising a clear error on other backends), idempotent at t
 - [Deployment Operations](../reference/specs/deploy-operations.md) — the `dj.deploy` module
 - [Cascade Specification](../reference/specs/cascade.md) — propagation rules shared with `trace`
 - [What's New in 2.2](whats-new-22.md) — Previous release
-- [Release Notes (v2.3.0)](https://github.com/datajoint/datajoint-python/releases) — GitHub changelog
+- [Release Notes (v2.3.1)](https://github.com/datajoint/datajoint-python/releases/tag/v2.3.1) — GitHub changelog
