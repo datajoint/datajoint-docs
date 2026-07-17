@@ -4178,8 +4178,8 @@
 <p>DataJoint 2.3 introduced <code>self.upstream</code> (and the underlying <a href="../diagram/"><code>Diagram.trace</code></a>) to make this convention easy to follow and to inspect. The framework does not enforce it at runtime, so keeping reads within the upstream cone remains the pipeline author's responsibility; a <code>make()</code> that reads outside it produces results the pipeline cannot reproduce.</p>
 <p><code>self.upstream</code> behavior:</p>
 <ul>
-<li><strong>Lifecycle:</strong> <code>self.upstream</code> is set to <code>Diagram.trace(self &amp; key)</code> immediately before <code>make()</code> is invoked and cleared afterward — including when <code>make()</code> raises. Accessing it outside <code>make()</code> raises <code>DataJointError</code>.</li>
-<li><strong>Lazy:</strong> the trace diagram is built once per <code>make()</code> call; no SQL fires until an ancestor is accessed and fetched. Fetch results are not cached — reading the same ancestor twice issues two queries.</li>
+<li><strong>Lifecycle:</strong> the framework records the current key before invoking <code>make()</code>; <code>self.upstream</code> is built as <code>Diagram.trace(self &amp; key)</code> on first access and cleared afterward — including when <code>make()</code> raises. Accessing it outside <code>make()</code> raises <code>DataJointError</code>.</li>
+<li><strong>Lazy:</strong> the trace diagram is built at most once per <code>make()</code> call — on first <code>self.upstream</code> access. <code>make()</code> implementations that never read <code>self.upstream</code> never build the trace, and no SQL fires until an ancestor is accessed and fetched. Fetch results are not cached — reading the same ancestor twice issues two queries.</li>
 <li><strong>Tripartite:</strong> <code>self.upstream</code> is available across all tripartite phases (<code>make_fetch</code>, <code>make_compute</code>, <code>make_insert</code>) of the same <code>make()</code> call.</li>
 <li><strong>Scope:</strong> it exposes declared ancestors only. A table's own Parts are descendants, not ancestors — read them directly as <code>self.PartName</code>.</li>
 </ul>
