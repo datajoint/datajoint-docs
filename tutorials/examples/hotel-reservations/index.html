@@ -59,7 +59,7 @@
 <div class="md-banner">
 <div class="md-banner__inner md-grid md-typeset">
 <p>
-        📖 You are viewing documentation for <strong>DataJoint 2.2+</strong>
+        📖 You are viewing documentation for <strong>DataJoint 2.3+</strong>
         ·
         <a href="https://docs.datajoint.com/how-to/migrate-to-v20/">
           Migration guide for legacy users (pre-2.0)
@@ -3524,7 +3524,7 @@ schema = dj.Schema('tutorial_hotel')</div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>[2026-05-18 19:43:25] DataJoint 2.2.2 connected to postgres@postgres:5432
+<pre>[2026-07-17 00:28:54] DataJoint 2.3.1 connected to postgres@postgres:5432
 </pre>
 </div>
 </div>
@@ -4025,29 +4025,29 @@ RoomAvailable() &amp; {'room': 1}</div>
 <table border="1" class="Table">
 <thead> <tr> <th> <span id="primary" title="None">room</span></th><th><span id="primary" title="">date</span></th><th><span id="nonprimary" title="price per night">price</span> </th> </tr> </thead>
 <tbody> <tr> <td>1</td>
-<td>2026-05-18</td>
+<td>2026-07-17</td>
 <td>134.00</td></tr><tr><td>1</td>
-<td>2026-05-19</td>
-<td>145.00</td></tr><tr><td>1</td>
-<td>2026-05-20</td>
-<td>164.00</td></tr><tr><td>1</td>
-<td>2026-05-21</td>
-<td>130.00</td></tr><tr><td>1</td>
-<td>2026-05-22</td>
-<td>154.00</td></tr><tr><td>1</td>
-<td>2026-05-23</td>
-<td>187.00</td></tr><tr><td>1</td>
-<td>2026-05-24</td>
-<td>224.00</td></tr><tr><td>1</td>
-<td>2026-05-25</td>
-<td>120.00</td></tr><tr><td>1</td>
-<td>2026-05-26</td>
-<td>122.00</td></tr><tr><td>1</td>
-<td>2026-05-27</td>
-<td>197.00</td></tr><tr><td>1</td>
-<td>2026-05-28</td>
+<td>2026-07-18</td>
 <td>195.00</td></tr><tr><td>1</td>
-<td>2026-05-29</td>
+<td>2026-07-19</td>
+<td>214.00</td></tr><tr><td>1</td>
+<td>2026-07-20</td>
+<td>130.00</td></tr><tr><td>1</td>
+<td>2026-07-21</td>
+<td>154.00</td></tr><tr><td>1</td>
+<td>2026-07-22</td>
+<td>137.00</td></tr><tr><td>1</td>
+<td>2026-07-23</td>
+<td>174.00</td></tr><tr><td>1</td>
+<td>2026-07-24</td>
+<td>120.00</td></tr><tr><td>1</td>
+<td>2026-07-25</td>
+<td>172.00</td></tr><tr><td>1</td>
+<td>2026-07-26</td>
+<td>247.00</td></tr><tr><td>1</td>
+<td>2026-07-27</td>
+<td>195.00</td></tr><tr><td>1</td>
+<td>2026-07-28</td>
 <td>180.00</td> </tr> </tbody>
 </table>
 <p>...</p>
@@ -4398,7 +4398,7 @@ Reservation()</div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>Reserved room 1 for 2026-05-19
+<pre>Reserved room 1 for 2026-07-18
 </pre>
 </div>
 </div>
@@ -4464,7 +4464,7 @@ Reservation()</div>
 <table border="1" class="Table">
 <thead> <tr> <th> <span id="primary" title="None">room</span></th><th><span id="primary" title="None">date</span></th><th><span id="nonprimary" title="None">guest_id</span></th><th><span id="nonprimary" title="encrypted card info">credit_card</span> </th> </tr> </thead>
 <tbody> <tr> <td>1</td>
-<td>2026-05-19</td>
+<td>2026-07-18</td>
 <td>1282531583</td>
 <td>4111-1111-1111-1111</td> </tr> </tbody>
 </table>
@@ -4515,7 +4515,7 @@ except RoomAlreadyReserved as e:
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>Blocked: Room 1 already reserved for 2026-05-19
+<pre>Blocked: Room 1 already reserved for 2026-07-18
 </pre>
 </div>
 </div>
@@ -4565,7 +4565,7 @@ except RoomNotAvailable as e:
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>Blocked: Room 1 not available on 2027-05-18
+<pre>Blocked: Room 1 not available on 2027-07-17
 </pre>
 </div>
 </div>
@@ -4613,7 +4613,7 @@ except NoReservation as e:
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>Blocked: No reservation for room 2 on 2026-05-19
+<pre>Blocked: No reservation for room 2 on 2026-07-18
 </pre>
 </div>
 </div>
@@ -4661,7 +4661,7 @@ CheckIn()</div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>Checked in room 1 for 2026-05-19
+<pre>Checked in room 1 for 2026-07-18
 </pre>
 </div>
 </div>
@@ -4727,7 +4727,7 @@ CheckIn()</div>
 <table border="1" class="Table">
 <thead> <tr> <th> <span id="primary" title="None">room</span></th><th><span id="primary" title="None">date</span> </th> </tr> </thead>
 <tbody> <tr> <td>1</td>
-<td>2026-05-19</td> </tr> </tbody>
+<td>2026-07-18</td> </tr> </tbody>
 </table>
 <p>Total: 1</p></div>
 </div>
@@ -4782,7 +4782,7 @@ except NotCheckedIn as e:
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>Blocked: Room 3 not checked in for 2026-05-19
+<pre>Blocked: Room 3 not checked in for 2026-07-18
 </pre>
 </div>
 </div>
@@ -4830,7 +4830,7 @@ CheckOut()</div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>Checked out room 1 for 2026-05-19
+<pre>Checked out room 1 for 2026-07-18
 </pre>
 </div>
 </div>
@@ -4896,7 +4896,7 @@ CheckOut()</div>
 <table border="1" class="Table">
 <thead> <tr> <th> <span id="primary" title="None">room</span></th><th><span id="primary" title="None">date</span> </th> </tr> </thead>
 <tbody> <tr> <td>1</td>
-<td>2026-05-19</td> </tr> </tbody>
+<td>2026-07-18</td> </tr> </tbody>
 </table>
 <p>Total: 1</p></div>
 </div>
@@ -4954,7 +4954,7 @@ available</div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>Available rooms for 2026-05-19: 18
+<pre>Available rooms for 2026-07-18: 18
 </pre>
 </div>
 </div>
@@ -5020,30 +5020,30 @@ available</div>
 <table border="1" class="Table">
 <thead> <tr> <th> <span id="primary" title="None">room</span></th><th><span id="primary" title="">date</span></th><th><span id="nonprimary" title="price per night">price</span> </th> </tr> </thead>
 <tbody> <tr> <td>2</td>
-<td>2026-05-19</td>
-<td>189.00</td></tr><tr><td>4</td>
-<td>2026-05-19</td>
-<td>148.00</td></tr><tr><td>5</td>
-<td>2026-05-19</td>
-<td>177.00</td></tr><tr><td>6</td>
-<td>2026-05-19</td>
-<td>195.00</td></tr><tr><td>7</td>
-<td>2026-05-19</td>
-<td>155.00</td></tr><tr><td>8</td>
-<td>2026-05-19</td>
-<td>120.00</td></tr><tr><td>9</td>
-<td>2026-05-19</td>
-<td>140.00</td></tr><tr><td>10</td>
-<td>2026-05-19</td>
-<td>174.00</td></tr><tr><td>11</td>
-<td>2026-05-19</td>
-<td>163.00</td></tr><tr><td>12</td>
-<td>2026-05-19</td>
-<td>155.00</td></tr><tr><td>13</td>
-<td>2026-05-19</td>
-<td>139.00</td></tr><tr><td>14</td>
-<td>2026-05-19</td>
-<td>147.00</td> </tr> </tbody>
+<td>2026-07-18</td>
+<td>239.00</td></tr><tr><td>4</td>
+<td>2026-07-18</td>
+<td>198.00</td></tr><tr><td>5</td>
+<td>2026-07-18</td>
+<td>227.00</td></tr><tr><td>6</td>
+<td>2026-07-18</td>
+<td>245.00</td></tr><tr><td>7</td>
+<td>2026-07-18</td>
+<td>205.00</td></tr><tr><td>8</td>
+<td>2026-07-18</td>
+<td>170.00</td></tr><tr><td>9</td>
+<td>2026-07-18</td>
+<td>190.00</td></tr><tr><td>10</td>
+<td>2026-07-18</td>
+<td>224.00</td></tr><tr><td>11</td>
+<td>2026-07-18</td>
+<td>213.00</td></tr><tr><td>12</td>
+<td>2026-07-18</td>
+<td>205.00</td></tr><tr><td>13</td>
+<td>2026-07-18</td>
+<td>189.00</td></tr><tr><td>14</td>
+<td>2026-07-18</td>
+<td>197.00</td> </tr> </tbody>
 </table>
 <p>...</p>
 <p>Total: 18</p></div>
@@ -5251,7 +5251,7 @@ not_checked_in = Reservation - CheckIn
 <table border="1" class="Table">
 <thead> <tr> <th> <span id="primary" title="None">room</span></th><th><span id="primary" title="None">date</span></th><th><span id="nonprimary" title="">guest_name</span> </th> </tr> </thead>
 <tbody> <tr> <td>3</td>
-<td>2026-05-19</td>
+<td>2026-07-18</td>
 <td>David Brown</td> </tr> </tbody>
 </table>
 <p>Total: 1</p></div>
@@ -5362,7 +5362,7 @@ dj.U('room_type').aggr(
 <table border="1" class="Table">
 <thead> <tr> <th> <span id="primary" title="">room_type</span></th><th><span id="nonprimary" title="calculated attribute">total_revenue</span></th><th><span id="nonprimary" title="calculated attribute">reservations</span> </th> </tr> </thead>
 <tbody> <tr> <td>Deluxe</td>
-<td>318.00</td>
+<td>418.00</td>
 <td>2</td> </tr> </tbody>
 </table>
 <p>Total: 1</p></div>

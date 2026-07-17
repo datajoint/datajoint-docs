@@ -59,7 +59,7 @@
 <div class="md-banner">
 <div class="md-banner__inner md-grid md-typeset">
 <p>
-        📖 You are viewing documentation for <strong>DataJoint 2.2+</strong>
+        📖 You are viewing documentation for <strong>DataJoint 2.3+</strong>
         ·
         <a href="https://docs.datajoint.com/how-to/migrate-to-v20/">
           Migration guide for legacy users (pre-2.0)
@@ -3463,7 +3463,7 @@ schema = dj.Schema('tutorial_distributed')</div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>[2026-05-18 19:42:36] DataJoint 2.2.2 connected to postgres@postgres:5432
+<pre>[2026-07-17 00:28:07] DataJoint 2.3.1 connected to postgres@postgres:5432
 </pre>
 </div>
 </div>
@@ -3558,14 +3558,14 @@ class Analysis(dj.Computed):
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>[2026-05-18 19:42:36][WARNING]: Native type 'int' is used in attribute 'exp_id'. Consider using a core DataJoint type for better portability.
+<pre>[2026-07-17 00:28:07][WARNING]: Native type 'int' is used in attribute 'exp_id'. Consider using a core DataJoint type for better portability.
 </pre>
 </div>
 </div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>[2026-05-18 19:42:36][WARNING]: Native type 'int' is used in attribute 'n_samples'. Consider using a core DataJoint type for better portability.
+<pre>[2026-07-17 00:28:07][WARNING]: Native type 'int' is used in attribute 'n_samples'. Consider using a core DataJoint type for better portability.
 </pre>
 </div>
 </div>
@@ -3661,7 +3661,7 @@ Analysis.populate(reserve_jobs=True, max_calls=5, display_progress=True)</div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>[2026-05-18 19:42:36][WARNING]: Native type 'integer' is used in attribute 'exp_id'. Consider using a core DataJoint type for better portability.
+<pre>[2026-07-17 00:28:07][WARNING]: Native type 'integer' is used in attribute 'exp_id'. Consider using a core DataJoint type for better portability.
 </pre>
 </div>
 </div>
@@ -3674,37 +3674,37 @@ Analysis.populate(reserve_jobs=True, max_calls=5, display_progress=True)</div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>Analysis:  20%|██        | 1/5 [00:00&lt;00:00,  8.77it/s]</pre>
+<pre>Analysis:  20%|██        | 1/5 [00:00&lt;00:00,  7.52it/s]</pre>
 </div>
 </div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>Analysis:  40%|████      | 2/5 [00:00&lt;00:00,  9.07it/s]</pre>
+<pre>Analysis:  40%|████      | 2/5 [00:00&lt;00:00,  8.31it/s]</pre>
 </div>
 </div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>Analysis:  60%|██████    | 3/5 [00:00&lt;00:00,  9.10it/s]</pre>
+<pre>Analysis:  60%|██████    | 3/5 [00:00&lt;00:00,  8.63it/s]</pre>
 </div>
 </div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>Analysis:  80%|████████  | 4/5 [00:00&lt;00:00,  9.01it/s]</pre>
+<pre>Analysis:  80%|████████  | 4/5 [00:00&lt;00:00,  8.80it/s]</pre>
 </div>
 </div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>Analysis: 100%|██████████| 5/5 [00:00&lt;00:00,  8.98it/s]</pre>
+<pre>Analysis: 100%|██████████| 5/5 [00:00&lt;00:00,  8.84it/s]</pre>
 </div>
 </div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>Analysis: 100%|██████████| 5/5 [00:00&lt;00:00,  8.96it/s]</pre>
+<pre>Analysis: 100%|██████████| 5/5 [00:00&lt;00:00,  8.63it/s]</pre>
 </div>
 </div>
 <div class="jp-OutputArea-child">
@@ -3869,19 +3869,19 @@ print(f"Computed: {len(Analysis())}")</div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>Analysis:   7%|▋         | 1/15 [00:00&lt;00:01,  9.43it/s]</pre>
+<pre>Analysis:   7%|▋         | 1/15 [00:00&lt;00:01,  9.48it/s]</pre>
 </div>
 </div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>Analysis:  13%|█▎        | 2/15 [00:00&lt;00:01,  9.36it/s]</pre>
+<pre>Analysis:  13%|█▎        | 2/15 [00:00&lt;00:01,  9.33it/s]</pre>
 </div>
 </div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>Analysis:  20%|██        | 3/15 [00:00&lt;00:01,  9.13it/s]</pre>
+<pre>Analysis:  20%|██        | 3/15 [00:00&lt;00:01,  9.07it/s]</pre>
 </div>
 </div>
 <div class="jp-OutputArea-child">
@@ -3893,73 +3893,73 @@ print(f"Computed: {len(Analysis())}")</div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>Analysis:  33%|███▎      | 5/15 [00:00&lt;00:01,  9.04it/s]</pre>
+<pre>Analysis:  33%|███▎      | 5/15 [00:00&lt;00:01,  9.05it/s]</pre>
 </div>
 </div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>Analysis:  40%|████      | 6/15 [00:00&lt;00:00,  9.01it/s]</pre>
+<pre>Analysis:  40%|████      | 6/15 [00:00&lt;00:01,  8.18it/s]</pre>
 </div>
 </div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>Analysis:  47%|████▋     | 7/15 [00:00&lt;00:00,  9.01it/s]</pre>
+<pre>Analysis:  47%|████▋     | 7/15 [00:00&lt;00:00,  8.55it/s]</pre>
 </div>
 </div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>Analysis:  53%|█████▎    | 8/15 [00:00&lt;00:00,  9.05it/s]</pre>
+<pre>Analysis:  53%|█████▎    | 8/15 [00:00&lt;00:00,  8.74it/s]</pre>
 </div>
 </div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>Analysis:  60%|██████    | 9/15 [00:00&lt;00:00,  9.02it/s]</pre>
+<pre>Analysis:  60%|██████    | 9/15 [00:01&lt;00:00,  8.84it/s]</pre>
 </div>
 </div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>Analysis:  67%|██████▋   | 10/15 [00:01&lt;00:00,  8.99it/s]</pre>
+<pre>Analysis:  67%|██████▋   | 10/15 [00:01&lt;00:00,  8.87it/s]</pre>
 </div>
 </div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>Analysis:  73%|███████▎  | 11/15 [00:01&lt;00:00,  9.00it/s]</pre>
+<pre>Analysis:  73%|███████▎  | 11/15 [00:01&lt;00:00,  7.04it/s]</pre>
 </div>
 </div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>Analysis:  80%|████████  | 12/15 [00:01&lt;00:00,  9.08it/s]</pre>
+<pre>Analysis:  80%|████████  | 12/15 [00:01&lt;00:00,  7.67it/s]</pre>
 </div>
 </div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>Analysis:  87%|████████▋ | 13/15 [00:01&lt;00:00,  9.21it/s]</pre>
+<pre>Analysis:  87%|████████▋ | 13/15 [00:01&lt;00:00,  8.12it/s]</pre>
 </div>
 </div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>Analysis:  93%|█████████▎| 14/15 [00:01&lt;00:00,  9.23it/s]</pre>
+<pre>Analysis:  93%|█████████▎| 14/15 [00:01&lt;00:00,  8.31it/s]</pre>
 </div>
 </div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>Analysis: 100%|██████████| 15/15 [00:01&lt;00:00,  9.25it/s]</pre>
+<pre>Analysis: 100%|██████████| 15/15 [00:01&lt;00:00,  8.51it/s]</pre>
 </div>
 </div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>Analysis: 100%|██████████| 15/15 [00:01&lt;00:00,  9.12it/s]</pre>
+<pre>Analysis: 100%|██████████| 15/15 [00:01&lt;00:00,  8.44it/s]</pre>
 </div>
 </div>
 <div class="jp-OutputArea-child">
