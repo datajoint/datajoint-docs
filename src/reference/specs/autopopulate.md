@@ -357,8 +357,8 @@ DataJoint 2.3 introduced `self.upstream` (and the underlying [`Diagram.trace`](d
 
 `self.upstream` behavior:
 
-- **Lifecycle:** `self.upstream` is set to `Diagram.trace(self & key)` immediately before `make()` is invoked and cleared afterward — including when `make()` raises. Accessing it outside `make()` raises `DataJointError`.
-- **Lazy:** the trace diagram is built once per `make()` call; no SQL fires until an ancestor is accessed and fetched. Fetch results are not cached — reading the same ancestor twice issues two queries.
+- **Lifecycle:** the framework records the current key before invoking `make()`; `self.upstream` is built as `Diagram.trace(self & key)` on first access and cleared afterward — including when `make()` raises. Accessing it outside `make()` raises `DataJointError`.
+- **Lazy:** the trace diagram is built at most once per `make()` call — on first `self.upstream` access. `make()` implementations that never read `self.upstream` never build the trace, and no SQL fires until an ancestor is accessed and fetched. Fetch results are not cached — reading the same ancestor twice issues two queries.
 - **Tripartite:** `self.upstream` is available across all tripartite phases (`make_fetch`, `make_compute`, `make_insert`) of the same `make()` call.
 - **Scope:** it exposes declared ancestors only. A table's own Parts are descendants, not ancestors — read them directly as `self.PartName`.
 

@@ -181,9 +181,9 @@ For a renamed-FK case (paralleling [Cascade Spec §Worked Example 1](cascade.md#
 
 ### Where it's set
 
-The framework constructs `self.upstream = Diagram.trace(self & key)` immediately before invoking the user-defined `make(self, key)`. The construction happens once per `make()` call; `self.upstream` is a regular attribute on the bound `self` instance for the duration of the call.
+Before invoking `make(self, key)`, the framework records the current key but defers constructing the trace. `self.upstream = Diagram.trace(self & key)` is built the first time the user accesses `self.upstream` inside `make()` and memoized for the rest of the call; `make()` implementations that never read `self.upstream` never build the trace. Both the key and the memoized trace are cleared after `make()` returns (including when it raises).
 
-The construction is **lazy** in the sense that the underlying SQL is not issued until the user accesses an ancestor: `self.upstream[Session]` builds a `QueryExpression`, and `.fetch1()` on that expression triggers a SELECT. The trace diagram is built once per `make()` call, but fetch results are not cached — each `self.upstream[T]` access returns a fresh `QueryExpression`, so reading the same ancestor twice issues two SELECTs.
+Once built, the trace diagram is reused for the remainder of the call. The underlying SQL is not issued until the user indexes into an ancestor: `self.upstream[Session]` builds a `QueryExpression`, and `.fetch1()` on that expression triggers a SELECT. Fetch results are not cached — each `self.upstream[T]` access returns a fresh `QueryExpression`, so reading the same ancestor twice issues two SELECTs.
 
 ### What it returns
 
