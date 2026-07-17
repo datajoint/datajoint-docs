@@ -106,4 +106,4 @@ It is PostgreSQL-only (raising a clear error on other backends), idempotent at t
 - [Deployment Operations](../reference/specs/deploy-operations.md) — the `dj.deploy` module
 - [Cascade Specification](../reference/specs/cascade.md) — propagation rules shared with `trace`
 - [What's New in 2.2](whats-new-22.md) — Previous release
-- [Release Notes (v2.3.1)](https://github.com/datajoint/datajoint-python/releases/tag/v2.3.1) — GitHub changelog
+- [Release Notes (2.3.x)](https://github.com/datajoint/datajoint-python/releases) — GitHub changelog
