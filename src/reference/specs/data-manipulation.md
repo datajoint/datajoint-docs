@@ -320,6 +320,8 @@ def delete(
 | `"ignore"` | Allow deleting parts without masters (breaks integrity) |
 | `"cascade"` | Also delete masters when parts are deleted |
 
+Invalid values raise `ValueError`.
+
 **Returns:** Number of deleted rows from the primary table.
 
 ### 4.2 Cascade Behavior
@@ -404,6 +406,8 @@ Session.Recording.delete(part_integrity="cascade")
 | `"enforce"` | (default) Error if parts would be deleted without masters |
 | `"ignore"` | Allow deleting parts without masters (breaks integrity) |
 | `"cascade"` | Also delete masters when parts are deleted (maintains integrity) |
+
+Invalid values raise `ValueError`.
 
 ### 4.7 `delete_quick()` Method
 

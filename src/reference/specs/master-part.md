@@ -185,6 +185,8 @@ def delete(self, part_integrity: str = "enforce", ...) -> int
 | `"ignore"` | Allow deleting parts without masters (breaks integrity) |
 | `"cascade"` | Also delete masters when parts are deleted |
 
+Invalid values raise `ValueError`.
+
 ### 4.3 Default Behavior (enforce)
 
 ```python
