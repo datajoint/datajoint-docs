@@ -133,46 +133,23 @@ scan_id : varchar(200)
 scan_id : int64             # wastes space, slower joins
 ```
 
-### Use Fixed-Width for Joins
+### Avoid Floating-Point Keys
 
-Fixed-width types join faster:
-
-```python
-# Good: Fixed width
-subject_id : char(8)
-
-# Acceptable: Variable width
-subject_id : varchar(16)
-```
-
-### Avoid Dates as Primary Keys
-
-Dates alone rarely guarantee uniqueness:
+Never use `float` or `double` in a primary key: equality comparison on
+floating-point values is unreliable because of rounding, so lookups and joins on
+the key can silently miss. Use `decimal` (fixed-point) — or an integer — instead:
 
 ```python
-# Bad: Date might not be unique
-session_date : date
----
-...
+# Bad: float equality is fraught with rounding error — key lookups can miss
+dose_mg : float64
 
-# Good: Add a sequence number
--> Subject
-session_idx : int32
----
-session_date : date
+# Good: exact fixed-point value
+dose_mg : decimal(6, 3)
 ```
 
-### Avoid Computed Values
-
-Primary keys should be stable inputs, not derived:
-
-```python
-# Bad: Derived from other data
-hash_id : varchar(64)  # MD5 of some content
-
-# Good: Assigned identifier
-recording_id : uuid
-```
+A `date` or `datetime` is perfectly good key material when the entity is
+genuinely identified by that time (a daily summary, or a session dated by day).
+Add a sequence number only when the date alone doesn't identify the entity.
 
 ## Migration Considerations
 

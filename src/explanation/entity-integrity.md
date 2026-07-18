@@ -75,6 +75,13 @@ Every DataJoint table must have a primary key. Primary-key attributes:
 - **Cannot be changed** — keys are immutable after insertion.
 - **Declared above the `---`** in the table definition.
 
+In practice, entity integrity is largely a matter of **primary-key design** —
+choosing a key that truly identifies each entity, and shaping entity types so
+each has a good natural key. The mechanics of choosing and declaring those keys
+are covered in the [Design Primary Keys](../how-to/design-primary-keys.md)
+how-to; this page explains *why* the primary key is what carries entity
+integrity.
+
 ### Explicit keys, no auto-increment
 
 DataJoint requires every primary-key value to be provided explicitly at
