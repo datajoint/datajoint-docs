@@ -11,6 +11,11 @@ Primary key attributes:
 - Cannot be changed after insertion
 - Are inherited by dependent tables via foreign keys
 
+The primary key is how a table enforces
+[entity integrity](../explanation/entity-integrity.md) — the one-to-one
+correspondence between rows and the real-world entities they represent. Every
+principle below follows from that responsibility.
+
 ## Natural Keys
 
 Use meaningful identifiers when they exist:
@@ -111,14 +116,21 @@ class Trial(dj.Manual):
 
 ### Keep Keys Small
 
-Prefer `int32` over `int64` when the range allows:
+The primary key is copied into every dependent table, index, and join, so an
+oversized key multiplies across the whole schema. Use the smallest type that
+covers the range, and don't reach for a wide string key when a compact integer
+will do:
 
 ```python
-# Good: Appropriate size
-session_idx : int32     # Max 65,535 sessions per subject
+# Good: a compact integer key
+scan_id : int32             # up to ~2.1 billion scans
 
-# Avoid: Unnecessarily large
-session_idx : int64      # Wastes space, slower joins
+# Avoid: a 200-character string key where an int32 would do —
+# this key is copied into every child table, index, and join
+scan_id : varchar(200)
+
+# Avoid: a wider integer than the range needs
+scan_id : int64             # wastes space, slower joins
 ```
 
 ### Use Fixed-Width for Joins
@@ -180,5 +192,9 @@ class Scan(dj.Manual):
 
 ## See Also
 
+- [Entity Integrity](../explanation/entity-integrity.md) — why every table needs
+  a primary key and how it enforces the one-to-one correspondence with entities
+- [Normalization](../explanation/normalization.md) — organizing attributes so
+  each fact lives in exactly one place
 - [Define Tables](define-tables.md) — Table definition syntax
 - [Model Relationships](model-relationships.ipynb) — Foreign key patterns

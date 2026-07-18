@@ -412,16 +412,26 @@ class Trial(dj.Manual):
 
 ### Too many key attributes
 
+`(subject_id, timestamp)` is a *correct* key for a per-subject measurement:
+each reading is its own entity, identified by who was measured and when.
+Over-keying is the opposite mistake — putting a **descriptive** attribute into
+the key, so a single entity fragments into several records:
+
 ```python
-# Wrong: timestamp makes every row unique, losing entity semantics
+# Wrong: `technician` describes who took the reading; it doesn't identify it —
+# the same measurement recorded under two technicians becomes two entities
 class Measurement(dj.Manual):
     definition = """
-    subject_id : int64
-    timestamp : datetime(6)   # Microsecond precision destroys entity identity
+    subject_id : int32
+    timestamp : datetime(6)
+    technician : varchar(32)   # descriptive — belongs below the ---, not in the key
     ---
     value : float32
     """
 ```
+
+Keep the key to exactly the attributes that identify the entity; put everything
+descriptive below the `---`.
 
 ### Mutable natural keys
 
@@ -451,6 +461,10 @@ yours to design.
 
 ## See also
 
+- [Design Primary Keys](../how-to/design-primary-keys.md) — how to choose and
+  declare the keys that carry entity integrity
+- [Model Relationships](../how-to/model-relationships.ipynb) — foreign keys and
+  the relationship types they express
 - [Normalization](normalization.md) — entity normalization and the workflow
   test
 - [Computation Model](computation-model.md) — how cascade deletes and

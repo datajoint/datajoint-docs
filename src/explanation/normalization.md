@@ -259,3 +259,15 @@ class HousingAssignment(dj.Manual):
 - Is this a relationship or event? (Yes → association/event table)
 
 Following these principles achieves **full workflow entity normalization** where each table represents a single, well-defined entity type entered at a specific workflow step.
+
+## See also
+
+- [Entity Integrity](entity-integrity.md) — the uniqueness guarantee that a
+  normalized table's primary key enforces
+- [Design Primary Keys](../how-to/design-primary-keys.md) — choosing the keys
+  that identify each normalized entity
+- [Model Relationships](../how-to/model-relationships.ipynb) — connecting
+  normalized entities with foreign keys
+- [Relational Workflow Model](relational-workflow-model.md) — the broader frame
+  in which normalization, entity integrity, and referential integrity work
+  together
