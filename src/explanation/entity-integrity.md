@@ -186,6 +186,11 @@ key. Neither attribute alone would identify a recording across the table.
 
 ## Foreign keys
 
+Referential integrity is impossible without entity integrity: you must be able
+to identify unique entities before you can define valid relationships between
+them. A foreign key builds on the parent's primary key, so a well-designed key
+is the prerequisite for every relationship that references it.
+
 A foreign key serves two distinct purposes in DataJoint:
 
 1. **Referential integrity.** The referenced entity must exist.

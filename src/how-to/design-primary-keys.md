@@ -18,7 +18,9 @@ principle below follows from that responsibility.
 
 ## Natural Keys
 
-Use meaningful identifiers when they exist:
+A key is *natural* when it identifies the entity **outside** the database —
+printed on labels, written in lab notebooks, or spoken in conversation. Use one
+whenever it exists:
 
 ```python
 @schema
