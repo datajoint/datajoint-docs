@@ -221,8 +221,18 @@ cascade
 
 For simple single-table deletes, `(Table & restriction).delete()` remains the simplest approach. The diagram API is for when you need more visibility before executing.
 
+## Reclaiming Object Storage
+
+Deleting rows removes their database records, but for tables with in-store types
+(`<blob@>`, `<attach@>`, `<object@>`, `<npy@>`) the stored objects remain — by
+design (hash-addressed storage is deduplicated, and immediate deletion is unsafe
+under concurrency). Those orphaned objects are reclaimed separately by
+[garbage collection](garbage-collection.md); run it periodically to free storage
+after large deletes.
+
 ## See Also
 
+- [Clean Up Object Storage](garbage-collection.md) — reclaim stored objects orphaned by deletes
 - [Diagram Specification](../reference/specs/diagram.md) — Full reference for diagram operations
 - [Master-Part Tables](master-part.ipynb) — Compositional data patterns
 - [Model Relationships](model-relationships.ipynb) — Foreign key patterns
