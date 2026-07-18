@@ -207,15 +207,19 @@ class LongComputation(dj.Computed):
         data = (RawData & key).fetch1('data')
         return (data,)
 
-    def make_compute(self, key, fetched):
-        """Perform computation (outside transaction)"""
-        (data,) = fetched
+    def make_compute(self, key, data):
+        """Perform computation (outside transaction).
+
+        `data` is make_fetch's returned tuple, unpacked positionally.
+        """
         result = expensive_computation(data)
         return (result,)
 
-    def make_insert(self, key, fetched, computed):
-        """Insert results (inside brief transaction)"""
-        (result,) = computed
+    def make_insert(self, key, result):
+        """Insert results (inside a brief transaction).
+
+        `result` is make_compute's returned tuple, unpacked positionally.
+        """
         self.insert1({**key, 'result': result})
 ```
 
