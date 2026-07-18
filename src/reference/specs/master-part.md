@@ -84,6 +84,13 @@ Master-Part relationships enforce **compositional integrity**:
 1. **Existence**: Parts cannot exist without their master
 2. **Cohesion**: Parts should be deleted/dropped with their master
 3. **Atomicity**: Master and parts form a logical unit
+4. **Transitive completeness**: a dependency on the master is a dependency on all of its parts
+
+Because the master and its parts are inserted and deleted as one unit, a foreign
+key to the master transitively guarantees that every one of its part rows
+exists. Downstream tables therefore reference the master alone and can rely on
+the whole composite being present — they do not (and cannot) depend on the parts
+individually.
 
 ### 2.2 Foreign Key Behavior
 

@@ -237,4 +237,5 @@ after large deletes.
 - [Master-Part Tables](master-part.ipynb) — Compositional data patterns
 - [Model Relationships](model-relationships.ipynb) — Foreign key patterns
 - [Insert Data](insert-data.md) — Adding data to tables
+- [Update Data](update-data.md) — Correcting or replacing existing rows
 - [Run Computations](run-computations.md) — Recomputing after changes
