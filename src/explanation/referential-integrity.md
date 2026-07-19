@@ -46,8 +46,8 @@ decision, not merely a link.
 ### 1. Schema embedding
 
 The parent's primary-key attributes become attributes of the child, with the
-same names and datatypes. The child inherits the parent's key rather than
-inventing a parallel one.
+same datatypes and — by default — the same names. The child inherits the
+parent's key rather than inventing a parallel one.
 
 ```python
 @schema
@@ -60,9 +60,17 @@ class Session(dj.Manual):
     """
 ```
 
-Because the names match, DataJoint can later resolve joins by
-[attribute lineage](semantic-matching.md) — every inherited attribute traces
-back to the dimension where it was first defined.
+DataJoint resolves joins by [attribute lineage](semantic-matching.md) rather
+than by name — every inherited attribute traces back to the dimension where it
+was first defined.
+
+Sharing the parent's attribute name is the common case, not a requirement. A
+foreign key can be **renamed** — `-> Person.proj(husband='person_id')` embeds
+`person_id` into the child under the name `husband`, which is what lets a table
+reference the same parent more than once. A renamed attribute keeps the *same*
+lineage under a *different* name, so joins still resolve correctly: it is the
+attribute's lineage, not its literal name, that ties it back to its origin. See
+[renamed foreign keys](semantic-matching.md) for the full mechanics.
 
 ### 2. Insert restriction on the child
 
