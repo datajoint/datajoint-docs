@@ -555,7 +555,7 @@ def make(self, key):
     data = (Source & key).to_dicts()
 
     # Explicit transaction for insert
-    with dj.conn().transaction:
+    with self.connection.transaction:
         self.insert1({**key, 'result': compute(data)})
         self.Part.insert(parts)
 ```

@@ -125,7 +125,7 @@ Session.Trial.insert([
 For atomic master+parts insertion, use transactions:
 
 ```python
-with dj.conn().transaction:
+with schema.connection.transaction:
     Session.insert1(master_data)
     Session.Trial.insert(trials_data)
 ```

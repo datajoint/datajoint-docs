@@ -553,7 +553,7 @@ Subject.delete()      # Atomic (by default)
 For multi-table operations:
 
 ```python
-with dj.conn().transaction:
+with schema.connection.transaction:
     Parent.insert1(parent_row)
     Child.insert(child_rows)
     # Commits on successful exit
@@ -629,7 +629,7 @@ Subject.insert(rows)
 ### 9.3 Use Transactions for Related Inserts
 
 ```python
-with dj.conn().transaction:
+with schema.connection.transaction:
     session_key = Session.insert1(session_data, skip_duplicates=True)
     Session.Recording.insert(recordings)
     Session.Stimulus.insert(stimuli)
