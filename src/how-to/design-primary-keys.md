@@ -11,9 +11,16 @@ Primary key attributes:
 - Cannot be changed after insertion
 - Are inherited by dependent tables via foreign keys
 
+The primary key is how a table enforces
+[entity integrity](../explanation/entity-integrity.md) — the one-to-one
+correspondence between rows and the real-world entities they represent. Every
+principle below follows from that responsibility.
+
 ## Natural Keys
 
-Use meaningful identifiers when they exist:
+A key is *natural* when it identifies the entity **outside** the database —
+printed on labels, written in lab notebooks, or spoken in conversation. Use one
+whenever it exists:
 
 ```python
 @schema
@@ -111,56 +118,40 @@ class Trial(dj.Manual):
 
 ### Keep Keys Small
 
-Prefer `int32` over `int64` when the range allows:
+The primary key is copied into every dependent table, index, and join, so an
+oversized key multiplies across the whole schema. Use the smallest type that
+covers the range, and don't reach for a wide string key when a compact integer
+will do:
 
 ```python
-# Good: Appropriate size
-session_idx : int32     # Max 65,535 sessions per subject
+# Good: a compact integer key
+scan_id : int32             # up to ~2.1 billion scans
 
-# Avoid: Unnecessarily large
-session_idx : int64      # Wastes space, slower joins
+# Avoid: a 200-character string key where an int32 would do —
+# this key is copied into every child table, index, and join
+scan_id : varchar(200)
+
+# Avoid: a wider integer than the range needs
+scan_id : int64             # wastes space, slower joins
 ```
 
-### Use Fixed-Width for Joins
+### Avoid Floating-Point Keys
 
-Fixed-width types join faster:
+Never use `float` or `double` in a primary key: equality comparison on
+floating-point values is unreliable because of rounding, so lookups and joins on
+the key can silently miss. Use `decimal` (fixed-point) — or an integer — instead:
 
 ```python
-# Good: Fixed width
-subject_id : char(8)
+# Bad: float equality is fraught with rounding error — key lookups can miss
+dose_mg : float64
 
-# Acceptable: Variable width
-subject_id : varchar(16)
+# Good: exact fixed-point value
+dose_mg : decimal(6, 3)
 ```
 
-### Avoid Dates as Primary Keys
-
-Dates alone rarely guarantee uniqueness:
-
-```python
-# Bad: Date might not be unique
-session_date : date
----
-...
-
-# Good: Add a sequence number
--> Subject
-session_idx : int32
----
-session_date : date
-```
-
-### Avoid Computed Values
-
-Primary keys should be stable inputs, not derived:
-
-```python
-# Bad: Derived from other data
-hash_id : varchar(64)  # MD5 of some content
-
-# Good: Assigned identifier
-recording_id : uuid
-```
+A `date` or `datetime` is perfectly good key material when the entity is
+genuinely identified by that time (a daily summary, or a session dated by day).
+Add a sequence number only when the date alone doesn't identify the entity.
 
 ## Migration Considerations
 
@@ -180,5 +171,9 @@ class Scan(dj.Manual):
 
 ## See Also
 
+- [Entity Integrity](../explanation/entity-integrity.md) — why every table needs
+  a primary key and how it enforces the one-to-one correspondence with entities
+- [Normalization](../explanation/normalization.md) — organizing attributes so
+  each fact lives in exactly one place
 - [Define Tables](define-tables.md) — Table definition syntax
 - [Model Relationships](model-relationships.ipynb) — Foreign key patterns

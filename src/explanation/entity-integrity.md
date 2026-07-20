@@ -75,6 +75,13 @@ Every DataJoint table must have a primary key. Primary-key attributes:
 - **Cannot be changed** — keys are immutable after insertion.
 - **Declared above the `---`** in the table definition.
 
+In practice, entity integrity is largely a matter of **primary-key design** —
+choosing a key that truly identifies each entity, and shaping entity types so
+each has a good natural key. The mechanics of choosing and declaring those keys
+are covered in the [Design Primary Keys](../how-to/design-primary-keys.md)
+how-to; this page explains *why* the primary key is what carries entity
+integrity.
+
 ### Explicit keys, no auto-increment
 
 DataJoint requires every primary-key value to be provided explicitly at
@@ -178,6 +185,11 @@ Here `(subject_id, session_idx, recording_idx)` together form the primary
 key. Neither attribute alone would identify a recording across the table.
 
 ## Foreign keys
+
+Referential integrity is impossible without entity integrity: you must be able
+to identify unique entities before you can define valid relationships between
+them. A foreign key builds on the parent's primary key, so a well-designed key
+is the prerequisite for every relationship that references it.
 
 A foreign key serves two distinct purposes in DataJoint:
 
@@ -412,16 +424,26 @@ class Trial(dj.Manual):
 
 ### Too many key attributes
 
+`(subject_id, timestamp)` is a *correct* key for a per-subject measurement:
+each reading is its own entity, identified by who was measured and when.
+Over-keying is the opposite mistake — putting a **descriptive** attribute into
+the key, so a single entity fragments into several records:
+
 ```python
-# Wrong: timestamp makes every row unique, losing entity semantics
+# Wrong: `technician` describes who took the reading; it doesn't identify it —
+# the same measurement recorded under two technicians becomes two entities
 class Measurement(dj.Manual):
     definition = """
-    subject_id : int64
-    timestamp : datetime(6)   # Microsecond precision destroys entity identity
+    subject_id : int32
+    timestamp : datetime(6)
+    technician : varchar(32)   # descriptive — belongs below the ---, not in the key
     ---
     value : float32
     """
 ```
+
+Keep the key to exactly the attributes that identify the entity; put everything
+descriptive below the `---`.
 
 ### Mutable natural keys
 
@@ -451,6 +473,10 @@ yours to design.
 
 ## See also
 
+- [Design Primary Keys](../how-to/design-primary-keys.md) — how to choose and
+  declare the keys that carry entity integrity
+- [Model Relationships](../how-to/model-relationships.ipynb) — foreign keys and
+  the relationship types they express
 - [Normalization](normalization.md) — entity normalization and the workflow
   test
 - [Computation Model](computation-model.md) — how cascade deletes and

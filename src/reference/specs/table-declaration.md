@@ -476,7 +476,7 @@ class Session(dj.Manual):
 ### 6.8 Projections in Foreign Keys
 
 ```
--> Parent.proj(alias='original_name')
+-> Parent.proj(new_name='original_name')
 ```
 
 - Reference same table multiple times with different attribute names
