@@ -58,7 +58,7 @@ Version admonitions are used for features introduced **after 2.0** (i.e., versio
 
 !!! version-deprecated "Deprecated in 2.1, removed in 3.0"
 
-    The `allow_direct_insert` parameter is deprecated. Use `dj.config['safemode']` instead.
+    The `old_method()` is deprecated. Use `new_method()` instead.
 
 **Note:** Features deprecated at the 2.0 baseline (coming from pre-2.0) are documented in the [Migration Guide](../how-to/migrate-to-v20.md) rather than with admonitions, since this documentation assumes 2.0 as the baseline.
 
