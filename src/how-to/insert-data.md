@@ -55,6 +55,34 @@ Subject.insert(rows, replace=True)
 Subject.insert(rows, ignore_extra_fields=True)
 ```
 
+## What Not to Insert
+
+The sections above target **Manual** tables — the tier whose rows are inserted
+directly, from outside the DataJoint pipeline (whether entered by hand through a
+form or GUI, or loaded by an automated ingestion tool). Other tiers get their
+rows a different way, and inserting into them directly breaks reproducibility:
+
+- **Computed and Imported tables** — their rows are produced only by `make()`
+  through [`populate()`](run-computations.md); a direct insert is rejected at
+  runtime. To change a result, delete and recompute rather than editing it by
+  hand. See the [`make()` reproducibility contract](../reference/specs/autopopulate.md#43-the-make-reproducibility-contract).
+- **Lookup tables** — their rows live in the table's `contents` in the
+  definition code, versioned and redeployed through your normal review process,
+  not inserted at runtime. If you find yourself inserting into a "Lookup" table
+  from application code, make it a `dj.Manual` table instead. See
+  [Manual or Lookup?](define-tables.md#manual-or-lookup).
+
+Two more rules keep inserts consistent:
+
+- **Insert parents before children.** A foreign key requires the referenced
+  parent row to exist first, so insert upstream tables before the tables that
+  depend on them.
+- **Don't open a transaction inside `make()`.** `populate()` already wraps each
+  `make()` call in a transaction, so its inserts are atomic; the
+  `with schema.connection.transaction:` pattern shown next is for grouping inserts in
+  **Manual** code — never inside `make()`. See
+  [the computation model](../explanation/computation-model.md#3-dont-open-a-transaction-inside-make).
+
 ## Master-Part Tables
 
 Use a transaction to maintain compositional integrity:
@@ -152,3 +180,5 @@ if Subject.validate(rows):
 - [Master-Part Tables](master-part.ipynb) — Atomic insertion of master and parts
 - [Define Tables](define-tables.md) — Table definition syntax
 - [Delete Data](delete-data.md) — Removing data from tables
+- [Update Data](update-data.md) — Correcting or replacing existing rows
+- [Run Computations](run-computations.md) — Populating computed tables via `make()`

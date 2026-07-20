@@ -545,20 +545,25 @@ def make(self, key):
     # All three inserts commit together or roll back together
 ```
 
-### 5.5 Manual Transaction Control
+### 5.5 No Manual Transactions Inside make()
 
-For complex scenarios, use explicit transactions:
+`populate()` already wraps each `make(key)` call in a transaction (§5.1), so
+everything a `make()` inserts — the master row and all of its Part rows —
+commits atomically, or rolls back together if `make()` raises. **Do not open
+your own transaction inside `make()`:** DataJoint does not support nested
+transactions, so starting one while `make()`'s transaction is already active
+raises an error.
 
 ```python
 def make(self, key):
-    # Fetch outside transaction
     data = (Source & key).to_dicts()
-
-    # Explicit transaction for insert
-    with self.connection.transaction:
-        self.insert1({**key, 'result': compute(data)})
-        self.Part.insert(parts)
+    # Correct: no explicit transaction — make() is already atomic
+    self.insert1({**key, "result": compute(data)})
+    self.Part.insert(parts)
 ```
+
+Explicit `with schema.connection.transaction:` blocks belong in ordinary (Manual) code
+that groups several related inserts — never in `make()`.
 
 ---
 

@@ -84,6 +84,21 @@ Master-Part relationships enforce **compositional integrity**:
 1. **Existence**: Parts cannot exist without their master
 2. **Cohesion**: Parts should be deleted/dropped with their master
 3. **Atomicity**: Master and parts form a logical unit
+4. **Transitive completeness**: a dependency on the master is a dependency on all of its parts
+
+For Computed and Imported tables, a master and its parts are inserted
+atomically: `populate()` wraps each `make()` call in a transaction, so the
+master and all of its parts commit together or not at all. For Manual
+master-part sets this atomicity is a convention rather than an enforced
+guarantee — insert the master and its parts within a single transaction
+(`with schema.connection.transaction:`) to preserve it. Deletion cascades in either
+case: deleting a master also deletes its parts.
+
+Because a populated master therefore reaches a complete composite, downstream
+tables *typically* reference the master alone and rely on the whole composite
+being present. A foreign key to a specific part is still legal — and common in
+practice — but is often unnecessary when the composite as a whole is what
+matters.
 
 ### 2.2 Foreign Key Behavior
 
