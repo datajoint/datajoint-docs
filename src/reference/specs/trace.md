@@ -25,7 +25,7 @@ Without (1), downstream tools that need row-level lineage (data-lineage viewers,
 
 ### Trace as the upstream mirror of cascade
 
-`Diagram.cascade()` walks **downstream** from a restricted seed and answers *"what is affected if these rows are deleted?"* `Diagram.trace()` walks **upstream** and answers *"what contributed to these rows?"*. The two share the same dependency graph (a `MultiDiGraph`), the same edge model, and most of the same propagation machinery — only the direction differs.
+`Diagram.cascade()` walks **downstream** from a restricted seed and answers *"what is affected if these rows are deleted?"* `Diagram.trace()` walks **upstream** and answers *"what contributed to these rows?"*. The two share the same dependency graph, the same edge model, and most of the same propagation machinery — only the direction differs.
 
 | Method | Direction | Convergence | Question answered |
 |---|---|---|---|
@@ -37,7 +37,7 @@ Without (1), downstream tools that need row-level lineage (data-lineage viewers,
 
 ### Reusing the propagation primitives
 
-`trace` applies the **upward propagation rules** (`U1`, `U2`, `U3`) defined in the [Cascade Specification](cascade.md#upward-propagation-child-parent), which are the symmetric inverses of `cascade`'s forward rules. Renamed FKs (`.proj()`) are reversed via U2; Part-of-Part chains are walked through naturally; parallel FKs between the same pair of tables are handled as distinct edges.
+`trace` applies the **upward propagation rules** (`U1`, `U2`, `U3`) defined in the [Cascade Specification](cascade.md#upward-propagation-child-parent), which are the symmetric inverses of `cascade`'s forward rules. Renamed FKs (`.proj()`) are reversed via U2; Part-of-Part chains are walked through naturally; multiple foreign keys between the same pair of tables are each reversed independently.
 
 This is why `trace` cannot ship before the upward primitives exist in the codebase. As of DataJoint 2.3, the primitives are in place (added with [#1429's cascade fix](https://github.com/datajoint/datajoint-python/pull/1468)), and `trace` is a direct consumer.
 

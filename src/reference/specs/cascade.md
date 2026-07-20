@@ -21,7 +21,7 @@ DataJoint loads its FK structure into a directed acyclic graph (`Connection.depe
 |---|---|
 | **Node** | A table, named by its fully-qualified SQL identifier (e.g. ``` `schema`.`table_name` ```). The graph stores the table's primary key set as node data. |
 | **Edge `parent → child`** | An FK constraint from `child` to `parent`. Edge data: `attr_map` (dict mapping child's FK columns → parent's referenced columns), `aliased` (true iff any column was renamed), `primary` (true iff the FK is in the child's primary key). |
-| **Parallel edges** | The graph is a `MultiDiGraph`, so multiple FKs between the same `parent → child` pair — including renamed (`aliased=True`) ones — are stored as distinct parallel edges keyed by `(parent, child, key)`, each carrying its own `attr_map`/`aliased`/`primary`. No synthetic intermediate node is used. |
+| **Parallel edges** | A child can reference the same parent through more than one foreign key — for example two renamed (`.proj()`) references — so the same `parent → child` pair may be connected by multiple edges, each carrying its own `attr_map`/`aliased`/`primary`. |
 
 The cascade engine operates on a copy of this graph (the `Diagram` class), recording per-table restrictions in `_cascade_restrictions` and the set of restricted attributes in `_restriction_attrs`.
 
@@ -209,7 +209,7 @@ The following are known, documented behaviors of the cascade engine as shipped:
 ## References
 
 - Source: `src/datajoint/diagram.py` — `Diagram.cascade`, `_propagate_restrictions`, `_apply_propagation_rule`, `_apply_propagation_rule_upward`, `_propagate_part_to_master`.
-- Source: `src/datajoint/dependencies.py` — graph construction (a `MultiDiGraph` with one parallel edge per FK), `extract_master`.
+- Source: `src/datajoint/dependencies.py` — dependency-graph construction, `extract_master`.
 - Issue: [datajoint-python #1429](https://github.com/datajoint/datajoint-python/issues/1429) — bug report and motivating examples for the upward propagation rules.
 - [Master-Part Specification](master-part.md) — Part-Master contract.
 - [Diagram Specification](diagram.md) — graph operations on the dependency graph.
