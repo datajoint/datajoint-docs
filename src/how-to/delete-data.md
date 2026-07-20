@@ -87,7 +87,7 @@ Deletes are atomic—all cascading deletes succeed or none do:
 Within an existing transaction:
 
 ```python
-with dj.conn().transaction:
+with schema.connection.transaction:
     (Table1 & key1).delete(transaction=False)
     (Table2 & key2).delete(transaction=False)
     Table3.insert(rows)
@@ -170,7 +170,7 @@ key = {'subject_id': 'M001', 'session_idx': 1}
 (Session & key).delete(prompt=False)
 
 # 2. Reinsert with corrected data
-with dj.conn().transaction:
+with schema.connection.transaction:
     Session.insert1({**key, 'session_date': '2024-01-08', 'duration': 40.0})
     Session.Trial.insert(corrected_trials)
 

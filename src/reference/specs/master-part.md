@@ -91,7 +91,7 @@ atomically: `populate()` wraps each `make()` call in a transaction, so the
 master and all of its parts commit together or not at all. For Manual
 master-part sets this atomicity is a convention rather than an enforced
 guarantee — insert the master and its parts within a single transaction
-(`with dj.conn().transaction:`) to preserve it. Deletion cascades in either
+(`with schema.connection.transaction:`) to preserve it. Deletion cascades in either
 case: deleting a master also deletes its parts.
 
 Because a populated master therefore reaches a complete composite, downstream
@@ -140,7 +140,7 @@ Session.Trial.insert([
 For atomic master+parts insertion, use transactions:
 
 ```python
-with dj.conn().transaction:
+with schema.connection.transaction:
     Session.insert1(master_data)
     Session.Trial.insert(trials_data)
 ```

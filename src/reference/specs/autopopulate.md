@@ -562,7 +562,7 @@ def make(self, key):
     self.Part.insert(parts)
 ```
 
-Explicit `with dj.conn().transaction:` blocks belong in ordinary (Manual) code
+Explicit `with schema.connection.transaction:` blocks belong in ordinary (Manual) code
 that groups several related inserts — never in `make()`.
 
 ---

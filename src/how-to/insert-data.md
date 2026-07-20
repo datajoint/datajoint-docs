@@ -79,7 +79,7 @@ Two more rules keep inserts consistent:
   depend on them.
 - **Don't open a transaction inside `make()`.** `populate()` already wraps each
   `make()` call in a transaction, so its inserts are atomic; the
-  `with dj.conn().transaction:` pattern shown next is for grouping inserts in
+  `with schema.connection.transaction:` pattern shown next is for grouping inserts in
   **Manual** code — never inside `make()`. See
   [the computation model](../explanation/computation-model.md#3-dont-open-a-transaction-inside-make).
 
@@ -88,7 +88,7 @@ Two more rules keep inserts consistent:
 Use a transaction to maintain compositional integrity:
 
 ```python
-with dj.conn().transaction:
+with schema.connection.transaction:
     Session.insert1({
         'subject_id': 'M001',
         'session_idx': 1,
@@ -162,7 +162,7 @@ for row in all_rows:
 ### Use transactions for related inserts
 
 ```python
-with dj.conn().transaction:
+with schema.connection.transaction:
     Parent.insert1(parent_row)
     Child.insert(child_rows)
 ```
