@@ -30,10 +30,10 @@ class MyTable(dj.Manual):
 
 | Type | Base Class | Purpose |
 |------|------------|---------|
-| Manual | `dj.Manual` | Data entered at runtime (users, forms, instruments, imports) |
+| Manual | `dj.Manual` | Data inserted directly from outside the pipeline (forms, instruments, ingestion scripts) |
 | Lookup | `dj.Lookup` | Reference data defined in the schema via `contents` |
-| Imported | `dj.Imported` | Data from external sources |
-| Computed | `dj.Computed` | Derived data |
+| Imported | `dj.Imported` | Populated by `make()` from an external source |
+| Computed | `dj.Computed` | Populated by `make()` from other tables |
 | Part | `dj.Part` | Child of master table |
 
 ## Primary Key (Above `---`)

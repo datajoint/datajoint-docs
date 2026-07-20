@@ -23,9 +23,9 @@ class TableName(dj.Manual):
 
 | Tier | Base Class | Table Prefix | Purpose |
 |------|------------|--------------|---------|
-| Manual | `dj.Manual` | (none) | Data entered at runtime (users, instruments, imports) |
+| Manual | `dj.Manual` | (none) | Data inserted directly from outside the pipeline (users, instruments, ingestion scripts) |
 | Lookup | `dj.Lookup` | `#` | Reference data defined in the schema via `contents` |
-| Imported | `dj.Imported` | `_` | Data from external sources |
+| Imported | `dj.Imported` | `_` | Populated by `make()` from an external source |
 | Computed | `dj.Computed` | `__` | Derived from other tables |
 | Part | `dj.Part` | `master__` | Detail records of master table |
 
