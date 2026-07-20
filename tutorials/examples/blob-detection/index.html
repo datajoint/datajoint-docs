@@ -4262,7 +4262,7 @@ class Detection(dj.Computed):
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <p>The diagram shows:</p>
 <ul>
-<li><strong>Green</strong> = Manual tables (user-entered data)</li>
+<li><strong>Green</strong> = Manual tables (data inserted directly, manually or via ingestion)</li>
 <li><strong>Gray</strong> = Lookup tables (reference data)</li>
 <li><strong>Red</strong> = Computed tables (derived data)</li>
 <li><strong>Edges</strong> = Dependencies (foreign keys), always flow top-to-bottom</li>
@@ -5028,7 +5028,7 @@ dj.Diagram(schema)</div>
 </tr>
 <tr>
 <td><strong>Manual Table</strong></td>
-<td>Stores user-entered data</td>
+<td>Stores data inserted directly from outside the pipeline</td>
 <td><code>Image</code>, <code>SelectedDetection</code></td>
 </tr>
 <tr>

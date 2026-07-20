@@ -1,6 +1,6 @@
 # DataJoint Documentation (Full)
 
-Generated: 2026-07-20 17:15:05 UTC
+Generated: 2026-07-20 17:16:26 UTC
 Commit: unknown
 Branch: unknown
 
@@ -5977,8 +5977,8 @@ Tables are classified by their role in the workflow:
 | Tier | Purpose | SQL Equivalent |
 |------|---------|----------------|
 | `Lookup` | Reference data, parameters | Regular table |
-| `Manual` | User-entered data | Regular table |
-| `Imported` | Data from external files | Regular table + trigger |
+| `Manual` | Data inserted directly from outside the pipeline (people or ingestion scripts) | Regular table |
+| `Imported` | Data from external sources (files, instruments, databases), populated by `make()` | Regular table + trigger |
 | `Computed` | Derived results | Materialized view + trigger |
 
 ### 2. Automatic Computation
@@ -6538,9 +6538,9 @@ DataJoint has four table tiers, each serving a different purpose:
 
 | Tier | Class | Purpose | Data Entry |
 |------|-------|---------|------------|
-| **Manual** | `dj.Manual` | Core experimental data | Inserted by operators or instruments |
+| **Manual** | `dj.Manual` | Core experimental data | Inserted directly by operators, instruments, or ingestion scripts |
 | **Lookup** | `dj.Lookup` | Reference/configuration data | Pre-populated, rarely changes |
-| **Imported** | `dj.Imported` | Data from external files | Auto-populated via `make()` |
+| **Imported** | `dj.Imported` | Data from external sources (files, instruments, databases) | Auto-populated via `make()` |
 | **Computed** | `dj.Computed` | Derived/processed data | Auto-populated via `make()` |
 
 **Manual** tables are not necessarily populated by hand—they contain data entered into the pipeline by operators, instruments, or ingestion scripts using `insert` commands. In contrast, **Imported** and **Computed** tables are auto-populated by calling the `.populate()` method, which invokes the `make()` callback for each missing entry.
@@ -6955,9 +6955,9 @@ SessionSummary()
 - Keep keys minimal but sufficient for uniqueness
 
 ### 2. Use Appropriate Table Tiers
-- **Manual**: Data entered by operators or instruments
+- **Manual**: Data inserted directly — by operators, instruments, or ingestion scripts
 - **Lookup**: Configuration, parameters, reference data
-- **Imported**: Data read from files (recordings, images)
+- **Imported**: Data read from external sources (recordings, images, instruments)
 - **Computed**: Derived analyses and summaries
 
 ### 3. Normalize Your Data
@@ -10257,7 +10257,7 @@ dj.Diagram(schema)
 
 
 **Legend:**
-- **Green rectangles**: Manual tables (user-entered data)
+- **Green rectangles**: Manual tables (data inserted directly — manually or by ingestion scripts)
 - **Gray rectangles**: Lookup tables (parameters)
 - **Blue ovals**: Imported tables (data from files)
 - **Red ovals**: Computed tables (derived from other tables)
@@ -11565,7 +11565,7 @@ dj.Diagram(schema)
 
 
 The diagram shows:
-- **Green** = Manual tables (user-entered data)
+- **Green** = Manual tables (data inserted directly, manually or via ingestion)
 - **Gray** = Lookup tables (reference data)
 - **Red** = Computed tables (derived data)
 - **Edges** = Dependencies (foreign keys), always flow top-to-bottom
@@ -11677,7 +11677,7 @@ dj.Diagram(schema)
 | Concept | What It Does | Example |
 |---------|--------------|--------|
 | **Schema** | Groups related tables | `schema = dj.Schema('tutorial_blobs')` |
-| **Manual Table** | Stores user-entered data | `Image`, `SelectedDetection` |
+| **Manual Table** | Stores data inserted directly from outside the pipeline | `Image`, `SelectedDetection` |
 | **Lookup Table** | Stores reference/config data | `DetectionParams` |
 | **Computed Table** | Derives data automatically | `Detection` |
 | **Part Table** | Stores detailed results with master | `Detection.Blob` |
@@ -15915,10 +15915,10 @@ class MyTable(dj.Manual):
 
 | Type | Base Class | Purpose |
 |------|------------|---------|
-| Manual | `dj.Manual` | Data entered at runtime (users, forms, instruments, imports) |
+| Manual | `dj.Manual` | Data inserted directly from outside the pipeline (forms, instruments, ingestion scripts) |
 | Lookup | `dj.Lookup` | Reference data defined in the schema via `contents` |
-| Imported | `dj.Imported` | Data from external sources |
-| Computed | `dj.Computed` | Derived data |
+| Imported | `dj.Imported` | Populated by `make()` from an external source |
+| Computed | `dj.Computed` | Populated by `make()` from other tables |
 | Part | `dj.Part` | Child of master table |
 
 ## Primary Key (Above `---`)
@@ -35972,9 +35972,9 @@ class TableName(dj.Manual):
 
 | Tier | Base Class | Table Prefix | Purpose |
 |------|------------|--------------|---------|
-| Manual | `dj.Manual` | (none) | Data entered at runtime (users, instruments, imports) |
+| Manual | `dj.Manual` | (none) | Data inserted directly from outside the pipeline (users, instruments, ingestion scripts) |
 | Lookup | `dj.Lookup` | `#` | Reference data defined in the schema via `contents` |
-| Imported | `dj.Imported` | `_` | Data from external sources |
+| Imported | `dj.Imported` | `_` | Populated by `make()` from an external source |
 | Computed | `dj.Computed` | `__` | Derived from other tables |
 | Part | `dj.Part` | `master__` | Detail records of master table |
 

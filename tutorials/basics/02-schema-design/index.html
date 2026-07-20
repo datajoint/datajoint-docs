@@ -3893,7 +3893,7 @@ schema = dj.Schema('tutorial_design')</div>
 <td><strong>Manual</strong></td>
 <td><code>dj.Manual</code></td>
 <td>Core experimental data</td>
-<td>Inserted by operators or instruments</td>
+<td>Inserted directly by operators, instruments, or ingestion scripts</td>
 </tr>
 <tr>
 <td><strong>Lookup</strong></td>
@@ -3904,7 +3904,7 @@ schema = dj.Schema('tutorial_design')</div>
 <tr>
 <td><strong>Imported</strong></td>
 <td><code>dj.Imported</code></td>
-<td>Data from external files</td>
+<td>Data from external sources (files, instruments, databases)</td>
 <td>Auto-populated via <code>make()</code></td>
 </tr>
 <tr>
@@ -5403,9 +5403,9 @@ SessionSummary()</div>
 <li>Keep keys minimal but sufficient for uniqueness</li>
 </ul>
 <h3 id="2-use-appropriate-table-tiers">2. Use Appropriate Table Tiers<a class="anchor-link" href="#2-use-appropriate-table-tiers">¶</a></h3><ul>
-<li><strong>Manual</strong>: Data entered by operators or instruments</li>
+<li><strong>Manual</strong>: Data inserted directly — by operators, instruments, or ingestion scripts</li>
 <li><strong>Lookup</strong>: Configuration, parameters, reference data</li>
-<li><strong>Imported</strong>: Data read from files (recordings, images)</li>
+<li><strong>Imported</strong>: Data read from external sources (recordings, images, instruments)</li>
 <li><strong>Computed</strong>: Derived analyses and summaries</li>
 </ul>
 <h3 id="3-normalize-your-data">3. Normalize Your Data<a class="anchor-link" href="#3-normalize-your-data">¶</a></h3><ul>
