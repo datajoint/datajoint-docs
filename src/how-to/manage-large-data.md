@@ -83,7 +83,7 @@ Insert large data efficiently:
 
 ```python
 # Good: single transaction for related data
-with dj.conn().transaction:
+with schema.connection.transaction:
     for item in large_batch:
         MyTable.insert1(item)
 ```

@@ -396,7 +396,7 @@ raises an error:
 ```python
 def make(self, key):
     # WRONG — a transaction is already in progress, so this raises an error
-    with dj.conn().transaction:
+    with self.connection.transaction:
         self.insert(compute_multiple_results(key))
 ```
 

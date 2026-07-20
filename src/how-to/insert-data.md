@@ -60,7 +60,7 @@ Subject.insert(rows, ignore_extra_fields=True)
 Use a transaction to maintain compositional integrity:
 
 ```python
-with dj.conn().transaction:
+with schema.connection.transaction:
     Session.insert1({
         'subject_id': 'M001',
         'session_idx': 1,
@@ -134,7 +134,7 @@ for row in all_rows:
 ### Use transactions for related inserts
 
 ```python
-with dj.conn().transaction:
+with schema.connection.transaction:
     Parent.insert1(parent_row)
     Child.insert(child_rows)
 ```
