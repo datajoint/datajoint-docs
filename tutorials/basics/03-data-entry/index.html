@@ -4665,7 +4665,7 @@ print(f"Total subjects: {len(Subject())}")</div>
 </clipboard-copy>
 </div>
 <div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Use a transaction to ensure master and parts are inserted atomically</span>
-<span class="k">with</span> <span class="n">dj</span><span class="o">.</span><span class="n">conn</span><span class="p">()</span><span class="o">.</span><span class="n">transaction</span><span class="p">:</span>
+<span class="k">with</span> <span class="n">schema</span><span class="o">.</span><span class="n">connection</span><span class="o">.</span><span class="n">transaction</span><span class="p">:</span>
     <span class="n">Session</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span>
         <span class="s1">'subject_id'</span><span class="p">:</span> <span class="s1">'M001'</span><span class="p">,</span>
         <span class="s1">'session_idx'</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
@@ -4689,7 +4689,7 @@ print(f"Total subjects: {len(Subject())}")</div>
 <span class="n">Session</span><span class="o">.</span><span class="n">Trial</span><span class="p">()</span>
 </pre></div>
 <div class="clipboard-copy-txt" id="cell-10"># Use a transaction to ensure master and parts are inserted atomically
-with dj.conn().transaction:
+with schema.connection.transaction:
     Session.insert1({
         'subject_id': 'M001',
         'session_idx': 1,
@@ -5294,7 +5294,7 @@ SessionAnalysis: 0
 </clipboard-copy>
 </div>
 <div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Add more data for demonstration</span>
-<span class="k">with</span> <span class="n">dj</span><span class="o">.</span><span class="n">conn</span><span class="p">()</span><span class="o">.</span><span class="n">transaction</span><span class="p">:</span>
+<span class="k">with</span> <span class="n">schema</span><span class="o">.</span><span class="n">connection</span><span class="o">.</span><span class="n">transaction</span><span class="p">:</span>
     <span class="n">Session</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span>
         <span class="s1">'subject_id'</span><span class="p">:</span> <span class="s1">'M002'</span><span class="p">,</span>
         <span class="s1">'session_idx'</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
@@ -5312,7 +5312,7 @@ SessionAnalysis: 0
 <span class="p">(</span><span class="n">Session</span> <span class="o">&amp;</span> <span class="p">{</span><span class="s1">'subject_id'</span><span class="p">:</span> <span class="s1">'M002'</span><span class="p">,</span> <span class="s1">'session_idx'</span><span class="p">:</span> <span class="mi">1</span><span class="p">})</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">prompt</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 </pre></div>
 <div class="clipboard-copy-txt" id="cell-18"># Add more data for demonstration
-with dj.conn().transaction:
+with schema.connection.transaction:
     Session.insert1({
         'subject_id': 'M002',
         'session_idx': 1,
@@ -5397,7 +5397,7 @@ with dj.conn().transaction:
 </clipboard-copy>
 </div>
 <div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Add a session with trials (using transaction for compositional integrity)</span>
-<span class="k">with</span> <span class="n">dj</span><span class="o">.</span><span class="n">conn</span><span class="p">()</span><span class="o">.</span><span class="n">transaction</span><span class="p">:</span>
+<span class="k">with</span> <span class="n">schema</span><span class="o">.</span><span class="n">connection</span><span class="o">.</span><span class="n">transaction</span><span class="p">:</span>
     <span class="n">Session</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span>
         <span class="s1">'subject_id'</span><span class="p">:</span> <span class="s1">'M003'</span><span class="p">,</span>
         <span class="s1">'session_idx'</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
@@ -5416,7 +5416,7 @@ with dj.conn().transaction:
 <span class="nb">print</span><span class="p">(</span><span class="s2">"Before correction:"</span><span class="p">,</span> <span class="n">SessionAnalysis</span><span class="o">.</span><span class="n">fetch1</span><span class="p">())</span>
 </pre></div>
 <div class="clipboard-copy-txt" id="cell-19"># Add a session with trials (using transaction for compositional integrity)
-with dj.conn().transaction:
+with schema.connection.transaction:
     Session.insert1({
         'subject_id': 'M003',
         'session_idx': 1,
@@ -5481,7 +5481,7 @@ print("Before correction:", SessionAnalysis.fetch1())</div>
 <span class="p">(</span><span class="n">Session</span> <span class="o">&amp;</span> <span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">prompt</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
 <span class="c1"># 2. Reinsert with corrected data (using transaction)</span>
-<span class="k">with</span> <span class="n">dj</span><span class="o">.</span><span class="n">conn</span><span class="p">()</span><span class="o">.</span><span class="n">transaction</span><span class="p">:</span>
+<span class="k">with</span> <span class="n">schema</span><span class="o">.</span><span class="n">connection</span><span class="o">.</span><span class="n">transaction</span><span class="p">:</span>
     <span class="n">Session</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="o">**</span><span class="n">key</span><span class="p">,</span> <span class="s1">'session_date'</span><span class="p">:</span> <span class="s1">'2026-01-08'</span><span class="p">,</span> <span class="s1">'duration'</span><span class="p">:</span> <span class="mf">40.0</span><span class="p">})</span>
     <span class="n">Session</span><span class="o">.</span><span class="n">Trial</span><span class="o">.</span><span class="n">insert</span><span class="p">([</span>
         <span class="p">{</span><span class="o">**</span><span class="n">key</span><span class="p">,</span> <span class="s1">'trial_idx'</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">'outcome'</span><span class="p">:</span> <span class="s1">'hit'</span><span class="p">,</span> <span class="s1">'reaction_time'</span><span class="p">:</span> <span class="mf">0.35</span><span class="p">},</span>
@@ -5503,7 +5503,7 @@ key = {'subject_id': 'M003', 'session_idx': 1}
 (Session &amp; key).delete(prompt=False)
 
 # 2. Reinsert with corrected data (using transaction)
-with dj.conn().transaction:
+with schema.connection.transaction:
     Session.insert1({**key, 'session_date': '2026-01-08', 'duration': 40.0})
     Session.Trial.insert([
         {**key, 'trial_idx': 1, 'outcome': 'hit', 'reaction_time': 0.35},
@@ -5726,7 +5726,7 @@ if not result:
 </clipboard-copy>
 </div>
 <div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Atomic transaction - all inserts succeed or none do</span>
-<span class="k">with</span> <span class="n">dj</span><span class="o">.</span><span class="n">conn</span><span class="p">()</span><span class="o">.</span><span class="n">transaction</span><span class="p">:</span>
+<span class="k">with</span> <span class="n">schema</span><span class="o">.</span><span class="n">connection</span><span class="o">.</span><span class="n">transaction</span><span class="p">:</span>
     <span class="n">Session</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span>
         <span class="s1">'subject_id'</span><span class="p">:</span> <span class="s1">'M007'</span><span class="p">,</span>
         <span class="s1">'session_idx'</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
@@ -5743,7 +5743,7 @@ if not result:
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Session inserted with </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">Session</span><span class="o">.</span><span class="n">Trial</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="p">{</span><span class="s1">'subject_id'</span><span class="p">:</span><span class="w"> </span><span class="s1">'M007'</span><span class="p">})</span><span class="si">}</span><span class="s2"> trials"</span><span class="p">)</span>
 </pre></div>
 <div class="clipboard-copy-txt" id="cell-23"># Atomic transaction - all inserts succeed or none do
-with dj.conn().transaction:
+with schema.connection.transaction:
     Session.insert1({
         'subject_id': 'M007',
         'session_idx': 1,
@@ -5793,7 +5793,7 @@ print(f"Session inserted with {len(Session.Trial &amp; {'subject_id': 'M007'})} 
 <span class="n">Trial</span><span class="o">.</span><span class="n">update1</span><span class="p">({</span><span class="o">**</span><span class="n">key</span><span class="p">,</span> <span class="s1">'value'</span><span class="p">:</span> <span class="n">new_value</span><span class="p">})</span>
 </pre></div>
 <h3 id="2-use-transactions-for-master-part-inserts">2. Use Transactions for Master-Part Inserts<a class="anchor-link" href="#2-use-transactions-for-master-part-inserts">¶</a></h3><div class="highlight"><pre><span></span><span class="c1"># Ensures compositional integrity</span>
-<span class="k">with</span> <span class="n">dj</span><span class="o">.</span><span class="n">conn</span><span class="p">()</span><span class="o">.</span><span class="n">transaction</span><span class="p">:</span>
+<span class="k">with</span> <span class="n">schema</span><span class="o">.</span><span class="n">connection</span><span class="o">.</span><span class="n">transaction</span><span class="p">:</span>
     <span class="n">Session</span><span class="o">.</span><span class="n">insert1</span><span class="p">(</span><span class="n">session_data</span><span class="p">)</span>
     <span class="n">Session</span><span class="o">.</span><span class="n">Trial</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">trials</span><span class="p">)</span>
 </pre></div>

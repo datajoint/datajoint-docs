@@ -3683,7 +3683,7 @@ dj.Diagram(schema)</div>
 <span class="n">Subject</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="s1">'subject_id'</span><span class="p">:</span> <span class="s1">'M001'</span><span class="p">,</span> <span class="s1">'species'</span><span class="p">:</span> <span class="s1">'Mus musculus'</span><span class="p">})</span>
 
 <span class="c1"># Insert session and trials atomically</span>
-<span class="k">with</span> <span class="n">dj</span><span class="o">.</span><span class="n">conn</span><span class="p">()</span><span class="o">.</span><span class="n">transaction</span><span class="p">:</span>
+<span class="k">with</span> <span class="n">schema</span><span class="o">.</span><span class="n">connection</span><span class="o">.</span><span class="n">transaction</span><span class="p">:</span>
     <span class="n">Session</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span>
         <span class="s1">'subject_id'</span><span class="p">:</span> <span class="s1">'M001'</span><span class="p">,</span>
         <span class="s1">'session_idx'</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
@@ -3704,7 +3704,7 @@ dj.Diagram(schema)</div>
 Subject.insert1({'subject_id': 'M001', 'species': 'Mus musculus'})
 
 # Insert session and trials atomically
-with dj.conn().transaction:
+with schema.connection.transaction:
     Session.insert1({
         'subject_id': 'M001',
         'session_idx': 1,

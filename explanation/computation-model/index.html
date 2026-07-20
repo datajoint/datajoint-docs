@@ -3442,7 +3442,7 @@ nested transactions, so starting one while <code>make()</code>'s transaction is 
 raises an error:</p>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">make</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
     <span class="c1"># WRONG — a transaction is already in progress, so this raises an error</span>
-    <span class="k">with</span> <span class="n">dj</span><span class="o">.</span><span class="n">conn</span><span class="p">()</span><span class="o">.</span><span class="n">transaction</span><span class="p">:</span>
+    <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">connection</span><span class="o">.</span><span class="n">transaction</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">compute_multiple_results</span><span class="p">(</span><span class="n">key</span><span class="p">))</span>
 </code></pre></div>
 <h3 id="4-test-on-one-entity-with-populate-not-make-directly">4. Test on One Entity with <code>populate()</code>, Not <code>make()</code> Directly<a class="headerlink" href="#4-test-on-one-entity-with-populate-not-make-directly" title="Permanent link">¶</a></h3>

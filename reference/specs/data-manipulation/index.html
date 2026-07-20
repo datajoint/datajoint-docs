@@ -7923,7 +7923,7 @@ Commit deletes? [yes, No]:
 </code></pre></div>
 <h3 id="72-explicit-transactions">7.2 Explicit Transactions<a class="headerlink" href="#72-explicit-transactions" title="Permanent link">&para;</a></h3>
 <p>For multi-table operations:</p>
-<div class="highlight"><pre><span></span><code><span class="k">with</span> <span class="n">dj</span><span class="o">.</span><span class="n">conn</span><span class="p">()</span><span class="o">.</span><span class="n">transaction</span><span class="p">:</span>
+<div class="highlight"><pre><span></span><code><span class="k">with</span> <span class="n">schema</span><span class="o">.</span><span class="n">connection</span><span class="o">.</span><span class="n">transaction</span><span class="p">:</span>
     <span class="n">Parent</span><span class="o">.</span><span class="n">insert1</span><span class="p">(</span><span class="n">parent_row</span><span class="p">)</span>
     <span class="n">Child</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">child_rows</span><span class="p">)</span>
     <span class="c1"># Commits on successful exit</span>
@@ -8005,7 +8005,7 @@ Commit deletes? [yes, No]:
 <span class="n">Subject</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">rows</span><span class="p">)</span>
 </code></pre></div>
 <h3 id="93-use-transactions-for-related-inserts">9.3 Use Transactions for Related Inserts<a class="headerlink" href="#93-use-transactions-for-related-inserts" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="k">with</span> <span class="n">dj</span><span class="o">.</span><span class="n">conn</span><span class="p">()</span><span class="o">.</span><span class="n">transaction</span><span class="p">:</span>
+<div class="highlight"><pre><span></span><code><span class="k">with</span> <span class="n">schema</span><span class="o">.</span><span class="n">connection</span><span class="o">.</span><span class="n">transaction</span><span class="p">:</span>
     <span class="n">session_key</span> <span class="o">=</span> <span class="n">Session</span><span class="o">.</span><span class="n">insert1</span><span class="p">(</span><span class="n">session_data</span><span class="p">,</span> <span class="n">skip_duplicates</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">Session</span><span class="o">.</span><span class="n">Recording</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">recordings</span><span class="p">)</span>
     <span class="n">Session</span><span class="o">.</span><span class="n">Stimulus</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">stimuli</span><span class="p">)</span>

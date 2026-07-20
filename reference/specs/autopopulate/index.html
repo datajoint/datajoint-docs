@@ -4336,7 +4336,7 @@ COMMIT
     <span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="n">Source</span> <span class="o">&amp;</span> <span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">to_dicts</span><span class="p">()</span>
 
     <span class="c1"># Explicit transaction for insert</span>
-    <span class="k">with</span> <span class="n">dj</span><span class="o">.</span><span class="n">conn</span><span class="p">()</span><span class="o">.</span><span class="n">transaction</span><span class="p">:</span>
+    <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">connection</span><span class="o">.</span><span class="n">transaction</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="o">**</span><span class="n">key</span><span class="p">,</span> <span class="s1">'result'</span><span class="p">:</span> <span class="n">compute</span><span class="p">(</span><span class="n">data</span><span class="p">)})</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">Part</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">parts</span><span class="p">)</span>
 </code></pre></div>

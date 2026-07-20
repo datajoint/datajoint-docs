@@ -7078,7 +7078,7 @@
 </code></pre></div>
 <h3 id="32-atomic-insertion">3.2 Atomic Insertion<a class="headerlink" href="#32-atomic-insertion" title="Permanent link">&para;</a></h3>
 <p>For atomic master+parts insertion, use transactions:</p>
-<div class="highlight"><pre><span></span><code><span class="k">with</span> <span class="n">dj</span><span class="o">.</span><span class="n">conn</span><span class="p">()</span><span class="o">.</span><span class="n">transaction</span><span class="p">:</span>
+<div class="highlight"><pre><span></span><code><span class="k">with</span> <span class="n">schema</span><span class="o">.</span><span class="n">connection</span><span class="o">.</span><span class="n">transaction</span><span class="p">:</span>
     <span class="n">Session</span><span class="o">.</span><span class="n">insert1</span><span class="p">(</span><span class="n">master_data</span><span class="p">)</span>
     <span class="n">Session</span><span class="o">.</span><span class="n">Trial</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">trials_data</span><span class="p">)</span>
 </code></pre></div>

@@ -6487,7 +6487,7 @@
 <h2 id="batch-inserts">Batch Inserts<a class="headerlink" href="#batch-inserts" title="Permanent link">&para;</a></h2>
 <p>Insert large data efficiently:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Good: single transaction for related data</span>
-<span class="k">with</span> <span class="n">dj</span><span class="o">.</span><span class="n">conn</span><span class="p">()</span><span class="o">.</span><span class="n">transaction</span><span class="p">:</span>
+<span class="k">with</span> <span class="n">schema</span><span class="o">.</span><span class="n">connection</span><span class="o">.</span><span class="n">transaction</span><span class="p">:</span>
     <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">large_batch</span><span class="p">:</span>
         <span class="n">MyTable</span><span class="o">.</span><span class="n">insert1</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
 </code></pre></div>

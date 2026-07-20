@@ -6574,7 +6574,7 @@ Proceed? [yes, No]:
 <span class="p">(</span><span class="n">Subject</span> <span class="o">&amp;</span> <span class="n">restriction</span><span class="p">)</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">transaction</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </code></pre></div>
 <p>Within an existing transaction:</p>
-<div class="highlight"><pre><span></span><code><span class="k">with</span> <span class="n">dj</span><span class="o">.</span><span class="n">conn</span><span class="p">()</span><span class="o">.</span><span class="n">transaction</span><span class="p">:</span>
+<div class="highlight"><pre><span></span><code><span class="k">with</span> <span class="n">schema</span><span class="o">.</span><span class="n">connection</span><span class="o">.</span><span class="n">transaction</span><span class="p">:</span>
     <span class="p">(</span><span class="n">Table1</span> <span class="o">&amp;</span> <span class="n">key1</span><span class="p">)</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">transaction</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
     <span class="p">(</span><span class="n">Table2</span> <span class="o">&amp;</span> <span class="n">key2</span><span class="p">)</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">transaction</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
     <span class="n">Table3</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">rows</span><span class="p">)</span>
@@ -6645,7 +6645,7 @@ Proceed? [yes, No]:
 <span class="p">(</span><span class="n">Session</span> <span class="o">&amp;</span> <span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">prompt</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
 <span class="c1"># 2. Reinsert with corrected data</span>
-<span class="k">with</span> <span class="n">dj</span><span class="o">.</span><span class="n">conn</span><span class="p">()</span><span class="o">.</span><span class="n">transaction</span><span class="p">:</span>
+<span class="k">with</span> <span class="n">schema</span><span class="o">.</span><span class="n">connection</span><span class="o">.</span><span class="n">transaction</span><span class="p">:</span>
     <span class="n">Session</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="o">**</span><span class="n">key</span><span class="p">,</span> <span class="s1">&#39;session_date&#39;</span><span class="p">:</span> <span class="s1">&#39;2024-01-08&#39;</span><span class="p">,</span> <span class="s1">&#39;duration&#39;</span><span class="p">:</span> <span class="mf">40.0</span><span class="p">})</span>
     <span class="n">Session</span><span class="o">.</span><span class="n">Trial</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">corrected_trials</span><span class="p">)</span>
 

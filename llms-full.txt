@@ -1,6 +1,6 @@
 # DataJoint Documentation (Full)
 
-Generated: 2026-07-20 14:47:51 UTC
+Generated: 2026-07-20 15:43:37 UTC
 Commit: unknown
 Branch: unknown
 
@@ -642,7 +642,7 @@ raises an error:
 ```python
 def make(self, key):
     # WRONG — a transaction is already in progress, so this raises an error
-    with dj.conn().transaction:
+    with self.connection.transaction:
         self.insert(compute_multiple_results(key))
 ```
 
@@ -6670,7 +6670,7 @@ print(f"Total subjects: {len(Subject())}")
 
 ```python
 # Use a transaction to ensure master and parts are inserted atomically
-with dj.conn().transaction:
+with schema.connection.transaction:
     Session.insert1({
         'subject_id': 'M001',
         'session_idx': 1,
@@ -6821,7 +6821,7 @@ The `prompt` parameter controls whether `delete()` asks for confirmation. When `
 
 ```python
 # Add more data for demonstration
-with dj.conn().transaction:
+with schema.connection.transaction:
     Session.insert1({
         'subject_id': 'M002',
         'session_idx': 1,
@@ -6847,7 +6847,7 @@ When source data needs to change, the correct pattern is **delete → insert →
 
 ```python
 # Add a session with trials (using transaction for compositional integrity)
-with dj.conn().transaction:
+with schema.connection.transaction:
     Session.insert1({
         'subject_id': 'M003',
         'session_idx': 1,
@@ -6880,7 +6880,7 @@ key = {'subject_id': 'M003', 'session_idx': 1}
 (Session & key).delete(prompt=False)
 
 # 2. Reinsert with corrected data (using transaction)
-with dj.conn().transaction:
+with schema.connection.transaction:
     Session.insert1({**key, 'session_date': '2026-01-08', 'duration': 40.0})
     Session.Trial.insert([
         {**key, 'trial_idx': 1, 'outcome': 'hit', 'reaction_time': 0.35},
@@ -6943,7 +6943,7 @@ Single operations are atomic by default. Use explicit transactions for:
 
 ```python
 # Atomic transaction - all inserts succeed or none do
-with dj.conn().transaction:
+with schema.connection.transaction:
     Session.insert1({
         'subject_id': 'M007',
         'session_idx': 1,
@@ -6981,7 +6981,7 @@ Trial.update1({**key, 'value': new_value})
 
 ```python
 # Ensures compositional integrity
-with dj.conn().transaction:
+with schema.connection.transaction:
     Session.insert1(session_data)
     Session.Trial.insert(trials)
 ```
@@ -15769,7 +15769,7 @@ Deletes are atomic—all cascading deletes succeed or none do:
 Within an existing transaction:
 
 ```python
-with dj.conn().transaction:
+with schema.connection.transaction:
     (Table1 & key1).delete(transaction=False)
     (Table2 & key2).delete(transaction=False)
     Table3.insert(rows)
@@ -15852,7 +15852,7 @@ key = {'subject_id': 'M001', 'session_idx': 1}
 (Session & key).delete(prompt=False)
 
 # 2. Reinsert with corrected data
-with dj.conn().transaction:
+with schema.connection.transaction:
     Session.insert1({**key, 'session_date': '2024-01-08', 'duration': 40.0})
     Session.Trial.insert(corrected_trials)
 
@@ -17356,7 +17356,7 @@ Subject.insert(rows, ignore_extra_fields=True)
 Use a transaction to maintain compositional integrity:
 
 ```python
-with dj.conn().transaction:
+with schema.connection.transaction:
     Session.insert1({
         'subject_id': 'M001',
         'session_idx': 1,
@@ -17430,7 +17430,7 @@ for row in all_rows:
 ### Use transactions for related inserts
 
 ```python
-with dj.conn().transaction:
+with schema.connection.transaction:
     Parent.insert1(parent_row)
     Child.insert(child_rows)
 ```
@@ -17676,7 +17676,7 @@ Insert large data efficiently:
 
 ```python
 # Good: single transaction for related data
-with dj.conn().transaction:
+with schema.connection.transaction:
     for item in large_batch:
         MyTable.insert1(item)
 ```
@@ -18828,7 +18828,7 @@ Masters must exist before their parts. Use a transaction for atomicity:
 Subject.insert1({'subject_id': 'M001', 'species': 'Mus musculus'})
 
 # Insert session and trials atomically
-with dj.conn().transaction:
+with schema.connection.transaction:
     Session.insert1({
         'subject_id': 'M001',
         'session_idx': 1,
@@ -27347,7 +27347,7 @@ def make(self, key):
     data = (Source & key).to_dicts()
 
     # Explicit transaction for insert
-    with dj.conn().transaction:
+    with self.connection.transaction:
         self.insert1({**key, 'result': compute(data)})
         self.Part.insert(parts)
 ```
@@ -29469,7 +29469,7 @@ Subject.delete()      # Atomic (by default)
 For multi-table operations:
 
 ```python
-with dj.conn().transaction:
+with schema.connection.transaction:
     Parent.insert1(parent_row)
     Child.insert(child_rows)
     # Commits on successful exit
@@ -29545,7 +29545,7 @@ Subject.insert(rows)
 ### 9.3 Use Transactions for Related Inserts
 
 ```python
-with dj.conn().transaction:
+with schema.connection.transaction:
     session_key = Session.insert1(session_data, skip_duplicates=True)
     Session.Recording.insert(recordings)
     Session.Stimulus.insert(stimuli)
@@ -31373,7 +31373,7 @@ Session.Trial.insert([
 For atomic master+parts insertion, use transactions:
 
 ```python
-with dj.conn().transaction:
+with schema.connection.transaction:
     Session.insert1(master_data)
     Session.Trial.insert(trials_data)
 ```
