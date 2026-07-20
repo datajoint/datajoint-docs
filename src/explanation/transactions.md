@@ -38,9 +38,11 @@ Grounded in DataJoint, they read as follows:
   restarts.
 
 DataJoint adheres to this classical ACID model on both of its peer backends,
-MySQL and PostgreSQL, using serializable-style isolation for operations that must
-be atomic. The database engine, not DataJoint, ultimately enforces the guarantee;
-DataJoint's job is to open a transaction around the right group of statements.
+MySQL and PostgreSQL, relying on each backend's default isolation to keep the
+grouped statements atomic and consistent — MySQL opens the transaction with a
+consistent snapshot (REPEATABLE READ), PostgreSQL uses READ COMMITTED. The
+database engine, not DataJoint, ultimately enforces the guarantee; DataJoint's
+job is to open a transaction around the right group of statements.
 
 ## A concrete all-or-nothing example
 

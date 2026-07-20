@@ -118,9 +118,12 @@ DataJoint declares references with the foreign-key arrow `->`, which inherits
 the referenced table's primary key into the dependent table and enforces that
 the referenced row exists before a dependent row can be inserted. Removal is
 symmetric: deleting an entity **cascades** to everything that depends on it,
-so the database never enters a state with orphaned references — including
-objects held in integrated object storage, which are removed together with
-the rows that own them. See [Referential Integrity](referential-integrity.md).
+so the database never enters a state with orphaned references. This is a
+row-level guarantee: objects held in integrated object storage are *not* removed
+synchronously with their rows (hash-addressed storage is deduplicated, and
+immediate deletion is unsafe under concurrency) — they are reclaimed
+asynchronously by garbage collection. See
+[Referential Integrity](referential-integrity.md).
 
 ### 5. Compositional integrity
 
@@ -131,8 +134,11 @@ some parts without others — would leave a partial, misleading entity.
 
 DataJoint expresses this with the **master-part** relationship. The master
 represents the composite entity; its part tables hold the components produced
-with it. Insertion and deletion of a master and its parts occur as a single
-transaction, so a partial composite can never be observed. See
+with it. When a master and its parts are populated together by `make()`
+(Computed and Imported tables), their insertion is one transaction, so a partial
+composite is never committed; for Manual master-part sets this atomicity is
+maintained by convention (a single transaction). Deletion cascades from master
+to parts in either case. See
 [Master-Part](../reference/specs/master-part.md).
 
 ### 6. Consistency

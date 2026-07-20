@@ -103,13 +103,15 @@ records and reinsert them. In a pipeline this preserves a clean rule: if an
 input changes, the results derived from it are removed and recomputed, never
 quietly rewritten.
 
-### 5. Automatic index creation
+### 5. Indexing the foreign-key columns
 
-The database automatically creates a secondary index on the child's
-foreign-key columns. You never declare it. This index accelerates the delete
-check (finding a parent's children), the join (matching child keys to parent
-keys), and the insert check (confirming the parent exists). A foreign key thus
-carries a performance guarantee as well as an integrity guarantee.
+On MySQL/InnoDB the engine automatically creates a secondary index on the
+child's foreign-key columns as part of enforcing the constraint — you never
+declare it. Such an index accelerates the delete check (finding a parent's
+children), the join (matching child keys to parent keys), and the insert check
+(confirming the parent exists). PostgreSQL does *not* index foreign-key columns
+automatically; when the delete or join cost on a large child table matters,
+declare an explicit `index(...)` on those columns.
 
 ## The dual role: integrity and workflow
 
