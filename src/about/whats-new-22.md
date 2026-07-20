@@ -266,9 +266,9 @@ When `cascade()` or `restrict()` propagates a restriction from a parent to a chi
 
 | Rule | Condition | Child restriction |
 |------|-----------|-------------------|
-| **Direct copy** | Non-aliased FK, restriction attributes are a subset of child's primary key | Restriction copied directly |
-| **Aliased projection** | FK uses attribute renaming (e.g., `subject_id` → `animal_id`) | Parent projected with attribute mapping |
-| **Full projection** | Non-aliased FK, restriction uses attributes not in child's primary key | Parent projected (all attributes) as restriction |
+| **Direct copy** | Non-renamed FK, restriction attributes are a subset of child's primary key | Restriction copied directly |
+| **Renamed projection** | FK uses attribute renaming (e.g., `subject_id` → `animal_id`) | Parent projected with attribute mapping |
+| **Full projection** | Non-renamed FK, restriction uses attributes not in child's primary key | Parent projected (all attributes) as restriction |
 
 When a child has multiple restricted ancestors, convergence depends on the mode: `cascade()` uses OR (any path marks a row for deletion), `restrict()` uses AND (all conditions must match).
 

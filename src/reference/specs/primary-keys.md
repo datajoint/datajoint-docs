@@ -24,7 +24,7 @@ The functional dependency relationship is derived from the structure of primary 
 
 - `A → B` holds when every attribute in PK(B) appears (by name) somewhere in A (either as a primary key or secondary attribute)
 - After semantic matching passes, namesakes represent semantically equivalent attributes, so checking by name is valid
-- Aliased attributes (same lineage, different names) don't participate in natural joins
+- Renamed attributes (same lineage, different names) don't participate in natural joins
 
 ## Notation
 

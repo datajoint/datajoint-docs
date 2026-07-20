@@ -25,7 +25,7 @@ pk_section     = attribute_line+
 secondary_section = attribute_line*
 
 attribute_line = [foreign_key | attribute]
-foreign_key    = "->" [modifiers] table_reference [alias]
+foreign_key    = "->" [modifiers] table_reference [rename]
 modifiers      = "[" modifier ("," modifier)* "]"
 modifier       = "nullable" | "unique"
 attribute      = [default "="] name ":" type [# comment]

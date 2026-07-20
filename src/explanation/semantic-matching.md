@@ -282,9 +282,9 @@ class RequiredCourse(dj.Manual):
 FavoriteCourse() * RequiredCourse()
 ```
 
-### Aliased Foreign Key
+### Renamed Foreign Key
 
-When you alias a foreign key, the new name gets the same lineage as the original:
+When you rename a foreign key, the new name gets the same lineage as the original:
 
 ```python
 class Person(dj.Manual):
