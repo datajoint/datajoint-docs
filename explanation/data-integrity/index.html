@@ -8,13 +8,13 @@
       
       
       
-        <link rel="canonical" href="https://docs.datajoint.com/explanation/data-pipelines/">
+        <link rel="canonical" href="https://docs.datajoint.com/explanation/data-integrity/">
       
       
-        <link rel="prev" href="../">
+        <link rel="prev" href="../relational-workflow-model/">
       
       
-        <link rel="next" href="../faq/">
+        <link rel="next" href="../entity-integrity/">
       
       
         
@@ -25,7 +25,7 @@
     
     
       
-        <title>Data Pipelines - DataJoint Documentation</title>
+        <title>Data Integrity - DataJoint Documentation</title>
       
     
     
@@ -105,7 +105,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#scientific-data-pipelines" class="md-skip">
+        <a href="#data-integrity" class="md-skip">
           Skip to content
         </a>
       
@@ -178,7 +178,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Data Pipelines
+              Data Integrity
             
           </span>
         </div>
@@ -431,10 +431,8 @@
                 
   
   
-    
   
   
-  
     
     
       
@@ -448,11 +446,11 @@
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_1" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_1" >
         
           
           <label class="md-nav__link" for="__nav_2_1" id="__nav_2_1_label" tabindex="0">
@@ -473,7 +471,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_1_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_1_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_2_1">
             <span class="md-nav__icon md-icon"></span>
             
@@ -488,37 +486,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Data Pipelines
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../data-pipelines/" class="md-nav__link">
         
   
   
@@ -534,159 +505,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#pipeline-architecture" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Pipeline Architecture
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#pipeline-as-a-dag" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Pipeline as a DAG
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Pipeline as a DAG">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#dag-constraints" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        DAG Constraints
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#the-relational-workflow-model" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        The Relational Workflow Model
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#schema-organization" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Schema Organization
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#object-augmented-schemas" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Object-Augmented Schemas
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Object-Augmented Schemas">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#the-oas-philosophy" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        The OAS Philosophy
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#pipeline-workflow" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Pipeline Workflow
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#comparing-approaches" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Comparing Approaches
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#summary" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Summary
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#see-also" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        See Also
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -732,8 +550,10 @@
                 
   
   
+    
   
   
+  
     
     
       
@@ -765,11 +585,11 @@
       
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2" checked>
         
           
           <label class="md-nav__link" for="__nav_2_2" id="__nav_2_2_label" tabindex="0">
@@ -790,7 +610,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_2_2">
             <span class="md-nav__icon md-icon"></span>
             
@@ -833,10 +653,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../data-integrity/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Data Integrity
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -852,6 +699,153 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#from-real-world-rules-to-database-constraints" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        From real-world rules to database constraints
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-seven-types-of-integrity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The seven types of integrity
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The seven types of integrity">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-domain-integrity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Domain integrity
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-completeness" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Completeness
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-entity-integrity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Entity integrity
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-referential-integrity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Referential integrity
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-compositional-integrity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Compositional integrity
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-consistency" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Consistency
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#7-workflow-integrity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Workflow integrity
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#why-declared-constraints-matter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why declared constraints matter
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#see-also" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        See also
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -6322,10 +6316,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#pipeline-architecture" class="md-nav__link">
+  <a href="#from-real-world-rules-to-database-constraints" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Pipeline Architecture
+        From real-world rules to database constraints
       
     </span>
   </a>
@@ -6333,22 +6327,88 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#pipeline-as-a-dag" class="md-nav__link">
+  <a href="#the-seven-types-of-integrity" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Pipeline as a DAG
+        The seven types of integrity
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Pipeline as a DAG">
+    <nav class="md-nav" aria-label="The seven types of integrity">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#dag-constraints" class="md-nav__link">
+  <a href="#1-domain-integrity" class="md-nav__link">
     <span class="md-ellipsis">
       
-        DAG Constraints
+        1. Domain integrity
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-completeness" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Completeness
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-entity-integrity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Entity integrity
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-referential-integrity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Referential integrity
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-compositional-integrity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Compositional integrity
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-consistency" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Consistency
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#7-workflow-integrity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Workflow integrity
       
     </span>
   </a>
@@ -6361,82 +6421,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#the-relational-workflow-model" class="md-nav__link">
+  <a href="#why-declared-constraints-matter" class="md-nav__link">
     <span class="md-ellipsis">
       
-        The Relational Workflow Model
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#schema-organization" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Schema Organization
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#object-augmented-schemas" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Object-Augmented Schemas
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Object-Augmented Schemas">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#the-oas-philosophy" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        The OAS Philosophy
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#pipeline-workflow" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Pipeline Workflow
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#comparing-approaches" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Comparing Approaches
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#summary" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Summary
+        Why declared constraints matter
       
     </span>
   </a>
@@ -6447,7 +6435,7 @@
   <a href="#see-also" class="md-nav__link">
     <span class="md-ellipsis">
       
-        See Also
+        See also
       
     </span>
   </a>
@@ -6474,178 +6462,196 @@
   
 
 
-<h1 id="scientific-data-pipelines">Scientific Data Pipelines<a class="headerlink" href="#scientific-data-pipelines" title="Permanent link">&para;</a></h1>
-<p>A <strong>scientific data pipeline</strong> extends beyond a database with computations. It is a comprehensive system that:</p>
-<ul>
-<li>Manages the complete lifecycle of scientific data from acquisition to delivery</li>
-<li>Integrates diverse tools for data entry, visualization, and analysis</li>
-<li>Provides infrastructure for secure, scalable computation</li>
-<li>Enables collaboration across teams and institutions</li>
-<li>Supports reproducibility and data lineage throughout</li>
-</ul>
-<h2 id="pipeline-architecture">Pipeline Architecture<a class="headerlink" href="#pipeline-architecture" title="Permanent link">&para;</a></h2>
-<p>At the heart of every DataJoint pipeline is an <strong>open-source core</strong> of three components that handle schema, computation, and storage. The managed <strong>DataJoint Platform</strong> extends this core with services for AI access, data ingestion, exploration, security, collaboration, and visualization.</p>
-<p><img alt="DataJoint Platform Architecture" src="../../images/dj-platform.svg" /></p>
-<table>
-<thead>
-<tr>
-<th>Open-Source Core</th>
-<th>Purpose</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>Code Repository</strong></td>
-<td>Version-controlled pipeline definitions, <code>make</code> methods, configuration</td>
-</tr>
-<tr>
-<td><strong>Relational Database</strong></td>
-<td>System of record for metadata, relationships, and integrity enforcement</td>
-</tr>
-<tr>
-<td><strong>Object Store</strong></td>
-<td>Scalable storage for large scientific data (images, recordings, signals)</td>
-</tr>
-</tbody>
-</table>
-<p>These components work together: code defines the schema and computations, the database tracks all metadata and relationships, and object storage holds the large scientific data files.</p>
-<h2 id="pipeline-as-a-dag">Pipeline as a DAG<a class="headerlink" href="#pipeline-as-a-dag" title="Permanent link">&para;</a></h2>
-<p>A DataJoint pipeline forms a <strong>Directed Acyclic Graph (DAG)</strong> at two levels:</p>
-<p><img alt="Pipeline DAG Structure" src="../../images/pipeline-illustration.png" /></p>
-<p><strong>Nodes</strong> represent Python modules, which correspond to database schemas.</p>
-<p><strong>Edges</strong> represent:</p>
-<ul>
-<li>Python import dependencies between modules</li>
-<li>Bundles of foreign key references between schemas</li>
-</ul>
-<p>This dual structure ensures that both code dependencies and data dependencies flow in the same direction.</p>
-<h3 id="dag-constraints">DAG Constraints<a class="headerlink" href="#dag-constraints" title="Permanent link">&para;</a></h3>
+<h1 id="data-integrity">Data Integrity<a class="headerlink" href="#data-integrity" title="Permanent link">&para;</a></h1>
+<p><strong>Data integrity</strong> is the ability of a database to represent the real world
+faithfully: to accept only valid data states and only valid transitions
+between them. Every scientific record encodes rules that hold outside the
+database — a mouse has exactly one identifier, a recording belongs to a
+session that actually happened, a measurement is a number in a known range.
+Data integrity is the discipline of turning those real-world rules into
+<strong>database constraints</strong> that the engine enforces automatically.</p>
+<p>The distinguishing property of a constraint is that it <em>cannot be bypassed</em>.
+Validation written in application code protects only the one program that
+runs it; a second script or a collaborator's notebook can write straight
+past it. A constraint declared in the schema is enforced for every client,
+on every write, with no cooperation required — the rule lives with the data,
+not with any one program that touches it.</p>
+<p>DataJoint organizes these guarantees into seven types of integrity. The
+first four are classical relational guarantees; the last three extend them
+to compositions, concurrency, and computation. Each maps to a specific
+feature of a table definition.</p>
+<h2 id="from-real-world-rules-to-database-constraints">From real-world rules to database constraints<a class="headerlink" href="#from-real-world-rules-to-database-constraints" title="Permanent link">&para;</a></h2>
+<p>Database design is largely the work of translating a sentence about the
+world into a set of enforceable constraints. Consider one lab rule:</p>
 <blockquote>
-<p><strong>All foreign key relationships within a schema MUST form a DAG.</strong></p>
-<p><strong>Dependencies between schemas (foreign keys + imports) MUST also form a DAG.</strong></p>
+<p>Every mouse has a unique identifier, and every recording session must
+reference a real mouse and record when it started.</p>
 </blockquote>
-<p>This constraint is fundamental to DataJoint's design. It ensures:</p>
-<ul>
-<li><strong>Unidirectional data flow</strong> — Data enters at the top and flows downstream</li>
-<li><strong>Clear lineage</strong> — Every result traces back to its inputs</li>
-<li><strong>Safe deletion</strong> — Cascading deletes follow the DAG without cycles</li>
-<li><strong>Predictable computation</strong> — <code>populate()</code> can determine correct execution order</li>
-</ul>
-<h2 id="the-relational-workflow-model">The Relational Workflow Model<a class="headerlink" href="#the-relational-workflow-model" title="Permanent link">&para;</a></h2>
-<p>DataJoint pipelines are built on the <a href="../relational-workflow-model/">Relational Workflow Model</a>—a paradigm that extends relational databases with native support for computational workflows. In this model:</p>
-<ul>
-<li><strong>Tables represent workflow steps</strong>, not just data storage</li>
-<li><strong>Foreign keys encode dependencies</strong>, prescribing the order of operations</li>
-<li><strong>Table tiers</strong> (Lookup, Manual, Imported, Computed) classify how data enters the pipeline</li>
-<li><strong>The schema forms a DAG</strong> that defines valid execution sequences</li>
-</ul>
-<p>This model treats the database schema as an <strong>executable workflow specification</strong>—defining not just what data exists but when and how it comes into existence.</p>
-<h2 id="schema-organization">Schema Organization<a class="headerlink" href="#schema-organization" title="Permanent link">&para;</a></h2>
-<p>Each schema corresponds to a dedicated Python module. The module import structure mirrors the foreign key dependencies between schemas:</p>
-<p><img alt="Schema Structure" src="../../images/schema-illustration.png" /></p>
-<div class="highlight"><pre><span></span><code>my_pipeline/
-├── src/
-│   └── my_pipeline/
-│       ├── __init__.py
-│       ├── subject.py      # subject schema (no dependencies)
-│       ├── session.py      # session schema (depends on subject)
-│       ├── acquisition.py  # acquisition schema (depends on session)
-│       └── analysis.py     # analysis schema (depends on acquisition)
-</code></pre></div>
-<p>For practical guidance on organizing multi-schema pipelines, configuring repositories, and managing team access, see <a href="../../how-to/manage-pipeline-project/">Manage a Pipeline Project</a>.</p>
-<h2 id="object-augmented-schemas">Object-Augmented Schemas<a class="headerlink" href="#object-augmented-schemas" title="Permanent link">&para;</a></h2>
-<p>Scientific data often includes large objects—images, recordings, time series, instrument outputs—that don't fit efficiently in relational tables. DataJoint addresses this through <strong>Object-Augmented Schemas (OAS)</strong>, a hybrid storage architecture that preserves relational semantics while handling arbitrarily large data.</p>
-<h3 id="the-oas-philosophy">The OAS Philosophy<a class="headerlink" href="#the-oas-philosophy" title="Permanent link">&para;</a></h3>
-<p><strong>1. The database remains the system of record.</strong></p>
-<p>All metadata, relationships, and query logic live in the relational database. The schema defines what data exists, how entities relate, and what computations produce them. Queries operate on the relational structure; results are consistent and reproducible.</p>
-<p><strong>2. Large objects live in object stores.</strong></p>
-<p>Object storage (filesystems, S3, GCS, Azure Blob, MinIO) holds the actual bytes—arrays, images, files. The database stores only lightweight references (paths, checksums, metadata). This separation lets the database stay fast while data scales to terabytes.</p>
-<p><strong>3. Transparent access through codecs.</strong></p>
-<p>DataJoint's <a href="../type-system/">type system</a> provides codec types that bridge Python objects and storage:</p>
-<table>
-<thead>
-<tr>
-<th>Codec</th>
-<th>Purpose</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>&lt;blob&gt;</code></td>
-<td>Serialize Python objects (NumPy arrays, dicts)</td>
-</tr>
-<tr>
-<td><code>&lt;blob@store&gt;</code></td>
-<td>Same, but stored in object store</td>
-</tr>
-<tr>
-<td><code>&lt;attach&gt;</code></td>
-<td>Store files with preserved filenames</td>
-</tr>
-<tr>
-<td><code>&lt;object@store&gt;</code></td>
-<td>Path-addressed storage for complex structures (Zarr, HDF5)</td>
-</tr>
-<tr>
-<td><code>&lt;filepath@store&gt;</code></td>
-<td>References to user-managed files</td>
-</tr>
-</tbody>
-</table>
-<p>Users work with native Python objects; serialization and storage routing are invisible.</p>
-<p><strong>4. Referential integrity extends to objects.</strong></p>
-<p>When a database row is deleted, its associated stored objects are garbage-collected. Foreign key cascades work correctly—delete upstream data and downstream results (including their objects) disappear. The database and object store remain synchronized without manual cleanup.</p>
-<p><strong>5. Multiple storage tiers support diverse access patterns.</strong></p>
-<p>Different attributes can route to different stores:</p>
-<div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">Recording</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Imported</span><span class="p">):</span>
+<p>That single sentence decomposes into four independent constraints, each a
+different type of integrity:</p>
+<div class="highlight"><pre><span></span><code><span class="nd">@schema</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Mouse</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
     <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
-<span class="s2">    -&gt; Session</span>
+<span class="s2">    mouse_id : char(6)          # unique ear-tag identifier</span>
 <span class="s2">    ---</span>
-<span class="s2">    raw_data : &lt;blob@fast&gt;       # Hot storage for active analysis</span>
-<span class="s2">    archive : &lt;blob@cold&gt;        # Cold storage for long-term retention</span>
+<span class="s2">    date_of_birth : date</span>
+<span class="s2">    sex : enum(&#39;M&#39;, &#39;F&#39;, &#39;U&#39;)</span>
+<span class="s2">    &quot;&quot;&quot;</span>
+
+<span class="nd">@schema</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Session</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">    -&gt; Mouse                    # references a real mouse</span>
+<span class="s2">    session_idx : int32</span>
+<span class="s2">    ---</span>
+<span class="s2">    session_start : datetime    # must be present and a valid timestamp</span>
 <span class="s2">    &quot;&quot;&quot;</span>
 </code></pre></div>
-<p>This architecture lets teams work with terabyte-scale datasets while retaining the query power, integrity guarantees, and reproducibility of the relational model.</p>
-<h2 id="pipeline-workflow">Pipeline Workflow<a class="headerlink" href="#pipeline-workflow" title="Permanent link">&para;</a></h2>
-<p>A typical data pipeline workflow:</p>
-<ol>
-<li>
-<p><strong>Acquisition</strong> — Data is collected from instruments, experiments, or external sources. Raw files land in object storage; metadata populates Manual tables.</p>
-</li>
-<li>
-<p><strong>Import</strong> — Automated processes parse raw data, extract signals, and populate Imported tables with structured results.</p>
-</li>
-<li>
-<p><strong>Computation</strong> — The <code>populate()</code> mechanism identifies new data and triggers downstream processing. Compute resources execute transformations and populate Computed tables.</p>
-</li>
-<li>
-<p><strong>Query &amp; Analysis</strong> — Users query results across the pipeline, combining data from multiple stages to generate insights, reports, or visualizations.</p>
-</li>
-<li>
-<p><strong>Collaboration</strong> — Team members access the same database concurrently, building on shared results. Foreign key constraints maintain consistency.</p>
-</li>
-<li>
-<p><strong>Delivery</strong> — Processed results are exported, integrated into downstream systems, or archived according to project requirements.</p>
-</li>
-</ol>
-<p>Throughout this process, the schema definition remains the single source of truth.</p>
-<h2 id="comparing-approaches">Comparing Approaches<a class="headerlink" href="#comparing-approaches" title="Permanent link">&para;</a></h2>
-<p>The pipeline approach requires upfront investment in schema design. Compared to a file-based approach where data structure is implicit in filenames, dependencies are encoded in scripts, and lineage must be tracked manually, a DataJoint pipeline makes all of those explicit in the schema — and pays the investment back in reproducibility, query power, and collaboration as projects scale.</p>
-<p>For a detailed structural comparison against file-based workflow systems (CWL, Snakemake, Nextflow) and task orchestrators (Airflow, Argo, Prefect, Dagster), and for guidance on when the two layers complement rather than substitute each other, see <a href="../comparison-to-workflow-languages/">Comparison to Workflow Languages</a>.</p>
-<h2 id="summary">Summary<a class="headerlink" href="#summary" title="Permanent link">&para;</a></h2>
-<p>Scientific data pipelines extend the Relational Workflow Model into complete data operations systems:</p>
+<table>
+<thead>
+<tr>
+<th>Fragment of the rule</th>
+<th>Constraint</th>
+<th>Integrity type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>"a unique identifier"</td>
+<td>primary key on <code>mouse_id</code></td>
+<td>entity</td>
+</tr>
+<tr>
+<td>"must reference a real mouse"</td>
+<td>foreign key <code>-&gt; Mouse</code></td>
+<td>referential</td>
+</tr>
+<tr>
+<td>"record when it started" (a value is required)</td>
+<td><code>session_start</code> is not nullable</td>
+<td>completeness</td>
+</tr>
+<tr>
+<td>"when it started" is a timestamp</td>
+<td><code>datetime</code> type on <code>session_start</code></td>
+<td>domain</td>
+</tr>
+</tbody>
+</table>
+<p>No procedural code enforces any of this. The declaration <em>is</em> the
+enforcement.</p>
+<h2 id="the-seven-types-of-integrity">The seven types of integrity<a class="headerlink" href="#the-seven-types-of-integrity" title="Permanent link">&para;</a></h2>
+<h3 id="1-domain-integrity">1. Domain integrity<a class="headerlink" href="#1-domain-integrity" title="Permanent link">&para;</a></h3>
+<p><strong>Every value falls within the valid set for its attribute.</strong> An attribute's
+type restricts what it can hold — a numeric range, a fixed set of categories,
+a string length, a calendar date. The database rejects anything outside that
+set at insert time.</p>
+<p>DataJoint enforces domain integrity through the attribute type declared for
+each column: <code>int32</code>, <code>int64</code>, <code>float32</code>, <code>float64</code>, <code>decimal(p, s)</code>,
+<code>varchar(N)</code>, <code>char(N)</code>, <code>date</code>, <code>datetime</code>, <code>uuid</code>, and <code>enum(...)</code> for
+closed categorical sets. Choosing <code>sex : enum('M', 'F', 'U')</code> instead of a
+free-text field means an invalid category can never be stored, and
+<code>decimal(5, 2)</code> fixes both magnitude and precision. The type system is
+extensible: custom codecs attach domain rules to structured and object-backed
+attributes as well.</p>
+<h3 id="2-completeness">2. Completeness<a class="headerlink" href="#2-completeness" title="Permanent link">&para;</a></h3>
+<p><strong>Required information is always present.</strong> An attribute that must have a
+value cannot be left empty. This prevents records that are structurally
+valid but analytically useless — a session with no start time, a subject
+with no species.</p>
+<p>In DataJoint, every attribute is required by default: unless an attribute is
+explicitly given a default value (including an explicit nullable default), a
+value must be supplied on insert. Primary-key attributes are always required.
+Completeness is thus the normal case, and optionality is the deliberate
+exception you opt into.</p>
+<h3 id="3-entity-integrity">3. Entity integrity<a class="headerlink" href="#3-entity-integrity" title="Permanent link">&para;</a></h3>
+<p><strong>Each real-world entity corresponds to exactly one record, and each record
+to exactly one entity.</strong> This bidirectional one-to-one correspondence is what
+makes a record a trustworthy stand-in for the thing it represents — no
+duplicates, no two entities sharing a row.</p>
+<p>The <strong>primary key</strong> — the attributes declared above the <code>---</code> separator —
+enforces the database half of this guarantee by rejecting duplicate keys.
+DataJoint requires every table to have a primary key and requires key values
+to be supplied explicitly (there is no auto-increment), so a client must
+commit to <em>which</em> entity it is inserting. The other half — reliably binding a
+physical entity to its identifier — is a real-world process such as an ear
+tag or barcode, which the database mirrors but cannot create. See
+<a href="../entity-integrity/">Entity Integrity</a> for the full treatment.</p>
+<h3 id="4-referential-integrity">4. Referential integrity<a class="headerlink" href="#4-referential-integrity" title="Permanent link">&para;</a></h3>
+<p><strong>A reference always points to something that exists.</strong> If one entity refers
+to another, the referenced entity must be present; there are no dangling
+pointers to records that were never created or have since been removed.</p>
+<p>DataJoint declares references with the foreign-key arrow <code>-&gt;</code>, which inherits
+the referenced table's primary key into the dependent table and enforces that
+the referenced row exists before a dependent row can be inserted. Removal is
+symmetric: deleting an entity <strong>cascades</strong> to everything that depends on it,
+so the database never enters a state with orphaned references. This is a
+row-level guarantee: objects held in integrated object storage are <em>not</em> removed
+synchronously with their rows (hash-addressed storage is deduplicated, and
+immediate deletion is unsafe under concurrency) — they are reclaimed
+asynchronously by garbage collection. See
+<a href="../referential-integrity/">Referential Integrity</a>.</p>
+<h3 id="5-compositional-integrity">5. Compositional integrity<a class="headerlink" href="#5-compositional-integrity" title="Permanent link">&para;</a></h3>
+<p><strong>A multi-part entity is stored whole or not at all.</strong> Some entities are
+inherently composite: a segmentation and all of its detected cells, an import
+and every frame it produced. Storing the container without its parts — or
+some parts without others — would leave a partial, misleading entity.</p>
+<p>DataJoint expresses this with the <strong>master-part</strong> relationship. The master
+represents the composite entity; its part tables hold the components produced
+with it. When a master and its parts are populated together by <code>make()</code>
+(Computed and Imported tables), their insertion is one transaction, so a partial
+composite is never committed; for Manual master-part sets this atomicity is
+maintained by convention (a single transaction). Deletion cascades from master
+to parts in either case. See
+<a href="../../reference/specs/master-part/">Master-Part</a>.</p>
+<h3 id="6-consistency">6. Consistency<a class="headerlink" href="#6-consistency" title="Permanent link">&para;</a></h3>
+<p><strong>Concurrent operations never leave the database in an invalid intermediate
+state.</strong> With many users and long-running computations writing at once, a
+multi-step operation must either complete entirely or leave no trace, and
+in-progress work must not be visible to others as if it were final.</p>
+<p>DataJoint relies on the backend's <strong>transactions</strong> and ACID guarantees to
+enforce this. A group of writes is committed atomically or rolled back as a
+unit, and isolation keeps a partially applied change from being seen by a
+concurrent reader. Both supported backends — MySQL and PostgreSQL — provide
+these guarantees. See <a href="../transactions/">Transactions</a>.</p>
+<h3 id="7-workflow-integrity">7. Workflow integrity<a class="headerlink" href="#7-workflow-integrity" title="Permanent link">&para;</a></h3>
+<p><strong>Entities come into being in a valid order.</strong> This extends referential
+integrity along the axis of time. Referential integrity says a recording must
+reference a real session; workflow integrity adds that the session must exist
+<em>before</em> the recording, and that a computed result cannot exist before the
+inputs it was derived from.</p>
+<p>The same foreign-key graph that enforces referential integrity is a
+<strong>directed acyclic graph</strong> (DAG) that prescribes execution order. Because it
+is acyclic, there is always a valid sequence in which entities can be
+created. <code>populate()</code> walks this graph, computing each entity only after its
+upstream dependencies exist, and cascade deletes remove downstream results
+when their inputs become invalid. The dependency graph and the pipeline are
+the same object, which is why results stay traceable to their declared inputs
+and remain reproducible. See
+<a href="../relational-workflow-model/">The Relational Workflow Model</a>.</p>
+<h2 id="why-declared-constraints-matter">Why declared constraints matter<a class="headerlink" href="#why-declared-constraints-matter" title="Permanent link">&para;</a></h2>
+<p>The seven types share one property that application-level checks cannot
+match: they are enforced by the database for every client, always.</p>
 <ul>
-<li><strong>Pipeline Architecture</strong> — Code repository, relational database, and object store working together</li>
-<li><strong>DAG Structure</strong> — Unidirectional flow of data and dependencies</li>
-<li><strong>Object-Augmented Schemas</strong> — Scalable storage with relational semantics</li>
+<li><strong>Unbypassable</strong> — no program can write invalid data, however it connects.</li>
+<li><strong>Automatic</strong> — the engine checks every write; no developer has to remember
+  to call a validator.</li>
+<li><strong>Concurrent-safe</strong> — the guarantees hold under simultaneous access by many
+  users and processes.</li>
+<li><strong>Self-describing</strong> — the schema states the rules explicitly, so the
+  constraints double as documentation that both people and agents can read.</li>
 </ul>
-<p>The schema remains central—defining data structures, dependencies, and computational flow. This pipeline-centric approach lets teams focus on their science while the system handles data integrity, lineage, and reproducibility automatically.</p>
-<h2 id="see-also">See Also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
+<p>A schema that declares its integrity rules is an executable specification of
+what valid data looks like: invalid states are refused at the point of entry
+rather than discovered later in analysis.</p>
+<h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
 <ul>
-<li><a href="../relational-workflow-model/">Relational Workflow Model</a> — The conceptual foundation</li>
-<li><a href="../entity-integrity/">Entity Integrity</a> — Primary keys and dimensions</li>
-<li><a href="../type-system/">Type System</a> — Codec types and storage modes</li>
-<li><a href="../../how-to/manage-pipeline-project/">Manage a Pipeline Project</a> — Practical project organization</li>
+<li><a href="../entity-integrity/">Entity Integrity</a> — the one-to-one correspondence and the primary key</li>
+<li><a href="../referential-integrity/">Referential Integrity</a> — foreign keys and cascading deletes</li>
+<li><a href="../../reference/specs/master-part/">Master-Part</a> — compositional integrity through transactional grouping</li>
+<li><a href="../normalization/">Normalization</a> — organizing attributes so each describes one entity</li>
+<li><a href="../transactions/">Transactions</a> — atomicity and consistency under concurrent access</li>
+<li><a href="../relational-workflow-model/">The Relational Workflow Model</a> — the frame in which these guarantees fit together</li>
 </ul>
 
 

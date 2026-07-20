@@ -1,6 +1,6 @@
 # DataJoint Documentation (Full)
 
-Generated: 2026-07-20 15:43:37 UTC
+Generated: 2026-07-20 16:21:29 UTC
 Commit: unknown
 Branch: unknown
 
@@ -1062,6 +1062,210 @@ Check for existing plugin codecs that may already solve your needs:
 - **[dj-photon-codecs](https://github.com/datajoint/dj-photon-codecs)** — Photon-limited movies with Anscombe transformation and compression
 
 See the [Use Plugin Codecs](../how-to/use-plugin-codecs.md/) guide for installation and usage of existing codec packages. Creating a custom codec is straightforward, but reusing existing ones saves time and ensures compatibility.
+
+
+---
+## File: explanation/data-integrity.md
+
+# Data Integrity
+
+**Data integrity** is the ability of a database to represent the real world
+faithfully: to accept only valid data states and only valid transitions
+between them. Every scientific record encodes rules that hold outside the
+database — a mouse has exactly one identifier, a recording belongs to a
+session that actually happened, a measurement is a number in a known range.
+Data integrity is the discipline of turning those real-world rules into
+**database constraints** that the engine enforces automatically.
+
+The distinguishing property of a constraint is that it *cannot be bypassed*.
+Validation written in application code protects only the one program that
+runs it; a second script or a collaborator's notebook can write straight
+past it. A constraint declared in the schema is enforced for every client,
+on every write, with no cooperation required — the rule lives with the data,
+not with any one program that touches it.
+
+DataJoint organizes these guarantees into seven types of integrity. The
+first four are classical relational guarantees; the last three extend them
+to compositions, concurrency, and computation. Each maps to a specific
+feature of a table definition.
+
+## From real-world rules to database constraints
+
+Database design is largely the work of translating a sentence about the
+world into a set of enforceable constraints. Consider one lab rule:
+
+> Every mouse has a unique identifier, and every recording session must
+> reference a real mouse and record when it started.
+
+That single sentence decomposes into four independent constraints, each a
+different type of integrity:
+
+```python
+@schema
+class Mouse(dj.Manual):
+    definition = """
+    mouse_id : char(6)          # unique ear-tag identifier
+    ---
+    date_of_birth : date
+    sex : enum('M', 'F', 'U')
+    """
+
+@schema
+class Session(dj.Manual):
+    definition = """
+    -> Mouse                    # references a real mouse
+    session_idx : int32
+    ---
+    session_start : datetime    # must be present and a valid timestamp
+    """
+```
+
+| Fragment of the rule | Constraint | Integrity type |
+|---|---|---|
+| "a unique identifier" | primary key on `mouse_id` | entity |
+| "must reference a real mouse" | foreign key `-> Mouse` | referential |
+| "record when it started" (a value is required) | `session_start` is not nullable | completeness |
+| "when it started" is a timestamp | `datetime` type on `session_start` | domain |
+
+No procedural code enforces any of this. The declaration *is* the
+enforcement.
+
+## The seven types of integrity
+
+### 1. Domain integrity
+
+**Every value falls within the valid set for its attribute.** An attribute's
+type restricts what it can hold — a numeric range, a fixed set of categories,
+a string length, a calendar date. The database rejects anything outside that
+set at insert time.
+
+DataJoint enforces domain integrity through the attribute type declared for
+each column: `int32`, `int64`, `float32`, `float64`, `decimal(p, s)`,
+`varchar(N)`, `char(N)`, `date`, `datetime`, `uuid`, and `enum(...)` for
+closed categorical sets. Choosing `sex : enum('M', 'F', 'U')` instead of a
+free-text field means an invalid category can never be stored, and
+`decimal(5, 2)` fixes both magnitude and precision. The type system is
+extensible: custom codecs attach domain rules to structured and object-backed
+attributes as well.
+
+### 2. Completeness
+
+**Required information is always present.** An attribute that must have a
+value cannot be left empty. This prevents records that are structurally
+valid but analytically useless — a session with no start time, a subject
+with no species.
+
+In DataJoint, every attribute is required by default: unless an attribute is
+explicitly given a default value (including an explicit nullable default), a
+value must be supplied on insert. Primary-key attributes are always required.
+Completeness is thus the normal case, and optionality is the deliberate
+exception you opt into.
+
+### 3. Entity integrity
+
+**Each real-world entity corresponds to exactly one record, and each record
+to exactly one entity.** This bidirectional one-to-one correspondence is what
+makes a record a trustworthy stand-in for the thing it represents — no
+duplicates, no two entities sharing a row.
+
+The **primary key** — the attributes declared above the `---` separator —
+enforces the database half of this guarantee by rejecting duplicate keys.
+DataJoint requires every table to have a primary key and requires key values
+to be supplied explicitly (there is no auto-increment), so a client must
+commit to *which* entity it is inserting. The other half — reliably binding a
+physical entity to its identifier — is a real-world process such as an ear
+tag or barcode, which the database mirrors but cannot create. See
+[Entity Integrity](entity-integrity.md) for the full treatment.
+
+### 4. Referential integrity
+
+**A reference always points to something that exists.** If one entity refers
+to another, the referenced entity must be present; there are no dangling
+pointers to records that were never created or have since been removed.
+
+DataJoint declares references with the foreign-key arrow `->`, which inherits
+the referenced table's primary key into the dependent table and enforces that
+the referenced row exists before a dependent row can be inserted. Removal is
+symmetric: deleting an entity **cascades** to everything that depends on it,
+so the database never enters a state with orphaned references. This is a
+row-level guarantee: objects held in integrated object storage are *not* removed
+synchronously with their rows (hash-addressed storage is deduplicated, and
+immediate deletion is unsafe under concurrency) — they are reclaimed
+asynchronously by garbage collection. See
+[Referential Integrity](referential-integrity.md).
+
+### 5. Compositional integrity
+
+**A multi-part entity is stored whole or not at all.** Some entities are
+inherently composite: a segmentation and all of its detected cells, an import
+and every frame it produced. Storing the container without its parts — or
+some parts without others — would leave a partial, misleading entity.
+
+DataJoint expresses this with the **master-part** relationship. The master
+represents the composite entity; its part tables hold the components produced
+with it. When a master and its parts are populated together by `make()`
+(Computed and Imported tables), their insertion is one transaction, so a partial
+composite is never committed; for Manual master-part sets this atomicity is
+maintained by convention (a single transaction). Deletion cascades from master
+to parts in either case. See
+[Master-Part](../reference/specs/master-part.md).
+
+### 6. Consistency
+
+**Concurrent operations never leave the database in an invalid intermediate
+state.** With many users and long-running computations writing at once, a
+multi-step operation must either complete entirely or leave no trace, and
+in-progress work must not be visible to others as if it were final.
+
+DataJoint relies on the backend's **transactions** and ACID guarantees to
+enforce this. A group of writes is committed atomically or rolled back as a
+unit, and isolation keeps a partially applied change from being seen by a
+concurrent reader. Both supported backends — MySQL and PostgreSQL — provide
+these guarantees. See [Transactions](transactions.md).
+
+### 7. Workflow integrity
+
+**Entities come into being in a valid order.** This extends referential
+integrity along the axis of time. Referential integrity says a recording must
+reference a real session; workflow integrity adds that the session must exist
+*before* the recording, and that a computed result cannot exist before the
+inputs it was derived from.
+
+The same foreign-key graph that enforces referential integrity is a
+**directed acyclic graph** (DAG) that prescribes execution order. Because it
+is acyclic, there is always a valid sequence in which entities can be
+created. `populate()` walks this graph, computing each entity only after its
+upstream dependencies exist, and cascade deletes remove downstream results
+when their inputs become invalid. The dependency graph and the pipeline are
+the same object, which is why results stay traceable to their declared inputs
+and remain reproducible. See
+[The Relational Workflow Model](relational-workflow-model.md).
+
+## Why declared constraints matter
+
+The seven types share one property that application-level checks cannot
+match: they are enforced by the database for every client, always.
+
+- **Unbypassable** — no program can write invalid data, however it connects.
+- **Automatic** — the engine checks every write; no developer has to remember
+  to call a validator.
+- **Concurrent-safe** — the guarantees hold under simultaneous access by many
+  users and processes.
+- **Self-describing** — the schema states the rules explicitly, so the
+  constraints double as documentation that both people and agents can read.
+
+A schema that declares its integrity rules is an executable specification of
+what valid data looks like: invalid states are refused at the point of entry
+rather than discovered later in analysis.
+
+## See also
+
+- [Entity Integrity](entity-integrity.md) — the one-to-one correspondence and the primary key
+- [Referential Integrity](referential-integrity.md) — foreign keys and cascading deletes
+- [Master-Part](../reference/specs/master-part.md) — compositional integrity through transactional grouping
+- [Normalization](normalization.md) — organizing attributes so each describes one entity
+- [Transactions](transactions.md) — atomicity and consistency under concurrent access
+- [The Relational Workflow Model](relational-workflow-model.md) — the frame in which these guarantees fit together
 
 
 ---
@@ -3021,6 +3225,185 @@ complete query capability for scientific data pipelines.
 
 
 ---
+## File: explanation/referential-integrity.md
+
+# Referential Integrity
+
+Where [entity integrity](entity-integrity.md) guarantees that each record
+corresponds to exactly one real-world entity, **referential integrity**
+guarantees that the *relationships between* entities remain valid. It is what
+prevents a session from referencing a subject that was never recorded, or a
+computed result from surviving after the input it was derived from has been
+deleted.
+
+**Referential integrity is impossible without entity integrity.** You cannot
+reliably relate entities until you can reliably identify them. A foreign key
+points at a parent's primary key, so the parent must first have a primary key
+that uniquely names each of its entities. Identification comes first;
+relationships follow. This is why the two guarantees are always discussed in
+order — the second is built on the first.
+
+## A foreign key is a logical constraint, not a physical pointer
+
+The most important thing to understand about a foreign key is what it is *not*.
+It is not a stored link to a location on disk. Nothing in the child record
+holds an address, offset, or path into the parent.
+
+A foreign key is a **logical constraint enforced at runtime**. When you insert
+a row into a child table, the database does not follow a pre-existing link. It
+performs a *search* of the parent table to verify that a row with the matching
+primary-key value already exists. If one does, the insert succeeds; if not, the
+insert is rejected. The relationship is re-verified from the actual data every
+time it matters, rather than trusted because a pointer was once written down.
+
+This is a genuine departure from file-based data models. In an HDF5 file, or a
+tree of files referencing each other by path, a link is a physical thing: a
+name or address baked into the data. If the target moves or disappears, the
+link silently dangles and nothing notices until something tries to follow it.
+The relational model refuses to store such a link at all. Because references
+are logical, they cannot dangle: a value either matches an existing key or the
+database will not accept it. This is the source of the model's durability — and
+it is why DataJoint stores relationships as key values rather than as pointers
+into its [internal object store](type-system.md).
+
+## The five effects of a foreign key
+
+Declaring a foreign key — in DataJoint, the arrow `->` — sets five distinct
+things in motion. Understanding each explains why a foreign key is a design
+decision, not merely a link.
+
+### 1. Schema embedding
+
+The parent's primary-key attributes become attributes of the child, with the
+same datatypes and — by default — the same names. The child inherits the
+parent's key rather than inventing a parallel one.
+
+```python
+@schema
+class Session(dj.Manual):
+    definition = """
+    -> Subject                 # embeds subject_id : varchar(16)
+    session_idx : int32
+    ---
+    session_date : date
+    """
+```
+
+DataJoint resolves joins by [attribute lineage](semantic-matching.md) rather
+than by name — every inherited attribute traces back to the dimension where it
+was first defined.
+
+Sharing the parent's attribute name is the common case, not a requirement. A
+foreign key can be **renamed** — `-> Person.proj(husband='person_id')` embeds
+`person_id` into the child under the name `husband`, which is what lets a table
+reference the same parent more than once. A renamed attribute keeps the *same*
+lineage under a *different* name, so joins still resolve correctly: it is the
+attribute's lineage, not its literal name, that ties it back to its origin. See
+[renamed foreign keys](semantic-matching.md) for the full mechanics.
+
+### 2. Insert restriction on the child
+
+A child row can be inserted only if its foreign-key value matches an existing
+parent key. This is what prevents *orphaned* records. The restriction falls on
+the **child**: you may always add new parents, but you cannot add a child that
+references a parent that does not exist.
+
+```python
+Session.insert1(('M00142', 1, '2026-03-01'))  # ok if subject M00142 exists
+Session.insert1(('M09999', 1, '2026-03-01'))  # IntegrityError: no such subject
+```
+
+### 3. Delete restriction on the parent
+
+The mirror of the insert rule: a parent cannot leave dependent children
+stranded. Standard SQL rejects a delete that would orphan children. DataJoint
+instead **cascades** the delete — removing a parent removes every child that
+depends on it, and every child of those children, down the whole hierarchy. It
+warns you first, because the reach can be large. The restriction falls on the
+**parent**: you may always delete a child, but deleting a parent takes its
+descendants with it.
+
+### 4. Update restriction on key values
+
+Key values are not edited in place. DataJoint does not support updating a
+primary-key or foreign-key value, because doing so would silently invalidate
+every relationship built on it. The intended pattern is to delete the affected
+records and reinsert them. In a pipeline this preserves a clean rule: if an
+input changes, the results derived from it are removed and recomputed, never
+quietly rewritten.
+
+### 5. Indexing the foreign-key columns
+
+On MySQL/InnoDB the engine automatically creates a secondary index on the
+child's foreign-key columns as part of enforcing the constraint — you never
+declare it. Such an index accelerates the delete check (finding a parent's
+children), the join (matching child keys to parent keys), and the insert check
+(confirming the parent exists). PostgreSQL does *not* index foreign-key columns
+automatically; when the delete or join cost on a large child table matters,
+declare an explicit `index(...)` on those columns.
+
+## The dual role: integrity and workflow
+
+In a conventional relational database a foreign key does exactly one job:
+referential integrity. In DataJoint it does a second job at the same time. The
+same arrow that guarantees a valid reference also declares a **workflow
+dependency** — it states that the child cannot be produced until the parent
+exists.
+
+Read the insert restriction again through this lens. "The parent must exist
+before the child can reference it" is not only an integrity rule; it is an
+execution order. The set of foreign keys across a schema therefore defines a
+[directed acyclic graph](relational-workflow-model.md) — the pipeline DAG,
+which is also the schema diagram. Nothing external schedules the work; the
+foreign-key graph itself dictates what may run, what must run first, and what
+already exists. Cascade delete acquires the same double meaning: removing an
+invalidated input automatically removes every downstream result computed from
+it, keeping the pipeline consistent without any audit step. This unification of
+constraint and execution order is what makes lineage and reproducibility
+[structural properties of the schema](relational-workflow-model.md) rather than
+something reconstructed after the fact.
+
+## Modifiers and placement shape the relationship
+
+The default foreign key is a required, many-to-one reference: every child names
+exactly one parent, and a parent may be named by many children. Two modifiers
+adjust this, and *where* the arrow sits adjusts it further.
+
+- **`-> [nullable] Parent`** makes the reference optional — the child may exist
+  with no parent (the key value is left empty). Only a *secondary* foreign key,
+  declared below the `---`, can be nullable; a key that is part of the primary
+  key must always have a value, because it helps identify the entity.
+- **`-> [unique] Parent`** makes the reference one-to-one — at most one child
+  may name a given parent.
+
+Placement matters just as much. A foreign key placed *above* the `---` becomes
+part of the child's primary key, so the parent's identity is built into the
+child's identity — a containment or extension relationship. Placed *below* the
+`---`, it is an ordinary secondary reference. And two foreign keys placed
+together above the `---` form the composite key of an *association* table,
+which is how DataJoint expresses many-to-many relationships. Choosing among
+these is a modeling decision with real consequences for cardinality and for how
+the relationship appears in a diagram.
+
+These placements and modifiers, and the relationship patterns they build, are
+covered in full in the how-to guide — see
+[Model Relationships](../how-to/model-relationships.ipynb).
+
+## See also
+
+- [Entity Integrity](entity-integrity.md) — the guarantee referential
+  integrity depends on: identifying entities before relating them
+- [Data Integrity](data-integrity.md) — how referential integrity fits among
+  DataJoint's full set of integrity guarantees
+- [Model Relationships](../how-to/model-relationships.ipynb) — the how-to for
+  one-to-one, one-to-many, and many-to-many patterns
+- [Design Primary Keys](../how-to/design-primary-keys.md) — choosing the keys
+  that foreign keys reference
+- [Relational Workflow Model](relational-workflow-model.md) — the frame in
+  which a foreign key is both a constraint and an execution order
+
+
+---
 ## File: explanation/relational-workflow-model.md
 
 # The Relational Workflow Model
@@ -3808,9 +4191,9 @@ class RequiredCourse(dj.Manual):
 FavoriteCourse() * RequiredCourse()
 ```
 
-### Aliased Foreign Key
+### Renamed Foreign Key
 
-When you alias a foreign key, the new name gets the same lineage as the original:
+When you rename a foreign key, the new name gets the same lineage as the original:
 
 ```python
 class Person(dj.Manual):
@@ -3945,6 +4328,209 @@ For pipelines that are predominantly internal (no analytic publish), `<blob@>` e
 - How-to: [Use Plugin Codecs](../how-to/use-plugin-codecs.md) — installing and registering codec plugins.
 - How-to: [Create Custom Codecs](../how-to/create-custom-codec.md) — writing your own codec.
 - Strategic background: Databricks integration's Linked Delta Tables — covered in `datajoint-databricks/DECISIONS.md` (internal repo; summary on request).
+
+
+---
+## File: explanation/transactions.md
+
+# Transactions
+
+A database is not merely a store of records; it is meant to reflect the current
+state of an enterprise faithfully, to everyone looking at it at once. Two
+analysts querying the same pipeline should see the same data, and a write made by
+one should immediately inform every read that follows. This property is called
+**data consistency**, and it is easiest to appreciate through its failures — a
+bank website that shows yesterday's pending transactions but today's balance is
+briefly inconsistent, presenting two versions of the truth that do not agree.
+
+Consistency is cheap when only one party writes and everyone else reads, which is
+common in science: one lab produces data, others analyze it. It becomes hard the
+moment several agents — people or processes — read and modify the same data
+concurrently. The mechanism that keeps a database consistent under concurrent,
+multi-step change is the **transaction**: a group of statements that the database
+treats as a single indivisible unit.
+
+## What a transaction guarantees
+
+A transaction bundles several read and write operations so that they commit
+**all-or-nothing**. Either every operation in the group takes effect together, or
+— if anything goes wrong — none of them do, and the database is left exactly as
+it was before the group began. There is no observable state in which only some of
+the operations have landed.
+
+Relational databases express this guarantee through the **ACID** properties.
+Grounded in DataJoint, they read as follows:
+
+- **Atomic** — the group is indivisible. If any step fails or raises, the whole
+  group is rolled back. This is the all-or-nothing behavior above.
+- **Consistent** — each committed transaction moves the database from one valid
+  state to another, with every integrity constraint — primary keys, foreign
+  keys, `unique` — satisfied at the boundary. A transaction that would leave a
+  dangling foreign key cannot commit.
+- **Isolated** — concurrent transactions do not see one another's partial work.
+  Each runs as if it had the database to itself, reading a consistent snapshot.
+- **Durable** — once a transaction commits, its changes survive crashes and
+  restarts.
+
+DataJoint adheres to this classical ACID model on both of its peer backends,
+MySQL and PostgreSQL, relying on each backend's default isolation to keep the
+grouped statements atomic and consistent — MySQL opens the transaction with a
+consistent snapshot (REPEATABLE READ), PostgreSQL uses READ COMMITTED. The
+database engine, not DataJoint, ultimately enforces the guarantee; DataJoint's
+job is to open a transaction around the right group of statements.
+
+## A concrete all-or-nothing example
+
+The textbook case is a transfer between two accounts. Consider a simple table of
+bank accounts:
+
+```python
+import datajoint as dj
+
+schema = dj.Schema("bank")
+
+@schema
+class Account(dj.Manual):
+    definition = """
+    account_number : int32
+    ---
+    customer_name  : varchar(60)
+    balance        : decimal(9, 2)
+    """
+```
+
+Moving money requires two writes that belong together: debit the source, credit
+the destination. Written naively, without grouping them, a failure between the
+two is catastrophic:
+
+```python
+def transfer_unsafe(source, destination, amount):
+    balance = (Account & source).fetch1("balance")
+    if balance < amount:
+        raise RuntimeError("Insufficient funds")
+    Account.update1(dict(source, balance=balance - amount))   # money leaves here
+    raise RuntimeError("connection lost")                     # ...and never arrives
+    Account.update1(dict(destination, balance=... + amount))  # never runs
+```
+
+The debit committed on its own; the credit never happened. Money vanished, and no
+constraint was violated — the database is internally valid but factually wrong.
+Wrapping the two writes in a transaction closes this gap:
+
+```python
+def transfer(source, destination, amount):
+    if amount <= 0:
+        raise ValueError("Transfer amount must be positive")
+    with schema.connection.transaction:
+        balance = (Account & source).fetch1("balance")
+        if balance < amount:
+            raise RuntimeError("Insufficient funds")
+        Account.update1(dict(source, balance=balance - amount))
+        dest = (Account & destination).fetch1("balance")
+        Account.update1(dict(destination, balance=dest + amount))
+```
+
+Everything inside `with schema.connection.transaction:` is one atomic unit. If the block
+completes normally, both updates commit together. If any statement raises — an
+insufficient-funds check, a lost connection, a bug — the whole block rolls back
+and the exception propagates. The debit is never left stranded without its credit.
+
+The same pattern makes a **master row and its part rows** land together. Because
+a part table's rows depend on their master through a foreign key, inserting them
+as one transaction guarantees you never observe a master without its parts, nor
+parts orphaned from a master:
+
+```python
+with schema.connection.transaction:
+    Experiment.insert1(dict(experiment_id=1, experiment_date="2026-07-17"))
+    Experiment.Trial.insert([
+        dict(experiment_id=1, trial_idx=1, outcome="success"),
+        dict(experiment_id=1, trial_idx=2, outcome="failure"),
+    ])
+```
+
+A single `insert()` or `update1()` call is *already* atomic on its own. You reach
+for an explicit `with schema.connection.transaction:` block only when **several**
+operations must succeed or fail as a group, as above.
+
+!!! note "Which connection the transaction uses"
+    `schema.connection` is the connection shared by that schema's tables — the
+    same object `dj.conn()` returns in the common single-connection setup. A
+    transaction covers only operations on *that* connection, so group tables that
+    share it. If you deliberately place schemas on different connections (separate
+    `dj.Instance`s, or an explicit `connection=`), wrap the work using the
+    connection those tables actually use.
+
+!!! warning "Transactions do not nest"
+    DataJoint does not support nested transactions. Opening a transaction while
+    another is already active on the same connection raises an error. Keep exactly
+    one `transaction` block active at a time.
+
+## Transactions in computation
+
+You almost never write a transaction block inside a `make()` method, because
+`populate()` has already opened one for you. For each key it processes,
+`populate()` wraps the entire `make(key)` call in a transaction, calls `make()`,
+and commits only if it returns without error. Everything a `make()` writes — its
+own rows and all of its part-table rows — is therefore inserted as one atomic
+unit. A computed result and its parts commit together, or, if `make()` raises,
+roll back together, leaving nothing behind to clean up.
+
+```python
+@schema
+class ProcessedData(dj.Computed):
+    definition = """
+    -> RawData
+    ---
+    result : float64
+    """
+
+    def make(self, key):
+        data = (RawData & key).fetch1("data")
+        result = expensive_computation(data)
+        self.insert1(dict(key, result=result))   # already inside populate()'s transaction
+```
+
+This is why DataJoint pipelines stay consistent with their inputs: a downstream
+result is either fully present or fully absent, never half-computed.
+
+!!! danger "Never open a transaction inside `make()`"
+    Because `populate()` has already started one, opening your own transaction
+    inside `make()` attempts to nest — which DataJoint does not support, so it
+    raises an error. Just insert directly; the write is already atomic.
+
+    ```python
+    def make(self, key):
+        with self.connection.transaction:   # WRONG — a transaction is already active
+            self.insert1(...)         # this raises an error
+    ```
+
+For long-running computations, holding the transaction open for the whole `make()`
+would lock resources and risk timeouts. The [three-part make](computation-model.md)
+pattern addresses this by running fetch and compute *outside* the transaction and
+confining only the insert to a brief one — still without you ever opening a
+transaction yourself.
+
+## Deletes are transactional too
+
+Cascading deletes span many tables — a delete propagates through every dependent
+table in reverse topological order. To keep that cascade all-or-nothing, `delete`
+runs inside a transaction by default (`transaction=True`), so a failure partway
+through rolls back the entire cascade rather than leaving descendants deleted and
+ancestors intact. The only reason to opt out with `delete(transaction=False)` is
+when the delete is already running inside a transaction you opened, since a nested
+transaction is not allowed.
+
+## See also
+
+- [Computation Model](computation-model.md) — how `populate()` wraps each
+  `make()` call and the three-part pattern for long computations.
+- [Data Integrity](data-integrity.md) — the integrity guarantees transactions
+  uphold at each commit boundary.
+- [Insert data](../how-to/insert-data.md) — inserting master and part rows.
+- [Delete data](../how-to/delete-data.md) — cascading deletes and safemode.
+- [AutoPopulate](../reference/specs/autopopulate.md) — normative spec for the
+  per-key transaction and the make() reproducibility contract.
 
 
 ---
@@ -26082,7 +26668,7 @@ pk_section     = attribute_line+
 secondary_section = attribute_line*
 
 attribute_line = [foreign_key | attribute]
-foreign_key    = "->" [modifiers] table_reference [alias]
+foreign_key    = "->" [modifiers] table_reference [rename]
 modifiers      = "[" modifier ("," modifier)* "]"
 modifier       = "nullable" | "unique"
 attribute      = [default "="] name ":" type [# comment]
@@ -30198,11 +30784,11 @@ Each iteration yields a `FreeTable` with any cascade or restrict conditions appl
 
 When `cascade()` or `restrict()` propagates a restriction from a parent table to a child table, one of three rules applies depending on the foreign key relationship:
 
-**Rule 1 — Direct copy:** When the foreign key is non-aliased and the restriction attributes are a subset of the child's primary key, the restriction is copied directly to the child.
+**Rule 1 — Direct copy:** When the foreign key is non-renamed and the restriction attributes are a subset of the child's primary key, the restriction is copied directly to the child.
 
-**Rule 2 — Aliased projection:** When the foreign key uses attribute renaming (e.g., `subject_id` → `animal_id`), the parent is projected with the attribute mapping to match the child's column names.
+**Rule 2 — Renamed projection:** When the foreign key uses attribute renaming (e.g., `subject_id` → `animal_id`), the parent is projected with the attribute mapping to match the child's column names.
 
-**Rule 3 — Full projection:** When the foreign key is non-aliased but the restriction uses attributes not in the child's primary key, the parent is projected (all attributes) and used as a restriction on the child.
+**Rule 3 — Full projection:** When the foreign key is non-renamed but the restriction uses attributes not in the child's primary key, the parent is projected (all attributes) and used as a restriction on the child.
 
 **Convergence behavior:**
 
@@ -32802,7 +33388,7 @@ The functional dependency relationship is derived from the structure of primary 
 
 - `A → B` holds when every attribute in PK(B) appears (by name) somewhere in A (either as a primary key or secondary attribute)
 - After semantic matching passes, namesakes represent semantically equivalent attributes, so checking by name is valid
-- Aliased attributes (same lineage, different names) don't participate in natural joins
+- Renamed attributes (same lineage, different names) don't participate in natural joins
 
 ## Notation
 
@@ -35711,7 +36297,7 @@ class Session(dj.Manual):
 ### 6.8 Projections in Foreign Keys
 
 ```
--> Parent.proj(alias='original_name')
+-> Parent.proj(new_name='original_name')
 ```
 
 - Reference same table multiple times with different attribute names
@@ -38997,9 +39583,9 @@ When `cascade()` or `restrict()` propagates a restriction from a parent to a chi
 
 | Rule | Condition | Child restriction |
 |------|-----------|-------------------|
-| **Direct copy** | Non-aliased FK, restriction attributes are a subset of child's primary key | Restriction copied directly |
-| **Aliased projection** | FK uses attribute renaming (e.g., `subject_id` → `animal_id`) | Parent projected with attribute mapping |
-| **Full projection** | Non-aliased FK, restriction uses attributes not in child's primary key | Parent projected (all attributes) as restriction |
+| **Direct copy** | Non-renamed FK, restriction attributes are a subset of child's primary key | Restriction copied directly |
+| **Renamed projection** | FK uses attribute renaming (e.g., `subject_id` → `animal_id`) | Parent projected with attribute mapping |
+| **Full projection** | Non-renamed FK, restriction uses attributes not in child's primary key | Parent projected (all attributes) as restriction |
 
 When a child has multiple restricted ancestors, convergence depends on the mode: `cascade()` uses OR (any path marks a row for deletion), `restrict()` uses AND (all conditions must match).
 

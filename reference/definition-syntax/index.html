@@ -569,6 +569,12 @@
       
         
       
+        
+      
+        
+      
+        
+      
     
     
     
@@ -646,6 +652,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../../explanation/data-integrity/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Data Integrity
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../explanation/entity-integrity/" class="md-nav__link">
         
   
@@ -674,6 +708,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../../explanation/referential-integrity/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Referential Integrity
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../explanation/normalization/" class="md-nav__link">
         
   
@@ -682,6 +744,34 @@
     
   
     Normalization
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/transactions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Transactions
   
 
     
@@ -6446,7 +6536,7 @@ pk_section     = attribute_line+
 secondary_section = attribute_line*
 
 attribute_line = [foreign_key | attribute]
-foreign_key    = &quot;-&gt;&quot; [modifiers] table_reference [alias]
+foreign_key    = &quot;-&gt;&quot; [modifiers] table_reference [rename]
 modifiers      = &quot;[&quot; modifier (&quot;,&quot; modifier)* &quot;]&quot;
 modifier       = &quot;nullable&quot; | &quot;unique&quot;
 attribute      = [default &quot;=&quot;] name &quot;:&quot; type [# comment]

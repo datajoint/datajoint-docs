@@ -569,6 +569,12 @@
       
         
       
+        
+      
+        
+      
+        
+      
     
     
     
@@ -646,6 +652,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../../../explanation/data-integrity/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Data Integrity
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../../explanation/entity-integrity/" class="md-nav__link">
         
   
@@ -674,6 +708,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../../../explanation/referential-integrity/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Referential Integrity
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../../explanation/normalization/" class="md-nav__link">
         
   
@@ -682,6 +744,34 @@
     
   
     Normalization
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../explanation/transactions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Transactions
   
 
     
@@ -8458,7 +8548,7 @@ need to control visibility at the call site, use proj().
 <li>Use case: optional one-to-one relationships where the child may not reference any parent</li>
 </ul>
 <h3 id="68-projections-in-foreign-keys">6.8 Projections in Foreign Keys<a class="headerlink" href="#68-projections-in-foreign-keys" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code>-&gt; Parent.proj(alias=&#39;original_name&#39;)
+<div class="highlight"><pre><span></span><code>-&gt; Parent.proj(new_name=&#39;original_name&#39;)
 </code></pre></div>
 <ul>
 <li>Reference same table multiple times with different attribute names</li>

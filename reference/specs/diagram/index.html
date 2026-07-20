@@ -315,6 +315,18 @@
 </a>
 </li>
 <li class="md-nav__item">
+<a class="md-nav__link" href="../../../explanation/data-integrity/">
+<span class="md-ellipsis">
+    
+  
+    Data Integrity
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
 <a class="md-nav__link" href="../../../explanation/entity-integrity/">
 <span class="md-ellipsis">
     
@@ -327,11 +339,35 @@
 </a>
 </li>
 <li class="md-nav__item">
+<a class="md-nav__link" href="../../../explanation/referential-integrity/">
+<span class="md-ellipsis">
+    
+  
+    Referential Integrity
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
 <a class="md-nav__link" href="../../../explanation/normalization/">
 <span class="md-ellipsis">
     
   
     Normalization
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../explanation/transactions/">
+<span class="md-ellipsis">
+    
+  
+    Transactions
   
 
     
@@ -3573,9 +3609,9 @@
 <p><code>Table.delete()</code> and <code>Table.drop()</code> use <code>reversed(diagram)</code> internally to execute mutations in safe dependency order.</p>
 <h3 id="restriction-propagation">Restriction Propagation<a class="headerlink" href="#restriction-propagation" title="Permanent link">¶</a></h3>
 <p>When <code>cascade()</code> or <code>restrict()</code> propagates a restriction from a parent table to a child table, one of three rules applies depending on the foreign key relationship:</p>
-<p><strong>Rule 1 — Direct copy:</strong> When the foreign key is non-aliased and the restriction attributes are a subset of the child's primary key, the restriction is copied directly to the child.</p>
-<p><strong>Rule 2 — Aliased projection:</strong> When the foreign key uses attribute renaming (e.g., <code>subject_id</code> → <code>animal_id</code>), the parent is projected with the attribute mapping to match the child's column names.</p>
-<p><strong>Rule 3 — Full projection:</strong> When the foreign key is non-aliased but the restriction uses attributes not in the child's primary key, the parent is projected (all attributes) and used as a restriction on the child.</p>
+<p><strong>Rule 1 — Direct copy:</strong> When the foreign key is non-renamed and the restriction attributes are a subset of the child's primary key, the restriction is copied directly to the child.</p>
+<p><strong>Rule 2 — Renamed projection:</strong> When the foreign key uses attribute renaming (e.g., <code>subject_id</code> → <code>animal_id</code>), the parent is projected with the attribute mapping to match the child's column names.</p>
+<p><strong>Rule 3 — Full projection:</strong> When the foreign key is non-renamed but the restriction uses attributes not in the child's primary key, the parent is projected (all attributes) and used as a restriction on the child.</p>
 <p><strong>Convergence behavior:</strong></p>
 <p>When a child table has multiple restricted ancestors, the convergence rule depends on the mode:</p>
 <ul>

@@ -8,13 +8,13 @@
       
       
       
-        <link rel="canonical" href="https://docs.datajoint.com/explanation/data-pipelines/">
+        <link rel="canonical" href="https://docs.datajoint.com/explanation/transactions/">
       
       
-        <link rel="prev" href="../">
+        <link rel="prev" href="../normalization/">
       
       
-        <link rel="next" href="../faq/">
+        <link rel="next" href="../computation-model/">
       
       
         
@@ -25,7 +25,7 @@
     
     
       
-        <title>Data Pipelines - DataJoint Documentation</title>
+        <title>Transactions - DataJoint Documentation</title>
       
     
     
@@ -105,7 +105,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#scientific-data-pipelines" class="md-skip">
+        <a href="#transactions" class="md-skip">
           Skip to content
         </a>
       
@@ -178,7 +178,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Data Pipelines
+              Transactions
             
           </span>
         </div>
@@ -431,10 +431,8 @@
                 
   
   
-    
   
   
-  
     
     
       
@@ -448,11 +446,11 @@
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_1" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_1" >
         
           
           <label class="md-nav__link" for="__nav_2_1" id="__nav_2_1_label" tabindex="0">
@@ -473,7 +471,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_1_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_1_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_2_1">
             <span class="md-nav__icon md-icon"></span>
             
@@ -488,37 +486,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Data Pipelines
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../data-pipelines/" class="md-nav__link">
         
   
   
@@ -534,159 +505,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#pipeline-architecture" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Pipeline Architecture
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#pipeline-as-a-dag" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Pipeline as a DAG
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Pipeline as a DAG">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#dag-constraints" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        DAG Constraints
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#the-relational-workflow-model" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        The Relational Workflow Model
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#schema-organization" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Schema Organization
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#object-augmented-schemas" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Object-Augmented Schemas
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Object-Augmented Schemas">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#the-oas-philosophy" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        The OAS Philosophy
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#pipeline-workflow" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Pipeline Workflow
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#comparing-approaches" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Comparing Approaches
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#summary" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Summary
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#see-also" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        See Also
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -732,8 +550,10 @@
                 
   
   
+    
   
   
+  
     
     
       
@@ -765,11 +585,11 @@
       
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2" checked>
         
           
           <label class="md-nav__link" for="__nav_2_2" id="__nav_2_2_label" tabindex="0">
@@ -790,7 +610,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_2_2">
             <span class="md-nav__icon md-icon"></span>
             
@@ -945,10 +765,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../transactions/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Transactions
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -964,6 +811,81 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#what-a-transaction-guarantees" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What a transaction guarantees
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#a-concrete-all-or-nothing-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A concrete all-or-nothing example
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#transactions-in-computation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Transactions in computation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#deletes-are-transactional-too" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deletes are transactional too
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#see-also" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        See also
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -6322,10 +6244,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#pipeline-architecture" class="md-nav__link">
+  <a href="#what-a-transaction-guarantees" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Pipeline Architecture
+        What a transaction guarantees
       
     </span>
   </a>
@@ -6333,38 +6255,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#pipeline-as-a-dag" class="md-nav__link">
+  <a href="#a-concrete-all-or-nothing-example" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Pipeline as a DAG
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Pipeline as a DAG">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#dag-constraints" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        DAG Constraints
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#the-relational-workflow-model" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        The Relational Workflow Model
+        A concrete all-or-nothing example
       
     </span>
   </a>
@@ -6372,10 +6266,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#schema-organization" class="md-nav__link">
+  <a href="#transactions-in-computation" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Schema Organization
+        Transactions in computation
       
     </span>
   </a>
@@ -6383,60 +6277,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#object-augmented-schemas" class="md-nav__link">
+  <a href="#deletes-are-transactional-too" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Object-Augmented Schemas
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Object-Augmented Schemas">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#the-oas-philosophy" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        The OAS Philosophy
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#pipeline-workflow" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Pipeline Workflow
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#comparing-approaches" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Comparing Approaches
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#summary" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Summary
+        Deletes are transactional too
       
     </span>
   </a>
@@ -6447,7 +6291,7 @@
   <a href="#see-also" class="md-nav__link">
     <span class="md-ellipsis">
       
-        See Also
+        See also
       
     </span>
   </a>
@@ -6474,178 +6318,176 @@
   
 
 
-<h1 id="scientific-data-pipelines">Scientific Data Pipelines<a class="headerlink" href="#scientific-data-pipelines" title="Permanent link">&para;</a></h1>
-<p>A <strong>scientific data pipeline</strong> extends beyond a database with computations. It is a comprehensive system that:</p>
+<h1 id="transactions">Transactions<a class="headerlink" href="#transactions" title="Permanent link">&para;</a></h1>
+<p>A database is not merely a store of records; it is meant to reflect the current
+state of an enterprise faithfully, to everyone looking at it at once. Two
+analysts querying the same pipeline should see the same data, and a write made by
+one should immediately inform every read that follows. This property is called
+<strong>data consistency</strong>, and it is easiest to appreciate through its failures — a
+bank website that shows yesterday's pending transactions but today's balance is
+briefly inconsistent, presenting two versions of the truth that do not agree.</p>
+<p>Consistency is cheap when only one party writes and everyone else reads, which is
+common in science: one lab produces data, others analyze it. It becomes hard the
+moment several agents — people or processes — read and modify the same data
+concurrently. The mechanism that keeps a database consistent under concurrent,
+multi-step change is the <strong>transaction</strong>: a group of statements that the database
+treats as a single indivisible unit.</p>
+<h2 id="what-a-transaction-guarantees">What a transaction guarantees<a class="headerlink" href="#what-a-transaction-guarantees" title="Permanent link">&para;</a></h2>
+<p>A transaction bundles several read and write operations so that they commit
+<strong>all-or-nothing</strong>. Either every operation in the group takes effect together, or
+— if anything goes wrong — none of them do, and the database is left exactly as
+it was before the group began. There is no observable state in which only some of
+the operations have landed.</p>
+<p>Relational databases express this guarantee through the <strong>ACID</strong> properties.
+Grounded in DataJoint, they read as follows:</p>
 <ul>
-<li>Manages the complete lifecycle of scientific data from acquisition to delivery</li>
-<li>Integrates diverse tools for data entry, visualization, and analysis</li>
-<li>Provides infrastructure for secure, scalable computation</li>
-<li>Enables collaboration across teams and institutions</li>
-<li>Supports reproducibility and data lineage throughout</li>
+<li><strong>Atomic</strong> — the group is indivisible. If any step fails or raises, the whole
+  group is rolled back. This is the all-or-nothing behavior above.</li>
+<li><strong>Consistent</strong> — each committed transaction moves the database from one valid
+  state to another, with every integrity constraint — primary keys, foreign
+  keys, <code>unique</code> — satisfied at the boundary. A transaction that would leave a
+  dangling foreign key cannot commit.</li>
+<li><strong>Isolated</strong> — concurrent transactions do not see one another's partial work.
+  Each runs as if it had the database to itself, reading a consistent snapshot.</li>
+<li><strong>Durable</strong> — once a transaction commits, its changes survive crashes and
+  restarts.</li>
 </ul>
-<h2 id="pipeline-architecture">Pipeline Architecture<a class="headerlink" href="#pipeline-architecture" title="Permanent link">&para;</a></h2>
-<p>At the heart of every DataJoint pipeline is an <strong>open-source core</strong> of three components that handle schema, computation, and storage. The managed <strong>DataJoint Platform</strong> extends this core with services for AI access, data ingestion, exploration, security, collaboration, and visualization.</p>
-<p><img alt="DataJoint Platform Architecture" src="../../images/dj-platform.svg" /></p>
-<table>
-<thead>
-<tr>
-<th>Open-Source Core</th>
-<th>Purpose</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>Code Repository</strong></td>
-<td>Version-controlled pipeline definitions, <code>make</code> methods, configuration</td>
-</tr>
-<tr>
-<td><strong>Relational Database</strong></td>
-<td>System of record for metadata, relationships, and integrity enforcement</td>
-</tr>
-<tr>
-<td><strong>Object Store</strong></td>
-<td>Scalable storage for large scientific data (images, recordings, signals)</td>
-</tr>
-</tbody>
-</table>
-<p>These components work together: code defines the schema and computations, the database tracks all metadata and relationships, and object storage holds the large scientific data files.</p>
-<h2 id="pipeline-as-a-dag">Pipeline as a DAG<a class="headerlink" href="#pipeline-as-a-dag" title="Permanent link">&para;</a></h2>
-<p>A DataJoint pipeline forms a <strong>Directed Acyclic Graph (DAG)</strong> at two levels:</p>
-<p><img alt="Pipeline DAG Structure" src="../../images/pipeline-illustration.png" /></p>
-<p><strong>Nodes</strong> represent Python modules, which correspond to database schemas.</p>
-<p><strong>Edges</strong> represent:</p>
-<ul>
-<li>Python import dependencies between modules</li>
-<li>Bundles of foreign key references between schemas</li>
-</ul>
-<p>This dual structure ensures that both code dependencies and data dependencies flow in the same direction.</p>
-<h3 id="dag-constraints">DAG Constraints<a class="headerlink" href="#dag-constraints" title="Permanent link">&para;</a></h3>
-<blockquote>
-<p><strong>All foreign key relationships within a schema MUST form a DAG.</strong></p>
-<p><strong>Dependencies between schemas (foreign keys + imports) MUST also form a DAG.</strong></p>
-</blockquote>
-<p>This constraint is fundamental to DataJoint's design. It ensures:</p>
-<ul>
-<li><strong>Unidirectional data flow</strong> — Data enters at the top and flows downstream</li>
-<li><strong>Clear lineage</strong> — Every result traces back to its inputs</li>
-<li><strong>Safe deletion</strong> — Cascading deletes follow the DAG without cycles</li>
-<li><strong>Predictable computation</strong> — <code>populate()</code> can determine correct execution order</li>
-</ul>
-<h2 id="the-relational-workflow-model">The Relational Workflow Model<a class="headerlink" href="#the-relational-workflow-model" title="Permanent link">&para;</a></h2>
-<p>DataJoint pipelines are built on the <a href="../relational-workflow-model/">Relational Workflow Model</a>—a paradigm that extends relational databases with native support for computational workflows. In this model:</p>
-<ul>
-<li><strong>Tables represent workflow steps</strong>, not just data storage</li>
-<li><strong>Foreign keys encode dependencies</strong>, prescribing the order of operations</li>
-<li><strong>Table tiers</strong> (Lookup, Manual, Imported, Computed) classify how data enters the pipeline</li>
-<li><strong>The schema forms a DAG</strong> that defines valid execution sequences</li>
-</ul>
-<p>This model treats the database schema as an <strong>executable workflow specification</strong>—defining not just what data exists but when and how it comes into existence.</p>
-<h2 id="schema-organization">Schema Organization<a class="headerlink" href="#schema-organization" title="Permanent link">&para;</a></h2>
-<p>Each schema corresponds to a dedicated Python module. The module import structure mirrors the foreign key dependencies between schemas:</p>
-<p><img alt="Schema Structure" src="../../images/schema-illustration.png" /></p>
-<div class="highlight"><pre><span></span><code>my_pipeline/
-├── src/
-│   └── my_pipeline/
-│       ├── __init__.py
-│       ├── subject.py      # subject schema (no dependencies)
-│       ├── session.py      # session schema (depends on subject)
-│       ├── acquisition.py  # acquisition schema (depends on session)
-│       └── analysis.py     # analysis schema (depends on acquisition)
-</code></pre></div>
-<p>For practical guidance on organizing multi-schema pipelines, configuring repositories, and managing team access, see <a href="../../how-to/manage-pipeline-project/">Manage a Pipeline Project</a>.</p>
-<h2 id="object-augmented-schemas">Object-Augmented Schemas<a class="headerlink" href="#object-augmented-schemas" title="Permanent link">&para;</a></h2>
-<p>Scientific data often includes large objects—images, recordings, time series, instrument outputs—that don't fit efficiently in relational tables. DataJoint addresses this through <strong>Object-Augmented Schemas (OAS)</strong>, a hybrid storage architecture that preserves relational semantics while handling arbitrarily large data.</p>
-<h3 id="the-oas-philosophy">The OAS Philosophy<a class="headerlink" href="#the-oas-philosophy" title="Permanent link">&para;</a></h3>
-<p><strong>1. The database remains the system of record.</strong></p>
-<p>All metadata, relationships, and query logic live in the relational database. The schema defines what data exists, how entities relate, and what computations produce them. Queries operate on the relational structure; results are consistent and reproducible.</p>
-<p><strong>2. Large objects live in object stores.</strong></p>
-<p>Object storage (filesystems, S3, GCS, Azure Blob, MinIO) holds the actual bytes—arrays, images, files. The database stores only lightweight references (paths, checksums, metadata). This separation lets the database stay fast while data scales to terabytes.</p>
-<p><strong>3. Transparent access through codecs.</strong></p>
-<p>DataJoint's <a href="../type-system/">type system</a> provides codec types that bridge Python objects and storage:</p>
-<table>
-<thead>
-<tr>
-<th>Codec</th>
-<th>Purpose</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>&lt;blob&gt;</code></td>
-<td>Serialize Python objects (NumPy arrays, dicts)</td>
-</tr>
-<tr>
-<td><code>&lt;blob@store&gt;</code></td>
-<td>Same, but stored in object store</td>
-</tr>
-<tr>
-<td><code>&lt;attach&gt;</code></td>
-<td>Store files with preserved filenames</td>
-</tr>
-<tr>
-<td><code>&lt;object@store&gt;</code></td>
-<td>Path-addressed storage for complex structures (Zarr, HDF5)</td>
-</tr>
-<tr>
-<td><code>&lt;filepath@store&gt;</code></td>
-<td>References to user-managed files</td>
-</tr>
-</tbody>
-</table>
-<p>Users work with native Python objects; serialization and storage routing are invisible.</p>
-<p><strong>4. Referential integrity extends to objects.</strong></p>
-<p>When a database row is deleted, its associated stored objects are garbage-collected. Foreign key cascades work correctly—delete upstream data and downstream results (including their objects) disappear. The database and object store remain synchronized without manual cleanup.</p>
-<p><strong>5. Multiple storage tiers support diverse access patterns.</strong></p>
-<p>Different attributes can route to different stores:</p>
-<div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">Recording</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Imported</span><span class="p">):</span>
+<p>DataJoint adheres to this classical ACID model on both of its peer backends,
+MySQL and PostgreSQL, relying on each backend's default isolation to keep the
+grouped statements atomic and consistent — MySQL opens the transaction with a
+consistent snapshot (REPEATABLE READ), PostgreSQL uses READ COMMITTED. The
+database engine, not DataJoint, ultimately enforces the guarantee; DataJoint's
+job is to open a transaction around the right group of statements.</p>
+<h2 id="a-concrete-all-or-nothing-example">A concrete all-or-nothing example<a class="headerlink" href="#a-concrete-all-or-nothing-example" title="Permanent link">&para;</a></h2>
+<p>The textbook case is a transfer between two accounts. Consider a simple table of
+bank accounts:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">datajoint</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dj</span>
+
+<span class="n">schema</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">Schema</span><span class="p">(</span><span class="s2">&quot;bank&quot;</span><span class="p">)</span>
+
+<span class="nd">@schema</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Account</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
     <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
-<span class="s2">    -&gt; Session</span>
+<span class="s2">    account_number : int32</span>
 <span class="s2">    ---</span>
-<span class="s2">    raw_data : &lt;blob@fast&gt;       # Hot storage for active analysis</span>
-<span class="s2">    archive : &lt;blob@cold&gt;        # Cold storage for long-term retention</span>
+<span class="s2">    customer_name  : varchar(60)</span>
+<span class="s2">    balance        : decimal(9, 2)</span>
 <span class="s2">    &quot;&quot;&quot;</span>
 </code></pre></div>
-<p>This architecture lets teams work with terabyte-scale datasets while retaining the query power, integrity guarantees, and reproducibility of the relational model.</p>
-<h2 id="pipeline-workflow">Pipeline Workflow<a class="headerlink" href="#pipeline-workflow" title="Permanent link">&para;</a></h2>
-<p>A typical data pipeline workflow:</p>
-<ol>
-<li>
-<p><strong>Acquisition</strong> — Data is collected from instruments, experiments, or external sources. Raw files land in object storage; metadata populates Manual tables.</p>
-</li>
-<li>
-<p><strong>Import</strong> — Automated processes parse raw data, extract signals, and populate Imported tables with structured results.</p>
-</li>
-<li>
-<p><strong>Computation</strong> — The <code>populate()</code> mechanism identifies new data and triggers downstream processing. Compute resources execute transformations and populate Computed tables.</p>
-</li>
-<li>
-<p><strong>Query &amp; Analysis</strong> — Users query results across the pipeline, combining data from multiple stages to generate insights, reports, or visualizations.</p>
-</li>
-<li>
-<p><strong>Collaboration</strong> — Team members access the same database concurrently, building on shared results. Foreign key constraints maintain consistency.</p>
-</li>
-<li>
-<p><strong>Delivery</strong> — Processed results are exported, integrated into downstream systems, or archived according to project requirements.</p>
-</li>
-</ol>
-<p>Throughout this process, the schema definition remains the single source of truth.</p>
-<h2 id="comparing-approaches">Comparing Approaches<a class="headerlink" href="#comparing-approaches" title="Permanent link">&para;</a></h2>
-<p>The pipeline approach requires upfront investment in schema design. Compared to a file-based approach where data structure is implicit in filenames, dependencies are encoded in scripts, and lineage must be tracked manually, a DataJoint pipeline makes all of those explicit in the schema — and pays the investment back in reproducibility, query power, and collaboration as projects scale.</p>
-<p>For a detailed structural comparison against file-based workflow systems (CWL, Snakemake, Nextflow) and task orchestrators (Airflow, Argo, Prefect, Dagster), and for guidance on when the two layers complement rather than substitute each other, see <a href="../comparison-to-workflow-languages/">Comparison to Workflow Languages</a>.</p>
-<h2 id="summary">Summary<a class="headerlink" href="#summary" title="Permanent link">&para;</a></h2>
-<p>Scientific data pipelines extend the Relational Workflow Model into complete data operations systems:</p>
+<p>Moving money requires two writes that belong together: debit the source, credit
+the destination. Written naively, without grouping them, a failure between the
+two is catastrophic:</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">transfer_unsafe</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">destination</span><span class="p">,</span> <span class="n">amount</span><span class="p">):</span>
+    <span class="n">balance</span> <span class="o">=</span> <span class="p">(</span><span class="n">Account</span> <span class="o">&amp;</span> <span class="n">source</span><span class="p">)</span><span class="o">.</span><span class="n">fetch1</span><span class="p">(</span><span class="s2">&quot;balance&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">balance</span> <span class="o">&lt;</span> <span class="n">amount</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Insufficient funds&quot;</span><span class="p">)</span>
+    <span class="n">Account</span><span class="o">.</span><span class="n">update1</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">balance</span><span class="o">=</span><span class="n">balance</span> <span class="o">-</span> <span class="n">amount</span><span class="p">))</span>   <span class="c1"># money leaves here</span>
+    <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;connection lost&quot;</span><span class="p">)</span>                     <span class="c1"># ...and never arrives</span>
+    <span class="n">Account</span><span class="o">.</span><span class="n">update1</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="n">destination</span><span class="p">,</span> <span class="n">balance</span><span class="o">=...</span> <span class="o">+</span> <span class="n">amount</span><span class="p">))</span>  <span class="c1"># never runs</span>
+</code></pre></div>
+<p>The debit committed on its own; the credit never happened. Money vanished, and no
+constraint was violated — the database is internally valid but factually wrong.
+Wrapping the two writes in a transaction closes this gap:</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">transfer</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">destination</span><span class="p">,</span> <span class="n">amount</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">amount</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Transfer amount must be positive&quot;</span><span class="p">)</span>
+    <span class="k">with</span> <span class="n">schema</span><span class="o">.</span><span class="n">connection</span><span class="o">.</span><span class="n">transaction</span><span class="p">:</span>
+        <span class="n">balance</span> <span class="o">=</span> <span class="p">(</span><span class="n">Account</span> <span class="o">&amp;</span> <span class="n">source</span><span class="p">)</span><span class="o">.</span><span class="n">fetch1</span><span class="p">(</span><span class="s2">&quot;balance&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">balance</span> <span class="o">&lt;</span> <span class="n">amount</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Insufficient funds&quot;</span><span class="p">)</span>
+        <span class="n">Account</span><span class="o">.</span><span class="n">update1</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">balance</span><span class="o">=</span><span class="n">balance</span> <span class="o">-</span> <span class="n">amount</span><span class="p">))</span>
+        <span class="n">dest</span> <span class="o">=</span> <span class="p">(</span><span class="n">Account</span> <span class="o">&amp;</span> <span class="n">destination</span><span class="p">)</span><span class="o">.</span><span class="n">fetch1</span><span class="p">(</span><span class="s2">&quot;balance&quot;</span><span class="p">)</span>
+        <span class="n">Account</span><span class="o">.</span><span class="n">update1</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="n">destination</span><span class="p">,</span> <span class="n">balance</span><span class="o">=</span><span class="n">dest</span> <span class="o">+</span> <span class="n">amount</span><span class="p">))</span>
+</code></pre></div>
+<p>Everything inside <code>with schema.connection.transaction:</code> is one atomic unit. If the block
+completes normally, both updates commit together. If any statement raises — an
+insufficient-funds check, a lost connection, a bug — the whole block rolls back
+and the exception propagates. The debit is never left stranded without its credit.</p>
+<p>The same pattern makes a <strong>master row and its part rows</strong> land together. Because
+a part table's rows depend on their master through a foreign key, inserting them
+as one transaction guarantees you never observe a master without its parts, nor
+parts orphaned from a master:</p>
+<div class="highlight"><pre><span></span><code><span class="k">with</span> <span class="n">schema</span><span class="o">.</span><span class="n">connection</span><span class="o">.</span><span class="n">transaction</span><span class="p">:</span>
+    <span class="n">Experiment</span><span class="o">.</span><span class="n">insert1</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="n">experiment_id</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">experiment_date</span><span class="o">=</span><span class="s2">&quot;2026-07-17&quot;</span><span class="p">))</span>
+    <span class="n">Experiment</span><span class="o">.</span><span class="n">Trial</span><span class="o">.</span><span class="n">insert</span><span class="p">([</span>
+        <span class="nb">dict</span><span class="p">(</span><span class="n">experiment_id</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">trial_idx</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">outcome</span><span class="o">=</span><span class="s2">&quot;success&quot;</span><span class="p">),</span>
+        <span class="nb">dict</span><span class="p">(</span><span class="n">experiment_id</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">trial_idx</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">outcome</span><span class="o">=</span><span class="s2">&quot;failure&quot;</span><span class="p">),</span>
+    <span class="p">])</span>
+</code></pre></div>
+<p>A single <code>insert()</code> or <code>update1()</code> call is <em>already</em> atomic on its own. You reach
+for an explicit <code>with schema.connection.transaction:</code> block only when <strong>several</strong>
+operations must succeed or fail as a group, as above.</p>
+<div class="admonition note">
+<p class="admonition-title">Which connection the transaction uses</p>
+<p><code>schema.connection</code> is the connection shared by that schema's tables — the
+same object <code>dj.conn()</code> returns in the common single-connection setup. A
+transaction covers only operations on <em>that</em> connection, so group tables that
+share it. If you deliberately place schemas on different connections (separate
+<code>dj.Instance</code>s, or an explicit <code>connection=</code>), wrap the work using the
+connection those tables actually use.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Transactions do not nest</p>
+<p>DataJoint does not support nested transactions. Opening a transaction while
+another is already active on the same connection raises an error. Keep exactly
+one <code>transaction</code> block active at a time.</p>
+</div>
+<h2 id="transactions-in-computation">Transactions in computation<a class="headerlink" href="#transactions-in-computation" title="Permanent link">&para;</a></h2>
+<p>You almost never write a transaction block inside a <code>make()</code> method, because
+<code>populate()</code> has already opened one for you. For each key it processes,
+<code>populate()</code> wraps the entire <code>make(key)</code> call in a transaction, calls <code>make()</code>,
+and commits only if it returns without error. Everything a <code>make()</code> writes — its
+own rows and all of its part-table rows — is therefore inserted as one atomic
+unit. A computed result and its parts commit together, or, if <code>make()</code> raises,
+roll back together, leaving nothing behind to clean up.</p>
+<div class="highlight"><pre><span></span><code><span class="nd">@schema</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ProcessedData</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Computed</span><span class="p">):</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">    -&gt; RawData</span>
+<span class="s2">    ---</span>
+<span class="s2">    result : float64</span>
+<span class="s2">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">make</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="n">RawData</span> <span class="o">&amp;</span> <span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">fetch1</span><span class="p">(</span><span class="s2">&quot;data&quot;</span><span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">expensive_computation</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">insert1</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">result</span><span class="o">=</span><span class="n">result</span><span class="p">))</span>   <span class="c1"># already inside populate()&#39;s transaction</span>
+</code></pre></div>
+<p>This is why DataJoint pipelines stay consistent with their inputs: a downstream
+result is either fully present or fully absent, never half-computed.</p>
+<div class="admonition danger">
+<p class="admonition-title">Never open a transaction inside <code>make()</code></p>
+<p>Because <code>populate()</code> has already started one, opening your own transaction
+inside <code>make()</code> attempts to nest — which DataJoint does not support, so it
+raises an error. Just insert directly; the write is already atomic.</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">make</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+    <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">connection</span><span class="o">.</span><span class="n">transaction</span><span class="p">:</span>   <span class="c1"># WRONG — a transaction is already active</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">insert1</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>         <span class="c1"># this raises an error</span>
+</code></pre></div>
+</div>
+<p>For long-running computations, holding the transaction open for the whole <code>make()</code>
+would lock resources and risk timeouts. The <a href="../computation-model/">three-part make</a>
+pattern addresses this by running fetch and compute <em>outside</em> the transaction and
+confining only the insert to a brief one — still without you ever opening a
+transaction yourself.</p>
+<h2 id="deletes-are-transactional-too">Deletes are transactional too<a class="headerlink" href="#deletes-are-transactional-too" title="Permanent link">&para;</a></h2>
+<p>Cascading deletes span many tables — a delete propagates through every dependent
+table in reverse topological order. To keep that cascade all-or-nothing, <code>delete</code>
+runs inside a transaction by default (<code>transaction=True</code>), so a failure partway
+through rolls back the entire cascade rather than leaving descendants deleted and
+ancestors intact. The only reason to opt out with <code>delete(transaction=False)</code> is
+when the delete is already running inside a transaction you opened, since a nested
+transaction is not allowed.</p>
+<h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
 <ul>
-<li><strong>Pipeline Architecture</strong> — Code repository, relational database, and object store working together</li>
-<li><strong>DAG Structure</strong> — Unidirectional flow of data and dependencies</li>
-<li><strong>Object-Augmented Schemas</strong> — Scalable storage with relational semantics</li>
-</ul>
-<p>The schema remains central—defining data structures, dependencies, and computational flow. This pipeline-centric approach lets teams focus on their science while the system handles data integrity, lineage, and reproducibility automatically.</p>
-<h2 id="see-also">See Also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="../relational-workflow-model/">Relational Workflow Model</a> — The conceptual foundation</li>
-<li><a href="../entity-integrity/">Entity Integrity</a> — Primary keys and dimensions</li>
-<li><a href="../type-system/">Type System</a> — Codec types and storage modes</li>
-<li><a href="../../how-to/manage-pipeline-project/">Manage a Pipeline Project</a> — Practical project organization</li>
+<li><a href="../computation-model/">Computation Model</a> — how <code>populate()</code> wraps each
+  <code>make()</code> call and the three-part pattern for long computations.</li>
+<li><a href="../data-integrity/">Data Integrity</a> — the integrity guarantees transactions
+  uphold at each commit boundary.</li>
+<li><a href="../../how-to/insert-data/">Insert data</a> — inserting master and part rows.</li>
+<li><a href="../../how-to/delete-data/">Delete data</a> — cascading deletes and safemode.</li>
+<li><a href="../../reference/specs/autopopulate/">AutoPopulate</a> — normative spec for the
+  per-key transaction and the make() reproducibility contract.</li>
 </ul>
 
 

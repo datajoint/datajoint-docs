@@ -571,6 +571,12 @@
       
         
       
+        
+      
+        
+      
+        
+      
     
     
     
@@ -648,6 +654,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../data-integrity/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Data Integrity
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../entity-integrity/" class="md-nav__link">
         
   
@@ -676,6 +710,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../referential-integrity/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Referential Integrity
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../normalization/" class="md-nav__link">
         
   
@@ -684,6 +746,34 @@
     
   
     Normalization
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../transactions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Transactions
   
 
     
@@ -1181,10 +1271,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#aliased-foreign-key" class="md-nav__link">
+  <a href="#renamed-foreign-key" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Aliased Foreign Key
+        Renamed Foreign Key
       
     </span>
   </a>
@@ -6505,10 +6595,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#aliased-foreign-key" class="md-nav__link">
+  <a href="#renamed-foreign-key" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Aliased Foreign Key
+        Renamed Foreign Key
       
     </span>
   </a>
@@ -6881,8 +6971,8 @@ DataJoint version or an incomplete declare. Run `schema.rebuild_lineage()` ...
 <span class="c1"># Works: course_id is secondary in both, but has same lineage</span>
 <span class="n">FavoriteCourse</span><span class="p">()</span> <span class="o">*</span> <span class="n">RequiredCourse</span><span class="p">()</span>
 </code></pre></div>
-<h3 id="aliased-foreign-key">Aliased Foreign Key<a class="headerlink" href="#aliased-foreign-key" title="Permanent link">&para;</a></h3>
-<p>When you alias a foreign key, the new name gets the same lineage as the original:</p>
+<h3 id="renamed-foreign-key">Renamed Foreign Key<a class="headerlink" href="#renamed-foreign-key" title="Permanent link">&para;</a></h3>
+<p>When you rename a foreign key, the new name gets the same lineage as the original:</p>
 <div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">Person</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
     <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
 <span class="s2">    person_id : int unsigned</span>

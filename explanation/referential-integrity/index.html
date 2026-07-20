@@ -8,13 +8,13 @@
       
       
       
-        <link rel="canonical" href="https://docs.datajoint.com/explanation/data-pipelines/">
+        <link rel="canonical" href="https://docs.datajoint.com/explanation/referential-integrity/">
       
       
-        <link rel="prev" href="../">
+        <link rel="prev" href="../entity-integrity/">
       
       
-        <link rel="next" href="../faq/">
+        <link rel="next" href="../normalization/">
       
       
         
@@ -25,7 +25,7 @@
     
     
       
-        <title>Data Pipelines - DataJoint Documentation</title>
+        <title>Referential Integrity - DataJoint Documentation</title>
       
     
     
@@ -105,7 +105,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#scientific-data-pipelines" class="md-skip">
+        <a href="#referential-integrity" class="md-skip">
           Skip to content
         </a>
       
@@ -178,7 +178,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Data Pipelines
+              Referential Integrity
             
           </span>
         </div>
@@ -431,10 +431,8 @@
                 
   
   
-    
   
   
-  
     
     
       
@@ -448,11 +446,11 @@
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_1" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_1" >
         
           
           <label class="md-nav__link" for="__nav_2_1" id="__nav_2_1_label" tabindex="0">
@@ -473,7 +471,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_1_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_1_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_2_1">
             <span class="md-nav__icon md-icon"></span>
             
@@ -488,37 +486,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Data Pipelines
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../data-pipelines/" class="md-nav__link">
         
   
   
@@ -534,159 +505,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#pipeline-architecture" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Pipeline Architecture
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#pipeline-as-a-dag" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Pipeline as a DAG
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Pipeline as a DAG">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#dag-constraints" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        DAG Constraints
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#the-relational-workflow-model" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        The Relational Workflow Model
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#schema-organization" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Schema Organization
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#object-augmented-schemas" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Object-Augmented Schemas
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Object-Augmented Schemas">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#the-oas-philosophy" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        The OAS Philosophy
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#pipeline-workflow" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Pipeline Workflow
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#comparing-approaches" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Comparing Approaches
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#summary" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Summary
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#see-also" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        See Also
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -732,8 +550,10 @@
                 
   
   
+    
   
   
+  
     
     
       
@@ -765,11 +585,11 @@
       
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2" checked>
         
           
           <label class="md-nav__link" for="__nav_2_2" id="__nav_2_2_label" tabindex="0">
@@ -790,7 +610,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_2_2">
             <span class="md-nav__icon md-icon"></span>
             
@@ -889,10 +709,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../referential-integrity/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Referential Integrity
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -908,6 +755,142 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#a-foreign-key-is-a-logical-constraint-not-a-physical-pointer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A foreign key is a logical constraint, not a physical pointer
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-five-effects-of-a-foreign-key" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The five effects of a foreign key
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The five effects of a foreign key">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-schema-embedding" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Schema embedding
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-insert-restriction-on-the-child" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Insert restriction on the child
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-delete-restriction-on-the-parent" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Delete restriction on the parent
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-update-restriction-on-key-values" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Update restriction on key values
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-indexing-the-foreign-key-columns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Indexing the foreign-key columns
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-dual-role-integrity-and-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The dual role: integrity and workflow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#modifiers-and-placement-shape-the-relationship" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Modifiers and placement shape the relationship
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#see-also" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        See also
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -6322,10 +6305,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#pipeline-architecture" class="md-nav__link">
+  <a href="#a-foreign-key-is-a-logical-constraint-not-a-physical-pointer" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Pipeline Architecture
+        A foreign key is a logical constraint, not a physical pointer
       
     </span>
   </a>
@@ -6333,22 +6316,66 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#pipeline-as-a-dag" class="md-nav__link">
+  <a href="#the-five-effects-of-a-foreign-key" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Pipeline as a DAG
+        The five effects of a foreign key
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Pipeline as a DAG">
+    <nav class="md-nav" aria-label="The five effects of a foreign key">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#dag-constraints" class="md-nav__link">
+  <a href="#1-schema-embedding" class="md-nav__link">
     <span class="md-ellipsis">
       
-        DAG Constraints
+        1. Schema embedding
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-insert-restriction-on-the-child" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Insert restriction on the child
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-delete-restriction-on-the-parent" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Delete restriction on the parent
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-update-restriction-on-key-values" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Update restriction on key values
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-indexing-the-foreign-key-columns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Indexing the foreign-key columns
       
     </span>
   </a>
@@ -6361,10 +6388,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#the-relational-workflow-model" class="md-nav__link">
+  <a href="#the-dual-role-integrity-and-workflow" class="md-nav__link">
     <span class="md-ellipsis">
       
-        The Relational Workflow Model
+        The dual role: integrity and workflow
       
     </span>
   </a>
@@ -6372,71 +6399,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#schema-organization" class="md-nav__link">
+  <a href="#modifiers-and-placement-shape-the-relationship" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Schema Organization
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#object-augmented-schemas" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Object-Augmented Schemas
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Object-Augmented Schemas">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#the-oas-philosophy" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        The OAS Philosophy
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#pipeline-workflow" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Pipeline Workflow
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#comparing-approaches" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Comparing Approaches
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#summary" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Summary
+        Modifiers and placement shape the relationship
       
     </span>
   </a>
@@ -6447,7 +6413,7 @@
   <a href="#see-also" class="md-nav__link">
     <span class="md-ellipsis">
       
-        See Also
+        See also
       
     </span>
   </a>
@@ -6474,178 +6440,149 @@
   
 
 
-<h1 id="scientific-data-pipelines">Scientific Data Pipelines<a class="headerlink" href="#scientific-data-pipelines" title="Permanent link">&para;</a></h1>
-<p>A <strong>scientific data pipeline</strong> extends beyond a database with computations. It is a comprehensive system that:</p>
-<ul>
-<li>Manages the complete lifecycle of scientific data from acquisition to delivery</li>
-<li>Integrates diverse tools for data entry, visualization, and analysis</li>
-<li>Provides infrastructure for secure, scalable computation</li>
-<li>Enables collaboration across teams and institutions</li>
-<li>Supports reproducibility and data lineage throughout</li>
-</ul>
-<h2 id="pipeline-architecture">Pipeline Architecture<a class="headerlink" href="#pipeline-architecture" title="Permanent link">&para;</a></h2>
-<p>At the heart of every DataJoint pipeline is an <strong>open-source core</strong> of three components that handle schema, computation, and storage. The managed <strong>DataJoint Platform</strong> extends this core with services for AI access, data ingestion, exploration, security, collaboration, and visualization.</p>
-<p><img alt="DataJoint Platform Architecture" src="../../images/dj-platform.svg" /></p>
-<table>
-<thead>
-<tr>
-<th>Open-Source Core</th>
-<th>Purpose</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>Code Repository</strong></td>
-<td>Version-controlled pipeline definitions, <code>make</code> methods, configuration</td>
-</tr>
-<tr>
-<td><strong>Relational Database</strong></td>
-<td>System of record for metadata, relationships, and integrity enforcement</td>
-</tr>
-<tr>
-<td><strong>Object Store</strong></td>
-<td>Scalable storage for large scientific data (images, recordings, signals)</td>
-</tr>
-</tbody>
-</table>
-<p>These components work together: code defines the schema and computations, the database tracks all metadata and relationships, and object storage holds the large scientific data files.</p>
-<h2 id="pipeline-as-a-dag">Pipeline as a DAG<a class="headerlink" href="#pipeline-as-a-dag" title="Permanent link">&para;</a></h2>
-<p>A DataJoint pipeline forms a <strong>Directed Acyclic Graph (DAG)</strong> at two levels:</p>
-<p><img alt="Pipeline DAG Structure" src="../../images/pipeline-illustration.png" /></p>
-<p><strong>Nodes</strong> represent Python modules, which correspond to database schemas.</p>
-<p><strong>Edges</strong> represent:</p>
-<ul>
-<li>Python import dependencies between modules</li>
-<li>Bundles of foreign key references between schemas</li>
-</ul>
-<p>This dual structure ensures that both code dependencies and data dependencies flow in the same direction.</p>
-<h3 id="dag-constraints">DAG Constraints<a class="headerlink" href="#dag-constraints" title="Permanent link">&para;</a></h3>
-<blockquote>
-<p><strong>All foreign key relationships within a schema MUST form a DAG.</strong></p>
-<p><strong>Dependencies between schemas (foreign keys + imports) MUST also form a DAG.</strong></p>
-</blockquote>
-<p>This constraint is fundamental to DataJoint's design. It ensures:</p>
-<ul>
-<li><strong>Unidirectional data flow</strong> — Data enters at the top and flows downstream</li>
-<li><strong>Clear lineage</strong> — Every result traces back to its inputs</li>
-<li><strong>Safe deletion</strong> — Cascading deletes follow the DAG without cycles</li>
-<li><strong>Predictable computation</strong> — <code>populate()</code> can determine correct execution order</li>
-</ul>
-<h2 id="the-relational-workflow-model">The Relational Workflow Model<a class="headerlink" href="#the-relational-workflow-model" title="Permanent link">&para;</a></h2>
-<p>DataJoint pipelines are built on the <a href="../relational-workflow-model/">Relational Workflow Model</a>—a paradigm that extends relational databases with native support for computational workflows. In this model:</p>
-<ul>
-<li><strong>Tables represent workflow steps</strong>, not just data storage</li>
-<li><strong>Foreign keys encode dependencies</strong>, prescribing the order of operations</li>
-<li><strong>Table tiers</strong> (Lookup, Manual, Imported, Computed) classify how data enters the pipeline</li>
-<li><strong>The schema forms a DAG</strong> that defines valid execution sequences</li>
-</ul>
-<p>This model treats the database schema as an <strong>executable workflow specification</strong>—defining not just what data exists but when and how it comes into existence.</p>
-<h2 id="schema-organization">Schema Organization<a class="headerlink" href="#schema-organization" title="Permanent link">&para;</a></h2>
-<p>Each schema corresponds to a dedicated Python module. The module import structure mirrors the foreign key dependencies between schemas:</p>
-<p><img alt="Schema Structure" src="../../images/schema-illustration.png" /></p>
-<div class="highlight"><pre><span></span><code>my_pipeline/
-├── src/
-│   └── my_pipeline/
-│       ├── __init__.py
-│       ├── subject.py      # subject schema (no dependencies)
-│       ├── session.py      # session schema (depends on subject)
-│       ├── acquisition.py  # acquisition schema (depends on session)
-│       └── analysis.py     # analysis schema (depends on acquisition)
-</code></pre></div>
-<p>For practical guidance on organizing multi-schema pipelines, configuring repositories, and managing team access, see <a href="../../how-to/manage-pipeline-project/">Manage a Pipeline Project</a>.</p>
-<h2 id="object-augmented-schemas">Object-Augmented Schemas<a class="headerlink" href="#object-augmented-schemas" title="Permanent link">&para;</a></h2>
-<p>Scientific data often includes large objects—images, recordings, time series, instrument outputs—that don't fit efficiently in relational tables. DataJoint addresses this through <strong>Object-Augmented Schemas (OAS)</strong>, a hybrid storage architecture that preserves relational semantics while handling arbitrarily large data.</p>
-<h3 id="the-oas-philosophy">The OAS Philosophy<a class="headerlink" href="#the-oas-philosophy" title="Permanent link">&para;</a></h3>
-<p><strong>1. The database remains the system of record.</strong></p>
-<p>All metadata, relationships, and query logic live in the relational database. The schema defines what data exists, how entities relate, and what computations produce them. Queries operate on the relational structure; results are consistent and reproducible.</p>
-<p><strong>2. Large objects live in object stores.</strong></p>
-<p>Object storage (filesystems, S3, GCS, Azure Blob, MinIO) holds the actual bytes—arrays, images, files. The database stores only lightweight references (paths, checksums, metadata). This separation lets the database stay fast while data scales to terabytes.</p>
-<p><strong>3. Transparent access through codecs.</strong></p>
-<p>DataJoint's <a href="../type-system/">type system</a> provides codec types that bridge Python objects and storage:</p>
-<table>
-<thead>
-<tr>
-<th>Codec</th>
-<th>Purpose</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>&lt;blob&gt;</code></td>
-<td>Serialize Python objects (NumPy arrays, dicts)</td>
-</tr>
-<tr>
-<td><code>&lt;blob@store&gt;</code></td>
-<td>Same, but stored in object store</td>
-</tr>
-<tr>
-<td><code>&lt;attach&gt;</code></td>
-<td>Store files with preserved filenames</td>
-</tr>
-<tr>
-<td><code>&lt;object@store&gt;</code></td>
-<td>Path-addressed storage for complex structures (Zarr, HDF5)</td>
-</tr>
-<tr>
-<td><code>&lt;filepath@store&gt;</code></td>
-<td>References to user-managed files</td>
-</tr>
-</tbody>
-</table>
-<p>Users work with native Python objects; serialization and storage routing are invisible.</p>
-<p><strong>4. Referential integrity extends to objects.</strong></p>
-<p>When a database row is deleted, its associated stored objects are garbage-collected. Foreign key cascades work correctly—delete upstream data and downstream results (including their objects) disappear. The database and object store remain synchronized without manual cleanup.</p>
-<p><strong>5. Multiple storage tiers support diverse access patterns.</strong></p>
-<p>Different attributes can route to different stores:</p>
-<div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">Recording</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Imported</span><span class="p">):</span>
+<h1 id="referential-integrity">Referential Integrity<a class="headerlink" href="#referential-integrity" title="Permanent link">&para;</a></h1>
+<p>Where <a href="../entity-integrity/">entity integrity</a> guarantees that each record
+corresponds to exactly one real-world entity, <strong>referential integrity</strong>
+guarantees that the <em>relationships between</em> entities remain valid. It is what
+prevents a session from referencing a subject that was never recorded, or a
+computed result from surviving after the input it was derived from has been
+deleted.</p>
+<p><strong>Referential integrity is impossible without entity integrity.</strong> You cannot
+reliably relate entities until you can reliably identify them. A foreign key
+points at a parent's primary key, so the parent must first have a primary key
+that uniquely names each of its entities. Identification comes first;
+relationships follow. This is why the two guarantees are always discussed in
+order — the second is built on the first.</p>
+<h2 id="a-foreign-key-is-a-logical-constraint-not-a-physical-pointer">A foreign key is a logical constraint, not a physical pointer<a class="headerlink" href="#a-foreign-key-is-a-logical-constraint-not-a-physical-pointer" title="Permanent link">&para;</a></h2>
+<p>The most important thing to understand about a foreign key is what it is <em>not</em>.
+It is not a stored link to a location on disk. Nothing in the child record
+holds an address, offset, or path into the parent.</p>
+<p>A foreign key is a <strong>logical constraint enforced at runtime</strong>. When you insert
+a row into a child table, the database does not follow a pre-existing link. It
+performs a <em>search</em> of the parent table to verify that a row with the matching
+primary-key value already exists. If one does, the insert succeeds; if not, the
+insert is rejected. The relationship is re-verified from the actual data every
+time it matters, rather than trusted because a pointer was once written down.</p>
+<p>This is a genuine departure from file-based data models. In an HDF5 file, or a
+tree of files referencing each other by path, a link is a physical thing: a
+name or address baked into the data. If the target moves or disappears, the
+link silently dangles and nothing notices until something tries to follow it.
+The relational model refuses to store such a link at all. Because references
+are logical, they cannot dangle: a value either matches an existing key or the
+database will not accept it. This is the source of the model's durability — and
+it is why DataJoint stores relationships as key values rather than as pointers
+into its <a href="../type-system/">internal object store</a>.</p>
+<h2 id="the-five-effects-of-a-foreign-key">The five effects of a foreign key<a class="headerlink" href="#the-five-effects-of-a-foreign-key" title="Permanent link">&para;</a></h2>
+<p>Declaring a foreign key — in DataJoint, the arrow <code>-&gt;</code> — sets five distinct
+things in motion. Understanding each explains why a foreign key is a design
+decision, not merely a link.</p>
+<h3 id="1-schema-embedding">1. Schema embedding<a class="headerlink" href="#1-schema-embedding" title="Permanent link">&para;</a></h3>
+<p>The parent's primary-key attributes become attributes of the child, with the
+same datatypes and — by default — the same names. The child inherits the
+parent's key rather than inventing a parallel one.</p>
+<div class="highlight"><pre><span></span><code><span class="nd">@schema</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Session</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
     <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
-<span class="s2">    -&gt; Session</span>
+<span class="s2">    -&gt; Subject                 # embeds subject_id : varchar(16)</span>
+<span class="s2">    session_idx : int32</span>
 <span class="s2">    ---</span>
-<span class="s2">    raw_data : &lt;blob@fast&gt;       # Hot storage for active analysis</span>
-<span class="s2">    archive : &lt;blob@cold&gt;        # Cold storage for long-term retention</span>
+<span class="s2">    session_date : date</span>
 <span class="s2">    &quot;&quot;&quot;</span>
 </code></pre></div>
-<p>This architecture lets teams work with terabyte-scale datasets while retaining the query power, integrity guarantees, and reproducibility of the relational model.</p>
-<h2 id="pipeline-workflow">Pipeline Workflow<a class="headerlink" href="#pipeline-workflow" title="Permanent link">&para;</a></h2>
-<p>A typical data pipeline workflow:</p>
-<ol>
-<li>
-<p><strong>Acquisition</strong> — Data is collected from instruments, experiments, or external sources. Raw files land in object storage; metadata populates Manual tables.</p>
-</li>
-<li>
-<p><strong>Import</strong> — Automated processes parse raw data, extract signals, and populate Imported tables with structured results.</p>
-</li>
-<li>
-<p><strong>Computation</strong> — The <code>populate()</code> mechanism identifies new data and triggers downstream processing. Compute resources execute transformations and populate Computed tables.</p>
-</li>
-<li>
-<p><strong>Query &amp; Analysis</strong> — Users query results across the pipeline, combining data from multiple stages to generate insights, reports, or visualizations.</p>
-</li>
-<li>
-<p><strong>Collaboration</strong> — Team members access the same database concurrently, building on shared results. Foreign key constraints maintain consistency.</p>
-</li>
-<li>
-<p><strong>Delivery</strong> — Processed results are exported, integrated into downstream systems, or archived according to project requirements.</p>
-</li>
-</ol>
-<p>Throughout this process, the schema definition remains the single source of truth.</p>
-<h2 id="comparing-approaches">Comparing Approaches<a class="headerlink" href="#comparing-approaches" title="Permanent link">&para;</a></h2>
-<p>The pipeline approach requires upfront investment in schema design. Compared to a file-based approach where data structure is implicit in filenames, dependencies are encoded in scripts, and lineage must be tracked manually, a DataJoint pipeline makes all of those explicit in the schema — and pays the investment back in reproducibility, query power, and collaboration as projects scale.</p>
-<p>For a detailed structural comparison against file-based workflow systems (CWL, Snakemake, Nextflow) and task orchestrators (Airflow, Argo, Prefect, Dagster), and for guidance on when the two layers complement rather than substitute each other, see <a href="../comparison-to-workflow-languages/">Comparison to Workflow Languages</a>.</p>
-<h2 id="summary">Summary<a class="headerlink" href="#summary" title="Permanent link">&para;</a></h2>
-<p>Scientific data pipelines extend the Relational Workflow Model into complete data operations systems:</p>
+<p>DataJoint resolves joins by <a href="../semantic-matching/">attribute lineage</a> rather
+than by name — every inherited attribute traces back to the dimension where it
+was first defined.</p>
+<p>Sharing the parent's attribute name is the common case, not a requirement. A
+foreign key can be <strong>renamed</strong> — <code>-&gt; Person.proj(husband='person_id')</code> embeds
+<code>person_id</code> into the child under the name <code>husband</code>, which is what lets a table
+reference the same parent more than once. A renamed attribute keeps the <em>same</em>
+lineage under a <em>different</em> name, so joins still resolve correctly: it is the
+attribute's lineage, not its literal name, that ties it back to its origin. See
+<a href="../semantic-matching/">renamed foreign keys</a> for the full mechanics.</p>
+<h3 id="2-insert-restriction-on-the-child">2. Insert restriction on the child<a class="headerlink" href="#2-insert-restriction-on-the-child" title="Permanent link">&para;</a></h3>
+<p>A child row can be inserted only if its foreign-key value matches an existing
+parent key. This is what prevents <em>orphaned</em> records. The restriction falls on
+the <strong>child</strong>: you may always add new parents, but you cannot add a child that
+references a parent that does not exist.</p>
+<div class="highlight"><pre><span></span><code><span class="n">Session</span><span class="o">.</span><span class="n">insert1</span><span class="p">((</span><span class="s1">&#39;M00142&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;2026-03-01&#39;</span><span class="p">))</span>  <span class="c1"># ok if subject M00142 exists</span>
+<span class="n">Session</span><span class="o">.</span><span class="n">insert1</span><span class="p">((</span><span class="s1">&#39;M09999&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;2026-03-01&#39;</span><span class="p">))</span>  <span class="c1"># IntegrityError: no such subject</span>
+</code></pre></div>
+<h3 id="3-delete-restriction-on-the-parent">3. Delete restriction on the parent<a class="headerlink" href="#3-delete-restriction-on-the-parent" title="Permanent link">&para;</a></h3>
+<p>The mirror of the insert rule: a parent cannot leave dependent children
+stranded. Standard SQL rejects a delete that would orphan children. DataJoint
+instead <strong>cascades</strong> the delete — removing a parent removes every child that
+depends on it, and every child of those children, down the whole hierarchy. It
+warns you first, because the reach can be large. The restriction falls on the
+<strong>parent</strong>: you may always delete a child, but deleting a parent takes its
+descendants with it.</p>
+<h3 id="4-update-restriction-on-key-values">4. Update restriction on key values<a class="headerlink" href="#4-update-restriction-on-key-values" title="Permanent link">&para;</a></h3>
+<p>Key values are not edited in place. DataJoint does not support updating a
+primary-key or foreign-key value, because doing so would silently invalidate
+every relationship built on it. The intended pattern is to delete the affected
+records and reinsert them. In a pipeline this preserves a clean rule: if an
+input changes, the results derived from it are removed and recomputed, never
+quietly rewritten.</p>
+<h3 id="5-indexing-the-foreign-key-columns">5. Indexing the foreign-key columns<a class="headerlink" href="#5-indexing-the-foreign-key-columns" title="Permanent link">&para;</a></h3>
+<p>On MySQL/InnoDB the engine automatically creates a secondary index on the
+child's foreign-key columns as part of enforcing the constraint — you never
+declare it. Such an index accelerates the delete check (finding a parent's
+children), the join (matching child keys to parent keys), and the insert check
+(confirming the parent exists). PostgreSQL does <em>not</em> index foreign-key columns
+automatically; when the delete or join cost on a large child table matters,
+declare an explicit <code>index(...)</code> on those columns.</p>
+<h2 id="the-dual-role-integrity-and-workflow">The dual role: integrity and workflow<a class="headerlink" href="#the-dual-role-integrity-and-workflow" title="Permanent link">&para;</a></h2>
+<p>In a conventional relational database a foreign key does exactly one job:
+referential integrity. In DataJoint it does a second job at the same time. The
+same arrow that guarantees a valid reference also declares a <strong>workflow
+dependency</strong> — it states that the child cannot be produced until the parent
+exists.</p>
+<p>Read the insert restriction again through this lens. "The parent must exist
+before the child can reference it" is not only an integrity rule; it is an
+execution order. The set of foreign keys across a schema therefore defines a
+<a href="../relational-workflow-model/">directed acyclic graph</a> — the pipeline DAG,
+which is also the schema diagram. Nothing external schedules the work; the
+foreign-key graph itself dictates what may run, what must run first, and what
+already exists. Cascade delete acquires the same double meaning: removing an
+invalidated input automatically removes every downstream result computed from
+it, keeping the pipeline consistent without any audit step. This unification of
+constraint and execution order is what makes lineage and reproducibility
+<a href="../relational-workflow-model/">structural properties of the schema</a> rather than
+something reconstructed after the fact.</p>
+<h2 id="modifiers-and-placement-shape-the-relationship">Modifiers and placement shape the relationship<a class="headerlink" href="#modifiers-and-placement-shape-the-relationship" title="Permanent link">&para;</a></h2>
+<p>The default foreign key is a required, many-to-one reference: every child names
+exactly one parent, and a parent may be named by many children. Two modifiers
+adjust this, and <em>where</em> the arrow sits adjusts it further.</p>
 <ul>
-<li><strong>Pipeline Architecture</strong> — Code repository, relational database, and object store working together</li>
-<li><strong>DAG Structure</strong> — Unidirectional flow of data and dependencies</li>
-<li><strong>Object-Augmented Schemas</strong> — Scalable storage with relational semantics</li>
+<li><strong><code>-&gt; [nullable] Parent</code></strong> makes the reference optional — the child may exist
+  with no parent (the key value is left empty). Only a <em>secondary</em> foreign key,
+  declared below the <code>---</code>, can be nullable; a key that is part of the primary
+  key must always have a value, because it helps identify the entity.</li>
+<li><strong><code>-&gt; [unique] Parent</code></strong> makes the reference one-to-one — at most one child
+  may name a given parent.</li>
 </ul>
-<p>The schema remains central—defining data structures, dependencies, and computational flow. This pipeline-centric approach lets teams focus on their science while the system handles data integrity, lineage, and reproducibility automatically.</p>
-<h2 id="see-also">See Also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
+<p>Placement matters just as much. A foreign key placed <em>above</em> the <code>---</code> becomes
+part of the child's primary key, so the parent's identity is built into the
+child's identity — a containment or extension relationship. Placed <em>below</em> the
+<code>---</code>, it is an ordinary secondary reference. And two foreign keys placed
+together above the <code>---</code> form the composite key of an <em>association</em> table,
+which is how DataJoint expresses many-to-many relationships. Choosing among
+these is a modeling decision with real consequences for cardinality and for how
+the relationship appears in a diagram.</p>
+<p>These placements and modifiers, and the relationship patterns they build, are
+covered in full in the how-to guide — see
+<a href="../../how-to/model-relationships/">Model Relationships</a>.</p>
+<h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
 <ul>
-<li><a href="../relational-workflow-model/">Relational Workflow Model</a> — The conceptual foundation</li>
-<li><a href="../entity-integrity/">Entity Integrity</a> — Primary keys and dimensions</li>
-<li><a href="../type-system/">Type System</a> — Codec types and storage modes</li>
-<li><a href="../../how-to/manage-pipeline-project/">Manage a Pipeline Project</a> — Practical project organization</li>
+<li><a href="../entity-integrity/">Entity Integrity</a> — the guarantee referential
+  integrity depends on: identifying entities before relating them</li>
+<li><a href="../data-integrity/">Data Integrity</a> — how referential integrity fits among
+  DataJoint's full set of integrity guarantees</li>
+<li><a href="../../how-to/model-relationships/">Model Relationships</a> — the how-to for
+  one-to-one, one-to-many, and many-to-many patterns</li>
+<li><a href="../../how-to/design-primary-keys/">Design Primary Keys</a> — choosing the keys
+  that foreign keys reference</li>
+<li><a href="../relational-workflow-model/">Relational Workflow Model</a> — the frame in
+  which a foreign key is both a constraint and an execution order</li>
 </ul>
 
 
