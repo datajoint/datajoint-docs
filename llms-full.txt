@@ -1,6 +1,6 @@
 # DataJoint Documentation (Full)
 
-Generated: 2026-07-20 17:16:26 UTC
+Generated: 2026-07-20 18:57:34 UTC
 Commit: unknown
 Branch: unknown
 
@@ -6096,6 +6096,152 @@ DataJoint uses SQL databases (MySQL/PostgreSQL) underneath but provides:
 schema.drop(prompt=False)
 ```
 
+
+---
+## File: tutorials/advanced/three-part-make.ipynb
+
+# The Three-Part `make()` — Long Computations Without Long Transactions
+
+A standard `make()` runs fetch → compute → insert inside **one** database
+transaction. That is fine for quick derivations, but when the compute step
+takes minutes to hours, holding a transaction open that long blocks other
+writers, risks transaction timeouts, and pins resources. The **three-part**
+(tripartite) `make()` splits the work into `make_fetch`, `make_compute`, and
+`make_insert` so the slow part runs with **no transaction held** — while
+DataJoint still guarantees referential integrity by re-fetching and
+hash-verifying the inputs before it inserts.
+
+
+```python
+import datajoint as dj
+import numpy as np
+
+schema = dj.Schema("tripartite_demo")
+schema.drop(prompt=False)          # reset so the example is re-runnable
+schema = dj.Schema("tripartite_demo")
+```
+
+
+## An upstream source table
+
+`Recording` is a `Manual` table holding one 1-D waveform per recording (an
+in-store `<blob>`). It is the declared input — everything the computation
+reads comes from here.
+
+
+```python
+@schema
+class Recording(dj.Manual):
+    definition = """
+    recording_id     : int32
+    ---
+    sampling_rate_hz : float64
+    signal           : <blob>      # 1-D waveform, float64 samples
+    """
+
+rng = np.random.default_rng(0)
+Recording.insert(
+    {
+        "recording_id": i,
+        "sampling_rate_hz": 1000.0,
+        "signal": (rng.standard_normal(5000) * (i + 1)).astype(np.float64),
+    }
+    for i in range(3)
+)
+Recording()
+```
+
+
+## The computed table, in three phases
+
+`RecordingStats` derives amplitude statistics for each recording and, in a
+Part table, the RMS of four equal-length windows.
+
+- **`make_fetch(key)`** reads only the declared upstream input and returns it
+  as a tuple. It runs **outside** the transaction and is re-run **inside** it;
+  its output is hash-verified, so it must be reproducible and must not write.
+- **`make_compute(key, signal)`** is the slow part. It touches **no database**
+  (no transaction is open) and depends only on what `make_fetch` returned.
+  Because its result is inserted once and never re-verified, it may even be
+  stochastic.
+- **`make_insert(key, master_row, window_rows)`** runs **inside** a brief
+  transaction and writes only to `self` and its Part table, atomically.
+
+
+```python
+@schema
+class RecordingStats(dj.Computed):
+    definition = """
+    -> Recording
+    ---
+    n_samples : int32
+    mean_amp  : float64
+    rms_amp   : float64
+    peak_amp  : float64
+    """
+
+    class Window(dj.Part):
+        definition = """
+        -> master
+        window_id  : int32
+        ---
+        window_rms : float64
+        """
+
+    def make_fetch(self, key, **kwargs):
+        # Phase 1 — read the declared upstream input; return a tuple.
+        signal = (Recording & key).fetch1("signal")
+        return (signal,)
+
+    def make_compute(self, key, signal):
+        # Phase 2 — no DB access; a long computation would live here.
+        master_row = {
+            **key,
+            "n_samples": int(signal.size),
+            "mean_amp": float(signal.mean()),
+            "rms_amp": float(np.sqrt(np.mean(signal ** 2))),
+            "peak_amp": float(np.max(np.abs(signal))),
+        }
+        window_rows = [
+            {**key, "window_id": i, "window_rms": float(np.sqrt(np.mean(w ** 2)))}
+            for i, w in enumerate(np.array_split(signal, 4))
+        ]
+        return (master_row, window_rows)   # tuple -> unpacked into make_insert
+
+    def make_insert(self, key, master_row, window_rows):
+        # Phase 3 — atomic write to self + Part, inside the transaction.
+        self.insert1(master_row)
+        self.Window.insert(window_rows)
+```
+
+
+## Run it
+
+`populate()` orchestrates all three phases per key: it calls `make_fetch` and
+`make_compute` with no transaction open, then opens a transaction, re-runs
+`make_fetch`, verifies the inputs are byte-identical, and finally calls
+`make_insert` and commits. If an upstream row changed mid-computation, the
+verification fails with a `DataJointError` and nothing is inserted.
+
+
+```python
+RecordingStats.populate(display_progress=True)
+RecordingStats()
+```
+
+
+
+```python
+RecordingStats.Window & "recording_id = 0"
+```
+
+
+## Testing fetch and compute directly
+
+Because `make_fetch` performs no writes and `make_compute` touches no
+database, you can call them directly to inspect intermediate results —
+something you cannot do with a standard `make()`. The insert step is
+exercised only through `populate()`.
 
 ---
 ## File: tutorials/basics/01-first-pipeline.ipynb
@@ -24044,15 +24190,19 @@ class LongComputation(dj.Computed):
         data = (RawData & key).fetch1('data')
         return (data,)
 
-    def make_compute(self, key, fetched):
-        """Perform computation (outside transaction)"""
-        (data,) = fetched
+    def make_compute(self, key, data):
+        """Perform computation (outside transaction).
+
+        `data` is make_fetch's returned tuple, unpacked positionally.
+        """
         result = expensive_computation(data)
         return (result,)
 
-    def make_insert(self, key, fetched, computed):
-        """Insert results (inside brief transaction)"""
-        (result,) = computed
+    def make_insert(self, key, result):
+        """Insert results (inside a brief transaction).
+
+        `result` is make_compute's returned tuple, unpacked positionally.
+        """
         self.insert1({**key, 'result': result})
 ```
 

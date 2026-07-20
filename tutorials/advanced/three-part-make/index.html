@@ -5,12 +5,12 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width,initial-scale=1" name="viewport"/>
-<link href="https://docs.datajoint.com/tutorials/advanced/custom-codecs/" rel="canonical"/>
-<link href="../distributed/" rel="prev"/>
-<link href="../instances/" rel="next"/>
+<link href="https://docs.datajoint.com/tutorials/advanced/three-part-make/" rel="canonical"/>
+<link href="../instances/" rel="prev"/>
+<link href="../../../how-to/" rel="next"/>
 <link href="../../../assets/images/company-logo-blue.png" rel="icon"/>
 <meta content="mkdocs-1.6.1, mkdocs-material-9.7.7" name="generator"/>
-<title>Custom Codecs - DataJoint Documentation</title>
+<title>The Three-Part — Long Computations Without Long Transactions - DataJoint Documentation</title>
 <link href="../../../assets/stylesheets/main.ec1eaa64.min.css" rel="stylesheet"/>
 <link href="../../../assets/stylesheets/palette.ab4e12ef.min.css" rel="stylesheet"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
@@ -46,7 +46,7 @@
 <input autocomplete="off" class="md-toggle" data-md-toggle="search" id="__search" type="checkbox"/>
 <label class="md-overlay" for="__drawer"></label>
 <div data-md-component="skip">
-<a class="md-skip" href="#custom-codecs">
+<a class="md-skip" href="#the-three-part-long-computations-without-long-transactions">
           Skip to content
         </a>
 </div>
@@ -98,7 +98,7 @@
 <div class="md-header__topic" data-md-component="header-topic">
 <span class="md-ellipsis">
             
-              Custom Codecs
+              The Three-Part — Long Computations Without Long Transactions
             
           </span>
 </div>
@@ -934,20 +934,8 @@
   </span>
 </a>
 </li>
-<li class="md-nav__item md-nav__item--active">
-<input class="md-nav__toggle md-toggle" id="__toc" type="checkbox"/>
-<label class="md-nav__link md-nav__link--active" for="__toc">
-<span class="md-ellipsis">
-    
-  
-    Custom Codecs
-  
-
-    
-  </span>
-<span class="md-nav__icon md-icon"></span>
-</label>
-<a class="md-nav__link md-nav__link--active" href="./">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../custom-codecs/">
 <span class="md-ellipsis">
     
   
@@ -957,41 +945,6 @@
     
   </span>
 </a>
-<nav aria-label="Table of contents" class="md-nav md-nav--secondary">
-<label class="md-nav__title" for="__toc">
-<span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
-<li class="md-nav__item">
-<a class="md-nav__link" href="#creating-a-custom-codec">
-<span class="md-ellipsis">
-      
-        Creating a Custom Codec
-      
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#codec-structure">
-<span class="md-ellipsis">
-      
-        Codec Structure
-      
-    </span>
-</a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#example-spike-train">
-<span class="md-ellipsis">
-      
-        Example: Spike Train
-      
-    </span>
-</a>
-</li>
-</ul>
-</nav>
 </li>
 <li class="md-nav__item">
 <a class="md-nav__link" href="../instances/">
@@ -1005,8 +958,20 @@
   </span>
 </a>
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../three-part-make/">
+<li class="md-nav__item md-nav__item--active">
+<input class="md-nav__toggle md-toggle" id="__toc" type="checkbox"/>
+<label class="md-nav__link md-nav__link--active" for="__toc">
+<span class="md-ellipsis">
+    
+  
+    The Three-Part — Long Computations Without Long Transactions
+  
+
+    
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<a class="md-nav__link md-nav__link--active" href="./">
 <span class="md-ellipsis">
     
   
@@ -1016,6 +981,50 @@
     
   </span>
 </a>
+<nav aria-label="Table of contents" class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">
+<span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#an-upstream-source-table">
+<span class="md-ellipsis">
+      
+        An upstream source table
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#the-computed-table-in-three-phases">
+<span class="md-ellipsis">
+      
+        The computed table, in three phases
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#run-it">
+<span class="md-ellipsis">
+      
+        Run it
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#testing-fetch-and-compute-directly">
+<span class="md-ellipsis">
+      
+        Testing fetch and compute directly
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
 </li>
 </ul>
 </nav>
@@ -2650,28 +2659,37 @@
     </label>
 <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
 <li class="md-nav__item">
-<a class="md-nav__link" href="#creating-a-custom-codec">
+<a class="md-nav__link" href="#an-upstream-source-table">
 <span class="md-ellipsis">
       
-        Creating a Custom Codec
+        An upstream source table
       
     </span>
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#codec-structure">
+<a class="md-nav__link" href="#the-computed-table-in-three-phases">
 <span class="md-ellipsis">
       
-        Codec Structure
+        The computed table, in three phases
       
     </span>
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#example-spike-train">
+<a class="md-nav__link" href="#run-it">
 <span class="md-ellipsis">
       
-        Example: Spike Train
+        Run it
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#testing-fetch-and-compute-directly">
+<span class="md-ellipsis">
+      
+        Testing fetch and compute directly
       
     </span>
 </a>
@@ -3404,23 +3422,25 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 </style>
 <!-- End of mermaid configuration --><div class="jupyter-wrapper">
 <div class="jp-Notebook" data-jp-theme-light="true" data-jp-theme-name="JupyterLab Light">
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=cell-0">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=bcdb90f1">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h1 id="custom-codecs">Custom Codecs<a class="anchor-link" href="#custom-codecs">¶</a></h1><p>This tutorial covers extending DataJoint's type system. You'll learn:</p>
-<ul>
-<li><strong>Codec basics</strong> — Encoding and decoding</li>
-<li><strong>Creating codecs</strong> — Domain-specific types</li>
-<li><strong>Codec chaining</strong> — Composing codecs</li>
-</ul>
+<h1 id="the-three-part-make-long-computations-without-long-transactions">The Three-Part <code>make()</code> — Long Computations Without Long Transactions<a class="anchor-link" href="#the-three-part-make-long-computations-without-long-transactions">¶</a></h1><p>A standard <code>make()</code> runs fetch → compute → insert inside <strong>one</strong> database
+transaction. That is fine for quick derivations, but when the compute step
+takes minutes to hours, holding a transaction open that long blocks other
+writers, risks transaction timeouts, and pins resources. The <strong>three-part</strong>
+(tripartite) <code>make()</code> splits the work into <code>make_fetch</code>, <code>make_compute</code>, and
+<code>make_insert</code> so the slow part runs with <strong>no transaction held</strong> — while
+DataJoint still guarantees referential integrity by re-fetching and
+hash-verifying the inputs before it inserts.</p>
 </div>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=cell-1">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=d50ffc26">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -3441,12 +3461,16 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <div class="highlight-ipynb hl-python"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">datajoint</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dj</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
-<span class="n">schema</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">Schema</span><span class="p">(</span><span class="s1">'tutorial_codecs'</span><span class="p">)</span>
+<span class="n">schema</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">Schema</span><span class="p">(</span><span class="s2">"tripartite_demo"</span><span class="p">)</span>
+<span class="n">schema</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">prompt</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>          <span class="c1"># reset so the example is re-runnable</span>
+<span class="n">schema</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">Schema</span><span class="p">(</span><span class="s2">"tripartite_demo"</span><span class="p">)</span>
 </pre></div>
 <div class="clipboard-copy-txt" id="cell-1">import datajoint as dj
 import numpy as np
 
-schema = dj.Schema('tutorial_codecs')</div>
+schema = dj.Schema("tripartite_demo")
+schema.drop(prompt=False)          # reset so the example is re-runnable
+schema = dj.Schema("tripartite_demo")</div>
 </div>
 </div>
 </div>
@@ -3458,7 +3482,7 @@ schema = dj.Schema('tutorial_codecs')</div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>[2026-07-17 00:28:05] DataJoint 2.3.1 connected to postgres@postgres:5432
+<pre>[2026-07-18 19:34:08] DataJoint 2.3.1 connected to root@mysql:3306
 </pre>
 </div>
 </div>
@@ -3466,18 +3490,20 @@ schema = dj.Schema('tutorial_codecs')</div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=cell-2">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=3488c971">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="creating-a-custom-codec">Creating a Custom Codec<a class="anchor-link" href="#creating-a-custom-codec">¶</a></h2>
+<h2 id="an-upstream-source-table">An upstream source table<a class="anchor-link" href="#an-upstream-source-table">¶</a></h2><p><code>Recording</code> is a <code>Manual</code> table holding one 1-D waveform per recording (an
+in-store <code>&lt;blob&gt;</code>). It is the declared input — everything the computation
+reads comes from here.</p>
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=cell-3">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=c2fe46b4">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -3495,58 +3521,153 @@ schema = dj.Schema('tutorial_codecs')</div>
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">networkx</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">nx</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="nd">@schema</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Recording</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
+<span class="s2">    recording_id     : int32</span>
+<span class="s2">    ---</span>
+<span class="s2">    sampling_rate_hz : float64</span>
+<span class="s2">    signal           : &lt;blob&gt;      # 1-D waveform, float64 samples</span>
+<span class="s2">    """</span>
 
-<span class="k">class</span><span class="w"> </span><span class="nc">GraphCodec</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Codec</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">"""Store NetworkX graphs."""</span>
-    
-    <span class="n">name</span> <span class="o">=</span> <span class="s2">"graph"</span>  <span class="c1"># Use as &lt;graph&gt;</span>
-    
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_dtype</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">is_store</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="k">return</span> <span class="s2">"&lt;blob&gt;"</span>
-    
-    <span class="k">def</span><span class="w"> </span><span class="nf">encode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">store_name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="k">return</span> <span class="p">{</span><span class="s1">'nodes'</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="n">value</span><span class="o">.</span><span class="n">nodes</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="kc">True</span><span class="p">)),</span> <span class="s1">'edges'</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="n">value</span><span class="o">.</span><span class="n">edges</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="kc">True</span><span class="p">))}</span>
-    
-    <span class="k">def</span><span class="w"> </span><span class="nf">decode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stored</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="n">g</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">()</span>
-        <span class="n">g</span><span class="o">.</span><span class="n">add_nodes_from</span><span class="p">(</span><span class="n">stored</span><span class="p">[</span><span class="s1">'nodes'</span><span class="p">])</span>
-        <span class="n">g</span><span class="o">.</span><span class="n">add_edges_from</span><span class="p">(</span><span class="n">stored</span><span class="p">[</span><span class="s1">'edges'</span><span class="p">])</span>
-        <span class="k">return</span> <span class="n">g</span>
-    
-    <span class="k">def</span><span class="w"> </span><span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Expected nx.Graph"</span><span class="p">)</span>
+<span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">Recording</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span>
+    <span class="p">{</span>
+        <span class="s2">"recording_id"</span><span class="p">:</span> <span class="n">i</span><span class="p">,</span>
+        <span class="s2">"sampling_rate_hz"</span><span class="p">:</span> <span class="mf">1000.0</span><span class="p">,</span>
+        <span class="s2">"signal"</span><span class="p">:</span> <span class="p">(</span><span class="n">rng</span><span class="o">.</span><span class="n">standard_normal</span><span class="p">(</span><span class="mi">5000</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">),</span>
+    <span class="p">}</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+<span class="p">)</span>
+<span class="n">Recording</span><span class="p">()</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-2">import networkx as nx
+<div class="clipboard-copy-txt" id="cell-2">@schema
+class Recording(dj.Manual):
+    definition = """
+    recording_id     : int32
+    ---
+    sampling_rate_hz : float64
+    signal           : &lt;blob&gt;      # 1-D waveform, float64 samples
+    """
 
-class GraphCodec(dj.Codec):
-    """Store NetworkX graphs."""
-    
-    name = "graph"  # Use as &lt;graph&gt;
-    
-    def get_dtype(self, is_store: bool) -&gt; str:
-        return "&lt;blob&gt;"
-    
-    def encode(self, value, *, key=None, store_name=None):
-        return {'nodes': list(value.nodes(data=True)), 'edges': list(value.edges(data=True))}
-    
-    def decode(self, stored, *, key=None):
-        g = nx.Graph()
-        g.add_nodes_from(stored['nodes'])
-        g.add_edges_from(stored['edges'])
-        return g
-    
-    def validate(self, value):
-        if not isinstance(value, nx.Graph):
-            raise TypeError(f"Expected nx.Graph")</div>
+rng = np.random.default_rng(0)
+Recording.insert(
+    {
+        "recording_id": i,
+        "sampling_rate_hz": 1000.0,
+        "signal": (rng.standard_normal(5000) * (i + 1)).astype(np.float64),
+    }
+    for i in range(3)
+)
+Recording()</div>
 </div>
 </div>
+</div>
+</div>
+<div class="jp-Cell-outputWrapper">
+<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+</div>
+<div class="jp-OutputArea jp-Cell-outputArea">
+<div class="jp-OutputArea-child jp-OutputArea-executeResult">
+<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[2]:</div>
+<div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/html" tabindex="0">
+<style type="text/css">
+        .Table{
+            border-collapse:collapse;
+        }
+        .Table th{
+            background: #A0A0A0; color: #ffffff; padding:2px 4px; border:#f0e0e0 1px solid;
+            font-weight: normal; font-family: monospace; font-size: 75%; text-align: center;
+        }
+        .Table th p{
+            margin: 0;
+        }
+        .Table td{
+            padding:2px 4px; border:#f0e0e0 1px solid; font-size: 75%;
+        }
+        .Table tr:nth-child(odd){
+            background: #ffffff;
+            color: #000000;
+        }
+        .Table tr:nth-child(even){
+            background: #f3f1ff;
+            color: #000000;
+        }
+        #primary {
+            font-weight: bold;
+            color: black;
+        }
+        #nonprimary {
+            font-weight: normal;
+            color: white;
+        }
+
+        /* Dark mode support */
+        @media (prefers-color-scheme: dark) {
+            .Table th{
+                background: #4a4a4a; color: #ffffff; border:#555555 1px solid; text-align: center;
+            }
+            .Table td{
+                border:#555555 1px solid;
+            }
+            .Table tr:nth-child(odd){
+                background: #2d2d2d;
+                color: #e0e0e0;
+            }
+            .Table tr:nth-child(even){
+                background: #3d3d3d;
+                color: #e0e0e0;
+            }
+            #primary {
+                color: #bd93f9;
+            }
+            #nonprimary {
+                color: #e0e0e0;
+            }
+        }
+    </style>
+<div style="max-height:1000px;max-width:1500px;overflow:auto;">
+<table border="1" class="Table">
+<thead> <tr> <th> <span id="primary" title="">recording_id</span></th><th><span id="nonprimary" title="">sampling_rate_hz</span></th><th><span id="nonprimary" title="1-D waveform, float64 samples">signal</span> </th> </tr> </thead>
+<tbody> <tr> <td>0</td>
+<td>1000.0</td>
+<td>&lt;blob&gt;</td></tr><tr><td>1</td>
+<td>1000.0</td>
+<td>&lt;blob&gt;</td></tr><tr><td>2</td>
+<td>1000.0</td>
+<td>&lt;blob&gt;</td> </tr> </tbody>
+</table>
+<p>Total: 3</p></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=79d265f8">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<h2 id="the-computed-table-in-three-phases">The computed table, in three phases<a class="anchor-link" href="#the-computed-table-in-three-phases">¶</a></h2><p><code>RecordingStats</code> derives amplitude statistics for each recording and, in a
+Part table, the RMS of four equal-length windows.</p>
+<ul>
+<li><strong><code>make_fetch(key)</code></strong> reads only the declared upstream input and returns it
+as a tuple. It runs <strong>outside</strong> the transaction and is re-run <strong>inside</strong> it;
+its output is hash-verified, so it must be reproducible and must not write.</li>
+<li><strong><code>make_compute(key, signal)</code></strong> is the slow part. It touches <strong>no database</strong>
+(no transaction is open) and depends only on what <code>make_fetch</code> returned.
+Because its result is inserted once and never re-verified, it may even be
+stochastic.</li>
+<li><strong><code>make_insert(key, master_row, window_rows)</code></strong> runs <strong>inside</strong> a brief
+transaction and writes only to <code>self</code> and its Part table, atomically.</li>
+</ul>
 </div>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=cell-4">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=6aa4e0b7">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -3565,27 +3686,114 @@ class GraphCodec(dj.Codec):
 </clipboard-copy>
 </div>
 <div class="highlight-ipynb hl-python"><pre><span></span><span class="nd">@schema</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">Connectivity</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">RecordingStats</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Computed</span><span class="p">):</span>
     <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
-<span class="s2">    conn_id : int32</span>
+<span class="s2">    -&gt; Recording</span>
 <span class="s2">    ---</span>
-<span class="s2">    network : &lt;graph&gt;</span>
+<span class="s2">    n_samples : int32</span>
+<span class="s2">    mean_amp  : float64</span>
+<span class="s2">    rms_amp   : float64</span>
+<span class="s2">    peak_amp  : float64</span>
 <span class="s2">    """</span>
+
+    <span class="k">class</span><span class="w"> </span><span class="nc">Window</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Part</span><span class="p">):</span>
+        <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
+<span class="s2">        -&gt; master</span>
+<span class="s2">        window_id  : int32</span>
+<span class="s2">        ---</span>
+<span class="s2">        window_rms : float64</span>
+<span class="s2">        """</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">make_fetch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="c1"># Phase 1 — read the declared upstream input; return a tuple.</span>
+        <span class="n">signal</span> <span class="o">=</span> <span class="p">(</span><span class="n">Recording</span> <span class="o">&amp;</span> <span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">fetch1</span><span class="p">(</span><span class="s2">"signal"</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">signal</span><span class="p">,)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">make_compute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">signal</span><span class="p">):</span>
+        <span class="c1"># Phase 2 — no DB access; a long computation would live here.</span>
+        <span class="n">master_row</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="o">**</span><span class="n">key</span><span class="p">,</span>
+            <span class="s2">"n_samples"</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">signal</span><span class="o">.</span><span class="n">size</span><span class="p">),</span>
+            <span class="s2">"mean_amp"</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">signal</span><span class="o">.</span><span class="n">mean</span><span class="p">()),</span>
+            <span class="s2">"rms_amp"</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">signal</span> <span class="o">**</span> <span class="mi">2</span><span class="p">))),</span>
+            <span class="s2">"peak_amp"</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">signal</span><span class="p">))),</span>
+        <span class="p">}</span>
+        <span class="n">window_rows</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="p">{</span><span class="o">**</span><span class="n">key</span><span class="p">,</span> <span class="s2">"window_id"</span><span class="p">:</span> <span class="n">i</span><span class="p">,</span> <span class="s2">"window_rms"</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">w</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)))}</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">w</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array_split</span><span class="p">(</span><span class="n">signal</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+        <span class="p">]</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">master_row</span><span class="p">,</span> <span class="n">window_rows</span><span class="p">)</span>   <span class="c1"># tuple -&gt; unpacked into make_insert</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">make_insert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">master_row</span><span class="p">,</span> <span class="n">window_rows</span><span class="p">):</span>
+        <span class="c1"># Phase 3 — atomic write to self + Part, inside the transaction.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">insert1</span><span class="p">(</span><span class="n">master_row</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Window</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">window_rows</span><span class="p">)</span>
 </pre></div>
 <div class="clipboard-copy-txt" id="cell-3">@schema
-class Connectivity(dj.Manual):
+class RecordingStats(dj.Computed):
     definition = """
-    conn_id : int32
+    -&gt; Recording
     ---
-    network : &lt;graph&gt;
-    """</div>
+    n_samples : int32
+    mean_amp  : float64
+    rms_amp   : float64
+    peak_amp  : float64
+    """
+
+    class Window(dj.Part):
+        definition = """
+        -&gt; master
+        window_id  : int32
+        ---
+        window_rms : float64
+        """
+
+    def make_fetch(self, key, **kwargs):
+        # Phase 1 — read the declared upstream input; return a tuple.
+        signal = (Recording &amp; key).fetch1("signal")
+        return (signal,)
+
+    def make_compute(self, key, signal):
+        # Phase 2 — no DB access; a long computation would live here.
+        master_row = {
+            **key,
+            "n_samples": int(signal.size),
+            "mean_amp": float(signal.mean()),
+            "rms_amp": float(np.sqrt(np.mean(signal ** 2))),
+            "peak_amp": float(np.max(np.abs(signal))),
+        }
+        window_rows = [
+            {**key, "window_id": i, "window_rms": float(np.sqrt(np.mean(w ** 2)))}
+            for i, w in enumerate(np.array_split(signal, 4))
+        ]
+        return (master_row, window_rows)   # tuple -&gt; unpacked into make_insert
+
+    def make_insert(self, key, master_row, window_rows):
+        # Phase 3 — atomic write to self + Part, inside the transaction.
+        self.insert1(master_row)
+        self.Window.insert(window_rows)</div>
 </div>
 </div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=2e1c5357">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<h2 id="run-it">Run it<a class="anchor-link" href="#run-it">¶</a></h2><p><code>populate()</code> orchestrates all three phases per key: it calls <code>make_fetch</code> and
+<code>make_compute</code> with no transaction open, then opens a transaction, re-runs
+<code>make_fetch</code>, verifies the inputs are byte-identical, and finally calls
+<code>make_insert</code> and commits. If an upstream row changed mid-computation, the
+verification fails with a <code>DataJointError</code> and nothing is inserted.</p>
 </div>
 </div>
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=cell-5">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=d5ae3a37">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -3603,25 +3811,11 @@ class Connectivity(dj.Manual):
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Create and insert</span>
-<span class="n">g</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">()</span>
-<span class="n">g</span><span class="o">.</span><span class="n">add_edges_from</span><span class="p">([(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">)])</span>
-<span class="n">Connectivity</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="s1">'conn_id'</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">'network'</span><span class="p">:</span> <span class="n">g</span><span class="p">})</span>
-
-<span class="c1"># Fetch</span>
-<span class="n">result</span> <span class="o">=</span> <span class="p">(</span><span class="n">Connectivity</span> <span class="o">&amp;</span> <span class="p">{</span><span class="s1">'conn_id'</span><span class="p">:</span> <span class="mi">1</span><span class="p">})</span><span class="o">.</span><span class="n">fetch1</span><span class="p">(</span><span class="s1">'network'</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Type: </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">result</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Edges: </span><span class="si">{</span><span class="nb">list</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">edges</span><span class="p">())</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">RecordingStats</span><span class="o">.</span><span class="n">populate</span><span class="p">(</span><span class="n">display_progress</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">RecordingStats</span><span class="p">()</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-4"># Create and insert
-g = nx.Graph()
-g.add_edges_from([(1, 2), (2, 3), (1, 3)])
-Connectivity.insert1({'conn_id': 1, 'network': g})
-
-# Fetch
-result = (Connectivity &amp; {'conn_id': 1}).fetch1('network')
-print(f"Type: {type(result)}")
-print(f"Edges: {list(result.edges())}")</div>
+<div class="clipboard-copy-txt" id="cell-4">RecordingStats.populate(display_progress=True)
+RecordingStats()</div>
 </div>
 </div>
 </div>
@@ -3632,53 +3826,112 @@ print(f"Edges: {list(result.edges())}")</div>
 <div class="jp-OutputArea jp-Cell-outputArea">
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>Type: &lt;class 'networkx.classes.graph.Graph'&gt;
-Edges: [(1, 2), (1, 3), (2, 3)]
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
+<pre>RecordingStats:   0%|          | 0/3 [00:00&lt;?, ?it/s]</pre>
+</div>
+</div>
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
+<pre>RecordingStats:  67%|██████▋   | 2/3 [00:00&lt;00:00, 18.40it/s]</pre>
+</div>
+</div>
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
+<pre>RecordingStats: 100%|██████████| 3/3 [00:00&lt;00:00, 20.65it/s]</pre>
+</div>
+</div>
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
+<pre>
 </pre>
 </div>
 </div>
+<div class="jp-OutputArea-child jp-OutputArea-executeResult">
+<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[4]:</div>
+<div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/html" tabindex="0">
+<style type="text/css">
+        .Table{
+            border-collapse:collapse;
+        }
+        .Table th{
+            background: #A0A0A0; color: #ffffff; padding:2px 4px; border:#f0e0e0 1px solid;
+            font-weight: normal; font-family: monospace; font-size: 75%; text-align: center;
+        }
+        .Table th p{
+            margin: 0;
+        }
+        .Table td{
+            padding:2px 4px; border:#f0e0e0 1px solid; font-size: 75%;
+        }
+        .Table tr:nth-child(odd){
+            background: #ffffff;
+            color: #000000;
+        }
+        .Table tr:nth-child(even){
+            background: #f3f1ff;
+            color: #000000;
+        }
+        #primary {
+            font-weight: bold;
+            color: black;
+        }
+        #nonprimary {
+            font-weight: normal;
+            color: white;
+        }
+
+        /* Dark mode support */
+        @media (prefers-color-scheme: dark) {
+            .Table th{
+                background: #4a4a4a; color: #ffffff; border:#555555 1px solid; text-align: center;
+            }
+            .Table td{
+                border:#555555 1px solid;
+            }
+            .Table tr:nth-child(odd){
+                background: #2d2d2d;
+                color: #e0e0e0;
+            }
+            .Table tr:nth-child(even){
+                background: #3d3d3d;
+                color: #e0e0e0;
+            }
+            #primary {
+                color: #bd93f9;
+            }
+            #nonprimary {
+                color: #e0e0e0;
+            }
+        }
+    </style>
+<div style="max-height:1000px;max-width:1500px;overflow:auto;">
+<table border="1" class="Table">
+<thead> <tr> <th> <span id="primary" title="">recording_id</span></th><th><span id="nonprimary" title="">n_samples</span></th><th><span id="nonprimary" title="">mean_amp</span></th><th><span id="nonprimary" title="">rms_amp</span></th><th><span id="nonprimary" title="">peak_amp</span> </th> </tr> </thead>
+<tbody> <tr> <td>0</td>
+<td>5000</td>
+<td>-0.004532247621656686</td>
+<td>0.9954048273054507</td>
+<td>3.899421730054339</td></tr><tr><td>1</td>
+<td>5000</td>
+<td>0.03431204343517783</td>
+<td>2.001563146013397</td>
+<td>6.963674475871197</td></tr><tr><td>2</td>
+<td>5000</td>
+<td>0.029421682585778063</td>
+<td>3.0056591656476797</td>
+<td>12.069475942671023</td> </tr> </tbody>
+</table>
+<p>Total: 3</p></div>
 </div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=cell-6">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="codec-structure">Codec Structure<a class="anchor-link" href="#codec-structure">¶</a></h2><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">MyCodec</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Codec</span><span class="p">):</span>
-    <span class="n">name</span> <span class="o">=</span> <span class="s2">"mytype"</span>  <span class="c1"># Use as &lt;mytype&gt;</span>
-    
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_dtype</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">is_store</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="k">return</span> <span class="s2">"&lt;blob&gt;"</span>  <span class="c1"># Storage type</span>
-    
-    <span class="k">def</span><span class="w"> </span><span class="nf">encode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">store_name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">serializable_data</span>
-    
-    <span class="k">def</span><span class="w"> </span><span class="nf">decode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stored</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">python_object</span>
-    
-    <span class="k">def</span><span class="w"> </span><span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>  <span class="c1"># Optional</span>
-        <span class="k">pass</span>
-</pre></div>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=cell-7">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="example-spike-train">Example: Spike Train<a class="anchor-link" href="#example-spike-train">¶</a></h2>
-</div>
-</div>
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=cell-8">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=f14c4cfd">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -3696,96 +3949,9 @@ Edges: [(1, 2), (1, 3), (2, 3)]
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
-
-<span class="nd">@dataclass</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">SpikeTrain</span><span class="p">:</span>
-    <span class="n">times</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
-    <span class="n">unit_id</span><span class="p">:</span> <span class="nb">int</span>
-    <span class="n">quality</span><span class="p">:</span> <span class="nb">str</span>
-
-<span class="k">class</span><span class="w"> </span><span class="nc">SpikeTrainCodec</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Codec</span><span class="p">):</span>
-    <span class="n">name</span> <span class="o">=</span> <span class="s2">"spike_train"</span>
-    
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_dtype</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">is_store</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="k">return</span> <span class="s2">"&lt;blob&gt;"</span>
-    
-    <span class="k">def</span><span class="w"> </span><span class="nf">encode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">store_name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="k">return</span> <span class="p">{</span><span class="s1">'times'</span><span class="p">:</span> <span class="n">value</span><span class="o">.</span><span class="n">times</span><span class="p">,</span> <span class="s1">'unit_id'</span><span class="p">:</span> <span class="n">value</span><span class="o">.</span><span class="n">unit_id</span><span class="p">,</span> <span class="s1">'quality'</span><span class="p">:</span> <span class="n">value</span><span class="o">.</span><span class="n">quality</span><span class="p">}</span>
-    
-    <span class="k">def</span><span class="w"> </span><span class="nf">decode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stored</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">SpikeTrain</span><span class="p">(</span><span class="n">times</span><span class="o">=</span><span class="n">stored</span><span class="p">[</span><span class="s1">'times'</span><span class="p">],</span> <span class="n">unit_id</span><span class="o">=</span><span class="n">stored</span><span class="p">[</span><span class="s1">'unit_id'</span><span class="p">],</span> <span class="n">quality</span><span class="o">=</span><span class="n">stored</span><span class="p">[</span><span class="s1">'quality'</span><span class="p">])</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">RecordingStats</span><span class="o">.</span><span class="n">Window</span> <span class="o">&amp;</span> <span class="s2">"recording_id = 0"</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-5">from dataclasses import dataclass
-
-@dataclass
-class SpikeTrain:
-    times: np.ndarray
-    unit_id: int
-    quality: str
-
-class SpikeTrainCodec(dj.Codec):
-    name = "spike_train"
-    
-    def get_dtype(self, is_store: bool) -&gt; str:
-        return "&lt;blob&gt;"
-    
-    def encode(self, value, *, key=None, store_name=None):
-        return {'times': value.times, 'unit_id': value.unit_id, 'quality': value.quality}
-    
-    def decode(self, stored, *, key=None):
-        return SpikeTrain(times=stored['times'], unit_id=stored['unit_id'], quality=stored['quality'])</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=cell-9">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [6]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-<div class="CodeMirror cm-s-jupyter">
-<div class="zeroclipboard-container">
-<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-6">
-<div>
-<span class="notice" hidden="">Copied!</span>
-<svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
-<path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z" fill="currentColor" fill-rule="evenodd"></path>
-<path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z" fill="currentColor" fill-rule="evenodd"></path>
-</svg>
-</div>
-</clipboard-copy>
-</div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="nd">@schema</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">Unit</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
-<span class="s2">    unit_id : int32</span>
-<span class="s2">    ---</span>
-<span class="s2">    spikes : &lt;spike_train&gt;</span>
-<span class="s2">    """</span>
-
-<span class="n">train</span> <span class="o">=</span> <span class="n">SpikeTrain</span><span class="p">(</span><span class="n">times</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">50</span><span class="p">)),</span> <span class="n">unit_id</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">quality</span><span class="o">=</span><span class="s1">'good'</span><span class="p">)</span>
-<span class="n">Unit</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="s1">'unit_id'</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">'spikes'</span><span class="p">:</span> <span class="n">train</span><span class="p">})</span>
-
-<span class="n">result</span> <span class="o">=</span> <span class="p">(</span><span class="n">Unit</span> <span class="o">&amp;</span> <span class="p">{</span><span class="s1">'unit_id'</span><span class="p">:</span> <span class="mi">1</span><span class="p">})</span><span class="o">.</span><span class="n">fetch1</span><span class="p">(</span><span class="s1">'spikes'</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Type: </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">result</span><span class="p">)</span><span class="si">}</span><span class="s2">, Spikes: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">times</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-</pre></div>
-<div class="clipboard-copy-txt" id="cell-6">@schema
-class Unit(dj.Manual):
-    definition = """
-    unit_id : int32
-    ---
-    spikes : &lt;spike_train&gt;
-    """
-
-train = SpikeTrain(times=np.sort(np.random.uniform(0, 100, 50)), unit_id=1, quality='good')
-Unit.insert1({'unit_id': 1, 'spikes': train})
-
-result = (Unit &amp; {'unit_id': 1}).fetch1('spikes')
-print(f"Type: {type(result)}, Spikes: {len(result.times)}")</div>
+<div class="clipboard-copy-txt" id="cell-5">RecordingStats.Window &amp; "recording_id = 0"</div>
 </div>
 </div>
 </div>
@@ -3794,40 +3960,94 @@ print(f"Type: {type(result)}, Spikes: {len(result.times)}")</div>
 <div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
 </div>
 <div class="jp-OutputArea jp-Cell-outputArea">
-<div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>Type: &lt;class '__main__.SpikeTrain'&gt;, Spikes: 50
-</pre>
+<div class="jp-OutputArea-child jp-OutputArea-executeResult">
+<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[5]:</div>
+<div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/html" tabindex="0">
+<style type="text/css">
+        .Table{
+            border-collapse:collapse;
+        }
+        .Table th{
+            background: #A0A0A0; color: #ffffff; padding:2px 4px; border:#f0e0e0 1px solid;
+            font-weight: normal; font-family: monospace; font-size: 75%; text-align: center;
+        }
+        .Table th p{
+            margin: 0;
+        }
+        .Table td{
+            padding:2px 4px; border:#f0e0e0 1px solid; font-size: 75%;
+        }
+        .Table tr:nth-child(odd){
+            background: #ffffff;
+            color: #000000;
+        }
+        .Table tr:nth-child(even){
+            background: #f3f1ff;
+            color: #000000;
+        }
+        #primary {
+            font-weight: bold;
+            color: black;
+        }
+        #nonprimary {
+            font-weight: normal;
+            color: white;
+        }
+
+        /* Dark mode support */
+        @media (prefers-color-scheme: dark) {
+            .Table th{
+                background: #4a4a4a; color: #ffffff; border:#555555 1px solid; text-align: center;
+            }
+            .Table td{
+                border:#555555 1px solid;
+            }
+            .Table tr:nth-child(odd){
+                background: #2d2d2d;
+                color: #e0e0e0;
+            }
+            .Table tr:nth-child(even){
+                background: #3d3d3d;
+                color: #e0e0e0;
+            }
+            #primary {
+                color: #bd93f9;
+            }
+            #nonprimary {
+                color: #e0e0e0;
+            }
+        }
+    </style>
+<div style="max-height:1000px;max-width:1500px;overflow:auto;">
+<table border="1" class="Table">
+<thead> <tr> <th> <span id="primary" title="">recording_id</span></th><th><span id="primary" title="">window_id</span></th><th><span id="nonprimary" title="">window_rms</span> </th> </tr> </thead>
+<tbody> <tr> <td>0</td>
+<td>0</td>
+<td>0.9817028961918416</td></tr><tr><td>0</td>
+<td>1</td>
+<td>1.013580648563692</td></tr><tr><td>0</td>
+<td>2</td>
+<td>0.9919901565252676</td></tr><tr><td>0</td>
+<td>3</td>
+<td>0.9940786199867229</td> </tr> </tbody>
+</table>
+<p>Total: 4</p></div>
 </div>
 </div>
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=cell-10">
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=0c83cf71">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [7]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-<div class="CodeMirror cm-s-jupyter">
-<div class="zeroclipboard-container">
-<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-7">
-<div>
-<span class="notice" hidden="">Copied!</span>
-<svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
-<path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z" fill="currentColor" fill-rule="evenodd"></path>
-<path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z" fill="currentColor" fill-rule="evenodd"></path>
-</svg>
-</div>
-</clipboard-copy>
-</div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">schema</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">prompt</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-</pre></div>
-<div class="clipboard-copy-txt" id="cell-7">schema.drop(prompt=False)</div>
-</div>
-</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<h2 id="testing-fetch-and-compute-directly">Testing fetch and compute directly<a class="anchor-link" href="#testing-fetch-and-compute-directly">¶</a></h2><p>Because <code>make_fetch</code> performs no writes and <code>make_compute</code> touches no
+database, you can call them directly to inspect intermediate results —
+something you cannot do with a standard <code>make()</code>. The insert step is
+exercised only through <code>populate()</code>.</p>
 </div>
 </div>
 </div>

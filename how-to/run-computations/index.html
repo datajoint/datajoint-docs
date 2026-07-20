@@ -2012,6 +2012,8 @@
       
         
       
+        
+      
     
     
     
@@ -2181,6 +2183,34 @@
     
   
     Working with Instances
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/advanced/three-part-make/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The Three-Part — Long Computations Without Long Transactions
   
 
     
@@ -6768,15 +6798,19 @@ Multiple cores on one machine?
         <span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="n">RawData</span> <span class="o">&amp;</span> <span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">fetch1</span><span class="p">(</span><span class="s1">&#39;data&#39;</span><span class="p">)</span>
         <span class="k">return</span> <span class="p">(</span><span class="n">data</span><span class="p">,)</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">make_compute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">fetched</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Perform computation (outside transaction)&quot;&quot;&quot;</span>
-        <span class="p">(</span><span class="n">data</span><span class="p">,)</span> <span class="o">=</span> <span class="n">fetched</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">make_compute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Perform computation (outside transaction).</span>
+
+<span class="sd">        `data` is make_fetch&#39;s returned tuple, unpacked positionally.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">result</span> <span class="o">=</span> <span class="n">expensive_computation</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
         <span class="k">return</span> <span class="p">(</span><span class="n">result</span><span class="p">,)</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">make_insert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">fetched</span><span class="p">,</span> <span class="n">computed</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Insert results (inside brief transaction)&quot;&quot;&quot;</span>
-        <span class="p">(</span><span class="n">result</span><span class="p">,)</span> <span class="o">=</span> <span class="n">computed</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">make_insert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">result</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Insert results (inside a brief transaction).</span>
+
+<span class="sd">        `result` is make_compute&#39;s returned tuple, unpacked positionally.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="o">**</span><span class="n">key</span><span class="p">,</span> <span class="s1">&#39;result&#39;</span><span class="p">:</span> <span class="n">result</span><span class="p">})</span>
 </code></pre></div>
 <h2 id="custom-key-source">Custom Key Source<a class="headerlink" href="#custom-key-source" title="Permanent link">&para;</a></h2>
