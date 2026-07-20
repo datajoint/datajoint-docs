@@ -2874,6 +2874,8 @@
       
         
       
+        
+      
     
     
     
@@ -3031,6 +3033,17 @@
     <span class="md-ellipsis">
       
         Ignore Extra Fields
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-not-to-insert" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What Not to Insert
       
     </span>
   </a>
@@ -3233,6 +3246,34 @@
     
   
     Delete Data
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../update-data/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Update Data
   
 
     
@@ -6415,6 +6456,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#what-not-to-insert" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What Not to Insert
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#master-part-tables" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -6590,6 +6642,33 @@
 <div class="highlight"><pre><span></span><code><span class="c1"># Ignore fields not in the table definition</span>
 <span class="n">Subject</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">rows</span><span class="p">,</span> <span class="n">ignore_extra_fields</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </code></pre></div>
+<h2 id="what-not-to-insert">What Not to Insert<a class="headerlink" href="#what-not-to-insert" title="Permanent link">&para;</a></h2>
+<p>The sections above target <strong>Manual</strong> tables — the tier whose rows are inserted
+directly, from outside the DataJoint pipeline (whether entered by hand through a
+form or GUI, or loaded by an automated ingestion tool). Other tiers get their
+rows a different way, and inserting into them directly breaks reproducibility:</p>
+<ul>
+<li><strong>Computed and Imported tables</strong> — their rows are produced only by <code>make()</code>
+  through <a href="../run-computations/"><code>populate()</code></a>; a direct insert is rejected at
+  runtime. To change a result, delete and recompute rather than editing it by
+  hand. See the <a href="../../reference/specs/autopopulate/#43-the-make-reproducibility-contract"><code>make()</code> reproducibility contract</a>.</li>
+<li><strong>Lookup tables</strong> — their rows live in the table's <code>contents</code> in the
+  definition code, versioned and redeployed through your normal review process,
+  not inserted at runtime. If you find yourself inserting into a "Lookup" table
+  from application code, make it a <code>dj.Manual</code> table instead. See
+  <a href="../define-tables/#manual-or-lookup">Manual or Lookup?</a>.</li>
+</ul>
+<p>Two more rules keep inserts consistent:</p>
+<ul>
+<li><strong>Insert parents before children.</strong> A foreign key requires the referenced
+  parent row to exist first, so insert upstream tables before the tables that
+  depend on them.</li>
+<li><strong>Don't open a transaction inside <code>make()</code>.</strong> <code>populate()</code> already wraps each
+  <code>make()</code> call in a transaction, so its inserts are atomic; the
+  <code>with schema.connection.transaction:</code> pattern shown next is for grouping inserts in
+  <strong>Manual</strong> code — never inside <code>make()</code>. See
+  <a href="../../explanation/computation-model/#3-dont-open-a-transaction-inside-make">the computation model</a>.</li>
+</ul>
 <h2 id="master-part-tables">Master-Part Tables<a class="headerlink" href="#master-part-tables" title="Permanent link">&para;</a></h2>
 <p>Use a transaction to maintain compositional integrity:</p>
 <div class="highlight"><pre><span></span><code><span class="k">with</span> <span class="n">schema</span><span class="o">.</span><span class="n">connection</span><span class="o">.</span><span class="n">transaction</span><span class="p">:</span>
@@ -6682,6 +6761,8 @@
 <li><a href="../master-part/">Master-Part Tables</a> — Atomic insertion of master and parts</li>
 <li><a href="../define-tables/">Define Tables</a> — Table definition syntax</li>
 <li><a href="../delete-data/">Delete Data</a> — Removing data from tables</li>
+<li><a href="../update-data/">Update Data</a> — Correcting or replacing existing rows</li>
+<li><a href="../run-computations/">Run Computations</a> — Populating computed tables via <code>make()</code></li>
 </ul>
 
 

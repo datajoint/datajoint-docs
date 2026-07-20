@@ -1,6 +1,6 @@
 # DataJoint Documentation (Full)
 
-Generated: 2026-07-20 16:21:29 UTC
+Generated: 2026-07-20 17:15:05 UTC
 Commit: unknown
 Branch: unknown
 
@@ -16489,12 +16489,23 @@ cascade
 
 For simple single-table deletes, `(Table & restriction).delete()` remains the simplest approach. The diagram API is for when you need more visibility before executing.
 
+## Reclaiming Object Storage
+
+Deleting rows removes their database records, but for tables with in-store types
+(`<blob@>`, `<attach@>`, `<object@>`, `<npy@>`) the stored objects remain — by
+design (hash-addressed storage is deduplicated, and immediate deletion is unsafe
+under concurrency). Those orphaned objects are reclaimed separately by
+[garbage collection](garbage-collection.md); run it periodically to free storage
+after large deletes.
+
 ## See Also
 
+- [Clean Up Object Storage](garbage-collection.md) — reclaim stored objects orphaned by deletes
 - [Diagram Specification](../reference/specs/diagram.md) — Full reference for diagram operations
 - [Master-Part Tables](master-part.ipynb) — Compositional data patterns
 - [Model Relationships](model-relationships.ipynb) — Foreign key patterns
 - [Insert Data](insert-data.md) — Adding data to tables
+- [Update Data](update-data.md) — Correcting or replacing existing rows
 - [Run Computations](run-computations.md) — Recomputing after changes
 
 
@@ -17937,6 +17948,34 @@ Subject.insert(rows, replace=True)
 Subject.insert(rows, ignore_extra_fields=True)
 ```
 
+## What Not to Insert
+
+The sections above target **Manual** tables — the tier whose rows are inserted
+directly, from outside the DataJoint pipeline (whether entered by hand through a
+form or GUI, or loaded by an automated ingestion tool). Other tiers get their
+rows a different way, and inserting into them directly breaks reproducibility:
+
+- **Computed and Imported tables** — their rows are produced only by `make()`
+  through [`populate()`](run-computations.md); a direct insert is rejected at
+  runtime. To change a result, delete and recompute rather than editing it by
+  hand. See the [`make()` reproducibility contract](../reference/specs/autopopulate.md#43-the-make-reproducibility-contract).
+- **Lookup tables** — their rows live in the table's `contents` in the
+  definition code, versioned and redeployed through your normal review process,
+  not inserted at runtime. If you find yourself inserting into a "Lookup" table
+  from application code, make it a `dj.Manual` table instead. See
+  [Manual or Lookup?](define-tables.md#manual-or-lookup).
+
+Two more rules keep inserts consistent:
+
+- **Insert parents before children.** A foreign key requires the referenced
+  parent row to exist first, so insert upstream tables before the tables that
+  depend on them.
+- **Don't open a transaction inside `make()`.** `populate()` already wraps each
+  `make()` call in a transaction, so its inserts are atomic; the
+  `with schema.connection.transaction:` pattern shown next is for grouping inserts in
+  **Manual** code — never inside `make()`. See
+  [the computation model](../explanation/computation-model.md#3-dont-open-a-transaction-inside-make).
+
 ## Master-Part Tables
 
 Use a transaction to maintain compositional integrity:
@@ -18034,6 +18073,8 @@ if Subject.validate(rows):
 - [Master-Part Tables](master-part.ipynb) — Atomic insertion of master and parts
 - [Define Tables](define-tables.md) — Table definition syntax
 - [Delete Data](delete-data.md) — Removing data from tables
+- [Update Data](update-data.md) — Correcting or replacing existing rows
+- [Run Computations](run-computations.md) — Populating computed tables via `make()`
 
 
 ---
@@ -24702,6 +24743,73 @@ def sample_subjects(schema):
 
 
 ---
+## File: how-to/update-data.md
+
+# Update Data
+
+DataJoint treats stored records as immutable artifacts of a workflow: the normal
+way to change data is to **delete and reinsert**, not to update in place. Updates
+exist only as a **surgical correction** for a mistake in already-entered data —
+rare and deliberate, never part of a routine workflow.
+
+!!! note "If you update often, look at the schema"
+    A well-normalized workflow schema rarely needs updates. Frequent updates
+    usually mean a table mixes data created at different workflow steps — see
+    [Normalization](../explanation/normalization.md).
+
+## Prefer delete + reinsert
+
+To replace a Manual entity's data, delete the row and insert the corrected one.
+Because foreign keys cascade, this keeps every dependent record consistent:
+
+```python
+(Subject & "subject_id=1001").delete()
+Subject.insert1({"subject_id": 1001, "species": "mouse", "date_of_birth": "2026-01-15"})
+```
+
+For a **computed** result, never edit it in place — delete it and recompute so
+the value stays traceable to its declared inputs:
+
+```python
+(Segmentation & key).delete()   # cascades to anything downstream
+Segmentation.populate(key)      # recompute from the upstream cone
+```
+
+## Surgical corrections with `update1()`
+
+When you must correct a **secondary** attribute of a single existing row without
+disturbing its dependents, use `update1()`. It rewrites exactly one row,
+identified by its full primary key:
+
+```python
+# Fix a mistyped genotype on one subject
+Subject.update1({"subject_id": 1001, "genotype": "wild-type"})
+```
+
+`update1()` is deliberately narrow:
+
+- It changes **one row**; the primary key in the argument must match an existing row.
+- It **cannot change primary-key attributes** — keys are immutable. To re-key an
+  entity, delete and reinsert (see [Design Primary Keys](design-primary-keys.md)).
+- It does **not** re-run downstream computations. If a corrected value feeds
+  computed tables, delete and recompute those instead.
+
+## What you cannot change
+
+- **Primary keys** — immutable after insertion; delete and reinsert.
+- **Computed / Imported results** — produced by `make()`; delete and recompute
+  rather than update. See
+  [Insert Data → What Not to Insert](insert-data.md#what-not-to-insert).
+
+## See also
+
+- [Insert Data](insert-data.md) — adding rows
+- [Delete Data](delete-data.md) — removing rows (cascades to dependents)
+- [Run Computations](run-computations.md) — recomputing after a change
+- [Normalization](../explanation/normalization.md) — why updates are rare in a workflow schema
+
+
+---
 ## File: how-to/use-cli.md
 
 # Use the Command-Line Interface
@@ -27923,20 +28031,25 @@ def make(self, key):
     # All three inserts commit together or roll back together
 ```
 
-### 5.5 Manual Transaction Control
+### 5.5 No Manual Transactions Inside make()
 
-For complex scenarios, use explicit transactions:
+`populate()` already wraps each `make(key)` call in a transaction (§5.1), so
+everything a `make()` inserts — the master row and all of its Part rows —
+commits atomically, or rolls back together if `make()` raises. **Do not open
+your own transaction inside `make()`:** DataJoint does not support nested
+transactions, so starting one while `make()`'s transaction is already active
+raises an error.
 
 ```python
 def make(self, key):
-    # Fetch outside transaction
     data = (Source & key).to_dicts()
-
-    # Explicit transaction for insert
-    with self.connection.transaction:
-        self.insert1({**key, 'result': compute(data)})
-        self.Part.insert(parts)
+    # Correct: no explicit transaction — make() is already atomic
+    self.insert1({**key, "result": compute(data)})
+    self.Part.insert(parts)
 ```
+
+Explicit `with schema.connection.transaction:` blocks belong in ordinary (Manual) code
+that groups several related inserts — never in `make()`.
 
 ---
 
@@ -31918,6 +32031,21 @@ Master-Part relationships enforce **compositional integrity**:
 1. **Existence**: Parts cannot exist without their master
 2. **Cohesion**: Parts should be deleted/dropped with their master
 3. **Atomicity**: Master and parts form a logical unit
+4. **Transitive completeness**: a dependency on the master is a dependency on all of its parts
+
+For Computed and Imported tables, a master and its parts are inserted
+atomically: `populate()` wraps each `make()` call in a transaction, so the
+master and all of its parts commit together or not at all. For Manual
+master-part sets this atomicity is a convention rather than an enforced
+guarantee — insert the master and its parts within a single transaction
+(`with schema.connection.transaction:`) to preserve it. Deletion cascades in either
+case: deleting a master also deletes its parts.
+
+Because a populated master therefore reaches a complete composite, downstream
+tables *typically* reference the master alone and rely on the whole composite
+being present. A foreign key to a specific part is still legal — and common in
+practice — but is often unnecessary when the composite as a whole is what
+matters.
 
 ### 2.2 Foreign Key Behavior
 

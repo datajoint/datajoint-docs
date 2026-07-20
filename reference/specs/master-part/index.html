@@ -2870,6 +2870,8 @@
       
         
       
+        
+      
     
     
     
@@ -3011,6 +3013,34 @@
     
   
     Delete Data
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../how-to/update-data/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Update Data
   
 
     
@@ -7141,7 +7171,20 @@
 <li><strong>Existence</strong>: Parts cannot exist without their master</li>
 <li><strong>Cohesion</strong>: Parts should be deleted/dropped with their master</li>
 <li><strong>Atomicity</strong>: Master and parts form a logical unit</li>
+<li><strong>Transitive completeness</strong>: a dependency on the master is a dependency on all of its parts</li>
 </ol>
+<p>For Computed and Imported tables, a master and its parts are inserted
+atomically: <code>populate()</code> wraps each <code>make()</code> call in a transaction, so the
+master and all of its parts commit together or not at all. For Manual
+master-part sets this atomicity is a convention rather than an enforced
+guarantee — insert the master and its parts within a single transaction
+(<code>with schema.connection.transaction:</code>) to preserve it. Deletion cascades in either
+case: deleting a master also deletes its parts.</p>
+<p>Because a populated master therefore reaches a complete composite, downstream
+tables <em>typically</em> reference the master alone and rely on the whole composite
+being present. A foreign key to a specific part is still legal — and common in
+practice — but is often unnecessary when the composite as a whole is what
+matters.</p>
 <h3 id="22-foreign-key-behavior">2.2 Foreign Key Behavior<a class="headerlink" href="#22-foreign-key-behavior" title="Permanent link">&para;</a></h3>
 <p>Part tables have implicit foreign key to master:</p>
 <div class="highlight"><pre><span></span><code><span class="k">FOREIGN</span><span class="w"> </span><span class="k">KEY</span><span class="w"> </span><span class="p">(</span><span class="n">master_pk</span><span class="p">)</span><span class="w"> </span><span class="k">REFERENCES</span><span class="w"> </span><span class="n">master_table</span><span class="w"> </span><span class="p">(</span><span class="n">master_pk</span><span class="p">)</span>

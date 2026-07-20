@@ -14,7 +14,7 @@
         <link rel="prev" href="../fetch-results/">
       
       
-        <link rel="next" href="../run-computations/">
+        <link rel="next" href="../update-data/">
       
       
         
@@ -2874,6 +2874,8 @@
       
         
       
+        
+      
     
     
     
@@ -3255,6 +3257,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#reclaiming-object-storage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reclaiming Object Storage
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#see-also" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3269,6 +3282,34 @@
   
 </nav>
       
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../update-data/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Update Data
+  
+
+    
+  </span>
+  
+  
+
+      </a>
     </li>
   
 
@@ -6576,6 +6617,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#reclaiming-object-storage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reclaiming Object Storage
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#see-also" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -6775,12 +6827,21 @@ Proceed? [yes, No]:
 <li><strong>Programmatic control</strong>: Use <code>counts()</code> return values to make decisions in automated workflows</li>
 </ul>
 <p>For simple single-table deletes, <code>(Table &amp; restriction).delete()</code> remains the simplest approach. The diagram API is for when you need more visibility before executing.</p>
+<h2 id="reclaiming-object-storage">Reclaiming Object Storage<a class="headerlink" href="#reclaiming-object-storage" title="Permanent link">&para;</a></h2>
+<p>Deleting rows removes their database records, but for tables with in-store types
+(<code>&lt;blob@&gt;</code>, <code>&lt;attach@&gt;</code>, <code>&lt;object@&gt;</code>, <code>&lt;npy@&gt;</code>) the stored objects remain — by
+design (hash-addressed storage is deduplicated, and immediate deletion is unsafe
+under concurrency). Those orphaned objects are reclaimed separately by
+<a href="../garbage-collection/">garbage collection</a>; run it periodically to free storage
+after large deletes.</p>
 <h2 id="see-also">See Also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
 <ul>
+<li><a href="../garbage-collection/">Clean Up Object Storage</a> — reclaim stored objects orphaned by deletes</li>
 <li><a href="../../reference/specs/diagram/">Diagram Specification</a> — Full reference for diagram operations</li>
 <li><a href="../master-part/">Master-Part Tables</a> — Compositional data patterns</li>
 <li><a href="../model-relationships/">Model Relationships</a> — Foreign key patterns</li>
 <li><a href="../insert-data/">Insert Data</a> — Adding data to tables</li>
+<li><a href="../update-data/">Update Data</a> — Correcting or replacing existing rows</li>
 <li><a href="../run-computations/">Run Computations</a> — Recomputing after changes</li>
 </ul>
 
