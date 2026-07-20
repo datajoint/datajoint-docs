@@ -261,4 +261,5 @@ schema definition language and query algebra were first formalized in
 - [Query Algebra](query-algebra.md) — the five-operator algebra with algebraic closure
 - [Semantic Matching](semantic-matching.md) — lineage-based join resolution
 - [Type System](type-system.md) — extensible types with pluggable codecs
+- [Design Primary Keys](../how-to/design-primary-keys.md) and [Model Relationships](../how-to/model-relationships.ipynb) — choosing the keys that carry entity integrity and connecting entities with foreign keys
 - [Define Tables](../how-to/define-tables.md) and [Run Computations](../how-to/run-computations.md) — declaring steps and executing them
