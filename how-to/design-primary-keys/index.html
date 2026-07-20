@@ -2740,32 +2740,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#use-fixed-width-for-joins" class="md-nav__link">
+  <a href="#avoid-floating-point-keys" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Use Fixed-Width for Joins
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#avoid-dates-as-primary-keys" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Avoid Dates as Primary Keys
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#avoid-computed-values" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Avoid Computed Values
+        Avoid Floating-Point Keys
       
     </span>
   </a>
@@ -6337,32 +6315,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#use-fixed-width-for-joins" class="md-nav__link">
+  <a href="#avoid-floating-point-keys" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Use Fixed-Width for Joins
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#avoid-dates-as-primary-keys" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Avoid Dates as Primary Keys
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#avoid-computed-values" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Avoid Computed Values
+        Avoid Floating-Point Keys
       
     </span>
   </a>
@@ -6426,8 +6382,14 @@
 <li>Cannot be changed after insertion</li>
 <li>Are inherited by dependent tables via foreign keys</li>
 </ul>
+<p>The primary key is how a table enforces
+<a href="../../explanation/entity-integrity/">entity integrity</a> — the one-to-one
+correspondence between rows and the real-world entities they represent. Every
+principle below follows from that responsibility.</p>
 <h2 id="natural-keys">Natural Keys<a class="headerlink" href="#natural-keys" title="Permanent link">&para;</a></h2>
-<p>Use meaningful identifiers when they exist:</p>
+<p>A key is <em>natural</em> when it identifies the entity <strong>outside</strong> the database —
+printed on labels, written in lab notebooks, or spoken in conversation. Use one
+whenever it exists:</p>
 <div class="highlight"><pre><span></span><code><span class="nd">@schema</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Subject</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
     <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
@@ -6507,42 +6469,33 @@
 </code></pre></div>
 <h2 id="key-design-guidelines">Key Design Guidelines<a class="headerlink" href="#key-design-guidelines" title="Permanent link">&para;</a></h2>
 <h3 id="keep-keys-small">Keep Keys Small<a class="headerlink" href="#keep-keys-small" title="Permanent link">&para;</a></h3>
-<p>Prefer <code>int32</code> over <code>int64</code> when the range allows:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Good: Appropriate size</span>
-<span class="n">session_idx</span> <span class="p">:</span> <span class="n">int32</span>     <span class="c1"># Max 65,535 sessions per subject</span>
+<p>The primary key is copied into every dependent table, index, and join, so an
+oversized key multiplies across the whole schema. Use the smallest type that
+covers the range, and don't reach for a wide string key when a compact integer
+will do:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Good: a compact integer key</span>
+<span class="n">scan_id</span> <span class="p">:</span> <span class="n">int32</span>             <span class="c1"># up to ~2.1 billion scans</span>
 
-<span class="c1"># Avoid: Unnecessarily large</span>
-<span class="n">session_idx</span> <span class="p">:</span> <span class="n">int64</span>      <span class="c1"># Wastes space, slower joins</span>
-</code></pre></div>
-<h3 id="use-fixed-width-for-joins">Use Fixed-Width for Joins<a class="headerlink" href="#use-fixed-width-for-joins" title="Permanent link">&para;</a></h3>
-<p>Fixed-width types join faster:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Good: Fixed width</span>
-<span class="n">subject_id</span> <span class="p">:</span> <span class="n">char</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span>
+<span class="c1"># Avoid: a 200-character string key where an int32 would do —</span>
+<span class="c1"># this key is copied into every child table, index, and join</span>
+<span class="n">scan_id</span> <span class="p">:</span> <span class="n">varchar</span><span class="p">(</span><span class="mi">200</span><span class="p">)</span>
 
-<span class="c1"># Acceptable: Variable width</span>
-<span class="n">subject_id</span> <span class="p">:</span> <span class="n">varchar</span><span class="p">(</span><span class="mi">16</span><span class="p">)</span>
+<span class="c1"># Avoid: a wider integer than the range needs</span>
+<span class="n">scan_id</span> <span class="p">:</span> <span class="n">int64</span>             <span class="c1"># wastes space, slower joins</span>
 </code></pre></div>
-<h3 id="avoid-dates-as-primary-keys">Avoid Dates as Primary Keys<a class="headerlink" href="#avoid-dates-as-primary-keys" title="Permanent link">&para;</a></h3>
-<p>Dates alone rarely guarantee uniqueness:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Bad: Date might not be unique</span>
-<span class="n">session_date</span> <span class="p">:</span> <span class="n">date</span>
-<span class="o">---</span>
-<span class="o">...</span>
+<h3 id="avoid-floating-point-keys">Avoid Floating-Point Keys<a class="headerlink" href="#avoid-floating-point-keys" title="Permanent link">&para;</a></h3>
+<p>Never use <code>float</code> or <code>double</code> in a primary key: equality comparison on
+floating-point values is unreliable because of rounding, so lookups and joins on
+the key can silently miss. Use <code>decimal</code> (fixed-point) — or an integer — instead:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Bad: float equality is fraught with rounding error — key lookups can miss</span>
+<span class="n">dose_mg</span> <span class="p">:</span> <span class="n">float64</span>
 
-<span class="c1"># Good: Add a sequence number</span>
-<span class="o">-&gt;</span> <span class="n">Subject</span>
-<span class="n">session_idx</span> <span class="p">:</span> <span class="n">int32</span>
-<span class="o">---</span>
-<span class="n">session_date</span> <span class="p">:</span> <span class="n">date</span>
+<span class="c1"># Good: exact fixed-point value</span>
+<span class="n">dose_mg</span> <span class="p">:</span> <span class="n">decimal</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
 </code></pre></div>
-<h3 id="avoid-computed-values">Avoid Computed Values<a class="headerlink" href="#avoid-computed-values" title="Permanent link">&para;</a></h3>
-<p>Primary keys should be stable inputs, not derived:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Bad: Derived from other data</span>
-<span class="n">hash_id</span> <span class="p">:</span> <span class="n">varchar</span><span class="p">(</span><span class="mi">64</span><span class="p">)</span>  <span class="c1"># MD5 of some content</span>
-
-<span class="c1"># Good: Assigned identifier</span>
-<span class="n">recording_id</span> <span class="p">:</span> <span class="n">uuid</span>
-</code></pre></div>
+<p>A <code>date</code> or <code>datetime</code> is perfectly good key material when the entity is
+genuinely identified by that time (a daily summary, or a session dated by day).
+Add a sequence number only when the date alone doesn't identify the entity.</p>
 <h2 id="migration-considerations">Migration Considerations<a class="headerlink" href="#migration-considerations" title="Permanent link">&para;</a></h2>
 <p>Once a table has data, primary keys cannot be changed. Plan carefully:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Consider future needs</span>
@@ -6557,6 +6510,10 @@
 </code></pre></div>
 <h2 id="see-also">See Also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
 <ul>
+<li><a href="../../explanation/entity-integrity/">Entity Integrity</a> — why every table needs
+  a primary key and how it enforces the one-to-one correspondence with entities</li>
+<li><a href="../../explanation/normalization/">Normalization</a> — organizing attributes so
+  each fact lives in exactly one place</li>
 <li><a href="../define-tables/">Define Tables</a> — Table definition syntax</li>
 <li><a href="../model-relationships/">Model Relationships</a> — Foreign key patterns</li>
 </ul>

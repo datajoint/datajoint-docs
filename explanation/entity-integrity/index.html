@@ -6879,6 +6879,12 @@ identifier with no reliable connection to anything real.</p>
 <li><strong>Cannot be changed</strong> — keys are immutable after insertion.</li>
 <li><strong>Declared above the <code>---</code></strong> in the table definition.</li>
 </ul>
+<p>In practice, entity integrity is largely a matter of <strong>primary-key design</strong> —
+choosing a key that truly identifies each entity, and shaping entity types so
+each has a good natural key. The mechanics of choosing and declaring those keys
+are covered in the <a href="../../how-to/design-primary-keys/">Design Primary Keys</a>
+how-to; this page explains <em>why</em> the primary key is what carries entity
+integrity.</p>
 <h3 id="explicit-keys-no-auto-increment">Explicit keys, no auto-increment<a class="headerlink" href="#explicit-keys-no-auto-increment" title="Permanent link">&para;</a></h3>
 <p>DataJoint requires every primary-key value to be provided explicitly at
 insertion. There is no <code>AUTO_INCREMENT</code>. This is a deliberate choice that
@@ -6964,6 +6970,10 @@ foreign keys: a child entity is identified within the context of its parent.</p>
 <p>Here <code>(subject_id, session_idx, recording_idx)</code> together form the primary
 key. Neither attribute alone would identify a recording across the table.</p>
 <h2 id="foreign-keys">Foreign keys<a class="headerlink" href="#foreign-keys" title="Permanent link">&para;</a></h2>
+<p>Referential integrity is impossible without entity integrity: you must be able
+to identify unique entities before you can define valid relationships between
+them. A foreign key builds on the parent's primary key, so a well-designed key
+is the prerequisite for every relationship that references it.</p>
 <p>A foreign key serves two distinct purposes in DataJoint:</p>
 <ol>
 <li><strong>Referential integrity.</strong> The referenced entity must exist.</li>
@@ -7191,15 +7201,23 @@ token-issuance protocol for anonymous respondents.</p>
 <span class="s2">    &quot;&quot;&quot;</span>
 </code></pre></div>
 <h3 id="too-many-key-attributes">Too many key attributes<a class="headerlink" href="#too-many-key-attributes" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># Wrong: timestamp makes every row unique, losing entity semantics</span>
+<p><code>(subject_id, timestamp)</code> is a <em>correct</em> key for a per-subject measurement:
+each reading is its own entity, identified by who was measured and when.
+Over-keying is the opposite mistake — putting a <strong>descriptive</strong> attribute into
+the key, so a single entity fragments into several records:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Wrong: `technician` describes who took the reading; it doesn&#39;t identify it —</span>
+<span class="c1"># the same measurement recorded under two technicians becomes two entities</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Measurement</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
     <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
-<span class="s2">    subject_id : int64</span>
-<span class="s2">    timestamp : datetime(6)   # Microsecond precision destroys entity identity</span>
+<span class="s2">    subject_id : int32</span>
+<span class="s2">    timestamp : datetime(6)</span>
+<span class="s2">    technician : varchar(32)   # descriptive — belongs below the ---, not in the key</span>
 <span class="s2">    ---</span>
 <span class="s2">    value : float32</span>
 <span class="s2">    &quot;&quot;&quot;</span>
 </code></pre></div>
+<p>Keep the key to exactly the attributes that identify the entity; put everything
+descriptive below the <code>---</code>.</p>
 <h3 id="mutable-natural-keys">Mutable natural keys<a class="headerlink" href="#mutable-natural-keys" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># Risky: names can change</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Patient</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
@@ -7222,6 +7240,10 @@ insertion, is the database's half of the answer. The real-world process is
 yours to design.</p>
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
 <ul>
+<li><a href="../../how-to/design-primary-keys/">Design Primary Keys</a> — how to choose and
+  declare the keys that carry entity integrity</li>
+<li><a href="../../how-to/model-relationships/">Model Relationships</a> — foreign keys and
+  the relationship types they express</li>
 <li><a href="../normalization/">Normalization</a> — entity normalization and the workflow
   test</li>
 <li><a href="../computation-model/">Computation Model</a> — how cascade deletes and

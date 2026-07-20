@@ -738,6 +738,56 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#three-lenses-on-normalization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Three lenses on normalization
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Three lenses on normalization">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-mathematical-lens-classical-normal-forms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The mathematical lens: classical normal forms
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-entity-lens-one-table-per-entity-type" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The entity lens: one table per entity type
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-workflow-lens" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The workflow lens
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#the-workflow-normalization-principle" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -795,6 +845,28 @@
         
       </ul>
     </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#workflow-normalization-is-stricter-than-3nf" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Workflow normalization is stricter than 3NF
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#updates-as-a-design-smell" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Updates as a design smell
+      
+    </span>
+  </a>
   
 </li>
       
@@ -925,6 +997,17 @@
     <span class="md-ellipsis">
       
         Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#see-also" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        See also
       
     </span>
   </a>
@@ -6293,6 +6376,56 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#three-lenses-on-normalization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Three lenses on normalization
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Three lenses on normalization">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-mathematical-lens-classical-normal-forms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The mathematical lens: classical normal forms
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-entity-lens-one-table-per-entity-type" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The entity lens: one table per entity type
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-workflow-lens" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The workflow lens
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#the-workflow-normalization-principle" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -6350,6 +6483,28 @@
         
       </ul>
     </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#workflow-normalization-is-stricter-than-3nf" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Workflow normalization is stricter than 3NF
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#updates-as-a-design-smell" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Updates as a design smell
+      
+    </span>
+  </a>
   
 </li>
       
@@ -6486,6 +6641,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#see-also" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        See also
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -6510,6 +6676,112 @@
 <p>Schema normalization ensures data integrity by organizing tables to minimize
 redundancy and prevent update anomalies. DataJoint's workflow-centric approach
 makes normalization intuitive.</p>
+<h2 id="three-lenses-on-normalization">Three lenses on normalization<a class="headerlink" href="#three-lenses-on-normalization" title="Permanent link">&para;</a></h2>
+<p>Normalization is not a single algorithm but a family of design principles that
+all point toward the same goal: store each fact once, make integrity
+enforceable, and keep the schema easy to query and reason about. Three
+traditions arrived at these principles from different starting points, and it is
+worth holding all three in view, because each illuminates a different facet of
+the same design.</p>
+<table>
+<thead>
+<tr>
+<th>Lens</th>
+<th>One-line rule</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Codd</strong> (mathematical)</td>
+<td>Every non-key attribute depends on <em>the key, the whole key, and nothing but the key.</em></td>
+</tr>
+<tr>
+<td><strong>Chen</strong> (entity)</td>
+<td>Each table represents <em>one entity type</em>, and every attribute describes that entity.</td>
+</tr>
+<tr>
+<td><strong>DataJoint</strong> (workflow)</td>
+<td>Each table represents <em>one workflow step</em>, and foreign keys prescribe the order of operations.</td>
+</tr>
+</tbody>
+</table>
+<p>The remarkable fact is that these three lenses <strong>converge on the same schema</strong>.
+Codd reasons abstractly about functional dependencies; Chen reasons concretely
+about the entities in a domain; DataJoint reasons operationally about when each
+entity comes into being. Faced with the same tangled table, all three prescribe
+the same decomposition. They differ only in the reasoning that gets you there —
+and in strictness: the workflow lens is the tightest of the three, as the
+<a href="#workflow-normalization-is-stricter-than-3nf">e-commerce example below</a> shows.</p>
+<h3 id="the-mathematical-lens-classical-normal-forms">The mathematical lens: classical normal forms<a class="headerlink" href="#the-mathematical-lens-classical-normal-forms" title="Permanent link">&para;</a></h3>
+<p>Edgar Codd's normal forms, developed in the early 1970s, ground normalization in
+<strong>functional dependencies</strong>. An attribute <code>A</code> <em>functionally determines</em> <code>B</code>
+(written <code>A → B</code>) when a value of <code>A</code> fixes a single value of <code>B</code> — for example
+<code>mouse_id → date_of_birth</code>, or <code>(student, course) → grade</code>. Normalization asks
+which of these dependencies belong together in one table and which signal that a
+table is doing too much.</p>
+<p>The classical progression addresses three kinds of trouble:</p>
+<ul>
+<li><strong>First normal form (1NF)</strong> — every value is atomic. No comma-separated lists,
+  no <code>course_1 / course_2 / course_3</code> repeating groups. A mouse's series of
+  weights does not belong in a single cell; it belongs in rows of its own table.</li>
+<li><strong>Second normal form (2NF)</strong> — with a composite key, every non-key attribute
+  depends on the <em>whole</em> key, not just part of it. In an enrollment table keyed
+  by <code>(student, course)</code>, <code>student_name</code> depends on <code>student</code> alone — a partial
+  dependency — so it belongs in a <code>Student</code> table.</li>
+<li><strong>Third normal form (3NF)</strong> — no non-key attribute depends on another non-key
+  attribute. If <code>student → department → building</code>, then <code>building</code> depends on
+  <code>department</code>, not directly on the student — a transitive dependency — so
+  <code>department</code> becomes its own table.</li>
+</ul>
+<div class="admonition tip">
+<p class="admonition-title">The normalization mnemonic</p>
+<p>Every non-key attribute must depend on <strong>the key, the whole key, and nothing
+but the key</strong>. This captures 1NF, 2NF, and 3NF in a single phrase: 1NF gives
+you a key at all, 2NF is <em>the whole key</em>, and 3NF is <em>nothing but the key</em>.</p>
+</div>
+<p>This lens is rigorous and mechanically checkable, but it requires you to
+enumerate functional dependencies in the abstract; it offers little guidance on
+how to carve up a domain in the first place. That is where the entity lens helps.</p>
+<h3 id="the-entity-lens-one-table-per-entity-type">The entity lens: one table per entity type<a class="headerlink" href="#the-entity-lens-one-table-per-entity-type" title="Permanent link">&para;</a></h3>
+<p>Peter Chen's Entity-Relationship Model (1976) reframes normalization around the
+<em>things</em> a domain is about rather than the dependencies among attributes.</p>
+<div class="admonition important">
+<p class="admonition-title">Entity Normalization Principle</p>
+<p>Each table represents exactly one well-defined entity type, identified by its
+primary key. Every non-key attribute must describe that entity type
+<strong>directly, completely, and non-optionally</strong>.</p>
+</div>
+<ul>
+<li><strong>Directly</strong> — the attribute is a property of <em>this</em> entity, not of some other
+  entity it references (a mouse's cage location describes the cage, not the
+  mouse). This is the entity-level reading of 3NF.</li>
+<li><strong>Completely</strong> — the attribute depends on the entire key, not a part of it.
+  This is the entity-level reading of 2NF.</li>
+<li><strong>Non-optionally</strong> — the attribute is present for every instance. Attributes
+  that are <code>NULL</code> for many rows are a hint that two entity types have been folded
+  together.</li>
+</ul>
+<p>A relationship with its own attributes is itself an entity type. An enrollment
+that carries a <code>grade</code> is not merely an edge between <code>Student</code> and <code>Course</code>; it
+is an <code>Enrollment</code> entity keyed by <code>(student, course)</code>, and <code>grade</code> describes
+that enrollment directly. Whenever a relationship-set acquires attributes,
+promote it to its own table.</p>
+<div class="admonition note">
+<p class="admonition-title">Tidy data is normalization rediscovered</p>
+<p>Hadley Wickham's <em>tidy data</em> rules — (1) each variable is a column, (2) each
+observation is a row, (3) each type of observational unit forms its own table
+— restate normalization from the data-analysis side. Rules 1 and 2 are
+<strong>1NF</strong>; rule 3 is <strong>entity normalization</strong>. The same structure emerges
+whether you start from predicate calculus, entity modeling, or the practical
+need to plot and manipulate data cleanly.</p>
+</div>
+<h3 id="the-workflow-lens">The workflow lens<a class="headerlink" href="#the-workflow-lens" title="Permanent link">&para;</a></h3>
+<p>DataJoint adds a dimension the first two leave implicit: <em>time</em>. Entity
+normalization asks <em>what</em> entities exist; workflow normalization asks <em>when and
+how</em> each one is created. A table represents not just an entity type but an
+entity type produced at a specific step of a workflow, and its foreign keys do
+double duty — enforcing referential integrity <em>and</em> prescribing the order in
+which steps may run. The rest of this page develops that lens.</p>
 <h2 id="the-workflow-normalization-principle">The Workflow Normalization Principle<a class="headerlink" href="#the-workflow-normalization-principle" title="Permanent link">&para;</a></h2>
 <blockquote>
 <p><strong>"Every table represents an entity type that is created at a specific step
@@ -6617,6 +6889,118 @@ table structure. DataJoint takes a different approach: design tables around
 <li><strong>Later events separate</strong> — Cage assignments, weight measurements happen after initial tracking</li>
 <li><strong>History preserved</strong> — Can track cage moves over time without data loss</li>
 </ul>
+<h2 id="workflow-normalization-is-stricter-than-3nf">Workflow normalization is stricter than 3NF<a class="headerlink" href="#workflow-normalization-is-stricter-than-3nf" title="Permanent link">&para;</a></h2>
+<p>The three lenses converge, but they are not equally demanding. A table can
+satisfy Codd's normal forms <em>and</em> entity normalization and still violate workflow
+normalization. Consider an e-commerce <code>Order</code> that records the whole lifecycle of
+an order in a single row:</p>
+<div class="highlight"><pre><span></span><code>Order
+┌───────────┬────────────┬─────────────┬──────────────┬───────────────┬───────────────┐
+│ order_id* │ product_id │ customer_id │ payment_date │ shipment_date │ delivery_date │
+├───────────┼────────────┼─────────────┼──────────────┼───────────────┼───────────────┤
+│ 1001      │ WIDGET-A   │ C0137       │ 2026-10-16   │ 2026-10-18    │ 2026-10-20    │
+│ 1002      │ GADGET-B   │ C0173       │ 2026-10-17   │ NULL          │ NULL          │
+│ 1003      │ TOOL-C     │ C3310       │ NULL         │ NULL          │ NULL          │
+└───────────┴────────────┴─────────────┴──────────────┴───────────────┴───────────────┘
+</code></pre></div>
+<ul>
+<li><strong>Codd:</strong> all values are atomic (1NF), the key is not composite (2NF is moot),
+  and every attribute depends directly on <code>order_id</code> (3NF). <em>Perfectly
+  normalized.</em></li>
+<li><strong>Chen:</strong> every column is a property of the order — payment, shipment, and
+  delivery details all describe <em>this</em> order. <em>Perfectly normalized.</em></li>
+<li><strong>DataJoint:</strong> the attributes are created at four different moments — the order
+  is placed, then paid, then shipped, then delivered. <em>This violates workflow
+  normalization.</em></li>
+</ul>
+<p>The symptoms are visible in the data itself. Order 1003 is all <code>NULL</code>s downstream
+because its workflow has not progressed; nothing prevents <code>shipment_date</code> from
+being filled before <code>payment_date</code>; and as the order advances, the row must be
+<strong>UPDATE</strong>d again and again. The schema cannot enforce that payment precedes
+shipment, because that sequence is not expressed anywhere.</p>
+<p>Splitting by workflow step fixes all of this:</p>
+<div class="highlight"><pre><span></span><code><span class="nd">@schema</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Order</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">    order_id : int32</span>
+<span class="s2">    order_date : datetime</span>
+<span class="s2">    ---</span>
+<span class="s2">    -&gt; Product</span>
+<span class="s2">    -&gt; Customer</span>
+<span class="s2">    &quot;&quot;&quot;</span>
+
+<span class="nd">@schema</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Payment</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">    -&gt; Order                    # can&#39;t pay before ordering</span>
+<span class="s2">    ---</span>
+<span class="s2">    payment_date : datetime</span>
+<span class="s2">    payment_method : enum(&#39;Credit Card&#39;, &#39;PayPal&#39;, &#39;Bank Transfer&#39;)</span>
+<span class="s2">    amount : decimal(10, 2)</span>
+<span class="s2">    &quot;&quot;&quot;</span>
+
+<span class="nd">@schema</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Shipment</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">    -&gt; Payment                  # can&#39;t ship before payment clears</span>
+<span class="s2">    ---</span>
+<span class="s2">    shipment_date : datetime</span>
+<span class="s2">    carrier : varchar(50)</span>
+<span class="s2">    tracking_number : varchar(100)</span>
+<span class="s2">    &quot;&quot;&quot;</span>
+
+<span class="nd">@schema</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Delivery</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">    -&gt; Shipment                 # can&#39;t deliver before shipping</span>
+<span class="s2">    ---</span>
+<span class="s2">    delivery_date : datetime</span>
+<span class="s2">    recipient_signature : varchar(100)</span>
+<span class="s2">    &quot;&quot;&quot;</span>
+</code></pre></div>
+<p>The foreign keys now form a chain — <code>Order → Payment → Shipment → Delivery</code> —
+that is simultaneously the referential-integrity structure and the workflow
+diagram. Every attribute is non-nullable, because a row exists only once its step
+has actually happened. There are no <code>NULL</code>s standing in for "not yet," no updates
+as the order advances, and the order of operations is enforced by construction.
+As a bonus, workflow state becomes a query: paid-but-not-yet-shipped orders are
+simply <code>Payment - Shipment</code>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This is what "stricter than 3NF" means in practice. Codd and Chen separate
+data by <em>dependency</em> and by <em>entity type</em>; the workflow lens additionally
+separates it by <em>when it comes into being</em>. Every workflow-normalized schema
+is in 3NF, but not every 3NF schema is workflow-normalized.</p>
+</div>
+<h2 id="updates-as-a-design-smell">Updates as a design smell<a class="headerlink" href="#updates-as-a-design-smell" title="Permanent link">&para;</a></h2>
+<p>The e-commerce redesign points to a heuristic that runs through all of
+DataJoint's schemas:</p>
+<div class="admonition tip">
+<p class="admonition-title">The UPDATE test</p>
+<p>Can your normal, day-to-day operations be expressed purely as <strong>INSERT</strong> and
+<strong>DELETE</strong>?</p>
+<ul>
+<li><strong>Yes</strong> → the schema is well normalized.</li>
+<li><strong>No</strong> → the schema needs redesign.</li>
+</ul>
+</div>
+<p>In a workflow-normalized schema, intrinsic attributes never change, and anything
+that <em>does</em> change over time lives in its own table — usually with a date or
+timestamp in the primary key, so a change is recorded as a new row rather than an
+overwrite. "Updating" a mouse's weight is an <code>INSERT</code> into <code>MouseWeight</code>;
+correcting a step means <code>DELETE</code> the affected row and let the cascade remove
+everything derived from it, then recompute. Both preserve history and keep
+derived results consistent with their inputs.</p>
+<p>Reaching for <code>UPDATE</code> in ordinary operation is a signal that something is
+mismodeled — a time-varying attribute was left inside an entity table, or two
+workflow steps were merged. DataJoint does provide <code>update1()</code>, but it is a
+surgical tool for correcting data-entry errors, and only when nothing downstream
+depends on the attribute being changed. The reason is that an in-place edit to an
+upstream row silently invalidates every downstream result derived from it: the
+foreign keys still match, so the database raises no error, yet the derived rows
+now reflect inputs that no longer exist. Deleting instead of updating makes that
+dependency explicit — the cascade forces you to recompute what depended on the
+corrected value, keeping the pipeline reproducible.</p>
 <h2 id="the-workflow-test">The Workflow Test<a class="headerlink" href="#the-workflow-test" title="Permanent link">&para;</a></h2>
 <p>Ask these questions to determine table structure:</p>
 <h3 id="1-is-this-an-intrinsic-attribute-of-the-entity">1. "Is this an intrinsic attribute of the entity?"<a class="headerlink" href="#1-is-this-an-intrinsic-attribute-of-the-entity" title="Permanent link">&para;</a></h3>
@@ -6717,6 +7101,19 @@ table structure. DataJoint takes a different approach: design tables around
 </li>
 </ol>
 <h2 id="summary">Summary<a class="headerlink" href="#summary" title="Permanent link">&para;</a></h2>
+<div class="admonition note">
+<p class="admonition-title">The three lenses at a glance</p>
+<ul>
+<li><strong>Codd (mathematical):</strong> depend on the key, the whole key, and nothing but
+  the key.</li>
+<li><strong>Chen (entity):</strong> each table is one entity type; every attribute describes
+  it directly, completely, and non-optionally.</li>
+<li><strong>DataJoint (workflow):</strong> each table is one workflow step; foreign keys
+  define the order of operations.</li>
+</ul>
+<p>All three converge on the same schema. The workflow lens is the strictest,
+because it also separates data by <em>when</em> it is created.</p>
+</div>
 <p><strong>Core principles:</strong></p>
 <ol>
 <li><strong>Intrinsic attributes only</strong> — Each entity contains only properties inherent to itself</li>
@@ -6732,6 +7129,18 @@ table structure. DataJoint takes a different approach: design tables around
 <li>Is this a relationship or event? (Yes → association/event table)</li>
 </ul>
 <p>Following these principles achieves <strong>full workflow entity normalization</strong> where each table represents a single, well-defined entity type entered at a specific workflow step.</p>
+<h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="../entity-integrity/">Entity Integrity</a> — the uniqueness guarantee that a
+  normalized table's primary key enforces</li>
+<li><a href="../../how-to/design-primary-keys/">Design Primary Keys</a> — choosing the keys
+  that identify each normalized entity</li>
+<li><a href="../../how-to/model-relationships/">Model Relationships</a> — connecting
+  normalized entities with foreign keys</li>
+<li><a href="../relational-workflow-model/">Relational Workflow Model</a> — the broader frame
+  in which normalization, entity integrity, and referential integrity work
+  together</li>
+</ul>
 
 
 
