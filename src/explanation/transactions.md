@@ -86,7 +86,7 @@ Wrapping the two writes in a transaction closes this gap:
 def transfer(source, destination, amount):
     if amount <= 0:
         raise ValueError("Transfer amount must be positive")
-    with dj.conn().transaction:
+    with schema.connection.transaction:
         balance = (Account & source).fetch1("balance")
         if balance < amount:
             raise RuntimeError("Insufficient funds")
@@ -95,7 +95,7 @@ def transfer(source, destination, amount):
         Account.update1(dict(destination, balance=dest + amount))
 ```
 
-Everything inside `with dj.conn().transaction:` is one atomic unit. If the block
+Everything inside `with schema.connection.transaction:` is one atomic unit. If the block
 completes normally, both updates commit together. If any statement raises — an
 insufficient-funds check, a lost connection, a bug — the whole block rolls back
 and the exception propagates. The debit is never left stranded without its credit.
@@ -106,7 +106,7 @@ as one transaction guarantees you never observe a master without its parts, nor
 parts orphaned from a master:
 
 ```python
-with dj.conn().transaction:
+with schema.connection.transaction:
     Experiment.insert1(dict(experiment_id=1, experiment_date="2026-07-17"))
     Experiment.Trial.insert([
         dict(experiment_id=1, trial_idx=1, outcome="success"),
@@ -115,8 +115,16 @@ with dj.conn().transaction:
 ```
 
 A single `insert()` or `update1()` call is *already* atomic on its own. You reach
-for an explicit `with dj.conn().transaction:` block only when **several**
+for an explicit `with schema.connection.transaction:` block only when **several**
 operations must succeed or fail as a group, as above.
+
+!!! note "Which connection the transaction uses"
+    `schema.connection` is the connection shared by that schema's tables — the
+    same object `dj.conn()` returns in the common single-connection setup. A
+    transaction covers only operations on *that* connection, so group tables that
+    share it. If you deliberately place schemas on different connections (separate
+    `dj.Instance`s, or an explicit `connection=`), wrap the work using the
+    connection those tables actually use.
 
 !!! warning "Transactions do not nest"
     DataJoint does not support nested transactions. Opening a transaction while
@@ -158,7 +166,7 @@ result is either fully present or fully absent, never half-computed.
 
     ```python
     def make(self, key):
-        with dj.conn().transaction:   # WRONG — a transaction is already active
+        with self.connection.transaction:   # WRONG — a transaction is already active
             self.insert1(...)         # this raises an error
     ```
 
