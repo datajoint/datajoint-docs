@@ -11,7 +11,7 @@
         <link rel="canonical" href="https://docs.datajoint.com/about/whats-new-22/">
       
       
-        <link rel="prev" href="../whats-new-2-2-4/">
+        <link rel="prev" href="../whats-new-23/">
       
       
         <link rel="next" href="../whats-new-21/">
@@ -5804,8 +5804,6 @@
       
         
       
-        
-      
     
     
     
@@ -5890,34 +5888,6 @@
                 
   
   
-  
-  
-    <li class="md-nav__item">
-      <a href="../whats-new-2-2-4/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    What's New in 2.2.4
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
     
   
   
@@ -5979,6 +5949,17 @@
       Table of contents
     </label>
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#changes-in-224" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Changes in 2.2.4
+      
+    </span>
+  </a>
+  
+</li>
       
         <li class="md-nav__item">
   <a href="#overview" class="md-nav__link">
@@ -6557,6 +6538,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#changes-in-224" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Changes in 2.2.4
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#overview" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -6892,6 +6884,14 @@
 <p><strong>Upgrading from 2.0 or 2.1?</strong> No breaking changes. All existing code using <code>dj.config</code> and <code>dj.Schema()</code> continues to work. The new Instance API is purely additive.</p>
 <p><strong>Citation:</strong> Yatsenko D, Nguyen TT. <em>DataJoint 2.0: A Computational Substrate for Agentic Scientific Workflows.</em> arXiv:2602.16585. 2026. <a href="https://doi.org/10.48550/arXiv.2602.16585">doi:10.48550/arXiv.2602.16585</a></p>
 </blockquote>
+<h2 id="changes-in-224">Changes in 2.2.4<a class="headerlink" href="#changes-in-224" title="Permanent link">&para;</a></h2>
+<p>2.2.4 is a patch release on the 2.2 line, adding <strong>env-var-only configuration of object storage</strong> and a <strong>public plugin contract for third-party storage protocols</strong>. If you are upgrading from <strong>2.2.0–2.2.3</strong> there are no breaking changes — the new environment variables are purely additive.</p>
+<ul>
+<li><strong><code>DJ_STORES</code></strong> — configure object stores entirely from the environment. The variable holds a JSON object identical to the <code>stores</code> block of <code>datajoint.json</code>, so config moves between file and env var by copy-paste. See <a href="../../how-to/manage-secrets/">Manage Secrets</a> and <a href="../../how-to/configure-storage/">Configure Object Storage</a>.</li>
+<li><strong><code>DJ_IGNORE_CONFIG_FILE</code></strong> — set to <code>true</code> to skip <code>datajoint.json</code> and the <code>.secrets/</code> and <code>/run/secrets/datajoint/</code> directories entirely, so only environment variables and defaults apply. Intended for env-var-only deployments (Kubernetes, Lambda, the DataJoint platform).</li>
+<li><strong><code>.secrets/stores.&lt;name&gt;.&lt;attr&gt;</code> accepts any attribute</strong>, not just <code>access_key</code> / <code>secret_key</code> — plugin-registered adapters can supply their own fields (a Bearer <code>token</code>, an <code>api_key</code>, etc.).</li>
+<li><strong>Storage-adapter plugin contract.</strong> The <code>datajoint.storage</code> entry-point group is now part of the public API: third-party packages register additional storage protocols by subclassing <code>dj.StorageAdapter</code> and declaring an entry point. Built-in <code>file</code>/<code>s3</code>/<code>gcs</code>/<code>azure</code> are unaffected. See <a href="../../reference/specs/storage-adapter-api/">Storage Adapter API</a>.</li>
+</ul>
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
 <p>DataJoint has traditionally used a global singleton pattern: one configuration (<code>dj.config</code>), one connection (<code>dj.conn()</code>), shared across all tables in a process. This works well for interactive sessions and single-user scripts, but breaks down when:</p>
 <ul>
