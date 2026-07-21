@@ -5925,6 +5925,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#changes-in-232" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Changes in 2.3.2
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#changes-in-231" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -6374,6 +6385,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#changes-in-232" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Changes in 2.3.2
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#changes-in-231" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -6526,6 +6548,14 @@
 <p><strong>Upgrading from 2.0, 2.1, or 2.2?</strong> No breaking changes. Everything here is additive — existing pipelines run identically.</p>
 <p><strong>Citation:</strong> Yatsenko D, Nguyen TT. <em>DataJoint 2.0: A Computational Substrate for Agentic Scientific Workflows.</em> arXiv:2602.16585. 2026. <a href="https://doi.org/10.48550/arXiv.2602.16585">doi:10.48550/arXiv.2602.16585</a></p>
 </blockquote>
+<h2 id="changes-in-232">Changes in 2.3.2<a class="headerlink" href="#changes-in-232" title="Permanent link">&para;</a></h2>
+<p>2.3.2 is a patch release on the 2.3 line. If you are upgrading from <strong>2.3.1</strong>:</p>
+<ul>
+<li><strong>Uncaught exceptions show full tracebacks again.</strong> Importing <code>datajoint</code> no longer installs a process-wide <code>sys.excepthook</code>. Previously any uncaught exception in the process — DataJoint-related or not — was reduced to a single opaque <code>[ERROR]: Uncaught exception</code> line with no type, message, or traceback; now Python's default handler prints the full traceback to stderr. The log formatter also renders exception and stack info correctly. See <a href="https://github.com/datajoint/datajoint-python/issues/1516">#1516</a>.</li>
+<li><strong><code>populate(reserve_jobs=True)</code> works with <code>uuid</code>-derived primary keys.</strong> Auto-populating a <code>Computed</code>/<code>Imported</code> table whose primary key derives from a <code>uuid</code> attribute no longer crashes with <code>Unsupported attribute type binary(16)</code> when its jobs table is first created. See <a href="https://github.com/datajoint/datajoint-python/issues/1515">#1515</a>.</li>
+<li><strong>Safer garbage collection.</strong> <code>gc.collect()</code> no longer acts on a partial store listing, closing a path where an interrupted or incomplete storage enumeration could misclassify live files as orphans. See <a href="../../how-to/garbage-collection/">Clean Up Object Storage</a>.</li>
+<li><strong>Version derived from the release tag.</strong> The package version now comes from the git tag (via <code>hatch-vcs</code>), so a git install of a tagged commit (<code>pip install "git+https://github.com/datajoint/datajoint-python.git@v2.3.2"</code>) and <code>pip show datajoint</code> both report <code>2.3.2</code> — previously such an install could report the prior release. Running from an uninstalled source tree now reports <code>0.0.0+unknown</code>; use <code>pip install -e .</code> for development.</li>
+</ul>
 <h2 id="changes-in-231">Changes in 2.3.1<a class="headerlink" href="#changes-in-231" title="Permanent link">&para;</a></h2>
 <p>2.3.1 is a patch release on the 2.3 line. If you are upgrading from <strong>2.3.0</strong>:</p>
 <ul>

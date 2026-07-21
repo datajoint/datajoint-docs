@@ -1,6 +1,6 @@
 # DataJoint Documentation (Full)
 
-Generated: 2026-07-21 21:23:42 UTC
+Generated: 2026-07-21 23:36:52 UTC
 Commit: unknown
 Branch: unknown
 
@@ -39993,6 +39993,15 @@ DataJoint 2.3 adds a first-class **upstream read surface** — `Diagram.trace` a
 > **Upgrading from 2.0, 2.1, or 2.2?** No breaking changes. Everything here is additive — existing pipelines run identically.
 
 > **Citation:** Yatsenko D, Nguyen TT. *DataJoint 2.0: A Computational Substrate for Agentic Scientific Workflows.* arXiv:2602.16585. 2026. [doi:10.48550/arXiv.2602.16585](https://doi.org/10.48550/arXiv.2602.16585)
+
+## Changes in 2.3.2
+
+2.3.2 is a patch release on the 2.3 line. If you are upgrading from **2.3.1**:
+
+- **Uncaught exceptions show full tracebacks again.** Importing `datajoint` no longer installs a process-wide `sys.excepthook`. Previously any uncaught exception in the process — DataJoint-related or not — was reduced to a single opaque `[ERROR]: Uncaught exception` line with no type, message, or traceback; now Python's default handler prints the full traceback to stderr. The log formatter also renders exception and stack info correctly. See [#1516](https://github.com/datajoint/datajoint-python/issues/1516).
+- **`populate(reserve_jobs=True)` works with `uuid`-derived primary keys.** Auto-populating a `Computed`/`Imported` table whose primary key derives from a `uuid` attribute no longer crashes with `Unsupported attribute type binary(16)` when its jobs table is first created. See [#1515](https://github.com/datajoint/datajoint-python/issues/1515).
+- **Safer garbage collection.** `gc.collect()` no longer acts on a partial store listing, closing a path where an interrupted or incomplete storage enumeration could misclassify live files as orphans. See [Clean Up Object Storage](../how-to/garbage-collection.md).
+- **Version derived from the release tag.** The package version now comes from the git tag (via `hatch-vcs`), so a git install of a tagged commit (`pip install "git+https://github.com/datajoint/datajoint-python.git@v2.3.2"`) and `pip show datajoint` both report `2.3.2` — previously such an install could report the prior release. Running from an uninstalled source tree now reports `0.0.0+unknown`; use `pip install -e .` for development.
 
 ## Changes in 2.3.1
 
