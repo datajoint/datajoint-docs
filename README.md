@@ -38,11 +38,11 @@ MODE="LIVE" docker compose up --build
 # MODE="BUILD" docker compose up --build
 ```
 
-The Docker environment includes MySQL, MinIO, and all dependencies.
+The Docker environment includes MySQL, PostgreSQL, MinIO, and all dependencies.
 
 ### Native Python
 
-**Prerequisites:** Python 3.10+, MySQL 8.0+
+**Prerequisites:** Python 3.10+, and a supported backend — MySQL 8.0+ or PostgreSQL (peer backends)
 
 ```bash
 # Setup
@@ -104,7 +104,7 @@ python scripts/check_notebook_versions.py
 
 ## Citation
 
-> Yatsenko D, Walker EY, Tolias AS. DataJoint: A Simpler Relational Data Model. arXiv:2303.00102. 2023. doi: [10.48550/arXiv.2303.00102](https://doi.org/10.48550/arXiv.2303.00102)
+> Yatsenko D, Nguyen TT. DataJoint 2.0: A Computational Substrate for Agentic Scientific Workflows. arXiv:2602.16585. 2026. doi: [10.48550/arXiv.2602.16585](https://doi.org/10.48550/arXiv.2602.16585) — [RRID:SCR_014543](https://scicrunch.org/resolver/SCR_014543)
 
 Full citation information: [docs.datajoint.com/about/citation/](https://docs.datajoint.com/about/citation/)
 
