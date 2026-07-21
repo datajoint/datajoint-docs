@@ -3629,7 +3629,7 @@
 </tr>
 </tbody>
 </table>
-<p>Each iteration yields a <code>FreeTable</code> with any cascade or restrict conditions applied. Alias nodes are skipped. Only nodes in the diagram's visible set (<code>nodes_to_show</code>) are yielded.</p>
+<p>Each iteration yields a <code>FreeTable</code> with any cascade or restrict conditions applied. Only nodes in the diagram's visible set (<code>nodes_to_show</code>) are yielded.</p>
 <p><code>Table.delete()</code> and <code>Table.drop()</code> use <code>reversed(diagram)</code> internally to execute mutations in safe dependency order.</p>
 <h3 id="restriction-propagation">Restriction Propagation<a class="headerlink" href="#restriction-propagation" title="Permanent link">¶</a></h3>
 <p>When <code>cascade()</code> or <code>restrict()</code> propagates a restriction from a parent table to a child table, one of three rules applies depending on the foreign key relationship:</p>
@@ -3802,6 +3802,10 @@
 <tr>
 <td>Thin line</td>
 <td>Multi-valued foreign key</td>
+</tr>
+<tr>
+<td>Orange line</td>
+<td>Renamed foreign key (via <code>.proj()</code>) — hover the edge for the column-rename tooltip</td>
 </tr>
 </tbody>
 </table>

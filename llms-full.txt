@@ -1,6 +1,6 @@
 # DataJoint Documentation (Full)
 
-Generated: 2026-07-21 16:02:59 UTC
+Generated: 2026-07-21 21:23:42 UTC
 Commit: unknown
 Branch: unknown
 
@@ -7052,7 +7052,7 @@ DataJoint diagrams show tables as nodes and foreign keys as edges. The notation 
 | **Gray** | Lookup table |
 | **Red** | Computed table |
 | **Blue** | Imported table |
-| **Orange dots** | Renamed foreign keys (via `.proj()`) |
+| **Orange edges** | Renamed foreign keys (via `.proj()`) |
 
 **Key principle:** Solid lines mean the parent's identity becomes part of the child's identity. Dashed lines mean the child maintains independent identity.
 
@@ -22612,7 +22612,7 @@ dj.Diagram(Session) + dj.Diagram(Comparison)
 ```
 
 
-**Orange dots** indicate renamed foreign keys. Hover over them to see the projection expression.
+**Orange edges** indicate renamed foreign keys. Hover over an edge to see the renamed columns.
 
 This creates attributes `session_a` and `session_b`, both referencing `Session.session_idx`.
 
@@ -23546,9 +23546,9 @@ dj.Diagram(Student) + dj.Diagram(Course) + dj.Diagram(Enrollment)
 
 **Note:** `Enrollment` is **not underlined** — it exists in the space defined by Student × Course dimensions.
 
-## Orange Dots: Renamed Foreign Keys
+## Orange Edges: Renamed Foreign Keys
 
-When referencing the same table multiple times, use `.proj()` to rename. **Orange dots** indicate renamed FKs.
+When referencing the same table multiple times, use `.proj()` to rename. **Orange edges** indicate renamed FKs.
 
 
 ```python
@@ -23574,9 +23574,56 @@ dj.Diagram(Person) + dj.Diagram(Marriage)
 ```
 
 
-The orange dots between `Person` and `Marriage` indicate that projections renamed the foreign key attributes (`spouse1` and `spouse2` both reference `person_id`).
+The orange edges between `Person` and `Marriage` indicate that projections renamed the foreign key attributes (`spouse1` and `spouse2` both reference `person_id`).
 
-**Tip:** In Jupyter, hover over orange dots to see the projection expression.
+**Tip:** In Jupyter, hover over an orange edge to see the renamed columns (e.g. `spouse1 ← person_id`).
+
+### Renamed primary vs. secondary foreign keys
+
+The orange color marks a *renamed* foreign key — it does **not** change the line-style semantics. A renamed FK is drawn exactly like any other, just in orange:
+
+- **solid** = the FK is part of the child's primary key; **dashed** = a secondary reference (below the `---`).
+- **thick** = the FK spans the child's *entire* primary key (a 1:1 reference); **thin** = it is only part of it.
+
+So a renamed **primary** FK is a **solid orange** line, whereas the renamed **secondary** FKs in the `Marriage` example above are **dashed orange**.
+
+Below, `Synapse` references `Neuron` twice as **primary** renamed FKs (`presynaptic`, `postsynaptic`) — drawn **solid orange** (thin, since each is only part of `Synapse`'s primary key). `NeuronProfile` extends `Neuron` one-to-one through a single renamed primary FK — drawn **thick solid orange**.
+
+
+
+```python
+neuro = dj.Schema("howto_synapse")
+neuro.drop(prompt=False)
+neuro = dj.Schema("howto_synapse")
+
+@neuro
+class Neuron(dj.Manual):
+    definition = """
+    neuron_id : int64
+    ---
+    region : varchar(32)
+    """
+
+@neuro
+class Synapse(dj.Manual):
+    definition = """
+    -> Neuron.proj(presynaptic="neuron_id")   # renamed PRIMARY FK -> solid orange
+    -> Neuron.proj(postsynaptic="neuron_id")  # renamed PRIMARY FK -> solid orange
+    ---
+    weight : float
+    """
+
+@neuro
+class NeuronProfile(dj.Manual):
+    definition = """
+    -> Neuron.proj(profile_id="neuron_id")       # renamed 1:1 PRIMARY FK -> thick solid orange
+    ---
+    notes : varchar(64)
+    """
+
+dj.Diagram(neuro)
+```
+
 
 ## Diagram Operations
 
@@ -23621,8 +23668,7 @@ dj.Diagram(Subject) + 2
 
 ## Layout Direction
 
-!!! version-added "New in 2.1"
-    Configurable layout direction was added in DataJoint 2.1.
+> **New in 2.1** — Configurable layout direction was added in DataJoint 2.1.
 
 Control the flow direction of diagrams via configuration:
 
@@ -23641,8 +23687,7 @@ with dj.config.override(display__diagram_direction="LR"):
 
 ## Mermaid Output
 
-!!! version-added "New in 2.1"
-    Mermaid output was added in DataJoint 2.1.
+> **New in 2.1** — Mermaid output was added in DataJoint 2.1.
 
 Generate [Mermaid](https://mermaid.js.org/) syntax for embedding diagrams in Markdown documentation, GitHub, or web pages:
 
@@ -23664,8 +23709,7 @@ dj.Diagram(schema).save("pipeline.mmd")  # .mmd or .mermaid extension
 
 Real-world pipelines often span multiple schemas (modules).
 
-!!! version-added "New in 2.1"
-    Automatic schema grouping was added in DataJoint 2.1. Tables are automatically grouped into visual clusters by schema, with the Python module name shown as the group label.
+> **New in 2.1** — Automatic schema grouping was added in DataJoint 2.1. Tables are automatically grouped into visual clusters by schema, with the Python module name shown as the group label.
 
 
 ```python
@@ -23722,8 +23766,7 @@ Tables are grouped by their database schema automatically. The group label shows
 
 ## Collapsing Schemas
 
-!!! version-added "New in 2.1"
-    The `collapse()` method was added in DataJoint 2.1.
+> **New in 2.1** — The `collapse()` method was added in DataJoint 2.1.
 
 For high-level pipeline views, collapse entire schemas into single nodes using `.collapse()`. This is useful for showing relationships between modules without the detail of individual tables.
 
@@ -23945,7 +23988,7 @@ A dashed line could be any of:
 | **Thin solid** | One-to-many containment |
 | **Dashed** | Reference (independent identity) |
 | **Underlined** | Introduces new dimension |
-| **Orange dots** | Renamed FK via `.proj()` |
+| **Orange edges** | Renamed FK via `.proj()` |
 | **Colors** | Green=Manual, Gray=Lookup, Red=Computed, Blue=Imported |
 | **Grouped boxes** | Tables grouped by schema/module |
 | **3D box (gray)** | Collapsed schema *(New in 2.1)* |
@@ -28713,7 +28756,7 @@ DataJoint loads its FK structure into a directed acyclic graph (`Connection.depe
 |---|---|
 | **Node** | A table, named by its fully-qualified SQL identifier (e.g. ``` `schema`.`table_name` ```). The graph stores the table's primary key set as node data. |
 | **Edge `parent → child`** | An FK constraint from `child` to `parent`. Edge data: `attr_map` (dict mapping child's FK columns → parent's referenced columns), `aliased` (true iff any column was renamed), `primary` (true iff the FK is in the child's primary key). |
-| **Alias node** | Inserted between a `parent` and `child` when the FK is `aliased=True`. Named by an integer-string (`"1"`, `"2"`, …) to distinguish from real table nodes. Both half-edges (`parent → alias`, `alias → child`) carry the same `attr_map` and `aliased` props. Treat as transparent when walking. |
+| **Parallel edges** | A child can reference the same parent through more than one foreign key — for example two renamed (`.proj()`) references — so the same `parent → child` pair may be connected by multiple edges, each carrying its own `attr_map`/`aliased`/`primary`. |
 
 The cascade engine operates on a copy of this graph (the `Diagram` class), recording per-table restrictions in `_cascade_restrictions` and the set of restricted attributes in `_restriction_attrs`.
 
@@ -28785,7 +28828,7 @@ The walk uses `nx.shortest_path(master, part)` to find the FK chain from Master 
 Master → [intermediate Part(s)] → Part
 ```
 
-Alias nodes (`"1"`, `"2"`, …) on the path are skipped — both half-edges carry the same `attr_map` and `aliased` props, so the engine reads props from one and reasons about the real edge. Each real edge along the walk fires one upward rule (U1, U2, or U3) per the edge's metadata. **Intermediate Parts in a Part-of-Part chain are restricted along the way** — not only the Master.
+Each edge along the path fires one upward rule (U1, U2, or U3) per the edge's metadata (`attr_map`, `aliased`). **Intermediate Parts in a Part-of-Part chain are restricted along the way** — not only the Master.
 
 ### Materialization at the Master
 
@@ -28836,7 +28879,7 @@ class Subject(dj.Manual):
 When `(Subject.Recording & {"recording_id": 5}).delete(part_integrity="cascade")` runs:
 
 1. **Seed-is-Part check.** `extract_master(Recording) == Subject`. Trigger the upward walk.
-2. **FK path.** `shortest_path(Subject, Recording) = [Subject, Subject.Session, alias_node, Subject.Recording]` → real path `[Subject, Subject.Session, Subject.Recording]`.
+2. **FK path.** `shortest_path(Subject, Recording) = [Subject, Subject.Session, Subject.Recording]`.
 3. **Walk reversed.**
    - Edge `Subject.Session → Subject.Recording`: `aliased=True`. Apply **U2** — `Subject.Session` is restricted by `Subject.Recording.proj(subject_id='src_subject', session_id='src_session')`.
    - Edge `Subject → Subject.Session`: `aliased=False`, `child_attrs={subject_id, session_id} ⊆ parent_pk={subject_id}`? No (`session_id` not in parent pk). Apply **U3** — `Subject` is restricted by `Subject.Session.proj(*attr_map.keys())`, projecting the child onto its FK columns; for this primary FK those columns are just `subject_id`, so this is equivalent to `Subject.Session.proj()` projected to `subject_id`.
@@ -28901,7 +28944,7 @@ The following are known, documented behaviors of the cascade engine as shipped:
 ## References
 
 - Source: `src/datajoint/diagram.py` — `Diagram.cascade`, `_propagate_restrictions`, `_apply_propagation_rule`, `_apply_propagation_rule_upward`, `_propagate_part_to_master`.
-- Source: `src/datajoint/dependencies.py` — graph construction, `extract_master`, alias node insertion.
+- Source: `src/datajoint/dependencies.py` — dependency-graph construction, `extract_master`.
 - Issue: [datajoint-python #1429](https://github.com/datajoint/datajoint-python/issues/1429) — bug report and motivating examples for the upward propagation rules.
 - [Master-Part Specification](master-part.md) — Part-Master contract.
 - [Diagram Specification](diagram.md) — graph operations on the dependency graph.
@@ -31039,7 +31082,7 @@ Diagrams support iteration in topological order:
 | `for ft in diagram` | Parents first | Data export, inspection |
 | `for ft in reversed(diagram)` | Leaves first | Cascade delete, drop |
 
-Each iteration yields a `FreeTable` with any cascade or restrict conditions applied. Alias nodes are skipped. Only nodes in the diagram's visible set (`nodes_to_show`) are yielded.
+Each iteration yields a `FreeTable` with any cascade or restrict conditions applied. Only nodes in the diagram's visible set (`nodes_to_show`) are yielded.
 
 `Table.delete()` and `Table.drop()` use `reversed(diagram)` internally to execute mutations in safe dependency order.
 
@@ -31136,6 +31179,7 @@ Each table tier has a distinct visual style:
 | Dashed line | Non-primary foreign key |
 | Thick line | Master-Part relationship |
 | Thin line | Multi-valued foreign key |
+| Orange line | Renamed foreign key (via `.proj()`) — hover the edge for the column-rename tooltip |
 
 ### Node Labels
 
@@ -37094,7 +37138,7 @@ Without (1), downstream tools that need row-level lineage (data-lineage viewers,
 
 ### Trace as the upstream mirror of cascade
 
-`Diagram.cascade()` walks **downstream** from a restricted seed and answers *"what is affected if these rows are deleted?"* `Diagram.trace()` walks **upstream** and answers *"what contributed to these rows?"*. The two share the same dependency graph, the same alias-node mechanism, and most of the same propagation machinery — only the direction differs.
+`Diagram.cascade()` walks **downstream** from a restricted seed and answers *"what is affected if these rows are deleted?"* `Diagram.trace()` walks **upstream** and answers *"what contributed to these rows?"*. The two share the same dependency graph, the same edge model, and most of the same propagation machinery — only the direction differs.
 
 | Method | Direction | Convergence | Question answered |
 |---|---|---|---|
@@ -37106,7 +37150,7 @@ Without (1), downstream tools that need row-level lineage (data-lineage viewers,
 
 ### Reusing the propagation primitives
 
-`trace` applies the **upward propagation rules** (`U1`, `U2`, `U3`) defined in the [Cascade Specification](cascade.md#upward-propagation-child-parent), which are the symmetric inverses of `cascade`'s forward rules. Renamed FKs (`.proj()`) are reversed via U2; Part-of-Part chains are walked through naturally; alias nodes in the graph are transparent.
+`trace` applies the **upward propagation rules** (`U1`, `U2`, `U3`) defined in the [Cascade Specification](cascade.md#upward-propagation-child-parent), which are the symmetric inverses of `cascade`'s forward rules. Renamed FKs (`.proj()`) are reversed via U2; Part-of-Part chains are walked through naturally; multiple foreign keys between the same pair of tables are each reversed independently.
 
 This is why `trace` cannot ship before the upward primitives exist in the codebase. As of DataJoint 2.3, the primitives are in place (added with [#1429's cascade fix](https://github.com/datajoint/datajoint-python/pull/1468)), and `trace` is a direct consumer.
 

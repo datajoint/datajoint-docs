@@ -3024,8 +3024,8 @@
 <td>An FK constraint from <code>child</code> to <code>parent</code>. Edge data: <code>attr_map</code> (dict mapping child's FK columns → parent's referenced columns), <code>aliased</code> (true iff any column was renamed), <code>primary</code> (true iff the FK is in the child's primary key).</td>
 </tr>
 <tr>
-<td><strong>Alias node</strong></td>
-<td>Inserted between a <code>parent</code> and <code>child</code> when the FK is <code>aliased=True</code>. Named by an integer-string (<code>"1"</code>, <code>"2"</code>, …) to distinguish from real table nodes. Both half-edges (<code>parent → alias</code>, <code>alias → child</code>) carry the same <code>attr_map</code> and <code>aliased</code> props. Treat as transparent when walking.</td>
+<td><strong>Parallel edges</strong></td>
+<td>A child can reference the same parent through more than one foreign key — for example two renamed (<code>.proj()</code>) references — so the same <code>parent → child</code> pair may be connected by multiple edges, each carrying its own <code>attr_map</code>/<code>aliased</code>/<code>primary</code>.</td>
 </tr>
 </tbody>
 </table>
@@ -3133,7 +3133,7 @@
 <p>The walk uses <code>nx.shortest_path(master, part)</code> to find the FK chain from Master to Part:</p>
 <div class="highlight"><pre><span></span><code>Master → [intermediate Part(s)] → Part
 </code></pre></div>
-<p>Alias nodes (<code>"1"</code>, <code>"2"</code>, …) on the path are skipped — both half-edges carry the same <code>attr_map</code> and <code>aliased</code> props, so the engine reads props from one and reasons about the real edge. Each real edge along the walk fires one upward rule (U1, U2, or U3) per the edge's metadata. <strong>Intermediate Parts in a Part-of-Part chain are restricted along the way</strong> — not only the Master.</p>
+<p>Each edge along the path fires one upward rule (U1, U2, or U3) per the edge's metadata (<code>attr_map</code>, <code>aliased</code>). <strong>Intermediate Parts in a Part-of-Part chain are restricted along the way</strong> — not only the Master.</p>
 <h3 id="materialization-at-the-master">Materialization at the Master<a class="headerlink" href="#materialization-at-the-master" title="Permanent link">¶</a></h3>
 <p>After the upward walk completes, the Master's accumulated restrictions are <strong>materialized</strong> to a literal value tuple via <code>(master_ft &amp; restrictions).proj().to_arrays()</code> and stored as a single condition. Subsequent forward propagation from the Master back down to its other Parts then generates <code>WHERE pk IN (literal-list)</code> rather than <code>WHERE pk IN (SELECT ... FROM &lt;originating-part&gt;)</code>.</p>
 <p><strong>Why materialization matters.</strong> This is required for correctness on <strong>every backend</strong>, not merely to satisfy MySQL. <code>Table.delete</code> executes per-table deletes in reverse-topological order (leaves first — see <a href="../data-manipulation/">Data Manipulation</a>), so the originating Part is deleted <em>before</em> the Master. If the Master's restriction were left as a <code>QueryExpression</code> referencing that Part, the Master's own DELETE — issued last — would find the Part already emptied, match zero rows, and silently strand the Master (the very compositional-integrity violation the upward walk exists to prevent). Materializing the Master's primary keys to a literal value set at plan time, before any rows are deleted, captures them while the Part still exists.</p>
@@ -3170,7 +3170,7 @@
 <p>When <code>(Subject.Recording &amp; {"recording_id": 5}).delete(part_integrity="cascade")</code> runs:</p>
 <ol>
 <li><strong>Seed-is-Part check.</strong> <code>extract_master(Recording) == Subject</code>. Trigger the upward walk.</li>
-<li><strong>FK path.</strong> <code>shortest_path(Subject, Recording) = [Subject, Subject.Session, alias_node, Subject.Recording]</code> → real path <code>[Subject, Subject.Session, Subject.Recording]</code>.</li>
+<li><strong>FK path.</strong> <code>shortest_path(Subject, Recording) = [Subject, Subject.Session, Subject.Recording]</code>.</li>
 <li><strong>Walk reversed.</strong><ul>
 <li>Edge <code>Subject.Session → Subject.Recording</code>: <code>aliased=True</code>. Apply <strong>U2</strong> — <code>Subject.Session</code> is restricted by <code>Subject.Recording.proj(subject_id='src_subject', session_id='src_session')</code>.</li>
 <li>Edge <code>Subject → Subject.Session</code>: <code>aliased=False</code>, <code>child_attrs={subject_id, session_id} ⊆ parent_pk={subject_id}</code>? No (<code>session_id</code> not in parent pk). Apply <strong>U3</strong> — <code>Subject</code> is restricted by <code>Subject.Session.proj(*attr_map.keys())</code>, projecting the child onto its FK columns; for this primary FK those columns are just <code>subject_id</code>, so this is equivalent to <code>Subject.Session.proj()</code> projected to <code>subject_id</code>.</li>
@@ -3230,7 +3230,7 @@
 <h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">¶</a></h2>
 <ul>
 <li>Source: <code>src/datajoint/diagram.py</code> — <code>Diagram.cascade</code>, <code>_propagate_restrictions</code>, <code>_apply_propagation_rule</code>, <code>_apply_propagation_rule_upward</code>, <code>_propagate_part_to_master</code>.</li>
-<li>Source: <code>src/datajoint/dependencies.py</code> — graph construction, <code>extract_master</code>, alias node insertion.</li>
+<li>Source: <code>src/datajoint/dependencies.py</code> — dependency-graph construction, <code>extract_master</code>.</li>
 <li>Issue: <a href="https://github.com/datajoint/datajoint-python/issues/1429">datajoint-python #1429</a> — bug report and motivating examples for the upward propagation rules.</li>
 <li><a href="../master-part/">Master-Part Specification</a> — Part-Master contract.</li>
 <li><a href="../diagram/">Diagram Specification</a> — graph operations on the dependency graph.</li>

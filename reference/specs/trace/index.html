@@ -6767,7 +6767,7 @@
 <p>Without (1), downstream tools that need row-level lineage (data-lineage viewers, CDC publishers, audit logs) have to reimplement the FK walk themselves — repeatedly, with subtly different bugs. Without (2), even users who follow the convention write awkward boilerplate (<code>(Upstream &amp; key).fetch1(...)</code> everywhere).</p>
 <h2 id="concepts">Concepts<a class="headerlink" href="#concepts" title="Permanent link">&para;</a></h2>
 <h3 id="trace-as-the-upstream-mirror-of-cascade">Trace as the upstream mirror of cascade<a class="headerlink" href="#trace-as-the-upstream-mirror-of-cascade" title="Permanent link">&para;</a></h3>
-<p><code>Diagram.cascade()</code> walks <strong>downstream</strong> from a restricted seed and answers <em>"what is affected if these rows are deleted?"</em> <code>Diagram.trace()</code> walks <strong>upstream</strong> and answers <em>"what contributed to these rows?"</em>. The two share the same dependency graph, the same alias-node mechanism, and most of the same propagation machinery — only the direction differs.</p>
+<p><code>Diagram.cascade()</code> walks <strong>downstream</strong> from a restricted seed and answers <em>"what is affected if these rows are deleted?"</em> <code>Diagram.trace()</code> walks <strong>upstream</strong> and answers <em>"what contributed to these rows?"</em>. The two share the same dependency graph, the same edge model, and most of the same propagation machinery — only the direction differs.</p>
 <table>
 <thead>
 <tr>
@@ -6800,7 +6800,7 @@
 </table>
 <p><code>trace</code> uses OR convergence because an ancestor entity contributes to a child row if it appears via <em>any</em> FK path. (An AND-flavored upstream analog — "ancestors that contributed via <em>every</em> path" — is not provided in 2.3.)</p>
 <h3 id="reusing-the-propagation-primitives">Reusing the propagation primitives<a class="headerlink" href="#reusing-the-propagation-primitives" title="Permanent link">&para;</a></h3>
-<p><code>trace</code> applies the <strong>upward propagation rules</strong> (<code>U1</code>, <code>U2</code>, <code>U3</code>) defined in the <a href="../cascade/#upward-propagation-child-parent">Cascade Specification</a>, which are the symmetric inverses of <code>cascade</code>'s forward rules. Renamed FKs (<code>.proj()</code>) are reversed via U2; Part-of-Part chains are walked through naturally; alias nodes in the graph are transparent.</p>
+<p><code>trace</code> applies the <strong>upward propagation rules</strong> (<code>U1</code>, <code>U2</code>, <code>U3</code>) defined in the <a href="../cascade/#upward-propagation-child-parent">Cascade Specification</a>, which are the symmetric inverses of <code>cascade</code>'s forward rules. Renamed FKs (<code>.proj()</code>) are reversed via U2; Part-of-Part chains are walked through naturally; multiple foreign keys between the same pair of tables are each reversed independently.</p>
 <p>This is why <code>trace</code> cannot ship before the upward primitives exist in the codebase. As of DataJoint 2.3, the primitives are in place (added with <a href="https://github.com/datajoint/datajoint-python/pull/1468">#1429's cascade fix</a>), and <code>trace</code> is a direct consumer.</p>
 <h3 id="the-make-readwrite-boundary">The <code>make()</code> read/write boundary<a class="headerlink" href="#the-make-readwrite-boundary" title="Permanent link">&para;</a></h3>
 <p>DataJoint's <code>make(self, key)</code> convention has always been:</p>
