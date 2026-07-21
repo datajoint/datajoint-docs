@@ -6,6 +6,15 @@ DataJoint 2.2 introduces **isolated instances** and **thread-safe mode** for app
 
 > **Citation:** Yatsenko D, Nguyen TT. *DataJoint 2.0: A Computational Substrate for Agentic Scientific Workflows.* arXiv:2602.16585. 2026. [doi:10.48550/arXiv.2602.16585](https://doi.org/10.48550/arXiv.2602.16585)
 
+## Changes in 2.2.4
+
+2.2.4 is a patch release on the 2.2 line, adding **env-var-only configuration of object storage** and a **public plugin contract for third-party storage protocols**. If you are upgrading from **2.2.0–2.2.3** there are no breaking changes — the new environment variables are purely additive.
+
+- **`DJ_STORES`** — configure object stores entirely from the environment. The variable holds a JSON object identical to the `stores` block of `datajoint.json`, so config moves between file and env var by copy-paste. See [Manage Secrets](../how-to/manage-secrets.md) and [Configure Object Storage](../how-to/configure-storage.md).
+- **`DJ_IGNORE_CONFIG_FILE`** — set to `true` to skip `datajoint.json` and the `.secrets/` and `/run/secrets/datajoint/` directories entirely, so only environment variables and defaults apply. Intended for env-var-only deployments (Kubernetes, Lambda, the DataJoint platform).
+- **`.secrets/stores.<name>.<attr>` accepts any attribute**, not just `access_key` / `secret_key` — plugin-registered adapters can supply their own fields (a Bearer `token`, an `api_key`, etc.).
+- **Storage-adapter plugin contract.** The `datajoint.storage` entry-point group is now part of the public API: third-party packages register additional storage protocols by subclassing `dj.StorageAdapter` and declaring an entry point. Built-in `file`/`s3`/`gcs`/`azure` are unaffected. See [Storage Adapter API](../reference/specs/storage-adapter-api.md).
+
 ## Overview
 
 DataJoint has traditionally used a global singleton pattern: one configuration (`dj.config`), one connection (`dj.conn()`), shared across all tables in a process. This works well for interactive sessions and single-user scripts, but breaks down when:
