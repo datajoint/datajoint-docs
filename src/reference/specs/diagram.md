@@ -259,7 +259,7 @@ Diagrams support iteration in topological order:
 | `for ft in diagram` | Parents first | Data export, inspection |
 | `for ft in reversed(diagram)` | Leaves first | Cascade delete, drop |
 
-Each iteration yields a `FreeTable` with any cascade or restrict conditions applied. Alias nodes are skipped. Only nodes in the diagram's visible set (`nodes_to_show`) are yielded.
+Each iteration yields a `FreeTable` with any cascade or restrict conditions applied. Only nodes in the diagram's visible set (`nodes_to_show`) are yielded.
 
 `Table.delete()` and `Table.drop()` use `reversed(diagram)` internally to execute mutations in safe dependency order.
 
@@ -356,6 +356,7 @@ Each table tier has a distinct visual style:
 | Dashed line | Non-primary foreign key |
 | Thick line | Master-Part relationship |
 | Thin line | Multi-valued foreign key |
+| Orange line | Renamed foreign key (via `.proj()`) — hover the edge for the column-rename tooltip |
 
 ### Node Labels
 

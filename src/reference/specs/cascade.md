@@ -21,7 +21,7 @@ DataJoint loads its FK structure into a directed acyclic graph (`Connection.depe
 |---|---|
 | **Node** | A table, named by its fully-qualified SQL identifier (e.g. ``` `schema`.`table_name` ```). The graph stores the table's primary key set as node data. |
 | **Edge `parent → child`** | An FK constraint from `child` to `parent`. Edge data: `attr_map` (dict mapping child's FK columns → parent's referenced columns), `aliased` (true iff any column was renamed), `primary` (true iff the FK is in the child's primary key). |
-| **Alias node** | Inserted between a `parent` and `child` when the FK is `aliased=True`. Named by an integer-string (`"1"`, `"2"`, …) to distinguish from real table nodes. Both half-edges (`parent → alias`, `alias → child`) carry the same `attr_map` and `aliased` props. Treat as transparent when walking. |
+| **Parallel edges** | A child can reference the same parent through more than one foreign key — for example two renamed (`.proj()`) references — so the same `parent → child` pair may be connected by multiple edges, each carrying its own `attr_map`/`aliased`/`primary`. |
 
 The cascade engine operates on a copy of this graph (the `Diagram` class), recording per-table restrictions in `_cascade_restrictions` and the set of restricted attributes in `_restriction_attrs`.
 
@@ -93,7 +93,7 @@ The walk uses `nx.shortest_path(master, part)` to find the FK chain from Master 
 Master → [intermediate Part(s)] → Part
 ```
 
-Alias nodes (`"1"`, `"2"`, …) on the path are skipped — both half-edges carry the same `attr_map` and `aliased` props, so the engine reads props from one and reasons about the real edge. Each real edge along the walk fires one upward rule (U1, U2, or U3) per the edge's metadata. **Intermediate Parts in a Part-of-Part chain are restricted along the way** — not only the Master.
+Each edge along the path fires one upward rule (U1, U2, or U3) per the edge's metadata (`attr_map`, `aliased`). **Intermediate Parts in a Part-of-Part chain are restricted along the way** — not only the Master.
 
 ### Materialization at the Master
 
@@ -144,7 +144,7 @@ class Subject(dj.Manual):
 When `(Subject.Recording & {"recording_id": 5}).delete(part_integrity="cascade")` runs:
 
 1. **Seed-is-Part check.** `extract_master(Recording) == Subject`. Trigger the upward walk.
-2. **FK path.** `shortest_path(Subject, Recording) = [Subject, Subject.Session, alias_node, Subject.Recording]` → real path `[Subject, Subject.Session, Subject.Recording]`.
+2. **FK path.** `shortest_path(Subject, Recording) = [Subject, Subject.Session, Subject.Recording]`.
 3. **Walk reversed.**
    - Edge `Subject.Session → Subject.Recording`: `aliased=True`. Apply **U2** — `Subject.Session` is restricted by `Subject.Recording.proj(subject_id='src_subject', session_id='src_session')`.
    - Edge `Subject → Subject.Session`: `aliased=False`, `child_attrs={subject_id, session_id} ⊆ parent_pk={subject_id}`? No (`session_id` not in parent pk). Apply **U3** — `Subject` is restricted by `Subject.Session.proj(*attr_map.keys())`, projecting the child onto its FK columns; for this primary FK those columns are just `subject_id`, so this is equivalent to `Subject.Session.proj()` projected to `subject_id`.
@@ -209,7 +209,7 @@ The following are known, documented behaviors of the cascade engine as shipped:
 ## References
 
 - Source: `src/datajoint/diagram.py` — `Diagram.cascade`, `_propagate_restrictions`, `_apply_propagation_rule`, `_apply_propagation_rule_upward`, `_propagate_part_to_master`.
-- Source: `src/datajoint/dependencies.py` — graph construction, `extract_master`, alias node insertion.
+- Source: `src/datajoint/dependencies.py` — dependency-graph construction, `extract_master`.
 - Issue: [datajoint-python #1429](https://github.com/datajoint/datajoint-python/issues/1429) — bug report and motivating examples for the upward propagation rules.
 - [Master-Part Specification](master-part.md) — Part-Master contract.
 - [Diagram Specification](diagram.md) — graph operations on the dependency graph.
