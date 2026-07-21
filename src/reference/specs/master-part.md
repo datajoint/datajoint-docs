@@ -84,7 +84,7 @@ Master-Part relationships enforce **compositional integrity**:
 1. **Existence**: Parts cannot exist without their master
 2. **Cohesion**: Parts should be deleted/dropped with their master
 3. **Atomicity**: Master and parts form a logical unit
-4. **Transitive completeness**: a dependency on the master is a dependency on all of its parts
+4. **Transitive completeness**: a foreign key to the master is, in effect, a dependency on the entire composite — the master *and* all of its parts
 
 For Computed and Imported tables, a master and its parts are inserted
 atomically: `populate()` wraps each `make()` call in a transaction, so the
@@ -94,11 +94,13 @@ guarantee — insert the master and its parts within a single transaction
 (`with schema.connection.transaction:`) to preserve it. Deletion cascades in either
 case: deleting a master also deletes its parts.
 
-Because a populated master therefore reaches a complete composite, downstream
-tables *typically* reference the master alone and rely on the whole composite
-being present. A foreign key to a specific part is still legal — and common in
-practice — but is often unnecessary when the composite as a whole is what
-matters.
+Because `populate()` fills a master and all of its parts atomically, a master row
+always stands for a complete composite. A downstream table therefore references **the
+master alone**: declaring a foreign key to a master effectively declares a dependency
+on all of its parts as well — the master reference binds the dependent to the whole
+composite. Parts need not, and generally should not, be referenced individually. (A
+foreign key to a specific part remains legal for the rare case where a dependent
+genuinely needs just one part.)
 
 ### 2.2 Foreign Key Behavior
 
@@ -177,9 +179,19 @@ class ProcessedSession(dj.Computed):
 
 ## 4. Delete Operations
 
+Deletion is executed by the cascade engine. `Table.delete()` runs a cascade that
+propagates the restriction from the seed table **downstream** across every foreign-key
+edge, so the delete reaches a master and all of its dependents — its parts included —
+consistently. The same propagation without mutation is previewed via
+`Diagram.cascade(table_expr, part_integrity=...).counts()`. Because a part holds a
+foreign key to its master, the master → part edge is an ordinary downstream edge, so
+deleting a master reaches its parts through normal forward propagation. See the
+[Cascade Specification](cascade.md) for the full propagation rules and the role of
+`part_integrity`.
+
 ### 4.1 Cascade from Master
 
-Deleting from master cascades to parts:
+Deleting from master cascades to parts (forward propagation along the master → part edge):
 
 ```python
 # Deletes session AND all its trials
@@ -218,6 +230,7 @@ Session.Trial.delete()
 ```
 
 **Use cases:**
+
 - Removing specific invalid trials
 - Partial data cleanup
 - Testing/debugging
@@ -231,9 +244,9 @@ Session.Trial.delete()
 (Session.Trial & condition).delete(part_integrity="cascade")
 ```
 
-**Behavior:** The restriction propagates **upward** from the part to its master. Specifically, the restricted part rows identify which master rows are affected, and those masters receive a restriction. The master restriction then propagates back **downstream** through the normal cascade, reaching all sibling parts. The result is that the entire compositional unit — master plus all its parts — is deleted, not just the originally restricted part rows.
+**Behavior:** `part_integrity="cascade"` enables **upward propagation** in the cascade engine. When `Diagram.cascade` reaches (or starts at) a part, it walks the foreign-key chain up to the master — applying the upward rules (U1–U3) — materializes the master's affected rows, then forward-cascades from the master back **downstream** to **all** of its parts. The entire compositional unit — master plus all its parts — is deleted, not just the originally restricted part rows.
 
-This upward propagation may trigger further rounds: if the master itself is a part of a higher-level master, the restriction continues upward. The cascade engine iterates until no new restrictions are produced.
+The upward walk may trigger further rounds: if the master is itself a part of a higher-level master, propagation continues upward, and the engine iterates until no new master is pulled in. See [Part-to-Master upward propagation](cascade.md#part-to-master-upward-propagation) for the details.
 
 ### 4.6 Behavior Matrix
 
@@ -325,6 +338,7 @@ Session.aggr(
 ### 7.1 When to Use Part Tables
 
 **Good use cases:**
+
 - Trials within sessions
 - Electrodes within probes
 - Cells within imaging fields
@@ -332,6 +346,7 @@ Session.aggr(
 - Rows within files
 
 **Avoid when:**
+
 - Parts have independent meaning (use regular FK instead)
 - Need to query parts without master context
 - Parts reference multiple masters
