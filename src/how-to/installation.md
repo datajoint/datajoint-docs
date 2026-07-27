@@ -93,6 +93,15 @@ See [Configure Database Connection](configure-database.md) for connection setup.
 - Python 3.10+
 - MySQL 8.0.13+ or PostgreSQL 15+
 - Network access to database server
+- Linux, macOS, or Windows (see [Platform support](#platform-support))
+
+## Platform support
+
+DataJoint runs on **Linux, macOS, and Windows**.
+
+- CI validates the **full test suite — including database integration** — on Linux, across both ends of the supported Python range (3.10 and 3.14).
+- The **unit-test suite additionally runs on Windows** (Python 3.10 and 3.14). This covers OS-specific behavior — notably filesystem path handling for file-protocol object stores and garbage collection, where native path separators must not leak into store paths.
+- macOS is a supported development platform.
 
 ## Troubleshooting
 
