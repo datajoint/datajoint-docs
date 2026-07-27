@@ -213,7 +213,8 @@ in a single statement.
 
 ## Schema dimensions
 
-A **dimension** is an independent axis of variation in the data. The rule:
+A **schema dimension** — often shortened to *dimension* — is an independent axis of
+variation in the data. The rule:
 
 > **Any table that introduces a new primary-key attribute introduces a new
 > dimension.**
