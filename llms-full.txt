@@ -1,6 +1,6 @@
 # DataJoint Documentation (Full)
 
-Generated: 2026-07-22 20:00:51 UTC
+Generated: 2026-07-27 16:33:14 UTC
 Commit: unknown
 Branch: unknown
 
@@ -1661,7 +1661,8 @@ in a single statement.
 
 ## Schema dimensions
 
-A **dimension** is an independent axis of variation in the data. The rule:
+A **schema dimension** — often shortened to *dimension* — is an independent axis of
+variation in the data. The rule:
 
 > **Any table that introduces a new primary-key attribute introduces a new
 > dimension.**
@@ -18321,6 +18322,15 @@ See [Configure Database Connection](configure-database.md) for connection setup.
 - Python 3.10+
 - MySQL 8.0.13+ or PostgreSQL 15+
 - Network access to database server
+- Linux, macOS, or Windows (see [Platform support](#platform-support))
+
+## Platform support
+
+DataJoint runs on **Linux, macOS, and Windows**.
+
+- CI validates the **full test suite — including database integration** — on Linux, across both ends of the supported Python range (3.10 and 3.14).
+- The **unit-test suite additionally runs on Windows** (Python 3.10 and 3.14). This covers OS-specific behavior — notably filesystem path handling for file-protocol object stores and garbage collection, where native path separators must not leak into store paths.
+- macOS is a supported development platform.
 
 ## Troubleshooting
 
@@ -23452,7 +23462,7 @@ dj.Diagram(Department) + dj.Diagram(Employee)
 
 ## Dimensions and Underlined Names
 
-A **dimension** is a new entity type introduced by a table that defines new primary key attributes. Each underlined table introduces exactly **one** dimension—even if it has multiple new PK attributes, together they identify one new entity type.
+A **schema dimension** (often shortened to *dimension*) is a new entity type introduced by a table that defines new primary key attributes. Each underlined table introduces exactly **one** dimension—even if it has multiple new PK attributes, together they identify one new entity type.
 
 | Visual | Meaning |
 |--------|--------|

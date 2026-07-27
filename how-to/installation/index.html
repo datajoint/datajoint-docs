@@ -2550,6 +2550,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#platform-support" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Platform support
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#troubleshooting" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -6480,6 +6491,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#platform-support" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Platform support
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#troubleshooting" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -6645,6 +6667,14 @@ docker<span class="w"> </span>run<span class="w"> </span>-d<span class="w"> </sp
 <li>Python 3.10+</li>
 <li>MySQL 8.0.13+ or PostgreSQL 15+</li>
 <li>Network access to database server</li>
+<li>Linux, macOS, or Windows (see <a href="#platform-support">Platform support</a>)</li>
+</ul>
+<h2 id="platform-support">Platform support<a class="headerlink" href="#platform-support" title="Permanent link">&para;</a></h2>
+<p>DataJoint runs on <strong>Linux, macOS, and Windows</strong>.</p>
+<ul>
+<li>CI validates the <strong>full test suite — including database integration</strong> — on Linux, across both ends of the supported Python range (3.10 and 3.14).</li>
+<li>The <strong>unit-test suite additionally runs on Windows</strong> (Python 3.10 and 3.14). This covers OS-specific behavior — notably filesystem path handling for file-protocol object stores and garbage collection, where native path separators must not leak into store paths.</li>
+<li>macOS is a supported development platform.</li>
 </ul>
 <h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
 <h3 id="pymysql-connection-errors"><code>pymysql</code> connection errors<a class="headerlink" href="#pymysql-connection-errors" title="Permanent link">&para;</a></h3>
