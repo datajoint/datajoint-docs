@@ -82,6 +82,8 @@ class Analysis(dj.Computed):
 
 The `key_source` property defines which entries should exist in the table—the complete set of primary keys that `make()` should be called with.
 
+This set is the table's **grain**—the combination of dimensions at which the computation is done. `make()` runs once per key, so a computed table operates at the grain of its `key_source`.
+
 ### 2.2 Automatic Key Source
 
 By default, DataJoint automatically calculates `key_source` as the join of all tables referenced by foreign keys in the primary key:
