@@ -889,6 +889,17 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#grain" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Grain
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#tables-that-introduce-dimensions" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -6696,6 +6707,17 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#grain" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Grain
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#tables-that-introduce-dimensions" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -7121,6 +7143,29 @@ dimension.</strong></p>
 <p>The rule applies whether the table has only new attributes or also inherits
 attributes through foreign keys. A new primary-key attribute means a new
 dimension.</p>
+<h3 id="grain">Grain<a class="headerlink" href="#grain" title="Permanent link">&para;</a></h3>
+<p>A dimension is a <em>single</em> axis of variation; a table's <strong>grain</strong> is the <em>whole
+combination</em> of axes at which each row is recorded or computed — its full primary
+key. Grain is the answer to this guide's leading question, <em>"what is one row of
+this table?"</em></p>
+<blockquote>
+<p><strong>The grain of a table is the level of detail at which its data is recorded or
+computed: what one row represents, given by the combination of dimensions in its
+primary key.</strong></p>
+</blockquote>
+<ul>
+<li><code>Session</code>, keyed <code>(subject_id, session_idx)</code>, has grain <strong>(subject × session)</strong> —
+  one row per session of a subject.</li>
+<li>Adding a dimension makes the grain <strong>finer</strong>: a part table that adds <code>blob_idx</code>
+  (<code>Detection.Blob</code> below) has grain <strong>(… × blob)</strong> — one row per blob of a
+  detection.</li>
+<li>A computed table's grain is the combination of dimensions at which its <code>make()</code>
+  produces rows — its
+  <a href="../../reference/specs/autopopulate/"><code>key_source</code></a>. <em>A computation operates at
+  its grain.</em></li>
+</ul>
+<p>"Grain" is the established term in dimensional modeling for what a single row
+represents; DataJoint generalizes it from recorded fact rows to <em>computed</em> rows.</p>
 <h3 id="tables-that-introduce-dimensions">Tables that introduce dimensions<a class="headerlink" href="#tables-that-introduce-dimensions" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="nd">@schema</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Subject</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>

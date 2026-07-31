@@ -9226,6 +9226,7 @@
 </table>
 <h3 id="53-requirement">5.3 Requirement<a class="headerlink" href="#53-requirement" title="Permanent link">&para;</a></h3>
 <p><strong>B must contain all primary key attributes of A.</strong> This enables grouping B's rows by A's primary key.</p>
+<p>Geometrically, aggregation <strong>reduces the grain</strong>: it projects the finer grain of <code>B</code> onto the coarser grain of <code>A</code> it contains, folding each group of B-rows into summary values. Requiring <code>B</code> to contain all of A's primary key is exactly what makes every B-row fall into one A-group. Note that <code>.proj</code> does <em>not</em> reduce the grain—it always retains the primary key (§3.2)—so aggregation, not projection, is the grain-reducing operator.</p>
 <h3 id="54-aggregate-functions">5.4 Aggregate Functions<a class="headerlink" href="#54-aggregate-functions" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># Count</span>
 <span class="n">Session</span><span class="o">.</span><span class="n">aggr</span><span class="p">(</span><span class="n">Trial</span><span class="p">,</span> <span class="n">n_trials</span><span class="o">=</span><span class="s1">&#39;count(*)&#39;</span><span class="p">)</span>

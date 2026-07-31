@@ -3953,6 +3953,7 @@
 <h2 id="2-key-source-calculation">2. Key Source Calculation<a class="headerlink" href="#2-key-source-calculation" title="Permanent link">¶</a></h2>
 <h3 id="21-definition">2.1 Definition<a class="headerlink" href="#21-definition" title="Permanent link">¶</a></h3>
 <p>The <code>key_source</code> property defines which entries should exist in the table—the complete set of primary keys that <code>make()</code> should be called with.</p>
+<p>This set is the table's <strong>grain</strong>—the combination of dimensions at which the computation is done. <code>make()</code> runs once per key, so a computed table operates at the grain of its <code>key_source</code>.</p>
 <h3 id="22-automatic-key-source">2.2 Automatic Key Source<a class="headerlink" href="#22-automatic-key-source" title="Permanent link">¶</a></h3>
 <p>By default, DataJoint automatically calculates <code>key_source</code> as the join of all tables referenced by foreign keys in the primary key:</p>
 <div class="highlight"><pre><span></span><code><span class="nd">@schema</span>

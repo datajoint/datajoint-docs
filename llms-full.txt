@@ -1,6 +1,6 @@
 # DataJoint Documentation (Full)
 
-Generated: 2026-07-27 16:33:14 UTC
+Generated: 2026-07-31 13:41:02 UTC
 Commit: unknown
 Branch: unknown
 
@@ -1670,6 +1670,30 @@ variation in the data. The rule:
 The rule applies whether the table has only new attributes or also inherits
 attributes through foreign keys. A new primary-key attribute means a new
 dimension.
+
+### Grain
+
+A dimension is a *single* axis of variation; a table's **grain** is the *whole
+combination* of axes at which each row is recorded or computed — its full primary
+key. Grain is the answer to this guide's leading question, *"what is one row of
+this table?"*
+
+> **The grain of a table is the level of detail at which its data is recorded or
+> computed: what one row represents, given by the combination of dimensions in its
+> primary key.**
+
+- `Session`, keyed `(subject_id, session_idx)`, has grain **(subject × session)** —
+  one row per session of a subject.
+- Adding a dimension makes the grain **finer**: a part table that adds `blob_idx`
+  (`Detection.Blob` below) has grain **(… × blob)** — one row per blob of a
+  detection.
+- A computed table's grain is the combination of dimensions at which its `make()`
+  produces rows — its
+  [`key_source`](../reference/specs/autopopulate.md). *A computation operates at
+  its grain.*
+
+"Grain" is the established term in dimensional modeling for what a single row
+represents; DataJoint generalizes it from recorded fact rows to *computed* rows.
 
 ### Tables that introduce dimensions
 
@@ -16285,22 +16309,29 @@ class TaskType(dj.Lookup):
 
 ### Manual or Lookup?
 
-Both tiers hold rows that are *entered* rather than computed, so the question is
-**where a row comes from**:
+Both tiers hold rows that are *entered* rather than computed. The deciding
+question is **which process is accountable for the rows' quality: code review, or
+data management?**
 
-- Use **`dj.Lookup`** when the rows are part of the schema's design and belong in
-  the code — parameter sets, method definitions, controlled vocabularies,
-  enumerations. They are declared in `contents`, versioned with the table, and
-  identical in every deployment until the code changes. Updating a Lookup means
-  editing `contents` and redeploying — the change flows through your normal CI/CD
+- Use **`dj.Lookup`** when the rows are **part of the schema definition** and their
+  quality is guaranteed by **code review before deployment**. They live in
+  `contents`, are versioned with the table, and are identical in every deployment
+  until the code changes — parameter sets, method definitions, enumerations, and
+  controlled vocabularies *when code-seeded*. Updating a Lookup means editing
+  `contents` and redeploying, so the change flows through your normal CI/CD
   process, not a runtime insert.
-- Use **`dj.Manual`** when the rows are entered at runtime and are specific to a
-  project or experiment — subjects, sessions, samples, or anything typed into a
-  form, ingested from a file, or read from an instrument.
+- Use **`dj.Manual`** when the rows are **populated at runtime** and their quality
+  is guaranteed by the **data-management process** — validation, curation, and
+  access control at ingest, not code review. Subjects, sessions, samples, or
+  anything typed into a form, ingested from a file, or read from an instrument.
 
-If you find yourself populating a "Lookup" table at runtime (for example, from a
-dashboard form) rather than from its committed `contents`, make it `dj.Manual`
-instead — its rows are runtime data, not part of the schema definition.
+This resolves the case that "where a row comes from" leaves ambiguous: a controlled
+vocabulary that is **populated at runtime** — gene symbols loaded from an external
+reference, ontology terms discovered during processing. It reads like a Lookup, but
+its rows are runtime data governed by the data-management process, so it is
+`dj.Manual`. It still gets domain integrity from a `unique index` on its term; it
+simply is not code-reviewed schema content. Make `gene_symbol` a `dj.Lookup` only
+when you seed a fixed, reviewed list in `contents`.
 
 ## Part Tables
 
@@ -27771,6 +27802,8 @@ class Analysis(dj.Computed):
 
 The `key_source` property defines which entries should exist in the table—the complete set of primary keys that `make()` should be called with.
 
+This set is the table's **grain**—the combination of dimensions at which the computation is done. `make()` runs once per key, so a computed table operates at the grain of its `key_source`.
+
 ### 2.2 Automatic Key Source
 
 By default, DataJoint automatically calculates `key_source` as the join of all tables referenced by foreign keys in the primary key:
@@ -34470,6 +34503,8 @@ result = A.aggr(B, ..., exclude_nonmatching=True) # Only rows with matches
 
 **B must contain all primary key attributes of A.** This enables grouping B's rows by A's primary key.
 
+Geometrically, aggregation **reduces the grain**: it projects the finer grain of `B` onto the coarser grain of `A` it contains, folding each group of B-rows into summary values. Requiring `B` to contain all of A's primary key is exactly what makes every B-row fall into one A-group. Note that `.proj` does *not* reduce the grain—it always retains the primary key (§3.2)—so aggregation, not projection, is the grain-reducing operator.
+
 ### 5.4 Aggregate Functions
 
 ```python
@@ -36176,8 +36211,8 @@ class TableName(dj.Manual):
 
 | Tier | Base Class | Table Prefix | Purpose |
 |------|------------|--------------|---------|
-| Manual | `dj.Manual` | (none) | Data inserted directly from outside the pipeline (users, instruments, ingestion scripts) |
-| Lookup | `dj.Lookup` | `#` | Reference data defined in the schema via `contents` |
+| Manual | `dj.Manual` | (none) | Data inserted at runtime from outside the pipeline (users, instruments, ingestion scripts); quality assured by the data-management process |
+| Lookup | `dj.Lookup` | `#` | Reference data defined in the schema via `contents`; quality assured by code review |
 | Imported | `dj.Imported` | `_` | Populated by `make()` from an external source |
 | Computed | `dj.Computed` | `__` | Derived from other tables |
 | Part | `dj.Part` | `master__` | Detail records of master table |
