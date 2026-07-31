@@ -7036,29 +7036,22 @@
     <span class="p">]</span>
 </code></pre></div>
 <h3 id="manual-or-lookup">Manual or Lookup?<a class="headerlink" href="#manual-or-lookup" title="Permanent link">&para;</a></h3>
-<p>Both tiers hold rows that are <em>entered</em> rather than computed. The deciding
-question is <strong>which process is accountable for the rows' quality: code review, or
-data management?</strong></p>
+<p>Both tiers hold rows that are <em>entered</em> rather than computed, so the question is
+<strong>where a row comes from</strong>:</p>
 <ul>
-<li>Use <strong><code>dj.Lookup</code></strong> when the rows are <strong>part of the schema definition</strong> and their
-  quality is guaranteed by <strong>code review before deployment</strong>. They live in
-  <code>contents</code>, are versioned with the table, and are identical in every deployment
-  until the code changes — parameter sets, method definitions, enumerations, and
-  controlled vocabularies <em>when code-seeded</em>. Updating a Lookup means editing
-  <code>contents</code> and redeploying, so the change flows through your normal CI/CD
+<li>Use <strong><code>dj.Lookup</code></strong> when the rows are part of the schema's design and belong in
+  the code — parameter sets, method definitions, controlled vocabularies,
+  enumerations. They are declared in <code>contents</code>, versioned with the table, and
+  identical in every deployment until the code changes. Updating a Lookup means
+  editing <code>contents</code> and redeploying — the change flows through your normal CI/CD
   process, not a runtime insert.</li>
-<li>Use <strong><code>dj.Manual</code></strong> when the rows are <strong>populated at runtime</strong> and their quality
-  is guaranteed by the <strong>data-management process</strong> — validation, curation, and
-  access control at ingest, not code review. Subjects, sessions, samples, or
-  anything typed into a form, ingested from a file, or read from an instrument.</li>
+<li>Use <strong><code>dj.Manual</code></strong> when the rows are entered at runtime and are specific to a
+  project or experiment — subjects, sessions, samples, or anything typed into a
+  form, ingested from a file, or read from an instrument.</li>
 </ul>
-<p>This resolves the case that "where a row comes from" leaves ambiguous: a controlled
-vocabulary that is <strong>populated at runtime</strong> — gene symbols loaded from an external
-reference, ontology terms discovered during processing. It reads like a Lookup, but
-its rows are runtime data governed by the data-management process, so it is
-<code>dj.Manual</code>. It still gets domain integrity from a <code>unique index</code> on its term; it
-simply is not code-reviewed schema content. Make <code>gene_symbol</code> a <code>dj.Lookup</code> only
-when you seed a fixed, reviewed list in <code>contents</code>.</p>
+<p>If you find yourself populating a "Lookup" table at runtime (for example, from a
+dashboard form) rather than from its committed <code>contents</code>, make it <code>dj.Manual</code>
+instead — its rows are runtime data, not part of the schema definition.</p>
 <h2 id="part-tables">Part Tables<a class="headerlink" href="#part-tables" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><span class="nd">@schema</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Session</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
