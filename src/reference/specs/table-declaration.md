@@ -23,8 +23,8 @@ class TableName(dj.Manual):
 
 | Tier | Base Class | Table Prefix | Purpose |
 |------|------------|--------------|---------|
-| Manual | `dj.Manual` | (none) | Data inserted directly from outside the pipeline (users, instruments, ingestion scripts) |
-| Lookup | `dj.Lookup` | `#` | Reference data defined in the schema via `contents` |
+| Manual | `dj.Manual` | (none) | Data inserted at runtime from outside the pipeline (users, instruments, ingestion scripts); quality assured by the data-management process |
+| Lookup | `dj.Lookup` | `#` | Reference data defined in the schema via `contents`; quality assured by code review |
 | Imported | `dj.Imported` | `_` | Populated by `make()` from an external source |
 | Computed | `dj.Computed` | `__` | Derived from other tables |
 | Part | `dj.Part` | `master__` | Detail records of master table |

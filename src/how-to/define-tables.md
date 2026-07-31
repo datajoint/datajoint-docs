@@ -253,22 +253,29 @@ class TaskType(dj.Lookup):
 
 ### Manual or Lookup?
 
-Both tiers hold rows that are *entered* rather than computed, so the question is
-**where a row comes from**:
+Both tiers hold rows that are *entered* rather than computed. The deciding
+question is **which process is accountable for the rows' quality: code review, or
+data management?**
 
-- Use **`dj.Lookup`** when the rows are part of the schema's design and belong in
-  the code — parameter sets, method definitions, controlled vocabularies,
-  enumerations. They are declared in `contents`, versioned with the table, and
-  identical in every deployment until the code changes. Updating a Lookup means
-  editing `contents` and redeploying — the change flows through your normal CI/CD
+- Use **`dj.Lookup`** when the rows are **part of the schema definition** and their
+  quality is guaranteed by **code review before deployment**. They live in
+  `contents`, are versioned with the table, and are identical in every deployment
+  until the code changes — parameter sets, method definitions, enumerations, and
+  controlled vocabularies *when code-seeded*. Updating a Lookup means editing
+  `contents` and redeploying, so the change flows through your normal CI/CD
   process, not a runtime insert.
-- Use **`dj.Manual`** when the rows are entered at runtime and are specific to a
-  project or experiment — subjects, sessions, samples, or anything typed into a
-  form, ingested from a file, or read from an instrument.
+- Use **`dj.Manual`** when the rows are **populated at runtime** and their quality
+  is guaranteed by the **data-management process** — validation, curation, and
+  access control at ingest, not code review. Subjects, sessions, samples, or
+  anything typed into a form, ingested from a file, or read from an instrument.
 
-If you find yourself populating a "Lookup" table at runtime (for example, from a
-dashboard form) rather than from its committed `contents`, make it `dj.Manual`
-instead — its rows are runtime data, not part of the schema definition.
+This resolves the case that "where a row comes from" leaves ambiguous: a controlled
+vocabulary that is **populated at runtime** — gene symbols loaded from an external
+reference, ontology terms discovered during processing. It reads like a Lookup, but
+its rows are runtime data governed by the data-management process, so it is
+`dj.Manual`. It still gets domain integrity from a `unique index` on its term; it
+simply is not code-reviewed schema content. Make `gene_symbol` a `dj.Lookup` only
+when you seed a fixed, reviewed list in `contents`.
 
 ## Part Tables
 
