@@ -90,6 +90,11 @@ The following features work identically across all backends:
 | JSON operators | `->`, `->>` | `->`, `->>` |
 | BLOB storage | `LONGBLOB` | `BYTEA` |
 | Boolean type | `TINYINT(1)` | `BOOLEAN` |
+| Foreign-key column index | Implicit (InnoDB) | Emitted by DataJoint (coverage-aware) |
+
+DataJoint guarantees foreign-key columns are indexed on both backends; the
+difference above is only *who* creates the index. See
+[Foreign-Key Indexes](table-declaration.md#26-foreign-key-indexes).
 
 ### String Quoting
 
