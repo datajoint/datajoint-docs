@@ -407,6 +407,8 @@ result = A.aggr(B, ..., exclude_nonmatching=True) # Only rows with matches
 
 **B must contain all primary key attributes of A.** This enables grouping B's rows by A's primary key.
 
+Geometrically, aggregation **reduces the grain**: it projects the finer grain of `B` onto the coarser grain of `A` it contains, folding each group of B-rows into summary values. Requiring `B` to contain all of A's primary key is exactly what makes every B-row fall into one A-group. Note that `.proj` does *not* reduce the grain—it always retains the primary key (§3.2)—so aggregation, not projection, is the grain-reducing operator.
+
 ### 5.4 Aggregate Functions
 
 ```python

@@ -223,6 +223,30 @@ The rule applies whether the table has only new attributes or also inherits
 attributes through foreign keys. A new primary-key attribute means a new
 dimension.
 
+### Grain
+
+A dimension is a *single* axis of variation; a table's **grain** is the *whole
+combination* of axes at which each row is recorded or computed — its full primary
+key. Grain is the answer to this guide's leading question, *"what is one row of
+this table?"*
+
+> **The grain of a table is the level of detail at which its data is recorded or
+> computed: what one row represents, given by the combination of dimensions in its
+> primary key.**
+
+- `Session`, keyed `(subject_id, session_idx)`, has grain **(subject × session)** —
+  one row per session of a subject.
+- Adding a dimension makes the grain **finer**: a part table that adds `blob_idx`
+  (`Detection.Blob` below) has grain **(… × blob)** — one row per blob of a
+  detection.
+- A computed table's grain is the combination of dimensions at which its `make()`
+  produces rows — its
+  [`key_source`](../reference/specs/autopopulate.md). *A computation operates at
+  its grain.*
+
+"Grain" is the established term in dimensional modeling for what a single row
+represents; DataJoint generalizes it from recorded fact rows to *computed* rows.
+
 ### Tables that introduce dimensions
 
 ```python
