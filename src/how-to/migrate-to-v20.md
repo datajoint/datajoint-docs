@@ -100,6 +100,7 @@ DataJoint 2.0 makes serialization **explicit** with codecs. In pre-2.0, `longblo
 |-------------------|----------------|---------|-----------|
 | `longblob` | `<blob>` | In-table | Phase I code, Phase III data |
 | `mediumblob` | `<blob>` | In-table | Phase I code, Phase III data |
+| `blob`, `tinyblob` | `<blob>` | In-table | Phase I code, Phase III data |
 | `attach` | `<attach>` | In-table | Phase I code, Phase III data |
 | `blob@store` | `<blob@store>` | In-store (hash) | Phase I code, Phase III data |
 | `attach@store` | `<attach@store>` | In-store (hash) | Phase I code, Phase III data |
@@ -1080,10 +1081,34 @@ Convert ALL types and codecs in Phase I:
 | `int unsigned` | `int64` | Core type |
 | `int` | `int32` | Core type |
 | `smallint unsigned` | `int32` | Core type |
+| `smallint` | `int16` | Core type |
 | `tinyint unsigned` | `int16` | Core type |
-| `bigint unsigned` | `int64` | Core type |
+| `tinyint` | `int8` | Core type |
+| `mediumint unsigned` | `int32` | Core type |
+| `mediumint` | `int32` | Core type |
+| `bigint unsigned` | `int64` | Core type — see the caution below |
+| `bigint` | `int64` | Core type |
 | `float` | `float32` | Core type |
 | `double` | `float64` | Core type |
+| `decimal(M,D)` | Unchanged | Core type |
+| `decimal(M,D) unsigned` | `decimal(M,D)` | Native type — see below |
+
+DataJoint 2.0 provides no unsigned integer types, so an unsigned column widens to the
+next signed type that holds its full range. Choose a signed type with sufficient range
+rather than reaching for a native spelling.
+
+!!! warning "`bigint unsigned` is the one lossy case"
+
+    Values above 2<sup>63</sup>-1 do not fit in `int64`. `dj.migrate` labels these
+    columns `int64` and logs a warning naming each one. Verify the stored range before
+    migrating, and keep the column native if you genuinely need the top half of the
+    unsigned range.
+
+**Modifiers and aliases on `decimal`:** `decimal` is a core type only in its canonical
+two-argument form. `decimal(M,D) unsigned`, `decimal(M)`, `numeric(M,D)`, `dec(M,D)`
+and `fixed(M,D)` remain declarable but are treated as native types, with the usual
+portability warning. Dropping `unsigned` costs only the non-negativity constraint, not
+precision, so converting to `decimal(M,D)` is the recommended move.
 
 **String, Date, and Structured Types:**
 
@@ -1158,7 +1183,7 @@ SCOPE - PHASE I:
 
 1. Convert ALL type syntax to 2.0 core types
 2. Convert ALL legacy codecs (in-table AND in-store)
-   - In-table: longblob → <blob>, mediumblob → <blob>, attach → <attach>
+   - In-table: longblob → <blob>, mediumblob → <blob>, blob → <blob>, tinyblob → <blob>, attach → <attach>
    - In-store (legacy only): blob@store → <blob@store>, attach@store → <attach@store>, filepath@store → <filepath@store>
 3. Code will use TEST stores configured in datajoint.json
 4. Do NOT add new 2.0 codecs (<npy@>, <object@>) - these are for Phase IV adoption
@@ -1173,11 +1198,15 @@ Core Types (Integer and Float):
   smallint → int16
   tinyint unsigned → int16
   tinyint → int8
-  bigint unsigned → int64
+  mediumint unsigned → int32
+  mediumint → int32
+  bigint unsigned → int64  # lossy above 2**63-1; verify the stored range
   bigint → int64
   float → float32
   double → float64
-  decimal(M,D) → decimal(M,D)  # unchanged
+  decimal(M,D) → decimal(M,D)  # unchanged (core type)
+  decimal(M,D) unsigned → decimal(M,D)  # drop the modifier; native otherwise
+  decimal(M) / numeric(M,D) / dec(M,D) / fixed(M,D) → decimal(M,D)  # native otherwise
 
 Core Types (String and Date):
   varchar(N) → varchar(N)  # unchanged (core type)
