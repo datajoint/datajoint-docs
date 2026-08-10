@@ -292,7 +292,7 @@ If a descendant table lives in a schema that hasn't been activated (loaded into 
 
 ## Traversal algebra
 
-This design rationale derives the traversal operations from first principles. The operational methods above (`cascade`, `trace`, `restrict`) are not three separate features — they are a small, composable algebra over the dependency graph, derived here from first principles so the *rules*, not just the API, are the specification. The unifying model has **one additive traversal** (`expand`, of which `cascade` is the downstream case and `trace` the upstream case) and **one subtractive traversal** (`restrict`), built on **two rules** (an edge rule and a group rule).
+This design rationale derives the traversal operations from first principles. The operational methods above (`cascade` and `trace`) are not separate features — they are the two directions of **one traversal**, `expand`, over the dependency graph, derived here so the *rules*, not just the API, are the specification. The model is a single operation `expand(seed, direction)` — `cascade` is the downstream case, `trace` the upstream case — built on **two rules**: an edge rule (R1) and a group rule (R2).
 
 ### 1. The one primitive: propagating a restriction across a foreign key
 
@@ -326,30 +326,22 @@ Part tables add **compositional** integrity on top of referential integrity: a m
 
 R2 is a closure over the master–part grouping, which is exactly why foreign-key restrictions alone cannot express it.
 
-### 4. Two operations over R1 + R2
+### 4. The one operation: expand
 
-There are exactly two irreducible ways to use the rules, and they are opposites.
-
-**`expand` — additive (grow from one seed).** A constructor: seed a single restricted table and grow outward by R1 + R2, accumulating reachable rows by **union** (a table is reached if reachable via any path). Directional, `direction="down" | "up" | "both"` (default `"down"`):
+There is one traversal. Seed a single restricted table and grow outward by R1 + R2, accumulating reachable rows by **union** (a table is reached if reachable via any path). It is directional, `direction="down" | "up" | "both"` (default `"down"`):
 
 - `direction="down"` — descendants: the **delete blast radius**. This is `cascade`.
 - `direction="up"` — ancestors: the **valid query sources** a `make()` may read under the reproducibility contract. This is `trace`; inside `make()`, `self.upstream` is `expand(self & key, direction="up")`.
-- `direction="both"` — a referentially-consistent **export region** around the seed.
+- `direction="both"` — a referentially-consistent **export region** around the seed: everything the seed rows depend on and everything derived from them.
 
-A single-seed additive closure is always consistent and never needs an intersection: tracing up pulls exactly the referenced ancestors, cascading down pulls exactly the dependents.
+A single-seed closure is always consistent and never needs an intersection: tracing up pulls exactly the referenced ancestors, cascading down pulls exactly the dependents. Every requirement is a case of `expand`: blast radius (`down`), `make()` sources (`up`), and "all data for this entity" / consistent export (`both`).
 
-**`restrict` — subtractive (progressively carve any diagram).** An instance method on any diagram, carving it down by applying conditions, accumulating by **intersection** — **every table is restricted by the conjunction of all conditions that reach it**; tables that go empty drop out. It is:
-
-- **progressive / chainable** — `.restrict(A).restrict(B)…`, each carves further;
-- **order-independent** — the result is the conjunction of all conditions;
-- **monotone** — every step only removes; every intermediate is a valid slice.
-
-`restrict` is *not* reducible to combinations of `expand`, because it applies **multiple independent conditions** and gives each table the AND of the ones upstream of it. Example: "all data for `subject_id=5` **and** `method_id=5`" — `Subject` and `ProcessingMethod` are independent ancestors meeting only at a shared descendant; combining single-seed expansions cannot assemble it, chained `restrict` does.
+**Multiple conditions do not need a second operation.** A filter over several *independent* tables (e.g. "data for `subject_id=5` **and** `method_id=5`") is still `expand`. Either the conditions share a common descendant that inherits both keys — seed that descendant with the combined condition and `expand(both)` — or they do not, in which case no table is downstream of both, there is nothing to intersect, and the result is the union of the individual expansions. A per-table "conjunction of upstream conditions" carving is a UI-layer composition of `expand`s (a Navigator concern), not a core operation.
 
 ### 5. Why this is the whole story
 
-- **Intersection is not a convergence rule.** It only arises in the subtractive model with multiple independent conditions (`restrict`). The additive model (`expand`) is pure reachability — always union.
-- **The two compose freely.** A diagram is a set of tables, each holding one row-set. `expand` unions reachable rows in (grow); `restrict` intersects a propagated condition in (carve). One representation, so they chain in any order. A grow step ORs rows in (restrict by a list, `[cond, …]`); a carve step ANDs a further restriction on (chained `&`).
+- **It is pure reachability.** A restriction reaches a table if it reaches it via *any* foreign-key path, so convergence is always **union** — there is no intersection to reason about and no second, subtractive operation.
+- **One data structure.** A diagram is a set of tables, each holding one row-set; `expand` unions reachable rows into it as it grows.
 - **Materialization is a delete-time concern, not part of traversal.** Freezing a group's keys before deleting (delete runs parts-before-masters) matters only when a traversal feeds `delete`; the read-only closures never pay for it.
 
 ### 6. Renamed foreign keys and the seed restriction
@@ -366,7 +358,7 @@ Only the materialized kind is *frozen literal values*; the other two are *live* 
 
 *Which attributes cross an edge:* an attribute propagates across an edge iff that edge **carries** it (the foreign key references it). A data attribute (`weight`) is carried by no edge and never propagates — a key containing one is really an `A & cond` case (Kind 2/3), reducible to Kind 1 by materializing to keys first, `(A & cond).keys()`. A *secondary* foreign-key attribute propagates along its own edge even though it is not part of the primary key. So the test is per edge — *does the key cover the attributes this edge carries?* — not a global "is the key primary-key-only?".
 
-*Direction, because a foreign key is a function:* **down** (parent to children) is the preimage — a parent key relabels to a partial child key and always suffices. **Up** (child to parent) is the image — to name the referenced parent by relabelling, the key must include the parent's **full primary key** (in the child's names). When it doesn't, `expand` (which must be exact) **materializes** — queries the child for the actual referenced parent keys — while `restrict` (which removes only the provably-excluded) may **leave the parent uncarved** (a looser but still referentially-valid slice). Same relabel condition for both; only the fallback differs.
+*Direction, because a foreign key is a function:* **down** (parent to children) is the preimage — a parent key relabels to a partial child key and always suffices. **Up** (child to parent) is the image — to name the referenced parent by relabelling, the key must include the parent's **full primary key** (in the child's names). When it doesn't, the relabel fast-path cannot fire and `expand` **materializes** — queries the child for the actual referenced parent keys — and continues.
 
 **Kinds 2 & 3 — live (restrict-then-project).** A subquery or string restriction has no literal values to relabel; cross the edge **relationally** — restrict `A` by the condition, project it onto the neighbor's referenced attributes (renamed), and restrict the neighbor. A string cannot cross as text (it may name attributes the foreign key doesn't carry, and rewriting SQL to the neighbor's names is not reliable); only its *effect* crosses, through the referenced-attribute values of the surviving `A` rows. Any live restriction becomes relabel-able (and delete-safe) the moment it is materialized to keys, `(A & r).keys()` — which is exactly what `cascade` does at plan time.
 
@@ -380,17 +372,17 @@ R2 needs **no new key machinery** — it is the relabel fast-path run twice, wit
 
 **The signature: a key that reaches a part via its master carries no part-specific constraint.** The lift *narrows* the key to the master; the re-expansion *widens* it to all parts; the part-specific attribute is destroyed by the lift and cannot be recovered. That loss *is* compositional atomicity in key terms — the whole part-group comes along precisely because the returning key no longer distinguishes one part from its siblings.
 
-Corollaries: a materialized-key seed stays materialized through the whole part -> master -> parts round trip, so it is delete-safe for free (the delete-order materialization only ever fires for *live* seeds); and one mechanism serves all three call sites — the mutating part->master cascade, the upstream `trace` that surfaces an ancestor master's parts, and `restrict` promoting a part predicate to its master.
+Corollaries: a materialized-key seed stays materialized through the whole part -> master -> parts round trip, so it is delete-safe for free (the delete-order materialization only ever fires for *live* seeds); and the same mechanism serves both directions — the mutating part->master cascade (`expand` down feeding a delete) and the upstream `trace` (`expand` up) that surfaces an ancestor master's parts.
 
 ### Summary
 
-| | additive (grow) | subtractive (carve) |
+| direction | operation | serves |
 |---|---|---|
-| operator | `expand(seed, direction)` (`cascade` = down, `trace` = up) | `diagram.restrict(*conditions, direction)` |
-| accumulate | union | intersection |
-| serves | delete blast radius / `make()` sources / export region | multi-condition pipeline carving |
+| `down` | `expand(seed, "down")` = `cascade` | delete blast radius |
+| `up` | `expand(seed, "up")` = `trace` | `make()` sources (`self.upstream`) |
+| `both` | `expand(seed, "both")` | consistent export region / "all data for this entity" |
 
-One data structure, two composable transforms, two rules — R1 (edge restriction) and R2 (group). `cascade` and `trace` are the downstream and upstream cases of the additive traversal.
+One operation, one data structure, two rules — R1 (edge restriction) and R2 (group). `cascade` and `trace` are the downstream and upstream cases of `expand`; a filter over several independent tables composes `expand`s rather than adding a new operation.
 
 ---
 
