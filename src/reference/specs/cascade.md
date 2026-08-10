@@ -4,6 +4,8 @@ This document specifies how DataJoint propagates restrictions across the foreign
 
 For the user-facing entry points, see [Delete Data](../../how-to/delete-data.md). For dependent concepts, see [Master-Part](master-part.md), [Diagram](diagram.md), and [Data Manipulation](data-manipulation.md).
 
+Cascade is the **downstream** case of the diagram-traversal algebra — the additive traversal `expand(direction="down")`. The rules it uses (the edge rule R1 and the group rule R2), and why they take the form they do, are derived once in the [Diagram spec's Design Rationale](diagram.md#traversal-algebra); this page specifies the cascade-specific behavior on top of them.
+
 ## Overview
 
 A *cascade* starts at a (possibly restricted) **seed** table and propagates the restriction to every table that depends on it via foreign keys, so that a delete or preview affects all dependents consistently. Cascade is invoked by:

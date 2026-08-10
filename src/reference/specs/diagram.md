@@ -290,6 +290,110 @@ If a descendant table lives in a schema that hasn't been activated (loaded into 
 
 ---
 
+## Traversal algebra
+
+This design rationale derives the traversal operations from first principles. The operational methods above (`cascade`, `trace`, `restrict`) are not three separate features — they are a small, composable algebra over the dependency graph, derived here from first principles so the *rules*, not just the API, are the specification. The unifying model has **one additive traversal** (`expand`, of which `cascade` is the downstream case and `trace` the upstream case) and **one subtractive traversal** (`restrict`), built on **two rules** (an edge rule and a group rule).
+
+### 1. The one primitive: propagating a restriction across a foreign key
+
+A **restriction** on a table is a subset of its rows, written as a condition.
+
+Every foreign key `child -> parent` defines a function: each child row references exactly one parent row. Propagating a restriction across that edge is itself a **restriction** — restrict the neighbor by the restricted table, matched on the foreign-key attributes (`&` with a query expression). It works in either direction:
+
+- **downstream** (a restriction on the parent, carried to the child): `child & parent_restricted` — the child rows whose parent is in the restricted set.
+- **upstream** (a restriction on the child, carried to the parent): `parent & child_restricted` — the parent rows referenced by the restricted child.
+
+Downstream and upstream are the *same* operation pointed opposite ways along the same foreign key. This is the whole engine; everything below is how the edge rule degenerates, what parts add, and how you accumulate across many edges.
+
+### 2. The edge rule (R1, referential)
+
+**Base case — the foreign key is the whole primary key, not renamed, no parts.** The parent's primary key is embedded verbatim in the child's, with the same column names. A primary-key restriction on the parent is a predicate on exactly those columns, which the child also has, by the same names. So: **carry the restriction unchanged** — the identical predicate that selects the parent rows already selects the matching child rows. This is why the same primary-key restriction rides the whole diagram.
+
+**Complication A — secondary foreign key.** The parent's key lands in the child's *secondary* (non-primary) attributes. A raw predicate still selects the right child rows, but the restriction is no longer a statement about the child's *identity*, so it cannot be promoted to the child's primary key and ridden further. Keep it relational: project the restricted parent to its key and restrict the child by it, matched on the foreign-key columns.
+
+**Complication B — renamed foreign key.** The referencing columns have different names in the child. The parent's predicate names columns the child lacks. Fix, mechanically: rename the restriction's columns through the foreign key's attribute map before restricting (reverse the rename going upstream).
+
+> **R1 (edge rule):** propagate a restriction across a foreign-key edge by **restricting** the neighbor by the restricted table (`&`), projected/renamed onto the shared foreign-key columns. When the foreign key is the whole primary key and unrenamed, the projection is the identity and the restriction collapses to "apply the same predicate."
+
+### 3. The group rule (R2, compositional)
+
+Part tables add **compositional** integrity on top of referential integrity: a master and its parts are one entity, created and deleted all-or-nothing.
+
+- **master -> part** needs nothing new — a part carries `-> master` in its primary key, so R1 already sweeps in all parts of a restricted master.
+- **part -> master** is the new rule. A restriction landing on part rows satisfies referential integrity by touching just those rows, but leaves a fragment of an entity. So it must **lift existentially to the master** (the master is in if *any* of its parts is), and the master re-expands to **all** its parts.
+
+> **R2 (group rule):** a restriction touching any part of a master's group brings the whole group — existential lift part -> master, then expand master -> all parts.
+
+R2 is a closure over the master–part grouping, which is exactly why foreign-key restrictions alone cannot express it.
+
+### 4. Two operations over R1 + R2
+
+There are exactly two irreducible ways to use the rules, and they are opposites.
+
+**`expand` — additive (grow from one seed).** A constructor: seed a single restricted table and grow outward by R1 + R2, accumulating reachable rows by **union** (a table is reached if reachable via any path). Directional, `direction="down" | "up" | "both"` (default `"down"`):
+
+- `direction="down"` — descendants: the **delete blast radius**. This is `cascade`.
+- `direction="up"` — ancestors: the **valid query sources** a `make()` may read under the reproducibility contract. This is `trace`; inside `make()`, `self.upstream` is `expand(self & key, direction="up")`.
+- `direction="both"` — a referentially-consistent **export region** around the seed.
+
+A single-seed additive closure is always consistent and never needs an intersection: tracing up pulls exactly the referenced ancestors, cascading down pulls exactly the dependents.
+
+**`restrict` — subtractive (progressively carve any diagram).** An instance method on any diagram, carving it down by applying conditions, accumulating by **intersection** — **every table is restricted by the conjunction of all conditions that reach it**; tables that go empty drop out. It is:
+
+- **progressive / chainable** — `.restrict(A).restrict(B)…`, each carves further;
+- **order-independent** — the result is the conjunction of all conditions;
+- **monotone** — every step only removes; every intermediate is a valid slice.
+
+`restrict` is *not* reducible to combinations of `expand`, because it applies **multiple independent conditions** and gives each table the AND of the ones upstream of it. Example: "all data for `subject_id=5` **and** `method_id=5`" — `Subject` and `ProcessingMethod` are independent ancestors meeting only at a shared descendant; combining single-seed expansions cannot assemble it, chained `restrict` does.
+
+### 5. Why this is the whole story
+
+- **Intersection is not a convergence rule.** It only arises in the subtractive model with multiple independent conditions (`restrict`). The additive model (`expand`) is pure reachability — always union.
+- **The two compose freely.** A diagram is a set of tables, each holding one row-set. `expand` unions reachable rows in (grow); `restrict` intersects a propagated condition in (carve). One representation, so they chain in any order. A grow step ORs rows in (restrict by a list, `[cond, …]`); a carve step ANDs a further restriction on (chained `&`).
+- **Materialization is a delete-time concern, not part of traversal.** Freezing a group's keys before deleting (delete runs parts-before-masters) matters only when a traversal feeds `delete`; the read-only closures never pay for it.
+
+### 6. Renamed foreign keys and the seed restriction
+
+Each time a restriction crosses a foreign key it must be re-expressed in the neighbor's attribute names. Renaming is the only thing that changes names across an edge, so it is the only place this needs care, and the *shape* of the seed restriction decides how. A restriction is one of three kinds:
+
+- **materialized** — a dict of primary-key values, or a sequence of them (literal `attr: value` rows, e.g. `A.keys()`);
+- **subquery** — a query expression (another table, possibly restricted);
+- **string** — a raw SQL predicate over attribute names, e.g. `'weight > 10'`.
+
+Only the materialized kind is *frozen literal values*; the other two are *live* (evaluated against current data). This split decides whether a renamed edge is crossed by simply relabelling or must be crossed relationally.
+
+**Kind 1 — materialized (relabel fast-path).** Crossing a renamed foreign key, the neighbor's restriction is obtained by **renaming the dict's keys through the edge, values unchanged**: keep the referenced attributes (relabelled) and drop any key field that does not exist on the neighbor. Going upstream this drops the child's own identity attributes, leaving exactly the parent's key; going downstream nothing is dropped and the child's own key attributes stay unconstrained (a partial key). Renamings chain, so a key relabels edge by edge. This is exact because the renaming is pure (values and types preserved) and attribute identity across the edge is fixed by the edge's pairing, not by coincidental name matches. A sequence of dicts (e.g. `A.keys()`) is the OR of its members and relabels element by element; the walk stays symbolic — no subqueries — and, being frozen literals, is stable and delete-safe.
+
+*Which attributes cross an edge:* an attribute propagates across an edge iff that edge **carries** it (the foreign key references it). A data attribute (`weight`) is carried by no edge and never propagates — a key containing one is really an `A & cond` case (Kind 2/3), reducible to Kind 1 by materializing to keys first, `(A & cond).keys()`. A *secondary* foreign-key attribute propagates along its own edge even though it is not part of the primary key. So the test is per edge — *does the key cover the attributes this edge carries?* — not a global "is the key primary-key-only?".
+
+*Direction, because a foreign key is a function:* **down** (parent to children) is the preimage — a parent key relabels to a partial child key and always suffices. **Up** (child to parent) is the image — to name the referenced parent by relabelling, the key must include the parent's **full primary key** (in the child's names). When it doesn't, `expand` (which must be exact) **materializes** — queries the child for the actual referenced parent keys — while `restrict` (which removes only the provably-excluded) may **leave the parent uncarved** (a looser but still referentially-valid slice). Same relabel condition for both; only the fallback differs.
+
+**Kinds 2 & 3 — live (restrict-then-project).** A subquery or string restriction has no literal values to relabel; cross the edge **relationally** — restrict `A` by the condition, project it onto the neighbor's referenced attributes (renamed), and restrict the neighbor. A string cannot cross as text (it may name attributes the foreign key doesn't carry, and rewriting SQL to the neighbor's names is not reliable); only its *effect* crosses, through the referenced-attribute values of the surviving `A` rows. Any live restriction becomes relabel-able (and delete-safe) the moment it is materialized to keys, `(A & r).keys()` — which is exactly what `cascade` does at plan time.
+
+### 7. The group rule and the relabel fast-path
+
+R2 needs **no new key machinery** — it is the relabel fast-path run twice, with the part-specific attribute deliberately lost in between. For a master `Session` (primary key `session_id`) and part `Session.Trial` (primary key `(session_id, trial_id)`):
+
+- **master to part (down):** the ordinary relabel — `Session & {'session_id': 5}` becomes the partial key `{'session_id': 5}` on `Session.Trial`, selecting *every* trial of session 5. "All parts follow the master" falls straight out of the down rule.
+- **part to master (up), the existential lift:** relabel-drop — `Session.Trial & {'session_id': 5, 'trial_id': 2}` keeps `session_id`, drops the part-specific `trial_id`, giving `{'session_id': 5}`. A sequence of part keys across many trials all drop to the same master key and de-duplicate, so the OR-over-siblings is free.
+- **master to all parts (re-expansion):** *not* a relabel of the seed — a fresh downstream step from the recovered master key, `{'session_id': 5}` on `Session` relabels down to `{'session_id': 5}` on `Session.Trial`, which drops the `trial_id` constraint and so *widens* from "trial 2" to all trials.
+
+**The signature: a key that reaches a part via its master carries no part-specific constraint.** The lift *narrows* the key to the master; the re-expansion *widens* it to all parts; the part-specific attribute is destroyed by the lift and cannot be recovered. That loss *is* compositional atomicity in key terms — the whole part-group comes along precisely because the returning key no longer distinguishes one part from its siblings.
+
+Corollaries: a materialized-key seed stays materialized through the whole part -> master -> parts round trip, so it is delete-safe for free (the delete-order materialization only ever fires for *live* seeds); and one mechanism serves all three call sites — the mutating part->master cascade, the upstream `trace` that surfaces an ancestor master's parts, and `restrict` promoting a part predicate to its master.
+
+### Summary
+
+| | additive (grow) | subtractive (carve) |
+|---|---|---|
+| operator | `expand(seed, direction)` (`cascade` = down, `trace` = up) | `diagram.restrict(*conditions, direction)` |
+| accumulate | union | intersection |
+| serves | delete blast radius / `make()` sources / export region | multi-condition pipeline carving |
+
+One data structure, two composable transforms, two rules — R1 (edge restriction) and R2 (group). `cascade` and `trace` are the downstream and upstream cases of the additive traversal.
+
+---
+
 ## Output Methods
 
 ### Graphviz Output

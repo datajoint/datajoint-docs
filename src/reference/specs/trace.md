@@ -12,6 +12,8 @@ The two are designed as a unit. `trace` is the underlying graph operation; `self
 
 For the related downstream operation, see [Cascade Specification](cascade.md). For `make()` itself, see [AutoPopulate Specification](autopopulate.md).
 
+Trace is the **upstream** case of the diagram-traversal algebra — the additive traversal `expand(direction="up")`, the mirror of cascade's downstream `expand(direction="down")`. The shared rules (the edge rule R1 and the group rule R2) are derived once in the [Diagram spec's Design Rationale](diagram.md#traversal-algebra); this page specifies the upstream-specific behavior and the `self.upstream` surface on top of them.
+
 ## Why this exists
 
 A computed row's reproducibility rests on the convention that `make(self, key)` reads only from its declared upstream dependencies. Making that convention easy to follow — and its result easy to inspect — requires two pieces working together:
