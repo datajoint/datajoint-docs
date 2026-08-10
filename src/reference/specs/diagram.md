@@ -352,11 +352,25 @@ Each table tier has a distinct visual style:
 
 | Style | Meaning |
 |-------|---------|
-| Solid line | Primary foreign key |
-| Dashed line | Non-primary foreign key |
-| Thick line | Master-Part relationship |
-| Thin line | Multi-valued foreign key |
+| Solid line | Primary foreign key (in the child's primary key) |
+| Dashed line | Secondary foreign key (below the `---`) |
+| Thick line | **1:1** dependency — the foreign key constitutes the child's *entire* primary key |
+| Thin line | **Multi-valued** dependency — the child has primary-key attributes beyond those the foreign key contributes |
 | Orange line | Renamed foreign key (via `.proj()`) — hover the edge for the column-rename tooltip |
+
+**Line weight encodes cardinality, and only cardinality — it is binary.** A
+thick edge is a one-to-one dependency: the parent's key fills the child's entire
+primary key. A thin edge is one-to-many: the child adds primary-key attributes of
+its own — whether newly declared (e.g. `scan_number`) or inherited from *another*
+foreign key (a key composed from two parents). This is rename-safe: what matters
+is whether the foreign key covers the child's whole primary key, not whether the
+attribute names match, so a **renamed** foreign key can still be 1:1 (thick).
+
+Master-part is **not** a weight. A part almost always adds a key attribute, so a
+master→part edge is **thin** under this same rule. The weight rule is the same
+fact as the [underline rule](#node-labels) viewed from the edge: a table that
+introduces a new key attribute is exactly a table whose incoming dependency is
+multi-valued.
 
 ### Node Labels
 
