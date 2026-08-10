@@ -53,6 +53,16 @@ flowchart TB
 
 The engine performs **multiple passes** when `part_integrity="cascade"` is in effect: each pass forward-propagates over all `allowed_nodes`, and a pass may pull in a new master (with its descendants) that requires another pass. The loop terminates because the graph is a DAG and only finitely many nodes can be added.
 
+## Delete-time materialization
+
+Downward expansion for **delete** carries a constraint that preview (count) does not: a table's restriction must not reference a table that is deleted *earlier* in the plan.
+
+`Table.delete` executes its per-table deletes in **reverse-topological order** (leaves first — see [Data Manipulation](data-manipulation.md)), so every downstream table is emptied before the table it depends on. If a table's restriction were left as a `QueryExpression` referencing a downstream table — which happens whenever the cascade **seed** is itself restricted by a descendant ([#1496](https://github.com/datajoint/datajoint-python/issues/1496)), or when the master's restriction is left pointing at an already-walked part — that subquery would run against a table already emptied by an earlier step, match zero rows, and silently strand the rows that should have been deleted.
+
+The fix is to **materialize** any such restriction to a literal key set at plan time, before any row is deleted, while the referenced table still holds its rows. Materialization is applied by delete-order reason on **every backend**, not made backend-conditional: the reverse-topological ordering strands rows regardless of engine. (MySQL additionally rejects a DELETE whose subquery targets the table being modified — error 1093 — but PostgreSQL, which permits that self-reference, still needs materialization for the ordering reason, so this is not a MySQL-only concern.) Where materialization is refused, the engine fails closed with a legible error rather than deleting through a stale subquery. Preview/`counts()` issues no deletes and so pays none of this cost.
+
+The master-key materialization in [Part-to-Master upward propagation](#materialization-at-the-master) below is the specific instance of this rule for the `part_integrity="cascade"` walk.
+
 ## `part_integrity` modes
 
 Master-Part integrity reflects the contract that a Master row exists for every Part row that references it. Three modes govern how cascade enforces or relaxes that contract:
@@ -87,9 +97,7 @@ Each edge along a path applies the edge rule R1 (see the [Diagram spec's Travers
 
 After the upward walk completes, the Master's accumulated restrictions are **materialized** to a literal value tuple via `(master_ft & restrictions).proj().to_arrays()` and stored as a single condition. Subsequent forward propagation from the Master back down to its other Parts then generates `WHERE pk IN (literal-list)` rather than `WHERE pk IN (SELECT ... FROM <originating-part>)`.
 
-**Why materialization matters.** This is required for correctness on **every backend**, not merely to satisfy MySQL. `Table.delete` executes per-table deletes in reverse-topological order (leaves first — see [Data Manipulation](data-manipulation.md)), so the originating Part is deleted *before* the Master. If the Master's restriction were left as a `QueryExpression` referencing that Part, the Master's own DELETE — issued last — would find the Part already emptied, match zero rows, and silently strand the Master (the very compositional-integrity violation the upward walk exists to prevent). Materializing the Master's primary keys to a literal value set at plan time, before any rows are deleted, captures them while the Part still exists.
-
-A secondary consequence: the literal set also avoids a self-referential subquery. Left as a query, the Master forward-cascading back to the originating Part would generate a DELETE whose subquery targets the table being modified — which MySQL rejects ("error 1093: You can't specify target table 'T' for update in FROM clause"). PostgreSQL permits that self-reference, but the reverse-topological ordering above means materialization is required on **both** backends regardless — so this must not be treated as a MySQL-only concern.
+This is the [delete-time materialization](#delete-time-materialization) rule applied here: the originating Part is deleted before the Master (reverse-topological order), so a Master restriction left pointing at that Part would match zero rows and strand the Master — the very compositional-integrity violation the upward walk exists to prevent. Capturing the Master's primary keys while the Part still holds its rows avoids that, and as a bonus avoids the self-referential subquery MySQL rejects with error 1093.
 
 Intermediate Parts in the chain are **not** materialized — they appear only as restrictions on the path, not as forward-cascade sources, so the self-reference issue doesn't arise there.
 
