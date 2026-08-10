@@ -27,21 +27,20 @@ Without (1), downstream tools that need row-level lineage (data-lineage viewers,
 
 ### Trace as the upstream mirror of cascade
 
-`Diagram.cascade()` walks **downstream** from a restricted seed and answers *"what is affected if these rows are deleted?"* `Diagram.trace()` walks **upstream** and answers *"what contributed to these rows?"*. The two share the same dependency graph, the same edge model, and most of the same propagation machinery — only the direction differs.
+`Diagram.cascade()` walks **downstream** from a restricted seed and answers *"what is affected if these rows are deleted?"* `Diagram.trace()` walks **upstream** and answers *"what contributed to these rows?"*. They are the two directions of the same traversal (`expand`), over the same dependency graph and the same rules — only the direction differs:
 
-| Method | Direction | Convergence | Question answered |
-|---|---|---|---|
-| `Diagram.cascade(expr)` | downstream | OR — any FK path taints | What's affected if these rows are deleted? |
-| `Diagram.restrict(expr)` | downstream | AND — must satisfy all FK paths | What satisfies all of these conditions? |
-| `Diagram.trace(expr)` | **upstream** | **OR** — any FK path contributes | What contributed to these rows? |
+| Method | `expand` direction | Question answered |
+|---|---|---|
+| `Diagram.cascade(expr)` | `down` | What's affected if these rows are deleted? |
+| `Diagram.trace(expr)` | `up` | What contributed to these rows? |
 
-`trace` uses OR convergence because an ancestor entity contributes to a child row if it appears via *any* FK path. (An AND-flavored upstream analog — "ancestors that contributed via *every* path" — is not provided in 2.3.)
+Convergence is always **union** — an ancestor contributes to a child row if it is reachable via *any* foreign-key path. This is reachability, not an intersection; there is no AND-flavored upstream analog.
 
-### Reusing the propagation primitives
+### Reusing the propagation rules
 
-`trace` applies the **upward propagation rules** (`U1`, `U2`, `U3`) defined in the [Cascade Specification](cascade.md#upward-propagation-child-parent), which are the symmetric inverses of `cascade`'s forward rules. Renamed FKs (`.proj()`) are reversed via U2; Part-of-Part chains are walked through naturally; multiple foreign keys between the same pair of tables are each reversed independently.
+`trace` applies the **edge rule R1** in the upstream direction — the same rule `cascade` applies downstream — plus the **group rule R2** for master–part. Both are derived once in the [Diagram spec's Traversal algebra](diagram.md#traversal-algebra); a renamed FK is relabelled through the edge's attribute map, Part-of-Part chains are walked naturally, and parallel foreign keys are each handled independently.
 
-This is why `trace` cannot ship before the upward primitives exist in the codebase. As of DataJoint 2.3, the primitives are in place (added with [#1429's cascade fix](https://github.com/datajoint/datajoint-python/pull/1468)), and `trace` is a direct consumer.
+This is why `trace` cannot ship before the upstream primitives exist in the codebase. As of DataJoint 2.3 they are in place (added with [#1429's cascade fix](https://github.com/datajoint/datajoint-python/pull/1468)), and `trace` is a direct consumer.
 
 ### The `make()` read/write boundary
 

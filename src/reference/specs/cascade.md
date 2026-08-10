@@ -17,7 +17,7 @@ Both follow the same propagation rules; only the terminal step (delete vs. count
 
 ## Dependency graph
 
-DataJoint loads its FK structure into a directed acyclic graph (`Connection.dependencies`, a `networkx.DiGraph`). The graph encodes two kinds of structure:
+DataJoint loads its FK structure into a directed acyclic graph (`Connection.dependencies`, a `networkx.MultiDiGraph` — a multigraph so that parallel foreign keys, including renamed ones, are each their own edge rather than needing synthetic alias nodes). The graph encodes two kinds of structure:
 
 | Element | Encodes |
 |---|---|
@@ -89,13 +89,13 @@ The Master is identified by **naming convention** via `dependencies.extract_mast
 
 ### Walking the FK path
 
-The walk uses `nx.shortest_path(master, part)` to find the FK chain from Master to Part:
+The walk enumerates **every** simple FK path from Master to Part (`nx.all_simple_edge_paths`), so a Part reachable through more than one foreign-key chain — or through parallel edges between the same pair — is restricted through all of them, combined with OR ([#1492](https://github.com/datajoint/datajoint-python/pull/1492)):
 
 ```
-Master → [intermediate Part(s)] → Part
+Master -> [intermediate Part(s)] -> Part
 ```
 
-Each edge along the path fires one upward rule (U1, U2, or U3) per the edge's metadata (`attr_map`, `aliased`). **Intermediate Parts in a Part-of-Part chain are restricted along the way** — not only the Master.
+Each edge along a path applies the edge rule R1 (see the [Diagram spec's Traversal algebra](diagram.md#traversal-algebra)) in the upstream direction, per the edge's metadata (`attr_map`, renamed-or-not). **Intermediate Parts in a Part-of-Part chain are restricted along the way** — not only the Master.
 
 ### Materialization at the Master
 
