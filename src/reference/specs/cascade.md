@@ -22,34 +22,20 @@ DataJoint loads its FK structure into a directed acyclic graph (`Connection.depe
 | Element | Encodes |
 |---|---|
 | **Node** | A table, named by its fully-qualified SQL identifier (e.g. ``` `schema`.`table_name` ```). The graph stores the table's primary key set as node data. |
-| **Edge `parent → child`** | An FK constraint from `child` to `parent`. Edge data: `attr_map` (dict mapping child's FK columns → parent's referenced columns), `aliased` (true iff any column was renamed), `primary` (true iff the FK is in the child's primary key). |
-| **Parallel edges** | A child can reference the same parent through more than one foreign key — for example two renamed (`.proj()`) references — so the same `parent → child` pair may be connected by multiple edges, each carrying its own `attr_map`/`aliased`/`primary`. |
+| **Edge `parent -> child`** | An FK constraint from `child` to `parent`. Edge data: `attr_map` (dict mapping child's FK columns -> parent's referenced columns), `aliased` (true iff any column was renamed), `primary` (true iff the FK is in the child's primary key). |
+| **Parallel edges** | A child can reference the same parent through more than one foreign key — for example two renamed (`.proj()`) references — so the same `parent -> child` pair may be connected by multiple edges, each carrying its own `attr_map`/`aliased`/`primary`. |
 
 The cascade engine operates on a copy of this graph (the `Diagram` class), recording per-table restrictions in `_cascade_restrictions` and the set of restricted attributes in `_restriction_attrs`.
 
-## Restriction propagation rules
+## Restriction propagation across an edge
 
-When propagating a restriction across an edge `parent → child`, one of three rules applies. The rule depends on whether the FK renames columns (`aliased`) and on whether the parent's currently-restricted attributes (`parent_attrs`) are contained in the child's primary key (`child_pk`).
+Cascade propagates a restriction across each foreign-key edge by the **edge rule R1** — derived in the [Diagram spec's Traversal algebra](diagram.md#traversal-algebra) — restricting the neighbor by the restricted table, projected/renamed onto the shared foreign-key columns. R1 has three degenerate cases, keyed by whether the foreign key renames columns and whether the restricted attributes are the neighbor's whole primary key:
 
-### Forward propagation (parent → child)
+- **copy** — non-renamed, and the restricted attributes are the neighbor's primary-key attributes: carry the same predicate unchanged (the columns share names).
+- **rename** — renamed foreign key: project the restricted table with its columns renamed through the edge's attribute map to the neighbor's names.
+- **project** — non-renamed, but the restricted attributes are *not* (only) the neighbor's primary key: project the restricted table onto the shared foreign-key columns so the join matches on the right columns.
 
-| Rule | Trigger | Effect on child |
-|---|---|---|
-| **F1. Copy** | `not aliased and parent_attrs` **non-empty** `and parent_attrs ⊆ child_pk` | Child inherits the parent's restriction directly (same attribute names; literal restriction values copy as-is). An empty attribute set takes rule 3. |
-| **F2. Aliased rename** | `aliased` | Child's restriction is `parent.proj(**{fk_col: parent_col for fk_col, parent_col in attr_map.items()})` — the parent expression with columns renamed to match the child's column names. |
-| **F3. Project** | `not aliased and parent_attrs ⊄ child_pk` | Child's restriction is `parent.proj()` — the parent projected to its primary key. |
-
-After applying the rule, the child's restricted-attributes set is updated to track what's now constrained on it. The child becomes a propagation source for its own children in the next pass.
-
-### Upward propagation (child → parent)
-
-Symmetric inverses of the forward rules. Used by `part_integrity="cascade"` to propagate a Part's restriction up to its Master through the FK chain. Edge metadata is the same; the direction of travel is reversed.
-
-| Rule | Trigger | Effect on parent |
-|---|---|---|
-| **U1. Copy** | `not aliased and child_attrs` **non-empty** `and child_attrs ⊆ parent_pk` | Parent inherits the child's restriction directly (shared attribute names). An empty attribute set takes rule 3. |
-| **U2. Aliased reverse-rename** | `aliased` | Parent's restriction is `child.proj(**{parent_col: fk_col for fk_col, parent_col in attr_map.items()})` — the child expression with FK columns renamed back to the parent's column names. |
-| **U3. Project** | `not aliased and child_attrs ⊄ parent_pk` | Parent's restriction is `child.proj(*attr_map.keys())` — the child projected onto its FK columns (which, when non-aliased, share names with the parent's PK) so the parent restriction joins on the right columns. |
+Cascade applies R1 **forward** (parent to child) for the delete/preview walk. After each step the child's restricted-attribute set is updated, and the child becomes a propagation source for its own children in the next pass. For `part_integrity="cascade"`, R1 is also applied **upstream** (child to parent) to lift a Part's restriction to its Master — the same rule with tail and head swapped.
 
 ## Cascade flow
 
@@ -74,14 +60,14 @@ Master-Part integrity reflects the contract that a Master row exists for every P
 | Mode | Behavior |
 |---|---|
 | `"enforce"` (default) | If a delete would remove a Part row without removing the corresponding Master row, the entire delete is rolled back with `DataJointError`. The Master row is checked **after** the delete; the integrity violation is detected post-hoc and reversed. The *intent* is row-level (each deleted Part row should have its Master deleted), but the shipped post-check is **table-level** — see [Limitations](#limitations) for the resulting rare false negatives and false positives. |
-| `"ignore"` | No upward propagation; no post-check. Use when the Master row is intentionally preserved and the user has accepted that Part rows may be orphaned. Caller is responsible for the consequences. |
-| `"cascade"` | **Upward propagation enabled.** When cascade reaches a Part, the Master is also restricted (via the upward rules below), and the Master then forward-cascades back down to **all** its Parts (siblings of the originating Part included). Used when the user wants the master-part group treated atomically. |
+| `"ignore"` | No upward propagation; no post-check. Master and Part are treated as **regular tables** — each is restricted only through its own foreign keys, and a Part row may be left orphaned when its Master row is preserved. Caller is responsible for the consequences. |
+| `"cascade"` | **The master-part group is treated as one item.** Whichever member the cascade encounters first, the whole group comes with it: if the **Master** is reached first, all of its Parts are included; if a **Part** is reached first, the restriction is lifted to its Master (via the upward walk below) and then all of the Master's Parts are included (siblings of the originating Part included). This is the group rule R2 (see the [Diagram spec's Traversal algebra](diagram.md#traversal-algebra)) applied in either direction of travel. |
 
 This document focuses on the `"cascade"` mode; the `"enforce"` and `"ignore"` modes do not change the propagation graph.
 
 ## Part-to-Master upward propagation
 
-When `part_integrity="cascade"` and the cascade reaches (or starts at) a Part node, the engine triggers an **upward walk** of the FK graph from the Part to its Master, applying the upward rules (U1, U2, U3) at each edge.
+When `part_integrity="cascade"` and the cascade reaches (or starts at) a Part node, the engine triggers an **upward walk** of the FK graph from the Part to its Master, applying the edge rule R1 upstream at each edge. Reaching the Master first needs no walk — its Parts are pulled in by ordinary forward propagation.
 
 ### Identifying the Master
 
@@ -141,19 +127,19 @@ class Subject(dj.Manual):
         """
 ```
 
-`Recording`'s columns are `{src_subject, src_session, recording_id}` — none of them are named `subject_id`. The FK from `Subject.Session → Subject.Recording` is aliased.
+`Recording`'s columns are `{src_subject, src_session, recording_id}` — none of them are named `subject_id`. The FK from `Subject.Session -> Subject.Recording` is aliased.
 
 When `(Subject.Recording & {"recording_id": 5}).delete(part_integrity="cascade")` runs:
 
 1. **Seed-is-Part check.** `extract_master(Recording) == Subject`. Trigger the upward walk.
-2. **FK path.** `shortest_path(Subject, Recording) = [Subject, Subject.Session, Subject.Recording]`.
-3. **Walk reversed.**
-   - Edge `Subject.Session → Subject.Recording`: `aliased=True`. Apply **U2** — `Subject.Session` is restricted by `Subject.Recording.proj(subject_id='src_subject', session_id='src_session')`.
-   - Edge `Subject → Subject.Session`: `aliased=False`, `child_attrs={subject_id, session_id} ⊆ parent_pk={subject_id}`? No (`session_id` not in parent pk). Apply **U3** — `Subject` is restricted by `Subject.Session.proj(*attr_map.keys())`, projecting the child onto its FK columns; for this primary FK those columns are just `subject_id`, so this is equivalent to `Subject.Session.proj()` projected to `subject_id`.
+2. **FK path.** The simple FK path from Master to Part is `[Subject, Subject.Session, Subject.Recording]` (`nx.all_simple_edge_paths`).
+3. **Walk reversed** (R1 upstream at each edge).
+   - Edge `Subject.Session -> Subject.Recording`: renamed FK — the **rename** case. `Subject.Session` is restricted by `Subject.Recording.proj(subject_id='src_subject', session_id='src_session')`.
+   - Edge `Subject -> Subject.Session`: not renamed, but the child's restricted attributes `{subject_id, session_id}` are not (only) the parent's primary key `{subject_id}` (`session_id` is not in it) — the **project** case. `Subject` is restricted by `Subject.Session` projected onto its foreign-key columns, which for this primary FK is just `subject_id`.
 4. **Materialize Master.** `Subject`'s restriction is fetched into a value tuple; replaces the chained `QueryExpression`.
 5. **Forward pass.** Master forward-cascades back down to `Subject.Session` and `Subject.Recording` (and any sibling Parts not on the original path), now with the materialized restriction.
 
-Without the FK walk (the pre-fix behavior), the engine joined `subject_ft.proj() & recording_ft.proj()` on shared attribute names. `Subject` has `subject_id`; `Recording` has `src_subject`. No shared columns → empty restriction → Master not restricted. This is the failure mode from [#1429](https://github.com/datajoint/datajoint-python/issues/1429) Case 1.
+Without the FK walk (the pre-fix behavior), the engine joined `subject_ft.proj() & recording_ft.proj()` on shared attribute names. `Subject` has `subject_id`; `Recording` has `src_subject`. No shared columns -> empty restriction -> Master not restricted. This is the failure mode from [#1429](https://github.com/datajoint/datajoint-python/issues/1429) Case 1.
 
 ### Example 2: Part-of-Part with no Master reference in PartB
 
@@ -177,15 +163,15 @@ class Master(dj.Manual):
         """
 ```
 
-`PartB`'s definition references `Master.PartA`, not `master` directly. The FK chain Master → PartA → PartB still exists in the dependency graph (PartA's FK to Master is `aliased=False`; PartA → PartB is also `aliased=False`).
+`PartB`'s definition references `Master.PartA`, not `master` directly. The FK chain Master -> PartA -> PartB still exists in the dependency graph (PartA's FK to Master is `aliased=False`; PartA -> PartB is also `aliased=False`).
 
 For `(Master.PartB & {"master_id": 1}).delete(part_integrity="cascade")`:
 
-1. Upward walk: PartB → PartA → Master.
-   - Edge PartA → PartB: `aliased=False`, `child_attrs ⊆ parent_pk`? `child_attrs = {master_id}`, `parent_pk = {master_id, part_a_id}`. Yes ⊆. Apply **U1** — `PartA` inherits `PartB`'s restriction directly.
-   - Edge Master → PartA: `aliased=False`, `child_attrs = {master_id} ⊆ parent_pk = {master_id}`. Apply **U1** — `Master` inherits `PartA`'s restriction.
+1. Upward walk: PartB -> PartA -> Master (R1 upstream at each edge).
+   - Edge PartA -> PartB: not renamed, and the child's restricted attributes `{master_id}` are within the parent's primary key `{master_id, part_a_id}` — the **copy** case. `PartA` inherits `PartB`'s restriction directly.
+   - Edge Master -> PartA: not renamed, and `{master_id}` is the parent's primary key `{master_id}` — the **copy** case. `Master` inherits `PartA`'s restriction.
 2. Materialize Master.
-3. Forward cascade Master → PartA → PartB picks up all sibling rows under `master_id=1`.
+3. Forward cascade Master -> PartA -> PartB picks up all sibling rows under `master_id=1`.
 
 Without the FK walk (the pre-fix behavior), the engine jumped directly from PartB to Master via `master_ft.proj() & partB_ft.proj()`. PartA was never restricted, and the chain semantics were silently incorrect. This is [#1429](https://github.com/datajoint/datajoint-python/issues/1429) Case 2.
 
@@ -195,8 +181,8 @@ For a cascade subgraph with N nodes and E edges, propagation runs in at most O(N
 
 ## What is not part of this specification
 
-- **`Diagram.trace()`** for general upstream restriction propagation: a related but distinct feature that **shipped in 2.3** and reuses the same upward rules (U1/U2/U3) defined above. `trace()` exposes upstream propagation as a first-class operator; the cascade engine's upward walk in this document is the same machinery applied inside `part_integrity="cascade"`. See the [Upstream Trace Specification](trace.md) for `trace`'s API and semantics.
-- **Custom propagation rules** (user-defined): not supported. The three forward and three upward rules cover the cases the FK graph can produce.
+- **`Diagram.trace()`** for general upstream restriction propagation: a related but distinct feature that **shipped in 2.3** and applies the same edge rule R1 upstream. `trace()` exposes upstream propagation as a first-class operator; the cascade engine's upward walk in this document is the same machinery applied inside `part_integrity="cascade"`. See the [Upstream Trace Specification](trace.md) for `trace`'s API and semantics.
+- **Custom propagation rules** (user-defined): not supported. R1 and its three cases (copy, rename, project) cover the cases the FK graph can produce.
 - **Cross-schema cascade**: handled by `dependencies.load_all_downstream()` called from `Diagram.cascade()`; orthogonal to the propagation rules described here.
 
 ## Limitations
