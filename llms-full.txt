@@ -1,6 +1,6 @@
 # DataJoint Documentation (Full)
 
-Generated: 2026-07-31 13:41:13 UTC
+Generated: 2026-08-11 17:15:06 UTC
 Commit: unknown
 Branch: unknown
 
@@ -3359,13 +3359,16 @@ quietly rewritten.
 
 ### 5. Indexing the foreign-key columns
 
-On MySQL/InnoDB the engine automatically creates a secondary index on the
-child's foreign-key columns as part of enforcing the constraint — you never
+The child's foreign-key columns are always indexed, on both backends — you never
 declare it. Such an index accelerates the delete check (finding a parent's
 children), the join (matching child keys to parent keys), and the insert check
-(confirming the parent exists). PostgreSQL does *not* index foreign-key columns
-automatically; when the delete or join cost on a large child table matters,
-declare an explicit `index(...)` on those columns.
+(confirming the parent exists). On MySQL/InnoDB the engine creates the index
+implicitly as part of enforcing the constraint. PostgreSQL does *not* index
+foreign-key columns automatically, so DataJoint emits the index itself — skipping
+it only when those columns are already covered (a left-prefix of the primary key
+or of a declared index). Either way, the mental model holds: the database indexes
+foreign-key columns. See the
+[table-declaration spec](../reference/specs/table-declaration.md#26-foreign-key-indexes).
 
 ## The dual role: integrity and workflow
 
@@ -16309,22 +16312,29 @@ class TaskType(dj.Lookup):
 
 ### Manual or Lookup?
 
-Both tiers hold rows that are *entered* rather than computed, so the question is
-**where a row comes from**:
+Both tiers hold rows that are *entered* rather than computed. The deciding
+question is **which process is accountable for the rows' quality: code review, or
+data management?**
 
-- Use **`dj.Lookup`** when the rows are part of the schema's design and belong in
-  the code — parameter sets, method definitions, controlled vocabularies,
-  enumerations. They are declared in `contents`, versioned with the table, and
-  identical in every deployment until the code changes. Updating a Lookup means
-  editing `contents` and redeploying — the change flows through your normal CI/CD
+- Use **`dj.Lookup`** when the rows are **part of the schema definition** and their
+  quality is guaranteed by **code review before deployment**. They live in
+  `contents`, are versioned with the table, and are identical in every deployment
+  until the code changes — parameter sets, method definitions, enumerations, and
+  controlled vocabularies *when code-seeded*. Updating a Lookup means editing
+  `contents` and redeploying, so the change flows through your normal CI/CD
   process, not a runtime insert.
-- Use **`dj.Manual`** when the rows are entered at runtime and are specific to a
-  project or experiment — subjects, sessions, samples, or anything typed into a
-  form, ingested from a file, or read from an instrument.
+- Use **`dj.Manual`** when the rows are **populated at runtime** and their quality
+  is guaranteed by the **data-management process** — validation, curation, and
+  access control at ingest, not code review. Subjects, sessions, samples, or
+  anything typed into a form, ingested from a file, or read from an instrument.
 
-If you find yourself populating a "Lookup" table at runtime (for example, from a
-dashboard form) rather than from its committed `contents`, make it `dj.Manual`
-instead — its rows are runtime data, not part of the schema definition.
+This resolves the case that "where a row comes from" leaves ambiguous: a controlled
+vocabulary that is **populated at runtime** — gene symbols loaded from an external
+reference, ontology terms discovered during processing. It reads like a Lookup, but
+its rows are runtime data governed by the data-management process, so it is
+`dj.Manual`. It still gets domain integrity from a `unique index` on its term; it
+simply is not code-reviewed schema content. Make `gene_symbol` a `dj.Lookup` only
+when you seed a fixed, reviewed list in `contents`.
 
 ## Part Tables
 
@@ -30610,6 +30620,11 @@ The following features work identically across all backends:
 | JSON operators | `->`, `->>` | `->`, `->>` |
 | BLOB storage | `LONGBLOB` | `BYTEA` |
 | Boolean type | `TINYINT(1)` | `BOOLEAN` |
+| Foreign-key column index | Implicit (InnoDB) | Emitted by DataJoint (coverage-aware) |
+
+DataJoint guarantees foreign-key columns are indexed on both backends; the
+difference above is only *who* creates the index. See
+[Foreign-Key Indexes](table-declaration.md#26-foreign-key-indexes).
 
 ### String Quoting
 
@@ -36204,8 +36219,8 @@ class TableName(dj.Manual):
 
 | Tier | Base Class | Table Prefix | Purpose |
 |------|------------|--------------|---------|
-| Manual | `dj.Manual` | (none) | Data inserted directly from outside the pipeline (users, instruments, ingestion scripts) |
-| Lookup | `dj.Lookup` | `#` | Reference data defined in the schema via `contents` |
+| Manual | `dj.Manual` | (none) | Data inserted at runtime from outside the pipeline (users, instruments, ingestion scripts); quality assured by the data-management process |
+| Lookup | `dj.Lookup` | `#` | Reference data defined in the schema via `contents`; quality assured by code review |
 | Imported | `dj.Imported` | `_` | Populated by `make()` from an external source |
 | Computed | `dj.Computed` | `__` | Derived from other tables |
 | Part | `dj.Part` | `master__` | Detail records of master table |
@@ -36310,6 +36325,26 @@ Internally, singleton tables use a hidden `_singleton` attribute of type `bool` 
 - Excluded from `heading.attributes`
 - Excluded from `fetch()` results
 - Excluded from join matching
+
+### 2.6 Foreign-Key Indexes
+
+DataJoint guarantees that a foreign key's referencing (child) columns are
+indexed, so foreign-key joins, cascade deletes, and the parent-existence check
+are index-supported on every backend.
+
+- On **MySQL/InnoDB** the index is created implicitly as part of enforcing the
+  constraint; DataJoint declares nothing.
+- On **PostgreSQL**, which does not index foreign-key columns automatically,
+  DataJoint emits the index itself.
+
+The emitted index is **coverage-aware**: it is skipped when the foreign-key
+columns are already a left-prefix of an existing index — the table's primary key,
+a declared `index(...)`/`unique index(...)`, or a wider foreign-key index — since
+that index already serves the lookups. So a *leading* primary foreign key adds no
+index, while a *secondary* foreign key or one in a *non-leading* position of a
+composite primary key gets its own. A `unique` foreign key always carries its
+`UNIQUE INDEX` on both backends. (Index lifecycle on foreign-key drop / `alter()`
+is out of scope of declaration; see the schema-changes specification.)
 
 ---
 

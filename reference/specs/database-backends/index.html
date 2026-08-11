@@ -3015,8 +3015,16 @@ services such as AWS RDS:</p>
 <td><code>TINYINT(1)</code></td>
 <td><code>BOOLEAN</code></td>
 </tr>
+<tr>
+<td>Foreign-key column index</td>
+<td>Implicit (InnoDB)</td>
+<td>Emitted by DataJoint (coverage-aware)</td>
+</tr>
 </tbody>
 </table>
+<p>DataJoint guarantees foreign-key columns are indexed on both backends; the
+difference above is only <em>who</em> creates the index. See
+<a href="../table-declaration/#26-foreign-key-indexes">Foreign-Key Indexes</a>.</p>
 <h3 id="string-quoting">String Quoting<a class="headerlink" href="#string-quoting" title="Permanent link">¶</a></h3>
 <p>MySQL and PostgreSQL handle quotes differently in SQL:</p>
 <table>

@@ -4286,6 +4286,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#26-foreign-key-indexes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.6 Foreign-Key Indexes
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -7151,6 +7162,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#26-foreign-key-indexes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.6 Foreign-Key Indexes
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -7853,13 +7875,13 @@
 <td>Manual</td>
 <td><code>dj.Manual</code></td>
 <td>(none)</td>
-<td>Data inserted directly from outside the pipeline (users, instruments, ingestion scripts)</td>
+<td>Data inserted at runtime from outside the pipeline (users, instruments, ingestion scripts); quality assured by the data-management process</td>
 </tr>
 <tr>
 <td>Lookup</td>
 <td><code>dj.Lookup</code></td>
 <td><code>#</code></td>
-<td>Reference data defined in the schema via <code>contents</code></td>
+<td>Reference data defined in the schema via <code>contents</code>; quality assured by code review</td>
 </tr>
 <tr>
 <td>Imported</td>
@@ -7987,6 +8009,24 @@ secondary_section
 <li>Excluded from <code>fetch()</code> results</li>
 <li>Excluded from join matching</li>
 </ul>
+<h3 id="26-foreign-key-indexes">2.6 Foreign-Key Indexes<a class="headerlink" href="#26-foreign-key-indexes" title="Permanent link">&para;</a></h3>
+<p>DataJoint guarantees that a foreign key's referencing (child) columns are
+indexed, so foreign-key joins, cascade deletes, and the parent-existence check
+are index-supported on every backend.</p>
+<ul>
+<li>On <strong>MySQL/InnoDB</strong> the index is created implicitly as part of enforcing the
+  constraint; DataJoint declares nothing.</li>
+<li>On <strong>PostgreSQL</strong>, which does not index foreign-key columns automatically,
+  DataJoint emits the index itself.</li>
+</ul>
+<p>The emitted index is <strong>coverage-aware</strong>: it is skipped when the foreign-key
+columns are already a left-prefix of an existing index — the table's primary key,
+a declared <code>index(...)</code>/<code>unique index(...)</code>, or a wider foreign-key index — since
+that index already serves the lookups. So a <em>leading</em> primary foreign key adds no
+index, while a <em>secondary</em> foreign key or one in a <em>non-leading</em> position of a
+composite primary key gets its own. A <code>unique</code> foreign key always carries its
+<code>UNIQUE INDEX</code> on both backends. (Index lifecycle on foreign-key drop / <code>alter()</code>
+is out of scope of declaration; see the schema-changes specification.)</p>
 <hr />
 <h2 id="3-attribute-definition">3. Attribute Definition<a class="headerlink" href="#3-attribute-definition" title="Permanent link">&para;</a></h2>
 <h3 id="31-syntax">3.1 Syntax<a class="headerlink" href="#31-syntax" title="Permanent link">&para;</a></h3>
