@@ -80,6 +80,13 @@ Store credentials separately in `.secrets/`:
 └── stores.main.secret_key
 ```
 
+!!! note "Ambient credentials"
+    `access_key` and `secret_key` are **optional**. Omit both to let the AWS
+    default credential chain resolve an ambient identity — an EC2 instance
+    profile, EKS/IRSA service-account role, ECS task role, or a workstation with
+    `AWS_PROFILE`/SSO — the same way the `gcs` and `azure` stores resolve theirs.
+    Provide both only for static keys. (Supplying just one is rejected.)
+
 Paths will be:
 
 - Hash: `s3://my-bucket/my-project/production/_hash/{schema}/{hash}`
@@ -196,8 +203,8 @@ print(dj.config.stores.keys())
 | `stores.<name>.bucket` | S3/GCS | Bucket name |
 | `stores.<name>.endpoint` | S3 | S3 endpoint URL |
 | `stores.<name>.secure` | No | Use HTTPS (default: true) |
-| `stores.<name>.access_key` | S3 | Access key ID (store in `.secrets/`) |
-| `stores.<name>.secret_key` | S3 | Secret access key (store in `.secrets/`) |
+| `stores.<name>.access_key` | No | Access key ID (store in `.secrets/`). Omit both keys to use ambient AWS credentials |
+| `stores.<name>.secret_key` | No | Secret access key (store in `.secrets/`). Omit both keys to use ambient AWS credentials |
 | `stores.<name>.subfolding` | No | Hash-addressed hierarchy: `[2, 2]` for 2-level nesting (default: no subfolding) |
 | `stores.<name>.partition_pattern` | No | Schema-addressed path partitioning: `"subject_id/session_date"` (default: no partitioning) |
 | `stores.<name>.token_length` | No | Random token length for schema-addressed filenames (default: `8`) |

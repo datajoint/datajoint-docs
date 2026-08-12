@@ -165,6 +165,13 @@ AKIAIOSFODNN7EXAMPLE
 wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
 ```
 
+!!! tip "No static keys? Use an ambient identity"
+    On infrastructure with an AWS identity already attached — an EC2 instance
+    profile, EKS/IRSA service-account role, ECS task role, or SSO — omit
+    `access_key` and `secret_key` entirely. The AWS default credential chain
+    resolves the identity (and refreshes it for long-running jobs), so no static
+    keys need to be minted or stored. Set both only for static credentials.
+
 #### Alternative: Environment Variables
 
 !!! version-added "New in 2.2.4"
