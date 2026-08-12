@@ -17,8 +17,10 @@ Diagrams in this documentation use the same notation as `dj.Diagram` in
 tables are gray rectangles, **Imported** tables are blue ovals, and
 **Computed** tables are red ovals. A **Part** table is a plain rectangle
 grouped with its master inside a light box. Tier is conveyed by shape and
-color, and **edge thickness carries cardinality** — a thick line is a
-one-to-one dependency, a thin line one-to-many. Edges are drawn without
+color, and **edge thickness** shows how a child relates to its parent — a
+thick line means the child **extends** the parent (one per parent); a thin
+line means the child is **contained within** the parent (many per parent).
+Edges are drawn without
 arrowheads, so **direction is read from the layout**. A diagram uses a
 single orientation throughout — either left-to-right or top-to-bottom —
 and which one is usually obvious at a glance. This one is left-to-right,
@@ -39,7 +41,9 @@ dimension. The legend below the figure keys the full notation.
 
 ![Worked-example imaging pipeline diagram spanning two schemas: experiment (Mouse → Session → Scan) and analysis (AverageFrame → Segmentation → Fluorescence, with Lookup SegmentationParam feeding Segmentation, and the Part tables Roi on Segmentation and Trace on Fluorescence).](../images/rwm-pipeline.svg)
 
-![Legend: table tiers — Manual (green rectangle), Lookup (gray rectangle), Imported (blue oval), Computed (red oval), Part (plain rectangle); an underlined name introduces a new key dimension (many rows per parent) while a plain name inherits its whole key (one row per parent); edge thickness is cardinality — thick one-to-one, thin one-to-many; edges have no arrowheads, so direction follows the layout.](../images/rwm-legend.svg)
+![Legend: table tiers — Manual (green rectangle), Lookup (gray rectangle), Imported (blue oval), Computed (red oval), Part (smaller plain rectangle); an underlined name is a new entity type (a new schema dimension, many rows per parent) while a plain name is composed from existing entities (one row per parent); edge thickness — thick means the child extends the parent, thin means the child is contained within the parent; a dashed rounded box is a schema module (labeled in the corner); a gray box encloses a master with its parts; edges have no arrowheads, so direction follows the layout.](../images/rwm-legend.svg)
+
+The notation is specified in full in the [Diagram specification](../reference/specs/diagram.md). The concepts it depicts are explained in depth elsewhere: [entity integrity](entity-integrity.md) (keys, entity types, and schema dimensions), [master–part tables](../reference/specs/master-part.md) (the entity group and its all-or-nothing populate), the [computation model](computation-model.md) (how `make()` produces Imported and Computed tables), and [semantic matching](semantic-matching.md) (why a name means the same thing everywhere it appears).
 
 The pipeline spans two schemas: **`experiment`** holds the raw, manually
 entered tables, and **`analysis`** holds everything derived from them.
