@@ -14,27 +14,49 @@ the lineage of relational modeling follows.
 
 Diagrams in this documentation use the same notation as `dj.Diagram` in
 `datajoint-python`: **Manual** tables are green rectangles, **Lookup**
-tables are plain text, **Imported** tables are blue ovals, and **Computed**
-tables are red ovals. Tier is conveyed by shape and color — the node
-itself carries only the table name.
+tables are gray rectangles, **Imported** tables are blue ovals, and
+**Computed** tables are red ovals. A **Part** table is a plain rectangle
+grouped with its master inside a light box. Tier is conveyed by shape and
+color, and **edge thickness carries cardinality** — a thick line is a
+one-to-one dependency, a thin line one-to-many. The node itself carries
+only the table name.
 
 ```mermaid
 graph TD
+    classDef manual    fill:#E7F3EC,stroke:#2F7D5B,color:#1B5138;
+    classDef lookup    fill:#F2F4F7,stroke:#A9B1BD,color:#495261;
+    classDef imported  fill:#E2ECFA,stroke:#2A5FA5,color:#123A6D;
+    classDef computed  fill:#FBEAEC,stroke:#B23A48,color:#7C2430;
+    classDef part      fill:#FFFFFF,stroke:#9AA6B8,color:#46536B;
+
     Mouse["Mouse"]:::manual
     Session["Session"]:::manual
     Scan["Scan"]:::manual
     SegParam["SegmentationParam"]:::lookup
     AvgFrame(["AverageFrame"]):::imported
-    Segmentation(["Segmentation"]):::computed
-    Fluorescence(["Fluorescence"]):::imported
 
-    Mouse --> Session --> Scan --> AvgFrame --> Segmentation --> Fluorescence
+    subgraph seg [" "]
+      Segmentation(["Segmentation"]):::computed
+      Roi["Roi"]:::part
+    end
+    subgraph fluo [" "]
+      Fluorescence(["Fluorescence"]):::imported
+      Trace["Trace"]:::part
+    end
+
+    Mouse --> Session
+    Session --> Scan
+    Scan --> AvgFrame
+    AvgFrame --> Segmentation
     SegParam --> Segmentation
+    Segmentation --> Roi
+    Segmentation --> Fluorescence
+    Fluorescence --> Trace
+    Roi --> Trace
 
-    classDef manual    fill:#c8e6c9,stroke:#2e7d32,color:#1b5e20;
-    classDef lookup    fill:none,stroke:none,color:#212121;
-    classDef imported  fill:#bbdefb,stroke:#1565c0,color:#0d47a1;
-    classDef computed  fill:#ffcdd2,stroke:#c62828,color:#b71c1c;
+    %% edge thickness = cardinality: thick 1:1, thin one-to-many
+    linkStyle 0,1,3,4,5,7,8 stroke:#3A424F,stroke-width:1px;
+    linkStyle 2,6 stroke:#3A424F,stroke-width:2px;
 ```
 
 `Mouse`, `Session`, and `Scan` are **Manual** tables entered by the
@@ -43,11 +65,15 @@ parameter sets. `AverageFrame` is **Imported** — its `make()` reads the
 TIFF identified by `Scan` and stores the mean fluorescence frame.
 `Segmentation` is **Computed** — its primary key fans in from both
 `AverageFrame` and `SegmentationParam`, so every average frame is
-segmented with every parameter set automatically. `Fluorescence` then
-extracts per-ROI time-series traces from each segmentation. No external
-scheduler is consulted: the foreign-key graph dictates what may run, what
-must run first, and what already exists. The pipeline DAG and the database
-schema are the same object.
+segmented with every parameter set automatically; its **Part** table
+`Roi` holds the individual regions found in each segmentation.
+`Fluorescence` then extracts per-ROI time-series from each segmentation,
+and its **Part** table `Trace` stores one trace per region — each `Trace`
+row tied back to the `Roi` it measures. A master and its parts form one
+entity, inserted and deleted together. No external scheduler is consulted:
+the foreign-key graph dictates what may run, what must run first, and what
+already exists. The pipeline DAG and the database schema are the same
+object.
 
 ## Three interpretations of the relational model
 
