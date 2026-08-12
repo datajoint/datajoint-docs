@@ -130,6 +130,26 @@ Internally, singleton tables use a hidden `_singleton` attribute of type `bool` 
 - Excluded from `fetch()` results
 - Excluded from join matching
 
+### 2.6 Foreign-Key Indexes
+
+DataJoint guarantees that a foreign key's referencing (child) columns are
+indexed, so foreign-key joins, cascade deletes, and the parent-existence check
+are index-supported on every backend.
+
+- On **MySQL/InnoDB** the index is created implicitly as part of enforcing the
+  constraint; DataJoint declares nothing.
+- On **PostgreSQL**, which does not index foreign-key columns automatically,
+  DataJoint emits the index itself.
+
+The emitted index is **coverage-aware**: it is skipped when the foreign-key
+columns are already a left-prefix of an existing index — the table's primary key,
+a declared `index(...)`/`unique index(...)`, or a wider foreign-key index — since
+that index already serves the lookups. So a *leading* primary foreign key adds no
+index, while a *secondary* foreign key or one in a *non-leading* position of a
+composite primary key gets its own. A `unique` foreign key always carries its
+`UNIQUE INDEX` on both backends. (Index lifecycle on foreign-key drop / `alter()`
+is out of scope of declaration; see the schema-changes specification.)
+
 ---
 
 ## 3. Attribute Definition

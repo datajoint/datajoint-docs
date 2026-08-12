@@ -105,13 +105,16 @@ quietly rewritten.
 
 ### 5. Indexing the foreign-key columns
 
-On MySQL/InnoDB the engine automatically creates a secondary index on the
-child's foreign-key columns as part of enforcing the constraint — you never
+The child's foreign-key columns are always indexed, on both backends — you never
 declare it. Such an index accelerates the delete check (finding a parent's
 children), the join (matching child keys to parent keys), and the insert check
-(confirming the parent exists). PostgreSQL does *not* index foreign-key columns
-automatically; when the delete or join cost on a large child table matters,
-declare an explicit `index(...)` on those columns.
+(confirming the parent exists). On MySQL/InnoDB the engine creates the index
+implicitly as part of enforcing the constraint. PostgreSQL does *not* index
+foreign-key columns automatically, so DataJoint emits the index itself — skipping
+it only when those columns are already covered (a left-prefix of the primary key
+or of a declared index). Either way, the mental model holds: the database indexes
+foreign-key columns. See the
+[table-declaration spec](../reference/specs/table-declaration.md#26-foreign-key-indexes).
 
 ## The dual role: integrity and workflow
 
