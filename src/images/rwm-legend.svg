@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 214"
+     font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif"
+     font-size="15">
+  <!-- Legend for the dj.Diagram notation used in the figure above. Theme-adaptive
+       (auto): light palette by default, remapped to the dark palette under
+       prefers-color-scheme: dark. Colors are unique per role, so attribute
+       selectors override the inline presentation attributes; the two whites
+       (page, part fill) are keyed by class. -->
+  <style>
+    @media (prefers-color-scheme: dark) {
+      .bg { fill: #161A21; }
+      .part { fill: #1E232C; }
+      [fill="#E7F3EC"] { fill: #16281F; }
+      [fill="#E2ECFA"] { fill: #152538; }
+      [fill="#F2F4F7"] { fill: #242832; }
+      [fill="#FBEAEC"] { fill: #331A1F; }
+      [stroke="#2F7D5B"] { stroke: #4FA97F; }
+      [stroke="#2A5FA5"] { stroke: #5E92D6; }
+      [stroke="#A9B1BD"] { stroke: #8A93A1; }
+      [stroke="#B23A48"] { stroke: #D0687A; }
+      [stroke="#9AA6B8"] { stroke: #7B879B; }
+      [stroke="#3A424F"] { stroke: #AEB6C2; }
+      [fill="#1B5138"] { fill: #BCE6CF; }
+      [fill="#123A6D"] { fill: #C3DAF6; }
+      [fill="#495261"] { fill: #C9CFD9; }
+      [fill="#7C2430"] { fill: #F3C2CB; }
+      [fill="#46536B"] { fill: #C4CCDB; }
+      [fill="#3A424F"] { fill: #AEB6C2; }
+    }
+  </style>
+
+  <rect class="bg" width="100%" height="100%" fill="white"/>
+
+  <!-- Row 1 — table tiers (shape + color, as drawn in the diagram) -->
+  <rect x="30" y="20" width="96" height="36" rx="6" fill="#E7F3EC" stroke="#2F7D5B" stroke-width="1.6"/>
+  <text x="78" y="43" text-anchor="middle" fill="#1B5138" font-weight="600">Manual</text>
+
+  <rect x="202" y="20" width="96" height="36" rx="6" fill="#F2F4F7" stroke="#A9B1BD" stroke-width="1.6"/>
+  <text x="250" y="43" text-anchor="middle" fill="#495261" font-weight="600">Lookup</text>
+
+  <ellipse cx="430" cy="38" rx="60" ry="21" fill="#E2ECFA" stroke="#2A5FA5" stroke-width="1.6"/>
+  <text x="430" y="43" text-anchor="middle" fill="#123A6D" font-weight="600">Imported</text>
+
+  <ellipse cx="612" cy="38" rx="62" ry="21" fill="#FBEAEC" stroke="#B23A48" stroke-width="1.6"/>
+  <text x="612" y="43" text-anchor="middle" fill="#7C2430" font-weight="600">Computed</text>
+
+  <rect class="part" x="738" y="20" width="76" height="36" rx="6" fill="#FFFFFF" stroke="#9AA6B8" stroke-width="1.6"/>
+  <text x="776" y="43" text-anchor="middle" fill="#46536B" font-weight="600">Part</text>
+
+  <!-- Row 2 — the underline: does the name introduce a new key dimension? -->
+  <text x="30" y="97" fill="#3A424F" font-weight="600" text-decoration="underline">Session</text>
+  <text x="112" y="97" fill="#3A424F" font-size="13.5">introduces a new key attribute — a new dimension of the key (many rows per parent)</text>
+
+  <text x="30" y="123" fill="#3A424F" font-weight="600">AverageFrame</text>
+  <text x="132" y="123" fill="#3A424F" font-size="13.5">plain name — inherits its whole key from its parents (one row per parent)</text>
+
+  <!-- Row 3 — edge thickness = cardinality -->
+  <line x1="30" y1="156" x2="92" y2="156" stroke="#3A424F" stroke-width="3"/>
+  <text x="102" y="161" fill="#3A424F" font-size="13.5">one-to-one — the foreign key is the child's whole key</text>
+
+  <line x1="470" y1="156" x2="532" y2="156" stroke="#3A424F" stroke-width="1.2"/>
+  <text x="542" y="161" fill="#3A424F" font-size="13.5">one-to-many — the child adds key attributes</text>
+
+  <!-- Row 4 — direction -->
+  <text x="30" y="192" fill="#3A424F" font-style="italic" font-size="13">Edges have no arrowheads — direction follows the layout (upstream → downstream); a part is always downstream of its master.</text>
+</svg>

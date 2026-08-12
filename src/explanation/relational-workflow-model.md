@@ -28,10 +28,15 @@ master rather than downstream of it, but a part's foreign key always
 references its master, so the part is always downstream. They are placed
 together because a master and its parts are always populated in a single
 transaction. Tables are grouped into their **schemas** — the labeled
-boxes — and dependencies cross schema boundaries freely. The node itself
-carries only the table name.
+boxes — and dependencies cross schema boundaries freely. An **underlined**
+name marks a table that introduces a new key attribute — a new dimension
+of the key, so it has many rows per parent — while a plain name inherits
+its whole key from its parents, one row per parent. The legend below the
+figure keys the full notation.
 
 ![Worked-example imaging pipeline diagram spanning two schemas: experiment (Mouse → Session → Scan) and analysis (AverageFrame → Segmentation → Fluorescence, with Lookup SegmentationParam feeding Segmentation, and the Part tables Roi on Segmentation and Trace on Fluorescence).](../images/rwm-pipeline.svg)
+
+![Legend: table tiers — Manual (green rectangle), Lookup (gray rectangle), Imported (blue oval), Computed (red oval), Part (plain rectangle); an underlined name introduces a new key dimension (many rows per parent) while a plain name inherits its whole key (one row per parent); edge thickness is cardinality — thick one-to-one, thin one-to-many; edges have no arrowheads, so direction follows the layout.](../images/rwm-legend.svg)
 
 The pipeline spans two schemas: **`experiment`** holds the raw, manually
 entered tables, and **`analysis`** holds everything derived from them.
