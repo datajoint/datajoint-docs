@@ -22,10 +22,14 @@ one-to-one dependency, a thin line one-to-many. Edges are drawn without
 arrowheads, so **direction is read from the layout**: this diagram is laid
 out left-to-right, so every foreign key points from an upstream table on
 the left to the downstream table that depends on it on the right (a
-top-to-bottom layout reads the same way, upstream at the top). Tables are
-grouped into their **schemas** — the labeled boxes — and dependencies
-cross schema boundaries freely. The node itself carries only the table
-name.
+top-to-bottom layout reads the same way, upstream at the top). The one
+exception is a **master–part** group: a Part is drawn level with its
+master rather than downstream of it, but a part's foreign key always
+references its master, so the part is always downstream. They are placed
+together because a master and its parts are always populated in a single
+transaction. Tables are grouped into their **schemas** — the labeled
+boxes — and dependencies cross schema boundaries freely. The node itself
+carries only the table name.
 
 ![Worked-example imaging pipeline diagram spanning two schemas: experiment (Mouse → Session → Scan) and analysis (AverageFrame → Segmentation → Fluorescence, with Lookup SegmentationParam feeding Segmentation, and the Part tables Roi on Segmentation and Trace on Fluorescence).](../images/rwm-pipeline.svg)
 
