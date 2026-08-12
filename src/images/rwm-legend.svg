@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 244"
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 288"
      font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif"
      font-size="15">
   <!-- Legend for the dj.Diagram notation used in the figure above. Theme-adaptive
@@ -14,11 +14,13 @@
       [fill="#E2ECFA"] { fill: #152538; }
       [fill="#F2F4F7"] { fill: #242832; }
       [fill="#FBEAEC"] { fill: #331A1F; }
+      [fill="#F3F5F8"] { fill: #2A313D; }
       [stroke="#2F7D5B"] { stroke: #4FA97F; }
       [stroke="#2A5FA5"] { stroke: #5E92D6; }
       [stroke="#A9B1BD"] { stroke: #8A93A1; }
       [stroke="#B23A48"] { stroke: #D0687A; }
       [stroke="#9AA6B8"] { stroke: #7B879B; }
+      [stroke="#E2E6EC"] { stroke: #39414E; }
       [stroke="#3A424F"] { stroke: #AEB6C2; }
       [fill="#1B5138"] { fill: #BCE6CF; }
       [fill="#123A6D"] { fill: #C3DAF6; }
@@ -61,11 +63,20 @@
   <line x1="470" y1="150" x2="532" y2="150" stroke="#3A424F" stroke-width="1.2"/>
   <text x="542" y="155" fill="#3A424F" font-size="13.5">one-to-many — the child adds key attributes</text>
 
-  <!-- Row 4 — schema module (dashed rounded box) -->
+  <!-- Row 4 — schema module (dashed rounded box, corner label) -->
   <rect x="30" y="172" width="116" height="30" rx="8" fill="none" stroke="#A9B1BD" stroke-width="1.4" stroke-dasharray="5,4"/>
   <text x="139" y="185" text-anchor="end" fill="#495261" font-size="12">experiment</text>
   <text x="158" y="191" fill="#3A424F" font-size="13.5">a schema — a dashed rounded box, labeled in the corner by its Python module</text>
 
-  <!-- Row 5 — direction -->
-  <text x="30" y="226" fill="#3A424F" font-style="italic" font-size="13">Edges have no arrowheads — direction follows the layout (upstream → downstream); a part is always downstream of its master.</text>
+  <!-- Row 5 — master-part entity cluster (gray box) -->
+  <rect x="30" y="212" width="152" height="40" rx="10" fill="#F3F5F8" stroke="#E2E6EC" stroke-width="1.4"/>
+  <ellipse cx="72" cy="232" rx="28" ry="13" fill="#FBEAEC" stroke="#B23A48" stroke-width="1.4"/>
+  <text x="72" y="236" text-anchor="middle" fill="#7C2430" font-size="10" font-weight="600">Seg</text>
+  <line x1="100" y1="232" x2="112" y2="232" stroke="#3A424F" stroke-width="1.2"/>
+  <rect class="part" x="112" y="222" width="52" height="20" rx="4" fill="#FFFFFF" stroke="#9AA6B8" stroke-width="1.2"/>
+  <text x="138" y="236" text-anchor="middle" fill="#46536B" font-size="10" font-weight="600">Roi</text>
+  <text x="196" y="237" fill="#3A424F" font-size="13.5">a gray box encloses a master with all its parts — one entity, populated together</text>
+
+  <!-- Row 6 — direction -->
+  <text x="30" y="272" fill="#3A424F" font-style="italic" font-size="13">Edges have no arrowheads — direction follows the layout (upstream → downstream); a part is always downstream of its master.</text>
 </svg>
