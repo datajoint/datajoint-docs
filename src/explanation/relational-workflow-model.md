@@ -21,43 +21,7 @@ color, and **edge thickness carries cardinality** — a thick line is a
 one-to-one dependency, a thin line one-to-many. The node itself carries
 only the table name.
 
-```mermaid
-graph TD
-    classDef manual    fill:#E7F3EC,stroke:#2F7D5B,color:#1B5138;
-    classDef lookup    fill:#F2F4F7,stroke:#A9B1BD,color:#495261;
-    classDef imported  fill:#E2ECFA,stroke:#2A5FA5,color:#123A6D;
-    classDef computed  fill:#FBEAEC,stroke:#B23A48,color:#7C2430;
-    classDef part      fill:#FFFFFF,stroke:#9AA6B8,color:#46536B;
-
-    Mouse["Mouse"]:::manual
-    Session["Session"]:::manual
-    Scan["Scan"]:::manual
-    SegParam["SegmentationParam"]:::lookup
-    AvgFrame(["AverageFrame"]):::imported
-
-    subgraph seg [" "]
-      Segmentation(["Segmentation"]):::computed
-      Roi["Roi"]:::part
-    end
-    subgraph fluo [" "]
-      Fluorescence(["Fluorescence"]):::imported
-      Trace["Trace"]:::part
-    end
-
-    Mouse --> Session
-    Session --> Scan
-    Scan --> AvgFrame
-    AvgFrame --> Segmentation
-    SegParam --> Segmentation
-    Segmentation --> Roi
-    Segmentation --> Fluorescence
-    Fluorescence --> Trace
-    Roi --> Trace
-
-    %% edge thickness = cardinality: thick 1:1, thin one-to-many
-    linkStyle 0,1,3,4,5,7,8 stroke:#3A424F,stroke-width:1px;
-    linkStyle 2,6 stroke:#3A424F,stroke-width:2px;
-```
+![Worked-example imaging pipeline diagram: Mouse → Session → Scan → AverageFrame → Segmentation → Fluorescence, with Lookup SegmentationParam feeding Segmentation, and the Part tables Roi (on Segmentation) and Trace (on Fluorescence).](../images/rwm-pipeline.svg)
 
 `Mouse`, `Session`, and `Scan` are **Manual** tables entered by the
 experimenter. `SegmentationParam` is a **Lookup** table holding reference
