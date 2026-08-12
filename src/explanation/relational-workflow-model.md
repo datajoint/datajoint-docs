@@ -19,10 +19,12 @@ tables are gray rectangles, **Imported** tables are blue ovals, and
 grouped with its master inside a light box. Tier is conveyed by shape and
 color, and **edge thickness carries cardinality** — a thick line is a
 one-to-one dependency, a thin line one-to-many. Edges are drawn without
-arrowheads, so **direction is read from the layout**: this diagram is laid
-out left-to-right, so every foreign key points from an upstream table on
-the left to the downstream table that depends on it on the right (a
-top-to-bottom layout reads the same way, upstream at the top). The one
+arrowheads, so **direction is read from the layout**. A diagram uses a
+single orientation throughout — either left-to-right or top-to-bottom —
+and which one is usually obvious at a glance. This one is left-to-right,
+so every foreign key points from an upstream table on the left to the
+downstream table that depends on it on the right (a top-to-bottom diagram
+reads the same way, upstream at the top). The one
 exception is a **master–part** group: a Part is drawn level with its
 master rather than downstream of it, but a part's foreign key always
 references its master, so the part is always downstream. They are placed
