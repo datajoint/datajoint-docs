@@ -343,10 +343,10 @@ Each table tier has a distinct visual style:
 | Tier | Shape | Fill Color | Font Color |
 |------|-------|------------|------------|
 | **Manual** | rectangle | green | dark green |
-| **Lookup** | plain text | gray | black |
+| **Lookup** | rectangle | gray | dark gray |
 | **Computed** | ellipse | red | dark red |
 | **Imported** | ellipse | blue | dark blue |
-| **Part** | plain text | transparent | black |
+| **Part** | rectangle (smaller, muted) | white | gray |
 
 ### Edge Styles
 
@@ -454,20 +454,22 @@ print(dj.Diagram(schema).make_mermaid())
 
 Output:
 ```mermaid
-flowchart TB
-    classDef manual fill:#90EE90,stroke:#006400
-    classDef lookup fill:#D3D3D3,stroke:#696969
-    classDef computed fill:#FFB6C1,stroke:#8B0000
-    classDef imported fill:#ADD8E6,stroke:#00008B
-    classDef part fill:#FFFFFF,stroke:#000000
+flowchart LR
+    classDef manual fill:#E7F3EC,stroke:#2F7D5B,color:#1B5138
+    classDef lookup fill:#F2F4F7,stroke:#A9B1BD,color:#495261
+    classDef computed fill:#FBEAEC,stroke:#B23A48,color:#7C2430
+    classDef imported fill:#E2ECFA,stroke:#2A5FA5,color:#123A6D
+    classDef part fill:#FFFFFF,stroke:#9AA6B8,color:#46536B
 
-    subgraph my_pipeline
+    subgraph my_pipeline["my_pipeline"]
         Mouse[Mouse]:::manual
         Session[Session]:::manual
         Neuron([Neuron]):::computed
     end
     Mouse --> Session
     Session --> Neuron
+    linkStyle 0 stroke:#3A424F,stroke-width:1px
+    linkStyle 1 stroke:#3A424F,stroke-width:2px
 ```
 
 ### Combining Diagrams
