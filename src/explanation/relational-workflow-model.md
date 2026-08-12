@@ -29,10 +29,11 @@ references its master, so the part is always downstream. They are placed
 together because a master and its parts are always populated in a single
 transaction. Tables are grouped into their **schemas** — the labeled
 boxes — and dependencies cross schema boundaries freely. An **underlined**
-name marks a table that introduces a new key attribute — a new dimension
-of the key, so it has many rows per parent — while a plain name inherits
-its whole key from its parents, one row per parent. The legend below the
-figure keys the full notation.
+name marks a **new entity type** — the table introduces a new key
+attribute, a new *schema dimension*, so it holds many rows per parent —
+while a plain name is an **extension of an existing entity**, inheriting
+its whole key from its parents with one row per parent. The legend below
+the figure keys the full notation.
 
 ![Worked-example imaging pipeline diagram spanning two schemas: experiment (Mouse → Session → Scan) and analysis (AverageFrame → Segmentation → Fluorescence, with Lookup SegmentationParam feeding Segmentation, and the Part tables Roi on Segmentation and Trace on Fluorescence).](../images/rwm-pipeline.svg)
 
