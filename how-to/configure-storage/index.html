@@ -6713,6 +6713,14 @@
 ├── stores.main.access_key
 └── stores.main.secret_key
 </code></pre></div>
+<div class="admonition note">
+<p class="admonition-title">Ambient credentials</p>
+<p><code>access_key</code> and <code>secret_key</code> are <strong>optional</strong>. Omit both to let the AWS
+default credential chain resolve an ambient identity — an EC2 instance
+profile, EKS/IRSA service-account role, ECS task role, or a workstation with
+<code>AWS_PROFILE</code>/SSO — the same way the <code>gcs</code> and <code>azure</code> stores resolve theirs.
+Provide both only for static keys. (Supplying just one is rejected.)</p>
+</div>
 <p>Paths will be:</p>
 <ul>
 <li>Hash: <code>s3://my-bucket/my-project/production/_hash/{schema}/{hash}</code></li>
@@ -6838,13 +6846,13 @@
 </tr>
 <tr>
 <td><code>stores.&lt;name&gt;.access_key</code></td>
-<td>S3</td>
-<td>Access key ID (store in <code>.secrets/</code>)</td>
+<td>No</td>
+<td>Access key ID (store in <code>.secrets/</code>). Omit both keys to use ambient AWS credentials</td>
 </tr>
 <tr>
 <td><code>stores.&lt;name&gt;.secret_key</code></td>
-<td>S3</td>
-<td>Secret access key (store in <code>.secrets/</code>)</td>
+<td>No</td>
+<td>Secret access key (store in <code>.secrets/</code>). Omit both keys to use ambient AWS credentials</td>
 </tr>
 <tr>
 <td><code>stores.&lt;name&gt;.subfolding</code></td>

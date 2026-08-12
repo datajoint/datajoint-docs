@@ -7294,6 +7294,14 @@ AKIAIOSFODNN7EXAMPLE
 <span class="c1"># .secrets/stores.main.secret_key</span>
 wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
 </code></pre></div>
+<div class="admonition tip">
+<p class="admonition-title">No static keys? Use an ambient identity</p>
+<p>On infrastructure with an AWS identity already attached — an EC2 instance
+profile, EKS/IRSA service-account role, ECS task role, or SSO — omit
+<code>access_key</code> and <code>secret_key</code> entirely. The AWS default credential chain
+resolves the identity (and refreshes it for long-running jobs), so no static
+keys need to be minted or stored. Set both only for static credentials.</p>
+</div>
 <h4 id="alternative-environment-variables">Alternative: Environment Variables<a class="headerlink" href="#alternative-environment-variables" title="Permanent link">&para;</a></h4>
 <div class="admonition version-added">
 <p class="admonition-title">New in 2.2.4</p>
