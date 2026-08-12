@@ -18,15 +18,19 @@ tables are gray rectangles, **Imported** tables are blue ovals, and
 **Computed** tables are red ovals. A **Part** table is a plain rectangle
 grouped with its master inside a light box. Tier is conveyed by shape and
 color, and **edge thickness carries cardinality** — a thick line is a
-one-to-one dependency, a thin line one-to-many. The node itself carries
-only the table name.
+one-to-one dependency, a thin line one-to-many. Tables are grouped into
+their **schemas** — the labeled boxes — and dependencies cross schema
+boundaries freely. The node itself carries only the table name.
 
-![Worked-example imaging pipeline diagram: Mouse → Session → Scan → AverageFrame → Segmentation → Fluorescence, with Lookup SegmentationParam feeding Segmentation, and the Part tables Roi (on Segmentation) and Trace (on Fluorescence).](../images/rwm-pipeline.svg)
+![Worked-example imaging pipeline diagram spanning two schemas: experiment (Mouse → Session → Scan) and analysis (AverageFrame → Segmentation → Fluorescence, with Lookup SegmentationParam feeding Segmentation, and the Part tables Roi on Segmentation and Trace on Fluorescence).](../images/rwm-pipeline.svg)
 
+The pipeline spans two schemas: **`experiment`** holds the raw, manually
+entered tables, and **`analysis`** holds everything derived from them.
 `Mouse`, `Session`, and `Scan` are **Manual** tables entered by the
 experimenter. `SegmentationParam` is a **Lookup** table holding reference
 parameter sets. `AverageFrame` is **Imported** — its `make()` reads the
-TIFF identified by `Scan` and stores the mean fluorescence frame.
+TIFF identified by `Scan` (a dependency reaching across from `experiment`
+into `analysis`) and stores the mean fluorescence frame.
 `Segmentation` is **Computed** — its primary key fans in from both
 `AverageFrame` and `SegmentationParam`, so every average frame is
 segmented with every parameter set automatically; its **Part** table
