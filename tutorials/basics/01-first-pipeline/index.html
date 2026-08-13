@@ -3798,12 +3798,7 @@ schema = dj.Schema('tutorial_first_pipeline')</div>
 <li>Runs <strong>sessions</strong> where data is collected</li>
 <li>Collects <strong>recordings</strong> during each session</li>
 </ul>
-<div class="jp-Mermaid"><pre class="mermaid">
-flowchart TD
-    Researcher --&gt; Session
-    Subject --&gt; Session
-    Session --&gt; Recording
-</pre></div>
+<img alt="First pipeline schema: Researcher and Subject (Manual), Session depends on Subject with a secondary reference to Researcher, and Recording depends on Session." src="/images/first-pipeline.svg" width="640"/>
 </div>
 </div>
 </div>
