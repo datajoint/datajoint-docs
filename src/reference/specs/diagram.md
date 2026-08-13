@@ -343,20 +343,34 @@ Each table tier has a distinct visual style:
 | Tier | Shape | Fill Color | Font Color |
 |------|-------|------------|------------|
 | **Manual** | rectangle | green | dark green |
-| **Lookup** | plain text | gray | black |
+| **Lookup** | rectangle | gray | dark gray |
 | **Computed** | ellipse | red | dark red |
 | **Imported** | ellipse | blue | dark blue |
-| **Part** | plain text | transparent | black |
+| **Part** | rectangle (smaller, muted) | white | gray |
 
 ### Edge Styles
 
 | Style | Meaning |
 |-------|---------|
-| Solid line | Primary foreign key |
-| Dashed line | Non-primary foreign key |
-| Thick line | Master-Part relationship |
-| Thin line | Multi-valued foreign key |
+| Solid line | Primary foreign key (in the child's primary key) |
+| Dashed line | Secondary foreign key (below the `---`) |
+| Thick line | **1:1** dependency — the foreign key constitutes the child's *entire* primary key |
+| Thin line | **Multi-valued** dependency — the child has primary-key attributes beyond those the foreign key contributes |
 | Orange line | Renamed foreign key (via `.proj()`) — hover the edge for the column-rename tooltip |
+
+**Line weight encodes cardinality, and only cardinality — it is binary.** A
+thick edge is a one-to-one dependency: the parent's key fills the child's entire
+primary key. A thin edge is one-to-many: the child adds primary-key attributes of
+its own — whether newly declared (e.g. `scan_number`) or inherited from *another*
+foreign key (a key composed from two parents). This is rename-safe: what matters
+is whether the foreign key covers the child's whole primary key, not whether the
+attribute names match, so a **renamed** foreign key can still be 1:1 (thick).
+
+Master-part is **not** a weight. A part almost always adds a key attribute, so a
+master→part edge is **thin** under this same rule. The weight rule is the same
+fact as the [underline rule](#node-labels) viewed from the edge: a table that
+introduces a new key attribute is exactly a table whose incoming dependency is
+multi-valued.
 
 ### Node Labels
 
@@ -440,20 +454,22 @@ print(dj.Diagram(schema).make_mermaid())
 
 Output:
 ```mermaid
-flowchart TB
-    classDef manual fill:#90EE90,stroke:#006400
-    classDef lookup fill:#D3D3D3,stroke:#696969
-    classDef computed fill:#FFB6C1,stroke:#8B0000
-    classDef imported fill:#ADD8E6,stroke:#00008B
-    classDef part fill:#FFFFFF,stroke:#000000
+flowchart LR
+    classDef manual fill:#E7F3EC,stroke:#2F7D5B,color:#1B5138
+    classDef lookup fill:#F2F4F7,stroke:#A9B1BD,color:#495261
+    classDef computed fill:#FBEAEC,stroke:#B23A48,color:#7C2430
+    classDef imported fill:#E2ECFA,stroke:#2A5FA5,color:#123A6D
+    classDef part fill:#FFFFFF,stroke:#9AA6B8,color:#46536B
 
-    subgraph my_pipeline
+    subgraph my_pipeline["my_pipeline"]
         Mouse[Mouse]:::manual
         Session[Session]:::manual
         Neuron([Neuron]):::computed
     end
     Mouse --> Session
     Session --> Neuron
+    linkStyle 0 stroke:#3A424F,stroke-width:1px
+    linkStyle 1 stroke:#3A424F,stroke-width:2px
 ```
 
 ### Combining Diagrams
