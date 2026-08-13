@@ -3742,9 +3742,9 @@
 </tr>
 <tr>
 <td><strong>Lookup</strong></td>
-<td>rectangle</td>
+<td>plain text</td>
 <td>gray</td>
-<td>dark gray</td>
+<td>black</td>
 </tr>
 <tr>
 <td><strong>Computed</strong></td>
@@ -3760,9 +3760,9 @@
 </tr>
 <tr>
 <td><strong>Part</strong></td>
-<td>rectangle (smaller, muted)</td>
-<td>white</td>
-<td>gray</td>
+<td>plain text</td>
+<td>transparent</td>
+<td>black</td>
 </tr>
 </tbody>
 </table>
@@ -3777,19 +3777,19 @@
 <tbody>
 <tr>
 <td>Solid line</td>
-<td>Primary foreign key (in the child's primary key)</td>
+<td>Primary foreign key</td>
 </tr>
 <tr>
 <td>Dashed line</td>
-<td>Secondary foreign key (below the <code>---</code>)</td>
+<td>Non-primary foreign key</td>
 </tr>
 <tr>
 <td>Thick line</td>
-<td><strong>1:1</strong> dependency — the foreign key constitutes the child's <em>entire</em> primary key</td>
+<td>Master-Part relationship</td>
 </tr>
 <tr>
 <td>Thin line</td>
-<td><strong>Multi-valued</strong> dependency — the child has primary-key attributes beyond those the foreign key contributes</td>
+<td>Multi-valued foreign key</td>
 </tr>
 <tr>
 <td>Orange line</td>
@@ -3797,18 +3797,6 @@
 </tr>
 </tbody>
 </table>
-<p><strong>Line weight encodes cardinality, and only cardinality — it is binary.</strong> A
-thick edge is a one-to-one dependency: the parent's key fills the child's entire
-primary key. A thin edge is one-to-many: the child adds primary-key attributes of
-its own — whether newly declared (e.g. <code>scan_number</code>) or inherited from <em>another</em>
-foreign key (a key composed from two parents). This is rename-safe: what matters
-is whether the foreign key covers the child's whole primary key, not whether the
-attribute names match, so a <strong>renamed</strong> foreign key can still be 1:1 (thick).</p>
-<p>Master-part is <strong>not</strong> a weight. A part almost always adds a key attribute, so a
-master→part edge is <strong>thin</strong> under this same rule. The weight rule is the same
-fact as the <a href="#node-labels">underline rule</a> viewed from the edge: a table that
-introduces a new key attribute is exactly a table whose incoming dependency is
-multi-valued.</p>
 <h3 id="node-labels">Node Labels<a class="headerlink" href="#node-labels" title="Permanent link">¶</a></h3>
 <ul>
 <li><strong>Underlined</strong>: Table introduces new primary key attributes</li>
@@ -3871,22 +3859,20 @@ multi-valued.</p>
 <div class="highlight"><pre><span></span><code><span class="nb">print</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Diagram</span><span class="p">(</span><span class="n">schema</span><span class="p">)</span><span class="o">.</span><span class="n">make_mermaid</span><span class="p">())</span>
 </code></pre></div>
 <p>Output:
-<pre class="mermaid"><code>flowchart LR
-    classDef manual fill:#E7F3EC,stroke:#2F7D5B,color:#1B5138
-    classDef lookup fill:#F2F4F7,stroke:#A9B1BD,color:#495261
-    classDef computed fill:#FBEAEC,stroke:#B23A48,color:#7C2430
-    classDef imported fill:#E2ECFA,stroke:#2A5FA5,color:#123A6D
-    classDef part fill:#FFFFFF,stroke:#9AA6B8,color:#46536B
+<pre class="mermaid"><code>flowchart TB
+    classDef manual fill:#90EE90,stroke:#006400
+    classDef lookup fill:#D3D3D3,stroke:#696969
+    classDef computed fill:#FFB6C1,stroke:#8B0000
+    classDef imported fill:#ADD8E6,stroke:#00008B
+    classDef part fill:#FFFFFF,stroke:#000000
 
-    subgraph my_pipeline["my_pipeline"]
+    subgraph my_pipeline
         Mouse[Mouse]:::manual
         Session[Session]:::manual
         Neuron([Neuron]):::computed
     end
     Mouse --&gt; Session
     Session --&gt; Neuron
-    linkStyle 0 stroke:#3A424F,stroke-width:1px
-    linkStyle 1 stroke:#3A424F,stroke-width:2px
 </code></pre></p>
 <h3 id="combining-diagrams">Combining Diagrams<a class="headerlink" href="#combining-diagrams" title="Permanent link">¶</a></h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># Union of schemas</span>

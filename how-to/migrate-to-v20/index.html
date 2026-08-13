@@ -8623,12 +8623,6 @@ automatically, reducing manual effort by 50-80%.</p>
 <td>Phase I code, Phase III data</td>
 </tr>
 <tr>
-<td><code>blob</code>, <code>tinyblob</code></td>
-<td><code>&lt;blob&gt;</code></td>
-<td>In-table</td>
-<td>Phase I code, Phase III data</td>
-</tr>
-<tr>
 <td><code>attach</code></td>
 <td><code>&lt;attach&gt;</code></td>
 <td>In-table</td>
@@ -9624,37 +9618,12 @@ and understand the file organization.</p>
 <td>Core type</td>
 </tr>
 <tr>
-<td><code>smallint</code></td>
-<td><code>int16</code></td>
-<td>Core type</td>
-</tr>
-<tr>
 <td><code>tinyint unsigned</code></td>
 <td><code>int16</code></td>
 <td>Core type</td>
 </tr>
 <tr>
-<td><code>tinyint</code></td>
-<td><code>int8</code></td>
-<td>Core type</td>
-</tr>
-<tr>
-<td><code>mediumint unsigned</code></td>
-<td><code>int32</code></td>
-<td>Core type</td>
-</tr>
-<tr>
-<td><code>mediumint</code></td>
-<td><code>int32</code></td>
-<td>Core type</td>
-</tr>
-<tr>
 <td><code>bigint unsigned</code></td>
-<td><code>int64</code></td>
-<td>Core type — see the caution below</td>
-</tr>
-<tr>
-<td><code>bigint</code></td>
 <td><code>int64</code></td>
 <td>Core type</td>
 </tr>
@@ -9668,33 +9637,8 @@ and understand the file organization.</p>
 <td><code>float64</code></td>
 <td>Core type</td>
 </tr>
-<tr>
-<td><code>decimal(M,D)</code></td>
-<td>Unchanged</td>
-<td>Core type</td>
-</tr>
-<tr>
-<td><code>decimal(M,D) unsigned</code></td>
-<td><code>decimal(M,D)</code></td>
-<td>Native type — see below</td>
-</tr>
 </tbody>
 </table>
-<p>DataJoint 2.0 provides no unsigned integer types, so an unsigned column widens to the
-next signed type that holds its full range. Choose a signed type with sufficient range
-rather than reaching for a native spelling.</p>
-<div class="admonition warning">
-<p class="admonition-title"><code>bigint unsigned</code> is the one lossy case</p>
-<p>Values above 2<sup>63</sup>-1 do not fit in <code>int64</code>. <code>dj.migrate</code> labels these
-columns <code>int64</code> and logs a warning naming each one. Verify the stored range before
-migrating, and keep the column native if you genuinely need the top half of the
-unsigned range.</p>
-</div>
-<p><strong>Modifiers and aliases on <code>decimal</code>:</strong> <code>decimal</code> is a core type only in its canonical
-two-argument form. <code>decimal(M,D) unsigned</code>, <code>decimal(M)</code>, <code>numeric(M,D)</code>, <code>dec(M,D)</code>
-and <code>fixed(M,D)</code> remain declarable but are treated as native types, with the usual
-portability warning. Dropping <code>unsigned</code> costs only the non-negativity constraint, not
-precision, so converting to <code>decimal(M,D)</code> is the recommended move.</p>
 <p><strong>String, Date, and Structured Types:</strong></p>
 <table>
 <thead>
@@ -9849,7 +9793,7 @@ SCOPE - PHASE I:
 
 1. Convert ALL type syntax to 2.0 core types
 2. Convert ALL legacy codecs (in-table AND in-store)
-   - In-table: longblob → &lt;blob&gt;, mediumblob → &lt;blob&gt;, blob → &lt;blob&gt;, tinyblob → &lt;blob&gt;, attach → &lt;attach&gt;
+   - In-table: longblob → &lt;blob&gt;, mediumblob → &lt;blob&gt;, attach → &lt;attach&gt;
    - In-store (legacy only): blob@store → &lt;blob@store&gt;, attach@store → &lt;attach@store&gt;, filepath@store → &lt;filepath@store&gt;
 3. Code will use TEST stores configured in datajoint.json
 4. Do NOT add new 2.0 codecs (&lt;npy@&gt;, &lt;object@&gt;) - these are for Phase IV adoption
@@ -9864,15 +9808,11 @@ Core Types (Integer and Float):
   smallint → int16
   tinyint unsigned → int16
   tinyint → int8
-  mediumint unsigned → int32
-  mediumint → int32
-  bigint unsigned → int64  # lossy above 2**63-1; verify the stored range
+  bigint unsigned → int64
   bigint → int64
   float → float32
   double → float64
-  decimal(M,D) → decimal(M,D)  # unchanged (core type)
-  decimal(M,D) unsigned → decimal(M,D)  # drop the modifier; native otherwise
-  decimal(M) / numeric(M,D) / dec(M,D) / fixed(M,D) → decimal(M,D)  # native otherwise
+  decimal(M,D) → decimal(M,D)  # unchanged
 
 Core Types (String and Date):
   varchar(N) → varchar(N)  # unchanged (core type)

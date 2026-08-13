@@ -1,6 +1,6 @@
 # DataJoint Documentation (Full)
 
-Generated: 2026-08-13 12:31:17 UTC
+Generated: 2026-08-13 12:31:22 UTC
 Commit: unknown
 Branch: unknown
 
@@ -4658,12 +4658,6 @@ Standardized, scientist-friendly types that work identically across backends.
 | `decimal(n,f)` | Fixed-point | Exact decimal |
 
 Unsigned integer types are not provided. Choose a signed type with sufficient range for your data.
-
-`decimal` is a core type only in its canonical two-argument form, `decimal(n,f)`. The
-same SQL type carrying a modifier or spelled with an alias — `decimal(4,2) unsigned`,
-`decimal(6)`, `numeric(4,2)`, `dec(4,2)`, `fixed(4,2)` — is accepted as a **native**
-type instead, with the usual portability warning. Prefer `decimal(n,f)`, and note that
-dropping `unsigned` costs only the non-negativity constraint, not precision.
 
 ### String Types
 
@@ -19894,7 +19888,6 @@ DataJoint 2.0 makes serialization **explicit** with codecs. In pre-2.0, `longblo
 |-------------------|----------------|---------|-----------|
 | `longblob` | `<blob>` | In-table | Phase I code, Phase III data |
 | `mediumblob` | `<blob>` | In-table | Phase I code, Phase III data |
-| `blob`, `tinyblob` | `<blob>` | In-table | Phase I code, Phase III data |
 | `attach` | `<attach>` | In-table | Phase I code, Phase III data |
 | `blob@store` | `<blob@store>` | In-store (hash) | Phase I code, Phase III data |
 | `attach@store` | `<attach@store>` | In-store (hash) | Phase I code, Phase III data |
@@ -20875,34 +20868,10 @@ Convert ALL types and codecs in Phase I:
 | `int unsigned` | `int64` | Core type |
 | `int` | `int32` | Core type |
 | `smallint unsigned` | `int32` | Core type |
-| `smallint` | `int16` | Core type |
 | `tinyint unsigned` | `int16` | Core type |
-| `tinyint` | `int8` | Core type |
-| `mediumint unsigned` | `int32` | Core type |
-| `mediumint` | `int32` | Core type |
-| `bigint unsigned` | `int64` | Core type — see the caution below |
-| `bigint` | `int64` | Core type |
+| `bigint unsigned` | `int64` | Core type |
 | `float` | `float32` | Core type |
 | `double` | `float64` | Core type |
-| `decimal(M,D)` | Unchanged | Core type |
-| `decimal(M,D) unsigned` | `decimal(M,D)` | Native type — see below |
-
-DataJoint 2.0 provides no unsigned integer types, so an unsigned column widens to the
-next signed type that holds its full range. Choose a signed type with sufficient range
-rather than reaching for a native spelling.
-
-!!! warning "`bigint unsigned` is the one lossy case"
-
-    Values above 2<sup>63</sup>-1 do not fit in `int64`. `dj.migrate` labels these
-    columns `int64` and logs a warning naming each one. Verify the stored range before
-    migrating, and keep the column native if you genuinely need the top half of the
-    unsigned range.
-
-**Modifiers and aliases on `decimal`:** `decimal` is a core type only in its canonical
-two-argument form. `decimal(M,D) unsigned`, `decimal(M)`, `numeric(M,D)`, `dec(M,D)`
-and `fixed(M,D)` remain declarable but are treated as native types, with the usual
-portability warning. Dropping `unsigned` costs only the non-negativity constraint, not
-precision, so converting to `decimal(M,D)` is the recommended move.
 
 **String, Date, and Structured Types:**
 
@@ -20977,7 +20946,7 @@ SCOPE - PHASE I:
 
 1. Convert ALL type syntax to 2.0 core types
 2. Convert ALL legacy codecs (in-table AND in-store)
-   - In-table: longblob → <blob>, mediumblob → <blob>, blob → <blob>, tinyblob → <blob>, attach → <attach>
+   - In-table: longblob → <blob>, mediumblob → <blob>, attach → <attach>
    - In-store (legacy only): blob@store → <blob@store>, attach@store → <attach@store>, filepath@store → <filepath@store>
 3. Code will use TEST stores configured in datajoint.json
 4. Do NOT add new 2.0 codecs (<npy@>, <object@>) - these are for Phase IV adoption
@@ -20992,15 +20961,11 @@ Core Types (Integer and Float):
   smallint → int16
   tinyint unsigned → int16
   tinyint → int8
-  mediumint unsigned → int32
-  mediumint → int32
-  bigint unsigned → int64  # lossy above 2**63-1; verify the stored range
+  bigint unsigned → int64
   bigint → int64
   float → float32
   double → float64
-  decimal(M,D) → decimal(M,D)  # unchanged (core type)
-  decimal(M,D) unsigned → decimal(M,D)  # drop the modifier; native otherwise
-  decimal(M) / numeric(M,D) / dec(M,D) / fixed(M,D) → decimal(M,D)  # native otherwise
+  decimal(M,D) → decimal(M,D)  # unchanged
 
 Core Types (String and Date):
   varchar(N) → varchar(N)  # unchanged (core type)
@@ -31266,34 +31231,20 @@ Each table tier has a distinct visual style:
 | Tier | Shape | Fill Color | Font Color |
 |------|-------|------------|------------|
 | **Manual** | rectangle | green | dark green |
-| **Lookup** | rectangle | gray | dark gray |
+| **Lookup** | plain text | gray | black |
 | **Computed** | ellipse | red | dark red |
 | **Imported** | ellipse | blue | dark blue |
-| **Part** | rectangle (smaller, muted) | white | gray |
+| **Part** | plain text | transparent | black |
 
 ### Edge Styles
 
 | Style | Meaning |
 |-------|---------|
-| Solid line | Primary foreign key (in the child's primary key) |
-| Dashed line | Secondary foreign key (below the `---`) |
-| Thick line | **1:1** dependency — the foreign key constitutes the child's *entire* primary key |
-| Thin line | **Multi-valued** dependency — the child has primary-key attributes beyond those the foreign key contributes |
+| Solid line | Primary foreign key |
+| Dashed line | Non-primary foreign key |
+| Thick line | Master-Part relationship |
+| Thin line | Multi-valued foreign key |
 | Orange line | Renamed foreign key (via `.proj()`) — hover the edge for the column-rename tooltip |
-
-**Line weight encodes cardinality, and only cardinality — it is binary.** A
-thick edge is a one-to-one dependency: the parent's key fills the child's entire
-primary key. A thin edge is one-to-many: the child adds primary-key attributes of
-its own — whether newly declared (e.g. `scan_number`) or inherited from *another*
-foreign key (a key composed from two parents). This is rename-safe: what matters
-is whether the foreign key covers the child's whole primary key, not whether the
-attribute names match, so a **renamed** foreign key can still be 1:1 (thick).
-
-Master-part is **not** a weight. A part almost always adds a key attribute, so a
-master→part edge is **thin** under this same rule. The weight rule is the same
-fact as the [underline rule](#node-labels) viewed from the edge: a table that
-introduces a new key attribute is exactly a table whose incoming dependency is
-multi-valued.
 
 ### Node Labels
 
@@ -31377,22 +31328,20 @@ print(dj.Diagram(schema).make_mermaid())
 
 Output:
 ```mermaid
-flowchart LR
-    classDef manual fill:#E7F3EC,stroke:#2F7D5B,color:#1B5138
-    classDef lookup fill:#F2F4F7,stroke:#A9B1BD,color:#495261
-    classDef computed fill:#FBEAEC,stroke:#B23A48,color:#7C2430
-    classDef imported fill:#E2ECFA,stroke:#2A5FA5,color:#123A6D
-    classDef part fill:#FFFFFF,stroke:#9AA6B8,color:#46536B
+flowchart TB
+    classDef manual fill:#90EE90,stroke:#006400
+    classDef lookup fill:#D3D3D3,stroke:#696969
+    classDef computed fill:#FFB6C1,stroke:#8B0000
+    classDef imported fill:#ADD8E6,stroke:#00008B
+    classDef part fill:#FFFFFF,stroke:#000000
 
-    subgraph my_pipeline["my_pipeline"]
+    subgraph my_pipeline
         Mouse[Mouse]:::manual
         Session[Session]:::manual
         Neuron([Neuron]):::computed
     end
     Mouse --> Session
     Session --> Neuron
-    linkStyle 0 stroke:#3A424F,stroke-width:1px
-    linkStyle 1 stroke:#3A424F,stroke-width:2px
 ```
 
 ### Combining Diagrams
