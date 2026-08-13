@@ -491,13 +491,18 @@ combined = dj.Diagram.from_sequence([schema1, schema2, schema3])
 
 Operational methods (`cascade`, `restrict`, `counts`, `prune`) use `networkx`, which is always installed as a core dependency.
 
-Diagram **visualization** requires optional dependencies:
+Diagram **visualization** additionally requires:
 
-```bash
-pip install matplotlib pygraphviz
-```
+- **Graphviz** — the `dot` executable. The default notebook display, `_repr_svg_()`, goes through
+  `make_svg()` → `make_dot()` → pydot → `dot`, so this is the path nearly all usage hits. `pydot`
+  ships with DataJoint, but Graphviz itself is a system package that `pip` cannot install
+  (`brew install graphviz`, `sudo apt-get install graphviz`). Without it, rendering raises
+  `FileNotFoundError` — see
+  [Installation → Troubleshooting](../../how-to/installation.md#djdiagram-raises-filenotfounderror).
+- **matplotlib** — only for `Diagram.draw()`, a separate `make_image()` path that most usage never
+  touches: `pip install datajoint[viz]`.
 
-If visualization dependencies are missing, `dj.Diagram` displays a warning and provides a stub class. Operational methods remain available regardless.
+Operational methods remain available regardless.
 
 ---
 
