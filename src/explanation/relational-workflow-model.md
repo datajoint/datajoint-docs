@@ -14,40 +14,55 @@ the lineage of relational modeling follows.
 
 Diagrams in this documentation use the same notation as `dj.Diagram` in
 `datajoint-python`: **Manual** tables are green rectangles, **Lookup**
-tables are plain text, **Imported** tables are blue ovals, and **Computed**
-tables are red ovals. Tier is conveyed by shape and color — the node
-itself carries only the table name.
+tables are gray rectangles, **Imported** tables are blue ovals, and
+**Computed** tables are red ovals. A **Part** table is a plain rectangle
+grouped with its master inside a light box. Tier is conveyed by shape and
+color, and **edge thickness** shows how a child relates to its parent — a
+thick line means the child **extends** the parent (one per parent); a thin
+line means the child is **contained within** the parent (many per parent).
+Edges are drawn without
+arrowheads, so **direction is read from the layout**. A diagram uses a
+single orientation throughout — either left-to-right or top-to-bottom —
+and which one is usually obvious at a glance. This one is left-to-right,
+so every foreign key points from an upstream table on the left to the
+downstream table that depends on it on the right (a top-to-bottom diagram
+reads the same way, upstream at the top). The one
+exception is a **master–part** group: a Part is drawn level with its
+master rather than downstream of it, but a part's foreign key always
+references its master, so the part is always downstream. They are placed
+together because a master and its parts are always populated in a single
+transaction. Tables are grouped into their **schemas** — the labeled
+boxes — and dependencies cross schema boundaries freely. An **underlined**
+name marks a **new entity type** — the table introduces a new key
+attribute, a new *schema dimension*, so it holds many rows per parent —
+while a plain name is **composed from existing entities**, extending one
+or combining several, inheriting its whole key and adding no new
+dimension. The legend below the figure keys the full notation.
 
-```mermaid
-graph TD
-    Mouse["Mouse"]:::manual
-    Session["Session"]:::manual
-    Scan["Scan"]:::manual
-    SegParam["SegmentationParam"]:::lookup
-    AvgFrame(["AverageFrame"]):::imported
-    Segmentation(["Segmentation"]):::computed
-    Fluorescence(["Fluorescence"]):::imported
+![Worked-example imaging pipeline diagram spanning two schemas: experiment (Mouse → Session → Scan) and analysis (AverageFrame → Segmentation → Fluorescence, with Lookup SegmentationParam feeding Segmentation, and the Part tables Roi on Segmentation and Trace on Fluorescence).](../images/rwm-pipeline.svg)
 
-    Mouse --> Session --> Scan --> AvgFrame --> Segmentation --> Fluorescence
-    SegParam --> Segmentation
+![Legend: table tiers — Manual (green rectangle), Lookup (gray rectangle), Imported (blue oval), Computed (red oval), Part (smaller plain rectangle); an underlined name is a new entity type (a new schema dimension, many rows per parent) while a plain name is composed from existing entities (one row per parent); edge thickness — thick means the child extends the parent, thin means the child is contained within the parent; a dashed rounded box is a schema module (labeled in the corner); a gray box encloses a master with its parts; edges have no arrowheads, so direction follows the layout.](../images/rwm-legend.svg)
 
-    classDef manual    fill:#c8e6c9,stroke:#2e7d32,color:#1b5e20;
-    classDef lookup    fill:none,stroke:none,color:#212121;
-    classDef imported  fill:#bbdefb,stroke:#1565c0,color:#0d47a1;
-    classDef computed  fill:#ffcdd2,stroke:#c62828,color:#b71c1c;
-```
+The notation is specified in full in the [Diagram specification](../reference/specs/diagram.md). The concepts it depicts are explained in depth elsewhere: [entity integrity](entity-integrity.md) (keys, entity types, and schema dimensions), [master–part tables](../reference/specs/master-part.md) (the entity group and its all-or-nothing populate), the [computation model](computation-model.md) (how `make()` produces Imported and Computed tables), and [semantic matching](semantic-matching.md) (why a name means the same thing everywhere it appears).
 
+The pipeline spans two schemas: **`experiment`** holds the raw, manually
+entered tables, and **`analysis`** holds everything derived from them.
 `Mouse`, `Session`, and `Scan` are **Manual** tables entered by the
 experimenter. `SegmentationParam` is a **Lookup** table holding reference
 parameter sets. `AverageFrame` is **Imported** — its `make()` reads the
-TIFF identified by `Scan` and stores the mean fluorescence frame.
+TIFF identified by `Scan` (a dependency reaching across from `experiment`
+into `analysis`) and stores the mean fluorescence frame.
 `Segmentation` is **Computed** — its primary key fans in from both
 `AverageFrame` and `SegmentationParam`, so every average frame is
-segmented with every parameter set automatically. `Fluorescence` then
-extracts per-ROI time-series traces from each segmentation. No external
-scheduler is consulted: the foreign-key graph dictates what may run, what
-must run first, and what already exists. The pipeline DAG and the database
-schema are the same object.
+segmented with every parameter set automatically; its **Part** table
+`Roi` holds the individual regions found in each segmentation.
+`Fluorescence` then extracts per-ROI time-series from each segmentation,
+and its **Part** table `Trace` stores one trace per region — each `Trace`
+row tied back to the `Roi` it measures. A master and its parts form one
+entity, inserted and deleted together. No external scheduler is consulted:
+the foreign-key graph dictates what may run, what must run first, and what
+already exists. The pipeline DAG and the database schema are the same
+object.
 
 ## Three interpretations of the relational model
 
