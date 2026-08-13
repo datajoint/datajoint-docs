@@ -9,14 +9,14 @@ DataJoint configuration options and settings.
 Configuration is loaded in priority order:
 
 1. **Environment variables** (highest priority)
-2. **Secrets directory** (`.secrets/`)
-3. **Config file** (`datajoint.json`)
+2. **Config file** (`datajoint.json`)
+3. **Secrets directory** (`.secrets/`)
 4. **Defaults** (lowest priority)
 
 ## Database Settings
 
 | Setting | Environment | Default | Description |
-|---------|-------------|---------|-------------|
+| --------- | ------------- | --------- | ------------- |
 | `database.backend` | `DJ_BACKEND` | `mysql` | Database backend: `mysql` or `postgresql` *(new in 2.1)* |
 | `database.host` | `DJ_HOST` | `localhost` | Database server hostname |
 | `database.port` | `DJ_PORT` | `3306`/`5432` | Database server port (auto-detects from backend) |
@@ -53,7 +53,7 @@ DataJoint uses two default settings to reflect the architectural distinction bet
 **Common settings (all protocols):**
 
 | Setting | Required | Description |
-|---------|----------|-------------|
+| --------- | ---------- | ------------- |
 | `stores.<name>.protocol` | Yes | Storage protocol: `file`, `s3`, `gcs`, `azure` |
 | `stores.<name>.location` | Yes | Base path or prefix (includes project context) |
 | `stores.<name>.hash_prefix` | No | Path prefix for hash-addressed section (default: `"_hash"`) |
@@ -90,7 +90,7 @@ Prefixes must be mutually exclusive (no prefix can be a parent/child of another)
 **S3-specific settings:**
 
 | Setting | Required | Description |
-|---------|----------|-------------|
+| --------- | ---------- | ------------- |
 | `stores.<name>.endpoint` | Yes | S3 endpoint URL (e.g., `s3.amazonaws.com`) |
 | `stores.<name>.bucket` | Yes | Bucket name |
 | `stores.<name>.access_key` | Yes | S3 access key ID |
@@ -100,7 +100,7 @@ Prefixes must be mutually exclusive (no prefix can be a parent/child of another)
 **GCS-specific settings:**
 
 | Setting | Required | Description |
-|---------|----------|-------------|
+| --------- | ---------- | ------------- |
 | `stores.<name>.bucket` | Yes | GCS bucket name |
 | `stores.<name>.token` | Yes | Authentication token path |
 | `stores.<name>.project` | No | GCS project ID |
@@ -108,7 +108,7 @@ Prefixes must be mutually exclusive (no prefix can be a parent/child of another)
 **Azure-specific settings:**
 
 | Setting | Required | Description |
-|---------|----------|-------------|
+| --------- | ---------- | ------------- |
 | `stores.<name>.container` | Yes | Azure container name |
 | `stores.<name>.account_name` | Yes | Storage account name |
 | `stores.<name>.account_key` | Yes | Storage account key |
@@ -154,7 +154,7 @@ If table lacks partition attributes, it follows normal path structure.
 ## Jobs Settings
 
 | Setting | Default | Description |
-|---------|---------|-------------|
+| --------- | --------- | ------------- |
 | `jobs.auto_refresh` | `True` | Auto-refresh job queue on populate |
 | `jobs.keep_completed` | `False` | Retain success records in jobs table |
 | `jobs.stale_timeout` | `3600` | Seconds before stale job cleanup |
@@ -166,7 +166,7 @@ If table lacks partition attributes, it follows normal path structure.
 ## Display Settings
 
 | Setting | Environment | Default | Description |
-|---------|-------------|---------|-------------|
+| --------- | ------------- | --------- | ------------- |
 | `display.limit` | — | `12` | Max rows to display |
 | `display.width` | — | `14` | Column width |
 | `display.show_tuple_count` | — | `True` | Show row count in output |
@@ -175,7 +175,7 @@ If table lacks partition attributes, it follows normal path structure.
 ## Top-Level Settings
 
 | Setting | Environment | Default | Description |
-|---------|-------------|---------|-------------|
+| --------- | ------------- | --------- | ------------- |
 | `loglevel` | `DJ_LOG_LEVEL` | `INFO` | Log level: `DEBUG`, `INFO`, `WARNING`, `ERROR`, `CRITICAL` |
 | `safemode` | — | `True` | Require confirmation for destructive operations |
 | `enable_python_native_blobs` | — | `True` | Allow Python-native blob serialization |
@@ -326,7 +326,7 @@ schema = inst.Schema("my_schema")
 ### Parameters
 
 | Parameter | Type | Default | Description |
-|-----------|------|---------|-------------|
+| ----------- | ------ | --------- | ------------- |
 | `host` | str | — | Database hostname (required) |
 | `user` | str | — | Database username (required) |
 | `password` | str | — | Database password (required) |
@@ -337,7 +337,7 @@ schema = inst.Schema("my_schema")
 ### Attributes and Methods
 
 | Member | Description |
-|--------|-------------|
+| -------- | ------------- |
 | `inst.config` | This Instance's Config object |
 | `inst.connection` | This Instance's Connection object |
 | `inst.Schema(name)` | Create a Schema bound to this Instance |

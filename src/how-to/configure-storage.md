@@ -26,8 +26,8 @@ Multiple stores can be configured for different data types or storage tiers. One
 DataJoint loads configuration in priority order:
 
 1. **Environment variables** (highest priority)
-2. **Secrets directory** (`.secrets/`)
-3. **Config file** (`datajoint.json`)
+2. **Config file** (`datajoint.json`)
+3. **Secrets directory** (`.secrets/`)
 4. **Defaults** (lowest priority)
 
 ## Single Store Configuration
@@ -196,7 +196,7 @@ print(dj.config.stores.keys())
 ## Configuration Options
 
 | Option | Required | Description |
-|--------|----------|-------------|
+| -------- | ---------- | ------------- |
 | `stores.default` | Yes | Name of the default store |
 | `stores.<name>.protocol` | Yes | `file`, `s3`, `gcs`, or `azure` |
 | `stores.<name>.location` | Yes | Base path or prefix (includes project context) |
@@ -248,7 +248,7 @@ Schema-addressed storage (`<object@>`, `<npy@>`) does not use subfolding—it us
 ### Filesystem Recommendations
 
 | Filesystem | Subfolding Needed | Notes |
-|------------|-------------------|-------|
+| ------------ | ------------------- | ------- |
 | ext3 | Yes | Limited directory indexing |
 | FAT32/exFAT | Yes | Linear directory scans |
 | NFS | Yes | Network latency amplifies directory lookups |
