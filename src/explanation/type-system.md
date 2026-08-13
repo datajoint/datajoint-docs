@@ -93,6 +93,12 @@ Standardized, scientist-friendly types that work identically across backends.
 
 Unsigned integer types are not provided. Choose a signed type with sufficient range for your data.
 
+`decimal` is a core type only in its canonical two-argument form, `decimal(n,f)`. The
+same SQL type carrying a modifier or spelled with an alias — `decimal(4,2) unsigned`,
+`decimal(6)`, `numeric(4,2)`, `dec(4,2)`, `fixed(4,2)` — is accepted as a **native**
+type instead, with the usual portability warning. Prefer `decimal(n,f)`, and note that
+dropping `unsigned` costs only the non-negativity constraint, not precision.
+
 ### String Types
 
 | Type | Description |
