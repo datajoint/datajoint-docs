@@ -2418,6 +2418,15 @@
 </a>
 </li>
 <li class="md-nav__item">
+<a class="md-nav__link" href="#datajoint.diagram.Diagram.svg_string">
+<span class="md-ellipsis">
+      
+        svg_string
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
 <a class="md-nav__link" href="#datajoint.diagram.Diagram.make_mermaid">
 <span class="md-ellipsis">
       
@@ -2832,6 +2841,15 @@
 </a>
 </li>
 <li class="md-nav__item">
+<a class="md-nav__link" href="#datajoint.diagram.Diagram.svg_string">
+<span class="md-ellipsis">
+      
+        svg_string
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
 <a class="md-nav__link" href="#datajoint.diagram.Diagram.make_mermaid">
 <span class="md-ellipsis">
       
@@ -2956,7 +2974,7 @@ dj.Diagram(schema)  # now includes all downstream schemas
 <p><code>Diagram.cascade()</code> calls <code>load_all_downstream()</code> automatically.</p>
 <p>Layout direction is controlled via <code>dj.config.display.diagram_direction</code>
 (default <code>"TB"</code>). Use <code>dj.config.override()</code> to change temporarily::</p>
-<pre><code>with dj.config.override(display_diagram_direction="LR"):
+<pre><code>with dj.config.override(display__diagram_direction="LR"):
     dj.Diagram(schema).draw()
 </code></pre>
 </details>
@@ -3411,7 +3429,7 @@ to handle concurrent inserts safely).</p>
 <h3 class="doc doc-heading" id="datajoint.diagram.Diagram.make_dot">
 <span class="doc doc-object-name doc-function-name">make_dot</span>
 <a class="headerlink" href="#datajoint.diagram.Diagram.make_dot" title="Permanent link">¶</a></h3>
-<div class="doc-signature highlight"><pre><span></span><code><span class="nf">make_dot</span><span class="p">()</span>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">make_dot</span><span class="p">(</span><span class="n">theme</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
 </code></pre></div>
 <div class="doc doc-contents">
 <p>Generate a pydot graph object.</p>
@@ -3466,6 +3484,19 @@ group label when available.</p>
 </div>
 </div>
 <div class="doc doc-object doc-function">
+<h3 class="doc doc-heading" id="datajoint.diagram.Diagram.svg_string">
+<span class="doc doc-object-name doc-function-name">svg_string</span>
+<a class="headerlink" href="#datajoint.diagram.Diagram.svg_string" title="Permanent link">¶</a></h3>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">svg_string</span><span class="p">()</span>
+</code></pre></div>
+<div class="doc doc-contents">
+<p>Render the diagram to an SVG string, honoring the color theme.</p>
+<p>For <code>theme="auto"</code> the diagram is rendered in light colors and a
+<code>prefers-color-scheme</code> style block is injected so a single image
+adapts to the viewer's light or dark mode. Other themes render directly.</p>
+</div>
+</div>
+<div class="doc doc-object doc-function">
 <h3 class="doc doc-heading" id="datajoint.diagram.Diagram.make_mermaid">
 <span class="doc doc-object-name doc-function-name">make_mermaid</span>
 <a class="headerlink" href="#datajoint.diagram.Diagram.make_mermaid" title="Permanent link">¶</a></h3>
@@ -3500,18 +3531,31 @@ Markdown documentation, GitHub, or <a href="https://mermaid.live">https://mermai
 <summary>Notes</summary>
 <p>Layout direction is controlled via <code>dj.config.display.diagram_direction</code>.
 Tables are grouped by schema using Mermaid subgraphs, with the Python
-module name shown as the group label when available.</p>
+module name shown as the group label when available. A master and its
+parts are nested in an inner subgraph, mirroring the Graphviz entity
+cluster.</p>
+<p>The notation matches the modernized Graphviz renderer (#1532/#1533):
+the tier palette is shared from <code>_DIAGRAM_THEMES["light"]</code>; edge
+thickness encodes cardinality (thick = 1:1, thin = one-to-many),
+<strong>not</strong> primary-vs-secondary; renamed foreign keys are drawn in the
+theme's amber. Three Graphviz features have no Mermaid equivalent and
+are omitted: the top-right schema-label placement, the Helvetica font,
+and the underline marking a dimension-introducing table. Dark mode is
+left to the Mermaid host's theme rather than emitted inline.</p>
 </details>
 <p><span class="doc-section-title">Examples:</span></p>
 <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Diagram</span><span class="p">(</span><span class="n">schema</span><span class="p">)</span><span class="o">.</span><span class="n">make_mermaid</span><span class="p">())</span>
 <span class="go">flowchart TB</span>
-<span class="go">    subgraph my_pipeline</span>
+<span class="go">    classDef manual fill:#E7F3EC,stroke:#2F7D5B,color:#1B5138</span>
+<span class="go">    ...</span>
+<span class="go">    subgraph my_pipeline["my_pipeline"]</span>
 <span class="go">        Mouse[Mouse]:::manual</span>
 <span class="go">        Session[Session]:::manual</span>
 <span class="go">        Neuron([Neuron]):::computed</span>
 <span class="go">    end</span>
 <span class="go">    Mouse --&gt; Session</span>
 <span class="go">    Session --&gt; Neuron</span>
+<span class="go">    linkStyle 0 stroke:#3A424F,stroke-width:1px</span>
 </code></pre></div>
 </div>
 </div>
