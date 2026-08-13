@@ -3135,6 +3135,11 @@ database efficiency with Python convenience.</p>
 </tbody>
 </table>
 <p>Unsigned integer types are not provided. Choose a signed type with sufficient range for your data.</p>
+<p><code>decimal</code> is a core type only in its canonical two-argument form, <code>decimal(n,f)</code>. The
+same SQL type carrying a modifier or spelled with an alias — <code>decimal(4,2) unsigned</code>,
+<code>decimal(6)</code>, <code>numeric(4,2)</code>, <code>dec(4,2)</code>, <code>fixed(4,2)</code> — is accepted as a <strong>native</strong>
+type instead, with the usual portability warning. Prefer <code>decimal(n,f)</code>, and note that
+dropping <code>unsigned</code> costs only the non-negativity constraint, not precision.</p>
 <h3 id="string-types">String Types<a class="headerlink" href="#string-types" title="Permanent link">¶</a></h3>
 <table>
 <thead>
