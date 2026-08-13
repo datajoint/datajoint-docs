@@ -65,7 +65,7 @@ Contributions welcome! See [contribution guidelines](https://docs.datajoint.com/
 
 **Quick fixes:** Fork, edit markdown in `src/`, submit PR.
 
-**Tutorial notebooks:** Re-execute after changes:
+**Single notebook:** Re-execute one notebook in place:
 ```bash
 docker compose exec docs jupyter nbconvert --to notebook --execute --inplace \
     /main/src/tutorials/YOUR_NOTEBOOK.ipynb
@@ -93,6 +93,19 @@ banner doesn't match `extra.datajoint_version`:
 ```bash
 python scripts/check_notebook_versions.py
 ```
+
+Notes on the execution environment:
+
+- **Credentials.** The Compose databases use the password `tutorial` —
+  `root` for MySQL (`MYSQL_ROOT_PASSWORD`) and `postgres` for PostgreSQL (`POSTGRES_USER` /
+  `POSTGRES_PASSWORD`), both set in `docker-compose.yaml`. `MODE=EXECUTE*` supplies them to the
+  notebooks automatically; you only need them to connect to a Compose database from outside it.
+- **Graphviz.** `dj.Diagram`'s notebook display calls the Graphviz `dot` binary, which the docs
+  image installs. This is why committed diagram outputs always render, and why the same cell
+  fails on a host without Graphviz — see
+  [Installation → Troubleshooting](https://docs.datajoint.com/how-to/installation/#djdiagram-raises-filenotfounderror).
+- **DataJoint version.** `pip_requirements.txt` installs `datajoint@master`, so regenerated
+  outputs track the development branch rather than the last release.
 
 ## Related
 
