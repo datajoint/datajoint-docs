@@ -75,9 +75,24 @@ each column: `int32`, `int64`, `float32`, `float64`, `decimal(p, s)`,
 `varchar(N)`, `char(N)`, `date`, `datetime`, `uuid`, and `enum(...)` for
 closed categorical sets. Choosing `sex : enum('M', 'F', 'U')` instead of a
 free-text field means an invalid category can never be stored, and
-`decimal(5, 2)` fixes both magnitude and precision. The type system is
-extensible: custom codecs attach domain rules to structured and object-backed
-attributes as well.
+`decimal(5, 2)` fixes both magnitude and precision.
+
+The type system is **extensible**, and this is where DataJoint carries domain
+integrity beyond the scalar SQL types. Through
+[Object-Augmented Schemas](data-pipelines.md#object-augmented-schemas) and the
+[codec system](../how-to/create-custom-codec.md), an attribute can hold a
+domain-specific datatype — a calcium-imaging movie, a spike-sorting result, a
+fitted model — whose contents live in object storage but are addressed and
+governed by the schema. A [codec](../reference/specs/codec-api.md) *defines* that
+datatype: it can run **arbitrary validation checks** when a value is encoded —
+rejecting anything outside the domain's valid set, exactly as `enum` does for a
+category — and it exposes **typed access methods** for reading the value back.
+Crucially, the object write is bound to the **same database transaction** as the
+row that references it, so an object-backed attribute obeys the same discipline
+as any scalar column: the row and its object commit together or not at all, and
+a failed check or write rolls the whole insert back. Domain integrity therefore
+holds uniformly — from `int32` and `enum` to arbitrary structured and
+object-backed types — under one consistency guarantee.
 
 ### 2. Completeness
 
