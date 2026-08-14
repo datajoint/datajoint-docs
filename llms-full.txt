@@ -1,6 +1,6 @@
 # DataJoint Documentation (Full)
 
-Generated: 2026-08-14 12:30:52 UTC
+Generated: 2026-08-14 21:44:09 UTC
 Commit: unknown
 Branch: unknown
 
@@ -13617,76 +13617,15 @@ schema.drop(prompt=False)
 
 Learn DataJoint by building real pipelines.
 
-These tutorials guide you through building data pipelines step by step. Each tutorial
-is a Jupyter notebook that you can run interactively. Start with the basics and
-progress to domain-specific and advanced topics.
+These tutorials guide you through building data pipelines step by step. Each tutorial is a
+Jupyter notebook, published here with its code and its executed outputs, so you can follow the
+whole pipeline without leaving the page. Start with the basics and progress to domain-specific
+and advanced topics.
 
-## Quick Start
-
-Install DataJoint:
-
-```bash
-pip install datajoint
-```
-
-Configure database credentials in your project (see [Configuration](../reference/configuration.md)):
-
-```bash
-# Create datajoint.json for non-sensitive settings
-echo '{"database": {"host": "localhost", "port": 3306}}' > datajoint.json
-
-# Create secrets directory for credentials
-mkdir -p .secrets
-echo "root" > .secrets/database.user
-echo "password" > .secrets/database.password
-```
-
-Define and populate a simple pipeline:
-
-```python
-import datajoint as dj
-
-schema = dj.Schema('my_pipeline')
-
-@schema
-class Subject(dj.Manual):
-    definition = """
-    subject_id : int32
-    ---
-    name : varchar(100)
-    date_of_birth : date
-    """
-
-@schema
-class Session(dj.Manual):
-    definition = """
-    -> Subject
-    session_idx : int16
-    ---
-    session_date : date
-    """
-
-@schema
-class SessionAnalysis(dj.Computed):
-    definition = """
-    -> Session
-    ---
-    result : float64
-    """
-
-    def make(self, key):
-        # Compute result for this session
-        self.insert1({**key, 'result': 42.0})
-
-# Insert data
-Subject.insert1({'subject_id': 1, 'name': 'M001', 'date_of_birth': '2026-01-15'})
-Session.insert1({'subject_id': 1, 'session_idx': 1, 'session_date': '2026-01-06'})
-
-# Run computations
-SessionAnalysis.populate()
-```
-
-Continue learning with the structured tutorials below.
+**Want to run them yourself?** Every notebook can be downloaded and executed against your own
+MySQL or PostgreSQL database. [Installation](../how-to/installation.md) covers the setup:
+DataJoint, a database, Jupyter, and
+[getting the notebooks](../how-to/installation.md#running-the-tutorial-notebooks).
 
 ## Learning Paths
 
@@ -13813,22 +13752,6 @@ Extending DataJoint for specialized use cases:
 - [JSON Data Type](advanced/json-type.ipynb) — Semi-structured data in tables
 - [Distributed Computing](advanced/distributed.ipynb) — Multi-process and cluster workflows
 - [Custom Codecs](advanced/custom-codecs.ipynb) — Extending the type system
-
-## Running the Tutorials
-
-```bash
-# Clone the repository
-git clone https://github.com/datajoint/datajoint-docs.git
-cd datajoint-docs
-
-# Start the tutorial environment
-docker compose up -d
-
-# Launch Jupyter
-jupyter lab src/tutorials/
-```
-
-All tutorials use a local MySQL database that resets between sessions.
 
 
 ============================================================
@@ -15124,14 +15047,17 @@ This file should be committed to version control.
 
 ## Secrets Directory (`.secrets/`)
 
-Store credentials in `.secrets/datajoint.json`:
+Store credentials as one plain-text file per setting:
 
-```json
-{
-  "database.user": "myuser",
-  "database.password": "mypassword"
-}
+```bash
+mkdir -p .secrets
+echo "myuser"     > .secrets/database.user
+echo "mypassword" > .secrets/database.password
+chmod 600 .secrets/*
 ```
+
+Only `database.user`, `database.password`, and `stores.<name>.<attr>` are read from this
+directory — see [Manage Secrets](manage-secrets.md#option-1-secrets-directory-recommended-for-development).
 
 **Important:** Add `.secrets/` to your `.gitignore`:
 
@@ -15154,7 +15080,7 @@ Environment variables take precedence over config files.
 ## Configuration Settings
 
 | Setting | Environment | Default | Description |
-|---------|-------------|---------|-------------|
+| --------- | ------------- | --------- | ------------- |
 | `database.host` | `DJ_HOST` | `localhost` | Database server hostname |
 | `database.port` | `DJ_PORT` | Auto | Database server port (3306 for MySQL, 5432 for PostgreSQL) |
 | `database.user` | `DJ_USER` | — | Database username |
@@ -15198,8 +15124,8 @@ with dj.config.override(database={'host': 'test-server'}):
 
 1. Programmatic settings (highest priority)
 2. Environment variables
-3. `.secrets/datajoint.json`
-4. `datajoint.json`
+3. `datajoint.json`
+4. `.secrets/`
 5. Default values (lowest priority)
 
 ## TLS Configuration
@@ -15400,7 +15326,6 @@ staging = dj.Instance(host="staging.example.com", user="dev", password="...")
 See [Use Isolated Instances](use-instances.md/) for a complete guide.
 
 
-
 ---
 ## File: how-to/configure-storage.md
 
@@ -15432,8 +15357,8 @@ Multiple stores can be configured for different data types or storage tiers. One
 DataJoint loads configuration in priority order:
 
 1. **Environment variables** (highest priority)
-2. **Secrets directory** (`.secrets/`)
-3. **Config file** (`datajoint.json`)
+2. **Config file** (`datajoint.json`)
+3. **Secrets directory** (`.secrets/`)
 4. **Defaults** (lowest priority)
 
 ## Single Store Configuration
@@ -15602,7 +15527,7 @@ print(dj.config.stores.keys())
 ## Configuration Options
 
 | Option | Required | Description |
-|--------|----------|-------------|
+| -------- | ---------- | ------------- |
 | `stores.default` | Yes | Name of the default store |
 | `stores.<name>.protocol` | Yes | `file`, `s3`, `gcs`, or `azure` |
 | `stores.<name>.location` | Yes | Base path or prefix (includes project context) |
@@ -15654,7 +15579,7 @@ Schema-addressed storage (`<object@>`, `<npy@>`) does not use subfolding—it us
 ### Filesystem Recommendations
 
 | Filesystem | Subfolding Needed | Notes |
-|------------|-------------------|-------|
+| ------------ | ------------------- | ------- |
 | ext3 | Yes | Limited directory indexing |
 | FAT32/exFAT | Yes | Linear directory scans |
 | NFS | Yes | Network latency amplifies directory lookups |
@@ -16726,7 +16651,7 @@ Configure DataJoint for production environments with controlled schema changes a
 Development and production environments have different requirements:
 
 | Concern | Development | Production |
-|---------|-------------|------------|
+| --------- | ------------- | ------------ |
 | Schema changes | Automatic table creation | Controlled, explicit changes only |
 | Naming | Ad-hoc schema names | Consistent project prefixes |
 | Configuration | Local settings | Environment-based |
@@ -16769,7 +16694,7 @@ Or in `datajoint.json`:
 With `create_tables=False`:
 
 | Action | Development (True) | Production (False) |
-|--------|-------------------|-------------------|
+| -------- | ------------------- | ------------------- |
 | Access existing table | Works | Works |
 | Access missing table | Creates it | **Raises error** |
 | Explicit `Schema(create_tables=True)` | Creates | Creates (override) |
@@ -16886,8 +16811,8 @@ Use different configurations for development, staging, and production.
 DataJoint loads settings in priority order:
 
 1. **Environment variables** (highest priority)
-2. **Secrets directory** (`.secrets/`)
-3. **Config file** (`datajoint.json`)
+2. **Config file** (`datajoint.json`)
+3. **Secrets directory** (`.secrets/`)
 4. **Defaults** (lowest priority)
 
 ### Development Setup
@@ -17050,7 +16975,7 @@ if __name__ == '__main__':
 ## Summary
 
 | Setting | Development | Production |
-|---------|-------------|------------|
+| --------- | ------------- | ------------ |
 | `database.create_tables` | `true` | `false` |
 | `database.database_prefix` | `""` or `dev_` | `prod_` |
 | `safemode` | `true` | `false` (automated) |
@@ -18289,6 +18214,13 @@ if Subject.validate(rows):
 
 Install DataJoint Python and set up your environment.
 
+## Requirements
+
+- Python 3.10+
+- MySQL 8.0.13+ or PostgreSQL 15+
+- Network access to database server
+- Linux, macOS, or Windows (see [Platform support](#platform-support))
+
 ## Install DataJoint 2.0+
 
 ```bash
@@ -18298,7 +18230,7 @@ pip install datajoint
 **With optional dependencies:**
 
 ```bash
-# For diagram visualization (matplotlib, ipython)
+# For Diagram.draw(), which renders diagrams into a matplotlib figure
 pip install datajoint[viz]
 
 # For polars DataFrame support
@@ -18343,6 +18275,10 @@ print(dj.__version__)
 
 DataJoint connects to either MySQL or PostgreSQL. MySQL has been supported since the original release; PostgreSQL support was added in **2.1**, and the `database.name` setting for selecting a non-default PostgreSQL database was added in **2.2.1**. See [Configure Database Connection](configure-database.md#postgresql-backend) for the full configuration reference.
 
+### DataJoint.com (Recommended)
+
+[DataJoint.com](https://datajoint.com) provides fully managed infrastructure for scientific data pipelines—cloud or on-premises—with comprehensive support, automatic backups, object storage, and team collaboration features.
+
 ### Local Development (Docker)
 
 ```bash
@@ -18363,10 +18299,6 @@ docker run -d \
   postgres:15
 ```
 
-### DataJoint.com (Recommended)
-
-[DataJoint.com](https://datajoint.com) provides fully managed infrastructure for scientific data pipelines—cloud or on-premises—with comprehensive support, automatic backups, object storage, and team collaboration features.
-
 ### Self-Managed Cloud Databases
 
 - **Amazon RDS** — MySQL, Aurora MySQL, PostgreSQL, or Aurora PostgreSQL
@@ -18375,12 +18307,101 @@ docker run -d \
 
 See [Configure Database Connection](configure-database.md) for connection setup.
 
-## Requirements
+## Your First Pipeline
 
-- Python 3.10+
-- MySQL 8.0.13+ or PostgreSQL 15+
-- Network access to database server
-- Linux, macOS, or Windows (see [Platform support](#platform-support))
+With DataJoint installed and a database reachable, this is the shortest end-to-end path: point
+DataJoint at your database, declare a few tables, insert a row, and run a computation.
+
+Configure your project (see [Configuration](../reference/configuration.md) for the full
+reference):
+
+```bash
+# Non-sensitive settings
+echo '{"database": {"host": "localhost", "port": 3306}}' > datajoint.json
+
+# Credentials, kept out of the project files
+mkdir -p .secrets
+echo "<your-username>" > .secrets/database.user
+echo "<your-password>" > .secrets/database.password
+chmod 600 .secrets/*
+```
+
+Define and populate a simple pipeline:
+
+```python
+import datajoint as dj
+
+schema = dj.Schema('my_pipeline')
+
+@schema
+class Subject(dj.Manual):
+    definition = """
+    subject_id : int32
+    ---
+    name : varchar(100)
+    date_of_birth : date
+    """
+
+@schema
+class Session(dj.Manual):
+    definition = """
+    -> Subject
+    session_idx : int16
+    ---
+    session_date : date
+    """
+
+@schema
+class SessionAnalysis(dj.Computed):
+    definition = """
+    -> Session
+    ---
+    result : float64
+    """
+
+    def make(self, key):
+        # Compute result for this session
+        self.insert1({**key, 'result': 42.0})
+
+# Insert data
+Subject.insert1({'subject_id': 1, 'name': 'M001', 'date_of_birth': '2026-01-15'})
+Session.insert1({'subject_id': 1, 'session_idx': 1, 'session_date': '2026-01-06'})
+
+# Run computations
+SessionAnalysis.populate()
+```
+
+`Subject` and `Session` are entered by hand; `SessionAnalysis` derives from `Session` and fills
+itself when you call `populate()`. That dependency — declared with `->` — is the whole of the
+[Relational Workflow Model](../explanation/relational-workflow-model.md) in miniature.
+
+## Running the Tutorial Notebooks
+
+The [tutorials](../tutorials/index.md) are published with their outputs, so you can read them
+straight through. To run them yourself, add Jupyter to the environment above and get a copy of
+the notebooks — each tutorial page has a download link, or clone the documentation repository
+for all of them at once:
+
+```bash
+pip install jupyterlab
+
+git clone https://github.com/datajoint/datajoint-docs.git
+jupyter lab datajoint-docs/src/tutorials/
+```
+
+Configuration works exactly as in the example above: DataJoint searches upward from the
+notebook's directory for `datajoint.json` and reads credentials from the `.secrets/` directory
+beside it. The repository ships a `datajoint.json` at its root pointing at `localhost:3306` —
+edit it to match your own server, and add your own `.secrets/`. Each tutorial creates its own
+schema, so they do not collide with each other or with your existing databases.
+
+Two dependencies are worth installing up front:
+
+- **Graphviz**, for the `dj.Diagram` cells — see
+  [Troubleshooting](#djdiagram-raises-filenotfounderror) below.
+- **An object store**, for the tutorials that use `<blob@>`, `<npy@>`, or `<attach@>` types. The
+  committed `datajoint.json` writes to a local directory, which needs no extra services; see
+  [Configure Storage](configure-storage.md) to point it elsewhere.
 
 ## Platform support
 
@@ -18427,6 +18448,21 @@ GRANT ALL PRIVILEGES ON `your_schema%`.* TO 'username'@'%';
 -- PostgreSQL
 GRANT ALL PRIVILEGES ON DATABASE my_db TO username;
 ```
+
+### `dj.Diagram` raises `FileNotFoundError`
+
+Install Graphviz:
+
+```bash
+brew install graphviz                 # macOS
+sudo apt-get install graphviz         # Debian/Ubuntu
+conda install -c conda-forge graphviz # conda, any platform
+```
+
+Diagrams render through `pydot` — installed with DataJoint — which calls the Graphviz `dot`
+executable. Graphviz is a system package, so `pip` cannot supply it. On Windows, install
+from [graphviz.org/download](https://graphviz.org/download/) and put its `bin` directory on
+your `PATH`. Verify with `dot -V`.
 
 
 ---
@@ -19025,7 +19061,7 @@ Secure configuration management for database credentials, storage access keys, a
 DataJoint separates configuration into sensitive and non-sensitive components:
 
 | Component | Location | Purpose | Version Control |
-|-----------|----------|---------|-----------------|
+| ----------- | ---------- | --------- | ----------------- |
 | **Non-sensitive** | `datajoint.json` | Project settings, defaults | ✅ Commit to git |
 | **Sensitive** | `.secrets/` directory | Credentials, API keys | ❌ Never commit |
 | **Dynamic** | Environment variables | CI/CD, production | ⚠️ Context-dependent |
@@ -19037,7 +19073,7 @@ DataJoint loads configuration in this priority order (highest to lowest):
 1. **Programmatic settings** — `dj.config['key'] = value`
 2. **Environment variables** — `DJ_HOST`, `DJ_USER`, `DJ_STORES`, etc.
 3. **Project configuration** — `datajoint.json`
-4. **Secrets directory** — `.secrets/stores.<name>.<attr>` (fills attributes the file/env didn't already set)
+4. **Secrets directory** — `.secrets/database.user`, `.secrets/database.password`, `.secrets/stores.<name>.<attr>` (each fills a value the file and env didn't already set)
 5. **Default values** — Built-in defaults
 
 Higher priority sources override lower ones. Set `DJ_IGNORE_CONFIG_FILE=true` *(new in 2.2.4)* to skip both `datajoint.json` and the secrets directory entirely — see [Env-var-only deployments](#env-var-only-deployments) below.
@@ -19051,7 +19087,8 @@ project/
 ├── datajoint.json               # Non-sensitive settings (commit)
 ├── .gitignore                   # Must include .secrets/
 ├── .secrets/
-│   ├── datajoint.json           # Database credentials
+│   ├── database.user            # Database credentials, one value per file
+│   ├── database.password
 │   ├── stores.main.access_key   # S3/cloud storage credentials
 │   ├── stores.main.secret_key
 │   ├── stores.archive.access_key
@@ -19074,13 +19111,13 @@ project/
 
 ### Option 1: Secrets Directory (Recommended for Development)
 
-Create `.secrets/datajoint.json`:
+Each secret is a separate plain-text file named for the setting it carries:
 
-```json
-{
-  "database.user": "myuser",
-  "database.password": "mypassword"
-}
+```bash
+mkdir -p .secrets
+echo "myuser"     > .secrets/database.user
+echo "mypassword" > .secrets/database.password
+chmod 600 .secrets/*
 ```
 
 Non-sensitive database settings go in `datajoint.json`:
@@ -19140,7 +19177,7 @@ Local or network-mounted file systems don't require credentials:
 
 ### S3/MinIO Storage (With Credentials)
 
-#### Config in `datajoint.json` (non-sensitive):
+#### Config in `datajoint.json` (non-sensitive)
 
 ```json
 {
@@ -19162,7 +19199,7 @@ Local or network-mounted file systems don't require credentials:
 }
 ```
 
-#### Credentials in `.secrets/` directory:
+#### Credentials in `.secrets/` directory
 
 Create separate files for each store's credentials:
 
@@ -19220,7 +19257,7 @@ If `DJ_STORES` contains invalid JSON, DataJoint raises `ValueError` at config-lo
 ### Database Connections
 
 | Setting | Environment Variable | Description |
-|---------|---------------------|-------------|
+| --------- | --------------------- | ------------- |
 | `database.host` | `DJ_HOST` | Database hostname |
 | `database.port` | `DJ_PORT` | Database port (default: 3306) |
 | `database.user` | `DJ_USER` | Database username |
@@ -19274,16 +19311,12 @@ chmod 700 .secrets  # Owner-only access
 # 2. Create .gitignore
 echo ".secrets/" >> .gitignore
 
-# 3. Store credentials in .secrets/
-cat > .secrets/datajoint.json <<EOF
-{
-  "database.user": "dev_user",
-  "database.password": "dev_password"
-}
-EOF
+# 3. Store credentials in .secrets/, one value per file
+echo "dev_user"     > .secrets/database.user
+echo "dev_password" > .secrets/database.password
 
 # 4. Set restrictive permissions
-chmod 600 .secrets/datajoint.json
+chmod 600 .secrets/*
 ```
 
 ### Production Environment
@@ -19388,7 +19421,7 @@ import datajoint as dj
 
 # Config loaded automatically from:
 # 1. datajoint.json (project settings)
-# 2. .secrets/datajoint.json (credentials)
+# 2. .secrets/database.user and .secrets/database.password (credentials)
 conn = dj.conn()
 ```
 
@@ -19418,6 +19451,10 @@ project/
 ```
 
 **Load by environment:**
+
+These per-environment JSON files are read by the snippet below, not by DataJoint's own
+secrets loader, so they can hold any settings and use any filenames. Assigning through
+`dj.config[...]` is a programmatic override, which outranks every other source.
 
 ```python
 import os
@@ -19500,7 +19537,7 @@ conn = dj.conn(reset=True)
 git history; until rotation completes, the leaked secret is still valid.
 
 - Database users (`database.user` / `database.password`): change the password
-  on the server, then update your local `.secrets/datajoint.json`.
+  on the server, then update your local `.secrets/database.password`.
 - Object-store credentials (`stores.<name>.access_key` / `secret_key`, or the
   equivalent in your cloud provider): issue new keys and revoke the old ones.
 - Any third-party tokens that appeared in the same file.
@@ -19511,9 +19548,9 @@ git history; until rotation completes, the leaked secret is still valid.
 clones don't leak it further:
 
 ```bash
-# Remove file from history
+# Remove the leaked file from history (repeat per file, or pass several paths)
 git filter-branch --force --index-filter \
-  "git rm --cached --ignore-unmatch .secrets/datajoint.json" \
+  "git rm --cached --ignore-unmatch .secrets/database.password" \
   --prune-empty --tag-name-filter cat -- --all
 
 # Force push (coordinate with team!)
@@ -19523,7 +19560,7 @@ git push origin --force --all
 **Step 3 — Verify removal:**
 
 ```bash
-git log --all --full-history -- .secrets/datajoint.json
+git log --all --full-history -- .secrets/database.password
 ```
 
 ## Configuration Templates
@@ -19538,12 +19575,10 @@ git log --all --full-history -- .secrets/datajoint.json
 }
 ```
 
-```json
-// .secrets/datajoint.json
-{
-  "database.user": "root",
-  "database.password": "simple"
-}
+```
+// .secrets/ directory
+.secrets/database.user                  # root
+.secrets/database.password              # simple
 ```
 
 ### Production with S3 Storage
@@ -19569,7 +19604,8 @@ git log --all --full-history -- .secrets/datajoint.json
 
 ```
 // .secrets/ directory
-.secrets/datajoint.json                 # Database credentials
+.secrets/database.user                  # Database username
+.secrets/database.password              # Database password
 .secrets/stores.main.access_key         # S3 access key
 .secrets/stores.main.secret_key         # S3 secret key
 ```
@@ -19819,7 +19855,7 @@ Upgrade existing pipelines from legacy DataJoint (pre-2.0) to DataJoint 2.0+.
 ### System Requirements
 
 | Component | Legacy (pre-2.0) | DataJoint 2.0+ |
-|-----------|-----------------|---------------|
+| ----------- | ----------------- | --------------- |
 | **Python** | 3.8+ | **3.10+** |
 | **MySQL** | 5.7+ | **8.0+** |
 | **Character encoding** | (varies) | **UTF-8 (utf8mb4)** |
@@ -19888,7 +19924,7 @@ Tests provide immediate ROI during migration and ongoing value for development.
 DataJoint 2.0 introduces a unified type system with three tiers:
 
 | Tier | Description | Examples | Migration |
-|------|-------------|----------|-----------|
+| ------ | ------------- | ---------- | ----------- |
 | **Native** | Raw MySQL types | `int unsigned`, `tinyint` | Auto-converted to core types |
 | **Core** | Standardized portable types | `int64`, `float64`, `varchar(100)`, `json` | Phase I |
 | **Codec** | Serialization to blob or storage | `<blob>`, `<blob@store>`, `<npy@>` | Phase I-III |
@@ -19902,7 +19938,7 @@ DataJoint 2.0 makes serialization **explicit** with codecs. In pre-2.0, `longblo
 #### Migration: Legacy → 2.0
 
 | pre-2.0 (Implicit) | 2.0 (Explicit) | Storage | Migration |
-|-------------------|----------------|---------|-----------|
+| ------------------- | ---------------- | --------- | ----------- |
 | `longblob` | `<blob>` | In-table | Phase I code, Phase III data |
 | `mediumblob` | `<blob>` | In-table | Phase I code, Phase III data |
 | `blob`, `tinyblob` | `<blob>` | In-table | Phase I code, Phase III data |
@@ -19947,7 +19983,7 @@ COMMENT ':<blob@store>:large array in object storage'
 In pre-2.0, `longblob` columns automatically deserialized Python objects using DataJoint's binary serialization format. DataJoint 2.0 identifies blob columns by checking for `:<blob>:` in the column comment. **Without this marker, blob columns are treated as raw binary data and will NOT be deserialized.**
 
 | Column Comment | DataJoint 2.0 Behavior |
-|----------------|----------------------|
+| ---------------- | ---------------------- |
 | `:<blob>:neural data` | ✓ Deserializes to Python/NumPy objects |
 | `neural data` (no marker) | ✗ Returns raw bytes (no deserialization) |
 
@@ -20042,7 +20078,7 @@ DataJoint 2.0 replaces `external.*` with unified `stores.*` configuration:
 ### Query API Changes
 
 | pre-2.0 | 2.0 | Phase |
-|--------|-----|-------|
+| -------- | ----- | ------- |
 | `table.fetch()` | `table.to_arrays()` or `table.to_dicts()` | I |
 | `table.fetch(..., format="frame")` | `table.to_pandas(...)` | I |
 | `table.fetch1()` | `table.fetch1()` (unchanged) | — |
@@ -20064,7 +20100,7 @@ DataJoint 2.0 replaces `external.*` with unified `stores.*` configuration:
 ## Migration Overview
 
 | Phase | Goal | Code Changes | Schema/Store Changes | Production Impact |
-|-------|------|--------------|----------------------|-------------------|
+| ------- | ------ | -------------- | ---------------------- | ------------------- |
 | **I** | Branch & code migration | All API updates, type syntax, **all codecs** (in-table and in-store) | Empty `_v2` schemas + test stores | **None** |
 | **II** | Test compatibility | — | Populate `_v2` schemas with sample data, test equivalence | **None** |
 | **III** | Migrate production data | — | Multiple migration options | **Varies** |
@@ -20495,7 +20531,7 @@ Now configure database connection and stores.
 
 DataJoint 2.0 uses:
 
-- **`.secrets/datajoint.json`** for credentials (gitignored)
+- **`.secrets/database.user`** and **`.secrets/database.password`** for credentials (gitignored)
 - **`datajoint.json`** for non-sensitive settings (checked in)
 - **`stores.*`** instead of `external.*`
 
@@ -20512,18 +20548,18 @@ echo ".secrets/" >> .gitignore
 python -c "import datajoint as dj; dj.config.save_template()"
 ```
 
-**Edit `.secrets/datajoint.json`:**
-```json
-{
-  "database.host": "your-database-host",
-  "database.user": "your-username",
-  "database.password": "your-password"
-}
+**Fill in the credential files under `.secrets/`** — one value per file:
+```bash
+echo "your-username" > .secrets/database.user
+echo "your-password" > .secrets/database.password
 ```
 
-**Edit `datajoint.json`:**
+**Edit `datajoint.json`**:
 ```json
 {
+  "database": {
+    "host": "your-database-host"
+  },
   "loglevel": "INFO",
   "safemode": true,
   "display.limit": 12,
@@ -20882,7 +20918,7 @@ Convert ALL types and codecs in Phase I:
 **Integer and Float Types:**
 
 | pre-2.0 | 2.0 | Category |
-|--------|-----|----------|
+| -------- | ----- | ---------- |
 | `int unsigned` | `int64` | Core type |
 | `int` | `int32` | Core type |
 | `smallint unsigned` | `int32` | Core type |
@@ -20918,7 +20954,7 @@ precision, so converting to `decimal(M,D)` is the recommended move.
 **String, Date, and Structured Types:**
 
 | pre-2.0 | 2.0 | Notes |
-|--------|-----|-------|
+| -------- | ----- | ------- |
 | `varchar(N)`, `char(N)` | Unchanged | Core types |
 | `date` | Unchanged | Core type |
 | `enum('a', 'b')` | Unchanged | Core type |
@@ -20934,7 +20970,7 @@ precision, so converting to `decimal(M,D)` is the recommended move.
 **Codecs:**
 
 | pre-2.0 | 2.0 | Category |
-|--------|-----|----------|
+| -------- | ----- | ---------- |
 | `longblob` | `<blob>` | Codec (in-table) |
 | `attach` | `<attach>` | Codec (in-table) |
 | `blob@store` | `<blob@store>` | Codec (in-store) |
@@ -26667,14 +26703,14 @@ DataJoint configuration options and settings.
 Configuration is loaded in priority order:
 
 1. **Environment variables** (highest priority)
-2. **Secrets directory** (`.secrets/`)
-3. **Config file** (`datajoint.json`)
+2. **Config file** (`datajoint.json`)
+3. **Secrets directory** (`.secrets/`)
 4. **Defaults** (lowest priority)
 
 ## Database Settings
 
 | Setting | Environment | Default | Description |
-|---------|-------------|---------|-------------|
+| --------- | ------------- | --------- | ------------- |
 | `database.backend` | `DJ_BACKEND` | `mysql` | Database backend: `mysql` or `postgresql` *(new in 2.1)* |
 | `database.host` | `DJ_HOST` | `localhost` | Database server hostname |
 | `database.port` | `DJ_PORT` | `3306`/`5432` | Database server port (auto-detects from backend) |
@@ -26711,7 +26747,7 @@ DataJoint uses two default settings to reflect the architectural distinction bet
 **Common settings (all protocols):**
 
 | Setting | Required | Description |
-|---------|----------|-------------|
+| --------- | ---------- | ------------- |
 | `stores.<name>.protocol` | Yes | Storage protocol: `file`, `s3`, `gcs`, `azure` |
 | `stores.<name>.location` | Yes | Base path or prefix (includes project context) |
 | `stores.<name>.hash_prefix` | No | Path prefix for hash-addressed section (default: `"_hash"`) |
@@ -26748,7 +26784,7 @@ Prefixes must be mutually exclusive (no prefix can be a parent/child of another)
 **S3-specific settings:**
 
 | Setting | Required | Description |
-|---------|----------|-------------|
+| --------- | ---------- | ------------- |
 | `stores.<name>.endpoint` | Yes | S3 endpoint URL (e.g., `s3.amazonaws.com`) |
 | `stores.<name>.bucket` | Yes | Bucket name |
 | `stores.<name>.access_key` | Yes | S3 access key ID |
@@ -26758,7 +26794,7 @@ Prefixes must be mutually exclusive (no prefix can be a parent/child of another)
 **GCS-specific settings:**
 
 | Setting | Required | Description |
-|---------|----------|-------------|
+| --------- | ---------- | ------------- |
 | `stores.<name>.bucket` | Yes | GCS bucket name |
 | `stores.<name>.token` | Yes | Authentication token path |
 | `stores.<name>.project` | No | GCS project ID |
@@ -26766,7 +26802,7 @@ Prefixes must be mutually exclusive (no prefix can be a parent/child of another)
 **Azure-specific settings:**
 
 | Setting | Required | Description |
-|---------|----------|-------------|
+| --------- | ---------- | ------------- |
 | `stores.<name>.container` | Yes | Azure container name |
 | `stores.<name>.account_name` | Yes | Storage account name |
 | `stores.<name>.account_key` | Yes | Storage account key |
@@ -26812,7 +26848,7 @@ If table lacks partition attributes, it follows normal path structure.
 ## Jobs Settings
 
 | Setting | Default | Description |
-|---------|---------|-------------|
+| --------- | --------- | ------------- |
 | `jobs.auto_refresh` | `True` | Auto-refresh job queue on populate |
 | `jobs.keep_completed` | `False` | Retain success records in jobs table |
 | `jobs.stale_timeout` | `3600` | Seconds before stale job cleanup |
@@ -26824,7 +26860,7 @@ If table lacks partition attributes, it follows normal path structure.
 ## Display Settings
 
 | Setting | Environment | Default | Description |
-|---------|-------------|---------|-------------|
+| --------- | ------------- | --------- | ------------- |
 | `display.limit` | — | `12` | Max rows to display |
 | `display.width` | — | `14` | Column width |
 | `display.show_tuple_count` | — | `True` | Show row count in output |
@@ -26833,7 +26869,7 @@ If table lacks partition attributes, it follows normal path structure.
 ## Top-Level Settings
 
 | Setting | Environment | Default | Description |
-|---------|-------------|---------|-------------|
+| --------- | ------------- | --------- | ------------- |
 | `loglevel` | `DJ_LOG_LEVEL` | `INFO` | Log level: `DEBUG`, `INFO`, `WARNING`, `ERROR`, `CRITICAL` |
 | `safemode` | — | `True` | Require confirmation for destructive operations |
 | `enable_python_native_blobs` | — | `True` | Allow Python-native blob serialization |
@@ -26984,7 +27020,7 @@ schema = inst.Schema("my_schema")
 ### Parameters
 
 | Parameter | Type | Default | Description |
-|-----------|------|---------|-------------|
+| ----------- | ------ | --------- | ------------- |
 | `host` | str | — | Database hostname (required) |
 | `user` | str | — | Database username (required) |
 | `password` | str | — | Database password (required) |
@@ -26995,7 +27031,7 @@ schema = inst.Schema("my_schema")
 ### Attributes and Methods
 
 | Member | Description |
-|--------|-------------|
+| -------- | ------------- |
 | `inst.config` | This Instance's Config object |
 | `inst.connection` | This Instance's Connection object |
 | `inst.Schema(name)` | Create a Schema bound to this Instance |
@@ -31425,13 +31461,18 @@ combined = dj.Diagram.from_sequence([schema1, schema2, schema3])
 
 Operational methods (`cascade`, `restrict`, `counts`, `prune`) use `networkx`, which is always installed as a core dependency.
 
-Diagram **visualization** requires optional dependencies:
+Diagram **visualization** additionally requires:
 
-```bash
-pip install matplotlib pygraphviz
-```
+- **Graphviz** — the `dot` executable. The default notebook display, `_repr_svg_()`, goes through
+  `make_svg()` → `make_dot()` → pydot → `dot`, so this is the path nearly all usage hits. `pydot`
+  ships with DataJoint, but Graphviz itself is a system package that `pip` cannot install
+  (`brew install graphviz`, `sudo apt-get install graphviz`). Without it, rendering raises
+  `FileNotFoundError` — see
+  [Installation → Troubleshooting](../../how-to/installation.md#djdiagram-raises-filenotfounderror).
+- **matplotlib** — only for `Diagram.draw()`, a separate `make_image()` path that most usage never
+  touches: `pip install datajoint[viz]`.
 
-If visualization dependencies are missing, `dj.Diagram` displays a warning and provides a stub class. Operational methods remain available regardless.
+Operational methods remain available regardless.
 
 ---
 

@@ -2450,6 +2450,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Requirements
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#install-datajoint-20" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2501,10 +2512,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#local-development-docker" class="md-nav__link">
+  <a href="#datajointcom-recommended" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Local Development (Docker)
+        DataJoint.com (Recommended)
       
     </span>
   </a>
@@ -2512,10 +2523,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#datajointcom-recommended" class="md-nav__link">
+  <a href="#local-development-docker" class="md-nav__link">
     <span class="md-ellipsis">
       
-        DataJoint.com (Recommended)
+        Local Development (Docker)
       
     </span>
   </a>
@@ -2539,10 +2550,21 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#requirements" class="md-nav__link">
+  <a href="#your-first-pipeline" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Requirements
+        Your First Pipeline
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#running-the-tutorial-notebooks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Running the Tutorial Notebooks
       
     </span>
   </a>
@@ -2610,6 +2632,17 @@
     <span class="md-ellipsis">
       
         Permission denied
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#djdiagram-raises-filenotfounderror" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        dj.Diagram raises FileNotFoundError
       
     </span>
   </a>
@@ -6391,6 +6424,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Requirements
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#install-datajoint-20" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -6442,10 +6486,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#local-development-docker" class="md-nav__link">
+  <a href="#datajointcom-recommended" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Local Development (Docker)
+        DataJoint.com (Recommended)
       
     </span>
   </a>
@@ -6453,10 +6497,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#datajointcom-recommended" class="md-nav__link">
+  <a href="#local-development-docker" class="md-nav__link">
     <span class="md-ellipsis">
       
-        DataJoint.com (Recommended)
+        Local Development (Docker)
       
     </span>
   </a>
@@ -6480,10 +6524,21 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#requirements" class="md-nav__link">
+  <a href="#your-first-pipeline" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Requirements
+        Your First Pipeline
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#running-the-tutorial-notebooks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Running the Tutorial Notebooks
       
     </span>
   </a>
@@ -6557,6 +6612,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#djdiagram-raises-filenotfounderror" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        dj.Diagram raises FileNotFoundError
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -6584,11 +6650,18 @@
 
 <h1 id="installation">Installation<a class="headerlink" href="#installation" title="Permanent link">&para;</a></h1>
 <p>Install DataJoint Python and set up your environment.</p>
+<h2 id="requirements">Requirements<a class="headerlink" href="#requirements" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Python 3.10+</li>
+<li>MySQL 8.0.13+ or PostgreSQL 15+</li>
+<li>Network access to database server</li>
+<li>Linux, macOS, or Windows (see <a href="#platform-support">Platform support</a>)</li>
+</ul>
 <h2 id="install-datajoint-20">Install DataJoint 2.0+<a class="headerlink" href="#install-datajoint-20" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>datajoint
 </code></pre></div>
 <p><strong>With optional dependencies:</strong></p>
-<div class="highlight"><pre><span></span><code><span class="c1"># For diagram visualization (matplotlib, ipython)</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># For Diagram.draw(), which renders diagrams into a matplotlib figure</span>
 pip<span class="w"> </span>install<span class="w"> </span>datajoint<span class="o">[</span>viz<span class="o">]</span>
 
 <span class="c1"># For polars DataFrame support</span>
@@ -6638,6 +6711,8 @@ Legacy documentation for 0.14.x is available at <a href="https://datajoint.githu
 </table>
 <h2 id="database-server">Database Server<a class="headerlink" href="#database-server" title="Permanent link">&para;</a></h2>
 <p>DataJoint connects to either MySQL or PostgreSQL. MySQL has been supported since the original release; PostgreSQL support was added in <strong>2.1</strong>, and the <code>database.name</code> setting for selecting a non-default PostgreSQL database was added in <strong>2.2.1</strong>. See <a href="../configure-database/#postgresql-backend">Configure Database Connection</a> for the full configuration reference.</p>
+<h3 id="datajointcom-recommended">DataJoint.com (Recommended)<a class="headerlink" href="#datajointcom-recommended" title="Permanent link">&para;</a></h3>
+<p><a href="https://datajoint.com">DataJoint.com</a> provides fully managed infrastructure for scientific data pipelines—cloud or on-premises—with comprehensive support, automatic backups, object storage, and team collaboration features.</p>
 <h3 id="local-development-docker">Local Development (Docker)<a class="headerlink" href="#local-development-docker" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># MySQL</span>
 docker<span class="w"> </span>run<span class="w"> </span>-d<span class="w"> </span><span class="se">\</span>
@@ -6653,8 +6728,6 @@ docker<span class="w"> </span>run<span class="w"> </span>-d<span class="w"> </sp
 <span class="w">  </span>-e<span class="w"> </span><span class="nv">POSTGRES_PASSWORD</span><span class="o">=</span>simple<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>postgres:15
 </code></pre></div>
-<h3 id="datajointcom-recommended">DataJoint.com (Recommended)<a class="headerlink" href="#datajointcom-recommended" title="Permanent link">&para;</a></h3>
-<p><a href="https://datajoint.com">DataJoint.com</a> provides fully managed infrastructure for scientific data pipelines—cloud or on-premises—with comprehensive support, automatic backups, object storage, and team collaboration features.</p>
 <h3 id="self-managed-cloud-databases">Self-Managed Cloud Databases<a class="headerlink" href="#self-managed-cloud-databases" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>Amazon RDS</strong> — MySQL, Aurora MySQL, PostgreSQL, or Aurora PostgreSQL</li>
@@ -6662,12 +6735,87 @@ docker<span class="w"> </span>run<span class="w"> </span>-d<span class="w"> </sp
 <li><strong>Azure Database</strong> — MySQL or PostgreSQL</li>
 </ul>
 <p>See <a href="../configure-database/">Configure Database Connection</a> for connection setup.</p>
-<h2 id="requirements">Requirements<a class="headerlink" href="#requirements" title="Permanent link">&para;</a></h2>
+<h2 id="your-first-pipeline">Your First Pipeline<a class="headerlink" href="#your-first-pipeline" title="Permanent link">&para;</a></h2>
+<p>With DataJoint installed and a database reachable, this is the shortest end-to-end path: point
+DataJoint at your database, declare a few tables, insert a row, and run a computation.</p>
+<p>Configure your project (see <a href="../../reference/configuration/">Configuration</a> for the full
+reference):</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Non-sensitive settings</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s1">&#39;{&quot;database&quot;: {&quot;host&quot;: &quot;localhost&quot;, &quot;port&quot;: 3306}}&#39;</span><span class="w"> </span>&gt;<span class="w"> </span>datajoint.json
+
+<span class="c1"># Credentials, kept out of the project files</span>
+mkdir<span class="w"> </span>-p<span class="w"> </span>.secrets
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;&lt;your-username&gt;&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>.secrets/database.user
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;&lt;your-password&gt;&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>.secrets/database.password
+chmod<span class="w"> </span><span class="m">600</span><span class="w"> </span>.secrets/*
+</code></pre></div>
+<p>Define and populate a simple pipeline:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">datajoint</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dj</span>
+
+<span class="n">schema</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">Schema</span><span class="p">(</span><span class="s1">&#39;my_pipeline&#39;</span><span class="p">)</span>
+
+<span class="nd">@schema</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Subject</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">    subject_id : int32</span>
+<span class="s2">    ---</span>
+<span class="s2">    name : varchar(100)</span>
+<span class="s2">    date_of_birth : date</span>
+<span class="s2">    &quot;&quot;&quot;</span>
+
+<span class="nd">@schema</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Session</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">    -&gt; Subject</span>
+<span class="s2">    session_idx : int16</span>
+<span class="s2">    ---</span>
+<span class="s2">    session_date : date</span>
+<span class="s2">    &quot;&quot;&quot;</span>
+
+<span class="nd">@schema</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">SessionAnalysis</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Computed</span><span class="p">):</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">    -&gt; Session</span>
+<span class="s2">    ---</span>
+<span class="s2">    result : float64</span>
+<span class="s2">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">make</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+        <span class="c1"># Compute result for this session</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="o">**</span><span class="n">key</span><span class="p">,</span> <span class="s1">&#39;result&#39;</span><span class="p">:</span> <span class="mf">42.0</span><span class="p">})</span>
+
+<span class="c1"># Insert data</span>
+<span class="n">Subject</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="s1">&#39;subject_id&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;M001&#39;</span><span class="p">,</span> <span class="s1">&#39;date_of_birth&#39;</span><span class="p">:</span> <span class="s1">&#39;2026-01-15&#39;</span><span class="p">})</span>
+<span class="n">Session</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="s1">&#39;subject_id&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;session_idx&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;session_date&#39;</span><span class="p">:</span> <span class="s1">&#39;2026-01-06&#39;</span><span class="p">})</span>
+
+<span class="c1"># Run computations</span>
+<span class="n">SessionAnalysis</span><span class="o">.</span><span class="n">populate</span><span class="p">()</span>
+</code></pre></div>
+<p><code>Subject</code> and <code>Session</code> are entered by hand; <code>SessionAnalysis</code> derives from <code>Session</code> and fills
+itself when you call <code>populate()</code>. That dependency — declared with <code>-&gt;</code> — is the whole of the
+<a href="../../explanation/relational-workflow-model/">Relational Workflow Model</a> in miniature.</p>
+<h2 id="running-the-tutorial-notebooks">Running the Tutorial Notebooks<a class="headerlink" href="#running-the-tutorial-notebooks" title="Permanent link">&para;</a></h2>
+<p>The <a href="../../tutorials/">tutorials</a> are published with their outputs, so you can read them
+straight through. To run them yourself, add Jupyter to the environment above and get a copy of
+the notebooks — each tutorial page has a download link, or clone the documentation repository
+for all of them at once:</p>
+<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>jupyterlab
+
+git<span class="w"> </span>clone<span class="w"> </span>https://github.com/datajoint/datajoint-docs.git
+jupyter<span class="w"> </span>lab<span class="w"> </span>datajoint-docs/src/tutorials/
+</code></pre></div>
+<p>Configuration works exactly as in the example above: DataJoint searches upward from the
+notebook's directory for <code>datajoint.json</code> and reads credentials from the <code>.secrets/</code> directory
+beside it. The repository ships a <code>datajoint.json</code> at its root pointing at <code>localhost:3306</code> —
+edit it to match your own server, and add your own <code>.secrets/</code>. Each tutorial creates its own
+schema, so they do not collide with each other or with your existing databases.</p>
+<p>Two dependencies are worth installing up front:</p>
 <ul>
-<li>Python 3.10+</li>
-<li>MySQL 8.0.13+ or PostgreSQL 15+</li>
-<li>Network access to database server</li>
-<li>Linux, macOS, or Windows (see <a href="#platform-support">Platform support</a>)</li>
+<li><strong>Graphviz</strong>, for the <code>dj.Diagram</code> cells — see
+  <a href="#djdiagram-raises-filenotfounderror">Troubleshooting</a> below.</li>
+<li><strong>An object store</strong>, for the tutorials that use <code>&lt;blob@&gt;</code>, <code>&lt;npy@&gt;</code>, or <code>&lt;attach@&gt;</code> types. The
+  committed <code>datajoint.json</code> writes to a local directory, which needs no extra services; see
+  <a href="../configure-storage/">Configure Storage</a> to point it elsewhere.</li>
 </ul>
 <h2 id="platform-support">Platform support<a class="headerlink" href="#platform-support" title="Permanent link">&para;</a></h2>
 <p>DataJoint runs on <strong>Linux, macOS, and Windows</strong>.</p>
@@ -6696,6 +6844,16 @@ docker<span class="w"> </span>run<span class="w"> </span>-d<span class="w"> </sp
 <div class="highlight"><pre><span></span><code><span class="c1">-- PostgreSQL</span>
 <span class="k">GRANT</span><span class="w"> </span><span class="k">ALL</span><span class="w"> </span><span class="k">PRIVILEGES</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">DATABASE</span><span class="w"> </span><span class="n">my_db</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">username</span><span class="p">;</span>
 </code></pre></div>
+<h3 id="djdiagram-raises-filenotfounderror"><code>dj.Diagram</code> raises <code>FileNotFoundError</code><a class="headerlink" href="#djdiagram-raises-filenotfounderror" title="Permanent link">&para;</a></h3>
+<p>Install Graphviz:</p>
+<div class="highlight"><pre><span></span><code>brew<span class="w"> </span>install<span class="w"> </span>graphviz<span class="w">                 </span><span class="c1"># macOS</span>
+sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>graphviz<span class="w">         </span><span class="c1"># Debian/Ubuntu</span>
+conda<span class="w"> </span>install<span class="w"> </span>-c<span class="w"> </span>conda-forge<span class="w"> </span>graphviz<span class="w"> </span><span class="c1"># conda, any platform</span>
+</code></pre></div>
+<p>Diagrams render through <code>pydot</code> — installed with DataJoint — which calls the Graphviz <code>dot</code>
+executable. Graphviz is a system package, so <code>pip</code> cannot supply it. On Windows, install
+from <a href="https://graphviz.org/download/">graphviz.org/download</a> and put its <code>bin</code> directory on
+your <code>PATH</code>. Verify with <code>dot -V</code>.</p>
 
 
 

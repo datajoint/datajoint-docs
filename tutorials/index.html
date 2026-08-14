@@ -6170,17 +6170,6 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#quick-start" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Quick Start
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#learning-paths" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -6285,17 +6274,6 @@
   
 </li>
       
-        <li class="md-nav__item">
-  <a href="#running-the-tutorials" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Running the Tutorials
-      
-    </span>
-  </a>
-  
-</li>
-      
     </ul>
   
 </nav>
@@ -6318,65 +6296,14 @@
 
 <h1 id="tutorials">Tutorials<a class="headerlink" href="#tutorials" title="Permanent link">&para;</a></h1>
 <p>Learn DataJoint by building real pipelines.</p>
-<p>These tutorials guide you through building data pipelines step by step. Each tutorial
-is a Jupyter notebook that you can run interactively. Start with the basics and
-progress to domain-specific and advanced topics.</p>
-<h2 id="quick-start">Quick Start<a class="headerlink" href="#quick-start" title="Permanent link">&para;</a></h2>
-<p>Install DataJoint:</p>
-<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>datajoint
-</code></pre></div>
-<p>Configure database credentials in your project (see <a href="../reference/configuration/">Configuration</a>):</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Create datajoint.json for non-sensitive settings</span>
-<span class="nb">echo</span><span class="w"> </span><span class="s1">&#39;{&quot;database&quot;: {&quot;host&quot;: &quot;localhost&quot;, &quot;port&quot;: 3306}}&#39;</span><span class="w"> </span>&gt;<span class="w"> </span>datajoint.json
-
-<span class="c1"># Create secrets directory for credentials</span>
-mkdir<span class="w"> </span>-p<span class="w"> </span>.secrets
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;root&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>.secrets/database.user
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;password&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>.secrets/database.password
-</code></pre></div>
-<p>Define and populate a simple pipeline:</p>
-<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">datajoint</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dj</span>
-
-<span class="n">schema</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">Schema</span><span class="p">(</span><span class="s1">&#39;my_pipeline&#39;</span><span class="p">)</span>
-
-<span class="nd">@schema</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">Subject</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
-<span class="s2">    subject_id : int32</span>
-<span class="s2">    ---</span>
-<span class="s2">    name : varchar(100)</span>
-<span class="s2">    date_of_birth : date</span>
-<span class="s2">    &quot;&quot;&quot;</span>
-
-<span class="nd">@schema</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">Session</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
-<span class="s2">    -&gt; Subject</span>
-<span class="s2">    session_idx : int16</span>
-<span class="s2">    ---</span>
-<span class="s2">    session_date : date</span>
-<span class="s2">    &quot;&quot;&quot;</span>
-
-<span class="nd">@schema</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">SessionAnalysis</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Computed</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
-<span class="s2">    -&gt; Session</span>
-<span class="s2">    ---</span>
-<span class="s2">    result : float64</span>
-<span class="s2">    &quot;&quot;&quot;</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">make</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
-        <span class="c1"># Compute result for this session</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="o">**</span><span class="n">key</span><span class="p">,</span> <span class="s1">&#39;result&#39;</span><span class="p">:</span> <span class="mf">42.0</span><span class="p">})</span>
-
-<span class="c1"># Insert data</span>
-<span class="n">Subject</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="s1">&#39;subject_id&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;M001&#39;</span><span class="p">,</span> <span class="s1">&#39;date_of_birth&#39;</span><span class="p">:</span> <span class="s1">&#39;2026-01-15&#39;</span><span class="p">})</span>
-<span class="n">Session</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="s1">&#39;subject_id&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;session_idx&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;session_date&#39;</span><span class="p">:</span> <span class="s1">&#39;2026-01-06&#39;</span><span class="p">})</span>
-
-<span class="c1"># Run computations</span>
-<span class="n">SessionAnalysis</span><span class="o">.</span><span class="n">populate</span><span class="p">()</span>
-</code></pre></div>
-<p>Continue learning with the structured tutorials below.</p>
+<p>These tutorials guide you through building data pipelines step by step. Each tutorial is a
+Jupyter notebook, published here with its code and its executed outputs, so you can follow the
+whole pipeline without leaving the page. Start with the basics and progress to domain-specific
+and advanced topics.</p>
+<p><strong>Want to run them yourself?</strong> Every notebook can be downloaded and executed against your own
+MySQL or PostgreSQL database. <a href="../how-to/installation/">Installation</a> covers the setup:
+DataJoint, a database, Jupyter, and
+<a href="../how-to/installation/#running-the-tutorial-notebooks">getting the notebooks</a>.</p>
 <h2 id="learning-paths">Learning Paths<a class="headerlink" href="#learning-paths" title="Permanent link">&para;</a></h2>
 <p>Choose your learning path based on your goals:</p>
 <h3 id="new-to-datajoint">🌱 New to DataJoint<a class="headerlink" href="#new-to-datajoint" title="Permanent link">&para;</a></h3>
@@ -6479,18 +6406,6 @@ mkdir<span class="w"> </span>-p<span class="w"> </span>.secrets
 <li><a href="advanced/distributed/">Distributed Computing</a> — Multi-process and cluster workflows</li>
 <li><a href="advanced/custom-codecs/">Custom Codecs</a> — Extending the type system</li>
 </ul>
-<h2 id="running-the-tutorials">Running the Tutorials<a class="headerlink" href="#running-the-tutorials" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><span class="c1"># Clone the repository</span>
-git<span class="w"> </span>clone<span class="w"> </span>https://github.com/datajoint/datajoint-docs.git
-<span class="nb">cd</span><span class="w"> </span>datajoint-docs
-
-<span class="c1"># Start the tutorial environment</span>
-docker<span class="w"> </span>compose<span class="w"> </span>up<span class="w"> </span>-d
-
-<span class="c1"># Launch Jupyter</span>
-jupyter<span class="w"> </span>lab<span class="w"> </span>src/tutorials/
-</code></pre></div>
-<p>All tutorials use a local MySQL database that resets between sessions.</p>
 
 
 

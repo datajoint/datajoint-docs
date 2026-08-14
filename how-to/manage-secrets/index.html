@@ -2599,7 +2599,7 @@
   <a href="#config-in-datajointjson-non-sensitive" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Config in datajoint.json (non-sensitive):
+        Config in datajoint.json (non-sensitive)
       
     </span>
   </a>
@@ -2610,7 +2610,7 @@
   <a href="#credentials-in-secrets-directory" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Credentials in .secrets/ directory:
+        Credentials in .secrets/ directory
       
     </span>
   </a>
@@ -6795,7 +6795,7 @@
   <a href="#config-in-datajointjson-non-sensitive" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Config in datajoint.json (non-sensitive):
+        Config in datajoint.json (non-sensitive)
       
     </span>
   </a>
@@ -6806,7 +6806,7 @@
   <a href="#credentials-in-secrets-directory" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Credentials in .secrets/ directory:
+        Credentials in .secrets/ directory
       
     </span>
   </a>
@@ -7188,7 +7188,7 @@
 <li><strong>Programmatic settings</strong> — <code>dj.config['key'] = value</code></li>
 <li><strong>Environment variables</strong> — <code>DJ_HOST</code>, <code>DJ_USER</code>, <code>DJ_STORES</code>, etc.</li>
 <li><strong>Project configuration</strong> — <code>datajoint.json</code></li>
-<li><strong>Secrets directory</strong> — <code>.secrets/stores.&lt;name&gt;.&lt;attr&gt;</code> (fills attributes the file/env didn't already set)</li>
+<li><strong>Secrets directory</strong> — <code>.secrets/database.user</code>, <code>.secrets/database.password</code>, <code>.secrets/stores.&lt;name&gt;.&lt;attr&gt;</code> (each fills a value the file and env didn't already set)</li>
 <li><strong>Default values</strong> — Built-in defaults</li>
 </ol>
 <p>Higher priority sources override lower ones. Set <code>DJ_IGNORE_CONFIG_FILE=true</code> <em>(new in 2.2.4)</em> to skip both <code>datajoint.json</code> and the secrets directory entirely — see <a href="#env-var-only-deployments">Env-var-only deployments</a> below.</p>
@@ -7198,7 +7198,8 @@
 ├── datajoint.json               # Non-sensitive settings (commit)
 ├── .gitignore                   # Must include .secrets/
 ├── .secrets/
-│   ├── datajoint.json           # Database credentials
+│   ├── database.user            # Database credentials, one value per file
+│   ├── database.password
 │   ├── stores.main.access_key   # S3/cloud storage credentials
 │   ├── stores.main.secret_key
 │   ├── stores.archive.access_key
@@ -7216,11 +7217,11 @@
 </code></pre></div>
 <h2 id="database-credentials">Database Credentials<a class="headerlink" href="#database-credentials" title="Permanent link">&para;</a></h2>
 <h3 id="option-1-secrets-directory-recommended-for-development">Option 1: Secrets Directory (Recommended for Development)<a class="headerlink" href="#option-1-secrets-directory-recommended-for-development" title="Permanent link">&para;</a></h3>
-<p>Create <code>.secrets/datajoint.json</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;database.user&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;myuser&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;database.password&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;mypassword&quot;</span>
-<span class="p">}</span>
+<p>Each secret is a separate plain-text file named for the setting it carries:</p>
+<div class="highlight"><pre><span></span><code>mkdir<span class="w"> </span>-p<span class="w"> </span>.secrets
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;myuser&quot;</span><span class="w">     </span>&gt;<span class="w"> </span>.secrets/database.user
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;mypassword&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>.secrets/database.password
+chmod<span class="w"> </span><span class="m">600</span><span class="w"> </span>.secrets/*
 </code></pre></div>
 <p>Non-sensitive database settings go in <code>datajoint.json</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
@@ -7261,7 +7262,7 @@
 <span class="p">}</span>
 </code></pre></div>
 <h3 id="s3minio-storage-with-credentials">S3/MinIO Storage (With Credentials)<a class="headerlink" href="#s3minio-storage-with-credentials" title="Permanent link">&para;</a></h3>
-<h4 id="config-in-datajointjson-non-sensitive">Config in <code>datajoint.json</code> (non-sensitive):<a class="headerlink" href="#config-in-datajointjson-non-sensitive" title="Permanent link">&para;</a></h4>
+<h4 id="config-in-datajointjson-non-sensitive">Config in <code>datajoint.json</code> (non-sensitive)<a class="headerlink" href="#config-in-datajointjson-non-sensitive" title="Permanent link">&para;</a></h4>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;stores&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="nt">&quot;default&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;main&quot;</span><span class="p">,</span>
@@ -7280,7 +7281,7 @@
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
-<h4 id="credentials-in-secrets-directory">Credentials in <code>.secrets/</code> directory:<a class="headerlink" href="#credentials-in-secrets-directory" title="Permanent link">&para;</a></h4>
+<h4 id="credentials-in-secrets-directory">Credentials in <code>.secrets/</code> directory<a class="headerlink" href="#credentials-in-secrets-directory" title="Permanent link">&para;</a></h4>
 <p>Create separate files for each store's credentials:</p>
 <div class="highlight"><pre><span></span><code>.secrets/stores.main.access_key
 .secrets/stores.main.secret_key
@@ -7420,16 +7421,12 @@ chmod<span class="w"> </span><span class="m">700</span><span class="w"> </span>.
 <span class="c1"># 2. Create .gitignore</span>
 <span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;.secrets/&quot;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>.gitignore
 
-<span class="c1"># 3. Store credentials in .secrets/</span>
-cat<span class="w"> </span>&gt;<span class="w"> </span>.secrets/datajoint.json<span class="w"> </span><span class="s">&lt;&lt;EOF</span>
-<span class="s">{</span>
-<span class="s">  &quot;database.user&quot;: &quot;dev_user&quot;,</span>
-<span class="s">  &quot;database.password&quot;: &quot;dev_password&quot;</span>
-<span class="s">}</span>
-<span class="s">EOF</span>
+<span class="c1"># 3. Store credentials in .secrets/, one value per file</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;dev_user&quot;</span><span class="w">     </span>&gt;<span class="w"> </span>.secrets/database.user
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;dev_password&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>.secrets/database.password
 
 <span class="c1"># 4. Set restrictive permissions</span>
-chmod<span class="w"> </span><span class="m">600</span><span class="w"> </span>.secrets/datajoint.json
+chmod<span class="w"> </span><span class="m">600</span><span class="w"> </span>.secrets/*
 </code></pre></div>
 <h3 id="production-environment">Production Environment<a class="headerlink" href="#production-environment" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># Use environment variables from secure sources</span>
@@ -7504,7 +7501,7 @@ chmod<span class="w"> </span><span class="m">600</span><span class="w"> </span>.
 
 <span class="c1"># Config loaded automatically from:</span>
 <span class="c1"># 1. datajoint.json (project settings)</span>
-<span class="c1"># 2. .secrets/datajoint.json (credentials)</span>
+<span class="c1"># 2. .secrets/database.user and .secrets/database.password (credentials)</span>
 <span class="n">conn</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">conn</span><span class="p">()</span>
 </code></pre></div>
 <h3 id="production-with-environment-variables">Production with Environment Variables<a class="headerlink" href="#production-with-environment-variables" title="Permanent link">&para;</a></h3>
@@ -7526,6 +7523,9 @@ chmod<span class="w"> </span><span class="m">600</span><span class="w"> </span>.
 └── ...
 </code></pre></div>
 <p><strong>Load by environment:</strong></p>
+<p>These per-environment JSON files are read by the snippet below, not by DataJoint's own
+secrets loader, so they can hold any settings and use any filenames. Assigning through
+<code>dj.config[...]</code> is a programmatic override, which outranks every other source.</p>
 <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">datajoint</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dj</span>
 
@@ -7590,7 +7590,7 @@ rotation does.</p>
 git history; until rotation completes, the leaked secret is still valid.</p>
 <ul>
 <li>Database users (<code>database.user</code> / <code>database.password</code>): change the password
-  on the server, then update your local <code>.secrets/datajoint.json</code>.</li>
+  on the server, then update your local <code>.secrets/database.password</code>.</li>
 <li>Object-store credentials (<code>stores.&lt;name&gt;.access_key</code> / <code>secret_key</code>, or the
   equivalent in your cloud provider): issue new keys and revoke the old ones.</li>
 <li>Any third-party tokens that appeared in the same file.</li>
@@ -7599,16 +7599,16 @@ git history; until rotation completes, the leaked secret is still valid.</p>
 </ul>
 <p><strong>Step 2 — Remove from git history.</strong> After rotation, scrub the file so old
 clones don't leak it further:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Remove file from history</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># Remove the leaked file from history (repeat per file, or pass several paths)</span>
 git<span class="w"> </span>filter-branch<span class="w"> </span>--force<span class="w"> </span>--index-filter<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span><span class="s2">&quot;git rm --cached --ignore-unmatch .secrets/datajoint.json&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span><span class="s2">&quot;git rm --cached --ignore-unmatch .secrets/database.password&quot;</span><span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--prune-empty<span class="w"> </span>--tag-name-filter<span class="w"> </span>cat<span class="w"> </span>--<span class="w"> </span>--all
 
 <span class="c1"># Force push (coordinate with team!)</span>
 git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </span>--force<span class="w"> </span>--all
 </code></pre></div>
 <p><strong>Step 3 — Verify removal:</strong></p>
-<div class="highlight"><pre><span></span><code>git<span class="w"> </span>log<span class="w"> </span>--all<span class="w"> </span>--full-history<span class="w"> </span>--<span class="w"> </span>.secrets/datajoint.json
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>log<span class="w"> </span>--all<span class="w"> </span>--full-history<span class="w"> </span>--<span class="w"> </span>.secrets/database.password
 </code></pre></div>
 <h2 id="configuration-templates">Configuration Templates<a class="headerlink" href="#configuration-templates" title="Permanent link">&para;</a></h2>
 <h3 id="minimal-development-setup">Minimal Development Setup<a class="headerlink" href="#minimal-development-setup" title="Permanent link">&para;</a></h3>
@@ -7618,11 +7618,9 @@ git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </
 <span class="w">  </span><span class="nt">&quot;safemode&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
 <span class="p">}</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><span class="c1">// .secrets/datajoint.json</span>
-<span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;database.user&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;root&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;database.password&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;simple&quot;</span>
-<span class="p">}</span>
+<div class="highlight"><pre><span></span><code>// .secrets/ directory
+.secrets/database.user                  # root
+.secrets/database.password              # simple
 </code></pre></div>
 <h3 id="production-with-s3-storage">Production with S3 Storage<a class="headerlink" href="#production-with-s3-storage" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="c1">// datajoint.json</span>
@@ -7643,7 +7641,8 @@ git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </
 <span class="p">}</span>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code>// .secrets/ directory
-.secrets/datajoint.json                 # Database credentials
+.secrets/database.user                  # Database username
+.secrets/database.password              # Database password
 .secrets/stores.main.access_key         # S3 access key
 .secrets/stores.main.secret_key         # S3 secret key
 </code></pre></div>

@@ -3901,10 +3901,18 @@ multi-valued.</p>
 <hr/>
 <h2 id="dependencies">Dependencies<a class="headerlink" href="#dependencies" title="Permanent link">¶</a></h2>
 <p>Operational methods (<code>cascade</code>, <code>restrict</code>, <code>counts</code>, <code>prune</code>) use <code>networkx</code>, which is always installed as a core dependency.</p>
-<p>Diagram <strong>visualization</strong> requires optional dependencies:</p>
-<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>matplotlib<span class="w"> </span>pygraphviz
-</code></pre></div>
-<p>If visualization dependencies are missing, <code>dj.Diagram</code> displays a warning and provides a stub class. Operational methods remain available regardless.</p>
+<p>Diagram <strong>visualization</strong> additionally requires:</p>
+<ul>
+<li><strong>Graphviz</strong> — the <code>dot</code> executable. The default notebook display, <code>_repr_svg_()</code>, goes through
+  <code>make_svg()</code> → <code>make_dot()</code> → pydot → <code>dot</code>, so this is the path nearly all usage hits. <code>pydot</code>
+  ships with DataJoint, but Graphviz itself is a system package that <code>pip</code> cannot install
+  (<code>brew install graphviz</code>, <code>sudo apt-get install graphviz</code>). Without it, rendering raises
+  <code>FileNotFoundError</code> — see
+  <a href="../../../how-to/installation/#djdiagram-raises-filenotfounderror">Installation → Troubleshooting</a>.</li>
+<li><strong>matplotlib</strong> — only for <code>Diagram.draw()</code>, a separate <code>make_image()</code> path that most usage never
+  touches: <code>pip install datajoint[viz]</code>.</li>
+</ul>
+<p>Operational methods remain available regardless.</p>
 <hr/>
 <h2 id="see-also">See Also<a class="headerlink" href="#see-also" title="Permanent link">¶</a></h2>
 <ul>

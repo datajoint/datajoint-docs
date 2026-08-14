@@ -6769,12 +6769,14 @@
 </code></pre></div>
 <p>This file should be committed to version control.</p>
 <h2 id="secrets-directory-secrets">Secrets Directory (<code>.secrets/</code>)<a class="headerlink" href="#secrets-directory-secrets" title="Permanent link">&para;</a></h2>
-<p>Store credentials in <code>.secrets/datajoint.json</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;database.user&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;myuser&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;database.password&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;mypassword&quot;</span>
-<span class="p">}</span>
+<p>Store credentials as one plain-text file per setting:</p>
+<div class="highlight"><pre><span></span><code>mkdir<span class="w"> </span>-p<span class="w"> </span>.secrets
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;myuser&quot;</span><span class="w">     </span>&gt;<span class="w"> </span>.secrets/database.user
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;mypassword&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>.secrets/database.password
+chmod<span class="w"> </span><span class="m">600</span><span class="w"> </span>.secrets/*
 </code></pre></div>
+<p>Only <code>database.user</code>, <code>database.password</code>, and <code>stores.&lt;name&gt;.&lt;attr&gt;</code> are read from this
+directory — see <a href="../manage-secrets/#option-1-secrets-directory-recommended-for-development">Manage Secrets</a>.</p>
 <p><strong>Important:</strong> Add <code>.secrets/</code> to your <code>.gitignore</code>:</p>
 <div class="highlight"><pre><span></span><code>.secrets/
 </code></pre></div>
@@ -6875,8 +6877,8 @@
 <ol>
 <li>Programmatic settings (highest priority)</li>
 <li>Environment variables</li>
-<li><code>.secrets/datajoint.json</code></li>
 <li><code>datajoint.json</code></li>
+<li><code>.secrets/</code></li>
 <li>Default values (lowest priority)</li>
 </ol>
 <h2 id="tls-configuration">TLS Configuration<a class="headerlink" href="#tls-configuration" title="Permanent link">&para;</a></h2>
