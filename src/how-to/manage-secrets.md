@@ -7,7 +7,7 @@ Secure configuration management for database credentials, storage access keys, a
 DataJoint separates configuration into sensitive and non-sensitive components:
 
 | Component | Location | Purpose | Version Control |
-|-----------|----------|---------|-----------------|
+| ----------- | ---------- | --------- | ----------------- |
 | **Non-sensitive** | `datajoint.json` | Project settings, defaults | ✅ Commit to git |
 | **Sensitive** | `.secrets/` directory | Credentials, API keys | ❌ Never commit |
 | **Dynamic** | Environment variables | CI/CD, production | ⚠️ Context-dependent |
@@ -19,7 +19,7 @@ DataJoint loads configuration in this priority order (highest to lowest):
 1. **Programmatic settings** — `dj.config['key'] = value`
 2. **Environment variables** — `DJ_HOST`, `DJ_USER`, `DJ_STORES`, etc.
 3. **Project configuration** — `datajoint.json`
-4. **Secrets directory** — `.secrets/stores.<name>.<attr>` (fills attributes the file/env didn't already set)
+4. **Secrets directory** — `.secrets/database.user`, `.secrets/database.password`, `.secrets/stores.<name>.<attr>` (each fills a value the file and env didn't already set)
 5. **Default values** — Built-in defaults
 
 Higher priority sources override lower ones. Set `DJ_IGNORE_CONFIG_FILE=true` *(new in 2.2.4)* to skip both `datajoint.json` and the secrets directory entirely — see [Env-var-only deployments](#env-var-only-deployments) below.
@@ -33,7 +33,8 @@ project/
 ├── datajoint.json               # Non-sensitive settings (commit)
 ├── .gitignore                   # Must include .secrets/
 ├── .secrets/
-│   ├── datajoint.json           # Database credentials
+│   ├── database.user            # Database credentials, one value per file
+│   ├── database.password
 │   ├── stores.main.access_key   # S3/cloud storage credentials
 │   ├── stores.main.secret_key
 │   ├── stores.archive.access_key
@@ -56,13 +57,13 @@ project/
 
 ### Option 1: Secrets Directory (Recommended for Development)
 
-Create `.secrets/datajoint.json`:
+Each secret is a separate plain-text file named for the setting it carries:
 
-```json
-{
-  "database.user": "myuser",
-  "database.password": "mypassword"
-}
+```bash
+mkdir -p .secrets
+echo "myuser"     > .secrets/database.user
+echo "mypassword" > .secrets/database.password
+chmod 600 .secrets/*
 ```
 
 Non-sensitive database settings go in `datajoint.json`:
@@ -122,7 +123,7 @@ Local or network-mounted file systems don't require credentials:
 
 ### S3/MinIO Storage (With Credentials)
 
-#### Config in `datajoint.json` (non-sensitive):
+#### Config in `datajoint.json` (non-sensitive)
 
 ```json
 {
@@ -144,7 +145,7 @@ Local or network-mounted file systems don't require credentials:
 }
 ```
 
-#### Credentials in `.secrets/` directory:
+#### Credentials in `.secrets/` directory
 
 Create separate files for each store's credentials:
 
@@ -202,7 +203,7 @@ If `DJ_STORES` contains invalid JSON, DataJoint raises `ValueError` at config-lo
 ### Database Connections
 
 | Setting | Environment Variable | Description |
-|---------|---------------------|-------------|
+| --------- | --------------------- | ------------- |
 | `database.host` | `DJ_HOST` | Database hostname |
 | `database.port` | `DJ_PORT` | Database port (default: 3306) |
 | `database.user` | `DJ_USER` | Database username |
@@ -256,16 +257,12 @@ chmod 700 .secrets  # Owner-only access
 # 2. Create .gitignore
 echo ".secrets/" >> .gitignore
 
-# 3. Store credentials in .secrets/
-cat > .secrets/datajoint.json <<EOF
-{
-  "database.user": "dev_user",
-  "database.password": "dev_password"
-}
-EOF
+# 3. Store credentials in .secrets/, one value per file
+echo "dev_user"     > .secrets/database.user
+echo "dev_password" > .secrets/database.password
 
 # 4. Set restrictive permissions
-chmod 600 .secrets/datajoint.json
+chmod 600 .secrets/*
 ```
 
 ### Production Environment
@@ -370,7 +367,7 @@ import datajoint as dj
 
 # Config loaded automatically from:
 # 1. datajoint.json (project settings)
-# 2. .secrets/datajoint.json (credentials)
+# 2. .secrets/database.user and .secrets/database.password (credentials)
 conn = dj.conn()
 ```
 
@@ -400,6 +397,10 @@ project/
 ```
 
 **Load by environment:**
+
+These per-environment JSON files are read by the snippet below, not by DataJoint's own
+secrets loader, so they can hold any settings and use any filenames. Assigning through
+`dj.config[...]` is a programmatic override, which outranks every other source.
 
 ```python
 import os
@@ -482,7 +483,7 @@ conn = dj.conn(reset=True)
 git history; until rotation completes, the leaked secret is still valid.
 
 - Database users (`database.user` / `database.password`): change the password
-  on the server, then update your local `.secrets/datajoint.json`.
+  on the server, then update your local `.secrets/database.password`.
 - Object-store credentials (`stores.<name>.access_key` / `secret_key`, or the
   equivalent in your cloud provider): issue new keys and revoke the old ones.
 - Any third-party tokens that appeared in the same file.
@@ -493,9 +494,9 @@ git history; until rotation completes, the leaked secret is still valid.
 clones don't leak it further:
 
 ```bash
-# Remove file from history
+# Remove the leaked file from history (repeat per file, or pass several paths)
 git filter-branch --force --index-filter \
-  "git rm --cached --ignore-unmatch .secrets/datajoint.json" \
+  "git rm --cached --ignore-unmatch .secrets/database.password" \
   --prune-empty --tag-name-filter cat -- --all
 
 # Force push (coordinate with team!)
@@ -505,7 +506,7 @@ git push origin --force --all
 **Step 3 — Verify removal:**
 
 ```bash
-git log --all --full-history -- .secrets/datajoint.json
+git log --all --full-history -- .secrets/database.password
 ```
 
 ## Configuration Templates
@@ -520,12 +521,10 @@ git log --all --full-history -- .secrets/datajoint.json
 }
 ```
 
-```json
-// .secrets/datajoint.json
-{
-  "database.user": "root",
-  "database.password": "simple"
-}
+```
+// .secrets/ directory
+.secrets/database.user                  # root
+.secrets/database.password              # simple
 ```
 
 ### Production with S3 Storage
@@ -551,7 +550,8 @@ git log --all --full-history -- .secrets/datajoint.json
 
 ```
 // .secrets/ directory
-.secrets/datajoint.json                 # Database credentials
+.secrets/database.user                  # Database username
+.secrets/database.password              # Database password
 .secrets/stores.main.access_key         # S3 access key
 .secrets/stores.main.secret_key         # S3 secret key
 ```

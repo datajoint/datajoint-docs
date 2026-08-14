@@ -14,7 +14,7 @@ Upgrade existing pipelines from legacy DataJoint (pre-2.0) to DataJoint 2.0+.
 ### System Requirements
 
 | Component | Legacy (pre-2.0) | DataJoint 2.0+ |
-|-----------|-----------------|---------------|
+| ----------- | ----------------- | --------------- |
 | **Python** | 3.8+ | **3.10+** |
 | **MySQL** | 5.7+ | **8.0+** |
 | **Character encoding** | (varies) | **UTF-8 (utf8mb4)** |
@@ -83,7 +83,7 @@ Tests provide immediate ROI during migration and ongoing value for development.
 DataJoint 2.0 introduces a unified type system with three tiers:
 
 | Tier | Description | Examples | Migration |
-|------|-------------|----------|-----------|
+| ------ | ------------- | ---------- | ----------- |
 | **Native** | Raw MySQL types | `int unsigned`, `tinyint` | Auto-converted to core types |
 | **Core** | Standardized portable types | `int64`, `float64`, `varchar(100)`, `json` | Phase I |
 | **Codec** | Serialization to blob or storage | `<blob>`, `<blob@store>`, `<npy@>` | Phase I-III |
@@ -97,7 +97,7 @@ DataJoint 2.0 makes serialization **explicit** with codecs. In pre-2.0, `longblo
 #### Migration: Legacy → 2.0
 
 | pre-2.0 (Implicit) | 2.0 (Explicit) | Storage | Migration |
-|-------------------|----------------|---------|-----------|
+| ------------------- | ---------------- | --------- | ----------- |
 | `longblob` | `<blob>` | In-table | Phase I code, Phase III data |
 | `mediumblob` | `<blob>` | In-table | Phase I code, Phase III data |
 | `blob`, `tinyblob` | `<blob>` | In-table | Phase I code, Phase III data |
@@ -142,7 +142,7 @@ COMMENT ':<blob@store>:large array in object storage'
 In pre-2.0, `longblob` columns automatically deserialized Python objects using DataJoint's binary serialization format. DataJoint 2.0 identifies blob columns by checking for `:<blob>:` in the column comment. **Without this marker, blob columns are treated as raw binary data and will NOT be deserialized.**
 
 | Column Comment | DataJoint 2.0 Behavior |
-|----------------|----------------------|
+| ---------------- | ---------------------- |
 | `:<blob>:neural data` | ✓ Deserializes to Python/NumPy objects |
 | `neural data` (no marker) | ✗ Returns raw bytes (no deserialization) |
 
@@ -237,7 +237,7 @@ DataJoint 2.0 replaces `external.*` with unified `stores.*` configuration:
 ### Query API Changes
 
 | pre-2.0 | 2.0 | Phase |
-|--------|-----|-------|
+| -------- | ----- | ------- |
 | `table.fetch()` | `table.to_arrays()` or `table.to_dicts()` | I |
 | `table.fetch(..., format="frame")` | `table.to_pandas(...)` | I |
 | `table.fetch1()` | `table.fetch1()` (unchanged) | — |
@@ -259,7 +259,7 @@ DataJoint 2.0 replaces `external.*` with unified `stores.*` configuration:
 ## Migration Overview
 
 | Phase | Goal | Code Changes | Schema/Store Changes | Production Impact |
-|-------|------|--------------|----------------------|-------------------|
+| ------- | ------ | -------------- | ---------------------- | ------------------- |
 | **I** | Branch & code migration | All API updates, type syntax, **all codecs** (in-table and in-store) | Empty `_v2` schemas + test stores | **None** |
 | **II** | Test compatibility | — | Populate `_v2` schemas with sample data, test equivalence | **None** |
 | **III** | Migrate production data | — | Multiple migration options | **Varies** |
@@ -690,7 +690,7 @@ Now configure database connection and stores.
 
 DataJoint 2.0 uses:
 
-- **`.secrets/datajoint.json`** for credentials (gitignored)
+- **`.secrets/database.user`** and **`.secrets/database.password`** for credentials (gitignored)
 - **`datajoint.json`** for non-sensitive settings (checked in)
 - **`stores.*`** instead of `external.*`
 
@@ -707,18 +707,18 @@ echo ".secrets/" >> .gitignore
 python -c "import datajoint as dj; dj.config.save_template()"
 ```
 
-**Edit `.secrets/datajoint.json`:**
-```json
-{
-  "database.host": "your-database-host",
-  "database.user": "your-username",
-  "database.password": "your-password"
-}
+**Fill in the credential files under `.secrets/`** — one value per file:
+```bash
+echo "your-username" > .secrets/database.user
+echo "your-password" > .secrets/database.password
 ```
 
-**Edit `datajoint.json`:**
+**Edit `datajoint.json`**:
 ```json
 {
+  "database": {
+    "host": "your-database-host"
+  },
   "loglevel": "INFO",
   "safemode": true,
   "display.limit": 12,
@@ -1077,7 +1077,7 @@ Convert ALL types and codecs in Phase I:
 **Integer and Float Types:**
 
 | pre-2.0 | 2.0 | Category |
-|--------|-----|----------|
+| -------- | ----- | ---------- |
 | `int unsigned` | `int64` | Core type |
 | `int` | `int32` | Core type |
 | `smallint unsigned` | `int32` | Core type |
@@ -1113,7 +1113,7 @@ precision, so converting to `decimal(M,D)` is the recommended move.
 **String, Date, and Structured Types:**
 
 | pre-2.0 | 2.0 | Notes |
-|--------|-----|-------|
+| -------- | ----- | ------- |
 | `varchar(N)`, `char(N)` | Unchanged | Core types |
 | `date` | Unchanged | Core type |
 | `enum('a', 'b')` | Unchanged | Core type |
@@ -1129,7 +1129,7 @@ precision, so converting to `decimal(M,D)` is the recommended move.
 **Codecs:**
 
 | pre-2.0 | 2.0 | Category |
-|--------|-----|----------|
+| -------- | ----- | ---------- |
 | `longblob` | `<blob>` | Codec (in-table) |
 | `attach` | `<attach>` | Codec (in-table) |
 | `blob@store` | `<blob@store>` | Codec (in-store) |
