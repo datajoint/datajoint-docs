@@ -25,7 +25,7 @@
 
     ---
 
-    Build your first pipeline with hands-on Jupyter notebooks
+    Learn DataJoint through complete, worked Jupyter-notebook pipelines
 
     [:octicons-arrow-right-24: Start learning](tutorials/index.md)
 
@@ -65,4 +65,4 @@
 
 ---
 
-**New to DataJoint?** Start with the [:octicons-arrow-right-24: Quick Start tutorial](tutorials/index.md).
+**New to DataJoint?** Visit [:octicons-arrow-right-24: Installation](how-to/installation.md) to install DataJoint and run your first pipeline, then work through the [:octicons-arrow-right-24: Tutorials](tutorials/index.md).
