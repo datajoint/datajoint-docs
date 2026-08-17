@@ -87,12 +87,16 @@ governed by the schema. A [codec](../reference/specs/codec-api.md) *defines* tha
 datatype: it can run **arbitrary validation checks** when a value is encoded —
 rejecting anything outside the domain's valid set, exactly as `enum` does for a
 category — and it exposes **typed access methods** for reading the value back.
-Crucially, the object write is bound to the **same database transaction** as the
-row that references it, so an object-backed attribute obeys the same discipline
-as any scalar column: the row and its object commit together or not at all, and
-a failed check or write rolls the whole insert back. Domain integrity therefore
-holds uniformly — from `int32` and `enum` to arbitrary structured and
-object-backed types — under one consistency guarantee.
+The check runs at encode time, *before* anything is written, so an invalid
+value is rejected up front and the row that would reference it is never
+committed — the same guarantee scalar columns give, extended to object-backed
+types. The stored object is integrated with the row's lifecycle rather than
+being an opaque side file: it is addressed by the schema and reclaimed by
+[garbage collection](referential-integrity.md) when no row references it
+(object stores are not transactional participants, so a failed insert leaves at
+most an unreferenced object, never a bad value in the table).
+Domain integrity therefore holds uniformly — from `int32` and `enum` to
+arbitrary structured and object-backed types.
 
 ### 2. Completeness
 
