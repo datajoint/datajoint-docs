@@ -1,9 +1,26 @@
-# Migrate to DataJoint 2.0
+# Migrate to DataJoint 2.x
 
-Upgrade existing pipelines from legacy DataJoint (pre-2.0) to DataJoint 2.0+.
+Upgrade existing pipelines from legacy DataJoint (the pre-2.0 `0.x` series)
+directly to the latest DataJoint 2.x — currently **2.3**.
 
 > **This guide is optimized for AI coding assistants.** Point your AI agent at this
 > document and it will execute the migration with your oversight.
+
+!!! tip "Which version do I migrate to?"
+
+    Migrate **straight to the latest 2.x release** (currently 2.3) — there is no
+    need to step through 2.0 → 2.1 → 2.2 → 2.3. A single upgrade takes a `0.x`
+    pipeline all the way to 2.3.
+
+    Everything this guide calls "2.0" is the **migration surface** — the type
+    system, explicit codecs, and unified `stores` introduced in 2.0. Later
+    releases build on it without adding migration steps: **2.1** added the
+    PostgreSQL backend and configurable diagram layout, **2.2** added the jobs
+    layer and diagram operations, and **2.3** added the upstream/provenance API.
+    Installing the latest release gives you all of them.
+
+    Complete the migration while on **2.3 or earlier**: the `datajoint.migrate`
+    helper is scheduled for removal in 2.4/2.5.
 
 !!! warning "Temporary module"
 
