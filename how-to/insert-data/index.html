@@ -3904,7 +3904,7 @@
   <span class="md-ellipsis">
     
   
-    Migrate to 2.0
+    Migrate to 2.x
   
 
     
@@ -6606,27 +6606,27 @@
 <p>Add data to DataJoint tables.</p>
 <h2 id="single-row">Single Row<a class="headerlink" href="#single-row" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><span class="n">Subject</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span>
-    <span class="s1">&#39;subject_id&#39;</span><span class="p">:</span> <span class="s1">&#39;M001&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;species&#39;</span><span class="p">:</span> <span class="s1">&#39;Mus musculus&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;date_of_birth&#39;</span><span class="p">:</span> <span class="s1">&#39;2026-01-15&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;sex&#39;</span><span class="p">:</span> <span class="s1">&#39;M&#39;</span>
+    <span class="s1">'subject_id'</span><span class="p">:</span> <span class="s1">'M001'</span><span class="p">,</span>
+    <span class="s1">'species'</span><span class="p">:</span> <span class="s1">'Mus musculus'</span><span class="p">,</span>
+    <span class="s1">'date_of_birth'</span><span class="p">:</span> <span class="s1">'2026-01-15'</span><span class="p">,</span>
+    <span class="s1">'sex'</span><span class="p">:</span> <span class="s1">'M'</span>
 <span class="p">})</span>
 </code></pre></div>
 <h2 id="multiple-rows">Multiple Rows<a class="headerlink" href="#multiple-rows" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><span class="n">Subject</span><span class="o">.</span><span class="n">insert</span><span class="p">([</span>
-    <span class="p">{</span><span class="s1">&#39;subject_id&#39;</span><span class="p">:</span> <span class="s1">&#39;M001&#39;</span><span class="p">,</span> <span class="s1">&#39;species&#39;</span><span class="p">:</span> <span class="s1">&#39;Mus musculus&#39;</span><span class="p">,</span> <span class="s1">&#39;date_of_birth&#39;</span><span class="p">:</span> <span class="s1">&#39;2026-01-15&#39;</span><span class="p">,</span> <span class="s1">&#39;sex&#39;</span><span class="p">:</span> <span class="s1">&#39;M&#39;</span><span class="p">},</span>
-    <span class="p">{</span><span class="s1">&#39;subject_id&#39;</span><span class="p">:</span> <span class="s1">&#39;M002&#39;</span><span class="p">,</span> <span class="s1">&#39;species&#39;</span><span class="p">:</span> <span class="s1">&#39;Mus musculus&#39;</span><span class="p">,</span> <span class="s1">&#39;date_of_birth&#39;</span><span class="p">:</span> <span class="s1">&#39;2026-02-01&#39;</span><span class="p">,</span> <span class="s1">&#39;sex&#39;</span><span class="p">:</span> <span class="s1">&#39;F&#39;</span><span class="p">},</span>
-    <span class="p">{</span><span class="s1">&#39;subject_id&#39;</span><span class="p">:</span> <span class="s1">&#39;M003&#39;</span><span class="p">,</span> <span class="s1">&#39;species&#39;</span><span class="p">:</span> <span class="s1">&#39;Mus musculus&#39;</span><span class="p">,</span> <span class="s1">&#39;date_of_birth&#39;</span><span class="p">:</span> <span class="s1">&#39;2026-02-15&#39;</span><span class="p">,</span> <span class="s1">&#39;sex&#39;</span><span class="p">:</span> <span class="s1">&#39;M&#39;</span><span class="p">},</span>
+    <span class="p">{</span><span class="s1">'subject_id'</span><span class="p">:</span> <span class="s1">'M001'</span><span class="p">,</span> <span class="s1">'species'</span><span class="p">:</span> <span class="s1">'Mus musculus'</span><span class="p">,</span> <span class="s1">'date_of_birth'</span><span class="p">:</span> <span class="s1">'2026-01-15'</span><span class="p">,</span> <span class="s1">'sex'</span><span class="p">:</span> <span class="s1">'M'</span><span class="p">},</span>
+    <span class="p">{</span><span class="s1">'subject_id'</span><span class="p">:</span> <span class="s1">'M002'</span><span class="p">,</span> <span class="s1">'species'</span><span class="p">:</span> <span class="s1">'Mus musculus'</span><span class="p">,</span> <span class="s1">'date_of_birth'</span><span class="p">:</span> <span class="s1">'2026-02-01'</span><span class="p">,</span> <span class="s1">'sex'</span><span class="p">:</span> <span class="s1">'F'</span><span class="p">},</span>
+    <span class="p">{</span><span class="s1">'subject_id'</span><span class="p">:</span> <span class="s1">'M003'</span><span class="p">,</span> <span class="s1">'species'</span><span class="p">:</span> <span class="s1">'Mus musculus'</span><span class="p">,</span> <span class="s1">'date_of_birth'</span><span class="p">:</span> <span class="s1">'2026-02-15'</span><span class="p">,</span> <span class="s1">'sex'</span><span class="p">:</span> <span class="s1">'M'</span><span class="p">},</span>
 <span class="p">])</span>
 </code></pre></div>
 <h2 id="from-pandas-dataframe">From pandas DataFrame<a class="headerlink" href="#from-pandas-dataframe" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
 
 <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
-    <span class="s1">&#39;subject_id&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;M004&#39;</span><span class="p">,</span> <span class="s1">&#39;M005&#39;</span><span class="p">],</span>
-    <span class="s1">&#39;species&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;Mus musculus&#39;</span><span class="p">,</span> <span class="s1">&#39;Mus musculus&#39;</span><span class="p">],</span>
-    <span class="s1">&#39;date_of_birth&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;2026-03-01&#39;</span><span class="p">,</span> <span class="s1">&#39;2026-03-15&#39;</span><span class="p">],</span>
-    <span class="s1">&#39;sex&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;F&#39;</span><span class="p">,</span> <span class="s1">&#39;M&#39;</span><span class="p">]</span>
+    <span class="s1">'subject_id'</span><span class="p">:</span> <span class="p">[</span><span class="s1">'M004'</span><span class="p">,</span> <span class="s1">'M005'</span><span class="p">],</span>
+    <span class="s1">'species'</span><span class="p">:</span> <span class="p">[</span><span class="s1">'Mus musculus'</span><span class="p">,</span> <span class="s1">'Mus musculus'</span><span class="p">],</span>
+    <span class="s1">'date_of_birth'</span><span class="p">:</span> <span class="p">[</span><span class="s1">'2026-03-01'</span><span class="p">,</span> <span class="s1">'2026-03-15'</span><span class="p">],</span>
+    <span class="s1">'sex'</span><span class="p">:</span> <span class="p">[</span><span class="s1">'F'</span><span class="p">,</span> <span class="s1">'M'</span><span class="p">]</span>
 <span class="p">})</span>
 
 <span class="n">Subject</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
@@ -6673,21 +6673,21 @@ rows a different way, and inserting into them directly breaks reproducibility:</
 <p>Use a transaction to maintain compositional integrity:</p>
 <div class="highlight"><pre><span></span><code><span class="k">with</span> <span class="n">schema</span><span class="o">.</span><span class="n">connection</span><span class="o">.</span><span class="n">transaction</span><span class="p">:</span>
     <span class="n">Session</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span>
-        <span class="s1">&#39;subject_id&#39;</span><span class="p">:</span> <span class="s1">&#39;M001&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;session_idx&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
-        <span class="s1">&#39;session_date&#39;</span><span class="p">:</span> <span class="s1">&#39;2026-01-20&#39;</span>
+        <span class="s1">'subject_id'</span><span class="p">:</span> <span class="s1">'M001'</span><span class="p">,</span>
+        <span class="s1">'session_idx'</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="s1">'session_date'</span><span class="p">:</span> <span class="s1">'2026-01-20'</span>
     <span class="p">})</span>
     <span class="n">Session</span><span class="o">.</span><span class="n">Trial</span><span class="o">.</span><span class="n">insert</span><span class="p">([</span>
-        <span class="p">{</span><span class="s1">&#39;subject_id&#39;</span><span class="p">:</span> <span class="s1">&#39;M001&#39;</span><span class="p">,</span> <span class="s1">&#39;session_idx&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;trial_idx&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;outcome&#39;</span><span class="p">:</span> <span class="s1">&#39;hit&#39;</span><span class="p">,</span> <span class="s1">&#39;reaction_time&#39;</span><span class="p">:</span> <span class="mf">0.35</span><span class="p">},</span>
-        <span class="p">{</span><span class="s1">&#39;subject_id&#39;</span><span class="p">:</span> <span class="s1">&#39;M001&#39;</span><span class="p">,</span> <span class="s1">&#39;session_idx&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;trial_idx&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;outcome&#39;</span><span class="p">:</span> <span class="s1">&#39;miss&#39;</span><span class="p">,</span> <span class="s1">&#39;reaction_time&#39;</span><span class="p">:</span> <span class="mf">0.82</span><span class="p">},</span>
+        <span class="p">{</span><span class="s1">'subject_id'</span><span class="p">:</span> <span class="s1">'M001'</span><span class="p">,</span> <span class="s1">'session_idx'</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">'trial_idx'</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">'outcome'</span><span class="p">:</span> <span class="s1">'hit'</span><span class="p">,</span> <span class="s1">'reaction_time'</span><span class="p">:</span> <span class="mf">0.35</span><span class="p">},</span>
+        <span class="p">{</span><span class="s1">'subject_id'</span><span class="p">:</span> <span class="s1">'M001'</span><span class="p">,</span> <span class="s1">'session_idx'</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">'trial_idx'</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">'outcome'</span><span class="p">:</span> <span class="s1">'miss'</span><span class="p">,</span> <span class="s1">'reaction_time'</span><span class="p">:</span> <span class="mf">0.82</span><span class="p">},</span>
     <span class="p">])</span>
 </code></pre></div>
 <h2 id="insert-from-query">Insert from Query<a class="headerlink" href="#insert-from-query" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><span class="c1"># Copy data from another table or query result</span>
-<span class="n">NewTable</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">OldTable</span> <span class="o">&amp;</span> <span class="s1">&#39;condition&#39;</span><span class="p">)</span>
+<span class="n">NewTable</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">OldTable</span> <span class="o">&amp;</span> <span class="s1">'condition'</span><span class="p">)</span>
 
 <span class="c1"># With projection</span>
-<span class="n">NewTable</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">OldTable</span><span class="o">.</span><span class="n">proj</span><span class="p">(</span><span class="s1">&#39;attr1&#39;</span><span class="p">,</span> <span class="s1">&#39;attr2&#39;</span><span class="p">,</span> <span class="n">new_name</span><span class="o">=</span><span class="s1">&#39;old_name&#39;</span><span class="p">))</span>
+<span class="n">NewTable</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">OldTable</span><span class="o">.</span><span class="n">proj</span><span class="p">(</span><span class="s1">'attr1'</span><span class="p">,</span> <span class="s1">'attr2'</span><span class="p">,</span> <span class="n">new_name</span><span class="o">=</span><span class="s1">'old_name'</span><span class="p">))</span>
 </code></pre></div>
 <h2 id="validate-before-insert">Validate Before Insert<a class="headerlink" href="#validate-before-insert" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><span class="n">result</span> <span class="o">=</span> <span class="n">Subject</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="n">rows</span><span class="p">)</span>
@@ -6695,9 +6695,9 @@ rows a different way, and inserting into them directly breaks reproducibility:</
 <span class="k">if</span> <span class="n">result</span><span class="p">:</span>
     <span class="n">Subject</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">rows</span><span class="p">)</span>
 <span class="k">else</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Validation errors:&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"Validation errors:"</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">error</span> <span class="ow">in</span> <span class="n">result</span><span class="o">.</span><span class="n">errors</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">error</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  </span><span class="si">{</span><span class="n">error</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 </code></pre></div>
 <h2 id="insert-with-blobs">Insert with Blobs<a class="headerlink" href="#insert-with-blobs" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
@@ -6705,8 +6705,8 @@ rows a different way, and inserting into them directly breaks reproducibility:</
 <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
 
 <span class="n">ImageData</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span>
-    <span class="s1">&#39;image_id&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
-    <span class="s1">&#39;pixel_data&#39;</span><span class="p">:</span> <span class="n">data</span>  <span class="c1"># Automatically serialized</span>
+    <span class="s1">'image_id'</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s1">'pixel_data'</span><span class="p">:</span> <span class="n">data</span>  <span class="c1"># Automatically serialized</span>
 <span class="p">})</span>
 </code></pre></div>
 <p>For multi-GB arrays, Zarr stores, HDF5 files, or any object too large to hold in memory before insert, use <a href="../staged-insert/">Staged Insert</a> instead — it writes directly to object storage and commits the row atomically.</p>

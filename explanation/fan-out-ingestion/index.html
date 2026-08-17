@@ -3777,7 +3777,7 @@
   <span class="md-ellipsis">
     
   
-    Migrate to 2.0
+    Migrate to 2.x
   
 
     
@@ -6362,23 +6362,23 @@ loader — reads one source and inserts into several <strong>entry-point tables<
 table:</p>
 <div class="highlight"><pre><span></span><code><span class="nd">@schema</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">RecordingFile</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>        <span class="c1"># the source record</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    file_id : uuid</span>
 <span class="s2">    ---</span>
 <span class="s2">    path    : varchar(255)</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">    """</span>
 
 <span class="nd">@schema</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Ingest</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Imported</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    -&gt; RecordingFile</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">    """</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">make</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
         <span class="n">meta</span> <span class="o">=</span> <span class="n">parse</span><span class="p">(</span><span class="n">RecordingFile</span> <span class="o">&amp;</span> <span class="n">key</span><span class="p">)</span>
         <span class="c1"># fan out into several entry-point tables that have no FK back to Ingest</span>
-        <span class="n">Subject</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="o">**</span><span class="n">meta</span><span class="o">.</span><span class="n">subject</span><span class="p">,</span> <span class="s2">&quot;source_file&quot;</span><span class="p">:</span> <span class="n">key</span><span class="p">[</span><span class="s2">&quot;file_id&quot;</span><span class="p">]})</span>
-        <span class="n">Session</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="o">**</span><span class="n">meta</span><span class="o">.</span><span class="n">session</span><span class="p">,</span> <span class="s2">&quot;source_file&quot;</span><span class="p">:</span> <span class="n">key</span><span class="p">[</span><span class="s2">&quot;file_id&quot;</span><span class="p">]})</span>
-        <span class="n">Recording</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="o">**</span><span class="n">meta</span><span class="o">.</span><span class="n">recording</span><span class="p">,</span> <span class="s2">&quot;source_file&quot;</span><span class="p">:</span> <span class="n">key</span><span class="p">[</span><span class="s2">&quot;file_id&quot;</span><span class="p">]})</span>
+        <span class="n">Subject</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="o">**</span><span class="n">meta</span><span class="o">.</span><span class="n">subject</span><span class="p">,</span> <span class="s2">"source_file"</span><span class="p">:</span> <span class="n">key</span><span class="p">[</span><span class="s2">"file_id"</span><span class="p">]})</span>
+        <span class="n">Session</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="o">**</span><span class="n">meta</span><span class="o">.</span><span class="n">session</span><span class="p">,</span> <span class="s2">"source_file"</span><span class="p">:</span> <span class="n">key</span><span class="p">[</span><span class="s2">"file_id"</span><span class="p">]})</span>
+        <span class="n">Recording</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="o">**</span><span class="n">meta</span><span class="o">.</span><span class="n">recording</span><span class="p">,</span> <span class="s2">"source_file"</span><span class="p">:</span> <span class="n">key</span><span class="p">[</span><span class="s2">"file_id"</span><span class="p">]})</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">insert1</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
 </code></pre></div>
 <h2 id="it-steps-outside-direct-referential-integrity-explicitly">It steps outside direct referential integrity — explicitly<a class="headerlink" href="#it-steps-outside-direct-referential-integrity-explicitly" title="Permanent link">&para;</a></h2>

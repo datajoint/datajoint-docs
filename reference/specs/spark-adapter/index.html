@@ -3671,7 +3671,7 @@
   <span class="md-ellipsis">
     
   
-    Migrate to 2.0
+    Migrate to 2.x
   
 
     
@@ -6489,13 +6489,13 @@
 
 <span class="nd">@runtime_checkable</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">SparkAdapter</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    A codec that adapts its decoded values to Spark-native types.</span>
 
 <span class="sd">    Opt-in. Codecs implementing this method declare that their decoded</span>
 <span class="sd">    values can be expressed as primitives, lists, or dicts of the same —</span>
-<span class="sd">    i.e., shapes that map cleanly to Spark&#39;s StructType / ArrayType / MapType.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    i.e., shapes that map cleanly to Spark's StructType / ArrayType / MapType.</span>
+<span class="sd">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">to_spark</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">decoded</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span> <span class="o">...</span>
 </code></pre></div>
@@ -6545,7 +6545,7 @@
 <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">datajoint</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dj</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">datajoint.spark</span><span class="w"> </span><span class="kn">import</span> <span class="n">SparkAdapter</span>
 
-<span class="n">attr</span> <span class="o">=</span> <span class="n">table</span><span class="o">.</span><span class="n">heading</span><span class="p">[</span><span class="s2">&quot;column_name&quot;</span><span class="p">]</span>
+<span class="n">attr</span> <span class="o">=</span> <span class="n">table</span><span class="o">.</span><span class="n">heading</span><span class="p">[</span><span class="s2">"column_name"</span><span class="p">]</span>
 <span class="k">if</span> <span class="n">attr</span><span class="o">.</span><span class="n">codec</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">attr</span><span class="o">.</span><span class="n">codec</span><span class="p">,</span> <span class="n">SparkAdapter</span><span class="p">):</span>
     <span class="c1"># The codec opts in to Spark rendering</span>
     <span class="n">rendered</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">codec</span><span class="o">.</span><span class="n">to_spark</span><span class="p">(</span><span class="n">decoded_value</span><span class="p">)</span>
@@ -6569,12 +6569,12 @@
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
 <span class="k">class</span><span class="w"> </span><span class="nc">FloatArrayCodec</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Codec</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;1D array of float64. Adapts to Spark ARRAY&lt;DOUBLE&gt;.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""1D array of float64. Adapts to Spark ARRAY&lt;DOUBLE&gt;."""</span>
 
-    <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;float_array&quot;</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="s2">"float_array"</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">get_dtype</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">is_store</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="k">return</span> <span class="s2">&quot;longblob&quot;</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">is_store</span> <span class="k">else</span> <span class="s2">&quot;&lt;hash&gt;&quot;</span>
+        <span class="k">return</span> <span class="s2">"longblob"</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">is_store</span> <span class="k">else</span> <span class="s2">"&lt;hash&gt;"</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">encode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">store_name</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span><span class="o">.</span><span class="n">tobytes</span><span class="p">()</span>
@@ -6588,7 +6588,7 @@
 <p><code>isinstance(FloatArrayCodec(), dj.SparkAdapter)</code> returns <code>True</code> because the method is present. No subclassing required.</p>
 <p>A 2D image codec returning a nested list (Spark <code>ARRAY&lt;ARRAY&lt;DOUBLE&gt;&gt;</code>):</p>
 <div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">Image2DCodec</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Codec</span><span class="p">):</span>
-    <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;image_2d&quot;</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="s2">"image_2d"</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">encode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">store_name</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span> <span class="o">...</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">decode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stored</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span> <span class="o">...</span>
@@ -6598,22 +6598,22 @@
 </code></pre></div>
 <p>A structured codec rendering to Spark <code>STRUCT&lt;x: DOUBLE, y: DOUBLE, label: STRING&gt;</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">PointWithLabelCodec</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Codec</span><span class="p">):</span>
-    <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;labeled_point&quot;</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="s2">"labeled_point"</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">encode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">store_name</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span> <span class="o">...</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">decode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stored</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span> <span class="o">...</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">to_spark</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">decoded</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
         <span class="k">return</span> <span class="p">{</span>
-            <span class="s2">&quot;x&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">decoded</span><span class="p">[</span><span class="s2">&quot;x&quot;</span><span class="p">]),</span>
-            <span class="s2">&quot;y&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">decoded</span><span class="p">[</span><span class="s2">&quot;y&quot;</span><span class="p">]),</span>
-            <span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">decoded</span><span class="p">[</span><span class="s2">&quot;label&quot;</span><span class="p">]),</span>
+            <span class="s2">"x"</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">decoded</span><span class="p">[</span><span class="s2">"x"</span><span class="p">]),</span>
+            <span class="s2">"y"</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">decoded</span><span class="p">[</span><span class="s2">"y"</span><span class="p">]),</span>
+            <span class="s2">"label"</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">decoded</span><span class="p">[</span><span class="s2">"label"</span><span class="p">]),</span>
         <span class="p">}</span>
 </code></pre></div>
 <h2 id="consumer-pattern">Consumer pattern<a class="headerlink" href="#consumer-pattern" title="Permanent link">&para;</a></h2>
 <p>A simplified silver-layer publish loop (the actual <code>datajoint-databricks</code> consumer is more elaborate):</p>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">publish_row_to_silver</span><span class="p">(</span><span class="n">table</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">target_table</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Publish one row of `table` (restricted by `key`) to a Spark-renderable target.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Publish one row of `table` (restricted by `key`) to a Spark-renderable target."""</span>
     <span class="kn">from</span><span class="w"> </span><span class="nn">datajoint.spark</span><span class="w"> </span><span class="kn">import</span> <span class="n">SparkAdapter</span>
 
     <span class="n">row</span> <span class="o">=</span> <span class="p">(</span><span class="n">table</span> <span class="o">&amp;</span> <span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">fetch1</span><span class="p">()</span>
@@ -6626,11 +6626,11 @@
             <span class="c1"># Primitive column (no codec) — pass through</span>
             <span class="n">rendered</span><span class="p">[</span><span class="n">attr_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="c1"># Codec doesn&#39;t adapt to Spark — skip this column for silver, or raise</span>
+            <span class="c1"># Codec doesn't adapt to Spark — skip this column for silver, or raise</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;Column </span><span class="si">{</span><span class="n">attr_name</span><span class="si">!r}</span><span class="s2"> uses codec </span><span class="si">{</span><span class="n">attr</span><span class="o">.</span><span class="n">codec</span><span class="o">.</span><span class="n">name</span><span class="si">!r}</span><span class="s2"> which &quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;does not implement SparkAdapter; this row is not eligible &quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;for silver-layer publish.&quot;</span>
+                <span class="sa">f</span><span class="s2">"Column </span><span class="si">{</span><span class="n">attr_name</span><span class="si">!r}</span><span class="s2"> uses codec </span><span class="si">{</span><span class="n">attr</span><span class="o">.</span><span class="n">codec</span><span class="o">.</span><span class="n">name</span><span class="si">!r}</span><span class="s2"> which "</span>
+                <span class="sa">f</span><span class="s2">"does not implement SparkAdapter; this row is not eligible "</span>
+                <span class="sa">f</span><span class="s2">"for silver-layer publish."</span>
             <span class="p">)</span>
     <span class="n">target_table</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">rendered</span><span class="p">)</span>
 </code></pre></div>

@@ -3671,7 +3671,7 @@
   <span class="md-ellipsis">
     
   
-    Migrate to 2.0
+    Migrate to 2.x
   
 
     
@@ -6774,7 +6774,7 @@
 <p>This is why <code>trace</code> cannot ship before the upward primitives exist in the codebase. As of DataJoint 2.3, the primitives are in place (added with <a href="https://github.com/datajoint/datajoint-python/pull/1468">#1429's cascade fix</a>), and <code>trace</code> is a direct consumer.</p>
 <h3 id="the-make-readwrite-boundary">The <code>make()</code> read/write boundary<a class="headerlink" href="#the-make-readwrite-boundary" title="Permanent link">&para;</a></h3>
 <p>DataJoint's <code>make(self, key)</code> convention has always been:</p>
-<div class="highlight"><pre><span></span><code>Read from self&#39;s declared upstream dependencies; write to self (and its Parts).
+<div class="highlight"><pre><span></span><code>Read from self's declared upstream dependencies; write to self (and its Parts).
 </code></pre></div>
 <p>This is the <strong>read/write boundary</strong>: data flows in from declared ancestors and out to the target table and its Parts. Anything that crosses this boundary in another direction undermines reproducibility — a <code>fetch</code> from an undeclared table makes that dependency invisible to the FK graph; an <code>insert</code> into another table sneaks rows past it. (The full rule set is the <a href="../autopopulate/#43-the-make-reproducibility-contract">make() reproducibility contract</a>.)</p>
 <p><code>self.upstream</code> makes the read side of this boundary the path of least resistance:</p>
@@ -6818,8 +6818,8 @@
 <p>The primary user-facing operation. Returns the ancestor's table pre-restricted through the FK join path.</p>
 <div class="highlight"><pre><span></span><code><span class="n">trace</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">Diagram</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="n">MyChild</span> <span class="o">&amp;</span> <span class="n">key</span><span class="p">)</span>
 <span class="n">session</span> <span class="o">=</span> <span class="n">trace</span><span class="p">[</span><span class="n">Session</span><span class="p">]</span>              <span class="c1"># QueryExpression: Session restricted to ancestors of MyChild &amp; key</span>
-<span class="n">session</span><span class="o">.</span><span class="n">fetch1</span><span class="p">(</span><span class="s2">&quot;session_date&quot;</span><span class="p">)</span>
-<span class="n">trace</span><span class="p">[</span><span class="n">ExtractTraces</span><span class="p">]</span><span class="o">.</span><span class="n">to_arrays</span><span class="p">(</span><span class="s2">&quot;trace&quot;</span><span class="p">)</span>
+<span class="n">session</span><span class="o">.</span><span class="n">fetch1</span><span class="p">(</span><span class="s2">"session_date"</span><span class="p">)</span>
+<span class="n">trace</span><span class="p">[</span><span class="n">ExtractTraces</span><span class="p">]</span><span class="o">.</span><span class="n">to_arrays</span><span class="p">(</span><span class="s2">"trace"</span><span class="p">)</span>
 </code></pre></div>
 <p>The argument may be:</p>
 <ul>
@@ -6851,59 +6851,59 @@
 <h3 id="examples">Examples<a class="headerlink" href="#examples" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">datajoint</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dj</span>
 
-<span class="n">schema</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">Schema</span><span class="p">(</span><span class="s2">&quot;imaging&quot;</span><span class="p">)</span>
+<span class="n">schema</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">Schema</span><span class="p">(</span><span class="s2">"imaging"</span><span class="p">)</span>
 
 <span class="nd">@schema</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Subject</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    subject_id : int32</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">    """</span>
 
 <span class="nd">@schema</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Session</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    -&gt; Subject</span>
 <span class="s2">    session_id : int32</span>
 <span class="s2">    ---</span>
 <span class="s2">    session_date : date</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">    """</span>
 
 <span class="nd">@schema</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Scan</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Imported</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    -&gt; Session</span>
 <span class="s2">    scan_id : int32</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">    """</span>
 
 <span class="nd">@schema</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">ExtractTraces</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Computed</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    -&gt; Scan</span>
 <span class="s2">    ---</span>
 <span class="s2">    trace : float64</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">    """</span>
 
 <span class="nd">@schema</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Summary</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Computed</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    -&gt; ExtractTraces</span>
 <span class="s2">    ---</span>
 <span class="s2">    summary_stat : float64</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">    """</span>
 </code></pre></div>
 <p>Given a populated <code>Summary</code> row, the trace reaches every ancestor:</p>
-<div class="highlight"><pre><span></span><code><span class="n">key</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;subject_id&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;session_id&quot;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span> <span class="s2">&quot;scan_id&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">}</span>
+<div class="highlight"><pre><span></span><code><span class="n">key</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"subject_id"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">"session_id"</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span> <span class="s2">"scan_id"</span><span class="p">:</span> <span class="mi">2</span><span class="p">}</span>
 <span class="n">trace</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">Diagram</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="n">Summary</span> <span class="o">&amp;</span> <span class="n">key</span><span class="p">)</span>
 
-<span class="n">trace</span><span class="p">[</span><span class="n">Subject</span><span class="p">]</span><span class="o">.</span><span class="n">fetch1</span><span class="p">(</span><span class="s2">&quot;subject_id&quot;</span><span class="p">)</span>           <span class="c1"># 1</span>
-<span class="n">trace</span><span class="p">[</span><span class="n">Session</span><span class="p">]</span><span class="o">.</span><span class="n">fetch1</span><span class="p">(</span><span class="s2">&quot;session_date&quot;</span><span class="p">)</span>         <span class="c1"># date of session 5</span>
-<span class="n">trace</span><span class="p">[</span><span class="n">Scan</span><span class="p">]</span><span class="o">.</span><span class="n">fetch1</span><span class="p">(</span><span class="s2">&quot;scan_id&quot;</span><span class="p">)</span>                 <span class="c1"># 2</span>
-<span class="n">trace</span><span class="p">[</span><span class="n">ExtractTraces</span><span class="p">]</span><span class="o">.</span><span class="n">fetch1</span><span class="p">(</span><span class="s2">&quot;trace&quot;</span><span class="p">)</span>          <span class="c1"># the trace that produced this Summary</span>
+<span class="n">trace</span><span class="p">[</span><span class="n">Subject</span><span class="p">]</span><span class="o">.</span><span class="n">fetch1</span><span class="p">(</span><span class="s2">"subject_id"</span><span class="p">)</span>           <span class="c1"># 1</span>
+<span class="n">trace</span><span class="p">[</span><span class="n">Session</span><span class="p">]</span><span class="o">.</span><span class="n">fetch1</span><span class="p">(</span><span class="s2">"session_date"</span><span class="p">)</span>         <span class="c1"># date of session 5</span>
+<span class="n">trace</span><span class="p">[</span><span class="n">Scan</span><span class="p">]</span><span class="o">.</span><span class="n">fetch1</span><span class="p">(</span><span class="s2">"scan_id"</span><span class="p">)</span>                 <span class="c1"># 2</span>
+<span class="n">trace</span><span class="p">[</span><span class="n">ExtractTraces</span><span class="p">]</span><span class="o">.</span><span class="n">fetch1</span><span class="p">(</span><span class="s2">"trace"</span><span class="p">)</span>          <span class="c1"># the trace that produced this Summary</span>
 
 <span class="n">trace</span><span class="o">.</span><span class="n">counts</span><span class="p">()</span>
 <span class="c1"># keyed by full table name; the seed (Summary) is included alongside its ancestors:</span>
-<span class="c1"># {&#39;`imaging`.`subject`&#39;: 1, &#39;`imaging`.`session`&#39;: 1, &#39;`imaging`.`_scan`&#39;: 1,</span>
-<span class="c1">#  &#39;`imaging`.`__extract_traces`&#39;: 1, &#39;`imaging`.`__summary`&#39;: 1}</span>
+<span class="c1"># {'`imaging`.`subject`': 1, '`imaging`.`session`': 1, '`imaging`.`_scan`': 1,</span>
+<span class="c1">#  '`imaging`.`__extract_traces`': 1, '`imaging`.`__summary`': 1}</span>
 </code></pre></div>
 <p>For a renamed-FK case (paralleling <a href="../cascade/#example-1-part-of-part-with-renamed-fk">Cascade Spec §Worked Example 1</a>), the upward rules reverse the rename so <code>trace[Ancestor]</code> returns the ancestor with its native column names regardless of how the seed's columns are named.</p>
 <h2 id="2-selfupstream-inside-make">2. <code>self.upstream</code> inside <code>make()</code><a class="headerlink" href="#2-selfupstream-inside-make" title="Permanent link">&para;</a></h2>
@@ -6923,17 +6923,17 @@
 <p><code>self.upstream</code> is both a convenience and the reproducible-by-construction read channel — the same data is reachable via <code>(Upstream &amp; key).fetch1(...)</code>, but reading through <code>self.upstream</code> keeps the dependency inside the declared upstream cone:</p>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">make</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
     <span class="c1"># All upstream reads pre-restricted to the current key</span>
-    <span class="n">session_date</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">upstream</span><span class="p">[</span><span class="n">Session</span><span class="p">]</span><span class="o">.</span><span class="n">fetch1</span><span class="p">(</span><span class="s2">&quot;session_date&quot;</span><span class="p">)</span>
-    <span class="n">traces</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">upstream</span><span class="p">[</span><span class="n">ExtractTraces</span><span class="p">]</span><span class="o">.</span><span class="n">to_arrays</span><span class="p">(</span><span class="s2">&quot;trace&quot;</span><span class="p">)</span>
+    <span class="n">session_date</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">upstream</span><span class="p">[</span><span class="n">Session</span><span class="p">]</span><span class="o">.</span><span class="n">fetch1</span><span class="p">(</span><span class="s2">"session_date"</span><span class="p">)</span>
+    <span class="n">traces</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">upstream</span><span class="p">[</span><span class="n">ExtractTraces</span><span class="p">]</span><span class="o">.</span><span class="n">to_arrays</span><span class="p">(</span><span class="s2">"trace"</span><span class="p">)</span>
     <span class="n">summary</span> <span class="o">=</span> <span class="n">compute</span><span class="p">(</span><span class="n">traces</span><span class="p">,</span> <span class="n">session_date</span><span class="p">)</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="o">**</span><span class="n">key</span><span class="p">,</span> <span class="s2">&quot;summary_stat&quot;</span><span class="p">:</span> <span class="n">summary</span><span class="p">})</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="o">**</span><span class="n">key</span><span class="p">,</span> <span class="s2">"summary_stat"</span><span class="p">:</span> <span class="n">summary</span><span class="p">})</span>
 </code></pre></div>
 <p>Multi-ancestor reads remain natural:</p>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">make</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
     <span class="c1"># Aggregate one ancestor restricted by another, all still pre-keyed</span>
     <span class="n">counts</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">upstream</span><span class="p">[</span><span class="n">Session</span><span class="p">]</span><span class="o">.</span><span class="n">aggr</span><span class="p">(</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">upstream</span><span class="p">[</span><span class="n">Scan</span><span class="p">],</span> <span class="n">n</span><span class="o">=</span><span class="s2">&quot;count(scan_id)&quot;</span>
-    <span class="p">)</span><span class="o">.</span><span class="n">fetch</span><span class="p">(</span><span class="s2">&quot;n&quot;</span><span class="p">,</span> <span class="n">as_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">upstream</span><span class="p">[</span><span class="n">Scan</span><span class="p">],</span> <span class="n">n</span><span class="o">=</span><span class="s2">"count(scan_id)"</span>
+    <span class="p">)</span><span class="o">.</span><span class="n">fetch</span><span class="p">(</span><span class="s2">"n"</span><span class="p">,</span> <span class="n">as_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="o">...</span>
 </code></pre></div>
 <p>Part tables of ancestors are accessible:</p>
@@ -6954,32 +6954,32 @@
 
 <span class="nd">@schema</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Spectrum</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Computed</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    -&gt; Recording</span>
 <span class="s2">    ---</span>
 <span class="s2">    spectrum : longblob</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">    """</span>
 
     <span class="k">class</span><span class="w"> </span><span class="nc">Bin</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Part</span><span class="p">):</span>
-        <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+        <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">        -&gt; master</span>
 <span class="s2">        bin_id : int32</span>
 <span class="s2">        ---</span>
 <span class="s2">        energy : float64</span>
-<span class="s2">        &quot;&quot;&quot;</span>
+<span class="s2">        """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">make</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
         <span class="c1"># Reads confined to the declared upstream cone</span>
-        <span class="n">rate</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">upstream</span><span class="p">[</span><span class="n">Recording</span><span class="p">]</span><span class="o">.</span><span class="n">fetch1</span><span class="p">(</span><span class="s2">&quot;sampling_rate&quot;</span><span class="p">)</span>
-        <span class="n">samples</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">upstream</span><span class="p">[</span><span class="n">Recording</span><span class="p">]</span><span class="o">.</span><span class="n">to_arrays</span><span class="p">(</span><span class="s2">&quot;signal&quot;</span><span class="p">)</span>
+        <span class="n">rate</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">upstream</span><span class="p">[</span><span class="n">Recording</span><span class="p">]</span><span class="o">.</span><span class="n">fetch1</span><span class="p">(</span><span class="s2">"sampling_rate"</span><span class="p">)</span>
+        <span class="n">samples</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">upstream</span><span class="p">[</span><span class="n">Recording</span><span class="p">]</span><span class="o">.</span><span class="n">to_arrays</span><span class="p">(</span><span class="s2">"signal"</span><span class="p">)</span>
 
         <span class="c1"># Compute</span>
         <span class="n">spectrum</span> <span class="o">=</span> <span class="n">compute_spectrum</span><span class="p">(</span><span class="n">samples</span><span class="p">,</span> <span class="n">rate</span><span class="p">)</span>
 
         <span class="c1"># Scoped writes</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="o">**</span><span class="n">key</span><span class="p">,</span> <span class="s2">&quot;spectrum&quot;</span><span class="p">:</span> <span class="n">spectrum</span><span class="p">})</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="o">**</span><span class="n">key</span><span class="p">,</span> <span class="s2">"spectrum"</span><span class="p">:</span> <span class="n">spectrum</span><span class="p">})</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">Bin</span><span class="o">.</span><span class="n">insert</span><span class="p">([</span>
-            <span class="p">{</span><span class="o">**</span><span class="n">key</span><span class="p">,</span> <span class="s2">&quot;bin_id&quot;</span><span class="p">:</span> <span class="n">i</span><span class="p">,</span> <span class="s2">&quot;energy&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">e</span><span class="p">)}</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">e</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">spectrum</span><span class="p">)</span>
+            <span class="p">{</span><span class="o">**</span><span class="n">key</span><span class="p">,</span> <span class="s2">"bin_id"</span><span class="p">:</span> <span class="n">i</span><span class="p">,</span> <span class="s2">"energy"</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">e</span><span class="p">)}</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">e</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">spectrum</span><span class="p">)</span>
         <span class="p">])</span>
 </code></pre></div>
 <p>Because every read went through <code>self.upstream</code>, every column in <code>Spectrum.fetch1(key)</code> derives from data reachable via <code>Diagram.trace(Spectrum &amp; key)</code> — the row is reproducible from its declared upstream, and downstream tooling (row-level lineage views, CDC publishers, audit logs) can reconstruct its inputs by traversal alone.</p>

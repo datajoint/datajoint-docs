@@ -3671,7 +3671,7 @@
   <span class="md-ellipsis">
     
   
-    Migrate to 2.0
+    Migrate to 2.x
   
 
     
@@ -7079,38 +7079,38 @@
 <h3 id="quick-start">Quick Start<a class="headerlink" href="#quick-start" title="Permanent link">&para;</a></h3>
 <p>Semantic matching is enabled by default in DataJoint 2.0. For most well-designed schemas, no changes are required.</p>
 <h4 id="when-you-might-see-errors">When You Might See Errors<a class="headerlink" href="#when-you-might-see-errors" title="Permanent link">&para;</a></h4>
-<div class="highlight"><pre><span></span><code><span class="c1"># Two tables with generic &#39;id&#39; attribute</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># Two tables with generic 'id' attribute</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Student</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    id : int64</span>
 <span class="s2">    ---</span>
 <span class="s2">    name : varchar(100)</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">    """</span>
 
 <span class="k">class</span><span class="w"> </span><span class="nc">Course</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    id : int64</span>
 <span class="s2">    ---</span>
 <span class="s2">    title : varchar(100)</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">    """</span>
 
-<span class="c1"># This will raise an error because &#39;id&#39; has different lineages</span>
+<span class="c1"># This will raise an error because 'id' has different lineages</span>
 <span class="n">Student</span><span class="p">()</span> <span class="o">*</span> <span class="n">Course</span><span class="p">()</span>  <span class="c1"># DataJointError!</span>
 </code></pre></div>
 <h4 id="how-to-resolve">How to Resolve<a class="headerlink" href="#how-to-resolve" title="Permanent link">&para;</a></h4>
 <p><strong>Option 1: Rename attributes using projection</strong>
-<div class="highlight"><pre><span></span><code><span class="n">Student</span><span class="p">()</span> <span class="o">*</span> <span class="n">Course</span><span class="p">()</span><span class="o">.</span><span class="n">proj</span><span class="p">(</span><span class="n">course_id</span><span class="o">=</span><span class="s1">&#39;id&#39;</span><span class="p">)</span>  <span class="c1"># OK</span>
+<div class="highlight"><pre><span></span><code><span class="n">Student</span><span class="p">()</span> <span class="o">*</span> <span class="n">Course</span><span class="p">()</span><span class="o">.</span><span class="n">proj</span><span class="p">(</span><span class="n">course_id</span><span class="o">=</span><span class="s1">'id'</span><span class="p">)</span>  <span class="c1"># OK</span>
 </code></pre></div></p>
 <p><strong>Option 2: Bypass semantic check (use with caution)</strong>
 <div class="highlight"><pre><span></span><code><span class="n">Student</span><span class="p">()</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">Course</span><span class="p">(),</span> <span class="n">semantic_check</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>  <span class="c1"># OK, but be careful!</span>
 </code></pre></div></p>
 <p><strong>Option 3: Use descriptive names (best practice)</strong>
 <div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">Student</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    student_id : int64</span>
 <span class="s2">    ---</span>
 <span class="s2">    name : varchar(100)</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">    """</span>
 </code></pre></div></p>
 <h3 id="rebuilding-lineage-for-existing-schemas">Rebuilding Lineage for Existing Schemas<a class="headerlink" href="#rebuilding-lineage-for-existing-schemas" title="Permanent link">&para;</a></h3>
 <div class="admonition version-added">
@@ -7121,7 +7121,7 @@
 <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">datajoint</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dj</span>
 
 <span class="c1"># Connect and get your schema</span>
-<span class="n">schema</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">Schema</span><span class="p">(</span><span class="s1">&#39;my_database&#39;</span><span class="p">)</span>
+<span class="n">schema</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">Schema</span><span class="p">(</span><span class="s1">'my_database'</span><span class="p">)</span>
 
 <span class="c1"># Rebuild lineage</span>
 <span class="n">schema</span><span class="o">.</span><span class="n">rebuild_lineage</span><span class="p">()</span>
@@ -7157,15 +7157,15 @@
 <h4 id="schemalineage_table_exists"><code>schema.lineage_table_exists</code><a class="headerlink" href="#schemalineage_table_exists" title="Permanent link">&para;</a></h4>
 <p>Property indicating whether the <code>~lineage</code> table exists in this schema.</p>
 <div class="highlight"><pre><span></span><code><span class="k">if</span> <span class="n">schema</span><span class="o">.</span><span class="n">lineage_table_exists</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Lineage tracking is enabled&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"Lineage tracking is enabled"</span><span class="p">)</span>
 </code></pre></div>
 <p><strong>Returns</strong>: <code>bool</code> - <code>True</code> if <code>~lineage</code> table exists, <code>False</code> otherwise.</p>
 <h4 id="schemalineage"><code>schema.lineage</code><a class="headerlink" href="#schemalineage" title="Permanent link">&para;</a></h4>
 <p>Property returning all lineage entries for the schema.</p>
 <div class="highlight"><pre><span></span><code><span class="n">schema</span><span class="o">.</span><span class="n">lineage</span>
-<span class="c1"># {&#39;myschema.session.session_id&#39;: &#39;myschema.session.session_id&#39;,</span>
-<span class="c1">#  &#39;myschema.trial.session_id&#39;: &#39;myschema.session.session_id&#39;,</span>
-<span class="c1">#  &#39;myschema.trial.trial_num&#39;: &#39;myschema.trial.trial_num&#39;}</span>
+<span class="c1"># {'myschema.session.session_id': 'myschema.session.session_id',</span>
+<span class="c1">#  'myschema.trial.session_id': 'myschema.session.session_id',</span>
+<span class="c1">#  'myschema.trial.trial_num': 'myschema.trial.trial_num'}</span>
 </code></pre></div>
 <p><strong>Returns</strong>: <code>dict</code> - Maps <code>'schema.table.attribute'</code> to its lineage origin</p>
 <h3 id="join-methods">Join Methods<a class="headerlink" href="#join-methods" title="Permanent link">&para;</a></h3>
@@ -7203,13 +7203,13 @@
 <p>Union of expressions. Requires all namesake attributes to have matching lineage.</p>
 <h3 id="universal-set-dju">Universal Set (<code>dj.U</code>)<a class="headerlink" href="#universal-set-dju" title="Permanent link">&para;</a></h3>
 <h4 id="valid-operations">Valid Operations<a class="headerlink" href="#valid-operations" title="Permanent link">&para;</a></h4>
-<div class="highlight"><pre><span></span><code><span class="n">dj</span><span class="o">.</span><span class="n">U</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">A</span>           <span class="c1"># Restriction: promotes a, b to PK</span>
-<span class="n">dj</span><span class="o">.</span><span class="n">U</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">aggr</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="o">...</span><span class="p">)</span>  <span class="c1"># Aggregation: groups by a, b</span>
+<div class="highlight"><pre><span></span><code><span class="n">dj</span><span class="o">.</span><span class="n">U</span><span class="p">(</span><span class="s1">'a'</span><span class="p">,</span> <span class="s1">'b'</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">A</span>           <span class="c1"># Restriction: promotes a, b to PK</span>
+<span class="n">dj</span><span class="o">.</span><span class="n">U</span><span class="p">(</span><span class="s1">'a'</span><span class="p">,</span> <span class="s1">'b'</span><span class="p">)</span><span class="o">.</span><span class="n">aggr</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="o">...</span><span class="p">)</span>  <span class="c1"># Aggregation: groups by a, b</span>
 <span class="n">dj</span><span class="o">.</span><span class="n">U</span><span class="p">()</span> <span class="o">&amp;</span> <span class="n">A</span>                   <span class="c1"># Distinct primary keys of A</span>
 </code></pre></div>
 <h4 id="invalid-operations">Invalid Operations<a class="headerlink" href="#invalid-operations" title="Permanent link">&para;</a></h4>
-<div class="highlight"><pre><span></span><code><span class="n">dj</span><span class="o">.</span><span class="n">U</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">)</span> <span class="o">-</span> <span class="n">A</span>   <span class="c1"># DataJointError: produces infinite set</span>
-<span class="n">dj</span><span class="o">.</span><span class="n">U</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">)</span> <span class="o">*</span> <span class="n">A</span>   <span class="c1"># DataJointError: use &amp; instead</span>
+<div class="highlight"><pre><span></span><code><span class="n">dj</span><span class="o">.</span><span class="n">U</span><span class="p">(</span><span class="s1">'a'</span><span class="p">,</span> <span class="s1">'b'</span><span class="p">)</span> <span class="o">-</span> <span class="n">A</span>   <span class="c1"># DataJointError: produces infinite set</span>
+<span class="n">dj</span><span class="o">.</span><span class="n">U</span><span class="p">(</span><span class="s1">'a'</span><span class="p">,</span> <span class="s1">'b'</span><span class="p">)</span> <span class="o">*</span> <span class="n">A</span>   <span class="c1"># DataJointError: use &amp; instead</span>
 </code></pre></div>
 <hr />
 <p>For conceptual background on lineage, terminology, and matching rules, see <a href="../../../explanation/semantic-matching/">Semantic Matching (Explanation)</a>.</p>
@@ -7271,8 +7271,8 @@ To enable semantic matching, rebuild lineage with: schema.rebuild_lineage()
 </code></pre></div>
 <h3 id="parent-lineage-missing-warning">Parent Lineage Missing Warning<a class="headerlink" href="#parent-lineage-missing-warning" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code>WARNING: Lineage for `parent_db`.`parent_table`.`attr` not found
-(parent schema&#39;s ~lineage table may be missing or incomplete).
-Using it as origin. Once the parent schema&#39;s lineage is rebuilt,
+(parent schema's ~lineage table may be missing or incomplete).
+Using it as origin. Once the parent schema's lineage is rebuilt,
 run schema.rebuild_lineage() on this schema to correct the lineage.
 </code></pre></div>
 

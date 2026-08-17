@@ -3949,7 +3949,7 @@
   <span class="md-ellipsis">
     
   
-    Migrate to 2.0
+    Migrate to 2.x
   
 
     
@@ -6707,36 +6707,36 @@
 <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">zarr</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">datajoint</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dj</span>
 
-<span class="n">schema</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">Schema</span><span class="p">(</span><span class="s1">&#39;imaging&#39;</span><span class="p">)</span>
+<span class="n">schema</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">Schema</span><span class="p">(</span><span class="s1">'imaging'</span><span class="p">)</span>
 
 <span class="nd">@schema</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">ImagingSession</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    subject_id : int32</span>
 <span class="s2">    session_id : int32</span>
 <span class="s2">    ---</span>
 <span class="s2">    n_frames   : int32</span>
 <span class="s2">    frame_rate : float32</span>
 <span class="s2">    frames     : &lt;object@&gt;</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">    """</span>
 
 <span class="k">with</span> <span class="n">ImagingSession</span><span class="o">.</span><span class="n">staged_insert1</span> <span class="k">as</span> <span class="n">staged</span><span class="p">:</span>
     <span class="c1"># 1. Set primary key values first</span>
-    <span class="n">staged</span><span class="o">.</span><span class="n">rec</span><span class="p">[</span><span class="s1">&#39;subject_id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
-    <span class="n">staged</span><span class="o">.</span><span class="n">rec</span><span class="p">[</span><span class="s1">&#39;session_id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">staged</span><span class="o">.</span><span class="n">rec</span><span class="p">[</span><span class="s1">'subject_id'</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">staged</span><span class="o">.</span><span class="n">rec</span><span class="p">[</span><span class="s1">'session_id'</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
 
     <span class="c1"># 2. Get a storage handle for the object field</span>
-    <span class="n">store</span> <span class="o">=</span> <span class="n">staged</span><span class="o">.</span><span class="n">store</span><span class="p">(</span><span class="s1">&#39;frames&#39;</span><span class="p">,</span> <span class="s1">&#39;.zarr&#39;</span><span class="p">)</span>
+    <span class="n">store</span> <span class="o">=</span> <span class="n">staged</span><span class="o">.</span><span class="n">store</span><span class="p">(</span><span class="s1">'frames'</span><span class="p">,</span> <span class="s1">'.zarr'</span><span class="p">)</span>
 
     <span class="c1"># 3. Write directly to object storage (no local copy)</span>
-    <span class="n">z</span> <span class="o">=</span> <span class="n">zarr</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">store</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span> <span class="mi">512</span><span class="p">,</span> <span class="mi">512</span><span class="p">),</span>
-                  <span class="n">chunks</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">512</span><span class="p">,</span> <span class="mi">512</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;int32&#39;</span><span class="p">)</span>
+    <span class="n">z</span> <span class="o">=</span> <span class="n">zarr</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">store</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">'w'</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span> <span class="mi">512</span><span class="p">,</span> <span class="mi">512</span><span class="p">),</span>
+                  <span class="n">chunks</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">512</span><span class="p">,</span> <span class="mi">512</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">'int32'</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1000</span><span class="p">):</span>
         <span class="n">z</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">acquire_frame</span><span class="p">()</span>
 
     <span class="c1"># 4. Set remaining record attributes</span>
-    <span class="n">staged</span><span class="o">.</span><span class="n">rec</span><span class="p">[</span><span class="s1">&#39;n_frames&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1000</span>
-    <span class="n">staged</span><span class="o">.</span><span class="n">rec</span><span class="p">[</span><span class="s1">&#39;frame_rate&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">30.0</span>
+    <span class="n">staged</span><span class="o">.</span><span class="n">rec</span><span class="p">[</span><span class="s1">'n_frames'</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1000</span>
+    <span class="n">staged</span><span class="o">.</span><span class="n">rec</span><span class="p">[</span><span class="s1">'frame_rate'</span><span class="p">]</span> <span class="o">=</span> <span class="mf">30.0</span>
 
 <span class="c1"># On clean exit: metadata is computed, row is inserted</span>
 <span class="c1"># On exception: staged objects are removed, no row is inserted</span>
@@ -6762,27 +6762,27 @@
 <p>Context manager property on every <code>dj.Table</code> subclass. Yields a <code>StagedInsert</code> object scoped to one row. Writes go to the store referenced by the field's type spec — <code>&lt;object@&gt;</code> uses <code>stores.default</code>, and <code>&lt;object@name&gt;</code> uses the named store.</p>
 <h3 id="stagedrec"><code>staged.rec</code><a class="headerlink" href="#stagedrec" title="Permanent link">&para;</a></h3>
 <p>A dict for the row's attribute values. Set primary key fields <strong>before</strong> calling <code>staged.store()</code> or <code>staged.open()</code> — the storage path is derived from the primary key.</p>
-<div class="highlight"><pre><span></span><code><span class="n">staged</span><span class="o">.</span><span class="n">rec</span><span class="p">[</span><span class="s1">&#39;subject_id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
-<span class="n">staged</span><span class="o">.</span><span class="n">rec</span><span class="p">[</span><span class="s1">&#39;session_id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+<div class="highlight"><pre><span></span><code><span class="n">staged</span><span class="o">.</span><span class="n">rec</span><span class="p">[</span><span class="s1">'subject_id'</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">staged</span><span class="o">.</span><span class="n">rec</span><span class="p">[</span><span class="s1">'session_id'</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
 </code></pre></div>
 <h3 id="stagedstorefield-ext"><code>staged.store(field, ext='')</code><a class="headerlink" href="#stagedstorefield-ext" title="Permanent link">&para;</a></h3>
 <p>Returns an <code>fsspec.FSMap</code> for an object field. Suitable for Zarr, xarray, or any library that takes a mapping-style store.</p>
-<div class="highlight"><pre><span></span><code><span class="n">store</span> <span class="o">=</span> <span class="n">staged</span><span class="o">.</span><span class="n">store</span><span class="p">(</span><span class="s1">&#39;frames&#39;</span><span class="p">,</span> <span class="s1">&#39;.zarr&#39;</span><span class="p">)</span>
-<span class="n">z</span> <span class="o">=</span> <span class="n">zarr</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">store</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="n">shape</span><span class="o">=...</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=...</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><span class="n">store</span> <span class="o">=</span> <span class="n">staged</span><span class="o">.</span><span class="n">store</span><span class="p">(</span><span class="s1">'frames'</span><span class="p">,</span> <span class="s1">'.zarr'</span><span class="p">)</span>
+<span class="n">z</span> <span class="o">=</span> <span class="n">zarr</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">store</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">'w'</span><span class="p">,</span> <span class="n">shape</span><span class="o">=...</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=...</span><span class="p">)</span>
 </code></pre></div>
 <h3 id="stagedopenfield-ext-modewb"><code>staged.open(field, ext='', mode='wb')</code><a class="headerlink" href="#stagedopenfield-ext-modewb" title="Permanent link">&para;</a></h3>
 <p>Returns a file-like object for an object field. Suitable for HDF5, raw binary, or any library that takes a file handle.</p>
-<div class="highlight"><pre><span></span><code><span class="k">with</span> <span class="n">staged</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s1">&#39;recording&#39;</span><span class="p">,</span> <span class="s1">&#39;.h5&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-    <span class="n">h5py</span><span class="o">.</span><span class="n">File</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;w&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">create_dataset</span><span class="p">(</span><span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">arr</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><span class="k">with</span> <span class="n">staged</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s1">'recording'</span><span class="p">,</span> <span class="s1">'.h5'</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="n">h5py</span><span class="o">.</span><span class="n">File</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">'w'</span><span class="p">)</span><span class="o">.</span><span class="n">create_dataset</span><span class="p">(</span><span class="s1">'data'</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">arr</span><span class="p">)</span>
 </code></pre></div>
 <h3 id="stagedfs"><code>staged.fs</code><a class="headerlink" href="#stagedfs" title="Permanent link">&para;</a></h3>
 <p>The underlying <code>fsspec.AbstractFileSystem</code> for advanced operations (listing, deleting, custom paths). Most users won't need this.</p>
 <h2 id="patterns">Patterns<a class="headerlink" href="#patterns" title="Permanent link">&para;</a></h2>
 <h3 id="zarr-arrays">Zarr arrays<a class="headerlink" href="#zarr-arrays" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="k">with</span> <span class="n">Recording</span><span class="o">.</span><span class="n">staged_insert1</span> <span class="k">as</span> <span class="n">staged</span><span class="p">:</span>
-    <span class="n">staged</span><span class="o">.</span><span class="n">rec</span><span class="p">[</span><span class="s1">&#39;recording_id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">recording_id</span>
-    <span class="n">z</span> <span class="o">=</span> <span class="n">zarr</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">staged</span><span class="o">.</span><span class="n">store</span><span class="p">(</span><span class="s1">&#39;frames&#39;</span><span class="p">,</span> <span class="s1">&#39;.zarr&#39;</span><span class="p">),</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;w&#39;</span><span class="p">,</span>
-                  <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">n_frames</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">w</span><span class="p">),</span> <span class="n">chunks</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">w</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;uint16&#39;</span><span class="p">)</span>
+    <span class="n">staged</span><span class="o">.</span><span class="n">rec</span><span class="p">[</span><span class="s1">'recording_id'</span><span class="p">]</span> <span class="o">=</span> <span class="n">recording_id</span>
+    <span class="n">z</span> <span class="o">=</span> <span class="n">zarr</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">staged</span><span class="o">.</span><span class="n">store</span><span class="p">(</span><span class="s1">'frames'</span><span class="p">,</span> <span class="s1">'.zarr'</span><span class="p">),</span> <span class="n">mode</span><span class="o">=</span><span class="s1">'w'</span><span class="p">,</span>
+                  <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">n_frames</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">w</span><span class="p">),</span> <span class="n">chunks</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">w</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">'uint16'</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">frame</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">stream</span><span class="p">):</span>
         <span class="n">z</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">frame</span>
 </code></pre></div>
@@ -6790,23 +6790,23 @@
 <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">h5py</span>
 
 <span class="k">with</span> <span class="n">Recording</span><span class="o">.</span><span class="n">staged_insert1</span> <span class="k">as</span> <span class="n">staged</span><span class="p">:</span>
-    <span class="n">staged</span><span class="o">.</span><span class="n">rec</span><span class="p">[</span><span class="s1">&#39;recording_id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">recording_id</span>
-    <span class="k">with</span> <span class="n">staged</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s1">&#39;raw&#39;</span><span class="p">,</span> <span class="s1">&#39;.h5&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-        <span class="k">with</span> <span class="n">h5py</span><span class="o">.</span><span class="n">File</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">h5</span><span class="p">:</span>
-            <span class="n">h5</span><span class="o">.</span><span class="n">create_dataset</span><span class="p">(</span><span class="s1">&#39;signal&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">signal</span><span class="p">,</span> <span class="n">chunks</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-            <span class="n">h5</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;fs&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sampling_rate</span>
+    <span class="n">staged</span><span class="o">.</span><span class="n">rec</span><span class="p">[</span><span class="s1">'recording_id'</span><span class="p">]</span> <span class="o">=</span> <span class="n">recording_id</span>
+    <span class="k">with</span> <span class="n">staged</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s1">'raw'</span><span class="p">,</span> <span class="s1">'.h5'</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="k">with</span> <span class="n">h5py</span><span class="o">.</span><span class="n">File</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="s1">'w'</span><span class="p">)</span> <span class="k">as</span> <span class="n">h5</span><span class="p">:</span>
+            <span class="n">h5</span><span class="o">.</span><span class="n">create_dataset</span><span class="p">(</span><span class="s1">'signal'</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">signal</span><span class="p">,</span> <span class="n">chunks</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">h5</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">'fs'</span><span class="p">]</span> <span class="o">=</span> <span class="n">sampling_rate</span>
 </code></pre></div>
 <h3 id="streaming-from-an-instrument">Streaming from an instrument<a class="headerlink" href="#streaming-from-an-instrument" title="Permanent link">&para;</a></h3>
 <p>Set the primary key, get the handle, then write as data arrives. The block exits — and the row commits — only after the stream is fully captured:</p>
 <div class="highlight"><pre><span></span><code><span class="k">with</span> <span class="n">ImagingSession</span><span class="o">.</span><span class="n">staged_insert1</span> <span class="k">as</span> <span class="n">staged</span><span class="p">:</span>
-    <span class="n">staged</span><span class="o">.</span><span class="n">rec</span><span class="p">[</span><span class="s1">&#39;subject_id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">subject_id</span>
-    <span class="n">staged</span><span class="o">.</span><span class="n">rec</span><span class="p">[</span><span class="s1">&#39;session_id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">session_id</span>
+    <span class="n">staged</span><span class="o">.</span><span class="n">rec</span><span class="p">[</span><span class="s1">'subject_id'</span><span class="p">]</span> <span class="o">=</span> <span class="n">subject_id</span>
+    <span class="n">staged</span><span class="o">.</span><span class="n">rec</span><span class="p">[</span><span class="s1">'session_id'</span><span class="p">]</span> <span class="o">=</span> <span class="n">session_id</span>
 
-    <span class="n">z</span> <span class="o">=</span> <span class="n">zarr</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">staged</span><span class="o">.</span><span class="n">store</span><span class="p">(</span><span class="s1">&#39;frames&#39;</span><span class="p">,</span> <span class="s1">&#39;.zarr&#39;</span><span class="p">),</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="o">...</span><span class="p">)</span>
+    <span class="n">z</span> <span class="o">=</span> <span class="n">zarr</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">staged</span><span class="o">.</span><span class="n">store</span><span class="p">(</span><span class="s1">'frames'</span><span class="p">,</span> <span class="s1">'.zarr'</span><span class="p">),</span> <span class="n">mode</span><span class="o">=</span><span class="s1">'w'</span><span class="p">,</span> <span class="o">...</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_frames</span><span class="p">):</span>
         <span class="n">z</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">camera</span><span class="o">.</span><span class="n">grab</span><span class="p">()</span>
 
-    <span class="n">staged</span><span class="o">.</span><span class="n">rec</span><span class="p">[</span><span class="s1">&#39;n_frames&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">n_frames</span>
+    <span class="n">staged</span><span class="o">.</span><span class="n">rec</span><span class="p">[</span><span class="s1">'n_frames'</span><span class="p">]</span> <span class="o">=</span> <span class="n">n_frames</span>
 </code></pre></div>
 <p>If the camera errors out mid-stream, the partial Zarr is removed and the row is not inserted.</p>
 <h2 id="error-handling-and-atomicity">Error Handling and Atomicity<a class="headerlink" href="#error-handling-and-atomicity" title="Permanent link">&para;</a></h2>

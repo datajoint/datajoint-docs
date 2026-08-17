@@ -3671,7 +3671,7 @@
   <span class="md-ellipsis">
     
   
-    Migrate to 2.0
+    Migrate to 2.x
   
 
     
@@ -6987,13 +6987,13 @@
 </tbody>
 </table>
 <p><strong>New syntax:</strong></p>
-<div class="highlight"><pre><span></span><code><span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">recording_id : uuid</span>
 <span class="s2">---</span>
 <span class="s2">metadata : &lt;blob&gt;           # Internal storage</span>
 <span class="s2">raw_data : &lt;blob@store&gt;     # Hash-addressed object storage</span>
 <span class="s2">zarr_array : &lt;object@store&gt; # Path-addressed for Zarr/HDF5</span>
-<span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">"""</span>
 </code></pre></div>
 <h2 id="explicit-type-system">Explicit Type System<a class="headerlink" href="#explicit-type-system" title="Permanent link">&para;</a></h2>
 <p><strong>Breaking change</strong>: DataJoint 2.0 makes all type conversions explicit through a three-tier architecture.</p>
@@ -7039,7 +7039,7 @@
 <h3 id="custom-codecs">Custom Codecs<a class="headerlink" href="#custom-codecs" title="Permanent link">&para;</a></h3>
 <p>Replace legacy AdaptedTypes with the new codec API:</p>
 <div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">GraphCodec</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Codec</span><span class="p">):</span>
-    <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;graph&quot;</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="s2">"graph"</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">encode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">value</span><span class="o">.</span><span class="n">edges</span><span class="p">)</span>
@@ -7089,13 +7089,13 @@
 <span class="n">Analysis</span><span class="o">.</span><span class="n">populate</span><span class="p">(</span><span class="n">reserve_jobs</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">processes</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
 
 <span class="c1"># Monitor progress</span>
-<span class="n">Analysis</span><span class="o">.</span><span class="n">jobs</span><span class="o">.</span><span class="n">progress</span><span class="p">()</span>  <span class="c1"># {&#39;pending&#39;: 10, &#39;reserved&#39;: 2, &#39;error&#39;: 0}</span>
+<span class="n">Analysis</span><span class="o">.</span><span class="n">jobs</span><span class="o">.</span><span class="n">progress</span><span class="p">()</span>  <span class="c1"># {'pending': 10, 'reserved': 2, 'error': 0}</span>
 
 <span class="c1"># Handle errors</span>
 <span class="n">Analysis</span><span class="o">.</span><span class="n">jobs</span><span class="o">.</span><span class="n">errors</span><span class="o">.</span><span class="n">to_dicts</span><span class="p">()</span>
 
 <span class="c1"># Set priorities</span>
-<span class="n">Analysis</span><span class="o">.</span><span class="n">jobs</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;session_id&#39;</span><span class="p">:</span> <span class="mi">123</span><span class="p">},</span> <span class="n">priority</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># High priority</span>
+<span class="n">Analysis</span><span class="o">.</span><span class="n">jobs</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">'session_id'</span><span class="p">:</span> <span class="mi">123</span><span class="p">},</span> <span class="n">priority</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># High priority</span>
 </code></pre></div>
 <h2 id="semantic-matching">Semantic Matching<a class="headerlink" href="#semantic-matching" title="Permanent link">&para;</a></h2>
 <p><strong>Breaking change</strong>: Query operations now use <strong>lineage-based matching</strong> by default.</p>
@@ -7125,16 +7125,16 @@
 </code></pre></div>
 <h2 id="objectref-api-new">ObjectRef API (New)<a class="headerlink" href="#objectref-api-new" title="Permanent link">&para;</a></h2>
 <p><strong>New feature</strong>: Path-addressed storage returns <code>ObjectRef</code> handles that support streaming access without downloading entire datasets.</p>
-<div class="highlight"><pre><span></span><code><span class="n">ref</span> <span class="o">=</span> <span class="p">(</span><span class="n">Dataset</span> <span class="o">&amp;</span> <span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">fetch1</span><span class="p">(</span><span class="s1">&#39;zarr_array&#39;</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><span class="n">ref</span> <span class="o">=</span> <span class="p">(</span><span class="n">Dataset</span> <span class="o">&amp;</span> <span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">fetch1</span><span class="p">(</span><span class="s1">'zarr_array'</span><span class="p">)</span>
 
 <span class="c1"># Direct fsspec access for Zarr/xarray</span>
-<span class="n">z</span> <span class="o">=</span> <span class="n">zarr</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">ref</span><span class="o">.</span><span class="n">fsmap</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">)</span>
+<span class="n">z</span> <span class="o">=</span> <span class="n">zarr</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">ref</span><span class="o">.</span><span class="n">fsmap</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">'r'</span><span class="p">)</span>
 
 <span class="c1"># Or download locally</span>
-<span class="n">local_path</span> <span class="o">=</span> <span class="n">ref</span><span class="o">.</span><span class="n">download</span><span class="p">(</span><span class="s1">&#39;/tmp/data&#39;</span><span class="p">)</span>
+<span class="n">local_path</span> <span class="o">=</span> <span class="n">ref</span><span class="o">.</span><span class="n">download</span><span class="p">(</span><span class="s1">'/tmp/data'</span><span class="p">)</span>
 
 <span class="c1"># Stream chunks without full download</span>
-<span class="k">with</span> <span class="n">ref</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+<span class="k">with</span> <span class="n">ref</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s1">'rb'</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
     <span class="n">chunk</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">1024</span><span class="p">)</span>
 </code></pre></div>
 <p>This enables efficient access to large datasets stored in Zarr, HDF5, or custom formats.</p>

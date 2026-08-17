@@ -3671,7 +3671,7 @@
   <span class="md-ellipsis">
     
   
-    Migrate to 2.0
+    Migrate to 2.x
   
 
     
@@ -6885,13 +6885,13 @@
 </ul>
 <p>Prefixes must be mutually exclusive (no prefix can be a parent/child of another). This allows mapping DataJoint to existing storage layouts:</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;stores&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;legacy&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="nt">&quot;protocol&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;file&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;location&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/data/existing_storage&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;hash_prefix&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;content_addressed&quot;</span><span class="p">,</span><span class="w">      </span><span class="c1">// Path prefix for hash section</span>
-<span class="w">      </span><span class="nt">&quot;schema_prefix&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;structured_data&quot;</span><span class="p">,</span><span class="w">       </span><span class="c1">// Path prefix for schema section</span>
-<span class="w">      </span><span class="nt">&quot;filepath_prefix&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;raw_files&quot;</span><span class="w">            </span><span class="c1">// Path prefix for filepath section</span>
+<span class="w">  </span><span class="nt">"stores"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"legacy"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">"protocol"</span><span class="p">:</span><span class="w"> </span><span class="s2">"file"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"location"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/data/existing_storage"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"hash_prefix"</span><span class="p">:</span><span class="w"> </span><span class="s2">"content_addressed"</span><span class="p">,</span><span class="w">      </span><span class="c1">// Path prefix for hash section</span>
+<span class="w">      </span><span class="nt">"schema_prefix"</span><span class="p">:</span><span class="w"> </span><span class="s2">"structured_data"</span><span class="p">,</span><span class="w">       </span><span class="c1">// Path prefix for schema section</span>
+<span class="w">      </span><span class="nt">"filepath_prefix"</span><span class="p">:</span><span class="w"> </span><span class="s2">"raw_files"</span><span class="w">            </span><span class="c1">// Path prefix for filepath section</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
@@ -7168,34 +7168,34 @@
 <h2 id="example-configuration">Example Configuration<a class="headerlink" href="#example-configuration" title="Permanent link">&para;</a></h2>
 <h3 id="datajointjson-non-sensitive-settings">datajoint.json (Non-sensitive settings)<a class="headerlink" href="#datajointjson-non-sensitive-settings" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;database.host&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;mysql.example.com&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;database.port&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">3306</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;stores&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="nt">&quot;default&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;main&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="nt">&quot;filepath_default&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;raw_data&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="nt">&quot;main&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="nt">&quot;protocol&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;s3&quot;</span><span class="p">,</span>
-<span class="w">            </span><span class="nt">&quot;endpoint&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;s3.amazonaws.com&quot;</span><span class="p">,</span>
-<span class="w">            </span><span class="nt">&quot;bucket&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;datajoint-bucket&quot;</span><span class="p">,</span>
-<span class="w">            </span><span class="nt">&quot;location&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;neuroscience-lab/production&quot;</span><span class="p">,</span>
-<span class="w">            </span><span class="nt">&quot;partition_pattern&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;subject_id/session_date&quot;</span><span class="p">,</span>
-<span class="w">            </span><span class="nt">&quot;token_length&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">8</span>
+<span class="w">    </span><span class="nt">"database.host"</span><span class="p">:</span><span class="w"> </span><span class="s2">"mysql.example.com"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"database.port"</span><span class="p">:</span><span class="w"> </span><span class="mi">3306</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"stores"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">"default"</span><span class="p">:</span><span class="w"> </span><span class="s2">"main"</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">"filepath_default"</span><span class="p">:</span><span class="w"> </span><span class="s2">"raw_data"</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">"main"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">"protocol"</span><span class="p">:</span><span class="w"> </span><span class="s2">"s3"</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">"endpoint"</span><span class="p">:</span><span class="w"> </span><span class="s2">"s3.amazonaws.com"</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">"bucket"</span><span class="p">:</span><span class="w"> </span><span class="s2">"datajoint-bucket"</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">"location"</span><span class="p">:</span><span class="w"> </span><span class="s2">"neuroscience-lab/production"</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">"partition_pattern"</span><span class="p">:</span><span class="w"> </span><span class="s2">"subject_id/session_date"</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">"token_length"</span><span class="p">:</span><span class="w"> </span><span class="mi">8</span>
 <span class="w">        </span><span class="p">},</span>
-<span class="w">        </span><span class="nt">&quot;archive&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="nt">&quot;protocol&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;s3&quot;</span><span class="p">,</span>
-<span class="w">            </span><span class="nt">&quot;endpoint&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;s3.amazonaws.com&quot;</span><span class="p">,</span>
-<span class="w">            </span><span class="nt">&quot;bucket&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;archive-bucket&quot;</span><span class="p">,</span>
-<span class="w">            </span><span class="nt">&quot;location&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;neuroscience-lab/long-term&quot;</span><span class="p">,</span>
-<span class="w">            </span><span class="nt">&quot;subfolding&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">]</span>
+<span class="w">        </span><span class="nt">"archive"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">"protocol"</span><span class="p">:</span><span class="w"> </span><span class="s2">"s3"</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">"endpoint"</span><span class="p">:</span><span class="w"> </span><span class="s2">"s3.amazonaws.com"</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">"bucket"</span><span class="p">:</span><span class="w"> </span><span class="s2">"archive-bucket"</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">"location"</span><span class="p">:</span><span class="w"> </span><span class="s2">"neuroscience-lab/long-term"</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">"subfolding"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">]</span>
 <span class="w">        </span><span class="p">},</span>
-<span class="w">        </span><span class="nt">&quot;raw_data&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="nt">&quot;protocol&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;file&quot;</span><span class="p">,</span>
-<span class="w">            </span><span class="nt">&quot;location&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/mnt/acquisition&quot;</span><span class="p">,</span>
-<span class="w">            </span><span class="nt">&quot;filepath_prefix&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;recordings&quot;</span>
+<span class="w">        </span><span class="nt">"raw_data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">"protocol"</span><span class="p">:</span><span class="w"> </span><span class="s2">"file"</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">"location"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/mnt/acquisition"</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">"filepath_prefix"</span><span class="p">:</span><span class="w"> </span><span class="s2">"recordings"</span>
 <span class="w">        </span><span class="p">}</span>
 <span class="w">    </span><span class="p">},</span>
-<span class="w">    </span><span class="nt">&quot;jobs&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="nt">&quot;add_job_metadata&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">    </span><span class="nt">"jobs"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">"add_job_metadata"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
@@ -7209,7 +7209,7 @@
 └── stores.archive.secret_key          # xKbmsYVuoGFNJ/L8NEOH...
 </code></pre></div>
 <p>Add <code>.secrets/</code> to <code>.gitignore</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;.secrets/&quot;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>.gitignore
+<div class="highlight"><pre><span></span><code><span class="nb">echo</span><span class="w"> </span><span class="s2">".secrets/"</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>.gitignore
 </code></pre></div>
 <h3 id="environment-variables-alternative-to-secrets">Environment Variables (Alternative to .secrets/)<a class="headerlink" href="#environment-variables-alternative-to-secrets" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># Database</span>
@@ -7219,17 +7219,17 @@
 <span class="nb">export</span><span class="w"> </span><span class="nv">DJ_DATABASE_NAME</span><span class="o">=</span>my_database<span class="w">  </span><span class="c1"># PostgreSQL only (new in 2.2.1)</span>
 
 <span class="c1"># Stores (new in 2.2.4) — JSON-encoded copy of the stores block</span>
-<span class="nb">export</span><span class="w"> </span><span class="nv">DJ_STORES</span><span class="o">=</span><span class="s1">&#39;{</span>
-<span class="s1">  &quot;default&quot;: &quot;main&quot;,</span>
-<span class="s1">  &quot;main&quot;: {</span>
-<span class="s1">    &quot;protocol&quot;: &quot;s3&quot;,</span>
-<span class="s1">    &quot;endpoint&quot;: &quot;s3.amazonaws.com&quot;,</span>
-<span class="s1">    &quot;bucket&quot;: &quot;datajoint-bucket&quot;,</span>
-<span class="s1">    &quot;location&quot;: &quot;neuroscience-lab/production&quot;,</span>
-<span class="s1">    &quot;access_key&quot;: &quot;AKIA...&quot;,</span>
-<span class="s1">    &quot;secret_key&quot;: &quot;wJal...&quot;</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">DJ_STORES</span><span class="o">=</span><span class="s1">'{</span>
+<span class="s1">  "default": "main",</span>
+<span class="s1">  "main": {</span>
+<span class="s1">    "protocol": "s3",</span>
+<span class="s1">    "endpoint": "s3.amazonaws.com",</span>
+<span class="s1">    "bucket": "datajoint-bucket",</span>
+<span class="s1">    "location": "neuroscience-lab/production",</span>
+<span class="s1">    "access_key": "AKIA...",</span>
+<span class="s1">    "secret_key": "wJal..."</span>
 <span class="s1">  }</span>
-<span class="s1">}&#39;</span>
+<span class="s1">}'</span>
 
 <span class="c1"># Skip datajoint.json and .secrets/ entirely (new in 2.2.4)</span>
 <span class="nb">export</span><span class="w"> </span><span class="nv">DJ_IGNORE_CONFIG_FILE</span><span class="o">=</span><span class="nb">true</span>
@@ -7248,8 +7248,8 @@
 <span class="nb">print</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">diagram_direction</span><span class="p">)</span>
 
 <span class="c1"># Write settings</span>
-<span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">database</span><span class="o">.</span><span class="n">host</span> <span class="o">=</span> <span class="s2">&quot;mysql.example.com&quot;</span>
-<span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">diagram_direction</span> <span class="o">=</span> <span class="s2">&quot;TB&quot;</span>
+<span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">database</span><span class="o">.</span><span class="n">host</span> <span class="o">=</span> <span class="s2">"mysql.example.com"</span>
+<span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">diagram_direction</span> <span class="o">=</span> <span class="s2">"TB"</span>
 </code></pre></div>
 <h3 id="temporary-overrides">Temporary Overrides<a class="headerlink" href="#temporary-overrides" title="Permanent link">&para;</a></h3>
 <p>Use <code>dj.config.override()</code> to temporarily change settings within a context:</p>
@@ -7260,9 +7260,9 @@
 </code></pre></div>
 <p><strong>Nested settings syntax:</strong> Since Python doesn't allow dots in keyword argument names, use double underscores (<code>__</code>) to access nested settings in <code>override()</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># These are equivalent:</span>
-<span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">diagram_direction</span> <span class="o">=</span> <span class="s2">&quot;TB&quot;</span>  <span class="c1"># direct assignment</span>
+<span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">diagram_direction</span> <span class="o">=</span> <span class="s2">"TB"</span>  <span class="c1"># direct assignment</span>
 
-<span class="k">with</span> <span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">override</span><span class="p">(</span><span class="n">display__diagram_direction</span><span class="o">=</span><span class="s2">&quot;TB&quot;</span><span class="p">):</span>  <span class="c1"># in override()</span>
+<span class="k">with</span> <span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">override</span><span class="p">(</span><span class="n">display__diagram_direction</span><span class="o">=</span><span class="s2">"TB"</span><span class="p">):</span>  <span class="c1"># in override()</span>
     <span class="o">...</span>
 </code></pre></div>
 <p>The double underscore maps to the dot-notation path: <code>display__diagram_direction</code> → <code>display.diagram_direction</code>.</p>
@@ -7272,8 +7272,8 @@
 <p><code>dj.Instance</code> provides isolated config and connection for multi-tenant and thread-safe use.</p>
 </div>
 <p><code>dj.Instance</code> encapsulates a Config and Connection pair, independent of global state:</p>
-<div class="highlight"><pre><span></span><code><span class="n">inst</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">Instance</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="s2">&quot;localhost&quot;</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="s2">&quot;root&quot;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s2">&quot;secret&quot;</span><span class="p">)</span>
-<span class="n">schema</span> <span class="o">=</span> <span class="n">inst</span><span class="o">.</span><span class="n">Schema</span><span class="p">(</span><span class="s2">&quot;my_schema&quot;</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><span class="n">inst</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">Instance</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="s2">"localhost"</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="s2">"root"</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s2">"secret"</span><span class="p">)</span>
+<span class="n">schema</span> <span class="o">=</span> <span class="n">inst</span><span class="o">.</span><span class="n">Schema</span><span class="p">(</span><span class="s2">"my_schema"</span><span class="p">)</span>
 </code></pre></div>
 <h3 id="parameters">Parameters<a class="headerlink" href="#parameters" title="Permanent link">&para;</a></h3>
 <table>
@@ -7384,18 +7384,18 @@
 </ul>
 <p>Only <code>dj.Instance()</code> works in thread-safe mode, enforcing explicit connection management.</p>
 <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
-<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;DJ_THREAD_SAFE&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;true&quot;</span>
+<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">"DJ_THREAD_SAFE"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"true"</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">datajoint</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dj</span>
 
 <span class="c1"># These all raise ThreadSafetyError:</span>
 <span class="c1"># dj.config.database.host</span>
 <span class="c1"># dj.conn()</span>
-<span class="c1"># dj.Schema(&quot;my_db&quot;)</span>
+<span class="c1"># dj.Schema("my_db")</span>
 
 <span class="c1"># This works:</span>
-<span class="n">inst</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">Instance</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="s2">&quot;localhost&quot;</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="s2">&quot;root&quot;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s2">&quot;secret&quot;</span><span class="p">)</span>
-<span class="n">schema</span> <span class="o">=</span> <span class="n">inst</span><span class="o">.</span><span class="n">Schema</span><span class="p">(</span><span class="s2">&quot;my_db&quot;</span><span class="p">)</span>
+<span class="n">inst</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">Instance</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="s2">"localhost"</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="s2">"root"</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s2">"secret"</span><span class="p">)</span>
+<span class="n">schema</span> <span class="o">=</span> <span class="n">inst</span><span class="o">.</span><span class="n">Schema</span><span class="p">(</span><span class="s2">"my_db"</span><span class="p">)</span>
 </code></pre></div>
 <h2 id="api-reference">API Reference<a class="headerlink" href="#api-reference" title="Permanent link">&para;</a></h2>
 <p>See <a href="../../api/datajoint/settings/">Settings API</a> for programmatic access.</p>

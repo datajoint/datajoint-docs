@@ -3849,7 +3849,7 @@
   <span class="md-ellipsis">
     
   
-    Migrate to 2.0
+    Migrate to 2.x
   
 
     
@@ -6521,21 +6521,21 @@ reference a real mouse and record when it started.</p>
 different type of integrity:</p>
 <div class="highlight"><pre><span></span><code><span class="nd">@schema</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Mouse</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    mouse_id : char(6)          # unique ear-tag identifier</span>
 <span class="s2">    ---</span>
 <span class="s2">    date_of_birth : date</span>
-<span class="s2">    sex : enum(&#39;M&#39;, &#39;F&#39;, &#39;U&#39;)</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">    sex : enum('M', 'F', 'U')</span>
+<span class="s2">    """</span>
 
 <span class="nd">@schema</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Session</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    -&gt; Mouse                    # references a real mouse</span>
 <span class="s2">    session_idx : int32</span>
 <span class="s2">    ---</span>
 <span class="s2">    session_start : datetime    # must be present and a valid timestamp</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">    """</span>
 </code></pre></div>
 <table>
 <thead>

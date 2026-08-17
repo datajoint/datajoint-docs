@@ -3854,7 +3854,7 @@
   <span class="md-ellipsis">
     
   
-    Migrate to 2.0
+    Migrate to 2.x
   
 
     
@@ -6507,19 +6507,19 @@
 <h2 id="restriction">Restriction (<code>&amp;</code>)<a class="headerlink" href="#restriction" title="Permanent link">&para;</a></h2>
 <p>Filter rows that match a condition:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># String condition</span>
-<span class="n">Session</span> <span class="o">&amp;</span> <span class="s2">&quot;session_date &gt; &#39;2026-01-01&#39;&quot;</span>
-<span class="n">Session</span> <span class="o">&amp;</span> <span class="s2">&quot;duration BETWEEN 30 AND 60&quot;</span>
+<span class="n">Session</span> <span class="o">&amp;</span> <span class="s2">"session_date &gt; '2026-01-01'"</span>
+<span class="n">Session</span> <span class="o">&amp;</span> <span class="s2">"duration BETWEEN 30 AND 60"</span>
 
 <span class="c1"># Dictionary (exact match)</span>
-<span class="n">Session</span> <span class="o">&amp;</span> <span class="p">{</span><span class="s1">&#39;subject_id&#39;</span><span class="p">:</span> <span class="s1">&#39;M001&#39;</span><span class="p">}</span>
-<span class="n">Session</span> <span class="o">&amp;</span> <span class="p">{</span><span class="s1">&#39;subject_id&#39;</span><span class="p">:</span> <span class="s1">&#39;M001&#39;</span><span class="p">,</span> <span class="s1">&#39;session_idx&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">}</span>
+<span class="n">Session</span> <span class="o">&amp;</span> <span class="p">{</span><span class="s1">'subject_id'</span><span class="p">:</span> <span class="s1">'M001'</span><span class="p">}</span>
+<span class="n">Session</span> <span class="o">&amp;</span> <span class="p">{</span><span class="s1">'subject_id'</span><span class="p">:</span> <span class="s1">'M001'</span><span class="p">,</span> <span class="s1">'session_idx'</span><span class="p">:</span> <span class="mi">1</span><span class="p">}</span>
 
 <span class="c1"># Query expression</span>
 <span class="n">Session</span> <span class="o">&amp;</span> <span class="n">Subject</span>                    <span class="c1"># Sessions for subjects in Subject</span>
-<span class="n">Session</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">Subject</span> <span class="o">&amp;</span> <span class="s2">&quot;sex = &#39;M&#39;&quot;</span><span class="p">)</span>    <span class="c1"># Sessions for male subjects</span>
+<span class="n">Session</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">Subject</span> <span class="o">&amp;</span> <span class="s2">"sex = 'M'"</span><span class="p">)</span>    <span class="c1"># Sessions for male subjects</span>
 
 <span class="c1"># List (OR)</span>
-<span class="n">Session</span> <span class="o">&amp;</span> <span class="p">[{</span><span class="s1">&#39;subject_id&#39;</span><span class="p">:</span> <span class="s1">&#39;M001&#39;</span><span class="p">},</span> <span class="p">{</span><span class="s1">&#39;subject_id&#39;</span><span class="p">:</span> <span class="s1">&#39;M002&#39;</span><span class="p">}]</span>
+<span class="n">Session</span> <span class="o">&amp;</span> <span class="p">[{</span><span class="s1">'subject_id'</span><span class="p">:</span> <span class="s1">'M001'</span><span class="p">},</span> <span class="p">{</span><span class="s1">'subject_id'</span><span class="p">:</span> <span class="s1">'M002'</span><span class="p">}]</span>
 </code></pre></div>
 <h2 id="top-n-rows-djtop">Top N Rows (<code>dj.Top</code>)<a class="headerlink" href="#top-n-rows-djtop" title="Permanent link">&para;</a></h2>
 <p>Limit results with optional ordering:</p>
@@ -6527,21 +6527,21 @@
 <span class="n">Session</span> <span class="o">&amp;</span> <span class="n">dj</span><span class="o">.</span><span class="n">Top</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
 
 <span class="c1"># Top 10 by date (descending)</span>
-<span class="n">Session</span> <span class="o">&amp;</span> <span class="n">dj</span><span class="o">.</span><span class="n">Top</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="s1">&#39;session_date DESC&#39;</span><span class="p">)</span>
+<span class="n">Session</span> <span class="o">&amp;</span> <span class="n">dj</span><span class="o">.</span><span class="n">Top</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="s1">'session_date DESC'</span><span class="p">)</span>
 
 <span class="c1"># Pagination: skip 20, take 10</span>
-<span class="n">Session</span> <span class="o">&amp;</span> <span class="n">dj</span><span class="o">.</span><span class="n">Top</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="s1">&#39;session_date DESC&#39;</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<span class="n">Session</span> <span class="o">&amp;</span> <span class="n">dj</span><span class="o">.</span><span class="n">Top</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="s1">'session_date DESC'</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
 
 <span class="c1"># All rows ordered</span>
-<span class="n">Session</span> <span class="o">&amp;</span> <span class="n">dj</span><span class="o">.</span><span class="n">Top</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;session_date DESC&#39;</span><span class="p">)</span>
+<span class="n">Session</span> <span class="o">&amp;</span> <span class="n">dj</span><span class="o">.</span><span class="n">Top</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">'session_date DESC'</span><span class="p">)</span>
 </code></pre></div>
 <p>Use <code>"KEY"</code> for primary key ordering, <code>"KEY DESC"</code> for reverse:</p>
-<div class="highlight"><pre><span></span><code><span class="n">Session</span> <span class="o">&amp;</span> <span class="n">dj</span><span class="o">.</span><span class="n">Top</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="s1">&#39;KEY DESC&#39;</span><span class="p">)</span>  <span class="c1"># Last 10 by primary key</span>
+<div class="highlight"><pre><span></span><code><span class="n">Session</span> <span class="o">&amp;</span> <span class="n">dj</span><span class="o">.</span><span class="n">Top</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="s1">'KEY DESC'</span><span class="p">)</span>  <span class="c1"># Last 10 by primary key</span>
 </code></pre></div>
 <h2 id="anti-restriction-">Anti-Restriction (<code>-</code>)<a class="headerlink" href="#anti-restriction-" title="Permanent link">&para;</a></h2>
 <p>Filter rows that do NOT match:</p>
 <div class="highlight"><pre><span></span><code><span class="n">Subject</span> <span class="o">-</span> <span class="n">Session</span>          <span class="c1"># Subjects without sessions</span>
-<span class="n">Session</span> <span class="o">-</span> <span class="p">{</span><span class="s1">&#39;subject_id&#39;</span><span class="p">:</span> <span class="s1">&#39;M001&#39;</span><span class="p">}</span>
+<span class="n">Session</span> <span class="o">-</span> <span class="p">{</span><span class="s1">'subject_id'</span><span class="p">:</span> <span class="s1">'M001'</span><span class="p">}</span>
 </code></pre></div>
 <h2 id="projection-proj">Projection (<code>.proj()</code>)<a class="headerlink" href="#projection-proj" title="Permanent link">&para;</a></h2>
 <p>Select, rename, or compute attributes:</p>
@@ -6549,19 +6549,19 @@
 <span class="n">Subject</span><span class="o">.</span><span class="n">proj</span><span class="p">()</span>
 
 <span class="c1"># Specific attributes</span>
-<span class="n">Subject</span><span class="o">.</span><span class="n">proj</span><span class="p">(</span><span class="s1">&#39;species&#39;</span><span class="p">,</span> <span class="s1">&#39;sex&#39;</span><span class="p">)</span>
+<span class="n">Subject</span><span class="o">.</span><span class="n">proj</span><span class="p">(</span><span class="s1">'species'</span><span class="p">,</span> <span class="s1">'sex'</span><span class="p">)</span>
 
 <span class="c1"># All attributes</span>
 <span class="n">Subject</span><span class="o">.</span><span class="n">proj</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
 
 <span class="c1"># All except some</span>
-<span class="n">Subject</span><span class="o">.</span><span class="n">proj</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="s1">&#39;-notes&#39;</span><span class="p">)</span>
+<span class="n">Subject</span><span class="o">.</span><span class="n">proj</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="s1">'-notes'</span><span class="p">)</span>
 
 <span class="c1"># Rename</span>
-<span class="n">Subject</span><span class="o">.</span><span class="n">proj</span><span class="p">(</span><span class="n">animal_species</span><span class="o">=</span><span class="s1">&#39;species&#39;</span><span class="p">)</span>
+<span class="n">Subject</span><span class="o">.</span><span class="n">proj</span><span class="p">(</span><span class="n">animal_species</span><span class="o">=</span><span class="s1">'species'</span><span class="p">)</span>
 
 <span class="c1"># Computed</span>
-<span class="n">Subject</span><span class="o">.</span><span class="n">proj</span><span class="p">(</span><span class="n">weight_kg</span><span class="o">=</span><span class="s1">&#39;weight / 1000&#39;</span><span class="p">)</span>
+<span class="n">Subject</span><span class="o">.</span><span class="n">proj</span><span class="p">(</span><span class="n">weight_kg</span><span class="o">=</span><span class="s1">'weight / 1000'</span><span class="p">)</span>
 </code></pre></div>
 <h2 id="join">Join (<code>*</code>)<a class="headerlink" href="#join" title="Permanent link">&para;</a></h2>
 <p>Combine tables on matching attributes:</p>
@@ -6569,34 +6569,34 @@
 <span class="n">Subject</span> <span class="o">*</span> <span class="n">Session</span> <span class="o">*</span> <span class="n">Experimenter</span>
 
 <span class="c1"># Restrict then join</span>
-<span class="p">(</span><span class="n">Subject</span> <span class="o">&amp;</span> <span class="s2">&quot;sex = &#39;M&#39;&quot;</span><span class="p">)</span> <span class="o">*</span> <span class="n">Session</span>
+<span class="p">(</span><span class="n">Subject</span> <span class="o">&amp;</span> <span class="s2">"sex = 'M'"</span><span class="p">)</span> <span class="o">*</span> <span class="n">Session</span>
 </code></pre></div>
 <h2 id="aggregation-aggr">Aggregation (<code>.aggr()</code>)<a class="headerlink" href="#aggregation-aggr" title="Permanent link">&para;</a></h2>
 <p>Group and summarize:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Count trials per session</span>
-<span class="n">Session</span><span class="o">.</span><span class="n">aggr</span><span class="p">(</span><span class="n">Session</span><span class="o">.</span><span class="n">Trial</span><span class="p">,</span> <span class="n">n_trials</span><span class="o">=</span><span class="s1">&#39;count(trial_idx)&#39;</span><span class="p">)</span>
+<span class="n">Session</span><span class="o">.</span><span class="n">aggr</span><span class="p">(</span><span class="n">Session</span><span class="o">.</span><span class="n">Trial</span><span class="p">,</span> <span class="n">n_trials</span><span class="o">=</span><span class="s1">'count(trial_idx)'</span><span class="p">)</span>
 
 <span class="c1"># Multiple aggregates</span>
 <span class="n">Session</span><span class="o">.</span><span class="n">aggr</span><span class="p">(</span>
     <span class="n">Session</span><span class="o">.</span><span class="n">Trial</span><span class="p">,</span>
-    <span class="n">n_trials</span><span class="o">=</span><span class="s1">&#39;count(trial_idx)&#39;</span><span class="p">,</span>
-    <span class="n">avg_rt</span><span class="o">=</span><span class="s1">&#39;avg(reaction_time)&#39;</span><span class="p">,</span>
-    <span class="n">min_rt</span><span class="o">=</span><span class="s1">&#39;min(reaction_time)&#39;</span>
+    <span class="n">n_trials</span><span class="o">=</span><span class="s1">'count(trial_idx)'</span><span class="p">,</span>
+    <span class="n">avg_rt</span><span class="o">=</span><span class="s1">'avg(reaction_time)'</span><span class="p">,</span>
+    <span class="n">min_rt</span><span class="o">=</span><span class="s1">'min(reaction_time)'</span>
 <span class="p">)</span>
 
 <span class="c1"># Exclude sessions without trials</span>
-<span class="n">Session</span><span class="o">.</span><span class="n">aggr</span><span class="p">(</span><span class="n">Session</span><span class="o">.</span><span class="n">Trial</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="s1">&#39;count(trial_idx)&#39;</span><span class="p">,</span> <span class="n">exclude_nonmatching</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">Session</span><span class="o">.</span><span class="n">aggr</span><span class="p">(</span><span class="n">Session</span><span class="o">.</span><span class="n">Trial</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="s1">'count(trial_idx)'</span><span class="p">,</span> <span class="n">exclude_nonmatching</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </code></pre></div>
 <h2 id="universal-set-dju">Universal Set (<code>dj.U()</code>)<a class="headerlink" href="#universal-set-dju" title="Permanent link">&para;</a></h2>
 <p>Group by arbitrary attributes:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Unique values</span>
-<span class="n">dj</span><span class="o">.</span><span class="n">U</span><span class="p">(</span><span class="s1">&#39;species&#39;</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">Subject</span>
+<span class="n">dj</span><span class="o">.</span><span class="n">U</span><span class="p">(</span><span class="s1">'species'</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">Subject</span>
 
 <span class="c1"># Group by non-primary-key attribute</span>
-<span class="n">dj</span><span class="o">.</span><span class="n">U</span><span class="p">(</span><span class="s1">&#39;session_date&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">aggr</span><span class="p">(</span><span class="n">Session</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="s1">&#39;count(session_idx)&#39;</span><span class="p">)</span>
+<span class="n">dj</span><span class="o">.</span><span class="n">U</span><span class="p">(</span><span class="s1">'session_date'</span><span class="p">)</span><span class="o">.</span><span class="n">aggr</span><span class="p">(</span><span class="n">Session</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="s1">'count(session_idx)'</span><span class="p">)</span>
 
 <span class="c1"># Global aggregation (one row)</span>
-<span class="n">dj</span><span class="o">.</span><span class="n">U</span><span class="p">()</span><span class="o">.</span><span class="n">aggr</span><span class="p">(</span><span class="n">Session</span><span class="p">,</span> <span class="n">total</span><span class="o">=</span><span class="s1">&#39;count(*)&#39;</span><span class="p">)</span>
+<span class="n">dj</span><span class="o">.</span><span class="n">U</span><span class="p">()</span><span class="o">.</span><span class="n">aggr</span><span class="p">(</span><span class="n">Session</span><span class="p">,</span> <span class="n">total</span><span class="o">=</span><span class="s1">'count(*)'</span><span class="p">)</span>
 </code></pre></div>
 <h2 id="extension-extend">Extension (<code>.extend()</code>)<a class="headerlink" href="#extension-extend" title="Permanent link">&para;</a></h2>
 <p>Add attributes without losing rows:</p>
@@ -6606,10 +6606,10 @@
 <h2 id="chain-operations">Chain Operations<a class="headerlink" href="#chain-operations" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><span class="n">result</span> <span class="o">=</span> <span class="p">(</span>
     <span class="n">Subject</span>
-    <span class="o">&amp;</span> <span class="s2">&quot;sex = &#39;M&#39;&quot;</span>
+    <span class="o">&amp;</span> <span class="s2">"sex = 'M'"</span>
     <span class="o">*</span> <span class="n">Session</span>
-    <span class="o">&amp;</span> <span class="s2">&quot;duration &gt; 30&quot;</span>
-<span class="p">)</span><span class="o">.</span><span class="n">proj</span><span class="p">(</span><span class="s1">&#39;species&#39;</span><span class="p">,</span> <span class="s1">&#39;session_date&#39;</span><span class="p">,</span> <span class="s1">&#39;duration&#39;</span><span class="p">)</span>
+    <span class="o">&amp;</span> <span class="s2">"duration &gt; 30"</span>
+<span class="p">)</span><span class="o">.</span><span class="n">proj</span><span class="p">(</span><span class="s1">'species'</span><span class="p">,</span> <span class="s1">'session_date'</span><span class="p">,</span> <span class="s1">'duration'</span><span class="p">)</span>
 </code></pre></div>
 <h2 id="operator-precedence">Operator Precedence<a class="headerlink" href="#operator-precedence" title="Permanent link">&para;</a></h2>
 <table>

@@ -3671,7 +3671,7 @@
   <span class="md-ellipsis">
     
   
-    Migrate to 2.0
+    Migrate to 2.x
   
 
     
@@ -7091,14 +7091,14 @@
 <h3 id="common-parameters">Common Parameters<a class="headerlink" href="#common-parameters" title="Permanent link">&para;</a></h3>
 <p>All output methods accept these optional parameters:</p>
 <div class="highlight"><pre><span></span><code><span class="n">table</span><span class="o">.</span><span class="n">to_dicts</span><span class="p">(</span>
-    <span class="n">order_by</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>      <span class="c1"># str or list: column(s) to sort by, e.g. &quot;KEY&quot;, &quot;name DESC&quot;</span>
+    <span class="n">order_by</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>      <span class="c1"># str or list: column(s) to sort by, e.g. "KEY", "name DESC"</span>
     <span class="n">limit</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>         <span class="c1"># int: maximum rows to return</span>
     <span class="n">offset</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>        <span class="c1"># int: rows to skip</span>
     <span class="n">squeeze</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>      <span class="c1"># bool: remove singleton dimensions from arrays</span>
 <span class="p">)</span>
 </code></pre></div>
 <p>For in-store types (attachments, filepaths), files are downloaded to <code>config["download_path"]</code>. Use <code>config.override()</code> to change:</p>
-<div class="highlight"><pre><span></span><code><span class="k">with</span> <span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">override</span><span class="p">(</span><span class="n">download_path</span><span class="o">=</span><span class="s2">&quot;/data&quot;</span><span class="p">):</span>
+<div class="highlight"><pre><span></span><code><span class="k">with</span> <span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">override</span><span class="p">(</span><span class="n">download_path</span><span class="o">=</span><span class="s2">"/data"</span><span class="p">):</span>
     <span class="n">data</span> <span class="o">=</span> <span class="n">table</span><span class="o">.</span><span class="n">to_dicts</span><span class="p">()</span>
 </code></pre></div>
 <h3 id="iteration">Iteration<a class="headerlink" href="#iteration" title="Permanent link">&para;</a></h3>
@@ -7182,10 +7182,10 @@
 </tbody>
 </table>
 <p>For mixed KEY + attribute fetch:
-<div class="highlight"><pre><span></span><code><span class="c1"># Old: keys, a = table.fetch(&#39;KEY&#39;, &#39;a&#39;)</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># Old: keys, a = table.fetch('KEY', 'a')</span>
 <span class="c1"># New: Combine keys() with to_arrays()</span>
 <span class="n">keys</span> <span class="o">=</span> <span class="n">table</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
-<span class="n">a</span> <span class="o">=</span> <span class="n">table</span><span class="o">.</span><span class="n">to_arrays</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">)</span>
+<span class="n">a</span> <span class="o">=</span> <span class="n">table</span><span class="o">.</span><span class="n">to_arrays</span><span class="p">(</span><span class="s1">'a'</span><span class="p">)</span>
 <span class="c1"># Or use to_dicts() which includes all columns</span>
 </code></pre></div></p>
 <h3 id="ordering-limiting-offset">Ordering, Limiting, Offset<a class="headerlink" href="#ordering-limiting-offset" title="Permanent link">&para;</a></h3>
@@ -7275,11 +7275,11 @@
 <h3 id="column-selection-with-proj">Column Selection with proj()<a class="headerlink" href="#column-selection-with-proj" title="Permanent link">&para;</a></h3>
 <p>Use <code>.proj()</code> for column selection, then apply output method:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Select specific columns</span>
-<span class="n">table</span><span class="o">.</span><span class="n">proj</span><span class="p">(</span><span class="s1">&#39;col1&#39;</span><span class="p">,</span> <span class="s1">&#39;col2&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">to_pandas</span><span class="p">()</span>
-<span class="n">table</span><span class="o">.</span><span class="n">proj</span><span class="p">(</span><span class="s1">&#39;col1&#39;</span><span class="p">,</span> <span class="s1">&#39;col2&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">to_dicts</span><span class="p">()</span>
+<span class="n">table</span><span class="o">.</span><span class="n">proj</span><span class="p">(</span><span class="s1">'col1'</span><span class="p">,</span> <span class="s1">'col2'</span><span class="p">)</span><span class="o">.</span><span class="n">to_pandas</span><span class="p">()</span>
+<span class="n">table</span><span class="o">.</span><span class="n">proj</span><span class="p">(</span><span class="s1">'col1'</span><span class="p">,</span> <span class="s1">'col2'</span><span class="p">)</span><span class="o">.</span><span class="n">to_dicts</span><span class="p">()</span>
 
 <span class="c1"># Computed columns</span>
-<span class="n">table</span><span class="o">.</span><span class="n">proj</span><span class="p">(</span><span class="n">total</span><span class="o">=</span><span class="s1">&#39;price * quantity&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">to_pandas</span><span class="p">()</span>
+<span class="n">table</span><span class="o">.</span><span class="n">proj</span><span class="p">(</span><span class="n">total</span><span class="o">=</span><span class="s1">'price * quantity'</span><span class="p">)</span><span class="o">.</span><span class="n">to_pandas</span><span class="p">()</span>
 </code></pre></div>
 <hr />
 <h2 id="removed-features">Removed Features<a class="headerlink" href="#removed-features" title="Permanent link">&para;</a></h2>
@@ -7314,17 +7314,17 @@
 </code></pre></div>
 <h3 id="example-2-filtered-and-sorted-query">Example 2: Filtered and Sorted Query<a class="headerlink" href="#example-2-filtered-and-sorted-query" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># Get recent experiments, sorted by date</span>
-<span class="n">recent</span> <span class="o">=</span> <span class="p">(</span><span class="n">Experiment</span><span class="p">()</span> <span class="o">&amp;</span> <span class="s2">&quot;date &gt; &#39;2024-01-01&#39;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">to_pandas</span><span class="p">(</span>
-    <span class="n">order_by</span><span class="o">=</span><span class="s1">&#39;date DESC&#39;</span><span class="p">,</span>
+<span class="n">recent</span> <span class="o">=</span> <span class="p">(</span><span class="n">Experiment</span><span class="p">()</span> <span class="o">&amp;</span> <span class="s2">"date &gt; '2024-01-01'"</span><span class="p">)</span><span class="o">.</span><span class="n">to_pandas</span><span class="p">(</span>
+    <span class="n">order_by</span><span class="o">=</span><span class="s1">'date DESC'</span><span class="p">,</span>
     <span class="n">limit</span><span class="o">=</span><span class="mi">100</span>
 <span class="p">)</span>
 </code></pre></div>
 <h3 id="example-3-specific-columns">Example 3: Specific Columns<a class="headerlink" href="#example-3-specific-columns" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># Fetch specific columns as arrays</span>
-<span class="n">names</span><span class="p">,</span> <span class="n">dates</span> <span class="o">=</span> <span class="n">Experiment</span><span class="p">()</span><span class="o">.</span><span class="n">to_arrays</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="s1">&#39;date&#39;</span><span class="p">)</span>
+<span class="n">names</span><span class="p">,</span> <span class="n">dates</span> <span class="o">=</span> <span class="n">Experiment</span><span class="p">()</span><span class="o">.</span><span class="n">to_arrays</span><span class="p">(</span><span class="s1">'name'</span><span class="p">,</span> <span class="s1">'date'</span><span class="p">)</span>
 
 <span class="c1"># Or with primary key included</span>
-<span class="n">names</span><span class="p">,</span> <span class="n">dates</span> <span class="o">=</span> <span class="n">Experiment</span><span class="p">()</span><span class="o">.</span><span class="n">to_arrays</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="s1">&#39;date&#39;</span><span class="p">,</span> <span class="n">include_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">names</span><span class="p">,</span> <span class="n">dates</span> <span class="o">=</span> <span class="n">Experiment</span><span class="p">()</span><span class="o">.</span><span class="n">to_arrays</span><span class="p">(</span><span class="s1">'name'</span><span class="p">,</span> <span class="s1">'date'</span><span class="p">,</span> <span class="n">include_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </code></pre></div>
 <h3 id="example-4-primary-keys-for-iteration">Example 4: Primary Keys for Iteration<a class="headerlink" href="#example-4-primary-keys-for-iteration" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># Get keys for restriction</span>
@@ -7337,7 +7337,7 @@
 <span class="n">row</span> <span class="o">=</span> <span class="p">(</span><span class="n">Experiment</span><span class="p">()</span> <span class="o">&amp;</span> <span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">fetch1</span><span class="p">()</span>
 
 <span class="c1"># Get specific attributes</span>
-<span class="n">name</span><span class="p">,</span> <span class="n">date</span> <span class="o">=</span> <span class="p">(</span><span class="n">Experiment</span><span class="p">()</span> <span class="o">&amp;</span> <span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">fetch1</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="s1">&#39;date&#39;</span><span class="p">)</span>
+<span class="n">name</span><span class="p">,</span> <span class="n">date</span> <span class="o">=</span> <span class="p">(</span><span class="n">Experiment</span><span class="p">()</span> <span class="o">&amp;</span> <span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">fetch1</span><span class="p">(</span><span class="s1">'name'</span><span class="p">,</span> <span class="s1">'date'</span><span class="p">)</span>
 </code></pre></div>
 <h3 id="example-6-lazy-iteration">Example 6: Lazy Iteration<a class="headerlink" href="#example-6-lazy-iteration" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># Stream rows efficiently (single database cursor)</span>
@@ -7351,7 +7351,7 @@
 <div class="highlight"><pre><span></span><code><span class="c1"># Polars (fast, modern)</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">polars</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pl</span>
 <span class="n">df</span> <span class="o">=</span> <span class="n">Experiment</span><span class="p">()</span><span class="o">.</span><span class="n">to_polars</span><span class="p">()</span>
-<span class="n">result</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">pl</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s1">&#39;value&#39;</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">100</span><span class="p">)</span><span class="o">.</span><span class="n">group_by</span><span class="p">(</span><span class="s1">&#39;category&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">agg</span><span class="p">(</span><span class="n">pl</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="s1">&#39;value&#39;</span><span class="p">))</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">pl</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s1">'value'</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">100</span><span class="p">)</span><span class="o">.</span><span class="n">group_by</span><span class="p">(</span><span class="s1">'category'</span><span class="p">)</span><span class="o">.</span><span class="n">agg</span><span class="p">(</span><span class="n">pl</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="s1">'value'</span><span class="p">))</span>
 
 <span class="c1"># PyArrow (zero-copy interop)</span>
 <span class="n">table</span> <span class="o">=</span> <span class="n">Experiment</span><span class="p">()</span><span class="o">.</span><span class="n">to_arrow</span><span class="p">()</span>
@@ -7362,7 +7362,7 @@
 <h3 id="lazy-iteration">Lazy Iteration<a class="headerlink" href="#lazy-iteration" title="Permanent link">&para;</a></h3>
 <p>The new iteration is significantly more efficient:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Old (1.x): N+1 queries</span>
-<span class="c1"># 1. fetch(&quot;KEY&quot;) gets ALL keys</span>
+<span class="c1"># 1. fetch("KEY") gets ALL keys</span>
 <span class="c1"># 2. fetch1() for EACH key</span>
 
 <span class="c1"># New (2.0): Single query</span>

@@ -3673,7 +3673,7 @@
   <span class="md-ellipsis">
     
   
-    Migrate to 2.0
+    Migrate to 2.x
   
 
     
@@ -6810,7 +6810,7 @@
 <span class="w">      </span><span class="nt">POSTGRES_USER</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">datajoint</span>
 <span class="w">      </span><span class="nt">POSTGRES_PASSWORD</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">datajoint</span>
 <span class="w">    </span><span class="nt">ports</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;5432:5432&quot;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"5432:5432"</span>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code>docker<span class="w"> </span>compose<span class="w"> </span>up<span class="w"> </span>-d
 </code></pre></div>
@@ -6831,18 +6831,18 @@
 <span class="kn">import</span><span class="w"> </span><span class="nn">datajoint</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dj</span>
 
 
-<span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span><span class="p">(</span><span class="n">scope</span><span class="o">=</span><span class="s2">&quot;session&quot;</span><span class="p">)</span>
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span><span class="p">(</span><span class="n">scope</span><span class="o">=</span><span class="s2">"session"</span><span class="p">)</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">dj_connection</span><span class="p">():</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Configure and return DataJoint connection for the test session.&quot;&quot;&quot;</span>
-    <span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;database.host&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;DJ_HOST&quot;</span><span class="p">,</span> <span class="s2">&quot;localhost&quot;</span><span class="p">)</span>
-    <span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;database.port&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;DJ_PORT&quot;</span><span class="p">,</span> <span class="mi">5432</span><span class="p">))</span>
-    <span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;database.user&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;DJ_USER&quot;</span><span class="p">,</span> <span class="s2">&quot;datajoint&quot;</span><span class="p">)</span>
-    <span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;database.password&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;DJ_PASS&quot;</span><span class="p">,</span> <span class="s2">&quot;datajoint&quot;</span><span class="p">)</span>
-    <span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;database.use_tls&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;DJ_USE_TLS&quot;</span><span class="p">,</span> <span class="s2">&quot;false&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;true&quot;</span>
+<span class="w">    </span><span class="sd">"""Configure and return DataJoint connection for the test session."""</span>
+    <span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">"database.host"</span><span class="p">]</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">"DJ_HOST"</span><span class="p">,</span> <span class="s2">"localhost"</span><span class="p">)</span>
+    <span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">"database.port"</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">"DJ_PORT"</span><span class="p">,</span> <span class="mi">5432</span><span class="p">))</span>
+    <span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">"database.user"</span><span class="p">]</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">"DJ_USER"</span><span class="p">,</span> <span class="s2">"datajoint"</span><span class="p">)</span>
+    <span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">"database.password"</span><span class="p">]</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">"DJ_PASS"</span><span class="p">,</span> <span class="s2">"datajoint"</span><span class="p">)</span>
+    <span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">"database.use_tls"</span><span class="p">]</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">"DJ_USE_TLS"</span><span class="p">,</span> <span class="s2">"false"</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">"true"</span>
 
-    <span class="n">backend</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;DJ_BACKEND&quot;</span><span class="p">,</span> <span class="s2">&quot;postgresql&quot;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">backend</span> <span class="o">==</span> <span class="s2">&quot;postgresql&quot;</span><span class="p">:</span>
-        <span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;database.backend&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;postgresql&quot;</span>
+    <span class="n">backend</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">"DJ_BACKEND"</span><span class="p">,</span> <span class="s2">"postgresql"</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">backend</span> <span class="o">==</span> <span class="s2">"postgresql"</span><span class="p">:</span>
+        <span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">"database.backend"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"postgresql"</span>
 
     <span class="c1"># Verify connection works</span>
     <span class="n">dj</span><span class="o">.</span><span class="n">conn</span><span class="p">()</span>
@@ -6853,11 +6853,11 @@
 <p>Create a fresh schema for each test, with automatic cleanup:</p>
 <div class="highlight"><pre><span></span><code><span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">schema</span><span class="p">(</span><span class="n">dj_connection</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create a temporary schema for a single test.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Create a temporary schema for a single test."""</span>
     <span class="kn">import</span><span class="w"> </span><span class="nn">uuid</span>
 
     <span class="c1"># Unique schema name to avoid collisions in parallel runs</span>
-    <span class="n">schema_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;test_</span><span class="si">{</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">()</span><span class="o">.</span><span class="n">hex</span><span class="p">[:</span><span class="mi">8</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="n">schema_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"test_</span><span class="si">{</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">()</span><span class="o">.</span><span class="n">hex</span><span class="p">[:</span><span class="mi">8</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span>
     <span class="n">schema</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">Schema</span><span class="p">(</span><span class="n">schema_name</span><span class="p">)</span>
 
     <span class="k">yield</span> <span class="n">schema</span>
@@ -6867,10 +6867,10 @@
 </code></pre></div>
 <h3 id="schema-fixture-module-scoped">Schema Fixture (Module-Scoped)<a class="headerlink" href="#schema-fixture-module-scoped" title="Permanent link">&para;</a></h3>
 <p>For tests that share table definitions, use module scope:</p>
-<div class="highlight"><pre><span></span><code><span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span><span class="p">(</span><span class="n">scope</span><span class="o">=</span><span class="s2">&quot;module&quot;</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span><span class="p">(</span><span class="n">scope</span><span class="o">=</span><span class="s2">"module"</span><span class="p">)</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">shared_schema</span><span class="p">(</span><span class="n">dj_connection</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Schema shared across tests in a module.&quot;&quot;&quot;</span>
-    <span class="n">schema_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;test_</span><span class="si">{</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">()</span><span class="o">.</span><span class="n">hex</span><span class="p">[:</span><span class="mi">8</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="w">    </span><span class="sd">"""Schema shared across tests in a module."""</span>
+    <span class="n">schema_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"test_</span><span class="si">{</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">()</span><span class="o">.</span><span class="n">hex</span><span class="p">[:</span><span class="mi">8</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span>
     <span class="n">schema</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">Schema</span><span class="p">(</span><span class="n">schema_name</span><span class="p">)</span>
 
     <span class="k">yield</span> <span class="n">schema</span>
@@ -6882,98 +6882,98 @@
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_insert_and_fetch</span><span class="p">(</span><span class="n">schema</span><span class="p">):</span>
     <span class="nd">@schema</span>
     <span class="k">class</span><span class="w"> </span><span class="nc">Subject</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
-        <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+        <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">        subject_id : int32</span>
 <span class="s2">        ---</span>
 <span class="s2">        name : varchar(100)</span>
-<span class="s2">        &quot;&quot;&quot;</span>
+<span class="s2">        """</span>
 
     <span class="c1"># Insert</span>
-    <span class="n">Subject</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="s2">&quot;subject_id&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Alice&quot;</span><span class="p">})</span>
+    <span class="n">Subject</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="s2">"subject_id"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">"name"</span><span class="p">:</span> <span class="s2">"Alice"</span><span class="p">})</span>
 
     <span class="c1"># Verify</span>
     <span class="n">result</span> <span class="o">=</span> <span class="n">Subject</span><span class="o">.</span><span class="n">fetch1</span><span class="p">()</span>
-    <span class="k">assert</span> <span class="n">result</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;Alice&quot;</span>
+    <span class="k">assert</span> <span class="n">result</span><span class="p">[</span><span class="s2">"name"</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"Alice"</span>
 </code></pre></div>
 <h3 id="testing-computed-tables">Testing Computed Tables<a class="headerlink" href="#testing-computed-tables" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_computed_table</span><span class="p">(</span><span class="n">schema</span><span class="p">):</span>
     <span class="nd">@schema</span>
     <span class="k">class</span><span class="w"> </span><span class="nc">Source</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
-        <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+        <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">        id : int32</span>
 <span class="s2">        ---</span>
 <span class="s2">        value : float64</span>
-<span class="s2">        &quot;&quot;&quot;</span>
+<span class="s2">        """</span>
 
     <span class="nd">@schema</span>
     <span class="k">class</span><span class="w"> </span><span class="nc">Computed</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Computed</span><span class="p">):</span>
-        <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+        <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">        -&gt; Source</span>
 <span class="s2">        ---</span>
 <span class="s2">        doubled : float64</span>
-<span class="s2">        &quot;&quot;&quot;</span>
+<span class="s2">        """</span>
 
         <span class="k">def</span><span class="w"> </span><span class="nf">make</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
-            <span class="n">value</span> <span class="o">=</span> <span class="p">(</span><span class="n">Source</span> <span class="o">&amp;</span> <span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">fetch1</span><span class="p">(</span><span class="s2">&quot;value&quot;</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="o">**</span><span class="n">key</span><span class="p">,</span> <span class="s2">&quot;doubled&quot;</span><span class="p">:</span> <span class="n">value</span> <span class="o">*</span> <span class="mi">2</span><span class="p">})</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="p">(</span><span class="n">Source</span> <span class="o">&amp;</span> <span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">fetch1</span><span class="p">(</span><span class="s2">"value"</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="o">**</span><span class="n">key</span><span class="p">,</span> <span class="s2">"doubled"</span><span class="p">:</span> <span class="n">value</span> <span class="o">*</span> <span class="mi">2</span><span class="p">})</span>
 
     <span class="c1"># Setup</span>
-    <span class="n">Source</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="mf">3.5</span><span class="p">})</span>
+    <span class="n">Source</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="s2">"id"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">"value"</span><span class="p">:</span> <span class="mf">3.5</span><span class="p">})</span>
 
     <span class="c1"># Run computation</span>
     <span class="n">Computed</span><span class="o">.</span><span class="n">populate</span><span class="p">()</span>
 
     <span class="c1"># Verify</span>
-    <span class="k">assert</span> <span class="n">Computed</span><span class="o">.</span><span class="n">fetch1</span><span class="p">(</span><span class="s2">&quot;doubled&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="mf">7.0</span>
+    <span class="k">assert</span> <span class="n">Computed</span><span class="o">.</span><span class="n">fetch1</span><span class="p">(</span><span class="s2">"doubled"</span><span class="p">)</span> <span class="o">==</span> <span class="mf">7.0</span>
 </code></pre></div>
 <h3 id="testing-foreign-key-constraints">Testing Foreign Key Constraints<a class="headerlink" href="#testing-foreign-key-constraints" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_referential_integrity</span><span class="p">(</span><span class="n">schema</span><span class="p">):</span>
     <span class="nd">@schema</span>
     <span class="k">class</span><span class="w"> </span><span class="nc">Parent</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
-        <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+        <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">        parent_id : int32</span>
-<span class="s2">        &quot;&quot;&quot;</span>
+<span class="s2">        """</span>
 
     <span class="nd">@schema</span>
     <span class="k">class</span><span class="w"> </span><span class="nc">Child</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
-        <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+        <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">        -&gt; Parent</span>
 <span class="s2">        child_id : int32</span>
-<span class="s2">        &quot;&quot;&quot;</span>
+<span class="s2">        """</span>
 
     <span class="c1"># Insert parent first</span>
-    <span class="n">Parent</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="s2">&quot;parent_id&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">})</span>
-    <span class="n">Child</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="s2">&quot;parent_id&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;child_id&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">})</span>
+    <span class="n">Parent</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="s2">"parent_id"</span><span class="p">:</span> <span class="mi">1</span><span class="p">})</span>
+    <span class="n">Child</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="s2">"parent_id"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">"child_id"</span><span class="p">:</span> <span class="mi">1</span><span class="p">})</span>
 
     <span class="c1"># Verify FK violation raises error</span>
     <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">errors</span><span class="o">.</span><span class="n">IntegrityError</span><span class="p">):</span>
-        <span class="n">Child</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="s2">&quot;parent_id&quot;</span><span class="p">:</span> <span class="mi">999</span><span class="p">,</span> <span class="s2">&quot;child_id&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">})</span>
+        <span class="n">Child</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="s2">"parent_id"</span><span class="p">:</span> <span class="mi">999</span><span class="p">,</span> <span class="s2">"child_id"</span><span class="p">:</span> <span class="mi">2</span><span class="p">})</span>
 </code></pre></div>
 <h3 id="testing-cascading-deletes">Testing Cascading Deletes<a class="headerlink" href="#testing-cascading-deletes" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_cascade_delete</span><span class="p">(</span><span class="n">schema</span><span class="p">):</span>
     <span class="nd">@schema</span>
     <span class="k">class</span><span class="w"> </span><span class="nc">Parent</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
-        <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+        <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">        parent_id : int32</span>
-<span class="s2">        &quot;&quot;&quot;</span>
+<span class="s2">        """</span>
 
     <span class="nd">@schema</span>
     <span class="k">class</span><span class="w"> </span><span class="nc">Child</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
-        <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+        <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">        -&gt; Parent</span>
 <span class="s2">        child_id : int32</span>
-<span class="s2">        &quot;&quot;&quot;</span>
+<span class="s2">        """</span>
 
-    <span class="n">Parent</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="s2">&quot;parent_id&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">})</span>
+    <span class="n">Parent</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="s2">"parent_id"</span><span class="p">:</span> <span class="mi">1</span><span class="p">})</span>
     <span class="n">Child</span><span class="o">.</span><span class="n">insert</span><span class="p">([</span>
-        <span class="p">{</span><span class="s2">&quot;parent_id&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;child_id&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">},</span>
-        <span class="p">{</span><span class="s2">&quot;parent_id&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;child_id&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">},</span>
+        <span class="p">{</span><span class="s2">"parent_id"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">"child_id"</span><span class="p">:</span> <span class="mi">1</span><span class="p">},</span>
+        <span class="p">{</span><span class="s2">"parent_id"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">"child_id"</span><span class="p">:</span> <span class="mi">2</span><span class="p">},</span>
     <span class="p">])</span>
 
     <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">Child</span><span class="p">())</span> <span class="o">==</span> <span class="mi">2</span>
 
     <span class="c1"># Delete parent cascades to children</span>
-    <span class="p">(</span><span class="n">Parent</span> <span class="o">&amp;</span> <span class="p">{</span><span class="s2">&quot;parent_id&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">})</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">prompt</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="p">(</span><span class="n">Parent</span> <span class="o">&amp;</span> <span class="p">{</span><span class="s2">"parent_id"</span><span class="p">:</span> <span class="mi">1</span><span class="p">})</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">prompt</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
     <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">Child</span><span class="p">())</span> <span class="o">==</span> <span class="mi">0</span>
 </code></pre></div>
@@ -6981,15 +6981,15 @@
 <p>For tables using blob storage, configure a test store:</p>
 <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">tempfile</span>
 
-<span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span><span class="p">(</span><span class="n">scope</span><span class="o">=</span><span class="s2">&quot;session&quot;</span><span class="p">)</span>
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span><span class="p">(</span><span class="n">scope</span><span class="o">=</span><span class="s2">"session"</span><span class="p">)</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">blob_store</span><span class="p">(</span><span class="n">dj_connection</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Configure a temporary blob store for tests.&quot;&quot;&quot;</span>
-    <span class="n">store_path</span> <span class="o">=</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">mkdtemp</span><span class="p">(</span><span class="n">prefix</span><span class="o">=</span><span class="s2">&quot;dj_test_store_&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="sd">"""Configure a temporary blob store for tests."""</span>
+    <span class="n">store_path</span> <span class="o">=</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">mkdtemp</span><span class="p">(</span><span class="n">prefix</span><span class="o">=</span><span class="s2">"dj_test_store_"</span><span class="p">)</span>
 
-    <span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;stores&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s2">&quot;test&quot;</span><span class="p">:</span> <span class="p">{</span>
-            <span class="s2">&quot;protocol&quot;</span><span class="p">:</span> <span class="s2">&quot;file&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;location&quot;</span><span class="p">:</span> <span class="n">store_path</span><span class="p">,</span>
+    <span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">"stores"</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">"test"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">"protocol"</span><span class="p">:</span> <span class="s2">"file"</span><span class="p">,</span>
+            <span class="s2">"location"</span><span class="p">:</span> <span class="n">store_path</span><span class="p">,</span>
         <span class="p">}</span>
     <span class="p">}</span>
 
@@ -7005,16 +7005,16 @@
 
     <span class="nd">@schema</span>
     <span class="k">class</span><span class="w"> </span><span class="nc">ArrayData</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
-        <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+        <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">        id : int32</span>
 <span class="s2">        ---</span>
 <span class="s2">        data : &lt;blob@test&gt;</span>
-<span class="s2">        &quot;&quot;&quot;</span>
+<span class="s2">        """</span>
 
     <span class="n">arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
-    <span class="n">ArrayData</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="n">arr</span><span class="p">})</span>
+    <span class="n">ArrayData</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="s2">"id"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">"data"</span><span class="p">:</span> <span class="n">arr</span><span class="p">})</span>
 
-    <span class="n">fetched</span> <span class="o">=</span> <span class="n">ArrayData</span><span class="o">.</span><span class="n">fetch1</span><span class="p">(</span><span class="s2">&quot;data&quot;</span><span class="p">)</span>
+    <span class="n">fetched</span> <span class="o">=</span> <span class="n">ArrayData</span><span class="o">.</span><span class="n">fetch1</span><span class="p">(</span><span class="s2">"data"</span><span class="p">)</span>
     <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">array_equal</span><span class="p">(</span><span class="n">fetched</span><span class="p">,</span> <span class="n">arr</span><span class="p">)</span>
 </code></pre></div>
 <h2 id="cicd-configuration">CI/CD Configuration<a class="headerlink" href="#cicd-configuration" title="Permanent link">&para;</a></h2>
@@ -7047,10 +7047,10 @@
 
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/setup-python@v5</span>
 <span class="w">        </span><span class="nt">with</span><span class="p">:</span>
-<span class="w">          </span><span class="nt">python-version</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;3.11&quot;</span>
+<span class="w">          </span><span class="nt">python-version</span><span class="p">:</span><span class="w"> </span><span class="s">"3.11"</span>
 
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Install dependencies</span>
-<span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pip install -e &quot;.[test]&quot;</span>
+<span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pip install -e ".[test]"</span>
 
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Run tests</span>
 <span class="w">        </span><span class="nt">env</span><span class="p">:</span>
@@ -7090,7 +7090,7 @@
 <h2 id="common-patterns">Common Patterns<a class="headerlink" href="#common-patterns" title="Permanent link">&para;</a></h2>
 <h3 id="parameterized-tests">Parameterized Tests<a class="headerlink" href="#parameterized-tests" title="Permanent link">&para;</a></h3>
 <p>Test the same logic with different inputs:</p>
-<div class="highlight"><pre><span></span><code><span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">parametrize</span><span class="p">(</span><span class="s2">&quot;value,expected&quot;</span><span class="p">,</span> <span class="p">[</span>
+<div class="highlight"><pre><span></span><code><span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">parametrize</span><span class="p">(</span><span class="s2">"value,expected"</span><span class="p">,</span> <span class="p">[</span>
     <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
     <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
     <span class="p">(</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="o">-</span><span class="mi">10</span><span class="p">),</span>
@@ -7098,57 +7098,57 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">test_doubling</span><span class="p">(</span><span class="n">schema</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">expected</span><span class="p">):</span>
     <span class="nd">@schema</span>
     <span class="k">class</span><span class="w"> </span><span class="nc">Numbers</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
-        <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+        <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">        id : int32</span>
 <span class="s2">        ---</span>
 <span class="s2">        value : int32</span>
-<span class="s2">        &quot;&quot;&quot;</span>
+<span class="s2">        """</span>
 
     <span class="nd">@schema</span>
     <span class="k">class</span><span class="w"> </span><span class="nc">Doubled</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Computed</span><span class="p">):</span>
-        <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+        <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">        -&gt; Numbers</span>
 <span class="s2">        ---</span>
 <span class="s2">        result : int32</span>
-<span class="s2">        &quot;&quot;&quot;</span>
+<span class="s2">        """</span>
         <span class="k">def</span><span class="w"> </span><span class="nf">make</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
-            <span class="n">v</span> <span class="o">=</span> <span class="p">(</span><span class="n">Numbers</span> <span class="o">&amp;</span> <span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">fetch1</span><span class="p">(</span><span class="s2">&quot;value&quot;</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="o">**</span><span class="n">key</span><span class="p">,</span> <span class="s2">&quot;result&quot;</span><span class="p">:</span> <span class="n">v</span> <span class="o">*</span> <span class="mi">2</span><span class="p">})</span>
+            <span class="n">v</span> <span class="o">=</span> <span class="p">(</span><span class="n">Numbers</span> <span class="o">&amp;</span> <span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">fetch1</span><span class="p">(</span><span class="s2">"value"</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="o">**</span><span class="n">key</span><span class="p">,</span> <span class="s2">"result"</span><span class="p">:</span> <span class="n">v</span> <span class="o">*</span> <span class="mi">2</span><span class="p">})</span>
 
-    <span class="n">Numbers</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="n">value</span><span class="p">})</span>
+    <span class="n">Numbers</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="s2">"id"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">"value"</span><span class="p">:</span> <span class="n">value</span><span class="p">})</span>
     <span class="n">Doubled</span><span class="o">.</span><span class="n">populate</span><span class="p">()</span>
 
-    <span class="k">assert</span> <span class="n">Doubled</span><span class="o">.</span><span class="n">fetch1</span><span class="p">(</span><span class="s2">&quot;result&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="n">expected</span>
+    <span class="k">assert</span> <span class="n">Doubled</span><span class="o">.</span><span class="n">fetch1</span><span class="p">(</span><span class="s2">"result"</span><span class="p">)</span> <span class="o">==</span> <span class="n">expected</span>
 </code></pre></div>
 <h3 id="testing-error-conditions">Testing Error Conditions<a class="headerlink" href="#testing-error-conditions" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_duplicate_insert_raises</span><span class="p">(</span><span class="n">schema</span><span class="p">):</span>
     <span class="nd">@schema</span>
     <span class="k">class</span><span class="w"> </span><span class="nc">Data</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
-        <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+        <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">        id : int32</span>
-<span class="s2">        &quot;&quot;&quot;</span>
+<span class="s2">        """</span>
 
-    <span class="n">Data</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">})</span>
+    <span class="n">Data</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="s2">"id"</span><span class="p">:</span> <span class="mi">1</span><span class="p">})</span>
 
     <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">errors</span><span class="o">.</span><span class="n">DuplicateError</span><span class="p">):</span>
-        <span class="n">Data</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">})</span>
+        <span class="n">Data</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="s2">"id"</span><span class="p">:</span> <span class="mi">1</span><span class="p">})</span>
 </code></pre></div>
 <h3 id="fixtures-for-sample-data">Fixtures for Sample Data<a class="headerlink" href="#fixtures-for-sample-data" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">sample_subjects</span><span class="p">(</span><span class="n">schema</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create Subject table with sample data.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Create Subject table with sample data."""</span>
     <span class="nd">@schema</span>
     <span class="k">class</span><span class="w"> </span><span class="nc">Subject</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
-        <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+        <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">        subject_id : varchar(16)</span>
 <span class="s2">        ---</span>
 <span class="s2">        species : varchar(50)</span>
-<span class="s2">        &quot;&quot;&quot;</span>
+<span class="s2">        """</span>
 
     <span class="n">Subject</span><span class="o">.</span><span class="n">insert</span><span class="p">([</span>
-        <span class="p">{</span><span class="s2">&quot;subject_id&quot;</span><span class="p">:</span> <span class="s2">&quot;M001&quot;</span><span class="p">,</span> <span class="s2">&quot;species&quot;</span><span class="p">:</span> <span class="s2">&quot;mouse&quot;</span><span class="p">},</span>
-        <span class="p">{</span><span class="s2">&quot;subject_id&quot;</span><span class="p">:</span> <span class="s2">&quot;M002&quot;</span><span class="p">,</span> <span class="s2">&quot;species&quot;</span><span class="p">:</span> <span class="s2">&quot;mouse&quot;</span><span class="p">},</span>
-        <span class="p">{</span><span class="s2">&quot;subject_id&quot;</span><span class="p">:</span> <span class="s2">&quot;R001&quot;</span><span class="p">,</span> <span class="s2">&quot;species&quot;</span><span class="p">:</span> <span class="s2">&quot;rat&quot;</span><span class="p">},</span>
+        <span class="p">{</span><span class="s2">"subject_id"</span><span class="p">:</span> <span class="s2">"M001"</span><span class="p">,</span> <span class="s2">"species"</span><span class="p">:</span> <span class="s2">"mouse"</span><span class="p">},</span>
+        <span class="p">{</span><span class="s2">"subject_id"</span><span class="p">:</span> <span class="s2">"M002"</span><span class="p">,</span> <span class="s2">"species"</span><span class="p">:</span> <span class="s2">"mouse"</span><span class="p">},</span>
+        <span class="p">{</span><span class="s2">"subject_id"</span><span class="p">:</span> <span class="s2">"R001"</span><span class="p">,</span> <span class="s2">"species"</span><span class="p">:</span> <span class="s2">"rat"</span><span class="p">},</span>
     <span class="p">])</span>
 
     <span class="k">return</span> <span class="n">Subject</span>
@@ -7176,7 +7176,7 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">test_large_computation</span><span class="p">(</span><span class="n">schema</span><span class="p">):</span>
     <span class="o">...</span>
 </code></pre></div>
-   <div class="highlight"><pre><span></span><code>pytest<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;not slow&quot;</span><span class="w">  </span><span class="c1"># Skip slow tests</span>
+   <div class="highlight"><pre><span></span><code>pytest<span class="w"> </span>-m<span class="w"> </span><span class="s2">"not slow"</span><span class="w">  </span><span class="c1"># Skip slow tests</span>
 pytest<span class="w"> </span>-m<span class="w"> </span>slow<span class="w">        </span><span class="c1"># Run only slow tests</span>
 </code></pre></div></p>
 </li>

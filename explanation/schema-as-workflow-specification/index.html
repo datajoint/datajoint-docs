@@ -3821,7 +3821,7 @@
   <span class="md-ellipsis">
     
   
-    Migrate to 2.0
+    Migrate to 2.x
   
 
     
@@ -6473,43 +6473,43 @@ primary key attributes (above <code>---</code>) from secondary attributes (below
 pipeline:</p>
 <div class="highlight"><pre><span></span><code><span class="nd">@schema</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Scan</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    -&gt; Session</span>
 <span class="s2">    scan_idx     : int32          # scan within session</span>
 <span class="s2">    ---</span>
 <span class="s2">    depth_um     : float32        # cortical depth</span>
 <span class="s2">    nframes      : int32</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">    """</span>
 
 <span class="nd">@schema</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">AverageFrame</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Imported</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    -&gt; Scan</span>
 <span class="s2">    ---</span>
 <span class="s2">    avg_frame    : &lt;npy@raw&gt;      # mean fluorescence frame</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">make</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
         <span class="o">...</span>
 
 <span class="nd">@schema</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">SegmentationParam</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Lookup</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    param_set_id : int32</span>
 <span class="s2">    ---</span>
-<span class="s2">    method       : enum(&#39;cellpose&#39;, &#39;suite2p&#39;)</span>
+<span class="s2">    method       : enum('cellpose', 'suite2p')</span>
 <span class="s2">    diameter_um  : float32</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">    """</span>
 
 <span class="nd">@schema</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Segmentation</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Computed</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    -&gt; AverageFrame</span>
 <span class="s2">    -&gt; SegmentationParam</span>
 <span class="s2">    ---</span>
 <span class="s2">    n_cells      : int32</span>
 <span class="s2">    masks        : &lt;object@raw&gt;   # cell masks, lazy reference</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">make</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
         <span class="o">...</span>

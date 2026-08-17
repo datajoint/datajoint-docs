@@ -3675,7 +3675,7 @@
   <span class="md-ellipsis">
     
   
-    Migrate to 2.0
+    Migrate to 2.x
   
 
     
@@ -6739,39 +6739,39 @@
 <div class="highlight"><pre><span></span><code><span class="c1"># Original</span>
 <span class="nd">@schema</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Subject</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    subject_id : varchar(16)</span>
 <span class="s2">    ---</span>
 <span class="s2">    species : varchar(32)</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">    """</span>
 
 <span class="c1"># Updated - add column</span>
 <span class="nd">@schema</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Subject</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    subject_id : varchar(16)</span>
 <span class="s2">    ---</span>
 <span class="s2">    species : varchar(32)</span>
 <span class="s2">    weight = null : float32      # New column</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">    """</span>
 
 <span class="c1"># Apply change</span>
 <span class="n">Subject</span><span class="o">.</span><span class="n">alter</span><span class="p">()</span>
 </code></pre></div>
 <h2 id="drop-a-column">Drop a Column<a class="headerlink" href="#drop-a-column" title="Permanent link">&para;</a></h2>
 <p>Remove from definition and alter:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Column &#39;old_field&#39; removed from definition</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># Column 'old_field' removed from definition</span>
 <span class="n">Subject</span><span class="o">.</span><span class="n">alter</span><span class="p">()</span>
 </code></pre></div>
 <h2 id="modify-column-type">Modify Column Type<a class="headerlink" href="#modify-column-type" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><span class="c1"># Change varchar(32) to varchar(100)</span>
 <span class="nd">@schema</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Subject</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    subject_id : varchar(16)</span>
 <span class="s2">    ---</span>
 <span class="s2">    species : varchar(100)       # Was varchar(32)</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">    """</span>
 
 <span class="n">Subject</span><span class="o">.</span><span class="n">alter</span><span class="p">()</span>
 </code></pre></div>
@@ -6781,11 +6781,11 @@
 <span class="c1"># Renamed to: species_name</span>
 <span class="nd">@schema</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Subject</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    subject_id : varchar(16)</span>
 <span class="s2">    ---</span>
-<span class="s2">    species_name : varchar(32)   # Renamed from &#39;species&#39;</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">    species_name : varchar(32)   # Renamed from 'species'</span>
+<span class="s2">    """</span>
 
 <span class="n">Subject</span><span class="o">.</span><span class="n">alter</span><span class="p">()</span>
 </code></pre></div>
@@ -6807,11 +6807,11 @@
 <div class="highlight"><pre><span></span><code><span class="c1"># This will raise NotImplementedError</span>
 <span class="nd">@schema</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Subject</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    new_id : uuid               # Changed primary key</span>
 <span class="s2">    ---</span>
 <span class="s2">    species : varchar(32)</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">    """</span>
 
 <span class="n">Subject</span><span class="o">.</span><span class="n">alter</span><span class="p">()</span>  <span class="c1"># Error!</span>
 </code></pre></div>
@@ -6819,40 +6819,40 @@
 <h3 id="foreign-key-changes">Foreign Key Changes<a class="headerlink" href="#foreign-key-changes" title="Permanent link">&para;</a></h3>
 <p>Cannot add or remove foreign key references:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Cannot add new FK via alter()</span>
-<span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">subject_id : varchar(16)</span>
 <span class="s2">---</span>
 <span class="s2">-&gt; NewReference              # Cannot add via alter</span>
 <span class="s2">species : varchar(32)</span>
-<span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">"""</span>
 </code></pre></div>
 <p><strong>Workaround</strong>: Drop dependent tables, recreate with new structure.</p>
 <h3 id="index-changes">Index Changes<a class="headerlink" href="#index-changes" title="Permanent link">&para;</a></h3>
 <p>Cannot modify indexes via alter:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Cannot add/remove indexes via alter()</span>
-<span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">subject_id : varchar(16)</span>
 <span class="s2">---</span>
 <span class="s2">index(species)               # Cannot add via alter</span>
 <span class="s2">species : varchar(32)</span>
-<span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">"""</span>
 </code></pre></div>
 <h2 id="migration-pattern">Migration Pattern<a class="headerlink" href="#migration-pattern" title="Permanent link">&para;</a></h2>
 <p>For unsupported changes, use this pattern:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># 1. Create new table with desired structure</span>
 <span class="nd">@schema</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">SubjectNew</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    subject_id : uuid            # New primary key type</span>
 <span class="s2">    ---</span>
 <span class="s2">    species : varchar(32)</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">    """</span>
 
 <span class="c1"># 2. Migrate data</span>
 <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">Subject</span><span class="p">()</span><span class="o">.</span><span class="n">to_dicts</span><span class="p">():</span>
     <span class="n">SubjectNew</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span>
-        <span class="s1">&#39;subject_id&#39;</span><span class="p">:</span> <span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">(),</span>  <span class="c1"># Generate new keys</span>
-        <span class="s1">&#39;species&#39;</span><span class="p">:</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;species&#39;</span><span class="p">]</span>
+        <span class="s1">'subject_id'</span><span class="p">:</span> <span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">(),</span>  <span class="c1"># Generate new keys</span>
+        <span class="s1">'species'</span><span class="p">:</span> <span class="n">row</span><span class="p">[</span><span class="s1">'species'</span><span class="p">]</span>
     <span class="p">})</span>
 
 <span class="c1"># 3. Update dependent tables</span>
@@ -6885,7 +6885,7 @@
 <h3 id="test-in-development-first">Test in Development First<a class="headerlink" href="#test-in-development-first" title="Permanent link">&para;</a></h3>
 <p>Always test schema changes on a copy:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Clone schema for testing</span>
-<span class="n">test_schema</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">Schema</span><span class="p">(</span><span class="s1">&#39;test_&#39;</span> <span class="o">+</span> <span class="n">schema</span><span class="o">.</span><span class="n">database</span><span class="p">)</span>
+<span class="n">test_schema</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">Schema</span><span class="p">(</span><span class="s1">'test_'</span> <span class="o">+</span> <span class="n">schema</span><span class="o">.</span><span class="n">database</span><span class="p">)</span>
 </code></pre></div>
 <h2 id="see-also">See Also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
 <ul>

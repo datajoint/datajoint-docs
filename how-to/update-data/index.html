@@ -3766,7 +3766,7 @@
   <span class="md-ellipsis">
     
   
-    Migrate to 2.0
+    Migrate to 2.x
   
 
     
@@ -6340,8 +6340,8 @@ usually mean a table mixes data created at different workflow steps — see
 <h2 id="prefer-delete-reinsert">Prefer delete + reinsert<a class="headerlink" href="#prefer-delete-reinsert" title="Permanent link">&para;</a></h2>
 <p>To replace a Manual entity's data, delete the row and insert the corrected one.
 Because foreign keys cascade, this keeps every dependent record consistent:</p>
-<div class="highlight"><pre><span></span><code><span class="p">(</span><span class="n">Subject</span> <span class="o">&amp;</span> <span class="s2">&quot;subject_id=1001&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
-<span class="n">Subject</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="s2">&quot;subject_id&quot;</span><span class="p">:</span> <span class="mi">1001</span><span class="p">,</span> <span class="s2">&quot;species&quot;</span><span class="p">:</span> <span class="s2">&quot;mouse&quot;</span><span class="p">,</span> <span class="s2">&quot;date_of_birth&quot;</span><span class="p">:</span> <span class="s2">&quot;2026-01-15&quot;</span><span class="p">})</span>
+<div class="highlight"><pre><span></span><code><span class="p">(</span><span class="n">Subject</span> <span class="o">&amp;</span> <span class="s2">"subject_id=1001"</span><span class="p">)</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
+<span class="n">Subject</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="s2">"subject_id"</span><span class="p">:</span> <span class="mi">1001</span><span class="p">,</span> <span class="s2">"species"</span><span class="p">:</span> <span class="s2">"mouse"</span><span class="p">,</span> <span class="s2">"date_of_birth"</span><span class="p">:</span> <span class="s2">"2026-01-15"</span><span class="p">})</span>
 </code></pre></div>
 <p>For a <strong>computed</strong> result, never edit it in place — delete it and recompute so
 the value stays traceable to its declared inputs:</p>
@@ -6353,7 +6353,7 @@ the value stays traceable to its declared inputs:</p>
 disturbing its dependents, use <code>update1()</code>. It rewrites exactly one row,
 identified by its full primary key:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Fix a mistyped genotype on one subject</span>
-<span class="n">Subject</span><span class="o">.</span><span class="n">update1</span><span class="p">({</span><span class="s2">&quot;subject_id&quot;</span><span class="p">:</span> <span class="mi">1001</span><span class="p">,</span> <span class="s2">&quot;genotype&quot;</span><span class="p">:</span> <span class="s2">&quot;wild-type&quot;</span><span class="p">})</span>
+<span class="n">Subject</span><span class="o">.</span><span class="n">update1</span><span class="p">({</span><span class="s2">"subject_id"</span><span class="p">:</span> <span class="mi">1001</span><span class="p">,</span> <span class="s2">"genotype"</span><span class="p">:</span> <span class="s2">"wild-type"</span><span class="p">})</span>
 </code></pre></div>
 <p><code>update1()</code> is deliberately narrow:</p>
 <ul>

@@ -3927,7 +3927,7 @@
   <span class="md-ellipsis">
     
   
-    Migrate to 2.0
+    Migrate to 2.x
   
 
     
@@ -6741,52 +6741,52 @@ DataJoint at your database, declare a few tables, insert a row, and run a comput
 <p>Configure your project (see <a href="../../reference/configuration/">Configuration</a> for the full
 reference):</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Non-sensitive settings</span>
-<span class="nb">echo</span><span class="w"> </span><span class="s1">&#39;{&quot;database&quot;: {&quot;host&quot;: &quot;localhost&quot;, &quot;port&quot;: 3306}}&#39;</span><span class="w"> </span>&gt;<span class="w"> </span>datajoint.json
+<span class="nb">echo</span><span class="w"> </span><span class="s1">'{"database": {"host": "localhost", "port": 3306}}'</span><span class="w"> </span>&gt;<span class="w"> </span>datajoint.json
 
 <span class="c1"># Credentials, kept out of the project files</span>
 mkdir<span class="w"> </span>-p<span class="w"> </span>.secrets
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;&lt;your-username&gt;&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>.secrets/database.user
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;&lt;your-password&gt;&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>.secrets/database.password
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"&lt;your-username&gt;"</span><span class="w"> </span>&gt;<span class="w"> </span>.secrets/database.user
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"&lt;your-password&gt;"</span><span class="w"> </span>&gt;<span class="w"> </span>.secrets/database.password
 chmod<span class="w"> </span><span class="m">600</span><span class="w"> </span>.secrets/*
 </code></pre></div>
 <p>Define and populate a simple pipeline:</p>
 <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">datajoint</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dj</span>
 
-<span class="n">schema</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">Schema</span><span class="p">(</span><span class="s1">&#39;my_pipeline&#39;</span><span class="p">)</span>
+<span class="n">schema</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">Schema</span><span class="p">(</span><span class="s1">'my_pipeline'</span><span class="p">)</span>
 
 <span class="nd">@schema</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Subject</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    subject_id : int32</span>
 <span class="s2">    ---</span>
 <span class="s2">    name : varchar(100)</span>
 <span class="s2">    date_of_birth : date</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">    """</span>
 
 <span class="nd">@schema</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Session</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    -&gt; Subject</span>
 <span class="s2">    session_idx : int16</span>
 <span class="s2">    ---</span>
 <span class="s2">    session_date : date</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">    """</span>
 
 <span class="nd">@schema</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">SessionAnalysis</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Computed</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    -&gt; Session</span>
 <span class="s2">    ---</span>
 <span class="s2">    result : float64</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">make</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
         <span class="c1"># Compute result for this session</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="o">**</span><span class="n">key</span><span class="p">,</span> <span class="s1">&#39;result&#39;</span><span class="p">:</span> <span class="mf">42.0</span><span class="p">})</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="o">**</span><span class="n">key</span><span class="p">,</span> <span class="s1">'result'</span><span class="p">:</span> <span class="mf">42.0</span><span class="p">})</span>
 
 <span class="c1"># Insert data</span>
-<span class="n">Subject</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="s1">&#39;subject_id&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;M001&#39;</span><span class="p">,</span> <span class="s1">&#39;date_of_birth&#39;</span><span class="p">:</span> <span class="s1">&#39;2026-01-15&#39;</span><span class="p">})</span>
-<span class="n">Session</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="s1">&#39;subject_id&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;session_idx&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;session_date&#39;</span><span class="p">:</span> <span class="s1">&#39;2026-01-06&#39;</span><span class="p">})</span>
+<span class="n">Subject</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="s1">'subject_id'</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">'name'</span><span class="p">:</span> <span class="s1">'M001'</span><span class="p">,</span> <span class="s1">'date_of_birth'</span><span class="p">:</span> <span class="s1">'2026-01-15'</span><span class="p">})</span>
+<span class="n">Session</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="s1">'subject_id'</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">'session_idx'</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">'session_date'</span><span class="p">:</span> <span class="s1">'2026-01-06'</span><span class="p">})</span>
 
 <span class="c1"># Run computations</span>
 <span class="n">SessionAnalysis</span><span class="o">.</span><span class="n">populate</span><span class="p">()</span>
@@ -6834,12 +6834,12 @@ schema, so they do not collide with each other or with your existing databases.<
 <p>The PostgreSQL backend (added in 2.1) requires the <code>postgres</code> extra, which installs <code>psycopg2-binary</code>.</p>
 <h3 id="ssltls-connection-issues">SSL/TLS connection issues<a class="headerlink" href="#ssltls-connection-issues" title="Permanent link">&para;</a></h3>
 <p>Set <code>use_tls=False</code> for local development:</p>
-<div class="highlight"><pre><span></span><code><span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;database.use_tls&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+<div class="highlight"><pre><span></span><code><span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">'database.use_tls'</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
 </code></pre></div>
 <h3 id="permission-denied">Permission denied<a class="headerlink" href="#permission-denied" title="Permanent link">&para;</a></h3>
 <p>Ensure your database user has appropriate privileges:</p>
 <div class="highlight"><pre><span></span><code><span class="c1">-- MySQL</span>
-<span class="k">GRANT</span><span class="w"> </span><span class="k">ALL</span><span class="w"> </span><span class="k">PRIVILEGES</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="o">`</span><span class="n">your_schema</span><span class="o">%`</span><span class="p">.</span><span class="o">*</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="s1">&#39;username&#39;</span><span class="o">@</span><span class="s1">&#39;%&#39;</span><span class="p">;</span>
+<span class="k">GRANT</span><span class="w"> </span><span class="k">ALL</span><span class="w"> </span><span class="k">PRIVILEGES</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="o">`</span><span class="n">your_schema</span><span class="o">%`</span><span class="p">.</span><span class="o">*</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="s1">'username'</span><span class="o">@</span><span class="s1">'%'</span><span class="p">;</span>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="c1">-- PostgreSQL</span>
 <span class="k">GRANT</span><span class="w"> </span><span class="k">ALL</span><span class="w"> </span><span class="k">PRIVILEGES</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">DATABASE</span><span class="w"> </span><span class="n">my_db</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">username</span><span class="p">;</span>

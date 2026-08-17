@@ -3799,7 +3799,7 @@
   <span class="md-ellipsis">
     
   
-    Migrate to 2.0
+    Migrate to 2.x
   
 
     
@@ -6436,13 +6436,13 @@
 <p>The path to silver eligibility is to <strong>choose a typed codec for the column</strong> in the schema definition. A typed codec knows its value shape and can map decoded values to a Spark-native return — primitives, lists, dicts of the same.</p>
 <div class="highlight"><pre><span></span><code><span class="nd">@schema</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Recording</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Imported</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    -&gt; Session</span>
 <span class="s2">    ---</span>
 <span class="s2">    signal : &lt;float_array@&gt;     # 1D float array — adapts to Spark ARRAY&lt;DOUBLE&gt;</span>
 <span class="s2">    metadata : &lt;labeled_struct@&gt;  # structured record — adapts to Spark STRUCT&lt;...&gt;</span>
 <span class="s2">    raw_dump : &lt;blob@&gt;            # arbitrary Python value — bronze-only</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">    """</span>
 </code></pre></div>
 <p>The codec implementations (<code>&lt;float_array@&gt;</code>, <code>&lt;labeled_struct@&gt;</code>, etc.) live in plugin packages, not in <code>datajoint-python</code> itself. Each plugin is independently versioned and can target a specific domain — neuroscience array shapes, imaging types, time-series layouts, etc.</p>
 <h2 id="why-a-protocol-not-a-codec-method">Why a Protocol, not a Codec method<a class="headerlink" href="#why-a-protocol-not-a-codec-method" title="Permanent link">&para;</a></h2>

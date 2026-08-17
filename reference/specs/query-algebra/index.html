@@ -3671,7 +3671,7 @@
   <span class="md-ellipsis">
     
   
-    Migrate to 2.0
+    Migrate to 2.x
   
 
     
@@ -8723,7 +8723,7 @@
 <h3 id="11-immutability">1.1 Immutability<a class="headerlink" href="#11-immutability" title="Permanent link">&para;</a></h3>
 <p>All query expressions are immutable. Every operator creates a new expression:</p>
 <div class="highlight"><pre><span></span><code><span class="n">original</span> <span class="o">=</span> <span class="n">Session</span><span class="p">()</span>
-<span class="n">restricted</span> <span class="o">=</span> <span class="n">original</span> <span class="o">&amp;</span> <span class="s2">&quot;session_date &gt; &#39;2024-01-01&#39;&quot;</span>  <span class="c1"># New object</span>
+<span class="n">restricted</span> <span class="o">=</span> <span class="n">original</span> <span class="o">&amp;</span> <span class="s2">"session_date &gt; '2024-01-01'"</span>  <span class="c1"># New object</span>
 <span class="c1"># original is unchanged</span>
 </code></pre></div>
 <h3 id="12-primary-key-preservation">1.2 Primary Key Preservation<a class="headerlink" href="#12-primary-key-preservation" title="Permanent link">&para;</a></h3>
@@ -8766,7 +8766,7 @@
 </table>
 <h3 id="13-lazy-evaluation">1.3 Lazy Evaluation<a class="headerlink" href="#13-lazy-evaluation" title="Permanent link">&para;</a></h3>
 <p>Expressions are not executed until data is fetched:</p>
-<div class="highlight"><pre><span></span><code><span class="n">expr</span> <span class="o">=</span> <span class="p">(</span><span class="n">Session</span> <span class="o">*</span> <span class="n">Trial</span><span class="p">)</span> <span class="o">&amp;</span> <span class="s2">&quot;trial_type = &#39;test&#39;&quot;</span>  <span class="c1"># No database query yet</span>
+<div class="highlight"><pre><span></span><code><span class="n">expr</span> <span class="o">=</span> <span class="p">(</span><span class="n">Session</span> <span class="o">*</span> <span class="n">Trial</span><span class="p">)</span> <span class="o">&amp;</span> <span class="s2">"trial_type = 'test'"</span>  <span class="c1"># No database query yet</span>
 <span class="n">data</span> <span class="o">=</span> <span class="n">expr</span><span class="o">.</span><span class="n">to_dicts</span><span class="p">()</span>  <span class="c1"># Query executed here</span>
 </code></pre></div>
 <hr />
@@ -8825,25 +8825,25 @@
 </table>
 <h3 id="23-string-conditions">2.3 String Conditions<a class="headerlink" href="#23-string-conditions" title="Permanent link">&para;</a></h3>
 <p>SQL expressions using attribute names:</p>
-<div class="highlight"><pre><span></span><code><span class="n">Session</span> <span class="o">&amp;</span> <span class="s2">&quot;session_date &gt; &#39;2024-01-01&#39;&quot;</span>
-<span class="n">Session</span> <span class="o">&amp;</span> <span class="s2">&quot;subject_id IN (1, 2, 3)&quot;</span>
-<span class="n">Session</span> <span class="o">&amp;</span> <span class="s2">&quot;notes LIKE &#39;%test%&#39;&quot;</span>
-<span class="n">Session</span> <span class="o">&amp;</span> <span class="s2">&quot;(x &gt; 0) AND (y &lt; 100)&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="n">Session</span> <span class="o">&amp;</span> <span class="s2">"session_date &gt; '2024-01-01'"</span>
+<span class="n">Session</span> <span class="o">&amp;</span> <span class="s2">"subject_id IN (1, 2, 3)"</span>
+<span class="n">Session</span> <span class="o">&amp;</span> <span class="s2">"notes LIKE '%test%'"</span>
+<span class="n">Session</span> <span class="o">&amp;</span> <span class="s2">"(x &gt; 0) AND (y &lt; 100)"</span>
 </code></pre></div>
 <h3 id="24-dictionary-conditions">2.4 Dictionary Conditions<a class="headerlink" href="#24-dictionary-conditions" title="Permanent link">&para;</a></h3>
 <p>Attribute-value equality:</p>
-<div class="highlight"><pre><span></span><code><span class="n">Session</span> <span class="o">&amp;</span> <span class="p">{</span><span class="s2">&quot;subject_id&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">}</span>
-<span class="n">Session</span> <span class="o">&amp;</span> <span class="p">{</span><span class="s2">&quot;subject_id&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;session_type&quot;</span><span class="p">:</span> <span class="s2">&quot;training&quot;</span><span class="p">}</span>
+<div class="highlight"><pre><span></span><code><span class="n">Session</span> <span class="o">&amp;</span> <span class="p">{</span><span class="s2">"subject_id"</span><span class="p">:</span> <span class="mi">1</span><span class="p">}</span>
+<span class="n">Session</span> <span class="o">&amp;</span> <span class="p">{</span><span class="s2">"subject_id"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">"session_type"</span><span class="p">:</span> <span class="s2">"training"</span><span class="p">}</span>
 </code></pre></div>
 <p>Multiple key-value pairs are combined with AND.</p>
 <p><strong>Unmatched keys are silently ignored:</strong></p>
-<div class="highlight"><pre><span></span><code><span class="c1"># If &#39;nonexistent&#39; is not an attribute of Session:</span>
-<span class="n">Session</span> <span class="o">&amp;</span> <span class="p">{</span><span class="s2">&quot;subject_id&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;nonexistent&quot;</span><span class="p">:</span> <span class="s2">&quot;value&quot;</span><span class="p">}</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># If 'nonexistent' is not an attribute of Session:</span>
+<span class="n">Session</span> <span class="o">&amp;</span> <span class="p">{</span><span class="s2">"subject_id"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">"nonexistent"</span><span class="p">:</span> <span class="s2">"value"</span><span class="p">}</span>
 <span class="c1"># Equivalent to:</span>
-<span class="n">Session</span> <span class="o">&amp;</span> <span class="p">{</span><span class="s2">&quot;subject_id&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">}</span>  <span class="c1"># unmatched key skipped</span>
+<span class="n">Session</span> <span class="o">&amp;</span> <span class="p">{</span><span class="s2">"subject_id"</span><span class="p">:</span> <span class="mi">1</span><span class="p">}</span>  <span class="c1"># unmatched key skipped</span>
 
 <span class="c1"># If NO keys match, condition evaluates to True (all rows):</span>
-<span class="n">Session</span> <span class="o">&amp;</span> <span class="p">{</span><span class="s2">&quot;nonexistent&quot;</span><span class="p">:</span> <span class="s2">&quot;value&quot;</span><span class="p">}</span>  <span class="c1"># returns all rows</span>
+<span class="n">Session</span> <span class="o">&amp;</span> <span class="p">{</span><span class="s2">"nonexistent"</span><span class="p">:</span> <span class="s2">"value"</span><span class="p">}</span>  <span class="c1"># returns all rows</span>
 </code></pre></div>
 <p>This applies to:
 - Misspelled attribute names
@@ -8851,8 +8851,8 @@
 - Keys from a different table's schema</p>
 <p><strong>Rationale:</strong> Enables restricting with dicts containing extra keys (e.g., a row fetched from another table) without explicitly filtering to matching attributes.</p>
 <p><strong>Caution:</strong> Typos fail silently. Use string restrictions for explicit validation:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># SQL error if attribute doesn&#39;t exist</span>
-<span class="n">Session</span> <span class="o">&amp;</span> <span class="s2">&quot;nonexistent = &#39;value&#39;&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># SQL error if attribute doesn't exist</span>
+<span class="n">Session</span> <span class="o">&amp;</span> <span class="s2">"nonexistent = 'value'"</span>
 </code></pre></div>
 <h3 id="25-restriction-by-query-expression">2.5 Restriction by Query Expression<a class="headerlink" href="#25-restriction-by-query-expression" title="Permanent link">&para;</a></h3>
 <p>Restrict to rows with matching primary keys in another expression:</p>
@@ -8860,15 +8860,15 @@
 <span class="n">Session</span> <span class="o">&amp;</span> <span class="n">Trial</span>
 
 <span class="c1"># Sessions for active subjects only</span>
-<span class="n">Session</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">Subject</span> <span class="o">&amp;</span> <span class="s2">&quot;status = &#39;active&#39;&quot;</span><span class="p">)</span>
+<span class="n">Session</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">Subject</span> <span class="o">&amp;</span> <span class="s2">"status = 'active'"</span><span class="p">)</span>
 </code></pre></div>
 <h3 id="26-collection-conditions-or">2.6 Collection Conditions (OR)<a class="headerlink" href="#26-collection-conditions-or" title="Permanent link">&para;</a></h3>
 <p>Lists, tuples, and sets create OR conditions:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Either condition matches</span>
-<span class="n">Session</span> <span class="o">&amp;</span> <span class="p">[{</span><span class="s2">&quot;subject_id&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">},</span> <span class="p">{</span><span class="s2">&quot;subject_id&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">}]</span>
+<span class="n">Session</span> <span class="o">&amp;</span> <span class="p">[{</span><span class="s2">"subject_id"</span><span class="p">:</span> <span class="mi">1</span><span class="p">},</span> <span class="p">{</span><span class="s2">"subject_id"</span><span class="p">:</span> <span class="mi">2</span><span class="p">}]</span>
 
 <span class="c1"># Equivalent to</span>
-<span class="n">Session</span> <span class="o">&amp;</span> <span class="s2">&quot;subject_id IN (1, 2)&quot;</span>
+<span class="n">Session</span> <span class="o">&amp;</span> <span class="s2">"subject_id IN (1, 2)"</span>
 </code></pre></div>
 <h3 id="27-anti-restriction">2.7 Anti-Restriction<a class="headerlink" href="#27-anti-restriction" title="Permanent link">&para;</a></h3>
 <p>The <code>-</code> operator selects rows that do NOT match:</p>
@@ -8876,7 +8876,7 @@
 <span class="n">Session</span> <span class="o">-</span> <span class="n">Trial</span>
 
 <span class="c1"># Sessions not from subject 1</span>
-<span class="n">Session</span> <span class="o">-</span> <span class="p">{</span><span class="s2">&quot;subject_id&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">}</span>
+<span class="n">Session</span> <span class="o">-</span> <span class="p">{</span><span class="s2">"subject_id"</span><span class="p">:</span> <span class="mi">1</span><span class="p">}</span>
 </code></pre></div>
 <h3 id="28-chaining-restrictions">2.8 Chaining Restrictions<a class="headerlink" href="#28-chaining-restrictions" title="Permanent link">&para;</a></h3>
 <p>Sequential restrictions combine with AND:</p>
@@ -8939,10 +8939,10 @@
 <h3 id="31-syntax">3.1 Syntax<a class="headerlink" href="#31-syntax" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="n">result</span> <span class="o">=</span> <span class="n">expression</span><span class="o">.</span><span class="n">proj</span><span class="p">()</span>                          <span class="c1"># Primary key only</span>
 <span class="n">result</span> <span class="o">=</span> <span class="n">expression</span><span class="o">.</span><span class="n">proj</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>                       <span class="c1"># All attributes</span>
-<span class="n">result</span> <span class="o">=</span> <span class="n">expression</span><span class="o">.</span><span class="n">proj</span><span class="p">(</span><span class="s1">&#39;attr1&#39;</span><span class="p">,</span> <span class="s1">&#39;attr2&#39;</span><span class="p">)</span>          <span class="c1"># PK + specified</span>
-<span class="n">result</span> <span class="o">=</span> <span class="n">expression</span><span class="o">.</span><span class="n">proj</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="s1">&#39;-secret&#39;</span><span class="p">)</span>            <span class="c1"># All except secret</span>
-<span class="n">result</span> <span class="o">=</span> <span class="n">expression</span><span class="o">.</span><span class="n">proj</span><span class="p">(</span><span class="n">new_name</span><span class="o">=</span><span class="s1">&#39;old_name&#39;</span><span class="p">)</span>       <span class="c1"># Rename</span>
-<span class="n">result</span> <span class="o">=</span> <span class="n">expression</span><span class="o">.</span><span class="n">proj</span><span class="p">(</span><span class="n">computed</span><span class="o">=</span><span class="s1">&#39;x + y&#39;</span><span class="p">)</span>          <span class="c1"># Computed attribute</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">expression</span><span class="o">.</span><span class="n">proj</span><span class="p">(</span><span class="s1">'attr1'</span><span class="p">,</span> <span class="s1">'attr2'</span><span class="p">)</span>          <span class="c1"># PK + specified</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">expression</span><span class="o">.</span><span class="n">proj</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="s1">'-secret'</span><span class="p">)</span>            <span class="c1"># All except secret</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">expression</span><span class="o">.</span><span class="n">proj</span><span class="p">(</span><span class="n">new_name</span><span class="o">=</span><span class="s1">'old_name'</span><span class="p">)</span>       <span class="c1"># Rename</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">expression</span><span class="o">.</span><span class="n">proj</span><span class="p">(</span><span class="n">computed</span><span class="o">=</span><span class="s1">'x + y'</span><span class="p">)</span>          <span class="c1"># Computed attribute</span>
 </code></pre></div>
 <h3 id="32-attribute-selection">3.2 Attribute Selection<a class="headerlink" href="#32-attribute-selection" title="Permanent link">&para;</a></h3>
 <table>
@@ -8969,35 +8969,35 @@
 </table>
 <p>Primary key attributes are always included, even if not specified.</p>
 <h3 id="33-renaming-attributes">3.3 Renaming Attributes<a class="headerlink" href="#33-renaming-attributes" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># Rename &#39;name&#39; to &#39;subject_name&#39;</span>
-<span class="n">Subject</span><span class="o">.</span><span class="n">proj</span><span class="p">(</span><span class="n">subject_name</span><span class="o">=</span><span class="s1">&#39;name&#39;</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># Rename 'name' to 'subject_name'</span>
+<span class="n">Subject</span><span class="o">.</span><span class="n">proj</span><span class="p">(</span><span class="n">subject_name</span><span class="o">=</span><span class="s1">'name'</span><span class="p">)</span>
 
 <span class="c1"># Duplicate attribute with new name (parentheses preserve original)</span>
-<span class="n">Subject</span><span class="o">.</span><span class="n">proj</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="n">subject_name</span><span class="o">=</span><span class="s1">&#39;(name)&#39;</span><span class="p">)</span>
+<span class="n">Subject</span><span class="o">.</span><span class="n">proj</span><span class="p">(</span><span class="s1">'name'</span><span class="p">,</span> <span class="n">subject_name</span><span class="o">=</span><span class="s1">'(name)'</span><span class="p">)</span>
 </code></pre></div>
 <h3 id="34-computed-attributes">3.4 Computed Attributes<a class="headerlink" href="#34-computed-attributes" title="Permanent link">&para;</a></h3>
 <p>Create new attributes from SQL expressions:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Arithmetic</span>
-<span class="n">Trial</span><span class="o">.</span><span class="n">proj</span><span class="p">(</span><span class="n">speed</span><span class="o">=</span><span class="s1">&#39;distance / duration&#39;</span><span class="p">)</span>
+<span class="n">Trial</span><span class="o">.</span><span class="n">proj</span><span class="p">(</span><span class="n">speed</span><span class="o">=</span><span class="s1">'distance / duration'</span><span class="p">)</span>
 
 <span class="c1"># Functions</span>
-<span class="n">Session</span><span class="o">.</span><span class="n">proj</span><span class="p">(</span><span class="n">year</span><span class="o">=</span><span class="s1">&#39;YEAR(session_date)&#39;</span><span class="p">)</span>
+<span class="n">Session</span><span class="o">.</span><span class="n">proj</span><span class="p">(</span><span class="n">year</span><span class="o">=</span><span class="s1">'YEAR(session_date)'</span><span class="p">)</span>
 
 <span class="c1"># Aggregation-like (per row)</span>
-<span class="n">Trial</span><span class="o">.</span><span class="n">proj</span><span class="p">(</span><span class="n">centered</span><span class="o">=</span><span class="s1">&#39;value - mean_value&#39;</span><span class="p">)</span>
+<span class="n">Trial</span><span class="o">.</span><span class="n">proj</span><span class="p">(</span><span class="n">centered</span><span class="o">=</span><span class="s1">'value - mean_value'</span><span class="p">)</span>
 </code></pre></div>
 <h3 id="35-primary-key-renaming">3.5 Primary Key Renaming<a class="headerlink" href="#35-primary-key-renaming" title="Permanent link">&para;</a></h3>
 <p>Primary key attributes CAN be renamed:</p>
-<div class="highlight"><pre><span></span><code><span class="n">Subject</span><span class="o">.</span><span class="n">proj</span><span class="p">(</span><span class="n">mouse_id</span><span class="o">=</span><span class="s1">&#39;subject_id&#39;</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><span class="n">Subject</span><span class="o">.</span><span class="n">proj</span><span class="p">(</span><span class="n">mouse_id</span><span class="o">=</span><span class="s1">'subject_id'</span><span class="p">)</span>
 <span class="c1"># Result PK: (mouse_id,) instead of (subject_id,)</span>
 </code></pre></div>
 <h3 id="36-excluding-attributes">3.6 Excluding Attributes<a class="headerlink" href="#36-excluding-attributes" title="Permanent link">&para;</a></h3>
 <p>Use <code>-</code> prefix with ellipsis to exclude:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># All attributes except &#39;internal_notes&#39;</span>
-<span class="n">Session</span><span class="o">.</span><span class="n">proj</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="s1">&#39;-internal_notes&#39;</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># All attributes except 'internal_notes'</span>
+<span class="n">Session</span><span class="o">.</span><span class="n">proj</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="s1">'-internal_notes'</span><span class="p">)</span>
 
 <span class="c1"># Multiple exclusions</span>
-<span class="n">Session</span><span class="o">.</span><span class="n">proj</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="s1">&#39;-notes&#39;</span><span class="p">,</span> <span class="s1">&#39;-metadata&#39;</span><span class="p">)</span>
+<span class="n">Session</span><span class="o">.</span><span class="n">proj</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="s1">'-notes'</span><span class="p">,</span> <span class="s1">'-metadata'</span><span class="p">)</span>
 </code></pre></div>
 <p>Cannot exclude primary key attributes.</p>
 <h3 id="37-algebraic-properties">3.7 Algebraic Properties<a class="headerlink" href="#37-algebraic-properties" title="Permanent link">&para;</a></h3>
@@ -9121,7 +9121,7 @@
 </table>
 <p><strong>A → B</strong> means: All of B's primary key attributes exist in A (as PK or secondary).</p>
 <h3 id="45-examples">4.5 Examples<a class="headerlink" href="#45-examples" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># Session → Trial (Session&#39;s PK is subset of Trial&#39;s PK)</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># Session → Trial (Session's PK is subset of Trial's PK)</span>
 <span class="n">Session</span> <span class="o">*</span> <span class="n">Trial</span>
 <span class="c1"># Result PK: (subject_id, session_id) — same as Session</span>
 
@@ -9193,8 +9193,8 @@
 <h2 id="5-aggregation-aggr">5. Aggregation (<code>.aggr()</code>)<a class="headerlink" href="#5-aggregation-aggr" title="Permanent link">&para;</a></h2>
 <h3 id="51-syntax">5.1 Syntax<a class="headerlink" href="#51-syntax" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="n">result</span> <span class="o">=</span> <span class="n">A</span><span class="o">.</span><span class="n">aggr</span><span class="p">(</span><span class="n">B</span><span class="p">,</span> <span class="o">...</span><span class="p">)</span>                           <span class="c1"># All A attributes</span>
-<span class="n">result</span> <span class="o">=</span> <span class="n">A</span><span class="o">.</span><span class="n">aggr</span><span class="p">(</span><span class="n">B</span><span class="p">,</span> <span class="s1">&#39;attr1&#39;</span><span class="p">,</span> <span class="s1">&#39;attr2&#39;</span><span class="p">)</span>              <span class="c1"># PK + specified from A</span>
-<span class="n">result</span> <span class="o">=</span> <span class="n">A</span><span class="o">.</span><span class="n">aggr</span><span class="p">(</span><span class="n">B</span><span class="p">,</span> <span class="o">...</span><span class="p">,</span> <span class="n">count</span><span class="o">=</span><span class="s1">&#39;count(*)&#39;</span><span class="p">)</span>         <span class="c1"># With aggregate</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">A</span><span class="o">.</span><span class="n">aggr</span><span class="p">(</span><span class="n">B</span><span class="p">,</span> <span class="s1">'attr1'</span><span class="p">,</span> <span class="s1">'attr2'</span><span class="p">)</span>              <span class="c1"># PK + specified from A</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">A</span><span class="o">.</span><span class="n">aggr</span><span class="p">(</span><span class="n">B</span><span class="p">,</span> <span class="o">...</span><span class="p">,</span> <span class="n">count</span><span class="o">=</span><span class="s1">'count(*)'</span><span class="p">)</span>         <span class="c1"># With aggregate</span>
 <span class="n">result</span> <span class="o">=</span> <span class="n">A</span><span class="o">.</span><span class="n">aggr</span><span class="p">(</span><span class="n">B</span><span class="p">,</span> <span class="o">...</span><span class="p">,</span> <span class="n">exclude_nonmatching</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="c1"># Only rows with matches</span>
 </code></pre></div>
 <h3 id="52-parameters">5.2 Parameters<a class="headerlink" href="#52-parameters" title="Permanent link">&para;</a></h3>
@@ -9229,21 +9229,21 @@
 <p>Geometrically, aggregation <strong>reduces the grain</strong>: it projects the finer grain of <code>B</code> onto the coarser grain of <code>A</code> it contains, folding each group of B-rows into summary values. Requiring <code>B</code> to contain all of A's primary key is exactly what makes every B-row fall into one A-group. Note that <code>.proj</code> does <em>not</em> reduce the grain—it always retains the primary key (§3.2)—so aggregation, not projection, is the grain-reducing operator.</p>
 <h3 id="54-aggregate-functions">5.4 Aggregate Functions<a class="headerlink" href="#54-aggregate-functions" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># Count</span>
-<span class="n">Session</span><span class="o">.</span><span class="n">aggr</span><span class="p">(</span><span class="n">Trial</span><span class="p">,</span> <span class="n">n_trials</span><span class="o">=</span><span class="s1">&#39;count(*)&#39;</span><span class="p">)</span>
+<span class="n">Session</span><span class="o">.</span><span class="n">aggr</span><span class="p">(</span><span class="n">Trial</span><span class="p">,</span> <span class="n">n_trials</span><span class="o">=</span><span class="s1">'count(*)'</span><span class="p">)</span>
 
 <span class="c1"># Sum, average, min, max</span>
 <span class="n">Session</span><span class="o">.</span><span class="n">aggr</span><span class="p">(</span><span class="n">Trial</span><span class="p">,</span>
-    <span class="n">total</span><span class="o">=</span><span class="s1">&#39;sum(score)&#39;</span><span class="p">,</span>
-    <span class="n">avg_score</span><span class="o">=</span><span class="s1">&#39;avg(score)&#39;</span><span class="p">,</span>
-    <span class="n">best</span><span class="o">=</span><span class="s1">&#39;max(score)&#39;</span><span class="p">,</span>
-    <span class="n">worst</span><span class="o">=</span><span class="s1">&#39;min(score)&#39;</span>
+    <span class="n">total</span><span class="o">=</span><span class="s1">'sum(score)'</span><span class="p">,</span>
+    <span class="n">avg_score</span><span class="o">=</span><span class="s1">'avg(score)'</span><span class="p">,</span>
+    <span class="n">best</span><span class="o">=</span><span class="s1">'max(score)'</span><span class="p">,</span>
+    <span class="n">worst</span><span class="o">=</span><span class="s1">'min(score)'</span>
 <span class="p">)</span>
 
 <span class="c1"># Group concatenation</span>
-<span class="n">Session</span><span class="o">.</span><span class="n">aggr</span><span class="p">(</span><span class="n">Trial</span><span class="p">,</span> <span class="n">trial_list</span><span class="o">=</span><span class="s1">&#39;group_concat(trial_id)&#39;</span><span class="p">)</span>
+<span class="n">Session</span><span class="o">.</span><span class="n">aggr</span><span class="p">(</span><span class="n">Trial</span><span class="p">,</span> <span class="n">trial_list</span><span class="o">=</span><span class="s1">'group_concat(trial_id)'</span><span class="p">)</span>
 
 <span class="c1"># Conditional count</span>
-<span class="n">Session</span><span class="o">.</span><span class="n">aggr</span><span class="p">(</span><span class="n">Trial</span><span class="p">,</span> <span class="n">n_correct</span><span class="o">=</span><span class="s1">&#39;sum(correct = 1)&#39;</span><span class="p">)</span>
+<span class="n">Session</span><span class="o">.</span><span class="n">aggr</span><span class="p">(</span><span class="n">Trial</span><span class="p">,</span> <span class="n">n_correct</span><span class="o">=</span><span class="s1">'sum(correct = 1)'</span><span class="p">)</span>
 </code></pre></div>
 <h3 id="55-sql-equivalent">5.5 SQL Equivalent<a class="headerlink" href="#55-sql-equivalent" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="k">SELECT</span><span class="w"> </span><span class="n">A</span><span class="p">.</span><span class="n">pk1</span><span class="p">,</span><span class="w"> </span><span class="n">A</span><span class="p">.</span><span class="n">pk2</span><span class="p">,</span><span class="w"> </span><span class="n">A</span><span class="p">.</span><span class="n">secondary</span><span class="p">,</span><span class="w"> </span><span class="n">agg_func</span><span class="p">(</span><span class="n">B</span><span class="p">.</span><span class="n">col</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">new_attr</span>
@@ -9257,18 +9257,18 @@
 <p>Restrictions on A attributes → WHERE clause (before GROUP BY)
 Restrictions on B attributes → HAVING clause (after GROUP BY)</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># WHERE: only 2024 sessions, then count trials</span>
-<span class="p">(</span><span class="n">Session</span> <span class="o">&amp;</span> <span class="s2">&quot;YEAR(session_date) = 2024&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">aggr</span><span class="p">(</span><span class="n">Trial</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="s1">&#39;count(*)&#39;</span><span class="p">)</span>
+<span class="p">(</span><span class="n">Session</span> <span class="o">&amp;</span> <span class="s2">"YEAR(session_date) = 2024"</span><span class="p">)</span><span class="o">.</span><span class="n">aggr</span><span class="p">(</span><span class="n">Trial</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="s1">'count(*)'</span><span class="p">)</span>
 
 <span class="c1"># HAVING: sessions with more than 10 trials</span>
-<span class="n">Session</span><span class="o">.</span><span class="n">aggr</span><span class="p">(</span><span class="n">Trial</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="s1">&#39;count(*)&#39;</span><span class="p">)</span> <span class="o">&amp;</span> <span class="s2">&quot;n &gt; 10&quot;</span>
+<span class="n">Session</span><span class="o">.</span><span class="n">aggr</span><span class="p">(</span><span class="n">Trial</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="s1">'count(*)'</span><span class="p">)</span> <span class="o">&amp;</span> <span class="s2">"n &gt; 10"</span>
 </code></pre></div>
 <h3 id="57-default-behavior-keep-all-rows">5.7 Default Behavior: Keep All Rows<a class="headerlink" href="#57-default-behavior-keep-all-rows" title="Permanent link">&para;</a></h3>
 <p>By default (<code>exclude_nonmatching=False</code>), aggregation keeps all rows from A, even those without matches in B:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># All sessions included; those without trials have n=0</span>
-<span class="n">Session</span><span class="o">.</span><span class="n">aggr</span><span class="p">(</span><span class="n">Trial</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="s1">&#39;count(trial_id)&#39;</span><span class="p">)</span>
+<span class="n">Session</span><span class="o">.</span><span class="n">aggr</span><span class="p">(</span><span class="n">Trial</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="s1">'count(trial_id)'</span><span class="p">)</span>
 
 <span class="c1"># Only sessions that have at least one trial</span>
-<span class="n">Session</span><span class="o">.</span><span class="n">aggr</span><span class="p">(</span><span class="n">Trial</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="s1">&#39;count(trial_id)&#39;</span><span class="p">,</span> <span class="n">exclude_nonmatching</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">Session</span><span class="o">.</span><span class="n">aggr</span><span class="p">(</span><span class="n">Trial</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="s1">'count(trial_id)'</span><span class="p">,</span> <span class="n">exclude_nonmatching</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </code></pre></div>
 <p>Note: Use <code>count(pk_attr)</code> rather than <code>count(*)</code> to correctly count 0 for sessions without trials. <code>count(*)</code> counts all rows including the NULL-filled left join row.</p>
 <h3 id="58-algebraic-properties">5.8 Algebraic Properties<a class="headerlink" href="#58-algebraic-properties" title="Permanent link">&para;</a></h3>
@@ -9465,39 +9465,39 @@ Restrictions on B attributes → HAVING clause (after GROUP BY)</p>
 <h2 id="8-universal-sets-dju">8. Universal Sets (<code>dj.U()</code>)<a class="headerlink" href="#8-universal-sets-dju" title="Permanent link">&para;</a></h2>
 <h3 id="81-syntax">8.1 Syntax<a class="headerlink" href="#81-syntax" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="n">dj</span><span class="o">.</span><span class="n">U</span><span class="p">()</span>                    <span class="c1"># Singular entity (one row, no attributes)</span>
-<span class="n">dj</span><span class="o">.</span><span class="n">U</span><span class="p">(</span><span class="s1">&#39;attr1&#39;</span><span class="p">,</span> <span class="s1">&#39;attr2&#39;</span><span class="p">)</span>    <span class="c1"># Set of all combinations</span>
+<span class="n">dj</span><span class="o">.</span><span class="n">U</span><span class="p">(</span><span class="s1">'attr1'</span><span class="p">,</span> <span class="s1">'attr2'</span><span class="p">)</span>    <span class="c1"># Set of all combinations</span>
 </code></pre></div>
 <h3 id="82-unique-value-enumeration">8.2 Unique Value Enumeration<a class="headerlink" href="#82-unique-value-enumeration" title="Permanent link">&para;</a></h3>
 <p>Extract distinct values:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># All unique last names</span>
-<span class="n">dj</span><span class="o">.</span><span class="n">U</span><span class="p">(</span><span class="s1">&#39;last_name&#39;</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">Student</span>
+<span class="n">dj</span><span class="o">.</span><span class="n">U</span><span class="p">(</span><span class="s1">'last_name'</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">Student</span>
 
 <span class="c1"># All unique (year, month) combinations</span>
-<span class="n">dj</span><span class="o">.</span><span class="n">U</span><span class="p">(</span><span class="s1">&#39;year&#39;</span><span class="p">,</span> <span class="s1">&#39;month&#39;</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">Session</span><span class="o">.</span><span class="n">proj</span><span class="p">(</span><span class="n">year</span><span class="o">=</span><span class="s1">&#39;YEAR(date)&#39;</span><span class="p">,</span> <span class="n">month</span><span class="o">=</span><span class="s1">&#39;MONTH(date)&#39;</span><span class="p">)</span>
+<span class="n">dj</span><span class="o">.</span><span class="n">U</span><span class="p">(</span><span class="s1">'year'</span><span class="p">,</span> <span class="s1">'month'</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">Session</span><span class="o">.</span><span class="n">proj</span><span class="p">(</span><span class="n">year</span><span class="o">=</span><span class="s1">'YEAR(date)'</span><span class="p">,</span> <span class="n">month</span><span class="o">=</span><span class="s1">'MONTH(date)'</span><span class="p">)</span>
 </code></pre></div>
 <p>Result has specified attributes as primary key, with DISTINCT semantics.</p>
 <h3 id="83-universal-aggregation">8.3 Universal Aggregation<a class="headerlink" href="#83-universal-aggregation" title="Permanent link">&para;</a></h3>
 <p>Aggregate entire table (no grouping):</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Count all students</span>
-<span class="n">dj</span><span class="o">.</span><span class="n">U</span><span class="p">()</span><span class="o">.</span><span class="n">aggr</span><span class="p">(</span><span class="n">Student</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="s1">&#39;count(*)&#39;</span><span class="p">)</span>
+<span class="n">dj</span><span class="o">.</span><span class="n">U</span><span class="p">()</span><span class="o">.</span><span class="n">aggr</span><span class="p">(</span><span class="n">Student</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="s1">'count(*)'</span><span class="p">)</span>
 <span class="c1"># Result: single row with n = total count</span>
 
 <span class="c1"># Global statistics</span>
 <span class="n">dj</span><span class="o">.</span><span class="n">U</span><span class="p">()</span><span class="o">.</span><span class="n">aggr</span><span class="p">(</span><span class="n">Trial</span><span class="p">,</span>
-    <span class="n">total</span><span class="o">=</span><span class="s1">&#39;count(*)&#39;</span><span class="p">,</span>
-    <span class="n">avg_score</span><span class="o">=</span><span class="s1">&#39;avg(score)&#39;</span><span class="p">,</span>
-    <span class="n">std_score</span><span class="o">=</span><span class="s1">&#39;std(score)&#39;</span>
+    <span class="n">total</span><span class="o">=</span><span class="s1">'count(*)'</span><span class="p">,</span>
+    <span class="n">avg_score</span><span class="o">=</span><span class="s1">'avg(score)'</span><span class="p">,</span>
+    <span class="n">std_score</span><span class="o">=</span><span class="s1">'std(score)'</span>
 <span class="p">)</span>
 </code></pre></div>
 <h3 id="84-arbitrary-grouping">8.4 Arbitrary Grouping<a class="headerlink" href="#84-arbitrary-grouping" title="Permanent link">&para;</a></h3>
 <p>Group by attributes not in original PK:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Count students by graduation year</span>
-<span class="n">dj</span><span class="o">.</span><span class="n">U</span><span class="p">(</span><span class="s1">&#39;grad_year&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">aggr</span><span class="p">(</span><span class="n">Student</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="s1">&#39;count(*)&#39;</span><span class="p">)</span>
+<span class="n">dj</span><span class="o">.</span><span class="n">U</span><span class="p">(</span><span class="s1">'grad_year'</span><span class="p">)</span><span class="o">.</span><span class="n">aggr</span><span class="p">(</span><span class="n">Student</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="s1">'count(*)'</span><span class="p">)</span>
 
 <span class="c1"># Monthly session counts</span>
-<span class="n">dj</span><span class="o">.</span><span class="n">U</span><span class="p">(</span><span class="s1">&#39;year&#39;</span><span class="p">,</span> <span class="s1">&#39;month&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">aggr</span><span class="p">(</span>
-    <span class="n">Session</span><span class="o">.</span><span class="n">proj</span><span class="p">(</span><span class="n">year</span><span class="o">=</span><span class="s1">&#39;YEAR(date)&#39;</span><span class="p">,</span> <span class="n">month</span><span class="o">=</span><span class="s1">&#39;MONTH(date)&#39;</span><span class="p">),</span>
-    <span class="n">n</span><span class="o">=</span><span class="s1">&#39;count(*)&#39;</span>
+<span class="n">dj</span><span class="o">.</span><span class="n">U</span><span class="p">(</span><span class="s1">'year'</span><span class="p">,</span> <span class="s1">'month'</span><span class="p">)</span><span class="o">.</span><span class="n">aggr</span><span class="p">(</span>
+    <span class="n">Session</span><span class="o">.</span><span class="n">proj</span><span class="p">(</span><span class="n">year</span><span class="o">=</span><span class="s1">'YEAR(date)'</span><span class="p">,</span> <span class="n">month</span><span class="o">=</span><span class="s1">'MONTH(date)'</span><span class="p">),</span>
+    <span class="n">n</span><span class="o">=</span><span class="s1">'count(*)'</span>
 <span class="p">)</span>
 </code></pre></div>
 <h3 id="85-primary-key-behavior">8.5 Primary Key Behavior<a class="headerlink" href="#85-primary-key-behavior" title="Permanent link">&para;</a></h3>
@@ -9529,8 +9529,8 @@ Restrictions on B attributes → HAVING clause (after GROUP BY)</p>
 </table>
 <h3 id="86-restrictions">8.6 Restrictions<a class="headerlink" href="#86-restrictions" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># U attributes must exist in the table</span>
-<span class="n">dj</span><span class="o">.</span><span class="n">U</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">Student</span>        <span class="c1"># OK: &#39;name&#39; in Student</span>
-<span class="n">dj</span><span class="o">.</span><span class="n">U</span><span class="p">(</span><span class="s1">&#39;invalid&#39;</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">Student</span>     <span class="c1"># Error: &#39;invalid&#39; not found</span>
+<span class="n">dj</span><span class="o">.</span><span class="n">U</span><span class="p">(</span><span class="s1">'name'</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">Student</span>        <span class="c1"># OK: 'name' in Student</span>
+<span class="n">dj</span><span class="o">.</span><span class="n">U</span><span class="p">(</span><span class="s1">'invalid'</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">Student</span>     <span class="c1"># Error: 'invalid' not found</span>
 </code></pre></div>
 <h3 id="87-error-conditions">8.7 Error Conditions<a class="headerlink" href="#87-error-conditions" title="Permanent link">&para;</a></h3>
 <table>
@@ -9567,10 +9567,10 @@ Restrictions on B attributes → HAVING clause (after GROUP BY)</p>
 </code></pre></div>
 <p>Foreign key inheritance preserves lineage:</p>
 <div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">Session</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
-<span class="s2">    -&gt; Subject          # Inherits subject_id with Subject&#39;s lineage</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
+<span class="s2">    -&gt; Subject          # Inherits subject_id with Subject's lineage</span>
 <span class="s2">    session_id : int</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">    """</span>
 </code></pre></div>
 <h3 id="92-homologous-namesakes">9.2 Homologous Namesakes<a class="headerlink" href="#92-homologous-namesakes" title="Permanent link">&para;</a></h3>
 <p>Two attributes are <strong>homologous namesakes</strong> if they have:
@@ -9578,12 +9578,12 @@ Restrictions on B attributes → HAVING clause (after GROUP BY)</p>
 2. Same lineage (trace to same original definition)</p>
 <h3 id="93-non-homologous-namesakes">9.3 Non-Homologous Namesakes<a class="headerlink" href="#93-non-homologous-namesakes" title="Permanent link">&para;</a></h3>
 <p>Attributes with same name but different lineage create semantic collisions:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Both have &#39;name&#39; but from different origins</span>
-<span class="n">Student</span> <span class="o">*</span> <span class="n">Course</span>  <span class="c1"># Error if both have &#39;name&#39; attribute</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># Both have 'name' but from different origins</span>
+<span class="n">Student</span> <span class="o">*</span> <span class="n">Course</span>  <span class="c1"># Error if both have 'name' attribute</span>
 </code></pre></div>
 <h3 id="94-resolution">9.4 Resolution<a class="headerlink" href="#94-resolution" title="Permanent link">&para;</a></h3>
 <p>Rename to avoid collisions:</p>
-<div class="highlight"><pre><span></span><code><span class="n">Student</span> <span class="o">*</span> <span class="n">Course</span><span class="o">.</span><span class="n">proj</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">course_name</span><span class="o">=</span><span class="s1">&#39;name&#39;</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><span class="n">Student</span> <span class="o">*</span> <span class="n">Course</span><span class="o">.</span><span class="n">proj</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">course_name</span><span class="o">=</span><span class="s1">'name'</span><span class="p">)</span>
 </code></pre></div>
 <h3 id="95-semantic-check-parameter">9.5 Semantic Check Parameter<a class="headerlink" href="#95-semantic-check-parameter" title="Permanent link">&para;</a></h3>
 <table>
@@ -9675,10 +9675,10 @@ Restrictions on B attributes → HAVING clause (after GROUP BY)</p>
 <h3 id="121-syntax">12.1 Syntax<a class="headerlink" href="#121-syntax" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="n">result</span> <span class="o">=</span> <span class="n">expression</span> <span class="o">&amp;</span> <span class="n">dj</span><span class="o">.</span><span class="n">Top</span><span class="p">()</span>                          <span class="c1"># First row by primary key</span>
 <span class="n">result</span> <span class="o">=</span> <span class="n">expression</span> <span class="o">&amp;</span> <span class="n">dj</span><span class="o">.</span><span class="n">Top</span><span class="p">(</span><span class="n">limit</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>                   <span class="c1"># First 5 rows by primary key</span>
-<span class="n">result</span> <span class="o">=</span> <span class="n">expression</span> <span class="o">&amp;</span> <span class="n">dj</span><span class="o">.</span><span class="n">Top</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="s1">&#39;score DESC&#39;</span><span class="p">)</span>           <span class="c1"># Top 5 by score descending</span>
-<span class="n">result</span> <span class="o">=</span> <span class="n">expression</span> <span class="o">&amp;</span> <span class="n">dj</span><span class="o">.</span><span class="n">Top</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="n">order_by</span><span class="o">=</span><span class="s1">&#39;date DESC&#39;</span><span class="p">)</span>  <span class="c1"># Top 10 by date descending</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">expression</span> <span class="o">&amp;</span> <span class="n">dj</span><span class="o">.</span><span class="n">Top</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="s1">'score DESC'</span><span class="p">)</span>           <span class="c1"># Top 5 by score descending</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">expression</span> <span class="o">&amp;</span> <span class="n">dj</span><span class="o">.</span><span class="n">Top</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="n">order_by</span><span class="o">=</span><span class="s1">'date DESC'</span><span class="p">)</span>  <span class="c1"># Top 10 by date descending</span>
 <span class="n">result</span> <span class="o">=</span> <span class="n">expression</span> <span class="o">&amp;</span> <span class="n">dj</span><span class="o">.</span><span class="n">Top</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>              <span class="c1"># Skip 10, take 5</span>
-<span class="n">result</span> <span class="o">=</span> <span class="n">expression</span> <span class="o">&amp;</span> <span class="n">dj</span><span class="o">.</span><span class="n">Top</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;score DESC&#39;</span><span class="p">)</span>        <span class="c1"># All rows, ordered by score</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">expression</span> <span class="o">&amp;</span> <span class="n">dj</span><span class="o">.</span><span class="n">Top</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">'score DESC'</span><span class="p">)</span>        <span class="c1"># All rows, ordered by score</span>
 </code></pre></div>
 <h3 id="122-parameters">12.2 Parameters<a class="headerlink" href="#122-parameters" title="Permanent link">&para;</a></h3>
 <table>
@@ -9780,34 +9780,34 @@ Restrictions on B attributes → HAVING clause (after GROUP BY)</p>
 - <code>offset</code> = sum of both offsets
 - <code>order_by</code> = preserved from first Top</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Merge: same result, single query</span>
-<span class="p">(</span><span class="n">Table</span> <span class="o">&amp;</span> <span class="n">dj</span><span class="o">.</span><span class="n">Top</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="s2">&quot;score DESC&quot;</span><span class="p">))</span> <span class="o">&amp;</span> <span class="n">dj</span><span class="o">.</span><span class="n">Top</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="n">order_by</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
-<span class="c1"># Effective: Top(5, &quot;score DESC&quot;, offset=0)</span>
+<span class="p">(</span><span class="n">Table</span> <span class="o">&amp;</span> <span class="n">dj</span><span class="o">.</span><span class="n">Top</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="s2">"score DESC"</span><span class="p">))</span> <span class="o">&amp;</span> <span class="n">dj</span><span class="o">.</span><span class="n">Top</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="n">order_by</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+<span class="c1"># Effective: Top(5, "score DESC", offset=0)</span>
 
 <span class="c1"># Merge with offsets</span>
-<span class="p">(</span><span class="n">Table</span> <span class="o">&amp;</span> <span class="n">dj</span><span class="o">.</span><span class="n">Top</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="mi">5</span><span class="p">))</span> <span class="o">&amp;</span> <span class="n">dj</span><span class="o">.</span><span class="n">Top</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">order_by</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-<span class="c1"># Effective: Top(3, &quot;x&quot;, offset=7)</span>
+<span class="p">(</span><span class="n">Table</span> <span class="o">&amp;</span> <span class="n">dj</span><span class="o">.</span><span class="n">Top</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="s2">"x"</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="mi">5</span><span class="p">))</span> <span class="o">&amp;</span> <span class="n">dj</span><span class="o">.</span><span class="n">Top</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">order_by</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="c1"># Effective: Top(3, "x", offset=7)</span>
 
 <span class="c1"># Subquery: different orderings</span>
-<span class="p">(</span><span class="n">Table</span> <span class="o">&amp;</span> <span class="n">dj</span><span class="o">.</span><span class="n">Top</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="s2">&quot;score DESC&quot;</span><span class="p">))</span> <span class="o">&amp;</span> <span class="n">dj</span><span class="o">.</span><span class="n">Top</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="s2">&quot;id ASC&quot;</span><span class="p">)</span>
+<span class="p">(</span><span class="n">Table</span> <span class="o">&amp;</span> <span class="n">dj</span><span class="o">.</span><span class="n">Top</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="s2">"score DESC"</span><span class="p">))</span> <span class="o">&amp;</span> <span class="n">dj</span><span class="o">.</span><span class="n">Top</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="s2">"id ASC"</span><span class="p">)</span>
 <span class="c1"># First selects top 10 by score, then reorders those 10 by id and takes 3</span>
 </code></pre></div>
 <h3 id="126-preview-and-limit">12.6 Preview and Limit<a class="headerlink" href="#126-preview-and-limit" title="Permanent link">&para;</a></h3>
 <p>When fetching with a <code>limit</code> parameter, the limit is applied as an additional Top that inherits existing ordering:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># User applies custom ordering</span>
-<span class="n">query</span> <span class="o">=</span> <span class="n">Table</span> <span class="o">&amp;</span> <span class="n">dj</span><span class="o">.</span><span class="n">Top</span><span class="p">(</span><span class="n">order_by</span><span class="o">=</span><span class="s2">&quot;score DESC&quot;</span><span class="p">)</span>
+<span class="n">query</span> <span class="o">=</span> <span class="n">Table</span> <span class="o">&amp;</span> <span class="n">dj</span><span class="o">.</span><span class="n">Top</span><span class="p">(</span><span class="n">order_by</span><span class="o">=</span><span class="s2">"score DESC"</span><span class="p">)</span>
 
 <span class="c1"># Preview respects the ordering</span>
-<span class="n">query</span><span class="o">.</span><span class="n">to_arrays</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">,</span> <span class="s2">&quot;score&quot;</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>  <span class="c1"># Top 5 by score descending</span>
+<span class="n">query</span><span class="o">.</span><span class="n">to_arrays</span><span class="p">(</span><span class="s2">"id"</span><span class="p">,</span> <span class="s2">"score"</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>  <span class="c1"># Top 5 by score descending</span>
 </code></pre></div>
 <p>Internally, <code>to_arrays(..., limit=N)</code> applies <code>dj.Top(N, order_by=None)</code>, which inherits the existing ordering.</p>
 <h3 id="127-use-cases">12.7 Use Cases<a class="headerlink" href="#127-use-cases" title="Permanent link">&para;</a></h3>
 <p><strong>Top N rows:</strong>
 <div class="highlight"><pre><span></span><code><span class="c1"># Top 10 highest scores</span>
-<span class="n">Result</span> <span class="o">&amp;</span> <span class="n">dj</span><span class="o">.</span><span class="n">Top</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="s2">&quot;score DESC&quot;</span><span class="p">)</span>
+<span class="n">Result</span> <span class="o">&amp;</span> <span class="n">dj</span><span class="o">.</span><span class="n">Top</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="s2">"score DESC"</span><span class="p">)</span>
 </code></pre></div></p>
 <p><strong>Pagination:</strong>
 <div class="highlight"><pre><span></span><code><span class="c1"># Page 3 (rows 20-29) sorted by date</span>
-<span class="n">Session</span> <span class="o">&amp;</span> <span class="n">dj</span><span class="o">.</span><span class="n">Top</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="s2">&quot;session_date DESC&quot;</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<span class="n">Session</span> <span class="o">&amp;</span> <span class="n">dj</span><span class="o">.</span><span class="n">Top</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="s2">"session_date DESC"</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
 </code></pre></div></p>
 <p><strong>Sampling (deterministic):</strong>
 <div class="highlight"><pre><span></span><code><span class="c1"># First 100 rows by primary key</span>
@@ -9815,7 +9815,7 @@ Restrictions on B attributes → HAVING clause (after GROUP BY)</p>
 </code></pre></div></p>
 <p><strong>Ordering without limit:</strong>
 <div class="highlight"><pre><span></span><code><span class="c1"># All rows ordered by date</span>
-<span class="n">Session</span> <span class="o">&amp;</span> <span class="n">dj</span><span class="o">.</span><span class="n">Top</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;session_date DESC&quot;</span><span class="p">)</span>
+<span class="n">Session</span> <span class="o">&amp;</span> <span class="n">dj</span><span class="o">.</span><span class="n">Top</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s2">"session_date DESC"</span><span class="p">)</span>
 </code></pre></div></p>
 <h3 id="128-algebraic-properties">12.8 Algebraic Properties<a class="headerlink" href="#128-algebraic-properties" title="Permanent link">&para;</a></h3>
 <table>
@@ -9938,17 +9938,17 @@ MySQL:        FROM → WHERE → SELECT → GROUP BY → HAVING
 - Aggregated attributes (created by <code>.aggr()</code>)
 - Any attribute after <code>LIMIT</code>/<code>OFFSET</code> has been applied</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Modify in place: condition added to WHERE</span>
-<span class="n">Session</span> <span class="o">&amp;</span> <span class="s2">&quot;session_date &gt; &#39;2024-01-01&#39;&quot;</span>
-<span class="c1"># SQL: SELECT ... FROM session WHERE session_date &gt; &#39;2024-01-01&#39;</span>
+<span class="n">Session</span> <span class="o">&amp;</span> <span class="s2">"session_date &gt; '2024-01-01'"</span>
+<span class="c1"># SQL: SELECT ... FROM session WHERE session_date &gt; '2024-01-01'</span>
 
 <span class="c1"># Subquery required: restriction references computed alias</span>
-<span class="n">Session</span><span class="o">.</span><span class="n">proj</span><span class="p">(</span><span class="n">year</span><span class="o">=</span><span class="s1">&#39;YEAR(session_date)&#39;</span><span class="p">)</span> <span class="o">&amp;</span> <span class="s2">&quot;year = 2024&quot;</span>
+<span class="n">Session</span><span class="o">.</span><span class="n">proj</span><span class="p">(</span><span class="n">year</span><span class="o">=</span><span class="s1">'YEAR(session_date)'</span><span class="p">)</span> <span class="o">&amp;</span> <span class="s2">"year = 2024"</span>
 <span class="c1"># SQL: SELECT * FROM (</span>
 <span class="c1">#        SELECT ..., YEAR(session_date) as year FROM session</span>
 <span class="c1">#      ) AS _s1 WHERE year = 2024</span>
 </code></pre></div>
 <p><strong>Aggregation special case</strong>: Restrictions after aggregation go to HAVING (MySQL) or require subquery (PostgreSQL):</p>
-<div class="highlight"><pre><span></span><code><span class="n">Session</span><span class="o">.</span><span class="n">aggr</span><span class="p">(</span><span class="n">Trial</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="s1">&#39;count(*)&#39;</span><span class="p">)</span> <span class="o">&amp;</span> <span class="s2">&quot;n &gt; 10&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="n">Session</span><span class="o">.</span><span class="n">aggr</span><span class="p">(</span><span class="n">Trial</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="s1">'count(*)'</span><span class="p">)</span> <span class="o">&amp;</span> <span class="s2">"n &gt; 10"</span>
 <span class="c1"># MySQL:      ... GROUP BY pk HAVING n &gt; 10</span>
 <span class="c1"># PostgreSQL: SELECT * FROM (...GROUP BY pk) AS _s1 WHERE n &gt; 10</span>
 </code></pre></div>
@@ -9961,11 +9961,11 @@ MySQL:        FROM → WHERE → SELECT → GROUP BY → HAVING
 - Computing attribute from another computed attribute (alias of alias)
 - Projecting after <code>LIMIT</code>/<code>OFFSET</code> has been applied</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Modify in place: adds computed column to SELECT</span>
-<span class="n">Session</span><span class="o">.</span><span class="n">proj</span><span class="p">(</span><span class="n">year</span><span class="o">=</span><span class="s1">&#39;YEAR(session_date)&#39;</span><span class="p">)</span>
+<span class="n">Session</span><span class="o">.</span><span class="n">proj</span><span class="p">(</span><span class="n">year</span><span class="o">=</span><span class="s1">'YEAR(session_date)'</span><span class="p">)</span>
 <span class="c1"># SQL: SELECT pk, YEAR(session_date) as year FROM session</span>
 
 <span class="c1"># Subquery required: decade depends on year alias</span>
-<span class="n">Session</span><span class="o">.</span><span class="n">proj</span><span class="p">(</span><span class="n">year</span><span class="o">=</span><span class="s1">&#39;YEAR(session_date)&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">proj</span><span class="p">(</span><span class="n">decade</span><span class="o">=</span><span class="s1">&#39;year - year % 10&#39;</span><span class="p">)</span>
+<span class="n">Session</span><span class="o">.</span><span class="n">proj</span><span class="p">(</span><span class="n">year</span><span class="o">=</span><span class="s1">'YEAR(session_date)'</span><span class="p">)</span><span class="o">.</span><span class="n">proj</span><span class="p">(</span><span class="n">decade</span><span class="o">=</span><span class="s1">'year - year % 10'</span><span class="p">)</span>
 <span class="c1"># SQL: SELECT pk, year - year % 10 as decade FROM (</span>
 <span class="c1">#        SELECT pk, YEAR(session_date) as year FROM session</span>
 <span class="c1">#      ) AS _s1</span>
@@ -9985,7 +9985,7 @@ MySQL:        FROM → WHERE → SELECT → GROUP BY → HAVING
 <span class="c1"># SQL: SELECT ... FROM session JOIN trial USING (pk)</span>
 
 <span class="c1"># Subquery required: aggregation as join operand</span>
-<span class="n">Session</span> <span class="o">*</span> <span class="n">Session</span><span class="o">.</span><span class="n">aggr</span><span class="p">(</span><span class="n">Trial</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="s1">&#39;count(*)&#39;</span><span class="p">)</span>
+<span class="n">Session</span> <span class="o">*</span> <span class="n">Session</span><span class="o">.</span><span class="n">aggr</span><span class="p">(</span><span class="n">Trial</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="s1">'count(*)'</span><span class="p">)</span>
 <span class="c1"># SQL: SELECT ... FROM session JOIN (</span>
 <span class="c1">#        SELECT pk, count(*) as n FROM session</span>
 <span class="c1">#        LEFT JOIN trial USING (pk) GROUP BY pk</span>
@@ -10008,7 +10008,7 @@ MySQL:        FROM → WHERE → SELECT → GROUP BY → HAVING
 - Another aggregation</p>
 <h3 id="1353-toplimit-rules-djtop">13.5.3 Top/Limit Rules (<code>dj.Top</code>)<a class="headerlink" href="#1353-toplimit-rules-djtop" title="Permanent link">&para;</a></h3>
 <p><strong>Any operation after Top requires subquery</strong> (the limited result must materialize):</p>
-<div class="highlight"><pre><span></span><code><span class="p">(</span><span class="n">Session</span> <span class="o">&amp;</span> <span class="n">dj</span><span class="o">.</span><span class="n">Top</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="s1">&#39;date DESC&#39;</span><span class="p">))</span> <span class="o">&amp;</span> <span class="s2">&quot;notes IS NOT NULL&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="p">(</span><span class="n">Session</span> <span class="o">&amp;</span> <span class="n">dj</span><span class="o">.</span><span class="n">Top</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="s1">'date DESC'</span><span class="p">))</span> <span class="o">&amp;</span> <span class="s2">"notes IS NOT NULL"</span>
 <span class="c1"># SQL: SELECT * FROM (</span>
 <span class="c1">#        SELECT * FROM session ORDER BY date DESC LIMIT 10</span>
 <span class="c1">#      ) AS _s1 WHERE notes IS NOT NULL</span>

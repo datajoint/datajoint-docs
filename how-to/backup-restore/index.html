@@ -3675,7 +3675,7 @@
   <span class="md-ellipsis">
     
   
-    Migrate to 2.0
+    Migrate to 2.x
   
 
     
@@ -6895,7 +6895,7 @@ rsync<span class="w"> </span>-av<span class="w"> </span>/data/store/<span class=
 <span class="c1"># Cleanup old backups (keep 7 days)</span>
 find<span class="w"> </span><span class="nv">$BACKUP_DIR</span><span class="w"> </span>-mtime<span class="w"> </span>+7<span class="w"> </span>-delete
 
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Backup completed: </span><span class="nv">$DATE</span><span class="s2">&quot;</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"Backup completed: </span><span class="nv">$DATE</span><span class="s2">"</span>
 </code></pre></div>
 <h2 id="point-in-time-recovery">Point-in-Time Recovery<a class="headerlink" href="#point-in-time-recovery" title="Permanent link">&para;</a></h2>
 <h3 id="enable-binary-logging">Enable Binary Logging<a class="headerlink" href="#enable-binary-logging" title="Permanent link">&para;</a></h3>
@@ -6910,7 +6910,7 @@ find<span class="w"> </span><span class="nv">$BACKUP_DIR</span><span class="w"> 
 mysql<span class="w"> </span>-h<span class="w"> </span>host<span class="w"> </span>-u<span class="w"> </span>user<span class="w"> </span>-p<span class="w"> </span>&lt;<span class="w"> </span>backup.sql
 
 <span class="c1"># Apply binary logs up to specific time</span>
-mysqlbinlog<span class="w"> </span>--stop-datetime<span class="o">=</span><span class="s2">&quot;2024-01-15 14:30:00&quot;</span><span class="w"> </span><span class="se">\</span>
+mysqlbinlog<span class="w"> </span>--stop-datetime<span class="o">=</span><span class="s2">"2024-01-15 14:30:00"</span><span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>mysql-bin.000001<span class="w"> </span>mysql-bin.000002<span class="w"> </span><span class="se">\</span>
 <span class="w">    </span><span class="p">|</span><span class="w"> </span>mysql<span class="w"> </span>-h<span class="w"> </span>host<span class="w"> </span>-u<span class="w"> </span>user<span class="w"> </span>-p
 </code></pre></div>
@@ -6927,7 +6927,7 @@ mysqldump<span class="w"> </span>-h<span class="w"> </span>host<span class="w"> 
 <h3 id="foreign-key-order">Foreign Key Order<a class="headerlink" href="#foreign-key-order" title="Permanent link">&para;</a></h3>
 <p>When restoring, tables must be created in dependency order. mysqldump handles this automatically, but manual restoration may require:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Disable FK checks during restore</span>
-mysql<span class="w"> </span>-h<span class="w"> </span>host<span class="w"> </span>-u<span class="w"> </span>user<span class="w"> </span>-p<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;SET FOREIGN_KEY_CHECKS=0; SOURCE backup.sql; SET FOREIGN_KEY_CHECKS=1;&quot;</span>
+mysql<span class="w"> </span>-h<span class="w"> </span>host<span class="w"> </span>-u<span class="w"> </span>user<span class="w"> </span>-p<span class="w"> </span>-e<span class="w"> </span><span class="s2">"SET FOREIGN_KEY_CHECKS=0; SOURCE backup.sql; SET FOREIGN_KEY_CHECKS=1;"</span>
 </code></pre></div>
 <h3 id="jobs-tables">Jobs Tables<a class="headerlink" href="#jobs-tables" title="Permanent link">&para;</a></h3>
 <p>Jobs tables (<code>~~table_name</code>) are recreated automatically. You can exclude them:</p>
@@ -6953,9 +6953,9 @@ mysql<span class="w"> </span>-h<span class="w"> </span>host<span class="w"> </sp
 <span class="c1"># Check external objects are accessible</span>
 <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">MyTable</span><span class="p">()</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
     <span class="k">try</span><span class="p">:</span>
-        <span class="p">(</span><span class="n">MyTable</span> <span class="o">&amp;</span> <span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">fetch1</span><span class="p">(</span><span class="s1">&#39;blob_column&#39;</span><span class="p">)</span>
+        <span class="p">(</span><span class="n">MyTable</span> <span class="o">&amp;</span> <span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">fetch1</span><span class="p">(</span><span class="s1">'blob_column'</span><span class="p">)</span>
     <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Missing: </span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2"> - </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Missing: </span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2"> - </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 </code></pre></div>
 <h2 id="disaster-recovery-plan">Disaster Recovery Plan<a class="headerlink" href="#disaster-recovery-plan" title="Permanent link">&para;</a></h2>
 <ol>

@@ -3671,7 +3671,7 @@
   <span class="md-ellipsis">
     
   
-    Migrate to 2.0
+    Migrate to 2.x
   
 
     
@@ -7029,8 +7029,8 @@ Session.join(Trial, left=True)  # OK: Session → Trial
 </code></pre></div></p>
 <p><strong>Error message:</strong>
 <div class="highlight"><pre><span></span><code>DataJointError: Left join requires the left operand to determine the right operand (A → B).
-The following attributes from the right operand&#39;s primary key are not determined by
-the left operand: [&#39;z&#39;]. Use an inner join or restructure the query.
+The following attributes from the right operand's primary key are not determined by
+the left operand: ['z']. Use an inner join or restructure the query.
 </code></pre></div></p>
 <h3 id="conceptual-note-left-join-as-extension">Conceptual Note: Left Join as Extension<a class="headerlink" href="#conceptual-note-left-join-as-extension" title="Permanent link">&para;</a></h3>
 <p>When <code>A → B</code>, the left join <code>A.join(B, left=True)</code> is conceptually distinct from the general join operator <code>A * B</code>. It is better understood as an <strong>extension</strong> operation rather than a join:</p>
@@ -7076,7 +7076,7 @@ the left operand: [&#39;z&#39;]. Use an inner join or restructure the query.
 <p>DataJoint provides an explicit <code>extend()</code> method for this pattern:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># These are equivalent when A → B:</span>
 <span class="n">A</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">B</span><span class="p">,</span> <span class="n">left</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">A</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">B</span><span class="p">)</span>           <span class="c1"># clearer intent: extend A with B&#39;s attributes</span>
+<span class="n">A</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">B</span><span class="p">)</span>           <span class="c1"># clearer intent: extend A with B's attributes</span>
 </code></pre></div>
 <p>The <code>extend()</code> method:</p>
 <ul>
@@ -7139,7 +7139,7 @@ the left operand: [&#39;z&#39;]. Use an inner join or restructure the query.
 Trial: session_id*, trial_num*, response_time    (references Session)
 
 # Aggregation (default keeps all rows)
-Session.aggr(Trial, avg_rt=&#39;avg(response_time)&#39;)
+Session.aggr(Trial, avg_rt='avg(response_time)')
 
 # Internally: Session LEFT JOIN Trial (with invalid PK allowed)
 # Intermediate PK would be {session_id} ∪ {session_id, trial_num} = {session_id, trial_num}
@@ -7152,17 +7152,17 @@ Session.aggr(Trial, avg_rt=&#39;avg(response_time)&#39;)
 <p>Since <code>dj.U</code> conceptually contains all possible lineages, its attributes are <strong>homologous to any namesake attribute</strong> in other expressions.</p>
 <h3 id="valid-operations">Valid Operations<a class="headerlink" href="#valid-operations" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># Restriction: promotes a, b to PK; lineage transferred from A</span>
-<span class="n">dj</span><span class="o">.</span><span class="n">U</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">A</span>
+<span class="n">dj</span><span class="o">.</span><span class="n">U</span><span class="p">(</span><span class="s1">'a'</span><span class="p">,</span> <span class="s1">'b'</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">A</span>
 
 <span class="c1"># Aggregation: groups by a, b</span>
-<span class="n">dj</span><span class="o">.</span><span class="n">U</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">aggr</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">count</span><span class="o">=</span><span class="s1">&#39;count(*)&#39;</span><span class="p">)</span>
+<span class="n">dj</span><span class="o">.</span><span class="n">U</span><span class="p">(</span><span class="s1">'a'</span><span class="p">,</span> <span class="s1">'b'</span><span class="p">)</span><span class="o">.</span><span class="n">aggr</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">count</span><span class="o">=</span><span class="s1">'count(*)'</span><span class="p">)</span>
 </code></pre></div>
 <h3 id="invalid-operations">Invalid Operations<a class="headerlink" href="#invalid-operations" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># Anti-restriction: produces infinite set</span>
-<span class="n">dj</span><span class="o">.</span><span class="n">U</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">)</span> <span class="o">-</span> <span class="n">A</span>  <span class="c1"># DataJointError</span>
+<span class="n">dj</span><span class="o">.</span><span class="n">U</span><span class="p">(</span><span class="s1">'a'</span><span class="p">,</span> <span class="s1">'b'</span><span class="p">)</span> <span class="o">-</span> <span class="n">A</span>  <span class="c1"># DataJointError</span>
 
 <span class="c1"># Join: deprecated, use &amp; instead</span>
-<span class="n">dj</span><span class="o">.</span><span class="n">U</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">)</span> <span class="o">*</span> <span class="n">A</span>  <span class="c1"># DataJointError with migration guidance</span>
+<span class="n">dj</span><span class="o">.</span><span class="n">U</span><span class="p">(</span><span class="s1">'a'</span><span class="p">,</span> <span class="s1">'b'</span><span class="p">)</span> <span class="o">*</span> <span class="n">A</span>  <span class="c1"># DataJointError with migration guidance</span>
 </code></pre></div>
 
 

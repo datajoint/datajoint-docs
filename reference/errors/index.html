@@ -3671,7 +3671,7 @@
   <span class="md-ellipsis">
     
   
-    Migrate to 2.0
+    Migrate to 2.x
   
 
     
@@ -6793,7 +6793,7 @@
 <div class="highlight"><pre><span></span><code><span class="k">try</span><span class="p">:</span>
     <span class="c1"># DataJoint operation</span>
 <span class="k">except</span> <span class="n">dj</span><span class="o">.</span><span class="n">DataJointError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;DataJoint error: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"DataJoint error: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 </code></pre></div>
 <h2 id="connection-errors">Connection Errors<a class="headerlink" href="#connection-errors" title="Permanent link">&para;</a></h2>
 <h3 id="lostconnectionerror">LostConnectionError<a class="headerlink" href="#lostconnectionerror" title="Permanent link">&para;</a></h3>
@@ -6823,10 +6823,10 @@
 <h3 id="duplicateerror">DuplicateError<a class="headerlink" href="#duplicateerror" title="Permanent link">&para;</a></h3>
 <p>Attempt to insert duplicate primary key.</p>
 <div class="highlight"><pre><span></span><code><span class="k">try</span><span class="p">:</span>
-    <span class="n">table</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Alice&#39;</span><span class="p">})</span>
-    <span class="n">table</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Bob&#39;</span><span class="p">})</span>  <span class="c1"># Raises DuplicateError</span>
+    <span class="n">table</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="s1">'id'</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">'name'</span><span class="p">:</span> <span class="s1">'Alice'</span><span class="p">})</span>
+    <span class="n">table</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="s1">'id'</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">'name'</span><span class="p">:</span> <span class="s1">'Bob'</span><span class="p">})</span>  <span class="c1"># Raises DuplicateError</span>
 <span class="k">except</span> <span class="n">dj</span><span class="o">.</span><span class="n">errors</span><span class="o">.</span><span class="n">DuplicateError</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Entry already exists&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"Entry already exists"</span><span class="p">)</span>
 </code></pre></div>
 <p><strong>Resolution:</strong>
 - Use <code>insert(..., skip_duplicates=True)</code>
@@ -6843,15 +6843,15 @@
 <h3 id="unknownattributeerror">UnknownAttributeError<a class="headerlink" href="#unknownattributeerror" title="Permanent link">&para;</a></h3>
 <p>Referenced attribute doesn't exist.</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Raises UnknownAttributeError</span>
-<span class="n">table</span><span class="o">.</span><span class="n">to_arrays</span><span class="p">(</span><span class="s1">&#39;nonexistent_column&#39;</span><span class="p">)</span>
+<span class="n">table</span><span class="o">.</span><span class="n">to_arrays</span><span class="p">(</span><span class="s1">'nonexistent_column'</span><span class="p">)</span>
 </code></pre></div>
 <p><strong>Resolution:</strong>
 - Check <code>table.heading</code> for available attributes
 - Verify spelling</p>
 <h3 id="missingattributeerror">MissingAttributeError<a class="headerlink" href="#missingattributeerror" title="Permanent link">&para;</a></h3>
 <p>Required attribute not provided in insert.</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Raises MissingAttributeError if &#39;name&#39; is required</span>
-<span class="n">table</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">})</span>  <span class="c1"># Missing &#39;name&#39;</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># Raises MissingAttributeError if 'name' is required</span>
+<span class="n">table</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="s1">'id'</span><span class="p">:</span> <span class="mi">1</span><span class="p">})</span>  <span class="c1"># Missing 'name'</span>
 </code></pre></div>
 <p><strong>Resolution:</strong>
 - Provide all required attributes
@@ -6894,19 +6894,19 @@
 <span class="k">try</span><span class="p">:</span>
     <span class="n">table</span><span class="o">.</span><span class="n">insert1</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
 <span class="k">except</span> <span class="n">dj</span><span class="o">.</span><span class="n">errors</span><span class="o">.</span><span class="n">DuplicateError</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Entry exists, skipping&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"Entry exists, skipping"</span><span class="p">)</span>
 <span class="k">except</span> <span class="n">dj</span><span class="o">.</span><span class="n">errors</span><span class="o">.</span><span class="n">IntegrityError</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Parent entry missing&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"Parent entry missing"</span><span class="p">)</span>
 <span class="k">except</span> <span class="n">dj</span><span class="o">.</span><span class="n">DataJointError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Other DataJoint error: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Other DataJoint error: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 </code></pre></div>
 <h3 id="error-information">Error Information<a class="headerlink" href="#error-information" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="k">try</span><span class="p">:</span>
     <span class="n">table</span><span class="o">.</span><span class="n">insert1</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
 <span class="k">except</span> <span class="n">dj</span><span class="o">.</span><span class="n">DataJointError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error type: </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Message: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Args: </span><span class="si">{</span><span class="n">e</span><span class="o">.</span><span class="n">args</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Error type: </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Message: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Args: </span><span class="si">{</span><span class="n">e</span><span class="o">.</span><span class="n">args</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 </code></pre></div>
 <h2 id="see-also">See Also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
 <ul>

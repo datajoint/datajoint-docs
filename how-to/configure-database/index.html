@@ -3976,7 +3976,7 @@
   <span class="md-ellipsis">
     
   
-    Migrate to 2.0
+    Migrate to 2.x
   
 
     
@@ -6761,18 +6761,18 @@
 <h2 id="project-configuration-datajointjson">Project Configuration (<code>datajoint.json</code>)<a class="headerlink" href="#project-configuration-datajointjson" title="Permanent link">&para;</a></h2>
 <p>Create <code>datajoint.json</code> in your project root for non-sensitive settings:</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;database.host&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;db.example.com&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;database.port&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">3306</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;database.use_tls&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;safemode&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">  </span><span class="nt">"database.host"</span><span class="p">:</span><span class="w"> </span><span class="s2">"db.example.com"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"database.port"</span><span class="p">:</span><span class="w"> </span><span class="mi">3306</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"database.use_tls"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"safemode"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
 <span class="p">}</span>
 </code></pre></div>
 <p>This file should be committed to version control.</p>
 <h2 id="secrets-directory-secrets">Secrets Directory (<code>.secrets/</code>)<a class="headerlink" href="#secrets-directory-secrets" title="Permanent link">&para;</a></h2>
 <p>Store credentials as one plain-text file per setting:</p>
 <div class="highlight"><pre><span></span><code>mkdir<span class="w"> </span>-p<span class="w"> </span>.secrets
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;myuser&quot;</span><span class="w">     </span>&gt;<span class="w"> </span>.secrets/database.user
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;mypassword&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>.secrets/database.password
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"myuser"</span><span class="w">     </span>&gt;<span class="w"> </span>.secrets/database.user
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"mypassword"</span><span class="w"> </span>&gt;<span class="w"> </span>.secrets/database.password
 chmod<span class="w"> </span><span class="m">600</span><span class="w"> </span>.secrets/*
 </code></pre></div>
 <p>Only <code>database.user</code>, <code>database.password</code>, and <code>stores.&lt;name&gt;.&lt;attr&gt;</code> are read from this
@@ -6859,17 +6859,17 @@ directory — see <a href="../manage-secrets/#option-1-secrets-directory-recomme
 
 <span class="c1"># Connects using configured credentials</span>
 <span class="n">conn</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">conn</span><span class="p">()</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Connected to </span><span class="si">{</span><span class="n">conn</span><span class="o">.</span><span class="n">host</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Connected to </span><span class="si">{</span><span class="n">conn</span><span class="o">.</span><span class="n">host</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 </code></pre></div>
 <h2 id="programmatic-configuration">Programmatic Configuration<a class="headerlink" href="#programmatic-configuration" title="Permanent link">&para;</a></h2>
 <p>For scripts, you can set configuration programmatically:</p>
 <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">datajoint</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dj</span>
 
-<span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;database.host&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;localhost&#39;</span>
+<span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">'database.host'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'localhost'</span>
 <span class="c1"># Credentials from environment or secrets file</span>
 </code></pre></div>
 <h2 id="temporary-override">Temporary Override<a class="headerlink" href="#temporary-override" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><span class="k">with</span> <span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">override</span><span class="p">(</span><span class="n">database</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;host&#39;</span><span class="p">:</span> <span class="s1">&#39;test-server&#39;</span><span class="p">}):</span>
+<div class="highlight"><pre><span></span><code><span class="k">with</span> <span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">override</span><span class="p">(</span><span class="n">database</span><span class="o">=</span><span class="p">{</span><span class="s1">'host'</span><span class="p">:</span> <span class="s1">'test-server'</span><span class="p">}):</span>
     <span class="c1"># Uses test-server for this block only</span>
     <span class="n">conn</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">conn</span><span class="p">()</span>
 </code></pre></div>
@@ -6884,12 +6884,12 @@ directory — see <a href="../manage-secrets/#option-1-secrets-directory-recomme
 <h2 id="tls-configuration">TLS Configuration<a class="headerlink" href="#tls-configuration" title="Permanent link">&para;</a></h2>
 <p>For production, always use TLS:</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;database.use_tls&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">  </span><span class="nt">"database.use_tls"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
 <span class="p">}</span>
 </code></pre></div>
 <p>For local development without TLS:</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;database.use_tls&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span>
+<span class="w">  </span><span class="nt">"database.use_tls"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span>
 <span class="p">}</span>
 </code></pre></div>
 <h2 id="postgresql-backend">PostgreSQL Backend<a class="headerlink" href="#postgresql-backend" title="Permanent link">&para;</a></h2>
@@ -6900,9 +6900,9 @@ directory — see <a href="../manage-secrets/#option-1-secrets-directory-recomme
 <p>DataJoint supports both MySQL and PostgreSQL backends. To use PostgreSQL:</p>
 <h3 id="configuration-file">Configuration File<a class="headerlink" href="#configuration-file" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;database&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;host&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;localhost&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;backend&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;postgresql&quot;</span>
+<span class="w">  </span><span class="nt">"database"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"host"</span><span class="p">:</span><span class="w"> </span><span class="s2">"localhost"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"backend"</span><span class="p">:</span><span class="w"> </span><span class="s2">"postgresql"</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
@@ -6914,10 +6914,10 @@ directory — see <a href="../manage-secrets/#option-1-secrets-directory-recomme
 </div>
 <p>PostgreSQL requires connecting to a specific database. By default, DataJoint connects to the <code>postgres</code> database. To use a different database:</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;database&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;host&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;localhost&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;backend&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;postgresql&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;my_database&quot;</span>
+<span class="w">  </span><span class="nt">"database"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"host"</span><span class="p">:</span><span class="w"> </span><span class="s2">"localhost"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"backend"</span><span class="p">:</span><span class="w"> </span><span class="s2">"postgresql"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"my_database"</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
@@ -6925,7 +6925,7 @@ directory — see <a href="../manage-secrets/#option-1-secrets-directory-recomme
 <div class="highlight"><pre><span></span><code><span class="nb">export</span><span class="w"> </span><span class="nv">DJ_DATABASE_NAME</span><span class="o">=</span>my_database
 </code></pre></div>
 <p>Or programmatically:</p>
-<div class="highlight"><pre><span></span><code><span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;database.name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;my_database&#39;</span>
+<div class="highlight"><pre><span></span><code><span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">'database.name'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'my_database'</span>
 </code></pre></div>
 <p>This setting only applies to PostgreSQL. Setting it with the MySQL backend emits a warning.</p>
 <h3 id="environment-variable">Environment Variable<a class="headerlink" href="#environment-variable" title="Permanent link">&para;</a></h3>
@@ -6933,14 +6933,14 @@ directory — see <a href="../manage-secrets/#option-1-secrets-directory-recomme
 <span class="nb">export</span><span class="w"> </span><span class="nv">DJ_HOST</span><span class="o">=</span>localhost
 <span class="nb">export</span><span class="w"> </span><span class="nv">DJ_USER</span><span class="o">=</span>postgres
 <span class="nb">export</span><span class="w"> </span><span class="nv">DJ_PASS</span><span class="o">=</span>password
-<span class="nb">export</span><span class="w"> </span><span class="nv">DJ_DATABASE_NAME</span><span class="o">=</span>my_database<span class="w">  </span><span class="c1"># optional, defaults to &quot;postgres&quot;</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">DJ_DATABASE_NAME</span><span class="o">=</span>my_database<span class="w">  </span><span class="c1"># optional, defaults to "postgres"</span>
 </code></pre></div>
 <h3 id="programmatic-configuration_1">Programmatic Configuration<a class="headerlink" href="#programmatic-configuration_1" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">datajoint</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dj</span>
 
-<span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;database.backend&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;postgresql&#39;</span>
-<span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;database.host&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;localhost&#39;</span>
-<span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;database.name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;my_database&#39;</span>  <span class="c1"># optional</span>
+<span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">'database.backend'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'postgresql'</span>
+<span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">'database.host'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'localhost'</span>
+<span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">'database.name'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'my_database'</span>  <span class="c1"># optional</span>
 </code></pre></div>
 <h3 id="docker-compose-for-local-development">Docker Compose for Local Development<a class="headerlink" href="#docker-compose-for-local-development" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="nt">services</span><span class="p">:</span>
@@ -6951,9 +6951,9 @@ directory — see <a href="../manage-secrets/#option-1-secrets-directory-recomme
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">POSTGRES_USER=postgres</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">POSTGRES_DB=test</span>
 <span class="w">    </span><span class="nt">ports</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;5432:5432&quot;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"5432:5432"</span>
 <span class="w">    </span><span class="nt">healthcheck</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">test</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;CMD-SHELL&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;pg_isready</span><span class="nv"> </span><span class="s">-U</span><span class="nv"> </span><span class="s">postgres&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">      </span><span class="nt">test</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"CMD-SHELL"</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">"pg_isready</span><span class="nv"> </span><span class="s">-U</span><span class="nv"> </span><span class="s">postgres"</span><span class="p p-Indicator">]</span>
 <span class="w">      </span><span class="nt">timeout</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">30s</span>
 <span class="w">      </span><span class="nt">retries</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span>
 </code></pre></div>
@@ -6979,14 +6979,14 @@ directory — see <a href="../manage-secrets/#option-1-secrets-directory-recomme
 <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">datajoint</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dj</span>
 
 <span class="k">with</span> <span class="n">dj</span><span class="o">.</span><span class="n">Connection</span><span class="p">(</span><span class="n">host</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">password</span><span class="p">)</span> <span class="k">as</span> <span class="n">conn</span><span class="p">:</span>
-    <span class="n">schema</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">Schema</span><span class="p">(</span><span class="s1">&#39;my_schema&#39;</span><span class="p">,</span> <span class="n">connection</span><span class="o">=</span><span class="n">conn</span><span class="p">)</span>
+    <span class="n">schema</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">Schema</span><span class="p">(</span><span class="s1">'my_schema'</span><span class="p">,</span> <span class="n">connection</span><span class="o">=</span><span class="n">conn</span><span class="p">)</span>
     <span class="n">MyTable</span><span class="p">()</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
 <span class="c1"># Connection automatically closed when exiting the block</span>
 </code></pre></div>
 <p>The connection closes automatically even if an exception occurs:</p>
 <div class="highlight"><pre><span></span><code><span class="k">try</span><span class="p">:</span>
     <span class="k">with</span> <span class="n">dj</span><span class="o">.</span><span class="n">Connection</span><span class="p">(</span><span class="o">**</span><span class="n">creds</span><span class="p">)</span> <span class="k">as</span> <span class="n">conn</span><span class="p">:</span>
-        <span class="n">schema</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">Schema</span><span class="p">(</span><span class="s1">&#39;my_schema&#39;</span><span class="p">,</span> <span class="n">connection</span><span class="o">=</span><span class="n">conn</span><span class="p">)</span>
+        <span class="n">schema</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">Schema</span><span class="p">(</span><span class="s1">'my_schema'</span><span class="p">,</span> <span class="n">connection</span><span class="o">=</span><span class="n">conn</span><span class="p">)</span>
         <span class="n">MyTable</span><span class="p">()</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
         <span class="k">raise</span> <span class="n">SomeError</span><span class="p">()</span>
 <span class="k">except</span> <span class="n">SomeError</span><span class="p">:</span>
@@ -7007,8 +7007,8 @@ directory — see <a href="../manage-secrets/#option-1-secrets-directory-recomme
 <p>For applications that need multiple connections or thread safety, use <code>dj.Instance</code> instead of global config:</p>
 <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">datajoint</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dj</span>
 
-<span class="n">inst</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">Instance</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="s2">&quot;db.example.com&quot;</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="s2">&quot;myuser&quot;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s2">&quot;mypassword&quot;</span><span class="p">)</span>
-<span class="n">schema</span> <span class="o">=</span> <span class="n">inst</span><span class="o">.</span><span class="n">Schema</span><span class="p">(</span><span class="s2">&quot;my_schema&quot;</span><span class="p">)</span>
+<span class="n">inst</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">Instance</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="s2">"db.example.com"</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="s2">"myuser"</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s2">"mypassword"</span><span class="p">)</span>
+<span class="n">schema</span> <span class="o">=</span> <span class="n">inst</span><span class="o">.</span><span class="n">Schema</span><span class="p">(</span><span class="s2">"my_schema"</span><span class="p">)</span>
 </code></pre></div>
 <p>Each Instance has its own config and connection. This is useful for:</p>
 <ul>
@@ -7018,8 +7018,8 @@ directory — see <a href="../manage-secrets/#option-1-secrets-directory-recomme
 <li><strong>Thread safety</strong>: Set <code>DJ_THREAD_SAFE=true</code> to enforce Instance usage</li>
 </ul>
 <div class="highlight"><pre><span></span><code><span class="c1"># Multiple simultaneous connections</span>
-<span class="n">prod</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">Instance</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="s2">&quot;prod.example.com&quot;</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="s2">&quot;analyst&quot;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s2">&quot;...&quot;</span><span class="p">)</span>
-<span class="n">staging</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">Instance</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="s2">&quot;staging.example.com&quot;</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="s2">&quot;dev&quot;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s2">&quot;...&quot;</span><span class="p">)</span>
+<span class="n">prod</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">Instance</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="s2">"prod.example.com"</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="s2">"analyst"</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s2">"..."</span><span class="p">)</span>
+<span class="n">staging</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">Instance</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="s2">"staging.example.com"</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="s2">"dev"</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s2">"..."</span><span class="p">)</span>
 </code></pre></div>
 <p>See <a href="../use-instances/">Use Isolated Instances</a> for a complete guide.</p>
 

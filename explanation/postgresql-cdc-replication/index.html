@@ -3788,7 +3788,7 @@
   <span class="md-ellipsis">
     
   
-    Migrate to 2.0
+    Migrate to 2.x
   
 
     
@@ -6488,21 +6488,21 @@
 <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">datajoint</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dj</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">datajoint</span><span class="w"> </span><span class="kn">import</span> <span class="n">deploy</span>
 
-<span class="n">schema</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">Schema</span><span class="p">(</span><span class="s2">&quot;acquisition&quot;</span><span class="p">)</span>
+<span class="n">schema</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">Schema</span><span class="p">(</span><span class="s2">"acquisition"</span><span class="p">)</span>
 <span class="n">schema</span><span class="o">.</span><span class="n">activate</span><span class="p">()</span>  <span class="c1"># existing pipeline; tables already declared</span>
 
 <span class="c1"># Preview what would change.</span>
-<span class="n">plan</span> <span class="o">=</span> <span class="n">deploy</span><span class="o">.</span><span class="n">set_replica_identity</span><span class="p">(</span><span class="n">schema</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;full&quot;</span><span class="p">,</span> <span class="n">dry_run</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Would alter </span><span class="si">{</span><span class="n">plan</span><span class="p">[</span><span class="s1">&#39;tables_analyzed&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> tables:&quot;</span><span class="p">)</span>
-<span class="k">for</span> <span class="n">ddl</span> <span class="ow">in</span> <span class="n">plan</span><span class="p">[</span><span class="s2">&quot;ddl&quot;</span><span class="p">]:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="n">ddl</span><span class="p">)</span>
+<span class="n">plan</span> <span class="o">=</span> <span class="n">deploy</span><span class="o">.</span><span class="n">set_replica_identity</span><span class="p">(</span><span class="n">schema</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">"full"</span><span class="p">,</span> <span class="n">dry_run</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Would alter </span><span class="si">{</span><span class="n">plan</span><span class="p">[</span><span class="s1">'tables_analyzed'</span><span class="p">]</span><span class="si">}</span><span class="s2"> tables:"</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">ddl</span> <span class="ow">in</span> <span class="n">plan</span><span class="p">[</span><span class="s2">"ddl"</span><span class="p">]:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">" "</span><span class="p">,</span> <span class="n">ddl</span><span class="p">)</span>
 
 <span class="c1"># Apply.</span>
-<span class="n">deploy</span><span class="o">.</span><span class="n">set_replica_identity</span><span class="p">(</span><span class="n">schema</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;full&quot;</span><span class="p">,</span> <span class="n">dry_run</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">deploy</span><span class="o">.</span><span class="n">set_replica_identity</span><span class="p">(</span><span class="n">schema</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">"full"</span><span class="p">,</span> <span class="n">dry_run</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 </code></pre></div>
 <p>Because the operation is idempotent — re-applying the same mode is a no-op at the storage layer — a CI/CD pipeline can include it in the deploy hook for every release without accumulating side effects. New tables added in a future release pick up the setting on the next deploy.</p>
 <p>To revert (for example, to reduce WAL volume after a CDC consumer is decommissioned):</p>
-<div class="highlight"><pre><span></span><code><span class="n">deploy</span><span class="o">.</span><span class="n">set_replica_identity</span><span class="p">(</span><span class="n">schema</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;default&quot;</span><span class="p">,</span> <span class="n">dry_run</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><span class="n">deploy</span><span class="o">.</span><span class="n">set_replica_identity</span><span class="p">(</span><span class="n">schema</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">"default"</span><span class="p">,</span> <span class="n">dry_run</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 </code></pre></div>
 <p><code>set_replica_identity</code> is PostgreSQL-only by design — there is no MySQL equivalent of <code>REPLICA IDENTITY</code>, since MySQL's binlog-based CDC follows different mechanics. Calling it against a MySQL connection raises <code>DataJointError</code> rather than warning quietly.</p>
 <h2 id="related">Related<a class="headerlink" href="#related" title="Permanent link">&para;</a></h2>

@@ -3943,7 +3943,7 @@
   <span class="md-ellipsis">
     
   
-    Migrate to 2.0
+    Migrate to 2.x
   
 
     
@@ -6730,13 +6730,13 @@
 <h2 id="in-table-vs-object-store">In-Table vs Object Store<a class="headerlink" href="#in-table-vs-object-store" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><span class="nd">@schema</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Recording</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    recording_id : uuid</span>
 <span class="s2">    ---</span>
 <span class="s2">    metadata : &lt;blob&gt;           # In-table: stored in database column</span>
 <span class="s2">    raw_data : &lt;blob@&gt;          # Object store: hash-addressed</span>
 <span class="s2">    waveforms : &lt;npy@&gt;          # Object store: schema-addressed (lazy)</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">    """</span>
 </code></pre></div>
 <table>
 <thead>
@@ -6784,41 +6784,41 @@
 <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
 <span class="n">Recording</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span>
-    <span class="s1">&#39;recording_id&#39;</span><span class="p">:</span> <span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">(),</span>
-    <span class="s1">&#39;metadata&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;channels&#39;</span><span class="p">:</span> <span class="mi">32</span><span class="p">,</span> <span class="s1">&#39;rate&#39;</span><span class="p">:</span> <span class="mi">30000</span><span class="p">},</span>
-    <span class="s1">&#39;raw_data&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">32</span><span class="p">,</span> <span class="mi">30000</span><span class="p">)</span>  <span class="c1"># ~7.7 MB array</span>
+    <span class="s1">'recording_id'</span><span class="p">:</span> <span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">(),</span>
+    <span class="s1">'metadata'</span><span class="p">:</span> <span class="p">{</span><span class="s1">'channels'</span><span class="p">:</span> <span class="mi">32</span><span class="p">,</span> <span class="s1">'rate'</span><span class="p">:</span> <span class="mi">30000</span><span class="p">},</span>
+    <span class="s1">'raw_data'</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">32</span><span class="p">,</span> <span class="mi">30000</span><span class="p">)</span>  <span class="c1"># ~7.7 MB array</span>
 <span class="p">})</span>
 </code></pre></div>
 <p>DataJoint automatically routes to the configured store.</p>
 <h2 id="retrieve-data">Retrieve Data<a class="headerlink" href="#retrieve-data" title="Permanent link">&para;</a></h2>
 <p>Fetch works transparently:</p>
-<div class="highlight"><pre><span></span><code><span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="n">Recording</span> <span class="o">&amp;</span> <span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">fetch1</span><span class="p">(</span><span class="s1">&#39;raw_data&#39;</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="n">Recording</span> <span class="o">&amp;</span> <span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">fetch1</span><span class="p">(</span><span class="s1">'raw_data'</span><span class="p">)</span>
 <span class="c1"># Returns the numpy array, regardless of where it was stored</span>
 </code></pre></div>
 <h2 id="named-stores">Named Stores<a class="headerlink" href="#named-stores" title="Permanent link">&para;</a></h2>
 <p>Use different stores for different data types:</p>
 <div class="highlight"><pre><span></span><code><span class="nd">@schema</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Experiment</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    experiment_id : uuid</span>
 <span class="s2">    ---</span>
 <span class="s2">    raw_video : &lt;blob@raw&gt;        # Fast local storage</span>
 <span class="s2">    processed : &lt;blob@archive&gt;    # S3 for long-term</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">    """</span>
 </code></pre></div>
 <p>Configure stores in <code>datajoint.json</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;stores&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;default&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;raw&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;raw&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="nt">&quot;protocol&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;file&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;location&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/fast/storage&quot;</span>
+<span class="w">  </span><span class="nt">"stores"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"default"</span><span class="p">:</span><span class="w"> </span><span class="s2">"raw"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"raw"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">"protocol"</span><span class="p">:</span><span class="w"> </span><span class="s2">"file"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"location"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/fast/storage"</span>
 <span class="w">    </span><span class="p">},</span>
-<span class="w">    </span><span class="nt">&quot;archive&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="nt">&quot;protocol&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;s3&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;endpoint&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;s3.amazonaws.com&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;bucket&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;archive&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;location&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;project-data&quot;</span>
+<span class="w">    </span><span class="nt">"archive"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">"protocol"</span><span class="p">:</span><span class="w"> </span><span class="s2">"s3"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"endpoint"</span><span class="p">:</span><span class="w"> </span><span class="s2">"s3.amazonaws.com"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"bucket"</span><span class="p">:</span><span class="w"> </span><span class="s2">"archive"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"location"</span><span class="p">:</span><span class="w"> </span><span class="s2">"project-data"</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
@@ -6833,8 +6833,8 @@
 </ul>
 <div class="highlight"><pre><span></span><code><span class="c1"># These two inserts store the same array only once</span>
 <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">1000</span><span class="p">,</span> <span class="mi">1000</span><span class="p">))</span>
-<span class="n">Table</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;array&#39;</span><span class="p">:</span> <span class="n">data</span><span class="p">})</span>
-<span class="n">Table</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;array&#39;</span><span class="p">:</span> <span class="n">data</span><span class="p">})</span>  <span class="c1"># References same object</span>
+<span class="n">Table</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="s1">'id'</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">'array'</span><span class="p">:</span> <span class="n">data</span><span class="p">})</span>
+<span class="n">Table</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="s1">'id'</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">'array'</span><span class="p">:</span> <span class="n">data</span><span class="p">})</span>  <span class="c1"># References same object</span>
 </code></pre></div>
 <h2 id="schema-addressed-storage">Schema-Addressed Storage<a class="headerlink" href="#schema-addressed-storage" title="Permanent link">&para;</a></h2>
 <p><code>&lt;npy@&gt;</code> and <code>&lt;object@&gt;</code> use <strong>schema-addressed</strong> storage:</p>
@@ -6846,11 +6846,11 @@
 </ul>
 <div class="highlight"><pre><span></span><code><span class="nd">@schema</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Dataset</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    dataset_id : uuid</span>
 <span class="s2">    ---</span>
 <span class="s2">    zarr_array : &lt;object@&gt;      # Zarr array stored by path</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">    """</span>
 </code></pre></div>
 <p>Use schema-addressed storage for:</p>
 <ul>
@@ -6861,9 +6861,9 @@
 <h2 id="write-directly-to-object-storage">Write Directly to Object Storage<a class="headerlink" href="#write-directly-to-object-storage" title="Permanent link">&para;</a></h2>
 <p>For multi-GB imaging recordings, Zarr arrays, HDF5 files, or any object too large to round-trip through local storage, use <a href="../staged-insert/">Staged Insert</a>. It writes directly to the destination object store inside a context manager and commits the database row atomically on clean exit:</p>
 <div class="highlight"><pre><span></span><code><span class="k">with</span> <span class="n">ImagingSession</span><span class="o">.</span><span class="n">staged_insert1</span> <span class="k">as</span> <span class="n">staged</span><span class="p">:</span>
-    <span class="n">staged</span><span class="o">.</span><span class="n">rec</span><span class="p">[</span><span class="s1">&#39;subject_id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
-    <span class="n">staged</span><span class="o">.</span><span class="n">rec</span><span class="p">[</span><span class="s1">&#39;session_id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
-    <span class="n">z</span> <span class="o">=</span> <span class="n">zarr</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">staged</span><span class="o">.</span><span class="n">store</span><span class="p">(</span><span class="s1">&#39;frames&#39;</span><span class="p">,</span> <span class="s1">&#39;.zarr&#39;</span><span class="p">),</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="o">...</span><span class="p">)</span>
+    <span class="n">staged</span><span class="o">.</span><span class="n">rec</span><span class="p">[</span><span class="s1">'subject_id'</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">staged</span><span class="o">.</span><span class="n">rec</span><span class="p">[</span><span class="s1">'session_id'</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">z</span> <span class="o">=</span> <span class="n">zarr</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">staged</span><span class="o">.</span><span class="n">store</span><span class="p">(</span><span class="s1">'frames'</span><span class="p">,</span> <span class="s1">'.zarr'</span><span class="p">),</span> <span class="n">mode</span><span class="o">=</span><span class="s1">'w'</span><span class="p">,</span> <span class="o">...</span><span class="p">)</span>
     <span class="o">...</span>
 </code></pre></div>
 <p>See <a href="../staged-insert/">Staged Insert</a> for the full API, atomicity guarantees, and patterns for Zarr, HDF5, and streaming sources.</p>
@@ -6871,41 +6871,41 @@
 <p>Preserve original filenames with <code>&lt;attach@&gt;</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="nd">@schema</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Document</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    doc_id : uuid</span>
 <span class="s2">    ---</span>
 <span class="s2">    report : &lt;attach@&gt;          # Preserves filename</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">    """</span>
 
 <span class="c1"># Insert with AttachFileType</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">datajoint</span><span class="w"> </span><span class="kn">import</span> <span class="n">AttachFileType</span>
 <span class="n">Document</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span>
-    <span class="s1">&#39;doc_id&#39;</span><span class="p">:</span> <span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">(),</span>
-    <span class="s1">&#39;report&#39;</span><span class="p">:</span> <span class="n">AttachFileType</span><span class="p">(</span><span class="s1">&#39;/path/to/report.pdf&#39;</span><span class="p">)</span>
+    <span class="s1">'doc_id'</span><span class="p">:</span> <span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">(),</span>
+    <span class="s1">'report'</span><span class="p">:</span> <span class="n">AttachFileType</span><span class="p">(</span><span class="s1">'/path/to/report.pdf'</span><span class="p">)</span>
 <span class="p">})</span>
 </code></pre></div>
 <h2 id="numpy-arrays-with-npy">NumPy Arrays with <code>&lt;npy@&gt;</code><a class="headerlink" href="#numpy-arrays-with-npy" title="Permanent link">&para;</a></h2>
 <p>The <code>&lt;npy@&gt;</code> codec stores NumPy arrays as portable <code>.npy</code> files with lazy loading:</p>
 <div class="highlight"><pre><span></span><code><span class="nd">@schema</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Recording</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    recording_id : int32</span>
 <span class="s2">    ---</span>
 <span class="s2">    waveform : &lt;npy@mystore&gt;    # NumPy array, schema-addressed</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">    """</span>
 
 <span class="c1"># Insert - just pass the array</span>
 <span class="n">Recording</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span>
-    <span class="s1">&#39;recording_id&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
-    <span class="s1">&#39;waveform&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span> <span class="mi">32</span><span class="p">),</span>
+    <span class="s1">'recording_id'</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s1">'waveform'</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span> <span class="mi">32</span><span class="p">),</span>
 <span class="p">})</span>
 
 <span class="c1"># Fetch returns NpyRef (lazy)</span>
-<span class="n">ref</span> <span class="o">=</span> <span class="p">(</span><span class="n">Recording</span> <span class="o">&amp;</span> <span class="s1">&#39;recording_id=1&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">fetch1</span><span class="p">(</span><span class="s1">&#39;waveform&#39;</span><span class="p">)</span>
+<span class="n">ref</span> <span class="o">=</span> <span class="p">(</span><span class="n">Recording</span> <span class="o">&amp;</span> <span class="s1">'recording_id=1'</span><span class="p">)</span><span class="o">.</span><span class="n">fetch1</span><span class="p">(</span><span class="s1">'waveform'</span><span class="p">)</span>
 </code></pre></div>
 <h3 id="npyref-lazy-array-reference">NpyRef: Lazy Array Reference<a class="headerlink" href="#npyref-lazy-array-reference" title="Permanent link">&para;</a></h3>
 <p><code>NpyRef</code> provides metadata without downloading:</p>
-<div class="highlight"><pre><span></span><code><span class="n">ref</span> <span class="o">=</span> <span class="p">(</span><span class="n">Recording</span> <span class="o">&amp;</span> <span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">fetch1</span><span class="p">(</span><span class="s1">&#39;waveform&#39;</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><span class="n">ref</span> <span class="o">=</span> <span class="p">(</span><span class="n">Recording</span> <span class="o">&amp;</span> <span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">fetch1</span><span class="p">(</span><span class="s1">'waveform'</span><span class="p">)</span>
 
 <span class="c1"># Metadata access - NO download</span>
 <span class="n">ref</span><span class="o">.</span><span class="n">shape</span>    <span class="c1"># (1000, 32)</span>
@@ -6928,20 +6928,20 @@
 
 <span class="c1"># Inspect metadata without downloading</span>
 <span class="k">for</span> <span class="n">rec</span> <span class="ow">in</span> <span class="n">results</span><span class="p">:</span>
-    <span class="n">ref</span> <span class="o">=</span> <span class="n">rec</span><span class="p">[</span><span class="s1">&#39;waveform&#39;</span><span class="p">]</span>
+    <span class="n">ref</span> <span class="o">=</span> <span class="n">rec</span><span class="p">[</span><span class="s1">'waveform'</span><span class="p">]</span>
     <span class="k">if</span> <span class="n">ref</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">500</span><span class="p">:</span>     <span class="c1"># Check without download</span>
         <span class="n">process</span><span class="p">(</span><span class="n">ref</span><span class="o">.</span><span class="n">load</span><span class="p">())</span>     <span class="c1"># Download only what you need</span>
 </code></pre></div>
 <h2 id="lazy-loading-with-objectref">Lazy Loading with ObjectRef<a class="headerlink" href="#lazy-loading-with-objectref" title="Permanent link">&para;</a></h2>
 <p><code>&lt;object@&gt;</code> and <code>&lt;filepath@&gt;</code> return lazy references:</p>
-<div class="highlight"><pre><span></span><code><span class="n">ref</span> <span class="o">=</span> <span class="p">(</span><span class="n">Dataset</span> <span class="o">&amp;</span> <span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">fetch1</span><span class="p">(</span><span class="s1">&#39;zarr_array&#39;</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><span class="n">ref</span> <span class="o">=</span> <span class="p">(</span><span class="n">Dataset</span> <span class="o">&amp;</span> <span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">fetch1</span><span class="p">(</span><span class="s1">'zarr_array'</span><span class="p">)</span>
 
 <span class="c1"># Open for streaming access</span>
 <span class="k">with</span> <span class="n">ref</span><span class="o">.</span><span class="n">open</span><span class="p">()</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
     <span class="n">data</span> <span class="o">=</span> <span class="n">zarr</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
 
 <span class="c1"># Or download to local path</span>
-<span class="n">local_path</span> <span class="o">=</span> <span class="n">ref</span><span class="o">.</span><span class="n">download</span><span class="p">(</span><span class="s1">&#39;/tmp/data&#39;</span><span class="p">)</span>
+<span class="n">local_path</span> <span class="o">=</span> <span class="n">ref</span><span class="o">.</span><span class="n">download</span><span class="p">(</span><span class="s1">'/tmp/data'</span><span class="p">)</span>
 </code></pre></div>
 <h2 id="storage-best-practices">Storage Best Practices<a class="headerlink" href="#storage-best-practices" title="Permanent link">&para;</a></h2>
 <h3 id="choose-the-right-codec">Choose the Right Codec<a class="headerlink" href="#choose-the-right-codec" title="Permanent link">&para;</a></h3>
@@ -7004,23 +7004,23 @@
 <h3 id="store-tiers">Store Tiers<a class="headerlink" href="#store-tiers" title="Permanent link">&para;</a></h3>
 <p>Configure stores for different access patterns:</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;stores&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;default&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;hot&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;hot&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="nt">&quot;protocol&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;file&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;location&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/ssd/data&quot;</span>
+<span class="w">  </span><span class="nt">"stores"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"default"</span><span class="p">:</span><span class="w"> </span><span class="s2">"hot"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"hot"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">"protocol"</span><span class="p">:</span><span class="w"> </span><span class="s2">"file"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"location"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/ssd/data"</span>
 <span class="w">    </span><span class="p">},</span>
-<span class="w">    </span><span class="nt">&quot;warm&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="nt">&quot;protocol&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;s3&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;endpoint&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;s3.amazonaws.com&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;bucket&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;project-data&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;location&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;active&quot;</span>
+<span class="w">    </span><span class="nt">"warm"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">"protocol"</span><span class="p">:</span><span class="w"> </span><span class="s2">"s3"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"endpoint"</span><span class="p">:</span><span class="w"> </span><span class="s2">"s3.amazonaws.com"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"bucket"</span><span class="p">:</span><span class="w"> </span><span class="s2">"project-data"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"location"</span><span class="p">:</span><span class="w"> </span><span class="s2">"active"</span>
 <span class="w">    </span><span class="p">},</span>
-<span class="w">    </span><span class="nt">&quot;cold&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="nt">&quot;protocol&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;s3&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;endpoint&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;s3.amazonaws.com&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;bucket&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;archive&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;location&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;long-term&quot;</span>
+<span class="w">    </span><span class="nt">"cold"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">"protocol"</span><span class="p">:</span><span class="w"> </span><span class="s2">"s3"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"endpoint"</span><span class="p">:</span><span class="w"> </span><span class="s2">"s3.amazonaws.com"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"bucket"</span><span class="p">:</span><span class="w"> </span><span class="s2">"archive"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"location"</span><span class="p">:</span><span class="w"> </span><span class="s2">"long-term"</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>

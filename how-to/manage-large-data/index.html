@@ -3865,7 +3865,7 @@
   <span class="md-ellipsis">
     
   
-    Migrate to 2.0
+    Migrate to 2.x
   
 
     
@@ -6556,33 +6556,33 @@
 <h2 id="streaming-large-results">Streaming Large Results<a class="headerlink" href="#streaming-large-results" title="Permanent link">&para;</a></h2>
 <p>Avoid loading everything into memory:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Bad: loads all data at once</span>
-<span class="n">all_data</span> <span class="o">=</span> <span class="n">LargeTable</span><span class="p">()</span><span class="o">.</span><span class="n">to_arrays</span><span class="p">(</span><span class="s1">&#39;big_column&#39;</span><span class="p">)</span>
+<span class="n">all_data</span> <span class="o">=</span> <span class="n">LargeTable</span><span class="p">()</span><span class="o">.</span><span class="n">to_arrays</span><span class="p">(</span><span class="s1">'big_column'</span><span class="p">)</span>
 
 <span class="c1"># Good: stream rows lazily (single cursor, one row at a time)</span>
 <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">LargeTable</span><span class="p">():</span>
-    <span class="n">process</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;big_column&#39;</span><span class="p">])</span>
+    <span class="n">process</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s1">'big_column'</span><span class="p">])</span>
 
 <span class="c1"># Good: batch by ID range</span>
 <span class="n">keys</span> <span class="o">=</span> <span class="n">LargeTable</span><span class="p">()</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
 <span class="n">batch_size</span> <span class="o">=</span> <span class="mi">100</span>
 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">keys</span><span class="p">),</span> <span class="n">batch_size</span><span class="p">):</span>
     <span class="n">batch_keys</span> <span class="o">=</span> <span class="n">keys</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="n">i</span> <span class="o">+</span> <span class="n">batch_size</span><span class="p">]</span>
-    <span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="n">LargeTable</span><span class="p">()</span> <span class="o">&amp;</span> <span class="n">batch_keys</span><span class="p">)</span><span class="o">.</span><span class="n">to_arrays</span><span class="p">(</span><span class="s1">&#39;big_column&#39;</span><span class="p">)</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="n">LargeTable</span><span class="p">()</span> <span class="o">&amp;</span> <span class="n">batch_keys</span><span class="p">)</span><span class="o">.</span><span class="n">to_arrays</span><span class="p">(</span><span class="s1">'big_column'</span><span class="p">)</span>
     <span class="n">process</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
 </code></pre></div>
 <h2 id="lazy-loading-with-objectref">Lazy Loading with ObjectRef<a class="headerlink" href="#lazy-loading-with-objectref" title="Permanent link">&para;</a></h2>
 <p><code>&lt;object@&gt;</code> and <code>&lt;filepath@&gt;</code> return lazy references:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Returns ObjectRef, not the actual data</span>
-<span class="n">ref</span> <span class="o">=</span> <span class="p">(</span><span class="n">Dataset</span> <span class="o">&amp;</span> <span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">fetch1</span><span class="p">(</span><span class="s1">&#39;large_file&#39;</span><span class="p">)</span>
+<span class="n">ref</span> <span class="o">=</span> <span class="p">(</span><span class="n">Dataset</span> <span class="o">&amp;</span> <span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">fetch1</span><span class="p">(</span><span class="s1">'large_file'</span><span class="p">)</span>
 
 <span class="c1"># Stream without full download</span>
-<span class="k">with</span> <span class="n">ref</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+<span class="k">with</span> <span class="n">ref</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s1">'rb'</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
     <span class="c1"># Process in chunks</span>
     <span class="k">while</span> <span class="n">chunk</span> <span class="o">:=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">1024</span> <span class="o">*</span> <span class="mi">1024</span><span class="p">):</span>
         <span class="n">process</span><span class="p">(</span><span class="n">chunk</span><span class="p">)</span>
 
 <span class="c1"># Or download when needed</span>
-<span class="n">local_path</span> <span class="o">=</span> <span class="n">ref</span><span class="o">.</span><span class="n">download</span><span class="p">(</span><span class="s1">&#39;/tmp/working&#39;</span><span class="p">)</span>
+<span class="n">local_path</span> <span class="o">=</span> <span class="n">ref</span><span class="o">.</span><span class="n">download</span><span class="p">(</span><span class="s1">'/tmp/working'</span><span class="p">)</span>
 </code></pre></div>
 <h2 id="selective-fetching">Selective Fetching<a class="headerlink" href="#selective-fetching" title="Permanent link">&para;</a></h2>
 <p>Fetch only what you need:</p>
@@ -6590,11 +6590,11 @@
 <span class="n">row</span> <span class="o">=</span> <span class="n">MyTable</span><span class="o">.</span><span class="n">fetch1</span><span class="p">()</span>
 
 <span class="c1"># Good: fetch only metadata</span>
-<span class="n">metadata</span> <span class="o">=</span> <span class="p">(</span><span class="n">MyTable</span> <span class="o">&amp;</span> <span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">fetch1</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="s1">&#39;date&#39;</span><span class="p">,</span> <span class="s1">&#39;status&#39;</span><span class="p">)</span>
+<span class="n">metadata</span> <span class="o">=</span> <span class="p">(</span><span class="n">MyTable</span> <span class="o">&amp;</span> <span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">fetch1</span><span class="p">(</span><span class="s1">'name'</span><span class="p">,</span> <span class="s1">'date'</span><span class="p">,</span> <span class="s1">'status'</span><span class="p">)</span>
 
 <span class="c1"># Then fetch blob only if needed</span>
 <span class="k">if</span> <span class="n">needs_processing</span><span class="p">(</span><span class="n">metadata</span><span class="p">):</span>
-    <span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="n">MyTable</span> <span class="o">&amp;</span> <span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">fetch1</span><span class="p">(</span><span class="s1">&#39;large_data&#39;</span><span class="p">)</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="n">MyTable</span> <span class="o">&amp;</span> <span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">fetch1</span><span class="p">(</span><span class="s1">'large_data'</span><span class="p">)</span>
 </code></pre></div>
 <h2 id="projection-for-efficiency">Projection for Efficiency<a class="headerlink" href="#projection-for-efficiency" title="Permanent link">&para;</a></h2>
 <p>Exclude large columns from joins:</p>
@@ -6602,7 +6602,7 @@
 <span class="n">result</span> <span class="o">=</span> <span class="n">Table1</span> <span class="o">*</span> <span class="n">Table2</span>
 
 <span class="c1"># Fast: project away blobs before join</span>
-<span class="n">result</span> <span class="o">=</span> <span class="n">Table1</span><span class="o">.</span><span class="n">proj</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="p">)</span> <span class="o">*</span> <span class="n">Table2</span><span class="o">.</span><span class="n">proj</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="s1">&#39;status&#39;</span><span class="p">)</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">Table1</span><span class="o">.</span><span class="n">proj</span><span class="p">(</span><span class="s1">'id'</span><span class="p">,</span> <span class="s1">'name'</span><span class="p">)</span> <span class="o">*</span> <span class="n">Table2</span><span class="o">.</span><span class="n">proj</span><span class="p">(</span><span class="s1">'id'</span><span class="p">,</span> <span class="s1">'status'</span><span class="p">)</span>
 </code></pre></div>
 <h2 id="batch-inserts">Batch Inserts<a class="headerlink" href="#batch-inserts" title="Permanent link">&para;</a></h2>
 <p>Insert large data efficiently:</p>
@@ -6615,8 +6615,8 @@
 <p><code>&lt;blob@&gt;</code> and <code>&lt;attach@&gt;</code> automatically deduplicate within each schema:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Same array inserted twice</span>
 <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)</span>
-<span class="n">Table</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="n">data</span><span class="p">})</span>
-<span class="n">Table</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="n">data</span><span class="p">})</span>  <span class="c1"># References same storage</span>
+<span class="n">Table</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="s1">'id'</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">'data'</span><span class="p">:</span> <span class="n">data</span><span class="p">})</span>
+<span class="n">Table</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="s1">'id'</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">'data'</span><span class="p">:</span> <span class="n">data</span><span class="p">})</span>  <span class="c1"># References same storage</span>
 
 <span class="c1"># Only one copy exists in object storage (per schema)</span>
 </code></pre></div>
@@ -6635,7 +6635,7 @@ collection periodically:</p>
 
 <span class="c1"># Read-only report (collect defaults to dry_run=True)</span>
 <span class="n">stats</span> <span class="o">=</span> <span class="n">collector</span><span class="o">.</span><span class="n">collect</span><span class="p">()</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">stats</span><span class="p">[</span><span class="s1">&#39;hash_paths_orphaned&#39;</span><span class="p">]</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">stats</span><span class="p">[</span><span class="s1">&#39;schema_paths_orphaned&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> orphaned items&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">stats</span><span class="p">[</span><span class="s1">'hash_paths_orphaned'</span><span class="p">]</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">stats</span><span class="p">[</span><span class="s1">'schema_paths_orphaned'</span><span class="p">]</span><span class="si">}</span><span class="s2"> orphaned items"</span><span class="p">)</span>
 
 <span class="c1"># Remove orphaned items</span>
 <span class="n">stats</span> <span class="o">=</span> <span class="n">collector</span><span class="o">.</span><span class="n">collect</span><span class="p">(</span><span class="n">dry_run</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
@@ -6667,17 +6667,17 @@ collection periodically:</p>
 
     <span class="c1"># Combine results</span>
     <span class="n">final</span> <span class="o">=</span> <span class="n">combine_results</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="o">**</span><span class="n">key</span><span class="p">,</span> <span class="s1">&#39;result&#39;</span><span class="p">:</span> <span class="n">final</span><span class="p">})</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="o">**</span><span class="n">key</span><span class="p">,</span> <span class="s1">'result'</span><span class="p">:</span> <span class="n">final</span><span class="p">})</span>
 </code></pre></div>
 <h2 id="external-tools-for-very-large-data">External Tools for Very Large Data<a class="headerlink" href="#external-tools-for-very-large-data" title="Permanent link">&para;</a></h2>
 <p>For datasets too large for DataJoint:</p>
 <div class="highlight"><pre><span></span><code><span class="nd">@schema</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">LargeDataset</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    dataset_id : uuid</span>
 <span class="s2">    ---</span>
 <span class="s2">    zarr_path : &lt;filepath@&gt;     # Reference to external Zarr</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">    """</span>
 
 <span class="c1"># Store path reference, process with specialized tools</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">zarr</span>
@@ -6685,8 +6685,8 @@ collection periodically:</p>
 <span class="c1"># ... process with Zarr/Dask ...</span>
 
 <span class="n">LargeDataset</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span>
-    <span class="s1">&#39;dataset_id&#39;</span><span class="p">:</span> <span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">(),</span>
-    <span class="s1">&#39;zarr_path&#39;</span><span class="p">:</span> <span class="n">local_zarr_path</span>
+    <span class="s1">'dataset_id'</span><span class="p">:</span> <span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">(),</span>
+    <span class="s1">'zarr_path'</span><span class="p">:</span> <span class="n">local_zarr_path</span>
 <span class="p">})</span>
 </code></pre></div>
 <h2 id="see-also">See Also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>

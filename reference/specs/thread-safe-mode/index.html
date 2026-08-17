@@ -3671,7 +3671,7 @@
   <span class="md-ellipsis">
     
   
-    Migrate to 2.0
+    Migrate to 2.x
   
 
     
@@ -6932,23 +6932,23 @@
 </table>
 <p>If <code>backend</code> is omitted, it defaults to <code>config.database.backend</code> (which itself defaults to <code>"mysql"</code> unless overridden by environment or config file). An explicit <code>port</code> always takes precedence over the backend default.</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># MySQL (default)</span>
-<span class="n">inst</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">Instance</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="s2">&quot;db.example.com&quot;</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="s2">&quot;root&quot;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s2">&quot;secret&quot;</span><span class="p">)</span>
+<span class="n">inst</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">Instance</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="s2">"db.example.com"</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="s2">"root"</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s2">"secret"</span><span class="p">)</span>
 
 <span class="c1"># PostgreSQL — port defaults to 5432</span>
 <span class="n">inst</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">Instance</span><span class="p">(</span>
-    <span class="n">host</span><span class="o">=</span><span class="s2">&quot;db.example.com&quot;</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="s2">&quot;postgres&quot;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s2">&quot;secret&quot;</span><span class="p">,</span>
-    <span class="n">backend</span><span class="o">=</span><span class="s2">&quot;postgresql&quot;</span><span class="p">,</span>
+    <span class="n">host</span><span class="o">=</span><span class="s2">"db.example.com"</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="s2">"postgres"</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s2">"secret"</span><span class="p">,</span>
+    <span class="n">backend</span><span class="o">=</span><span class="s2">"postgresql"</span><span class="p">,</span>
 <span class="p">)</span>
 
 <span class="c1"># PostgreSQL on a non-standard port</span>
 <span class="n">inst</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">Instance</span><span class="p">(</span>
-    <span class="n">host</span><span class="o">=</span><span class="s2">&quot;db.example.com&quot;</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="s2">&quot;postgres&quot;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s2">&quot;secret&quot;</span><span class="p">,</span>
-    <span class="n">backend</span><span class="o">=</span><span class="s2">&quot;postgresql&quot;</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">5433</span><span class="p">,</span>
+    <span class="n">host</span><span class="o">=</span><span class="s2">"db.example.com"</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="s2">"postgres"</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s2">"secret"</span><span class="p">,</span>
+    <span class="n">backend</span><span class="o">=</span><span class="s2">"postgresql"</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">5433</span><span class="p">,</span>
 <span class="p">)</span>
 </code></pre></div>
 <p><strong>Config overrides:</strong> Any keyword argument that matches a config attribute is applied to the Instance's config. Use double underscores for nested settings:</p>
 <div class="highlight"><pre><span></span><code><span class="n">inst</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">Instance</span><span class="p">(</span>
-    <span class="n">host</span><span class="o">=</span><span class="s2">&quot;localhost&quot;</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="s2">&quot;root&quot;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s2">&quot;secret&quot;</span><span class="p">,</span>
+    <span class="n">host</span><span class="o">=</span><span class="s2">"localhost"</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="s2">"root"</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s2">"secret"</span><span class="p">,</span>
     <span class="n">safemode</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>                 <span class="c1"># inst.config.safemode = False</span>
     <span class="n">database__reconnect</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>      <span class="c1"># inst.config.database.reconnect = False</span>
 <span class="p">)</span>
@@ -7104,13 +7104,13 @@ Connection (Instance)
   _config → fresh Config             ← isolated per-instance
 </code></pre></div>
 <h3 id="config-flow-singleton-path">Config flow: singleton path<a class="headerlink" href="#config-flow-singleton-path" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code>dj.config[&quot;safemode&quot;] = False
+<div class="highlight"><pre><span></span><code>dj.config["safemode"] = False
        ↓ _ConfigProxy.__setitem__
-_global_config[&quot;safemode&quot;] = False   (same object as settings.config)
+_global_config["safemode"] = False   (same object as settings.config)
        ↓
-Connection._config[&quot;safemode&quot;]       (points to _global_config)
+Connection._config["safemode"]       (points to _global_config)
        ↓
-schema.drop() reads self.connection._config[&quot;safemode&quot;]  → False ✓
+schema.drop() reads self.connection._config["safemode"]  → False ✓
 </code></pre></div>
 <h3 id="config-flow-instance-path">Config flow: Instance path<a class="headerlink" href="#config-flow-instance-path" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code>inst = dj.Instance(host=..., user=..., password=...)
@@ -7120,14 +7120,14 @@ inst.connection = Connection(..., config_override=inst.config)
        ↓
 inst.config.safemode = False
        ↓
-schema.drop() reads self.connection._config[&quot;safemode&quot;]  → False ✓
+schema.drop() reads self.connection._config["safemode"]  → False ✓
 </code></pre></div>
 <h3 id="key-invariant">Key invariant<a class="headerlink" href="#key-invariant" title="Permanent link">&para;</a></h3>
 <p><strong>All runtime config reads go through <code>self.connection._config</code></strong>, never through the global <code>config</code> directly. This ensures both the singleton and Instance paths read the correct config.</p>
 <h3 id="connection-dependency-injection">Connection dependency injection<a class="headerlink" href="#connection-dependency-injection" title="Permanent link">&para;</a></h3>
 <p><code>Connection.__init__</code> accepts <code>backend</code> and <code>config_override</code> keyword arguments:</p>
 <div class="highlight"><pre><span></span><code><span class="n">Connection</span><span class="p">(</span><span class="n">host</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">password</span><span class="p">,</span> <span class="n">port</span><span class="p">,</span> <span class="n">use_tls</span><span class="p">,</span>
-           <span class="n">backend</span><span class="o">=</span><span class="s2">&quot;mysql&quot;</span><span class="p">,</span>              <span class="c1"># &quot;mysql&quot; or &quot;postgresql&quot;</span>
+           <span class="n">backend</span><span class="o">=</span><span class="s2">"mysql"</span><span class="p">,</span>              <span class="c1"># "mysql" or "postgresql"</span>
            <span class="n">config_override</span><span class="o">=</span><span class="n">inst</span><span class="o">.</span><span class="n">config</span><span class="p">)</span>  <span class="c1"># use this config, not the global</span>
 </code></pre></div>
 <p>When <code>config_override</code> is provided, the Connection uses it for all config reads (port, charset, reconnect, query cache, etc.). When omitted, it falls back to the module-level <code>settings.config</code>.</p>

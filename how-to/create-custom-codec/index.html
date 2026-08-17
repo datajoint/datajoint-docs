@@ -3871,7 +3871,7 @@
   <span class="md-ellipsis">
     
   
-    Migrate to 2.0
+    Migrate to 2.x
   
 
     
@@ -6549,12 +6549,12 @@
 <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">datajoint</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dj</span>
 
 <span class="k">class</span><span class="w"> </span><span class="nc">GraphCodec</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Codec</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Store NetworkX graphs.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Store NetworkX graphs."""</span>
 
-    <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;graph&quot;</span>  <span class="c1"># Used as &lt;graph&gt; in definitions</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="s2">"graph"</span>  <span class="c1"># Used as &lt;graph&gt; in definitions</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">get_dtype</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">is_store</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="k">return</span> <span class="s2">&quot;&lt;blob&gt;&quot;</span>  <span class="c1"># Delegate to blob for serialization</span>
+        <span class="k">return</span> <span class="s2">"&lt;blob&gt;"</span>  <span class="c1"># Delegate to blob for serialization</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">encode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">store_name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="kn">import</span><span class="w"> </span><span class="nn">networkx</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">nx</span>
@@ -6568,12 +6568,12 @@
 <h2 id="use-in-table-definition">Use in Table Definition<a class="headerlink" href="#use-in-table-definition" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><span class="nd">@schema</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Connectivity</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    conn_id : int</span>
 <span class="s2">    ---</span>
 <span class="s2">    network : &lt;graph&gt;           # Uses GraphCodec</span>
 <span class="s2">    network_large : &lt;graph@&gt;    # In-store</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">    """</span>
 </code></pre></div>
 <h2 id="required-methods">Required Methods<a class="headerlink" href="#required-methods" title="Permanent link">&para;</a></h2>
 <h3 id="get_dtypeis_store"><code>get_dtype(is_store)</code><a class="headerlink" href="#get_dtypeis_store" title="Permanent link">&para;</a></h3>
@@ -6584,8 +6584,8 @@
 </ul>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_dtype</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">is_store</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
     <span class="k">if</span> <span class="n">is_store</span><span class="p">:</span>
-        <span class="k">return</span> <span class="s2">&quot;&lt;blob@&gt;&quot;</span>  <span class="c1"># Blob in object storage</span>
-    <span class="k">return</span> <span class="s2">&quot;bytes&quot;</span>        <span class="c1"># Inline database blob</span>
+        <span class="k">return</span> <span class="s2">"&lt;blob@&gt;"</span>  <span class="c1"># Blob in object storage</span>
+    <span class="k">return</span> <span class="s2">"bytes"</span>        <span class="c1"># Inline database blob</span>
 </code></pre></div>
 <p>Common return values:</p>
 <ul>
@@ -6614,15 +6614,15 @@
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
     <span class="kn">import</span><span class="w"> </span><span class="nn">networkx</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">nx</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Expected nx.Graph, got </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Expected nx.Graph, got </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 </code></pre></div>
 <h2 id="codec-chaining">Codec Chaining<a class="headerlink" href="#codec-chaining" title="Permanent link">&para;</a></h2>
 <p>Codecs can delegate to other codecs:</p>
 <div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">ImageCodec</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Codec</span><span class="p">):</span>
-    <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;image&quot;</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="s2">"image"</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">get_dtype</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">is_store</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="k">return</span> <span class="s2">&quot;&lt;blob&gt;&quot;</span>  <span class="c1"># Chain to blob codec</span>
+        <span class="k">return</span> <span class="s2">"&lt;blob&gt;"</span>  <span class="c1"># Chain to blob codec</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">encode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">store_name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="c1"># Convert PIL Image to numpy array</span>
@@ -6636,12 +6636,12 @@
 <h2 id="store-only-codecs">Store-Only Codecs<a class="headerlink" href="#store-only-codecs" title="Permanent link">&para;</a></h2>
 <p>Some codecs require object storage (@ modifier):</p>
 <div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">ZarrCodec</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Codec</span><span class="p">):</span>
-    <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;zarr&quot;</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="s2">"zarr"</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">get_dtype</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">is_store</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">is_store</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">DataJointError</span><span class="p">(</span><span class="s2">&quot;&lt;zarr&gt; requires @ (store only)&quot;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="s2">&quot;&lt;object@&gt;&quot;</span>  <span class="c1"># Schema-addressed storage</span>
+            <span class="k">raise</span> <span class="n">DataJointError</span><span class="p">(</span><span class="s2">"&lt;zarr&gt; requires @ (store only)"</span><span class="p">)</span>
+        <span class="k">return</span> <span class="s2">"&lt;object@&gt;"</span>  <span class="c1"># Schema-addressed storage</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">encode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">store_name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">path</span>  <span class="c1"># Path to zarr directory</span>
@@ -6651,25 +6651,25 @@
 </code></pre></div>
 <p>For custom file formats, consider inheriting from <code>SchemaCodec</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">ParquetCodec</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">SchemaCodec</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Store DataFrames as Parquet files.&quot;&quot;&quot;</span>
-    <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;parquet&quot;</span>
+<span class="w">    </span><span class="sd">"""Store DataFrames as Parquet files."""</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="s2">"parquet"</span>
 
-    <span class="c1"># get_dtype inherited: requires @, returns &quot;json&quot;</span>
+    <span class="c1"># get_dtype inherited: requires @, returns "json"</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">encode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">store_name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="n">schema</span><span class="p">,</span> <span class="n">table</span><span class="p">,</span> <span class="n">field</span><span class="p">,</span> <span class="n">pk</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_extract_context</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
-        <span class="n">path</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_build_path</span><span class="p">(</span><span class="n">schema</span><span class="p">,</span> <span class="n">table</span><span class="p">,</span> <span class="n">field</span><span class="p">,</span> <span class="n">pk</span><span class="p">,</span> <span class="n">ext</span><span class="o">=</span><span class="s2">&quot;.parquet&quot;</span><span class="p">)</span>
+        <span class="n">path</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_build_path</span><span class="p">(</span><span class="n">schema</span><span class="p">,</span> <span class="n">table</span><span class="p">,</span> <span class="n">field</span><span class="p">,</span> <span class="n">pk</span><span class="p">,</span> <span class="n">ext</span><span class="o">=</span><span class="s2">".parquet"</span><span class="p">)</span>
         <span class="n">backend</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_backend</span><span class="p">(</span><span class="n">store_name</span><span class="p">)</span>
         <span class="c1"># ... upload parquet file</span>
-        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;path&quot;</span><span class="p">:</span> <span class="n">path</span><span class="p">,</span> <span class="s2">&quot;store&quot;</span><span class="p">:</span> <span class="n">store_name</span><span class="p">,</span> <span class="s2">&quot;shape&quot;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">shape</span><span class="p">)}</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">"path"</span><span class="p">:</span> <span class="n">path</span><span class="p">,</span> <span class="s2">"store"</span><span class="p">:</span> <span class="n">store_name</span><span class="p">,</span> <span class="s2">"shape"</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">shape</span><span class="p">)}</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">decode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stored</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">ParquetRef</span><span class="p">(</span><span class="n">stored</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_backend</span><span class="p">(</span><span class="n">stored</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;store&quot;</span><span class="p">)))</span>
+        <span class="k">return</span> <span class="n">ParquetRef</span><span class="p">(</span><span class="n">stored</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_backend</span><span class="p">(</span><span class="n">stored</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"store"</span><span class="p">)))</span>
 </code></pre></div>
 <h2 id="auto-registration">Auto-Registration<a class="headerlink" href="#auto-registration" title="Permanent link">&para;</a></h2>
 <p>Codecs register automatically when defined:</p>
 <div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">MyCodec</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Codec</span><span class="p">):</span>
-    <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;mytype&quot;</span>  <span class="c1"># Registers as &lt;mytype&gt;</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="s2">"mytype"</span>  <span class="c1"># Registers as &lt;mytype&gt;</span>
     <span class="o">...</span>
 
 <span class="c1"># Now usable in table definitions:</span>
@@ -6686,40 +6686,40 @@
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
 <span class="k">class</span><span class="w"> </span><span class="nc">MedicalImageCodec</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Codec</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Store SimpleITK medical images with metadata.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Store SimpleITK medical images with metadata."""</span>
 
-    <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;medimage&quot;</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="s2">"medimage"</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">get_dtype</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">is_store</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="k">return</span> <span class="s2">&quot;&lt;blob@&gt;&quot;</span> <span class="k">if</span> <span class="n">is_store</span> <span class="k">else</span> <span class="s2">&quot;&lt;blob&gt;&quot;</span>
+        <span class="k">return</span> <span class="s2">"&lt;blob@&gt;"</span> <span class="k">if</span> <span class="n">is_store</span> <span class="k">else</span> <span class="s2">"&lt;blob&gt;"</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">encode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">image</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">store_name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="k">return</span> <span class="p">{</span>
-            <span class="s1">&#39;array&#39;</span><span class="p">:</span> <span class="n">sitk</span><span class="o">.</span><span class="n">GetArrayFromImage</span><span class="p">(</span><span class="n">image</span><span class="p">),</span>
-            <span class="s1">&#39;spacing&#39;</span><span class="p">:</span> <span class="n">image</span><span class="o">.</span><span class="n">GetSpacing</span><span class="p">(),</span>
-            <span class="s1">&#39;origin&#39;</span><span class="p">:</span> <span class="n">image</span><span class="o">.</span><span class="n">GetOrigin</span><span class="p">(),</span>
-            <span class="s1">&#39;direction&#39;</span><span class="p">:</span> <span class="n">image</span><span class="o">.</span><span class="n">GetDirection</span><span class="p">(),</span>
+            <span class="s1">'array'</span><span class="p">:</span> <span class="n">sitk</span><span class="o">.</span><span class="n">GetArrayFromImage</span><span class="p">(</span><span class="n">image</span><span class="p">),</span>
+            <span class="s1">'spacing'</span><span class="p">:</span> <span class="n">image</span><span class="o">.</span><span class="n">GetSpacing</span><span class="p">(),</span>
+            <span class="s1">'origin'</span><span class="p">:</span> <span class="n">image</span><span class="o">.</span><span class="n">GetOrigin</span><span class="p">(),</span>
+            <span class="s1">'direction'</span><span class="p">:</span> <span class="n">image</span><span class="o">.</span><span class="n">GetDirection</span><span class="p">(),</span>
         <span class="p">}</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">decode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stored</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="n">image</span> <span class="o">=</span> <span class="n">sitk</span><span class="o">.</span><span class="n">GetImageFromArray</span><span class="p">(</span><span class="n">stored</span><span class="p">[</span><span class="s1">&#39;array&#39;</span><span class="p">])</span>
-        <span class="n">image</span><span class="o">.</span><span class="n">SetSpacing</span><span class="p">(</span><span class="n">stored</span><span class="p">[</span><span class="s1">&#39;spacing&#39;</span><span class="p">])</span>
-        <span class="n">image</span><span class="o">.</span><span class="n">SetOrigin</span><span class="p">(</span><span class="n">stored</span><span class="p">[</span><span class="s1">&#39;origin&#39;</span><span class="p">])</span>
-        <span class="n">image</span><span class="o">.</span><span class="n">SetDirection</span><span class="p">(</span><span class="n">stored</span><span class="p">[</span><span class="s1">&#39;direction&#39;</span><span class="p">])</span>
+        <span class="n">image</span> <span class="o">=</span> <span class="n">sitk</span><span class="o">.</span><span class="n">GetImageFromArray</span><span class="p">(</span><span class="n">stored</span><span class="p">[</span><span class="s1">'array'</span><span class="p">])</span>
+        <span class="n">image</span><span class="o">.</span><span class="n">SetSpacing</span><span class="p">(</span><span class="n">stored</span><span class="p">[</span><span class="s1">'spacing'</span><span class="p">])</span>
+        <span class="n">image</span><span class="o">.</span><span class="n">SetOrigin</span><span class="p">(</span><span class="n">stored</span><span class="p">[</span><span class="s1">'origin'</span><span class="p">])</span>
+        <span class="n">image</span><span class="o">.</span><span class="n">SetDirection</span><span class="p">(</span><span class="n">stored</span><span class="p">[</span><span class="s1">'direction'</span><span class="p">])</span>
         <span class="k">return</span> <span class="n">image</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">sitk</span><span class="o">.</span><span class="n">Image</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Expected sitk.Image, got </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Expected sitk.Image, got </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
 
 <span class="nd">@schema</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Scan</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    scan_id : uuid</span>
 <span class="s2">    ---</span>
 <span class="s2">    ct_image : &lt;medimage@&gt;      # CT scan with metadata</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">    """</span>
 </code></pre></div>
 <h2 id="see-also">See Also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
 <ul>

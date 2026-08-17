@@ -4165,7 +4165,7 @@
   <span class="md-ellipsis">
     
   
-    Migrate to 2.0
+    Migrate to 2.x
   
 
     
@@ -7142,15 +7142,15 @@
 <h3 id="2-use-in-table-definitions">2. Use in Table Definitions<a class="headerlink" href="#2-use-in-table-definitions" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">datajoint</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dj</span>
 
-<span class="n">schema</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">Schema</span><span class="p">(</span><span class="s1">&#39;my_schema&#39;</span><span class="p">)</span>
+<span class="n">schema</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">Schema</span><span class="p">(</span><span class="s1">'my_schema'</span><span class="p">)</span>
 
 <span class="nd">@schema</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Recording</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    recording_id : int</span>
 <span class="s2">    ---</span>
 <span class="s2">    waveform : &lt;zarr@&gt;  # Automatically available after install</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">    """</span>
 </code></pre></div>
 <p>That's it! No imports or registration needed. The codec is automatically discovered via Python's entry point system.</p>
 <h2 id="example-zarr-array-storage">Example: Zarr Array Storage<a class="headerlink" href="#example-zarr-array-storage" title="Permanent link">&para;</a></h2>
@@ -7162,36 +7162,36 @@
 <p>Configure object storage for external data:</p>
 <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">datajoint</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dj</span>
 
-<span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;stores&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s1">&#39;mystore&#39;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s1">&#39;protocol&#39;</span><span class="p">:</span> <span class="s1">&#39;s3&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;endpoint&#39;</span><span class="p">:</span> <span class="s1">&#39;s3.amazonaws.com&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;bucket&#39;</span><span class="p">:</span> <span class="s1">&#39;my-bucket&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;location&#39;</span><span class="p">:</span> <span class="s1">&#39;data&#39;</span><span class="p">,</span>
+<span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">'stores'</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">'mystore'</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s1">'protocol'</span><span class="p">:</span> <span class="s1">'s3'</span><span class="p">,</span>
+        <span class="s1">'endpoint'</span><span class="p">:</span> <span class="s1">'s3.amazonaws.com'</span><span class="p">,</span>
+        <span class="s1">'bucket'</span><span class="p">:</span> <span class="s1">'my-bucket'</span><span class="p">,</span>
+        <span class="s1">'location'</span><span class="p">:</span> <span class="s1">'data'</span><span class="p">,</span>
     <span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
 <h3 id="basic-usage">Basic Usage<a class="headerlink" href="#basic-usage" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
-<span class="n">schema</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">Schema</span><span class="p">(</span><span class="s1">&#39;neuroscience&#39;</span><span class="p">)</span>
+<span class="n">schema</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">Schema</span><span class="p">(</span><span class="s1">'neuroscience'</span><span class="p">)</span>
 
 <span class="nd">@schema</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Recording</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    recording_id : int</span>
 <span class="s2">    ---</span>
 <span class="s2">    waveform : &lt;zarr@mystore&gt;  # Store as Zarr array</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">    """</span>
 
 <span class="c1"># Insert NumPy array</span>
 <span class="n">Recording</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span>
-    <span class="s1">&#39;recording_id&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
-    <span class="s1">&#39;waveform&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span> <span class="mi">32</span><span class="p">),</span>
+    <span class="s1">'recording_id'</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s1">'waveform'</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span> <span class="mi">32</span><span class="p">),</span>
 <span class="p">})</span>
 
 <span class="c1"># Fetch returns zarr.Array (read-only)</span>
-<span class="n">zarr_array</span> <span class="o">=</span> <span class="p">(</span><span class="n">Recording</span> <span class="o">&amp;</span> <span class="p">{</span><span class="s1">&#39;recording_id&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">})</span><span class="o">.</span><span class="n">fetch1</span><span class="p">(</span><span class="s1">&#39;waveform&#39;</span><span class="p">)</span>
+<span class="n">zarr_array</span> <span class="o">=</span> <span class="p">(</span><span class="n">Recording</span> <span class="o">&amp;</span> <span class="p">{</span><span class="s1">'recording_id'</span><span class="p">:</span> <span class="mi">1</span><span class="p">})</span><span class="o">.</span><span class="n">fetch1</span><span class="p">(</span><span class="s1">'waveform'</span><span class="p">)</span>
 
 <span class="c1"># Use with NumPy</span>
 <span class="n">mean_waveform</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">zarr_array</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
@@ -7270,15 +7270,15 @@
 
 <span class="c1"># List all available codecs</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">list_codecs</span><span class="p">())</span>
-<span class="c1"># [&#39;blob&#39;, &#39;attach&#39;, &#39;hash&#39;, &#39;object&#39;, &#39;npy&#39;, &#39;filepath&#39;, &#39;zarr&#39;, ...]</span>
+<span class="c1"># ['blob', 'attach', 'hash', 'object', 'npy', 'filepath', 'zarr', ...]</span>
 
 <span class="c1"># Check specific codec</span>
-<span class="k">assert</span> <span class="s1">&#39;zarr&#39;</span> <span class="ow">in</span> <span class="n">dj</span><span class="o">.</span><span class="n">list_codecs</span><span class="p">()</span>
+<span class="k">assert</span> <span class="s1">'zarr'</span> <span class="ow">in</span> <span class="n">dj</span><span class="o">.</span><span class="n">list_codecs</span><span class="p">()</span>
 </code></pre></div>
 <h2 id="how-auto-registration-works">How Auto-Registration Works<a class="headerlink" href="#how-auto-registration-works" title="Permanent link">&para;</a></h2>
 <p>Plugin codecs use Python's entry point system for automatic discovery. When you install a codec package, it registers itself via <code>pyproject.toml</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="k">[project.entry-points.</span><span class="s2">&quot;datajoint.codecs&quot;</span><span class="k">]</span>
-<span class="n">zarr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;dj_zarr_codecs:ZarrCodec&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="k">[project.entry-points.</span><span class="s2">"datajoint.codecs"</span><span class="k">]</span>
+<span class="n">zarr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"dj_zarr_codecs:ZarrCodec"</span>
 </code></pre></div>
 <p>DataJoint discovers these entry points at import time, so the codec is immediately available after <code>pip install</code>.</p>
 <p><strong>No manual registration needed</strong> — unlike DataJoint 0.x which required <code>dj.register_codec()</code>.</p>
@@ -7290,13 +7290,13 @@
 <p>If installed but not working:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Force entry point reload</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">importlib.metadata</span>
-<span class="n">importlib</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">entry_points</span><span class="p">()</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">group</span><span class="o">=</span><span class="s1">&#39;datajoint.codecs&#39;</span><span class="p">)</span>
+<span class="n">importlib</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">entry_points</span><span class="p">()</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">group</span><span class="o">=</span><span class="s1">'datajoint.codecs'</span><span class="p">)</span>
 </code></pre></div>
 <h3 id="codec-not-found-after-installation">Codec Not Found After Installation<a class="headerlink" href="#codec-not-found-after-installation" title="Permanent link">&para;</a></h3>
 <p>Restart your Python session or kernel. Entry points are discovered at import time:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Restart kernel, then:</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">datajoint</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dj</span>
-<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;zarr&#39;</span> <span class="ow">in</span> <span class="n">dj</span><span class="o">.</span><span class="n">list_codecs</span><span class="p">())</span>  <span class="c1"># Should be True</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'zarr'</span> <span class="ow">in</span> <span class="n">dj</span><span class="o">.</span><span class="n">list_codecs</span><span class="p">())</span>  <span class="c1"># Should be True</span>
 </code></pre></div>
 <h3 id="version-conflicts">Version Conflicts<a class="headerlink" href="#version-conflicts" title="Permanent link">&para;</a></h3>
 <p>Check compatibility with your DataJoint version:</p>
@@ -7355,23 +7355,23 @@
     <span class="c1"># ... encoding logic ...</span>
 
     <span class="k">return</span> <span class="p">{</span>
-        <span class="s2">&quot;path&quot;</span><span class="p">:</span> <span class="n">path</span><span class="p">,</span>
-        <span class="s2">&quot;store&quot;</span><span class="p">:</span> <span class="n">store_name</span><span class="p">,</span>
-        <span class="s2">&quot;codec_version&quot;</span><span class="p">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">,</span>  <span class="c1"># Data format version</span>
-        <span class="s2">&quot;shape&quot;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="n">value</span><span class="o">.</span><span class="n">shape</span><span class="p">),</span>
-        <span class="s2">&quot;dtype&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">value</span><span class="o">.</span><span class="n">dtype</span><span class="p">),</span>
+        <span class="s2">"path"</span><span class="p">:</span> <span class="n">path</span><span class="p">,</span>
+        <span class="s2">"store"</span><span class="p">:</span> <span class="n">store_name</span><span class="p">,</span>
+        <span class="s2">"codec_version"</span><span class="p">:</span> <span class="s2">"1.0"</span><span class="p">,</span>  <span class="c1"># Data format version</span>
+        <span class="s2">"shape"</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="n">value</span><span class="o">.</span><span class="n">shape</span><span class="p">),</span>
+        <span class="s2">"dtype"</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">value</span><span class="o">.</span><span class="n">dtype</span><span class="p">),</span>
     <span class="p">}</span>
 </code></pre></div>
 <p><strong>Handle multiple versions in decode:</strong></p>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">decode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stored</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="n">version</span> <span class="o">=</span> <span class="n">stored</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;codec_version&quot;</span><span class="p">,</span> <span class="s2">&quot;1.0&quot;</span><span class="p">)</span>  <span class="c1"># Default for old data</span>
+    <span class="n">version</span> <span class="o">=</span> <span class="n">stored</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"codec_version"</span><span class="p">,</span> <span class="s2">"1.0"</span><span class="p">)</span>  <span class="c1"># Default for old data</span>
 
-    <span class="k">if</span> <span class="n">version</span> <span class="o">==</span> <span class="s2">&quot;2.0&quot;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">version</span> <span class="o">==</span> <span class="s2">"2.0"</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_decode_v2</span><span class="p">(</span><span class="n">stored</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="n">version</span> <span class="o">==</span> <span class="s2">&quot;1.0&quot;</span><span class="p">:</span>
+    <span class="k">elif</span> <span class="n">version</span> <span class="o">==</span> <span class="s2">"1.0"</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_decode_v1</span><span class="p">(</span><span class="n">stored</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="n">DataJointError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unsupported codec version: </span><span class="si">{</span><span class="n">version</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="n">DataJointError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Unsupported codec version: </span><span class="si">{</span><span class="n">version</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 </code></pre></div>
 <h3 id="when-to-bump-versions">When to Bump Versions<a class="headerlink" href="#when-to-bump-versions" title="Permanent link">&para;</a></h3>
 <p><strong>Bump data format version when:</strong>
@@ -7385,30 +7385,30 @@
 <h3 id="backward-compatibility-patterns">Backward Compatibility Patterns<a class="headerlink" href="#backward-compatibility-patterns" title="Permanent link">&para;</a></h3>
 <p><strong>Pattern 1: Version dispatch in decode()</strong></p>
 <div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">MyCodec</span><span class="p">(</span><span class="n">SchemaCodec</span><span class="p">):</span>
-    <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;mycodec&quot;</span>
-    <span class="n">CURRENT_VERSION</span> <span class="o">=</span> <span class="s2">&quot;2.0&quot;</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="s2">"mycodec"</span>
+    <span class="n">CURRENT_VERSION</span> <span class="o">=</span> <span class="s2">"2.0"</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">encode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">store_name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="c1"># Always encode with current version</span>
         <span class="n">metadata</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s2">&quot;codec_version&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">CURRENT_VERSION</span><span class="p">,</span>
+            <span class="s2">"codec_version"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">CURRENT_VERSION</span><span class="p">,</span>
             <span class="c1"># ... other metadata ...</span>
         <span class="p">}</span>
         <span class="k">return</span> <span class="n">metadata</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">decode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stored</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="n">version</span> <span class="o">=</span> <span class="n">stored</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;codec_version&quot;</span><span class="p">,</span> <span class="s2">&quot;1.0&quot;</span><span class="p">)</span>
+        <span class="n">version</span> <span class="o">=</span> <span class="n">stored</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"codec_version"</span><span class="p">,</span> <span class="s2">"1.0"</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="n">version</span> <span class="o">==</span> <span class="s2">&quot;2.0&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">version</span> <span class="o">==</span> <span class="s2">"2.0"</span><span class="p">:</span>
             <span class="c1"># Current version - optimized path</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_decode_current</span><span class="p">(</span><span class="n">stored</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">version</span> <span class="o">==</span> <span class="s2">&quot;1.0&quot;</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="n">version</span> <span class="o">==</span> <span class="s2">"1.0"</span><span class="p">:</span>
             <span class="c1"># Legacy version - compatibility path</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_decode_legacy_v1</span><span class="p">(</span><span class="n">stored</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">DataJointError</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;Cannot decode </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> version </span><span class="si">{</span><span class="n">version</span><span class="si">}</span><span class="s2">. &quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;Upgrade codec package or migrate data.&quot;</span>
+                <span class="sa">f</span><span class="s2">"Cannot decode </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> version </span><span class="si">{</span><span class="n">version</span><span class="si">}</span><span class="s2">. "</span>
+                <span class="sa">f</span><span class="s2">"Upgrade codec package or migrate data."</span>
             <span class="p">)</span>
 </code></pre></div>
 <p><strong>Pattern 2: Zarr attributes for feature versions</strong></p>
@@ -7416,23 +7416,23 @@
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">encode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">store_name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="c1"># ... write to Zarr ...</span>
 
-    <span class="n">z</span> <span class="o">=</span> <span class="n">zarr</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">store_map</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;r+&quot;</span><span class="p">)</span>
-    <span class="n">z</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;codec_version&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;2.0&quot;</span>
-    <span class="n">z</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;codec_name&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span>
-    <span class="n">z</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;feature_flags&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;compression&quot;</span><span class="p">,</span> <span class="s2">&quot;chunking&quot;</span><span class="p">]</span>
+    <span class="n">z</span> <span class="o">=</span> <span class="n">zarr</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">store_map</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">"r+"</span><span class="p">)</span>
+    <span class="n">z</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">"codec_version"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"2.0"</span>
+    <span class="n">z</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">"codec_name"</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span>
+    <span class="n">z</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">"feature_flags"</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"compression"</span><span class="p">,</span> <span class="s2">"chunking"</span><span class="p">]</span>
 
     <span class="k">return</span> <span class="p">{</span>
-        <span class="s2">&quot;path&quot;</span><span class="p">:</span> <span class="n">path</span><span class="p">,</span>
-        <span class="s2">&quot;store&quot;</span><span class="p">:</span> <span class="n">store_name</span><span class="p">,</span>
-        <span class="s2">&quot;codec_version&quot;</span><span class="p">:</span> <span class="s2">&quot;2.0&quot;</span><span class="p">,</span>  <span class="c1"># Also in DB for quick access</span>
+        <span class="s2">"path"</span><span class="p">:</span> <span class="n">path</span><span class="p">,</span>
+        <span class="s2">"store"</span><span class="p">:</span> <span class="n">store_name</span><span class="p">,</span>
+        <span class="s2">"codec_version"</span><span class="p">:</span> <span class="s2">"2.0"</span><span class="p">,</span>  <span class="c1"># Also in DB for quick access</span>
     <span class="p">}</span>
 
 <span class="k">def</span><span class="w"> </span><span class="nf">decode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stored</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="n">z</span> <span class="o">=</span> <span class="n">zarr</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">store_map</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">)</span>
-    <span class="n">version</span> <span class="o">=</span> <span class="n">z</span><span class="o">.</span><span class="n">attrs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;codec_version&quot;</span><span class="p">,</span> <span class="s2">&quot;1.0&quot;</span><span class="p">)</span>
+    <span class="n">z</span> <span class="o">=</span> <span class="n">zarr</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">store_map</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">"r"</span><span class="p">)</span>
+    <span class="n">version</span> <span class="o">=</span> <span class="n">z</span><span class="o">.</span><span class="n">attrs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"codec_version"</span><span class="p">,</span> <span class="s2">"1.0"</span><span class="p">)</span>
 
     <span class="c1"># Handle version-specific decoding</span>
-    <span class="k">if</span> <span class="n">version</span> <span class="o">==</span> <span class="s2">&quot;2.0&quot;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">version</span> <span class="o">==</span> <span class="s2">"2.0"</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">z</span>  <span class="c1"># Return Zarr array directly</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_migrate_v1_to_v2</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
@@ -7441,9 +7441,9 @@
 <p><strong>Strategy 1: Lazy migration (recommended)</strong></p>
 <p>Old data is migrated when accessed:</p>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">decode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stored</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="n">version</span> <span class="o">=</span> <span class="n">stored</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;codec_version&quot;</span><span class="p">,</span> <span class="s2">&quot;1.0&quot;</span><span class="p">)</span>
+    <span class="n">version</span> <span class="o">=</span> <span class="n">stored</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"codec_version"</span><span class="p">,</span> <span class="s2">"1.0"</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">version</span> <span class="o">==</span> <span class="s2">&quot;1.0&quot;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">version</span> <span class="o">==</span> <span class="s2">"1.0"</span><span class="p">:</span>
         <span class="c1"># Decode old format</span>
         <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_decode_v1</span><span class="p">(</span><span class="n">stored</span><span class="p">)</span>
 
@@ -7457,8 +7457,8 @@
 <p>For breaking changes, provide migration tools:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># migration_tool.py</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">migrate_table_to_v2</span><span class="p">(</span><span class="n">table</span><span class="p">,</span> <span class="n">field_name</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Migrate all rows to codec version 2.0.&quot;&quot;&quot;</span>
-    <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">table</span><span class="o">.</span><span class="n">fetch</span><span class="p">(</span><span class="s2">&quot;KEY&quot;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Migrate all rows to codec version 2.0."""</span>
+    <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">table</span><span class="o">.</span><span class="n">fetch</span><span class="p">(</span><span class="s2">"KEY"</span><span class="p">):</span>
         <span class="c1"># Fetch with old codec</span>
         <span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="n">table</span> <span class="o">&amp;</span> <span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">fetch1</span><span class="p">(</span><span class="n">field_name</span><span class="p">)</span>
 
@@ -7467,13 +7467,13 @@
 </code></pre></div>
 <p><strong>Strategy 3: Deprecation warnings</strong></p>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">decode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stored</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="n">version</span> <span class="o">=</span> <span class="n">stored</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;codec_version&quot;</span><span class="p">,</span> <span class="s2">&quot;1.0&quot;</span><span class="p">)</span>
+    <span class="n">version</span> <span class="o">=</span> <span class="n">stored</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"codec_version"</span><span class="p">,</span> <span class="s2">"1.0"</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">version</span> <span class="o">==</span> <span class="s2">&quot;1.0&quot;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">version</span> <span class="o">==</span> <span class="s2">"1.0"</span><span class="p">:</span>
         <span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
         <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;Reading </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> v1.0 data. Support will be removed in v3.0. &quot;</span>
-            <span class="sa">f</span><span class="s2">&quot;Please migrate: pip install </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">-migrate &amp;&amp; migrate-data&quot;</span><span class="p">,</span>
+            <span class="sa">f</span><span class="s2">"Reading </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> v1.0 data. Support will be removed in v3.0. "</span>
+            <span class="sa">f</span><span class="s2">"Please migrate: pip install </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">-migrate &amp;&amp; migrate-data"</span><span class="p">,</span>
             <span class="ne">DeprecationWarning</span>
         <span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_decode_v1</span><span class="p">(</span><span class="n">stored</span><span class="p">)</span>
@@ -7486,38 +7486,38 @@
 <p><strong>Hypothetical Version 2.0</strong> (backward compatible):
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">encode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">store_name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="c1"># New: configurable compression</span>
-    <span class="n">compression_level</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;compression_level&#39;</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+    <span class="n">compression_level</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">'compression_level'</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
 
     <span class="n">zarr</span><span class="o">.</span><span class="n">save_array</span><span class="p">(</span>
         <span class="n">store_map</span><span class="p">,</span>
         <span class="n">transformed</span><span class="p">,</span>
-        <span class="n">compressor</span><span class="o">=</span><span class="n">zarr</span><span class="o">.</span><span class="n">Blosc</span><span class="p">(</span><span class="n">cname</span><span class="o">=</span><span class="s2">&quot;zstd&quot;</span><span class="p">,</span> <span class="n">clevel</span><span class="o">=</span><span class="n">compression_level</span><span class="p">),</span>
+        <span class="n">compressor</span><span class="o">=</span><span class="n">zarr</span><span class="o">.</span><span class="n">Blosc</span><span class="p">(</span><span class="n">cname</span><span class="o">=</span><span class="s2">"zstd"</span><span class="p">,</span> <span class="n">clevel</span><span class="o">=</span><span class="n">compression_level</span><span class="p">),</span>
     <span class="p">)</span>
 
-    <span class="n">z</span> <span class="o">=</span> <span class="n">zarr</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">store_map</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;r+&quot;</span><span class="p">)</span>
-    <span class="n">z</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;codec_version&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;2.0&quot;</span>
-    <span class="n">z</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;compression_level&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">compression_level</span>
+    <span class="n">z</span> <span class="o">=</span> <span class="n">zarr</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">store_map</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">"r+"</span><span class="p">)</span>
+    <span class="n">z</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">"codec_version"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"2.0"</span>
+    <span class="n">z</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">"compression_level"</span><span class="p">]</span> <span class="o">=</span> <span class="n">compression_level</span>
 
     <span class="k">return</span> <span class="p">{</span>
-        <span class="s2">&quot;path&quot;</span><span class="p">:</span> <span class="n">path</span><span class="p">,</span>
-        <span class="s2">&quot;codec_version&quot;</span><span class="p">:</span> <span class="s2">&quot;2.0&quot;</span><span class="p">,</span>  <span class="c1"># &lt;-- NEW</span>
+        <span class="s2">"path"</span><span class="p">:</span> <span class="n">path</span><span class="p">,</span>
+        <span class="s2">"codec_version"</span><span class="p">:</span> <span class="s2">"2.0"</span><span class="p">,</span>  <span class="c1"># &lt;-- NEW</span>
         <span class="c1"># ... rest same ...</span>
     <span class="p">}</span>
 
 <span class="k">def</span><span class="w"> </span><span class="nf">decode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stored</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="n">z</span> <span class="o">=</span> <span class="n">zarr</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">store_map</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">)</span>
-    <span class="n">version</span> <span class="o">=</span> <span class="n">z</span><span class="o">.</span><span class="n">attrs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;codec_version&quot;</span><span class="p">,</span> <span class="s2">&quot;1.0&quot;</span><span class="p">)</span>
+    <span class="n">z</span> <span class="o">=</span> <span class="n">zarr</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">store_map</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">"r"</span><span class="p">)</span>
+    <span class="n">version</span> <span class="o">=</span> <span class="n">z</span><span class="o">.</span><span class="n">attrs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"codec_version"</span><span class="p">,</span> <span class="s2">"1.0"</span><span class="p">)</span>
 
     <span class="c1"># Both versions return zarr.Array - fully compatible!</span>
-    <span class="k">if</span> <span class="n">version</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;1.0&quot;</span><span class="p">,</span> <span class="s2">&quot;2.0&quot;</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">version</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"1.0"</span><span class="p">,</span> <span class="s2">"2.0"</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">z</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="n">DataJointError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unsupported version: </span><span class="si">{</span><span class="n">version</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="n">DataJointError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Unsupported version: </span><span class="si">{</span><span class="n">version</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 </code></pre></div></p>
 <h3 id="testing-version-compatibility">Testing Version Compatibility<a class="headerlink" href="#testing-version-compatibility" title="Permanent link">&para;</a></h3>
 <p>Include tests for version compatibility:</p>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_decode_v1_data</span><span class="p">():</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Ensure new codec can read old data.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Ensure new codec can read old data."""</span>
     <span class="c1"># Load fixture with v1.0 data</span>
     <span class="n">old_data</span> <span class="o">=</span> <span class="n">load_v1_fixture</span><span class="p">()</span>
 
@@ -7566,13 +7566,13 @@ dj-zarr-codecs&gt;=0.1.0
 </code></pre></div></p>
 <p><strong>pyproject.toml:</strong>
 <div class="highlight"><pre><span></span><code><span class="n">dependencies</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
-<span class="w">    </span><span class="s2">&quot;datajoint&gt;=2.0.0&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="s2">&quot;dj-zarr-codecs&gt;=0.1.0&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"datajoint&gt;=2.0.0"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"dj-zarr-codecs&gt;=0.1.0"</span><span class="p">,</span>
 <span class="p">]</span>
 </code></pre></div></p>
 <h3 id="2-document-codec-requirements">2. Document Codec Requirements<a class="headerlink" href="#2-document-codec-requirements" title="Permanent link">&para;</a></h3>
 <p>In your pipeline documentation, specify required codecs:</p>
-<div class="highlight"><pre><span></span><code><span class="sd">&quot;&quot;&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="sd">"""</span>
 <span class="sd">My Pipeline</span>
 <span class="sd">===========</span>
 
@@ -7582,7 +7582,7 @@ dj-zarr-codecs&gt;=0.1.0
 
 <span class="sd">Install:</span>
 <span class="sd">    pip install datajoint dj-zarr-codecs</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 </code></pre></div>
 <h3 id="3-pin-versions-for-reproducibility">3. Pin Versions for Reproducibility<a class="headerlink" href="#3-pin-versions-for-reproducibility" title="Permanent link">&para;</a></h3>
 <p>Use exact versions in production:</p>
@@ -7595,7 +7595,7 @@ dj-zarr-codecs&gt;=0.1.0
 <p>Add checks in your pipeline setup:</p>
 <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">datajoint</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dj</span>
 
-<span class="n">REQUIRED_CODECS</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;zarr&#39;</span><span class="p">]</span>
+<span class="n">REQUIRED_CODECS</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'zarr'</span><span class="p">]</span>
 
 <span class="k">def</span><span class="w"> </span><span class="nf">check_requirements</span><span class="p">():</span>
     <span class="n">available</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">list_codecs</span><span class="p">()</span>
@@ -7603,8 +7603,8 @@ dj-zarr-codecs&gt;=0.1.0
 
     <span class="k">if</span> <span class="n">missing</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;Missing required codecs: </span><span class="si">{</span><span class="n">missing</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
-            <span class="sa">f</span><span class="s2">&quot;Install with: pip install dj-zarr-codecs&quot;</span>
+            <span class="sa">f</span><span class="s2">"Missing required codecs: </span><span class="si">{</span><span class="n">missing</span><span class="si">}</span><span class="se">\n</span><span class="s2">"</span>
+            <span class="sa">f</span><span class="s2">"Install with: pip install dj-zarr-codecs"</span>
         <span class="p">)</span>
 
 <span class="n">check_requirements</span><span class="p">()</span>

@@ -3671,7 +3671,7 @@
   <span class="md-ellipsis">
     
   
-    Migrate to 2.0
+    Migrate to 2.x
   
 
     
@@ -6916,12 +6916,12 @@
 <h3 id="settings-structure">Settings Structure<a class="headerlink" href="#settings-structure" title="Permanent link">&para;</a></h3>
 <p>Job metadata is controlled via <code>config.jobs</code> settings:</p>
 <div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">JobsSettings</span><span class="p">(</span><span class="n">BaseSettings</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Job queue configuration for AutoPopulate 2.0.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Job queue configuration for AutoPopulate 2.0."""</span>
 
     <span class="n">model_config</span> <span class="o">=</span> <span class="n">SettingsConfigDict</span><span class="p">(</span>
-        <span class="n">env_prefix</span><span class="o">=</span><span class="s2">&quot;DJ_JOBS_&quot;</span><span class="p">,</span>
+        <span class="n">env_prefix</span><span class="o">=</span><span class="s2">"DJ_JOBS_"</span><span class="p">,</span>
         <span class="n">case_sensitive</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-        <span class="n">extra</span><span class="o">=</span><span class="s2">&quot;forbid&quot;</span><span class="p">,</span>
+        <span class="n">extra</span><span class="o">=</span><span class="s2">"forbid"</span><span class="p">,</span>
         <span class="n">validate_assignment</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
     <span class="p">)</span>
 
@@ -6930,15 +6930,15 @@
     <span class="n">keep_completed</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">...</span><span class="p">)</span>
     <span class="n">stale_timeout</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mi">3600</span><span class="p">,</span> <span class="o">...</span><span class="p">)</span>
     <span class="n">default_priority</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="o">...</span><span class="p">)</span>
-    <span class="n">version_method</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;git&quot;</span><span class="p">,</span> <span class="s2">&quot;none&quot;</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">...</span><span class="p">)</span>
+    <span class="n">version_method</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">"git"</span><span class="p">,</span> <span class="s2">"none"</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">...</span><span class="p">)</span>
     <span class="n">allow_new_pk_fields_in_computed_tables</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">...</span><span class="p">)</span>
 
     <span class="c1"># New setting for hidden job metadata</span>
     <span class="n">add_job_metadata</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
         <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Add hidden job metadata attributes (_job_start_time, _job_duration, _job_version) &quot;</span>
-        <span class="s2">&quot;to Computed and Imported tables during declaration. Tables created without this setting &quot;</span>
-        <span class="s2">&quot;will not receive metadata updates during populate.&quot;</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">"Add hidden job metadata attributes (_job_start_time, _job_duration, _job_version) "</span>
+        <span class="s2">"to Computed and Imported tables during declaration. Tables created without this setting "</span>
+        <span class="s2">"will not receive metadata updates during populate."</span>
     <span class="p">)</span>
 </code></pre></div>
 <h3 id="access-patterns">Access Patterns<a class="headerlink" href="#access-patterns" title="Permanent link">&para;</a></h3>
@@ -6958,7 +6958,7 @@
 <span class="c1">#   add_job_metadata: true</span>
 
 <span class="c1"># Temporary override</span>
-<span class="k">with</span> <span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">override</span><span class="p">(</span><span class="n">jobs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;add_job_metadata&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">}):</span>
+<span class="k">with</span> <span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">override</span><span class="p">(</span><span class="n">jobs</span><span class="o">=</span><span class="p">{</span><span class="s2">"add_job_metadata"</span><span class="p">:</span> <span class="kc">True</span><span class="p">}):</span>
     <span class="n">schema</span><span class="p">(</span><span class="n">MyComputedTable</span><span class="p">)</span>  <span class="c1"># Declared with metadata columns</span>
 </code></pre></div>
 <h3 id="setting-interactions">Setting Interactions<a class="headerlink" href="#setting-interactions" title="Permanent link">&para;</a></h3>
@@ -7065,22 +7065,22 @@ To add metadata columns to existing tables, use the migration utility (not autom
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">from_clause</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="n">clause</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">support</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">s</span><span class="p">,</span> <span class="n">left</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">support</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_left</span><span class="p">):</span>
-        <span class="n">clause</span> <span class="o">+=</span> <span class="s2">&quot; NATURAL</span><span class="si">{left}</span><span class="s2"> JOIN </span><span class="si">{clause}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+        <span class="n">clause</span> <span class="o">+=</span> <span class="s2">" NATURAL</span><span class="si">{left}</span><span class="s2"> JOIN </span><span class="si">{clause}</span><span class="s2">"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
 </code></pre></div></p>
 <p><strong>DataJoint 2.0 implementation:</strong>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">from_clause</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="n">clause</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">support</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">s</span><span class="p">,</span> <span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">using_attrs</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">support</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_joins</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">using_attrs</span><span class="p">:</span>
-            <span class="n">using</span> <span class="o">=</span> <span class="s2">&quot;USING (</span><span class="si">{}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;`</span><span class="si">{</span><span class="n">a</span><span class="si">}</span><span class="s2">`&quot;</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">using_attrs</span><span class="p">))</span>
-            <span class="n">clause</span> <span class="o">+=</span> <span class="s2">&quot; </span><span class="si">{left}</span><span class="s2">JOIN </span><span class="si">{s}</span><span class="s2"> </span><span class="si">{using}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                <span class="n">left</span><span class="o">=</span><span class="s2">&quot;LEFT &quot;</span> <span class="k">if</span> <span class="n">left</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+            <span class="n">using</span> <span class="o">=</span> <span class="s2">"USING (</span><span class="si">{}</span><span class="s2">)"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">", "</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="sa">f</span><span class="s2">"`</span><span class="si">{</span><span class="n">a</span><span class="si">}</span><span class="s2">`"</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">using_attrs</span><span class="p">))</span>
+            <span class="n">clause</span> <span class="o">+=</span> <span class="s2">" </span><span class="si">{left}</span><span class="s2">JOIN </span><span class="si">{s}</span><span class="s2"> </span><span class="si">{using}</span><span class="s2">"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">left</span><span class="o">=</span><span class="s2">"LEFT "</span> <span class="k">if</span> <span class="n">left</span> <span class="k">else</span> <span class="s2">""</span><span class="p">,</span>
                 <span class="n">s</span><span class="o">=</span><span class="n">s</span><span class="p">,</span>
                 <span class="n">using</span><span class="o">=</span><span class="n">using</span>
             <span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="c1"># Cross join (no common non-hidden attributes)</span>
-            <span class="n">clause</span> <span class="o">+=</span> <span class="s2">&quot; CROSS JOIN &quot;</span> <span class="o">+</span> <span class="n">s</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">left</span> <span class="k">else</span> <span class="s2">&quot; LEFT JOIN &quot;</span> <span class="o">+</span> <span class="n">s</span> <span class="o">+</span> <span class="s2">&quot; ON TRUE&quot;</span>
+            <span class="n">clause</span> <span class="o">+=</span> <span class="s2">" CROSS JOIN "</span> <span class="o">+</span> <span class="n">s</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">left</span> <span class="k">else</span> <span class="s2">" LEFT JOIN "</span> <span class="o">+</span> <span class="n">s</span> <span class="o">+</span> <span class="s2">" ON TRUE"</span>
     <span class="k">return</span> <span class="n">clause</span>
 </code></pre></div></p>
 <h3 id="changes-required">Changes Required<a class="headerlink" href="#changes-required" title="Permanent link">&para;</a></h3>
@@ -7150,9 +7150,9 @@ To add metadata columns to existing tables, use the migration utility (not autom
         <span class="c1"># Only for master tables, not parts</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">is_part_table</span><span class="p">:</span>
             <span class="n">job_metadata_sql</span> <span class="o">=</span> <span class="p">[</span>
-                <span class="s2">&quot;`_job_start_time` datetime(3) DEFAULT NULL&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;`_job_duration` float DEFAULT NULL&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;`_job_version` varchar(64) DEFAULT &#39;&#39;&quot;</span><span class="p">,</span>
+                <span class="s2">"`_job_start_time` datetime(3) DEFAULT NULL"</span><span class="p">,</span>
+                <span class="s2">"`_job_duration` float DEFAULT NULL"</span><span class="p">,</span>
+                <span class="s2">"`_job_version` varchar(64) DEFAULT ''"</span><span class="p">,</span>
             <span class="p">]</span>
             <span class="n">attribute_sql</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">job_metadata_sql</span><span class="p">)</span>
 </code></pre></div>
@@ -7175,45 +7175,45 @@ To add metadata columns to existing tables, use the migration utility (not autom
         <span class="p">)</span>
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_has_job_metadata_attrs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Check if table has hidden job metadata columns.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Check if table has hidden job metadata columns."""</span>
     <span class="n">hidden_attrs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">heading</span><span class="o">.</span><span class="n">_attributes</span>  <span class="c1"># includes hidden</span>
-    <span class="k">return</span> <span class="s1">&#39;_job_start_time&#39;</span> <span class="ow">in</span> <span class="n">hidden_attrs</span>
+    <span class="k">return</span> <span class="s1">'_job_start_time'</span> <span class="ow">in</span> <span class="n">hidden_attrs</span>
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_update_job_metadata</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">start_time</span><span class="p">,</span> <span class="n">duration</span><span class="p">,</span> <span class="n">version</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Update hidden job metadata for the given key.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Update hidden job metadata for the given key."""</span>
     <span class="c1"># UPDATE using primary key</span>
     <span class="n">pk_condition</span> <span class="o">=</span> <span class="n">make_condition</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="nb">set</span><span class="p">())</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">connection</span><span class="o">.</span><span class="n">query</span><span class="p">(</span>
-        <span class="sa">f</span><span class="s2">&quot;UPDATE </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">full_table_name</span><span class="si">}</span><span class="s2"> SET &quot;</span>
-        <span class="sa">f</span><span class="s2">&quot;`_job_start_time`=%s, `_job_duration`=%s, `_job_version`=%s &quot;</span>
-        <span class="sa">f</span><span class="s2">&quot;WHERE </span><span class="si">{</span><span class="n">pk_condition</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+        <span class="sa">f</span><span class="s2">"UPDATE </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">full_table_name</span><span class="si">}</span><span class="s2"> SET "</span>
+        <span class="sa">f</span><span class="s2">"`_job_start_time`=%s, `_job_duration`=%s, `_job_version`=%s "</span>
+        <span class="sa">f</span><span class="s2">"WHERE </span><span class="si">{</span><span class="n">pk_condition</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
         <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">start_time</span><span class="p">,</span> <span class="n">duration</span><span class="p">,</span> <span class="n">version</span><span class="p">[:</span><span class="mi">64</span><span class="p">])</span>
     <span class="p">)</span>
 </code></pre></div>
 <h3 id="3-job-table-jobspy">3. Job table (jobs.py)<a class="headerlink" href="#3-job-table-jobspy" title="Permanent link">&para;</a></h3>
 <p>Update version field length:
-<div class="highlight"><pre><span></span><code><span class="n">version</span><span class="o">=</span><span class="s2">&quot;&quot;</span>      <span class="p">:</span> <span class="n">varchar</span><span class="p">(</span><span class="mi">64</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><span class="n">version</span><span class="o">=</span><span class="s2">""</span>      <span class="p">:</span> <span class="n">varchar</span><span class="p">(</span><span class="mi">64</span><span class="p">)</span>
 </code></pre></div></p>
 <h3 id="4-version-helper">4. Version helper<a class="headerlink" href="#4-version-helper" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">_get_job_version</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get version string, truncated to 64 chars.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Get version string, truncated to 64 chars."""</span>
     <span class="kn">from</span><span class="w"> </span><span class="nn">.settings</span><span class="w"> </span><span class="kn">import</span> <span class="n">config</span>
 
     <span class="n">method</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">jobs</span><span class="o">.</span><span class="n">version_method</span>
-    <span class="k">if</span> <span class="n">method</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;none&quot;</span><span class="p">:</span>
-        <span class="k">return</span> <span class="s2">&quot;&quot;</span>
-    <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;git&quot;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">method</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">"none"</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">""</span>
+    <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">"git"</span><span class="p">:</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">result</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
-                <span class="p">[</span><span class="s2">&quot;git&quot;</span><span class="p">,</span> <span class="s2">&quot;rev-parse&quot;</span><span class="p">,</span> <span class="s2">&quot;--short&quot;</span><span class="p">,</span> <span class="s2">&quot;HEAD&quot;</span><span class="p">],</span>
+                <span class="p">[</span><span class="s2">"git"</span><span class="p">,</span> <span class="s2">"rev-parse"</span><span class="p">,</span> <span class="s2">"--short"</span><span class="p">,</span> <span class="s2">"HEAD"</span><span class="p">],</span>
                 <span class="n">capture_output</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                 <span class="n">text</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                 <span class="n">timeout</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
             <span class="p">)</span>
-            <span class="k">return</span> <span class="n">result</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">strip</span><span class="p">()[:</span><span class="mi">64</span><span class="p">]</span> <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">returncode</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
+            <span class="k">return</span> <span class="n">result</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">strip</span><span class="p">()[:</span><span class="mi">64</span><span class="p">]</span> <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">returncode</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">else</span> <span class="s2">""</span>
         <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-            <span class="k">return</span> <span class="s2">&quot;&quot;</span>
-    <span class="k">return</span> <span class="s2">&quot;&quot;</span>
+            <span class="k">return</span> <span class="s2">""</span>
+    <span class="k">return</span> <span class="s2">""</span>
 </code></pre></div>
 <h2 id="example-usage">Example Usage<a class="headerlink" href="#example-usage" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><span class="c1"># Enable job metadata for new tables</span>
@@ -7221,25 +7221,25 @@ To add metadata columns to existing tables, use the migration utility (not autom
 
 <span class="nd">@schema</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">SessionAnalysis</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Computed</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    -&gt; Session</span>
 <span class="s2">    ---</span>
 <span class="s2">    result : float</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">make</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
         <span class="c1"># User code - unaware of hidden attributes</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="o">**</span><span class="n">key</span><span class="p">,</span> <span class="s1">&#39;result&#39;</span><span class="p">:</span> <span class="n">compute</span><span class="p">(</span><span class="n">key</span><span class="p">)})</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="o">**</span><span class="n">key</span><span class="p">,</span> <span class="s1">'result'</span><span class="p">:</span> <span class="n">compute</span><span class="p">(</span><span class="n">key</span><span class="p">)})</span>
 
 <span class="c1"># Job metadata automatically added and populated:</span>
 <span class="c1"># _job_start_time, _job_duration, _job_version</span>
 
 <span class="c1"># User-facing API unaffected:</span>
-<span class="n">SessionAnalysis</span><span class="p">()</span><span class="o">.</span><span class="n">heading</span><span class="o">.</span><span class="n">names</span>  <span class="c1"># [&#39;session_id&#39;, &#39;result&#39;]</span>
+<span class="n">SessionAnalysis</span><span class="p">()</span><span class="o">.</span><span class="n">heading</span><span class="o">.</span><span class="n">names</span>  <span class="c1"># ['session_id', 'result']</span>
 <span class="n">SessionAnalysis</span><span class="p">()</span><span class="o">.</span><span class="n">to_dicts</span><span class="p">()</span>  <span class="c1"># Returns only visible attributes</span>
 
 <span class="c1"># Access hidden attributes explicitly if needed:</span>
-<span class="n">SessionAnalysis</span><span class="p">()</span><span class="o">.</span><span class="n">to_arrays</span><span class="p">(</span><span class="s1">&#39;_job_start_time&#39;</span><span class="p">,</span> <span class="s1">&#39;_job_duration&#39;</span><span class="p">,</span> <span class="s1">&#39;_job_version&#39;</span><span class="p">)</span>
+<span class="n">SessionAnalysis</span><span class="p">()</span><span class="o">.</span><span class="n">to_arrays</span><span class="p">(</span><span class="s1">'_job_start_time'</span><span class="p">,</span> <span class="s1">'_job_duration'</span><span class="p">,</span> <span class="s1">'_job_version'</span><span class="p">)</span>
 </code></pre></div>
 <h2 id="summary-of-design-decisions">Summary of Design Decisions<a class="headerlink" href="#summary-of-design-decisions" title="Permanent link">&para;</a></h2>
 <table>

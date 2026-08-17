@@ -3999,7 +3999,7 @@
   <span class="md-ellipsis">
     
   
-    Migrate to 2.0
+    Migrate to 2.x
   
 
     
@@ -6936,71 +6936,72 @@ table structure. DataJoint takes a different approach: design tables around
 <p><strong>Denormalized (problematic):</strong></p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Wrong: cage info repeated for every mouse</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Mouse</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    mouse_id : int32</span>
 <span class="s2">    ---</span>
 <span class="s2">    cage_id : int32</span>
 <span class="s2">    cage_location : varchar(50)    # Redundant!</span>
 <span class="s2">    cage_temperature : float32     # Redundant!</span>
 <span class="s2">    weight : float32</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">    """</span>
 </code></pre></div>
 <p><strong>Partially normalized (better, but not complete):</strong></p>
 <div class="highlight"><pre><span></span><code><span class="nd">@schema</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Cage</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    cage_id : int32</span>
 <span class="s2">    ---</span>
 <span class="s2">    location : varchar(50)</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">    """</span>
 
 <span class="nd">@schema</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Mouse</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    mouse_id : int32</span>
 <span class="s2">    ---</span>
 <span class="s2">    -&gt; Cage    # Still treats cage as static attribute</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">    """</span>
 </code></pre></div>
 <p><strong>Fully normalized (correct):</strong></p>
 <div class="highlight"><pre><span></span><code><span class="nd">@schema</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Cage</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    cage_id : int32</span>
 <span class="s2">    ---</span>
 <span class="s2">    location : varchar(50)</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">    """</span>
 
 <span class="nd">@schema</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Mouse</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    mouse_id : int32</span>
 <span class="s2">    ---</span>
 <span class="s2">    date_of_birth : date</span>
-<span class="s2">    sex : enum(&#39;M&#39;, &#39;F&#39;)</span>
+<span class="s2">    sex : enum('M', 'F')</span>
 <span class="s2">    # Note: NO cage reference here!</span>
 <span class="s2">    # Cage is not intrinsic to the mouse</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">    """</span>
 
 <span class="nd">@schema</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">CageAssignment</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    -&gt; Mouse</span>
 <span class="s2">    assignment_date : date</span>
 <span class="s2">    ---</span>
 <span class="s2">    -&gt; Cage</span>
 <span class="s2">    removal_date=null : date</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">    """</span>
 
 <span class="nd">@schema</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">MouseWeight</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    -&gt; Mouse</span>
 <span class="s2">    weigh_date : date</span>
 <span class="s2">    ---</span>
 <span class="s2">    weight : float32</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">    """</span>
 </code></pre></div>
+<p><img alt="Fully normalized mouse-housing schema, left to right: Mouse and Cage as entity tables; CageAssignment and MouseWeight as event tables keyed by date, each depending on Mouse. CageAssignment references Cage as a secondary (dashed) foreign key." src="../../images/norm-mouse-housing.svg" /></p>
 <p>This fully normalized design:</p>
 <ul>
 <li><strong>Intrinsic attributes only</strong> — <code>Mouse</code> contains only attributes determined at creation (birth date, sex)</li>
@@ -7041,43 +7042,44 @@ shipment, because that sequence is not expressed anywhere.</p>
 <p>Splitting by workflow step fixes all of this:</p>
 <div class="highlight"><pre><span></span><code><span class="nd">@schema</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Order</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    order_id : int32</span>
 <span class="s2">    order_date : datetime</span>
 <span class="s2">    ---</span>
 <span class="s2">    -&gt; Product</span>
 <span class="s2">    -&gt; Customer</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">    """</span>
 
 <span class="nd">@schema</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Payment</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
-<span class="s2">    -&gt; Order                    # can&#39;t pay before ordering</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
+<span class="s2">    -&gt; Order                    # can't pay before ordering</span>
 <span class="s2">    ---</span>
 <span class="s2">    payment_date : datetime</span>
-<span class="s2">    payment_method : enum(&#39;Credit Card&#39;, &#39;PayPal&#39;, &#39;Bank Transfer&#39;)</span>
+<span class="s2">    payment_method : enum('Credit Card', 'PayPal', 'Bank Transfer')</span>
 <span class="s2">    amount : decimal(10, 2)</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">    """</span>
 
 <span class="nd">@schema</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Shipment</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
-<span class="s2">    -&gt; Payment                  # can&#39;t ship before payment clears</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
+<span class="s2">    -&gt; Payment                  # can't ship before payment clears</span>
 <span class="s2">    ---</span>
 <span class="s2">    shipment_date : datetime</span>
 <span class="s2">    carrier : varchar(50)</span>
 <span class="s2">    tracking_number : varchar(100)</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">    """</span>
 
 <span class="nd">@schema</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Delivery</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
-<span class="s2">    -&gt; Shipment                 # can&#39;t deliver before shipping</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
+<span class="s2">    -&gt; Shipment                 # can't deliver before shipping</span>
 <span class="s2">    ---</span>
 <span class="s2">    delivery_date : datetime</span>
 <span class="s2">    recipient_signature : varchar(100)</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">    """</span>
 </code></pre></div>
+<p><img alt="Workflow-normalized order schema, left to right: Order (referencing Product and Customer as secondary, dashed foreign keys), then a one-to-one chain Order → Payment → Shipment → Delivery, each step a separate table." src="../../images/norm-order-workflow.svg" /></p>
 <p>The foreign keys now form a chain — <code>Order → Payment → Shipment → Delivery</code> —
 that is simultaneously the referential-integrity structure and the workflow
 diagram. Every attribute is non-nullable, because a row exists only once its step
@@ -7146,59 +7148,59 @@ corrected value, keeping the pipeline reproducible.</p>
 <p>Store reference data that doesn't change:</p>
 <div class="highlight"><pre><span></span><code><span class="nd">@schema</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Species</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Lookup</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    species : varchar(50)</span>
 <span class="s2">    ---</span>
 <span class="s2">    common_name : varchar(100)</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">    """</span>
     <span class="n">contents</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="p">(</span><span class="s1">&#39;Mus musculus&#39;</span><span class="p">,</span> <span class="s1">&#39;House mouse&#39;</span><span class="p">),</span>
-        <span class="p">(</span><span class="s1">&#39;Rattus norvegicus&#39;</span><span class="p">,</span> <span class="s1">&#39;Brown rat&#39;</span><span class="p">),</span>
+        <span class="p">(</span><span class="s1">'Mus musculus'</span><span class="p">,</span> <span class="s1">'House mouse'</span><span class="p">),</span>
+        <span class="p">(</span><span class="s1">'Rattus norvegicus'</span><span class="p">,</span> <span class="s1">'Brown rat'</span><span class="p">),</span>
     <span class="p">]</span>
 </code></pre></div>
 <h3 id="parameter-sets">Parameter Sets<a class="headerlink" href="#parameter-sets" title="Permanent link">&para;</a></h3>
 <p>Store versioned configurations:</p>
 <div class="highlight"><pre><span></span><code><span class="nd">@schema</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">AnalysisParams</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Lookup</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    params_id : int32</span>
 <span class="s2">    ---</span>
 <span class="s2">    threshold : float32</span>
 <span class="s2">    window_size : int32</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">    """</span>
 </code></pre></div>
 <h3 id="temporal-tracking">Temporal Tracking<a class="headerlink" href="#temporal-tracking" title="Permanent link">&para;</a></h3>
 <p>Track measurements or observations over time:</p>
 <div class="highlight"><pre><span></span><code><span class="nd">@schema</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">SubjectWeight</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    -&gt; Subject</span>
 <span class="s2">    weight_date : date</span>
 <span class="s2">    ---</span>
 <span class="s2">    weight : float32   # grams</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">    """</span>
 </code></pre></div>
 <h3 id="temporal-associations">Temporal Associations<a class="headerlink" href="#temporal-associations" title="Permanent link">&para;</a></h3>
 <p>Track relationships or assignments that change over time:</p>
 <div class="highlight"><pre><span></span><code><span class="nd">@schema</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">GroupAssignment</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    -&gt; Subject</span>
 <span class="s2">    assignment_date : date</span>
 <span class="s2">    ---</span>
 <span class="s2">    -&gt; ExperimentalGroup</span>
 <span class="s2">    removal_date=null : date</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">    """</span>
 
 <span class="nd">@schema</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">HousingAssignment</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    -&gt; Animal</span>
 <span class="s2">    move_date : date</span>
 <span class="s2">    ---</span>
 <span class="s2">    -&gt; Cage</span>
 <span class="s2">    move_reason : varchar(200)</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">    """</span>
 </code></pre></div>
 <p><strong>Key pattern:</strong> The relationship itself (subject-to-group, animal-to-cage) is <strong>not intrinsic</strong> to either entity. It's a temporal event that happens during the workflow.</p>
 <h2 id="benefits-in-datajoint">Benefits in DataJoint<a class="headerlink" href="#benefits-in-datajoint" title="Permanent link">&para;</a></h2>

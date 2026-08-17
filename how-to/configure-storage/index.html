@@ -3927,7 +3927,7 @@
   <span class="md-ellipsis">
     
   
-    Migrate to 2.0
+    Migrate to 2.x
   
 
     
@@ -6679,11 +6679,11 @@
 <h3 id="file-system-store">File System Store<a class="headerlink" href="#file-system-store" title="Permanent link">&para;</a></h3>
 <p>For local or network-mounted storage:</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;stores&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;default&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;main&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;main&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="nt">&quot;protocol&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;file&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;location&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/data/my-project/production&quot;</span>
+<span class="w">  </span><span class="nt">"stores"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"default"</span><span class="p">:</span><span class="w"> </span><span class="s2">"main"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"main"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">"protocol"</span><span class="p">:</span><span class="w"> </span><span class="s2">"file"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"location"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/data/my-project/production"</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
@@ -6696,14 +6696,14 @@
 <h3 id="s3-store">S3 Store<a class="headerlink" href="#s3-store" title="Permanent link">&para;</a></h3>
 <p>For Amazon S3 or S3-compatible storage:</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;stores&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;default&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;main&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;main&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="nt">&quot;protocol&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;s3&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;endpoint&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;s3.amazonaws.com&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;bucket&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;my-bucket&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;location&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;my-project/production&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;secure&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">  </span><span class="nt">"stores"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"default"</span><span class="p">:</span><span class="w"> </span><span class="s2">"main"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"main"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">"protocol"</span><span class="p">:</span><span class="w"> </span><span class="s2">"s3"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"endpoint"</span><span class="p">:</span><span class="w"> </span><span class="s2">"s3.amazonaws.com"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"bucket"</span><span class="p">:</span><span class="w"> </span><span class="s2">"my-bucket"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"location"</span><span class="p">:</span><span class="w"> </span><span class="s2">"my-project/production"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"secure"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
@@ -6729,14 +6729,14 @@ Provide both only for static keys. (Supplying just one is rejected.)</p>
 <h3 id="minio-store">MinIO Store<a class="headerlink" href="#minio-store" title="Permanent link">&para;</a></h3>
 <p>MinIO uses the S3 protocol with a custom endpoint:</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;stores&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;default&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;main&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;main&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="nt">&quot;protocol&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;s3&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;endpoint&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;minio.example.com:9000&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;bucket&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;datajoint&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;location&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;lab-data&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;secure&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span>
+<span class="w">  </span><span class="nt">"stores"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"default"</span><span class="p">:</span><span class="w"> </span><span class="s2">"main"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"main"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">"protocol"</span><span class="p">:</span><span class="w"> </span><span class="s2">"s3"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"endpoint"</span><span class="p">:</span><span class="w"> </span><span class="s2">"minio.example.com:9000"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"bucket"</span><span class="p">:</span><span class="w"> </span><span class="s2">"datajoint"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"location"</span><span class="p">:</span><span class="w"> </span><span class="s2">"lab-data"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"secure"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
@@ -6744,23 +6744,23 @@ Provide both only for static keys. (Supplying just one is rejected.)</p>
 <h2 id="multiple-stores-configuration">Multiple Stores Configuration<a class="headerlink" href="#multiple-stores-configuration" title="Permanent link">&para;</a></h2>
 <p>Define multiple stores for different data types or storage tiers:</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;stores&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;default&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;main&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;main&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="nt">&quot;protocol&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;file&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;location&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/data/my-project/main&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;partition_pattern&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;subject_id/session_date&quot;</span>
+<span class="w">  </span><span class="nt">"stores"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"default"</span><span class="p">:</span><span class="w"> </span><span class="s2">"main"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"main"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">"protocol"</span><span class="p">:</span><span class="w"> </span><span class="s2">"file"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"location"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/data/my-project/main"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"partition_pattern"</span><span class="p">:</span><span class="w"> </span><span class="s2">"subject_id/session_date"</span>
 <span class="w">    </span><span class="p">},</span>
-<span class="w">    </span><span class="nt">&quot;raw&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="nt">&quot;protocol&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;file&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;location&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/data/my-project/raw&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;subfolding&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">]</span>
+<span class="w">    </span><span class="nt">"raw"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">"protocol"</span><span class="p">:</span><span class="w"> </span><span class="s2">"file"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"location"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/data/my-project/raw"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"subfolding"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">]</span>
 <span class="w">    </span><span class="p">},</span>
-<span class="w">    </span><span class="nt">&quot;archive&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="nt">&quot;protocol&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;s3&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;endpoint&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;s3.amazonaws.com&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;bucket&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;archive-bucket&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;location&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;my-project/long-term&quot;</span>
+<span class="w">    </span><span class="nt">"archive"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">"protocol"</span><span class="p">:</span><span class="w"> </span><span class="s2">"s3"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"endpoint"</span><span class="p">:</span><span class="w"> </span><span class="s2">"s3.amazonaws.com"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"bucket"</span><span class="p">:</span><span class="w"> </span><span class="s2">"archive-bucket"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"location"</span><span class="p">:</span><span class="w"> </span><span class="s2">"my-project/long-term"</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
@@ -6773,14 +6773,14 @@ Provide both only for static keys. (Supplying just one is rejected.)</p>
 <p>Use named stores in table definitions:</p>
 <div class="highlight"><pre><span></span><code><span class="nd">@schema</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Recording</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    recording_id : uuid</span>
 <span class="s2">    ---</span>
 <span class="s2">    raw_data : &lt;blob@raw&gt;         # Hash: _hash/</span><span class="si">{schema}</span><span class="s2">/</span><span class="si">{hash}</span>
 <span class="s2">    zarr_scan : &lt;object@raw&gt;      # Schema: _schema/</span><span class="si">{schema}</span><span class="s2">/</span><span class="si">{table}</span><span class="s2">/</span><span class="si">{key}</span><span class="s2">/</span>
 <span class="s2">    summary : &lt;blob@&gt;             # Uses default store (main)</span>
 <span class="s2">    old_data : &lt;blob@archive&gt;     # Archive store, hash-addressed</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">    """</span>
 </code></pre></div>
 <p>Notice that <code>&lt;blob@raw&gt;</code> and <code>&lt;object@raw&gt;</code> both use the "raw" store, just different <code>_hash</code> and <code>_schema</code> sections.</p>
 <p><strong>Example paths with partitioning:</strong></p>
@@ -6798,7 +6798,7 @@ Provide both only for static keys. (Supplying just one is rejected.)</p>
 <span class="nb">print</span><span class="p">(</span><span class="n">spec</span><span class="p">)</span>
 
 <span class="c1"># Check named store</span>
-<span class="n">spec</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get_store_spec</span><span class="p">(</span><span class="s2">&quot;archive&quot;</span><span class="p">)</span>
+<span class="n">spec</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get_store_spec</span><span class="p">(</span><span class="s2">"archive"</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">spec</span><span class="p">)</span>
 
 <span class="c1"># List all configured stores</span>
@@ -6877,13 +6877,13 @@ Provide both only for static keys. (Supplying just one is rejected.)</p>
 </code></pre></div>
 <p>Some filesystems perform poorly with large directories (thousands of files). Subfolding creates a directory hierarchy to distribute files:</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;stores&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;default&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;main&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;main&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="nt">&quot;protocol&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;file&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;location&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/data/store&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;project_name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;my_project&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;subfolding&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">]</span>
+<span class="w">  </span><span class="nt">"stores"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"default"</span><span class="p">:</span><span class="w"> </span><span class="s2">"main"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"main"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">"protocol"</span><span class="p">:</span><span class="w"> </span><span class="s2">"file"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"location"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/data/store"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"project_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"my_project"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"subfolding"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">]</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
@@ -6973,8 +6973,8 @@ Modern local filesystems and cloud object storage work well without subfolding.<
 </ul>
 <p>You can use either format when specifying paths:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Both are equivalent for local files</span>
-<span class="s2">&quot;/data/myfile.dat&quot;</span>
-<span class="s2">&quot;file:///data/myfile.dat&quot;</span>
+<span class="s2">"/data/myfile.dat"</span>
+<span class="s2">"file:///data/myfile.dat"</span>
 </code></pre></div>
 <p>This unified approach enables:</p>
 <ul>
@@ -6985,13 +6985,13 @@ Modern local filesystems and cloud object storage work well without subfolding.<
 <h2 id="customizing-storage-sections">Customizing Storage Sections<a class="headerlink" href="#customizing-storage-sections" title="Permanent link">&para;</a></h2>
 <p>Each store is divided into sections for different storage types. By default, DataJoint uses <code>_hash/</code> for hash-addressed storage and <code>_schema/</code> for schema-addressed storage. You can customize the path prefix for each section using the <code>*_prefix</code> configuration parameters to map DataJoint to existing storage layouts. Writers, garbage collection, and <code>&lt;filepath@&gt;</code> validation all read the same per-store values, so a relocated section stays consistent end to end:</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;stores&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;legacy&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="nt">&quot;protocol&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;file&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;location&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/data/existing_storage&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;hash_prefix&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;content_addressed&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;schema_prefix&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;structured_data&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;filepath_prefix&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;raw_files&quot;</span>
+<span class="w">  </span><span class="nt">"stores"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"legacy"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">"protocol"</span><span class="p">:</span><span class="w"> </span><span class="s2">"file"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"location"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/data/existing_storage"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"hash_prefix"</span><span class="p">:</span><span class="w"> </span><span class="s2">"content_addressed"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"schema_prefix"</span><span class="p">:</span><span class="w"> </span><span class="s2">"structured_data"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"filepath_prefix"</span><span class="p">:</span><span class="w"> </span><span class="s2">"raw_files"</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
@@ -7012,15 +7012,15 @@ match content stored under an old prefix.</p>
 </div>
 <p><strong>Example with hierarchical layout:</strong></p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;stores&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;organized&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="nt">&quot;protocol&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;s3&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;endpoint&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;s3.amazonaws.com&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;bucket&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;neuroscience-data&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;location&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;lab-project-2024&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;hash_prefix&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;managed/blobs&quot;</span><span class="p">,</span><span class="w">      </span><span class="c1">// Path prefix for hash section</span>
-<span class="w">      </span><span class="nt">&quot;schema_prefix&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;managed/arrays&quot;</span><span class="p">,</span><span class="w">    </span><span class="c1">// Path prefix for schema section</span>
-<span class="w">      </span><span class="nt">&quot;filepath_prefix&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;imported&quot;</span><span class="w">         </span><span class="c1">// Path prefix for filepath section</span>
+<span class="w">  </span><span class="nt">"stores"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"organized"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">"protocol"</span><span class="p">:</span><span class="w"> </span><span class="s2">"s3"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"endpoint"</span><span class="p">:</span><span class="w"> </span><span class="s2">"s3.amazonaws.com"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"bucket"</span><span class="p">:</span><span class="w"> </span><span class="s2">"neuroscience-data"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"location"</span><span class="p">:</span><span class="w"> </span><span class="s2">"lab-project-2024"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"hash_prefix"</span><span class="p">:</span><span class="w"> </span><span class="s2">"managed/blobs"</span><span class="p">,</span><span class="w">      </span><span class="c1">// Path prefix for hash section</span>
+<span class="w">      </span><span class="nt">"schema_prefix"</span><span class="p">:</span><span class="w"> </span><span class="s2">"managed/arrays"</span><span class="p">,</span><span class="w">    </span><span class="c1">// Path prefix for schema section</span>
+<span class="w">      </span><span class="nt">"filepath_prefix"</span><span class="p">:</span><span class="w"> </span><span class="s2">"imported"</span><span class="w">         </span><span class="c1">// Path prefix for filepath section</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
@@ -7041,23 +7041,23 @@ match content stored under an old prefix.</p>
 <p>The <code>&lt;filepath@&gt;</code> codec stores paths to files that you manage. DataJoint does not manage lifecycle (no garbage collection), integrity (no transaction safety), or deduplication for filepath storage. You can reference existing files or create new ones—DataJoint simply stores the path string. Files can be anywhere in the store <strong>except</strong> the reserved sections:</p>
 <div class="highlight"><pre><span></span><code><span class="nd">@schema</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">RawData</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    session_id : int</span>
 <span class="s2">    ---</span>
 <span class="s2">    recording : &lt;filepath@acquisition&gt;  # User-managed file path</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">    """</span>
 
 <span class="c1"># Valid paths (user-managed)</span>
-<span class="n">table</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="s1">&#39;session_id&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;recording&#39;</span><span class="p">:</span> <span class="s1">&#39;subject01/session001/data.bin&#39;</span><span class="p">})</span>  <span class="c1"># Existing or new file</span>
-<span class="n">table</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="s1">&#39;session_id&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;recording&#39;</span><span class="p">:</span> <span class="s1">&#39;raw/experiment_2024/data.nwb&#39;</span><span class="p">})</span>  <span class="c1"># Existing or new file</span>
+<span class="n">table</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="s1">'session_id'</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">'recording'</span><span class="p">:</span> <span class="s1">'subject01/session001/data.bin'</span><span class="p">})</span>  <span class="c1"># Existing or new file</span>
+<span class="n">table</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="s1">'session_id'</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">'recording'</span><span class="p">:</span> <span class="s1">'raw/experiment_2024/data.nwb'</span><span class="p">})</span>  <span class="c1"># Existing or new file</span>
 
 <span class="c1"># Invalid paths (reserved for DataJoint - will raise ValueError)</span>
 <span class="c1"># These use the default prefixes (_hash and _schema)</span>
-<span class="n">table</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="s1">&#39;session_id&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="s1">&#39;recording&#39;</span><span class="p">:</span> <span class="s1">&#39;_hash/abc123...&#39;</span><span class="p">})</span>      <span class="c1"># Error!</span>
-<span class="n">table</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="s1">&#39;session_id&#39;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span> <span class="s1">&#39;recording&#39;</span><span class="p">:</span> <span class="s1">&#39;_schema/myschema/...&#39;</span><span class="p">})</span> <span class="c1"># Error!</span>
+<span class="n">table</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="s1">'session_id'</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="s1">'recording'</span><span class="p">:</span> <span class="s1">'_hash/abc123...'</span><span class="p">})</span>      <span class="c1"># Error!</span>
+<span class="n">table</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="s1">'session_id'</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span> <span class="s1">'recording'</span><span class="p">:</span> <span class="s1">'_schema/myschema/...'</span><span class="p">})</span> <span class="c1"># Error!</span>
 
-<span class="c1"># If you configured custom prefixes like &quot;content_addressed&quot;, those would also be blocked</span>
-<span class="c1"># table.insert1({&#39;session_id&#39;: 5, &#39;recording&#39;: &#39;content_addressed/file.dat&#39;})  # Error!</span>
+<span class="c1"># If you configured custom prefixes like "content_addressed", those would also be blocked</span>
+<span class="c1"># table.insert1({'session_id': 5, 'recording': 'content_addressed/file.dat'})  # Error!</span>
 </code></pre></div>
 <p><strong>Key characteristics of <code>&lt;filepath@&gt;</code>:</strong></p>
 <ul>
@@ -7076,27 +7076,27 @@ match content stored under an old prefix.</p>
 <p><code>DJ_STORES</code> carries a JSON-encoded copy of the <code>stores</code> dict for env-var-only deployments (Kubernetes pods, Lambda, the DataJoint platform). Combined with <code>DJ_IGNORE_CONFIG_FILE=true</code>, it removes the need for any file on disk.</p>
 </div>
 <p>The JSON shape is identical to the <code>stores</code> block of <code>datajoint.json</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="nb">export</span><span class="w"> </span><span class="nv">DJ_STORES</span><span class="o">=</span><span class="s1">&#39;{</span>
-<span class="s1">  &quot;default&quot;: &quot;main&quot;,</span>
-<span class="s1">  &quot;main&quot;: {</span>
-<span class="s1">    &quot;protocol&quot;: &quot;s3&quot;,</span>
-<span class="s1">    &quot;endpoint&quot;: &quot;s3.amazonaws.com&quot;,</span>
-<span class="s1">    &quot;bucket&quot;: &quot;my-bucket&quot;,</span>
-<span class="s1">    &quot;location&quot;: &quot;my-project/production&quot;,</span>
-<span class="s1">    &quot;access_key&quot;: &quot;AKIA...&quot;,</span>
-<span class="s1">    &quot;secret_key&quot;: &quot;wJal...&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="nb">export</span><span class="w"> </span><span class="nv">DJ_STORES</span><span class="o">=</span><span class="s1">'{</span>
+<span class="s1">  "default": "main",</span>
+<span class="s1">  "main": {</span>
+<span class="s1">    "protocol": "s3",</span>
+<span class="s1">    "endpoint": "s3.amazonaws.com",</span>
+<span class="s1">    "bucket": "my-bucket",</span>
+<span class="s1">    "location": "my-project/production",</span>
+<span class="s1">    "access_key": "AKIA...",</span>
+<span class="s1">    "secret_key": "wJal..."</span>
 <span class="s1">  }</span>
-<span class="s1">}&#39;</span>
+<span class="s1">}'</span>
 </code></pre></div>
 <p>For plugin-registered adapters, declare whatever fields the adapter requires:</p>
-<div class="highlight"><pre><span></span><code><span class="nb">export</span><span class="w"> </span><span class="nv">DJ_STORES</span><span class="o">=</span><span class="s1">&#39;{</span>
-<span class="s1">  &quot;uc&quot;: {</span>
-<span class="s1">    &quot;protocol&quot;: &quot;databricks&quot;,</span>
-<span class="s1">    &quot;workspace_url&quot;: &quot;https://my-workspace.cloud.databricks.com&quot;,</span>
-<span class="s1">    &quot;volume&quot;: &quot;main.default.my_volume&quot;,</span>
-<span class="s1">    &quot;token&quot;: &quot;dapibd...&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="nb">export</span><span class="w"> </span><span class="nv">DJ_STORES</span><span class="o">=</span><span class="s1">'{</span>
+<span class="s1">  "uc": {</span>
+<span class="s1">    "protocol": "databricks",</span>
+<span class="s1">    "workspace_url": "https://my-workspace.cloud.databricks.com",</span>
+<span class="s1">    "volume": "main.default.my_volume",</span>
+<span class="s1">    "token": "dapibd..."</span>
 <span class="s1">  }</span>
-<span class="s1">}&#39;</span>
+<span class="s1">}'</span>
 </code></pre></div>
 <p><code>DJ_STORES</code>, when set, replaces the <code>stores</code> block loaded from <code>datajoint.json</code>. The <code>.secrets/</code> directory still runs afterward and fills in any attribute that <code>DJ_STORES</code> omits — useful if you want to keep non-sensitive store config in a file and inject only credentials via env vars.</p>
 <p>See <a href="../manage-secrets/#env-var-only-deployments">Manage Secrets</a> for credential hygiene and <a href="../../reference/specs/storage-adapter-api/">Storage Adapter API</a> for the plugin contract.</p>

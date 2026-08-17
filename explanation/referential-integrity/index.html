@@ -3838,7 +3838,7 @@
   <span class="md-ellipsis">
     
   
-    Migrate to 2.0
+    Migrate to 2.x
   
 
     
@@ -6512,12 +6512,12 @@ same datatypes and — by default — the same names. The child inherits the
 parent's key rather than inventing a parallel one.</p>
 <div class="highlight"><pre><span></span><code><span class="nd">@schema</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Session</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    -&gt; Subject                 # embeds subject_id : varchar(16)</span>
 <span class="s2">    session_idx : int32</span>
 <span class="s2">    ---</span>
 <span class="s2">    session_date : date</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">    """</span>
 </code></pre></div>
 <p>DataJoint resolves joins by <a href="../semantic-matching/">attribute lineage</a> rather
 than by name — every inherited attribute traces back to the dimension where it
@@ -6534,8 +6534,8 @@ attribute's lineage, not its literal name, that ties it back to its origin. See
 parent key. This is what prevents <em>orphaned</em> records. The restriction falls on
 the <strong>child</strong>: you may always add new parents, but you cannot add a child that
 references a parent that does not exist.</p>
-<div class="highlight"><pre><span></span><code><span class="n">Session</span><span class="o">.</span><span class="n">insert1</span><span class="p">((</span><span class="s1">&#39;M00142&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;2026-03-01&#39;</span><span class="p">))</span>  <span class="c1"># ok if subject M00142 exists</span>
-<span class="n">Session</span><span class="o">.</span><span class="n">insert1</span><span class="p">((</span><span class="s1">&#39;M09999&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;2026-03-01&#39;</span><span class="p">))</span>  <span class="c1"># IntegrityError: no such subject</span>
+<div class="highlight"><pre><span></span><code><span class="n">Session</span><span class="o">.</span><span class="n">insert1</span><span class="p">((</span><span class="s1">'M00142'</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">'2026-03-01'</span><span class="p">))</span>  <span class="c1"># ok if subject M00142 exists</span>
+<span class="n">Session</span><span class="o">.</span><span class="n">insert1</span><span class="p">((</span><span class="s1">'M09999'</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">'2026-03-01'</span><span class="p">))</span>  <span class="c1"># IntegrityError: no such subject</span>
 </code></pre></div>
 <h3 id="3-delete-restriction-on-the-parent">3. Delete restriction on the parent<a class="headerlink" href="#3-delete-restriction-on-the-parent" title="Permanent link">&para;</a></h3>
 <p>The mirror of the insert rule: a parent cannot leave dependent children

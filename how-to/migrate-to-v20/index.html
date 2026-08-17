@@ -25,7 +25,7 @@
     
     
       
-        <title>Migrate to 2.0 - DataJoint Documentation</title>
+        <title>Migrate to 2.x - DataJoint Documentation</title>
       
     
     
@@ -105,7 +105,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#migrate-to-datajoint-20" class="md-skip">
+        <a href="#migrate-to-datajoint-2x" class="md-skip">
           Skip to content
         </a>
       
@@ -178,7 +178,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Migrate to 2.0
+              Migrate to 2.x
             
           </span>
         </div>
@@ -3684,7 +3684,7 @@
   <span class="md-ellipsis">
     
   
-    Migrate to 2.0
+    Migrate to 2.x
   
 
     
@@ -3702,7 +3702,7 @@
   <span class="md-ellipsis">
     
   
-    Migrate to 2.0
+    Migrate to 2.x
   
 
     
@@ -8480,12 +8480,27 @@
   
 
 
-<h1 id="migrate-to-datajoint-20">Migrate to DataJoint 2.0<a class="headerlink" href="#migrate-to-datajoint-20" title="Permanent link">&para;</a></h1>
-<p>Upgrade existing pipelines from legacy DataJoint (pre-2.0) to DataJoint 2.0+.</p>
+<h1 id="migrate-to-datajoint-2x">Migrate to DataJoint 2.x<a class="headerlink" href="#migrate-to-datajoint-2x" title="Permanent link">&para;</a></h1>
+<p>Upgrade existing pipelines from legacy DataJoint (the pre-2.0 <code>0.x</code> series)
+directly to the latest DataJoint 2.x — currently <strong>2.3</strong>.</p>
 <blockquote>
 <p><strong>This guide is optimized for AI coding assistants.</strong> Point your AI agent at this
 document and it will execute the migration with your oversight.</p>
 </blockquote>
+<div class="admonition tip">
+<p class="admonition-title">Which version do I migrate to?</p>
+<p>Migrate <strong>straight to the latest 2.x release</strong> (currently 2.3) — there is no
+need to step through 2.0 → 2.1 → 2.2 → 2.3. A single upgrade takes a <code>0.x</code>
+pipeline all the way to 2.3.</p>
+<p>Everything this guide calls "2.0" is the <strong>migration surface</strong> — the type
+system, explicit codecs, and unified <code>stores</code> introduced in 2.0. Later
+releases build on it without adding migration steps: <strong>2.1</strong> added the
+PostgreSQL backend and configurable diagram layout, <strong>2.2</strong> added the jobs
+layer and diagram operations, and <strong>2.3</strong> added the upstream/provenance API.
+Installing the latest release gives you all of them.</p>
+<p>Complete the migration while on <strong>2.3 or earlier</strong>: the <code>datajoint.migrate</code>
+helper is scheduled for removal in 2.4/2.5.</p>
+</div>
 <div class="admonition warning">
 <p class="admonition-title">Temporary module</p>
 <p>The <code>datajoint.migrate</code> module is provided temporarily to assist with migration and is scheduled for removal in DataJoint 2.4 or 2.5. We recommend completing your migration while on DataJoint 2.3 or earlier.</p>
@@ -8542,12 +8557,12 @@ document and it will execute the migration with your oversight.</p>
 <p>DataJoint 2.0 introduced portable type aliases (<code>int64</code>, <code>float64</code>, etc.) that enable <strong>PostgreSQL backend compatibility</strong>, which was added in DataJoint 2.1. Migration to core types ensures your schemas work seamlessly on both MySQL and PostgreSQL backends.</p>
 <p><strong>String quoting in restrictions:</strong> MySQL and PostgreSQL handle quotes differently. MySQL allows both single and double quotes for string literals, but PostgreSQL interprets double quotes as identifier (column) references. For PostgreSQL compatibility, replace double quotes with single quotes inside SQL restriction strings:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Before (MySQL only)</span>
-<span class="n">Table</span> <span class="o">&amp;</span> <span class="s1">&#39;name = &quot;Alice&quot;&#39;</span>
-<span class="n">Table</span> <span class="o">&amp;</span> <span class="s1">&#39;date &gt; &quot;2024-01-01&quot;&#39;</span>
+<span class="n">Table</span> <span class="o">&amp;</span> <span class="s1">'name = "Alice"'</span>
+<span class="n">Table</span> <span class="o">&amp;</span> <span class="s1">'date &gt; "2024-01-01"'</span>
 
 <span class="c1"># After (PostgreSQL compatible)</span>
-<span class="n">Table</span> <span class="o">&amp;</span> <span class="s2">&quot;name = &#39;Alice&#39;&quot;</span>
-<span class="n">Table</span> <span class="o">&amp;</span> <span class="s2">&quot;date &gt; &#39;2024-01-01&#39;&quot;</span>
+<span class="n">Table</span> <span class="o">&amp;</span> <span class="s2">"name = 'Alice'"</span>
+<span class="n">Table</span> <span class="o">&amp;</span> <span class="s2">"date &gt; '2024-01-01'"</span>
 </code></pre></div>
 <p>See <a href="../../reference/specs/database-backends/#string-quoting/">Database Backends Specification</a> for details.</p>
 <h3 id="before-you-start-testing-recommendation">Before You Start: Testing Recommendation<a class="headerlink" href="#before-you-start-testing-recommendation" title="Permanent link">&para;</a></h3>
@@ -8690,12 +8705,12 @@ automatically, reducing manual effort by 50-80%.</p>
 <h3 id="column-comment-format-critical-for-blob-migration">Column Comment Format (Critical for Blob Migration)<a class="headerlink" href="#column-comment-format-critical-for-blob-migration" title="Permanent link">&para;</a></h3>
 <p>DataJoint 2.0 stores type information in the SQL column comment using a <code>:type:</code> prefix format:</p>
 <div class="highlight"><pre><span></span><code><span class="c1">-- 2.0 column comment format</span>
-<span class="k">COMMENT</span><span class="w"> </span><span class="s1">&#39;:&lt;type&gt;:user comment&#39;</span>
+<span class="k">COMMENT</span><span class="w"> </span><span class="s1">':&lt;type&gt;:user comment'</span>
 
 <span class="c1">-- Examples</span>
-<span class="k">COMMENT</span><span class="w"> </span><span class="s1">&#39;:int64:subject identifier&#39;</span>
-<span class="k">COMMENT</span><span class="w"> </span><span class="s1">&#39;:&lt;blob&gt;:serialized neural data&#39;</span>
-<span class="k">COMMENT</span><span class="w"> </span><span class="s1">&#39;:&lt;blob@store&gt;:large array in object storage&#39;</span>
+<span class="k">COMMENT</span><span class="w"> </span><span class="s1">':int64:subject identifier'</span>
+<span class="k">COMMENT</span><span class="w"> </span><span class="s1">':&lt;blob&gt;:serialized neural data'</span>
+<span class="k">COMMENT</span><span class="w"> </span><span class="s1">':&lt;blob@store&gt;:large array in object storage'</span>
 </code></pre></div>
 <p><strong>Why this matters for blob columns:</strong></p>
 <p>In pre-2.0, <code>longblob</code> columns automatically deserialized Python objects using DataJoint's binary serialization format. DataJoint 2.0 identifies blob columns by checking for <code>:&lt;blob&gt;:</code> in the column comment. <strong>Without this marker, blob columns are treated as raw binary data and will NOT be deserialized.</strong></p>
@@ -8722,9 +8737,9 @@ automatically, reducing manual effort by 50-80%.</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">datajoint.migrate</span><span class="w"> </span><span class="kn">import</span> <span class="n">check_migration_status</span>
 
 <span class="n">status</span> <span class="o">=</span> <span class="n">check_migration_status</span><span class="p">(</span><span class="n">schema</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Blob columns: </span><span class="si">{</span><span class="n">status</span><span class="p">[</span><span class="s1">&#39;total_blob_columns&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Migrated: </span><span class="si">{</span><span class="n">status</span><span class="p">[</span><span class="s1">&#39;migrated&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Pending: </span><span class="si">{</span><span class="n">status</span><span class="p">[</span><span class="s1">&#39;pending&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Blob columns: </span><span class="si">{</span><span class="n">status</span><span class="p">[</span><span class="s1">'total_blob_columns'</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  Migrated: </span><span class="si">{</span><span class="n">status</span><span class="p">[</span><span class="s1">'migrated'</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  Pending: </span><span class="si">{</span><span class="n">status</span><span class="p">[</span><span class="s1">'pending'</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 </code></pre></div>
 <h4 id="migrating-blob-column-comments">Migrating Blob Column Comments<a class="headerlink" href="#migrating-blob-column-comments" title="Permanent link">&para;</a></h4>
 <p>Use <code>migrate_columns()</code> to add type markers to all columns (integers, floats, and blobs):</p>
@@ -8732,52 +8747,52 @@ automatically, reducing manual effort by 50-80%.</p>
 
 <span class="c1"># Preview changes (dry run)</span>
 <span class="n">result</span> <span class="o">=</span> <span class="n">migrate_columns</span><span class="p">(</span><span class="n">schema</span><span class="p">,</span> <span class="n">dry_run</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Would migrate </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;sql_statements&#39;</span><span class="p">])</span><span class="si">}</span><span class="s2"> columns&quot;</span><span class="p">)</span>
-<span class="k">for</span> <span class="n">sql</span> <span class="ow">in</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;sql_statements&#39;</span><span class="p">]:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">sql</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Would migrate </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s1">'sql_statements'</span><span class="p">])</span><span class="si">}</span><span class="s2"> columns"</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">sql</span> <span class="ow">in</span> <span class="n">result</span><span class="p">[</span><span class="s1">'sql_statements'</span><span class="p">]:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  </span><span class="si">{</span><span class="n">sql</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
 <span class="c1"># Apply changes</span>
 <span class="n">result</span> <span class="o">=</span> <span class="n">migrate_columns</span><span class="p">(</span><span class="n">schema</span><span class="p">,</span> <span class="n">dry_run</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Migrated </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;columns_migrated&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> columns&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Migrated </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">'columns_migrated'</span><span class="p">]</span><span class="si">}</span><span class="s2"> columns"</span><span class="p">)</span>
 </code></pre></div>
 <p>Or use <code>migrate_blob_columns()</code> to migrate only blob columns:</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">datajoint.migrate</span><span class="w"> </span><span class="kn">import</span> <span class="n">migrate_blob_columns</span>
 
 <span class="c1"># Preview</span>
 <span class="n">result</span> <span class="o">=</span> <span class="n">migrate_blob_columns</span><span class="p">(</span><span class="n">schema</span><span class="p">,</span> <span class="n">dry_run</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Would migrate </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;needs_migration&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> blob columns&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Would migrate </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">'needs_migration'</span><span class="p">]</span><span class="si">}</span><span class="s2"> blob columns"</span><span class="p">)</span>
 
 <span class="c1"># Apply</span>
 <span class="n">result</span> <span class="o">=</span> <span class="n">migrate_blob_columns</span><span class="p">(</span><span class="n">schema</span><span class="p">,</span> <span class="n">dry_run</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Migrated </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;migrated&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> blob columns&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Migrated </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">'migrated'</span><span class="p">]</span><span class="si">}</span><span class="s2"> blob columns"</span><span class="p">)</span>
 </code></pre></div>
 <p><strong>What the migration does:</strong></p>
 <div class="highlight"><pre><span></span><code><span class="c1">-- Before migration</span>
 <span class="k">ALTER</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="o">`</span><span class="k">schema</span><span class="o">`</span><span class="p">.</span><span class="o">`</span><span class="k">table</span><span class="o">`</span>
-<span class="w">  </span><span class="k">MODIFY</span><span class="w"> </span><span class="k">COLUMN</span><span class="w"> </span><span class="o">`</span><span class="k">data</span><span class="o">`</span><span class="w"> </span><span class="n">longblob</span><span class="w"> </span><span class="k">COMMENT</span><span class="w"> </span><span class="s1">&#39;neural recording&#39;</span><span class="p">;</span>
+<span class="w">  </span><span class="k">MODIFY</span><span class="w"> </span><span class="k">COLUMN</span><span class="w"> </span><span class="o">`</span><span class="k">data</span><span class="o">`</span><span class="w"> </span><span class="n">longblob</span><span class="w"> </span><span class="k">COMMENT</span><span class="w"> </span><span class="s1">'neural recording'</span><span class="p">;</span>
 
 <span class="c1">-- After migration</span>
 <span class="k">ALTER</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="o">`</span><span class="k">schema</span><span class="o">`</span><span class="p">.</span><span class="o">`</span><span class="k">table</span><span class="o">`</span>
-<span class="w">  </span><span class="k">MODIFY</span><span class="w"> </span><span class="k">COLUMN</span><span class="w"> </span><span class="o">`</span><span class="k">data</span><span class="o">`</span><span class="w"> </span><span class="n">longblob</span><span class="w"> </span><span class="k">COMMENT</span><span class="w"> </span><span class="s1">&#39;:&lt;blob&gt;:neural recording&#39;</span><span class="p">;</span>
+<span class="w">  </span><span class="k">MODIFY</span><span class="w"> </span><span class="k">COLUMN</span><span class="w"> </span><span class="o">`</span><span class="k">data</span><span class="o">`</span><span class="w"> </span><span class="n">longblob</span><span class="w"> </span><span class="k">COMMENT</span><span class="w"> </span><span class="s1">':&lt;blob&gt;:neural recording'</span><span class="p">;</span>
 </code></pre></div>
 <p>The data itself is unchanged—only the comment metadata is updated.</p>
 <h3 id="unified-stores-configuration">Unified Stores Configuration<a class="headerlink" href="#unified-stores-configuration" title="Permanent link">&para;</a></h3>
 <p>DataJoint 2.0 replaces <code>external.*</code> with unified <code>stores.*</code> configuration:</p>
 <p><strong>pre-2.0 (legacy):</strong>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;external&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;protocol&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;file&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;location&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/data/external&quot;</span>
+<span class="w">  </span><span class="nt">"external"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"protocol"</span><span class="p">:</span><span class="w"> </span><span class="s2">"file"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"location"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/data/external"</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div></p>
 <p><strong>2.0 (unified stores):</strong>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;stores&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;default&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;main&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;main&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="nt">&quot;protocol&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;file&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;location&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/data/stores&quot;</span>
+<span class="w">  </span><span class="nt">"stores"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"default"</span><span class="p">:</span><span class="w"> </span><span class="s2">"main"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"main"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">"protocol"</span><span class="p">:</span><span class="w"> </span><span class="s2">"file"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"location"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/data/stores"</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
@@ -8978,35 +8993,35 @@ production):</p>
 
 <span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">test_schema</span><span class="p">():</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Use QA database for testing.&quot;&quot;&quot;</span>
-    <span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;database.host&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;qa-db.example.com&#39;</span>
-    <span class="n">schema</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">schema</span><span class="p">(</span><span class="s1">&#39;test_pipeline&#39;</span><span class="p">)</span>
+<span class="w">    </span><span class="sd">"""Use QA database for testing."""</span>
+    <span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">'database.host'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'qa-db.example.com'</span>
+    <span class="n">schema</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">schema</span><span class="p">(</span><span class="s1">'test_pipeline'</span><span class="p">)</span>
     <span class="k">yield</span> <span class="n">schema</span>
     <span class="n">schema</span><span class="o">.</span><span class="n">drop</span><span class="p">()</span>  <span class="c1"># Cleanup after test</span>
 
 <span class="k">def</span><span class="w"> </span><span class="nf">test_mouse_insert</span><span class="p">(</span><span class="n">test_schema</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Test manual table insertion.&quot;&quot;&quot;</span>
-    <span class="n">Mouse</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="s1">&#39;mouse_id&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;dob&#39;</span><span class="p">:</span> <span class="s1">&#39;2024-01-01&#39;</span><span class="p">,</span> <span class="s1">&#39;sex&#39;</span><span class="p">:</span> <span class="s1">&#39;M&#39;</span><span class="p">})</span>
+<span class="w">    </span><span class="sd">"""Test manual table insertion."""</span>
+    <span class="n">Mouse</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="s1">'mouse_id'</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">'dob'</span><span class="p">:</span> <span class="s1">'2024-01-01'</span><span class="p">,</span> <span class="s1">'sex'</span><span class="p">:</span> <span class="s1">'M'</span><span class="p">})</span>
     <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">Mouse</span><span class="p">())</span> <span class="o">==</span> <span class="mi">1</span>
 
 <span class="k">def</span><span class="w"> </span><span class="nf">test_session_populate</span><span class="p">(</span><span class="n">test_schema</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Test session insertion and relationships.&quot;&quot;&quot;</span>
-    <span class="n">Mouse</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="s1">&#39;mouse_id&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;dob&#39;</span><span class="p">:</span> <span class="s1">&#39;2024-01-01&#39;</span><span class="p">,</span> <span class="s1">&#39;sex&#39;</span><span class="p">:</span> <span class="s1">&#39;M&#39;</span><span class="p">})</span>
+<span class="w">    </span><span class="sd">"""Test session insertion and relationships."""</span>
+    <span class="n">Mouse</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="s1">'mouse_id'</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">'dob'</span><span class="p">:</span> <span class="s1">'2024-01-01'</span><span class="p">,</span> <span class="s1">'sex'</span><span class="p">:</span> <span class="s1">'M'</span><span class="p">})</span>
     <span class="n">Session</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span>
-        <span class="s1">&#39;mouse_id&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-        <span class="s1">&#39;session_date&#39;</span><span class="p">:</span> <span class="s1">&#39;2024-06-01&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;experimenter&#39;</span><span class="p">:</span> <span class="s1">&#39;Alice&#39;</span>
+        <span class="s1">'mouse_id'</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="s1">'session_date'</span><span class="p">:</span> <span class="s1">'2024-06-01'</span><span class="p">,</span>
+        <span class="s1">'experimenter'</span><span class="p">:</span> <span class="s1">'Alice'</span>
     <span class="p">})</span>
-    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">Session</span><span class="p">()</span> <span class="o">&amp;</span> <span class="s1">&#39;mouse_id=0&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">Session</span><span class="p">()</span> <span class="o">&amp;</span> <span class="s1">'mouse_id=0'</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
 
 <span class="k">def</span><span class="w"> </span><span class="nf">test_neuron_computation</span><span class="p">(</span><span class="n">test_schema</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Test computed table populate.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Test computed table populate."""</span>
     <span class="c1"># Insert upstream data</span>
-    <span class="n">Mouse</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="s1">&#39;mouse_id&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;dob&#39;</span><span class="p">:</span> <span class="s1">&#39;2024-01-01&#39;</span><span class="p">,</span> <span class="s1">&#39;sex&#39;</span><span class="p">:</span> <span class="s1">&#39;M&#39;</span><span class="p">})</span>
+    <span class="n">Mouse</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="s1">'mouse_id'</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">'dob'</span><span class="p">:</span> <span class="s1">'2024-01-01'</span><span class="p">,</span> <span class="s1">'sex'</span><span class="p">:</span> <span class="s1">'M'</span><span class="p">})</span>
     <span class="n">Session</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span>
-        <span class="s1">&#39;mouse_id&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-        <span class="s1">&#39;session_date&#39;</span><span class="p">:</span> <span class="s1">&#39;2024-06-01&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;experimenter&#39;</span><span class="p">:</span> <span class="s1">&#39;Alice&#39;</span>
+        <span class="s1">'mouse_id'</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="s1">'session_date'</span><span class="p">:</span> <span class="s1">'2024-06-01'</span><span class="p">,</span>
+        <span class="s1">'experimenter'</span><span class="p">:</span> <span class="s1">'Alice'</span>
     <span class="p">})</span>
 
     <span class="c1"># Populate computed table</span>
@@ -9016,31 +9031,31 @@ production):</p>
     <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">Neuron</span><span class="p">())</span> <span class="o">&gt;</span> <span class="mi">0</span>
 
 <span class="k">def</span><span class="w"> </span><span class="nf">test_query_patterns</span><span class="p">(</span><span class="n">test_schema</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Test common query patterns.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Test common query patterns."""</span>
     <span class="c1"># Setup data</span>
-    <span class="n">Mouse</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="s1">&#39;mouse_id&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;dob&#39;</span><span class="p">:</span> <span class="s1">&#39;2024-01-01&#39;</span><span class="p">,</span> <span class="s1">&#39;sex&#39;</span><span class="p">:</span> <span class="s1">&#39;M&#39;</span><span class="p">})</span>
+    <span class="n">Mouse</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="s1">'mouse_id'</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">'dob'</span><span class="p">:</span> <span class="s1">'2024-01-01'</span><span class="p">,</span> <span class="s1">'sex'</span><span class="p">:</span> <span class="s1">'M'</span><span class="p">})</span>
 
     <span class="c1"># Test fetch</span>
     <span class="n">mice</span> <span class="o">=</span> <span class="n">Mouse</span><span class="o">.</span><span class="n">fetch</span><span class="p">(</span><span class="n">as_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">mice</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
 
     <span class="c1"># Test restriction</span>
-    <span class="n">male_mice</span> <span class="o">=</span> <span class="n">Mouse</span> <span class="o">&amp;</span> <span class="s2">&quot;sex=&#39;M&#39;&quot;</span>
+    <span class="n">male_mice</span> <span class="o">=</span> <span class="n">Mouse</span> <span class="o">&amp;</span> <span class="s2">"sex='M'"</span>
     <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">male_mice</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
 </code></pre></div>
 <p><strong>Integration test example:</strong></p>
 <div class="highlight"><pre><span></span><code><span class="c1"># tests/test_pipeline.py</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">test_full_pipeline</span><span class="p">(</span><span class="n">test_schema</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Test complete pipeline execution.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Test complete pipeline execution."""</span>
     <span class="c1"># 1. Insert manual data</span>
     <span class="n">Mouse</span><span class="o">.</span><span class="n">insert</span><span class="p">([</span>
-        <span class="p">{</span><span class="s1">&#39;mouse_id&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;dob&#39;</span><span class="p">:</span> <span class="s1">&#39;2024-01-01&#39;</span><span class="p">,</span> <span class="s1">&#39;sex&#39;</span><span class="p">:</span> <span class="s1">&#39;M&#39;</span><span class="p">},</span>
-        <span class="p">{</span><span class="s1">&#39;mouse_id&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;dob&#39;</span><span class="p">:</span> <span class="s1">&#39;2024-01-15&#39;</span><span class="p">,</span> <span class="s1">&#39;sex&#39;</span><span class="p">:</span> <span class="s1">&#39;F&#39;</span><span class="p">},</span>
+        <span class="p">{</span><span class="s1">'mouse_id'</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">'dob'</span><span class="p">:</span> <span class="s1">'2024-01-01'</span><span class="p">,</span> <span class="s1">'sex'</span><span class="p">:</span> <span class="s1">'M'</span><span class="p">},</span>
+        <span class="p">{</span><span class="s1">'mouse_id'</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">'dob'</span><span class="p">:</span> <span class="s1">'2024-01-15'</span><span class="p">,</span> <span class="s1">'sex'</span><span class="p">:</span> <span class="s1">'F'</span><span class="p">},</span>
     <span class="p">])</span>
 
     <span class="n">Session</span><span class="o">.</span><span class="n">insert</span><span class="p">([</span>
-        <span class="p">{</span><span class="s1">&#39;mouse_id&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;session_date&#39;</span><span class="p">:</span> <span class="s1">&#39;2024-06-01&#39;</span><span class="p">,</span> <span class="s1">&#39;experimenter&#39;</span><span class="p">:</span> <span class="s1">&#39;Alice&#39;</span><span class="p">},</span>
-        <span class="p">{</span><span class="s1">&#39;mouse_id&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;session_date&#39;</span><span class="p">:</span> <span class="s1">&#39;2024-06-03&#39;</span><span class="p">,</span> <span class="s1">&#39;experimenter&#39;</span><span class="p">:</span> <span class="s1">&#39;Bob&#39;</span><span class="p">},</span>
+        <span class="p">{</span><span class="s1">'mouse_id'</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">'session_date'</span><span class="p">:</span> <span class="s1">'2024-06-01'</span><span class="p">,</span> <span class="s1">'experimenter'</span><span class="p">:</span> <span class="s1">'Alice'</span><span class="p">},</span>
+        <span class="p">{</span><span class="s1">'mouse_id'</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">'session_date'</span><span class="p">:</span> <span class="s1">'2024-06-03'</span><span class="p">,</span> <span class="s1">'experimenter'</span><span class="p">:</span> <span class="s1">'Bob'</span><span class="p">},</span>
     <span class="p">])</span>
 
     <span class="c1"># 2. Populate computed tables</span>
@@ -9054,7 +9069,7 @@ production):</p>
     <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">Analysis</span><span class="p">())</span> <span class="o">&gt;</span> <span class="mi">0</span>
 
     <span class="c1"># 4. Test queries work</span>
-    <span class="n">alice_sessions</span> <span class="o">=</span> <span class="n">Session</span> <span class="o">&amp;</span> <span class="s2">&quot;experimenter=&#39;Alice&#39;&quot;</span>
+    <span class="n">alice_sessions</span> <span class="o">=</span> <span class="n">Session</span> <span class="o">&amp;</span> <span class="s2">"experimenter='Alice'"</span>
     <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">alice_sessions</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
 </code></pre></div>
 <h3 id="how-to-use-tests-with-ai-agents">How to Use Tests with AI Agents<a class="headerlink" href="#how-to-use-tests-with-ai-agents" title="Permanent link">&para;</a></h3>
@@ -9116,10 +9131,10 @@ significant value for automated migration.</p>
 <div class="highlight"><pre><span></span><code>git<span class="w"> </span>checkout<span class="w"> </span>main
 
 <span class="c1"># Pin legacy version in requirements</span>
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;datajoint&lt;2.0.0&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>requirements.txt
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"datajoint&lt;2.0.0"</span><span class="w"> </span>&gt;<span class="w"> </span>requirements.txt
 
 git<span class="w"> </span>add<span class="w"> </span>requirements.txt
-git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;chore: pin legacy datajoint for production&quot;</span>
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">"chore: pin legacy datajoint for production"</span>
 git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </span>main
 </code></pre></div>
 <p><strong>Why:</strong> This prevents accidental upgrades to 2.0 in production.</p>
@@ -9129,13 +9144,13 @@ git<span class="w"> </span>checkout<span class="w"> </span>-b<span class="w"> </
 
 <span class="c1"># Install DataJoint 2.0</span>
 pip<span class="w"> </span>install<span class="w"> </span>--upgrade<span class="w"> </span>pip
-pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;datajoint&gt;=2.0.0&quot;</span>
+pip<span class="w"> </span>install<span class="w"> </span><span class="s2">"datajoint&gt;=2.0.0"</span>
 
 <span class="c1"># Update requirements</span>
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;datajoint&gt;=2.0.0&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>requirements.txt
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"datajoint&gt;=2.0.0"</span><span class="w"> </span>&gt;<span class="w"> </span>requirements.txt
 
 git<span class="w"> </span>add<span class="w"> </span>requirements.txt
-git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;chore: upgrade to datajoint 2.0&quot;</span>
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">"chore: upgrade to datajoint 2.0"</span>
 </code></pre></div>
 <h3 id="step-3-update-schema-declarations">Step 3: Update Schema Declarations<a class="headerlink" href="#step-3-update-schema-declarations" title="Permanent link">&para;</a></h3>
 <p><strong>Critical early step:</strong> Update all <code>dj.schema()</code> calls to use <code>_v2</code> suffix
@@ -9149,31 +9164,31 @@ for parallel testing and validation.</p>
 </ul>
 <h4 id="find-all-schema-declarations">Find All Schema Declarations<a class="headerlink" href="#find-all-schema-declarations" title="Permanent link">&para;</a></h4>
 <div class="highlight"><pre><span></span><code><span class="c1"># Find all schema() calls in your codebase</span>
-grep<span class="w"> </span>-rn<span class="w"> </span><span class="s2">&quot;dj.schema\|dj.Schema&quot;</span><span class="w"> </span>--include<span class="o">=</span><span class="s2">&quot;*.py&quot;</span><span class="w"> </span>.
+grep<span class="w"> </span>-rn<span class="w"> </span><span class="s2">"dj.schema\|dj.Schema"</span><span class="w"> </span>--include<span class="o">=</span><span class="s2">"*.py"</span><span class="w"> </span>.
 
 <span class="c1"># Example output:</span>
-<span class="c1"># pipeline/session.py:5:schema = dj.schema(&#39;my_pipeline&#39;)</span>
-<span class="c1"># pipeline/analysis.py:8:schema = dj.schema(&#39;my_pipeline&#39;)</span>
-<span class="c1"># pipeline/ephys.py:3:schema = dj.schema(&#39;ephys_pipeline&#39;)</span>
+<span class="c1"># pipeline/session.py:5:schema = dj.schema('my_pipeline')</span>
+<span class="c1"># pipeline/analysis.py:8:schema = dj.schema('my_pipeline')</span>
+<span class="c1"># pipeline/ephys.py:3:schema = dj.schema('ephys_pipeline')</span>
 </code></pre></div>
 <h4 id="update-schema-names">Update Schema Names<a class="headerlink" href="#update-schema-names" title="Permanent link">&para;</a></h4>
 <p><strong>For each schema declaration, add <code>_v2</code> suffix:</strong></p>
 <div class="highlight"><pre><span></span><code><span class="c1"># BEFORE (production, on main branch)</span>
-<span class="n">schema</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">schema</span><span class="p">(</span><span class="s1">&#39;my_pipeline&#39;</span><span class="p">)</span>
+<span class="n">schema</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">schema</span><span class="p">(</span><span class="s1">'my_pipeline'</span><span class="p">)</span>
 
 <span class="c1"># AFTER (testing, on pre/v2.0 branch)</span>
-<span class="n">schema</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">schema</span><span class="p">(</span><span class="s1">&#39;my_pipeline_v2&#39;</span><span class="p">)</span>
+<span class="n">schema</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">schema</span><span class="p">(</span><span class="s1">'my_pipeline_v2'</span><span class="p">)</span>
 </code></pre></div>
 <p><strong>Multiple schemas example:</strong></p>
 <div class="highlight"><pre><span></span><code><span class="c1"># BEFORE</span>
-<span class="n">session_schema</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">schema</span><span class="p">(</span><span class="s1">&#39;sessions&#39;</span><span class="p">)</span>
-<span class="n">analysis_schema</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">schema</span><span class="p">(</span><span class="s1">&#39;analysis&#39;</span><span class="p">)</span>
-<span class="n">ephys_schema</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">schema</span><span class="p">(</span><span class="s1">&#39;ephys&#39;</span><span class="p">)</span>
+<span class="n">session_schema</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">schema</span><span class="p">(</span><span class="s1">'sessions'</span><span class="p">)</span>
+<span class="n">analysis_schema</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">schema</span><span class="p">(</span><span class="s1">'analysis'</span><span class="p">)</span>
+<span class="n">ephys_schema</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">schema</span><span class="p">(</span><span class="s1">'ephys'</span><span class="p">)</span>
 
 <span class="c1"># AFTER</span>
-<span class="n">session_schema</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">schema</span><span class="p">(</span><span class="s1">&#39;sessions_v2&#39;</span><span class="p">)</span>
-<span class="n">analysis_schema</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">schema</span><span class="p">(</span><span class="s1">&#39;analysis_v2&#39;</span><span class="p">)</span>
-<span class="n">ephys_schema</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">schema</span><span class="p">(</span><span class="s1">&#39;ephys_v2&#39;</span><span class="p">)</span>
+<span class="n">session_schema</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">schema</span><span class="p">(</span><span class="s1">'sessions_v2'</span><span class="p">)</span>
+<span class="n">analysis_schema</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">schema</span><span class="p">(</span><span class="s1">'analysis_v2'</span><span class="p">)</span>
+<span class="n">ephys_schema</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">schema</span><span class="p">(</span><span class="s1">'ephys_v2'</span><span class="p">)</span>
 </code></pre></div>
 <h4 id="ai-agent-prompt-update-schema-declarations">AI Agent Prompt: Update Schema Declarations<a class="headerlink" href="#ai-agent-prompt-update-schema-declarations" title="Permanent link">&para;</a></h4>
 <hr />
@@ -9192,25 +9207,25 @@ CONTEXT:
 STEPS:
 
 1. Find all schema declarations:
-   grep -rn &quot;dj.schema\|dj.Schema&quot; --include=&quot;*.py&quot; .
+   grep -rn "dj.schema\|dj.Schema" --include="*.py" .
 
 2. For EACH schema declaration, add _v2 suffix:
-   OLD: schema = dj.schema(&#39;my_pipeline&#39;)
-   NEW: schema = dj.schema(&#39;my_pipeline_v2&#39;)
+   OLD: schema = dj.schema('my_pipeline')
+   NEW: schema = dj.schema('my_pipeline_v2')
 
 3. Preserve all other arguments:
-   OLD: schema = dj.schema(&#39;sessions&#39;, locals())
-   NEW: schema = dj.schema(&#39;sessions_v2&#39;, locals())
+   OLD: schema = dj.schema('sessions', locals())
+   NEW: schema = dj.schema('sessions_v2', locals())
 
-   OLD: schema = dj.schema(&#39;analysis&#39;, create_schema=True)
-   NEW: schema = dj.schema(&#39;analysis_v2&#39;, create_schema=True)
+   OLD: schema = dj.schema('analysis', create_schema=True)
+   NEW: schema = dj.schema('analysis_v2', create_schema=True)
 
 4. Update any string references to schema names:
-   OLD: conn.query(&quot;USE my_pipeline&quot;)
-   NEW: conn.query(&quot;USE my_pipeline_v2&quot;)
+   OLD: conn.query("USE my_pipeline")
+   NEW: conn.query("USE my_pipeline_v2")
 
-   OLD: if schema_name == &#39;my_pipeline&#39;:
-   NEW: if schema_name == &#39;my_pipeline_v2&#39;:
+   OLD: if schema_name == 'my_pipeline':
+   NEW: if schema_name == 'my_pipeline_v2':
 
 NAMING CONVENTION:
 
@@ -9229,7 +9244,7 @@ After updating, verify:
 COMMIT:
 
 git add -A
-git commit -m &quot;feat(phase-i): add _v2 suffix to all schema declarations
+git commit -m "feat(phase-i): add _v2 suffix to all schema declarations
 
 - Update all dj.schema() calls to use _v2 suffix
 - Enables parallel testing without affecting production schemas
@@ -9237,7 +9252,7 @@ git commit -m &quot;feat(phase-i): add _v2 suffix to all schema declarations
 
 Schemas updated:
 - my_pipeline → my_pipeline_v2
-- [list other schemas...]&quot;
+- [list other schemas...]"
 </code></pre></div>
 <hr />
 <h4 id="verify-schema-name-changes">Verify Schema Name Changes<a class="headerlink" href="#verify-schema-name-changes" title="Permanent link">&para;</a></h4>
@@ -9245,18 +9260,18 @@ Schemas updated:
 
 <span class="c1"># Test connection (should work before any tables created)</span>
 <span class="n">conn</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">conn</span><span class="p">()</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;✓ Connected to database&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"✓ Connected to database"</span><span class="p">)</span>
 
-<span class="c1"># At this point, _v2 schemas don&#39;t exist yet</span>
+<span class="c1"># At this point, _v2 schemas don't exist yet</span>
 <span class="c1"># They will be created in Step 5 when table definitions are applied</span>
 </code></pre></div>
 <h4 id="commit-schema-declaration-changes">Commit Schema Declaration Changes<a class="headerlink" href="#commit-schema-declaration-changes" title="Permanent link">&para;</a></h4>
 <div class="highlight"><pre><span></span><code>git<span class="w"> </span>add<span class="w"> </span>-A
-git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;feat(phase-i): add _v2 suffix to all schema declarations</span>
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">"feat(phase-i): add _v2 suffix to all schema declarations</span>
 
 <span class="s2">- Update all dj.schema() calls to use _v2 suffix</span>
 <span class="s2">- Enables parallel testing without affecting production schemas</span>
-<span class="s2">- Next: configure stores and convert table definitions&quot;</span>
+<span class="s2">- Next: configure stores and convert table definitions"</span>
 </code></pre></div>
 <p><strong>Next steps:</strong></p>
 <ul>
@@ -9279,25 +9294,25 @@ Now configure database connection and stores.</p>
 <h4 id="create-configuration-files">Create Configuration Files<a class="headerlink" href="#create-configuration-files" title="Permanent link">&para;</a></h4>
 <div class="highlight"><pre><span></span><code><span class="c1"># Create .secrets directory</span>
 mkdir<span class="w"> </span>-p<span class="w"> </span>.secrets
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;.secrets/&quot;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>.gitignore
+<span class="nb">echo</span><span class="w"> </span><span class="s2">".secrets/"</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>.gitignore
 
 <span class="c1"># Create template</span>
-python<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import datajoint as dj; dj.config.save_template()&quot;</span>
+python<span class="w"> </span>-c<span class="w"> </span><span class="s2">"import datajoint as dj; dj.config.save_template()"</span>
 </code></pre></div>
 <p><strong>Fill in the credential files under <code>.secrets/</code></strong> — one value per file:
-<div class="highlight"><pre><span></span><code><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;your-username&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>.secrets/database.user
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;your-password&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>.secrets/database.password
+<div class="highlight"><pre><span></span><code><span class="nb">echo</span><span class="w"> </span><span class="s2">"your-username"</span><span class="w"> </span>&gt;<span class="w"> </span>.secrets/database.user
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"your-password"</span><span class="w"> </span>&gt;<span class="w"> </span>.secrets/database.password
 </code></pre></div></p>
 <p><strong>Edit <code>datajoint.json</code></strong>:
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;database&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;host&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;your-database-host&quot;</span>
+<span class="w">  </span><span class="nt">"database"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"host"</span><span class="p">:</span><span class="w"> </span><span class="s2">"your-database-host"</span>
 <span class="w">  </span><span class="p">},</span>
-<span class="w">  </span><span class="nt">&quot;loglevel&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;INFO&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;safemode&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;display.limit&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">12</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;display.width&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">100</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;display.show_tuple_count&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">  </span><span class="nt">"loglevel"</span><span class="p">:</span><span class="w"> </span><span class="s2">"INFO"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"safemode"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"display.limit"</span><span class="p">:</span><span class="w"> </span><span class="mi">12</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"display.width"</span><span class="p">:</span><span class="w"> </span><span class="mi">100</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"display.show_tuple_count"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
 <span class="p">}</span>
 </code></pre></div></p>
 <h4 id="verify-connection">Verify Connection<a class="headerlink" href="#verify-connection" title="Permanent link">&para;</a></h4>
@@ -9305,7 +9320,7 @@ python<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;i
 
 <span class="c1"># Test connection</span>
 <span class="n">conn</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">conn</span><span class="p">()</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Connected to </span><span class="si">{</span><span class="n">conn</span><span class="o">.</span><span class="n">conn_info</span><span class="p">[</span><span class="s1">&#39;host&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Connected to </span><span class="si">{</span><span class="n">conn</span><span class="o">.</span><span class="n">conn_info</span><span class="p">[</span><span class="s1">'host'</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 </code></pre></div>
 <h3 id="step-5-configure-test-object-stores-if-applicable">Step 5: Configure Test Object Stores (If Applicable)<a class="headerlink" href="#step-5-configure-test-object-stores-if-applicable" title="Permanent link">&para;</a></h3>
 <p><strong>Skip this step if:</strong> Your legacy pipeline uses only in-table storage (<code>longblob</code>, <code>mediumblob</code>, <code>blob</code>, <code>attach</code>). You can skip to Step 6.</p>
@@ -9341,11 +9356,11 @@ python<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;i
 <h4 id="configure-test-stores">Configure Test Stores<a class="headerlink" href="#configure-test-stores" title="Permanent link">&para;</a></h4>
 <p><strong>Edit <code>datajoint.json</code> to use test directories:</strong>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;stores&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;default&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;main&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;main&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="nt">&quot;protocol&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;file&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;location&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/data/v2_test_stores/main&quot;</span>
+<span class="w">  </span><span class="nt">"stores"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"default"</span><span class="p">:</span><span class="w"> </span><span class="s2">"main"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"main"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">"protocol"</span><span class="p">:</span><span class="w"> </span><span class="s2">"file"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"location"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/data/v2_test_stores/main"</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
@@ -9353,37 +9368,37 @@ python<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;i
 <p><strong>Note:</strong> Use separate test locations (e.g., <code>/data/v2_test_stores/</code>) to avoid conflicts with production stores.</p>
 <p><strong>For multiple test stores:</strong>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;stores&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;default&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;main&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;filepath_default&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;raw_data&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;main&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="nt">&quot;protocol&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;file&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;location&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/data/v2_test_stores/main&quot;</span>
+<span class="w">  </span><span class="nt">"stores"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"default"</span><span class="p">:</span><span class="w"> </span><span class="s2">"main"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"filepath_default"</span><span class="p">:</span><span class="w"> </span><span class="s2">"raw_data"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"main"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">"protocol"</span><span class="p">:</span><span class="w"> </span><span class="s2">"file"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"location"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/data/v2_test_stores/main"</span>
 <span class="w">    </span><span class="p">},</span>
-<span class="w">    </span><span class="nt">&quot;raw_data&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="nt">&quot;protocol&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;file&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;location&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/data/v2_test_stores/raw&quot;</span>
+<span class="w">    </span><span class="nt">"raw_data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">"protocol"</span><span class="p">:</span><span class="w"> </span><span class="s2">"file"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"location"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/data/v2_test_stores/raw"</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div></p>
 <p><strong>For cloud storage (using test bucket/prefix):</strong>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;stores&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;default&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;s3_store&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;s3_store&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="nt">&quot;protocol&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;s3&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;endpoint&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;s3.amazonaws.com&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;bucket&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;my-datajoint-test-bucket&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;location&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;v2-test&quot;</span>
+<span class="w">  </span><span class="nt">"stores"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"default"</span><span class="p">:</span><span class="w"> </span><span class="s2">"s3_store"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"s3_store"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">"protocol"</span><span class="p">:</span><span class="w"> </span><span class="s2">"s3"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"endpoint"</span><span class="p">:</span><span class="w"> </span><span class="s2">"s3.amazonaws.com"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"bucket"</span><span class="p">:</span><span class="w"> </span><span class="s2">"my-datajoint-test-bucket"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"location"</span><span class="p">:</span><span class="w"> </span><span class="s2">"v2-test"</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div></p>
 <p><strong>Store credentials in <code>.secrets/stores.s3_store.access_key</code> and
 <code>.secrets/stores.s3_store.secret_key</code>:</strong>
-<div class="highlight"><pre><span></span><code><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;YOUR_ACCESS_KEY&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>.secrets/stores.s3_store.access_key
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;YOUR_SECRET_KEY&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>.secrets/stores.s3_store.secret_key
+<div class="highlight"><pre><span></span><code><span class="nb">echo</span><span class="w"> </span><span class="s2">"YOUR_ACCESS_KEY"</span><span class="w"> </span>&gt;<span class="w"> </span>.secrets/stores.s3_store.access_key
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"YOUR_SECRET_KEY"</span><span class="w"> </span>&gt;<span class="w"> </span>.secrets/stores.s3_store.secret_key
 </code></pre></div></p>
 <h4 id="ai-agent-prompt-configure-and-test-stores">AI Agent Prompt: Configure and Test Stores<a class="headerlink" href="#ai-agent-prompt-configure-and-test-stores" title="Permanent link">&para;</a></h4>
 <hr />
@@ -9403,7 +9418,7 @@ STEPS:
 
 1. Configure test stores in datajoint.json:
    - Use test locations (e.g., /data/v2_test_stores/)
-   - For cloud: use test bucket or prefix (e.g., &quot;v2-test&quot;)
+   - For cloud: use test bucket or prefix (e.g., "v2-test")
    - Configure hash_prefix, schema_prefix, filepath_prefix if needed
 
 2. Store credentials in .secrets/ directory:
@@ -9420,13 +9435,13 @@ STEPS:
    ```python
    @schema
    class StoreTest(dj.Manual):
-       definition = &quot;&quot;&quot;
+       definition = """
        test_id : int
        ---
        blob_data : &lt;blob@&gt;
        attach_data : &lt;attach@&gt;
        filepath_data : &lt;filepath@&gt;
-       &quot;&quot;&quot;
+       """
    ```
 
 5. Insert test data and verify:
@@ -9465,7 +9480,7 @@ Understanding the hash-addressed section is critical for migration:
 - Subfolding splits hash into directory levels
 - Same content always produces same path (deduplication)
 
-Example with hash_prefix=&quot;_hash&quot;, subfolding=[2,2]:
+Example with hash_prefix="_hash", subfolding=[2,2]:
   /data/store/_hash/my_schema/ab/cd/abcdef123456...
 
 Learn more: Object Store Configuration Spec
@@ -9495,7 +9510,7 @@ Test results for store configuration:
 - Issues found: [any errors or unexpected behavior]
 
 COMMIT MESSAGE:
-&quot;feat(phase-i): configure test stores and verify codecs
+"feat(phase-i): configure test stores and verify codecs
 
 - Configure test stores with [protocol] at [location]
 - Store credentials in .secrets/ directory
@@ -9503,7 +9518,7 @@ COMMIT MESSAGE:
 - Verify hash-addressed file organization
 - Confirm codecs work with legacy schema structure
 
-Test stores ready for table definition conversion.&quot;
+Test stores ready for table definition conversion."
 </code></pre></div>
 <hr />
 <h4 id="test-in-store-codecs">Test In-Store Codecs<a class="headerlink" href="#test-in-store-codecs" title="Permanent link">&para;</a></h4>
@@ -9514,63 +9529,63 @@ and understand the file organization.</p>
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
 <span class="c1"># Create test schema</span>
-<span class="n">schema</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">schema</span><span class="p">(</span><span class="s1">&#39;test_stores_v2&#39;</span><span class="p">)</span>
+<span class="n">schema</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">schema</span><span class="p">(</span><span class="s1">'test_stores_v2'</span><span class="p">)</span>
 
 <span class="nd">@schema</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">StoreTest</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    test_id : int</span>
 <span class="s2">    ---</span>
 <span class="s2">    blob_data : &lt;blob@&gt;          # Hash-addressed blob</span>
 <span class="s2">    attach_data : &lt;attach@&gt;      # Hash-addressed attachment</span>
 <span class="s2">    filepath_data : &lt;filepath@&gt;  # Filepath reference</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">    """</span>
 
 <span class="c1"># Test data</span>
-<span class="n">test_blob</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;key&#39;</span><span class="p">:</span> <span class="s1">&#39;value&#39;</span><span class="p">,</span> <span class="s1">&#39;array&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]}</span>
-<span class="n">test_attach</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;metadata&#39;</span><span class="p">:</span> <span class="s1">&#39;test attachment&#39;</span><span class="p">}</span>
+<span class="n">test_blob</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'key'</span><span class="p">:</span> <span class="s1">'value'</span><span class="p">,</span> <span class="s1">'array'</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]}</span>
+<span class="n">test_attach</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'metadata'</span><span class="p">:</span> <span class="s1">'test attachment'</span><span class="p">}</span>
 
 <span class="c1"># For filepath, create test file first</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">tempfile</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 <span class="n">temp_dir</span> <span class="o">=</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">gettempdir</span><span class="p">()</span>
-<span class="n">test_file_path</span> <span class="o">=</span> <span class="s1">&#39;test_data/sample.txt&#39;</span>
+<span class="n">test_file_path</span> <span class="o">=</span> <span class="s1">'test_data/sample.txt'</span>
 <span class="n">full_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
-    <span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;stores&#39;</span><span class="p">][</span><span class="s1">&#39;default&#39;</span><span class="p">][</span><span class="s1">&#39;location&#39;</span><span class="p">],</span>
+    <span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">'stores'</span><span class="p">][</span><span class="s1">'default'</span><span class="p">][</span><span class="s1">'location'</span><span class="p">],</span>
     <span class="n">test_file_path</span>
 <span class="p">)</span>
 <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">full_path</span><span class="p">),</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">full_path</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;test content&#39;</span><span class="p">)</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">full_path</span><span class="p">,</span> <span class="s1">'w'</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'test content'</span><span class="p">)</span>
 
 <span class="c1"># Insert test data</span>
 <span class="n">StoreTest</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span>
-    <span class="s1">&#39;test_id&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
-    <span class="s1">&#39;blob_data&#39;</span><span class="p">:</span> <span class="n">test_blob</span><span class="p">,</span>
-    <span class="s1">&#39;attach_data&#39;</span><span class="p">:</span> <span class="n">test_attach</span><span class="p">,</span>
-    <span class="s1">&#39;filepath_data&#39;</span><span class="p">:</span> <span class="n">test_file_path</span>
+    <span class="s1">'test_id'</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s1">'blob_data'</span><span class="p">:</span> <span class="n">test_blob</span><span class="p">,</span>
+    <span class="s1">'attach_data'</span><span class="p">:</span> <span class="n">test_attach</span><span class="p">,</span>
+    <span class="s1">'filepath_data'</span><span class="p">:</span> <span class="n">test_file_path</span>
 <span class="p">})</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;✓ Test data inserted successfully&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"✓ Test data inserted successfully"</span><span class="p">)</span>
 </code></pre></div>
 <p><strong>Verify file organization:</strong></p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Fetch and verify</span>
-<span class="n">result</span> <span class="o">=</span> <span class="p">(</span><span class="n">StoreTest</span> <span class="o">&amp;</span> <span class="p">{</span><span class="s1">&#39;test_id&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">})</span><span class="o">.</span><span class="n">fetch1</span><span class="p">()</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;✓ blob_data: </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;blob_data&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;✓ attach_data: </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;attach_data&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;✓ filepath_data: </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;filepath_data&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="n">result</span> <span class="o">=</span> <span class="p">(</span><span class="n">StoreTest</span> <span class="o">&amp;</span> <span class="p">{</span><span class="s1">'test_id'</span><span class="p">:</span> <span class="mi">1</span><span class="p">})</span><span class="o">.</span><span class="n">fetch1</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"✓ blob_data: </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">'blob_data'</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"✓ attach_data: </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">'attach_data'</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"✓ filepath_data: </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">'filepath_data'</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
 <span class="c1"># Inspect hash-addressed file organization</span>
 <span class="n">store_spec</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get_store_spec</span><span class="p">()</span>
-<span class="n">hash_prefix</span> <span class="o">=</span> <span class="n">store_spec</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;hash_prefix&#39;</span><span class="p">,</span> <span class="s1">&#39;_hash&#39;</span><span class="p">)</span>
-<span class="n">location</span> <span class="o">=</span> <span class="n">store_spec</span><span class="p">[</span><span class="s1">&#39;location&#39;</span><span class="p">]</span>
+<span class="n">hash_prefix</span> <span class="o">=</span> <span class="n">store_spec</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'hash_prefix'</span><span class="p">,</span> <span class="s1">'_hash'</span><span class="p">)</span>
+<span class="n">location</span> <span class="o">=</span> <span class="n">store_spec</span><span class="p">[</span><span class="s1">'location'</span><span class="p">]</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Store organization:&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Location: </span><span class="si">{</span><span class="n">location</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Hash prefix: </span><span class="si">{</span><span class="n">hash_prefix</span><span class="si">}</span><span class="s2">/&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Expected structure: </span><span class="si">{</span><span class="n">hash_prefix</span><span class="si">}</span><span class="s2">/</span><span class="se">{{</span><span class="s2">schema</span><span class="se">}}</span><span class="s2">/</span><span class="se">{{</span><span class="s2">hash</span><span class="se">}}</span><span class="s2">&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Verify files exist at:&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">location</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">hash_prefix</span><span class="si">}</span><span class="s2">/test_stores_v2/&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Store organization:"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  Location: </span><span class="si">{</span><span class="n">location</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  Hash prefix: </span><span class="si">{</span><span class="n">hash_prefix</span><span class="si">}</span><span class="s2">/"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  Expected structure: </span><span class="si">{</span><span class="n">hash_prefix</span><span class="si">}</span><span class="s2">/</span><span class="se">{{</span><span class="s2">schema</span><span class="se">}}</span><span class="s2">/</span><span class="se">{{</span><span class="s2">hash</span><span class="se">}}</span><span class="s2">"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Verify files exist at:"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  </span><span class="si">{</span><span class="n">location</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">hash_prefix</span><span class="si">}</span><span class="s2">/test_stores_v2/"</span><span class="p">)</span>
 </code></pre></div>
 <p><strong>Review hash-addressed storage structure:</strong></p>
 <p>Hash-addressed storage (<code>&lt;blob@&gt;</code>, <code>&lt;attach@&gt;</code>) uses content-based paths:</p>
@@ -9589,9 +9604,9 @@ and understand the file organization.</p>
 (../reference/specs/object-store-configuration.md#hash-addressed-storage)</p>
 <p><strong>Cleanup test:</strong></p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Remove test data</span>
-<span class="p">(</span><span class="n">StoreTest</span> <span class="o">&amp;</span> <span class="p">{</span><span class="s1">&#39;test_id&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">})</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
+<span class="p">(</span><span class="n">StoreTest</span> <span class="o">&amp;</span> <span class="p">{</span><span class="s1">'test_id'</span><span class="p">:</span> <span class="mi">1</span><span class="p">})</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
 <span class="n">schema</span><span class="o">.</span><span class="n">drop</span><span class="p">()</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;✓ Test cleanup complete&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"✓ Test cleanup complete"</span><span class="p">)</span>
 </code></pre></div>
 <h3 id="step-6-convert-table-definitions">Step 6: Convert Table Definitions<a class="headerlink" href="#step-6-convert-table-definitions" title="Permanent link">&para;</a></h3>
 <p>Update table definitions in topological order (tables before their dependents).</p>
@@ -9878,7 +9893,7 @@ Core Types (String and Date):
   varchar(N) → varchar(N)  # unchanged (core type)
   char(N) → char(N)  # unchanged (core type)
   date → date  # unchanged (core type)
-  enum(&#39;a&#39;, &#39;b&#39;) → enum(&#39;a&#39;, &#39;b&#39;)  # unchanged (core type)
+  enum('a', 'b') → enum('a', 'b')  # unchanged (core type)
   bool → bool  # unchanged (core type, MySQL stores as tinyint(1))
   boolean → bool  # unchanged (core type, MySQL stores as tinyint(1))
   datetime → datetime  # unchanged (core type)
@@ -9921,13 +9936,13 @@ Conversion rules:
 
 For EACH timestamp column, ASK THE USER:
 
-1. &quot;What timezone convention was used for [column_name]?&quot;
+1. "What timezone convention was used for [column_name]?"
    - UTC (no conversion needed)
    - Server local time (requires conversion to UTC)
    - Application local time (requires conversion to UTC)
    - Mixed/unknown (requires data audit)
 
-2. &quot;Does this use MySQL&#39;s auto-update behavior (ON UPDATE CURRENT_TIMESTAMP)?&quot;
+2. "Does this use MySQL's auto-update behavior (ON UPDATE CURRENT_TIMESTAMP)?"
    - If yes, may need to update table schema
    - If no, application controls the value
 
@@ -9938,10 +9953,10 @@ For EACH timestamp column, ASK THE USER:
    - Handle timezone display in application front-ends and client APIs
 
 Example conversation:
-  AI: &quot;I found timestamp column &#39;session_time&#39;. What timezone was used?&quot;
-  User: &quot;Server time (US/Eastern)&quot;
-  AI: &quot;I recommend converting to UTC. I&#39;ll convert the type to datetime and add a
-       data conversion step in Phase III to convert US/Eastern times to UTC.&quot;
+  AI: "I found timestamp column 'session_time'. What timezone was used?"
+  User: "Server time (US/Eastern)"
+  AI: "I recommend converting to UTC. I'll convert the type to datetime and add a
+       data conversion step in Phase III to convert US/Eastern times to UTC."
 
 Example:
   # pre-2.0
@@ -9985,7 +10000,7 @@ IMPORTANT - Enum Types:
 enum is a core type—no changes required.
 
 Example:
-  sex : enum(&#39;M&#39;, &#39;F&#39;, &#39;U&#39;)  # No change needed
+  sex : enum('M', 'F', 'U')  # No change needed
 
 IMPORTANT - JSON Type:
 
@@ -10044,8 +10059,8 @@ IMPORTANT - Do NOT use these during migration (NEW in 2.0):
   # Do NOT convert existing attributes to these codecs
 
 SCHEMA DECLARATIONS:
-  OLD: schema = dj.schema(&#39;my_pipeline&#39;)
-  NEW: schema = dj.schema(&#39;my_pipeline_v2&#39;)
+  OLD: schema = dj.schema('my_pipeline')
+  NEW: schema = dj.schema('my_pipeline_v2')
 
 PROCESS:
 1. Identify all Python files with DataJoint schemas
@@ -10070,37 +10085,37 @@ VERIFICATION:
 EXAMPLE CONVERSION:
 
 # pre-2.0
-schema = dj.schema(&#39;neuroscience_pipeline&#39;)
+schema = dj.schema('neuroscience_pipeline')
 
 @schema
 class Recording(dj.Manual):
-    definition = &quot;&quot;&quot;
+    definition = """
     recording_id : int unsigned
     ---
     sampling_rate : float
     signal : blob@raw  # pre-2.0 in-store syntax
     waveforms : blob@raw  # pre-2.0 in-store syntax
     metadata : longblob  # pre-2.0 in-table
-    &quot;&quot;&quot;
+    """
 
 # 2.0 (Phase I with test stores)
-schema = dj.schema(&#39;neuroscience_pipeline_v2&#39;)
+schema = dj.schema('neuroscience_pipeline_v2')
 
 @schema
 class Recording(dj.Manual):
-    definition = &quot;&quot;&quot;
+    definition = """
     recording_id : int64
     ---
     sampling_rate : float32
     signal : &lt;blob@raw&gt;  # Converted: blob@raw → &lt;blob@raw&gt;
     waveforms : &lt;blob@raw&gt;  # Converted: blob@raw → &lt;blob@raw&gt;
     metadata : &lt;blob&gt;  # Converted: longblob → &lt;blob&gt;
-    &quot;&quot;&quot;
+    """
 
 # Phase I: Only convert existing legacy formats
 # Do NOT add new codecs like &lt;npy@&gt; during migration
 
-# If you want to adopt &lt;npy@&gt; later (Phase IV), that&#39;s a separate step:
+# If you want to adopt &lt;npy@&gt; later (Phase IV), that's a separate step:
 # - After migration is complete
 # - For new features or performance improvements
 # - Not required for migration
@@ -10117,7 +10132,7 @@ REPORT:
 - Test stores configured: [list store names]
 
 COMMIT MESSAGE FORMAT:
-&quot;feat(phase-i): convert table definitions to 2.0 syntax
+"feat(phase-i): convert table definitions to 2.0 syntax
 
 - Update schema declarations to *_v2
 - Convert native types to core types (int64, float64, etc.)
@@ -10125,7 +10140,7 @@ COMMIT MESSAGE FORMAT:
 - Configure test stores for development/testing
 
 Tables converted: X
-Codecs converted: Y (in-table: Z, in-store: W)&quot;
+Codecs converted: Y (in-table: Z, in-store: W)"
 </code></pre></div>
 <hr />
 <h3 id="step-7-convert-query-and-insert-code">Step 7: Convert Query and Insert Code<a class="headerlink" href="#step-7-convert-query-and-insert-code" title="Permanent link">&para;</a></h3>
@@ -10193,25 +10208,25 @@ API CONVERSIONS:
    OLD: data = table.fetch(as_dict=True)
    NEW: data = table.to_dicts()  # list of dicts
 
-   OLD: data = table.fetch(format=&quot;frame&quot;)
+   OLD: data = table.fetch(format="frame")
    NEW: data = table.to_pandas()  # pandas DataFrame
 
-   OLD: data = table.fetch(&#39;attr1&#39;, &#39;attr2&#39;)
-   NEW: data = table.to_arrays(&#39;attr1&#39;, &#39;attr2&#39;)  # returns tuple
+   OLD: data = table.fetch('attr1', 'attr2')
+   NEW: data = table.to_arrays('attr1', 'attr2')  # returns tuple
 
    OLD: row = table.fetch1()
    NEW: row = table.fetch1()  # UNCHANGED
 
-   OLD: keys = table.fetch1(&#39;KEY&#39;)
+   OLD: keys = table.fetch1('KEY')
    NEW: keys = table.keys()  # Returns list of dicts with primary key values
 
-   OLD: keys, a, b = table.fetch(&quot;KEY&quot;, &quot;a&quot;, &quot;b&quot;)
-   NEW: a, b = table.to_arrays(&#39;a&#39;, &#39;b&#39;, include_key=True)
+   OLD: keys, a, b = table.fetch("KEY", "a", "b")
+   NEW: a, b = table.to_arrays('a', 'b', include_key=True)
    # Returns tuple with keys included
 
 2. Update Method (always convert):
-   OLD: (table &amp; key)._update(&#39;attr&#39;, value)
-   NEW: table.update1({**key, &#39;attr&#39;: value})
+   OLD: (table &amp; key)._update('attr', value)
+   NEW: table.update1({**key, 'attr': value})
 
 3. Join Operator (always convert):
    OLD: result = table1 @ table2
@@ -10227,18 +10242,18 @@ API CONVERSIONS:
 
 4. Universal Set (CHECK - distinguish correct from hack):
    CORRECT (unchanged):
-   result = dj.U(&#39;attr&#39;) &amp; table  # Projects specific attributes, unchanged
+   result = dj.U('attr') &amp; table  # Projects specific attributes, unchanged
 
    HACK (always refactor):
-   OLD: result = dj.U(&#39;attr&#39;) * table  # Was hack to change primary key
+   OLD: result = dj.U('attr') * table  # Was hack to change primary key
    NEW: result = table  # Simply use table directly
 
    Note: The * operator with dj.U() was a hack. Replace with just table.
 
 5. Insert (CHANGED - requires named keys):
-   OLD: table.insert([(1, &#39;Alice&#39;), (2, &#39;Bob&#39;)])  # Positional tuples
-   NEW: table.insert([{&#39;id&#39;: 1, &#39;name&#39;: &#39;Alice&#39;},
-                      {&#39;id&#39;: 2, &#39;name&#39;: &#39;Bob&#39;}])  # Dicts
+   OLD: table.insert([(1, 'Alice'), (2, 'Bob')])  # Positional tuples
+   NEW: table.insert([{'id': 1, 'name': 'Alice'},
+                      {'id': 2, 'name': 'Bob'}])  # Dicts
 
    DataJoint 2.0 requires named key-value mappings for insert:
    - Dicts (most common)
@@ -10257,13 +10272,13 @@ API CONVERSIONS:
    MySQL allows both quote styles, but PostgreSQL interprets double quotes as
    identifier (column) references, causing errors.
 
-   OLD: Table &amp; &#39;name = &quot;Alice&quot;&#39;
-   OLD: Table &amp; &#39;date &gt; &quot;2024-01-01&quot;&#39;
-   OLD: Table &amp; &#39;strain = &quot;C57BL/6&quot;&#39;
+   OLD: Table &amp; 'name = "Alice"'
+   OLD: Table &amp; 'date &gt; "2024-01-01"'
+   OLD: Table &amp; 'strain = "C57BL/6"'
 
-   NEW: Table &amp; &quot;name = &#39;Alice&#39;&quot;
-   NEW: Table &amp; &quot;date &gt; &#39;2024-01-01&#39;&quot;
-   NEW: Table &amp; &quot;strain = &#39;C57BL/6&#39;&quot;
+   NEW: Table &amp; "name = 'Alice'"
+   NEW: Table &amp; "date &gt; '2024-01-01'"
+   NEW: Table &amp; "strain = 'C57BL/6'"
 
    Note: Dictionary restrictions handle quoting automatically but only support
    equality comparisons. For range comparisons (&gt;, &lt;, LIKE, etc.), use string
@@ -10289,7 +10304,7 @@ PROCESS:
 VERIFICATION:
 
 - .fetch() calls either converted OR intentionally kept (works with deprecation warning)
-- No .fetch1(&#39;KEY&#39;) calls remaining (replaced with .keys())
+- No .fetch1('KEY') calls remaining (replaced with .keys())
 - No ._update() calls remaining
 - No @ operator between tables
 - dj.U() * patterns replaced with just table
@@ -10305,11 +10320,11 @@ OLD: sessions = Session.fetch(as_dict=True)
 NEW: sessions = Session.to_dicts()
 
 Pattern 2: Fetch specific attributes
-OLD: mouse_ids, dobs = Mouse.fetch(&#39;mouse_id&#39;, &#39;dob&#39;)
-NEW: mouse_ids, dobs = Mouse.to_arrays(&#39;mouse_id&#39;, &#39;dob&#39;)
+OLD: mouse_ids, dobs = Mouse.fetch('mouse_id', 'dob')
+NEW: mouse_ids, dobs = Mouse.to_arrays('mouse_id', 'dob')
 
 Pattern 3: Fetch as pandas DataFrame
-OLD: df = Mouse.fetch(format=&quot;frame&quot;)
+OLD: df = Mouse.fetch(format="frame")
 NEW: df = Mouse.to_pandas()
 
 Pattern 4: Fetch single row
@@ -10317,16 +10332,16 @@ OLD: row = (Mouse &amp; key).fetch1()  # unchanged
 NEW: row = (Mouse &amp; key).fetch1()  # unchanged
 
 Pattern 5: Update attribute
-OLD: (Session &amp; key)._update(&#39;experimenter&#39;, &#39;Alice&#39;)
-NEW: Session.update1({**key, &#39;experimenter&#39;: &#39;Alice&#39;})
+OLD: (Session &amp; key)._update('experimenter', 'Alice')
+NEW: Session.update1({**key, 'experimenter': 'Alice'})
 
 Pattern 6: Fetch primary keys
-OLD: keys = Mouse.fetch1(&#39;KEY&#39;)
+OLD: keys = Mouse.fetch1('KEY')
 NEW: keys = Mouse.keys()
 
 Pattern 7: Fetch with keys included
-OLD: keys, weights, ages = Mouse.fetch(&quot;KEY&quot;, &quot;weight&quot;, &quot;age&quot;)
-NEW: weights, ages = Mouse.to_arrays(&#39;weight&#39;, &#39;age&#39;, include_key=True)
+OLD: keys, weights, ages = Mouse.fetch("KEY", "weight", "age")
+NEW: weights, ages = Mouse.to_arrays('weight', 'age', include_key=True)
 
 Pattern 8: Natural join (now WITH semantic checks)
 OLD: result = Neuron @ Session
@@ -10339,19 +10354,19 @@ NEW: result = Session.extend(Experiment)  # Consider using extend
 
 Pattern 10: Universal set (distinguish correct from hack)
 CORRECT (unchanged):
-OLD: all_dates = dj.U(&#39;session_date&#39;) &amp; Session
-NEW: all_dates = dj.U(&#39;session_date&#39;) &amp; Session  # Unchanged, correct
+OLD: all_dates = dj.U('session_date') &amp; Session
+NEW: all_dates = dj.U('session_date') &amp; Session  # Unchanged, correct
 
 HACK (always replace):
-OLD: result = dj.U(&#39;new_pk&#39;) * Session  # Hack to change primary key
+OLD: result = dj.U('new_pk') * Session  # Hack to change primary key
 NEW: result = Session  # Simply use table directly
 
 REPORT:
 
 - Files modified: [list]
 - fetch() → to_arrays/to_dicts: [count]
-- fetch(..., format=&quot;frame&quot;) → to_pandas(): [count]
-- fetch1(&#39;KEY&#39;) → keys(): [count]
+- fetch(..., format="frame") → to_pandas(): [count]
+- fetch1('KEY') → keys(): [count]
 - _update() → update1(): [count]
 - @ → * (natural join): [count]
 - .join(x, left=True) → .extend(x): [count]
@@ -10362,10 +10377,10 @@ REPORT:
 - Tests passed: [yes/no]
 
 COMMIT MESSAGE FORMAT:
-&quot;feat(phase-i): convert query and insert code to 2.0 API
+"feat(phase-i): convert query and insert code to 2.0 API
 
 - Replace fetch() with to_arrays()/to_dicts()/to_pandas()
-- Replace fetch1(&#39;KEY&#39;) with keys()
+- Replace fetch1('KEY') with keys()
 - Replace _update() with update1()
 - Replace @ operator with * (enables semantic checks)
 - Replace .join(x, left=True) with .extend(x)
@@ -10374,7 +10389,7 @@ COMMIT MESSAGE FORMAT:
 - Keep dj.U() &amp; table patterns unchanged (correct)
 - Investigate and resolve semantic check failures
 
-API conversions: X fetch, Y update, Z join&quot;
+API conversions: X fetch, Y update, Z join"
 </code></pre></div>
 <hr />
 <h3 id="step-8-update-populate-methods">Step 8: Update Populate Methods<a class="headerlink" href="#step-8-update-populate-methods" title="Permanent link">&para;</a></h3>
@@ -10404,13 +10419,13 @@ API conversions: X fetch, Y update, Z join&quot;
 <li>Positional tuples NO LONGER SUPPORTED</li>
 <li>Must use named key-value mappings:
    <div class="highlight"><pre><span></span><code><span class="c1"># OLD (no longer works)</span>
-<span class="bp">self</span><span class="o">.</span><span class="n">insert1</span><span class="p">((</span><span class="n">key</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">],</span> <span class="n">computed_value</span><span class="p">,</span> <span class="n">timestamp</span><span class="p">))</span>
+<span class="bp">self</span><span class="o">.</span><span class="n">insert1</span><span class="p">((</span><span class="n">key</span><span class="p">[</span><span class="s1">'id'</span><span class="p">],</span> <span class="n">computed_value</span><span class="p">,</span> <span class="n">timestamp</span><span class="p">))</span>
 
 <span class="c1"># NEW (required)</span>
 <span class="bp">self</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span>
     <span class="o">**</span><span class="n">key</span><span class="p">,</span>
-    <span class="s1">&#39;computed_value&#39;</span><span class="p">:</span> <span class="n">computed_value</span><span class="p">,</span>
-    <span class="s1">&#39;timestamp&#39;</span><span class="p">:</span> <span class="n">timestamp</span>
+    <span class="s1">'computed_value'</span><span class="p">:</span> <span class="n">computed_value</span><span class="p">,</span>
+    <span class="s1">'timestamp'</span><span class="p">:</span> <span class="n">timestamp</span>
 <span class="p">})</span>
 </code></pre></div></li>
 </ul>
@@ -10451,18 +10466,18 @@ API conversions: X fetch, Y update, Z join&quot;
 <span class="kn">import</span><span class="w"> </span><span class="nn">datajoint</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dj</span>
 <span class="n">conn</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">conn</span><span class="p">()</span>
 
-<span class="n">schemas</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;SHOW DATABASES LIKE &#39;%_v2&#39;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">fetchall</span><span class="p">()</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Created </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">schemas</span><span class="p">)</span><span class="si">}</span><span class="s2"> _v2 schemas:&quot;</span><span class="p">)</span>
+<span class="n">schemas</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">"SHOW DATABASES LIKE '%_v2'"</span><span class="p">)</span><span class="o">.</span><span class="n">fetchall</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Created </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">schemas</span><span class="p">)</span><span class="si">}</span><span class="s2"> _v2 schemas:"</span><span class="p">)</span>
 <span class="k">for</span> <span class="n">schema</span> <span class="ow">in</span> <span class="n">schemas</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  - </span><span class="si">{</span><span class="n">schema</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  - </span><span class="si">{</span><span class="n">schema</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
 <span class="c1"># Verify tables created</span>
 <span class="k">for</span> <span class="n">schema_name</span> <span class="ow">in</span> <span class="p">[</span><span class="n">s</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">schemas</span><span class="p">]:</span>
     <span class="n">tables</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">query</span><span class="p">(</span>
-        <span class="sa">f</span><span class="s2">&quot;SELECT COUNT(*) FROM information_schema.TABLES &quot;</span>
-        <span class="sa">f</span><span class="s2">&quot;WHERE TABLE_SCHEMA=&#39;</span><span class="si">{</span><span class="n">schema_name</span><span class="si">}</span><span class="s2">&#39;&quot;</span>
+        <span class="sa">f</span><span class="s2">"SELECT COUNT(*) FROM information_schema.TABLES "</span>
+        <span class="sa">f</span><span class="s2">"WHERE TABLE_SCHEMA='</span><span class="si">{</span><span class="n">schema_name</span><span class="si">}</span><span class="s2">'"</span>
     <span class="p">)</span><span class="o">.</span><span class="n">fetchone</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">schema_name</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">tables</span><span class="si">}</span><span class="s2"> tables&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">schema_name</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">tables</span><span class="si">}</span><span class="s2"> tables"</span><span class="p">)</span>
 </code></pre></div>
 <h4 id="commit-phase-i">Commit Phase I<a class="headerlink" href="#commit-phase-i" title="Permanent link">&para;</a></h4>
 <div class="highlight"><pre><span></span><code><span class="c1"># Review all changes</span>
@@ -10471,7 +10486,7 @@ git<span class="w"> </span>diff
 
 <span class="c1"># Commit</span>
 git<span class="w"> </span>add<span class="w"> </span>.
-git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;feat: complete Phase I migration to DataJoint 2.0</span>
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">"feat: complete Phase I migration to DataJoint 2.0</span>
 
 <span class="s2">Summary:</span>
 <span class="s2">- Created _v2 schemas (empty)</span>
@@ -10483,7 +10498,7 @@ git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </sp
 
 <span class="s2">Schemas: X</span>
 <span class="s2">Tables: Y</span>
-<span class="s2">Code files: Z&quot;</span>
+<span class="s2">Code files: Z"</span>
 
 git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </span>pre/v2.0
 </code></pre></div>
@@ -10540,12 +10555,12 @@ git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </
 <span class="kn">import</span><span class="w"> </span><span class="nn">your_pipeline_v2</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">v2</span>  <span class="c1"># 2.0 on pre/v2.0 branch</span>
 
 <span class="k">def</span><span class="w"> </span><span class="nf">compare_results</span><span class="p">():</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compare query results between legacy and v2.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Compare query results between legacy and v2."""</span>
 
     <span class="c1"># Insert same data into both schemas</span>
     <span class="n">test_data</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="p">{</span><span class="s1">&#39;mouse_id&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;dob&#39;</span><span class="p">:</span> <span class="s1">&#39;2024-01-01&#39;</span><span class="p">,</span> <span class="s1">&#39;sex&#39;</span><span class="p">:</span> <span class="s1">&#39;M&#39;</span><span class="p">},</span>
-        <span class="p">{</span><span class="s1">&#39;mouse_id&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;dob&#39;</span><span class="p">:</span> <span class="s1">&#39;2024-01-15&#39;</span><span class="p">,</span> <span class="s1">&#39;sex&#39;</span><span class="p">:</span> <span class="s1">&#39;F&#39;</span><span class="p">},</span>
+        <span class="p">{</span><span class="s1">'mouse_id'</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">'dob'</span><span class="p">:</span> <span class="s1">'2024-01-01'</span><span class="p">,</span> <span class="s1">'sex'</span><span class="p">:</span> <span class="s1">'M'</span><span class="p">},</span>
+        <span class="p">{</span><span class="s1">'mouse_id'</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">'dob'</span><span class="p">:</span> <span class="s1">'2024-01-15'</span><span class="p">,</span> <span class="s1">'sex'</span><span class="p">:</span> <span class="s1">'F'</span><span class="p">},</span>
     <span class="p">]</span>
 
     <span class="n">legacy</span><span class="o">.</span><span class="n">Mouse</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">test_data</span><span class="p">,</span> <span class="n">skip_duplicates</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -10555,20 +10570,20 @@ git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </
     <span class="n">legacy_mice</span> <span class="o">=</span> <span class="n">legacy</span><span class="o">.</span><span class="n">Mouse</span><span class="o">.</span><span class="n">fetch</span><span class="p">(</span><span class="n">as_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  <span class="c1"># pre-2.0 syntax</span>
     <span class="n">v2_mice</span> <span class="o">=</span> <span class="n">v2</span><span class="o">.</span><span class="n">Mouse</span><span class="o">.</span><span class="n">to_dicts</span><span class="p">()</span>  <span class="c1"># 2.0 syntax</span>
 
-    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">legacy_mice</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">v2_mice</span><span class="p">),</span> <span class="s2">&quot;Row count mismatch!&quot;</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">legacy_mice</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">v2_mice</span><span class="p">),</span> <span class="s2">"Row count mismatch!"</span>
 
     <span class="c1"># Compare values (excluding fetch-specific artifacts)</span>
     <span class="k">for</span> <span class="n">leg</span><span class="p">,</span> <span class="n">v2_row</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">legacy_mice</span><span class="p">,</span> <span class="n">v2_mice</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">leg</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
             <span class="k">if</span> <span class="n">leg</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">!=</span> <span class="n">v2_row</span><span class="p">[</span><span class="n">key</span><span class="p">]:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;MISMATCH: </span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">leg</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="si">}</span><span class="s2"> != </span><span class="si">{</span><span class="n">v2_row</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"MISMATCH: </span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">leg</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="si">}</span><span class="s2"> != </span><span class="si">{</span><span class="n">v2_row</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
                 <span class="k">return</span> <span class="kc">False</span>
 
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;✓ Query results are equivalent!&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"✓ Query results are equivalent!"</span><span class="p">)</span>
     <span class="k">return</span> <span class="kc">True</span>
 
 <span class="k">def</span><span class="w"> </span><span class="nf">compare_populate</span><span class="p">():</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compare populate results.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Compare populate results."""</span>
 
     <span class="c1"># Populate both</span>
     <span class="n">legacy</span><span class="o">.</span><span class="n">Neuron</span><span class="o">.</span><span class="n">populate</span><span class="p">(</span><span class="n">display_progress</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -10578,28 +10593,28 @@ git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </
     <span class="n">legacy_count</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">legacy</span><span class="o">.</span><span class="n">Neuron</span><span class="p">())</span>
     <span class="n">v2_count</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">v2</span><span class="o">.</span><span class="n">Neuron</span><span class="p">())</span>
 
-    <span class="k">assert</span> <span class="n">legacy_count</span> <span class="o">==</span> <span class="n">v2_count</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Count mismatch: </span><span class="si">{</span><span class="n">legacy_count</span><span class="si">}</span><span class="s2"> != </span><span class="si">{</span><span class="n">v2_count</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="k">assert</span> <span class="n">legacy_count</span> <span class="o">==</span> <span class="n">v2_count</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"Count mismatch: </span><span class="si">{</span><span class="n">legacy_count</span><span class="si">}</span><span class="s2"> != </span><span class="si">{</span><span class="n">v2_count</span><span class="si">}</span><span class="s2">"</span>
 
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;✓ Populate generated same number of rows: </span><span class="si">{</span><span class="n">v2_count</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"✓ Populate generated same number of rows: </span><span class="si">{</span><span class="n">v2_count</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
     <span class="c1"># Compare computed values (if numeric)</span>
-    <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">(</span><span class="n">legacy</span><span class="o">.</span><span class="n">Neuron</span> <span class="o">&amp;</span> <span class="s1">&#39;neuron_id=0&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-        <span class="n">leg_val</span> <span class="o">=</span> <span class="p">(</span><span class="n">legacy</span><span class="o">.</span><span class="n">Neuron</span> <span class="o">&amp;</span> <span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">fetch1</span><span class="p">(</span><span class="s1">&#39;activity&#39;</span><span class="p">)</span>
-        <span class="n">v2_val</span> <span class="o">=</span> <span class="p">(</span><span class="n">v2</span><span class="o">.</span><span class="n">Neuron</span> <span class="o">&amp;</span> <span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">fetch1</span><span class="p">(</span><span class="s1">&#39;activity&#39;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">(</span><span class="n">legacy</span><span class="o">.</span><span class="n">Neuron</span> <span class="o">&amp;</span> <span class="s1">'neuron_id=0'</span><span class="p">)</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="n">leg_val</span> <span class="o">=</span> <span class="p">(</span><span class="n">legacy</span><span class="o">.</span><span class="n">Neuron</span> <span class="o">&amp;</span> <span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">fetch1</span><span class="p">(</span><span class="s1">'activity'</span><span class="p">)</span>
+        <span class="n">v2_val</span> <span class="o">=</span> <span class="p">(</span><span class="n">v2</span><span class="o">.</span><span class="n">Neuron</span> <span class="o">&amp;</span> <span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">fetch1</span><span class="p">(</span><span class="s1">'activity'</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">leg_val</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
-            <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">leg_val</span><span class="p">,</span> <span class="n">v2_val</span><span class="p">,</span> <span class="n">rtol</span><span class="o">=</span><span class="mf">1e-9</span><span class="p">),</span> <span class="s2">&quot;Array values differ!&quot;</span>
+            <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">leg_val</span><span class="p">,</span> <span class="n">v2_val</span><span class="p">,</span> <span class="n">rtol</span><span class="o">=</span><span class="mf">1e-9</span><span class="p">),</span> <span class="s2">"Array values differ!"</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">assert</span> <span class="n">leg_val</span> <span class="o">==</span> <span class="n">v2_val</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Value mismatch: </span><span class="si">{</span><span class="n">leg_val</span><span class="si">}</span><span class="s2"> != </span><span class="si">{</span><span class="n">v2_val</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="k">assert</span> <span class="n">leg_val</span> <span class="o">==</span> <span class="n">v2_val</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"Value mismatch: </span><span class="si">{</span><span class="n">leg_val</span><span class="si">}</span><span class="s2"> != </span><span class="si">{</span><span class="n">v2_val</span><span class="si">}</span><span class="s2">"</span>
 
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;✓ Populate results are equivalent!&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"✓ Populate results are equivalent!"</span><span class="p">)</span>
     <span class="k">return</span> <span class="kc">True</span>
 
-<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Comparing legacy and v2 pipelines...&quot;</span><span class="p">)</span>
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">'__main__'</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"Comparing legacy and v2 pipelines..."</span><span class="p">)</span>
     <span class="n">compare_results</span><span class="p">()</span>
     <span class="n">compare_populate</span><span class="p">()</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">✓ All equivalence tests passed!&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">✓ All equivalence tests passed!"</span><span class="p">)</span>
 </code></pre></div>
 <p>Run comparison:</p>
 <div class="highlight"><pre><span></span><code>python<span class="w"> </span>compare_legacy_v2.py
@@ -10615,18 +10630,18 @@ git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </
 
 <span class="c1"># Compare table contents</span>
 <span class="n">result</span> <span class="o">=</span> <span class="n">compare_query_results</span><span class="p">(</span>
-    <span class="n">prod_schema</span><span class="o">=</span><span class="s1">&#39;my_pipeline&#39;</span><span class="p">,</span>
-    <span class="n">test_schema</span><span class="o">=</span><span class="s1">&#39;my_pipeline_v2&#39;</span><span class="p">,</span>
-    <span class="n">table</span><span class="o">=</span><span class="s1">&#39;neuron&#39;</span><span class="p">,</span>
+    <span class="n">prod_schema</span><span class="o">=</span><span class="s1">'my_pipeline'</span><span class="p">,</span>
+    <span class="n">test_schema</span><span class="o">=</span><span class="s1">'my_pipeline_v2'</span><span class="p">,</span>
+    <span class="n">table</span><span class="o">=</span><span class="s1">'neuron'</span><span class="p">,</span>
     <span class="n">tolerance</span><span class="o">=</span><span class="mf">1e-6</span><span class="p">,</span>
 <span class="p">)</span>
 
-<span class="k">if</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;match&#39;</span><span class="p">]:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;✓ </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;row_count&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> rows match&quot;</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">result</span><span class="p">[</span><span class="s1">'match'</span><span class="p">]:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"✓ </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">'row_count'</span><span class="p">]</span><span class="si">}</span><span class="s2"> rows match"</span><span class="p">)</span>
 <span class="k">else</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;✗ Discrepancies found:&quot;</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">disc</span> <span class="ow">in</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;discrepancies&#39;</span><span class="p">]:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">disc</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"✗ Discrepancies found:"</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">disc</span> <span class="ow">in</span> <span class="n">result</span><span class="p">[</span><span class="s1">'discrepancies'</span><span class="p">]:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  </span><span class="si">{</span><span class="n">disc</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 </code></pre></div>
 <h3 id="step-3-run-existing-tests">Step 3: Run Existing Tests<a class="headerlink" href="#step-3-run-existing-tests" title="Permanent link">&para;</a></h3>
 <p>If you have a test suite:</p>
@@ -10697,11 +10712,11 @@ Useful when planning production migration in Phase III.</p>
 <h4 id="0-configure-production-stores">0. Configure Production Stores<a class="headerlink" href="#0-configure-production-stores" title="Permanent link">&para;</a></h4>
 <p>Update <code>datajoint.json</code> to point to production stores (not test stores):</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;stores&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;default&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;main&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;main&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="nt">&quot;protocol&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;file&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;location&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/data/production_stores/main&quot;</span><span class="w">  </span><span class="err">#</span><span class="w"> </span><span class="err">Produc</span><span class="kc">t</span><span class="err">io</span><span class="kc">n</span><span class="w"> </span><span class="err">loca</span><span class="kc">t</span><span class="err">io</span><span class="kc">n</span>
+<span class="w">  </span><span class="nt">"stores"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"default"</span><span class="p">:</span><span class="w"> </span><span class="s2">"main"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"main"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">"protocol"</span><span class="p">:</span><span class="w"> </span><span class="s2">"file"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"location"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/data/production_stores/main"</span><span class="w">  </span><span class="err">#</span><span class="w"> </span><span class="err">Produc</span><span class="kc">t</span><span class="err">io</span><span class="kc">n</span><span class="w"> </span><span class="err">loca</span><span class="kc">t</span><span class="err">io</span><span class="kc">n</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
@@ -10713,7 +10728,7 @@ Useful when planning production migration in Phase III.</p>
 </ul>
 <p><strong>Commit this change:</strong>
 <div class="highlight"><pre><span></span><code>git<span class="w"> </span>add<span class="w"> </span>datajoint.json
-git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;config: update stores to production locations&quot;</span>
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">"config: update stores to production locations"</span>
 </code></pre></div></p>
 <h4 id="1-backup-production">1. Backup Production<a class="headerlink" href="#1-backup-production" title="Permanent link">&para;</a></h4>
 <div class="highlight"><pre><span></span><code><span class="c1"># Full backup</span>
@@ -10726,15 +10741,15 @@ mysqldump<span class="w"> </span>my_pipeline<span class="w"> </span>&gt;<span cl
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">datajoint.migrate</span><span class="w"> </span><span class="kn">import</span> <span class="n">copy_table_data</span>
 
 <span class="c1"># Copy each manual table</span>
-<span class="n">tables</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;mouse&#39;</span><span class="p">,</span> <span class="s1">&#39;session&#39;</span><span class="p">,</span> <span class="s1">&#39;experimenter&#39;</span><span class="p">]</span>  <span class="c1"># Your manual tables</span>
+<span class="n">tables</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'mouse'</span><span class="p">,</span> <span class="s1">'session'</span><span class="p">,</span> <span class="s1">'experimenter'</span><span class="p">]</span>  <span class="c1"># Your manual tables</span>
 
 <span class="k">for</span> <span class="n">table</span> <span class="ow">in</span> <span class="n">tables</span><span class="p">:</span>
     <span class="n">result</span> <span class="o">=</span> <span class="n">copy_table_data</span><span class="p">(</span>
-        <span class="n">source_schema</span><span class="o">=</span><span class="s1">&#39;my_pipeline&#39;</span><span class="p">,</span>
-        <span class="n">dest_schema</span><span class="o">=</span><span class="s1">&#39;my_pipeline_v2&#39;</span><span class="p">,</span>
+        <span class="n">source_schema</span><span class="o">=</span><span class="s1">'my_pipeline'</span><span class="p">,</span>
+        <span class="n">dest_schema</span><span class="o">=</span><span class="s1">'my_pipeline_v2'</span><span class="p">,</span>
         <span class="n">table</span><span class="o">=</span><span class="n">table</span><span class="p">,</span>
     <span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">table</span><span class="si">}</span><span class="s2">: copied </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;rows_copied&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> rows&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">table</span><span class="si">}</span><span class="s2">: copied </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">'rows_copied'</span><span class="p">]</span><span class="si">}</span><span class="s2"> rows"</span><span class="p">)</span>
 </code></pre></div>
 <h4 id="3-populate-computed-tables">3. Populate Computed Tables<a class="headerlink" href="#3-populate-computed-tables" title="Permanent link">&para;</a></h4>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">your_pipeline_v2</span><span class="w"> </span><span class="kn">import</span> <span class="n">Neuron</span><span class="p">,</span> <span class="n">Analysis</span>
@@ -10751,15 +10766,15 @@ mysqldump<span class="w"> </span>my_pipeline<span class="w"> </span>&gt;<span cl
 <span class="c1"># Update metadata format (UUID → JSON)</span>
 <span class="c1"># This does NOT move files—just updates database pointers</span>
 <span class="n">result</span> <span class="o">=</span> <span class="n">migrate_external_pointers_v2</span><span class="p">(</span>
-    <span class="n">schema</span><span class="o">=</span><span class="s1">&#39;my_pipeline_v2&#39;</span><span class="p">,</span>
-    <span class="n">table</span><span class="o">=</span><span class="s1">&#39;recording&#39;</span><span class="p">,</span>
-    <span class="n">attribute</span><span class="o">=</span><span class="s1">&#39;signal&#39;</span><span class="p">,</span>
-    <span class="n">source_store</span><span class="o">=</span><span class="s1">&#39;raw&#39;</span><span class="p">,</span>  <span class="c1"># Legacy pre-2.0 store name</span>
-    <span class="n">dest_store</span><span class="o">=</span><span class="s1">&#39;raw&#39;</span><span class="p">,</span>  <span class="c1"># 2.0 store name (from datajoint.json)</span>
+    <span class="n">schema</span><span class="o">=</span><span class="s1">'my_pipeline_v2'</span><span class="p">,</span>
+    <span class="n">table</span><span class="o">=</span><span class="s1">'recording'</span><span class="p">,</span>
+    <span class="n">attribute</span><span class="o">=</span><span class="s1">'signal'</span><span class="p">,</span>
+    <span class="n">source_store</span><span class="o">=</span><span class="s1">'raw'</span><span class="p">,</span>  <span class="c1"># Legacy pre-2.0 store name</span>
+    <span class="n">dest_store</span><span class="o">=</span><span class="s1">'raw'</span><span class="p">,</span>  <span class="c1"># 2.0 store name (from datajoint.json)</span>
     <span class="n">copy_files</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>  <span class="c1"># Keep files in place (recommended)</span>
 <span class="p">)</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Migrated </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;rows_migrated&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> pointers&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Migrated </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">'rows_migrated'</span><span class="p">]</span><span class="si">}</span><span class="s2"> pointers"</span><span class="p">)</span>
 </code></pre></div>
 <p><strong>What this does:</strong></p>
 <ul>
@@ -10773,29 +10788,29 @@ mysqldump<span class="w"> </span>my_pipeline<span class="w"> </span>&gt;<span cl
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">datajoint.migrate</span><span class="w"> </span><span class="kn">import</span> <span class="n">compare_query_results</span>
 
 <span class="c1"># Compare production vs _v2</span>
-<span class="n">tables_to_check</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;mouse&#39;</span><span class="p">,</span> <span class="s1">&#39;session&#39;</span><span class="p">,</span> <span class="s1">&#39;neuron&#39;</span><span class="p">,</span> <span class="s1">&#39;analysis&#39;</span><span class="p">]</span>
+<span class="n">tables_to_check</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'mouse'</span><span class="p">,</span> <span class="s1">'session'</span><span class="p">,</span> <span class="s1">'neuron'</span><span class="p">,</span> <span class="s1">'analysis'</span><span class="p">]</span>
 
 <span class="n">all_match</span> <span class="o">=</span> <span class="kc">True</span>
 <span class="k">for</span> <span class="n">table</span> <span class="ow">in</span> <span class="n">tables_to_check</span><span class="p">:</span>
     <span class="n">result</span> <span class="o">=</span> <span class="n">compare_query_results</span><span class="p">(</span>
-        <span class="n">prod_schema</span><span class="o">=</span><span class="s1">&#39;my_pipeline&#39;</span><span class="p">,</span>
-        <span class="n">test_schema</span><span class="o">=</span><span class="s1">&#39;my_pipeline_v2&#39;</span><span class="p">,</span>
+        <span class="n">prod_schema</span><span class="o">=</span><span class="s1">'my_pipeline'</span><span class="p">,</span>
+        <span class="n">test_schema</span><span class="o">=</span><span class="s1">'my_pipeline_v2'</span><span class="p">,</span>
         <span class="n">table</span><span class="o">=</span><span class="n">table</span><span class="p">,</span>
         <span class="n">tolerance</span><span class="o">=</span><span class="mf">1e-6</span><span class="p">,</span>
     <span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;match&#39;</span><span class="p">]:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;✓ </span><span class="si">{</span><span class="n">table</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;row_count&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> rows match&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">result</span><span class="p">[</span><span class="s1">'match'</span><span class="p">]:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"✓ </span><span class="si">{</span><span class="n">table</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">'row_count'</span><span class="p">]</span><span class="si">}</span><span class="s2"> rows match"</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;✗ </span><span class="si">{</span><span class="n">table</span><span class="si">}</span><span class="s2">: discrepancies found&quot;</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">disc</span> <span class="ow">in</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;discrepancies&#39;</span><span class="p">][:</span><span class="mi">5</span><span class="p">]:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;    </span><span class="si">{</span><span class="n">disc</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"✗ </span><span class="si">{</span><span class="n">table</span><span class="si">}</span><span class="s2">: discrepancies found"</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">disc</span> <span class="ow">in</span> <span class="n">result</span><span class="p">[</span><span class="s1">'discrepancies'</span><span class="p">][:</span><span class="mi">5</span><span class="p">]:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"    </span><span class="si">{</span><span class="n">disc</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
         <span class="n">all_match</span> <span class="o">=</span> <span class="kc">False</span>
 
 <span class="k">if</span> <span class="n">all_match</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">✓ All tables validated! Ready for cutover.&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">✓ All tables validated! Ready for cutover."</span><span class="p">)</span>
 <span class="k">else</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">✗ Fix discrepancies before proceeding.&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">✗ Fix discrepancies before proceeding."</span><span class="p">)</span>
 </code></pre></div>
 <h4 id="6-schedule-cutover">6. Schedule Cutover<a class="headerlink" href="#6-schedule-cutover" title="Permanent link">&para;</a></h4>
 <p><strong>Pre-cutover checklist:</strong></p>
@@ -10817,10 +10832,10 @@ mysqldump<span class="w"> </span>my_pipeline<span class="w"> </span>&gt;<span cl
 </code></pre></div>
 <p><strong>Update code:</strong></p>
 <div class="highlight"><pre><span></span><code><span class="c1"># On pre/v2.0 branch, update schema names back</span>
-sed<span class="w"> </span>-i<span class="w"> </span><span class="s1">&#39;&#39;</span><span class="w"> </span><span class="s1">&#39;s/_v2//g&#39;</span><span class="w"> </span>your_pipeline/*.py
+sed<span class="w"> </span>-i<span class="w"> </span><span class="s1">''</span><span class="w"> </span><span class="s1">'s/_v2//g'</span><span class="w"> </span>your_pipeline/*.py
 
 git<span class="w"> </span>add<span class="w"> </span>.
-git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;chore: remove _v2 suffix for production&quot;</span>
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">"chore: remove _v2 suffix for production"</span>
 
 <span class="c1"># Merge to main</span>
 git<span class="w"> </span>checkout<span class="w"> </span>main
@@ -10833,8 +10848,8 @@ git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </
 <div class="highlight"><pre><span></span><code><span class="c1"># Test production after cutover</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">your_pipeline</span><span class="w"> </span><span class="kn">import</span> <span class="n">schema</span><span class="p">,</span> <span class="n">Mouse</span><span class="p">,</span> <span class="n">Neuron</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Mice: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">Mouse</span><span class="p">())</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Neurons: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">Neuron</span><span class="p">())</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Mice: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">Mouse</span><span class="p">())</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Neurons: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">Neuron</span><span class="p">())</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
 <span class="c1"># Run a populate</span>
 <span class="n">Neuron</span><span class="o">.</span><span class="n">populate</span><span class="p">(</span><span class="n">limit</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">display_progress</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -10849,29 +10864,29 @@ git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </
 <h4 id="step-1-backup-production">Step 1: Backup Production<a class="headerlink" href="#step-1-backup-production" title="Permanent link">&para;</a></h4>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">datajoint.migrate</span><span class="w"> </span><span class="kn">import</span> <span class="n">backup_schema</span>
 
-<span class="n">result</span> <span class="o">=</span> <span class="n">backup_schema</span><span class="p">(</span><span class="s1">&#39;my_pipeline&#39;</span><span class="p">,</span> <span class="s1">&#39;my_pipeline_backup_20260114&#39;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Backed up </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;tables_backed_up&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> tables, </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;rows_backed_up&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> rows&quot;</span><span class="p">)</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">backup_schema</span><span class="p">(</span><span class="s1">'my_pipeline'</span><span class="p">,</span> <span class="s1">'my_pipeline_backup_20260114'</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Backed up </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">'tables_backed_up'</span><span class="p">]</span><span class="si">}</span><span class="s2"> tables, </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">'rows_backed_up'</span><span class="p">]</span><span class="si">}</span><span class="s2"> rows"</span><span class="p">)</span>
 </code></pre></div>
 <h4 id="step-2-add-type-markers-to-column-comments">Step 2: Add Type Markers to Column Comments<a class="headerlink" href="#step-2-add-type-markers-to-column-comments" title="Permanent link">&para;</a></h4>
 <p>This is the critical step for blob deserialization. Without <code>:&lt;blob&gt;:</code> markers, blob columns return raw bytes instead of deserialized Python objects.</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">datajoint.migrate</span><span class="w"> </span><span class="kn">import</span> <span class="n">migrate_columns</span><span class="p">,</span> <span class="n">check_migration_status</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">datajoint</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dj</span>
 
-<span class="n">schema</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">Schema</span><span class="p">(</span><span class="s1">&#39;my_pipeline&#39;</span><span class="p">)</span>
+<span class="n">schema</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">Schema</span><span class="p">(</span><span class="s1">'my_pipeline'</span><span class="p">)</span>
 
 <span class="c1"># Check current status</span>
 <span class="n">status</span> <span class="o">=</span> <span class="n">check_migration_status</span><span class="p">(</span><span class="n">schema</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Blob columns needing migration: </span><span class="si">{</span><span class="n">status</span><span class="p">[</span><span class="s1">&#39;pending&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Blob columns needing migration: </span><span class="si">{</span><span class="n">status</span><span class="p">[</span><span class="s1">'pending'</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
 <span class="c1"># Preview changes</span>
 <span class="n">result</span> <span class="o">=</span> <span class="n">migrate_columns</span><span class="p">(</span><span class="n">schema</span><span class="p">,</span> <span class="n">dry_run</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Would update </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;sql_statements&#39;</span><span class="p">])</span><span class="si">}</span><span class="s2"> columns:&quot;</span><span class="p">)</span>
-<span class="k">for</span> <span class="n">sql</span> <span class="ow">in</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;sql_statements&#39;</span><span class="p">][:</span><span class="mi">5</span><span class="p">]:</span>  <span class="c1"># Show first 5</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">sql</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Would update </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s1">'sql_statements'</span><span class="p">])</span><span class="si">}</span><span class="s2"> columns:"</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">sql</span> <span class="ow">in</span> <span class="n">result</span><span class="p">[</span><span class="s1">'sql_statements'</span><span class="p">][:</span><span class="mi">5</span><span class="p">]:</span>  <span class="c1"># Show first 5</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  </span><span class="si">{</span><span class="n">sql</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
 <span class="c1"># Apply changes (updates column comments only, no data changes)</span>
 <span class="n">result</span> <span class="o">=</span> <span class="n">migrate_columns</span><span class="p">(</span><span class="n">schema</span><span class="p">,</span> <span class="n">dry_run</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Migrated </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;columns_migrated&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> columns&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Migrated </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">'columns_migrated'</span><span class="p">]</span><span class="si">}</span><span class="s2"> columns"</span><span class="p">)</span>
 </code></pre></div>
 <p><strong>What this does:</strong> Adds <code>:&lt;type&gt;:</code> prefix to column comments:</p>
 <ul>
@@ -10883,7 +10898,7 @@ git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">datajoint.migrate</span><span class="w"> </span><span class="kn">import</span> <span class="n">rebuild_lineage</span>
 
 <span class="n">result</span> <span class="o">=</span> <span class="n">rebuild_lineage</span><span class="p">(</span><span class="n">schema</span><span class="p">,</span> <span class="n">dry_run</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Rebuilt lineage: </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;lineage_entries&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> entries&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Rebuilt lineage: </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">'lineage_entries'</span><span class="p">]</span><span class="si">}</span><span class="s2"> entries"</span><span class="p">)</span>
 </code></pre></div>
 <h4 id="step-4-migrate-external-storage-if-applicable">Step 4: Migrate External Storage (if applicable)<a class="headerlink" href="#step-4-migrate-external-storage-if-applicable" title="Permanent link">&para;</a></h4>
 <p>If you use <code>blob@store</code>, <code>attach@store</code>, or <code>filepath@store</code>:</p>
@@ -10891,11 +10906,11 @@ git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </
 
 <span class="c1"># Preview external blob/attach migration</span>
 <span class="n">result</span> <span class="o">=</span> <span class="n">migrate_external</span><span class="p">(</span><span class="n">schema</span><span class="p">,</span> <span class="n">dry_run</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Found </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;columns_found&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> external columns&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Found </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">'columns_found'</span><span class="p">]</span><span class="si">}</span><span class="s2"> external columns"</span><span class="p">)</span>
 
 <span class="c1"># Apply migration (adds _v2 columns with JSON metadata)</span>
 <span class="n">result</span> <span class="o">=</span> <span class="n">migrate_external</span><span class="p">(</span><span class="n">schema</span><span class="p">,</span> <span class="n">dry_run</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Migrated </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;rows_migrated&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> rows&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Migrated </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">'rows_migrated'</span><span class="p">]</span><span class="si">}</span><span class="s2"> rows"</span><span class="p">)</span>
 
 <span class="c1"># Similarly for filepath columns</span>
 <span class="n">result</span> <span class="o">=</span> <span class="n">migrate_filepath</span><span class="p">(</span><span class="n">schema</span><span class="p">,</span> <span class="n">dry_run</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
@@ -10907,13 +10922,13 @@ git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </
 <h4 id="step-5-verify-migration">Step 5: Verify Migration<a class="headerlink" href="#step-5-verify-migration" title="Permanent link">&para;</a></h4>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">datajoint.migrate</span><span class="w"> </span><span class="kn">import</span> <span class="n">verify_schema_v20</span>
 
-<span class="n">result</span> <span class="o">=</span> <span class="n">verify_schema_v20</span><span class="p">(</span><span class="s1">&#39;my_pipeline&#39;</span><span class="p">)</span>
-<span class="k">if</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;compatible&#39;</span><span class="p">]:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;✓ Schema fully migrated to 2.0&quot;</span><span class="p">)</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">verify_schema_v20</span><span class="p">(</span><span class="s1">'my_pipeline'</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">result</span><span class="p">[</span><span class="s1">'compatible'</span><span class="p">]:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"✓ Schema fully migrated to 2.0"</span><span class="p">)</span>
 <span class="k">else</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Issues found:&quot;</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">issue</span> <span class="ow">in</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;issues&#39;</span><span class="p">]:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  - </span><span class="si">{</span><span class="n">issue</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"Issues found:"</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">issue</span> <span class="ow">in</span> <span class="n">result</span><span class="p">[</span><span class="s1">'issues'</span><span class="p">]:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  - </span><span class="si">{</span><span class="n">issue</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 </code></pre></div>
 <h3 id="option-c-gradual-migration-with-legacy-compatibility">Option C: Gradual Migration with Legacy Compatibility<a class="headerlink" href="#option-c-gradual-migration-with-legacy-compatibility" title="Permanent link">&para;</a></h3>
 <p><strong>Best for:</strong> Pipelines that must support both pre-2.0 and 2.0 clients simultaneously</p>
@@ -10922,32 +10937,32 @@ git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </
 <p>For each in-store attribute, add a corresponding <code>_v2</code> column:</p>
 <div class="highlight"><pre><span></span><code><span class="c1">-- Add _v2 column for in-store codec</span>
 <span class="k">ALTER</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="o">`</span><span class="n">my_pipeline</span><span class="o">`</span><span class="p">.</span><span class="o">`</span><span class="n">recording</span><span class="o">`</span>
-<span class="w">  </span><span class="k">ADD</span><span class="w"> </span><span class="k">COLUMN</span><span class="w"> </span><span class="o">`</span><span class="n">signal_v2</span><span class="o">`</span><span class="w"> </span><span class="n">JSON</span><span class="w"> </span><span class="k">COMMENT</span><span class="w"> </span><span class="s1">&#39;:&lt;blob@raw&gt;:signal data&#39;</span><span class="p">;</span>
+<span class="w">  </span><span class="k">ADD</span><span class="w"> </span><span class="k">COLUMN</span><span class="w"> </span><span class="o">`</span><span class="n">signal_v2</span><span class="o">`</span><span class="w"> </span><span class="n">JSON</span><span class="w"> </span><span class="k">COMMENT</span><span class="w"> </span><span class="s1">':&lt;blob@raw&gt;:signal data'</span><span class="p">;</span>
 </code></pre></div>
 <h4 id="2-populate-_v2-columns">2. Populate <code>_v2</code> Columns<a class="headerlink" href="#2-populate-_v2-columns" title="Permanent link">&para;</a></h4>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">datajoint.migrate</span><span class="w"> </span><span class="kn">import</span> <span class="n">populate_v2_columns</span>
 
 <span class="n">result</span> <span class="o">=</span> <span class="n">populate_v2_columns</span><span class="p">(</span>
-    <span class="n">schema</span><span class="o">=</span><span class="s1">&#39;my_pipeline&#39;</span><span class="p">,</span>
-    <span class="n">table</span><span class="o">=</span><span class="s1">&#39;recording&#39;</span><span class="p">,</span>
-    <span class="n">attribute</span><span class="o">=</span><span class="s1">&#39;signal&#39;</span><span class="p">,</span>
-    <span class="n">v2_attribute</span><span class="o">=</span><span class="s1">&#39;signal_v2&#39;</span><span class="p">,</span>
-    <span class="n">source_store</span><span class="o">=</span><span class="s1">&#39;raw&#39;</span><span class="p">,</span>
-    <span class="n">dest_store</span><span class="o">=</span><span class="s1">&#39;raw&#39;</span><span class="p">,</span>
+    <span class="n">schema</span><span class="o">=</span><span class="s1">'my_pipeline'</span><span class="p">,</span>
+    <span class="n">table</span><span class="o">=</span><span class="s1">'recording'</span><span class="p">,</span>
+    <span class="n">attribute</span><span class="o">=</span><span class="s1">'signal'</span><span class="p">,</span>
+    <span class="n">v2_attribute</span><span class="o">=</span><span class="s1">'signal_v2'</span><span class="p">,</span>
+    <span class="n">source_store</span><span class="o">=</span><span class="s1">'raw'</span><span class="p">,</span>
+    <span class="n">dest_store</span><span class="o">=</span><span class="s1">'raw'</span><span class="p">,</span>
 <span class="p">)</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Populated </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;rows&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> _v2 columns&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Populated </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">'rows'</span><span class="p">]</span><span class="si">}</span><span class="s2"> _v2 columns"</span><span class="p">)</span>
 </code></pre></div>
 <h4 id="3-update-code-to-use-_v2-columns">3. Update Code to Use <code>_v2</code> Columns<a class="headerlink" href="#3-update-code-to-use-_v2-columns" title="Permanent link">&para;</a></h4>
 <div class="highlight"><pre><span></span><code><span class="c1"># Update table definition</span>
 <span class="nd">@schema</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Recording</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    recording_id : int64</span>
 <span class="s2">    ---</span>
 <span class="s2">    signal : blob@raw  # Legacy (pre-2.0 clients)</span>
 <span class="s2">    signal_v2 : &lt;blob@raw&gt;  # 2.0 clients</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">    """</span>
 </code></pre></div>
 <p><strong>Both APIs work:</strong></p>
 <ul>
@@ -11025,32 +11040,32 @@ on your needs. Migration is complete - these are optional enhancements.</p>
 <p><strong>Issue:</strong> <code>Database 'schema_v2' doesn't exist</code></p>
 <p><strong>Solution:</strong>
 <div class="highlight"><pre><span></span><code><span class="c1"># Ensure schema declared and created</span>
-<span class="n">schema</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">schema</span><span class="p">(</span><span class="s1">&#39;schema_v2&#39;</span><span class="p">)</span>
+<span class="n">schema</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">schema</span><span class="p">(</span><span class="s1">'schema_v2'</span><span class="p">)</span>
 <span class="n">schema</span><span class="o">.</span><span class="n">spawn_missing_classes</span><span class="p">()</span>
 </code></pre></div></p>
 <h3 id="type-syntax-errors">Type Syntax Errors<a class="headerlink" href="#type-syntax-errors" title="Permanent link">&para;</a></h3>
 <p><strong>Issue:</strong> <code>Invalid type: 'int unsigned'</code></p>
 <p><strong>Solution:</strong> Update to core types
 <div class="highlight"><pre><span></span><code><span class="c1"># Wrong</span>
-<span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">id : int unsigned</span>
-<span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">"""</span>
 
 <span class="c1"># Correct</span>
-<span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">id : int64</span>
-<span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">"""</span>
 </code></pre></div></p>
 <h3 id="external-storage-not-found">External Storage Not Found<a class="headerlink" href="#external-storage-not-found" title="Permanent link">&para;</a></h3>
 <p><strong>Issue:</strong> Can't access external data after migration</p>
 <p><strong>Solution:</strong>
 <div class="highlight"><pre><span></span><code><span class="c1"># Ensure stores configured</span>
-<span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;stores.default&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;main&#39;</span>
-<span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;stores.main.location&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;/data/stores&#39;</span>
+<span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">'stores.default'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'main'</span>
+<span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">'stores.main.location'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'/data/stores'</span>
 
 <span class="c1"># Verify</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">datajoint.settings</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_store_spec</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">get_store_spec</span><span class="p">(</span><span class="s1">&#39;main&#39;</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">get_store_spec</span><span class="p">(</span><span class="s1">'main'</span><span class="p">))</span>
 </code></pre></div></p>
 <hr />
 <h2 id="summary">Summary<a class="headerlink" href="#summary" title="Permanent link">&para;</a></h2>

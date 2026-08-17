@@ -3671,7 +3671,7 @@
   <span class="md-ellipsis">
     
   
-    Migrate to 2.0
+    Migrate to 2.x
   
 
     
@@ -6551,34 +6551,34 @@
 <h2 id="basic-structure">Basic Structure<a class="headerlink" href="#basic-structure" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><span class="nd">@schema</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">TableName</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    # Table comment</span>
 <span class="s2">    primary_attr1 : type    # comment</span>
 <span class="s2">    primary_attr2 : type    # comment</span>
 <span class="s2">    ---</span>
 <span class="s2">    secondary_attr1 : type  # comment</span>
 <span class="s2">    secondary_attr2 = default : type  # comment with default</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">    """</span>
 </code></pre></div>
 <h2 id="grammar">Grammar<a class="headerlink" href="#grammar" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code>definition     = [comment] pk_section &quot;---&quot; secondary_section
+<div class="highlight"><pre><span></span><code>definition     = [comment] pk_section "---" secondary_section
 pk_section     = attribute_line+
 secondary_section = attribute_line*
 
 attribute_line = [foreign_key | attribute]
-foreign_key    = &quot;-&gt;&quot; [modifiers] table_reference [rename]
-modifiers      = &quot;[&quot; modifier (&quot;,&quot; modifier)* &quot;]&quot;
-modifier       = &quot;nullable&quot; | &quot;unique&quot;
-attribute      = [default &quot;=&quot;] name &quot;:&quot; type [# comment]
+foreign_key    = "-&gt;" [modifiers] table_reference [rename]
+modifiers      = "[" modifier ("," modifier)* "]"
+modifier       = "nullable" | "unique"
+attribute      = [default "="] name ":" type [# comment]
 
 default        = NULL | literal | CURRENT_TIMESTAMP
 type           = core_type | codec_type | native_type
 core_type      = int32 | float64 | varchar(n) | ...
-codec_type     = &quot;&lt;&quot; name [&quot;@&quot; [store]] &quot;&gt;&quot;
+codec_type     = "&lt;" name ["@" [store]] "&gt;"
 </code></pre></div>
 <h2 id="foreign-keys">Foreign Keys<a class="headerlink" href="#foreign-keys" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><span class="o">-&gt;</span> <span class="n">ParentTable</span>                    <span class="c1"># Inherit all PK attributes</span>
-<span class="o">-&gt;</span> <span class="n">ParentTable</span><span class="o">.</span><span class="n">proj</span><span class="p">(</span><span class="n">new</span><span class="o">=</span><span class="s1">&#39;old&#39;</span><span class="p">)</span>    <span class="c1"># Rename attributes</span>
+<span class="o">-&gt;</span> <span class="n">ParentTable</span><span class="o">.</span><span class="n">proj</span><span class="p">(</span><span class="n">new</span><span class="o">=</span><span class="s1">'old'</span><span class="p">)</span>    <span class="c1"># Rename attributes</span>
 <span class="o">-&gt;</span> <span class="p">[</span><span class="n">nullable</span><span class="p">]</span> <span class="n">ParentTable</span>         <span class="c1"># Optional reference (secondary only)</span>
 <span class="o">-&gt;</span> <span class="p">[</span><span class="n">unique</span><span class="p">]</span> <span class="n">ParentTable</span>           <span class="c1"># One-to-one constraint</span>
 <span class="o">-&gt;</span> <span class="p">[</span><span class="n">nullable</span><span class="p">,</span> <span class="n">unique</span><span class="p">]</span> <span class="n">ParentTable</span> <span class="c1"># Optional one-to-one</span>
@@ -6629,9 +6629,9 @@ codec_type     = &quot;&lt;&quot; name [&quot;@&quot; [store]] &quot;&gt;&quot;
 <span class="n">raw_path</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">filepath</span><span class="nd">@raw</span><span class="o">&gt;</span>         <span class="c1"># Portable file reference</span>
 </code></pre></div>
 <h2 id="defaults">Defaults<a class="headerlink" href="#defaults" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><span class="n">status</span> <span class="o">=</span> <span class="s2">&quot;pending&quot;</span> <span class="p">:</span> <span class="n">varchar</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span>  <span class="c1"># String default</span>
+<div class="highlight"><pre><span></span><code><span class="n">status</span> <span class="o">=</span> <span class="s2">"pending"</span> <span class="p">:</span> <span class="n">varchar</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span>  <span class="c1"># String default</span>
 <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span> <span class="p">:</span> <span class="n">int32</span>                 <span class="c1"># Numeric default</span>
-<span class="n">notes</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span> <span class="p">:</span> <span class="n">varchar</span><span class="p">(</span><span class="mi">1000</span><span class="p">)</span>        <span class="c1"># Empty string default (preferred for strings)</span>
+<span class="n">notes</span> <span class="o">=</span> <span class="s1">''</span> <span class="p">:</span> <span class="n">varchar</span><span class="p">(</span><span class="mi">1000</span><span class="p">)</span>        <span class="c1"># Empty string default (preferred for strings)</span>
 <span class="n">created</span> <span class="o">=</span> <span class="n">CURRENT_TIMESTAMP</span> <span class="p">:</span> <span class="n">datetime</span>  <span class="c1"># Auto-timestamp</span>
 <span class="n">ratio</span> <span class="o">=</span> <span class="n">NULL</span> <span class="p">:</span> <span class="n">float64</span>            <span class="c1"># Nullable (only NULL can be default)</span>
 </code></pre></div>
@@ -6644,19 +6644,19 @@ default rather than <code>NULL</code>.</p>
 <span class="n">mouse_id</span> <span class="p">:</span> <span class="n">int32</span>    <span class="c1"># Inline attribute comment</span>
 </code></pre></div>
 <h2 id="indexes">Indexes<a class="headerlink" href="#indexes" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    ...</span>
 <span class="s2">    ---</span>
 <span class="s2">    ...</span>
 <span class="s2">    INDEX (attr1)                 # Single-column index</span>
 <span class="s2">    INDEX (attr1, attr2)          # Composite index</span>
 <span class="s2">    UNIQUE INDEX (email)          # Unique constraint</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">    """</span>
 </code></pre></div>
 <h2 id="complete-example">Complete Example<a class="headerlink" href="#complete-example" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><span class="nd">@schema</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Session</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    # Experimental session</span>
 <span class="s2">    -&gt; Subject</span>
 <span class="s2">    session_idx : int32           # Session number for this subject</span>
@@ -6664,11 +6664,11 @@ default rather than <code>NULL</code>.</p>
 <span class="s2">    session_date : date           # Date of session</span>
 <span class="s2">    -&gt; [nullable] Experimenter    # Optional experimenter</span>
 <span class="s2">    -&gt; [unique] Protocol          # Each protocol used at most once per session</span>
-<span class="s2">    notes = &#39;&#39; : varchar(1000)    # Session notes</span>
+<span class="s2">    notes = '' : varchar(1000)    # Session notes</span>
 <span class="s2">    start_time : datetime         # Session start</span>
 <span class="s2">    duration : float64            # Duration in minutes</span>
 <span class="s2">    INDEX (session_date)</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">    """</span>
 </code></pre></div>
 <h2 id="validation">Validation<a class="headerlink" href="#validation" title="Permanent link">&para;</a></h2>
 <p>DataJoint validates definitions at declaration time:</p>

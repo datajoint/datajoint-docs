@@ -3854,7 +3854,7 @@
   <span class="md-ellipsis">
     
   
-    Migrate to 2.0
+    Migrate to 2.x
   
 
     
@@ -6506,10 +6506,10 @@
 <p>Retrieve query results in various formats.</p>
 <h2 id="list-of-dictionaries">List of Dictionaries<a class="headerlink" href="#list-of-dictionaries" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><span class="n">rows</span> <span class="o">=</span> <span class="n">Subject</span><span class="o">.</span><span class="n">to_dicts</span><span class="p">()</span>
-<span class="c1"># [{&#39;subject_id&#39;: &#39;M001&#39;, &#39;species&#39;: &#39;Mus musculus&#39;, ...}, ...]</span>
+<span class="c1"># [{'subject_id': 'M001', 'species': 'Mus musculus', ...}, ...]</span>
 
 <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">rows</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;subject_id&#39;</span><span class="p">],</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;species&#39;</span><span class="p">])</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s1">'subject_id'</span><span class="p">],</span> <span class="n">row</span><span class="p">[</span><span class="s1">'species'</span><span class="p">])</span>
 </code></pre></div>
 <h2 id="pandas-dataframe">pandas DataFrame<a class="headerlink" href="#pandas-dataframe" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><span class="n">df</span> <span class="o">=</span> <span class="n">Subject</span><span class="o">.</span><span class="n">to_pandas</span><span class="p">()</span>
@@ -6524,37 +6524,37 @@
 <span class="n">arr</span> <span class="o">=</span> <span class="n">Subject</span><span class="o">.</span><span class="n">to_arrays</span><span class="p">()</span>
 
 <span class="c1"># Specific columns as separate arrays</span>
-<span class="n">species</span><span class="p">,</span> <span class="n">weights</span> <span class="o">=</span> <span class="n">Subject</span><span class="o">.</span><span class="n">to_arrays</span><span class="p">(</span><span class="s1">&#39;species&#39;</span><span class="p">,</span> <span class="s1">&#39;weight&#39;</span><span class="p">)</span>
+<span class="n">species</span><span class="p">,</span> <span class="n">weights</span> <span class="o">=</span> <span class="n">Subject</span><span class="o">.</span><span class="n">to_arrays</span><span class="p">(</span><span class="s1">'species'</span><span class="p">,</span> <span class="s1">'weight'</span><span class="p">)</span>
 </code></pre></div>
 <h2 id="primary-keys-only">Primary Keys Only<a class="headerlink" href="#primary-keys-only" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><span class="n">keys</span> <span class="o">=</span> <span class="n">Session</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
-<span class="c1"># [{&#39;subject_id&#39;: &#39;M001&#39;, &#39;session_idx&#39;: 1}, ...]</span>
+<span class="c1"># [{'subject_id': 'M001', 'session_idx': 1}, ...]</span>
 
 <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">keys</span><span class="p">:</span>
     <span class="n">process</span><span class="p">(</span><span class="n">Session</span> <span class="o">&amp;</span> <span class="n">key</span><span class="p">)</span>
 </code></pre></div>
 <h2 id="single-row">Single Row<a class="headerlink" href="#single-row" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><span class="c1"># As dictionary (raises if not exactly 1 row)</span>
-<span class="n">row</span> <span class="o">=</span> <span class="p">(</span><span class="n">Subject</span> <span class="o">&amp;</span> <span class="p">{</span><span class="s1">&#39;subject_id&#39;</span><span class="p">:</span> <span class="s1">&#39;M001&#39;</span><span class="p">})</span><span class="o">.</span><span class="n">fetch1</span><span class="p">()</span>
+<span class="n">row</span> <span class="o">=</span> <span class="p">(</span><span class="n">Subject</span> <span class="o">&amp;</span> <span class="p">{</span><span class="s1">'subject_id'</span><span class="p">:</span> <span class="s1">'M001'</span><span class="p">})</span><span class="o">.</span><span class="n">fetch1</span><span class="p">()</span>
 
 <span class="c1"># Specific attributes</span>
-<span class="n">species</span><span class="p">,</span> <span class="n">weight</span> <span class="o">=</span> <span class="p">(</span><span class="n">Subject</span> <span class="o">&amp;</span> <span class="p">{</span><span class="s1">&#39;subject_id&#39;</span><span class="p">:</span> <span class="s1">&#39;M001&#39;</span><span class="p">})</span><span class="o">.</span><span class="n">fetch1</span><span class="p">(</span><span class="s1">&#39;species&#39;</span><span class="p">,</span> <span class="s1">&#39;weight&#39;</span><span class="p">)</span>
+<span class="n">species</span><span class="p">,</span> <span class="n">weight</span> <span class="o">=</span> <span class="p">(</span><span class="n">Subject</span> <span class="o">&amp;</span> <span class="p">{</span><span class="s1">'subject_id'</span><span class="p">:</span> <span class="s1">'M001'</span><span class="p">})</span><span class="o">.</span><span class="n">fetch1</span><span class="p">(</span><span class="s1">'species'</span><span class="p">,</span> <span class="s1">'weight'</span><span class="p">)</span>
 </code></pre></div>
 <h2 id="ordering-and-limiting">Ordering and Limiting<a class="headerlink" href="#ordering-and-limiting" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><span class="c1"># Sort by single attribute</span>
-<span class="n">Subject</span><span class="o">.</span><span class="n">to_dicts</span><span class="p">(</span><span class="n">order_by</span><span class="o">=</span><span class="s1">&#39;weight DESC&#39;</span><span class="p">)</span>
+<span class="n">Subject</span><span class="o">.</span><span class="n">to_dicts</span><span class="p">(</span><span class="n">order_by</span><span class="o">=</span><span class="s1">'weight DESC'</span><span class="p">)</span>
 
 <span class="c1"># Sort by multiple attributes</span>
-<span class="n">Session</span><span class="o">.</span><span class="n">to_dicts</span><span class="p">(</span><span class="n">order_by</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;session_date DESC&#39;</span><span class="p">,</span> <span class="s1">&#39;duration&#39;</span><span class="p">])</span>
+<span class="n">Session</span><span class="o">.</span><span class="n">to_dicts</span><span class="p">(</span><span class="n">order_by</span><span class="o">=</span><span class="p">[</span><span class="s1">'session_date DESC'</span><span class="p">,</span> <span class="s1">'duration'</span><span class="p">])</span>
 
 <span class="c1"># Sort by primary key</span>
-<span class="n">Subject</span><span class="o">.</span><span class="n">to_dicts</span><span class="p">(</span><span class="n">order_by</span><span class="o">=</span><span class="s1">&#39;KEY&#39;</span><span class="p">)</span>
+<span class="n">Subject</span><span class="o">.</span><span class="n">to_dicts</span><span class="p">(</span><span class="n">order_by</span><span class="o">=</span><span class="s1">'KEY'</span><span class="p">)</span>
 
 <span class="c1"># Limit rows</span>
 <span class="n">Subject</span><span class="o">.</span><span class="n">to_dicts</span><span class="p">(</span><span class="n">limit</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
 
 <span class="c1"># Pagination</span>
-<span class="n">Subject</span><span class="o">.</span><span class="n">to_dicts</span><span class="p">(</span><span class="n">order_by</span><span class="o">=</span><span class="s1">&#39;KEY&#39;</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<span class="n">Subject</span><span class="o">.</span><span class="n">to_dicts</span><span class="p">(</span><span class="n">order_by</span><span class="o">=</span><span class="s1">'KEY'</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
 </code></pre></div>
 <h2 id="streaming-lazy-iteration">Streaming (Lazy Iteration)<a class="headerlink" href="#streaming-lazy-iteration" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><span class="c1"># Memory-efficient iteration</span>

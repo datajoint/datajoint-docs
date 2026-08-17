@@ -3671,7 +3671,7 @@
   <span class="md-ellipsis">
     
   
-    Migrate to 2.0
+    Migrate to 2.x
   
 
     
@@ -6812,10 +6812,10 @@ or "in-store storage" (specific to the @ modifier).</p>
 <p><span class="doc-section-title">Examples:</span></p>
     <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">datajoint</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dj</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">datajoint.migrate</span><span class="w"> </span><span class="kn">import</span> <span class="n">analyze_columns</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">schema</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">Schema</span><span class="p">(</span><span class="s1">&#39;my_database&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">schema</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">Schema</span><span class="p">(</span><span class="s1">'my_database'</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">result</span> <span class="o">=</span> <span class="n">analyze_columns</span><span class="p">(</span><span class="n">schema</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;needs_migration&#39;</span><span class="p">]:</span>
-<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">col</span><span class="p">[</span><span class="s1">&#39;table&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">col</span><span class="p">[</span><span class="s1">&#39;column&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">col</span><span class="p">[</span><span class="s1">&#39;native_type&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> → </span><span class="si">{</span><span class="n">col</span><span class="p">[</span><span class="s1">&#39;core_type&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">result</span><span class="p">[</span><span class="s1">'needs_migration'</span><span class="p">]:</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">col</span><span class="p">[</span><span class="s1">'table'</span><span class="p">]</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">col</span><span class="p">[</span><span class="s1">'column'</span><span class="p">]</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">col</span><span class="p">[</span><span class="s1">'native_type'</span><span class="p">]</span><span class="si">}</span><span class="s2"> → </span><span class="si">{</span><span class="n">col</span><span class="p">[</span><span class="s1">'core_type'</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 </code></pre></div>
 
 
@@ -6935,10 +6935,10 @@ filepath@*) - those require Phase 3-4.</p>
     <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">datajoint.migrate</span><span class="w"> </span><span class="kn">import</span> <span class="n">migrate_columns</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># Preview</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">result</span> <span class="o">=</span> <span class="n">migrate_columns</span><span class="p">(</span><span class="n">schema</span><span class="p">,</span> <span class="n">dry_run</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Would migrate </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;sql_statements&#39;</span><span class="p">])</span><span class="si">}</span><span class="s2"> columns&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Would migrate </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s1">'sql_statements'</span><span class="p">])</span><span class="si">}</span><span class="s2"> columns"</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># Apply</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">result</span> <span class="o">=</span> <span class="n">migrate_columns</span><span class="p">(</span><span class="n">schema</span><span class="p">,</span> <span class="n">dry_run</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Migrated </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;columns_migrated&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> columns&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Migrated </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">'columns_migrated'</span><span class="p">]</span><span class="si">}</span><span class="s2"> columns"</span><span class="p">)</span>
 </code></pre></div>
 
 
@@ -7036,11 +7036,11 @@ filepath@*) - those require Phase 3-4.</p>
 
 <p><span class="doc-section-title">Examples:</span></p>
     <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">datajoint</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dj</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">schema</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">Schema</span><span class="p">(</span><span class="s1">&#39;my_database&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">schema</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">Schema</span><span class="p">(</span><span class="s1">'my_database'</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">columns</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">migrate</span><span class="o">.</span><span class="n">analyze_blob_columns</span><span class="p">(</span><span class="n">schema</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">columns</span><span class="p">:</span>
-<span class="gp">... </span>    <span class="k">if</span> <span class="n">col</span><span class="p">[</span><span class="s1">&#39;needs_migration&#39;</span><span class="p">]:</span>
-<span class="gp">... </span>        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">col</span><span class="p">[</span><span class="s1">&#39;table_name&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">col</span><span class="p">[</span><span class="s1">&#39;column_name&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">col</span><span class="p">[</span><span class="s1">&#39;column_type&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="k">if</span> <span class="n">col</span><span class="p">[</span><span class="s1">'needs_migration'</span><span class="p">]:</span>
+<span class="gp">... </span>        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">col</span><span class="p">[</span><span class="s1">'table_name'</span><span class="p">]</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">col</span><span class="p">[</span><span class="s1">'column_name'</span><span class="p">]</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">col</span><span class="p">[</span><span class="s1">'column_type'</span><span class="p">]</span><span class="si">}</span><span class="s2">)"</span><span class="p">)</span>
 </code></pre></div>
 
 
@@ -7061,7 +7061,7 @@ filepath@*) - those require Phase 3-4.</p>
 
 
 <a href="#datajoint.migrate.generate_migration_sql" class="headerlink" title="Permanent link">&para;</a></h2>
-<div class="doc-signature highlight"><pre><span></span><code><span class="nf">generate_migration_sql</span><span class="p">(</span><span class="n">schema</span><span class="p">,</span> <span class="n">target_type</span><span class="o">=</span><span class="s1">&#39;blob&#39;</span><span class="p">,</span> <span class="n">dry_run</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">generate_migration_sql</span><span class="p">(</span><span class="n">schema</span><span class="p">,</span> <span class="n">target_type</span><span class="o">=</span><span class="s1">'blob'</span><span class="p">,</span> <span class="n">dry_run</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </code></pre></div>
 
     <div class="doc doc-contents ">
@@ -7189,7 +7189,7 @@ indicate explicit type handling.</p>
 
 
 <a href="#datajoint.migrate.migrate_blob_columns" class="headerlink" title="Permanent link">&para;</a></h2>
-<div class="doc-signature highlight"><pre><span></span><code><span class="nf">migrate_blob_columns</span><span class="p">(</span><span class="n">schema</span><span class="p">,</span> <span class="n">target_type</span><span class="o">=</span><span class="s1">&#39;blob&#39;</span><span class="p">,</span> <span class="n">dry_run</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">migrate_blob_columns</span><span class="p">(</span><span class="n">schema</span><span class="p">,</span> <span class="n">target_type</span><span class="o">=</span><span class="s1">'blob'</span><span class="p">,</span> <span class="n">dry_run</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </code></pre></div>
 
     <div class="doc doc-contents ">
@@ -7294,11 +7294,11 @@ declaration. The data format remains unchanged.</p>
 <p><span class="doc-section-title">Examples:</span></p>
     <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Preview migration</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">result</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">migrate</span><span class="o">.</span><span class="n">migrate_blob_columns</span><span class="p">(</span><span class="n">schema</span><span class="p">,</span> <span class="n">dry_run</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Would migrate </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;needs_migration&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> columns&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Would migrate </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">'needs_migration'</span><span class="p">]</span><span class="si">}</span><span class="s2"> columns"</span><span class="p">)</span>
 </code></pre></div>
     <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Apply migration</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">result</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">migrate</span><span class="o">.</span><span class="n">migrate_blob_columns</span><span class="p">(</span><span class="n">schema</span><span class="p">,</span> <span class="n">dry_run</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Migrated </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;migrated&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> columns&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Migrated </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">'migrated'</span><span class="p">]</span><span class="si">}</span><span class="s2"> columns"</span><span class="p">)</span>
 </code></pre></div>
 
 
@@ -7396,7 +7396,7 @@ only updates database metadata; source code changes are manual.</p>
 
 <p><span class="doc-section-title">Examples:</span></p>
     <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">status</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">migrate</span><span class="o">.</span><span class="n">check_migration_status</span><span class="p">(</span><span class="n">schema</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Migration progress: </span><span class="si">{</span><span class="n">status</span><span class="p">[</span><span class="s1">&#39;migrated&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">status</span><span class="p">[</span><span class="s1">&#39;total_blob_columns&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Migration progress: </span><span class="si">{</span><span class="n">status</span><span class="p">[</span><span class="s1">'migrated'</span><span class="p">]</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">status</span><span class="p">[</span><span class="s1">'total_blob_columns'</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 </code></pre></div>
 
 
@@ -7512,11 +7512,11 @@ the schema will be processed.</p>
 <span class="gp">&gt;&gt;&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># Preview migration for a single table</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">result</span> <span class="o">=</span> <span class="n">add_job_metadata_columns</span><span class="p">(</span><span class="n">MyComputedTable</span><span class="p">,</span> <span class="n">dry_run</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Would add </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;columns_added&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> columns&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Would add </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">'columns_added'</span><span class="p">]</span><span class="si">}</span><span class="s2"> columns"</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># Apply migration to all tables in a schema</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">result</span> <span class="o">=</span> <span class="n">add_job_metadata_columns</span><span class="p">(</span><span class="n">schema</span><span class="p">,</span> <span class="n">dry_run</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Modified </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;tables_modified&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> tables&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Modified </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">'tables_modified'</span><span class="p">]</span><span class="si">}</span><span class="s2"> tables"</span><span class="p">)</span>
 </code></pre></div>
 
 
@@ -7670,11 +7670,11 @@ Only run after verifying migration succeeded. Default False.</p>
 <span class="gp">&gt;&gt;&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># Step 1: Preview</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">result</span> <span class="o">=</span> <span class="n">migrate_external</span><span class="p">(</span><span class="n">schema</span><span class="p">,</span> <span class="n">dry_run</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Found </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;columns_found&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> columns to migrate&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Found </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">'columns_found'</span><span class="p">]</span><span class="si">}</span><span class="s2"> columns to migrate"</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># Step 2: Run migration (adds new columns)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">result</span> <span class="o">=</span> <span class="n">migrate_external</span><span class="p">(</span><span class="n">schema</span><span class="p">,</span> <span class="n">dry_run</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Migrated </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;rows_migrated&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> rows&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Migrated </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">'rows_migrated'</span><span class="p">]</span><span class="si">}</span><span class="s2"> rows"</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># Step 3: Verify data is accessible via DataJoint 2.0</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># ... manual verification ...</span>
@@ -7781,8 +7781,8 @@ tables are configured in settings and accessible.</p>
 <p><span class="doc-section-title">Examples:</span></p>
     <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">datajoint.migrate</span><span class="w"> </span><span class="kn">import</span> <span class="n">check_store_configuration</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">result</span> <span class="o">=</span> <span class="n">check_store_configuration</span><span class="p">(</span><span class="n">schema</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">if</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;stores_missing&#39;</span><span class="p">]:</span>
-<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Missing stores: </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;stores_missing&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">if</span> <span class="n">result</span><span class="p">[</span><span class="s1">'stores_missing'</span><span class="p">]:</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Missing stores: </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">'stores_missing'</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 </code></pre></div>
 
 
@@ -7892,10 +7892,10 @@ reference in the ~external_* tables points to an accessible file.</p>
 <p><span class="doc-section-title">Examples:</span></p>
     <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">datajoint.migrate</span><span class="w"> </span><span class="kn">import</span> <span class="n">verify_external_integrity</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">result</span> <span class="o">=</span> <span class="n">verify_external_integrity</span><span class="p">(</span><span class="n">schema</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">if</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;missing&#39;</span><span class="p">]:</span>
-<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Missing files: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;missing&#39;</span><span class="p">])</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-<span class="gp">... </span>    <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;missing&#39;</span><span class="p">][:</span><span class="mi">5</span><span class="p">]:</span>
-<span class="gp">... </span>        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">entry</span><span class="p">[</span><span class="s1">&#39;filepath&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">if</span> <span class="n">result</span><span class="p">[</span><span class="s1">'missing'</span><span class="p">]:</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Missing files: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s1">'missing'</span><span class="p">])</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">result</span><span class="p">[</span><span class="s1">'missing'</span><span class="p">][:</span><span class="mi">5</span><span class="p">]:</span>
+<span class="gp">... </span>        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  </span><span class="si">{</span><span class="n">entry</span><span class="p">[</span><span class="s1">'filepath'</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 </code></pre></div>
 
 
@@ -8010,9 +8010,9 @@ The lineage table tracks foreign key relationships for semantic matching.</p>
 <p><span class="doc-section-title">Examples:</span></p>
     <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">datajoint.migrate</span><span class="w"> </span><span class="kn">import</span> <span class="n">rebuild_lineage</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">result</span> <span class="o">=</span> <span class="n">rebuild_lineage</span><span class="p">(</span><span class="n">schema</span><span class="p">,</span> <span class="n">dry_run</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Would create </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;lineage_entries&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> lineage entries&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Would create </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">'lineage_entries'</span><span class="p">]</span><span class="si">}</span><span class="s2"> lineage entries"</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">result</span> <span class="o">=</span> <span class="n">rebuild_lineage</span><span class="p">(</span><span class="n">schema</span><span class="p">,</span> <span class="n">dry_run</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Rebuilt lineage: </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;status&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Rebuilt lineage: </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">'status'</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 </code></pre></div>
 
 
@@ -8288,8 +8288,8 @@ for safely testing DataJoint 2.0 migration without affecting production.</p>
 
 <p><span class="doc-section-title">Examples:</span></p>
     <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">datajoint.migrate</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_parallel_schema</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">result</span> <span class="o">=</span> <span class="n">create_parallel_schema</span><span class="p">(</span><span class="s1">&#39;my_pipeline&#39;</span><span class="p">,</span> <span class="s1">&#39;my_pipeline_v20&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Created </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;tables_created&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> tables&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">result</span> <span class="o">=</span> <span class="n">create_parallel_schema</span><span class="p">(</span><span class="s1">'my_pipeline'</span><span class="p">,</span> <span class="s1">'my_pipeline_v20'</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Created </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">'tables_created'</span><span class="p">]</span><span class="si">}</span><span class="s2"> tables"</span><span class="p">)</span>
 </code></pre></div>
 
 
@@ -8462,13 +8462,13 @@ for safely testing DataJoint 2.0 migration without affecting production.</p>
 
 <p><span class="doc-section-title">Examples:</span></p>
     <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Copy all data</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">result</span> <span class="o">=</span> <span class="n">copy_table_data</span><span class="p">(</span><span class="s1">&#39;my_pipeline&#39;</span><span class="p">,</span> <span class="s1">&#39;my_pipeline_v20&#39;</span><span class="p">,</span> <span class="s1">&#39;Mouse&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">result</span> <span class="o">=</span> <span class="n">copy_table_data</span><span class="p">(</span><span class="s1">'my_pipeline'</span><span class="p">,</span> <span class="s1">'my_pipeline_v20'</span><span class="p">,</span> <span class="s1">'Mouse'</span><span class="p">)</span>
 </code></pre></div>
     <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Copy sample</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">result</span> <span class="o">=</span> <span class="n">copy_table_data</span><span class="p">(</span>
-<span class="gp">... </span>    <span class="s1">&#39;my_pipeline&#39;</span><span class="p">,</span> <span class="s1">&#39;my_pipeline_v20&#39;</span><span class="p">,</span> <span class="s1">&#39;Session&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="s1">'my_pipeline'</span><span class="p">,</span> <span class="s1">'my_pipeline_v20'</span><span class="p">,</span> <span class="s1">'Session'</span><span class="p">,</span>
 <span class="gp">... </span>    <span class="n">limit</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="n">where_clause</span><span class="o">=</span><span class="s2">&quot;session_date &gt;= &#39;2024-01-01&#39;&quot;</span>
+<span class="gp">... </span>    <span class="n">where_clause</span><span class="o">=</span><span class="s2">"session_date &gt;= '2024-01-01'"</span>
 <span class="gp">... </span><span class="p">)</span>
 </code></pre></div>
 
@@ -8621,9 +8621,9 @@ for safely testing DataJoint 2.0 migration without affecting production.</p>
 
 
 <p><span class="doc-section-title">Examples:</span></p>
-    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">result</span> <span class="o">=</span> <span class="n">compare_query_results</span><span class="p">(</span><span class="s1">&#39;my_pipeline&#39;</span><span class="p">,</span> <span class="s1">&#39;my_pipeline_v20&#39;</span><span class="p">,</span> <span class="s1">&#39;neuron&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">if</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;match&#39;</span><span class="p">]:</span>
-<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;✓ All </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;row_count&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> rows match&quot;</span><span class="p">)</span>
+    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">result</span> <span class="o">=</span> <span class="n">compare_query_results</span><span class="p">(</span><span class="s1">'my_pipeline'</span><span class="p">,</span> <span class="s1">'my_pipeline_v20'</span><span class="p">,</span> <span class="s1">'neuron'</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">if</span> <span class="n">result</span><span class="p">[</span><span class="s1">'match'</span><span class="p">]:</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"✓ All </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">'row_count'</span><span class="p">]</span><span class="si">}</span><span class="s2"> rows match"</span><span class="p">)</span>
 </code></pre></div>
 
 
@@ -8743,8 +8743,8 @@ for safely testing DataJoint 2.0 migration without affecting production.</p>
 
 
 <p><span class="doc-section-title">Examples:</span></p>
-    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">result</span> <span class="o">=</span> <span class="n">backup_schema</span><span class="p">(</span><span class="s1">&#39;my_pipeline&#39;</span><span class="p">,</span> <span class="s1">&#39;my_pipeline_backup_20250114&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Backed up </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;tables_backed_up&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> tables&quot;</span><span class="p">)</span>
+    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">result</span> <span class="o">=</span> <span class="n">backup_schema</span><span class="p">(</span><span class="s1">'my_pipeline'</span><span class="p">,</span> <span class="s1">'my_pipeline_backup_20250114'</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Backed up </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">'tables_backed_up'</span><span class="p">]</span><span class="si">}</span><span class="s2"> tables"</span><span class="p">)</span>
 </code></pre></div>
 
 
@@ -8863,7 +8863,7 @@ for safely testing DataJoint 2.0 migration without affecting production.</p>
 
 
 <p><span class="doc-section-title">Examples:</span></p>
-    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">restore_schema</span><span class="p">(</span><span class="s1">&#39;my_pipeline_backup_20250114&#39;</span><span class="p">,</span> <span class="s1">&#39;my_pipeline&#39;</span><span class="p">)</span>
+    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">restore_schema</span><span class="p">(</span><span class="s1">'my_pipeline_backup_20250114'</span><span class="p">,</span> <span class="s1">'my_pipeline'</span><span class="p">)</span>
 </code></pre></div>
 
 
@@ -8968,9 +8968,9 @@ for safely testing DataJoint 2.0 migration without affecting production.</p>
 
 
 <p><span class="doc-section-title">Examples:</span></p>
-    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">result</span> <span class="o">=</span> <span class="n">verify_schema_v20</span><span class="p">(</span><span class="s1">&#39;my_pipeline&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">if</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;compatible&#39;</span><span class="p">]:</span>
-<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;✓ Schema fully migrated to 2.0&quot;</span><span class="p">)</span>
+    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">result</span> <span class="o">=</span> <span class="n">verify_schema_v20</span><span class="p">(</span><span class="s1">'my_pipeline'</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">if</span> <span class="n">result</span><span class="p">[</span><span class="s1">'compatible'</span><span class="p">]:</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="s2">"✓ Schema fully migrated to 2.0"</span><span class="p">)</span>
 </code></pre></div>
 
 
@@ -9161,14 +9161,14 @@ If False (default), JSON points to existing files.</p>
 <p><span class="doc-section-title">Examples:</span></p>
     <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Migrate pointers without moving files</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">result</span> <span class="o">=</span> <span class="n">migrate_external_pointers_v2</span><span class="p">(</span>
-<span class="gp">... </span>    <span class="n">schema</span><span class="o">=</span><span class="s1">&#39;my_pipeline_v2&#39;</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="n">table</span><span class="o">=</span><span class="s1">&#39;recording&#39;</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="n">attribute</span><span class="o">=</span><span class="s1">&#39;signal&#39;</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="n">source_store</span><span class="o">=</span><span class="s1">&#39;external-raw&#39;</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="n">dest_store</span><span class="o">=</span><span class="s1">&#39;raw&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">schema</span><span class="o">=</span><span class="s1">'my_pipeline_v2'</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">table</span><span class="o">=</span><span class="s1">'recording'</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">attribute</span><span class="o">=</span><span class="s1">'signal'</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">source_store</span><span class="o">=</span><span class="s1">'external-raw'</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">dest_store</span><span class="o">=</span><span class="s1">'raw'</span><span class="p">,</span>
 <span class="gp">... </span>    <span class="n">copy_files</span><span class="o">=</span><span class="kc">False</span>
 <span class="gp">... </span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Migrated </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;rows_migrated&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> pointers&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Migrated </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">'rows_migrated'</span><span class="p">]</span><span class="si">}</span><span class="s2"> pointers"</span><span class="p">)</span>
 </code></pre></div>
 
 

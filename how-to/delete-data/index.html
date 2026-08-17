@@ -3932,7 +3932,7 @@
   <span class="md-ellipsis">
     
   
-    Migrate to 2.0
+    Migrate to 2.x
   
 
     
@@ -6663,20 +6663,20 @@
 <h2 id="basic-delete">Basic Delete<a class="headerlink" href="#basic-delete" title="Permanent link">&para;</a></h2>
 <p>Delete rows matching a restriction:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Delete specific subject</span>
-<span class="p">(</span><span class="n">Subject</span> <span class="o">&amp;</span> <span class="p">{</span><span class="s1">&#39;subject_id&#39;</span><span class="p">:</span> <span class="s1">&#39;M001&#39;</span><span class="p">})</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
+<span class="p">(</span><span class="n">Subject</span> <span class="o">&amp;</span> <span class="p">{</span><span class="s1">'subject_id'</span><span class="p">:</span> <span class="s1">'M001'</span><span class="p">})</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
 
 <span class="c1"># Delete with condition</span>
-<span class="p">(</span><span class="n">Session</span> <span class="o">&amp;</span> <span class="s2">&quot;session_date &lt; &#39;2024-01-01&#39;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
+<span class="p">(</span><span class="n">Session</span> <span class="o">&amp;</span> <span class="s2">"session_date &lt; '2024-01-01'"</span><span class="p">)</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
 </code></pre></div>
 <h2 id="cascade-behavior">Cascade Behavior<a class="headerlink" href="#cascade-behavior" title="Permanent link">&para;</a></h2>
 <p>Deleting a row automatically cascades to all dependent tables:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Deletes subject AND all their sessions AND all trials</span>
-<span class="p">(</span><span class="n">Subject</span> <span class="o">&amp;</span> <span class="p">{</span><span class="s1">&#39;subject_id&#39;</span><span class="p">:</span> <span class="s1">&#39;M001&#39;</span><span class="p">})</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
+<span class="p">(</span><span class="n">Subject</span> <span class="o">&amp;</span> <span class="p">{</span><span class="s1">'subject_id'</span><span class="p">:</span> <span class="s1">'M001'</span><span class="p">})</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
 </code></pre></div>
 <p>This maintains referential integrity—no orphaned records remain.</p>
 <h2 id="confirmation-prompt">Confirmation Prompt<a class="headerlink" href="#confirmation-prompt" title="Permanent link">&para;</a></h2>
 <p>The <code>prompt</code> parameter controls confirmation behavior:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Uses dj.config[&#39;safemode&#39;] setting (default behavior)</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># Uses dj.config['safemode'] setting (default behavior)</span>
 <span class="p">(</span><span class="n">Subject</span> <span class="o">&amp;</span> <span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
 
 <span class="c1"># Explicitly skip confirmation</span>
@@ -6698,13 +6698,13 @@ Proceed? [yes, No]:
 <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">datajoint</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dj</span>
 
 <span class="c1"># Check current setting</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;safemode&#39;</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">'safemode'</span><span class="p">])</span>
 
 <span class="c1"># Disable prompts globally (use with caution)</span>
-<span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;safemode&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">'safemode'</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
 
 <span class="c1"># Re-enable prompts</span>
-<span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;safemode&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">'safemode'</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
 </code></pre></div>
 <p>Or temporarily override:</p>
 <div class="highlight"><pre><span></span><code><span class="k">with</span> <span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">override</span><span class="p">(</span><span class="n">safemode</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
@@ -6731,10 +6731,10 @@ Proceed? [yes, No]:
 </code></pre></div>
 <p>Use <code>part_integrity</code> to control this behavior:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Allow direct deletion (breaks master-part integrity)</span>
-<span class="p">(</span><span class="n">Session</span><span class="o">.</span><span class="n">Trial</span> <span class="o">&amp;</span> <span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">part_integrity</span><span class="o">=</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span>
+<span class="p">(</span><span class="n">Session</span><span class="o">.</span><span class="n">Trial</span> <span class="o">&amp;</span> <span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">part_integrity</span><span class="o">=</span><span class="s2">"ignore"</span><span class="p">)</span>
 
 <span class="c1"># Delete parts AND cascade up to delete master</span>
-<span class="p">(</span><span class="n">Session</span><span class="o">.</span><span class="n">Trial</span> <span class="o">&amp;</span> <span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">part_integrity</span><span class="o">=</span><span class="s2">&quot;cascade&quot;</span><span class="p">)</span>
+<span class="p">(</span><span class="n">Session</span><span class="o">.</span><span class="n">Trial</span> <span class="o">&amp;</span> <span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">part_integrity</span><span class="o">=</span><span class="s2">"cascade"</span><span class="p">)</span>
 </code></pre></div>
 <table>
 <thead>
@@ -6765,14 +6765,14 @@ Proceed? [yes, No]:
 </code></pre></div>
 <h2 id="delete-patterns">Delete Patterns<a class="headerlink" href="#delete-patterns" title="Permanent link">&para;</a></h2>
 <h3 id="by-primary-key">By Primary Key<a class="headerlink" href="#by-primary-key" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="p">(</span><span class="n">Session</span> <span class="o">&amp;</span> <span class="p">{</span><span class="s1">&#39;subject_id&#39;</span><span class="p">:</span> <span class="s1">&#39;M001&#39;</span><span class="p">,</span> <span class="s1">&#39;session_idx&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">})</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
+<div class="highlight"><pre><span></span><code><span class="p">(</span><span class="n">Session</span> <span class="o">&amp;</span> <span class="p">{</span><span class="s1">'subject_id'</span><span class="p">:</span> <span class="s1">'M001'</span><span class="p">,</span> <span class="s1">'session_idx'</span><span class="p">:</span> <span class="mi">1</span><span class="p">})</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
 </code></pre></div>
 <h3 id="by-condition">By Condition<a class="headerlink" href="#by-condition" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="p">(</span><span class="n">Trial</span> <span class="o">&amp;</span> <span class="s2">&quot;outcome = &#39;miss&#39;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
+<div class="highlight"><pre><span></span><code><span class="p">(</span><span class="n">Trial</span> <span class="o">&amp;</span> <span class="s2">"outcome = 'miss'"</span><span class="p">)</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
 </code></pre></div>
 <h3 id="by-join">By Join<a class="headerlink" href="#by-join" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># Delete trials from sessions before 2024</span>
-<span class="n">old_sessions</span> <span class="o">=</span> <span class="n">Session</span> <span class="o">&amp;</span> <span class="s2">&quot;session_date &lt; &#39;2024-01-01&#39;&quot;</span>
+<span class="n">old_sessions</span> <span class="o">=</span> <span class="n">Session</span> <span class="o">&amp;</span> <span class="s2">"session_date &lt; '2024-01-01'"</span>
 <span class="p">(</span><span class="n">Trial</span> <span class="o">&amp;</span> <span class="n">old_sessions</span><span class="p">)</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
 </code></pre></div>
 <h3 id="all-rows">All Rows<a class="headerlink" href="#all-rows" title="Permanent link">&para;</a></h3>
@@ -6781,14 +6781,14 @@ Proceed? [yes, No]:
 </code></pre></div>
 <h2 id="the-recomputation-pattern">The Recomputation Pattern<a class="headerlink" href="#the-recomputation-pattern" title="Permanent link">&para;</a></h2>
 <p>When source data needs correction, use <strong>delete → insert → populate</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="n">key</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;subject_id&#39;</span><span class="p">:</span> <span class="s1">&#39;M001&#39;</span><span class="p">,</span> <span class="s1">&#39;session_idx&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">}</span>
+<div class="highlight"><pre><span></span><code><span class="n">key</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'subject_id'</span><span class="p">:</span> <span class="s1">'M001'</span><span class="p">,</span> <span class="s1">'session_idx'</span><span class="p">:</span> <span class="mi">1</span><span class="p">}</span>
 
 <span class="c1"># 1. Delete cascades to computed tables</span>
 <span class="p">(</span><span class="n">Session</span> <span class="o">&amp;</span> <span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">prompt</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
 <span class="c1"># 2. Reinsert with corrected data</span>
 <span class="k">with</span> <span class="n">schema</span><span class="o">.</span><span class="n">connection</span><span class="o">.</span><span class="n">transaction</span><span class="p">:</span>
-    <span class="n">Session</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="o">**</span><span class="n">key</span><span class="p">,</span> <span class="s1">&#39;session_date&#39;</span><span class="p">:</span> <span class="s1">&#39;2024-01-08&#39;</span><span class="p">,</span> <span class="s1">&#39;duration&#39;</span><span class="p">:</span> <span class="mf">40.0</span><span class="p">})</span>
+    <span class="n">Session</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="o">**</span><span class="n">key</span><span class="p">,</span> <span class="s1">'session_date'</span><span class="p">:</span> <span class="s1">'2024-01-08'</span><span class="p">,</span> <span class="s1">'duration'</span><span class="p">:</span> <span class="mf">40.0</span><span class="p">})</span>
     <span class="n">Session</span><span class="o">.</span><span class="n">Trial</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">corrected_trials</span><span class="p">)</span>
 
 <span class="c1"># 3. Recompute derived data</span>
@@ -6798,7 +6798,7 @@ Proceed? [yes, No]:
 <h2 id="return-value">Return Value<a class="headerlink" href="#return-value" title="Permanent link">&para;</a></h2>
 <p><code>delete()</code> returns the count of deleted rows from the primary table:</p>
 <div class="highlight"><pre><span></span><code><span class="n">count</span> <span class="o">=</span> <span class="p">(</span><span class="n">Subject</span> <span class="o">&amp;</span> <span class="n">restriction</span><span class="p">)</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">prompt</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Deleted </span><span class="si">{</span><span class="n">count</span><span class="si">}</span><span class="s2"> subjects&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Deleted </span><span class="si">{</span><span class="n">count</span><span class="si">}</span><span class="s2"> subjects"</span><span class="p">)</span>
 </code></pre></div>
 <h2 id="inspecting-cascade-before-deleting">Inspecting Cascade Before Deleting<a class="headerlink" href="#inspecting-cascade-before-deleting" title="Permanent link">&para;</a></h2>
 <div class="admonition version-added">
@@ -6810,15 +6810,15 @@ Proceed? [yes, No]:
 <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">datajoint</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dj</span>
 
 <span class="c1"># 1. Preview: see affected tables and row counts (across all loaded schemas)</span>
-<span class="n">cascade</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">Diagram</span><span class="o">.</span><span class="n">cascade</span><span class="p">(</span><span class="n">Session</span> <span class="o">&amp;</span> <span class="p">{</span><span class="s1">&#39;subject_id&#39;</span><span class="p">:</span> <span class="s1">&#39;M001&#39;</span><span class="p">})</span>
+<span class="n">cascade</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">Diagram</span><span class="o">.</span><span class="n">cascade</span><span class="p">(</span><span class="n">Session</span> <span class="o">&amp;</span> <span class="p">{</span><span class="s1">'subject_id'</span><span class="p">:</span> <span class="s1">'M001'</span><span class="p">})</span>
 <span class="n">counts</span> <span class="o">=</span> <span class="n">cascade</span><span class="o">.</span><span class="n">counts</span><span class="p">()</span>
-<span class="c1"># {&#39;`lab`.`session`&#39;: 3, &#39;`lab`.`trial`&#39;: 45, &#39;`lab`.`processed_data`&#39;: 45}</span>
+<span class="c1"># {'`lab`.`session`': 3, '`lab`.`trial`': 45, '`lab`.`processed_data`': 45}</span>
 
 <span class="c1"># 2. Visualize the cascade subgraph (in Jupyter)</span>
 <span class="n">cascade</span>
 
 <span class="c1"># 3. Execute via Table.delete() after reviewing</span>
-<span class="p">(</span><span class="n">Session</span> <span class="o">&amp;</span> <span class="p">{</span><span class="s1">&#39;subject_id&#39;</span><span class="p">:</span> <span class="s1">&#39;M001&#39;</span><span class="p">})</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">prompt</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="p">(</span><span class="n">Session</span> <span class="o">&amp;</span> <span class="p">{</span><span class="s1">'subject_id'</span><span class="p">:</span> <span class="s1">'M001'</span><span class="p">})</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">prompt</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 </code></pre></div>
 <h3 id="when-to-use">When to Use<a class="headerlink" href="#when-to-use" title="Permanent link">&para;</a></h3>
 <ul>

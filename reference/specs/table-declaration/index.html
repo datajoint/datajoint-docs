@@ -3671,7 +3671,7 @@
   <span class="md-ellipsis">
     
   
-    Migrate to 2.0
+    Migrate to 2.x
   
 
     
@@ -7853,12 +7853,12 @@
 <h3 id="11-basic-declaration-pattern">1.1 Basic Declaration Pattern<a class="headerlink" href="#11-basic-declaration-pattern" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="nd">@schema</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">TableName</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    # table comment</span>
 <span class="s2">    primary_attr : int32</span>
 <span class="s2">    ---</span>
 <span class="s2">    secondary_attr : float64</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">    """</span>
 </code></pre></div>
 <h3 id="12-table-tiers">1.2 Table Tiers<a class="headerlink" href="#12-table-tiers" title="Permanent link">&para;</a></h3>
 <table>
@@ -7960,12 +7960,12 @@ secondary_section
 <p>A <strong>singleton table</strong> can hold at most one row. It is declared with no attributes in the primary key section:</p>
 <div class="highlight"><pre><span></span><code><span class="nd">@schema</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Config</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Lookup</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    # Global configuration</span>
 <span class="s2">    ---</span>
 <span class="s2">    setting1 : varchar(100)</span>
 <span class="s2">    setting2 : int32</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">    """</span>
 </code></pre></div>
 <p><strong>Behavior:</strong></p>
 <table>
@@ -8073,7 +8073,7 @@ is out of scope of declaration; see the schema-changes specification.)</p>
 </ul>
 <h3 id="34-hidden-attributes">3.4 Hidden Attributes<a class="headerlink" href="#34-hidden-attributes" title="Permanent link">&para;</a></h3>
 <p>Attributes with names starting with an underscore (<code>_</code>) are <strong>hidden</strong>. The hidden-attribute mechanism is reserved for <strong>platform-managed</strong> columns — bookkeeping that DataJoint itself adds to support the data pipeline — and is intentionally not exposed for user-defined attributes. Attempting to declare an attribute name with a leading underscore raises:</p>
-<div class="highlight"><pre><span></span><code>DataJointError: Attribute name in line &quot;_hidden: bool&quot; starts with an underscore.
+<div class="highlight"><pre><span></span><code>DataJointError: Attribute name in line "_hidden: bool" starts with an underscore.
 Names with leading underscore are reserved for platform-managed columns
 (e.g. _job_start_time, _singleton). Use a regular attribute name; if you
 need to control visibility at the call site, use proj().
@@ -8191,39 +8191,39 @@ need to control visibility at the call site, use proj().
 <span class="c1"># The public API (fetch / proj) intentionally rejects them.</span>
 <span class="n">conn</span> <span class="o">=</span> <span class="n">MyTable</span><span class="o">.</span><span class="n">connection</span>
 <span class="n">rows</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">query</span><span class="p">(</span>
-    <span class="sa">f</span><span class="s2">&quot;SELECT _job_start_time, _job_duration, _job_version &quot;</span>
-    <span class="sa">f</span><span class="s2">&quot;FROM </span><span class="si">{</span><span class="n">MyTable</span><span class="o">.</span><span class="n">full_table_name</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="sa">f</span><span class="s2">"SELECT _job_start_time, _job_duration, _job_version "</span>
+    <span class="sa">f</span><span class="s2">"FROM </span><span class="si">{</span><span class="n">MyTable</span><span class="o">.</span><span class="n">full_table_name</span><span class="si">}</span><span class="s2">"</span>
 <span class="p">)</span><span class="o">.</span><span class="n">fetchall</span><span class="p">()</span>
 
 <span class="c1"># String restriction works (passes through to SQL)</span>
-<span class="n">MyTable</span> <span class="o">&amp;</span> <span class="s2">&quot;_job_start_time &gt; &#39;2024-01-01&#39;&quot;</span>
+<span class="n">MyTable</span> <span class="o">&amp;</span> <span class="s2">"_job_start_time &gt; '2024-01-01'"</span>
 
 <span class="c1"># Dict restriction is silently dropped — does NOT filter</span>
-<span class="n">MyTable</span> <span class="o">&amp;</span> <span class="p">{</span><span class="s1">&#39;_job_start_time&#39;</span><span class="p">:</span> <span class="n">some_date</span><span class="p">}</span>   <span class="c1"># ⚠ ignored</span>
+<span class="n">MyTable</span> <span class="o">&amp;</span> <span class="p">{</span><span class="s1">'_job_start_time'</span><span class="p">:</span> <span class="n">some_date</span><span class="p">}</span>   <span class="c1"># ⚠ ignored</span>
 </code></pre></div>
 <p><strong>Use a regular attribute instead.</strong> When you want a column that's part of the schema-level contract (backing an index, storing a derived value, etc.) but isn't featured in default displays, declare it as a regular attribute and use <code>proj()</code> at the call site if you want to omit it from a particular query result. For example, a hash column backing a unique index:</p>
 <div class="highlight"><pre><span></span><code><span class="nd">@schema</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">TaskParams</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    task_id : int32</span>
 <span class="s2">    ---</span>
 <span class="s2">    tool : varchar(32)</span>
 <span class="s2">    params : json</span>
 <span class="s2">    params_hash : varchar(32)</span>
 <span class="s2">    unique index (tool, params_hash)</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">    """</span>
 
 <span class="c1"># Inserts work directly:</span>
-<span class="n">TaskParams</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="s1">&#39;task_id&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;tool&#39;</span><span class="p">:</span> <span class="s1">&#39;t&#39;</span><span class="p">,</span> <span class="s1">&#39;params&#39;</span><span class="p">:</span> <span class="p">{</span><span class="o">...</span><span class="p">},</span> <span class="s1">&#39;params_hash&#39;</span><span class="p">:</span> <span class="n">h</span><span class="p">})</span>
+<span class="n">TaskParams</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="s1">'task_id'</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">'tool'</span><span class="p">:</span> <span class="s1">'t'</span><span class="p">,</span> <span class="s1">'params'</span><span class="p">:</span> <span class="p">{</span><span class="o">...</span><span class="p">},</span> <span class="s1">'params_hash'</span><span class="p">:</span> <span class="n">h</span><span class="p">})</span>
 
 <span class="c1"># Dict restrictions work:</span>
-<span class="n">TaskParams</span> <span class="o">&amp;</span> <span class="p">{</span><span class="s1">&#39;params_hash&#39;</span><span class="p">:</span> <span class="n">h</span><span class="p">}</span>
+<span class="n">TaskParams</span> <span class="o">&amp;</span> <span class="p">{</span><span class="s1">'params_hash'</span><span class="p">:</span> <span class="n">h</span><span class="p">}</span>
 
 <span class="c1"># Hide from a specific result set with proj() if needed:</span>
-<span class="n">TaskParams</span><span class="o">.</span><span class="n">proj</span><span class="p">(</span><span class="s1">&#39;tool&#39;</span><span class="p">,</span> <span class="s1">&#39;params&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">fetch</span><span class="p">()</span>
+<span class="n">TaskParams</span><span class="o">.</span><span class="n">proj</span><span class="p">(</span><span class="s1">'tool'</span><span class="p">,</span> <span class="s1">'params'</span><span class="p">)</span><span class="o">.</span><span class="n">fetch</span><span class="p">()</span>
 </code></pre></div>
 <h3 id="35-examples">3.5 Examples<a class="headerlink" href="#35-examples" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2"># Experimental session with subject and timing info</span>
 <span class="s2">session_id : int32                          # auto-assigned</span>
 <span class="s2">---</span>
@@ -8231,8 +8231,8 @@ need to control visibility at the call site, use proj().
 <span class="s2">trial_number = 1 : int32                    # default to 1</span>
 <span class="s2">score = null : float32                      # nullable</span>
 <span class="s2">timestamp = CURRENT_TIMESTAMP : datetime    # auto-timestamp</span>
-<span class="s2">notes = &#39;&#39; : varchar(4000)                  # empty default</span>
-<span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">notes = '' : varchar(4000)                  # empty default</span>
+<span class="s2">"""</span>
 </code></pre></div>
 <hr />
 <h2 id="4-type-system">4. Type System<a class="headerlink" href="#4-type-system" title="Permanent link">&para;</a></h2>
@@ -8463,8 +8463,8 @@ need to control visibility at the call site, use proj().
 - <code>&lt;blob@store_name&gt;</code> - named store</p>
 <h3 id="47-type-reconstruction">4.7 Type Reconstruction<a class="headerlink" href="#47-type-reconstruction" title="Permanent link">&para;</a></h3>
 <p>Core types and codecs are stored in the SQL COMMENT field for reconstruction:</p>
-<div class="highlight"><pre><span></span><code><span class="k">COMMENT</span><span class="w"> </span><span class="s1">&#39;:float32:user comment here&#39;</span>
-<span class="k">COMMENT</span><span class="w"> </span><span class="s1">&#39;:&lt;blob@store&gt;:user comment&#39;</span>
+<div class="highlight"><pre><span></span><code><span class="k">COMMENT</span><span class="w"> </span><span class="s1">':float32:user comment here'</span>
+<span class="k">COMMENT</span><span class="w"> </span><span class="s1">':&lt;blob@store&gt;:user comment'</span>
 </code></pre></div>
 <hr />
 <h2 id="5-default-values">5. Default Values<a class="headerlink" href="#5-default-values" title="Permanent link">&para;</a></h2>
@@ -8526,7 +8526,7 @@ need to control visibility at the call site, use proj().
 <span class="n">data</span> <span class="o">=</span> <span class="n">null</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">blob</span><span class="o">&gt;</span>
 
 <span class="c1"># Invalid - raises DataJointError</span>
-<span class="n">data</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">blob</span><span class="o">&gt;</span>
+<span class="n">data</span> <span class="o">=</span> <span class="s1">''</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">blob</span><span class="o">&gt;</span>
 </code></pre></div>
 <hr />
 <h2 id="6-foreign-key-references">6. Foreign Key References<a class="headerlink" href="#6-foreign-key-references" title="Permanent link">&para;</a></h2>
@@ -8559,20 +8559,20 @@ need to control visibility at the call site, use proj().
 <p>Foreign keys automatically inherit all primary key attributes from the referenced table:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Parent</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Subject</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    subject_id : int32</span>
 <span class="s2">    ---</span>
 <span class="s2">    name : varchar(100)</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">    """</span>
 
 <span class="c1"># Child - inherits subject_id</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Session</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    -&gt; Subject</span>
 <span class="s2">    session_id : int32</span>
 <span class="s2">    ---</span>
 <span class="s2">    session_date : date</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">    """</span>
 </code></pre></div>
 <h3 id="64-position-rules">6.4 Position Rules<a class="headerlink" href="#64-position-rules" title="Permanent link">&para;</a></h3>
 <table>
@@ -8618,7 +8618,7 @@ need to control visibility at the call site, use proj().
 <li>Use case: optional one-to-one relationships where the child may not reference any parent</li>
 </ul>
 <h3 id="68-projections-in-foreign-keys">6.8 Projections in Foreign Keys<a class="headerlink" href="#68-projections-in-foreign-keys" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code>-&gt; Parent.proj(new_name=&#39;original_name&#39;)
+<div class="highlight"><pre><span></span><code>-&gt; Parent.proj(new_name='original_name')
 </code></pre></div>
 <ul>
 <li>Reference same table multiple times with different attribute names</li>
@@ -8631,7 +8631,7 @@ need to control visibility at the call site, use proj().
 <h3 id="69-lineage-tracking">6.9 Lineage Tracking<a class="headerlink" href="#69-lineage-tracking" title="Permanent link">&para;</a></h3>
 <p>Foreign key relationships are recorded in the <code>~lineage</code> table:</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
-    <span class="s1">&#39;child_attr&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;parent_schema.parent_table&#39;</span><span class="p">,</span> <span class="s1">&#39;parent_attr&#39;</span><span class="p">)</span>
+    <span class="s1">'child_attr'</span><span class="p">:</span> <span class="p">(</span><span class="s1">'parent_schema.parent_table'</span><span class="p">,</span> <span class="s1">'parent_attr'</span><span class="p">)</span>
 <span class="p">}</span>
 </code></pre></div>
 <p>Used for semantic attribute matching in queries.</p>
@@ -8642,7 +8642,7 @@ need to control visibility at the call site, use proj().
 unique index(attr1, attr2, ...)
 </code></pre></div>
 <h3 id="72-examples">7.2 Examples<a class="headerlink" href="#72-examples" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2"># User contact information</span>
 <span class="s2">user_id : int32</span>
 <span class="s2">---</span>
@@ -8651,7 +8651,7 @@ unique index(attr1, attr2, ...)
 <span class="s2">email : varchar(100)</span>
 <span class="s2">index(last_name, first_name)</span>
 <span class="s2">unique index(email)</span>
-<span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">"""</span>
 </code></pre></div>
 <h3 id="73-computed-expressions">7.3 Computed Expressions<a class="headerlink" href="#73-computed-expressions" title="Permanent link">&para;</a></h3>
 <p>Indexes can include SQL expressions:</p>
@@ -8667,17 +8667,17 @@ unique index(attr1, attr2, ...)
 <h3 id="81-declaration">8.1 Declaration<a class="headerlink" href="#81-declaration" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="nd">@schema</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Master</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    master_id : int32</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">    """</span>
 
     <span class="k">class</span><span class="w"> </span><span class="nc">Detail</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Part</span><span class="p">):</span>
-        <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+        <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">        -&gt; master</span>
 <span class="s2">        detail_id : int32</span>
 <span class="s2">        ---</span>
 <span class="s2">        value : float32</span>
-<span class="s2">        &quot;&quot;&quot;</span>
+<span class="s2">        """</span>
 </code></pre></div>
 <h3 id="82-naming">8.2 Naming<a class="headerlink" href="#82-naming" title="Permanent link">&para;</a></h3>
 <ul>
@@ -8706,24 +8706,24 @@ unique index(attr1, attr2, ...)
 <p>All primary key attributes must come from foreign key references.</p>
 <p><strong>Valid:</strong>
 <div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">Analysis</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Computed</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    -&gt; Session</span>
 <span class="s2">    -&gt; Parameter</span>
 <span class="s2">    ---</span>
 <span class="s2">    result : float64</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">    """</span>
 </code></pre></div></p>
 <p><strong>Invalid</strong> (by default):
 <div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">Analysis</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Computed</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    -&gt; Session</span>
 <span class="s2">    analysis_id : int32    # ERROR: non-FK primary key</span>
 <span class="s2">    ---</span>
 <span class="s2">    result : float64</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">    """</span>
 </code></pre></div></p>
 <p><strong>Override:</strong>
-<div class="highlight"><pre><span></span><code><span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;jobs.allow_new_pk_fields_in_computed_tables&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+<div class="highlight"><pre><span></span><code><span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">'jobs.allow_new_pk_fields_in_computed_tables'</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
 </code></pre></div></p>
 <h3 id="93-job-metadata">9.3 Job Metadata<a class="headerlink" href="#93-job-metadata" title="Permanent link">&para;</a></h3>
 <p>When <code>config['jobs.add_job_metadata'] = True</code>, auto-populated tables receive:</p>
@@ -8825,20 +8825,20 @@ unique index(attr1, attr2, ...)
 <h2 id="11-sql-generation">11. SQL Generation<a class="headerlink" href="#11-sql-generation" title="Permanent link">&para;</a></h2>
 <h3 id="111-create-table-template">11.1 CREATE TABLE Template<a class="headerlink" href="#111-create-table-template" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="o">`</span><span class="k">schema</span><span class="o">`</span><span class="p">.</span><span class="o">`</span><span class="k">table_name</span><span class="o">`</span><span class="w"> </span><span class="p">(</span>
-<span class="w">    </span><span class="o">`</span><span class="n">attr1</span><span class="o">`</span><span class="w"> </span><span class="n">TYPE1</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">COMMENT</span><span class="w"> </span><span class="ss">&quot;...&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="o">`</span><span class="n">attr2</span><span class="o">`</span><span class="w"> </span><span class="n">TYPE2</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">COMMENT</span><span class="w"> </span><span class="ss">&quot;...&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="o">`</span><span class="n">attr1</span><span class="o">`</span><span class="w"> </span><span class="n">TYPE1</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">COMMENT</span><span class="w"> </span><span class="ss">"..."</span><span class="p">,</span>
+<span class="w">    </span><span class="o">`</span><span class="n">attr2</span><span class="o">`</span><span class="w"> </span><span class="n">TYPE2</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">COMMENT</span><span class="w"> </span><span class="ss">"..."</span><span class="p">,</span>
 <span class="w">    </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="w"> </span><span class="p">(</span><span class="o">`</span><span class="n">pk1</span><span class="o">`</span><span class="p">,</span><span class="w"> </span><span class="o">`</span><span class="n">pk2</span><span class="o">`</span><span class="p">),</span>
 <span class="w">    </span><span class="k">FOREIGN</span><span class="w"> </span><span class="k">KEY</span><span class="w"> </span><span class="p">(</span><span class="o">`</span><span class="n">fk_attr</span><span class="o">`</span><span class="p">)</span><span class="w"> </span><span class="k">REFERENCES</span><span class="w"> </span><span class="o">`</span><span class="n">parent</span><span class="o">`</span><span class="w"> </span><span class="p">(</span><span class="o">`</span><span class="n">pk</span><span class="o">`</span><span class="p">)</span>
 <span class="w">        </span><span class="k">ON</span><span class="w"> </span><span class="k">UPDATE</span><span class="w"> </span><span class="k">CASCADE</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">DELETE</span><span class="w"> </span><span class="k">RESTRICT</span><span class="p">,</span>
 <span class="w">    </span><span class="k">INDEX</span><span class="w"> </span><span class="p">(</span><span class="o">`</span><span class="n">idx_attr</span><span class="o">`</span><span class="p">),</span>
 <span class="w">    </span><span class="k">UNIQUE</span><span class="w"> </span><span class="k">INDEX</span><span class="w"> </span><span class="p">(</span><span class="o">`</span><span class="n">uniq_attr</span><span class="o">`</span><span class="p">)</span>
-<span class="p">)</span><span class="w"> </span><span class="n">ENGINE</span><span class="o">=</span><span class="n">InnoDB</span><span class="w"> </span><span class="k">COMMENT</span><span class="o">=</span><span class="ss">&quot;table comment&quot;</span>
+<span class="p">)</span><span class="w"> </span><span class="n">ENGINE</span><span class="o">=</span><span class="n">InnoDB</span><span class="w"> </span><span class="k">COMMENT</span><span class="o">=</span><span class="ss">"table comment"</span>
 </code></pre></div>
 <h3 id="112-type-comment-encoding">11.2 Type Comment Encoding<a class="headerlink" href="#112-type-comment-encoding" title="Permanent link">&para;</a></h3>
 <p>Core types and codecs are preserved in comments:</p>
-<div class="highlight"><pre><span></span><code><span class="o">`</span><span class="n">value</span><span class="o">`</span><span class="w"> </span><span class="nb">float</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">COMMENT</span><span class="w"> </span><span class="ss">&quot;:float32:measurement value&quot;</span>
-<span class="o">`</span><span class="k">data</span><span class="o">`</span><span class="w"> </span><span class="n">longblob</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">COMMENT</span><span class="w"> </span><span class="ss">&quot;:&lt;blob&gt;:serialized data&quot;</span>
-<span class="o">`</span><span class="n">archive</span><span class="o">`</span><span class="w"> </span><span class="n">json</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">COMMENT</span><span class="w"> </span><span class="ss">&quot;:&lt;blob@cold&gt;:in-store data&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="o">`</span><span class="n">value</span><span class="o">`</span><span class="w"> </span><span class="nb">float</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">COMMENT</span><span class="w"> </span><span class="ss">":float32:measurement value"</span>
+<span class="o">`</span><span class="k">data</span><span class="o">`</span><span class="w"> </span><span class="n">longblob</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">COMMENT</span><span class="w"> </span><span class="ss">":&lt;blob&gt;:serialized data"</span>
+<span class="o">`</span><span class="n">archive</span><span class="o">`</span><span class="w"> </span><span class="n">json</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">COMMENT</span><span class="w"> </span><span class="ss">":&lt;blob@cold&gt;:in-store data"</span>
 </code></pre></div>
 <hr />
 <h2 id="12-implementation-files">12. Implementation Files<a class="headerlink" href="#12-implementation-files" title="Permanent link">&para;</a></h2>

@@ -4127,7 +4127,7 @@
   <span class="md-ellipsis">
     
   
-    Migrate to 2.0
+    Migrate to 2.x
   
 
     
@@ -7153,40 +7153,40 @@
 <div class="highlight"><pre><span></span><code><span class="c1"># &lt;blob&gt; and &lt;blob@&gt;: Insert Python objects, get Python objects back</span>
 <span class="nd">@schema</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Analysis</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Computed</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    -&gt; Experiment</span>
 <span class="s2">    ---</span>
 <span class="s2">    results : &lt;blob@&gt;         # Any Python object: dicts, lists, arrays</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">make</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
         <span class="c1"># Insert nested Python structures directly</span>
         <span class="n">results</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s1">&#39;accuracy&#39;</span><span class="p">:</span> <span class="mf">0.95</span><span class="p">,</span>
-            <span class="s1">&#39;confusion_matrix&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">15</span><span class="p">]]),</span>
-            <span class="s1">&#39;metadata&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;method&#39;</span><span class="p">:</span> <span class="s1">&#39;SVM&#39;</span><span class="p">,</span> <span class="s1">&#39;params&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]}</span>
+            <span class="s1">'accuracy'</span><span class="p">:</span> <span class="mf">0.95</span><span class="p">,</span>
+            <span class="s1">'confusion_matrix'</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">15</span><span class="p">]]),</span>
+            <span class="s1">'metadata'</span><span class="p">:</span> <span class="p">{</span><span class="s1">'method'</span><span class="p">:</span> <span class="s1">'SVM'</span><span class="p">,</span> <span class="s1">'params'</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]}</span>
         <span class="p">}</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="o">**</span><span class="n">key</span><span class="p">,</span> <span class="s1">&#39;results&#39;</span><span class="p">:</span> <span class="n">results</span><span class="p">})</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="o">**</span><span class="n">key</span><span class="p">,</span> <span class="s1">'results'</span><span class="p">:</span> <span class="n">results</span><span class="p">})</span>
 
 <span class="c1"># Fetch: Get Python object back (no manual unpickling)</span>
-<span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="n">Analysis</span> <span class="o">&amp;</span> <span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">fetch1</span><span class="p">(</span><span class="s1">&#39;results&#39;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;accuracy&#39;</span><span class="p">])</span>           <span class="c1"># 0.95</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;confusion_matrix&#39;</span><span class="p">])</span>   <span class="c1"># numpy array</span>
+<span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="n">Analysis</span> <span class="o">&amp;</span> <span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">fetch1</span><span class="p">(</span><span class="s1">'results'</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">'accuracy'</span><span class="p">])</span>           <span class="c1"># 0.95</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">'confusion_matrix'</span><span class="p">])</span>   <span class="c1"># numpy array</span>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="c1"># &lt;npy@&gt;: Insert array-like objects, get array-like objects back</span>
 <span class="nd">@schema</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Recording</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    recording_id : uuid</span>
 <span class="s2">    ---</span>
 <span class="s2">    traces : &lt;npy@&gt;           # NumPy arrays (no manual .npy files)</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">    """</span>
 
 <span class="c1"># Insert: Just pass the array</span>
-<span class="n">Recording</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="s1">&#39;recording_id&#39;</span><span class="p">:</span> <span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">(),</span> <span class="s1">&#39;traces&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span> <span class="mi">32</span><span class="p">)})</span>
+<span class="n">Recording</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="s1">'recording_id'</span><span class="p">:</span> <span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">(),</span> <span class="s1">'traces'</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span> <span class="mi">32</span><span class="p">)})</span>
 
 <span class="c1"># Fetch: Get array-like object (NpyRef with lazy loading)</span>
-<span class="n">ref</span> <span class="o">=</span> <span class="p">(</span><span class="n">Recording</span> <span class="o">&amp;</span> <span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">fetch1</span><span class="p">(</span><span class="s1">&#39;traces&#39;</span><span class="p">)</span>
+<span class="n">ref</span> <span class="o">=</span> <span class="p">(</span><span class="n">Recording</span> <span class="o">&amp;</span> <span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">fetch1</span><span class="p">(</span><span class="s1">'traces'</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">ref</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>              <span class="c1"># (1000, 32) - metadata without download</span>
 <span class="n">subset</span> <span class="o">=</span> <span class="n">ref</span><span class="p">[:</span><span class="mi">100</span><span class="p">,</span> <span class="p">:]</span>         <span class="c1"># Lazy slicing</span>
 </code></pre></div>
@@ -7210,13 +7210,13 @@
 <p>Try to keep in-table blobs under ~1-10 MB, but this depends on your specific use case:</p>
 <div class="highlight"><pre><span></span><code><span class="nd">@schema</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Experiment</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    experiment_id : uuid</span>
 <span class="s2">    ---</span>
 <span class="s2">    metadata : &lt;blob&gt;         # Small: config, parameters (&lt; 1 MB)</span>
 <span class="s2">    thumbnail : &lt;blob&gt;        # Medium: preview images (&lt; 10 MB)</span>
 <span class="s2">    raw_data : &lt;blob@&gt;        # Large: raw recordings (&gt; 10 MB)</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">    """</span>
 </code></pre></div>
 <p><strong>When to use in-table storage (<code>&lt;blob&gt;</code>):</strong>
 - Fast access needed (no external fetch)
@@ -7239,48 +7239,48 @@
 <p><strong>Full Access Every Time</strong></p>
 <p>Use <code>&lt;blob@&gt;</code> (hash-addressed):</p>
 <div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">ProcessedImage</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Computed</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    -&gt; RawImage</span>
 <span class="s2">    ---</span>
 <span class="s2">    processed : &lt;blob@&gt;       # Always load full image</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">    """</span>
 </code></pre></div>
 <p><strong>Typical pattern:</strong>
 <div class="highlight"><pre><span></span><code><span class="c1"># Fetch always gets full data</span>
-<span class="n">img</span> <span class="o">=</span> <span class="p">(</span><span class="n">ProcessedImage</span> <span class="o">&amp;</span> <span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">fetch1</span><span class="p">(</span><span class="s1">&#39;processed&#39;</span><span class="p">)</span>
+<span class="n">img</span> <span class="o">=</span> <span class="p">(</span><span class="n">ProcessedImage</span> <span class="o">&amp;</span> <span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">fetch1</span><span class="p">(</span><span class="s1">'processed'</span><span class="p">)</span>
 </code></pre></div></p>
 <hr />
 <p><strong>Streaming / Partial Reads</strong></p>
 <p>Use <code>&lt;object@&gt;</code> (schema-addressed):</p>
 <div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">ScanVolume</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    scan_id : uuid</span>
 <span class="s2">    ---</span>
 <span class="s2">    volume : &lt;object@&gt;        # Stream chunks as needed</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">    """</span>
 </code></pre></div>
 <p><strong>Typical pattern:</strong>
 <div class="highlight"><pre><span></span><code><span class="c1"># Get reference without downloading</span>
-<span class="n">ref</span> <span class="o">=</span> <span class="p">(</span><span class="n">ScanVolume</span> <span class="o">&amp;</span> <span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">fetch1</span><span class="p">(</span><span class="s1">&#39;volume&#39;</span><span class="p">)</span>
+<span class="n">ref</span> <span class="o">=</span> <span class="p">(</span><span class="n">ScanVolume</span> <span class="o">&amp;</span> <span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">fetch1</span><span class="p">(</span><span class="s1">'volume'</span><span class="p">)</span>
 
 <span class="c1"># Stream specific chunks</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">zarr</span>
-<span class="n">z</span> <span class="o">=</span> <span class="n">zarr</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">ref</span><span class="o">.</span><span class="n">fsmap</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">)</span>
+<span class="n">z</span> <span class="o">=</span> <span class="n">zarr</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">ref</span><span class="o">.</span><span class="n">fsmap</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">'r'</span><span class="p">)</span>
 <span class="n">slice_data</span> <span class="o">=</span> <span class="n">z</span><span class="p">[</span><span class="mi">100</span><span class="p">:</span><span class="mi">200</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]</span>  <span class="c1"># Fetch only this slice</span>
 </code></pre></div></p>
 <hr />
 <p><strong>NumPy Arrays with Lazy Loading</strong></p>
 <p>Use <code>&lt;npy@&gt;</code> (optimized for NumPy):</p>
 <div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">NeuralActivity</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Computed</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    -&gt; Recording</span>
 <span class="s2">    ---</span>
 <span class="s2">    traces : &lt;npy@&gt;           # NumPy array, lazy load</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">    """</span>
 </code></pre></div>
 <p><strong>Typical pattern:</strong>
 <div class="highlight"><pre><span></span><code><span class="c1"># Returns NpyRef (lazy)</span>
-<span class="n">ref</span> <span class="o">=</span> <span class="p">(</span><span class="n">NeuralActivity</span> <span class="o">&amp;</span> <span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">fetch1</span><span class="p">(</span><span class="s1">&#39;traces&#39;</span><span class="p">)</span>
+<span class="n">ref</span> <span class="o">=</span> <span class="p">(</span><span class="n">NeuralActivity</span> <span class="o">&amp;</span> <span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">fetch1</span><span class="p">(</span><span class="s1">'traces'</span><span class="p">)</span>
 
 <span class="c1"># Access like NumPy array (loads on demand)</span>
 <span class="n">subset</span> <span class="o">=</span> <span class="n">ref</span><span class="p">[:</span><span class="mi">100</span><span class="p">,</span> <span class="p">:]</span>         <span class="c1"># Efficient slicing</span>
@@ -7295,11 +7295,11 @@
 <p><strong>DataJoint-Managed (Integrated)</strong></p>
 <p>Use <code>&lt;blob@&gt;</code>, <code>&lt;npy@&gt;</code>, or <code>&lt;object@&gt;</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">ManagedData</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    data_id : uuid</span>
 <span class="s2">    ---</span>
 <span class="s2">    content : &lt;blob@&gt;         # DataJoint manages lifecycle</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">    """</span>
 </code></pre></div>
 <p><strong>DataJoint provides:</strong>
 - ✅ Automatic cleanup (garbage collection)
@@ -7314,11 +7314,11 @@
 <p><strong>User-Managed (References)</strong></p>
 <p>Use <code>&lt;filepath@&gt;</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">ExternalData</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    data_id : uuid</span>
 <span class="s2">    ---</span>
 <span class="s2">    raw_file : &lt;filepath@&gt;    # User manages file</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">    """</span>
 </code></pre></div>
 <p><strong>User provides:</strong>
 - ✅ File paths (you control organization)
@@ -7470,30 +7470,30 @@
 <h3 id="scenario-1-image-processing-pipeline">Scenario 1: Image Processing Pipeline<a class="headerlink" href="#scenario-1-image-processing-pipeline" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="nd">@schema</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">RawImage</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Imported from microscope&quot;&quot;&quot;</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Imported from microscope"""</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    image_id : uuid</span>
 <span class="s2">    ---</span>
 <span class="s2">    raw_file : &lt;filepath@acquisition&gt;    # Reference microscope output</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">    """</span>
 
 <span class="nd">@schema</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">CalibratedImage</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Computed</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Calibrated, moderate size&quot;&quot;&quot;</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Calibrated, moderate size"""</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    -&gt; RawImage</span>
 <span class="s2">    ---</span>
 <span class="s2">    calibrated : &lt;blob@&gt;                 # 5 MB processed image</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">    """</span>
 
 <span class="nd">@schema</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Thumbnail</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Computed</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Preview for dashboard&quot;&quot;&quot;</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Preview for dashboard"""</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    -&gt; CalibratedImage</span>
 <span class="s2">    ---</span>
 <span class="s2">    preview : &lt;blob&gt;                     # 100 KB thumbnail, in-table</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">    """</span>
 </code></pre></div>
 <p><strong>Rationale:</strong>
 - <code>&lt;filepath@&gt;</code>: Reference existing microscope files (large, externally managed)
@@ -7503,40 +7503,40 @@
 <h3 id="scenario-2-electrophysiology-recording">Scenario 2: Electrophysiology Recording<a class="headerlink" href="#scenario-2-electrophysiology-recording" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="nd">@schema</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">RecordingSession</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Recording metadata&quot;&quot;&quot;</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Recording metadata"""</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    session_id : uuid</span>
 <span class="s2">    ---</span>
 <span class="s2">    config : &lt;blob&gt;                      # 50 KB parameters, in-table</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">    """</span>
 
 <span class="nd">@schema</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">ContinuousData</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Imported</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Raw voltage traces&quot;&quot;&quot;</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Raw voltage traces"""</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    -&gt; RecordingSession</span>
 <span class="s2">    ---</span>
 <span class="s2">    raw_voltage : &lt;object@raw&gt;           # 10 GB Zarr array, streaming</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">    """</span>
 
 <span class="nd">@schema</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">SpikeWaveforms</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Computed</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Extracted spike shapes&quot;&quot;&quot;</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Extracted spike shapes"""</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    -&gt; ContinuousData</span>
 <span class="s2">    unit_id : int64</span>
 <span class="s2">    ---</span>
 <span class="s2">    waveforms : &lt;npy@&gt;                   # 20 MB array, lazy load</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">    """</span>
 
 <span class="nd">@schema</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">UnitStats</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Computed</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Summary statistics&quot;&quot;&quot;</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Summary statistics"""</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    -&gt; SpikeWaveforms</span>
 <span class="s2">    ---</span>
 <span class="s2">    stats : &lt;blob&gt;                       # 10 KB stats dict, in-table</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">    """</span>
 </code></pre></div>
 <p><strong>Rationale:</strong>
 - <code>&lt;blob&gt;</code>: Config and stats (small metadata, fast access)
@@ -7546,40 +7546,40 @@
 <h3 id="scenario-3-calcium-imaging-analysis">Scenario 3: Calcium Imaging Analysis<a class="headerlink" href="#scenario-3-calcium-imaging-analysis" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="nd">@schema</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Movie</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Raw calcium imaging movie&quot;&quot;&quot;</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Raw calcium imaging movie"""</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    movie_id : uuid</span>
 <span class="s2">    ---</span>
 <span class="s2">    frames : &lt;object@movies&gt;             # 2 GB TIFF stack, streaming</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">    """</span>
 
 <span class="nd">@schema</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">SegmentedCells</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Computed</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Cell masks&quot;&quot;&quot;</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Cell masks"""</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    -&gt; Movie</span>
 <span class="s2">    ---</span>
 <span class="s2">    masks : &lt;npy@&gt;                       # 50 MB mask array, lazy load</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">    """</span>
 
 <span class="nd">@schema</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">FluorescenceTraces</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Computed</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Extracted time series&quot;&quot;&quot;</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Extracted time series"""</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    -&gt; SegmentedCells</span>
 <span class="s2">    cell_id : int64</span>
 <span class="s2">    ---</span>
 <span class="s2">    trace : &lt;blob@&gt;                      # 500 KB per cell, deduplicated</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">    """</span>
 
 <span class="nd">@schema</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">TraceSummary</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Computed</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Event detection results&quot;&quot;&quot;</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Event detection results"""</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    -&gt; FluorescenceTraces</span>
 <span class="s2">    ---</span>
 <span class="s2">    events : &lt;blob&gt;                      # 5 KB event times, in-table</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">    """</span>
 </code></pre></div>
 <p><strong>Rationale:</strong>
 - <code>&lt;object@&gt;</code>: Movies (huge, stream for segmentation)
@@ -7589,11 +7589,11 @@
 <h2 id="configuration-examples">Configuration Examples<a class="headerlink" href="#configuration-examples" title="Permanent link">&para;</a></h2>
 <h3 id="single-store-development">Single Store (Development)<a class="headerlink" href="#single-store-development" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;stores&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;default&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;main&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;main&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="nt">&quot;protocol&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;file&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;location&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/data/my-project&quot;</span>
+<span class="w">  </span><span class="nt">"stores"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"default"</span><span class="p">:</span><span class="w"> </span><span class="s2">"main"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"main"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">"protocol"</span><span class="p">:</span><span class="w"> </span><span class="s2">"file"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"location"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/data/my-project"</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
@@ -7604,21 +7604,21 @@
 <hr />
 <h3 id="multiple-stores-production">Multiple Stores (Production)<a class="headerlink" href="#multiple-stores-production" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;stores&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;default&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;main&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;filepath_default&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;acquisition&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;main&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="nt">&quot;protocol&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;file&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;location&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/data/processed&quot;</span>
+<span class="w">  </span><span class="nt">"stores"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"default"</span><span class="p">:</span><span class="w"> </span><span class="s2">"main"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"filepath_default"</span><span class="p">:</span><span class="w"> </span><span class="s2">"acquisition"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"main"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">"protocol"</span><span class="p">:</span><span class="w"> </span><span class="s2">"file"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"location"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/data/processed"</span>
 <span class="w">    </span><span class="p">},</span>
-<span class="w">    </span><span class="nt">&quot;acquisition&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="nt">&quot;protocol&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;file&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;location&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/mnt/microscope&quot;</span>
+<span class="w">    </span><span class="nt">"acquisition"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">"protocol"</span><span class="p">:</span><span class="w"> </span><span class="s2">"file"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"location"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/mnt/microscope"</span>
 <span class="w">    </span><span class="p">},</span>
-<span class="w">    </span><span class="nt">&quot;archive&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="nt">&quot;protocol&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;s3&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;bucket&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;long-term-storage&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;location&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;lab-data/archive&quot;</span>
+<span class="w">    </span><span class="nt">"archive"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">"protocol"</span><span class="p">:</span><span class="w"> </span><span class="s2">"s3"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"bucket"</span><span class="p">:</span><span class="w"> </span><span class="s2">"long-term-storage"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"location"</span><span class="p">:</span><span class="w"> </span><span class="s2">"lab-data/archive"</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
@@ -7763,17 +7763,17 @@
 <div class="highlight"><pre><span></span><code><span class="c1"># Add new column with object storage</span>
 <span class="nd">@schema</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">MyTable</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    id : int</span>
 <span class="s2">    ---</span>
 <span class="s2">    data_old : &lt;blob&gt;          # Legacy in-table</span>
 <span class="s2">    data_new : &lt;blob@&gt;         # New object storage</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">    """</span>
 
 <span class="c1"># Migrate data</span>
-<span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">MyTable</span><span class="o">.</span><span class="n">fetch</span><span class="p">(</span><span class="s1">&#39;KEY&#39;</span><span class="p">):</span>
-    <span class="n">old_data</span> <span class="o">=</span> <span class="p">(</span><span class="n">MyTable</span> <span class="o">&amp;</span> <span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">fetch1</span><span class="p">(</span><span class="s1">&#39;data_old&#39;</span><span class="p">)</span>
-    <span class="p">(</span><span class="n">MyTable</span> <span class="o">&amp;</span> <span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">update1</span><span class="p">({</span><span class="o">**</span><span class="n">key</span><span class="p">,</span> <span class="s1">&#39;data_new&#39;</span><span class="p">:</span> <span class="n">old_data</span><span class="p">})</span>
+<span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">MyTable</span><span class="o">.</span><span class="n">fetch</span><span class="p">(</span><span class="s1">'KEY'</span><span class="p">):</span>
+    <span class="n">old_data</span> <span class="o">=</span> <span class="p">(</span><span class="n">MyTable</span> <span class="o">&amp;</span> <span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">fetch1</span><span class="p">(</span><span class="s1">'data_old'</span><span class="p">)</span>
+    <span class="p">(</span><span class="n">MyTable</span> <span class="o">&amp;</span> <span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">update1</span><span class="p">({</span><span class="o">**</span><span class="n">key</span><span class="p">,</span> <span class="s1">'data_new'</span><span class="p">:</span> <span class="n">old_data</span><span class="p">})</span>
 
 <span class="c1"># After verification, drop old column via alter()</span>
 </code></pre></div>
@@ -7781,36 +7781,36 @@
 <div class="highlight"><pre><span></span><code><span class="c1"># For large files that need streaming</span>
 <span class="nd">@schema</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Recording</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    recording_id : uuid</span>
 <span class="s2">    ---</span>
 <span class="s2">    data_blob : &lt;blob@&gt;        # Old: full download</span>
 <span class="s2">    data_stream : &lt;object@&gt;    # New: streaming access</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">    """</span>
 
 <span class="c1"># Convert and store as Zarr</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">zarr</span>
-<span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">Recording</span><span class="o">.</span><span class="n">fetch</span><span class="p">(</span><span class="s1">&#39;KEY&#39;</span><span class="p">):</span>
-    <span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="n">Recording</span> <span class="o">&amp;</span> <span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">fetch1</span><span class="p">(</span><span class="s1">&#39;data_blob&#39;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">Recording</span><span class="o">.</span><span class="n">fetch</span><span class="p">(</span><span class="s1">'KEY'</span><span class="p">):</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="n">Recording</span> <span class="o">&amp;</span> <span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">fetch1</span><span class="p">(</span><span class="s1">'data_blob'</span><span class="p">)</span>
 
     <span class="c1"># Create Zarr array</span>
-    <span class="n">ref</span> <span class="o">=</span> <span class="p">(</span><span class="n">Recording</span> <span class="o">&amp;</span> <span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">create_object_ref</span><span class="p">(</span><span class="s1">&#39;data_stream&#39;</span><span class="p">,</span> <span class="s1">&#39;.zarr&#39;</span><span class="p">)</span>
-    <span class="n">z</span> <span class="o">=</span> <span class="n">zarr</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">ref</span><span class="o">.</span><span class="n">fsmap</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
+    <span class="n">ref</span> <span class="o">=</span> <span class="p">(</span><span class="n">Recording</span> <span class="o">&amp;</span> <span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">create_object_ref</span><span class="p">(</span><span class="s1">'data_stream'</span><span class="p">,</span> <span class="s1">'.zarr'</span><span class="p">)</span>
+    <span class="n">z</span> <span class="o">=</span> <span class="n">zarr</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">ref</span><span class="o">.</span><span class="n">fsmap</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">'w'</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
     <span class="n">z</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">data</span>
 
     <span class="c1"># Update row</span>
-    <span class="p">(</span><span class="n">Recording</span> <span class="o">&amp;</span> <span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">update1</span><span class="p">({</span><span class="o">**</span><span class="n">key</span><span class="p">,</span> <span class="s1">&#39;data_stream&#39;</span><span class="p">:</span> <span class="n">ref</span><span class="p">})</span>
+    <span class="p">(</span><span class="n">Recording</span> <span class="o">&amp;</span> <span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">update1</span><span class="p">({</span><span class="o">**</span><span class="n">key</span><span class="p">,</span> <span class="s1">'data_stream'</span><span class="p">:</span> <span class="n">ref</span><span class="p">})</span>
 </code></pre></div>
 <h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
 <h3 id="datajointerror-store-not-configured">"DataJointError: Store not configured"<a class="headerlink" href="#datajointerror-store-not-configured" title="Permanent link">&para;</a></h3>
 <p><strong>Problem:</strong> Using <code>@</code> without store configuration</p>
 <p><strong>Solution:</strong>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;stores&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;default&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;main&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;main&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="nt">&quot;protocol&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;file&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;location&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/data/storage&quot;</span>
+<span class="w">  </span><span class="nt">"stores"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"default"</span><span class="p">:</span><span class="w"> </span><span class="s2">"main"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"main"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">"protocol"</span><span class="p">:</span><span class="w"> </span><span class="s2">"file"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"location"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/data/storage"</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
@@ -7819,10 +7819,10 @@
 <p><strong>Problem:</strong> <code>&lt;filepath@&gt;</code> path uses <code>_hash/</code> or <code>_schema/</code></p>
 <p><strong>Solution:</strong> Use different path:
 <div class="highlight"><pre><span></span><code><span class="c1"># Bad</span>
-<span class="n">table</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;file&#39;</span><span class="p">:</span> <span class="s1">&#39;_hash/mydata.bin&#39;</span><span class="p">})</span>  <span class="c1"># Error!</span>
+<span class="n">table</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="s1">'id'</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">'file'</span><span class="p">:</span> <span class="s1">'_hash/mydata.bin'</span><span class="p">})</span>  <span class="c1"># Error!</span>
 
 <span class="c1"># Good</span>
-<span class="n">table</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;file&#39;</span><span class="p">:</span> <span class="s1">&#39;raw/mydata.bin&#39;</span><span class="p">})</span>    <span class="c1"># OK</span>
+<span class="n">table</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="s1">'id'</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">'file'</span><span class="p">:</span> <span class="s1">'raw/mydata.bin'</span><span class="p">})</span>    <span class="c1"># OK</span>
 </code></pre></div></p>
 <h3 id="data-not-deduplicated">Data not deduplicated<a class="headerlink" href="#data-not-deduplicated" title="Permanent link">&para;</a></h3>
 <p><strong>Problem:</strong> Using <code>&lt;npy@&gt;</code> or <code>&lt;object@&gt;</code> expecting deduplication</p>

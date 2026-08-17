@@ -3671,7 +3671,7 @@
   <span class="md-ellipsis">
     
   
-    Migrate to 2.0
+    Migrate to 2.x
   
 
     
@@ -7322,11 +7322,11 @@
 <h3 id="minimal-configuration">Minimal Configuration<a class="headerlink" href="#minimal-configuration" title="Permanent link">&para;</a></h3>
 <p>Every store requires two fields:</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;stores&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;default&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;main&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;main&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="nt">&quot;protocol&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;file&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;location&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/data/my-project&quot;</span>
+<span class="w">  </span><span class="nt">"stores"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"default"</span><span class="p">:</span><span class="w"> </span><span class="s2">"main"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"main"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">"protocol"</span><span class="p">:</span><span class="w"> </span><span class="s2">"file"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"location"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/data/my-project"</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
@@ -7336,7 +7336,7 @@
 <p>DataJoint uses two default settings to reflect the architectural distinction between integrated and reference storage:</p>
 <h4 id="storesdefault-integrated-storage-oas">stores.default — Integrated Storage (OAS)<a class="headerlink" href="#storesdefault-integrated-storage-oas" title="Permanent link">&para;</a></h4>
 <p>The <code>stores.default</code> setting determines which store is used for <strong>integrated storage</strong> (hash-addressed and schema-addressed) when no store is specified:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># These are equivalent when stores.default = &quot;main&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># These are equivalent when stores.default = "main"</span>
 <span class="n">signal</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">blob</span><span class="o">&gt;</span>           <span class="c1"># Uses stores.default</span>
 <span class="n">signal</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">blob</span><span class="nd">@main</span><span class="o">&gt;</span>      <span class="c1"># Explicitly names store</span>
 
@@ -7349,7 +7349,7 @@
 - Each project typically uses one primary store for integrated data</p>
 <h4 id="storesfilepath_default-filepath-references">stores.filepath_default — Filepath References<a class="headerlink" href="#storesfilepath_default-filepath-references" title="Permanent link">&para;</a></h4>
 <p>The <code>stores.filepath_default</code> setting determines which store is used for <strong>filepath references</strong> when no store is specified:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># These are equivalent when stores.filepath_default = &quot;raw_data&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># These are equivalent when stores.filepath_default = "raw_data"</span>
 <span class="n">recording</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">filepath</span><span class="o">@&gt;</span>          <span class="c1"># Uses stores.filepath_default</span>
 <span class="n">recording</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">filepath</span><span class="nd">@raw_data</span><span class="o">&gt;</span>  <span class="c1"># Explicitly names store</span>
 </code></pre></div>
@@ -7363,21 +7363,21 @@
 <h3 id="complete-store-configuration">Complete Store Configuration<a class="headerlink" href="#complete-store-configuration" title="Permanent link">&para;</a></h3>
 <p>A fully configured store specifying all sections:</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;stores&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;default&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;main&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;main&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="nt">&quot;protocol&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;s3&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;endpoint&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;s3.amazonaws.com&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;bucket&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;neuroscience-data&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;location&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;lab-project-2024&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"stores"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"default"</span><span class="p">:</span><span class="w"> </span><span class="s2">"main"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"main"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">"protocol"</span><span class="p">:</span><span class="w"> </span><span class="s2">"s3"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"endpoint"</span><span class="p">:</span><span class="w"> </span><span class="s2">"s3.amazonaws.com"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"bucket"</span><span class="p">:</span><span class="w"> </span><span class="s2">"neuroscience-data"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"location"</span><span class="p">:</span><span class="w"> </span><span class="s2">"lab-project-2024"</span><span class="p">,</span>
 
-<span class="w">      </span><span class="nt">&quot;hash_prefix&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;blobs&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;schema_prefix&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;arrays&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;filepath_prefix&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;imported&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"hash_prefix"</span><span class="p">:</span><span class="w"> </span><span class="s2">"blobs"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"schema_prefix"</span><span class="p">:</span><span class="w"> </span><span class="s2">"arrays"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"filepath_prefix"</span><span class="p">:</span><span class="w"> </span><span class="s2">"imported"</span><span class="p">,</span>
 
-<span class="w">      </span><span class="nt">&quot;subfolding&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">],</span>
-<span class="w">      </span><span class="nt">&quot;partition_pattern&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;subject_id/session_date&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;token_length&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">8</span>
+<span class="w">      </span><span class="nt">"subfolding"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">],</span>
+<span class="w">      </span><span class="nt">"partition_pattern"</span><span class="p">:</span><span class="w"> </span><span class="s2">"subject_id/session_date"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"token_length"</span><span class="p">:</span><span class="w"> </span><span class="mi">8</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
@@ -7483,9 +7483,9 @@ and earlier live at root-level <code>{schema}/...</code> paths; garbage collecti
 lists both layouts.</p>
 <p><strong>Example with custom prefixes:</strong></p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;hash_prefix&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;content_addressed&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;schema_prefix&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;structured_data&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;filepath_prefix&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;user_files&quot;</span>
+<span class="w">  </span><span class="nt">"hash_prefix"</span><span class="p">:</span><span class="w"> </span><span class="s2">"content_addressed"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"schema_prefix"</span><span class="p">:</span><span class="w"> </span><span class="s2">"structured_data"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"filepath_prefix"</span><span class="p">:</span><span class="w"> </span><span class="s2">"user_files"</span>
 <span class="p">}</span>
 </code></pre></div>
 <p>Results in these sections:
@@ -7495,28 +7495,28 @@ lists both layouts.</p>
 <h3 id="multiple-stores">Multiple Stores<a class="headerlink" href="#multiple-stores" title="Permanent link">&para;</a></h3>
 <p>Configure multiple stores for different data types or storage tiers:</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;stores&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;default&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;main&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;filepath_default&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;raw_data&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;main&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="nt">&quot;protocol&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;file&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;location&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/data/fast-storage&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;hash_prefix&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;blobs&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;schema_prefix&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;arrays&quot;</span>
+<span class="w">  </span><span class="nt">"stores"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"default"</span><span class="p">:</span><span class="w"> </span><span class="s2">"main"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"filepath_default"</span><span class="p">:</span><span class="w"> </span><span class="s2">"raw_data"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"main"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">"protocol"</span><span class="p">:</span><span class="w"> </span><span class="s2">"file"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"location"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/data/fast-storage"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"hash_prefix"</span><span class="p">:</span><span class="w"> </span><span class="s2">"blobs"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"schema_prefix"</span><span class="p">:</span><span class="w"> </span><span class="s2">"arrays"</span>
 <span class="w">    </span><span class="p">},</span>
-<span class="w">    </span><span class="nt">&quot;archive&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="nt">&quot;protocol&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;s3&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;endpoint&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;s3.amazonaws.com&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;bucket&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;archive-bucket&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;location&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;long-term-storage&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;hash_prefix&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;archived_blobs&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;schema_prefix&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;archived_arrays&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;subfolding&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">]</span>
+<span class="w">    </span><span class="nt">"archive"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">"protocol"</span><span class="p">:</span><span class="w"> </span><span class="s2">"s3"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"endpoint"</span><span class="p">:</span><span class="w"> </span><span class="s2">"s3.amazonaws.com"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"bucket"</span><span class="p">:</span><span class="w"> </span><span class="s2">"archive-bucket"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"location"</span><span class="p">:</span><span class="w"> </span><span class="s2">"long-term-storage"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"hash_prefix"</span><span class="p">:</span><span class="w"> </span><span class="s2">"archived_blobs"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"schema_prefix"</span><span class="p">:</span><span class="w"> </span><span class="s2">"archived_arrays"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"subfolding"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">]</span>
 <span class="w">    </span><span class="p">},</span>
-<span class="w">    </span><span class="nt">&quot;raw_data&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="nt">&quot;protocol&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;file&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;location&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/data/acquisition&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;filepath_prefix&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;recordings&quot;</span>
+<span class="w">    </span><span class="nt">"raw_data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">"protocol"</span><span class="p">:</span><span class="w"> </span><span class="s2">"file"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"location"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/data/acquisition"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"filepath_prefix"</span><span class="p">:</span><span class="w"> </span><span class="s2">"recordings"</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
@@ -7524,14 +7524,14 @@ lists both layouts.</p>
 <p>Use named stores in table definitions:</p>
 <div class="highlight"><pre><span></span><code><span class="nd">@schema</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Recording</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    recording_id : uuid</span>
 <span class="s2">    ---</span>
 <span class="s2">    metadata     : &lt;blob@main&gt;          # Fast storage, hash-addressed</span>
 <span class="s2">    raw_file     : &lt;filepath@raw_data&gt;  # Reference existing acquisition file</span>
 <span class="s2">    processed    : &lt;object@main&gt;        # Fast storage, schema-addressed</span>
 <span class="s2">    backup       : &lt;blob@archive&gt;       # Long-term storage</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">    """</span>
 </code></pre></div>
 <h2 id="secret-management">Secret Management<a class="headerlink" href="#secret-management" title="Permanent link">&para;</a></h2>
 <p>Store credentials separately from configuration files using the <code>.secrets/</code> directory.</p>
@@ -7539,7 +7539,7 @@ lists both layouts.</p>
 <div class="highlight"><pre><span></span><code>project/
 ├── datajoint.json              # Non-sensitive configuration
 └── .secrets/                   # Credentials (gitignored)
-    ├── .gitignore              # Ensures secrets aren&#39;t committed
+    ├── .gitignore              # Ensures secrets aren't committed
     ├── database.user
     ├── database.password
     ├── stores.main.access_key
@@ -7578,13 +7578,13 @@ AKIAIOSFODNN7EXAMPLE
 <h3 id="setting-up-secrets">Setting Up Secrets<a class="headerlink" href="#setting-up-secrets" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># Create secrets directory</span>
 mkdir<span class="w"> </span>.secrets
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;*&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>.secrets/.gitignore
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"*"</span><span class="w"> </span>&gt;<span class="w"> </span>.secrets/.gitignore
 
 <span class="c1"># Add credentials (no quotes)</span>
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;analyst&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>.secrets/database.user
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;dbpass123&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>.secrets/database.password
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;AKIAIOSFODNN7EXAMPLE&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>.secrets/stores.main.access_key
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>.secrets/stores.main.secret_key
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"analyst"</span><span class="w"> </span>&gt;<span class="w"> </span>.secrets/database.user
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"dbpass123"</span><span class="w"> </span>&gt;<span class="w"> </span>.secrets/database.password
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"AKIAIOSFODNN7EXAMPLE"</span><span class="w"> </span>&gt;<span class="w"> </span>.secrets/stores.main.access_key
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"</span><span class="w"> </span>&gt;<span class="w"> </span>.secrets/stores.main.secret_key
 
 <span class="c1"># Verify .secrets/ is gitignored</span>
 git<span class="w"> </span>check-ignore<span class="w"> </span>.secrets/database.password<span class="w">  </span><span class="c1"># Should output the path</span>
@@ -7594,10 +7594,10 @@ git<span class="w"> </span>check-ignore<span class="w"> </span>.secrets/database
 <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">datajoint</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dj</span>
 
 <span class="c1"># Create config file</span>
-<span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">save_template</span><span class="p">(</span><span class="s1">&#39;datajoint.json&#39;</span><span class="p">)</span>
+<span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">save_template</span><span class="p">(</span><span class="s1">'datajoint.json'</span><span class="p">)</span>
 
 <span class="c1"># Create config + secrets directory with placeholders</span>
-<span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">save_template</span><span class="p">(</span><span class="s1">&#39;datajoint.json&#39;</span><span class="p">,</span> <span class="n">create_secrets_dir</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">save_template</span><span class="p">(</span><span class="s1">'datajoint.json'</span><span class="p">,</span> <span class="n">create_secrets_dir</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </code></pre></div>
 <h2 id="path-generation">Path Generation<a class="headerlink" href="#path-generation" title="Permanent link">&para;</a></h2>
 <h3 id="hash-addressed-storage">Hash-Addressed Storage<a class="headerlink" href="#hash-addressed-storage" title="Permanent link">&para;</a></h3>
@@ -7625,19 +7625,19 @@ git<span class="w"> </span>check-ignore<span class="w"> </span>.secrets/database
 <div class="highlight"><pre><span></span><code><span class="c1"># Table definition</span>
 <span class="nd">@schema</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Experiment</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    experiment_id : int</span>
 <span class="s2">    ---</span>
 <span class="s2">    data : &lt;blob@main&gt;</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">    """</span>
 
 <span class="c1"># With config:</span>
-<span class="c1"># hash_prefix = &quot;blobs&quot;</span>
-<span class="c1"># location = &quot;/data/store&quot;</span>
+<span class="c1"># hash_prefix = "blobs"</span>
+<span class="c1"># location = "/data/store"</span>
 <span class="c1"># subfolding = [2, 2]</span>
 
 <span class="c1"># Insert</span>
-<span class="n">Experiment</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="s1">&#39;experiment_id&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="n">my_data</span><span class="p">})</span>
+<span class="n">Experiment</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="s1">'experiment_id'</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">'data'</span><span class="p">:</span> <span class="n">my_data</span><span class="p">})</span>
 
 <span class="c1"># Resulting path:</span>
 <span class="c1"># /data/store/blobs/my_schema/ab/cd/abcdef123456...</span>
@@ -7662,7 +7662,7 @@ git<span class="w"> </span>check-ignore<span class="w"> </span>.secrets/database
 </ol>
 <p><strong>Partition pattern format:</strong></p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;partition_pattern&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;subject_id/session_date&quot;</span>
+<span class="w">  </span><span class="nt">"partition_pattern"</span><span class="p">:</span><span class="w"> </span><span class="s2">"subject_id/session_date"</span>
 <span class="p">}</span>
 </code></pre></div>
 <p>This creates paths like:
@@ -7682,22 +7682,22 @@ git<span class="w"> </span>check-ignore<span class="w"> </span>.secrets/database
 <p><strong>Example without partitioning:</strong></p>
 <div class="highlight"><pre><span></span><code><span class="nd">@schema</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Recording</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    subject_id : int</span>
 <span class="s2">    session_id : int</span>
 <span class="s2">    ---</span>
 <span class="s2">    neural_data : &lt;object@main&gt;</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">    """</span>
 
 <span class="c1"># With config:</span>
-<span class="c1"># schema_prefix = &quot;arrays&quot;</span>
-<span class="c1"># location = &quot;/data/store&quot;</span>
+<span class="c1"># schema_prefix = "arrays"</span>
+<span class="c1"># location = "/data/store"</span>
 <span class="c1"># token_length = 8</span>
 
 <span class="n">Recording</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span>
-    <span class="s1">&#39;subject_id&#39;</span><span class="p">:</span> <span class="mi">42</span><span class="p">,</span>
-    <span class="s1">&#39;session_id&#39;</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span>
-    <span class="s1">&#39;neural_data&#39;</span><span class="p">:</span> <span class="n">zarr_array</span>
+    <span class="s1">'subject_id'</span><span class="p">:</span> <span class="mi">42</span><span class="p">,</span>
+    <span class="s1">'session_id'</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span>
+    <span class="s1">'neural_data'</span><span class="p">:</span> <span class="n">zarr_array</span>
 <span class="p">})</span>
 
 <span class="c1"># Resulting path:</span>
@@ -7705,23 +7705,23 @@ git<span class="w"> </span>check-ignore<span class="w"> </span>.secrets/database
 </code></pre></div>
 <p><strong>Example with partitioning:</strong></p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Same table, but with partition configuration:</span>
-<span class="c1"># partition_pattern = &quot;subject_id/session_date&quot;</span>
+<span class="c1"># partition_pattern = "subject_id/session_date"</span>
 
 <span class="nd">@schema</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Recording</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    subject_id : int</span>
 <span class="s2">    session_date : date</span>
 <span class="s2">    session_id : int</span>
 <span class="s2">    ---</span>
 <span class="s2">    neural_data : &lt;object@main&gt;</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">    """</span>
 
 <span class="n">Recording</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span>
-    <span class="s1">&#39;subject_id&#39;</span><span class="p">:</span> <span class="mi">42</span><span class="p">,</span>
-    <span class="s1">&#39;session_date&#39;</span><span class="p">:</span> <span class="s1">&#39;2024-01-15&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;session_id&#39;</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span>
-    <span class="s1">&#39;neural_data&#39;</span><span class="p">:</span> <span class="n">zarr_array</span>
+    <span class="s1">'subject_id'</span><span class="p">:</span> <span class="mi">42</span><span class="p">,</span>
+    <span class="s1">'session_date'</span><span class="p">:</span> <span class="s1">'2024-01-15'</span><span class="p">,</span>
+    <span class="s1">'session_id'</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span>
+    <span class="s1">'neural_data'</span><span class="p">:</span> <span class="n">zarr_array</span>
 <span class="p">})</span>
 
 <span class="c1"># Resulting path:</span>
@@ -7772,50 +7772,50 @@ git<span class="w"> </span>check-ignore<span class="w"> </span>.secrets/database
 </ol>
 <p><strong>Strategies for avoiding collisions:</strong></p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Strategy 1: Include primary key in path</span>
-<span class="n">recording_path</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;subject_</span><span class="si">{</span><span class="n">subject_id</span><span class="si">}</span><span class="s2">/session_</span><span class="si">{</span><span class="n">session_id</span><span class="si">}</span><span class="s2">/data.bin&quot;</span>
+<span class="n">recording_path</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"subject_</span><span class="si">{</span><span class="n">subject_id</span><span class="si">}</span><span class="s2">/session_</span><span class="si">{</span><span class="n">session_id</span><span class="si">}</span><span class="s2">/data.bin"</span>
 
 <span class="c1"># Strategy 2: Use UUIDs</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">uuid</span>
-<span class="n">recording_path</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;recordings/</span><span class="si">{</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">()</span><span class="si">}</span><span class="s2">.nwb&quot;</span>
+<span class="n">recording_path</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"recordings/</span><span class="si">{</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">()</span><span class="si">}</span><span class="s2">.nwb"</span>
 
 <span class="c1"># Strategy 3: Timestamps</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span>
-<span class="n">recording_path</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;data_</span><span class="si">{</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span><span class="si">}</span><span class="s2">.dat&quot;</span>
+<span class="n">recording_path</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"data_</span><span class="si">{</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span><span class="si">}</span><span class="s2">.dat"</span>
 
 <span class="c1"># Strategy 4: Enforce via filepath_prefix</span>
-<span class="c1"># Config: &quot;filepath_prefix&quot;: &quot;recordings&quot;</span>
+<span class="c1"># Config: "filepath_prefix": "recordings"</span>
 <span class="c1"># All paths must start with recordings/, organize within that namespace</span>
 </code></pre></div>
 <p><strong>Reserved sections:</strong></p>
 <p>Filepath storage cannot use paths starting with configured <code>hash_prefix</code> or <code>schema_prefix</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Invalid (default prefixes)</span>
-<span class="n">table</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;file&#39;</span><span class="p">:</span> <span class="s1">&#39;_hash/data.bin&#39;</span><span class="p">})</span>       <span class="c1"># ERROR</span>
-<span class="n">table</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;file&#39;</span><span class="p">:</span> <span class="s1">&#39;_schema/data.zarr&#39;</span><span class="p">})</span>    <span class="c1"># ERROR</span>
+<span class="n">table</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="s1">'id'</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">'file'</span><span class="p">:</span> <span class="s1">'_hash/data.bin'</span><span class="p">})</span>       <span class="c1"># ERROR</span>
+<span class="n">table</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="s1">'id'</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">'file'</span><span class="p">:</span> <span class="s1">'_schema/data.zarr'</span><span class="p">})</span>    <span class="c1"># ERROR</span>
 
-<span class="c1"># Invalid (custom prefixes: hash_prefix=&quot;blobs&quot;)</span>
-<span class="n">table</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="s1">&#39;file&#39;</span><span class="p">:</span> <span class="s1">&#39;blobs/data.bin&#39;</span><span class="p">})</span>       <span class="c1"># ERROR</span>
+<span class="c1"># Invalid (custom prefixes: hash_prefix="blobs")</span>
+<span class="n">table</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="s1">'id'</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="s1">'file'</span><span class="p">:</span> <span class="s1">'blobs/data.bin'</span><span class="p">})</span>       <span class="c1"># ERROR</span>
 
 <span class="c1"># Valid</span>
-<span class="n">table</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span> <span class="s1">&#39;file&#39;</span><span class="p">:</span> <span class="s1">&#39;raw/subject01/rec.bin&#39;</span><span class="p">})</span>  <span class="c1"># OK</span>
+<span class="n">table</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="s1">'id'</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span> <span class="s1">'file'</span><span class="p">:</span> <span class="s1">'raw/subject01/rec.bin'</span><span class="p">})</span>  <span class="c1"># OK</span>
 </code></pre></div>
 <p><strong>Example:</strong></p>
 <div class="highlight"><pre><span></span><code><span class="nd">@schema</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">RawRecording</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    recording_id : uuid</span>
 <span class="s2">    ---</span>
 <span class="s2">    acquisition_file : &lt;filepath@acquisition&gt;</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">    """</span>
 
 <span class="c1"># With config:</span>
-<span class="c1"># filepath_prefix = &quot;imported&quot;</span>
-<span class="c1"># location = &quot;/data/acquisition&quot;</span>
+<span class="c1"># filepath_prefix = "imported"</span>
+<span class="c1"># location = "/data/acquisition"</span>
 
 <span class="c1"># File already exists at: /data/acquisition/imported/subject01/session001/data.nwb</span>
 
 <span class="n">RawRecording</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span>
-    <span class="s1">&#39;recording_id&#39;</span><span class="p">:</span> <span class="n">my_uuid</span><span class="p">,</span>
-    <span class="s1">&#39;acquisition_file&#39;</span><span class="p">:</span> <span class="s1">&#39;imported/subject01/session001/data.nwb&#39;</span>
+    <span class="s1">'recording_id'</span><span class="p">:</span> <span class="n">my_uuid</span><span class="p">,</span>
+    <span class="s1">'acquisition_file'</span><span class="p">:</span> <span class="s1">'imported/subject01/session001/data.nwb'</span>
 <span class="p">})</span>
 
 <span class="c1"># DataJoint validates file exists, stores reference</span>
@@ -7879,46 +7879,46 @@ git<span class="w"> </span>check-ignore<span class="w"> </span>.secrets/database
 <h2 id="protocol-specific-configuration">Protocol-Specific Configuration<a class="headerlink" href="#protocol-specific-configuration" title="Permanent link">&para;</a></h2>
 <h3 id="file-protocol">File Protocol<a class="headerlink" href="#file-protocol" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;protocol&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;file&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;location&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/data/my-project&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;hash_prefix&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;blobs&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;schema_prefix&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;arrays&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;filepath_prefix&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span>
+<span class="w">  </span><span class="nt">"protocol"</span><span class="p">:</span><span class="w"> </span><span class="s2">"file"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"location"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/data/my-project"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"hash_prefix"</span><span class="p">:</span><span class="w"> </span><span class="s2">"blobs"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"schema_prefix"</span><span class="p">:</span><span class="w"> </span><span class="s2">"arrays"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"filepath_prefix"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span>
 <span class="p">}</span>
 </code></pre></div>
 <p><strong>Required:</strong> <code>protocol</code>, <code>location</code></p>
 <h3 id="s3-protocol">S3 Protocol<a class="headerlink" href="#s3-protocol" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;protocol&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;s3&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;endpoint&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;s3.amazonaws.com&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;bucket&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;my-bucket&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;location&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;my-project/production&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;secure&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;hash_prefix&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;blobs&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;schema_prefix&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;arrays&quot;</span>
+<span class="w">  </span><span class="nt">"protocol"</span><span class="p">:</span><span class="w"> </span><span class="s2">"s3"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"endpoint"</span><span class="p">:</span><span class="w"> </span><span class="s2">"s3.amazonaws.com"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"bucket"</span><span class="p">:</span><span class="w"> </span><span class="s2">"my-bucket"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"location"</span><span class="p">:</span><span class="w"> </span><span class="s2">"my-project/production"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"secure"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"hash_prefix"</span><span class="p">:</span><span class="w"> </span><span class="s2">"blobs"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"schema_prefix"</span><span class="p">:</span><span class="w"> </span><span class="s2">"arrays"</span>
 <span class="p">}</span>
 </code></pre></div>
 <p><strong>Required:</strong> <code>protocol</code>, <code>endpoint</code>, <code>bucket</code>, <code>location</code>, <code>access_key</code>, <code>secret_key</code></p>
 <p><strong>Credentials:</strong> Store in <code>.secrets/stores.&lt;name&gt;.access_key</code> and <code>.secrets/stores.&lt;name&gt;.secret_key</code></p>
 <h3 id="gcs-protocol">GCS Protocol<a class="headerlink" href="#gcs-protocol" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;protocol&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;gcs&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;bucket&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;my-gcs-bucket&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;location&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;my-project&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;project&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;my-gcp-project&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;hash_prefix&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;blobs&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;schema_prefix&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;arrays&quot;</span>
+<span class="w">  </span><span class="nt">"protocol"</span><span class="p">:</span><span class="w"> </span><span class="s2">"gcs"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"bucket"</span><span class="p">:</span><span class="w"> </span><span class="s2">"my-gcs-bucket"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"location"</span><span class="p">:</span><span class="w"> </span><span class="s2">"my-project"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"project"</span><span class="p">:</span><span class="w"> </span><span class="s2">"my-gcp-project"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"hash_prefix"</span><span class="p">:</span><span class="w"> </span><span class="s2">"blobs"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"schema_prefix"</span><span class="p">:</span><span class="w"> </span><span class="s2">"arrays"</span>
 <span class="p">}</span>
 </code></pre></div>
 <p><strong>Required:</strong> <code>protocol</code>, <code>bucket</code>, <code>location</code>, <code>token</code></p>
 <p><strong>Credentials:</strong> Store in <code>.secrets/stores.&lt;name&gt;.token</code> (path to service account JSON)</p>
 <h3 id="azure-protocol">Azure Protocol<a class="headerlink" href="#azure-protocol" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;protocol&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;azure&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;container&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;my-container&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;location&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;my-project&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;hash_prefix&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;blobs&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;schema_prefix&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;arrays&quot;</span>
+<span class="w">  </span><span class="nt">"protocol"</span><span class="p">:</span><span class="w"> </span><span class="s2">"azure"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"container"</span><span class="p">:</span><span class="w"> </span><span class="s2">"my-container"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"location"</span><span class="p">:</span><span class="w"> </span><span class="s2">"my-project"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"hash_prefix"</span><span class="p">:</span><span class="w"> </span><span class="s2">"blobs"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"schema_prefix"</span><span class="p">:</span><span class="w"> </span><span class="s2">"arrays"</span>
 <span class="p">}</span>
 </code></pre></div>
 <p><strong>Required:</strong> <code>protocol</code>, <code>container</code>, <code>location</code>, <code>account_name</code>, <code>account_key</code></p>
@@ -7927,14 +7927,14 @@ git<span class="w"> </span>check-ignore<span class="w"> </span>.secrets/database
 <p>DataJoint 0.14.x used separate configuration systems:</p>
 <h3 id="legacy-external-storage-hash-addressed-integrated">Legacy "External" Storage (Hash-addressed Integrated)<a class="headerlink" href="#legacy-external-storage-hash-addressed-integrated" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># 0.14.x config</span>
-<span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;stores&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s1">&#39;my_store&#39;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s1">&#39;protocol&#39;</span><span class="p">:</span> <span class="s1">&#39;s3&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;endpoint&#39;</span><span class="p">:</span> <span class="s1">&#39;s3.amazonaws.com&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;bucket&#39;</span><span class="p">:</span> <span class="s1">&#39;my-bucket&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;location&#39;</span><span class="p">:</span> <span class="s1">&#39;my-project&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;access_key&#39;</span><span class="p">:</span> <span class="s1">&#39;XXX&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;secret_key&#39;</span><span class="p">:</span> <span class="s1">&#39;YYY&#39;</span>
+<span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">'stores'</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">'my_store'</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s1">'protocol'</span><span class="p">:</span> <span class="s1">'s3'</span><span class="p">,</span>
+        <span class="s1">'endpoint'</span><span class="p">:</span> <span class="s1">'s3.amazonaws.com'</span><span class="p">,</span>
+        <span class="s1">'bucket'</span><span class="p">:</span> <span class="s1">'my-bucket'</span><span class="p">,</span>
+        <span class="s1">'location'</span><span class="p">:</span> <span class="s1">'my-project'</span><span class="p">,</span>
+        <span class="s1">'access_key'</span><span class="p">:</span> <span class="s1">'XXX'</span><span class="p">,</span>
+        <span class="s1">'secret_key'</span><span class="p">:</span> <span class="s1">'YYY'</span>
     <span class="p">}</span>
 <span class="p">}</span>
 
@@ -7943,14 +7943,14 @@ git<span class="w"> </span>check-ignore<span class="w"> </span>.secrets/database
 </code></pre></div>
 <h3 id="20-equivalent">2.0 Equivalent<a class="headerlink" href="#20-equivalent" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;stores&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;default&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;my_store&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;my_store&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="nt">&quot;protocol&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;s3&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;endpoint&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;s3.amazonaws.com&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;bucket&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;my-bucket&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;location&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;my-project&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;hash_prefix&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;_hash&quot;</span>
+<span class="w">  </span><span class="nt">"stores"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"default"</span><span class="p">:</span><span class="w"> </span><span class="s2">"my_store"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"my_store"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">"protocol"</span><span class="p">:</span><span class="w"> </span><span class="s2">"s3"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"endpoint"</span><span class="p">:</span><span class="w"> </span><span class="s2">"s3.amazonaws.com"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"bucket"</span><span class="p">:</span><span class="w"> </span><span class="s2">"my-bucket"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"location"</span><span class="p">:</span><span class="w"> </span><span class="s2">"my-project"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"hash_prefix"</span><span class="p">:</span><span class="w"> </span><span class="s2">"_hash"</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
@@ -7970,31 +7970,31 @@ git<span class="w"> </span>check-ignore<span class="w"> </span>.secrets/database
 
 <span class="c1"># Check default store</span>
 <span class="n">spec</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get_store_spec</span><span class="p">()</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Default store: </span><span class="si">{</span><span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;stores&#39;</span><span class="p">][</span><span class="s1">&#39;default&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Protocol: </span><span class="si">{</span><span class="n">spec</span><span class="p">[</span><span class="s1">&#39;protocol&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Location: </span><span class="si">{</span><span class="n">spec</span><span class="p">[</span><span class="s1">&#39;location&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Hash prefix: </span><span class="si">{</span><span class="n">spec</span><span class="p">[</span><span class="s1">&#39;hash_prefix&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Schema prefix: </span><span class="si">{</span><span class="n">spec</span><span class="p">[</span><span class="s1">&#39;schema_prefix&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Filepath prefix: </span><span class="si">{</span><span class="n">spec</span><span class="p">[</span><span class="s1">&#39;filepath_prefix&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Default store: </span><span class="si">{</span><span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">'stores'</span><span class="p">][</span><span class="s1">'default'</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Protocol: </span><span class="si">{</span><span class="n">spec</span><span class="p">[</span><span class="s1">'protocol'</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Location: </span><span class="si">{</span><span class="n">spec</span><span class="p">[</span><span class="s1">'location'</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Hash prefix: </span><span class="si">{</span><span class="n">spec</span><span class="p">[</span><span class="s1">'hash_prefix'</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Schema prefix: </span><span class="si">{</span><span class="n">spec</span><span class="p">[</span><span class="s1">'schema_prefix'</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Filepath prefix: </span><span class="si">{</span><span class="n">spec</span><span class="p">[</span><span class="s1">'filepath_prefix'</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
 <span class="c1"># Check named store</span>
-<span class="n">spec</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get_store_spec</span><span class="p">(</span><span class="s1">&#39;archive&#39;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Archive location: </span><span class="si">{</span><span class="n">spec</span><span class="p">[</span><span class="s1">&#39;location&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="n">spec</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get_store_spec</span><span class="p">(</span><span class="s1">'archive'</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Archive location: </span><span class="si">{</span><span class="n">spec</span><span class="p">[</span><span class="s1">'location'</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
 <span class="c1"># List all stores</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Configured stores: </span><span class="si">{</span><span class="nb">list</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;stores&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Configured stores: </span><span class="si">{</span><span class="nb">list</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">'stores'</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 </code></pre></div>
 <h3 id="test-storage-access">Test Storage Access<a class="headerlink" href="#test-storage-access" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">datajoint.hash_registry</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_store_backend</span>
 
 <span class="c1"># Test backend connectivity</span>
-<span class="n">backend</span> <span class="o">=</span> <span class="n">get_store_backend</span><span class="p">(</span><span class="s1">&#39;main&#39;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Backend type: </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">backend</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="n">backend</span> <span class="o">=</span> <span class="n">get_store_backend</span><span class="p">(</span><span class="s1">'main'</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Backend type: </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">backend</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
 <span class="c1"># For file protocol, check paths exist</span>
-<span class="k">if</span> <span class="n">spec</span><span class="p">[</span><span class="s1">&#39;protocol&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;file&#39;</span><span class="p">:</span>
+<span class="k">if</span> <span class="n">spec</span><span class="p">[</span><span class="s1">'protocol'</span><span class="p">]</span> <span class="o">==</span> <span class="s1">'file'</span><span class="p">:</span>
     <span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
-    <span class="k">assert</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">spec</span><span class="p">[</span><span class="s1">&#39;location&#39;</span><span class="p">]),</span> <span class="sa">f</span><span class="s2">&quot;Location not found: </span><span class="si">{</span><span class="n">spec</span><span class="p">[</span><span class="s1">&#39;location&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="k">assert</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">spec</span><span class="p">[</span><span class="s1">'location'</span><span class="p">]),</span> <span class="sa">f</span><span class="s2">"Location not found: </span><span class="si">{</span><span class="n">spec</span><span class="p">[</span><span class="s1">'location'</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span>
 </code></pre></div>
 <h2 id="best-practices">Best Practices<a class="headerlink" href="#best-practices" title="Permanent link">&para;</a></h2>
 <h3 id="store-organization">Store Organization<a class="headerlink" href="#store-organization" title="Permanent link">&para;</a></h3>

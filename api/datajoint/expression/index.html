@@ -3671,7 +3671,7 @@
   <span class="md-ellipsis">
     
   
-    Migrate to 2.0
+    Migrate to 2.x
   
 
     
@@ -7724,7 +7724,7 @@ to existing entities without changing which entities are in the result.</p>
     <p>Session determines Trial (<code>session_id</code> is in Trial's PK), but Trial does NOT
 determine Session (<code>trial_num</code> not in Session).</p>
 <p>Valid - extend trials with session info:</p>
-    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">Trial</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">Session</span><span class="p">)</span>  <span class="c1"># Adds &#39;date&#39; from Session to each Trial</span>
+    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">Trial</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">Session</span><span class="p">)</span>  <span class="c1"># Adds 'date' from Session to each Trial</span>
 </code></pre></div>
     <p>Invalid - Session cannot extend to Trial:</p>
     <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">Session</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">Trial</span><span class="p">)</span>  <span class="c1"># Error: trial_num not in Session</span>

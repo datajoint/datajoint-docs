@@ -3671,7 +3671,7 @@
   <span class="md-ellipsis">
     
   
-    Migrate to 2.0
+    Migrate to 2.x
   
 
     
@@ -7564,7 +7564,7 @@ name : varchar(100)
 nickname = NULL : varchar(100)
 
 # Required with default value
-status = &quot;active&quot; : varchar(20)
+status = "active" : varchar(20)
 </code></pre></div>
 <p><strong>Auto-increment policy:</strong> DataJoint discourages <code>AUTO_INCREMENT</code> / <code>SERIAL</code> because:
 - Breaks reproducibility (IDs depend on insertion order)
@@ -7577,8 +7577,8 @@ status = &quot;active&quot; : varchar(20)
 definitions. This ensures consistent behavior across all tables and simplifies portability.</p>
 <p><strong>Configuration</strong> (in <code>dj.config</code> or <code>datajoint.json</code>):
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;database.charset&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;utf8mb4&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;database.collation&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;utf8mb4_bin&quot;</span>
+<span class="w">    </span><span class="nt">"database.charset"</span><span class="p">:</span><span class="w"> </span><span class="s2">"utf8mb4"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"database.collation"</span><span class="p">:</span><span class="w"> </span><span class="s2">"utf8mb4_bin"</span>
 <span class="p">}</span>
 </code></pre></div></p>
 <p><strong>Defaults:</strong></p>
@@ -7623,20 +7623,20 @@ composable and can be built-in or user-defined.</p>
 <h3 id="codec-base-class">Codec Base Class<a class="headerlink" href="#codec-base-class" title="Permanent link">&para;</a></h3>
 <p>Codecs inherit from <code>dj.Codec</code> and auto-register when their class is defined. See the <a href="../codec-api/">Codec API Specification</a> for complete details on creating custom codecs.</p>
 <div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">GraphCodec</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Codec</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Auto-registered as &lt;graph&gt;.&quot;&quot;&quot;</span>
-    <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;graph&quot;</span>
+<span class="w">    </span><span class="sd">"""Auto-registered as &lt;graph&gt;."""</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="s2">"graph"</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">get_dtype</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">is_store</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="k">return</span> <span class="s2">&quot;&lt;blob&gt;&quot;</span>
+        <span class="k">return</span> <span class="s2">"&lt;blob&gt;"</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">encode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">graph</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">store_name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;nodes&#39;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="n">graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">()),</span> <span class="s1">&#39;edges&#39;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="n">graph</span><span class="o">.</span><span class="n">edges</span><span class="p">())}</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s1">'nodes'</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="n">graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">()),</span> <span class="s1">'edges'</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="n">graph</span><span class="o">.</span><span class="n">edges</span><span class="p">())}</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">decode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stored</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="kn">import</span><span class="w"> </span><span class="nn">networkx</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">nx</span>
         <span class="n">G</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">()</span>
-        <span class="n">G</span><span class="o">.</span><span class="n">add_nodes_from</span><span class="p">(</span><span class="n">stored</span><span class="p">[</span><span class="s1">&#39;nodes&#39;</span><span class="p">])</span>
-        <span class="n">G</span><span class="o">.</span><span class="n">add_edges_from</span><span class="p">(</span><span class="n">stored</span><span class="p">[</span><span class="s1">&#39;edges&#39;</span><span class="p">])</span>
+        <span class="n">G</span><span class="o">.</span><span class="n">add_nodes_from</span><span class="p">(</span><span class="n">stored</span><span class="p">[</span><span class="s1">'nodes'</span><span class="p">])</span>
+        <span class="n">G</span><span class="o">.</span><span class="n">add_edges_from</span><span class="p">(</span><span class="n">stored</span><span class="p">[</span><span class="s1">'edges'</span><span class="p">])</span>
         <span class="k">return</span> <span class="n">G</span>
 </code></pre></div>
 <h3 id="codec-resolution-and-chaining">Codec Resolution and Chaining<a class="headerlink" href="#codec-resolution-and-chaining" title="Permanent link">&para;</a></h3>
@@ -7733,17 +7733,17 @@ returns the appropriate dtype based on storage mode:</p>
 <li><strong>dtype</strong>: <code>json</code> (stores path, store name, metadata)</li>
 </ul>
 <div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">Analysis</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Computed</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    -&gt; Recording</span>
 <span class="s2">    ---</span>
 <span class="s2">    results : &lt;object@&gt;         # default store</span>
 <span class="s2">    archive : &lt;object@cold&gt;     # specific store</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">    """</span>
 </code></pre></div>
 <h4 id="implementation">Implementation<a class="headerlink" href="#implementation" title="Permanent link">&para;</a></h4>
 <div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">ObjectCodec</span><span class="p">(</span><span class="n">SchemaCodec</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Schema-addressed OAS storage. Store only.&quot;&quot;&quot;</span>
-    <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;object&quot;</span>
+<span class="w">    </span><span class="sd">"""Schema-addressed OAS storage. Store only."""</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="s2">"object"</span>
 
     <span class="c1"># get_dtype inherited from SchemaCodec</span>
 
@@ -7752,10 +7752,10 @@ returns the appropriate dtype based on storage mode:</p>
         <span class="n">path</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_build_path</span><span class="p">(</span><span class="n">schema</span><span class="p">,</span> <span class="n">table</span><span class="p">,</span> <span class="n">field</span><span class="p">,</span> <span class="n">pk</span><span class="p">)</span>
         <span class="n">backend</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_backend</span><span class="p">(</span><span class="n">store_name</span><span class="p">)</span>
         <span class="n">backend</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
-        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;path&quot;</span><span class="p">:</span> <span class="n">path</span><span class="p">,</span> <span class="s2">&quot;store&quot;</span><span class="p">:</span> <span class="n">store_name</span><span class="p">,</span> <span class="o">...</span><span class="p">}</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">"path"</span><span class="p">:</span> <span class="n">path</span><span class="p">,</span> <span class="s2">"store"</span><span class="p">:</span> <span class="n">store_name</span><span class="p">,</span> <span class="o">...</span><span class="p">}</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">decode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stored</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ObjectRef</span><span class="p">:</span>
-        <span class="n">backend</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_backend</span><span class="p">(</span><span class="n">stored</span><span class="p">[</span><span class="s2">&quot;store&quot;</span><span class="p">])</span>
+        <span class="n">backend</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_backend</span><span class="p">(</span><span class="n">stored</span><span class="p">[</span><span class="s2">"store"</span><span class="p">])</span>
         <span class="k">return</span> <span class="n">ObjectRef</span><span class="o">.</span><span class="n">from_json</span><span class="p">(</span><span class="n">stored</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="n">backend</span><span class="p">)</span>
 </code></pre></div>
 <h3 id="hash-hashstore-hash-addressed-storage"><code>&lt;hash@&gt;</code> / <code>&lt;hash@store&gt;</code> - Hash-Addressed Storage<a class="headerlink" href="#hash-hashstore-hash-addressed-storage" title="Permanent link">&para;</a></h3>
@@ -7785,37 +7785,37 @@ see <a href="../object-store-configuration/#section-prefixes">Object Store Confi
 Both sections embed the schema name in every path.</p>
 <h4 id="implementation_1">Implementation<a class="headerlink" href="#implementation_1" title="Permanent link">&para;</a></h4>
 <div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">HashCodec</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Codec</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Hash-addressed storage. Store only.&quot;&quot;&quot;</span>
-    <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;hash&quot;</span>
+<span class="w">    </span><span class="sd">"""Hash-addressed storage. Store only."""</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="s2">"hash"</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">get_dtype</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">is_store</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">is_store</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">DataJointError</span><span class="p">(</span><span class="s2">&quot;&lt;hash&gt; requires @ (store only)&quot;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="s2">&quot;json&quot;</span>
+            <span class="k">raise</span> <span class="n">DataJointError</span><span class="p">(</span><span class="s2">"&lt;hash&gt; requires @ (store only)"</span><span class="p">)</span>
+        <span class="k">return</span> <span class="s2">"json"</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">encode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">store_name</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Store content, return metadata as JSON.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Store content, return metadata as JSON."""</span>
         <span class="n">hash_id</span> <span class="o">=</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">md5</span><span class="p">(</span><span class="n">data</span><span class="p">)</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()</span>  <span class="c1"># 32-char hex</span>
-        <span class="n">store</span> <span class="o">=</span> <span class="n">get_store</span><span class="p">(</span><span class="n">store_name</span> <span class="ow">or</span> <span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;stores&#39;</span><span class="p">][</span><span class="s1">&#39;default&#39;</span><span class="p">])</span>
-        <span class="n">path</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;_hash/</span><span class="si">{</span><span class="n">hash_id</span><span class="p">[:</span><span class="mi">2</span><span class="p">]</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">hash_id</span><span class="p">[</span><span class="mi">2</span><span class="p">:</span><span class="mi">4</span><span class="p">]</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">hash_id</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="n">store</span> <span class="o">=</span> <span class="n">get_store</span><span class="p">(</span><span class="n">store_name</span> <span class="ow">or</span> <span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">'stores'</span><span class="p">][</span><span class="s1">'default'</span><span class="p">])</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"_hash/</span><span class="si">{</span><span class="n">hash_id</span><span class="p">[:</span><span class="mi">2</span><span class="p">]</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">hash_id</span><span class="p">[</span><span class="mi">2</span><span class="p">:</span><span class="mi">4</span><span class="p">]</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">hash_id</span><span class="si">}</span><span class="s2">"</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="n">store</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
             <span class="n">store</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
 
         <span class="c1"># Metadata stored in JSON column (no separate registry)</span>
-        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;hash&quot;</span><span class="p">:</span> <span class="n">hash_id</span><span class="p">,</span> <span class="s2">&quot;store&quot;</span><span class="p">:</span> <span class="n">store_name</span><span class="p">,</span> <span class="s2">&quot;size&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)}</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">"hash"</span><span class="p">:</span> <span class="n">hash_id</span><span class="p">,</span> <span class="s2">"store"</span><span class="p">:</span> <span class="n">store_name</span><span class="p">,</span> <span class="s2">"size"</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)}</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">decode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stored</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Retrieve content by hash.&quot;&quot;&quot;</span>
-        <span class="n">store</span> <span class="o">=</span> <span class="n">get_store</span><span class="p">(</span><span class="n">stored</span><span class="p">[</span><span class="s2">&quot;store&quot;</span><span class="p">])</span>
-        <span class="n">path</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;_hash/</span><span class="si">{</span><span class="n">stored</span><span class="p">[</span><span class="s1">&#39;hash&#39;</span><span class="p">][:</span><span class="mi">2</span><span class="p">]</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">stored</span><span class="p">[</span><span class="s1">&#39;hash&#39;</span><span class="p">][</span><span class="mi">2</span><span class="p">:</span><span class="mi">4</span><span class="p">]</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">stored</span><span class="p">[</span><span class="s1">&#39;hash&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="w">        </span><span class="sd">"""Retrieve content by hash."""</span>
+        <span class="n">store</span> <span class="o">=</span> <span class="n">get_store</span><span class="p">(</span><span class="n">stored</span><span class="p">[</span><span class="s2">"store"</span><span class="p">])</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"_hash/</span><span class="si">{</span><span class="n">stored</span><span class="p">[</span><span class="s1">'hash'</span><span class="p">][:</span><span class="mi">2</span><span class="p">]</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">stored</span><span class="p">[</span><span class="s1">'hash'</span><span class="p">][</span><span class="mi">2</span><span class="p">:</span><span class="mi">4</span><span class="p">]</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">stored</span><span class="p">[</span><span class="s1">'hash'</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span>
         <span class="k">return</span> <span class="n">store</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
 </code></pre></div>
 <h4 id="database-column">Database Column<a class="headerlink" href="#database-column" title="Permanent link">&para;</a></h4>
 <p>The <code>&lt;hash@&gt;</code> type stores JSON metadata:</p>
 <div class="highlight"><pre><span></span><code><span class="c1">-- content column (MySQL)</span>
 <span class="n">features</span><span class="w"> </span><span class="n">JSON</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span>
-<span class="c1">-- Contains: {&quot;hash&quot;: &quot;abc123...&quot;, &quot;store&quot;: &quot;main&quot;, &quot;size&quot;: 12345}</span>
+<span class="c1">-- Contains: {"hash": "abc123...", "store": "main", "size": 12345}</span>
 
 <span class="c1">-- content column (PostgreSQL)</span>
 <span class="n">features</span><span class="w"> </span><span class="n">JSONB</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span>
@@ -7834,22 +7834,22 @@ Both sections embed the schema name in every path.</p>
 between environments (dev → prod, cloud → local) by changing store configuration without
 updating data.</p>
 <div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">RawData</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    session_id : int32</span>
 <span class="s2">    ---</span>
-<span class="s2">    recording : &lt;filepath@main&gt;      # relative path within &#39;main&#39; store</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">    recording : &lt;filepath@main&gt;      # relative path within 'main' store</span>
+<span class="s2">    """</span>
 
 <span class="c1"># Insert - user provides relative path within the store</span>
 <span class="n">table</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span>
-    <span class="s1">&#39;session_id&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
-    <span class="s1">&#39;recording&#39;</span><span class="p">:</span> <span class="s1">&#39;experiment_001/data.nwb&#39;</span>  <span class="c1"># relative to main store root</span>
+    <span class="s1">'session_id'</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s1">'recording'</span><span class="p">:</span> <span class="s1">'experiment_001/data.nwb'</span>  <span class="c1"># relative to main store root</span>
 <span class="p">})</span>
 
 <span class="c1"># Fetch - returns ObjectRef (lazy)</span>
-<span class="n">row</span> <span class="o">=</span> <span class="p">(</span><span class="n">table</span> <span class="o">&amp;</span> <span class="s1">&#39;session_id=1&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">fetch1</span><span class="p">()</span>
-<span class="n">ref</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;recording&#39;</span><span class="p">]</span>           <span class="c1"># ObjectRef</span>
-<span class="n">ref</span><span class="o">.</span><span class="n">download</span><span class="p">(</span><span class="s1">&#39;/local/path&#39;</span><span class="p">)</span>      <span class="c1"># explicit download</span>
+<span class="n">row</span> <span class="o">=</span> <span class="p">(</span><span class="n">table</span> <span class="o">&amp;</span> <span class="s1">'session_id=1'</span><span class="p">)</span><span class="o">.</span><span class="n">fetch1</span><span class="p">()</span>
+<span class="n">ref</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s1">'recording'</span><span class="p">]</span>           <span class="c1"># ObjectRef</span>
+<span class="n">ref</span><span class="o">.</span><span class="n">download</span><span class="p">(</span><span class="s1">'/local/path'</span><span class="p">)</span>      <span class="c1"># explicit download</span>
 <span class="n">ref</span><span class="o">.</span><span class="n">open</span><span class="p">()</span>                       <span class="c1"># fsspec streaming access</span>
 </code></pre></div>
 <h4 id="when-to-use-filepathstore-vs-varchar">When to Use <code>&lt;filepath@store&gt;</code> vs <code>varchar</code><a class="headerlink" href="#when-to-use-filepathstore-vs-varchar" title="Permanent link">&para;</a></h4>
@@ -7887,27 +7887,27 @@ updating data.</p>
 just use <code>varchar</code>. A string is simpler and more transparent.</p>
 <h4 id="implementation_2">Implementation<a class="headerlink" href="#implementation_2" title="Permanent link">&para;</a></h4>
 <div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">FilepathCodec</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Codec</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Store-relative file references. External only.&quot;&quot;&quot;</span>
-    <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;filepath&quot;</span>
+<span class="w">    </span><span class="sd">"""Store-relative file references. External only."""</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="s2">"filepath"</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">get_dtype</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">is_store</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">is_store</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">DataJointError</span><span class="p">(</span><span class="s2">&quot;&lt;filepath&gt; requires @store&quot;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="s2">&quot;json&quot;</span>
+            <span class="k">raise</span> <span class="n">DataJointError</span><span class="p">(</span><span class="s2">"&lt;filepath&gt; requires @store"</span><span class="p">)</span>
+        <span class="k">return</span> <span class="s2">"json"</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">encode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">relative_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">store_name</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Register reference to file in store.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Register reference to file in store."""</span>
         <span class="n">store</span> <span class="o">=</span> <span class="n">get_store</span><span class="p">(</span><span class="n">store_name</span><span class="p">)</span>  <span class="c1"># store_name required for filepath</span>
-        <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;path&#39;</span><span class="p">:</span> <span class="n">relative_path</span><span class="p">,</span> <span class="s1">&#39;store&#39;</span><span class="p">:</span> <span class="n">store_name</span><span class="p">}</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s1">'path'</span><span class="p">:</span> <span class="n">relative_path</span><span class="p">,</span> <span class="s1">'store'</span><span class="p">:</span> <span class="n">store_name</span><span class="p">}</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">decode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stored</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ObjectRef</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return ObjectRef for lazy access.&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">ObjectRef</span><span class="p">(</span><span class="n">store</span><span class="o">=</span><span class="n">get_store</span><span class="p">(</span><span class="n">stored</span><span class="p">[</span><span class="s1">&#39;store&#39;</span><span class="p">]),</span> <span class="n">path</span><span class="o">=</span><span class="n">stored</span><span class="p">[</span><span class="s1">&#39;path&#39;</span><span class="p">])</span>
+<span class="w">        </span><span class="sd">"""Return ObjectRef for lazy access."""</span>
+        <span class="k">return</span> <span class="n">ObjectRef</span><span class="p">(</span><span class="n">store</span><span class="o">=</span><span class="n">get_store</span><span class="p">(</span><span class="n">stored</span><span class="p">[</span><span class="s1">'store'</span><span class="p">]),</span> <span class="n">path</span><span class="o">=</span><span class="n">stored</span><span class="p">[</span><span class="s1">'path'</span><span class="p">])</span>
 </code></pre></div>
 <h4 id="database-column_1">Database Column<a class="headerlink" href="#database-column_1" title="Permanent link">&para;</a></h4>
 <div class="highlight"><pre><span></span><code><span class="c1">-- filepath column (MySQL)</span>
 <span class="n">recording</span><span class="w"> </span><span class="n">JSON</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span>
-<span class="c1">-- Contains: {&quot;path&quot;: &quot;experiment_001/data.nwb&quot;, &quot;store&quot;: &quot;main&quot;, &quot;checksum&quot;: &quot;...&quot;, &quot;size&quot;: ...}</span>
+<span class="c1">-- Contains: {"path": "experiment_001/data.nwb", "store": "main", "checksum": "...", "size": ...}</span>
 
 <span class="c1">-- filepath column (PostgreSQL)</span>
 <span class="n">recording</span><span class="w"> </span><span class="n">JSONB</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span>
@@ -8004,11 +8004,11 @@ just use <code>varchar</code>. A string is simpler and more transparent.</p>
 <li><strong><code>&lt;blob@store&gt;</code></strong>: Stored in specific named store</li>
 </ul>
 <div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">BlobCodec</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Codec</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Serialized Python objects. Supports internal and external.&quot;&quot;&quot;</span>
-    <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;blob&quot;</span>
+<span class="w">    </span><span class="sd">"""Serialized Python objects. Supports internal and external."""</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="s2">"blob"</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">get_dtype</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">is_store</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="k">return</span> <span class="s2">&quot;&lt;hash&gt;&quot;</span> <span class="k">if</span> <span class="n">is_store</span> <span class="k">else</span> <span class="s2">&quot;bytes&quot;</span>
+        <span class="k">return</span> <span class="s2">"&lt;hash&gt;"</span> <span class="k">if</span> <span class="n">is_store</span> <span class="k">else</span> <span class="s2">"bytes"</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">encode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">store_name</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
         <span class="kn">from</span><span class="w"> </span><span class="nn">.</span><span class="w"> </span><span class="kn">import</span> <span class="n">blob</span>
@@ -8020,13 +8020,13 @@ just use <code>varchar</code>. A string is simpler and more transparent.</p>
 </code></pre></div>
 <p>Usage:
 <div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">SessionAnalysis</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Computed</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    -&gt; Session</span>
 <span class="s2">    ---</span>
 <span class="s2">    small_result : &lt;blob&gt;          # in-table (in database)</span>
 <span class="s2">    large_result : &lt;blob@&gt;         # in-store (default store)</span>
 <span class="s2">    archive_result : &lt;blob@cold&gt;   # in-store (specific store)</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">    """</span>
 </code></pre></div></p>
 <h3 id="attach-attach-file-attachments"><code>&lt;attach&gt;</code> / <code>&lt;attach@&gt;</code> - File Attachments<a class="headerlink" href="#attach-attach-file-attachments" title="Permanent link">&para;</a></h3>
 <p><strong>Supports both in-table and in-store storage.</strong></p>
@@ -8037,32 +8037,32 @@ just use <code>varchar</code>. A string is simpler and more transparent.</p>
 <li><strong><code>&lt;attach@store&gt;</code></strong>: Stored in specific named store</li>
 </ul>
 <div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">AttachCodec</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Codec</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;File attachment with filename. Supports in-table and in-store.&quot;&quot;&quot;</span>
-    <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;attach&quot;</span>
+<span class="w">    </span><span class="sd">"""File attachment with filename. Supports in-table and in-store."""</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="s2">"attach"</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">get_dtype</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">is_store</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="k">return</span> <span class="s2">&quot;&lt;hash&gt;&quot;</span> <span class="k">if</span> <span class="n">is_store</span> <span class="k">else</span> <span class="s2">&quot;bytes&quot;</span>
+        <span class="k">return</span> <span class="s2">"&lt;hash&gt;"</span> <span class="k">if</span> <span class="n">is_store</span> <span class="k">else</span> <span class="s2">"bytes"</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">encode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filepath</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">store_name</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
         <span class="n">path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">filepath</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">path</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">encode</span><span class="p">()</span> <span class="o">+</span> <span class="sa">b</span><span class="s2">&quot;</span><span class="se">\0</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="n">path</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">path</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">encode</span><span class="p">()</span> <span class="o">+</span> <span class="sa">b</span><span class="s2">"</span><span class="se">\0</span><span class="s2">"</span> <span class="o">+</span> <span class="n">path</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">()</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">decode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stored</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="n">filename</span><span class="p">,</span> <span class="n">contents</span> <span class="o">=</span> <span class="n">stored</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="sa">b</span><span class="s2">&quot;</span><span class="se">\0</span><span class="s2">&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">filename</span><span class="p">,</span> <span class="n">contents</span> <span class="o">=</span> <span class="n">stored</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="sa">b</span><span class="s2">"</span><span class="se">\0</span><span class="s2">"</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
         <span class="n">filename</span> <span class="o">=</span> <span class="n">filename</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
-        <span class="n">download_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;download_path&#39;</span><span class="p">])</span> <span class="o">/</span> <span class="n">filename</span>
+        <span class="n">download_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">'download_path'</span><span class="p">])</span> <span class="o">/</span> <span class="n">filename</span>
         <span class="n">download_path</span><span class="o">.</span><span class="n">write_bytes</span><span class="p">(</span><span class="n">contents</span><span class="p">)</span>
         <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">download_path</span><span class="p">)</span>
 </code></pre></div>
 <p>Usage:
 <div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">Attachments</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    attachment_id : int32</span>
 <span class="s2">    ---</span>
 <span class="s2">    config : &lt;attach&gt;           # in-table (small file in DB)</span>
 <span class="s2">    data_file : &lt;attach@&gt;       # in-store (default store)</span>
 <span class="s2">    archive : &lt;attach@cold&gt;     # in-store (specific store)</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">    """</span>
 </code></pre></div></p>
 <h2 id="user-defined-codecs">User-Defined Codecs<a class="headerlink" href="#user-defined-codecs" title="Permanent link">&para;</a></h2>
 <p>Users can define custom codecs for domain-specific data. See the <a href="../codec-api/">Codec API Specification</a> for complete examples including:</p>
@@ -8180,7 +8180,7 @@ just use <code>varchar</code>. A string is simpler and more transparent.</p>
 <p>Hash metadata (hash, store, size) is stored directly in each table's JSON column - no separate
 registry table is needed. Garbage collection scans all tables to find referenced hashes:</p>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">garbage_collect</span><span class="p">(</span><span class="n">store_name</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Remove hash-addressed data not referenced by any table.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Remove hash-addressed data not referenced by any table."""</span>
     <span class="c1"># Scan store for all hash files</span>
     <span class="n">store</span> <span class="o">=</span> <span class="n">get_store</span><span class="p">(</span><span class="n">store_name</span><span class="p">)</span>
     <span class="n">all_hashes</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">store</span><span class="o">.</span><span class="n">list_hashes</span><span class="p">())</span>  <span class="c1"># from _hash/ directory</span>
@@ -8193,8 +8193,8 @@ registry table is needed. Garbage collection scans all tables to find referenced
                 <span class="k">if</span> <span class="n">uses_hash_storage</span><span class="p">(</span><span class="n">attr</span><span class="p">):</span>  <span class="c1"># &lt;blob@&gt;, &lt;attach@&gt;, &lt;hash@&gt;</span>
                     <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">table</span><span class="p">:</span>
                         <span class="n">val</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">attr</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
-                        <span class="k">if</span> <span class="n">val</span> <span class="ow">and</span> <span class="n">val</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;store&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="n">store_name</span><span class="p">:</span>
-                            <span class="n">referenced</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">val</span><span class="p">[</span><span class="s1">&#39;hash&#39;</span><span class="p">])</span>
+                        <span class="k">if</span> <span class="n">val</span> <span class="ow">and</span> <span class="n">val</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'store'</span><span class="p">)</span> <span class="o">==</span> <span class="n">store_name</span><span class="p">:</span>
+                            <span class="n">referenced</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">val</span><span class="p">[</span><span class="s1">'hash'</span><span class="p">])</span>
 
     <span class="c1"># Delete orphaned files</span>
     <span class="k">for</span> <span class="n">hash_id</span> <span class="ow">in</span> <span class="p">(</span><span class="n">all_hashes</span> <span class="o">-</span> <span class="n">referenced</span><span class="p">):</span>
@@ -8384,7 +8384,7 @@ audits), SHA256 checksums can be computed on-demand without changing the storage
 <p>Legacy external storage used per-schema <code>~external_{store}</code> tables with UUID references.
 Migration to the new JSON-based hash storage requires:</p>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">migrate_external_store</span><span class="p">(</span><span class="n">schema</span><span class="p">,</span> <span class="n">store_name</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Migrate legacy ~external_{store} to new HashRegistry.</span>
 
 <span class="sd">    1. Read all entries from ~external_{store}</span>
@@ -8394,11 +8394,11 @@ Migration to the new JSON-based hash storage requires:</p>
 <span class="sd">       - Copy to _hash/{hash}/ if not exists</span>
 <span class="sd">       - Update table column to new hash format</span>
 <span class="sd">    3. After all schemas migrated, drop ~external_{store} tables</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">external_table</span> <span class="o">=</span> <span class="n">schema</span><span class="o">.</span><span class="n">external</span><span class="p">[</span><span class="n">store_name</span><span class="p">]</span>
 
     <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">external_table</span><span class="p">:</span>
-        <span class="n">legacy_uuid</span> <span class="o">=</span> <span class="n">entry</span><span class="p">[</span><span class="s1">&#39;hash&#39;</span><span class="p">]</span>
+        <span class="n">legacy_uuid</span> <span class="o">=</span> <span class="n">entry</span><span class="p">[</span><span class="s1">'hash'</span><span class="p">]</span>
 
         <span class="c1"># Fetch content from legacy location</span>
         <span class="n">content</span> <span class="o">=</span> <span class="n">external_table</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">legacy_uuid</span><span class="p">)</span>
@@ -8407,13 +8407,13 @@ Migration to the new JSON-based hash storage requires:</p>
         <span class="n">hash_id</span> <span class="o">=</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">md5</span><span class="p">(</span><span class="n">content</span><span class="p">)</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()</span>
 
         <span class="c1"># Store in new location if not exists</span>
-        <span class="n">new_path</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;_hash/</span><span class="si">{</span><span class="n">hash_id</span><span class="p">[:</span><span class="mi">2</span><span class="p">]</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">hash_id</span><span class="p">[</span><span class="mi">2</span><span class="p">:</span><span class="mi">4</span><span class="p">]</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">hash_id</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="n">new_path</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"_hash/</span><span class="si">{</span><span class="n">hash_id</span><span class="p">[:</span><span class="mi">2</span><span class="p">]</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">hash_id</span><span class="p">[</span><span class="mi">2</span><span class="p">:</span><span class="mi">4</span><span class="p">]</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">hash_id</span><span class="si">}</span><span class="s2">"</span>
         <span class="n">store</span> <span class="o">=</span> <span class="n">get_store</span><span class="p">(</span><span class="n">store_name</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">store</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">new_path</span><span class="p">):</span>
             <span class="n">store</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">new_path</span><span class="p">,</span> <span class="n">content</span><span class="p">)</span>
 
         <span class="c1"># Update referencing tables: convert UUID column to JSON with hash metadata</span>
-        <span class="c1"># The JSON column stores {&quot;hash&quot;: hash_id, &quot;store&quot;: store_name, &quot;size&quot;: len(content)}</span>
+        <span class="c1"># The JSON column stores {"hash": hash_id, "store": store_name, "size": len(content)}</span>
         <span class="c1"># ... update all tables that reference this UUID ...</span>
 
     <span class="c1"># After migration complete for all schemas:</span>

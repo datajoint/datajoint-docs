@@ -3994,7 +3994,7 @@
   <span class="md-ellipsis">
     
   
-    Migrate to 2.0
+    Migrate to 2.x
   
 
     
@@ -6797,24 +6797,24 @@
 <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">datajoint</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dj</span>
 
 <span class="c1"># Add store configuration</span>
-<span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">object_storage</span><span class="o">.</span><span class="n">stores</span><span class="p">[</span><span class="s1">&#39;mystore&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s1">&#39;protocol&#39;</span><span class="p">:</span> <span class="s1">&#39;s3&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;endpoint&#39;</span><span class="p">:</span> <span class="s1">&#39;localhost:9000&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;bucket&#39;</span><span class="p">:</span> <span class="s1">&#39;my-bucket&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;access_key&#39;</span><span class="p">:</span> <span class="s1">&#39;access_key&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;secret_key&#39;</span><span class="p">:</span> <span class="s1">&#39;secret_key&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;location&#39;</span><span class="p">:</span> <span class="s1">&#39;data&#39;</span><span class="p">,</span>
+<span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">object_storage</span><span class="o">.</span><span class="n">stores</span><span class="p">[</span><span class="s1">'mystore'</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">'protocol'</span><span class="p">:</span> <span class="s1">'s3'</span><span class="p">,</span>
+    <span class="s1">'endpoint'</span><span class="p">:</span> <span class="s1">'localhost:9000'</span><span class="p">,</span>
+    <span class="s1">'bucket'</span><span class="p">:</span> <span class="s1">'my-bucket'</span><span class="p">,</span>
+    <span class="s1">'access_key'</span><span class="p">:</span> <span class="s1">'access_key'</span><span class="p">,</span>
+    <span class="s1">'secret_key'</span><span class="p">:</span> <span class="s1">'secret_key'</span><span class="p">,</span>
+    <span class="s1">'location'</span><span class="p">:</span> <span class="s1">'data'</span><span class="p">,</span>
 <span class="p">}</span>
 </code></pre></div>
 <p>Or in <code>datajoint.json</code>:
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;object_storage&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;stores&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="nt">&quot;mystore&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="nt">&quot;protocol&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;s3&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="nt">&quot;endpoint&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;s3.amazonaws.com&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="nt">&quot;bucket&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;my-bucket&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="nt">&quot;location&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;data&quot;</span>
+<span class="w">  </span><span class="nt">"object_storage"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"stores"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">"mystore"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">"protocol"</span><span class="p">:</span><span class="w"> </span><span class="s2">"s3"</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">"endpoint"</span><span class="p">:</span><span class="w"> </span><span class="s2">"s3.amazonaws.com"</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">"bucket"</span><span class="p">:</span><span class="w"> </span><span class="s2">"my-bucket"</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">"location"</span><span class="p">:</span><span class="w"> </span><span class="s2">"data"</span>
 <span class="w">      </span><span class="p">}</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="w">  </span><span class="p">}</span>
@@ -6823,23 +6823,23 @@
 <h3 id="2-define-table-with-npy">2. Define Table with <code>&lt;npy@&gt;</code><a class="headerlink" href="#2-define-table-with-npy" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="nd">@schema</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Recording</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    recording_id : int32</span>
 <span class="s2">    ---</span>
 <span class="s2">    waveform : &lt;npy@mystore&gt;</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">    """</span>
 </code></pre></div>
 <h3 id="3-insert-arrays">3. Insert Arrays<a class="headerlink" href="#3-insert-arrays" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
 <span class="n">Recording</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span>
-    <span class="s1">&#39;recording_id&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
-    <span class="s1">&#39;waveform&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span> <span class="mi">32</span><span class="p">),</span>
+    <span class="s1">'recording_id'</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s1">'waveform'</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span> <span class="mi">32</span><span class="p">),</span>
 <span class="p">})</span>
 </code></pre></div>
 <h3 id="4-fetch-with-lazy-loading">4. Fetch with Lazy Loading<a class="headerlink" href="#4-fetch-with-lazy-loading" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># Returns NpyRef, not array</span>
-<span class="n">ref</span> <span class="o">=</span> <span class="p">(</span><span class="n">Recording</span> <span class="o">&amp;</span> <span class="s1">&#39;recording_id=1&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">fetch1</span><span class="p">(</span><span class="s1">&#39;waveform&#39;</span><span class="p">)</span>
+<span class="n">ref</span> <span class="o">=</span> <span class="p">(</span><span class="n">Recording</span> <span class="o">&amp;</span> <span class="s1">'recording_id=1'</span><span class="p">)</span><span class="o">.</span><span class="n">fetch1</span><span class="p">(</span><span class="s1">'waveform'</span><span class="p">)</span>
 
 <span class="c1"># Metadata without download</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">ref</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>   <span class="c1"># (1000, 32)</span>
@@ -6877,7 +6877,7 @@
 <h3 id="memory-mapping">Memory Mapping<a class="headerlink" href="#memory-mapping" title="Permanent link">&para;</a></h3>
 <p>For large arrays, use <code>mmap_mode</code> to access data without loading it all into memory:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Memory-mapped loading (random access)</span>
-<span class="n">arr</span> <span class="o">=</span> <span class="n">ref</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">mmap_mode</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">)</span>
+<span class="n">arr</span> <span class="o">=</span> <span class="n">ref</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">mmap_mode</span><span class="o">=</span><span class="s1">'r'</span><span class="p">)</span>
 
 <span class="c1"># Only reads the portion you access</span>
 <span class="nb">slice</span> <span class="o">=</span> <span class="n">arr</span><span class="p">[</span><span class="mi">1000</span><span class="p">:</span><span class="mi">2000</span><span class="p">,</span> <span class="p">:]</span>  <span class="c1"># Efficient for large arrays</span>
@@ -6895,39 +6895,39 @@
 <span class="n">results</span> <span class="o">=</span> <span class="n">MyTable</span><span class="o">.</span><span class="n">to_dicts</span><span class="p">()</span>
 
 <span class="c1"># Filter by metadata (no downloads)</span>
-<span class="n">large</span> <span class="o">=</span> <span class="p">[</span><span class="n">r</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">results</span> <span class="k">if</span> <span class="n">r</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">1000</span><span class="p">]</span>
+<span class="n">large</span> <span class="o">=</span> <span class="p">[</span><span class="n">r</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">results</span> <span class="k">if</span> <span class="n">r</span><span class="p">[</span><span class="s1">'data'</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">1000</span><span class="p">]</span>
 
 <span class="c1"># Load only what you need</span>
 <span class="k">for</span> <span class="n">rec</span> <span class="ow">in</span> <span class="n">large</span><span class="p">:</span>
-    <span class="n">arr</span> <span class="o">=</span> <span class="n">rec</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
+    <span class="n">arr</span> <span class="o">=</span> <span class="n">rec</span><span class="p">[</span><span class="s1">'data'</span><span class="p">]</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
     <span class="n">process</span><span class="p">(</span><span class="n">arr</span><span class="p">)</span>
 </code></pre></div>
 <h3 id="computed-tables">Computed Tables<a class="headerlink" href="#computed-tables" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="nd">@schema</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">FilteredTrace</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Computed</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    -&gt; RawData</span>
 <span class="s2">    ---</span>
 <span class="s2">    result : &lt;npy@mystore&gt;</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">make</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
         <span class="c1"># Fetch lazy reference</span>
-        <span class="n">ref</span> <span class="o">=</span> <span class="p">(</span><span class="n">RawData</span> <span class="o">&amp;</span> <span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">fetch1</span><span class="p">(</span><span class="s1">&#39;raw&#39;</span><span class="p">)</span>
+        <span class="n">ref</span> <span class="o">=</span> <span class="p">(</span><span class="n">RawData</span> <span class="o">&amp;</span> <span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">fetch1</span><span class="p">(</span><span class="s1">'raw'</span><span class="p">)</span>
 
         <span class="c1"># NumPy functions auto-load</span>
         <span class="n">result</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fft</span><span class="p">(</span><span class="n">ref</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="o">**</span><span class="n">key</span><span class="p">,</span> <span class="s1">&#39;result&#39;</span><span class="p">:</span> <span class="n">result</span><span class="p">})</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="o">**</span><span class="n">key</span><span class="p">,</span> <span class="s1">'result'</span><span class="p">:</span> <span class="n">result</span><span class="p">})</span>
 </code></pre></div>
 <h3 id="memory-efficient-processing">Memory-Efficient Processing<a class="headerlink" href="#memory-efficient-processing" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># Process recordings one at a time</span>
 <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">Recording</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-    <span class="n">ref</span> <span class="o">=</span> <span class="p">(</span><span class="n">Recording</span> <span class="o">&amp;</span> <span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">fetch1</span><span class="p">(</span><span class="s1">&#39;data&#39;</span><span class="p">)</span>
+    <span class="n">ref</span> <span class="o">=</span> <span class="p">(</span><span class="n">Recording</span> <span class="o">&amp;</span> <span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">fetch1</span><span class="p">(</span><span class="s1">'data'</span><span class="p">)</span>
 
     <span class="c1"># Check size before loading</span>
     <span class="k">if</span> <span class="n">ref</span><span class="o">.</span><span class="n">nbytes</span> <span class="o">&gt;</span> <span class="mf">1e9</span><span class="p">:</span>  <span class="c1"># &gt; 1 GB</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Skipping large recording: </span><span class="si">{</span><span class="n">ref</span><span class="o">.</span><span class="n">nbytes</span><span class="o">/</span><span class="mf">1e9</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> GB&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Skipping large recording: </span><span class="si">{</span><span class="n">ref</span><span class="o">.</span><span class="n">nbytes</span><span class="o">/</span><span class="mf">1e9</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> GB"</span><span class="p">)</span>
         <span class="k">continue</span>
 
     <span class="n">process</span><span class="p">(</span><span class="n">ref</span><span class="o">.</span><span class="n">load</span><span class="p">())</span>
@@ -7001,7 +7001,7 @@
 <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>                                 <span class="c1"># 0-dimensional scalar</span>
 
 <span class="c1"># Structured arrays</span>
-<span class="n">dt</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dtype</span><span class="p">([(</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)])</span>
+<span class="n">dt</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dtype</span><span class="p">([(</span><span class="s1">'x'</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">),</span> <span class="p">(</span><span class="s1">'y'</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)])</span>
 <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([(</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">),</span> <span class="p">(</span><span class="mf">3.0</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">)],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dt</span><span class="p">)</span>
 
 <span class="c1"># NOT supported</span>
@@ -7010,7 +7010,7 @@
 <h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
 <h3 id="store-not-configured">"Store not configured"<a class="headerlink" href="#store-not-configured" title="Permanent link">&para;</a></h3>
 <p>Ensure your store is configured before using <code>&lt;npy@store&gt;</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">object_storage</span><span class="o">.</span><span class="n">stores</span><span class="p">[</span><span class="s1">&#39;store&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="o">...</span><span class="p">}</span>
+<div class="highlight"><pre><span></span><code><span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">object_storage</span><span class="o">.</span><span class="n">stores</span><span class="p">[</span><span class="s1">'store'</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="o">...</span><span class="p">}</span>
 </code></pre></div>
 <h3 id="requires-store-only">"requires @ (store only)"<a class="headerlink" href="#requires-store-only" title="Permanent link">&para;</a></h3>
 <p>The <code>&lt;npy&gt;</code> codec requires the <code>@</code> modifier:</p>
@@ -7026,7 +7026,7 @@
 <div class="highlight"><pre><span></span><code><span class="c1"># Check size before loading</span>
 <span class="k">if</span> <span class="n">ref</span><span class="o">.</span><span class="n">nbytes</span> <span class="o">&gt;</span> <span class="n">available_memory</span><span class="p">:</span>
     <span class="c1"># Use memory mapping for random access</span>
-    <span class="n">arr</span> <span class="o">=</span> <span class="n">ref</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">mmap_mode</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">)</span>
+    <span class="n">arr</span> <span class="o">=</span> <span class="n">ref</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">mmap_mode</span><span class="o">=</span><span class="s1">'r'</span><span class="p">)</span>
     <span class="c1"># Process in chunks</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">arr</span><span class="p">),</span> <span class="n">chunk_size</span><span class="p">):</span>
         <span class="n">process</span><span class="p">(</span><span class="n">arr</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="n">i</span><span class="o">+</span><span class="n">chunk_size</span><span class="p">])</span>

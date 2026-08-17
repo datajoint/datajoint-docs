@@ -3871,7 +3871,7 @@
   <span class="md-ellipsis">
     
   
-    Migrate to 2.0
+    Migrate to 2.x
   
 
     
@@ -6545,12 +6545,12 @@
 <p>Scientific workflows frequently use composite primary keys built from foreign keys. Compare how different approaches handle this common pattern:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># DataJoint - two characters declare dependency, foreign key, and inherit primary key</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Scan</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    -&gt; Session</span>
 <span class="s2">    scan_idx : int16</span>
 <span class="s2">    ---</span>
 <span class="s2">    depth : float32</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">    """</span>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="c1"># SQLAlchemy - verbose, scattered, error-prone</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Scan</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
@@ -6560,8 +6560,8 @@
     <span class="n">depth</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Float</span><span class="p">)</span>
     <span class="n">__table_args__</span> <span class="o">=</span> <span class="p">(</span>
         <span class="n">ForeignKeyConstraint</span><span class="p">(</span>
-            <span class="p">[</span><span class="s1">&#39;subject_id&#39;</span><span class="p">,</span> <span class="s1">&#39;session_date&#39;</span><span class="p">],</span>
-            <span class="p">[</span><span class="s1">&#39;session.subject_id&#39;</span><span class="p">,</span> <span class="s1">&#39;session.session_date&#39;</span><span class="p">]</span>
+            <span class="p">[</span><span class="s1">'subject_id'</span><span class="p">,</span> <span class="s1">'session_date'</span><span class="p">],</span>
+            <span class="p">[</span><span class="s1">'session.subject_id'</span><span class="p">,</span> <span class="s1">'session.session_date'</span><span class="p">]</span>
         <span class="p">),</span>
     <span class="p">)</span>
 </code></pre></div>

@@ -3904,7 +3904,7 @@
   <span class="md-ellipsis">
     
   
-    Migrate to 2.0
+    Migrate to 2.x
   
 
     
@@ -6613,24 +6613,24 @@
 </code></pre></div>
 <h2 id="restrict-what-to-compute">Restrict What to Compute<a class="headerlink" href="#restrict-what-to-compute" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><span class="c1"># Only specific subjects</span>
-<span class="n">SessionAnalysis</span><span class="o">.</span><span class="n">populate</span><span class="p">(</span><span class="n">Subject</span> <span class="o">&amp;</span> <span class="s2">&quot;sex = &#39;M&#39;&quot;</span><span class="p">)</span>
+<span class="n">SessionAnalysis</span><span class="o">.</span><span class="n">populate</span><span class="p">(</span><span class="n">Subject</span> <span class="o">&amp;</span> <span class="s2">"sex = 'M'"</span><span class="p">)</span>
 
 <span class="c1"># Only recent sessions</span>
-<span class="n">SessionAnalysis</span><span class="o">.</span><span class="n">populate</span><span class="p">(</span><span class="n">Session</span> <span class="o">&amp;</span> <span class="s2">&quot;session_date &gt; &#39;2026-01-01&#39;&quot;</span><span class="p">)</span>
+<span class="n">SessionAnalysis</span><span class="o">.</span><span class="n">populate</span><span class="p">(</span><span class="n">Session</span> <span class="o">&amp;</span> <span class="s2">"session_date &gt; '2026-01-01'"</span><span class="p">)</span>
 
 <span class="c1"># Specific key</span>
-<span class="n">SessionAnalysis</span><span class="o">.</span><span class="n">populate</span><span class="p">({</span><span class="s1">&#39;subject_id&#39;</span><span class="p">:</span> <span class="s1">&#39;M001&#39;</span><span class="p">,</span> <span class="s1">&#39;session_idx&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">})</span>
+<span class="n">SessionAnalysis</span><span class="o">.</span><span class="n">populate</span><span class="p">({</span><span class="s1">'subject_id'</span><span class="p">:</span> <span class="s1">'M001'</span><span class="p">,</span> <span class="s1">'session_idx'</span><span class="p">:</span> <span class="mi">1</span><span class="p">})</span>
 </code></pre></div>
 <h2 id="limit-number-of-jobs">Limit Number of Jobs<a class="headerlink" href="#limit-number-of-jobs" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><span class="c1"># Process at most 100 entries</span>
 <span class="n">SessionAnalysis</span><span class="o">.</span><span class="n">populate</span><span class="p">(</span><span class="n">limit</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
 </code></pre></div>
 <h2 id="error-handling">Error Handling<a class="headerlink" href="#error-handling" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><span class="c1"># Continue on errors (log but don&#39;t stop)</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># Continue on errors (log but don't stop)</span>
 <span class="n">SessionAnalysis</span><span class="o">.</span><span class="n">populate</span><span class="p">(</span><span class="n">suppress_errors</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
 <span class="c1"># Check what failed</span>
-<span class="n">failed</span> <span class="o">=</span> <span class="n">SessionAnalysis</span><span class="o">.</span><span class="n">jobs</span> <span class="o">&amp;</span> <span class="s2">&quot;status = &#39;error&#39;&quot;</span>
+<span class="n">failed</span> <span class="o">=</span> <span class="n">SessionAnalysis</span><span class="o">.</span><span class="n">jobs</span> <span class="o">&amp;</span> <span class="s2">"status = 'error'"</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">failed</span><span class="p">)</span>
 
 <span class="c1"># Clear errors to retry</span>
@@ -6724,9 +6724,9 @@ Multiple cores on one machine?
 <span class="c1"># Each reserves different keys, no duplicates</span>
 </code></pre></div>
 <h2 id="check-progress">Check Progress<a class="headerlink" href="#check-progress" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><span class="c1"># What&#39;s left to compute</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># What's left to compute</span>
 <span class="n">remaining</span> <span class="o">=</span> <span class="n">SessionAnalysis</span><span class="o">.</span><span class="n">key_source</span> <span class="o">-</span> <span class="n">SessionAnalysis</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">remaining</span><span class="p">)</span><span class="si">}</span><span class="s2"> entries remaining&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">remaining</span><span class="p">)</span><span class="si">}</span><span class="s2"> entries remaining"</span><span class="p">)</span>
 
 <span class="c1"># View job status</span>
 <span class="n">SessionAnalysis</span><span class="o">.</span><span class="n">jobs</span>
@@ -6734,68 +6734,68 @@ Multiple cores on one machine?
 <h2 id="the-make-method">The <code>make()</code> Method<a class="headerlink" href="#the-make-method" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><span class="nd">@schema</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">SessionAnalysis</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Computed</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    -&gt; Session</span>
 <span class="s2">    ---</span>
 <span class="s2">    result : float64</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">make</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
         <span class="c1"># 1. Fetch input data</span>
-        <span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="n">Session</span> <span class="o">&amp;</span> <span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">fetch1</span><span class="p">(</span><span class="s1">&#39;data&#39;</span><span class="p">)</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="n">Session</span> <span class="o">&amp;</span> <span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">fetch1</span><span class="p">(</span><span class="s1">'data'</span><span class="p">)</span>
 
         <span class="c1"># 2. Compute</span>
         <span class="n">result</span> <span class="o">=</span> <span class="n">process</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
 
         <span class="c1"># 3. Insert</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="o">**</span><span class="n">key</span><span class="p">,</span> <span class="s1">&#39;result&#39;</span><span class="p">:</span> <span class="n">result</span><span class="p">})</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="o">**</span><span class="n">key</span><span class="p">,</span> <span class="s1">'result'</span><span class="p">:</span> <span class="n">result</span><span class="p">})</span>
 </code></pre></div>
 <h2 id="three-part-make-for-long-computations">Three-Part Make for Long Computations<a class="headerlink" href="#three-part-make-for-long-computations" title="Permanent link">&para;</a></h2>
 <p>For computations taking hours or days:</p>
 <div class="highlight"><pre><span></span><code><span class="nd">@schema</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">LongComputation</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Computed</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    -&gt; RawData</span>
 <span class="s2">    ---</span>
 <span class="s2">    result : float64</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">make_fetch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Fetch input data (outside transaction).</span>
+<span class="w">        </span><span class="sd">"""Fetch input data (outside transaction).</span>
 
 <span class="sd">        kwargs are passed from populate(make_kwargs={...}).</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="n">RawData</span> <span class="o">&amp;</span> <span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">fetch1</span><span class="p">(</span><span class="s1">&#39;data&#39;</span><span class="p">)</span>
+<span class="sd">        """</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="n">RawData</span> <span class="o">&amp;</span> <span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">fetch1</span><span class="p">(</span><span class="s1">'data'</span><span class="p">)</span>
         <span class="k">return</span> <span class="p">(</span><span class="n">data</span><span class="p">,)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">make_compute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Perform computation (outside transaction).</span>
+<span class="w">        </span><span class="sd">"""Perform computation (outside transaction).</span>
 
-<span class="sd">        `data` is make_fetch&#39;s returned tuple, unpacked positionally.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        `data` is make_fetch's returned tuple, unpacked positionally.</span>
+<span class="sd">        """</span>
         <span class="n">result</span> <span class="o">=</span> <span class="n">expensive_computation</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
         <span class="k">return</span> <span class="p">(</span><span class="n">result</span><span class="p">,)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">make_insert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">result</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Insert results (inside a brief transaction).</span>
+<span class="w">        </span><span class="sd">"""Insert results (inside a brief transaction).</span>
 
-<span class="sd">        `result` is make_compute&#39;s returned tuple, unpacked positionally.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="o">**</span><span class="n">key</span><span class="p">,</span> <span class="s1">&#39;result&#39;</span><span class="p">:</span> <span class="n">result</span><span class="p">})</span>
+<span class="sd">        `result` is make_compute's returned tuple, unpacked positionally.</span>
+<span class="sd">        """</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="o">**</span><span class="n">key</span><span class="p">,</span> <span class="s1">'result'</span><span class="p">:</span> <span class="n">result</span><span class="p">})</span>
 </code></pre></div>
 <h2 id="custom-key-source">Custom Key Source<a class="headerlink" href="#custom-key-source" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><span class="nd">@schema</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">FilteredComputation</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Computed</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    -&gt; RawData</span>
 <span class="s2">    ---</span>
 <span class="s2">    result : float64</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">    """</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">key_source</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># Only compute for high-quality data</span>
-        <span class="k">return</span> <span class="p">(</span><span class="n">RawData</span> <span class="o">&amp;</span> <span class="s1">&#39;quality &gt; 0.8&#39;</span><span class="p">)</span> <span class="o">-</span> <span class="bp">self</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">RawData</span> <span class="o">&amp;</span> <span class="s1">'quality &gt; 0.8'</span><span class="p">)</span> <span class="o">-</span> <span class="bp">self</span>
 </code></pre></div>
 <h2 id="populate-options">Populate Options<a class="headerlink" href="#populate-options" title="Permanent link">&para;</a></h2>
 <table>

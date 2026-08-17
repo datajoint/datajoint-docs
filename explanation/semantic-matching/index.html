@@ -3944,7 +3944,7 @@
   <span class="md-ellipsis">
     
   
-    Migrate to 2.0
+    Migrate to 2.x
   
 
     
@@ -6738,20 +6738,20 @@
 <p>The natural join is elegant and powerful, but it has a well-known weakness: it relies entirely on naming conventions. If two tables happen to have columns with the same name but different meanings, a natural join silently produces a Cartesian product filtered on unrelated values—a subtle bug that can go undetected.</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Classic natural join pitfall</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Student</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    id : int64  # student ID</span>
 <span class="s2">    ---</span>
 <span class="s2">    name : varchar(100)</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">    """</span>
 
 <span class="k">class</span><span class="w"> </span><span class="nc">Course</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    id : int64  # course ID</span>
 <span class="s2">    ---</span>
 <span class="s2">    title : varchar(100)</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">    """</span>
 
-<span class="c1"># Natural join would match on &#39;id&#39;, but these are unrelated!</span>
+<span class="c1"># Natural join would match on 'id', but these are unrelated!</span>
 <span class="c1"># Student #5 paired with Course #5 is meaningless.</span>
 </code></pre></div>
 <p>DataJoint's semantic matching solves this by tracking the <strong>lineage</strong> of each attribute—where it was originally defined. Attributes only match if they have the same lineage, ensuring that joins always combine semantically related data.</p>
@@ -6789,19 +6789,19 @@
 </table>
 <h3 id="example">Example<a class="headerlink" href="#example" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">Session</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>         <span class="c1"># table: session</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    session_id : int64</span>
 <span class="s2">    ---</span>
 <span class="s2">    session_date : date</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">    """</span>
 
 <span class="k">class</span><span class="w"> </span><span class="nc">Trial</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>           <span class="c1"># table: trial</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    -&gt; Session</span>
 <span class="s2">    trial_num : int32</span>
 <span class="s2">    ---</span>
 <span class="s2">    stimulus : varchar(100)</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">    """</span>
 </code></pre></div>
 <p>Lineages:</p>
 <ul>
@@ -6881,7 +6881,7 @@ Use .proj() to rename one of the attributes.
 <ol>
 <li>
 <p><strong>Rename one attribute</strong> using projection:
-   <div class="highlight"><pre><span></span><code><span class="n">Student</span><span class="p">()</span> <span class="o">*</span> <span class="n">Course</span><span class="p">()</span><span class="o">.</span><span class="n">proj</span><span class="p">(</span><span class="n">course_id</span><span class="o">=</span><span class="s1">&#39;id&#39;</span><span class="p">)</span>
+   <div class="highlight"><pre><span></span><code><span class="n">Student</span><span class="p">()</span> <span class="o">*</span> <span class="n">Course</span><span class="p">()</span><span class="o">.</span><span class="n">proj</span><span class="p">(</span><span class="n">course_id</span><span class="o">=</span><span class="s1">'id'</span><span class="p">)</span>
 </code></pre></div></p>
 </li>
 <li>
@@ -6892,11 +6892,11 @@ Use .proj() to rename one of the attributes.
 <li>
 <p><strong>Use descriptive names</strong> in your schema design (best practice):
    <div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">Student</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
-<span class="s2">    student_id : int64  # not just &#39;id&#39;</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
+<span class="s2">    student_id : int64  # not just 'id'</span>
 <span class="s2">    ---</span>
 <span class="s2">    name : varchar(100)</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">    """</span>
 </code></pre></div></p>
 </li>
 </ol>
@@ -6913,7 +6913,7 @@ Use .proj() to rename one of the attributes.
 <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">datajoint</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dj</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">datajoint</span><span class="w"> </span><span class="kn">import</span> <span class="n">migrate</span>
 
-<span class="n">schema</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">Schema</span><span class="p">(</span><span class="s2">&quot;my_schema&quot;</span><span class="p">)</span>
+<span class="n">schema</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">Schema</span><span class="p">(</span><span class="s2">"my_schema"</span><span class="p">)</span>
 
 <span class="c1"># Option 1: instance method</span>
 <span class="n">schema</span><span class="o">.</span><span class="n">rebuild_lineage</span><span class="p">()</span>
@@ -6931,19 +6931,19 @@ DataJoint version or an incomplete declare. Run `schema.rebuild_lineage()` ...
 <h2 id="examples">Examples<a class="headerlink" href="#examples" title="Permanent link">&para;</a></h2>
 <h3 id="valid-join-shared-lineage">Valid Join (Shared Lineage)<a class="headerlink" href="#valid-join-shared-lineage" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">Student</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    student_id : int64</span>
 <span class="s2">    ---</span>
 <span class="s2">    name : varchar(100)</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">    """</span>
 
 <span class="k">class</span><span class="w"> </span><span class="nc">Enrollment</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    -&gt; Student</span>
 <span class="s2">    -&gt; Course</span>
 <span class="s2">    ---</span>
 <span class="s2">    grade : varchar(2)</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">    """</span>
 
 <span class="c1"># Works: student_id has same lineage in both</span>
 <span class="n">Student</span><span class="p">()</span> <span class="o">*</span> <span class="n">Enrollment</span><span class="p">()</span>
@@ -6951,24 +6951,24 @@ DataJoint version or an incomplete declare. Run `schema.rebuild_lineage()` ...
 <h3 id="multi-hop-fk-inheritance">Multi-hop FK Inheritance<a class="headerlink" href="#multi-hop-fk-inheritance" title="Permanent link">&para;</a></h3>
 <p>Lineage is preserved through multiple levels of foreign key inheritance:</p>
 <div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">Session</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    session_id : int64</span>
 <span class="s2">    ---</span>
 <span class="s2">    session_date : date</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">    """</span>
 
 <span class="k">class</span><span class="w"> </span><span class="nc">Trial</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    -&gt; Session</span>
 <span class="s2">    trial_num : int32</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">    """</span>
 
 <span class="k">class</span><span class="w"> </span><span class="nc">Response</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Computed</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    -&gt; Trial</span>
 <span class="s2">    ---</span>
 <span class="s2">    response_time : float64</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">    """</span>
 
 <span class="c1"># All work: session_id traces back to Session in all tables</span>
 <span class="n">Session</span><span class="p">()</span> <span class="o">*</span> <span class="n">Trial</span><span class="p">()</span>
@@ -6978,25 +6978,25 @@ DataJoint version or an incomplete declare. Run `schema.rebuild_lineage()` ...
 <h3 id="secondary-fk-attribute">Secondary FK Attribute<a class="headerlink" href="#secondary-fk-attribute" title="Permanent link">&para;</a></h3>
 <p>Lineage works for secondary (non-primary-key) foreign key attributes too:</p>
 <div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">Course</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    course_id : int unsigned</span>
 <span class="s2">    ---</span>
 <span class="s2">    title : varchar(100)</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">    """</span>
 
 <span class="k">class</span><span class="w"> </span><span class="nc">FavoriteCourse</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    student_id : int unsigned</span>
 <span class="s2">    ---</span>
 <span class="s2">    -&gt; Course</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">    """</span>
 
 <span class="k">class</span><span class="w"> </span><span class="nc">RequiredCourse</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    major_id : int unsigned</span>
 <span class="s2">    ---</span>
 <span class="s2">    -&gt; Course</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">    """</span>
 
 <span class="c1"># Works: course_id is secondary in both, but has same lineage</span>
 <span class="n">FavoriteCourse</span><span class="p">()</span> <span class="o">*</span> <span class="n">RequiredCourse</span><span class="p">()</span>
@@ -7004,19 +7004,19 @@ DataJoint version or an incomplete declare. Run `schema.rebuild_lineage()` ...
 <h3 id="renamed-foreign-key">Renamed Foreign Key<a class="headerlink" href="#renamed-foreign-key" title="Permanent link">&para;</a></h3>
 <p>When you rename a foreign key, the new name gets the same lineage as the original:</p>
 <div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">Person</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    person_id : int unsigned</span>
 <span class="s2">    ---</span>
 <span class="s2">    full_name : varchar(100)</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">    """</span>
 
 <span class="k">class</span><span class="w"> </span><span class="nc">Marriage</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
-<span class="s2">    -&gt; Person.proj(husband=&#39;person_id&#39;)</span>
-<span class="s2">    -&gt; Person.proj(wife=&#39;person_id&#39;)</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
+<span class="s2">    -&gt; Person.proj(husband='person_id')</span>
+<span class="s2">    -&gt; Person.proj(wife='person_id')</span>
 <span class="s2">    ---</span>
 <span class="s2">    marriage_date : date</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">    """</span>
 
 <span class="c1"># husband and wife both have lineage: schema.person.person_id</span>
 <span class="c1"># They are homologous (same lineage) but have different names</span>

@@ -4177,7 +4177,7 @@
   <span class="md-ellipsis">
     
   
-    Migrate to 2.0
+    Migrate to 2.x
   
 
     
@@ -7219,16 +7219,16 @@
 <h3 id="option-1-secrets-directory-recommended-for-development">Option 1: Secrets Directory (Recommended for Development)<a class="headerlink" href="#option-1-secrets-directory-recommended-for-development" title="Permanent link">&para;</a></h3>
 <p>Each secret is a separate plain-text file named for the setting it carries:</p>
 <div class="highlight"><pre><span></span><code>mkdir<span class="w"> </span>-p<span class="w"> </span>.secrets
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;myuser&quot;</span><span class="w">     </span>&gt;<span class="w"> </span>.secrets/database.user
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;mypassword&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>.secrets/database.password
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"myuser"</span><span class="w">     </span>&gt;<span class="w"> </span>.secrets/database.user
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"mypassword"</span><span class="w"> </span>&gt;<span class="w"> </span>.secrets/database.password
 chmod<span class="w"> </span><span class="m">600</span><span class="w"> </span>.secrets/*
 </code></pre></div>
 <p>Non-sensitive database settings go in <code>datajoint.json</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;database.host&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;db.example.com&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;database.port&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">3306</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;database.use_tls&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;safemode&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">  </span><span class="nt">"database.host"</span><span class="p">:</span><span class="w"> </span><span class="s2">"db.example.com"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"database.port"</span><span class="p">:</span><span class="w"> </span><span class="mi">3306</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"database.use_tls"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"safemode"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
 <span class="p">}</span>
 </code></pre></div>
 <h3 id="option-2-environment-variables-recommended-for-production">Option 2: Environment Variables (Recommended for Production)<a class="headerlink" href="#option-2-environment-variables-recommended-for-production" title="Permanent link">&para;</a></h3>
@@ -7243,20 +7243,20 @@ chmod<span class="w"> </span><span class="m">600</span><span class="w"> </span>.
 <p>For scripts and applications:</p>
 <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">datajoint</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dj</span>
 
-<span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;database.host&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;localhost&#39;</span>
-<span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;database.user&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;myuser&#39;</span>
-<span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;database.password&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;mypassword&#39;</span>
+<span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">'database.host'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'localhost'</span>
+<span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">'database.user'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'myuser'</span>
+<span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">'database.password'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'mypassword'</span>
 </code></pre></div>
 <p><strong>Security note:</strong> Only use this when credentials come from secure sources (environment, vault, secrets manager).</p>
 <h2 id="object-storage-credentials">Object Storage Credentials<a class="headerlink" href="#object-storage-credentials" title="Permanent link">&para;</a></h2>
 <h3 id="file-storage-no-credentials">File Storage (No Credentials)<a class="headerlink" href="#file-storage-no-credentials" title="Permanent link">&para;</a></h3>
 <p>Local or network-mounted file systems don't require credentials:</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;stores&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;default&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;main&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;main&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="nt">&quot;protocol&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;file&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;location&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/data/my-project&quot;</span>
+<span class="w">  </span><span class="nt">"stores"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"default"</span><span class="p">:</span><span class="w"> </span><span class="s2">"main"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"main"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">"protocol"</span><span class="p">:</span><span class="w"> </span><span class="s2">"file"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"location"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/data/my-project"</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
@@ -7264,19 +7264,19 @@ chmod<span class="w"> </span><span class="m">600</span><span class="w"> </span>.
 <h3 id="s3minio-storage-with-credentials">S3/MinIO Storage (With Credentials)<a class="headerlink" href="#s3minio-storage-with-credentials" title="Permanent link">&para;</a></h3>
 <h4 id="config-in-datajointjson-non-sensitive">Config in <code>datajoint.json</code> (non-sensitive)<a class="headerlink" href="#config-in-datajointjson-non-sensitive" title="Permanent link">&para;</a></h4>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;stores&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;default&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;main&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;main&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="nt">&quot;protocol&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;s3&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;endpoint&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;s3.amazonaws.com&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;bucket&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;my-bucket&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;location&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;my-project/data&quot;</span>
+<span class="w">  </span><span class="nt">"stores"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"default"</span><span class="p">:</span><span class="w"> </span><span class="s2">"main"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"main"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">"protocol"</span><span class="p">:</span><span class="w"> </span><span class="s2">"s3"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"endpoint"</span><span class="p">:</span><span class="w"> </span><span class="s2">"s3.amazonaws.com"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"bucket"</span><span class="p">:</span><span class="w"> </span><span class="s2">"my-bucket"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"location"</span><span class="p">:</span><span class="w"> </span><span class="s2">"my-project/data"</span>
 <span class="w">    </span><span class="p">},</span>
-<span class="w">    </span><span class="nt">&quot;archive&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="nt">&quot;protocol&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;s3&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;endpoint&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;s3.amazonaws.com&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;bucket&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;archive-bucket&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;location&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;my-project/archive&quot;</span>
+<span class="w">    </span><span class="nt">"archive"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">"protocol"</span><span class="p">:</span><span class="w"> </span><span class="s2">"s3"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"endpoint"</span><span class="p">:</span><span class="w"> </span><span class="s2">"s3.amazonaws.com"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"bucket"</span><span class="p">:</span><span class="w"> </span><span class="s2">"archive-bucket"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"location"</span><span class="p">:</span><span class="w"> </span><span class="s2">"my-project/archive"</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
@@ -7309,17 +7309,17 @@ keys need to be minted or stored. Set both only for static credentials.</p>
 <p><code>DJ_STORES</code> carries a JSON-encoded copy of the entire <code>stores</code> dict, in the same shape as <code>datajoint.json</code>. Replaces the <code>stores</code> block from the file. <code>.secrets/stores.&lt;name&gt;.&lt;attr&gt;</code> files still fill in attributes that <code>DJ_STORES</code> omits.</p>
 </div>
 <p>For cloud deployments, put the entire <code>stores</code> block in a single env var:</p>
-<div class="highlight"><pre><span></span><code><span class="nb">export</span><span class="w"> </span><span class="nv">DJ_STORES</span><span class="o">=</span><span class="s1">&#39;{</span>
-<span class="s1">  &quot;default&quot;: &quot;main&quot;,</span>
-<span class="s1">  &quot;main&quot;: {</span>
-<span class="s1">    &quot;protocol&quot;: &quot;s3&quot;,</span>
-<span class="s1">    &quot;endpoint&quot;: &quot;s3.amazonaws.com&quot;,</span>
-<span class="s1">    &quot;bucket&quot;: &quot;my-bucket&quot;,</span>
-<span class="s1">    &quot;location&quot;: &quot;my-project/data&quot;,</span>
-<span class="s1">    &quot;access_key&quot;: &quot;AKIAIOSFODNN7EXAMPLE&quot;,</span>
-<span class="s1">    &quot;secret_key&quot;: &quot;wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="nb">export</span><span class="w"> </span><span class="nv">DJ_STORES</span><span class="o">=</span><span class="s1">'{</span>
+<span class="s1">  "default": "main",</span>
+<span class="s1">  "main": {</span>
+<span class="s1">    "protocol": "s3",</span>
+<span class="s1">    "endpoint": "s3.amazonaws.com",</span>
+<span class="s1">    "bucket": "my-bucket",</span>
+<span class="s1">    "location": "my-project/data",</span>
+<span class="s1">    "access_key": "AKIAIOSFODNN7EXAMPLE",</span>
+<span class="s1">    "secret_key": "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"</span>
 <span class="s1">  }</span>
-<span class="s1">}&#39;</span>
+<span class="s1">}'</span>
 </code></pre></div>
 <p>For plugin-registered adapters, the field names are whatever the adapter declares — <code>token</code>, <code>api_key</code>, <code>workspace_url</code>, etc. See <a href="../../reference/specs/storage-adapter-api/">Storage Adapter API</a>.</p>
 <p>If <code>DJ_STORES</code> contains invalid JSON, DataJoint raises <code>ValueError</code> at config-load time with the JSON parser's error message.</p>
@@ -7403,7 +7403,7 @@ keys need to be minted or stored. Set both only for static credentials.</p>
 <span class="nb">export</span><span class="w"> </span><span class="nv">DJ_HOST</span><span class="o">=</span>db.example.com
 <span class="nb">export</span><span class="w"> </span><span class="nv">DJ_USER</span><span class="o">=</span><span class="k">$(</span>vault<span class="w"> </span><span class="nb">read</span><span class="w"> </span>-field<span class="o">=</span>username<span class="w"> </span>secret/datajoint<span class="k">)</span>
 <span class="nb">export</span><span class="w"> </span><span class="nv">DJ_PASS</span><span class="o">=</span><span class="k">$(</span>vault<span class="w"> </span><span class="nb">read</span><span class="w"> </span>-field<span class="o">=</span>password<span class="w"> </span>secret/datajoint<span class="k">)</span>
-<span class="nb">export</span><span class="w"> </span><span class="nv">DJ_STORES</span><span class="o">=</span><span class="s2">&quot;</span><span class="k">$(</span>vault<span class="w"> </span><span class="nb">read</span><span class="w"> </span>-format<span class="o">=</span>json<span class="w"> </span>-field<span class="o">=</span>stores<span class="w"> </span>secret/datajoint<span class="k">)</span><span class="s2">&quot;</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">DJ_STORES</span><span class="o">=</span><span class="s2">"</span><span class="k">$(</span>vault<span class="w"> </span><span class="nb">read</span><span class="w"> </span>-format<span class="o">=</span>json<span class="w"> </span>-field<span class="o">=</span>stores<span class="w"> </span>secret/datajoint<span class="k">)</span><span class="s2">"</span>
 </code></pre></div>
 <p>With <code>DJ_IGNORE_CONFIG_FILE=true</code>, DataJoint skips:</p>
 <ul>
@@ -7419,11 +7419,11 @@ mkdir<span class="w"> </span>-p<span class="w"> </span>.secrets
 chmod<span class="w"> </span><span class="m">700</span><span class="w"> </span>.secrets<span class="w">  </span><span class="c1"># Owner-only access</span>
 
 <span class="c1"># 2. Create .gitignore</span>
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;.secrets/&quot;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>.gitignore
+<span class="nb">echo</span><span class="w"> </span><span class="s2">".secrets/"</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>.gitignore
 
 <span class="c1"># 3. Store credentials in .secrets/, one value per file</span>
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;dev_user&quot;</span><span class="w">     </span>&gt;<span class="w"> </span>.secrets/database.user
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;dev_password&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>.secrets/database.password
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"dev_user"</span><span class="w">     </span>&gt;<span class="w"> </span>.secrets/database.user
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"dev_password"</span><span class="w"> </span>&gt;<span class="w"> </span>.secrets/database.password
 
 <span class="c1"># 4. Set restrictive permissions</span>
 chmod<span class="w"> </span><span class="m">600</span><span class="w"> </span>.secrets/*
@@ -7477,23 +7477,23 @@ chmod<span class="w"> </span><span class="m">600</span><span class="w"> </span>.
 <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">datajoint</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dj</span>
 
-<span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;database.user&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;DJ_USER&#39;</span><span class="p">]</span>
-<span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;database.password&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;DJ_PASS&#39;</span><span class="p">]</span>
+<span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">'database.user'</span><span class="p">]</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">'DJ_USER'</span><span class="p">]</span>
+<span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">'database.password'</span><span class="p">]</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">'DJ_PASS'</span><span class="p">]</span>
 </code></pre></div></p>
 <p><strong>Google Cloud Functions:</strong>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">google.cloud</span><span class="w"> </span><span class="kn">import</span> <span class="n">secretmanager</span>
 
 <span class="n">client</span> <span class="o">=</span> <span class="n">secretmanager</span><span class="o">.</span><span class="n">SecretManagerServiceClient</span><span class="p">()</span>
-<span class="n">name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;projects/</span><span class="si">{</span><span class="n">project_id</span><span class="si">}</span><span class="s2">/secrets/dj-password/versions/latest&quot;</span>
-<span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">access_secret_version</span><span class="p">(</span><span class="n">request</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">name</span><span class="p">})</span>
-<span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;database.password&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">payload</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;UTF-8&quot;</span><span class="p">)</span>
+<span class="n">name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"projects/</span><span class="si">{</span><span class="n">project_id</span><span class="si">}</span><span class="s2">/secrets/dj-password/versions/latest"</span>
+<span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">access_secret_version</span><span class="p">(</span><span class="n">request</span><span class="o">=</span><span class="p">{</span><span class="s2">"name"</span><span class="p">:</span> <span class="n">name</span><span class="p">})</span>
+<span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">'database.password'</span><span class="p">]</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">payload</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">"UTF-8"</span><span class="p">)</span>
 </code></pre></div></p>
 <p><strong>Azure Functions:</strong>
 <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">datajoint</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dj</span>
 
-<span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;database.user&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;DJ_USER&#39;</span><span class="p">]</span>
-<span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;database.password&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;DJ_PASS&#39;</span><span class="p">]</span>
+<span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">'database.user'</span><span class="p">]</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">'DJ_USER'</span><span class="p">]</span>
+<span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">'database.password'</span><span class="p">]</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">'DJ_PASS'</span><span class="p">]</span>
 </code></pre></div></p>
 <h2 id="common-patterns">Common Patterns<a class="headerlink" href="#common-patterns" title="Permanent link">&para;</a></h2>
 <h3 id="local-development-with-secrets-directory">Local Development with Secrets Directory<a class="headerlink" href="#local-development-with-secrets-directory" title="Permanent link">&para;</a></h3>
@@ -7529,8 +7529,8 @@ secrets loader, so they can hold any settings and use any filenames. Assigning t
 <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">datajoint</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dj</span>
 
-<span class="n">env</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s1">&#39;ENV&#39;</span><span class="p">,</span> <span class="s1">&#39;dev&#39;</span><span class="p">)</span>
-<span class="n">secrets_path</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;.secrets/datajoint.</span><span class="si">{</span><span class="n">env</span><span class="si">}</span><span class="s1">.json&#39;</span>
+<span class="n">env</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s1">'ENV'</span><span class="p">,</span> <span class="s1">'dev'</span><span class="p">)</span>
+<span class="n">secrets_path</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'.secrets/datajoint.</span><span class="si">{</span><span class="n">env</span><span class="si">}</span><span class="s1">.json'</span>
 
 <span class="c1"># Load environment-specific secrets</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
@@ -7550,14 +7550,14 @@ secrets loader, so they can hold any settings and use any filenames. Assigning t
 <span class="nb">print</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="p">)</span>
 
 <span class="c1"># Check specific setting</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;database.user&#39;</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">'database.user'</span><span class="p">])</span>
 </code></pre></div>
 <p><strong>Find which files were picked up:</strong></p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">datajoint.settings</span><span class="w"> </span><span class="kn">import</span> <span class="n">find_config_file</span><span class="p">,</span> <span class="n">find_secrets_dir</span>
 
 <span class="n">config_path</span> <span class="o">=</span> <span class="n">find_config_file</span><span class="p">()</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;config file:&quot;</span><span class="p">,</span> <span class="n">config_path</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;secrets dir:&quot;</span><span class="p">,</span> <span class="n">find_secrets_dir</span><span class="p">(</span><span class="n">config_path</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"config file:"</span><span class="p">,</span> <span class="n">config_path</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"secrets dir:"</span><span class="p">,</span> <span class="n">find_secrets_dir</span><span class="p">(</span><span class="n">config_path</span><span class="p">))</span>
 </code></pre></div>
 <p>If <code>find_config_file()</code> returns <code>None</code>, no <code>datajoint.json</code> was found via the
 upward search — values come from environment variables and defaults only.</p>
@@ -7571,8 +7571,8 @@ chmod<span class="w"> </span><span class="m">600</span><span class="w"> </span>.
 <span class="kn">import</span><span class="w"> </span><span class="nn">datajoint</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dj</span>
 
 <span class="c1"># Check environment variables are set</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s1">&#39;DJ_USER&#39;</span><span class="p">))</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s1">&#39;DJ_PASS&#39;</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s1">'DJ_USER'</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s1">'DJ_PASS'</span><span class="p">))</span>
 
 <span class="c1"># Force reload configuration</span>
 <span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
@@ -7601,7 +7601,7 @@ git history; until rotation completes, the leaked secret is still valid.</p>
 clones don't leak it further:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Remove the leaked file from history (repeat per file, or pass several paths)</span>
 git<span class="w"> </span>filter-branch<span class="w"> </span>--force<span class="w"> </span>--index-filter<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span><span class="s2">&quot;git rm --cached --ignore-unmatch .secrets/database.password&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span><span class="s2">"git rm --cached --ignore-unmatch .secrets/database.password"</span><span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--prune-empty<span class="w"> </span>--tag-name-filter<span class="w"> </span>cat<span class="w"> </span>--<span class="w"> </span>--all
 
 <span class="c1"># Force push (coordinate with team!)</span>
@@ -7614,8 +7614,8 @@ git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </
 <h3 id="minimal-development-setup">Minimal Development Setup<a class="headerlink" href="#minimal-development-setup" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="c1">// datajoint.json</span>
 <span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;database.host&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;localhost&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;safemode&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">  </span><span class="nt">"database.host"</span><span class="p">:</span><span class="w"> </span><span class="s2">"localhost"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"safemode"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
 <span class="p">}</span>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code>// .secrets/ directory
@@ -7625,17 +7625,17 @@ git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </
 <h3 id="production-with-s3-storage">Production with S3 Storage<a class="headerlink" href="#production-with-s3-storage" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="c1">// datajoint.json</span>
 <span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;database.host&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;db.example.com&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;database.port&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">3306</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;database.use_tls&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;safemode&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;stores&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;default&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;main&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;main&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="nt">&quot;protocol&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;s3&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;endpoint&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;s3.amazonaws.com&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;bucket&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;my-bucket&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;location&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;my-project&quot;</span>
+<span class="w">  </span><span class="nt">"database.host"</span><span class="p">:</span><span class="w"> </span><span class="s2">"db.example.com"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"database.port"</span><span class="p">:</span><span class="w"> </span><span class="mi">3306</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"database.use_tls"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"safemode"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"stores"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"default"</span><span class="p">:</span><span class="w"> </span><span class="s2">"main"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"main"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">"protocol"</span><span class="p">:</span><span class="w"> </span><span class="s2">"s3"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"endpoint"</span><span class="p">:</span><span class="w"> </span><span class="s2">"s3.amazonaws.com"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"bucket"</span><span class="p">:</span><span class="w"> </span><span class="s2">"my-bucket"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"location"</span><span class="p">:</span><span class="w"> </span><span class="s2">"my-project"</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>

@@ -3855,7 +3855,7 @@
   <span class="md-ellipsis">
     
   
-    Migrate to 2.0
+    Migrate to 2.x
   
 
     
@@ -6628,12 +6628,12 @@
 <p><strong>5. Multiple storage tiers support diverse access patterns.</strong></p>
 <p>Different attributes can route to different stores:</p>
 <div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">Recording</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Imported</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    -&gt; Session</span>
 <span class="s2">    ---</span>
 <span class="s2">    raw_data : &lt;blob@fast&gt;       # Hot storage for active analysis</span>
 <span class="s2">    archive : &lt;blob@cold&gt;        # Cold storage for long-term retention</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">    """</span>
 </code></pre></div>
 <p>This architecture lets teams work with terabyte-scale datasets while retaining the query power, integrity guarantees, and reproducibility of the relational model.</p>
 <h2 id="pipeline-workflow">Pipeline Workflow<a class="headerlink" href="#pipeline-workflow" title="Permanent link">&para;</a></h2>

@@ -3849,7 +3849,7 @@
   <span class="md-ellipsis">
     
   
-    Migrate to 2.0
+    Migrate to 2.x
   
 
     
@@ -6500,7 +6500,7 @@
 </code></pre></div>
 <p>This opens a Python REPL with <code>dj</code> (DataJoint) already imported:</p>
 <div class="highlight"><pre><span></span><code>DataJoint 2.0.0 REPL
-Type &#39;dj.&#39; and press Tab for available functions.
+Type 'dj.' and press Tab for available functions.
 
 &gt;&gt;&gt; dj.conn()  # Connect to database
 &gt;&gt;&gt; dj.list_schemas()  # List available schemas
@@ -6543,7 +6543,7 @@ Type &#39;dj.&#39; and press Tab for available functions.
 </ul>
 <p>This outputs:</p>
 <div class="highlight"><pre><span></span><code>DataJoint 2.0.0 REPL
-Type &#39;dj.&#39; and press Tab for available functions.
+Type 'dj.' and press Tab for available functions.
 
 Loaded schemas:
   lab -&gt; my_lab
@@ -6590,10 +6590,10 @@ datajoint<span class="w"> </span>--version<span class="w">  </span><span class="
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">datajoint.cli</span><span class="w"> </span><span class="kn">import</span> <span class="n">cli</span>
 
 <span class="c1"># Show version and exit</span>
-<span class="n">cli</span><span class="p">([</span><span class="s2">&quot;--version&quot;</span><span class="p">])</span>
+<span class="n">cli</span><span class="p">([</span><span class="s2">"--version"</span><span class="p">])</span>
 
 <span class="c1"># Start REPL with schemas</span>
-<span class="n">cli</span><span class="p">([</span><span class="s2">&quot;-s&quot;</span><span class="p">,</span> <span class="s2">&quot;my_lab:lab&quot;</span><span class="p">])</span>
+<span class="n">cli</span><span class="p">([</span><span class="s2">"-s"</span><span class="p">,</span> <span class="s2">"my_lab:lab"</span><span class="p">])</span>
 </code></pre></div>
 
 

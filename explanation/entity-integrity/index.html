@@ -4065,7 +4065,7 @@
   <span class="md-ellipsis">
     
   
-    Migrate to 2.0
+    Migrate to 2.x
   
 
     
@@ -7000,13 +7000,13 @@ the first place; the database mirrors and protects that association.</p>
 </table>
 <div class="highlight"><pre><span></span><code><span class="nd">@schema</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Mouse</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
-<span class="s2">    ear_tag : char(6)   # unique ear tag (e.g., &#39;M00142&#39;)</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
+<span class="s2">    ear_tag : char(6)   # unique ear tag (e.g., 'M00142')</span>
 <span class="s2">    ---</span>
 <span class="s2">    date_of_birth : date</span>
-<span class="s2">    sex : enum(&#39;M&#39;, &#39;F&#39;, &#39;U&#39;)</span>
+<span class="s2">    sex : enum('M', 'F', 'U')</span>
 <span class="s2">    strain : varchar(50)</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">    """</span>
 </code></pre></div>
 <p>The database enforces the first question through the primary-key constraint.
 The second and third questions require a <strong>physical identification system</strong>
@@ -7065,12 +7065,12 @@ system, it functions as a natural key as soon as it is printed on a label
 and used in the real world to refer to the entity.</p>
 <div class="highlight"><pre><span></span><code><span class="nd">@schema</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Gene</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Lookup</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
-<span class="s2">    gene_symbol : varchar(20)   # Official gene symbol (e.g., &#39;BRCA1&#39;)</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
+<span class="s2">    gene_symbol : varchar(20)   # Official gene symbol (e.g., 'BRCA1')</span>
 <span class="s2">    ---</span>
 <span class="s2">    full_name : varchar(200)</span>
 <span class="s2">    chromosome : varchar(5)</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">    """</span>
 </code></pre></div>
 <h3 id="surrogate-keys">Surrogate keys<a class="headerlink" href="#surrogate-keys" title="Permanent link">&para;</a></h3>
 <p>A <strong>surrogate key</strong> is an identifier used <em>only inside</em> the database. Users
@@ -7086,12 +7086,12 @@ database still enforces their uniqueness, but the "real-world process" half
 of entity integrity does not apply.</p>
 <div class="highlight"><pre><span></span><code><span class="nd">@schema</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">InternalRecord</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    record_id : uuid    # internal identifier</span>
 <span class="s2">    ---</span>
 <span class="s2">    created_timestamp : datetime(3)</span>
 <span class="s2">    data : &lt;blob&gt;</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">    """</span>
 </code></pre></div>
 <p>Prefer natural keys when a stable, meaningful identifier exists; use
 surrogates when no natural identifier is available or when privacy requires
@@ -7102,12 +7102,12 @@ combine multiple attributes. Composite keys most often arise from inheriting
 foreign keys: a child entity is identified within the context of its parent.</p>
 <div class="highlight"><pre><span></span><code><span class="nd">@schema</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Recording</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    -&gt; Session</span>
 <span class="s2">    recording_idx : int32   # recording number within session</span>
 <span class="s2">    ---</span>
 <span class="s2">    duration : float32       # seconds</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">    """</span>
 </code></pre></div>
 <p>Here <code>(subject_id, session_idx, recording_idx)</code> together form the primary
 key. Neither attribute alone would identify a recording across the table.</p>
@@ -7124,11 +7124,11 @@ is the prerequisite for every relationship that references it.</p>
 </ol>
 <div class="highlight"><pre><span></span><code><span class="nd">@schema</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Segmentation</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Computed</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    -&gt; Scan</span>
 <span class="s2">    ---</span>
 <span class="s2">    n_cells : int64</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">    """</span>
 </code></pre></div>
 <p>The arrow <code>-&gt;</code> inherits the primary key of <code>Scan</code> into <code>Segmentation</code>,
 establishes the foreign-key constraint, and declares the workflow dependency
@@ -7169,29 +7169,29 @@ represents; DataJoint generalizes it from recorded fact rows to <em>computed</em
 <h3 id="tables-that-introduce-dimensions">Tables that introduce dimensions<a class="headerlink" href="#tables-that-introduce-dimensions" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="nd">@schema</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Subject</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    subject_id : varchar(16)   # NEW dimension: subject_id</span>
 <span class="s2">    ---</span>
 <span class="s2">    species : varchar(50)</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">    """</span>
 
 <span class="nd">@schema</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Session</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    -&gt; Subject                 # inherits subject_id</span>
 <span class="s2">    session_idx : int32        # NEW dimension: session_idx</span>
 <span class="s2">    ---</span>
 <span class="s2">    session_date : date</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">    """</span>
 
 <span class="nd">@schema</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Trial</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    -&gt; Session                 # inherits subject_id, session_idx</span>
 <span class="s2">    trial_idx : int32          # NEW dimension: trial_idx</span>
 <span class="s2">    ---</span>
-<span class="s2">    outcome : enum(&#39;success&#39;, &#39;fail&#39;)</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">    outcome : enum('success', 'fail')</span>
+<span class="s2">    """</span>
 </code></pre></div>
 <p>All three tables introduce dimensions:</p>
 <ul>
@@ -7206,11 +7206,11 @@ represents; DataJoint generalizes it from recorded fact rows to <em>computed</em
 existing dimension rather than introducing a new one:</p>
 <div class="highlight"><pre><span></span><code><span class="nd">@schema</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">SubjectProfile</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    -&gt; Subject                 # PK = (subject_id) only</span>
 <span class="s2">    ---</span>
 <span class="s2">    weight : float32</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">    """</span>
 </code></pre></div>
 <p><code>SubjectProfile</code> represents a one-to-one extension of <code>Subject</code> — exactly
 one profile per subject. In schema diagrams, such tables have
@@ -7221,33 +7221,33 @@ New entity types are introduced by Manual or Lookup tables, not by
 computation:</p>
 <div class="highlight"><pre><span></span><code><span class="nd">@schema</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">SessionSummary</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Computed</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    -&gt; Session                 # PK = (subject_id, session_idx)</span>
 <span class="s2">    ---</span>
 <span class="s2">    num_trials : int64</span>
 <span class="s2">    accuracy : float32</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">    """</span>
 </code></pre></div>
 <h3 id="part-tables-can-introduce-dimensions">Part tables CAN introduce dimensions<a class="headerlink" href="#part-tables-can-introduce-dimensions" title="Permanent link">&para;</a></h3>
 <p>Unlike Computed master tables, part tables can introduce new dimensions
 when a single computation produces multiple related results:</p>
 <div class="highlight"><pre><span></span><code><span class="nd">@schema</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Detection</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Computed</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    -&gt; Image</span>
 <span class="s2">    -&gt; DetectionParams</span>
 <span class="s2">    ---</span>
 <span class="s2">    num_blobs : int64</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">    """</span>
 
     <span class="k">class</span><span class="w"> </span><span class="nc">Blob</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Part</span><span class="p">):</span>
-        <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+        <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">        -&gt; master              # inherits (image_id, params_id)</span>
 <span class="s2">        blob_idx : int32       # NEW dimension within detection</span>
 <span class="s2">        ---</span>
 <span class="s2">        x : float32</span>
 <span class="s2">        y : float32</span>
-<span class="s2">        &quot;&quot;&quot;</span>
+<span class="s2">        """</span>
 </code></pre></div>
 <p><code>Detection</code> inherits its dimensions; <code>Detection.Blob</code> introduces <code>blob_idx</code>
 to identify individual blobs within each detection.</p>
@@ -7357,41 +7357,41 @@ token-issuance protocol for anonymous respondents.</p>
 </ol>
 <h2 id="common-mistakes">Common mistakes<a class="headerlink" href="#common-mistakes" title="Permanent link">&para;</a></h2>
 <h3 id="too-few-key-attributes">Too few key attributes<a class="headerlink" href="#too-few-key-attributes" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># Wrong: experiment_id alone isn&#39;t unique</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># Wrong: experiment_id alone isn't unique</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Trial</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    experiment_id : int64</span>
 <span class="s2">    ---</span>
 <span class="s2">    trial_number : int32   # Should be part of the key!</span>
 <span class="s2">    result : float32</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">    """</span>
 </code></pre></div>
 <h3 id="too-many-key-attributes">Too many key attributes<a class="headerlink" href="#too-many-key-attributes" title="Permanent link">&para;</a></h3>
 <p><code>(subject_id, timestamp)</code> is a <em>correct</em> key for a per-subject measurement:
 each reading is its own entity, identified by who was measured and when.
 Over-keying is the opposite mistake — putting a <strong>descriptive</strong> attribute into
 the key, so a single entity fragments into several records:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Wrong: `technician` describes who took the reading; it doesn&#39;t identify it —</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># Wrong: `technician` describes who took the reading; it doesn't identify it —</span>
 <span class="c1"># the same measurement recorded under two technicians becomes two entities</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Measurement</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    subject_id : int32</span>
 <span class="s2">    timestamp : datetime(6)</span>
 <span class="s2">    technician : varchar(32)   # descriptive — belongs below the ---, not in the key</span>
 <span class="s2">    ---</span>
 <span class="s2">    value : float32</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">    """</span>
 </code></pre></div>
 <p>Keep the key to exactly the attributes that identify the entity; put everything
 descriptive below the <code>---</code>.</p>
 <h3 id="mutable-natural-keys">Mutable natural keys<a class="headerlink" href="#mutable-natural-keys" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># Risky: names can change</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Patient</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    patient_name : varchar(100)   # What if they change their name?</span>
 <span class="s2">    ---</span>
 <span class="s2">    date_of_birth : date</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">    """</span>
 </code></pre></div>
 <h2 id="summary">Summary<a class="headerlink" href="#summary" title="Permanent link">&para;</a></h2>
 <p>Entity integrity is the bidirectional one-to-one correspondence between

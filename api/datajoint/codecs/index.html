@@ -3671,7 +3671,7 @@
   <span class="md-ellipsis">
     
   
-    Migrate to 2.0
+    Migrate to 2.x
   
 
     
@@ -6595,28 +6595,28 @@ semantics for complex Python objects.</p>
 <p>Codecs auto-register when subclassed - no decorator needed (Python 3.10+).</p>
 <p>Example:</p>
 <div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">GraphCodec</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Codec</span><span class="p">):</span>
-    <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;graph&quot;</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="s2">"graph"</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">get_dtype</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">is_store</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="k">return</span> <span class="s2">&quot;&lt;blob&gt;&quot;</span>
+        <span class="k">return</span> <span class="s2">"&lt;blob&gt;"</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">encode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">graph</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">store_name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;nodes&#39;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="n">graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">()),</span> <span class="s1">&#39;edges&#39;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="n">graph</span><span class="o">.</span><span class="n">edges</span><span class="p">())}</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s1">'nodes'</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="n">graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">()),</span> <span class="s1">'edges'</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="n">graph</span><span class="o">.</span><span class="n">edges</span><span class="p">())}</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">decode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stored</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="kn">import</span><span class="w"> </span><span class="nn">networkx</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">nx</span>
         <span class="n">G</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">()</span>
-        <span class="n">G</span><span class="o">.</span><span class="n">add_nodes_from</span><span class="p">(</span><span class="n">stored</span><span class="p">[</span><span class="s1">&#39;nodes&#39;</span><span class="p">])</span>
-        <span class="n">G</span><span class="o">.</span><span class="n">add_edges_from</span><span class="p">(</span><span class="n">stored</span><span class="p">[</span><span class="s1">&#39;edges&#39;</span><span class="p">])</span>
+        <span class="n">G</span><span class="o">.</span><span class="n">add_nodes_from</span><span class="p">(</span><span class="n">stored</span><span class="p">[</span><span class="s1">'nodes'</span><span class="p">])</span>
+        <span class="n">G</span><span class="o">.</span><span class="n">add_edges_from</span><span class="p">(</span><span class="n">stored</span><span class="p">[</span><span class="s1">'edges'</span><span class="p">])</span>
         <span class="k">return</span> <span class="n">G</span>
 
 <span class="c1"># Then use in table definitions:</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">MyTable</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s1">&#39;&#39;&#39;</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s1">'''</span>
 <span class="s1">    id : uint16</span>
 <span class="s1">    ---</span>
 <span class="s1">    data : &lt;graph&gt;</span>
-<span class="s1">    &#39;&#39;&#39;</span>
+<span class="s1">    '''</span>
 </code></pre></div>
 
 
@@ -6688,32 +6688,32 @@ semantics for complex Python objects.</p>
 
 <p><span class="doc-section-title">Examples:</span></p>
     <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span><span class="w"> </span><span class="nc">GraphCodec</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Codec</span><span class="p">):</span>
-<span class="gp">... </span>    <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;graph&quot;</span>
+<span class="gp">... </span>    <span class="n">name</span> <span class="o">=</span> <span class="s2">"graph"</span>
 <span class="gp">...</span>
 <span class="gp">... </span>    <span class="k">def</span><span class="w"> </span><span class="nf">get_dtype</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">is_store</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="gp">... </span>        <span class="k">return</span> <span class="s2">&quot;&lt;blob&gt;&quot;</span>
+<span class="gp">... </span>        <span class="k">return</span> <span class="s2">"&lt;blob&gt;"</span>
 <span class="gp">...</span>
 <span class="gp">... </span>    <span class="k">def</span><span class="w"> </span><span class="nf">encode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">graph</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">store_name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="gp">... </span>        <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;nodes&#39;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="n">graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">()),</span> <span class="s1">&#39;edges&#39;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="n">graph</span><span class="o">.</span><span class="n">edges</span><span class="p">())}</span>
+<span class="gp">... </span>        <span class="k">return</span> <span class="p">{</span><span class="s1">'nodes'</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="n">graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">()),</span> <span class="s1">'edges'</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="n">graph</span><span class="o">.</span><span class="n">edges</span><span class="p">())}</span>
 <span class="gp">...</span>
 <span class="gp">... </span>    <span class="k">def</span><span class="w"> </span><span class="nf">decode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stored</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="gp">... </span>        <span class="kn">import</span><span class="w"> </span><span class="nn">networkx</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">nx</span>
 <span class="gp">... </span>        <span class="n">G</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">()</span>
-<span class="gp">... </span>        <span class="n">G</span><span class="o">.</span><span class="n">add_nodes_from</span><span class="p">(</span><span class="n">stored</span><span class="p">[</span><span class="s1">&#39;nodes&#39;</span><span class="p">])</span>
-<span class="gp">... </span>        <span class="n">G</span><span class="o">.</span><span class="n">add_edges_from</span><span class="p">(</span><span class="n">stored</span><span class="p">[</span><span class="s1">&#39;edges&#39;</span><span class="p">])</span>
+<span class="gp">... </span>        <span class="n">G</span><span class="o">.</span><span class="n">add_nodes_from</span><span class="p">(</span><span class="n">stored</span><span class="p">[</span><span class="s1">'nodes'</span><span class="p">])</span>
+<span class="gp">... </span>        <span class="n">G</span><span class="o">.</span><span class="n">add_edges_from</span><span class="p">(</span><span class="n">stored</span><span class="p">[</span><span class="s1">'edges'</span><span class="p">])</span>
 <span class="gp">... </span>        <span class="k">return</span> <span class="n">G</span>
 </code></pre></div>
     <p>Use in table definitions:</p>
 <div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">Connectivity</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s1">&#39;&#39;&#39;</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s1">'''</span>
 <span class="s1">    id : uint16</span>
 <span class="s1">    ---</span>
 <span class="s1">    graph_data : &lt;graph&gt;</span>
-<span class="s1">    &#39;&#39;&#39;</span>
+<span class="s1">    '''</span>
 </code></pre></div>
 <p>Skip auto-registration for abstract base classes:</p>
 <div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">ExternalOnlyCodec</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Codec</span><span class="p">,</span> <span class="n">register</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&#39;&#39;&#39;Abstract base - not registered.&#39;&#39;&#39;</span>
+<span class="w">    </span><span class="sd">'''Abstract base - not registered.'''</span>
     <span class="o">...</span>
 </code></pre></div>
 
@@ -7320,12 +7320,12 @@ empty string if <code>@</code> present without name (default store).</p>
 
 
 <p><span class="doc-section-title">Examples:</span></p>
-    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">parse_type_spec</span><span class="p">(</span><span class="s2">&quot;&lt;blob&gt;&quot;</span><span class="p">)</span>
-<span class="go">(&quot;blob&quot;, None)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">parse_type_spec</span><span class="p">(</span><span class="s2">&quot;&lt;blob@cold&gt;&quot;</span><span class="p">)</span>
-<span class="go">(&quot;blob&quot;, &quot;cold&quot;)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">parse_type_spec</span><span class="p">(</span><span class="s2">&quot;&lt;blob@&gt;&quot;</span><span class="p">)</span>
-<span class="go">(&quot;blob&quot;, &quot;&quot;)</span>
+    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">parse_type_spec</span><span class="p">(</span><span class="s2">"&lt;blob&gt;"</span><span class="p">)</span>
+<span class="go">("blob", None)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">parse_type_spec</span><span class="p">(</span><span class="s2">"&lt;blob@cold&gt;"</span><span class="p">)</span>
+<span class="go">("blob", "cold")</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">parse_type_spec</span><span class="p">(</span><span class="s2">"&lt;blob@&gt;"</span><span class="p">)</span>
+<span class="go">("blob", "")</span>
 </code></pre></div>
 
 
@@ -7780,12 +7780,12 @@ Chain is ordered from outermost to innermost codec.</p>
 
 
 <p><span class="doc-section-title">Examples:</span></p>
-    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">resolve_dtype</span><span class="p">(</span><span class="s2">&quot;&lt;blob&gt;&quot;</span><span class="p">)</span>
-<span class="go">(&quot;bytes&quot;, [BlobCodec], None)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">resolve_dtype</span><span class="p">(</span><span class="s2">&quot;&lt;blob@cold&gt;&quot;</span><span class="p">)</span>
-<span class="go">(&quot;&lt;hash&gt;&quot;, [BlobCodec], &quot;cold&quot;)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">resolve_dtype</span><span class="p">(</span><span class="s2">&quot;bytes&quot;</span><span class="p">)</span>
-<span class="go">(&quot;bytes&quot;, [], None)</span>
+    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">resolve_dtype</span><span class="p">(</span><span class="s2">"&lt;blob&gt;"</span><span class="p">)</span>
+<span class="go">("bytes", [BlobCodec], None)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">resolve_dtype</span><span class="p">(</span><span class="s2">"&lt;blob@cold&gt;"</span><span class="p">)</span>
+<span class="go">("&lt;hash&gt;", [BlobCodec], "cold")</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">resolve_dtype</span><span class="p">(</span><span class="s2">"bytes"</span><span class="p">)</span>
+<span class="go">("bytes", [], None)</span>
 </code></pre></div>
 
 

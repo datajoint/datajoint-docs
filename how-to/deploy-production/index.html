@@ -3988,7 +3988,7 @@
   <span class="md-ellipsis">
     
   
-    Migrate to 2.0
+    Migrate to 2.x
   
 
     
@@ -6815,8 +6815,8 @@
 </code></pre></div>
 <p>Or in <code>datajoint.json</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;database&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;create_tables&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span>
+<span class="w">  </span><span class="nt">"database"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"create_tables"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
@@ -6852,27 +6852,27 @@
 <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">datajoint</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dj</span>
 
 <span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">database</span><span class="o">.</span><span class="n">create_tables</span> <span class="o">=</span> <span class="kc">False</span>
-<span class="n">schema</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">Schema</span><span class="p">(</span><span class="s1">&#39;myproject_ephys&#39;</span><span class="p">)</span>
+<span class="n">schema</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">Schema</span><span class="p">(</span><span class="s1">'myproject_ephys'</span><span class="p">)</span>
 
 <span class="nd">@schema</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Recording</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    recording_id : int</span>
 <span class="s2">    ---</span>
 <span class="s2">    path : varchar(255)</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">    """</span>
 
-<span class="c1"># If table doesn&#39;t exist in database:</span>
+<span class="c1"># If table doesn't exist in database:</span>
 <span class="n">Recording</span><span class="p">()</span>  <span class="c1"># Raises DataJointError: Table not found</span>
 </code></pre></div>
 <h3 id="override-for-migrations">Override for Migrations<a class="headerlink" href="#override-for-migrations" title="Permanent link">&para;</a></h3>
 <p>When you need to create tables during a controlled migration:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Explicit override for this schema only</span>
-<span class="n">schema</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">Schema</span><span class="p">(</span><span class="s1">&#39;myproject_ephys&#39;</span><span class="p">,</span> <span class="n">create_tables</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">schema</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">Schema</span><span class="p">(</span><span class="s1">'myproject_ephys'</span><span class="p">,</span> <span class="n">create_tables</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
 <span class="nd">@schema</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">NewTable</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;...&quot;&quot;&quot;</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""..."""</span>
 
 <span class="n">NewTable</span><span class="p">()</span>  <span class="c1"># Creates the table</span>
 </code></pre></div>
@@ -6885,15 +6885,15 @@
 </div>
 <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">datajoint</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dj</span>
 
-<span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">database</span><span class="o">.</span><span class="n">database_prefix</span> <span class="o">=</span> <span class="s1">&#39;myproject_&#39;</span>
+<span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">database</span><span class="o">.</span><span class="n">database_prefix</span> <span class="o">=</span> <span class="s1">'myproject_'</span>
 </code></pre></div>
 <p>Or via environment variable:</p>
 <div class="highlight"><pre><span></span><code><span class="nb">export</span><span class="w"> </span><span class="nv">DJ_DATABASE_PREFIX</span><span class="o">=</span>myproject_
 </code></pre></div>
 <p>Or in <code>datajoint.json</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;database&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;database_prefix&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;myproject_&quot;</span>
+<span class="w">  </span><span class="nt">"database"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"database_prefix"</span><span class="p">:</span><span class="w"> </span><span class="s2">"myproject_"</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
@@ -6901,12 +6901,12 @@
 <p>Use the prefix when creating schemas:</p>
 <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">datajoint</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dj</span>
 
-<span class="n">prefix</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">database</span><span class="o">.</span><span class="n">database_prefix</span>  <span class="c1"># &#39;myproject_&#39;</span>
+<span class="n">prefix</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">database</span><span class="o">.</span><span class="n">database_prefix</span>  <span class="c1"># 'myproject_'</span>
 
 <span class="c1"># Schema names include prefix</span>
-<span class="n">subject_schema</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">Schema</span><span class="p">(</span><span class="n">prefix</span> <span class="o">+</span> <span class="s1">&#39;subject&#39;</span><span class="p">)</span>   <span class="c1"># myproject_subject</span>
-<span class="n">session_schema</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">Schema</span><span class="p">(</span><span class="n">prefix</span> <span class="o">+</span> <span class="s1">&#39;session&#39;</span><span class="p">)</span>   <span class="c1"># myproject_session</span>
-<span class="n">ephys_schema</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">Schema</span><span class="p">(</span><span class="n">prefix</span> <span class="o">+</span> <span class="s1">&#39;ephys&#39;</span><span class="p">)</span>       <span class="c1"># myproject_ephys</span>
+<span class="n">subject_schema</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">Schema</span><span class="p">(</span><span class="n">prefix</span> <span class="o">+</span> <span class="s1">'subject'</span><span class="p">)</span>   <span class="c1"># myproject_subject</span>
+<span class="n">session_schema</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">Schema</span><span class="p">(</span><span class="n">prefix</span> <span class="o">+</span> <span class="s1">'session'</span><span class="p">)</span>   <span class="c1"># myproject_session</span>
+<span class="n">ephys_schema</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">Schema</span><span class="p">(</span><span class="n">prefix</span> <span class="o">+</span> <span class="s1">'ephys'</span><span class="p">)</span>       <span class="c1"># myproject_ephys</span>
 </code></pre></div>
 <h3 id="benefits">Benefits<a class="headerlink" href="#benefits" title="Permanent link">&para;</a></h3>
 <ul>
@@ -6917,10 +6917,10 @@
 </ul>
 <h3 id="database-permissions-by-prefix">Database Permissions by Prefix<a class="headerlink" href="#database-permissions-by-prefix" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="c1">-- Grant access to all schemas with prefix</span>
-<span class="k">GRANT</span><span class="w"> </span><span class="k">ALL</span><span class="w"> </span><span class="k">PRIVILEGES</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="o">`</span><span class="n">myproject_</span><span class="o">%`</span><span class="p">.</span><span class="o">*</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="s1">&#39;developer&#39;</span><span class="o">@</span><span class="s1">&#39;10.0.0.%&#39;</span><span class="p">;</span>
+<span class="k">GRANT</span><span class="w"> </span><span class="k">ALL</span><span class="w"> </span><span class="k">PRIVILEGES</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="o">`</span><span class="n">myproject_</span><span class="o">%`</span><span class="p">.</span><span class="o">*</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="s1">'developer'</span><span class="o">@</span><span class="s1">'10.0.0.%'</span><span class="p">;</span>
 
 <span class="c1">-- Read-only access to another project</span>
-<span class="k">GRANT</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="o">`</span><span class="n">otherproject_</span><span class="o">%`</span><span class="p">.</span><span class="o">*</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="s1">&#39;developer&#39;</span><span class="o">@</span><span class="s1">&#39;10.0.0.%&#39;</span><span class="p">;</span>
+<span class="k">GRANT</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="o">`</span><span class="n">otherproject_</span><span class="o">%`</span><span class="p">.</span><span class="o">*</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="s1">'developer'</span><span class="o">@</span><span class="s1">'10.0.0.%'</span><span class="p">;</span>
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Restrict Host Access</p>
@@ -6941,9 +6941,9 @@ like <code>'10.0.0.%'</code> to limit access to your internal network.</p>
 <h3 id="development-setup">Development Setup<a class="headerlink" href="#development-setup" title="Permanent link">&para;</a></h3>
 <p><strong>datajoint.json</strong> (committed):
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;database&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;host&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;localhost&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;create_tables&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">  </span><span class="nt">"database"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"host"</span><span class="p">:</span><span class="w"> </span><span class="s2">"localhost"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"create_tables"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div></p>
@@ -6983,8 +6983,8 @@ like <code>'10.0.0.%'</code> to limit access to your internal network.</p>
 </code></pre></div>
 <p>Create the secrets directory with credential files:</p>
 <div class="highlight"><pre><span></span><code>mkdir<span class="w"> </span>-p<span class="w"> </span>secrets
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;prod_user&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>secrets/database.user
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;prod_password&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>secrets/database.password
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"prod_user"</span><span class="w"> </span>&gt;<span class="w"> </span>secrets/database.user
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"prod_password"</span><span class="w"> </span>&gt;<span class="w"> </span>secrets/database.password
 chmod<span class="w"> </span><span class="m">600</span><span class="w"> </span>secrets/*
 </code></pre></div>
 <p>For Kubernetes, use a Secret mounted to <code>/run/secrets/datajoint/</code>:</p>
@@ -7004,17 +7004,17 @@ chmod<span class="w"> </span><span class="m">600</span><span class="w"> </span>s
 <h2 id="complete-production-configuration">Complete Production Configuration<a class="headerlink" href="#complete-production-configuration" title="Permanent link">&para;</a></h2>
 <h3 id="datajointjson-committed">datajoint.json (committed)<a class="headerlink" href="#datajointjson-committed" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;database&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;host&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;localhost&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;port&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">3306</span>
+<span class="w">  </span><span class="nt">"database"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"host"</span><span class="p">:</span><span class="w"> </span><span class="s2">"localhost"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"port"</span><span class="p">:</span><span class="w"> </span><span class="mi">3306</span>
 <span class="w">  </span><span class="p">},</span>
-<span class="w">  </span><span class="nt">&quot;stores&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;default&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;main&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;main&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="nt">&quot;protocol&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;s3&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;endpoint&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;s3.amazonaws.com&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;bucket&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;my-org-data&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;location&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;myproject&quot;</span>
+<span class="w">  </span><span class="nt">"stores"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"default"</span><span class="p">:</span><span class="w"> </span><span class="s2">"main"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"main"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">"protocol"</span><span class="p">:</span><span class="w"> </span><span class="s2">"s3"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"endpoint"</span><span class="p">:</span><span class="w"> </span><span class="s2">"s3.amazonaws.com"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"bucket"</span><span class="p">:</span><span class="w"> </span><span class="s2">"my-org-data"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"location"</span><span class="p">:</span><span class="w"> </span><span class="s2">"myproject"</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
@@ -7035,34 +7035,34 @@ chmod<span class="w"> </span><span class="m">600</span><span class="w"> </span>s
 </code></pre></div>
 <h3 id="verification-script">Verification Script<a class="headerlink" href="#verification-script" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="ch">#!/usr/bin/env python</span>
-<span class="sd">&quot;&quot;&quot;Verify production configuration before deployment.&quot;&quot;&quot;</span>
+<span class="sd">"""Verify production configuration before deployment."""</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">datajoint</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dj</span>
 
 <span class="k">def</span><span class="w"> </span><span class="nf">verify_production_config</span><span class="p">():</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Check that production settings are correctly applied.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Check that production settings are correctly applied."""</span>
     <span class="n">errors</span> <span class="o">=</span> <span class="p">[]</span>
 
     <span class="c1"># Check create_tables is disabled</span>
     <span class="k">if</span> <span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">database</span><span class="o">.</span><span class="n">create_tables</span><span class="p">:</span>
-        <span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;create_tables should be False in production&quot;</span><span class="p">)</span>
+        <span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">"create_tables should be False in production"</span><span class="p">)</span>
 
     <span class="c1"># Check database prefix is set</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">database</span><span class="o">.</span><span class="n">database_prefix</span><span class="p">:</span>
-        <span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;database_prefix should be set in production&quot;</span><span class="p">)</span>
+        <span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">"database_prefix should be set in production"</span><span class="p">)</span>
 
     <span class="c1"># Check not pointing to localhost</span>
-    <span class="k">if</span> <span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">database</span><span class="o">.</span><span class="n">host</span> <span class="o">==</span> <span class="s1">&#39;localhost&#39;</span><span class="p">:</span>
-        <span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;database.host is localhost - expected production host&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">database</span><span class="o">.</span><span class="n">host</span> <span class="o">==</span> <span class="s1">'localhost'</span><span class="p">:</span>
+        <span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">"database.host is localhost - expected production host"</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">errors</span><span class="p">:</span>
         <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">errors</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;ERROR: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"ERROR: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
         <span class="k">return</span> <span class="kc">False</span>
 
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Production configuration verified&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"Production configuration verified"</span><span class="p">)</span>
     <span class="k">return</span> <span class="kc">True</span>
 
-<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">'__main__'</span><span class="p">:</span>
     <span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
     <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">0</span> <span class="k">if</span> <span class="n">verify_production_config</span><span class="p">()</span> <span class="k">else</span> <span class="mi">1</span><span class="p">)</span>
 </code></pre></div>

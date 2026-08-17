@@ -3849,7 +3849,7 @@
   <span class="md-ellipsis">
     
   
-    Migrate to 2.0
+    Migrate to 2.x
   
 
     
@@ -6512,11 +6512,11 @@ printed on labels, written in lab notebooks, or spoken in conversation. Use one
 whenever it exists:</p>
 <div class="highlight"><pre><span></span><code><span class="nd">@schema</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Subject</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
-<span class="s2">    subject_id : varchar(16)    # Lab-assigned ID like &#39;M001&#39;</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
+<span class="s2">    subject_id : varchar(16)    # Lab-assigned ID like 'M001'</span>
 <span class="s2">    ---</span>
 <span class="s2">    species : varchar(32)</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">    """</span>
 </code></pre></div>
 <p><strong>Good candidates:</strong>
 - Lab-assigned IDs
@@ -6526,30 +6526,30 @@ whenever it exists:</p>
 <p>Combine attributes when a single attribute isn't unique:</p>
 <div class="highlight"><pre><span></span><code><span class="nd">@schema</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Session</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    -&gt; Subject</span>
 <span class="s2">    session_idx : int32        # Session number within subject</span>
 <span class="s2">    ---</span>
 <span class="s2">    session_date : date</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">    """</span>
 </code></pre></div>
 <p>The primary key is <code>(subject_id, session_idx)</code>.</p>
 <h2 id="surrogate-keys">Surrogate Keys<a class="headerlink" href="#surrogate-keys" title="Permanent link">&para;</a></h2>
 <p>Use UUIDs when natural keys don't exist:</p>
 <div class="highlight"><pre><span></span><code><span class="nd">@schema</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Experiment</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    experiment_id : uuid</span>
 <span class="s2">    ---</span>
 <span class="s2">    description : varchar(500)</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">    """</span>
 </code></pre></div>
 <p>Generate UUIDs:</p>
 <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">uuid</span>
 
 <span class="n">Experiment</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span>
-    <span class="s1">&#39;experiment_id&#39;</span><span class="p">:</span> <span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">(),</span>
-    <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;Pilot study&#39;</span>
+    <span class="s1">'experiment_id'</span><span class="p">:</span> <span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">(),</span>
+    <span class="s1">'description'</span><span class="p">:</span> <span class="s1">'Pilot study'</span>
 <span class="p">})</span>
 </code></pre></div>
 <h2 id="why-datajoint-avoids-auto-increment">Why DataJoint Avoids Auto-Increment<a class="headerlink" href="#why-datajoint-avoids-auto-increment" title="Permanent link">&para;</a></h2>
@@ -6579,13 +6579,13 @@ whenever it exists:</p>
 <p>Foreign keys above the <code>---</code> become part of the primary key:</p>
 <div class="highlight"><pre><span></span><code><span class="nd">@schema</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Trial</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    -&gt; Session                  # In primary key</span>
 <span class="s2">    trial_idx : int32          # In primary key</span>
 <span class="s2">    ---</span>
 <span class="s2">    -&gt; Stimulus                  # NOT in primary key</span>
-<span class="s2">    outcome : enum(&#39;hit&#39;, &#39;miss&#39;)</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">    outcome : enum('hit', 'miss')</span>
+<span class="s2">    """</span>
 </code></pre></div>
 <h2 id="key-design-guidelines">Key Design Guidelines<a class="headerlink" href="#key-design-guidelines" title="Permanent link">&para;</a></h2>
 <h3 id="keep-keys-small">Keep Keys Small<a class="headerlink" href="#keep-keys-small" title="Permanent link">&para;</a></h3>
@@ -6621,12 +6621,12 @@ Add a sequence number only when the date alone doesn't identify the entity.</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Consider future needs</span>
 <span class="nd">@schema</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Scan</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    -&gt; Session</span>
 <span class="s2">    scan_idx : int16           # Might need int32 for high-throughput</span>
 <span class="s2">    ---</span>
 <span class="s2">    ...</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">    """</span>
 </code></pre></div>
 <h2 id="see-also">See Also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
 <ul>

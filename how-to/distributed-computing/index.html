@@ -3876,7 +3876,7 @@
   <span class="md-ellipsis">
     
   
-    Migrate to 2.0
+    Migrate to 2.x
   
 
     
@@ -6632,7 +6632,7 @@
 <p>Sync the job queue with current key_source:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Add new pending jobs, remove stale ones</span>
 <span class="n">result</span> <span class="o">=</span> <span class="n">SessionAnalysis</span><span class="o">.</span><span class="n">jobs</span><span class="o">.</span><span class="n">refresh</span><span class="p">()</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Added: </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;added&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">, Removed: </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;removed&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Added: </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">'added'</span><span class="p">]</span><span class="si">}</span><span class="s2">, Removed: </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">'removed'</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 </code></pre></div>
 <h2 id="priority-scheduling">Priority Scheduling<a class="headerlink" href="#priority-scheduling" title="Permanent link">&para;</a></h2>
 <p>Control processing order with priorities:</p>
@@ -6647,7 +6647,7 @@
 <div class="highlight"><pre><span></span><code><span class="c1"># View errors</span>
 <span class="n">errors</span> <span class="o">=</span> <span class="n">SessionAnalysis</span><span class="o">.</span><span class="n">jobs</span><span class="o">.</span><span class="n">errors</span>
 <span class="k">for</span> <span class="n">job</span> <span class="ow">in</span> <span class="n">errors</span><span class="o">.</span><span class="n">to_dicts</span><span class="p">():</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Key: </span><span class="si">{</span><span class="n">job</span><span class="si">}</span><span class="s2">, Error: </span><span class="si">{</span><span class="n">job</span><span class="p">[</span><span class="s1">&#39;error_message&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Key: </span><span class="si">{</span><span class="n">job</span><span class="si">}</span><span class="s2">, Error: </span><span class="si">{</span><span class="n">job</span><span class="p">[</span><span class="s1">'error_message'</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
 <span class="c1"># Clear errors to retry</span>
 <span class="n">errors</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
@@ -6675,7 +6675,7 @@
 <span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">jobs</span><span class="o">.</span><span class="n">default_priority</span> <span class="o">=</span> <span class="mi">5</span>
 
 <span class="c1"># Track code version (default: None)</span>
-<span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">jobs</span><span class="o">.</span><span class="n">version_method</span> <span class="o">=</span> <span class="s2">&quot;git&quot;</span>
+<span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">jobs</span><span class="o">.</span><span class="n">version_method</span> <span class="o">=</span> <span class="s2">"git"</span>
 </code></pre></div>
 <h2 id="populate-options">Populate Options<a class="headerlink" href="#populate-options" title="Permanent link">&para;</a></h2>
 <table>
@@ -6730,7 +6730,7 @@
 
 <span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">jobs</span><span class="o">.</span><span class="n">auto_refresh</span> <span class="o">=</span> <span class="kc">True</span>
 <span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">jobs</span><span class="o">.</span><span class="n">keep_completed</span> <span class="o">=</span> <span class="kc">True</span>
-<span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">jobs</span><span class="o">.</span><span class="n">version_method</span> <span class="o">=</span> <span class="s2">&quot;git&quot;</span>
+<span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">jobs</span><span class="o">.</span><span class="n">version_method</span> <span class="o">=</span> <span class="s2">"git"</span>
 
 <span class="c1"># worker.py - run on each node</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">config</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
@@ -6743,7 +6743,7 @@
         <span class="n">suppress_errors</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
         <span class="n">display_progress</span><span class="o">=</span><span class="kc">True</span>
     <span class="p">)</span>
-    <span class="k">if</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;success_count&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">result</span><span class="p">[</span><span class="s1">'success_count'</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
         <span class="k">break</span>  <span class="c1"># No more work</span>
 </code></pre></div>
 <h2 id="see-also">See Also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>

@@ -3893,7 +3893,7 @@
   <span class="md-ellipsis">
     
   
-    Migrate to 2.0
+    Migrate to 2.x
   
 
     
@@ -6597,13 +6597,13 @@
 
 <span class="c1"># View error details</span>
 <span class="k">for</span> <span class="n">job</span> <span class="ow">in</span> <span class="n">SessionAnalysis</span><span class="o">.</span><span class="n">jobs</span><span class="o">.</span><span class="n">errors</span><span class="o">.</span><span class="n">to_dicts</span><span class="p">():</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Key: </span><span class="si">{</span><span class="n">job</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Message: </span><span class="si">{</span><span class="n">job</span><span class="p">[</span><span class="s1">&#39;error_message&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Key: </span><span class="si">{</span><span class="n">job</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Message: </span><span class="si">{</span><span class="n">job</span><span class="p">[</span><span class="s1">'error_message'</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 </code></pre></div>
 <h2 id="get-full-stack-trace">Get Full Stack Trace<a class="headerlink" href="#get-full-stack-trace" title="Permanent link">&para;</a></h2>
 <p>Error stack traces are stored in the jobs table:</p>
 <div class="highlight"><pre><span></span><code><span class="n">job</span> <span class="o">=</span> <span class="p">(</span><span class="n">SessionAnalysis</span><span class="o">.</span><span class="n">jobs</span><span class="o">.</span><span class="n">errors</span> <span class="o">&amp;</span> <span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">fetch1</span><span class="p">()</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">job</span><span class="p">[</span><span class="s1">&#39;error_stack&#39;</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">job</span><span class="p">[</span><span class="s1">'error_stack'</span><span class="p">])</span>
 </code></pre></div>
 <h2 id="retry-failed-jobs">Retry Failed Jobs<a class="headerlink" href="#retry-failed-jobs" title="Permanent link">&para;</a></h2>
 <p>Clear error status and rerun:</p>
@@ -6616,7 +6616,7 @@
 <h2 id="retry-specific-jobs">Retry Specific Jobs<a class="headerlink" href="#retry-specific-jobs" title="Permanent link">&para;</a></h2>
 <p>Target specific failed jobs:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Clear one error</span>
-<span class="p">(</span><span class="n">SessionAnalysis</span><span class="o">.</span><span class="n">jobs</span> <span class="o">&amp;</span> <span class="n">key</span> <span class="o">&amp;</span> <span class="s2">&quot;status=&#39;error&#39;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
+<span class="p">(</span><span class="n">SessionAnalysis</span><span class="o">.</span><span class="n">jobs</span> <span class="o">&amp;</span> <span class="n">key</span> <span class="o">&amp;</span> <span class="s2">"status='error'"</span><span class="p">)</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
 
 <span class="c1"># Retry just that key</span>
 <span class="n">SessionAnalysis</span><span class="o">.</span><span class="n">populate</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">reserve_jobs</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -6633,28 +6633,28 @@
 <p>Handle expected errors gracefully:</p>
 <div class="highlight"><pre><span></span><code><span class="nd">@schema</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">SessionAnalysis</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Computed</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    -&gt; Session</span>
 <span class="s2">    ---</span>
 <span class="s2">    result : float64</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">make</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="n">Session</span> <span class="o">&amp;</span> <span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">fetch1</span><span class="p">(</span><span class="s1">&#39;data&#39;</span><span class="p">)</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="n">Session</span> <span class="o">&amp;</span> <span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">fetch1</span><span class="p">(</span><span class="s1">'data'</span><span class="p">)</span>
             <span class="n">result</span> <span class="o">=</span> <span class="n">risky_computation</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="c1"># Log and skip this key</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Skipping </span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-            <span class="k">return</span>  <span class="c1"># Don&#39;t insert, job remains pending</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Skipping </span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+            <span class="k">return</span>  <span class="c1"># Don't insert, job remains pending</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="o">**</span><span class="n">key</span><span class="p">,</span> <span class="s1">&#39;result&#39;</span><span class="p">:</span> <span class="n">result</span><span class="p">})</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="o">**</span><span class="n">key</span><span class="p">,</span> <span class="s1">'result'</span><span class="p">:</span> <span class="n">result</span><span class="p">})</span>
 </code></pre></div>
 <h2 id="transaction-rollback">Transaction Rollback<a class="headerlink" href="#transaction-rollback" title="Permanent link">&para;</a></h2>
 <p>Failed <code>make()</code> calls automatically rollback:</p>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">make</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
     <span class="c1"># These inserts are in a transaction</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="o">**</span><span class="n">key</span><span class="p">,</span> <span class="s1">&#39;result&#39;</span><span class="p">:</span> <span class="n">value1</span><span class="p">})</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="o">**</span><span class="n">key</span><span class="p">,</span> <span class="s1">'result'</span><span class="p">:</span> <span class="n">value1</span><span class="p">})</span>
     <span class="n">PartTable</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">parts</span><span class="p">)</span>
 
     <span class="c1"># If this raises, all inserts are rolled back</span>
@@ -6667,7 +6667,7 @@
     <span class="n">return_exception_objects</span><span class="o">=</span><span class="kc">True</span>
 <span class="p">)</span>
 
-<span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">exception</span> <span class="ow">in</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;error_list&#39;</span><span class="p">]:</span>
+<span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">exception</span> <span class="ow">in</span> <span class="n">result</span><span class="p">[</span><span class="s1">'error_list'</span><span class="p">]:</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">exception</span><span class="p">,</span> <span class="ne">TimeoutError</span><span class="p">):</span>
         <span class="c1"># Handle timeout differently</span>
         <span class="n">schedule_for_later</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
@@ -6675,23 +6675,23 @@
 <h2 id="monitor-error-rate">Monitor Error Rate<a class="headerlink" href="#monitor-error-rate" title="Permanent link">&para;</a></h2>
 <p>Track errors over time:</p>
 <div class="highlight"><pre><span></span><code><span class="n">progress</span> <span class="o">=</span> <span class="n">SessionAnalysis</span><span class="o">.</span><span class="n">jobs</span><span class="o">.</span><span class="n">progress</span><span class="p">()</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Pending: </span><span class="si">{</span><span class="n">progress</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;pending&#39;</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Errors: </span><span class="si">{</span><span class="n">progress</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;error&#39;</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Success: </span><span class="si">{</span><span class="n">progress</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;success&#39;</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Pending: </span><span class="si">{</span><span class="n">progress</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'pending'</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Errors: </span><span class="si">{</span><span class="n">progress</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'error'</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Success: </span><span class="si">{</span><span class="n">progress</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'success'</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
-<span class="n">error_rate</span> <span class="o">=</span> <span class="n">progress</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;error&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">/</span> <span class="nb">sum</span><span class="p">(</span><span class="n">progress</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error rate: </span><span class="si">{</span><span class="n">error_rate</span><span class="si">:</span><span class="s2">.1%</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="n">error_rate</span> <span class="o">=</span> <span class="n">progress</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'error'</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">/</span> <span class="nb">sum</span><span class="p">(</span><span class="n">progress</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Error rate: </span><span class="si">{</span><span class="n">error_rate</span><span class="si">:</span><span class="s2">.1%</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 </code></pre></div>
 <h2 id="common-error-patterns">Common Error Patterns<a class="headerlink" href="#common-error-patterns" title="Permanent link">&para;</a></h2>
 <h3 id="data-quality-issues">Data Quality Issues<a class="headerlink" href="#data-quality-issues" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">make</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
-    <span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="n">RawData</span> <span class="o">&amp;</span> <span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">fetch1</span><span class="p">(</span><span class="s1">&#39;data&#39;</span><span class="p">)</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="n">RawData</span> <span class="o">&amp;</span> <span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">fetch1</span><span class="p">(</span><span class="s1">'data'</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">validate_data</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="n">DataJointError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid data for </span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="n">DataJointError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Invalid data for </span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
     <span class="c1"># Process valid data</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="o">**</span><span class="n">key</span><span class="p">,</span> <span class="s1">&#39;result&#39;</span><span class="p">:</span> <span class="n">process</span><span class="p">(</span><span class="n">data</span><span class="p">)})</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="o">**</span><span class="n">key</span><span class="p">,</span> <span class="s1">'result'</span><span class="p">:</span> <span class="n">process</span><span class="p">(</span><span class="n">data</span><span class="p">)})</span>
 </code></pre></div>
 <h3 id="resource-constraints">Resource Constraints<a class="headerlink" href="#resource-constraints" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">make</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
@@ -6702,7 +6702,7 @@
         <span class="n">gc</span><span class="o">.</span><span class="n">collect</span><span class="p">()</span>
         <span class="n">result</span> <span class="o">=</span> <span class="n">memory_intensive_computation</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
 
-    <span class="bp">self</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="o">**</span><span class="n">key</span><span class="p">,</span> <span class="s1">&#39;result&#39;</span><span class="p">:</span> <span class="n">result</span><span class="p">})</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="o">**</span><span class="n">key</span><span class="p">,</span> <span class="s1">'result'</span><span class="p">:</span> <span class="n">result</span><span class="p">})</span>
 </code></pre></div>
 <h3 id="external-service-failures">External Service Failures<a class="headerlink" href="#external-service-failures" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">make</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
@@ -6715,7 +6715,7 @@
                 <span class="k">raise</span>
             <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">2</span> <span class="o">**</span> <span class="n">attempt</span><span class="p">)</span>  <span class="c1"># Exponential backoff</span>
 
-    <span class="bp">self</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="o">**</span><span class="n">key</span><span class="p">,</span> <span class="s1">&#39;result&#39;</span><span class="p">:</span> <span class="n">process</span><span class="p">(</span><span class="n">data</span><span class="p">)})</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="o">**</span><span class="n">key</span><span class="p">,</span> <span class="s1">'result'</span><span class="p">:</span> <span class="n">process</span><span class="p">(</span><span class="n">data</span><span class="p">)})</span>
 </code></pre></div>
 <h2 id="see-also">See Also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
 <ul>

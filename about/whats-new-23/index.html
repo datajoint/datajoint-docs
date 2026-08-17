@@ -3671,7 +3671,7 @@
   <span class="md-ellipsis">
     
   
-    Migrate to 2.0
+    Migrate to 2.x
   
 
     
@@ -6544,24 +6544,24 @@
 <h2 id="upstream-trace-and-selfupstream">Upstream Trace and <code>self.upstream</code><a class="headerlink" href="#upstream-trace-and-selfupstream" title="Permanent link">&para;</a></h2>
 <h3 id="diagramtrace-the-upstream-mirror-of-cascade"><code>Diagram.trace()</code> — the upstream mirror of <code>cascade</code><a class="headerlink" href="#diagramtrace-the-upstream-mirror-of-cascade" title="Permanent link">&para;</a></h3>
 <p><code>Diagram.cascade()</code> walks <strong>downstream</strong> and answers <em>"what is affected if these rows are deleted?"</em> <code>Diagram.trace()</code> walks <strong>upstream</strong> and answers <em>"what contributed to these rows?"</em> — reusing the same dependency graph and (inverted) propagation rules.</p>
-<div class="highlight"><pre><span></span><code><span class="n">key</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;subject_id&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;session_id&quot;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span> <span class="s2">&quot;scan_id&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">}</span>
+<div class="highlight"><pre><span></span><code><span class="n">key</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"subject_id"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">"session_id"</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span> <span class="s2">"scan_id"</span><span class="p">:</span> <span class="mi">2</span><span class="p">}</span>
 <span class="n">trace</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">Diagram</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="n">Summary</span> <span class="o">&amp;</span> <span class="n">key</span><span class="p">)</span>
 
-<span class="n">trace</span><span class="p">[</span><span class="n">Session</span><span class="p">]</span><span class="o">.</span><span class="n">fetch1</span><span class="p">(</span><span class="s2">&quot;session_date&quot;</span><span class="p">)</span>   <span class="c1"># ancestor, pre-restricted to what fed this Summary</span>
-<span class="n">trace</span><span class="p">[</span><span class="n">Scan</span><span class="p">]</span><span class="o">.</span><span class="n">fetch1</span><span class="p">(</span><span class="s2">&quot;scan_id&quot;</span><span class="p">)</span>
+<span class="n">trace</span><span class="p">[</span><span class="n">Session</span><span class="p">]</span><span class="o">.</span><span class="n">fetch1</span><span class="p">(</span><span class="s2">"session_date"</span><span class="p">)</span>   <span class="c1"># ancestor, pre-restricted to what fed this Summary</span>
+<span class="n">trace</span><span class="p">[</span><span class="n">Scan</span><span class="p">]</span><span class="o">.</span><span class="n">fetch1</span><span class="p">(</span><span class="s2">"scan_id"</span><span class="p">)</span>
 
-<span class="n">trace</span><span class="o">.</span><span class="n">counts</span><span class="p">()</span>   <span class="c1"># per-table row counts under the seed&#39;s restriction, keyed by full table name</span>
+<span class="n">trace</span><span class="o">.</span><span class="n">counts</span><span class="p">()</span>   <span class="c1"># per-table row counts under the seed's restriction, keyed by full table name</span>
 </code></pre></div>
 <p><code>trace[T]</code> returns the ancestor pre-restricted through the FK join path (a <code>FreeTable</code>, so every query operator and the fetch API apply). Renamed foreign keys are reversed automatically, and convergence is <strong>OR</strong> — an ancestor is included if it's reachable through <em>any</em> FK path. Requesting a table that isn't an ancestor raises <code>DataJointError</code>.</p>
 <h3 id="selfupstream-pre-restricted-ancestor-access-inside-make"><code>self.upstream</code> — pre-restricted ancestor access inside <code>make()</code><a class="headerlink" href="#selfupstream-pre-restricted-ancestor-access-inside-make" title="Permanent link">&para;</a></h3>
 <p>Before each <code>make()</code> call, the framework sets <code>self.upstream = Diagram.trace(self &amp; key)</code>. Indexing it gives you each declared ancestor already restricted to the rows that contributed to the current <code>key</code> — no boilerplate:</p>
 <div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">Spectrum</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Computed</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;-&gt; Recording&quot;</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"-&gt; Recording"</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">make</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
-        <span class="n">rate</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">upstream</span><span class="p">[</span><span class="n">Recording</span><span class="p">]</span><span class="o">.</span><span class="n">fetch1</span><span class="p">(</span><span class="s2">&quot;sampling_rate&quot;</span><span class="p">)</span>
-        <span class="n">samples</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">upstream</span><span class="p">[</span><span class="n">Recording</span><span class="p">]</span><span class="o">.</span><span class="n">to_arrays</span><span class="p">(</span><span class="s2">&quot;signal&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="o">**</span><span class="n">key</span><span class="p">,</span> <span class="s2">&quot;spectrum&quot;</span><span class="p">:</span> <span class="n">compute_spectrum</span><span class="p">(</span><span class="n">samples</span><span class="p">,</span> <span class="n">rate</span><span class="p">)})</span>
+        <span class="n">rate</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">upstream</span><span class="p">[</span><span class="n">Recording</span><span class="p">]</span><span class="o">.</span><span class="n">fetch1</span><span class="p">(</span><span class="s2">"sampling_rate"</span><span class="p">)</span>
+        <span class="n">samples</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">upstream</span><span class="p">[</span><span class="n">Recording</span><span class="p">]</span><span class="o">.</span><span class="n">to_arrays</span><span class="p">(</span><span class="s2">"signal"</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="o">**</span><span class="n">key</span><span class="p">,</span> <span class="s2">"spectrum"</span><span class="p">:</span> <span class="n">compute_spectrum</span><span class="p">(</span><span class="n">samples</span><span class="p">,</span> <span class="n">rate</span><span class="p">)})</span>
 </code></pre></div>
 <p>Construction is lazy — the SQL fires only when you access an ancestor and fetch. Outside <code>make()</code>, accessing <code>self.upstream</code> raises a clear error. It's a pure ergonomic win over <code>(Recording &amp; key).fetch1(...)</code>, and it keeps the read inside the declared upstream — which is what makes the result reproducible. See the <a href="../../reference/specs/autopopulate/#43-the-make-reproducibility-contract">make() reproducibility contract</a> for the full rule set.</p>
 <h3 id="adopting-selfupstream-incrementally">Adopting <code>self.upstream</code> incrementally<a class="headerlink" href="#adopting-selfupstream-incrementally" title="Permanent link">&para;</a></h3>
@@ -6583,11 +6583,11 @@
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">datajoint</span><span class="w"> </span><span class="kn">import</span> <span class="n">deploy</span>
 
 <span class="c1"># Preview</span>
-<span class="n">deploy</span><span class="o">.</span><span class="n">set_replica_identity</span><span class="p">(</span><span class="n">my_schema</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;full&quot;</span><span class="p">,</span> <span class="n">dry_run</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="c1"># {&#39;tables_analyzed&#39;: 12, &#39;tables_modified&#39;: 0, &#39;ddl&#39;: [&#39;ALTER TABLE &quot;ms&quot;.&quot;t1&quot; REPLICA IDENTITY FULL&#39;, ...]}</span>
+<span class="n">deploy</span><span class="o">.</span><span class="n">set_replica_identity</span><span class="p">(</span><span class="n">my_schema</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">"full"</span><span class="p">,</span> <span class="n">dry_run</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="c1"># {'tables_analyzed': 12, 'tables_modified': 0, 'ddl': ['ALTER TABLE "ms"."t1" REPLICA IDENTITY FULL', ...]}</span>
 
 <span class="c1"># Apply (schema-wide or a single table)</span>
-<span class="n">deploy</span><span class="o">.</span><span class="n">set_replica_identity</span><span class="p">(</span><span class="n">my_schema</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;full&quot;</span><span class="p">,</span> <span class="n">dry_run</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">deploy</span><span class="o">.</span><span class="n">set_replica_identity</span><span class="p">(</span><span class="n">my_schema</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">"full"</span><span class="p">,</span> <span class="n">dry_run</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 </code></pre></div>
 <p>It is PostgreSQL-only (raising a clear error on other backends), idempotent at the storage layer, and deliberately a <strong>deployment concern</strong> rather than a schema-definition one. See the <a href="../../reference/specs/deploy-operations/">Deployment Operations Specification</a> and <a href="../../explanation/postgresql-cdc-replication/">PostgreSQL CDC and Replica Identity</a>.</p>
 <h2 id="cascade-fix-part-of-part-and-renamed-fk-chains">Cascade Fix: Part-of-Part and Renamed-FK Chains<a class="headerlink" href="#cascade-fix-part-of-part-and-renamed-fk-chains" title="Permanent link">&para;</a></h2>

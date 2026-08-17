@@ -3671,7 +3671,7 @@
   <span class="md-ellipsis">
     
   
-    Migrate to 2.0
+    Migrate to 2.x
   
 
     
@@ -6828,7 +6828,7 @@
 <p>When you define tables in Python:
 <div class="highlight"><pre><span></span><code><span class="c1"># lab.py module</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">datajoint</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dj</span>
-<span class="n">schema</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">Schema</span><span class="p">(</span><span class="s1">&#39;lab&#39;</span><span class="p">)</span>
+<span class="n">schema</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">Schema</span><span class="p">(</span><span class="s1">'lab'</span><span class="p">)</span>
 
 <span class="nd">@schema</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Subject</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>  <span class="c1"># Subject class → `lab`.`subject` table</span>
@@ -6840,7 +6840,7 @@
 </code></pre></div></p>
 <p>Virtual schemas recreate this mapping when the Python source isn't available:
 <div class="highlight"><pre><span></span><code><span class="c1"># Creates module-like object with table classes</span>
-<span class="n">lab</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">virtual_schema</span><span class="p">(</span><span class="s1">&#39;lab&#39;</span><span class="p">)</span>
+<span class="n">lab</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">virtual_schema</span><span class="p">(</span><span class="s1">'lab'</span><span class="p">)</span>
 <span class="n">lab</span><span class="o">.</span><span class="n">Subject</span>  <span class="c1"># Subject class for `lab`.`subject`</span>
 <span class="n">lab</span><span class="o">.</span><span class="n">Session</span>  <span class="c1"># Session class for `lab`.`session`</span>
 </code></pre></div></p>
@@ -6848,21 +6848,21 @@
 <h2 id="2-schema-introspection-api">2. Schema Introspection API<a class="headerlink" href="#2-schema-introspection-api" title="Permanent link">&para;</a></h2>
 <h3 id="21-direct-table-access">2.1 Direct Table Access<a class="headerlink" href="#21-direct-table-access" title="Permanent link">&para;</a></h3>
 <p>Access individual tables by name using bracket notation:</p>
-<div class="highlight"><pre><span></span><code><span class="n">schema</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">Schema</span><span class="p">(</span><span class="s1">&#39;my_schema&#39;</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><span class="n">schema</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">Schema</span><span class="p">(</span><span class="s1">'my_schema'</span><span class="p">)</span>
 
 <span class="c1"># By CamelCase class name</span>
-<span class="n">experiment</span> <span class="o">=</span> <span class="n">schema</span><span class="p">[</span><span class="s1">&#39;Experiment&#39;</span><span class="p">]</span>
+<span class="n">experiment</span> <span class="o">=</span> <span class="n">schema</span><span class="p">[</span><span class="s1">'Experiment'</span><span class="p">]</span>
 
 <span class="c1"># By snake_case SQL name</span>
-<span class="n">experiment</span> <span class="o">=</span> <span class="n">schema</span><span class="p">[</span><span class="s1">&#39;experiment&#39;</span><span class="p">]</span>
+<span class="n">experiment</span> <span class="o">=</span> <span class="n">schema</span><span class="p">[</span><span class="s1">'experiment'</span><span class="p">]</span>
 
 <span class="c1"># Query the table</span>
 <span class="n">experiment</span><span class="o">.</span><span class="n">fetch</span><span class="p">()</span>
 </code></pre></div>
 <h3 id="22-get_table-method">2.2 <code>get_table()</code> Method<a class="headerlink" href="#22-get_table-method" title="Permanent link">&para;</a></h3>
 <p>Explicit method for table access:</p>
-<div class="highlight"><pre><span></span><code><span class="n">table</span> <span class="o">=</span> <span class="n">schema</span><span class="o">.</span><span class="n">get_table</span><span class="p">(</span><span class="s1">&#39;Experiment&#39;</span><span class="p">)</span>
-<span class="n">table</span> <span class="o">=</span> <span class="n">schema</span><span class="o">.</span><span class="n">get_table</span><span class="p">(</span><span class="s1">&#39;experiment&#39;</span><span class="p">)</span>  <span class="c1"># also works</span>
+<div class="highlight"><pre><span></span><code><span class="n">table</span> <span class="o">=</span> <span class="n">schema</span><span class="o">.</span><span class="n">get_table</span><span class="p">(</span><span class="s1">'Experiment'</span><span class="p">)</span>
+<span class="n">table</span> <span class="o">=</span> <span class="n">schema</span><span class="o">.</span><span class="n">get_table</span><span class="p">(</span><span class="s1">'experiment'</span><span class="p">)</span>  <span class="c1"># also works</span>
 </code></pre></div>
 <p><strong>Parameters:</strong>
 - <code>name</code> (str): Table name in CamelCase or snake_case</p>
@@ -6876,21 +6876,21 @@
 <p>Tables are yielded as <code>FreeTable</code> instances in topological order (dependencies before dependents).</p>
 <h3 id="24-containment-check">2.4 Containment Check<a class="headerlink" href="#24-containment-check" title="Permanent link">&para;</a></h3>
 <p>Check if a table exists:</p>
-<div class="highlight"><pre><span></span><code><span class="k">if</span> <span class="s1">&#39;Experiment&#39;</span> <span class="ow">in</span> <span class="n">schema</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Table exists&quot;</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><span class="k">if</span> <span class="s1">'Experiment'</span> <span class="ow">in</span> <span class="n">schema</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"Table exists"</span><span class="p">)</span>
 
-<span class="k">if</span> <span class="s1">&#39;nonexistent&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">schema</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Table doesn&#39;t exist&quot;</span><span class="p">)</span>
+<span class="k">if</span> <span class="s1">'nonexistent'</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">schema</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"Table doesn't exist"</span><span class="p">)</span>
 </code></pre></div>
 <hr />
 <h2 id="3-virtual-schema-function">3. Virtual Schema Function<a class="headerlink" href="#3-virtual-schema-function" title="Permanent link">&para;</a></h2>
 <h3 id="31-djvirtual_schema">3.1 <code>dj.virtual_schema()</code><a class="headerlink" href="#31-djvirtual_schema" title="Permanent link">&para;</a></h3>
 <p>The recommended way to access existing schemas as modules:</p>
-<div class="highlight"><pre><span></span><code><span class="n">lab</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">virtual_schema</span><span class="p">(</span><span class="s1">&#39;my_lab_schema&#39;</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><span class="n">lab</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">virtual_schema</span><span class="p">(</span><span class="s1">'my_lab_schema'</span><span class="p">)</span>
 
 <span class="c1"># Access tables as attributes (classes)</span>
 <span class="n">lab</span><span class="o">.</span><span class="n">Subject</span><span class="o">.</span><span class="n">fetch</span><span class="p">()</span>
-<span class="n">lab</span><span class="o">.</span><span class="n">Session</span> <span class="o">&amp;</span> <span class="s2">&quot;subject_id=&#39;M001&#39;&quot;</span>
+<span class="n">lab</span><span class="o">.</span><span class="n">Session</span> <span class="o">&amp;</span> <span class="s2">"subject_id='M001'"</span>
 
 <span class="c1"># Full query algebra supported</span>
 <span class="p">(</span><span class="n">lab</span><span class="o">.</span><span class="n">Session</span> <span class="o">*</span> <span class="n">lab</span><span class="o">.</span><span class="n">Subject</span><span class="p">)</span><span class="o">.</span><span class="n">fetch</span><span class="p">()</span>
@@ -6942,26 +6942,26 @@
 <p><strong>Returns:</strong> <code>VirtualModule</code> instance</p>
 <h3 id="32-virtualmodule-class">3.2 VirtualModule Class<a class="headerlink" href="#32-virtualmodule-class" title="Permanent link">&para;</a></h3>
 <p>The underlying class (prefer <code>virtual_schema()</code> function):</p>
-<div class="highlight"><pre><span></span><code><span class="n">module</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">VirtualModule</span><span class="p">(</span><span class="s1">&#39;lab&#39;</span><span class="p">,</span> <span class="s1">&#39;my_lab_schema&#39;</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><span class="n">module</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">VirtualModule</span><span class="p">(</span><span class="s1">'lab'</span><span class="p">,</span> <span class="s1">'my_lab_schema'</span><span class="p">)</span>
 <span class="n">module</span><span class="o">.</span><span class="n">Subject</span><span class="o">.</span><span class="n">fetch</span><span class="p">()</span>
 </code></pre></div>
 <p>The first argument is the module display name, second is the schema name.</p>
 <h3 id="33-accessing-the-schema-object">3.3 Accessing the Schema Object<a class="headerlink" href="#33-accessing-the-schema-object" title="Permanent link">&para;</a></h3>
 <p>Virtual modules expose the underlying Schema:</p>
-<div class="highlight"><pre><span></span><code><span class="n">lab</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">virtual_schema</span><span class="p">(</span><span class="s1">&#39;my_lab_schema&#39;</span><span class="p">)</span>
-<span class="n">lab</span><span class="o">.</span><span class="n">schema</span><span class="o">.</span><span class="n">database</span>  <span class="c1"># &#39;my_lab_schema&#39;</span>
-<span class="n">lab</span><span class="o">.</span><span class="n">schema</span><span class="o">.</span><span class="n">list_tables</span><span class="p">()</span>  <span class="c1"># [&#39;subject&#39;, &#39;session&#39;, ...]</span>
+<div class="highlight"><pre><span></span><code><span class="n">lab</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">virtual_schema</span><span class="p">(</span><span class="s1">'my_lab_schema'</span><span class="p">)</span>
+<span class="n">lab</span><span class="o">.</span><span class="n">schema</span><span class="o">.</span><span class="n">database</span>  <span class="c1"># 'my_lab_schema'</span>
+<span class="n">lab</span><span class="o">.</span><span class="n">schema</span><span class="o">.</span><span class="n">list_tables</span><span class="p">()</span>  <span class="c1"># ['subject', 'session', ...]</span>
 </code></pre></div>
 <hr />
 <h2 id="4-table-class-generation">4. Table Class Generation<a class="headerlink" href="#4-table-class-generation" title="Permanent link">&para;</a></h2>
 <h3 id="41-make_classes">4.1 <code>make_classes()</code><a class="headerlink" href="#41-make_classes" title="Permanent link">&para;</a></h3>
 <p>Create Python classes for all tables in a schema:</p>
-<div class="highlight"><pre><span></span><code><span class="n">schema</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">Schema</span><span class="p">(</span><span class="s1">&#39;existing_schema&#39;</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><span class="n">schema</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">Schema</span><span class="p">(</span><span class="s1">'existing_schema'</span><span class="p">)</span>
 <span class="n">schema</span><span class="o">.</span><span class="n">make_classes</span><span class="p">()</span>
 
 <span class="c1"># Now table classes are available in local namespace</span>
 <span class="n">Subject</span><span class="o">.</span><span class="n">fetch</span><span class="p">()</span>
-<span class="n">Session</span> <span class="o">&amp;</span> <span class="s2">&quot;date &gt; &#39;2024-01-01&#39;&quot;</span>
+<span class="n">Session</span> <span class="o">&amp;</span> <span class="s2">"date &gt; '2024-01-01'"</span>
 </code></pre></div>
 <p><strong>Parameters:</strong>
 - <code>into</code> (dict, optional): Namespace to populate. Defaults to caller's locals.</p>
@@ -6999,7 +6999,7 @@
 </table>
 <h3 id="43-part-table-handling">4.3 Part Table Handling<a class="headerlink" href="#43-part-table-handling" title="Permanent link">&para;</a></h3>
 <p>Part tables are attached to their master classes:</p>
-<div class="highlight"><pre><span></span><code><span class="n">lab</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">virtual_schema</span><span class="p">(</span><span class="s1">&#39;my_lab&#39;</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><span class="n">lab</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">virtual_schema</span><span class="p">(</span><span class="s1">'my_lab'</span><span class="p">)</span>
 
 <span class="c1"># Part tables are nested attributes</span>
 <span class="n">lab</span><span class="o">.</span><span class="n">Session</span><span class="o">.</span><span class="n">Trial</span><span class="o">.</span><span class="n">fetch</span><span class="p">()</span>  <span class="c1"># Session.Trial is a Part table</span>
@@ -7008,7 +7008,7 @@
 <h2 id="5-use-cases">5. Use Cases<a class="headerlink" href="#5-use-cases" title="Permanent link">&para;</a></h2>
 <h3 id="51-data-exploration">5.1 Data Exploration<a class="headerlink" href="#51-data-exploration" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># Quick exploration of unknown schema</span>
-<span class="n">lab</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">virtual_schema</span><span class="p">(</span><span class="s1">&#39;collaborator_lab&#39;</span><span class="p">)</span>
+<span class="n">lab</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">virtual_schema</span><span class="p">(</span><span class="s1">'collaborator_lab'</span><span class="p">)</span>
 
 <span class="c1"># List all tables</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">lab</span><span class="o">.</span><span class="n">schema</span><span class="o">.</span><span class="n">list_tables</span><span class="p">())</span>
@@ -7020,21 +7020,21 @@
 <span class="n">lab</span><span class="o">.</span><span class="n">Subject</span><span class="o">.</span><span class="n">fetch</span><span class="p">(</span><span class="n">limit</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
 </code></pre></div>
 <h3 id="52-cross-schema-queries">5.2 Cross-Schema Queries<a class="headerlink" href="#52-cross-schema-queries" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="n">my_schema</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">Schema</span><span class="p">(</span><span class="s1">&#39;my_analysis&#39;</span><span class="p">)</span>
-<span class="n">external</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">virtual_schema</span><span class="p">(</span><span class="s1">&#39;external_lab&#39;</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><span class="n">my_schema</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">Schema</span><span class="p">(</span><span class="s1">'my_analysis'</span><span class="p">)</span>
+<span class="n">external</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">virtual_schema</span><span class="p">(</span><span class="s1">'external_lab'</span><span class="p">)</span>
 
 <span class="c1"># Reference external tables in queries</span>
 <span class="nd">@my_schema</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Analysis</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Computed</span><span class="p">):</span>
-    <span class="n">definition</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">    -&gt; external.Session</span>
 <span class="s2">    ---</span>
 <span class="s2">    result : float</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="s2">    """</span>
 </code></pre></div>
 <h3 id="53-schema-migration">5.3 Schema Migration<a class="headerlink" href="#53-schema-migration" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="n">old</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">virtual_schema</span><span class="p">(</span><span class="s1">&#39;old_schema&#39;</span><span class="p">)</span>
-<span class="n">new</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">Schema</span><span class="p">(</span><span class="s1">&#39;new_schema&#39;</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><span class="n">old</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">virtual_schema</span><span class="p">(</span><span class="s1">'old_schema'</span><span class="p">)</span>
+<span class="n">new</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">Schema</span><span class="p">(</span><span class="s1">'new_schema'</span><span class="p">)</span>
 
 <span class="c1"># Copy data in topological order (iteration yields dependencies first)</span>
 <span class="k">for</span> <span class="n">table</span> <span class="ow">in</span> <span class="n">old</span><span class="p">:</span>
@@ -7045,7 +7045,7 @@
 <h3 id="54-garbage-collection">5.4 Garbage Collection<a class="headerlink" href="#54-garbage-collection" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">datajoint.gc</span><span class="w"> </span><span class="kn">import</span> <span class="n">scan_hash_references</span>
 
-<span class="n">schema</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">Schema</span><span class="p">(</span><span class="s1">&#39;my_schema&#39;</span><span class="p">)</span>
+<span class="n">schema</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">Schema</span><span class="p">(</span><span class="s1">'my_schema'</span><span class="p">)</span>
 
 <span class="c1"># Scan all tables for hash references</span>
 <span class="n">refs</span> <span class="o">=</span> <span class="n">scan_hash_references</span><span class="p">(</span><span class="n">schema</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>

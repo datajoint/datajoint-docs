@@ -3671,7 +3671,7 @@
   <span class="md-ellipsis">
     
   
-    Migrate to 2.0
+    Migrate to 2.x
   
 
     
@@ -8061,8 +8061,8 @@ Setting an attribute value to None will reset it to the default value (if any).<
 
 
 <p><span class="doc-section-title">Examples:</span></p>
-    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">table</span><span class="o">.</span><span class="n">update1</span><span class="p">({</span><span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">})</span>  <span class="c1"># update value in record with id=1</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">table</span><span class="o">.</span><span class="n">update1</span><span class="p">({</span><span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">})</span>  <span class="c1"># reset value to default</span>
+    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">table</span><span class="o">.</span><span class="n">update1</span><span class="p">({</span><span class="s1">'id'</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">'value'</span><span class="p">:</span> <span class="mi">3</span><span class="p">})</span>  <span class="c1"># update value in record with id=1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">table</span><span class="o">.</span><span class="n">update1</span><span class="p">({</span><span class="s1">'id'</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">'value'</span><span class="p">:</span> <span class="kc">None</span><span class="p">})</span>  <span class="c1"># reset value to default</span>
 </code></pre></div>
 
 
@@ -8463,8 +8463,8 @@ inserts to avoid memory issues. Each chunk is a separate transaction.</p>
 
 <p><span class="doc-section-title">Examples:</span></p>
     <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">Table</span><span class="o">.</span><span class="n">insert</span><span class="p">([</span>
-<span class="gp">... </span>    <span class="nb">dict</span><span class="p">(</span><span class="n">subject_id</span><span class="o">=</span><span class="mi">7</span><span class="p">,</span> <span class="n">species</span><span class="o">=</span><span class="s2">&quot;mouse&quot;</span><span class="p">,</span> <span class="n">date_of_birth</span><span class="o">=</span><span class="s2">&quot;2014-09-01&quot;</span><span class="p">),</span>
-<span class="gp">... </span>    <span class="nb">dict</span><span class="p">(</span><span class="n">subject_id</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">species</span><span class="o">=</span><span class="s2">&quot;mouse&quot;</span><span class="p">,</span> <span class="n">date_of_birth</span><span class="o">=</span><span class="s2">&quot;2014-09-02&quot;</span><span class="p">)])</span>
+<span class="gp">... </span>    <span class="nb">dict</span><span class="p">(</span><span class="n">subject_id</span><span class="o">=</span><span class="mi">7</span><span class="p">,</span> <span class="n">species</span><span class="o">=</span><span class="s2">"mouse"</span><span class="p">,</span> <span class="n">date_of_birth</span><span class="o">=</span><span class="s2">"2014-09-01"</span><span class="p">),</span>
+<span class="gp">... </span>    <span class="nb">dict</span><span class="p">(</span><span class="n">subject_id</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">species</span><span class="o">=</span><span class="s2">"mouse"</span><span class="p">,</span> <span class="n">date_of_birth</span><span class="o">=</span><span class="s2">"2014-09-02"</span><span class="p">)])</span>
 </code></pre></div>
     <p>Large insert with chunking:</p>
     <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">Table</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">large_dataset</span><span class="p">,</span> <span class="n">chunk_size</span><span class="o">=</span><span class="mi">10000</span><span class="p">)</span>
@@ -8572,7 +8572,7 @@ allow_direct_insert, chunk_size.</p>
 <p><span class="doc-section-title">Examples:</span></p>
     <p>Round-trip with to_pandas():</p>
     <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">table</span><span class="o">.</span><span class="n">to_pandas</span><span class="p">()</span>           <span class="c1"># PK becomes index</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="mi">2</span>    <span class="c1"># Modify data</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span><span class="p">[</span><span class="s1">'value'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">'value'</span><span class="p">]</span> <span class="o">*</span> <span class="mi">2</span>    <span class="c1"># Modify data</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">table</span><span class="o">.</span><span class="n">insert_dataframe</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>       <span class="c1"># Auto-detects index as PK</span>
 </code></pre></div>
     <p>Explicit control:</p>
@@ -8624,7 +8624,7 @@ If this table has populated dependent tables, this will fail.</p>
 
 
 <a href="#datajoint.table.Table.delete" class="headerlink" title="Permanent link">&para;</a></h3>
-<div class="doc-signature highlight"><pre><span></span><code><span class="nf">delete</span><span class="p">(</span><span class="n">transaction</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">prompt</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">part_integrity</span><span class="o">=</span><span class="s1">&#39;enforce&#39;</span><span class="p">)</span>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">delete</span><span class="p">(</span><span class="n">transaction</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">prompt</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">part_integrity</span><span class="o">=</span><span class="s1">'enforce'</span><span class="p">)</span>
 </code></pre></div>
 
     <div class="doc doc-contents ">
@@ -8700,7 +8700,7 @@ effectively a built-in dry run.</p>
 
 
 <a href="#datajoint.table.Table.drop" class="headerlink" title="Permanent link">&para;</a></h3>
-<div class="doc-signature highlight"><pre><span></span><code><span class="nf">drop</span><span class="p">(</span><span class="n">prompt</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">part_integrity</span><span class="o">=</span><span class="s1">&#39;enforce&#39;</span><span class="p">)</span>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">drop</span><span class="p">(</span><span class="n">prompt</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">part_integrity</span><span class="o">=</span><span class="s1">'enforce'</span><span class="p">)</span>
 </code></pre></div>
 
     <div class="doc doc-contents ">

@@ -3671,7 +3671,7 @@
   <span class="md-ellipsis">
     
   
-    Migrate to 2.0
+    Migrate to 2.x
   
 
     
@@ -6648,7 +6648,7 @@ the database schema. Useful for accessing schemas without Python source.</p>
 
 
 <p><span class="doc-section-title">Examples:</span></p>
-    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">lab</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">VirtualModule</span><span class="p">(</span><span class="s1">&#39;lab&#39;</span><span class="p">,</span> <span class="s1">&#39;my_lab_schema&#39;</span><span class="p">)</span>
+    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">lab</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">VirtualModule</span><span class="p">(</span><span class="s1">'lab'</span><span class="p">,</span> <span class="s1">'my_lab_schema'</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">lab</span><span class="o">.</span><span class="n">Subject</span><span class="o">.</span><span class="n">fetch</span><span class="p">()</span>
 </code></pre></div>
 
@@ -6896,9 +6896,9 @@ table classes as attributes.</p>
 
 
 <p><span class="doc-section-title">Examples:</span></p>
-    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">lab</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">virtual_schema</span><span class="p">(</span><span class="s1">&#39;my_lab&#39;</span><span class="p">)</span>
+    <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">lab</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">virtual_schema</span><span class="p">(</span><span class="s1">'my_lab'</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">lab</span><span class="o">.</span><span class="n">Subject</span><span class="o">.</span><span class="n">fetch</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">lab</span><span class="o">.</span><span class="n">Session</span> <span class="o">&amp;</span> <span class="s2">&quot;subject_id=&#39;M001&#39;&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">lab</span><span class="o">.</span><span class="n">Session</span> <span class="o">&amp;</span> <span class="s2">"subject_id='M001'"</span>
 </code></pre></div>
 
 
