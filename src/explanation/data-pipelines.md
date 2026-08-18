@@ -26,9 +26,9 @@ These components work together: code defines the schema and computations, the da
 
 A DataJoint pipeline forms a **Directed Acyclic Graph (DAG)** at two levels:
 
-![Pipeline DAG Structure](../images/pipeline-illustration.png/)
+![Pipeline DAG Structure](../images/pipeline-modules.svg)
 
-**Nodes** represent Python modules, which correspond to database schemas.
+**Nodes** represent Python modules, which correspond to database schemas — the dashed clusters in the diagram above.
 
 **Edges** represent:
 
@@ -65,7 +65,9 @@ This model treats the database schema as an **executable workflow specification*
 
 Each schema corresponds to a dedicated Python module. The module import structure mirrors the foreign key dependencies between schemas:
 
-![Schema Structure](../images/schema-illustration.png/)
+Within a schema, tables of different tiers form their own DAG — here, a `scan` schema with lookup, manual, and imported tables, including a master table with its part tables:
+
+![Schema Structure](../images/scan-schema.svg)
 
 ```
 my_pipeline/
