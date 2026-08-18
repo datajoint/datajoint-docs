@@ -92,7 +92,7 @@ value is rejected up front and the row that would reference it is never
 committed — the same guarantee scalar columns give, extended to object-backed
 types. The stored object is integrated with the row's lifecycle rather than
 being an opaque side file: it is addressed by the schema and reclaimed by
-[garbage collection](referential-integrity.md) when no row references it
+[garbage collection](../how-to/garbage-collection.md) when no row references it
 (object stores are not transactional participants, so a failed insert leaves at
 most an unreferenced object, never a bad value in the table).
 Domain integrity therefore holds uniformly — from `int32` and `enum` to
