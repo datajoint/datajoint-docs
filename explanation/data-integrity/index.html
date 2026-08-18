@@ -6581,9 +6581,27 @@ each column: <code>int32</code>, <code>int64</code>, <code>float32</code>, <code
 <code>varchar(N)</code>, <code>char(N)</code>, <code>date</code>, <code>datetime</code>, <code>uuid</code>, and <code>enum(...)</code> for
 closed categorical sets. Choosing <code>sex : enum('M', 'F', 'U')</code> instead of a
 free-text field means an invalid category can never be stored, and
-<code>decimal(5, 2)</code> fixes both magnitude and precision. The type system is
-extensible: custom codecs attach domain rules to structured and object-backed
-attributes as well.</p>
+<code>decimal(5, 2)</code> fixes both magnitude and precision.</p>
+<p>The type system is <strong>extensible</strong>, and this is where DataJoint carries domain
+integrity beyond the scalar SQL types. Through
+<a href="../data-pipelines/#object-augmented-schemas">Object-Augmented Schemas</a> and the
+<a href="../../how-to/create-custom-codec/">codec system</a>, an attribute can hold a
+domain-specific datatype — a calcium-imaging movie, a spike-sorting result, a
+fitted model — whose contents live in object storage but are addressed and
+governed by the schema. A <a href="../../reference/specs/codec-api/">codec</a> <em>defines</em> that
+datatype: it can run <strong>arbitrary validation checks</strong> when a value is encoded —
+rejecting anything outside the domain's valid set, exactly as <code>enum</code> does for a
+category — and it exposes <strong>typed access methods</strong> for reading the value back.
+The check runs at encode time, <em>before</em> anything is written, so an invalid
+value is rejected up front and the row that would reference it is never
+committed — the same guarantee scalar columns give, extended to object-backed
+types. The stored object is integrated with the row's lifecycle rather than
+being an opaque side file: it is addressed by the schema and reclaimed by
+<a href="../../how-to/garbage-collection/">garbage collection</a> when no row references it
+(object stores are not transactional participants, so a failed insert leaves at
+most an unreferenced object, never a bad value in the table).
+Domain integrity therefore holds uniformly — from <code>int32</code> and <code>enum</code> to
+arbitrary structured and object-backed types.</p>
 <h3 id="2-completeness">2. Completeness<a class="headerlink" href="#2-completeness" title="Permanent link">&para;</a></h3>
 <p><strong>Required information is always present.</strong> An attribute that must have a
 value cannot be left empty. This prevents records that are structurally
