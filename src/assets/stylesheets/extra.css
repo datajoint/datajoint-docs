@@ -1,6 +1,129 @@
 /* ===================================================================
    DataJoint Documentation Custom Styles
+
+   Palette and typography follow the DataJoint visual identity:
+     Navy   #171C39  — structure: headers, headings, body text
+     Blue   #00A0DF  — accent: links, the mark, data accents
+     Orange #FF5113  — emphasis, one role only (interactive accent)
+     Grey   #808285  — captions and rules; never body text
+     White  #FFFFFF
+   Type: Roboto 400 (headings), Roboto Slab 300 (body),
+   Source Code Pro (code).
    =================================================================== */
+
+:root {
+  --dj-navy: #171c39;
+  --dj-blue: #00a0df;
+  --dj-orange: #ff5113;
+  --dj-grey: #808285;
+  --dj-white: #ffffff;
+}
+
+/* -------------------------------------------------------------------
+   Typography — Roboto for headings (loaded in main.html), Roboto Slab
+   for body (theme font), Source Code Pro for code (theme font).
+   ------------------------------------------------------------------- */
+
+.md-typeset {
+  font-weight: 300;
+}
+
+.md-typeset h1,
+.md-typeset h2,
+.md-typeset h3,
+.md-typeset h4,
+.md-typeset h5,
+.md-typeset h6 {
+  font-family: "Roboto", system-ui, -apple-system, sans-serif;
+  font-weight: 400;
+}
+
+.md-typeset strong {
+  font-weight: 700;
+}
+
+/* -------------------------------------------------------------------
+   Light color scheme
+   ------------------------------------------------------------------- */
+
+[data-md-color-scheme="datajoint"] {
+  /* header ribbon: navy field, white text */
+  --md-primary-fg-color: var(--dj-navy);
+  --md-primary-fg-color--dark: var(--dj-navy);
+  --md-primary-bg-color: var(--dj-white);
+
+  /* links */
+  --md-typeset-a-color: var(--dj-blue);
+  /* single interactive emphasis: hover, focus, highlights */
+  --md-accent-fg-color: var(--dj-orange);
+
+  /* body text is navy; grey only for secondary text and rules */
+  --md-typeset-color: var(--dj-navy);
+  --md-default-fg-color: var(--dj-navy);
+  --md-default-fg-color--light: var(--dj-grey);
+}
+
+/* -------------------------------------------------------------------
+   Dark color scheme — slate, tuned to the palette. Background is a
+   navy-tinted dark that matches the dark theme used by pipeline
+   diagrams, so embedded figures blend with the page.
+   ------------------------------------------------------------------- */
+
+[data-md-color-scheme="slate"] {
+  /* header ribbon stays navy */
+  --md-primary-fg-color: var(--dj-navy);
+  --md-primary-fg-color--dark: var(--dj-navy);
+  --md-primary-bg-color: var(--dj-white);
+
+  /* links and interactive emphasis */
+  --md-typeset-a-color: var(--dj-blue);
+  --md-accent-fg-color: var(--dj-orange);
+
+  /* navy-tinted dark background family */
+  --md-default-bg-color: #161a21;
+  --md-code-bg-color: #1e232c;
+  --md-footer-bg-color: #10131a;
+  --md-footer-bg-color--dark: #0b0d12;
+}
+
+/* -------------------------------------------------------------------
+   Header logo — the mark renders via currentColor; the sail always
+   carries its own blue, which is the approved treatment on a navy
+   field.
+   ------------------------------------------------------------------- */
+
+.md-header__button.md-logo svg,
+.md-nav__button.md-logo svg {
+  fill: var(--dj-blue);
+}
+
+/* footer social icons */
+.md-social__link svg {
+  color: var(--dj-blue);
+}
+
+/* -------------------------------------------------------------------
+   Navigation
+   ------------------------------------------------------------------- */
+
+/* footer previous/next navigation */
+.md-footer__inner:not([hidden]) {
+  display: none;
+}
+
+/* left navigation title */
+.md-nav__title {
+  visibility: hidden;
+}
+.md-nav__title:after {
+  visibility: hidden;
+  content: "DataJoint Documentation";
+  display: block;
+}
+
+.md-typeset figure img {
+  display: inline;
+}
 
 /* -------------------------------------------------------------------
    Version Banner (Site-wide)
@@ -24,7 +147,7 @@
 }
 
 .md-banner a {
-  color: var(--md-primary-bg-color);
+  color: var(--dj-blue);
   text-decoration: underline;
   font-weight: 500;
 }
@@ -35,58 +158,62 @@
 
 /* -------------------------------------------------------------------
    Version Admonitions
+
+   These are coding colors: green/orange/red keep their added/changed/
+   deprecated semantics, tuned to sit alongside the brand palette
+   (orange is DataJoint Orange).
    ------------------------------------------------------------------- */
 
 /* New in version X.Y */
 .admonition.version-added {
-  border-left-color: #00c853;
+  border-left-color: #00875a;
 }
 
 .admonition.version-added > .admonition-title {
-  background-color: rgba(0, 200, 83, 0.1);
+  background-color: rgba(0, 135, 90, 0.1);
 }
 
 .admonition.version-added > .admonition-title::before {
-  background-color: #00c853;
+  background-color: #00875a;
   content: "✨";
 }
 
 /* Changed in version X.Y */
 .admonition.version-changed {
-  border-left-color: #ff9800;
+  border-left-color: var(--dj-orange);
 }
 
 .admonition.version-changed > .admonition-title {
-  background-color: rgba(255, 152, 0, 0.1);
+  background-color: rgba(255, 81, 19, 0.1);
 }
 
 .admonition.version-changed > .admonition-title::before {
-  background-color: #ff9800;
+  background-color: var(--dj-orange);
   content: "🔄";
 }
 
 /* Deprecated since version X.Y */
 .admonition.version-deprecated {
-  border-left-color: #f44336;
+  border-left-color: #c62828;
 }
 
 .admonition.version-deprecated > .admonition-title {
-  background-color: rgba(244, 67, 54, 0.1);
+  background-color: rgba(198, 40, 40, 0.1);
 }
 
 .admonition.version-deprecated > .admonition-title::before {
-  background-color: #f44336;
+  background-color: #c62828;
   content: "⚠️";
 }
 
 /* -------------------------------------------------------------------
-   Inline Version Badges
+   Inline Version Badges (coding colors, same mapping as above)
    ------------------------------------------------------------------- */
 
 .version-badge {
   font-size: 0.7em;
   padding: 0.2em 0.5em;
-  background-color: #2196F3;
+  background-color: var(--dj-blue);
   color: white;
   border-radius: 3px;
   font-weight: 500;
@@ -95,15 +222,15 @@
 }
 
 .version-badge.deprecated {
-  background-color: #f44336;
+  background-color: #c62828;
 }
 
 .version-badge.new {
-  background-color: #00c853;
+  background-color: #00875a;
 }
 
 .version-badge.changed {
-  background-color: #ff9800;
+  background-color: var(--dj-orange);
 }
 
 /* -------------------------------------------------------------------
@@ -147,11 +274,33 @@
 }
 
 .version-comparison .legacy {
-  background-color: rgba(244, 67, 54, 0.05);
-  border-left: 3px solid #f44336;
+  background-color: rgba(198, 40, 40, 0.05);
+  border-left: 3px solid #c62828;
 }
 
 .version-comparison .current {
-  background-color: rgba(0, 200, 83, 0.05);
-  border-left: 3px solid #00c853;
+  background-color: rgba(0, 135, 90, 0.05);
+  border-left: 3px solid #00875a;
+}
+
+/* -------------------------------------------------------------------
+   DataJoint query result tables — make them smaller
+   ------------------------------------------------------------------- */
+
+.jp-OutputArea-output table,
+.jp-RenderedHTMLCommon table {
+  font-size: 0.75rem;
+}
+
+.jp-OutputArea-output table td,
+.jp-OutputArea-output table th,
+.jp-RenderedHTMLCommon table td,
+.jp-RenderedHTMLCommon table th {
+  padding: 0.25rem 0.5rem;
+}
+
+/* Reduce monospace font size in notebook outputs */
+.jp-OutputArea-output pre,
+.jp-OutputArea-output code {
+  font-size: 0.8rem;
 }
