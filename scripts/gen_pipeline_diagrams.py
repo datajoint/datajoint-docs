@@ -21,7 +21,13 @@ Needs a database and a graphviz ``dot`` on PATH::
     docker compose up -d postgres
     DJ_HOST=localhost DJ_PORT=5432 DJ_USER=postgres DJ_PASS=tutorial \
         DJ_BACKEND=postgresql DJ_USE_TLS=false \
+        DJ_DATABASE_NAME=docs_diagrams \
         python scripts/gen_pipeline_diagrams.py
+
+``DJ_DATABASE_NAME`` matters: on PostgreSQL a ``dj.Schema`` is a schema *within*
+a database, so giving this example its own database lets it keep unprefixed
+schema names without colliding with anything else on the server. Create it once
+with ``createdb docs_diagrams``.
 
 ``--check`` renders without writing and exits non-zero if any committed figure
 differs — suitable for CI. The example schemas are dropped afterwards unless
@@ -32,11 +38,13 @@ and labels exactly, with the caveats below.
 
 Reproducibility caveats
 -----------------------
-- **Needs an empty database.** The schema names are unprefixed (``reference``,
+- **Give it its own database.** The schema names are unprefixed (``reference``,
   ``lab``, ``session``, ``imaging``) because ``dj.Diagram`` takes each cluster
-  label from the Python module name and these must agree. On a server that
-  already holds a schema by one of those names, the diagram silently picks up the
-  foreign tables instead. Point ``DJ_HOST``/``DJ_PORT`` at a throwaway instance.
+  label from the Python module name and the two must agree. Unprefixed names are
+  safe as long as ``DJ_DATABASE_NAME`` points at a database reserved for this
+  example — separate databases can hold same-named schemas. Without it the
+  connection lands in the default ``postgres`` database, where a pre-existing
+  schema of the same name is picked up silently and rendered instead.
 - **Padding entities depend on pydot.** Tooltip padding is emitted as ``&#160;``
   by the pydot that produced the committed figures and as literal spaces by
   4.0.1, which shows up as a whole-file diff with no visual change. Compare
