@@ -40,7 +40,7 @@ both `session` and `imaging`. Fourteen tables (including parts) collapse to four
 tables of each module. Each edge is an individual foreign key constraint — the two foreign
 keys that cross the `session → imaging` boundary (`Scan → ScanQuality` and
 `ScanInfo → MotionCorrection`) appear separately here, having collapsed into the single
-bundled edge above; likewise `Subject → Session` and `Session → User` across
+bundled edge above; likewise `Subject → Session` and `User → Session` across
 `lab → session`.
 
 ![Pipeline DAG at the table level](../images/pipeline-modules.svg)
