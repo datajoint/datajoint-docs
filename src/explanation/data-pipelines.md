@@ -30,12 +30,16 @@ pipeline can be viewed at either one.
 **Module level — the collapsed view.** Each node is a Python module, which corresponds to a
 database schema. Each edge represents a bundle of dependencies: the foreign key references
 between tables of the two schemas, together with the Python import dependency between their
-modules.
+modules. A heavier edge carries a larger bundle — below, the `scan → imaging` edge bundles
+two separate foreign keys, and `reference` supplies both `scan` and `imaging`.
 
 ![Pipeline DAG at the module level](../images/pipeline-modules-collapsed.svg)
 
 **Table level — the expanded view.** Each node is a table; the dashed clusters group the
-tables of each module. Each edge is an individual foreign key constraint.
+tables of each module. Each edge is an individual foreign key constraint — the two foreign
+keys that cross the `scan → imaging` boundary (`Scan → ScanQuality` and
+`ScanInfo → MotionCorrection`) appear separately here, having collapsed into the single
+bundled edge above.
 
 ![Pipeline DAG at the table level](../images/pipeline-modules.svg)
 
