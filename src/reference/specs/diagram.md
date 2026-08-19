@@ -340,13 +340,17 @@ save(filename, format=None)
 
 Each table tier has a distinct visual style:
 
-| Tier | Shape | Fill Color | Font Color |
-|------|-------|------------|------------|
-| **Manual** | rectangle | green | dark green |
-| **Lookup** | rectangle | gray | dark gray |
-| **Computed** | ellipse | red | dark red |
-| **Imported** | ellipse | blue | dark blue |
-| **Part** | rectangle (smaller, muted) | white | gray |
+| Tier | Shape | Fill | Stroke | Text |
+|------|-------|------|--------|------|
+| **Manual** | rounded box | green `#E8F0E9` | `#3E7A52` | `#28513A` |
+| **Lookup** | rounded box | gray `#F0F0F1` | `#808285` | `#5A5C5F` |
+| **Imported** | ellipse | blue `#E0F4FC` | `#00A0DF` | `#00537A` |
+| **Computed** | ellipse | orange `#FFEDE5` | `#FF5113` | `#B23200` |
+| **Part** | rounded box (smaller, muted) | white `#FFFFFF` | `#B9BBBE` | `#55585C` |
+
+The dark theme derives by rule (same hue per tier, fills inverted toward navy-tinted
+darks, text brightened to WCAG AA); the adaptive SVG embeds both via a
+`prefers-color-scheme` block.
 
 ### Edge Styles
 
