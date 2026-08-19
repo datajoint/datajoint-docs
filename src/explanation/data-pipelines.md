@@ -28,11 +28,13 @@ A DataJoint pipeline forms a **Directed Acyclic Graph (DAG)** at two levels, and
 pipeline can be viewed at either one.
 
 **Module level — the collapsed view.** Each node is a Python module, which corresponds to a
-database schema. Each edge represents a bundle of dependencies: the foreign key references
-between tables of the two schemas, together with the Python import dependency between their
-modules. A heavier edge carries a larger bundle — below, the `lab → session` and
-`session → imaging` edges each bundle two separate foreign keys, and `reference` supplies
-both `session` and `imaging`. Fourteen tables (including parts) collapse to four nodes.
+database schema. There is one edge per pair of schemas, standing for a bundle of dependencies:
+every foreign key reference between the two schemas' tables, together with the Python import
+dependency between their modules. A collapsed edge records only that the bundle exists — line
+weight and line style describe an individual foreign key, so they are read at the table level,
+not here. Below, `lab → session` and `session → imaging` each bundle two foreign keys,
+`reference` supplies both `session` and `imaging`, and fourteen tables (including parts)
+collapse to four nodes.
 
 ![Pipeline DAG at the module level](../images/pipeline-modules-collapsed.svg)
 
@@ -41,7 +43,9 @@ tables of each module. Each edge is an individual foreign key constraint — the
 keys that cross the `session → imaging` boundary (`Scan → ScanQuality` and
 `ScanInfo → MotionCorrection`) appear separately here, having collapsed into the single
 bundled edge above; likewise `Subject → Session` and `User → Session` across
-`lab → session`.
+`lab → session`. Each edge here carries the full notation — line weight for cardinality, line
+style for whether the reference is part of the child's primary key — as specified in
+[Diagram](../reference/specs/diagram.md).
 
 ![Pipeline DAG at the table level](../images/pipeline-modules.svg)
 
