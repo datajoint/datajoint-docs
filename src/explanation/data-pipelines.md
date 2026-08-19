@@ -32,7 +32,7 @@ database schema. Each edge represents a bundle of dependencies: the foreign key 
 between tables of the two schemas, together with the Python import dependency between their
 modules. A heavier edge carries a larger bundle — below, the `lab → session` and
 `session → imaging` edges each bundle two separate foreign keys, and `reference` supplies
-both `session` and `imaging`. Twelve tables collapse to four nodes.
+both `session` and `imaging`. Fourteen tables (including parts) collapse to four nodes.
 
 ![Pipeline DAG at the module level](../images/pipeline-modules-collapsed.svg)
 
@@ -74,22 +74,22 @@ This model treats the database schema as an **executable workflow specification*
 
 ## Schema Organization
 
-Each schema corresponds to a dedicated Python module. The module import structure mirrors the foreign key dependencies between schemas:
-
-Within a schema, tables of different tiers form their own DAG — here, a `scan` schema with lookup, manual, and imported tables, including a master table with its part tables:
-
-![Schema Structure](../images/scan-schema.svg)
+Each schema corresponds to a dedicated Python module, and the module import structure mirrors the foreign key dependencies between schemas. The pipeline above is organized as:
 
 ```
 my_pipeline/
 ├── src/
 │   └── my_pipeline/
 │       ├── __init__.py
-│       ├── subject.py      # subject schema (no dependencies)
-│       ├── session.py      # session schema (depends on subject)
-│       ├── acquisition.py  # acquisition schema (depends on session)
-│       └── analysis.py     # analysis schema (depends on acquisition)
+│       ├── lab.py        # lab schema (no dependencies)
+│       ├── reference.py  # reference schema (no dependencies)
+│       ├── session.py    # session schema (imports lab, reference)
+│       └── imaging.py    # imaging schema (imports session, reference)
 ```
+
+Within a schema, tables form their own DAG. Drilling into the `imaging` module: computed tables, including two masters with their part tables — `Segmentation` with `Segmentation.Roi`, and `Fluorescence` with `Fluorescence.Trace`, whose rows reference individual ROIs:
+
+![The imaging module expanded](../images/imaging-schema.svg)
 
 For practical guidance on organizing multi-schema pipelines, configuring repositories, and managing team access, see [Manage a Pipeline Project](../how-to/manage-pipeline-project.md/).
 
@@ -130,14 +130,18 @@ When a database row is deleted, its associated stored objects are garbage-collec
 Different attributes can route to different stores:
 
 ```python
-class Recording(dj.Imported):
+class ScanInfo(dj.Imported):
     definition = """
-    -> Session
+    -> Scan
     ---
-    raw_data : <blob@fast>       # Hot storage for active analysis
+    nframes : int32
+    fps : float32
+    raw_movie : <blob@fast>      # Hot storage for active analysis
     archive : <blob@cold>        # Cold storage for long-term retention
     """
 ```
+
+Here the pipeline's `ScanInfo` table keeps its scalar metadata (`nframes`, `fps`) in the database while routing its payloads to two different stores.
 
 This architecture lets teams work with terabyte-scale datasets while retaining the query power, integrity guarantees, and reproducibility of the relational model.
 
@@ -145,11 +149,11 @@ This architecture lets teams work with terabyte-scale datasets while retaining t
 
 A typical data pipeline workflow:
 
-1. **Acquisition** — Data is collected from instruments, experiments, or external sources. Raw files land in object storage; metadata populates Manual tables.
+1. **Acquisition** — Data is collected from instruments, experiments, or external sources. Raw files land in object storage; metadata populates Manual tables (`Session`, `Scan`).
 
-2. **Import** — Automated processes parse raw data, extract signals, and populate Imported tables with structured results.
+2. **Import** — Automated processes parse raw data, extract signals, and populate Imported tables with structured results (`ScanInfo`).
 
-3. **Computation** — The `populate()` mechanism identifies new data and triggers downstream processing. Compute resources execute transformations and populate Computed tables.
+3. **Computation** — The `populate()` mechanism identifies new data and triggers downstream processing. Compute resources execute transformations and populate Computed tables (`MotionCorrection`, `Segmentation`, `Fluorescence`).
 
 4. **Query & Analysis** — Users query results across the pipeline, combining data from multiple stages to generate insights, reports, or visualizations.
 
