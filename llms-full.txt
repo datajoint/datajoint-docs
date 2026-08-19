@@ -1,6 +1,6 @@
 # DataJoint Documentation (Full)
 
-Generated: 2026-08-19 18:53:18 UTC
+Generated: 2026-08-19 23:50:49 UTC
 Commit: unknown
 Branch: unknown
 
@@ -1316,18 +1316,33 @@ These components work together: code defines the schema and computations, the da
 
 ## Pipeline as a DAG
 
-A DataJoint pipeline forms a **Directed Acyclic Graph (DAG)** at two levels:
+A DataJoint pipeline forms a **Directed Acyclic Graph (DAG)** at two levels, and the same
+pipeline can be viewed at either one.
 
-![Pipeline DAG Structure](../images/pipeline-modules.svg)
+**Module level — the collapsed view.** Each node is a Python module, which corresponds to a
+database schema. There is one edge per pair of schemas, standing for a bundle of dependencies:
+every foreign key reference between the two schemas' tables, together with the Python import
+dependency between their modules. A collapsed edge records only that the bundle exists — line
+weight and line style describe an individual foreign key, so they are read at the table level,
+not here. Below, `lab → session` and `session → imaging` each bundle two foreign keys,
+`reference` supplies both `session` and `imaging`, and fourteen tables (including parts)
+collapse to four nodes.
 
-**Nodes** represent Python modules, which correspond to database schemas — the dashed clusters in the diagram above.
+![Pipeline DAG at the module level](../images/pipeline-modules-collapsed.svg)
 
-**Edges** represent:
+**Table level — the expanded view.** Each node is a table; the dashed clusters group the
+tables of each module. Each edge is an individual foreign key constraint — the two foreign
+keys that cross the `session → imaging` boundary (`Scan → ScanQuality` and
+`ScanInfo → MotionCorrection`) appear separately here, having collapsed into the single
+bundled edge above; likewise `Subject → Session` and `User → Session` across
+`lab → session`. Each edge here carries the full notation — line weight for cardinality, line
+style for whether the reference is part of the child's primary key — as specified in
+[Diagram](../reference/specs/diagram.md).
 
-- Python import dependencies between modules
-- Bundles of foreign key references between schemas
+![Pipeline DAG at the table level](../images/pipeline-modules.svg)
 
-This dual structure ensures that both code dependencies and data dependencies flow in the same direction.
+This dual structure ensures that both code dependencies and data dependencies flow in the
+same direction: collapsing every module's tables into a single node must itself yield a DAG.
 
 ### DAG Constraints
 
@@ -1355,22 +1370,22 @@ This model treats the database schema as an **executable workflow specification*
 
 ## Schema Organization
 
-Each schema corresponds to a dedicated Python module. The module import structure mirrors the foreign key dependencies between schemas:
-
-Within a schema, tables of different tiers form their own DAG — here, a `scan` schema with lookup, manual, and imported tables, including a master table with its part tables:
-
-![Schema Structure](../images/scan-schema.svg)
+Each schema corresponds to a dedicated Python module, and the module import structure mirrors the foreign key dependencies between schemas. The pipeline above is organized as:
 
 ```
 my_pipeline/
 ├── src/
 │   └── my_pipeline/
 │       ├── __init__.py
-│       ├── subject.py      # subject schema (no dependencies)
-│       ├── session.py      # session schema (depends on subject)
-│       ├── acquisition.py  # acquisition schema (depends on session)
-│       └── analysis.py     # analysis schema (depends on acquisition)
+│       ├── lab.py        # lab schema (no dependencies)
+│       ├── reference.py  # reference schema (no dependencies)
+│       ├── session.py    # session schema (imports lab, reference)
+│       └── imaging.py    # imaging schema (imports session, reference)
 ```
+
+Within a schema, tables form their own DAG. Drilling into the `imaging` module: computed tables, including two masters with their part tables — `Segmentation` with `Segmentation.Roi`, and `Fluorescence` with `Fluorescence.Trace`, whose rows reference individual ROIs:
+
+![The imaging module expanded](../images/imaging-schema.svg)
 
 For practical guidance on organizing multi-schema pipelines, configuring repositories, and managing team access, see [Manage a Pipeline Project](../how-to/manage-pipeline-project.md/).
 
@@ -1411,14 +1426,18 @@ When a database row is deleted, its associated stored objects are garbage-collec
 Different attributes can route to different stores:
 
 ```python
-class Recording(dj.Imported):
+class ScanInfo(dj.Imported):
     definition = """
-    -> Session
+    -> Scan
     ---
-    raw_data : <blob@fast>       # Hot storage for active analysis
+    nframes : int32
+    fps : float32
+    raw_movie : <blob@fast>      # Hot storage for active analysis
     archive : <blob@cold>        # Cold storage for long-term retention
     """
 ```
+
+Here the pipeline's `ScanInfo` table keeps its scalar metadata (`nframes`, `fps`) in the database while routing its payloads to two different stores.
 
 This architecture lets teams work with terabyte-scale datasets while retaining the query power, integrity guarantees, and reproducibility of the relational model.
 
@@ -1426,11 +1445,11 @@ This architecture lets teams work with terabyte-scale datasets while retaining t
 
 A typical data pipeline workflow:
 
-1. **Acquisition** — Data is collected from instruments, experiments, or external sources. Raw files land in object storage; metadata populates Manual tables.
+1. **Acquisition** — Data is collected from instruments, experiments, or external sources. Raw files land in object storage; metadata populates Manual tables (`Session`, `Scan`).
 
-2. **Import** — Automated processes parse raw data, extract signals, and populate Imported tables with structured results.
+2. **Import** — Automated processes parse raw data, extract signals, and populate Imported tables with structured results (`ScanInfo`).
 
-3. **Computation** — The `populate()` mechanism identifies new data and triggers downstream processing. Compute resources execute transformations and populate Computed tables.
+3. **Computation** — The `populate()` mechanism identifies new data and triggers downstream processing. Compute resources execute transformations and populate Computed tables (`MotionCorrection`, `Segmentation`, `Fluorescence`).
 
 4. **Query & Analysis** — Users query results across the pipeline, combining data from multiple stages to generate insights, reports, or visualizations.
 
@@ -3474,10 +3493,10 @@ the lineage of relational modeling follows.
 ## A worked example
 
 Diagrams in this documentation use the same notation as `dj.Diagram` in
-`datajoint-python`: **Manual** tables are green rectangles, **Lookup**
-tables are gray rectangles, **Imported** tables are blue ovals, and
-**Computed** tables are red ovals. A **Part** table is a plain rectangle
-grouped with its master inside a light box. Tier is conveyed by shape and
+`datajoint-python`: **Manual** tables are green rounded boxes, **Lookup**
+tables are gray rounded boxes, **Imported** tables are blue ellipses, and
+**Computed** tables are orange ellipses. A **Part** table is a small plain box
+grouped with its master inside a light box (the *entity cluster*). Tier is conveyed by shape and
 color, and **edge thickness** shows how a child relates to its parent — a
 thick line means the child **extends** the parent (one per parent); a thin
 line means the child is **contained within** the parent (many per parent).
@@ -3502,7 +3521,7 @@ dimension. The legend below the figure keys the full notation.
 
 ![Worked-example imaging pipeline diagram spanning two schemas: experiment (Mouse → Session → Scan) and analysis (AverageFrame → Segmentation → Fluorescence, with Lookup SegmentationParam feeding Segmentation, and the Part tables Roi on Segmentation and Trace on Fluorescence).](../images/rwm-pipeline.svg)
 
-![Legend: table tiers — Manual (green rectangle), Lookup (gray rectangle), Imported (blue oval), Computed (red oval), Part (smaller plain rectangle); an underlined name is a new entity type (a new schema dimension, many rows per parent) while a plain name is composed from existing entities (one row per parent); edge thickness — thick means the child extends the parent, thin means the child is contained within the parent; a dashed rounded box is a schema module (labeled in the corner); a gray box encloses a master with its parts; edges have no arrowheads, so direction follows the layout.](../images/rwm-legend.svg)
+![Legend: table tiers — Manual (green rounded box), Lookup (gray rounded box), Imported (blue ellipse), Computed (orange ellipse), Part (smaller plain box); an underlined name is a new entity type (a new schema dimension, many rows per parent) while a plain name is composed from existing entities (one row per parent); edge thickness — thick means the child extends the parent, thin means the child is contained within the parent; a dashed rounded box is a schema module (labeled in the corner); a gray box encloses a master with its parts; edges have no arrowheads, so direction follows the layout.](../images/rwm-legend.svg)
 
 The notation is specified in full in the [Diagram specification](../reference/specs/diagram.md). The concepts it depicts are explained in depth elsewhere: [entity integrity](entity-integrity.md) (keys, entity types, and schema dimensions), [master–part tables](../reference/specs/master-part.md) (the entity group and its all-or-nothing populate), the [computation model](computation-model.md) (how `make()` produces Imported and Computed tables), and [semantic matching](semantic-matching.md) (why a name means the same thing everywhere it appears).
 
@@ -10087,7 +10106,7 @@ This tutorial builds a complete calcium imaging analysis pipeline using DataJoin
 
 <img src="/images/calcium-pipeline.svg" alt="Calcium Imaging Pipeline" width="700">
 
-**Legend:** Green = Manual, Gray = Lookup, Blue = Imported, Red = Computed, White = Part
+**Legend:** Green = Manual, Gray = Lookup, Blue = Imported, Orange = Computed; a Part table is the small white box grouped with its master; an underlined name introduces a new dimension
 
 Each scan produces a TIFF movie. We compute an average frame, segment cells using threshold-based detection, and extract fluorescence traces for each detected ROI.
 
@@ -10473,11 +10492,12 @@ dj.Diagram(schema)
 
 
 **Legend:**
-- **Green rectangles**: Manual tables (data inserted directly — manually or by ingestion scripts)
-- **Gray rectangles**: Lookup tables (parameters)
-- **Blue ovals**: Imported tables (data from files)
-- **Red ovals**: Computed tables (derived from other tables)
-- **Plain text**: Part tables (detailed results)
+- **Green rounded boxes**: Manual tables (data entered at runtime — by a person, an instrument, or an ingestion script)
+- **Gray rounded boxes**: Lookup tables (parameters, part of the schema definition)
+- **Blue ellipses**: Imported tables (data from files)
+- **Orange ellipses**: Computed tables (derived from other tables)
+- **Small white boxes grouped with their master**: Part tables (detailed results, populated with the master in one transaction)
+- **Underlined names**: tables that introduce a new dimension (many rows per parent)
 
 ## Summary
 
@@ -10522,7 +10542,7 @@ This tutorial builds an electrophysiology analysis pipeline using DataJoint. You
 
 <img src="/images/ephys-pipeline.svg" alt="Electrophysiology Pipeline" width="600">
 
-**Legend:** Green = Manual, Gray = Lookup, Blue = Imported, Red = Computed, White = Part
+**Legend:** Green = Manual, Gray = Lookup, Blue = Imported, Orange = Computed; a Part table is the small white box grouped with its master; an underlined name introduces a new dimension
 
 Each session records from neurons. We compute statistics, detect spikes with configurable thresholds, and extract spike waveforms.
 
@@ -10914,7 +10934,7 @@ This tutorial builds an electrophysiology analysis pipeline using DataJoint with
 
 <img src="/images/ephys-npy-pipeline.svg" alt="Electrophysiology Pipeline" width="600">
 
-**Legend:** Green = Manual, Gray = Lookup, Blue = Imported, Red = Computed
+**Legend:** Green = Manual, Gray = Lookup, Blue = Imported, Orange = Computed
 
 Each session records from neurons. We compute statistics, detect spikes with configurable thresholds, and extract spike waveforms.
 
@@ -31352,13 +31372,17 @@ save(filename, format=None)
 
 Each table tier has a distinct visual style:
 
-| Tier | Shape | Fill Color | Font Color |
-|------|-------|------------|------------|
-| **Manual** | rectangle | green | dark green |
-| **Lookup** | rectangle | gray | dark gray |
-| **Computed** | ellipse | red | dark red |
-| **Imported** | ellipse | blue | dark blue |
-| **Part** | rectangle (smaller, muted) | white | gray |
+| Tier | Shape | Fill | Stroke | Text |
+|------|-------|------|--------|------|
+| **Manual** | rounded box | green `#E8F0E9` | `#3E7A52` | `#28513A` |
+| **Lookup** | rounded box | gray `#F0F0F1` | `#808285` | `#5A5C5F` |
+| **Imported** | ellipse | blue `#E0F4FC` | `#00A0DF` | `#00537A` |
+| **Computed** | ellipse | orange `#FFEDE5` | `#FF5113` | `#B23200` |
+| **Part** | rounded box (smaller, muted) | white `#FFFFFF` | `#B9BBBE` | `#55585C` |
+
+The dark theme derives by rule (same hue per tier, fills inverted toward navy-tinted
+darks, text brightened to WCAG AA); the adaptive SVG embeds both via a
+`prefers-color-scheme` block.
 
 ### Edge Styles
 

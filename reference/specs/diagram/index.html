@@ -3722,43 +3722,52 @@
 <tr>
 <th>Tier</th>
 <th>Shape</th>
-<th>Fill Color</th>
-<th>Font Color</th>
+<th>Fill</th>
+<th>Stroke</th>
+<th>Text</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><strong>Manual</strong></td>
-<td>rectangle</td>
-<td>green</td>
-<td>dark green</td>
+<td>rounded box</td>
+<td>green <code>#E8F0E9</code></td>
+<td><code>#3E7A52</code></td>
+<td><code>#28513A</code></td>
 </tr>
 <tr>
 <td><strong>Lookup</strong></td>
-<td>rectangle</td>
-<td>gray</td>
-<td>dark gray</td>
-</tr>
-<tr>
-<td><strong>Computed</strong></td>
-<td>ellipse</td>
-<td>red</td>
-<td>dark red</td>
+<td>rounded box</td>
+<td>gray <code>#F0F0F1</code></td>
+<td><code>#808285</code></td>
+<td><code>#5A5C5F</code></td>
 </tr>
 <tr>
 <td><strong>Imported</strong></td>
 <td>ellipse</td>
-<td>blue</td>
-<td>dark blue</td>
+<td>blue <code>#E0F4FC</code></td>
+<td><code>#00A0DF</code></td>
+<td><code>#00537A</code></td>
+</tr>
+<tr>
+<td><strong>Computed</strong></td>
+<td>ellipse</td>
+<td>orange <code>#FFEDE5</code></td>
+<td><code>#FF5113</code></td>
+<td><code>#B23200</code></td>
 </tr>
 <tr>
 <td><strong>Part</strong></td>
-<td>rectangle (smaller, muted)</td>
-<td>white</td>
-<td>gray</td>
+<td>rounded box (smaller, muted)</td>
+<td>white <code>#FFFFFF</code></td>
+<td><code>#B9BBBE</code></td>
+<td><code>#55585C</code></td>
 </tr>
 </tbody>
 </table>
+<p>The dark theme derives by rule (same hue per tier, fills inverted toward navy-tinted
+darks, text brightened to WCAG AA); the adaptive SVG embeds both via a
+<code>prefers-color-scheme</code> block.</p>
 <h3 id="edge-styles">Edge Styles<a class="headerlink" href="#edge-styles" title="Permanent link">¶</a></h3>
 <table>
 <thead>

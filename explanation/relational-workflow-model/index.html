@@ -6607,10 +6607,10 @@ sense. The worked example below shows the model in action; its place in
 the lineage of relational modeling follows.</p>
 <h2 id="a-worked-example">A worked example<a class="headerlink" href="#a-worked-example" title="Permanent link">&para;</a></h2>
 <p>Diagrams in this documentation use the same notation as <code>dj.Diagram</code> in
-<code>datajoint-python</code>: <strong>Manual</strong> tables are green rectangles, <strong>Lookup</strong>
-tables are gray rectangles, <strong>Imported</strong> tables are blue ovals, and
-<strong>Computed</strong> tables are red ovals. A <strong>Part</strong> table is a plain rectangle
-grouped with its master inside a light box. Tier is conveyed by shape and
+<code>datajoint-python</code>: <strong>Manual</strong> tables are green rounded boxes, <strong>Lookup</strong>
+tables are gray rounded boxes, <strong>Imported</strong> tables are blue ellipses, and
+<strong>Computed</strong> tables are orange ellipses. A <strong>Part</strong> table is a small plain box
+grouped with its master inside a light box (the <em>entity cluster</em>). Tier is conveyed by shape and
 color, and <strong>edge thickness</strong> shows how a child relates to its parent — a
 thick line means the child <strong>extends</strong> the parent (one per parent); a thin
 line means the child is <strong>contained within</strong> the parent (many per parent).
@@ -6633,7 +6633,7 @@ while a plain name is <strong>composed from existing entities</strong>, extendin
 or combining several, inheriting its whole key and adding no new
 dimension. The legend below the figure keys the full notation.</p>
 <p><img alt="Worked-example imaging pipeline diagram spanning two schemas: experiment (Mouse → Session → Scan) and analysis (AverageFrame → Segmentation → Fluorescence, with Lookup SegmentationParam feeding Segmentation, and the Part tables Roi on Segmentation and Trace on Fluorescence)." src="../../images/rwm-pipeline.svg" /></p>
-<p><img alt="Legend: table tiers — Manual (green rectangle), Lookup (gray rectangle), Imported (blue oval), Computed (red oval), Part (smaller plain rectangle); an underlined name is a new entity type (a new schema dimension, many rows per parent) while a plain name is composed from existing entities (one row per parent); edge thickness — thick means the child extends the parent, thin means the child is contained within the parent; a dashed rounded box is a schema module (labeled in the corner); a gray box encloses a master with its parts; edges have no arrowheads, so direction follows the layout." src="../../images/rwm-legend.svg" /></p>
+<p><img alt="Legend: table tiers — Manual (green rounded box), Lookup (gray rounded box), Imported (blue ellipse), Computed (orange ellipse), Part (smaller plain box); an underlined name is a new entity type (a new schema dimension, many rows per parent) while a plain name is composed from existing entities (one row per parent); edge thickness — thick means the child extends the parent, thin means the child is contained within the parent; a dashed rounded box is a schema module (labeled in the corner); a gray box encloses a master with its parts; edges have no arrowheads, so direction follows the layout." src="../../images/rwm-legend.svg" /></p>
 <p>The notation is specified in full in the <a href="../../reference/specs/diagram/">Diagram specification</a>. The concepts it depicts are explained in depth elsewhere: <a href="../entity-integrity/">entity integrity</a> (keys, entity types, and schema dimensions), <a href="../../reference/specs/master-part/">master–part tables</a> (the entity group and its all-or-nothing populate), the <a href="../computation-model/">computation model</a> (how <code>make()</code> produces Imported and Computed tables), and <a href="../semantic-matching/">semantic matching</a> (why a name means the same thing everywhere it appears).</p>
 <p>The pipeline spans two schemas: <strong><code>experiment</code></strong> holds the raw, manually
 entered tables, and <strong><code>analysis</code></strong> holds everything derived from them.

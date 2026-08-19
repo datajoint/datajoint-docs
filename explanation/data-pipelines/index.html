@@ -6531,15 +6531,28 @@
 </table>
 <p>These components work together: code defines the schema and computations, the database tracks all metadata and relationships, and object storage holds the large scientific data files.</p>
 <h2 id="pipeline-as-a-dag">Pipeline as a DAG<a class="headerlink" href="#pipeline-as-a-dag" title="Permanent link">&para;</a></h2>
-<p>A DataJoint pipeline forms a <strong>Directed Acyclic Graph (DAG)</strong> at two levels:</p>
-<p><img alt="Pipeline DAG Structure" src="../../images/pipeline-modules.svg" /></p>
-<p><strong>Nodes</strong> represent Python modules, which correspond to database schemas — the dashed clusters in the diagram above.</p>
-<p><strong>Edges</strong> represent:</p>
-<ul>
-<li>Python import dependencies between modules</li>
-<li>Bundles of foreign key references between schemas</li>
-</ul>
-<p>This dual structure ensures that both code dependencies and data dependencies flow in the same direction.</p>
+<p>A DataJoint pipeline forms a <strong>Directed Acyclic Graph (DAG)</strong> at two levels, and the same
+pipeline can be viewed at either one.</p>
+<p><strong>Module level — the collapsed view.</strong> Each node is a Python module, which corresponds to a
+database schema. There is one edge per pair of schemas, standing for a bundle of dependencies:
+every foreign key reference between the two schemas' tables, together with the Python import
+dependency between their modules. A collapsed edge records only that the bundle exists — line
+weight and line style describe an individual foreign key, so they are read at the table level,
+not here. Below, <code>lab → session</code> and <code>session → imaging</code> each bundle two foreign keys,
+<code>reference</code> supplies both <code>session</code> and <code>imaging</code>, and fourteen tables (including parts)
+collapse to four nodes.</p>
+<p><img alt="Pipeline DAG at the module level" src="../../images/pipeline-modules-collapsed.svg" /></p>
+<p><strong>Table level — the expanded view.</strong> Each node is a table; the dashed clusters group the
+tables of each module. Each edge is an individual foreign key constraint — the two foreign
+keys that cross the <code>session → imaging</code> boundary (<code>Scan → ScanQuality</code> and
+<code>ScanInfo → MotionCorrection</code>) appear separately here, having collapsed into the single
+bundled edge above; likewise <code>Subject → Session</code> and <code>User → Session</code> across
+<code>lab → session</code>. Each edge here carries the full notation — line weight for cardinality, line
+style for whether the reference is part of the child's primary key — as specified in
+<a href="../../reference/specs/diagram/">Diagram</a>.</p>
+<p><img alt="Pipeline DAG at the table level" src="../../images/pipeline-modules.svg" /></p>
+<p>This dual structure ensures that both code dependencies and data dependencies flow in the
+same direction: collapsing every module's tables into a single node must itself yield a DAG.</p>
 <h3 id="dag-constraints">DAG Constraints<a class="headerlink" href="#dag-constraints" title="Permanent link">&para;</a></h3>
 <blockquote>
 <p><strong>All foreign key relationships within a schema MUST form a DAG.</strong></p>
@@ -6562,18 +6575,18 @@
 </ul>
 <p>This model treats the database schema as an <strong>executable workflow specification</strong>—defining not just what data exists but when and how it comes into existence.</p>
 <h2 id="schema-organization">Schema Organization<a class="headerlink" href="#schema-organization" title="Permanent link">&para;</a></h2>
-<p>Each schema corresponds to a dedicated Python module. The module import structure mirrors the foreign key dependencies between schemas:</p>
-<p>Within a schema, tables of different tiers form their own DAG — here, a <code>scan</code> schema with lookup, manual, and imported tables, including a master table with its part tables:</p>
-<p><img alt="Schema Structure" src="../../images/scan-schema.svg" /></p>
+<p>Each schema corresponds to a dedicated Python module, and the module import structure mirrors the foreign key dependencies between schemas. The pipeline above is organized as:</p>
 <div class="highlight"><pre><span></span><code>my_pipeline/
 ├── src/
 │   └── my_pipeline/
 │       ├── __init__.py
-│       ├── subject.py      # subject schema (no dependencies)
-│       ├── session.py      # session schema (depends on subject)
-│       ├── acquisition.py  # acquisition schema (depends on session)
-│       └── analysis.py     # analysis schema (depends on acquisition)
+│       ├── lab.py        # lab schema (no dependencies)
+│       ├── reference.py  # reference schema (no dependencies)
+│       ├── session.py    # session schema (imports lab, reference)
+│       └── imaging.py    # imaging schema (imports session, reference)
 </code></pre></div>
+<p>Within a schema, tables form their own DAG. Drilling into the <code>imaging</code> module: computed tables, including two masters with their part tables — <code>Segmentation</code> with <code>Segmentation.Roi</code>, and <code>Fluorescence</code> with <code>Fluorescence.Trace</code>, whose rows reference individual ROIs:</p>
+<p><img alt="The imaging module expanded" src="../../images/imaging-schema.svg" /></p>
 <p>For practical guidance on organizing multi-schema pipelines, configuring repositories, and managing team access, see <a href="../../how-to/manage-pipeline-project/">Manage a Pipeline Project</a>.</p>
 <h2 id="object-augmented-schemas">Object-Augmented Schemas<a class="headerlink" href="#object-augmented-schemas" title="Permanent link">&para;</a></h2>
 <p>Scientific data often includes large objects—images, recordings, time series, instrument outputs—that don't fit efficiently in relational tables. DataJoint addresses this through <strong>Object-Augmented Schemas (OAS)</strong>, a hybrid storage architecture that preserves relational semantics while handling arbitrarily large data.</p>
@@ -6619,26 +6632,29 @@
 <p>When a database row is deleted, its associated stored objects are garbage-collected. Foreign key cascades work correctly—delete upstream data and downstream results (including their objects) disappear. The database and object store remain synchronized without manual cleanup.</p>
 <p><strong>5. Multiple storage tiers support diverse access patterns.</strong></p>
 <p>Different attributes can route to different stores:</p>
-<div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">Recording</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Imported</span><span class="p">):</span>
+<div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">ScanInfo</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Imported</span><span class="p">):</span>
     <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
-<span class="s2">    -&gt; Session</span>
+<span class="s2">    -&gt; Scan</span>
 <span class="s2">    ---</span>
-<span class="s2">    raw_data : &lt;blob@fast&gt;       # Hot storage for active analysis</span>
+<span class="s2">    nframes : int32</span>
+<span class="s2">    fps : float32</span>
+<span class="s2">    raw_movie : &lt;blob@fast&gt;      # Hot storage for active analysis</span>
 <span class="s2">    archive : &lt;blob@cold&gt;        # Cold storage for long-term retention</span>
 <span class="s2">    """</span>
 </code></pre></div>
+<p>Here the pipeline's <code>ScanInfo</code> table keeps its scalar metadata (<code>nframes</code>, <code>fps</code>) in the database while routing its payloads to two different stores.</p>
 <p>This architecture lets teams work with terabyte-scale datasets while retaining the query power, integrity guarantees, and reproducibility of the relational model.</p>
 <h2 id="pipeline-workflow">Pipeline Workflow<a class="headerlink" href="#pipeline-workflow" title="Permanent link">&para;</a></h2>
 <p>A typical data pipeline workflow:</p>
 <ol>
 <li>
-<p><strong>Acquisition</strong> — Data is collected from instruments, experiments, or external sources. Raw files land in object storage; metadata populates Manual tables.</p>
+<p><strong>Acquisition</strong> — Data is collected from instruments, experiments, or external sources. Raw files land in object storage; metadata populates Manual tables (<code>Session</code>, <code>Scan</code>).</p>
 </li>
 <li>
-<p><strong>Import</strong> — Automated processes parse raw data, extract signals, and populate Imported tables with structured results.</p>
+<p><strong>Import</strong> — Automated processes parse raw data, extract signals, and populate Imported tables with structured results (<code>ScanInfo</code>).</p>
 </li>
 <li>
-<p><strong>Computation</strong> — The <code>populate()</code> mechanism identifies new data and triggers downstream processing. Compute resources execute transformations and populate Computed tables.</p>
+<p><strong>Computation</strong> — The <code>populate()</code> mechanism identifies new data and triggers downstream processing. Compute resources execute transformations and populate Computed tables (<code>MotionCorrection</code>, <code>Segmentation</code>, <code>Fluorescence</code>).</p>
 </li>
 <li>
 <p><strong>Query &amp; Analysis</strong> — Users query results across the pipeline, combining data from multiple stages to generate insights, reports, or visualizations.</p>
