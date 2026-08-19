@@ -13,10 +13,10 @@ the lineage of relational modeling follows.
 ## A worked example
 
 Diagrams in this documentation use the same notation as `dj.Diagram` in
-`datajoint-python`: **Manual** tables are green rectangles, **Lookup**
-tables are gray rectangles, **Imported** tables are blue ovals, and
-**Computed** tables are red ovals. A **Part** table is a plain rectangle
-grouped with its master inside a light box. Tier is conveyed by shape and
+`datajoint-python`: **Manual** tables are green rounded boxes, **Lookup**
+tables are gray rounded boxes, **Imported** tables are blue ellipses, and
+**Computed** tables are orange ellipses. A **Part** table is a small plain box
+grouped with its master inside a light box (the *entity cluster*). Tier is conveyed by shape and
 color, and **edge thickness** shows how a child relates to its parent — a
 thick line means the child **extends** the parent (one per parent); a thin
 line means the child is **contained within** the parent (many per parent).
@@ -41,7 +41,7 @@ dimension. The legend below the figure keys the full notation.
 
 ![Worked-example imaging pipeline diagram spanning two schemas: experiment (Mouse → Session → Scan) and analysis (AverageFrame → Segmentation → Fluorescence, with Lookup SegmentationParam feeding Segmentation, and the Part tables Roi on Segmentation and Trace on Fluorescence).](../images/rwm-pipeline.svg)
 
-![Legend: table tiers — Manual (green rectangle), Lookup (gray rectangle), Imported (blue oval), Computed (red oval), Part (smaller plain rectangle); an underlined name is a new entity type (a new schema dimension, many rows per parent) while a plain name is composed from existing entities (one row per parent); edge thickness — thick means the child extends the parent, thin means the child is contained within the parent; a dashed rounded box is a schema module (labeled in the corner); a gray box encloses a master with its parts; edges have no arrowheads, so direction follows the layout.](../images/rwm-legend.svg)
+![Legend: table tiers — Manual (green rounded box), Lookup (gray rounded box), Imported (blue ellipse), Computed (orange ellipse), Part (smaller plain box); an underlined name is a new entity type (a new schema dimension, many rows per parent) while a plain name is composed from existing entities (one row per parent); edge thickness — thick means the child extends the parent, thin means the child is contained within the parent; a dashed rounded box is a schema module (labeled in the corner); a gray box encloses a master with its parts; edges have no arrowheads, so direction follows the layout.](../images/rwm-legend.svg)
 
 The notation is specified in full in the [Diagram specification](../reference/specs/diagram.md). The concepts it depicts are explained in depth elsewhere: [entity integrity](entity-integrity.md) (keys, entity types, and schema dimensions), [master–part tables](../reference/specs/master-part.md) (the entity group and its all-or-nothing populate), the [computation model](computation-model.md) (how `make()` produces Imported and Computed tables), and [semantic matching](semantic-matching.md) (why a name means the same thing everywhere it appears).
 

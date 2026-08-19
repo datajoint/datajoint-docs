@@ -2,7 +2,7 @@
 
 !!! tip "Upgrading from 0.14.x?"
 
-    - **Migration guide:** [Migrate to 2.0](how-to/migrate-to-v20.md)
+    - **Migration guide:** [Migrate to 2.x](how-to/migrate-to-v20.md)
     - **Legacy docs:** [datajoint.github.io](https://datajoint.github.io/datajoint-python)
 
 ## About DataJoint
