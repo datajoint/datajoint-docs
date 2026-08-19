@@ -10,73 +10,73 @@
     @media (prefers-color-scheme: dark) {
       .bg { fill: #161A21; }
       .part { fill: #1E232C; }
-      [fill="#E7F3EC"] { fill: #16281F; }
-      [fill="#E2ECFA"] { fill: #152538; }
-      [fill="#F2F4F7"] { fill: #242832; }
-      [fill="#FBEAEC"] { fill: #331A1F; }
+      [fill="#E8F0E9"] { fill: #16281F; }
+      [fill="#E0F4FC"] { fill: #0F2433; }
+      [fill="#F0F0F1"] { fill: #242832; }
+      [fill="#FFEDE5"] { fill: #331B12; }
       [fill="#F3F5F8"] { fill: #2A313D; }
-      [stroke="#2F7D5B"] { stroke: #4FA97F; }
-      [stroke="#2A5FA5"] { stroke: #5E92D6; }
-      [stroke="#A9B1BD"] { stroke: #8A93A1; }
-      [stroke="#B23A48"] { stroke: #D0687A; }
-      [stroke="#9AA6B8"] { stroke: #7B879B; }
+      [stroke="#3E7A52"] { stroke: #6BBF94; }
+      [stroke="#00A0DF"] { stroke: #33B8E8; }
+      [stroke="#808285"] { stroke: #9DA0A4; }
+      [stroke="#FF5113"] { stroke: #FF7A47; }
+      [stroke="#B9BBBE"] { stroke: #8F959D; }
       [stroke="#E2E6EC"] { stroke: #39414E; }
-      [stroke="#3A424F"] { stroke: #AEB6C2; }
-      [fill="#1B5138"] { fill: #BCE6CF; }
-      [fill="#123A6D"] { fill: #C3DAF6; }
-      [fill="#495261"] { fill: #C9CFD9; }
-      [fill="#7C2430"] { fill: #F3C2CB; }
-      [fill="#46536B"] { fill: #C4CCDB; }
-      [fill="#3A424F"] { fill: #AEB6C2; }
+      [stroke="#171C39"] { stroke: #AEB6C2; }
+      [fill="#28513A"] { fill: #BCE6CF; }
+      [fill="#00537A"] { fill: #BEE7F9; }
+      [fill="#5A5C5F"] { fill: #C9CFD9; }
+      [fill="#B23200"] { fill: #FFC7AE; }
+      [fill="#55585C"] { fill: #C8CED8; }
+      [fill="#171C39"] { fill: #AEB6C2; }
     }
   </style>
 
   <rect class="bg" width="100%" height="100%" fill="white"/>
 
   <!-- Row 1 — table tiers (shape + color, as drawn in the diagram) -->
-  <rect x="30" y="20" width="96" height="36" rx="6" fill="#E7F3EC" stroke="#2F7D5B" stroke-width="1.6"/>
-  <text x="78" y="43" text-anchor="middle" fill="#1B5138" font-weight="600">Manual</text>
+  <rect x="30" y="20" width="96" height="36" rx="6" fill="#E8F0E9" stroke="#3E7A52" stroke-width="1.6"/>
+  <text x="78" y="43" text-anchor="middle" fill="#28513A" font-weight="600">Manual</text>
 
-  <rect x="202" y="20" width="96" height="36" rx="6" fill="#F2F4F7" stroke="#A9B1BD" stroke-width="1.6"/>
-  <text x="250" y="43" text-anchor="middle" fill="#495261" font-weight="600">Lookup</text>
+  <rect x="202" y="20" width="96" height="36" rx="6" fill="#F0F0F1" stroke="#808285" stroke-width="1.6"/>
+  <text x="250" y="43" text-anchor="middle" fill="#5A5C5F" font-weight="600">Lookup</text>
 
-  <ellipse cx="430" cy="38" rx="60" ry="21" fill="#E2ECFA" stroke="#2A5FA5" stroke-width="1.6"/>
-  <text x="430" y="43" text-anchor="middle" fill="#123A6D" font-weight="600">Imported</text>
+  <ellipse cx="430" cy="38" rx="60" ry="21" fill="#E0F4FC" stroke="#00A0DF" stroke-width="1.6"/>
+  <text x="430" y="43" text-anchor="middle" fill="#00537A" font-weight="600">Imported</text>
 
-  <ellipse cx="612" cy="38" rx="62" ry="21" fill="#FBEAEC" stroke="#B23A48" stroke-width="1.6"/>
-  <text x="612" y="43" text-anchor="middle" fill="#7C2430" font-weight="600">Computed</text>
+  <ellipse cx="612" cy="38" rx="62" ry="21" fill="#FFEDE5" stroke="#FF5113" stroke-width="1.6"/>
+  <text x="612" y="43" text-anchor="middle" fill="#B23200" font-weight="600">Computed</text>
 
-  <rect class="part" x="748" y="26" width="58" height="26" rx="5" fill="#FFFFFF" stroke="#9AA6B8" stroke-width="1.4"/>
-  <text x="777" y="42" text-anchor="middle" fill="#46536B" font-weight="600" font-size="12">Part</text>
+  <rect class="part" x="748" y="26" width="58" height="26" rx="5" fill="#FFFFFF" stroke="#B9BBBE" stroke-width="1.4"/>
+  <text x="777" y="42" text-anchor="middle" fill="#55585C" font-weight="600" font-size="12">Part</text>
 
   <!-- Row 2 — the underline: does the name introduce a new entity type? -->
-  <text x="30" y="92" fill="#3A424F" font-weight="600" text-decoration="underline">Session</text>
-  <text x="158" y="92" fill="#3A424F" font-size="13.5">a new entity type — introduces a schema dimension (many rows per parent)</text>
+  <text x="30" y="92" fill="#171C39" font-weight="600" text-decoration="underline">Session</text>
+  <text x="158" y="92" fill="#171C39" font-size="13.5">a new entity type — introduces a schema dimension (many rows per parent)</text>
 
-  <text x="30" y="118" fill="#3A424F" font-weight="600">AverageFrame</text>
-  <text x="158" y="118" fill="#3A424F" font-size="13.5">composed from existing entities — inherits its whole key, adding no new dimension</text>
+  <text x="30" y="118" fill="#171C39" font-weight="600">AverageFrame</text>
+  <text x="158" y="118" fill="#171C39" font-size="13.5">composed from existing entities — inherits its whole key, adding no new dimension</text>
 
   <!-- Row 3 — edge thickness = cardinality -->
-  <line x1="30" y1="150" x2="92" y2="150" stroke="#3A424F" stroke-width="3"/>
-  <text x="102" y="155" fill="#3A424F" font-size="13.5">extends the parent (one per parent)</text>
+  <line x1="30" y1="150" x2="92" y2="150" stroke="#171C39" stroke-width="3"/>
+  <text x="102" y="155" fill="#171C39" font-size="13.5">extends the parent (one per parent)</text>
 
-  <line x1="392" y1="150" x2="454" y2="150" stroke="#3A424F" stroke-width="1.2"/>
-  <text x="464" y="155" fill="#3A424F" font-size="13.5">contained within the parent (many per parent)</text>
+  <line x1="392" y1="150" x2="454" y2="150" stroke="#171C39" stroke-width="1.2"/>
+  <text x="464" y="155" fill="#171C39" font-size="13.5">contained within the parent (many per parent)</text>
 
   <!-- Row 4 — schema module (dashed rounded box, corner label) -->
-  <rect x="30" y="172" width="116" height="30" rx="8" fill="none" stroke="#A9B1BD" stroke-width="1.4" stroke-dasharray="5,4"/>
-  <text x="139" y="185" text-anchor="end" fill="#495261" font-size="12">experiment</text>
-  <text x="158" y="191" fill="#3A424F" font-size="13.5">a schema — a dashed rounded box, labeled in the corner by its Python module</text>
+  <rect x="30" y="172" width="116" height="30" rx="8" fill="none" stroke="#808285" stroke-width="1.4" stroke-dasharray="5,4"/>
+  <text x="139" y="185" text-anchor="end" fill="#5A5C5F" font-size="12">experiment</text>
+  <text x="158" y="191" fill="#171C39" font-size="13.5">a schema — a dashed rounded box, labeled in the corner by its Python module</text>
 
   <!-- Row 5 — master-part entity cluster (gray box) -->
   <rect x="30" y="212" width="152" height="40" rx="10" fill="#F3F5F8" stroke="#E2E6EC" stroke-width="1.4"/>
-  <ellipse cx="72" cy="232" rx="28" ry="13" fill="#FBEAEC" stroke="#B23A48" stroke-width="1.4"/>
-  <text x="72" y="236" text-anchor="middle" fill="#7C2430" font-size="10" font-weight="600">Seg</text>
-  <line x1="100" y1="232" x2="112" y2="232" stroke="#3A424F" stroke-width="1.2"/>
-  <rect class="part" x="112" y="222" width="52" height="20" rx="4" fill="#FFFFFF" stroke="#9AA6B8" stroke-width="1.2"/>
-  <text x="138" y="236" text-anchor="middle" fill="#46536B" font-size="10" font-weight="600">Roi</text>
-  <text x="196" y="237" fill="#3A424F" font-size="13.5">a gray box encloses a master with all its parts — one entity, populated together</text>
+  <ellipse cx="72" cy="232" rx="28" ry="13" fill="#FFEDE5" stroke="#FF5113" stroke-width="1.4"/>
+  <text x="72" y="236" text-anchor="middle" fill="#B23200" font-size="10" font-weight="600">Seg</text>
+  <line x1="100" y1="232" x2="112" y2="232" stroke="#171C39" stroke-width="1.2"/>
+  <rect class="part" x="112" y="222" width="52" height="20" rx="4" fill="#FFFFFF" stroke="#B9BBBE" stroke-width="1.2"/>
+  <text x="138" y="236" text-anchor="middle" fill="#55585C" font-size="10" font-weight="600">Roi</text>
+  <text x="196" y="237" fill="#171C39" font-size="13.5">a gray box encloses a master with all its parts — one entity, populated together</text>
 
   <!-- Row 6 — direction -->
-  <text x="30" y="272" fill="#3A424F" font-style="italic" font-size="13">Edges have no arrowheads — direction follows the layout (upstream → downstream); a part is always downstream of its master.</text>
+  <text x="30" y="272" fill="#171C39" font-style="italic" font-size="13">Edges have no arrowheads — direction follows the layout (upstream → downstream); a part is always downstream of its master.</text>
 </svg>

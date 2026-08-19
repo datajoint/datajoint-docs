@@ -13,25 +13,25 @@
       .panel { fill: #1E232C; }
       .part { fill: #1E232C; }
       /* node fills */
-      [fill="#E7F3EC"] { fill: #16281F; }
-      [fill="#E2ECFA"] { fill: #152538; }
-      [fill="#F2F4F7"] { fill: #242832; }
-      [fill="#FBEAEC"] { fill: #331A1F; }
+      [fill="#E8F0E9"] { fill: #16281F; }
+      [fill="#E0F4FC"] { fill: #0F2433; }
+      [fill="#F0F0F1"] { fill: #242832; }
+      [fill="#FFEDE5"] { fill: #331B12; }
       [fill="#F3F5F8"] { fill: #2A313D; }
       /* strokes (nodes, cluster, edges) */
-      [stroke="#2F7D5B"] { stroke: #4FA97F; }
-      [stroke="#2A5FA5"] { stroke: #5E92D6; }
-      [stroke="#A9B1BD"] { stroke: #8A93A1; }
-      [stroke="#B23A48"] { stroke: #D0687A; }
-      [stroke="#9AA6B8"] { stroke: #7B879B; }
+      [stroke="#3E7A52"] { stroke: #6BBF94; }
+      [stroke="#00A0DF"] { stroke: #33B8E8; }
+      [stroke="#808285"] { stroke: #9DA0A4; }
+      [stroke="#FF5113"] { stroke: #FF7A47; }
+      [stroke="#B9BBBE"] { stroke: #8F959D; }
       [stroke="#E2E6EC"] { stroke: #39414E; }
-      [stroke="#3A424F"] { stroke: #AEB6C2; }
+      [stroke="#171C39"] { stroke: #AEB6C2; }
       /* node text */
-      [fill="#1B5138"] { fill: #BCE6CF; }
-      [fill="#123A6D"] { fill: #C3DAF6; }
-      [fill="#495261"] { fill: #C9CFD9; }
-      [fill="#7C2430"] { fill: #F3C2CB; }
-      [fill="#46536B"] { fill: #C4CCDB; }
+      [fill="#28513A"] { fill: #BCE6CF; }
+      [fill="#00537A"] { fill: #BEE7F9; }
+      [fill="#5A5C5F"] { fill: #C9CFD9; }
+      [fill="#B23200"] { fill: #FFC7AE; }
+      [fill="#55585C"] { fill: #C8CED8; }
       /* code panel + annotations */
       [fill="#24292e"] { fill: #c9d1d9; }
       [fill="#005cc5"] { fill: #79c0ff; }
@@ -50,11 +50,11 @@
 
   <!-- ============ LEFT PANEL: pipeline diagram (dj.Diagram notation) ============
        Node styling mirrors the modernized dj.Diagram light theme:
-         Manual   rectangle  fill #E7F3EC stroke #2F7D5B
-         Lookup   rectangle  fill #F2F4F7 stroke #A9B1BD
-         Imported oval       fill #E2ECFA stroke #2A5FA5
-         Computed oval       fill #FBEAEC stroke #B23A48
-         Part     rectangle  fill #FFFFFF stroke #9AA6B8
+         Manual   rectangle  fill #E8F0E9 stroke #3E7A52
+         Lookup   rectangle  fill #F0F0F1 stroke #808285
+         Imported oval       fill #E0F4FC stroke #00A0DF
+         Computed oval       fill #FFEDE5 stroke #FF5113
+         Part     rectangle  fill #FFFFFF stroke #B9BBBE
        Edge thickness encodes cardinality: thick = 1:1 (the FK is the child's
        whole primary key), thin = one-to-many. A master and its parts sit in a
        subtle rounded entity cluster. -->
@@ -64,7 +64,7 @@
         fill="#F3F5F8" stroke="#E2E6EC" stroke-width="1.4"/>
 
   <!-- Edges (no arrowheads — vertical flow implies direction, as dj.Diagram renders) -->
-  <g stroke="#3A424F" fill="none">
+  <g stroke="#171C39" fill="none">
     <line x1="200" y1="84"  x2="200" y2="110" stroke-width="1.4"/>
     <line x1="200" y1="154" x2="200" y2="180" stroke-width="1.4"/>
     <line x1="200" y1="224" x2="200" y2="262" stroke-width="3"/>   <!-- Scan->AverageFrame: 1:1, thick -->
@@ -74,32 +74,32 @@
   </g>
 
   <!-- Manual: Subject -->
-  <rect x="135" y="40" width="130" height="44" rx="6" fill="#E7F3EC" stroke="#2F7D5B" stroke-width="1.6"/>
-  <text x="200" y="69" text-anchor="middle" fill="#1B5138" font-weight="600">Subject</text>
+  <rect x="135" y="40" width="130" height="44" rx="6" fill="#E8F0E9" stroke="#3E7A52" stroke-width="1.6"/>
+  <text x="200" y="69" text-anchor="middle" fill="#28513A" font-weight="600">Subject</text>
 
   <!-- Manual: Session -->
-  <rect x="135" y="110" width="130" height="44" rx="6" fill="#E7F3EC" stroke="#2F7D5B" stroke-width="1.6"/>
-  <text x="200" y="139" text-anchor="middle" fill="#1B5138" font-weight="600">Session</text>
+  <rect x="135" y="110" width="130" height="44" rx="6" fill="#E8F0E9" stroke="#3E7A52" stroke-width="1.6"/>
+  <text x="200" y="139" text-anchor="middle" fill="#28513A" font-weight="600">Session</text>
 
   <!-- Manual: Scan -->
-  <rect x="135" y="180" width="130" height="44" rx="6" fill="#E7F3EC" stroke="#2F7D5B" stroke-width="1.6"/>
-  <text x="200" y="209" text-anchor="middle" fill="#1B5138" font-weight="600">Scan</text>
+  <rect x="135" y="180" width="130" height="44" rx="6" fill="#E8F0E9" stroke="#3E7A52" stroke-width="1.6"/>
+  <text x="200" y="209" text-anchor="middle" fill="#28513A" font-weight="600">Scan</text>
 
   <!-- Imported: AverageFrame -->
-  <ellipse cx="200" cy="290" rx="94" ry="28" fill="#E2ECFA" stroke="#2A5FA5" stroke-width="1.6"/>
-  <text x="200" y="298" text-anchor="middle" fill="#123A6D" font-weight="600">AverageFrame</text>
+  <ellipse cx="200" cy="290" rx="94" ry="28" fill="#E0F4FC" stroke="#00A0DF" stroke-width="1.6"/>
+  <text x="200" y="298" text-anchor="middle" fill="#00537A" font-weight="600">AverageFrame</text>
 
   <!-- Lookup: SegmentationParams -->
-  <rect x="327" y="256" width="236" height="44" rx="6" fill="#F2F4F7" stroke="#A9B1BD" stroke-width="1.6"/>
-  <text x="445" y="285" text-anchor="middle" fill="#495261" font-weight="600">SegmentationParams</text>
+  <rect x="327" y="256" width="236" height="44" rx="6" fill="#F0F0F1" stroke="#808285" stroke-width="1.6"/>
+  <text x="445" y="285" text-anchor="middle" fill="#5A5C5F" font-weight="600">SegmentationParams</text>
 
   <!-- Computed: Segmentation (master) -->
-  <ellipse cx="250" cy="392" rx="102" ry="30" fill="#FBEAEC" stroke="#B23A48" stroke-width="1.6"/>
-  <text x="250" y="400" text-anchor="middle" fill="#7C2430" font-weight="700">Segmentation</text>
+  <ellipse cx="250" cy="392" rx="102" ry="30" fill="#FFEDE5" stroke="#FF5113" stroke-width="1.6"/>
+  <text x="250" y="400" text-anchor="middle" fill="#B23200" font-weight="700">Segmentation</text>
 
   <!-- Part: Activity -->
-  <rect class="part" x="176" y="448" width="148" height="42" rx="6" fill="#FFFFFF" stroke="#9AA6B8" stroke-width="1.6"/>
-  <text x="250" y="476" text-anchor="middle" fill="#46536B" font-weight="600">Activity</text>
+  <rect class="part" x="176" y="448" width="148" height="42" rx="6" fill="#FFFFFF" stroke="#B9BBBE" stroke-width="1.6"/>
+  <text x="250" y="476" text-anchor="middle" fill="#55585C" font-weight="600">Activity</text>
 
   <!-- zoom connectors: the code panel is the Segmentation master-part group -->
   <g stroke="#c9ced6" stroke-width="1" stroke-dasharray="5,4" fill="none">

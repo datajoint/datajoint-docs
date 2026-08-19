@@ -61,6 +61,9 @@
 
     
     
+  <!-- Roboto for headings (body uses Roboto Slab, code uses Source Code Pro via theme.font) -->
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap">
 	<script
 		src="https://www.datadoghq-browser-agent.com/us1/v4/datadog-rum.js"
 		type="text/javascript">
@@ -152,15 +155,9 @@
       
   
   <?xml version="1.0" encoding="utf-8"?>
-<!-- Generator: Adobe Illustrator 15.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-	 width="260.479px" height="365.463px" viewBox="0 0 260.479 365.463" enable-background="new 0 0 260.479 365.463"
-	 xml:space="preserve">
-<g>
-	<path d="M4.638,361.434c0,0,124.071-124.072,135.896-357.434c0,0,29.555,189.053,115.266,256.988
-		C255.799,260.988,173.038,249.174,4.638,361.434z"/>
-</g>
+<!-- DataJoint mark (the sail). Renders via currentColor; styled to DataJoint Blue in extra.css. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 152 217.82" width="152" height="217.82">
+  <path d="M0,217.82c0,0,75.61-75.61,82.82-217.82c0,0,18.01,115.21,70.24,156.61C153.06,156.61,102.62,149.41,0,217.82L0,217.82z"/>
 </svg>
 
     </a>
@@ -298,15 +295,9 @@
       
   
   <?xml version="1.0" encoding="utf-8"?>
-<!-- Generator: Adobe Illustrator 15.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-	 width="260.479px" height="365.463px" viewBox="0 0 260.479 365.463" enable-background="new 0 0 260.479 365.463"
-	 xml:space="preserve">
-<g>
-	<path d="M4.638,361.434c0,0,124.071-124.072,135.896-357.434c0,0,29.555,189.053,115.266,256.988
-		C255.799,260.988,173.038,249.174,4.638,361.434z"/>
-</g>
+<!-- DataJoint mark (the sail). Renders via currentColor; styled to DataJoint Blue in extra.css. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 152 217.82" width="152" height="217.82">
+  <path d="M0,217.82c0,0,75.61-75.61,82.82-217.82c0,0,18.01,115.21,70.24,156.61C153.06,156.61,102.62,149.41,0,217.82L0,217.82z"/>
 </svg>
 
     </a>
@@ -6541,8 +6532,8 @@
 <p>These components work together: code defines the schema and computations, the database tracks all metadata and relationships, and object storage holds the large scientific data files.</p>
 <h2 id="pipeline-as-a-dag">Pipeline as a DAG<a class="headerlink" href="#pipeline-as-a-dag" title="Permanent link">&para;</a></h2>
 <p>A DataJoint pipeline forms a <strong>Directed Acyclic Graph (DAG)</strong> at two levels:</p>
-<p><img alt="Pipeline DAG Structure" src="../../images/pipeline-illustration.png" /></p>
-<p><strong>Nodes</strong> represent Python modules, which correspond to database schemas.</p>
+<p><img alt="Pipeline DAG Structure" src="../../images/pipeline-modules.svg" /></p>
+<p><strong>Nodes</strong> represent Python modules, which correspond to database schemas — the dashed clusters in the diagram above.</p>
 <p><strong>Edges</strong> represent:</p>
 <ul>
 <li>Python import dependencies between modules</li>
@@ -6572,7 +6563,8 @@
 <p>This model treats the database schema as an <strong>executable workflow specification</strong>—defining not just what data exists but when and how it comes into existence.</p>
 <h2 id="schema-organization">Schema Organization<a class="headerlink" href="#schema-organization" title="Permanent link">&para;</a></h2>
 <p>Each schema corresponds to a dedicated Python module. The module import structure mirrors the foreign key dependencies between schemas:</p>
-<p><img alt="Schema Structure" src="../../images/schema-illustration.png" /></p>
+<p>Within a schema, tables of different tiers form their own DAG — here, a <code>scan</code> schema with lookup, manual, and imported tables, including a master table with its part tables:</p>
+<p><img alt="Schema Structure" src="../../images/scan-schema.svg" /></p>
 <div class="highlight"><pre><span></span><code>my_pipeline/
 ├── src/
 │   └── my_pipeline/
@@ -6717,15 +6709,9 @@
     
     <a href="https://www.datajoint.com" target="_blank" rel="noopener" title="DataJoint" class="md-social__link">
       <?xml version="1.0" encoding="utf-8"?>
-<!-- Generator: Adobe Illustrator 15.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-	 width="260.479px" height="365.463px" viewBox="0 0 260.479 365.463" enable-background="new 0 0 260.479 365.463"
-	 xml:space="preserve">
-<g>
-	<path d="M4.638,361.434c0,0,124.071-124.072,135.896-357.434c0,0,29.555,189.053,115.266,256.988
-		C255.799,260.988,173.038,249.174,4.638,361.434z"/>
-</g>
+<!-- DataJoint mark (the sail). Renders via currentColor; styled to DataJoint Blue in extra.css. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 152 217.82" width="152" height="217.82">
+  <path d="M0,217.82c0,0,75.61-75.61,82.82-217.82c0,0,18.01,115.21,70.24,156.61C153.06,156.61,102.62,149.41,0,217.82L0,217.82z"/>
 </svg>
     </a>
   
