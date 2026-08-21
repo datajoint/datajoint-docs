@@ -12,6 +12,8 @@ The two are designed as a unit. `trace` is the underlying graph operation; `self
 
 For the related downstream operation, see [Cascade Specification](cascade.md). For `make()` itself, see [AutoPopulate Specification](autopopulate.md).
 
+Trace is the **upstream** case of the diagram-traversal algebra — the additive traversal `expand(direction="up")`, the mirror of cascade's downstream `expand(direction="down")`. The shared rules (the edge rule R1 and the group rule R2) are derived once in the [Diagram spec's Design Rationale](diagram.md#traversal-algebra); this page specifies the upstream-specific behavior and the `self.upstream` surface on top of them.
+
 ## Why this exists
 
 A computed row's reproducibility rests on the convention that `make(self, key)` reads only from its declared upstream dependencies. Making that convention easy to follow — and its result easy to inspect — requires two pieces working together:
@@ -25,21 +27,20 @@ Without (1), downstream tools that need row-level lineage (data-lineage viewers,
 
 ### Trace as the upstream mirror of cascade
 
-`Diagram.cascade()` walks **downstream** from a restricted seed and answers *"what is affected if these rows are deleted?"* `Diagram.trace()` walks **upstream** and answers *"what contributed to these rows?"*. The two share the same dependency graph, the same edge model, and most of the same propagation machinery — only the direction differs.
+`Diagram.cascade()` walks **downstream** from a restricted seed and answers *"what is affected if these rows are deleted?"* `Diagram.trace()` walks **upstream** and answers *"what contributed to these rows?"*. They are the two directions of the same traversal (`expand`), over the same dependency graph and the same rules — only the direction differs:
 
-| Method | Direction | Convergence | Question answered |
-|---|---|---|---|
-| `Diagram.cascade(expr)` | downstream | OR — any FK path taints | What's affected if these rows are deleted? |
-| `Diagram.restrict(expr)` | downstream | AND — must satisfy all FK paths | What satisfies all of these conditions? |
-| `Diagram.trace(expr)` | **upstream** | **OR** — any FK path contributes | What contributed to these rows? |
+| Method | `expand` direction | Question answered |
+|---|---|---|
+| `Diagram.cascade(expr)` | `down` | What's affected if these rows are deleted? |
+| `Diagram.trace(expr)` | `up` | What contributed to these rows? |
 
-`trace` uses OR convergence because an ancestor entity contributes to a child row if it appears via *any* FK path. (An AND-flavored upstream analog — "ancestors that contributed via *every* path" — is not provided in 2.3.)
+Convergence is always **union** — an ancestor contributes to a child row if it is reachable via *any* foreign-key path. This is reachability, not an intersection; there is no AND-flavored upstream analog.
 
-### Reusing the propagation primitives
+### Reusing the propagation rules
 
-`trace` applies the **upward propagation rules** (`U1`, `U2`, `U3`) defined in the [Cascade Specification](cascade.md#upward-propagation-child-parent), which are the symmetric inverses of `cascade`'s forward rules. Renamed FKs (`.proj()`) are reversed via U2; Part-of-Part chains are walked through naturally; multiple foreign keys between the same pair of tables are each reversed independently.
+`trace` applies the **edge rule R1** in the upstream direction — the same rule `cascade` applies downstream — plus the **group rule R2** for master–part. Both are derived once in the [Diagram spec's Traversal algebra](diagram.md#traversal-algebra); a renamed FK is relabelled through the edge's attribute map, Part-of-Part chains are walked naturally, and parallel foreign keys are each handled independently.
 
-This is why `trace` cannot ship before the upward primitives exist in the codebase. As of DataJoint 2.3, the primitives are in place (added with [#1429's cascade fix](https://github.com/datajoint/datajoint-python/pull/1468)), and `trace` is a direct consumer.
+This is why `trace` cannot ship before the upstream primitives exist in the codebase. As of DataJoint 2.3 they are in place (added with [#1429's cascade fix](https://github.com/datajoint/datajoint-python/pull/1468)), and `trace` is a direct consumer.
 
 ### The `make()` read/write boundary
 
@@ -77,7 +78,7 @@ Returns a `Diagram` instance whose nodes are the seed and all of its ancestors (
 `trace` mirrors `cascade`:
 
 1. Load the dependency graph via `connection.dependencies.load_all_upstream()` — the upstream analog of `load_all_downstream`, introduced with `Diagram.trace` ([#1423](https://github.com/datajoint/datajoint-python/issues/1423)). It discovers all schemas reachable via reverse FK edges from the seed's schema.
-2. Take the seed's restriction and propagate it **upstream** along the FK graph. For each edge `parent → child`, when the child has a restriction, apply the upward rule (`U1`, `U2`, or `U3` per the cascade spec) to derive the parent's restriction.
+2. Take the seed's restriction and propagate it **upstream** along the FK graph. For each edge `parent -> child`, when the child has a restriction, apply the edge rule R1 upstream (its **copy**, **rename**, or **project** case — see the [Diagram spec's Traversal algebra](diagram.md#traversal-algebra)) to derive the parent's restriction.
 3. Trim the resulting graph to **seed + ancestors only**. Descendants of the seed and unrelated ancestors are not included.
 4. Convergence is **OR**: an ancestor entity is included if reachable through *any* FK path from the seed (consistent with how a child row "comes from" any of its FK parents).
 
@@ -175,7 +176,7 @@ trace.counts()
 #  '`imaging`.`__extract_traces`': 1, '`imaging`.`__summary`': 1}
 ```
 
-For a renamed-FK case (paralleling [Cascade Spec §Worked Example 1](cascade.md#example-1-part-of-part-with-renamed-fk)), the upward rules reverse the rename so `trace[Ancestor]` returns the ancestor with its native column names regardless of how the seed's columns are named.
+For a renamed-FK case (paralleling [Cascade Spec §Worked Example 1](cascade.md#example-1-part-of-part-with-renamed-fk)), R1's **rename** case reverses the rename so `trace[Ancestor]` returns the ancestor with its native column names regardless of how the seed's columns are named.
 
 ## 2. `self.upstream` inside `make()`
 
@@ -194,7 +195,7 @@ Once built, the trace diagram is reused for the remainder of the call. The under
 `self.upstream` exposes:
 
 - All declared ancestors of `self` (transitively, including renamed-FK chains).
-- The Parts of ancestors that themselves lie on an FK path to `self` — a Part is included only when it is genuinely reachable through the FK graph, not merely because its master is an ancestor.
+- **All Parts of every ancestor Master.** By the group rule R2 (see the [Diagram spec's Traversal algebra](diagram.md#traversal-algebra)), a master-part group is one item: once an ancestor Master is in the trace, its whole part-group comes with it — not only those Parts that happen to lie on an FK path to `self`. This is the upstream mirror of `part_integrity="cascade"` treating the group atomically.
 
 Requesting any table outside this set raises `DataJointError` — including tables that exist in the schema but are not ancestors of `self`. This is the same guarantee `Diagram.trace(...)` provides; `self.upstream` is just the per-`make()` instance of it.
 
@@ -295,7 +296,7 @@ Teams adopt the read surface incrementally:
 
 - Source (shipped in 2.3): `src/datajoint/diagram.py` (`Diagram.trace`), `src/datajoint/autopopulate.py` (`AutoPopulate.upstream`). Implemented in [#1471](https://github.com/datajoint/datajoint-python/pull/1471) (trace) and [#1473](https://github.com/datajoint/datajoint-python/pull/1473) (self.upstream), building on the cascade rules from [#1468](https://github.com/datajoint/datajoint-python/pull/1468).
 - Issues: [#1423](https://github.com/datajoint/datajoint-python/issues/1423) (Diagram.trace), [#1424](https://github.com/datajoint/datajoint-python/issues/1424) (self.upstream).
-- [Cascade Specification](cascade.md) — propagation rules (F1/F2/F3 forward, U1/U2/U3 upward) shared with `trace`.
+- [Cascade Specification](cascade.md) — the downstream case of the same edge rule R1 and group rule R2 shared with `trace`.
 - [AutoPopulate Specification](autopopulate.md) — `make()` execution model and the make() reproducibility contract.
 - [Diagram Specification](diagram.md) — graph operations on the dependency graph.
 - [Entity Integrity](../../explanation/entity-integrity.md) — schema dimensions and FK semantics.
