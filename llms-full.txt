@@ -1,6 +1,6 @@
 # DataJoint Documentation (Full)
 
-Generated: 2026-08-19 23:50:49 UTC
+Generated: 2026-08-21 19:44:44 UTC
 Commit: unknown
 Branch: unknown
 
@@ -2019,6 +2019,13 @@ An ingestion routine — typically an `Imported` table's `make()`, or a manual
 loader — reads one source and inserts into several **entry-point tables**
 (`Manual` or `Imported`) that are *not* foreign-key children of the ingesting
 table:
+
+![The fan-out ingestion pattern. On the left, RecordingFile, a green rounded box for the Manual tier with its name underlined, joined by a thick navy line without an arrowhead to Ingest, a blue ellipse for the Imported tier whose name is not underlined — the edge is thick because Ingest declares only a foreign key to RecordingFile, so that key covers its whole primary key, and the name is plain because it introduces no key attribute of its own. From Ingest, three dashed navy arrows fan out to the right under the label "insert + source_file", each ending at a green rounded Manual box with an underlined name: Subject, Session and Recording. The arrowheads mark these as writes rather than dependencies, since a dependency edge carries none, and a note reads "no foreign key back to Ingest". A legend keys the Imported and Manual tiers, distinguishes a dependency (no arrowhead) from a write that is not a dependency, and notes that an underlined name introduces a primary-key attribute of its own.](../images/fan-out-ingestion.svg)
+
+The figure shows what the dependency graph does not: `dj.Diagram` pointed at this
+schema renders `Subject`, `Session`, and `Recording` as three unconnected nodes,
+because there is no foreign key for it to follow. The dashed arrows are the writes
+that the graph cannot record.
 
 ```python
 @schema

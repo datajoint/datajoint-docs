@@ -6351,6 +6351,11 @@ carries in return.</p>
 loader — reads one source and inserts into several <strong>entry-point tables</strong>
 (<code>Manual</code> or <code>Imported</code>) that are <em>not</em> foreign-key children of the ingesting
 table:</p>
+<p><img alt="The fan-out ingestion pattern. On the left, RecordingFile, a green rounded box for the Manual tier with its name underlined, joined by a thick navy line without an arrowhead to Ingest, a blue ellipse for the Imported tier whose name is not underlined — the edge is thick because Ingest declares only a foreign key to RecordingFile, so that key covers its whole primary key, and the name is plain because it introduces no key attribute of its own. From Ingest, three dashed navy arrows fan out to the right under the label &quot;insert + source_file&quot;, each ending at a green rounded Manual box with an underlined name: Subject, Session and Recording. The arrowheads mark these as writes rather than dependencies, since a dependency edge carries none, and a note reads &quot;no foreign key back to Ingest&quot;. A legend keys the Imported and Manual tiers, distinguishes a dependency (no arrowhead) from a write that is not a dependency, and notes that an underlined name introduces a primary-key attribute of its own." src="../../images/fan-out-ingestion.svg" /></p>
+<p>The figure shows what the dependency graph does not: <code>dj.Diagram</code> pointed at this
+schema renders <code>Subject</code>, <code>Session</code>, and <code>Recording</code> as three unconnected nodes,
+because there is no foreign key for it to follow. The dashed arrows are the writes
+that the graph cannot record.</p>
 <div class="highlight"><pre><span></span><code><span class="nd">@schema</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">RecordingFile</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>        <span class="c1"># the source record</span>
     <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
