@@ -92,8 +92,13 @@ ratio = NULL : float64            # Nullable (only NULL can be default)
 
 **Nullable attributes:** An attribute is nullable if and only if its default is `NULL`.
 DataJoint does not allow other defaults for nullable attributes—this prevents ambiguity
-about whether an attribute is optional. For strings, prefer empty string `''` as the
-default rather than `NULL`.
+about whether an attribute is optional.
+
+**`varchar` and `char` attributes should default to `''`, not `NULL`.** `NULL` and `''`
+both read as "nothing," and once an attribute allows both, every query and every `make()`
+body has to handle two representations of the same absence. Reserve `NULL` for an
+attribute that is genuinely optional and where "not yet known" must be distinguishable
+from "known to be empty"—a case that arises rarely for text.
 
 ## Comments
 
