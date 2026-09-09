@@ -5914,6 +5914,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#changes-in-233" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Changes in 2.3.3
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#changes-in-232" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -6023,6 +6034,17 @@
     <span class="md-ellipsis">
       
         Cascade Fix: Part-of-Part and Renamed-FK Chains
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#redesigned-diagrams" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Redesigned Diagrams
       
     </span>
   </a>
@@ -6346,6 +6368,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#changes-in-233" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Changes in 2.3.3
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#changes-in-232" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -6462,6 +6495,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#redesigned-diagrams" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Redesigned Diagrams
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#other-fixes" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -6505,10 +6549,29 @@
 
 <h1 id="whats-new-in-datajoint-23">What's New in DataJoint 2.3<a class="headerlink" href="#whats-new-in-datajoint-23" title="Permanent link">&para;</a></h1>
 <p>DataJoint 2.3 adds a first-class <strong>upstream read surface</strong> — <code>Diagram.trace</code> and <code>self.upstream</code> — which make "a computed row derives only from its declared upstream inputs" easy to follow inside <code>make()</code> and easy to query afterward. It also ships the <strong>SparkAdapter Codec Protocol</strong> for typed rendering to Spark-native types, <strong><code>dj.deploy.set_replica_identity</code></strong> for PostgreSQL change-data-capture, and a <strong>cascade fix</strong> for Part-of-Part and renamed-foreign-key chains.</p>
+<p>Later releases on the line added <strong>redesigned diagram rendering</strong> on the DataJoint brand palette, with a light/dark <a href="../../reference/configuration/#display-settings"><code>display.diagram_theme</code></a> setting, and <strong>S3 stores that resolve an ambient AWS identity</strong> instead of requiring static keys.</p>
 <blockquote>
-<p><strong>Upgrading from 2.0, 2.1, or 2.2?</strong> No breaking changes. Everything here is additive — existing pipelines run identically.</p>
+<p><strong>Upgrading from 2.0, 2.1, or 2.2?</strong> No API breaks — every feature on the 2.3 line is additive.
+Two fixes in 2.3.3 do, however, reject input that previously passed silently: a misspelled native
+type is now caught at declaration, and inserting a NumPy array into a <strong>native</strong> <code>blob</code> attribute
+now raises. Both cases were already broken — the first produced invalid DDL at the server, the
+second stored the array's text representation — so anything affected was losing data rather than
+working. See <a href="#changes-in-233">Changes in 2.3.3</a>.</p>
 <p><strong>Citation:</strong> Yatsenko D, Nguyen TT. <em>DataJoint 2.0: A Computational Substrate for Agentic Scientific Workflows.</em> arXiv:2602.16585. 2026. <a href="https://doi.org/10.48550/arXiv.2602.16585">doi:10.48550/arXiv.2602.16585</a></p>
 </blockquote>
+<h2 id="changes-in-233">Changes in 2.3.3<a class="headerlink" href="#changes-in-233" title="Permanent link">&para;</a></h2>
+<p>2.3.3 is a patch release on the 2.3 line. If you are upgrading from <strong>2.3.2</strong>:</p>
+<ul>
+<li><strong>S3 stores work without static credentials.</strong> <code>access_key</code> and <code>secret_key</code> are now optional in an <code>s3</code> store spec — omit both and the AWS credential chain resolves an ambient identity (EC2 instance profile, IRSA, ECS task role, SSO), matching how the <code>gcs</code> and <code>azure</code> protocols already behaved. This is what lets a pipeline run under an assumed role with no long-lived keys in its configuration. Setting exactly one of the two is now rejected at validation with a clear message, rather than failing later inside the AWS client as a partial credential. See <a href="../../how-to/configure-storage/">Configure Storage</a> and <a href="https://github.com/datajoint/datajoint-python/issues/1537">#1537</a>.</li>
+<li><strong>Redesigned diagram rendering.</strong> <code>dj.Diagram</code> output adopts the DataJoint brand palette: Manual and Lookup stay rectangles, Imported and Computed stay ovals, and each tier now carries its brand fill — Manual green, Lookup grey, Imported blue, Computed orange. Renamed foreign keys render as amber edges. Edge thickness now encodes <strong>cardinality</strong> rather than the master-part relationship, which it conflated before. See <a href="../../how-to/read-diagrams/">Read Diagrams</a> and <a href="https://github.com/datajoint/datajoint-python/issues/1532">#1532</a>.</li>
+<li><strong>New setting: <code>display.diagram_theme</code>.</strong> Choose <code>auto</code> (the default — one SVG that follows the viewer's light or dark mode), <code>light</code>, or <code>dark</code>. Settable as <code>dj.config.display.diagram_theme</code> or via <code>DJ_DIAGRAM_THEME</code>. See <a href="../../reference/configuration/#display-settings">Configuration</a>.</li>
+<li><strong>Diagrams render when a table cannot be resolved.</strong> A diagram containing a node that maps to no Python class — a table declared by another project, or one whose module is not imported — now draws that node with its raw table name instead of raising. This came up on PostgreSQL, where schema qualification made unresolved nodes more common. See <a href="https://github.com/datajoint/datajoint-python/issues/1535">#1535</a>.</li>
+<li><strong>Braces in comments no longer break declaration.</strong> A <code>{...}</code> sequence anywhere in a table or attribute comment — <code>payload : json  # {data, config} payload</code> — crashed <code>declare</code> with an opaque <code>KeyError</code>. Comments and <code>enum</code> values now pass through verbatim. The same defect was live on <code>Table.alter</code>, which additionally lost the declared type of any attribute it added; a table altered on PostgreSQL could become permanently un-alterable as a result. <code>alter()</code> now preserves type metadata, so <code>describe()</code> keeps round-tripping, and <code>ADD</code>/<code>DROP</code> work on PostgreSQL. See <a href="https://github.com/datajoint/datajoint-python/pull/1548">datajoint-python#1548</a>.</li>
+<li><strong>Attribute types are validated at declaration and insert.</strong> Four related gaps closed. A misspelled native type (<code>int24</code>, <code>intbanana</code>) is now rejected with <code>Unsupported attribute type</code> instead of being passed to the server as invalid DDL. <code>decimal(M,D) unsigned</code> is accepted again — it was rejected in 2.x while the equivalent <code>numeric(M,D) unsigned</code> passed. A bare <code>blob</code> is accepted alongside <code>tinyblob</code>/<code>longblob</code>. And inserting a NumPy array into a <strong>native</strong> <code>blob</code> attribute now raises instead of silently storing the array's text representation; use a <code>&lt;blob&gt;</code> codec attribute to store arrays. See <a href="https://github.com/datajoint/datajoint-python/issues/1527">#1527</a>, <a href="https://github.com/datajoint/datajoint-python/issues/1528">#1528</a>, <a href="https://github.com/datajoint/datajoint-python/issues/1529">#1529</a> and <a href="https://github.com/datajoint/datajoint-python/issues/1530">#1530</a>.</li>
+<li><strong>File-protocol stores are safe on Windows.</strong> Paths in <code>file://</code> store URLs are now built with POSIX separators on every platform. Previously a Windows backslash in a stored path did not match the forward-slash form used during reference discovery, so <code>gc.collect()</code> could classify live files as orphans and delete them. Windows is now covered by CI. See <a href="../../how-to/garbage-collection/">Clean Up Object Storage</a> and <a href="https://github.com/datajoint/datajoint-python/issues/1520">#1520</a>.</li>
+<li><strong>Foreign-key columns are indexed on PostgreSQL.</strong> Table declaration emitted an index for unique foreign keys only, leaving ordinary ones unindexed and making joins and cascading deletes scan. Non-unique foreign-key columns are now indexed, skipping any already covered by an existing index. Existing tables are unaffected until redeclared. See <a href="https://github.com/datajoint/datajoint-python/issues/1512">#1512</a>.</li>
+<li><strong>Custom codecs must resolve stores against the calling connection.</strong> The <code>SchemaCodec</code> example previously omitted <code>config=</code> when calling <code>_build_path</code> and <code>_get_backend</code>, so a codec written from it resolved its store against the module-level <code>dj.config</code> rather than the connection actually in use — reading the wrong store, or failing validation, in any process holding more than one connection. The example now threads <code>key["_config"]</code> through both, as the built-in <code>object</code> and <code>npy</code> codecs already did. If you maintain a codec, check both call sites. This threading is scheduled to be replaced by an explicit <code>context=</code> parameter in 2.3.4 — see <a href="https://github.com/datajoint/datajoint-python/issues/1550">#1550</a> — so the underscore key will keep working with a deprecation warning rather than changing under you. See <a href="../../tutorials/advanced/custom-codecs/">Custom Codecs</a>.</li>
+</ul>
 <h2 id="changes-in-232">Changes in 2.3.2<a class="headerlink" href="#changes-in-232" title="Permanent link">&para;</a></h2>
 <p>2.3.2 is a patch release on the 2.3 line. If you are upgrading from <strong>2.3.1</strong>:</p>
 <ul>
@@ -6583,6 +6646,38 @@
 <p>It is PostgreSQL-only (raising a clear error on other backends), idempotent at the storage layer, and deliberately a <strong>deployment concern</strong> rather than a schema-definition one. See the <a href="../../reference/specs/deploy-operations/">Deployment Operations Specification</a> and <a href="../../explanation/postgresql-cdc-replication/">PostgreSQL CDC and Replica Identity</a>.</p>
 <h2 id="cascade-fix-part-of-part-and-renamed-fk-chains">Cascade Fix: Part-of-Part and Renamed-FK Chains<a class="headerlink" href="#cascade-fix-part-of-part-and-renamed-fk-chains" title="Permanent link">&para;</a></h2>
 <p><code>part_integrity="cascade"</code> now correctly propagates a Part's restriction up to its Master through <strong>renamed foreign keys</strong> and <strong>Part-of-Part chains</strong>, and materializes the master restriction to avoid MySQL's self-referential-subquery error (1093) on the subsequent downstream cascade. This is the same upward-propagation machinery that <code>Diagram.trace</code> builds on. See the <a href="../../reference/specs/cascade/">Cascade Specification</a>.</p>
+<h2 id="redesigned-diagrams">Redesigned Diagrams<a class="headerlink" href="#redesigned-diagrams" title="Permanent link">&para;</a></h2>
+<p><code>dj.Diagram</code> output was restyled onto the DataJoint brand palette, and one notation rule that
+had been conflating two different things was corrected.</p>
+<p><strong>Tier is shape <em>and</em> color.</strong> Manual and Lookup are rectangles, Imported and Computed are
+ovals — unchanged — and each tier now carries its brand fill: Manual green, Lookup grey,
+Imported blue, Computed orange. A Part keeps a neutral box rather than its master's tier shape,
+so it stays a distinct, selectable node.</p>
+<p><strong>Line weight now encodes cardinality, and only cardinality.</strong> It is binary: a <strong>thick</strong> edge is
+a one-to-one dependency, where the foreign key fills the child's entire primary key; a <strong>thin</strong>
+edge is one-to-many, where the child adds primary-key attributes of its own. Previously weight
+also tried to signal the master-part relationship, which made the two unreadable together. The
+rule is rename-safe — what matters is whether the foreign key covers the child's whole primary
+key, not whether the attribute names match, so a renamed foreign key can still be one-to-one.</p>
+<p><strong>Renamed foreign keys are amber.</strong> A renamed (aliased) foreign key is drawn in amber <code>#C77D3A</code>
+— distinct from the orange Computed tier — layered on top of the ordinary line styles, so
+solid/dashed and thick/thin still read normally. Hover the edge in the SVG for the column
+renames (e.g. <code>spouse1 ← person_id</code>).</p>
+<p><strong>Themes.</strong> The new <code>display.diagram_theme</code> setting takes <code>auto</code>, <code>light</code>, or <code>dark</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">diagram_theme</span> <span class="o">=</span> <span class="s2">"dark"</span>
+
+<span class="c1"># or per-diagram</span>
+<span class="k">with</span> <span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">override</span><span class="p">(</span><span class="n">display__diagram_theme</span><span class="o">=</span><span class="s2">"light"</span><span class="p">):</span>
+    <span class="n">dj</span><span class="o">.</span><span class="n">Diagram</span><span class="p">(</span><span class="n">schema</span><span class="p">)</span>
+</code></pre></div>
+<p><code>auto</code> — the default — emits a <strong>single</strong> SVG that adapts to the viewer's light or dark mode
+through an embedded <code>prefers-color-scheme</code> block, so the same file works in both. It also reads
+<code>DJ_DIAGRAM_THEME</code>.</p>
+<p>Diagrams no longer fail on a node they cannot resolve to a Python class — a table declared by
+another project, or one whose module is not imported, is drawn with its raw table name instead
+of raising.</p>
+<p>See <a href="../../how-to/read-diagrams/">Read Diagrams</a> for the full notation and the
+<a href="../../reference/specs/diagram/">Diagram Specification</a> for the exact palette and rules.</p>
 <h2 id="other-fixes">Other Fixes<a class="headerlink" href="#other-fixes" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong><code>~lineage</code> self-heals</strong> — missing <code>~lineage</code> rows are detected and repaired on every <code>@schema</code> decoration.</li>
@@ -6595,6 +6690,8 @@
 <li><a href="../../reference/specs/spark-adapter/">SparkAdapter Codec Protocol</a> — typed rendering to Spark-native types</li>
 <li><a href="../../reference/specs/deploy-operations/">Deployment Operations</a> — the <code>dj.deploy</code> module</li>
 <li><a href="../../reference/specs/cascade/">Cascade Specification</a> — propagation rules shared with <code>trace</code></li>
+<li><a href="../../how-to/read-diagrams/">Read Diagrams</a> — diagram notation, tiers, edges and themes</li>
+<li><a href="../../reference/specs/diagram/">Diagram Specification</a> — the brand palette and the cardinality rule</li>
 <li><a href="../whats-new-22/">What's New in 2.2</a> — Previous release</li>
 <li><a href="https://github.com/datajoint/datajoint-python/releases">Release Notes (2.3.x)</a> — GitHub changelog</li>
 </ul>

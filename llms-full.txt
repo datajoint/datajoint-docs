@@ -1,6 +1,6 @@
 # DataJoint Documentation (Full)
 
-Generated: 2026-08-21 19:44:44 UTC
+Generated: 2026-09-09 22:55:09 UTC
 Commit: unknown
 Branch: unknown
 
@@ -7148,7 +7148,7 @@ DataJoint diagrams show tables as nodes and foreign keys as edges. The notation 
 | **Gray** | Lookup table |
 | **Red** | Computed table |
 | **Blue** | Imported table |
-| **Orange edges** | Renamed foreign keys (via `.proj()`) |
+| **Amber edges** | Renamed foreign keys (via `.proj()`) |
 
 **Key principle:** Solid lines mean the parent's identity becomes part of the child's identity. Dashed lines mean the child maintains independent identity.
 
@@ -22821,7 +22821,7 @@ dj.Diagram(Session) + dj.Diagram(Comparison)
 ```
 
 
-**Orange edges** indicate renamed foreign keys. Hover over an edge to see the renamed columns.
+**Amber edges** indicate renamed foreign keys. Hover over an edge to see the renamed columns.
 
 This creates attributes `session_a` and `session_b`, both referencing `Session.session_idx`.
 
@@ -23755,9 +23755,9 @@ dj.Diagram(Student) + dj.Diagram(Course) + dj.Diagram(Enrollment)
 
 **Note:** `Enrollment` is **not underlined** — it exists in the space defined by Student × Course dimensions.
 
-## Orange Edges: Renamed Foreign Keys
+## Amber Edges: Renamed Foreign Keys
 
-When referencing the same table multiple times, use `.proj()` to rename. **Orange edges** indicate renamed FKs.
+When referencing the same table multiple times, use `.proj()` to rename. **Amber edges** indicate renamed FKs.
 
 
 ```python
@@ -23783,20 +23783,20 @@ dj.Diagram(Person) + dj.Diagram(Marriage)
 ```
 
 
-The orange edges between `Person` and `Marriage` indicate that projections renamed the foreign key attributes (`spouse1` and `spouse2` both reference `person_id`).
+The amber edges between `Person` and `Marriage` indicate that projections renamed the foreign key attributes (`spouse1` and `spouse2` both reference `person_id`).
 
-**Tip:** In Jupyter, hover over an orange edge to see the renamed columns (e.g. `spouse1 ← person_id`).
+**Tip:** In Jupyter, hover over an amber edge to see the renamed columns (e.g. `spouse1 ← person_id`).
 
 ### Renamed primary vs. secondary foreign keys
 
-The orange color marks a *renamed* foreign key — it does **not** change the line-style semantics. A renamed FK is drawn exactly like any other, just in orange:
+The amber color marks a *renamed* foreign key — it does **not** change the line-style semantics. A renamed FK is drawn exactly like any other, just in amber:
 
 - **solid** = the FK is part of the child's primary key; **dashed** = a secondary reference (below the `---`).
 - **thick** = the FK spans the child's *entire* primary key (a 1:1 reference); **thin** = it is only part of it.
 
-So a renamed **primary** FK is a **solid orange** line, whereas the renamed **secondary** FKs in the `Marriage` example above are **dashed orange**.
+So a renamed **primary** FK is a **solid amber** line, whereas the renamed **secondary** FKs in the `Marriage` example above are **dashed amber**.
 
-Below, `Synapse` references `Neuron` twice as **primary** renamed FKs (`presynaptic`, `postsynaptic`) — drawn **solid orange** (thin, since each is only part of `Synapse`'s primary key). `NeuronProfile` extends `Neuron` one-to-one through a single renamed primary FK — drawn **thick solid orange**.
+Below, `Synapse` references `Neuron` twice as **primary** renamed FKs (`presynaptic`, `postsynaptic`) — drawn **solid amber** (thin, since each is only part of `Synapse`'s primary key). `NeuronProfile` extends `Neuron` one-to-one through a single renamed primary FK — drawn **thick solid amber**.
 
 
 
@@ -23816,8 +23816,8 @@ class Neuron(dj.Manual):
 @neuro
 class Synapse(dj.Manual):
     definition = """
-    -> Neuron.proj(presynaptic="neuron_id")   # renamed PRIMARY FK -> solid orange
-    -> Neuron.proj(postsynaptic="neuron_id")  # renamed PRIMARY FK -> solid orange
+    -> Neuron.proj(presynaptic="neuron_id")   # renamed PRIMARY FK -> solid amber
+    -> Neuron.proj(postsynaptic="neuron_id")  # renamed PRIMARY FK -> solid amber
     ---
     weight : float
     """
@@ -23825,7 +23825,7 @@ class Synapse(dj.Manual):
 @neuro
 class NeuronProfile(dj.Manual):
     definition = """
-    -> Neuron.proj(profile_id="neuron_id")       # renamed 1:1 PRIMARY FK -> thick solid orange
+    -> Neuron.proj(profile_id="neuron_id")       # renamed 1:1 PRIMARY FK -> thick solid amber
     ---
     notes : varchar(64)
     """
@@ -24197,14 +24197,15 @@ A dashed line could be any of:
 | **Thin solid** | One-to-many containment |
 | **Dashed** | Reference (independent identity) |
 | **Underlined** | Introduces new dimension |
-| **Orange edges** | Renamed FK via `.proj()` |
-| **Colors** | Green=Manual, Gray=Lookup, Red=Computed, Blue=Imported |
+| **Amber edges** | Renamed FK via `.proj()` |
+| **Colors** | Green=Manual, Gray=Lookup, Orange=Computed, Blue=Imported |
 | **Grouped boxes** | Tables grouped by schema/module |
 | **3D box (gray)** | Collapsed schema *(New in 2.1)* |
 
 | Feature | Method |
 |---------|--------|
 | Layout direction | `dj.config.display.diagram_direction` |
+| Color theme | `dj.config.display.diagram_theme` *(New in 2.3.3)* |
 | Mermaid output | `.make_mermaid()` |
 | Collapse schema | `.collapse()` *(New in 2.1)* |
 | Prune empty tables | `.prune()` *(New in 2.2)* |
@@ -26934,6 +26935,7 @@ If table lacks partition attributes, it follows normal path structure.
 | `display.width` | — | `14` | Column width |
 | `display.show_tuple_count` | — | `True` | Show row count in output |
 | `display.diagram_direction` | `DJ_DIAGRAM_DIRECTION` | `LR` | Diagram layout: `LR` (left-right) or `TB` (top-bottom) *(new in 2.1)* |
+| `display.diagram_theme` | `DJ_DIAGRAM_THEME` | `auto` | Diagram color theme: `auto` (one SVG that follows the viewer's light or dark mode), `light`, or `dark` *(new in 2.3.3)* |
 
 ## Top-Level Settings
 
@@ -31399,7 +31401,7 @@ darks, text brightened to WCAG AA); the adaptive SVG embeds both via a
 | Dashed line | Secondary foreign key (below the `---`) |
 | Thick line | **1:1** dependency — the foreign key constitutes the child's *entire* primary key |
 | Thin line | **Multi-valued** dependency — the child has primary-key attributes beyond those the foreign key contributes |
-| Orange line | Renamed foreign key (via `.proj()`) — hover the edge for the column-rename tooltip |
+| Amber line | Renamed foreign key (via `.proj()`) — amber `#C77D3A`, distinct from the orange **Computed** tier above; hover the edge for the column-rename tooltip |
 
 **Line weight encodes cardinality, and only cardinality — it is binary.** A
 thick edge is a one-to-one dependency: the parent's key fills the child's entire
@@ -40120,9 +40122,30 @@ The graph-driven approach resolves every known limitation of the prior error-dri
 
 DataJoint 2.3 adds a first-class **upstream read surface** — `Diagram.trace` and `self.upstream` — which make "a computed row derives only from its declared upstream inputs" easy to follow inside `make()` and easy to query afterward. It also ships the **SparkAdapter Codec Protocol** for typed rendering to Spark-native types, **`dj.deploy.set_replica_identity`** for PostgreSQL change-data-capture, and a **cascade fix** for Part-of-Part and renamed-foreign-key chains.
 
-> **Upgrading from 2.0, 2.1, or 2.2?** No breaking changes. Everything here is additive — existing pipelines run identically.
+Later releases on the line added **redesigned diagram rendering** on the DataJoint brand palette, with a light/dark [`display.diagram_theme`](../reference/configuration.md#display-settings) setting, and **S3 stores that resolve an ambient AWS identity** instead of requiring static keys.
+
+> **Upgrading from 2.0, 2.1, or 2.2?** No API breaks — every feature on the 2.3 line is additive.
+> Two fixes in 2.3.3 do, however, reject input that previously passed silently: a misspelled native
+> type is now caught at declaration, and inserting a NumPy array into a **native** `blob` attribute
+> now raises. Both cases were already broken — the first produced invalid DDL at the server, the
+> second stored the array's text representation — so anything affected was losing data rather than
+> working. See [Changes in 2.3.3](#changes-in-233).
 
 > **Citation:** Yatsenko D, Nguyen TT. *DataJoint 2.0: A Computational Substrate for Agentic Scientific Workflows.* arXiv:2602.16585. 2026. [doi:10.48550/arXiv.2602.16585](https://doi.org/10.48550/arXiv.2602.16585)
+
+## Changes in 2.3.3
+
+2.3.3 is a patch release on the 2.3 line. If you are upgrading from **2.3.2**:
+
+- **S3 stores work without static credentials.** `access_key` and `secret_key` are now optional in an `s3` store spec — omit both and the AWS credential chain resolves an ambient identity (EC2 instance profile, IRSA, ECS task role, SSO), matching how the `gcs` and `azure` protocols already behaved. This is what lets a pipeline run under an assumed role with no long-lived keys in its configuration. Setting exactly one of the two is now rejected at validation with a clear message, rather than failing later inside the AWS client as a partial credential. See [Configure Storage](../how-to/configure-storage.md) and [#1537](https://github.com/datajoint/datajoint-python/issues/1537).
+- **Redesigned diagram rendering.** `dj.Diagram` output adopts the DataJoint brand palette: Manual and Lookup stay rectangles, Imported and Computed stay ovals, and each tier now carries its brand fill — Manual green, Lookup grey, Imported blue, Computed orange. Renamed foreign keys render as amber edges. Edge thickness now encodes **cardinality** rather than the master-part relationship, which it conflated before. See [Read Diagrams](../how-to/read-diagrams.ipynb) and [#1532](https://github.com/datajoint/datajoint-python/issues/1532).
+- **New setting: `display.diagram_theme`.** Choose `auto` (the default — one SVG that follows the viewer's light or dark mode), `light`, or `dark`. Settable as `dj.config.display.diagram_theme` or via `DJ_DIAGRAM_THEME`. See [Configuration](../reference/configuration.md#display-settings).
+- **Diagrams render when a table cannot be resolved.** A diagram containing a node that maps to no Python class — a table declared by another project, or one whose module is not imported — now draws that node with its raw table name instead of raising. This came up on PostgreSQL, where schema qualification made unresolved nodes more common. See [#1535](https://github.com/datajoint/datajoint-python/issues/1535).
+- **Braces in comments no longer break declaration.** A `{...}` sequence anywhere in a table or attribute comment — `payload : json  # {data, config} payload` — crashed `declare` with an opaque `KeyError`. Comments and `enum` values now pass through verbatim. The same defect was live on `Table.alter`, which additionally lost the declared type of any attribute it added; a table altered on PostgreSQL could become permanently un-alterable as a result. `alter()` now preserves type metadata, so `describe()` keeps round-tripping, and `ADD`/`DROP` work on PostgreSQL. See [datajoint-python#1548](https://github.com/datajoint/datajoint-python/pull/1548).
+- **Attribute types are validated at declaration and insert.** Four related gaps closed. A misspelled native type (`int24`, `intbanana`) is now rejected with `Unsupported attribute type` instead of being passed to the server as invalid DDL. `decimal(M,D) unsigned` is accepted again — it was rejected in 2.x while the equivalent `numeric(M,D) unsigned` passed. A bare `blob` is accepted alongside `tinyblob`/`longblob`. And inserting a NumPy array into a **native** `blob` attribute now raises instead of silently storing the array's text representation; use a `<blob>` codec attribute to store arrays. See [#1527](https://github.com/datajoint/datajoint-python/issues/1527), [#1528](https://github.com/datajoint/datajoint-python/issues/1528), [#1529](https://github.com/datajoint/datajoint-python/issues/1529) and [#1530](https://github.com/datajoint/datajoint-python/issues/1530).
+- **File-protocol stores are safe on Windows.** Paths in `file://` store URLs are now built with POSIX separators on every platform. Previously a Windows backslash in a stored path did not match the forward-slash form used during reference discovery, so `gc.collect()` could classify live files as orphans and delete them. Windows is now covered by CI. See [Clean Up Object Storage](../how-to/garbage-collection.md) and [#1520](https://github.com/datajoint/datajoint-python/issues/1520).
+- **Foreign-key columns are indexed on PostgreSQL.** Table declaration emitted an index for unique foreign keys only, leaving ordinary ones unindexed and making joins and cascading deletes scan. Non-unique foreign-key columns are now indexed, skipping any already covered by an existing index. Existing tables are unaffected until redeclared. See [#1512](https://github.com/datajoint/datajoint-python/issues/1512).
+- **Custom codecs must resolve stores against the calling connection.** The `SchemaCodec` example previously omitted `config=` when calling `_build_path` and `_get_backend`, so a codec written from it resolved its store against the module-level `dj.config` rather than the connection actually in use — reading the wrong store, or failing validation, in any process holding more than one connection. The example now threads `key["_config"]` through both, as the built-in `object` and `npy` codecs already did. If you maintain a codec, check both call sites. This threading is scheduled to be replaced by an explicit `context=` parameter in 2.3.4 — see [#1550](https://github.com/datajoint/datajoint-python/issues/1550) — so the underscore key will keep working with a deprecation warning rather than changing under you. See [Custom Codecs](../tutorials/advanced/custom-codecs.ipynb).
 
 ## Changes in 2.3.2
 
@@ -40221,6 +40244,49 @@ It is PostgreSQL-only (raising a clear error on other backends), idempotent at t
 
 `part_integrity="cascade"` now correctly propagates a Part's restriction up to its Master through **renamed foreign keys** and **Part-of-Part chains**, and materializes the master restriction to avoid MySQL's self-referential-subquery error (1093) on the subsequent downstream cascade. This is the same upward-propagation machinery that `Diagram.trace` builds on. See the [Cascade Specification](../reference/specs/cascade.md).
 
+## Redesigned Diagrams
+
+`dj.Diagram` output was restyled onto the DataJoint brand palette, and one notation rule that
+had been conflating two different things was corrected.
+
+**Tier is shape *and* color.** Manual and Lookup are rectangles, Imported and Computed are
+ovals — unchanged — and each tier now carries its brand fill: Manual green, Lookup grey,
+Imported blue, Computed orange. A Part keeps a neutral box rather than its master's tier shape,
+so it stays a distinct, selectable node.
+
+**Line weight now encodes cardinality, and only cardinality.** It is binary: a **thick** edge is
+a one-to-one dependency, where the foreign key fills the child's entire primary key; a **thin**
+edge is one-to-many, where the child adds primary-key attributes of its own. Previously weight
+also tried to signal the master-part relationship, which made the two unreadable together. The
+rule is rename-safe — what matters is whether the foreign key covers the child's whole primary
+key, not whether the attribute names match, so a renamed foreign key can still be one-to-one.
+
+**Renamed foreign keys are amber.** A renamed (aliased) foreign key is drawn in amber `#C77D3A`
+— distinct from the orange Computed tier — layered on top of the ordinary line styles, so
+solid/dashed and thick/thin still read normally. Hover the edge in the SVG for the column
+renames (e.g. `spouse1 ← person_id`).
+
+**Themes.** The new `display.diagram_theme` setting takes `auto`, `light`, or `dark`:
+
+```python
+dj.config.display.diagram_theme = "dark"
+
+# or per-diagram
+with dj.config.override(display__diagram_theme="light"):
+    dj.Diagram(schema)
+```
+
+`auto` — the default — emits a **single** SVG that adapts to the viewer's light or dark mode
+through an embedded `prefers-color-scheme` block, so the same file works in both. It also reads
+`DJ_DIAGRAM_THEME`.
+
+Diagrams no longer fail on a node they cannot resolve to a Python class — a table declared by
+another project, or one whose module is not imported, is drawn with its raw table name instead
+of raising.
+
+See [Read Diagrams](../how-to/read-diagrams.ipynb) for the full notation and the
+[Diagram Specification](../reference/specs/diagram.md) for the exact palette and rules.
+
 ## Other Fixes
 
 - **`~lineage` self-heals** — missing `~lineage` rows are detected and repaired on every `@schema` decoration.
@@ -40233,6 +40299,8 @@ It is PostgreSQL-only (raising a clear error on other backends), idempotent at t
 - [SparkAdapter Codec Protocol](../reference/specs/spark-adapter.md) — typed rendering to Spark-native types
 - [Deployment Operations](../reference/specs/deploy-operations.md) — the `dj.deploy` module
 - [Cascade Specification](../reference/specs/cascade.md) — propagation rules shared with `trace`
+- [Read Diagrams](../how-to/read-diagrams.ipynb) — diagram notation, tiers, edges and themes
+- [Diagram Specification](../reference/specs/diagram.md) — the brand palette and the cardinality rule
 - [What's New in 2.2](whats-new-22.md) — Previous release
 - [Release Notes (2.3.x)](https://github.com/datajoint/datajoint-python/releases) — GitHub changelog
 

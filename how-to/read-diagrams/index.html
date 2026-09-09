@@ -1249,14 +1249,14 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#orange-edges-renamed-foreign-keys">
+<a class="md-nav__link" href="#amber-edges-renamed-foreign-keys">
 <span class="md-ellipsis">
       
-        Orange Edges: Renamed Foreign Keys
+        Amber Edges: Renamed Foreign Keys
       
     </span>
 </a>
-<nav aria-label="Orange Edges: Renamed Foreign Keys" class="md-nav">
+<nav aria-label="Amber Edges: Renamed Foreign Keys" class="md-nav">
 <ul class="md-nav__list">
 <li class="md-nav__item">
 <a class="md-nav__link" href="#renamed-primary-vs-secondary-foreign-keys">
@@ -2828,14 +2828,14 @@
 </a>
 </li>
 <li class="md-nav__item">
-<a class="md-nav__link" href="#orange-edges-renamed-foreign-keys">
+<a class="md-nav__link" href="#amber-edges-renamed-foreign-keys">
 <span class="md-ellipsis">
       
-        Orange Edges: Renamed Foreign Keys
+        Amber Edges: Renamed Foreign Keys
       
     </span>
 </a>
-<nav aria-label="Orange Edges: Renamed Foreign Keys" class="md-nav">
+<nav aria-label="Amber Edges: Renamed Foreign Keys" class="md-nav">
 <ul class="md-nav__list">
 <li class="md-nav__item">
 <a class="md-nav__link" href="#renamed-primary-vs-secondary-foreign-keys">
@@ -4315,7 +4315,7 @@ dj.Diagram(Student) + dj.Diagram(Course) + dj.Diagram(Enrollment)</div>
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="orange-edges-renamed-foreign-keys">Orange Edges: Renamed Foreign Keys<a class="anchor-link" href="#orange-edges-renamed-foreign-keys">¶</a></h2><p>When referencing the same table multiple times, use <code>.proj()</code> to rename. <strong>Orange edges</strong> indicate renamed FKs.</p>
+<h2 id="amber-edges-renamed-foreign-keys">Amber Edges: Renamed Foreign Keys<a class="anchor-link" href="#amber-edges-renamed-foreign-keys">¶</a></h2><p>When referencing the same table multiple times, use <code>.proj()</code> to rename. <strong>Amber edges</strong> indicate renamed FKs.</p>
 </div>
 </div>
 </div>
@@ -4401,8 +4401,8 @@ dj.Diagram(Person) + dj.Diagram(Marriage)</div>
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<p>The orange edges between <code>Person</code> and <code>Marriage</code> indicate that projections renamed the foreign key attributes (<code>spouse1</code> and <code>spouse2</code> both reference <code>person_id</code>).</p>
-<p><strong>Tip:</strong> In Jupyter, hover over an orange edge to see the renamed columns (e.g. <code>spouse1 ← person_id</code>).</p>
+<p>The amber edges between <code>Person</code> and <code>Marriage</code> indicate that projections renamed the foreign key attributes (<code>spouse1</code> and <code>spouse2</code> both reference <code>person_id</code>).</p>
+<p><strong>Tip:</strong> In Jupyter, hover over an amber edge to see the renamed columns (e.g. <code>spouse1 ← person_id</code>).</p>
 </div>
 </div>
 </div>
@@ -4413,13 +4413,13 @@ dj.Diagram(Person) + dj.Diagram(Marriage)</div>
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h3 id="renamed-primary-vs-secondary-foreign-keys">Renamed primary vs. secondary foreign keys<a class="anchor-link" href="#renamed-primary-vs-secondary-foreign-keys">¶</a></h3><p>The orange color marks a <em>renamed</em> foreign key — it does <strong>not</strong> change the line-style semantics. A renamed FK is drawn exactly like any other, just in orange:</p>
+<h3 id="renamed-primary-vs-secondary-foreign-keys">Renamed primary vs. secondary foreign keys<a class="anchor-link" href="#renamed-primary-vs-secondary-foreign-keys">¶</a></h3><p>The amber color marks a <em>renamed</em> foreign key — it does <strong>not</strong> change the line-style semantics. A renamed FK is drawn exactly like any other, just in amber:</p>
 <ul>
 <li><strong>solid</strong> = the FK is part of the child's primary key; <strong>dashed</strong> = a secondary reference (below the <code>---</code>).</li>
 <li><strong>thick</strong> = the FK spans the child's <em>entire</em> primary key (a 1:1 reference); <strong>thin</strong> = it is only part of it.</li>
 </ul>
-<p>So a renamed <strong>primary</strong> FK is a <strong>solid orange</strong> line, whereas the renamed <strong>secondary</strong> FKs in the <code>Marriage</code> example above are <strong>dashed orange</strong>.</p>
-<p>Below, <code>Synapse</code> references <code>Neuron</code> twice as <strong>primary</strong> renamed FKs (<code>presynaptic</code>, <code>postsynaptic</code>) — drawn <strong>solid orange</strong> (thin, since each is only part of <code>Synapse</code>'s primary key). <code>NeuronProfile</code> extends <code>Neuron</code> one-to-one through a single renamed primary FK — drawn <strong>thick solid orange</strong>.</p>
+<p>So a renamed <strong>primary</strong> FK is a <strong>solid amber</strong> line, whereas the renamed <strong>secondary</strong> FKs in the <code>Marriage</code> example above are <strong>dashed amber</strong>.</p>
+<p>Below, <code>Synapse</code> references <code>Neuron</code> twice as <strong>primary</strong> renamed FKs (<code>presynaptic</code>, <code>postsynaptic</code>) — drawn <strong>solid amber</strong> (thin, since each is only part of <code>Synapse</code>'s primary key). <code>NeuronProfile</code> extends <code>Neuron</code> one-to-one through a single renamed primary FK — drawn <strong>thick solid amber</strong>.</p>
 </div>
 </div>
 </div>
@@ -4457,8 +4457,8 @@ dj.Diagram(Person) + dj.Diagram(Marriage)</div>
 <span class="nd">@neuro</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Synapse</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
     <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
-<span class="s2">    -&gt; Neuron.proj(presynaptic="neuron_id")   # renamed PRIMARY FK -&gt; solid orange</span>
-<span class="s2">    -&gt; Neuron.proj(postsynaptic="neuron_id")  # renamed PRIMARY FK -&gt; solid orange</span>
+<span class="s2">    -&gt; Neuron.proj(presynaptic="neuron_id")   # renamed PRIMARY FK -&gt; solid amber</span>
+<span class="s2">    -&gt; Neuron.proj(postsynaptic="neuron_id")  # renamed PRIMARY FK -&gt; solid amber</span>
 <span class="s2">    ---</span>
 <span class="s2">    weight : float</span>
 <span class="s2">    """</span>
@@ -4466,7 +4466,7 @@ dj.Diagram(Person) + dj.Diagram(Marriage)</div>
 <span class="nd">@neuro</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">NeuronProfile</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
     <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
-<span class="s2">    -&gt; Neuron.proj(profile_id="neuron_id")       # renamed 1:1 PRIMARY FK -&gt; thick solid orange</span>
+<span class="s2">    -&gt; Neuron.proj(profile_id="neuron_id")       # renamed 1:1 PRIMARY FK -&gt; thick solid amber</span>
 <span class="s2">    ---</span>
 <span class="s2">    notes : varchar(64)</span>
 <span class="s2">    """</span>
@@ -4488,8 +4488,8 @@ class Neuron(dj.Manual):
 @neuro
 class Synapse(dj.Manual):
     definition = """
-    -&gt; Neuron.proj(presynaptic="neuron_id")   # renamed PRIMARY FK -&gt; solid orange
-    -&gt; Neuron.proj(postsynaptic="neuron_id")  # renamed PRIMARY FK -&gt; solid orange
+    -&gt; Neuron.proj(presynaptic="neuron_id")   # renamed PRIMARY FK -&gt; solid amber
+    -&gt; Neuron.proj(postsynaptic="neuron_id")  # renamed PRIMARY FK -&gt; solid amber
     ---
     weight : float
     """
@@ -4497,7 +4497,7 @@ class Synapse(dj.Manual):
 @neuro
 class NeuronProfile(dj.Manual):
     definition = """
-    -&gt; Neuron.proj(profile_id="neuron_id")       # renamed 1:1 PRIMARY FK -&gt; thick solid orange
+    -&gt; Neuron.proj(profile_id="neuron_id")       # renamed 1:1 PRIMARY FK -&gt; thick solid amber
     ---
     notes : varchar(64)
     """
@@ -5698,12 +5698,12 @@ dj.Diagram(acquisition).collapse() + dj.Diagram(processing).collapse() + dj.Diag
 <td>Introduces new dimension</td>
 </tr>
 <tr>
-<td><strong>Orange edges</strong></td>
+<td><strong>Amber edges</strong></td>
 <td>Renamed FK via <code>.proj()</code></td>
 </tr>
 <tr>
 <td><strong>Colors</strong></td>
-<td>Green=Manual, Gray=Lookup, Red=Computed, Blue=Imported</td>
+<td>Green=Manual, Gray=Lookup, Orange=Computed, Blue=Imported</td>
 </tr>
 <tr>
 <td><strong>Grouped boxes</strong></td>
@@ -5726,6 +5726,10 @@ dj.Diagram(acquisition).collapse() + dj.Diagram(processing).collapse() + dj.Diag
 <tr>
 <td>Layout direction</td>
 <td><code>dj.config.display.diagram_direction</code></td>
+</tr>
+<tr>
+<td>Color theme</td>
+<td><code>dj.config.display.diagram_theme</code> <em>(New in 2.3.3)</em></td>
 </tr>
 <tr>
 <td>Mermaid output</td>
