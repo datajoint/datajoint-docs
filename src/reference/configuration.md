@@ -171,6 +171,7 @@ If table lacks partition attributes, it follows normal path structure.
 | `display.width` | — | `14` | Column width |
 | `display.show_tuple_count` | — | `True` | Show row count in output |
 | `display.diagram_direction` | `DJ_DIAGRAM_DIRECTION` | `LR` | Diagram layout: `LR` (left-right) or `TB` (top-bottom) *(new in 2.1)* |
+| `display.diagram_theme` | `DJ_DIAGRAM_THEME` | `auto` | Diagram color theme: `auto` (one SVG that follows the viewer's light or dark mode), `light`, or `dark` *(new in 2.3.3)* |
 
 ## Top-Level Settings
 

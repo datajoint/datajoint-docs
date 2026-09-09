@@ -360,7 +360,7 @@ darks, text brightened to WCAG AA); the adaptive SVG embeds both via a
 | Dashed line | Secondary foreign key (below the `---`) |
 | Thick line | **1:1** dependency — the foreign key constitutes the child's *entire* primary key |
 | Thin line | **Multi-valued** dependency — the child has primary-key attributes beyond those the foreign key contributes |
-| Orange line | Renamed foreign key (via `.proj()`) — hover the edge for the column-rename tooltip |
+| Amber line | Renamed foreign key (via `.proj()`) — amber `#C77D3A`, distinct from the orange **Computed** tier above; hover the edge for the column-rename tooltip |
 
 **Line weight encodes cardinality, and only cardinality — it is binary.** A
 thick edge is a one-to-one dependency: the parent's key fills the child's entire
