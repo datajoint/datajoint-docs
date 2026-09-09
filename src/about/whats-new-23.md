@@ -2,7 +2,14 @@
 
 DataJoint 2.3 adds a first-class **upstream read surface** — `Diagram.trace` and `self.upstream` — which make "a computed row derives only from its declared upstream inputs" easy to follow inside `make()` and easy to query afterward. It also ships the **SparkAdapter Codec Protocol** for typed rendering to Spark-native types, **`dj.deploy.set_replica_identity`** for PostgreSQL change-data-capture, and a **cascade fix** for Part-of-Part and renamed-foreign-key chains.
 
-> **Upgrading from 2.0, 2.1, or 2.2?** No breaking changes. Everything here is additive — existing pipelines run identically.
+Later releases on the line added **redesigned diagram rendering** on the DataJoint brand palette, with a light/dark [`display.diagram_theme`](../reference/configuration.md#display-settings) setting, and **S3 stores that resolve an ambient AWS identity** instead of requiring static keys.
+
+> **Upgrading from 2.0, 2.1, or 2.2?** No API breaks — every feature on the 2.3 line is additive.
+> Two fixes in 2.3.3 do, however, reject input that previously passed silently: a misspelled native
+> type is now caught at declaration, and inserting a NumPy array into a **native** `blob` attribute
+> now raises. Both cases were already broken — the first produced invalid DDL at the server, the
+> second stored the array's text representation — so anything affected was losing data rather than
+> working. See [Changes in 2.3.3](#changes-in-233).
 
 > **Citation:** Yatsenko D, Nguyen TT. *DataJoint 2.0: A Computational Substrate for Agentic Scientific Workflows.* arXiv:2602.16585. 2026. [doi:10.48550/arXiv.2602.16585](https://doi.org/10.48550/arXiv.2602.16585)
 
@@ -117,6 +124,49 @@ It is PostgreSQL-only (raising a clear error on other backends), idempotent at t
 
 `part_integrity="cascade"` now correctly propagates a Part's restriction up to its Master through **renamed foreign keys** and **Part-of-Part chains**, and materializes the master restriction to avoid MySQL's self-referential-subquery error (1093) on the subsequent downstream cascade. This is the same upward-propagation machinery that `Diagram.trace` builds on. See the [Cascade Specification](../reference/specs/cascade.md).
 
+## Redesigned Diagrams
+
+`dj.Diagram` output was restyled onto the DataJoint brand palette, and one notation rule that
+had been conflating two different things was corrected.
+
+**Tier is shape *and* color.** Manual and Lookup are rectangles, Imported and Computed are
+ovals — unchanged — and each tier now carries its brand fill: Manual green, Lookup grey,
+Imported blue, Computed orange. A Part keeps a neutral box rather than its master's tier shape,
+so it stays a distinct, selectable node.
+
+**Line weight now encodes cardinality, and only cardinality.** It is binary: a **thick** edge is
+a one-to-one dependency, where the foreign key fills the child's entire primary key; a **thin**
+edge is one-to-many, where the child adds primary-key attributes of its own. Previously weight
+also tried to signal the master-part relationship, which made the two unreadable together. The
+rule is rename-safe — what matters is whether the foreign key covers the child's whole primary
+key, not whether the attribute names match, so a renamed foreign key can still be one-to-one.
+
+**Renamed foreign keys are amber.** A renamed (aliased) foreign key is drawn in amber `#C77D3A`
+— distinct from the orange Computed tier — layered on top of the ordinary line styles, so
+solid/dashed and thick/thin still read normally. Hover the edge in the SVG for the column
+renames (e.g. `spouse1 ← person_id`).
+
+**Themes.** The new `display.diagram_theme` setting takes `auto`, `light`, or `dark`:
+
+```python
+dj.config.display.diagram_theme = "dark"
+
+# or per-diagram
+with dj.config.override(display__diagram_theme="light"):
+    dj.Diagram(schema)
+```
+
+`auto` — the default — emits a **single** SVG that adapts to the viewer's light or dark mode
+through an embedded `prefers-color-scheme` block, so the same file works in both. It also reads
+`DJ_DIAGRAM_THEME`.
+
+Diagrams no longer fail on a node they cannot resolve to a Python class — a table declared by
+another project, or one whose module is not imported, is drawn with its raw table name instead
+of raising.
+
+See [Read Diagrams](../how-to/read-diagrams.ipynb) for the full notation and the
+[Diagram Specification](../reference/specs/diagram.md) for the exact palette and rules.
+
 ## Other Fixes
 
 - **`~lineage` self-heals** — missing `~lineage` rows are detected and repaired on every `@schema` decoration.
@@ -129,5 +179,7 @@ It is PostgreSQL-only (raising a clear error on other backends), idempotent at t
 - [SparkAdapter Codec Protocol](../reference/specs/spark-adapter.md) — typed rendering to Spark-native types
 - [Deployment Operations](../reference/specs/deploy-operations.md) — the `dj.deploy` module
 - [Cascade Specification](../reference/specs/cascade.md) — propagation rules shared with `trace`
+- [Read Diagrams](../how-to/read-diagrams.ipynb) — diagram notation, tiers, edges and themes
+- [Diagram Specification](../reference/specs/diagram.md) — the brand palette and the cardinality rule
 - [What's New in 2.2](whats-new-22.md) — Previous release
 - [Release Notes (2.3.x)](https://github.com/datajoint/datajoint-python/releases) — GitHub changelog
