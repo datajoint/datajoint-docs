@@ -4078,8 +4078,8 @@ dj.Diagram(Department) + dj.Diagram(Employee)</div>
 </table>
 <p><strong>Key rules:</strong></p>
 <ul>
-<li>Computed tables <strong>never</strong> introduce dimensions (always non-underlined)</li>
-<li>Part tables <strong>can</strong> introduce dimensions (may be underlined)</li>
+<li>An autopopulated master (<code>Computed</code>, <code>Imported</code>) is always non-underlined — its primary key is fully inherited from its dependencies</li>
+<li>A part table <strong>can</strong> be underlined; a part table is the only way an autopopulated table introduces a new dimension</li>
 </ul>
 </div>
 </div>

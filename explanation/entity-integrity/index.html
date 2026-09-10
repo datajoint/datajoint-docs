@@ -913,21 +913,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#computed-tables-never-introduce-dimensions" class="md-nav__link">
+  <a href="#autopopulated-tables-introduce-dimensions-only-through-part-tables" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Computed tables never introduce dimensions
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#part-tables-can-introduce-dimensions" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Part tables CAN introduce dimensions
+        Autopopulated tables introduce dimensions only through part tables
       
     </span>
   </a>
@@ -6731,21 +6720,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#computed-tables-never-introduce-dimensions" class="md-nav__link">
+  <a href="#autopopulated-tables-introduce-dimensions-only-through-part-tables" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Computed tables never introduce dimensions
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#part-tables-can-introduce-dimensions" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Part tables CAN introduce dimensions
+        Autopopulated tables introduce dimensions only through part tables
       
     </span>
   </a>
@@ -7150,7 +7128,7 @@ primary key.</strong></p>
 <li>Adding a dimension makes the grain <strong>finer</strong>: a part table that adds <code>blob_idx</code>
   (<code>Detection.Blob</code> below) has grain <strong>(… × blob)</strong> — one row per blob of a
   detection.</li>
-<li>A computed table's grain is the combination of dimensions at which its <code>make()</code>
+<li>An autopopulated table's grain is the combination of dimensions at which its <code>make()</code>
   produces rows — its
   <a href="../../reference/specs/autopopulate/"><code>key_source</code></a>. <em>A computation operates at
   its grain.</em></li>
@@ -7206,10 +7184,11 @@ existing dimension rather than introducing a new one:</p>
 <p><code>SubjectProfile</code> represents a one-to-one extension of <code>Subject</code> — exactly
 one profile per subject. In schema diagrams, such tables have
 <strong>non-underlined names</strong>.</p>
-<h3 id="computed-tables-never-introduce-dimensions">Computed tables never introduce dimensions<a class="headerlink" href="#computed-tables-never-introduce-dimensions" title="Permanent link">&para;</a></h3>
-<p>A <code>Computed</code> table's primary key is fully inherited from its dependencies.
-New entity types are introduced by Manual or Lookup tables, not by
-computation:</p>
+<h3 id="autopopulated-tables-introduce-dimensions-only-through-part-tables">Autopopulated tables introduce dimensions only through part tables<a class="headerlink" href="#autopopulated-tables-introduce-dimensions-only-through-part-tables" title="Permanent link">&para;</a></h3>
+<p>An autopopulated table — <code>Computed</code> or <code>Imported</code> — runs its <code>make()</code> once per
+key in its <a href="../../reference/specs/autopopulate/"><code>key_source</code></a>, so the master's
+primary key is fully inherited from its dependencies. The master introduces no
+dimension of its own:</p>
 <div class="highlight"><pre><span></span><code><span class="nd">@schema</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">SessionSummary</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Computed</span><span class="p">):</span>
     <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
@@ -7219,9 +7198,8 @@ computation:</p>
 <span class="s2">    accuracy : float32</span>
 <span class="s2">    """</span>
 </code></pre></div>
-<h3 id="part-tables-can-introduce-dimensions">Part tables CAN introduce dimensions<a class="headerlink" href="#part-tables-can-introduce-dimensions" title="Permanent link">&para;</a></h3>
-<p>Unlike Computed master tables, part tables can introduce new dimensions
-when a single computation produces multiple related results:</p>
+<p>When one <code>make()</code> call produces several results that need their own identifier,
+that new dimension goes in a <strong>part table</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="nd">@schema</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Detection</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Computed</span><span class="p">):</span>
     <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
@@ -7242,6 +7220,12 @@ when a single computation produces multiple related results:</p>
 </code></pre></div>
 <p><code>Detection</code> inherits its dimensions; <code>Detection.Blob</code> introduces <code>blob_idx</code>
 to identify individual blobs within each detection.</p>
+<blockquote>
+<p><strong>Introducing a new dimension in an autopopulated table requires a part
+table.</strong></p>
+</blockquote>
+<p>The master row and its part rows are inserted together in one transaction, so
+the new dimension is populated atomically with the computation that defines it.</p>
 <h3 id="dimensions-and-attribute-lineage">Dimensions and attribute lineage<a class="headerlink" href="#dimensions-and-attribute-lineage" title="Permanent link">&para;</a></h3>
 <p>Every foreign-key attribute traces back to the dimension where it was first
 defined. This trace is called <strong>attribute lineage</strong>:</p>
