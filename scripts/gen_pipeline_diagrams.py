@@ -49,14 +49,11 @@ Reproducibility caveats
   by the pydot that produced the committed figures and as literal spaces by
   4.0.1, which shows up as a whole-file diff with no visual change. Compare
   rendered content, not bytes, when the pydot version moves. Nothing pins pydot.
-- **One collapsed edge is traversal-order dependent.** A collapsed edge inherits
-  the attributes of whichever foreign key in its bundle is visited first
-  (``diagram.py``, ``_collapse_graph``: ``if not new_graph.has_edge(...)``), with
-  no aggregation over the bundle. Where a bundle mixes a primary and a secondary
-  foreign key — ``lab -> session`` here, which bundles ``Subject -> Session``
-  (primary) and ``User -> Session`` (secondary) — the edge renders solid or
-  dashed depending on order alone. The committed figure has it solid; this script
-  produces dashed. Both are outputs of the same renderer.
+- **Node emission order is hash-seeded.** ``dj.Diagram`` iterates sets of
+  table-name strings when emitting, so node and cluster order follows the
+  per-process string hash. This script therefore re-execs itself with
+  ``PYTHONHASHSEED=0``; without that, two identical runs disagree on order while
+  rendering the same picture. Upstream: datajoint-python#1551.
 
 A non-empty diff after a DataJoint upgrade is the signal to review the notation
 and the surrounding prose together — see issue #246.
@@ -67,6 +64,21 @@ import os
 import sys
 import tempfile
 from pathlib import Path
+
+# Re-exec with a fixed string-hash seed before anything imports datajoint.
+#
+# dj.Diagram iterates sets of table-name strings on its emission path, so the
+# order nodes and clusters land in the SVG follows str.__hash__, which Python
+# salts per process (PEP 456). The rendered picture is identical either way —
+# same coordinates, colors and edges — but the bytes are not, which makes
+# --check unusable and buries real notation changes in reordering noise.
+# Upstream: datajoint/datajoint-python#1551. Remove this block once that lands.
+#
+# PYTHONHASHSEED only takes effect at interpreter start, so it cannot be set
+# from inside the process.
+if os.environ.get("PYTHONHASHSEED") != "0":
+    os.environ["PYTHONHASHSEED"] = "0"
+    os.execv(sys.executable, [sys.executable, *sys.argv])
 
 import datajoint as dj
 
