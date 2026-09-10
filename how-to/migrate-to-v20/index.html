@@ -10975,24 +10975,32 @@ git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </
 <p>After successful migration, adopt DataJoint 2.0 features incrementally based
 on your needs. Migration is complete - these are optional enhancements.</p>
 <h3 id="new-features-overview">New Features Overview<a class="headerlink" href="#new-features-overview" title="Permanent link">&para;</a></h3>
-<p><strong>Schema-addressed storage</strong> (<code>&lt;npy@&gt;</code>, <code>&lt;object@&gt;</code>)
-- Lazy-loading arrays with fsspec integration
-- Hierarchical organization by primary key
-- Mutable objects with streaming access
-- See: <a href="../../tutorials/basics/06-object-storage/">Object Storage Tutorial</a></p>
-<p><strong>Semantic matching</strong>
-- Lineage-based join validation (enabled by default with <code>*</code> operator)
-- Catches errors from incompatible data combinations
-- See: <a href="../../reference/specs/semantic-matching/">Semantic Matching Spec</a></p>
-<p><strong>Jobs 2.0</strong>
-- Per-table job tracking (<code>~~table_name</code>)
-- Priority-based populate (with <code>reserve_jobs=True</code>)
-- Improved distributed computing coordination
-- See: <a href="../../tutorials/advanced/distributed/">Distributed Computing Tutorial</a></p>
-<p><strong>Custom codecs</strong>
-- Domain-specific data types
-- Extensible type system
-- See: <a href="../../tutorials/advanced/custom-codecs/">Custom Codecs Tutorial</a></p>
+<p><strong>Schema-addressed storage</strong> (<code>&lt;npy@&gt;</code>, <code>&lt;object@&gt;</code>)</p>
+<ul>
+<li>Lazy-loading arrays with fsspec integration</li>
+<li>Hierarchical organization by primary key</li>
+<li>Mutable objects with streaming access</li>
+<li>See: <a href="../../tutorials/basics/06-object-storage/">Object Storage Tutorial</a></li>
+</ul>
+<p><strong>Semantic matching</strong></p>
+<ul>
+<li>Lineage-based join validation (enabled by default with <code>*</code> operator)</li>
+<li>Catches errors from incompatible data combinations</li>
+<li>See: <a href="../../reference/specs/semantic-matching/">Semantic Matching Spec</a></li>
+</ul>
+<p><strong>Jobs 2.0</strong></p>
+<ul>
+<li>Per-table job tracking (<code>~~table_name</code>)</li>
+<li>Priority-based populate (with <code>reserve_jobs=True</code>)</li>
+<li>Improved distributed computing coordination</li>
+<li>See: <a href="../../tutorials/advanced/distributed/">Distributed Computing Tutorial</a></li>
+</ul>
+<p><strong>Custom codecs</strong></p>
+<ul>
+<li>Domain-specific data types</li>
+<li>Extensible type system</li>
+<li>See: <a href="../../tutorials/advanced/custom-codecs/">Custom Codecs Tutorial</a></li>
+</ul>
 <h3 id="learning-path">Learning Path<a class="headerlink" href="#learning-path" title="Permanent link">&para;</a></h3>
 <p><strong>Start here:</strong></p>
 <ol>
@@ -11060,24 +11068,32 @@ on your needs. Migration is complete - these are optional enhancements.</p>
 </code></pre></div></p>
 <hr />
 <h2 id="summary">Summary<a class="headerlink" href="#summary" title="Permanent link">&para;</a></h2>
-<p><strong>Phase I:</strong> Branch and code migration (~1-4 hours with AI)
-- Create <code>pre/v2.0</code> branch
-- Update all code to 2.0 API
-- Create empty <code>_v2</code> schemas</p>
-<p><strong>Phase II:</strong> Test with sample data (~1-2 days)
-- Insert test data
-- Validate functionality
-- Test new features</p>
-<p><strong>Phase III:</strong> Migrate production data (~1-7 days)
-- Choose migration option
-- Copy or migrate data
-- Validate integrity
-- Execute cutover</p>
-<p><strong>Phase IV:</strong> Adopt new features (ongoing)
-- Object storage
-- Semantic matching
-- Custom codecs
-- Jobs 2.0</p>
+<p><strong>Phase I:</strong> Branch and code migration (~1-4 hours with AI)</p>
+<ul>
+<li>Create <code>pre/v2.0</code> branch</li>
+<li>Update all code to 2.0 API</li>
+<li>Create empty <code>_v2</code> schemas</li>
+</ul>
+<p><strong>Phase II:</strong> Test with sample data (~1-2 days)</p>
+<ul>
+<li>Insert test data</li>
+<li>Validate functionality</li>
+<li>Test new features</li>
+</ul>
+<p><strong>Phase III:</strong> Migrate production data (~1-7 days)</p>
+<ul>
+<li>Choose migration option</li>
+<li>Copy or migrate data</li>
+<li>Validate integrity</li>
+<li>Execute cutover</li>
+</ul>
+<p><strong>Phase IV:</strong> Adopt new features (ongoing)</p>
+<ul>
+<li>Object storage</li>
+<li>Semantic matching</li>
+<li>Custom codecs</li>
+<li>Jobs 2.0</li>
+</ul>
 <p><strong>Total timeline:</strong> ~1-2 weeks for most pipelines</p>
 <hr />
 <h2 id="see-also">See Also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>

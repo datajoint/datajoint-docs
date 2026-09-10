@@ -7500,14 +7500,18 @@ Delete: Remove entities and all dependent data (cascading)
 <li>They can create inconsistencies with derived data</li>
 <li>They should be used sparingly for <strong>corrective operations</strong></li>
 </ul>
-<p><strong>Appropriate uses of update1():</strong>
-- Fixing data entry errors
-- Correcting metadata after the fact
-- Administrative annotations</p>
-<p><strong>Inappropriate uses:</strong>
-- Regular workflow operations
-- Batch modifications
-- Anything that should trigger recomputation</p>
+<p><strong>Appropriate uses of update1():</strong></p>
+<ul>
+<li>Fixing data entry errors</li>
+<li>Correcting metadata after the fact</li>
+<li>Administrative annotations</li>
+</ul>
+<p><strong>Inappropriate uses:</strong></p>
+<ul>
+<li>Regular workflow operations</li>
+<li>Batch modifications</li>
+<li>Anything that should trigger recomputation</li>
+</ul>
 <h3 id="13-the-recomputation-pattern">1.3 The Recomputation Pattern<a class="headerlink" href="#13-the-recomputation-pattern" title="Permanent link">&para;</a></h3>
 <p>When source data changes, the correct pattern is:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># 1. Delete the incorrect data (cascades to all derived tables)</span>
@@ -7645,9 +7649,11 @@ Delete: Remove entities and all dependent data (cascading)
 <span class="c1"># Replace existing rows</span>
 <span class="n">Subject</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">rows</span><span class="p">,</span> <span class="n">replace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </code></pre></div>
-<p><strong>Difference between skip and replace:</strong>
-- <code>skip_duplicates</code>: Keeps existing row unchanged
-- <code>replace</code>: Overwrites existing row with new values</p>
+<p><strong>Difference between skip and replace:</strong></p>
+<ul>
+<li><code>skip_duplicates</code>: Keeps existing row unchanged</li>
+<li><code>replace</code>: Overwrites existing row with new values</li>
+</ul>
 <h3 id="25-extra-fields">2.5 Extra Fields<a class="headerlink" href="#25-extra-fields" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># Error on extra fields (default)</span>
 <span class="n">Subject</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="s2">"subject_id"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">"unknown_field"</span><span class="p">:</span> <span class="s2">"x"</span><span class="p">})</span>  <span class="c1"># Raises error</span>
@@ -7700,8 +7706,10 @@ Delete: Remove entities and all dependent data (cascading)
 <p><strong>Signature:</strong>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">update1</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">row</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </code></pre></div></p>
-<p><strong>Parameters:</strong>
-- <code>row</code>: Dictionary containing all primary key values plus attributes to update</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>row</code>: Dictionary containing all primary key values plus attributes to update</li>
+</ul>
 <h3 id="32-basic-usage">3.2 Basic Usage<a class="headerlink" href="#32-basic-usage" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># Update a single attribute</span>
 <span class="n">Subject</span><span class="o">.</span><span class="n">update1</span><span class="p">({</span><span class="s2">"subject_id"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">"name"</span><span class="p">:</span> <span class="s2">"NewName"</span><span class="p">})</span>
@@ -7832,10 +7840,12 @@ Delete: Remove entities and all dependent data (cascading)
 <div class="highlight"><pre><span></span><code><span class="c1"># Deleting a subject deletes all their sessions, trials, and computed results</span>
 <span class="p">(</span><span class="n">Subject</span> <span class="o">&amp;</span> <span class="p">{</span><span class="s2">"subject_id"</span><span class="p">:</span> <span class="mi">1</span><span class="p">})</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
 </code></pre></div>
-<p><strong>Cascade order:</strong>
-1. Identify all tables with foreign keys referencing target
-2. Recursively delete matching rows in child tables
-3. Delete rows in target table</p>
+<p><strong>Cascade order:</strong></p>
+<ol>
+<li>Identify all tables with foreign keys referencing target</li>
+<li>Recursively delete matching rows in child tables</li>
+<li>Delete rows in target table</li>
+</ol>
 <div class="admonition version-added">
 <p class="admonition-title">New in 2.2</p>
 <p><code>Table.delete()</code> now uses graph-driven cascade internally via <code>dj.Diagram</code>. User-facing behavior is unchanged — the same parameters and return values apply. For direct control over the cascade (preview, multi-schema operations), use the <a href="../diagram/#operational-methods">Diagram operational methods</a>.</p>
@@ -7908,14 +7918,18 @@ Commit deletes? [yes, No]:
 <p>Fast delete without cascade or confirmation:</p>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">delete_quick</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">get_count</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span>
 </code></pre></div>
-<p><strong>Use cases:</strong>
-- Internal cleanup
-- Tables with no dependents
-- When you've already handled dependencies</p>
-<p><strong>Behavior:</strong>
-- No cascade to child tables
-- No user confirmation
-- Fails on FK constraint violation</p>
+<p><strong>Use cases:</strong></p>
+<ul>
+<li>Internal cleanup</li>
+<li>Tables with no dependents</li>
+<li>When you've already handled dependencies</li>
+</ul>
+<p><strong>Behavior:</strong></p>
+<ul>
+<li>No cascade to child tables</li>
+<li>No user confirmation</li>
+<li>Fails on FK constraint violation</li>
+</ul>
 <div class="highlight"><pre><span></span><code><span class="c1"># Quick delete (fails if has dependents)</span>
 <span class="p">(</span><span class="n">TempTable</span> <span class="o">&amp;</span> <span class="n">condition</span><span class="p">)</span><span class="o">.</span><span class="n">delete_quick</span><span class="p">()</span>
 
@@ -7928,10 +7942,12 @@ Commit deletes? [yes, No]:
 <p>Pre-validate rows before insertion:</p>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rows</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">ignore_extra_fields</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ValidationResult</span>
 </code></pre></div>
-<p><strong>Returns:</strong> <code>ValidationResult</code> with:
-- <code>is_valid</code>: Boolean indicating all rows passed
-- <code>errors</code>: List of (row_idx, field_name, error_message)
-- <code>rows_checked</code>: Number of rows validated</p>
+<p><strong>Returns:</strong> <code>ValidationResult</code> with:</p>
+<ul>
+<li><code>is_valid</code>: Boolean indicating all rows passed</li>
+<li><code>errors</code>: List of (row_idx, field_name, error_message)</li>
+<li><code>rows_checked</code>: Number of rows validated</li>
+</ul>
 <h3 id="52-usage">5.2 Usage<a class="headerlink" href="#52-usage" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="n">result</span> <span class="o">=</span> <span class="n">Subject</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="n">rows</span><span class="p">)</span>
 
@@ -7978,10 +7994,12 @@ Commit deletes? [yes, No]:
 </tbody>
 </table>
 <h3 id="54-limitations">5.4 Limitations<a class="headerlink" href="#54-limitations" title="Permanent link">&para;</a></h3>
-<p>These constraints are only checked at database level:
-- Foreign key references
-- Unique constraints (beyond PK)
-- Custom CHECK constraints</p>
+<p>These constraints are only checked at database level:</p>
+<ul>
+<li>Foreign key references</li>
+<li>Unique constraints (beyond PK)</li>
+<li>Custom CHECK constraints</li>
+</ul>
 <hr />
 <h2 id="6-part-tables">6. Part Tables<a class="headerlink" href="#6-part-tables" title="Permanent link">&para;</a></h2>
 <h3 id="61-inserting-into-part-tables">6.1 Inserting into Part Tables<a class="headerlink" href="#61-inserting-into-part-tables" title="Permanent link">&para;</a></h3>

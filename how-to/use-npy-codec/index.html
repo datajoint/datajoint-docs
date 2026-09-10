@@ -6777,12 +6777,14 @@
 <p>Store NumPy arrays with lazy loading and metadata access.</p>
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
 <p>The <code>&lt;npy@&gt;</code> codec stores NumPy arrays as portable <code>.npy</code> files in object storage. On fetch, you get an <code>NpyRef</code> that provides metadata without downloading.</p>
-<p><strong>Key benefits:</strong>
-- Access shape, dtype, size without I/O
-- Lazy loading - download only when needed
-- Memory mapping - random access to large arrays
-- Safe bulk fetch - inspect before downloading
-- Portable <code>.npy</code> format</p>
+<p><strong>Key benefits:</strong></p>
+<ul>
+<li>Access shape, dtype, size without I/O</li>
+<li>Lazy loading - download only when needed</li>
+<li>Memory mapping - random access to large arrays</li>
+<li>Safe bulk fetch - inspect before downloading</li>
+<li>Portable <code>.npy</code> format</li>
+</ul>
 <h2 id="quick-start">Quick Start<a class="headerlink" href="#quick-start" title="Permanent link">&para;</a></h2>
 <h3 id="1-configure-a-store">1. Configure a Store<a class="headerlink" href="#1-configure-a-store" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">datajoint</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dj</span>
@@ -6873,13 +6875,17 @@
 <span class="c1"># Only reads the portion you access</span>
 <span class="nb">slice</span> <span class="o">=</span> <span class="n">arr</span><span class="p">[</span><span class="mi">1000</span><span class="p">:</span><span class="mi">2000</span><span class="p">,</span> <span class="p">:]</span>  <span class="c1"># Efficient for large arrays</span>
 </code></pre></div>
-<p><strong>Modes:</strong>
-- <code>'r'</code> - Read-only (recommended)
-- <code>'r+'</code> - Read-write
-- <code>'c'</code> - Copy-on-write (changes not saved)</p>
-<p><strong>Performance:</strong>
-- Local filesystem stores: mmaps directly (no copy)
-- Remote stores (S3): downloads to cache first, then mmaps</p>
+<p><strong>Modes:</strong></p>
+<ul>
+<li><code>'r'</code> - Read-only (recommended)</li>
+<li><code>'r+'</code> - Read-write</li>
+<li><code>'c'</code> - Copy-on-write (changes not saved)</li>
+</ul>
+<p><strong>Performance:</strong></p>
+<ul>
+<li>Local filesystem stores: mmaps directly (no copy)</li>
+<li>Remote stores (S3): downloads to cache first, then mmaps</li>
+</ul>
 <h2 id="common-patterns">Common Patterns<a class="headerlink" href="#common-patterns" title="Permanent link">&para;</a></h2>
 <h3 id="bulk-fetch-with-filtering">Bulk Fetch with Filtering<a class="headerlink" href="#bulk-fetch-with-filtering" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># Fetch all - returns NpyRefs, not arrays</span>
@@ -6971,16 +6977,20 @@
 </tbody>
 </table>
 <h3 id="when-to-use-each">When to Use Each<a class="headerlink" href="#when-to-use-each" title="Permanent link">&para;</a></h3>
-<p><strong>Use <code>&lt;npy@&gt;</code> when:</strong>
-- Arrays are large (&gt; 10 MB)
-- You need to inspect shape/dtype before loading
-- Fetching many rows but processing few
-- Random access to slices of very large arrays (memory mapping)
-- Interoperability matters (non-Python tools)</p>
-<p><strong>Use <code>&lt;blob@&gt;</code> when:</strong>
-- Arrays are small (&lt; 10 MB)
-- Same arrays appear in multiple rows (deduplication)
-- Storing non-array Python objects (dicts, lists)</p>
+<p><strong>Use <code>&lt;npy@&gt;</code> when:</strong></p>
+<ul>
+<li>Arrays are large (&gt; 10 MB)</li>
+<li>You need to inspect shape/dtype before loading</li>
+<li>Fetching many rows but processing few</li>
+<li>Random access to slices of very large arrays (memory mapping)</li>
+<li>Interoperability matters (non-Python tools)</li>
+</ul>
+<p><strong>Use <code>&lt;blob@&gt;</code> when:</strong></p>
+<ul>
+<li>Arrays are small (&lt; 10 MB)</li>
+<li>Same arrays appear in multiple rows (deduplication)</li>
+<li>Storing non-array Python objects (dicts, lists)</li>
+</ul>
 <h2 id="supported-array-types">Supported Array Types<a class="headerlink" href="#supported-array-types" title="Permanent link">&para;</a></h2>
 <p>The <code>&lt;npy&gt;</code> codec supports any NumPy array except object dtype:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Supported</span>

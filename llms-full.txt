@@ -1,6 +1,6 @@
 # DataJoint Documentation (Full)
 
-Generated: 2026-09-10 18:33:44 UTC
+Generated: 2026-09-10 18:35:08 UTC
 Commit: unknown
 Branch: unknown
 
@@ -14068,6 +14068,7 @@ Protect your data with proper backup strategies.
 ## Overview
 
 A complete DataJoint backup includes:
+
 1. **Database** — Table structures and relational data
 2. **Object storage** — Large objects stored externally
 
@@ -14398,6 +14399,7 @@ class Experiment(dj.Manual):
 ```
 
 **When to use in-table storage (`<blob>`):**
+
 - Fast access needed (no external fetch)
 - Data frequently queried alongside other columns
 - Transactional consistency critical
@@ -14405,6 +14407,7 @@ class Experiment(dj.Manual):
 - No object storage configuration available
 
 **When to use object storage (`<blob@>`, `<npy@>`, `<object@>`):**
+
 - Data larger than ~10 MB
 - Infrequent access patterns
 - Need deduplication (hash-addressed types)
@@ -14412,6 +14415,7 @@ class Experiment(dj.Manual):
 - Want to separate hot data (DB) from cold data (object store)
 
 **Examples by size:**
+
 - **< 1 MB**: Configuration JSON, metadata, small parameter arrays → `<blob>`
 - **1-10 MB**: Thumbnails, processed features, small waveforms → `<blob>` or `<blob@>` depending on access pattern
 - **10-100 MB**: Neural recordings, images, PDFs → `<blob@>` or `<attach@>`
@@ -14490,6 +14494,7 @@ shape = ref.shape             # Metadata without loading
 ```
 
 **Why `<npy@>` over `<blob@>` for arrays:**
+
 - Lazy loading (doesn't load until accessed)
 - Efficient slicing (can fetch subsets)
 - Preserves shape/dtype metadata
@@ -14511,12 +14516,14 @@ class ManagedData(dj.Manual):
 ```
 
 **DataJoint provides:**
+
 - ✅ Automatic cleanup (garbage collection)
 - ✅ Transactional integrity (atomic with database)
 - ✅ Referential integrity (cascading deletes)
 - ✅ Content deduplication (for `<blob@>`, `<attach@>`)
 
 **User manages:**
+
 - ❌ File paths (DataJoint decides)
 - ❌ Cleanup (automatic)
 - ❌ Integrity (enforced)
@@ -14537,11 +14544,13 @@ class ExternalData(dj.Manual):
 ```
 
 **User provides:**
+
 - ✅ File paths (you control organization)
 - ✅ File lifecycle (you create/delete)
 - ✅ Existing files (reference external data)
 
 **DataJoint provides:**
+
 - ✅ Path validation (file exists on insert)
 - ✅ ObjectRef for lazy access
 - ❌ No garbage collection
@@ -14549,6 +14558,7 @@ class ExternalData(dj.Manual):
 - ❌ No deduplication
 
 **Use when:**
+
 - Files managed by external systems
 - Referencing existing data archives
 - Custom file organization required
@@ -14566,6 +14576,7 @@ small_data : <blob>
 ```
 
 **Characteristics:**
+
 - ✅ Fast access (in database)
 - ✅ Transactional consistency
 - ✅ Automatic backup
@@ -14578,6 +14589,7 @@ small_data : <blob>
 - ❌ Database bloat for large data
 
 **Best for:**
+
 - Configuration JSON (dicts/lists)
 - Small arrays/matrices
 - Thumbnails
@@ -14595,6 +14607,7 @@ config_file : <attach>
 ```
 
 **Characteristics:**
+
 - ✅ Fast access (in database)
 - ✅ Transactional consistency
 - ✅ Automatic backup
@@ -14607,12 +14620,14 @@ config_file : <attach>
 - ❌ Returns file path (extracts to download directory), not Python object
 
 **Best for:**
+
 - Small configuration files
 - Document attachments (< 10 MB)
 - Files where original filename matters
 - When you need the file extracted to disk
 
 **Difference from `<blob>`:**
+
 - `<blob>`: Stores Python objects (dicts, arrays) → returns Python object
 - `<attach>`: Stores files with filename → returns local file path
 
@@ -14630,6 +14645,7 @@ file : <attach@>            # File attachments
 ```
 
 **Characteristics (both):**
+
 - ✅ Content deduplication (identical data stored once)
 - ✅ Automatic gzip compression
 - ✅ Garbage collection
@@ -14640,24 +14656,29 @@ file : <attach@>            # File attachments
 - ❌ Storage path not browsable (hash-based)
 
 **`<blob@>` specific:**
+
 - ✅ **Python object convenience**: Insert/fetch dicts, lists, arrays directly (no manual IO)
 - Returns: Python objects
 
 **`<attach@>` specific:**
+
 - ✅ **Filename preserved**: Original filename stored with content
 - Returns: Local file path (extracts to download directory)
 
 **Best for `<blob@>`:**
+
 - Large Python objects (NumPy arrays, dicts)
 - Processed results (nested structures)
 - Any Python data with duplicates
 
 **Best for `<attach@>`:**
+
 - PDF/document files
 - Images, videos
 - Files where original filename/format matters
 
 **Key difference:**
+
 - `<blob@>`: Python objects in, Python objects out (no file handling)
 - `<attach@>`: Files in, file paths out (preserves filename)
 
@@ -14674,6 +14695,7 @@ dataset : <object@>         # Zarr, HDF5, custom
 ```
 
 **Characteristics:**
+
 - ✅ Streaming access (no full download)
 - ✅ Partial reads (fetch chunks)
 - ✅ Browsable paths (organized by key)
@@ -14684,11 +14706,13 @@ dataset : <object@>         # Zarr, HDF5, custom
 - ❌ One file per field per row
 
 **Key advantages:**
+
 - **Schema-addressed storage is browsable** - can be navigated and accessed by external tools (Zarr viewers, HDF5 utilities, direct filesystem access), not just through DataJoint
 - **`<npy@>` provides array convenience** - insert/fetch array-like objects directly (no manual .npy file handling)
 - **`<object@>` provides flexibility** - you manage the format (Zarr, HDF5, custom), DataJoint provides storage and references
 
 **Best for:**
+
 - `<npy@>`: NumPy arrays with lazy loading (no manual IO)
 - `<object@>`: Zarr arrays, HDF5 datasets, custom formats (you manage format)
 - Large video files
@@ -14696,6 +14720,7 @@ dataset : <object@>         # Zarr, HDF5, custom
 - Data that needs to be accessed by non-DataJoint tools
 
 **Difference `<npy@>` vs `<object@>`:**
+
 - `<npy@>`: Insert/fetch array-like objects (like `<blob>` but lazy) - no manual .npy handling
 - `<object@>`: You manage format and IO (Zarr, HDF5, custom) - more flexible but requires format knowledge
 
@@ -14711,6 +14736,7 @@ raw_data : <filepath@>      # User-managed file
 ```
 
 **Characteristics:**
+
 - ✅ Reference existing files
 - ✅ User controls paths
 - ✅ External system compatibility
@@ -14722,6 +14748,7 @@ raw_data : <filepath@>      # User-managed file
 - ❌ Must avoid `_hash/` and `_schema/` prefixes
 
 **Best for:**
+
 - Large instrument data directories
 - Externally managed archives
 - Legacy data integration
@@ -14761,6 +14788,7 @@ class Thumbnail(dj.Computed):
 ```
 
 **Rationale:**
+
 - `<filepath@>`: Reference existing microscope files (large, externally managed)
 - `<blob@>`: Processed images (moderate size, deduplicated if reprocessed)
 - `<blob>`: Thumbnails (tiny, fast access for UI)
@@ -14809,6 +14837,7 @@ class UnitStats(dj.Computed):
 ```
 
 **Rationale:**
+
 - `<blob>`: Config and stats (small metadata, fast access)
 - `<object@>`: Raw voltage (huge, stream for spike detection)
 - `<npy@>`: Waveforms (moderate arrays, load for clustering)
@@ -14857,6 +14886,7 @@ class TraceSummary(dj.Computed):
 ```
 
 **Rationale:**
+
 - `<object@>`: Movies (huge, stream for segmentation)
 - `<npy@>`: Masks (moderate, load for trace extraction)
 - `<blob@>`: Traces (per-cell, many rows, deduplication helps)
@@ -14879,6 +14909,7 @@ class TraceSummary(dj.Computed):
 ```
 
 All `@` codecs use this store:
+
 - `<blob@>` → `/data/my-project/_hash/{schema}/{hash}`
 - `<npy@>` → `/data/my-project/_schema/{schema}/{table}/{key}/`
 
@@ -17078,6 +17109,7 @@ class Subject(dj.Manual):
 ```
 
 **Good candidates:**
+
 - Lab-assigned IDs
 - Standard identifiers (NCBI accession, DOI)
 - Meaningful codes with enforced uniqueness
@@ -17139,6 +17171,7 @@ DataJoint discourages `auto_increment` for primary keys:
 5. **Meaningless foreign keys** — Downstream tables inherit opaque integers rather than traceable lineage.
 
 **Instead, use:**
+
 - Natural keys that identify entities in your domain
 - UUIDs when no natural identifier exists
 - Composite keys combining foreign keys with sequence numbers
@@ -17246,6 +17279,7 @@ SessionAnalysis.populate(reserve_jobs=True)
 ## How It Works
 
 With `reserve_jobs=True`:
+
 1. Worker checks the jobs table for pending work
 2. Atomically reserves a job before processing
 3. Other workers see the job as reserved and skip it
@@ -22346,23 +22380,27 @@ on your needs. Migration is complete - these are optional enhancements.
 ### New Features Overview
 
 **Schema-addressed storage** (`<npy@>`, `<object@>`)
+
 - Lazy-loading arrays with fsspec integration
 - Hierarchical organization by primary key
 - Mutable objects with streaming access
 - See: [Object Storage Tutorial](../tutorials/basics/06-object-storage.ipynb/)
 
 **Semantic matching**
+
 - Lineage-based join validation (enabled by default with `*` operator)
 - Catches errors from incompatible data combinations
 - See: [Semantic Matching Spec](../reference/specs/semantic-matching.md/)
 
 **Jobs 2.0**
+
 - Per-table job tracking (`~~table_name`)
 - Priority-based populate (with `reserve_jobs=True`)
 - Improved distributed computing coordination
 - See: [Distributed Computing Tutorial](../tutorials/advanced/distributed.ipynb/)
 
 **Custom codecs**
+
 - Domain-specific data types
 - Extensible type system
 - See: [Custom Codecs Tutorial](../tutorials/advanced/custom-codecs.ipynb/)
@@ -22456,22 +22494,26 @@ print(get_store_spec('main'))
 ## Summary
 
 **Phase I:** Branch and code migration (~1-4 hours with AI)
+
 - Create `pre/v2.0` branch
 - Update all code to 2.0 API
 - Create empty `_v2` schemas
 
 **Phase II:** Test with sample data (~1-2 days)
+
 - Insert test data
 - Validate functionality
 - Test new features
 
 **Phase III:** Migrate production data (~1-7 days)
+
 - Choose migration option
 - Copy or migrate data
 - Validate integrity
 - Execute cutover
 
 **Phase IV:** Adopt new features (ongoing)
+
 - Object storage
 - Semantic matching
 - Custom codecs
@@ -23142,6 +23184,7 @@ volume : <object@>        # Schema: _schema/{schema}/{table}/{key}/
 ```
 
 **Guides:**
+
 - [Choose a Storage Type](choose-storage-type.md) — Decision criteria
 - [Use Object Storage](use-object-storage.md) — How to use codecs
 
@@ -25517,6 +25560,7 @@ Store NumPy arrays with lazy loading and metadata access.
 The `<npy@>` codec stores NumPy arrays as portable `.npy` files in object storage. On fetch, you get an `NpyRef` that provides metadata without downloading.
 
 **Key benefits:**
+
 - Access shape, dtype, size without I/O
 - Lazy loading - download only when needed
 - Memory mapping - random access to large arrays
@@ -25640,11 +25684,13 @@ slice = arr[1000:2000, :]  # Efficient for large arrays
 ```
 
 **Modes:**
+
 - `'r'` - Read-only (recommended)
 - `'r+'` - Read-write
 - `'c'` - Copy-on-write (changes not saved)
 
 **Performance:**
+
 - Local filesystem stores: mmaps directly (no copy)
 - Remote stores (S3): downloads to cache first, then mmaps
 
@@ -25716,6 +25762,7 @@ for key in Recording.keys():
 ### When to Use Each
 
 **Use `<npy@>` when:**
+
 - Arrays are large (> 10 MB)
 - You need to inspect shape/dtype before loading
 - Fetching many rows but processing few
@@ -25723,6 +25770,7 @@ for key in Recording.keys():
 - Interoperability matters (non-Python tools)
 
 **Use `<blob@>` when:**
+
 - Arrays are small (< 10 MB)
 - Same arrays appear in multiple rows (deduplication)
 - Storing non-array Python objects (dicts, lists)
@@ -26079,10 +26127,12 @@ local_path = ref.download('/tmp/data')
 ### Size Guidelines
 
 **Technical limits:**
+
 - **MySQL**: In-table blobs up to 4 GiB (`LONGBLOB`)
 - **PostgreSQL**: In-table blobs unlimited (`BYTEA`)
 
 **Practical recommendations** (consider accessibility, cost, performance):
+
 - **< 1-10 MB**: In-table storage (`<blob>`) often sufficient
 - **10-100 MB**: Object store (`<blob@>` with dedup, or `<npy@>` for arrays)
 - **> 100 MB**: Schema-addressed (`<npy@>`, `<object@>`) for streaming and lazy loading
@@ -26380,6 +26430,7 @@ Plugin codecs evolve over time. Following versioning best practices ensures your
 ### Built-in vs Plugin Codec Versioning
 
 **Built-in codecs** (`<blob>`, `<npy@>`, `<object@>`, etc.) are versioned with DataJoint:
+
 - ✅ Shipped with datajoint-python
 - ✅ Versioned by DataJoint release (2.0.0, 2.1.0, 3.0.0)
 - ✅ Upgraded when you upgrade DataJoint
@@ -26387,6 +26438,7 @@ Plugin codecs evolve over time. Following versioning best practices ensures your
 - ❌ **No explicit codec_version field needed** - DataJoint version is the codec version
 
 **Plugin codecs** (dj-zarr-codecs, dj-photon-codecs, etc.) have independent lifecycles:
+
 - ✅ Installed separately from DataJoint
 - ✅ Independent version numbers (0.1.0 → 1.0.0 → 2.0.0)
 - ✅ Users choose when to upgrade
@@ -26453,11 +26505,13 @@ def decode(self, stored, *, key=None):
 ### When to Bump Versions
 
 **Bump data format version when:**
+
 - ✅ Changing storage structure or encoding algorithm
 - ✅ Modifying metadata schema
 - ✅ Changing compression parameters that affect decode
 
 **Don't bump for:**
+
 - ❌ Bug fixes that don't affect stored data format
 - ❌ Performance improvements to encode/decode logic
 - ❌ Adding new optional features (store version in attributes instead)
@@ -26581,6 +26635,7 @@ def decode(self, stored, *, key=None):
 ### Real-World Example: dj-photon-codecs Evolution
 
 **Version 1.0** (current):
+
 - Stores Anscombe-transformed data
 - Fixed compression (Blosc zstd level 5)
 - Fixed chunking (100 frames)
@@ -27362,11 +27417,13 @@ except dj.DataJointError as e:
 Database connection was lost during operation.
 
 **Common causes:**
+
 - Network interruption
 - Server timeout
 - Server restart
 
 **Resolution:**
+
 - Check network connectivity
 - Reconnect with `dj.conn().connect()`
 
@@ -27377,6 +27434,7 @@ Database connection was lost during operation.
 Invalid query syntax.
 
 **Common causes:**
+
 - Malformed restriction string
 - Invalid attribute reference
 - SQL syntax error in projection
@@ -27386,10 +27444,12 @@ Invalid query syntax.
 Insufficient database privileges.
 
 **Common causes:**
+
 - User lacks SELECT/INSERT/DELETE privileges
 - Schema access not granted
 
 **Resolution:**
+
 - Contact database administrator
 - Check user grants
 
@@ -27406,6 +27466,7 @@ except dj.errors.DuplicateError:
 ```
 
 **Resolution:**
+
 - Use `insert(..., skip_duplicates=True)`
 - Use `insert(..., replace=True)` to update
 - Check if entry exists before inserting
@@ -27415,10 +27476,12 @@ except dj.errors.DuplicateError:
 Foreign key constraint violation.
 
 **Common causes:**
+
 - Inserting row with non-existent parent
 - Parent row deletion blocked by children
 
 **Resolution:**
+
 - Insert parent rows first
 - Use cascade delete for parent
 
@@ -27432,6 +27495,7 @@ table.to_arrays('nonexistent_column')
 ```
 
 **Resolution:**
+
 - Check `table.heading` for available attributes
 - Verify spelling
 
@@ -27445,6 +27509,7 @@ table.insert1({'id': 1})  # Missing 'name'
 ```
 
 **Resolution:**
+
 - Provide all required attributes
 - Set default values in definition
 
@@ -27455,11 +27520,13 @@ table.insert1({'id': 1})  # Missing 'name'
 Table not declared in database.
 
 **Common causes:**
+
 - Schema not created
 - Table class not instantiated
 - Database dropped
 
 **Resolution:**
+
 - Check schema exists: `schema.is_activated()`
 - Verify table declaration
 
@@ -27470,11 +27537,13 @@ Table not declared in database.
 External file managed by DataJoint is missing.
 
 **Common causes:**
+
 - File manually deleted from store
 - Store misconfigured
 - Network/permission issues
 
 **Resolution:**
+
 - Check store configuration
 - Verify file exists at expected path
 - Run garbage collection audit
@@ -27484,11 +27553,13 @@ External file managed by DataJoint is missing.
 S3 bucket cannot be accessed.
 
 **Common causes:**
+
 - Invalid credentials
 - Bucket doesn't exist
 - Network/firewall issues
 
 **Resolution:**
+
 - Verify AWS credentials
 - Check bucket name and region
 - Test with AWS CLI
@@ -27905,6 +27976,7 @@ Student * Course.proj(..., course_name='name')
 AutoPopulate is DataJoint's mechanism for automated computation. Tables that inherit from `dj.Computed` or `dj.Imported` automatically populate themselves by executing a `make()` method for each entry defined by their dependencies.
 
 This specification covers:
+
 - The populate process and key source calculation
 - Transaction management and atomicity
 - The `make()` method and tripartite pattern
@@ -28001,6 +28073,7 @@ class SpikeDetection(dj.Computed):
 ```
 
 **Calculation rules:**
+
 1. Identify all foreign keys in the primary key section
 2. Join the referenced tables: `Parent1 * Parent2 * ...`
 3. Project to primary key attributes only
@@ -28326,6 +28399,7 @@ def make(self, key):
 ```
 
 **When to use tripartite:**
+
 - Computation takes more than a few seconds
 - You want to avoid holding database locks during computation
 - Working with external resources (files, APIs) that may be slow
@@ -28364,6 +28438,7 @@ def make_fetch(self, key, verbose=False, **kwargs):
 **Anti-pattern warning (contract rule 5):** Passing arguments that affect the computed result breaks reproducibility—every result-affecting input must enter through a declared upstream table, not `make_kwargs` (see [make() reproducibility contract](#43-the-make-reproducibility-contract), rule 5). If a parameter affects results, store it in a lookup table and reference it via foreign key.
 
 **Acceptable use:** Directives that don't affect results, such as:
+
 - `verbose=True` for logging
 - `gpu_id=0` for device selection
 - `n_workers=4` for parallelization
@@ -28586,12 +28661,14 @@ Analysis.populate()  # Direct mode
 ```
 
 **Characteristics:**
+
 - Calculates `key_source - self` on each call
 - No job tracking or status persistence
 - Simple and efficient for single-worker scenarios
 - No coordination overhead
 
 **Best for:**
+
 - Interactive development
 - Single-worker pipelines
 - Small to medium datasets
@@ -28605,12 +28682,14 @@ Analysis.populate(reserve_jobs=True)  # Distributed mode
 ```
 
 **Characteristics:**
+
 - Uses per-table jobs queue for coordination
 - Workers reserve jobs before processing
 - Full status tracking (pending, reserved, error, success)
 - Enables monitoring and recovery
 
 **Best for:**
+
 - Multi-worker distributed computing
 - Long-running pipelines
 - Production environments with monitoring needs
@@ -28804,6 +28883,7 @@ When two workers reserve the same job simultaneously:
 5. First worker marks job complete
 
 This is acceptable because:
+
 - The `make()` transaction guarantees data integrity
 - Conflicts are rare with job reservation
 - Wasted computation is minimal vs locking overhead
@@ -29351,6 +29431,7 @@ class MyCodec(dj.Codec):
 ```
 
 Naming conventions:
+
 - Use lowercase with underscores: `spike_train`, `graph_embedding`
 - Avoid generic names that might conflict: prefer `lab_model` over `model`
 - Names must be unique across all registered codecs
@@ -29526,11 +29607,13 @@ When DataJoint encounters `<zjson>`:
 3. Final storage type is `bytes` (LONGBLOB in MySQL)
 
 During INSERT:
+
 1. `ZjsonCodec.encode()` converts Python dict → compressed bytes
 2. `BlobCodec.encode()` packs bytes → DJ blob format
 3. Stored in database
 
 During FETCH:
+
 1. Read from database
 2. `BlobCodec.decode()` unpacks DJ blob → compressed bytes
 3. `ZjsonCodec.decode()` decompresses → Python dict
@@ -29705,6 +29788,7 @@ DataJoint provides these built-in codecs. See the [Type System Specification](ty
 | `<filepath@>` | N/A | `json` | Reference | Reference to existing files in store |
 
 **Addressing schemes:**
+
 - **Hash-addressed**: Path from content hash. Automatic deduplication.
 - **Schema-addressed**: Path mirrors database structure. One location per entity.
 
@@ -30057,11 +30141,13 @@ This design maintains referential integrity at the **entity level**—each row r
 - They should be used sparingly for **corrective operations**
 
 **Appropriate uses of update1():**
+
 - Fixing data entry errors
 - Correcting metadata after the fact
 - Administrative annotations
 
 **Inappropriate uses:**
+
 - Regular workflow operations
 - Batch modifications
 - Anything that should trigger recomputation
@@ -30158,6 +30244,7 @@ Subject.insert(rows, replace=True)
 ```
 
 **Difference between skip and replace:**
+
 - `skip_duplicates`: Keeps existing row unchanged
 - `replace`: Overwrites existing row with new values
 
@@ -30240,6 +30327,7 @@ def update1(self, row: dict) -> None
 ```
 
 **Parameters:**
+
 - `row`: Dictionary containing all primary key values plus attributes to update
 
 ### 3.2 Basic Usage
@@ -30363,6 +30451,7 @@ Delete automatically cascades to all dependent tables:
 ```
 
 **Cascade order:**
+
 1. Identify all tables with foreign keys referencing target
 2. Recursively delete matching rows in child tables
 3. Delete rows in target table
@@ -30445,11 +30534,13 @@ def delete_quick(self, get_count: bool = False) -> int | None
 ```
 
 **Use cases:**
+
 - Internal cleanup
 - Tables with no dependents
 - When you've already handled dependencies
 
 **Behavior:**
+
 - No cascade to child tables
 - No user confirmation
 - Fails on FK constraint violation
@@ -30475,6 +30566,7 @@ def validate(self, rows, *, ignore_extra_fields=False) -> ValidationResult
 ```
 
 **Returns:** `ValidationResult` with:
+
 - `is_valid`: Boolean indicating all rows passed
 - `errors`: List of (row_idx, field_name, error_message)
 - `rows_checked`: Number of rows validated
@@ -30506,6 +30598,7 @@ else:
 ### 5.4 Limitations
 
 These constraints are only checked at database level:
+
 - Foreign key references
 - Unique constraints (beyond PK)
 - Custom CHECK constraints
@@ -31922,6 +32015,7 @@ Specs clarify exact behavior when documentation or examples are ambiguous.
 4. [Type System](type-system.md) — Three-layer type architecture
 
 **Next:** Choose based on your needs:
+
 - **Working with data?** → Data Operations
 - **Building queries?** → Query Algebra
 - **Using large data?** → Object Storage
@@ -32041,6 +32135,7 @@ Job execution metadata (start time, duration, code version) should be persisted 
 ## Motivation
 
 The current job table (`~~table_name`) tracks execution metadata, but:
+
 1. Job entries are deleted after completion (unless `keep_completed=True`)
 2. Users often need to know when and with what code version each row was computed
 3. This metadata should be transparent - not cluttering the user-facing schema
@@ -32056,6 +32151,7 @@ Hidden attributes (prefixed with `_`) provide the solution: stored in the databa
 | `_job_version` | varchar(64) | Code version (e.g., git commit hash) |
 
 **Design notes:**
+
 - `_job_duration` (elapsed time) rather than `_job_completed_time` because duration is more informative for performance analysis
 - `varchar(64)` for version is sufficient for git hashes (40 chars for SHA-1, 7-8 for short hash)
 - `datetime(3)` provides millisecond precision
@@ -32152,6 +32248,7 @@ add_job_metadata_columns(schema)
 ```
 
 This utility:
+
 - ALTERs the table to add the three hidden columns
 - Does NOT populate existing rows (metadata remains NULL)
 - Future `populate()` calls will populate metadata for new rows
@@ -32161,17 +32258,20 @@ This utility:
 ### Declaration-time
 
 When `config.jobs.add_job_metadata=True` and a Computed/Imported table is declared:
+
 - Hidden metadata columns are added to the table definition
 - Only master tables receive metadata columns; Part tables never get them
 
 ### Population-time
 
 After `make()` completes successfully:
+
 1. Check if the table has hidden metadata columns
 2. If yes: UPDATE the just-inserted rows with start_time, duration, version
 3. If no: Silently skip (no error, no ALTER)
 
 This applies to both:
+
 - **Direct mode** (`reserve_jobs=False`): Single-process populate
 - **Distributed mode** (`reserve_jobs=True`): Multi-worker with job table coordination
 
@@ -32224,6 +32324,7 @@ def from_clause(self):
 Replace `_left: List[bool]` with `_joins: List[Tuple[bool, List[str]]]`
 
 Each join stores:
+
 - `left`: Whether it's a left join
 - `using_attrs`: Non-hidden common attributes to join on
 
@@ -32463,6 +32564,7 @@ Within a Part definition, reference the master using:
 ```
 
 The `-> master` reference:
+
 - Automatically inherits master's primary key
 - Creates foreign key constraint to master
 - Enforces ON DELETE RESTRICT (by default)
@@ -32612,6 +32714,7 @@ Session.Trial.delete()
 ```
 
 **Use cases:**
+
 - Removing specific invalid trials
 - Partial data cleanup
 - Testing/debugging
@@ -32719,6 +32822,7 @@ Session.aggr(
 ### 7.1 When to Use Part Tables
 
 **Good use cases:**
+
 - Trials within sessions
 - Electrodes within probes
 - Cells within imaging fields
@@ -32726,6 +32830,7 @@ Session.aggr(
 - Rows within files
 
 **Avoid when:**
+
 - Parts have independent meaning (use regular FK instead)
 - Need to query parts without master context
 - Parts reference multiple masters
@@ -32920,15 +33025,18 @@ chunk = arr[::100]
 ```
 
 **Modes:**
+
 - `'r'` - Read-only (recommended)
 - `'r+'` - Read-write (modifications persist)
 - `'c'` - Copy-on-write (changes not saved)
 
 **Performance characteristics:**
+
 - Local filesystem stores: memory-maps the file directly (zero-copy)
 - Remote stores (S3, GCS): downloads to local cache first, then memory-maps
 
 **When to use:**
+
 - Arrays too large to fit in memory
 - Only need random access to portions of the array
 - Processing data in chunks
@@ -33063,12 +33171,14 @@ arr = np.load('/path/to/store/_schema/my_schema/recording/recording_id=1/wavefor
 | `<hash@>` | raw bytes | Hash | No | No | N/A |
 
 **Addressing schemes:**
+
 - **Schema-addressed**: Path mirrors database structure. Browsable, one location per entity.
 - **Hash-addressed**: Path from content hash. Automatic deduplication.
 
 ## When to Use `<npy@>`
 
 **Use `<npy@>` when:**
+
 - Storing single numpy arrays
 - Interoperability matters (non-Python tools)
 - You want lazy loading with metadata inspection
@@ -33077,12 +33187,14 @@ arr = np.load('/path/to/store/_schema/my_schema/recording/recording_id=1/wavefor
 - Browsable object store organization is valuable
 
 **Use `<blob@>` when:**
+
 - Storing arbitrary Python objects (dicts, lists, mixed types)
 - Arrays are small and eager loading is fine
 - MATLAB compatibility with DataJoint's mYm format is needed
 - Deduplication is beneficial (hash-addressed)
 
 **Use `<object@>` when:**
+
 - Storing files/folders (Zarr, HDF5, multi-file outputs)
 - Content is not a single numpy array
 
@@ -33166,6 +33278,7 @@ arrays : <object@main>    # Explicitly names store
 ```
 
 **Rules:**
+
 - `stores.default` must be a string naming a configured store
 - Required for `<blob>`, `<attach>`, `<object>`, `<npy>` without explicit `@store`
 - Each project typically uses one primary store for integrated data
@@ -33181,6 +33294,7 @@ recording : <filepath@raw_data>  # Explicitly names store
 ```
 
 **Rules:**
+
 - `stores.filepath_default` must be a string naming a configured store
 - Required for `<filepath@>` without explicit store name
 - Often configured differently from `stores.default` because filepath references are not part of OAS
@@ -33245,6 +33359,7 @@ Each store is divided into sections controlled by prefix configuration. The `*_p
 | `filepath_prefix` | `null` | Filepath section (optional) | `<filepath@>` |
 
 **Validation rules:**
+
 1. All prefixes must be mutually exclusive (no nesting)
 2. `hash_prefix` and `schema_prefix` are reserved for DataJoint
 3. `filepath_prefix` is optional:
@@ -33287,6 +33402,7 @@ lists both layouts.
 ```
 
 Results in these sections:
+
 - `{location}/content_addressed/{schema}/{hash}` — hash-addressed
 - `{location}/structured_data/{schema}/{table}/{key}/` — schema-addressed
 - `{location}/user_files/{user_path}` — filepath (required prefix)
@@ -33458,6 +33574,7 @@ dj.config.save_template('datajoint.json', create_secrets_dir=True)
 6. Store metadata in relational database as JSON
 
 **Properties:**
+
 - **Immutable**: Content defines path, cannot be changed
 - **Deduplicated**: Identical content stored once
 - **Integrity**: Hash validates content on retrieval
@@ -33532,6 +33649,7 @@ Primary key values are encoded as: `{attr}={value}`
 - Order matches table definition
 
 **Properties:**
+
 - **Mutable**: Can overwrite by writing to same path
 - **Streaming**: fsspec integration for lazy loading
 - **Organized**: Hierarchical structure mirrors data relationships
@@ -33603,6 +33721,7 @@ This allows a single `partition_pattern` to apply to multiple tables, with autom
 **Path collision prevention:**
 
 The random token ensures uniqueness:
+
 - 8 characters (default): 62^8 = ~218 trillion combinations
 - Collision probability negligible for typical table sizes
 - Token regenerated on each write
@@ -33631,6 +33750,7 @@ Or if `filepath_prefix = null`:
 6. No file copying occurs
 
 **Properties:**
+
 - **Path-only storage**: DataJoint stores path string, no file management
 - **No lifecycle management**: No garbage collection, transaction safety, or deduplication
 - **User-managed**: User controls file creation, organization, and lifecycle
@@ -34411,6 +34531,7 @@ Session & {"nonexistent": "value"}  # returns all rows
 ```
 
 This applies to:
+
 - Misspelled attribute names
 - Hidden attributes (prefixed with `_`)
 - Keys from a different table's schema
@@ -35003,6 +35124,7 @@ class Session(dj.Manual):
 ### 9.2 Homologous Namesakes
 
 Two attributes are **homologous namesakes** if they have:
+
 1. Same name
 2. Same lineage (trace to same original definition)
 
@@ -35116,6 +35238,7 @@ When multiple Tops are chained, behavior depends on the `order_by` parameter:
 | Tops have different `order_by` | **Subquery**: first Top executed, then second applied |
 
 **Merge behavior:**
+
 - `limit` = minimum of both limits
 - `offset` = sum of both offsets
 - `order_by` = preserved from first Top
@@ -35234,10 +35357,12 @@ The choice depends on SQL semantics—whether the operation can be expressed by 
 ### 13.4 Restriction Rules (`&` and `-`)
 
 **Modify in place** when restricting on:
+
 - Base table attributes (columns from FROM tables)
 - Primary key attributes (including those inherited via FK)
 
 **Wrap as subquery** when restricting on:
+
 - Computed/aliased attributes (created by `.proj()`)
 - Aggregated attributes (created by `.aggr()`)
 - Any attribute after `LIMIT`/`OFFSET` has been applied
@@ -35265,11 +35390,13 @@ Session.aggr(Trial, n='count(*)') & "n > 10"
 ### 13.5 Projection Rules (`.proj()`)
 
 **Modify in place** when:
+
 - Selecting a subset of existing attributes
 - Renaming base attributes
 - Computing new attributes from base columns
 
 **Wrap as subquery** when:
+
 - Computing attribute from another computed attribute (alias of alias)
 - Projecting after `LIMIT`/`OFFSET` has been applied
 
@@ -35288,11 +35415,13 @@ Session.proj(year='YEAR(session_date)').proj(decade='year - year % 10')
 ### 13.5.1 Join Rules (`*`)
 
 **Modify in place** (merge both operands' clauses) when:
+
 - Both operands are base tables or simple projections
 - Join attributes are base columns (not computed)
 - Neither operand has `LIMIT`/`OFFSET` or `GROUP BY`
 
 **Wrap operand as subquery** when operand has:
+
 - Computed attributes used in join condition
 - `LIMIT`/`OFFSET` applied
 - `GROUP BY` (is an aggregation result)
@@ -35324,10 +35453,12 @@ HAVING <restrictions on B or computed attributes>
 ```
 
 **Restrictions routing:**
+
 - On grouping expression (A) attributes → `WHERE` (before GROUP BY)
 - On grouped expression (B) or computed attributes → `HAVING` (after GROUP BY)
 
 **Aggregation result requires subquery** when used as operand to:
+
 - Another join (`*`)
 - Further restriction on computed attributes
 - Another aggregation
@@ -36749,6 +36880,7 @@ Format: `<codec_name>` or `<codec_name@store>`
 | `<object>` | N/A (in-store only) | `json` | Object storage (Zarr, HDF5) |
 
 In-store storage syntax:
+
 - `<blob@>` - default store
 - `<blob@store_name>` - named store
 
@@ -36784,6 +36916,7 @@ attribute_name = default_value : type
 ### 5.3 Constant Literals
 
 These values are used without quotes in SQL:
+
 - `NULL`
 - `CURRENT_TIMESTAMP`
 
@@ -36903,6 +37036,7 @@ class Session(dj.Manual):
 ### 6.8 Referential Actions
 
 All foreign keys use:
+
 - `ON UPDATE CASCADE` - Parent key changes propagate
 - `ON DELETE RESTRICT` - Cannot delete parent with children
 
@@ -36987,6 +37121,7 @@ class Master(dj.Manual):
 ### 8.3 Master Reference
 
 Within Part definition, use:
+
 - `-> master` (lowercase keyword)
 - `-> MasterClassName` (class name)
 
@@ -37073,6 +37208,7 @@ When `config['jobs.add_job_metadata'] = True`, auto-populated tables receive:
 ### 10.3 Insert-Time Validation
 
 The `table.validate()` method checks:
+
 - Required fields present
 - NULL constraints satisfied
 - Primary key completeness
@@ -37714,6 +37850,7 @@ This document defines a three-layer type architecture:
 Codec types resolve through core types to native types: `<blob>` → `bytes` → `LONGBLOB`.
 
 **Syntax distinction:**
+
 - Core types: `int32`, `float64`, `varchar(255)` - no brackets
 - Codec types: `<blob>`, `<object@store>`, `<filepath@main>` - angle brackets
 - The `@` character indicates store (object storage vs in-table)
@@ -37762,6 +37899,7 @@ See [Encoding and Collation Policy](#encoding-and-collation-policy) for details.
 
 **Timezone policy:** All `datetime` values should be stored as **UTC**. Timezone conversion is a
 presentation concern handled by the application layer, not the database. This ensures:
+
 - Reproducible computations regardless of server or client timezone settings
 - Simple arithmetic on temporal values (no DST ambiguity)
 - Portable data across systems and regions
@@ -37843,6 +37981,7 @@ status = "active" : varchar(20)
 ```
 
 **Auto-increment policy:** DataJoint discourages `AUTO_INCREMENT` / `SERIAL` because:
+
 - Breaks reproducibility (IDs depend on insertion order)
 - Makes pipelines non-deterministic
 - Complicates data migration and replication
@@ -37871,6 +38010,7 @@ definitions. This ensures consistent behavior across all tables and simplifies p
 | Collation | `utf8mb4_bin` | `C` |
 
 **Policy:**
+
 - **UTF-8 required**: DataJoint validates charset is UTF-8 compatible at connection time
 - **Case-sensitive by default**: Binary collation (`utf8mb4_bin` / `C`) ensures predictable comparisons
 - **No per-column overrides**: `CHARACTER SET` and `COLLATE` are rejected in type definitions
@@ -38161,6 +38301,7 @@ column_name JSONB NOT NULL
 ```
 
 The `json` database type:
+
 - Used as dtype by built-in codecs (`<object@>`, `<hash@>`, `<filepath@store>`)
 - Stores arbitrary JSON-serializable data
 - Automatically uses appropriate type for database backend
@@ -38346,6 +38487,7 @@ def garbage_collect(store_name):
 | GC | Ref counted | Ref counted | With row | Ref counted | User managed |
 
 **When to use each:**
+
 - **`<blob>`**: Serialized Python objects (NumPy arrays, dicts). Use `<blob@>` for large/duplicated data
 - **`<attach>`**: File attachments with filename preserved. Use `<attach@>` for large files
 - **`<object@>`**: Large/complex file structures (Zarr, HDF5) where DataJoint controls organization
@@ -38406,6 +38548,7 @@ Content-addressed storage uses **MD5** (128-bit, 32-char hex) rather than SHA256
 **Why not SHA256?**
 
 SHA256 is the modern standard for content-addressable storage (Git, Docker, IPFS). However:
+
 - These systems prioritize cryptographic security against adversarial collision attacks
 - Scientific data pipelines face no adversarial threat model
 - The practical benefits (storage, speed, compatibility) outweigh theoretical security gains
@@ -38467,6 +38610,7 @@ def migrate_external_store(schema, store_name):
 ```
 
 **Migration considerations:**
+
 - Legacy UUIDs were based on MD5 content hash stored as `binary(16)` (UUID format)
 - New system uses `char(32)` MD5 hex strings stored in JSON
 - The hash algorithm is unchanged (MD5), only the storage format differs
@@ -38560,6 +38704,7 @@ table = schema.get_table('experiment')  # also works
 ```
 
 **Parameters:**
+
 - `name` (str): Table name in CamelCase or snake_case
 
 **Returns:** `FreeTable` instance
@@ -38661,6 +38806,7 @@ Session & "date > '2024-01-01'"
 ```
 
 **Parameters:**
+
 - `into` (dict, optional): Namespace to populate. Defaults to caller's locals.
 
 ### 4.2 Generated Class Types
@@ -39422,6 +39568,7 @@ zarr_array : <object@store> # Path-addressed for Zarr/HDF5
 ### What Changed
 
 Legacy DataJoint overloaded MySQL types with implicit conversions:
+
 - `longblob` could be blob serialization OR in-table attachment
 - `attach` was implicitly converted to longblob
 - `uuid` was used internally for external storage
@@ -39571,6 +39718,7 @@ This enables efficient access to large datasets stored in Zarr, HDF5, or custom 
 ### Legacy Support
 
 During migration (Phases 1-3), both legacy and 2.0 APIs can coexist:
+
 - Legacy clients can still access data
 - 2.0 clients understand legacy column types
 - Dual attributes enable cross-testing
@@ -39621,6 +39769,7 @@ Upgrading from DataJoint 0.x is a **phased process** designed to minimize risk:
 ### Migration Support
 
 The migration guide includes:
+
 - **AI agent prompts** for automated migration steps
 - **Validation commands** to check migration status
 - **Rollback procedures** for each phase

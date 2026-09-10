@@ -7150,10 +7150,12 @@
 <div class="highlight"><pre><span></span><code><span class="o">-&gt;</span> <span class="n">master</span>        <span class="c1"># lowercase keyword (preferred)</span>
 <span class="o">-&gt;</span> <span class="n">Session</span>       <span class="c1"># explicit class name</span>
 </code></pre></div>
-<p>The <code>-&gt; master</code> reference:
-- Automatically inherits master's primary key
-- Creates foreign key constraint to master
-- Enforces ON DELETE RESTRICT (by default)</p>
+<p>The <code>-&gt; master</code> reference:</p>
+<ul>
+<li>Automatically inherits master's primary key</li>
+<li>Creates foreign key constraint to master</li>
+<li>Enforces ON DELETE RESTRICT (by default)</li>
+</ul>
 <hr />
 <h2 id="2-integrity-constraints">2. Integrity Constraints<a class="headerlink" href="#2-integrity-constraints" title="Permanent link">&para;</a></h2>
 <h3 id="21-compositional-integrity">2.1 Compositional Integrity<a class="headerlink" href="#21-compositional-integrity" title="Permanent link">&para;</a></h3>
@@ -7274,10 +7276,12 @@ matters.</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Allow direct part deletion (master retains incomplete parts)</span>
 <span class="p">(</span><span class="n">Session</span><span class="o">.</span><span class="n">Trial</span> <span class="o">&amp;</span> <span class="p">{</span><span class="s1">'trial_idx'</span><span class="p">:</span> <span class="mi">1</span><span class="p">})</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">part_integrity</span><span class="o">=</span><span class="s2">"ignore"</span><span class="p">)</span>
 </code></pre></div>
-<p><strong>Use cases:</strong>
-- Removing specific invalid trials
-- Partial data cleanup
-- Testing/debugging</p>
+<p><strong>Use cases:</strong></p>
+<ul>
+<li>Removing specific invalid trials</li>
+<li>Partial data cleanup</li>
+<li>Testing/debugging</li>
+</ul>
 <p><strong>Warning:</strong> This leaves masters with incomplete part data.</p>
 <h3 id="45-cascade-to-master-cascade">4.5 Cascade to Master (cascade)<a class="headerlink" href="#45-cascade-to-master-cascade" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># Delete parts AND their masters</span>
@@ -7363,16 +7367,20 @@ matters.</p>
 <hr />
 <h2 id="7-best-practices">7. Best Practices<a class="headerlink" href="#7-best-practices" title="Permanent link">&para;</a></h2>
 <h3 id="71-when-to-use-part-tables">7.1 When to Use Part Tables<a class="headerlink" href="#71-when-to-use-part-tables" title="Permanent link">&para;</a></h3>
-<p><strong>Good use cases:</strong>
-- Trials within sessions
-- Electrodes within probes
-- Cells within imaging fields
-- Frames within videos
-- Rows within files</p>
-<p><strong>Avoid when:</strong>
-- Parts have independent meaning (use regular FK instead)
-- Need to query parts without master context
-- Parts reference multiple masters</p>
+<p><strong>Good use cases:</strong></p>
+<ul>
+<li>Trials within sessions</li>
+<li>Electrodes within probes</li>
+<li>Cells within imaging fields</li>
+<li>Frames within videos</li>
+<li>Rows within files</li>
+</ul>
+<p><strong>Avoid when:</strong></p>
+<ul>
+<li>Parts have independent meaning (use regular FK instead)</li>
+<li>Need to query parts without master context</li>
+<li>Parts reference multiple masters</li>
+</ul>
 <h3 id="72-naming-conventions">7.2 Naming Conventions<a class="headerlink" href="#72-naming-conventions" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">Master</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
     <span class="k">class</span><span class="w"> </span><span class="nc">Detail</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Part</span><span class="p">):</span>      <span class="c1"># Singular, descriptive</span>

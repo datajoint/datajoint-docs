@@ -6509,10 +6509,12 @@ whenever it exists:</p>
 <span class="s2">    species : varchar(32)</span>
 <span class="s2">    """</span>
 </code></pre></div>
-<p><strong>Good candidates:</strong>
-- Lab-assigned IDs
-- Standard identifiers (NCBI accession, DOI)
-- Meaningful codes with enforced uniqueness</p>
+<p><strong>Good candidates:</strong></p>
+<ul>
+<li>Lab-assigned IDs</li>
+<li>Standard identifiers (NCBI accession, DOI)</li>
+<li>Meaningful codes with enforced uniqueness</li>
+</ul>
 <h2 id="composite-keys">Composite Keys<a class="headerlink" href="#composite-keys" title="Permanent link">&para;</a></h2>
 <p>Combine attributes when a single attribute isn't unique:</p>
 <div class="highlight"><pre><span></span><code><span class="nd">@schema</span>
@@ -6562,10 +6564,12 @@ whenever it exists:</p>
 <p><strong>Meaningless foreign keys</strong> — Downstream tables inherit opaque integers rather than traceable lineage.</p>
 </li>
 </ol>
-<p><strong>Instead, use:</strong>
-- Natural keys that identify entities in your domain
-- UUIDs when no natural identifier exists
-- Composite keys combining foreign keys with sequence numbers</p>
+<p><strong>Instead, use:</strong></p>
+<ul>
+<li>Natural keys that identify entities in your domain</li>
+<li>UUIDs when no natural identifier exists</li>
+<li>Composite keys combining foreign keys with sequence numbers</li>
+</ul>
 <h2 id="foreign-keys-in-primary-key">Foreign Keys in Primary Key<a class="headerlink" href="#foreign-keys-in-primary-key" title="Permanent link">&para;</a></h2>
 <p>Foreign keys above the <code>---</code> become part of the primary key:</p>
 <div class="highlight"><pre><span></span><code><span class="nd">@schema</span>

@@ -6789,28 +6789,38 @@
 <h2 id="connection-errors">Connection Errors<a class="headerlink" href="#connection-errors" title="Permanent link">&para;</a></h2>
 <h3 id="lostconnectionerror">LostConnectionError<a class="headerlink" href="#lostconnectionerror" title="Permanent link">&para;</a></h3>
 <p>Database connection was lost during operation.</p>
-<p><strong>Common causes:</strong>
-- Network interruption
-- Server timeout
-- Server restart</p>
-<p><strong>Resolution:</strong>
-- Check network connectivity
-- Reconnect with <code>dj.conn().connect()</code></p>
+<p><strong>Common causes:</strong></p>
+<ul>
+<li>Network interruption</li>
+<li>Server timeout</li>
+<li>Server restart</li>
+</ul>
+<p><strong>Resolution:</strong></p>
+<ul>
+<li>Check network connectivity</li>
+<li>Reconnect with <code>dj.conn().connect()</code></li>
+</ul>
 <h2 id="query-errors">Query Errors<a class="headerlink" href="#query-errors" title="Permanent link">&para;</a></h2>
 <h3 id="querysyntaxerror">QuerySyntaxError<a class="headerlink" href="#querysyntaxerror" title="Permanent link">&para;</a></h3>
 <p>Invalid query syntax.</p>
-<p><strong>Common causes:</strong>
-- Malformed restriction string
-- Invalid attribute reference
-- SQL syntax error in projection</p>
+<p><strong>Common causes:</strong></p>
+<ul>
+<li>Malformed restriction string</li>
+<li>Invalid attribute reference</li>
+<li>SQL syntax error in projection</li>
+</ul>
 <h3 id="accesserror">AccessError<a class="headerlink" href="#accesserror" title="Permanent link">&para;</a></h3>
 <p>Insufficient database privileges.</p>
-<p><strong>Common causes:</strong>
-- User lacks SELECT/INSERT/DELETE privileges
-- Schema access not granted</p>
-<p><strong>Resolution:</strong>
-- Contact database administrator
-- Check user grants</p>
+<p><strong>Common causes:</strong></p>
+<ul>
+<li>User lacks SELECT/INSERT/DELETE privileges</li>
+<li>Schema access not granted</li>
+</ul>
+<p><strong>Resolution:</strong></p>
+<ul>
+<li>Contact database administrator</li>
+<li>Check user grants</li>
+</ul>
 <h3 id="duplicateerror">DuplicateError<a class="headerlink" href="#duplicateerror" title="Permanent link">&para;</a></h3>
 <p>Attempt to insert duplicate primary key.</p>
 <div class="highlight"><pre><span></span><code><span class="k">try</span><span class="p">:</span>
@@ -6819,65 +6829,87 @@
 <span class="k">except</span> <span class="n">dj</span><span class="o">.</span><span class="n">errors</span><span class="o">.</span><span class="n">DuplicateError</span><span class="p">:</span>
     <span class="nb">print</span><span class="p">(</span><span class="s2">"Entry already exists"</span><span class="p">)</span>
 </code></pre></div>
-<p><strong>Resolution:</strong>
-- Use <code>insert(..., skip_duplicates=True)</code>
-- Use <code>insert(..., replace=True)</code> to update
-- Check if entry exists before inserting</p>
+<p><strong>Resolution:</strong></p>
+<ul>
+<li>Use <code>insert(..., skip_duplicates=True)</code></li>
+<li>Use <code>insert(..., replace=True)</code> to update</li>
+<li>Check if entry exists before inserting</li>
+</ul>
 <h3 id="integrityerror">IntegrityError<a class="headerlink" href="#integrityerror" title="Permanent link">&para;</a></h3>
 <p>Foreign key constraint violation.</p>
-<p><strong>Common causes:</strong>
-- Inserting row with non-existent parent
-- Parent row deletion blocked by children</p>
-<p><strong>Resolution:</strong>
-- Insert parent rows first
-- Use cascade delete for parent</p>
+<p><strong>Common causes:</strong></p>
+<ul>
+<li>Inserting row with non-existent parent</li>
+<li>Parent row deletion blocked by children</li>
+</ul>
+<p><strong>Resolution:</strong></p>
+<ul>
+<li>Insert parent rows first</li>
+<li>Use cascade delete for parent</li>
+</ul>
 <h3 id="unknownattributeerror">UnknownAttributeError<a class="headerlink" href="#unknownattributeerror" title="Permanent link">&para;</a></h3>
 <p>Referenced attribute doesn't exist.</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Raises UnknownAttributeError</span>
 <span class="n">table</span><span class="o">.</span><span class="n">to_arrays</span><span class="p">(</span><span class="s1">'nonexistent_column'</span><span class="p">)</span>
 </code></pre></div>
-<p><strong>Resolution:</strong>
-- Check <code>table.heading</code> for available attributes
-- Verify spelling</p>
+<p><strong>Resolution:</strong></p>
+<ul>
+<li>Check <code>table.heading</code> for available attributes</li>
+<li>Verify spelling</li>
+</ul>
 <h3 id="missingattributeerror">MissingAttributeError<a class="headerlink" href="#missingattributeerror" title="Permanent link">&para;</a></h3>
 <p>Required attribute not provided in insert.</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Raises MissingAttributeError if 'name' is required</span>
 <span class="n">table</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="s1">'id'</span><span class="p">:</span> <span class="mi">1</span><span class="p">})</span>  <span class="c1"># Missing 'name'</span>
 </code></pre></div>
-<p><strong>Resolution:</strong>
-- Provide all required attributes
-- Set default values in definition</p>
+<p><strong>Resolution:</strong></p>
+<ul>
+<li>Provide all required attributes</li>
+<li>Set default values in definition</li>
+</ul>
 <h2 id="table-errors">Table Errors<a class="headerlink" href="#table-errors" title="Permanent link">&para;</a></h2>
 <h3 id="missingtableerror">MissingTableError<a class="headerlink" href="#missingtableerror" title="Permanent link">&para;</a></h3>
 <p>Table not declared in database.</p>
-<p><strong>Common causes:</strong>
-- Schema not created
-- Table class not instantiated
-- Database dropped</p>
-<p><strong>Resolution:</strong>
-- Check schema exists: <code>schema.is_activated()</code>
-- Verify table declaration</p>
+<p><strong>Common causes:</strong></p>
+<ul>
+<li>Schema not created</li>
+<li>Table class not instantiated</li>
+<li>Database dropped</li>
+</ul>
+<p><strong>Resolution:</strong></p>
+<ul>
+<li>Check schema exists: <code>schema.is_activated()</code></li>
+<li>Verify table declaration</li>
+</ul>
 <h2 id="storage-errors">Storage Errors<a class="headerlink" href="#storage-errors" title="Permanent link">&para;</a></h2>
 <h3 id="missingexternalfile">MissingExternalFile<a class="headerlink" href="#missingexternalfile" title="Permanent link">&para;</a></h3>
 <p>External file managed by DataJoint is missing.</p>
-<p><strong>Common causes:</strong>
-- File manually deleted from store
-- Store misconfigured
-- Network/permission issues</p>
-<p><strong>Resolution:</strong>
-- Check store configuration
-- Verify file exists at expected path
-- Run garbage collection audit</p>
+<p><strong>Common causes:</strong></p>
+<ul>
+<li>File manually deleted from store</li>
+<li>Store misconfigured</li>
+<li>Network/permission issues</li>
+</ul>
+<p><strong>Resolution:</strong></p>
+<ul>
+<li>Check store configuration</li>
+<li>Verify file exists at expected path</li>
+<li>Run garbage collection audit</li>
+</ul>
 <h3 id="bucketinaccessible">BucketInaccessible<a class="headerlink" href="#bucketinaccessible" title="Permanent link">&para;</a></h3>
 <p>S3 bucket cannot be accessed.</p>
-<p><strong>Common causes:</strong>
-- Invalid credentials
-- Bucket doesn't exist
-- Network/firewall issues</p>
-<p><strong>Resolution:</strong>
-- Verify AWS credentials
-- Check bucket name and region
-- Test with AWS CLI</p>
+<p><strong>Common causes:</strong></p>
+<ul>
+<li>Invalid credentials</li>
+<li>Bucket doesn't exist</li>
+<li>Network/firewall issues</li>
+</ul>
+<p><strong>Resolution:</strong></p>
+<ul>
+<li>Verify AWS credentials</li>
+<li>Check bucket name and region</li>
+<li>Test with AWS CLI</li>
+</ul>
 <h2 id="handling-errors">Handling Errors<a class="headerlink" href="#handling-errors" title="Permanent link">&para;</a></h2>
 <h3 id="catching-specific-errors">Catching Specific Errors<a class="headerlink" href="#catching-specific-errors" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">datajoint</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dj</span>

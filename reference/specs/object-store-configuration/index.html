@@ -7334,21 +7334,25 @@
 <span class="n">arrays</span> <span class="p">:</span> <span class="o">&lt;</span><span class="nb">object</span><span class="o">&gt;</span>         <span class="c1"># Uses stores.default</span>
 <span class="n">arrays</span> <span class="p">:</span> <span class="o">&lt;</span><span class="nb">object</span><span class="nd">@main</span><span class="o">&gt;</span>    <span class="c1"># Explicitly names store</span>
 </code></pre></div>
-<p><strong>Rules:</strong>
-- <code>stores.default</code> must be a string naming a configured store
-- Required for <code>&lt;blob&gt;</code>, <code>&lt;attach&gt;</code>, <code>&lt;object&gt;</code>, <code>&lt;npy&gt;</code> without explicit <code>@store</code>
-- Each project typically uses one primary store for integrated data</p>
+<p><strong>Rules:</strong></p>
+<ul>
+<li><code>stores.default</code> must be a string naming a configured store</li>
+<li>Required for <code>&lt;blob&gt;</code>, <code>&lt;attach&gt;</code>, <code>&lt;object&gt;</code>, <code>&lt;npy&gt;</code> without explicit <code>@store</code></li>
+<li>Each project typically uses one primary store for integrated data</li>
+</ul>
 <h4 id="storesfilepath_default-filepath-references">stores.filepath_default — Filepath References<a class="headerlink" href="#storesfilepath_default-filepath-references" title="Permanent link">&para;</a></h4>
 <p>The <code>stores.filepath_default</code> setting determines which store is used for <strong>filepath references</strong> when no store is specified:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># These are equivalent when stores.filepath_default = "raw_data"</span>
 <span class="n">recording</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">filepath</span><span class="o">@&gt;</span>          <span class="c1"># Uses stores.filepath_default</span>
 <span class="n">recording</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">filepath</span><span class="nd">@raw_data</span><span class="o">&gt;</span>  <span class="c1"># Explicitly names store</span>
 </code></pre></div>
-<p><strong>Rules:</strong>
-- <code>stores.filepath_default</code> must be a string naming a configured store
-- Required for <code>&lt;filepath@&gt;</code> without explicit store name
-- Often configured differently from <code>stores.default</code> because filepath references are not part of OAS
-- Users manage file lifecycle and organization</p>
+<p><strong>Rules:</strong></p>
+<ul>
+<li><code>stores.filepath_default</code> must be a string naming a configured store</li>
+<li>Required for <code>&lt;filepath@&gt;</code> without explicit store name</li>
+<li>Often configured differently from <code>stores.default</code> because filepath references are not part of OAS</li>
+<li>Users manage file lifecycle and organization</li>
+</ul>
 <p><strong>Why separate defaults?</strong></p>
 <p>Integrated storage (hash, schema) is managed by DataJoint as part of the Object-Augmented Schema—DataJoint controls paths, lifecycle, integrity, garbage collection, transaction safety, and deduplication. Filepath storage is user-managed—DataJoint only stores the path string and provides no lifecycle management, garbage collection, transaction safety, or deduplication. These are architecturally distinct, so they often use different storage locations and require separate defaults.</p>
 <h3 id="complete-store-configuration">Complete Store Configuration<a class="headerlink" href="#complete-store-configuration" title="Permanent link">&para;</a></h3>
@@ -7444,12 +7448,16 @@
 </tr>
 </tbody>
 </table>
-<p><strong>Validation rules:</strong>
-1. All prefixes must be mutually exclusive (no nesting)
-2. <code>hash_prefix</code> and <code>schema_prefix</code> are reserved for DataJoint
-3. <code>filepath_prefix</code> is optional:
-   - <code>null</code> (default): filepaths can use any path except reserved sections
-   - <code>"some/prefix"</code>: all filepaths must start with this prefix</p>
+<p><strong>Validation rules:</strong></p>
+<ol>
+<li>All prefixes must be mutually exclusive (no nesting)</li>
+<li><code>hash_prefix</code> and <code>schema_prefix</code> are reserved for DataJoint</li>
+<li><code>filepath_prefix</code> is optional:<ul>
+<li><code>null</code> (default): filepaths can use any path except reserved sections</li>
+<li><code>"some/prefix"</code>: all filepaths must start with this prefix</li>
+</ul>
+</li>
+</ol>
 <p><strong>Consumption (normative):</strong> the prefix values are read from the store spec
 by every component that touches managed storage — the writers (<code>put_hash</code>,
 <code>build_object_path</code>), garbage collection (which scans the configured
@@ -7479,10 +7487,12 @@ lists both layouts.</p>
 <span class="w">  </span><span class="nt">"filepath_prefix"</span><span class="p">:</span><span class="w"> </span><span class="s2">"user_files"</span>
 <span class="p">}</span>
 </code></pre></div>
-<p>Results in these sections:
-- <code>{location}/content_addressed/{schema}/{hash}</code> — hash-addressed
-- <code>{location}/structured_data/{schema}/{table}/{key}/</code> — schema-addressed
-- <code>{location}/user_files/{user_path}</code> — filepath (required prefix)</p>
+<p>Results in these sections:</p>
+<ul>
+<li><code>{location}/content_addressed/{schema}/{hash}</code> — hash-addressed</li>
+<li><code>{location}/structured_data/{schema}/{table}/{key}/</code> — schema-addressed</li>
+<li><code>{location}/user_files/{user_path}</code> — filepath (required prefix)</li>
+</ul>
 <h3 id="multiple-stores">Multiple Stores<a class="headerlink" href="#multiple-stores" title="Permanent link">&para;</a></h3>
 <p>Configure multiple stores for different data types or storage tiers:</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
@@ -7608,10 +7618,12 @@ git<span class="w"> </span>check-ignore<span class="w"> </span>.secrets/database
 <li>Construct path: <code>{hash_prefix}/{schema}/{subfolded_hash}</code></li>
 <li>Store metadata in relational database as JSON</li>
 </ol>
-<p><strong>Properties:</strong>
-- <strong>Immutable</strong>: Content defines path, cannot be changed
-- <strong>Deduplicated</strong>: Identical content stored once
-- <strong>Integrity</strong>: Hash validates content on retrieval</p>
+<p><strong>Properties:</strong></p>
+<ul>
+<li><strong>Immutable</strong>: Content defines path, cannot be changed</li>
+<li><strong>Deduplicated</strong>: Identical content stored once</li>
+<li><strong>Integrity</strong>: Hash validates content on retrieval</li>
+</ul>
 <p><strong>Example:</strong></p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Table definition</span>
 <span class="nd">@schema</span>
@@ -7666,10 +7678,12 @@ git<span class="w"> </span>check-ignore<span class="w"> </span>.secrets/database
 <li>Values URL-encoded if necessary</li>
 <li>Order matches table definition</li>
 </ul>
-<p><strong>Properties:</strong>
-- <strong>Mutable</strong>: Can overwrite by writing to same path
-- <strong>Streaming</strong>: fsspec integration for lazy loading
-- <strong>Organized</strong>: Hierarchical structure mirrors data relationships</p>
+<p><strong>Properties:</strong></p>
+<ul>
+<li><strong>Mutable</strong>: Can overwrite by writing to same path</li>
+<li><strong>Streaming</strong>: fsspec integration for lazy loading</li>
+<li><strong>Organized</strong>: Hierarchical structure mirrors data relationships</li>
+</ul>
 <p><strong>Example without partitioning:</strong></p>
 <div class="highlight"><pre><span></span><code><span class="nd">@schema</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Recording</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
@@ -7727,10 +7741,12 @@ git<span class="w"> </span>check-ignore<span class="w"> </span>.secrets/database
 </ol>
 <p>This allows a single <code>partition_pattern</code> to apply to multiple tables, with automatic fallback for tables lacking partition attributes.</p>
 <p><strong>Path collision prevention:</strong></p>
-<p>The random token ensures uniqueness:
-- 8 characters (default): 62^8 = ~218 trillion combinations
-- Collision probability negligible for typical table sizes
-- Token regenerated on each write</p>
+<p>The random token ensures uniqueness:</p>
+<ul>
+<li>8 characters (default): 62^8 = ~218 trillion combinations</li>
+<li>Collision probability negligible for typical table sizes</li>
+<li>Token regenerated on each write</li>
+</ul>
 <h3 id="filepath-storage">Filepath Storage<a class="headerlink" href="#filepath-storage" title="Permanent link">&para;</a></h3>
 <p><strong>Data type:</strong> <code>&lt;filepath@store&gt;</code></p>
 <p><strong>Path structure:</strong>
@@ -7748,12 +7764,14 @@ git<span class="w"> </span>check-ignore<span class="w"> </span>.secrets/database
 <li>Record path, size, and timestamp in JSON metadata</li>
 <li>No file copying occurs</li>
 </ol>
-<p><strong>Properties:</strong>
-- <strong>Path-only storage</strong>: DataJoint stores path string, no file management
-- <strong>No lifecycle management</strong>: No garbage collection, transaction safety, or deduplication
-- <strong>User-managed</strong>: User controls file creation, organization, and lifecycle
-- <strong>Collision-prone</strong>: <strong>User responsible for avoiding name collisions</strong>
-- <strong>Flexible</strong>: Can reference existing files or create new ones</p>
+<p><strong>Properties:</strong></p>
+<ul>
+<li><strong>Path-only storage</strong>: DataJoint stores path string, no file management</li>
+<li><strong>No lifecycle management</strong>: No garbage collection, transaction safety, or deduplication</li>
+<li><strong>User-managed</strong>: User controls file creation, organization, and lifecycle</li>
+<li><strong>Collision-prone</strong>: <strong>User responsible for avoiding name collisions</strong></li>
+<li><strong>Flexible</strong>: Can reference existing files or create new ones</li>
+</ul>
 <p><strong>Collision handling:</strong></p>
 <p>DataJoint does <strong>not</strong> prevent filename collisions for filepath storage. Users must ensure:</p>
 <ol>

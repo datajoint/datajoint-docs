@@ -7300,17 +7300,21 @@
 <h2 id="versioning-and-backward-compatibility">Versioning and Backward Compatibility<a class="headerlink" href="#versioning-and-backward-compatibility" title="Permanent link">&para;</a></h2>
 <p>Plugin codecs evolve over time. Following versioning best practices ensures your data remains accessible across codec updates.</p>
 <h3 id="built-in-vs-plugin-codec-versioning">Built-in vs Plugin Codec Versioning<a class="headerlink" href="#built-in-vs-plugin-codec-versioning" title="Permanent link">&para;</a></h3>
-<p><strong>Built-in codecs</strong> (<code>&lt;blob&gt;</code>, <code>&lt;npy@&gt;</code>, <code>&lt;object@&gt;</code>, etc.) are versioned with DataJoint:
-- ✅ Shipped with datajoint-python
-- ✅ Versioned by DataJoint release (2.0.0, 2.1.0, 3.0.0)
-- ✅ Upgraded when you upgrade DataJoint
-- ✅ Stability guaranteed by DataJoint's semantic versioning
-- ❌ <strong>No explicit codec_version field needed</strong> - DataJoint version is the codec version</p>
-<p><strong>Plugin codecs</strong> (dj-zarr-codecs, dj-photon-codecs, etc.) have independent lifecycles:
-- ✅ Installed separately from DataJoint
-- ✅ Independent version numbers (0.1.0 → 1.0.0 → 2.0.0)
-- ✅ Users choose when to upgrade
-- ✅ <strong>Must include explicit codec_version field</strong> for backward compatibility</p>
+<p><strong>Built-in codecs</strong> (<code>&lt;blob&gt;</code>, <code>&lt;npy@&gt;</code>, <code>&lt;object@&gt;</code>, etc.) are versioned with DataJoint:</p>
+<ul>
+<li>✅ Shipped with datajoint-python</li>
+<li>✅ Versioned by DataJoint release (2.0.0, 2.1.0, 3.0.0)</li>
+<li>✅ Upgraded when you upgrade DataJoint</li>
+<li>✅ Stability guaranteed by DataJoint's semantic versioning</li>
+<li>❌ <strong>No explicit codec_version field needed</strong> - DataJoint version is the codec version</li>
+</ul>
+<p><strong>Plugin codecs</strong> (dj-zarr-codecs, dj-photon-codecs, etc.) have independent lifecycles:</p>
+<ul>
+<li>✅ Installed separately from DataJoint</li>
+<li>✅ Independent version numbers (0.1.0 → 1.0.0 → 2.0.0)</li>
+<li>✅ Users choose when to upgrade</li>
+<li>✅ <strong>Must include explicit codec_version field</strong> for backward compatibility</li>
+</ul>
 <p><strong>Why the difference?</strong></p>
 <p>Plugin codecs evolve independently and need to handle data encoded by different plugin versions. Built-in codecs are part of DataJoint's API surface and evolve with the framework itself. When you upgrade DataJoint 2.0 → 3.0, you expect potential breaking changes. When you upgrade a plugin 1.0 → 2.0 while keeping DataJoint 2.0, backward compatibility is critical.</p>
 <p><strong>How built-in codecs handle versioning:</strong></p>
@@ -7365,14 +7369,18 @@
         <span class="k">raise</span> <span class="n">DataJointError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Unsupported codec version: </span><span class="si">{</span><span class="n">version</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 </code></pre></div>
 <h3 id="when-to-bump-versions">When to Bump Versions<a class="headerlink" href="#when-to-bump-versions" title="Permanent link">&para;</a></h3>
-<p><strong>Bump data format version when:</strong>
-- ✅ Changing storage structure or encoding algorithm
-- ✅ Modifying metadata schema
-- ✅ Changing compression parameters that affect decode</p>
-<p><strong>Don't bump for:</strong>
-- ❌ Bug fixes that don't affect stored data format
-- ❌ Performance improvements to encode/decode logic
-- ❌ Adding new optional features (store version in attributes instead)</p>
+<p><strong>Bump data format version when:</strong></p>
+<ul>
+<li>✅ Changing storage structure or encoding algorithm</li>
+<li>✅ Modifying metadata schema</li>
+<li>✅ Changing compression parameters that affect decode</li>
+</ul>
+<p><strong>Don't bump for:</strong></p>
+<ul>
+<li>❌ Bug fixes that don't affect stored data format</li>
+<li>❌ Performance improvements to encode/decode logic</li>
+<li>❌ Adding new optional features (store version in attributes instead)</li>
+</ul>
 <h3 id="backward-compatibility-patterns">Backward Compatibility Patterns<a class="headerlink" href="#backward-compatibility-patterns" title="Permanent link">&para;</a></h3>
 <p><strong>Pattern 1: Version dispatch in decode()</strong></p>
 <div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">MyCodec</span><span class="p">(</span><span class="n">SchemaCodec</span><span class="p">):</span>
@@ -7470,10 +7478,12 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_decode_v1</span><span class="p">(</span><span class="n">stored</span><span class="p">)</span>
 </code></pre></div>
 <h3 id="real-world-example-dj-photon-codecs-evolution">Real-World Example: dj-photon-codecs Evolution<a class="headerlink" href="#real-world-example-dj-photon-codecs-evolution" title="Permanent link">&para;</a></h3>
-<p><strong>Version 1.0</strong> (current):
-- Stores Anscombe-transformed data
-- Fixed compression (Blosc zstd level 5)
-- Fixed chunking (100 frames)</p>
+<p><strong>Version 1.0</strong> (current):</p>
+<ul>
+<li>Stores Anscombe-transformed data</li>
+<li>Fixed compression (Blosc zstd level 5)</li>
+<li>Fixed chunking (100 frames)</li>
+</ul>
 <p><strong>Hypothetical Version 2.0</strong> (backward compatible):
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">encode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">store_name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="c1"># New: configurable compression</span>

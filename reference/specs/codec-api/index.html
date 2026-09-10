@@ -3652,10 +3652,12 @@ maintaining DataJoint's query capabilities.</p>
 <div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">MyCodec</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Codec</span><span class="p">):</span>
     <span class="n">name</span> <span class="o">=</span> <span class="s2">"mycodec"</span>  <span class="c1"># Use as &lt;mycodec&gt; in definitions</span>
 </code></pre></div>
-<p>Naming conventions:
-- Use lowercase with underscores: <code>spike_train</code>, <code>graph_embedding</code>
-- Avoid generic names that might conflict: prefer <code>lab_model</code> over <code>model</code>
-- Names must be unique across all registered codecs</p>
+<p>Naming conventions:</p>
+<ul>
+<li>Use lowercase with underscores: <code>spike_train</code>, <code>graph_embedding</code></li>
+<li>Avoid generic names that might conflict: prefer <code>lab_model</code> over <code>model</code></li>
+<li>Names must be unique across all registered codecs</li>
+</ul>
 <h3 id="2-the-get_dtype-method">2. The <code>get_dtype()</code> Method<a class="headerlink" href="#2-the-get_dtype-method" title="Permanent link">¶</a></h3>
 <p>Returns the underlying storage type. The <code>is_store</code> parameter indicates whether
 the <code>@</code> modifier is present in the table definition:</p>
@@ -3790,14 +3792,18 @@ This enables layered functionality:</p>
 <li>Calls <code>BlobCodec.get_dtype(is_store=False)</code> → returns <code>"bytes"</code></li>
 <li>Final storage type is <code>bytes</code> (LONGBLOB in MySQL)</li>
 </ol>
-<p>During INSERT:
-1. <code>ZjsonCodec.encode()</code> converts Python dict → compressed bytes
-2. <code>BlobCodec.encode()</code> packs bytes → DJ blob format
-3. Stored in database</p>
-<p>During FETCH:
-1. Read from database
-2. <code>BlobCodec.decode()</code> unpacks DJ blob → compressed bytes
-3. <code>ZjsonCodec.decode()</code> decompresses → Python dict</p>
+<p>During INSERT:</p>
+<ol>
+<li><code>ZjsonCodec.encode()</code> converts Python dict → compressed bytes</li>
+<li><code>BlobCodec.encode()</code> packs bytes → DJ blob format</li>
+<li>Stored in database</li>
+</ol>
+<p>During FETCH:</p>
+<ol>
+<li>Read from database</li>
+<li><code>BlobCodec.decode()</code> unpacks DJ blob → compressed bytes</li>
+<li><code>ZjsonCodec.decode()</code> decompresses → Python dict</li>
+</ol>
 <h3 id="built-in-codec-chains">Built-in Codec Chains<a class="headerlink" href="#built-in-codec-chains" title="Permanent link">¶</a></h3>
 <p>DataJoint's built-in codecs form these chains:</p>
 <table>
@@ -4021,9 +4027,11 @@ This enables layered functionality:</p>
 </tr>
 </tbody>
 </table>
-<p><strong>Addressing schemes:</strong>
-- <strong>Hash-addressed</strong>: Path from content hash. Automatic deduplication.
-- <strong>Schema-addressed</strong>: Path mirrors database structure. One location per entity.</p>
+<p><strong>Addressing schemes:</strong></p>
+<ul>
+<li><strong>Hash-addressed</strong>: Path from content hash. Automatic deduplication.</li>
+<li><strong>Schema-addressed</strong>: Path mirrors database structure. One location per entity.</li>
+</ul>
 <h2 id="complete-examples">Complete Examples<a class="headerlink" href="#complete-examples" title="Permanent link">¶</a></h2>
 <h3 id="example-1-simple-serialization">Example 1: Simple Serialization<a class="headerlink" href="#example-1-simple-serialization" title="Permanent link">¶</a></h3>
 <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">datajoint</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dj</span>

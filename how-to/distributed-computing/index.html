@@ -6548,11 +6548,13 @@
 <span class="n">SessionAnalysis</span><span class="o">.</span><span class="n">populate</span><span class="p">(</span><span class="n">reserve_jobs</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </code></pre></div>
 <h2 id="how-it-works">How It Works<a class="headerlink" href="#how-it-works" title="Permanent link">&para;</a></h2>
-<p>With <code>reserve_jobs=True</code>:
-1. Worker checks the jobs table for pending work
-2. Atomically reserves a job before processing
-3. Other workers see the job as reserved and skip it
-4. On completion, job is marked success (or error)</p>
+<p>With <code>reserve_jobs=True</code>:</p>
+<ol>
+<li>Worker checks the jobs table for pending work</li>
+<li>Atomically reserves a job before processing</li>
+<li>Other workers see the job as reserved and skip it</li>
+<li>On completion, job is marked success (or error)</li>
+</ol>
 <h2 id="multi-process-on-single-machine">Multi-Process on Single Machine<a class="headerlink" href="#multi-process-on-single-machine" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><span class="c1"># Use multiple processes</span>
 <span class="n">SessionAnalysis</span><span class="o">.</span><span class="n">populate</span><span class="p">(</span><span class="n">reserve_jobs</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">processes</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>

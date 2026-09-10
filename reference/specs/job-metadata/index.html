@@ -6867,10 +6867,12 @@
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
 <p>Job execution metadata (start time, duration, code version) should be persisted in computed tables themselves, not just in ephemeral job entries. This is accomplished using hidden attributes.</p>
 <h2 id="motivation">Motivation<a class="headerlink" href="#motivation" title="Permanent link">&para;</a></h2>
-<p>The current job table (<code>~~table_name</code>) tracks execution metadata, but:
-1. Job entries are deleted after completion (unless <code>keep_completed=True</code>)
-2. Users often need to know when and with what code version each row was computed
-3. This metadata should be transparent - not cluttering the user-facing schema</p>
+<p>The current job table (<code>~~table_name</code>) tracks execution metadata, but:</p>
+<ol>
+<li>Job entries are deleted after completion (unless <code>keep_completed=True</code>)</li>
+<li>Users often need to know when and with what code version each row was computed</li>
+<li>This metadata should be transparent - not cluttering the user-facing schema</li>
+</ol>
 <p>Hidden attributes (prefixed with <code>_</code>) provide the solution: stored in the database but filtered from user-facing APIs.</p>
 <h2 id="hidden-job-metadata-attributes">Hidden Job Metadata Attributes<a class="headerlink" href="#hidden-job-metadata-attributes" title="Permanent link">&para;</a></h2>
 <table>
@@ -6899,10 +6901,12 @@
 </tr>
 </tbody>
 </table>
-<p><strong>Design notes:</strong>
-- <code>_job_duration</code> (elapsed time) rather than <code>_job_completed_time</code> because duration is more informative for performance analysis
-- <code>varchar(64)</code> for version is sufficient for git hashes (40 chars for SHA-1, 7-8 for short hash)
-- <code>datetime(3)</code> provides millisecond precision</p>
+<p><strong>Design notes:</strong></p>
+<ul>
+<li><code>_job_duration</code> (elapsed time) rather than <code>_job_completed_time</code> because duration is more informative for performance analysis</li>
+<li><code>varchar(64)</code> for version is sufficient for git hashes (40 chars for SHA-1, 7-8 for short hash)</li>
+<li><code>datetime(3)</code> provides millisecond precision</li>
+</ul>
 <h2 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">&para;</a></h2>
 <h3 id="settings-structure">Settings Structure<a class="headerlink" href="#settings-structure" title="Permanent link">&para;</a></h3>
 <p>Job metadata is controlled via <code>config.jobs</code> settings:</p>
@@ -7026,23 +7030,31 @@ To add metadata columns to existing tables, use the migration utility (not autom
 <span class="c1"># Add to all Computed/Imported tables in a schema</span>
 <span class="n">add_job_metadata_columns</span><span class="p">(</span><span class="n">schema</span><span class="p">)</span>
 </code></pre></div>
-<p>This utility:
-- ALTERs the table to add the three hidden columns
-- Does NOT populate existing rows (metadata remains NULL)
-- Future <code>populate()</code> calls will populate metadata for new rows</p>
+<p>This utility:</p>
+<ul>
+<li>ALTERs the table to add the three hidden columns</li>
+<li>Does NOT populate existing rows (metadata remains NULL)</li>
+<li>Future <code>populate()</code> calls will populate metadata for new rows</li>
+</ul>
 <h2 id="behavior">Behavior<a class="headerlink" href="#behavior" title="Permanent link">&para;</a></h2>
 <h3 id="declaration-time">Declaration-time<a class="headerlink" href="#declaration-time" title="Permanent link">&para;</a></h3>
-<p>When <code>config.jobs.add_job_metadata=True</code> and a Computed/Imported table is declared:
-- Hidden metadata columns are added to the table definition
-- Only master tables receive metadata columns; Part tables never get them</p>
+<p>When <code>config.jobs.add_job_metadata=True</code> and a Computed/Imported table is declared:</p>
+<ul>
+<li>Hidden metadata columns are added to the table definition</li>
+<li>Only master tables receive metadata columns; Part tables never get them</li>
+</ul>
 <h3 id="population-time">Population-time<a class="headerlink" href="#population-time" title="Permanent link">&para;</a></h3>
-<p>After <code>make()</code> completes successfully:
-1. Check if the table has hidden metadata columns
-2. If yes: UPDATE the just-inserted rows with start_time, duration, version
-3. If no: Silently skip (no error, no ALTER)</p>
-<p>This applies to both:
-- <strong>Direct mode</strong> (<code>reserve_jobs=False</code>): Single-process populate
-- <strong>Distributed mode</strong> (<code>reserve_jobs=True</code>): Multi-worker with job table coordination</p>
+<p>After <code>make()</code> completes successfully:</p>
+<ol>
+<li>Check if the table has hidden metadata columns</li>
+<li>If yes: UPDATE the just-inserted rows with start_time, duration, version</li>
+<li>If no: Silently skip (no error, no ALTER)</li>
+</ol>
+<p>This applies to both:</p>
+<ul>
+<li><strong>Direct mode</strong> (<code>reserve_jobs=False</code>): Single-process populate</li>
+<li><strong>Distributed mode</strong> (<code>reserve_jobs=True</code>): Multi-worker with job table coordination</li>
+</ul>
 <h2 id="excluding-hidden-attributes-from-binary-operators">Excluding Hidden Attributes from Binary Operators<a class="headerlink" href="#excluding-hidden-attributes-from-binary-operators" title="Permanent link">&para;</a></h2>
 <h3 id="problem-statement">Problem Statement<a class="headerlink" href="#problem-statement" title="Permanent link">&para;</a></h3>
 <p>If two tables have hidden attributes with the same name (e.g., both have <code>_job_start_time</code>), SQL's NATURAL JOIN would incorrectly match on them:</p>
@@ -7077,9 +7089,11 @@ To add metadata columns to existing tables, use the migration utility (not autom
 <h3 id="changes-required">Changes Required<a class="headerlink" href="#changes-required" title="Permanent link">&para;</a></h3>
 <h4 id="1-queryexpression_left-queryexpression_joins">1. <code>QueryExpression._left</code> → <code>QueryExpression._joins</code><a class="headerlink" href="#1-queryexpression_left-queryexpression_joins" title="Permanent link">&para;</a></h4>
 <p>Replace <code>_left: List[bool]</code> with <code>_joins: List[Tuple[bool, List[str]]]</code></p>
-<p>Each join stores:
-- <code>left</code>: Whether it's a left join
-- <code>using_attrs</code>: Non-hidden common attributes to join on</p>
+<p>Each join stores:</p>
+<ul>
+<li><code>left</code>: Whether it's a left join</li>
+<li><code>using_attrs</code>: Non-hidden common attributes to join on</li>
+</ul>
 <div class="highlight"><pre><span></span><code><span class="c1"># Before</span>
 <span class="n">result</span><span class="o">.</span><span class="n">_left</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_left</span> <span class="o">+</span> <span class="p">[</span><span class="n">left</span><span class="p">]</span> <span class="o">+</span> <span class="n">other</span><span class="o">.</span><span class="n">_left</span>
 

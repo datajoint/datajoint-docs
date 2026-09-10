@@ -6985,13 +6985,17 @@
 </tbody>
 </table>
 <h3 id="size-guidelines">Size Guidelines<a class="headerlink" href="#size-guidelines" title="Permanent link">&para;</a></h3>
-<p><strong>Technical limits:</strong>
-- <strong>MySQL</strong>: In-table blobs up to 4 GiB (<code>LONGBLOB</code>)
-- <strong>PostgreSQL</strong>: In-table blobs unlimited (<code>BYTEA</code>)</p>
-<p><strong>Practical recommendations</strong> (consider accessibility, cost, performance):
-- <strong>&lt; 1-10 MB</strong>: In-table storage (<code>&lt;blob&gt;</code>) often sufficient
-- <strong>10-100 MB</strong>: Object store (<code>&lt;blob@&gt;</code> with dedup, or <code>&lt;npy@&gt;</code> for arrays)
-- <strong>&gt; 100 MB</strong>: Schema-addressed (<code>&lt;npy@&gt;</code>, <code>&lt;object@&gt;</code>) for streaming and lazy loading</p>
+<p><strong>Technical limits:</strong></p>
+<ul>
+<li><strong>MySQL</strong>: In-table blobs up to 4 GiB (<code>LONGBLOB</code>)</li>
+<li><strong>PostgreSQL</strong>: In-table blobs unlimited (<code>BYTEA</code>)</li>
+</ul>
+<p><strong>Practical recommendations</strong> (consider accessibility, cost, performance):</p>
+<ul>
+<li><strong>&lt; 1-10 MB</strong>: In-table storage (<code>&lt;blob&gt;</code>) often sufficient</li>
+<li><strong>10-100 MB</strong>: Object store (<code>&lt;blob@&gt;</code> with dedup, or <code>&lt;npy@&gt;</code> for arrays)</li>
+<li><strong>&gt; 100 MB</strong>: Schema-addressed (<code>&lt;npy@&gt;</code>, <code>&lt;object@&gt;</code>) for streaming and lazy loading</li>
+</ul>
 <h3 id="store-tiers">Store Tiers<a class="headerlink" href="#store-tiers" title="Permanent link">&para;</a></h3>
 <p>Configure stores for different access patterns:</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>

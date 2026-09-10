@@ -7209,23 +7209,29 @@
 <span class="s2">    raw_data : &lt;blob@&gt;        # Large: raw recordings (&gt; 10 MB)</span>
 <span class="s2">    """</span>
 </code></pre></div>
-<p><strong>When to use in-table storage (<code>&lt;blob&gt;</code>):</strong>
-- Fast access needed (no external fetch)
-- Data frequently queried alongside other columns
-- Transactional consistency critical
-- Automatic backup with database important
-- No object storage configuration available</p>
-<p><strong>When to use object storage (<code>&lt;blob@&gt;</code>, <code>&lt;npy@&gt;</code>, <code>&lt;object@&gt;</code>):</strong>
-- Data larger than ~10 MB
-- Infrequent access patterns
-- Need deduplication (hash-addressed types)
-- Need browsable structure (schema-addressed types)
-- Want to separate hot data (DB) from cold data (object store)</p>
-<p><strong>Examples by size:</strong>
-- <strong>&lt; 1 MB</strong>: Configuration JSON, metadata, small parameter arrays → <code>&lt;blob&gt;</code>
-- <strong>1-10 MB</strong>: Thumbnails, processed features, small waveforms → <code>&lt;blob&gt;</code> or <code>&lt;blob@&gt;</code> depending on access pattern
-- <strong>10-100 MB</strong>: Neural recordings, images, PDFs → <code>&lt;blob@&gt;</code> or <code>&lt;attach@&gt;</code>
-- <strong>&gt; 100 MB</strong>: Zarr arrays, HDF5 datasets, large videos → <code>&lt;object@&gt;</code> or <code>&lt;npy@&gt;</code></p>
+<p><strong>When to use in-table storage (<code>&lt;blob&gt;</code>):</strong></p>
+<ul>
+<li>Fast access needed (no external fetch)</li>
+<li>Data frequently queried alongside other columns</li>
+<li>Transactional consistency critical</li>
+<li>Automatic backup with database important</li>
+<li>No object storage configuration available</li>
+</ul>
+<p><strong>When to use object storage (<code>&lt;blob@&gt;</code>, <code>&lt;npy@&gt;</code>, <code>&lt;object@&gt;</code>):</strong></p>
+<ul>
+<li>Data larger than ~10 MB</li>
+<li>Infrequent access patterns</li>
+<li>Need deduplication (hash-addressed types)</li>
+<li>Need browsable structure (schema-addressed types)</li>
+<li>Want to separate hot data (DB) from cold data (object store)</li>
+</ul>
+<p><strong>Examples by size:</strong></p>
+<ul>
+<li><strong>&lt; 1 MB</strong>: Configuration JSON, metadata, small parameter arrays → <code>&lt;blob&gt;</code></li>
+<li><strong>1-10 MB</strong>: Thumbnails, processed features, small waveforms → <code>&lt;blob&gt;</code> or <code>&lt;blob@&gt;</code> depending on access pattern</li>
+<li><strong>10-100 MB</strong>: Neural recordings, images, PDFs → <code>&lt;blob@&gt;</code> or <code>&lt;attach@&gt;</code></li>
+<li><strong>&gt; 100 MB</strong>: Zarr arrays, HDF5 datasets, large videos → <code>&lt;object@&gt;</code> or <code>&lt;npy@&gt;</code></li>
+</ul>
 <h3 id="access-pattern-guidelines">Access Pattern Guidelines<a class="headerlink" href="#access-pattern-guidelines" title="Permanent link">&para;</a></h3>
 <p><strong>Full Access Every Time</strong></p>
 <p>Use <code>&lt;blob@&gt;</code> (hash-addressed):</p>
@@ -7277,11 +7283,13 @@
 <span class="n">subset</span> <span class="o">=</span> <span class="n">ref</span><span class="p">[:</span><span class="mi">100</span><span class="p">,</span> <span class="p">:]</span>         <span class="c1"># Efficient slicing</span>
 <span class="n">shape</span> <span class="o">=</span> <span class="n">ref</span><span class="o">.</span><span class="n">shape</span>             <span class="c1"># Metadata without loading</span>
 </code></pre></div></p>
-<p><strong>Why <code>&lt;npy@&gt;</code> over <code>&lt;blob@&gt;</code> for arrays:</strong>
-- Lazy loading (doesn't load until accessed)
-- Efficient slicing (can fetch subsets)
-- Preserves shape/dtype metadata
-- Native NumPy serialization</p>
+<p><strong>Why <code>&lt;npy@&gt;</code> over <code>&lt;blob@&gt;</code> for arrays:</strong></p>
+<ul>
+<li>Lazy loading (doesn't load until accessed)</li>
+<li>Efficient slicing (can fetch subsets)</li>
+<li>Preserves shape/dtype metadata</li>
+<li>Native NumPy serialization</li>
+</ul>
 <h3 id="lifecycle-and-management">Lifecycle and Management<a class="headerlink" href="#lifecycle-and-management" title="Permanent link">&para;</a></h3>
 <p><strong>DataJoint-Managed (Integrated)</strong></p>
 <p>Use <code>&lt;blob@&gt;</code>, <code>&lt;npy@&gt;</code>, or <code>&lt;object@&gt;</code>:</p>
@@ -7292,15 +7300,19 @@
 <span class="s2">    content : &lt;blob@&gt;         # DataJoint manages lifecycle</span>
 <span class="s2">    """</span>
 </code></pre></div>
-<p><strong>DataJoint provides:</strong>
-- ✅ Automatic cleanup (garbage collection)
-- ✅ Transactional integrity (atomic with database)
-- ✅ Referential integrity (cascading deletes)
-- ✅ Content deduplication (for <code>&lt;blob@&gt;</code>, <code>&lt;attach@&gt;</code>)</p>
-<p><strong>User manages:</strong>
-- ❌ File paths (DataJoint decides)
-- ❌ Cleanup (automatic)
-- ❌ Integrity (enforced)</p>
+<p><strong>DataJoint provides:</strong></p>
+<ul>
+<li>✅ Automatic cleanup (garbage collection)</li>
+<li>✅ Transactional integrity (atomic with database)</li>
+<li>✅ Referential integrity (cascading deletes)</li>
+<li>✅ Content deduplication (for <code>&lt;blob@&gt;</code>, <code>&lt;attach@&gt;</code>)</li>
+</ul>
+<p><strong>User manages:</strong></p>
+<ul>
+<li>❌ File paths (DataJoint decides)</li>
+<li>❌ Cleanup (automatic)</li>
+<li>❌ Integrity (enforced)</li>
+</ul>
 <hr />
 <p><strong>User-Managed (References)</strong></p>
 <p>Use <code>&lt;filepath@&gt;</code>:</p>
@@ -7311,68 +7323,84 @@
 <span class="s2">    raw_file : &lt;filepath@&gt;    # User manages file</span>
 <span class="s2">    """</span>
 </code></pre></div>
-<p><strong>User provides:</strong>
-- ✅ File paths (you control organization)
-- ✅ File lifecycle (you create/delete)
-- ✅ Existing files (reference external data)</p>
-<p><strong>DataJoint provides:</strong>
-- ✅ Path validation (file exists on insert)
-- ✅ ObjectRef for lazy access
-- ❌ No garbage collection
-- ❌ No transaction safety for files
-- ❌ No deduplication</p>
-<p><strong>Use when:</strong>
-- Files managed by external systems
-- Referencing existing data archives
-- Custom file organization required
-- Large instrument output directories</p>
+<p><strong>User provides:</strong></p>
+<ul>
+<li>✅ File paths (you control organization)</li>
+<li>✅ File lifecycle (you create/delete)</li>
+<li>✅ Existing files (reference external data)</li>
+</ul>
+<p><strong>DataJoint provides:</strong></p>
+<ul>
+<li>✅ Path validation (file exists on insert)</li>
+<li>✅ ObjectRef for lazy access</li>
+<li>❌ No garbage collection</li>
+<li>❌ No transaction safety for files</li>
+<li>❌ No deduplication</li>
+</ul>
+<p><strong>Use when:</strong></p>
+<ul>
+<li>Files managed by external systems</li>
+<li>Referencing existing data archives</li>
+<li>Custom file organization required</li>
+<li>Large instrument output directories</li>
+</ul>
 <h2 id="storage-type-comparison">Storage Type Comparison<a class="headerlink" href="#storage-type-comparison" title="Permanent link">&para;</a></h2>
 <h3 id="in-table-blob">In-Table: <code>&lt;blob&gt;</code><a class="headerlink" href="#in-table-blob" title="Permanent link">&para;</a></h3>
 <p><strong>Storage:</strong> Database column (LONGBLOB)</p>
 <p><strong>Syntax:</strong>
 <div class="highlight"><pre><span></span><code><span class="n">small_data</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">blob</span><span class="o">&gt;</span>
 </code></pre></div></p>
-<p><strong>Characteristics:</strong>
-- ✅ Fast access (in database)
-- ✅ Transactional consistency
-- ✅ Automatic backup
-- ✅ No store configuration needed
-- ✅ <strong>Python object convenience</strong>: Insert/fetch dicts, lists, arrays directly (no manual IO)
-- ✅ Automatic serialization + gzip compression
-- ✅ Technical limit: 4 GiB (MySQL), unlimited (PostgreSQL)
-- ❌ Practical limit: Keep under ~1-10 MB for performance
-- ❌ No deduplication
-- ❌ Database bloat for large data</p>
-<p><strong>Best for:</strong>
-- Configuration JSON (dicts/lists)
-- Small arrays/matrices
-- Thumbnails
-- Nested data structures</p>
+<p><strong>Characteristics:</strong></p>
+<ul>
+<li>✅ Fast access (in database)</li>
+<li>✅ Transactional consistency</li>
+<li>✅ Automatic backup</li>
+<li>✅ No store configuration needed</li>
+<li>✅ <strong>Python object convenience</strong>: Insert/fetch dicts, lists, arrays directly (no manual IO)</li>
+<li>✅ Automatic serialization + gzip compression</li>
+<li>✅ Technical limit: 4 GiB (MySQL), unlimited (PostgreSQL)</li>
+<li>❌ Practical limit: Keep under ~1-10 MB for performance</li>
+<li>❌ No deduplication</li>
+<li>❌ Database bloat for large data</li>
+</ul>
+<p><strong>Best for:</strong></p>
+<ul>
+<li>Configuration JSON (dicts/lists)</li>
+<li>Small arrays/matrices</li>
+<li>Thumbnails</li>
+<li>Nested data structures</li>
+</ul>
 <hr />
 <h3 id="in-table-attach">In-Table: <code>&lt;attach&gt;</code><a class="headerlink" href="#in-table-attach" title="Permanent link">&para;</a></h3>
 <p><strong>Storage:</strong> Database column (LONGBLOB)</p>
 <p><strong>Syntax:</strong>
 <div class="highlight"><pre><span></span><code><span class="n">config_file</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">attach</span><span class="o">&gt;</span>
 </code></pre></div></p>
-<p><strong>Characteristics:</strong>
-- ✅ Fast access (in database)
-- ✅ Transactional consistency
-- ✅ Automatic backup
-- ✅ No store configuration needed
-- ✅ <strong>Filename preserved</strong>: Original filename stored with content
-- ✅ Automatic gzip compression
-- ✅ Technical limit: 4 GiB (MySQL), unlimited (PostgreSQL)
-- ❌ Practical limit: Keep under ~1-10 MB for performance
-- ❌ No deduplication
-- ❌ Returns file path (extracts to download directory), not Python object</p>
-<p><strong>Best for:</strong>
-- Small configuration files
-- Document attachments (&lt; 10 MB)
-- Files where original filename matters
-- When you need the file extracted to disk</p>
-<p><strong>Difference from <code>&lt;blob&gt;</code>:</strong>
-- <code>&lt;blob&gt;</code>: Stores Python objects (dicts, arrays) → returns Python object
-- <code>&lt;attach&gt;</code>: Stores files with filename → returns local file path</p>
+<p><strong>Characteristics:</strong></p>
+<ul>
+<li>✅ Fast access (in database)</li>
+<li>✅ Transactional consistency</li>
+<li>✅ Automatic backup</li>
+<li>✅ No store configuration needed</li>
+<li>✅ <strong>Filename preserved</strong>: Original filename stored with content</li>
+<li>✅ Automatic gzip compression</li>
+<li>✅ Technical limit: 4 GiB (MySQL), unlimited (PostgreSQL)</li>
+<li>❌ Practical limit: Keep under ~1-10 MB for performance</li>
+<li>❌ No deduplication</li>
+<li>❌ Returns file path (extracts to download directory), not Python object</li>
+</ul>
+<p><strong>Best for:</strong></p>
+<ul>
+<li>Small configuration files</li>
+<li>Document attachments (&lt; 10 MB)</li>
+<li>Files where original filename matters</li>
+<li>When you need the file extracted to disk</li>
+</ul>
+<p><strong>Difference from <code>&lt;blob&gt;</code>:</strong></p>
+<ul>
+<li><code>&lt;blob&gt;</code>: Stores Python objects (dicts, arrays) → returns Python object</li>
+<li><code>&lt;attach&gt;</code>: Stores files with filename → returns local file path</li>
+</ul>
 <hr />
 <h3 id="hash-addressed-blob-or-attach">Hash-Addressed: <code>&lt;blob@&gt;</code> or <code>&lt;attach@&gt;</code><a class="headerlink" href="#hash-addressed-blob-or-attach" title="Permanent link">&para;</a></h3>
 <p><strong>Storage:</strong> Object store at <code>{store}/_hash/{schema}/{hash}</code></p>
@@ -7381,32 +7409,44 @@
 <span class="n">data</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">blob</span><span class="nd">@mystore</span><span class="o">&gt;</span>       <span class="c1"># Named store</span>
 <span class="n">file</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">attach</span><span class="o">@&gt;</span>            <span class="c1"># File attachments</span>
 </code></pre></div></p>
-<p><strong>Characteristics (both):</strong>
-- ✅ Content deduplication (identical data stored once)
-- ✅ Automatic gzip compression
-- ✅ Garbage collection
-- ✅ Transaction safety
-- ✅ Referential integrity
-- ✅ Moderate to large files (1 MB - 100 GB)
-- ❌ Full download on fetch (no streaming)
-- ❌ Storage path not browsable (hash-based)</p>
-<p><strong><code>&lt;blob@&gt;</code> specific:</strong>
-- ✅ <strong>Python object convenience</strong>: Insert/fetch dicts, lists, arrays directly (no manual IO)
-- Returns: Python objects</p>
-<p><strong><code>&lt;attach@&gt;</code> specific:</strong>
-- ✅ <strong>Filename preserved</strong>: Original filename stored with content
-- Returns: Local file path (extracts to download directory)</p>
-<p><strong>Best for <code>&lt;blob@&gt;</code>:</strong>
-- Large Python objects (NumPy arrays, dicts)
-- Processed results (nested structures)
-- Any Python data with duplicates</p>
-<p><strong>Best for <code>&lt;attach@&gt;</code>:</strong>
-- PDF/document files
-- Images, videos
-- Files where original filename/format matters</p>
-<p><strong>Key difference:</strong>
-- <code>&lt;blob@&gt;</code>: Python objects in, Python objects out (no file handling)
-- <code>&lt;attach@&gt;</code>: Files in, file paths out (preserves filename)</p>
+<p><strong>Characteristics (both):</strong></p>
+<ul>
+<li>✅ Content deduplication (identical data stored once)</li>
+<li>✅ Automatic gzip compression</li>
+<li>✅ Garbage collection</li>
+<li>✅ Transaction safety</li>
+<li>✅ Referential integrity</li>
+<li>✅ Moderate to large files (1 MB - 100 GB)</li>
+<li>❌ Full download on fetch (no streaming)</li>
+<li>❌ Storage path not browsable (hash-based)</li>
+</ul>
+<p><strong><code>&lt;blob@&gt;</code> specific:</strong></p>
+<ul>
+<li>✅ <strong>Python object convenience</strong>: Insert/fetch dicts, lists, arrays directly (no manual IO)</li>
+<li>Returns: Python objects</li>
+</ul>
+<p><strong><code>&lt;attach@&gt;</code> specific:</strong></p>
+<ul>
+<li>✅ <strong>Filename preserved</strong>: Original filename stored with content</li>
+<li>Returns: Local file path (extracts to download directory)</li>
+</ul>
+<p><strong>Best for <code>&lt;blob@&gt;</code>:</strong></p>
+<ul>
+<li>Large Python objects (NumPy arrays, dicts)</li>
+<li>Processed results (nested structures)</li>
+<li>Any Python data with duplicates</li>
+</ul>
+<p><strong>Best for <code>&lt;attach@&gt;</code>:</strong></p>
+<ul>
+<li>PDF/document files</li>
+<li>Images, videos</li>
+<li>Files where original filename/format matters</li>
+</ul>
+<p><strong>Key difference:</strong></p>
+<ul>
+<li><code>&lt;blob@&gt;</code>: Python objects in, Python objects out (no file handling)</li>
+<li><code>&lt;attach@&gt;</code>: Files in, file paths out (preserves filename)</li>
+</ul>
 <hr />
 <h3 id="schema-addressed-npy-or-object">Schema-Addressed: <code>&lt;npy@&gt;</code> or <code>&lt;object@&gt;</code><a class="headerlink" href="#schema-addressed-npy-or-object" title="Permanent link">&para;</a></h3>
 <p><strong>Storage:</strong> Object store at <code>{store}/_schema/{schema}/{table}/{key}/{field}_{token}.ext</code></p>
@@ -7414,49 +7454,61 @@
 <div class="highlight"><pre><span></span><code><span class="n">array</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">npy</span><span class="o">@&gt;</span>              <span class="c1"># NumPy arrays</span>
 <span class="n">dataset</span> <span class="p">:</span> <span class="o">&lt;</span><span class="nb">object</span><span class="o">@&gt;</span>         <span class="c1"># Zarr, HDF5, custom</span>
 </code></pre></div></p>
-<p><strong>Characteristics:</strong>
-- ✅ Streaming access (no full download)
-- ✅ Partial reads (fetch chunks)
-- ✅ Browsable paths (organized by key)
-- ✅ Accessible by external tools (not just DataJoint)
-- ✅ Very large files (100 MB - TB+)
-- ✅ Multi-file datasets (e.g., Zarr directory structures)
-- ❌ No deduplication
-- ❌ One file per field per row</p>
-<p><strong>Key advantages:</strong>
-- <strong>Schema-addressed storage is browsable</strong> - can be navigated and accessed by external tools (Zarr viewers, HDF5 utilities, direct filesystem access), not just through DataJoint
-- <strong><code>&lt;npy@&gt;</code> provides array convenience</strong> - insert/fetch array-like objects directly (no manual .npy file handling)
-- <strong><code>&lt;object@&gt;</code> provides flexibility</strong> - you manage the format (Zarr, HDF5, custom), DataJoint provides storage and references</p>
-<p><strong>Best for:</strong>
-- <code>&lt;npy@&gt;</code>: NumPy arrays with lazy loading (no manual IO)
-- <code>&lt;object@&gt;</code>: Zarr arrays, HDF5 datasets, custom formats (you manage format)
-- Large video files
-- Multi-file experimental outputs
-- Data that needs to be accessed by non-DataJoint tools</p>
-<p><strong>Difference <code>&lt;npy@&gt;</code> vs <code>&lt;object@&gt;</code>:</strong>
-- <code>&lt;npy@&gt;</code>: Insert/fetch array-like objects (like <code>&lt;blob&gt;</code> but lazy) - no manual .npy handling
-- <code>&lt;object@&gt;</code>: You manage format and IO (Zarr, HDF5, custom) - more flexible but requires format knowledge</p>
+<p><strong>Characteristics:</strong></p>
+<ul>
+<li>✅ Streaming access (no full download)</li>
+<li>✅ Partial reads (fetch chunks)</li>
+<li>✅ Browsable paths (organized by key)</li>
+<li>✅ Accessible by external tools (not just DataJoint)</li>
+<li>✅ Very large files (100 MB - TB+)</li>
+<li>✅ Multi-file datasets (e.g., Zarr directory structures)</li>
+<li>❌ No deduplication</li>
+<li>❌ One file per field per row</li>
+</ul>
+<p><strong>Key advantages:</strong></p>
+<ul>
+<li><strong>Schema-addressed storage is browsable</strong> - can be navigated and accessed by external tools (Zarr viewers, HDF5 utilities, direct filesystem access), not just through DataJoint</li>
+<li><strong><code>&lt;npy@&gt;</code> provides array convenience</strong> - insert/fetch array-like objects directly (no manual .npy file handling)</li>
+<li><strong><code>&lt;object@&gt;</code> provides flexibility</strong> - you manage the format (Zarr, HDF5, custom), DataJoint provides storage and references</li>
+</ul>
+<p><strong>Best for:</strong></p>
+<ul>
+<li><code>&lt;npy@&gt;</code>: NumPy arrays with lazy loading (no manual IO)</li>
+<li><code>&lt;object@&gt;</code>: Zarr arrays, HDF5 datasets, custom formats (you manage format)</li>
+<li>Large video files</li>
+<li>Multi-file experimental outputs</li>
+<li>Data that needs to be accessed by non-DataJoint tools</li>
+</ul>
+<p><strong>Difference <code>&lt;npy@&gt;</code> vs <code>&lt;object@&gt;</code>:</strong></p>
+<ul>
+<li><code>&lt;npy@&gt;</code>: Insert/fetch array-like objects (like <code>&lt;blob&gt;</code> but lazy) - no manual .npy handling</li>
+<li><code>&lt;object@&gt;</code>: You manage format and IO (Zarr, HDF5, custom) - more flexible but requires format knowledge</li>
+</ul>
 <hr />
 <h3 id="filepath-references-filepath">Filepath References: <code>&lt;filepath@&gt;</code><a class="headerlink" href="#filepath-references-filepath" title="Permanent link">&para;</a></h3>
 <p><strong>Storage:</strong> User-managed paths in object store</p>
 <p><strong>Syntax:</strong>
 <div class="highlight"><pre><span></span><code><span class="n">raw_data</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">filepath</span><span class="o">@&gt;</span>      <span class="c1"># User-managed file</span>
 </code></pre></div></p>
-<p><strong>Characteristics:</strong>
-- ✅ Reference existing files
-- ✅ User controls paths
-- ✅ External system compatibility
-- ✅ Custom organization
-- ❌ No lifecycle management
-- ❌ No garbage collection
-- ❌ No transaction safety
-- ❌ No deduplication
-- ❌ Must avoid <code>_hash/</code> and <code>_schema/</code> prefixes</p>
-<p><strong>Best for:</strong>
-- Large instrument data directories
-- Externally managed archives
-- Legacy data integration
-- Custom file organization requirements</p>
+<p><strong>Characteristics:</strong></p>
+<ul>
+<li>✅ Reference existing files</li>
+<li>✅ User controls paths</li>
+<li>✅ External system compatibility</li>
+<li>✅ Custom organization</li>
+<li>❌ No lifecycle management</li>
+<li>❌ No garbage collection</li>
+<li>❌ No transaction safety</li>
+<li>❌ No deduplication</li>
+<li>❌ Must avoid <code>_hash/</code> and <code>_schema/</code> prefixes</li>
+</ul>
+<p><strong>Best for:</strong></p>
+<ul>
+<li>Large instrument data directories</li>
+<li>Externally managed archives</li>
+<li>Legacy data integration</li>
+<li>Custom file organization requirements</li>
+</ul>
 <h2 id="common-scenarios">Common Scenarios<a class="headerlink" href="#common-scenarios" title="Permanent link">&para;</a></h2>
 <h3 id="scenario-1-image-processing-pipeline">Scenario 1: Image Processing Pipeline<a class="headerlink" href="#scenario-1-image-processing-pipeline" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="nd">@schema</span>
@@ -7486,10 +7538,12 @@
 <span class="s2">    preview : &lt;blob&gt;                     # 100 KB thumbnail, in-table</span>
 <span class="s2">    """</span>
 </code></pre></div>
-<p><strong>Rationale:</strong>
-- <code>&lt;filepath@&gt;</code>: Reference existing microscope files (large, externally managed)
-- <code>&lt;blob@&gt;</code>: Processed images (moderate size, deduplicated if reprocessed)
-- <code>&lt;blob&gt;</code>: Thumbnails (tiny, fast access for UI)</p>
+<p><strong>Rationale:</strong></p>
+<ul>
+<li><code>&lt;filepath@&gt;</code>: Reference existing microscope files (large, externally managed)</li>
+<li><code>&lt;blob@&gt;</code>: Processed images (moderate size, deduplicated if reprocessed)</li>
+<li><code>&lt;blob&gt;</code>: Thumbnails (tiny, fast access for UI)</li>
+</ul>
 <hr />
 <h3 id="scenario-2-electrophysiology-recording">Scenario 2: Electrophysiology Recording<a class="headerlink" href="#scenario-2-electrophysiology-recording" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="nd">@schema</span>
@@ -7529,10 +7583,12 @@
 <span class="s2">    stats : &lt;blob&gt;                       # 10 KB stats dict, in-table</span>
 <span class="s2">    """</span>
 </code></pre></div>
-<p><strong>Rationale:</strong>
-- <code>&lt;blob&gt;</code>: Config and stats (small metadata, fast access)
-- <code>&lt;object@&gt;</code>: Raw voltage (huge, stream for spike detection)
-- <code>&lt;npy@&gt;</code>: Waveforms (moderate arrays, load for clustering)</p>
+<p><strong>Rationale:</strong></p>
+<ul>
+<li><code>&lt;blob&gt;</code>: Config and stats (small metadata, fast access)</li>
+<li><code>&lt;object@&gt;</code>: Raw voltage (huge, stream for spike detection)</li>
+<li><code>&lt;npy@&gt;</code>: Waveforms (moderate arrays, load for clustering)</li>
+</ul>
 <hr />
 <h3 id="scenario-3-calcium-imaging-analysis">Scenario 3: Calcium Imaging Analysis<a class="headerlink" href="#scenario-3-calcium-imaging-analysis" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="nd">@schema</span>
@@ -7572,11 +7628,13 @@
 <span class="s2">    events : &lt;blob&gt;                      # 5 KB event times, in-table</span>
 <span class="s2">    """</span>
 </code></pre></div>
-<p><strong>Rationale:</strong>
-- <code>&lt;object@&gt;</code>: Movies (huge, stream for segmentation)
-- <code>&lt;npy@&gt;</code>: Masks (moderate, load for trace extraction)
-- <code>&lt;blob@&gt;</code>: Traces (per-cell, many rows, deduplication helps)
-- <code>&lt;blob&gt;</code>: Event summaries (tiny, fast query results)</p>
+<p><strong>Rationale:</strong></p>
+<ul>
+<li><code>&lt;object@&gt;</code>: Movies (huge, stream for segmentation)</li>
+<li><code>&lt;npy@&gt;</code>: Masks (moderate, load for trace extraction)</li>
+<li><code>&lt;blob@&gt;</code>: Traces (per-cell, many rows, deduplication helps)</li>
+<li><code>&lt;blob&gt;</code>: Event summaries (tiny, fast query results)</li>
+</ul>
 <h2 id="configuration-examples">Configuration Examples<a class="headerlink" href="#configuration-examples" title="Permanent link">&para;</a></h2>
 <h3 id="single-store-development">Single Store (Development)<a class="headerlink" href="#single-store-development" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
@@ -7589,9 +7647,11 @@
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
-<p>All <code>@</code> codecs use this store:
-- <code>&lt;blob@&gt;</code> → <code>/data/my-project/_hash/{schema}/{hash}</code>
-- <code>&lt;npy@&gt;</code> → <code>/data/my-project/_schema/{schema}/{table}/{key}/</code></p>
+<p>All <code>@</code> codecs use this store:</p>
+<ul>
+<li><code>&lt;blob@&gt;</code> → <code>/data/my-project/_hash/{schema}/{hash}</code></li>
+<li><code>&lt;npy@&gt;</code> → <code>/data/my-project/_schema/{schema}/{table}/{key}/</code></li>
+</ul>
 <hr />
 <h3 id="multiple-stores-production">Multiple Stores (Production)<a class="headerlink" href="#multiple-stores-production" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>

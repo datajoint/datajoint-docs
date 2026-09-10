@@ -8449,9 +8449,11 @@ need to control visibility at the call site, use proj().
 </tr>
 </tbody>
 </table>
-<p>In-store storage syntax:
-- <code>&lt;blob@&gt;</code> - default store
-- <code>&lt;blob@store_name&gt;</code> - named store</p>
+<p>In-store storage syntax:</p>
+<ul>
+<li><code>&lt;blob@&gt;</code> - default store</li>
+<li><code>&lt;blob@store_name&gt;</code> - named store</li>
+</ul>
 <h3 id="47-type-reconstruction">4.7 Type Reconstruction<a class="headerlink" href="#47-type-reconstruction" title="Permanent link">&para;</a></h3>
 <p>Core types and codecs are stored in the SQL COMMENT field for reconstruction:</p>
 <div class="highlight"><pre><span></span><code><span class="k">COMMENT</span><span class="w"> </span><span class="s1">':float32:user comment here'</span>
@@ -8500,9 +8502,11 @@ need to control visibility at the call site, use proj().
 </tbody>
 </table>
 <h3 id="53-constant-literals">5.3 Constant Literals<a class="headerlink" href="#53-constant-literals" title="Permanent link">&para;</a></h3>
-<p>These values are used without quotes in SQL:
-- <code>NULL</code>
-- <code>CURRENT_TIMESTAMP</code></p>
+<p>These values are used without quotes in SQL:</p>
+<ul>
+<li><code>NULL</code></li>
+<li><code>CURRENT_TIMESTAMP</code></li>
+</ul>
 <h3 id="54-nullable-attributes">5.4 Nullable Attributes<a class="headerlink" href="#54-nullable-attributes" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code>score = null : float32
 </code></pre></div>
@@ -8616,9 +8620,11 @@ need to control visibility at the call site, use proj().
 <li>Useful for self-referential or multi-reference patterns</li>
 </ul>
 <h3 id="68-referential-actions">6.8 Referential Actions<a class="headerlink" href="#68-referential-actions" title="Permanent link">&para;</a></h3>
-<p>All foreign keys use:
-- <code>ON UPDATE CASCADE</code> - Parent key changes propagate
-- <code>ON DELETE RESTRICT</code> - Cannot delete parent with children</p>
+<p>All foreign keys use:</p>
+<ul>
+<li><code>ON UPDATE CASCADE</code> - Parent key changes propagate</li>
+<li><code>ON DELETE RESTRICT</code> - Cannot delete parent with children</li>
+</ul>
 <h3 id="69-lineage-tracking">6.9 Lineage Tracking<a class="headerlink" href="#69-lineage-tracking" title="Permanent link">&para;</a></h3>
 <p>Foreign key relationships are recorded in the <code>~lineage</code> table:</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
@@ -8676,9 +8682,11 @@ unique index(attr1, attr2, ...)
 <li>Example: <code>experiment__trial</code></li>
 </ul>
 <h3 id="83-master-reference">8.3 Master Reference<a class="headerlink" href="#83-master-reference" title="Permanent link">&para;</a></h3>
-<p>Within Part definition, use:
-- <code>-&gt; master</code> (lowercase keyword)
-- <code>-&gt; MasterClassName</code> (class name)</p>
+<p>Within Part definition, use:</p>
+<ul>
+<li><code>-&gt; master</code> (lowercase keyword)</li>
+<li><code>-&gt; MasterClassName</code> (class name)</li>
+</ul>
 <h3 id="84-constraints">8.4 Constraints<a class="headerlink" href="#84-constraints" title="Permanent link">&para;</a></h3>
 <ul>
 <li>Parts must reference their master</li>
@@ -8805,13 +8813,15 @@ unique index(attr1, attr2, ...)
 </tbody>
 </table>
 <h3 id="103-insert-time-validation">10.3 Insert-Time Validation<a class="headerlink" href="#103-insert-time-validation" title="Permanent link">&para;</a></h3>
-<p>The <code>table.validate()</code> method checks:
-- Required fields present
-- NULL constraints satisfied
-- Primary key completeness
-- Codec validation (if defined)
-- UUID format
-- JSON serializability</p>
+<p>The <code>table.validate()</code> method checks:</p>
+<ul>
+<li>Required fields present</li>
+<li>NULL constraints satisfied</li>
+<li>Primary key completeness</li>
+<li>Codec validation (if defined)</li>
+<li>UUID format</li>
+<li>JSON serializability</li>
+</ul>
 <hr />
 <h2 id="11-sql-generation">11. SQL Generation<a class="headerlink" href="#11-sql-generation" title="Permanent link">&para;</a></h2>
 <h3 id="111-create-table-template">11.1 CREATE TABLE Template<a class="headerlink" href="#111-create-table-template" title="Permanent link">&para;</a></h3>

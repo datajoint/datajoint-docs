@@ -3869,12 +3869,14 @@
 <h1 id="autopopulate-specification">AutoPopulate Specification<a class="headerlink" href="#autopopulate-specification" title="Permanent link">¶</a></h1>
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">¶</a></h2>
 <p>AutoPopulate is DataJoint's mechanism for automated computation. Tables that inherit from <code>dj.Computed</code> or <code>dj.Imported</code> automatically populate themselves by executing a <code>make()</code> method for each entry defined by their dependencies.</p>
-<p>This specification covers:
-- The populate process and key source calculation
-- Transaction management and atomicity
-- The <code>make()</code> method and tripartite pattern
-- Part tables in computed results
-- Distributed computing with job reservation</p>
+<p>This specification covers:</p>
+<ul>
+<li>The populate process and key source calculation</li>
+<li>Transaction management and atomicity</li>
+<li>The <code>make()</code> method and tripartite pattern</li>
+<li>Part tables in computed results</li>
+<li>Distributed computing with job reservation</li>
+</ul>
 <hr/>
 <h2 id="1-auto-populated-tables">1. Auto-Populated Tables<a class="headerlink" href="#1-auto-populated-tables" title="Permanent link">¶</a></h2>
 <h3 id="11-table-types">1.1 Table Types<a class="headerlink" href="#11-table-types" title="Permanent link">¶</a></h3>
@@ -3959,10 +3961,12 @@
 <span class="s2">    """</span>
     <span class="c1"># Automatic key_source = Recording * DetectionMethod</span>
 </code></pre></div>
-<p><strong>Calculation rules:</strong>
-1. Identify all foreign keys in the primary key section
-2. Join the referenced tables: <code>Parent1 * Parent2 * ...</code>
-3. Project to primary key attributes only</p>
+<p><strong>Calculation rules:</strong></p>
+<ol>
+<li>Identify all foreign keys in the primary key section</li>
+<li>Join the referenced tables: <code>Parent1 * Parent2 * ...</code></li>
+<li>Project to primary key attributes only</li>
+</ol>
 <p>For a table with definition:
 <div class="highlight"><pre><span></span><code><span class="o">-&gt;</span> <span class="n">Session</span>
 <span class="o">-&gt;</span> <span class="n">Probe</span>
@@ -4277,10 +4281,12 @@
     <span class="c1"># Phase 3: Insert (in transaction)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="o">**</span><span class="n">key</span><span class="p">,</span> <span class="s1">'result'</span><span class="p">:</span> <span class="n">result</span><span class="p">})</span>
 </code></pre></div>
-<p><strong>When to use tripartite:</strong>
-- Computation takes more than a few seconds
-- You want to avoid holding database locks during computation
-- Working with external resources (files, APIs) that may be slow</p>
+<p><strong>When to use tripartite:</strong></p>
+<ul>
+<li>Computation takes more than a few seconds</li>
+<li>You want to avoid holding database locks during computation</li>
+<li>Working with external resources (files, APIs) that may be slow</li>
+</ul>
 <h3 id="46-additional-make-arguments">4.6 Additional make() Arguments<a class="headerlink" href="#46-additional-make-arguments" title="Permanent link">¶</a></h3>
 <p>Pass extra arguments via <code>make_kwargs</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="nd">@schema</span>
@@ -4306,10 +4312,12 @@
     <span class="k">return</span> <span class="p">(</span><span class="n">Source</span> <span class="o">&amp;</span> <span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">fetch1</span><span class="p">(</span><span class="s1">'data'</span><span class="p">)</span>
 </code></pre></div>
 <p><strong>Anti-pattern warning (contract rule 5):</strong> Passing arguments that affect the computed result breaks reproducibility—every result-affecting input must enter through a declared upstream table, not <code>make_kwargs</code> (see <a href="#43-the-make-reproducibility-contract">make() reproducibility contract</a>, rule 5). If a parameter affects results, store it in a lookup table and reference it via foreign key.</p>
-<p><strong>Acceptable use:</strong> Directives that don't affect results, such as:
-- <code>verbose=True</code> for logging
-- <code>gpu_id=0</code> for device selection
-- <code>n_workers=4</code> for parallelization</p>
+<p><strong>Acceptable use:</strong> Directives that don't affect results, such as:</p>
+<ul>
+<li><code>verbose=True</code> for logging</li>
+<li><code>gpu_id=0</code> for device selection</li>
+<li><code>n_workers=4</code> for parallelization</li>
+</ul>
 <hr/>
 <h2 id="5-transaction-management">5. Transaction Management<a class="headerlink" href="#5-transaction-management" title="Permanent link">¶</a></h2>
 <h3 id="51-automatic-transactions">5.1 Automatic Transactions<a class="headerlink" href="#51-automatic-transactions" title="Permanent link">¶</a></h3>
@@ -4468,28 +4476,36 @@ that groups several related inserts — never in <code>make()</code>.</p>
 <p>When <code>reserve_jobs=False</code> (default):</p>
 <div class="highlight"><pre><span></span><code><span class="n">Analysis</span><span class="o">.</span><span class="n">populate</span><span class="p">()</span>  <span class="c1"># Direct mode</span>
 </code></pre></div>
-<p><strong>Characteristics:</strong>
-- Calculates <code>key_source - self</code> on each call
-- No job tracking or status persistence
-- Simple and efficient for single-worker scenarios
-- No coordination overhead</p>
-<p><strong>Best for:</strong>
-- Interactive development
-- Single-worker pipelines
-- Small to medium datasets</p>
+<p><strong>Characteristics:</strong></p>
+<ul>
+<li>Calculates <code>key_source - self</code> on each call</li>
+<li>No job tracking or status persistence</li>
+<li>Simple and efficient for single-worker scenarios</li>
+<li>No coordination overhead</li>
+</ul>
+<p><strong>Best for:</strong></p>
+<ul>
+<li>Interactive development</li>
+<li>Single-worker pipelines</li>
+<li>Small to medium datasets</li>
+</ul>
 <h3 id="82-distributed-mode">8.2 Distributed Mode<a class="headerlink" href="#82-distributed-mode" title="Permanent link">¶</a></h3>
 <p>When <code>reserve_jobs=True</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="n">Analysis</span><span class="o">.</span><span class="n">populate</span><span class="p">(</span><span class="n">reserve_jobs</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  <span class="c1"># Distributed mode</span>
 </code></pre></div>
-<p><strong>Characteristics:</strong>
-- Uses per-table jobs queue for coordination
-- Workers reserve jobs before processing
-- Full status tracking (pending, reserved, error, success)
-- Enables monitoring and recovery</p>
-<p><strong>Best for:</strong>
-- Multi-worker distributed computing
-- Long-running pipelines
-- Production environments with monitoring needs</p>
+<p><strong>Characteristics:</strong></p>
+<ul>
+<li>Uses per-table jobs queue for coordination</li>
+<li>Workers reserve jobs before processing</li>
+<li>Full status tracking (pending, reserved, error, success)</li>
+<li>Enables monitoring and recovery</li>
+</ul>
+<p><strong>Best for:</strong></p>
+<ul>
+<li>Multi-worker distributed computing</li>
+<li>Long-running pipelines</li>
+<li>Production environments with monitoring needs</li>
+</ul>
 <hr/>
 <h2 id="9-per-table-jobs-system">9. Per-Table Jobs System<a class="headerlink" href="#9-per-table-jobs-system" title="Permanent link">¶</a></h2>
 <h3 id="91-jobs-table">9.1 Jobs Table<a class="headerlink" href="#91-jobs-table" title="Permanent link">¶</a></h3>
@@ -4685,10 +4701,12 @@ version : varchar(255)              # Code version
 <li>Second worker gets duplicate key error (silently ignored)</li>
 <li>First worker marks job complete</li>
 </ol>
-<p>This is acceptable because:
-- The <code>make()</code> transaction guarantees data integrity
-- Conflicts are rare with job reservation
-- Wasted computation is minimal vs locking overhead</p>
+<p>This is acceptable because:</p>
+<ul>
+<li>The <code>make()</code> transaction guarantees data integrity</li>
+<li>Conflicts are rare with job reservation</li>
+<li>Wasted computation is minimal vs locking overhead</li>
+</ul>
 <hr/>
 <h2 id="12-error-handling">12. Error Handling<a class="headerlink" href="#12-error-handling" title="Permanent link">¶</a></h2>
 <h3 id="121-default-behavior">12.1 Default Behavior<a class="headerlink" href="#121-default-behavior" title="Permanent link">¶</a></h3>

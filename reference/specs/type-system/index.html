@@ -7236,10 +7236,12 @@
 </tbody>
 </table>
 <p>Codec types resolve through core types to native types: <code>&lt;blob&gt;</code> → <code>bytes</code> → <code>LONGBLOB</code>.</p>
-<p><strong>Syntax distinction:</strong>
-- Core types: <code>int32</code>, <code>float64</code>, <code>varchar(255)</code> - no brackets
-- Codec types: <code>&lt;blob&gt;</code>, <code>&lt;object@store&gt;</code>, <code>&lt;filepath@main&gt;</code> - angle brackets
-- The <code>@</code> character indicates store (object storage vs in-table)</p>
+<p><strong>Syntax distinction:</strong></p>
+<ul>
+<li>Core types: <code>int32</code>, <code>float64</code>, <code>varchar(255)</code> - no brackets</li>
+<li>Codec types: <code>&lt;blob&gt;</code>, <code>&lt;object@store&gt;</code>, <code>&lt;filepath@main&gt;</code> - angle brackets</li>
+<li>The <code>@</code> character indicates store (object storage vs in-table)</li>
+</ul>
 <h2 id="core-datajoint-types-layer-2">Core DataJoint Types (Layer 2)<a class="headerlink" href="#core-datajoint-types-layer-2" title="Permanent link">&para;</a></h2>
 <p>Core types provide a standardized, scientist-friendly interface that works identically across
 MySQL and PostgreSQL backends. Users should prefer these over native database types.</p>
@@ -7371,10 +7373,12 @@ See <a href="#encoding-and-collation-policy">Encoding and Collation Policy</a> f
 </tbody>
 </table>
 <p><strong>Timezone policy:</strong> All <code>datetime</code> values should be stored as <strong>UTC</strong>. Timezone conversion is a
-presentation concern handled by the application layer, not the database. This ensures:
-- Reproducible computations regardless of server or client timezone settings
-- Simple arithmetic on temporal values (no DST ambiguity)
-- Portable data across systems and regions</p>
+presentation concern handled by the application layer, not the database. This ensures:</p>
+<ul>
+<li>Reproducible computations regardless of server or client timezone settings</li>
+<li>Simple arithmetic on temporal values (no DST ambiguity)</li>
+<li>Portable data across systems and regions</li>
+</ul>
 <p>Use <code>CURRENT_TIMESTAMP</code> for auto-populated creation times:
 <div class="highlight"><pre><span></span><code>created_at : datetime = CURRENT_TIMESTAMP
 </code></pre></div></p>
@@ -7557,11 +7561,13 @@ nickname = NULL : varchar(100)
 # Required with default value
 status = "active" : varchar(20)
 </code></pre></div>
-<p><strong>Auto-increment policy:</strong> DataJoint discourages <code>AUTO_INCREMENT</code> / <code>SERIAL</code> because:
-- Breaks reproducibility (IDs depend on insertion order)
-- Makes pipelines non-deterministic
-- Complicates data migration and replication
-- Primary keys should be meaningful, not arbitrary</p>
+<p><strong>Auto-increment policy:</strong> DataJoint discourages <code>AUTO_INCREMENT</code> / <code>SERIAL</code> because:</p>
+<ul>
+<li>Breaks reproducibility (IDs depend on insertion order)</li>
+<li>Makes pipelines non-deterministic</li>
+<li>Complicates data migration and replication</li>
+<li>Primary keys should be meaningful, not arbitrary</li>
+</ul>
 <p>If required, use native types: <code>int auto_increment</code> or <code>serial</code> (with warning).</p>
 <h3 id="encoding-and-collation-policy">Encoding and Collation Policy<a class="headerlink" href="#encoding-and-collation-policy" title="Permanent link">&para;</a></h3>
 <p>Character encoding and collation are <strong>database-level configuration</strong>, not part of type
@@ -7594,11 +7600,13 @@ definitions. This ensures consistent behavior across all tables and simplifies p
 </tr>
 </tbody>
 </table>
-<p><strong>Policy:</strong>
-- <strong>UTF-8 required</strong>: DataJoint validates charset is UTF-8 compatible at connection time
-- <strong>Case-sensitive by default</strong>: Binary collation (<code>utf8mb4_bin</code> / <code>C</code>) ensures predictable comparisons
-- <strong>No per-column overrides</strong>: <code>CHARACTER SET</code> and <code>COLLATE</code> are rejected in type definitions
-- <strong>Like timezone</strong>: Encoding is infrastructure configuration, not part of the data model</p>
+<p><strong>Policy:</strong></p>
+<ul>
+<li><strong>UTF-8 required</strong>: DataJoint validates charset is UTF-8 compatible at connection time</li>
+<li><strong>Case-sensitive by default</strong>: Binary collation (<code>utf8mb4_bin</code> / <code>C</code>) ensures predictable comparisons</li>
+<li><strong>No per-column overrides</strong>: <code>CHARACTER SET</code> and <code>COLLATE</code> are rejected in type definitions</li>
+<li><strong>Like timezone</strong>: Encoding is infrastructure configuration, not part of the data model</li>
+</ul>
 <h2 id="codec-types-layer-3">Codec Types (Layer 3)<a class="headerlink" href="#codec-types-layer-3" title="Permanent link">&para;</a></h2>
 <p>Codec types provide <code>encode()</code>/<code>decode()</code> semantics on top of core types. They are
 composable and can be built-in or user-defined.</p>
@@ -7949,11 +7957,13 @@ just use <code>varchar</code>. A string is simpler and more transparent.</p>
 <span class="c1">-- PostgreSQL (uses JSONB for better indexing)</span>
 <span class="k">column_name</span><span class="w"> </span><span class="n">JSONB</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span>
 </code></pre></div>
-<p>The <code>json</code> database type:
-- Used as dtype by built-in codecs (<code>&lt;object@&gt;</code>, <code>&lt;hash@&gt;</code>, <code>&lt;filepath@store&gt;</code>)
-- Stores arbitrary JSON-serializable data
-- Automatically uses appropriate type for database backend
-- Supports JSON path queries where available</p>
+<p>The <code>json</code> database type:</p>
+<ul>
+<li>Used as dtype by built-in codecs (<code>&lt;object@&gt;</code>, <code>&lt;hash@&gt;</code>, <code>&lt;filepath@store&gt;</code>)</li>
+<li>Stores arbitrary JSON-serializable data</li>
+<li>Automatically uses appropriate type for database backend</li>
+<li>Supports JSON path queries where available</li>
+</ul>
 <h2 id="built-in-codecs">Built-in Codecs<a class="headerlink" href="#built-in-codecs" title="Permanent link">&para;</a></h2>
 <h3 id="blob-blob-serialized-python-objects"><code>&lt;blob&gt;</code> / <code>&lt;blob@&gt;</code> - Serialized Python Objects<a class="headerlink" href="#blob-blob-serialized-python-objects" title="Permanent link">&para;</a></h3>
 <p><strong>Supports both in-table and in-store storage.</strong></p>
@@ -8270,13 +8280,15 @@ registry table is needed. Garbage collection scans all tables to find referenced
 </tr>
 </tbody>
 </table>
-<p><strong>When to use each:</strong>
-- <strong><code>&lt;blob&gt;</code></strong>: Serialized Python objects (NumPy arrays, dicts). Use <code>&lt;blob@&gt;</code> for large/duplicated data
-- <strong><code>&lt;attach&gt;</code></strong>: File attachments with filename preserved. Use <code>&lt;attach@&gt;</code> for large files
-- <strong><code>&lt;object@&gt;</code></strong>: Large/complex file structures (Zarr, HDF5) where DataJoint controls organization
-- <strong><code>&lt;hash@&gt;</code></strong>: Raw bytes with deduplication (typically used via <code>&lt;blob@&gt;</code> or <code>&lt;attach@&gt;</code>)
-- <strong><code>&lt;filepath@store&gt;</code></strong>: Portable references to externally-managed files
-- <strong><code>varchar</code></strong>: Arbitrary URLs/paths where ObjectRef semantics aren't needed</p>
+<p><strong>When to use each:</strong></p>
+<ul>
+<li><strong><code>&lt;blob&gt;</code></strong>: Serialized Python objects (NumPy arrays, dicts). Use <code>&lt;blob@&gt;</code> for large/duplicated data</li>
+<li><strong><code>&lt;attach&gt;</code></strong>: File attachments with filename preserved. Use <code>&lt;attach@&gt;</code> for large files</li>
+<li><strong><code>&lt;object@&gt;</code></strong>: Large/complex file structures (Zarr, HDF5) where DataJoint controls organization</li>
+<li><strong><code>&lt;hash@&gt;</code></strong>: Raw bytes with deduplication (typically used via <code>&lt;blob@&gt;</code> or <code>&lt;attach@&gt;</code>)</li>
+<li><strong><code>&lt;filepath@store&gt;</code></strong>: Portable references to externally-managed files</li>
+<li><strong><code>varchar</code></strong>: Arbitrary URLs/paths where ObjectRef semantics aren't needed</li>
+</ul>
 <h2 id="key-design-decisions">Key Design Decisions<a class="headerlink" href="#key-design-decisions" title="Permanent link">&para;</a></h2>
 <ol>
 <li><strong>Three-layer architecture</strong>:<ul>
@@ -8334,10 +8346,12 @@ registry table is needed. Garbage collection scans all tables to find referenced
 </li>
 </ol>
 <p><strong>Why not SHA256?</strong></p>
-<p>SHA256 is the modern standard for content-addressable storage (Git, Docker, IPFS). However:
-- These systems prioritize cryptographic security against adversarial collision attacks
-- Scientific data pipelines face no adversarial threat model
-- The practical benefits (storage, speed, compatibility) outweigh theoretical security gains</p>
+<p>SHA256 is the modern standard for content-addressable storage (Git, Docker, IPFS). However:</p>
+<ul>
+<li>These systems prioritize cryptographic security against adversarial collision attacks</li>
+<li>Scientific data pipelines face no adversarial threat model</li>
+<li>The practical benefits (storage, speed, compatibility) outweigh theoretical security gains</li>
+</ul>
 <p><strong>Note</strong>: If cryptographic verification is ever needed (e.g., for compliance or reproducibility
 audits), SHA256 checksums can be computed on-demand without changing the storage addressing scheme.</p>
 <h2 id="migration-from-legacy-types">Migration from Legacy Types<a class="headerlink" href="#migration-from-legacy-types" title="Permanent link">&para;</a></h2>
@@ -8410,12 +8424,14 @@ Migration to the new JSON-based hash storage requires:</p>
     <span class="c1"># After migration complete for all schemas:</span>
     <span class="c1"># DROP TABLE `{schema}`.`~external_{store}`</span>
 </code></pre></div>
-<p><strong>Migration considerations:</strong>
-- Legacy UUIDs were based on MD5 content hash stored as <code>binary(16)</code> (UUID format)
-- New system uses <code>char(32)</code> MD5 hex strings stored in JSON
-- The hash algorithm is unchanged (MD5), only the storage format differs
-- Migration can be done incrementally per schema
-- Backward compatibility layer can read both formats during transition</p>
+<p><strong>Migration considerations:</strong></p>
+<ul>
+<li>Legacy UUIDs were based on MD5 content hash stored as <code>binary(16)</code> (UUID format)</li>
+<li>New system uses <code>char(32)</code> MD5 hex strings stored in JSON</li>
+<li>The hash algorithm is unchanged (MD5), only the storage format differs</li>
+<li>Migration can be done incrementally per schema</li>
+<li>Backward compatibility layer can read both formats during transition</li>
+</ul>
 <h2 id="open-questions">Open Questions<a class="headerlink" href="#open-questions" title="Permanent link">&para;</a></h2>
 <ol>
 <li>How long should the backward compatibility layer support legacy <code>~external_*</code> format?</li>

@@ -6803,17 +6803,23 @@ and transparent numpy integration via the <code>__array__</code> protocol.</p>
 <span class="nb">slice</span> <span class="o">=</span> <span class="n">arr</span><span class="p">[</span><span class="mi">1000</span><span class="p">:</span><span class="mi">2000</span><span class="p">,</span> <span class="p">:]</span>
 <span class="n">chunk</span> <span class="o">=</span> <span class="n">arr</span><span class="p">[::</span><span class="mi">100</span><span class="p">]</span>
 </code></pre></div>
-<p><strong>Modes:</strong>
-- <code>'r'</code> - Read-only (recommended)
-- <code>'r+'</code> - Read-write (modifications persist)
-- <code>'c'</code> - Copy-on-write (changes not saved)</p>
-<p><strong>Performance characteristics:</strong>
-- Local filesystem stores: memory-maps the file directly (zero-copy)
-- Remote stores (S3, GCS): downloads to local cache first, then memory-maps</p>
-<p><strong>When to use:</strong>
-- Arrays too large to fit in memory
-- Only need random access to portions of the array
-- Processing data in chunks</p>
+<p><strong>Modes:</strong></p>
+<ul>
+<li><code>'r'</code> - Read-only (recommended)</li>
+<li><code>'r+'</code> - Read-write (modifications persist)</li>
+<li><code>'c'</code> - Copy-on-write (changes not saved)</li>
+</ul>
+<p><strong>Performance characteristics:</strong></p>
+<ul>
+<li>Local filesystem stores: memory-maps the file directly (zero-copy)</li>
+<li>Remote stores (S3, GCS): downloads to local cache first, then memory-maps</li>
+</ul>
+<p><strong>When to use:</strong></p>
+<ul>
+<li>Arrays too large to fit in memory</li>
+<li>Only need random access to portions of the array</li>
+<li>Processing data in chunks</li>
+</ul>
 <h3 id="safe-bulk-fetch">Safe Bulk Fetch<a class="headerlink" href="#safe-bulk-fetch" title="Permanent link">&para;</a></h3>
 <p>The lazy design protects against accidental mass downloads:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Fetch 10,000 recordings - NO downloads happen yet</span>
@@ -6949,25 +6955,33 @@ the organization because it mirrors your database schema.</p>
 </tr>
 </tbody>
 </table>
-<p><strong>Addressing schemes:</strong>
-- <strong>Schema-addressed</strong>: Path mirrors database structure. Browsable, one location per entity.
-- <strong>Hash-addressed</strong>: Path from content hash. Automatic deduplication.</p>
+<p><strong>Addressing schemes:</strong></p>
+<ul>
+<li><strong>Schema-addressed</strong>: Path mirrors database structure. Browsable, one location per entity.</li>
+<li><strong>Hash-addressed</strong>: Path from content hash. Automatic deduplication.</li>
+</ul>
 <h2 id="when-to-use-npy">When to Use <code>&lt;npy@&gt;</code><a class="headerlink" href="#when-to-use-npy" title="Permanent link">&para;</a></h2>
-<p><strong>Use <code>&lt;npy@&gt;</code> when:</strong>
-- Storing single numpy arrays
-- Interoperability matters (non-Python tools)
-- You want lazy loading with metadata inspection
-- Fetching many rows where not all arrays are needed
-- Random access to large arrays via memory mapping
-- Browsable object store organization is valuable</p>
-<p><strong>Use <code>&lt;blob@&gt;</code> when:</strong>
-- Storing arbitrary Python objects (dicts, lists, mixed types)
-- Arrays are small and eager loading is fine
-- MATLAB compatibility with DataJoint's mYm format is needed
-- Deduplication is beneficial (hash-addressed)</p>
-<p><strong>Use <code>&lt;object@&gt;</code> when:</strong>
-- Storing files/folders (Zarr, HDF5, multi-file outputs)
-- Content is not a single numpy array</p>
+<p><strong>Use <code>&lt;npy@&gt;</code> when:</strong></p>
+<ul>
+<li>Storing single numpy arrays</li>
+<li>Interoperability matters (non-Python tools)</li>
+<li>You want lazy loading with metadata inspection</li>
+<li>Fetching many rows where not all arrays are needed</li>
+<li>Random access to large arrays via memory mapping</li>
+<li>Browsable object store organization is valuable</li>
+</ul>
+<p><strong>Use <code>&lt;blob@&gt;</code> when:</strong></p>
+<ul>
+<li>Storing arbitrary Python objects (dicts, lists, mixed types)</li>
+<li>Arrays are small and eager loading is fine</li>
+<li>MATLAB compatibility with DataJoint's mYm format is needed</li>
+<li>Deduplication is beneficial (hash-addressed)</li>
+</ul>
+<p><strong>Use <code>&lt;object@&gt;</code> when:</strong></p>
+<ul>
+<li>Storing files/folders (Zarr, HDF5, multi-file outputs)</li>
+<li>Content is not a single numpy array</li>
+</ul>
 <h2 id="limitations">Limitations<a class="headerlink" href="#limitations" title="Permanent link">&para;</a></h2>
 <ol>
 <li><strong>Single array only</strong>: For multiple arrays, use separate attributes or <code>&lt;object@&gt;</code> with <code>.npz</code></li>

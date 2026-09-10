@@ -8836,10 +8836,12 @@
 <span class="c1"># If NO keys match, condition evaluates to True (all rows):</span>
 <span class="n">Session</span> <span class="o">&amp;</span> <span class="p">{</span><span class="s2">"nonexistent"</span><span class="p">:</span> <span class="s2">"value"</span><span class="p">}</span>  <span class="c1"># returns all rows</span>
 </code></pre></div>
-<p>This applies to:
-- Misspelled attribute names
-- Hidden attributes (prefixed with <code>_</code>)
-- Keys from a different table's schema</p>
+<p>This applies to:</p>
+<ul>
+<li>Misspelled attribute names</li>
+<li>Hidden attributes (prefixed with <code>_</code>)</li>
+<li>Keys from a different table's schema</li>
+</ul>
 <p><strong>Rationale:</strong> Enables restricting with dicts containing extra keys (e.g., a row fetched from another table) without explicitly filtering to matching attributes.</p>
 <p><strong>Caution:</strong> Typos fail silently. Use string restrictions for explicit validation:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># SQL error if attribute doesn't exist</span>
@@ -9564,9 +9566,11 @@ Restrictions on B attributes → HAVING clause (after GROUP BY)</p>
 <span class="s2">    """</span>
 </code></pre></div>
 <h3 id="92-homologous-namesakes">9.2 Homologous Namesakes<a class="headerlink" href="#92-homologous-namesakes" title="Permanent link">&para;</a></h3>
-<p>Two attributes are <strong>homologous namesakes</strong> if they have:
-1. Same name
-2. Same lineage (trace to same original definition)</p>
+<p>Two attributes are <strong>homologous namesakes</strong> if they have:</p>
+<ol>
+<li>Same name</li>
+<li>Same lineage (trace to same original definition)</li>
+</ol>
 <h3 id="93-non-homologous-namesakes">9.3 Non-Homologous Namesakes<a class="headerlink" href="#93-non-homologous-namesakes" title="Permanent link">&para;</a></h3>
 <p>Attributes with same name but different lineage create semantic collisions:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Both have 'name' but from different origins</span>
@@ -9766,10 +9770,12 @@ Restrictions on B attributes → HAVING clause (after GROUP BY)</p>
 </tr>
 </tbody>
 </table>
-<p><strong>Merge behavior:</strong>
-- <code>limit</code> = minimum of both limits
-- <code>offset</code> = sum of both offsets
-- <code>order_by</code> = preserved from first Top</p>
+<p><strong>Merge behavior:</strong></p>
+<ul>
+<li><code>limit</code> = minimum of both limits</li>
+<li><code>offset</code> = sum of both offsets</li>
+<li><code>order_by</code> = preserved from first Top</li>
+</ul>
 <div class="highlight"><pre><span></span><code><span class="c1"># Merge: same result, single query</span>
 <span class="p">(</span><span class="n">Table</span> <span class="o">&amp;</span> <span class="n">dj</span><span class="o">.</span><span class="n">Top</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="s2">"score DESC"</span><span class="p">))</span> <span class="o">&amp;</span> <span class="n">dj</span><span class="o">.</span><span class="n">Top</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="n">order_by</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
 <span class="c1"># Effective: Top(5, "score DESC", offset=0)</span>
@@ -9921,13 +9927,17 @@ MySQL:        FROM → WHERE → SELECT → GROUP BY → HAVING
 </ol>
 <p>The choice depends on SQL semantics—whether the operation can be expressed by adding clauses, or whether the input must first be materialized as a derived table.</p>
 <h3 id="134-restriction-rules-and-">13.4 Restriction Rules (<code>&amp;</code> and <code>-</code>)<a class="headerlink" href="#134-restriction-rules-and-" title="Permanent link">&para;</a></h3>
-<p><strong>Modify in place</strong> when restricting on:
-- Base table attributes (columns from FROM tables)
-- Primary key attributes (including those inherited via FK)</p>
-<p><strong>Wrap as subquery</strong> when restricting on:
-- Computed/aliased attributes (created by <code>.proj()</code>)
-- Aggregated attributes (created by <code>.aggr()</code>)
-- Any attribute after <code>LIMIT</code>/<code>OFFSET</code> has been applied</p>
+<p><strong>Modify in place</strong> when restricting on:</p>
+<ul>
+<li>Base table attributes (columns from FROM tables)</li>
+<li>Primary key attributes (including those inherited via FK)</li>
+</ul>
+<p><strong>Wrap as subquery</strong> when restricting on:</p>
+<ul>
+<li>Computed/aliased attributes (created by <code>.proj()</code>)</li>
+<li>Aggregated attributes (created by <code>.aggr()</code>)</li>
+<li>Any attribute after <code>LIMIT</code>/<code>OFFSET</code> has been applied</li>
+</ul>
 <div class="highlight"><pre><span></span><code><span class="c1"># Modify in place: condition added to WHERE</span>
 <span class="n">Session</span> <span class="o">&amp;</span> <span class="s2">"session_date &gt; '2024-01-01'"</span>
 <span class="c1"># SQL: SELECT ... FROM session WHERE session_date &gt; '2024-01-01'</span>
@@ -9944,13 +9954,17 @@ MySQL:        FROM → WHERE → SELECT → GROUP BY → HAVING
 <span class="c1"># PostgreSQL: SELECT * FROM (...GROUP BY pk) AS _s1 WHERE n &gt; 10</span>
 </code></pre></div>
 <h3 id="135-projection-rules-proj">13.5 Projection Rules (<code>.proj()</code>)<a class="headerlink" href="#135-projection-rules-proj" title="Permanent link">&para;</a></h3>
-<p><strong>Modify in place</strong> when:
-- Selecting a subset of existing attributes
-- Renaming base attributes
-- Computing new attributes from base columns</p>
-<p><strong>Wrap as subquery</strong> when:
-- Computing attribute from another computed attribute (alias of alias)
-- Projecting after <code>LIMIT</code>/<code>OFFSET</code> has been applied</p>
+<p><strong>Modify in place</strong> when:</p>
+<ul>
+<li>Selecting a subset of existing attributes</li>
+<li>Renaming base attributes</li>
+<li>Computing new attributes from base columns</li>
+</ul>
+<p><strong>Wrap as subquery</strong> when:</p>
+<ul>
+<li>Computing attribute from another computed attribute (alias of alias)</li>
+<li>Projecting after <code>LIMIT</code>/<code>OFFSET</code> has been applied</li>
+</ul>
 <div class="highlight"><pre><span></span><code><span class="c1"># Modify in place: adds computed column to SELECT</span>
 <span class="n">Session</span><span class="o">.</span><span class="n">proj</span><span class="p">(</span><span class="n">year</span><span class="o">=</span><span class="s1">'YEAR(session_date)'</span><span class="p">)</span>
 <span class="c1"># SQL: SELECT pk, YEAR(session_date) as year FROM session</span>
@@ -9962,15 +9976,19 @@ MySQL:        FROM → WHERE → SELECT → GROUP BY → HAVING
 <span class="c1">#      ) AS _s1</span>
 </code></pre></div>
 <h3 id="1351-join-rules">13.5.1 Join Rules (<code>*</code>)<a class="headerlink" href="#1351-join-rules" title="Permanent link">&para;</a></h3>
-<p><strong>Modify in place</strong> (merge both operands' clauses) when:
-- Both operands are base tables or simple projections
-- Join attributes are base columns (not computed)
-- Neither operand has <code>LIMIT</code>/<code>OFFSET</code> or <code>GROUP BY</code></p>
-<p><strong>Wrap operand as subquery</strong> when operand has:
-- Computed attributes used in join condition
-- <code>LIMIT</code>/<code>OFFSET</code> applied
-- <code>GROUP BY</code> (is an aggregation result)
-- Is a union expression</p>
+<p><strong>Modify in place</strong> (merge both operands' clauses) when:</p>
+<ul>
+<li>Both operands are base tables or simple projections</li>
+<li>Join attributes are base columns (not computed)</li>
+<li>Neither operand has <code>LIMIT</code>/<code>OFFSET</code> or <code>GROUP BY</code></li>
+</ul>
+<p><strong>Wrap operand as subquery</strong> when operand has:</p>
+<ul>
+<li>Computed attributes used in join condition</li>
+<li><code>LIMIT</code>/<code>OFFSET</code> applied</li>
+<li><code>GROUP BY</code> (is an aggregation result)</li>
+<li>Is a union expression</li>
+</ul>
 <div class="highlight"><pre><span></span><code><span class="c1"># Modify in place: merge FROM and WHERE clauses</span>
 <span class="n">Session</span> <span class="o">*</span> <span class="n">Trial</span>
 <span class="c1"># SQL: SELECT ... FROM session JOIN trial USING (pk)</span>
@@ -9990,13 +10008,17 @@ MySQL:        FROM → WHERE → SELECT → GROUP BY → HAVING
 <span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">A</span><span class="p">.</span><span class="n">pk</span>
 <span class="k">HAVING</span><span class="w"> </span><span class="o">&lt;</span><span class="n">restrictions</span><span class="w"> </span><span class="k">on</span><span class="w"> </span><span class="n">B</span><span class="w"> </span><span class="k">or</span><span class="w"> </span><span class="n">computed</span><span class="w"> </span><span class="n">attributes</span><span class="o">&gt;</span>
 </code></pre></div>
-<p><strong>Restrictions routing:</strong>
-- On grouping expression (A) attributes → <code>WHERE</code> (before GROUP BY)
-- On grouped expression (B) or computed attributes → <code>HAVING</code> (after GROUP BY)</p>
-<p><strong>Aggregation result requires subquery</strong> when used as operand to:
-- Another join (<code>*</code>)
-- Further restriction on computed attributes
-- Another aggregation</p>
+<p><strong>Restrictions routing:</strong></p>
+<ul>
+<li>On grouping expression (A) attributes → <code>WHERE</code> (before GROUP BY)</li>
+<li>On grouped expression (B) or computed attributes → <code>HAVING</code> (after GROUP BY)</li>
+</ul>
+<p><strong>Aggregation result requires subquery</strong> when used as operand to:</p>
+<ul>
+<li>Another join (<code>*</code>)</li>
+<li>Further restriction on computed attributes</li>
+<li>Another aggregation</li>
+</ul>
 <h3 id="1353-toplimit-rules-djtop">13.5.3 Top/Limit Rules (<code>dj.Top</code>)<a class="headerlink" href="#1353-toplimit-rules-djtop" title="Permanent link">&para;</a></h3>
 <p><strong>Any operation after Top requires subquery</strong> (the limited result must materialize):</p>
 <div class="highlight"><pre><span></span><code><span class="p">(</span><span class="n">Session</span> <span class="o">&amp;</span> <span class="n">dj</span><span class="o">.</span><span class="n">Top</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="s1">'date DESC'</span><span class="p">))</span> <span class="o">&amp;</span> <span class="s2">"notes IS NOT NULL"</span>
