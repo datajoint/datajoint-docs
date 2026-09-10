@@ -6,6 +6,8 @@ If your work uses DataJoint or DataJoint Elements, please cite the respective
 
 ## 2026
 
++ Benquet, C., Sainsbury, T., Bruneau, L., Lin, Y., Cai, C., Popova, M., Ponder, K., Ntanavara, L., Froebe, R., Tan, Z., Fahey, P., Franke, K., Franco, L. M., Jones, K., Chen, Y., Keller, R., Pitkow, X., Niell, C. M., Tolias, A. S. & Mathis, M. W. (2026). [Visual uncertainty and task demands shape active sensing strategies in mice](https://doi.org/10.1016/j.cub.2026.06.011). *Current Biology*, 36, 3523-3534.e9.
+
 + Cotton, R. J. & Leonard, T. (2026). [BiomechAgent: AI-Assisted Biomechanical Analysis Through Code-Generating Agents](https://doi.org/10.48550/arXiv.2602.06975). *arXiv*.
 
 + Donahue, S., Djuraskovic, I., Shah, K., Sinz, F., Chafetz, R. & Cotton, R. J. (2026). [Calibrated Uncertainty for Trustworthy Clinical Gait Analysis Using Probabilistic Multiview Markerless Motion Capture](https://doi.org/10.48550/arXiv.2601.22412). *arXiv*.
@@ -13,6 +15,8 @@ If your work uses DataJoint or DataJoint Elements, please cite the respective
 + Evangelou, A., Diamantaki, M., Georgelou, K., Drakaki, Z., Ntanavara, L., Gerardos, G., Morou, S., Chatziris, N., Dogani, Z., Petsalaki, E. A., Raos, O. N., Gratsakis, A., Aliprantis, S., Papoutsi, A. & Froudarakis, E. (2026). [EthoPy provides an accessible platform for reproducible behavioral neuroscience](https://doi.org/10.1016/j.crmeth.2026.101421). *Cell Reports Methods*, 101421.
 
 + Fu, J., Shrinivasan, S., Baroni, L., Ding, Z., Fahey, P. G., Pierzchlewicz, P. A., Karantzas, N., Ponder, K., Froebe, R., Ntanavara, L., Muhammad, T., Willeke, K. F., Wang, E., Ding, Z., Tran, D., Papadopoulos, S., Patel, S., Reimer, J., Ecker, A. S., Pitkow, X., Antolik, J., Sinz, F. H., Haefner, R. M., Tolias, A. S. & Franke, K. (2026). [Statistics of natural scenes shape contextual modulation in the visual cortex](https://doi.org/10.1016/j.neuron.2026.02.022). *Neuron*.
+
++ Gonschorek, D., Oesterle, J., Zenkel, T., D'Agostino, F., Cai, C., Dyszkant, N., Szatko, K. P., Deja, F., Schwerd-Kleine, T., Arlinghaus, R., Franke, K., Zhao, Z., Schubert, T., Berens, P. & Euler, T. (2026). [A large-scale dataset of functional mouse ganglion cell layer responses](https://doi.org/10.1038/s41597-026-08026-0). *Scientific Data*, 13.
 
 + Guidera, J. A., Gramling, D. P., Comrie, A. E., Joshi, A., Tseng, S.-Y., Denovellis, E. L., Smyth, C. N., Lee, K. H., Zhou, J., Thompson, P., Hernandez, J., Yorita, A., Haque, R., Kirst, C. & Frank, L. M. (2026). [Regional specialization in prefrontal cortex manifests in the reliability of task progression codes](https://doi.org/10.1016/j.neuron.2026.01.023). *Neuron*, 114, 1152-1161.e8.
 
