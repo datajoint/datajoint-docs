@@ -72,7 +72,7 @@ Table & "name = 'Alice'"
 Table & "date > '2024-01-01'"
 ```
 
-See [Database Backends Specification](../reference/specs/database-backends.md#string-quoting/) for details.
+See [Database Backends Specification](../reference/specs/database-backends.md#string-quoting) for details.
 
 ### Before You Start: Testing Recommendation
 

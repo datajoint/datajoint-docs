@@ -119,7 +119,7 @@ Each specification follows a consistent structure:
 
 | Specification | Prerequisites | Related How-To | Related Explanation |
 |---------------|---------------|----------------|---------------------|
-| [Object Store Configuration](object-store-configuration.md) | Type System | [Configure Object Storage](../../how-to/configure-storage.md/) | [Data Pipelines (OAS)](../../explanation/data-pipelines.md#object-augmented-schemas/) |
+| [Object Store Configuration](object-store-configuration.md) | Type System | [Configure Object Storage](../../how-to/configure-storage.md/) | [Data Pipelines (OAS)](../../explanation/data-pipelines.md#object-augmented-schemas) |
 
 **Key concepts:** Hash-addressed storage (deduplication), schema-addressed storage (browsable paths), filepath storage (user-managed), store configuration, path generation
 
