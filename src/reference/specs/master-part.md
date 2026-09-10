@@ -69,6 +69,7 @@ Within a Part definition, reference the master using:
 ```
 
 The `-> master` reference:
+
 - Automatically inherits master's primary key
 - Creates foreign key constraint to master
 - Enforces ON DELETE RESTRICT (by default)
@@ -218,6 +219,7 @@ Session.Trial.delete()
 ```
 
 **Use cases:**
+
 - Removing specific invalid trials
 - Partial data cleanup
 - Testing/debugging
@@ -325,6 +327,7 @@ Session.aggr(
 ### 7.1 When to Use Part Tables
 
 **Good use cases:**
+
 - Trials within sessions
 - Electrodes within probes
 - Cells within imaging fields
@@ -332,6 +335,7 @@ Session.aggr(
 - Rows within files
 
 **Avoid when:**
+
 - Parts have independent meaning (use regular FK instead)
 - Need to query parts without master context
 - Parts reference multiple masters

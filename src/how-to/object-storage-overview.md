@@ -73,6 +73,7 @@ volume : <object@>        # Schema: _schema/{schema}/{table}/{key}/
 ```
 
 **Guides:**
+
 - [Choose a Storage Type](choose-storage-type.md) — Decision criteria
 - [Use Object Storage](use-object-storage.md) — How to use codecs
 

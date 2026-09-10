@@ -17,6 +17,7 @@ SessionAnalysis.populate(reserve_jobs=True)
 ## How It Works
 
 With `reserve_jobs=True`:
+
 1. Worker checks the jobs table for pending work
 2. Atomically reserves a job before processing
 3. Other workers see the job as reserved and skip it

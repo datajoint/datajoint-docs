@@ -26,11 +26,13 @@ This design maintains referential integrity at the **entity level**—each row r
 - They should be used sparingly for **corrective operations**
 
 **Appropriate uses of update1():**
+
 - Fixing data entry errors
 - Correcting metadata after the fact
 - Administrative annotations
 
 **Inappropriate uses:**
+
 - Regular workflow operations
 - Batch modifications
 - Anything that should trigger recomputation
@@ -127,6 +129,7 @@ Subject.insert(rows, replace=True)
 ```
 
 **Difference between skip and replace:**
+
 - `skip_duplicates`: Keeps existing row unchanged
 - `replace`: Overwrites existing row with new values
 
@@ -209,6 +212,7 @@ def update1(self, row: dict) -> None
 ```
 
 **Parameters:**
+
 - `row`: Dictionary containing all primary key values plus attributes to update
 
 ### 3.2 Basic Usage
@@ -332,6 +336,7 @@ Delete automatically cascades to all dependent tables:
 ```
 
 **Cascade order:**
+
 1. Identify all tables with foreign keys referencing target
 2. Recursively delete matching rows in child tables
 3. Delete rows in target table
@@ -414,11 +419,13 @@ def delete_quick(self, get_count: bool = False) -> int | None
 ```
 
 **Use cases:**
+
 - Internal cleanup
 - Tables with no dependents
 - When you've already handled dependencies
 
 **Behavior:**
+
 - No cascade to child tables
 - No user confirmation
 - Fails on FK constraint violation
@@ -444,6 +451,7 @@ def validate(self, rows, *, ignore_extra_fields=False) -> ValidationResult
 ```
 
 **Returns:** `ValidationResult` with:
+
 - `is_valid`: Boolean indicating all rows passed
 - `errors`: List of (row_idx, field_name, error_message)
 - `rows_checked`: Number of rows validated
@@ -475,6 +483,7 @@ else:
 ### 5.4 Limitations
 
 These constraints are only checked at database level:
+
 - Foreign key references
 - Unique constraints (beyond PK)
 - Custom CHECK constraints

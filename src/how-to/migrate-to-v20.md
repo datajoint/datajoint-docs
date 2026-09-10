@@ -2453,23 +2453,27 @@ on your needs. Migration is complete - these are optional enhancements.
 ### New Features Overview
 
 **Schema-addressed storage** (`<npy@>`, `<object@>`)
+
 - Lazy-loading arrays with fsspec integration
 - Hierarchical organization by primary key
 - Mutable objects with streaming access
 - See: [Object Storage Tutorial](../tutorials/basics/06-object-storage.ipynb/)
 
 **Semantic matching**
+
 - Lineage-based join validation (enabled by default with `*` operator)
 - Catches errors from incompatible data combinations
 - See: [Semantic Matching Spec](../reference/specs/semantic-matching.md/)
 
 **Jobs 2.0**
+
 - Per-table job tracking (`~~table_name`)
 - Priority-based populate (with `reserve_jobs=True`)
 - Improved distributed computing coordination
 - See: [Distributed Computing Tutorial](../tutorials/advanced/distributed.ipynb/)
 
 **Custom codecs**
+
 - Domain-specific data types
 - Extensible type system
 - See: [Custom Codecs Tutorial](../tutorials/advanced/custom-codecs.ipynb/)
@@ -2563,22 +2567,26 @@ print(get_store_spec('main'))
 ## Summary
 
 **Phase I:** Branch and code migration (~1-4 hours with AI)
+
 - Create `pre/v2.0` branch
 - Update all code to 2.0 API
 - Create empty `_v2` schemas
 
 **Phase II:** Test with sample data (~1-2 days)
+
 - Insert test data
 - Validate functionality
 - Test new features
 
 **Phase III:** Migrate production data (~1-7 days)
+
 - Choose migration option
 - Copy or migrate data
 - Validate integrity
 - Execute cutover
 
 **Phase IV:** Adopt new features (ongoing)
+
 - Object storage
 - Semantic matching
 - Custom codecs

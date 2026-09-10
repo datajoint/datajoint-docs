@@ -66,6 +66,7 @@ zarr_array : <object@store> # Path-addressed for Zarr/HDF5
 ### What Changed
 
 Legacy DataJoint overloaded MySQL types with implicit conversions:
+
 - `longblob` could be blob serialization OR in-table attachment
 - `attach` was implicitly converted to longblob
 - `uuid` was used internally for external storage
@@ -215,6 +216,7 @@ This enables efficient access to large datasets stored in Zarr, HDF5, or custom 
 ### Legacy Support
 
 During migration (Phases 1-3), both legacy and 2.0 APIs can coexist:
+
 - Legacy clients can still access data
 - 2.0 clients understand legacy column types
 - Dual attributes enable cross-testing
@@ -265,6 +267,7 @@ Upgrading from DataJoint 0.x is a **phased process** designed to minimize risk:
 ### Migration Support
 
 The migration guide includes:
+
 - **AI agent prompts** for automated migration steps
 - **Validation commands** to check migration status
 - **Rollback procedures** for each phase

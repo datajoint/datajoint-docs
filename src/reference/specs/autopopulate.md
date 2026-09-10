@@ -5,6 +5,7 @@
 AutoPopulate is DataJoint's mechanism for automated computation. Tables that inherit from `dj.Computed` or `dj.Imported` automatically populate themselves by executing a `make()` method for each entry defined by their dependencies.
 
 This specification covers:
+
 - The populate process and key source calculation
 - Transaction management and atomicity
 - The `make()` method and tripartite pattern
@@ -101,6 +102,7 @@ class SpikeDetection(dj.Computed):
 ```
 
 **Calculation rules:**
+
 1. Identify all foreign keys in the primary key section
 2. Join the referenced tables: `Parent1 * Parent2 * ...`
 3. Project to primary key attributes only
@@ -426,6 +428,7 @@ def make(self, key):
 ```
 
 **When to use tripartite:**
+
 - Computation takes more than a few seconds
 - You want to avoid holding database locks during computation
 - Working with external resources (files, APIs) that may be slow
@@ -464,6 +467,7 @@ def make_fetch(self, key, verbose=False, **kwargs):
 **Anti-pattern warning (contract rule 5):** Passing arguments that affect the computed result breaks reproducibility—every result-affecting input must enter through a declared upstream table, not `make_kwargs` (see [make() reproducibility contract](#43-the-make-reproducibility-contract), rule 5). If a parameter affects results, store it in a lookup table and reference it via foreign key.
 
 **Acceptable use:** Directives that don't affect results, such as:
+
 - `verbose=True` for logging
 - `gpu_id=0` for device selection
 - `n_workers=4` for parallelization
@@ -686,12 +690,14 @@ Analysis.populate()  # Direct mode
 ```
 
 **Characteristics:**
+
 - Calculates `key_source - self` on each call
 - No job tracking or status persistence
 - Simple and efficient for single-worker scenarios
 - No coordination overhead
 
 **Best for:**
+
 - Interactive development
 - Single-worker pipelines
 - Small to medium datasets
@@ -705,12 +711,14 @@ Analysis.populate(reserve_jobs=True)  # Distributed mode
 ```
 
 **Characteristics:**
+
 - Uses per-table jobs queue for coordination
 - Workers reserve jobs before processing
 - Full status tracking (pending, reserved, error, success)
 - Enables monitoring and recovery
 
 **Best for:**
+
 - Multi-worker distributed computing
 - Long-running pipelines
 - Production environments with monitoring needs
@@ -904,6 +912,7 @@ When two workers reserve the same job simultaneously:
 5. First worker marks job complete
 
 This is acceptable because:
+
 - The `make()` transaction guarantees data integrity
 - Conflicts are rare with job reservation
 - Wasted computation is minimal vs locking overhead

@@ -7,6 +7,7 @@ Protect your data with proper backup strategies.
 ## Overview
 
 A complete DataJoint backup includes:
+
 1. **Database** — Table structures and relational data
 2. **Object storage** — Large objects stored externally
 

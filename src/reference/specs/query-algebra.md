@@ -105,6 +105,7 @@ Session & {"nonexistent": "value"}  # returns all rows
 ```
 
 This applies to:
+
 - Misspelled attribute names
 - Hidden attributes (prefixed with `_`)
 - Keys from a different table's schema
@@ -697,6 +698,7 @@ class Session(dj.Manual):
 ### 9.2 Homologous Namesakes
 
 Two attributes are **homologous namesakes** if they have:
+
 1. Same name
 2. Same lineage (trace to same original definition)
 
@@ -810,6 +812,7 @@ When multiple Tops are chained, behavior depends on the `order_by` parameter:
 | Tops have different `order_by` | **Subquery**: first Top executed, then second applied |
 
 **Merge behavior:**
+
 - `limit` = minimum of both limits
 - `offset` = sum of both offsets
 - `order_by` = preserved from first Top
@@ -928,10 +931,12 @@ The choice depends on SQL semantics—whether the operation can be expressed by 
 ### 13.4 Restriction Rules (`&` and `-`)
 
 **Modify in place** when restricting on:
+
 - Base table attributes (columns from FROM tables)
 - Primary key attributes (including those inherited via FK)
 
 **Wrap as subquery** when restricting on:
+
 - Computed/aliased attributes (created by `.proj()`)
 - Aggregated attributes (created by `.aggr()`)
 - Any attribute after `LIMIT`/`OFFSET` has been applied
@@ -959,11 +964,13 @@ Session.aggr(Trial, n='count(*)') & "n > 10"
 ### 13.5 Projection Rules (`.proj()`)
 
 **Modify in place** when:
+
 - Selecting a subset of existing attributes
 - Renaming base attributes
 - Computing new attributes from base columns
 
 **Wrap as subquery** when:
+
 - Computing attribute from another computed attribute (alias of alias)
 - Projecting after `LIMIT`/`OFFSET` has been applied
 
@@ -982,11 +989,13 @@ Session.proj(year='YEAR(session_date)').proj(decade='year - year % 10')
 ### 13.5.1 Join Rules (`*`)
 
 **Modify in place** (merge both operands' clauses) when:
+
 - Both operands are base tables or simple projections
 - Join attributes are base columns (not computed)
 - Neither operand has `LIMIT`/`OFFSET` or `GROUP BY`
 
 **Wrap operand as subquery** when operand has:
+
 - Computed attributes used in join condition
 - `LIMIT`/`OFFSET` applied
 - `GROUP BY` (is an aggregation result)
@@ -1018,10 +1027,12 @@ HAVING <restrictions on B or computed attributes>
 ```
 
 **Restrictions routing:**
+
 - On grouping expression (A) attributes → `WHERE` (before GROUP BY)
 - On grouped expression (B) or computed attributes → `HAVING` (after GROUP BY)
 
 **Aggregation result requires subquery** when used as operand to:
+
 - Another join (`*`)
 - Further restriction on computed attributes
 - Another aggregation

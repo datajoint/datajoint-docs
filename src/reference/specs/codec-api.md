@@ -172,6 +172,7 @@ class MyCodec(dj.Codec):
 ```
 
 Naming conventions:
+
 - Use lowercase with underscores: `spike_train`, `graph_embedding`
 - Avoid generic names that might conflict: prefer `lab_model` over `model`
 - Names must be unique across all registered codecs
@@ -347,11 +348,13 @@ When DataJoint encounters `<zjson>`:
 3. Final storage type is `bytes` (LONGBLOB in MySQL)
 
 During INSERT:
+
 1. `ZjsonCodec.encode()` converts Python dict → compressed bytes
 2. `BlobCodec.encode()` packs bytes → DJ blob format
 3. Stored in database
 
 During FETCH:
+
 1. Read from database
 2. `BlobCodec.decode()` unpacks DJ blob → compressed bytes
 3. `ZjsonCodec.decode()` decompresses → Python dict
@@ -526,6 +529,7 @@ DataJoint provides these built-in codecs. See the [Type System Specification](ty
 | `<filepath@>` | N/A | `json` | Reference | Reference to existing files in store |
 
 **Addressing schemes:**
+
 - **Hash-addressed**: Path from content hash. Automatic deduplication.
 - **Schema-addressed**: Path mirrors database structure. One location per entity.
 

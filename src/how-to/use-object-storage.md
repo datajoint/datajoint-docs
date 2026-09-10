@@ -280,10 +280,12 @@ local_path = ref.download('/tmp/data')
 ### Size Guidelines
 
 **Technical limits:**
+
 - **MySQL**: In-table blobs up to 4 GiB (`LONGBLOB`)
 - **PostgreSQL**: In-table blobs unlimited (`BYTEA`)
 
 **Practical recommendations** (consider accessibility, cost, performance):
+
 - **< 1-10 MB**: In-table storage (`<blob>`) often sufficient
 - **10-100 MB**: Object store (`<blob@>` with dedup, or `<npy@>` for arrays)
 - **> 100 MB**: Schema-addressed (`<npy@>`, `<object@>`) for streaming and lazy loading

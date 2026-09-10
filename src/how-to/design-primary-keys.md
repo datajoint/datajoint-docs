@@ -33,6 +33,7 @@ class Subject(dj.Manual):
 ```
 
 **Good candidates:**
+
 - Lab-assigned IDs
 - Standard identifiers (NCBI accession, DOI)
 - Meaningful codes with enforced uniqueness
@@ -94,6 +95,7 @@ DataJoint discourages `auto_increment` for primary keys:
 5. **Meaningless foreign keys** — Downstream tables inherit opaque integers rather than traceable lineage.
 
 **Instead, use:**
+
 - Natural keys that identify entities in your domain
 - UUIDs when no natural identifier exists
 - Composite keys combining foreign keys with sequence numbers

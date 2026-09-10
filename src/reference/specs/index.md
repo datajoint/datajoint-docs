@@ -30,6 +30,7 @@ Specs clarify exact behavior when documentation or examples are ambiguous.
 4. [Type System](type-system.md) — Three-layer type architecture
 
 **Next:** Choose based on your needs:
+
 - **Working with data?** → Data Operations
 - **Building queries?** → Query Algebra
 - **Using large data?** → Object Storage

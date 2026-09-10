@@ -20,6 +20,7 @@ This document defines a three-layer type architecture:
 Codec types resolve through core types to native types: `<blob>` → `bytes` → `LONGBLOB`.
 
 **Syntax distinction:**
+
 - Core types: `int32`, `float64`, `varchar(255)` - no brackets
 - Codec types: `<blob>`, `<object@store>`, `<filepath@main>` - angle brackets
 - The `@` character indicates store (object storage vs in-table)
@@ -68,6 +69,7 @@ See [Encoding and Collation Policy](#encoding-and-collation-policy) for details.
 
 **Timezone policy:** All `datetime` values should be stored as **UTC**. Timezone conversion is a
 presentation concern handled by the application layer, not the database. This ensures:
+
 - Reproducible computations regardless of server or client timezone settings
 - Simple arithmetic on temporal values (no DST ambiguity)
 - Portable data across systems and regions
@@ -149,6 +151,7 @@ status = "active" : varchar(20)
 ```
 
 **Auto-increment policy:** DataJoint discourages `AUTO_INCREMENT` / `SERIAL` because:
+
 - Breaks reproducibility (IDs depend on insertion order)
 - Makes pipelines non-deterministic
 - Complicates data migration and replication
@@ -177,6 +180,7 @@ definitions. This ensures consistent behavior across all tables and simplifies p
 | Collation | `utf8mb4_bin` | `C` |
 
 **Policy:**
+
 - **UTF-8 required**: DataJoint validates charset is UTF-8 compatible at connection time
 - **Case-sensitive by default**: Binary collation (`utf8mb4_bin` / `C`) ensures predictable comparisons
 - **No per-column overrides**: `CHARACTER SET` and `COLLATE` are rejected in type definitions
@@ -467,6 +471,7 @@ column_name JSONB NOT NULL
 ```
 
 The `json` database type:
+
 - Used as dtype by built-in codecs (`<object@>`, `<hash@>`, `<filepath@store>`)
 - Stores arbitrary JSON-serializable data
 - Automatically uses appropriate type for database backend
@@ -652,6 +657,7 @@ def garbage_collect(store_name):
 | GC | Ref counted | Ref counted | With row | Ref counted | User managed |
 
 **When to use each:**
+
 - **`<blob>`**: Serialized Python objects (NumPy arrays, dicts). Use `<blob@>` for large/duplicated data
 - **`<attach>`**: File attachments with filename preserved. Use `<attach@>` for large files
 - **`<object@>`**: Large/complex file structures (Zarr, HDF5) where DataJoint controls organization
@@ -712,6 +718,7 @@ Content-addressed storage uses **MD5** (128-bit, 32-char hex) rather than SHA256
 **Why not SHA256?**
 
 SHA256 is the modern standard for content-addressable storage (Git, Docker, IPFS). However:
+
 - These systems prioritize cryptographic security against adversarial collision attacks
 - Scientific data pipelines face no adversarial threat model
 - The practical benefits (storage, speed, compatibility) outweigh theoretical security gains
@@ -773,6 +780,7 @@ def migrate_external_store(schema, store_name):
 ```
 
 **Migration considerations:**
+
 - Legacy UUIDs were based on MD5 content hash stored as `binary(16)` (UUID format)
 - New system uses `char(32)` MD5 hex strings stored in JSON
 - The hash algorithm is unchanged (MD5), only the storage format differs
