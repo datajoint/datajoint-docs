@@ -287,4 +287,4 @@ arr = np.load('/path/to/store/_schema/my_schema/recording/recording_id=1/wavefor
 
 - [Type System Specification](type-system.md) - Complete type system overview
 - [Codec API](codec-api.md) - Creating custom codecs
-- [Object Storage](type-system.md#object--schema-addressed-storage) - Schema-addressed storage details
+- [Object Storage](type-system.md#object-objectstore-schema-addressed-storage) - Schema-addressed storage details

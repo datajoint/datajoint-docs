@@ -26,7 +26,7 @@ Traditional databases excel at structured, relational data but struggle with lar
 - **Object storage:** Arrays, files, datasets (large data > 1 MB)
 - **Full referential integrity:** Maintained across both layers
 
-Read: [Object-Augmented Schemas](../explanation/data-pipelines.md#object-augmented-schemas/) for conceptual overview.
+Read: [Object-Augmented Schemas](../explanation/data-pipelines.md#object-augmented-schemas) for conceptual overview.
 
 ## Three Storage Modes
 
@@ -88,7 +88,7 @@ volume : <object@>        # Schema: _schema/{schema}/{table}/{key}/
 raw_data : <filepath@>    # User-managed path
 ```
 
-**Guide:** [Use Object Storage](use-object-storage.md#filepath-references)
+**Guide:** [Use Object Storage](use-object-storage.md#lazy-loading-with-objectref)
 
 ## Documentation by Level
 
@@ -154,7 +154,7 @@ For implementation details and specifications:
 ### Explanations
 
 - [Type System](../explanation/type-system.md/) — Conceptual overview
-- [Data Pipelines (OAS section)](../explanation/data-pipelines.md#object-augmented-schemas/) — Why OAS exists
+- [Data Pipelines (OAS section)](../explanation/data-pipelines.md#object-augmented-schemas) — Why OAS exists
 - [Custom Codecs](../explanation/custom-codecs.md/) — Design patterns
 
 ## Common Workflows
@@ -174,7 +174,7 @@ For implementation details and specifications:
 
 1. [Choose a Storage Type](choose-storage-type.md) — Determine new codec
 2. Add new column with object storage codec
-3. Migrate data (see [Use Object Storage](use-object-storage.md#migration-patterns))
+3. Migrate data (see [Use Object Storage](choose-storage-type.md#migration-between-storage-types))
 4. Verify data integrity
 5. Drop old column (see [Alter Tables](alter-tables.md))
 
@@ -187,7 +187,7 @@ For implementation details and specifications:
 1. Use `<object@>` or `<npy@>` (not `<blob@>`)
 2. [Configure Object Storage](configure-storage.md) — Ensure adequate storage
 3. For Zarr: Store as `<object@>` with `.zarr` extension
-4. For streaming: Use `ObjectRef.fsmap` (see [Use Object Storage](use-object-storage.md#streaming-access))
+4. For streaming: Use `ObjectRef.fsmap` (see [Use Object Storage](use-object-storage.md#lazy-loading-with-objectref))
 
 **Key advantage:** No need to download full dataset into memory
 
@@ -252,8 +252,8 @@ Write-once data with potential duplicates?
 | "Store not configured" | Missing stores config | [Configure Object Storage](configure-storage.md) |
 | Out of memory loading array | Using `<blob@>` for huge data | [Choose a Storage Type](choose-storage-type.md) → Use `<object@>` |
 | Slow fetches | Wrong codec choice | [Manage Large Data](manage-large-data.md) |
-| Data not deduplicated | Using wrong codec | [Choose a Storage Type](choose-storage-type.md#deduplication) |
-| Path conflicts with reserved | `<filepath@>` using `_hash/` or `_schema/` | [Use Object Storage](use-object-storage.md#filepath-references) |
+| Data not deduplicated | Using wrong codec | [Choose a Storage Type](choose-storage-type.md#data-not-deduplicated) |
+| Path conflicts with reserved | `<filepath@>` using `_hash/` or `_schema/` | [Use Object Storage](use-object-storage.md#lazy-loading-with-objectref) |
 | Missing files after delete | Expected behavior for integrated storage | [Garbage Collection](garbage-collection.md) |
 
 ### Getting Help
