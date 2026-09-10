@@ -7,6 +7,7 @@ Job execution metadata (start time, duration, code version) should be persisted 
 ## Motivation
 
 The current job table (`~~table_name`) tracks execution metadata, but:
+
 1. Job entries are deleted after completion (unless `keep_completed=True`)
 2. Users often need to know when and with what code version each row was computed
 3. This metadata should be transparent - not cluttering the user-facing schema
@@ -22,6 +23,7 @@ Hidden attributes (prefixed with `_`) provide the solution: stored in the databa
 | `_job_version` | varchar(64) | Code version (e.g., git commit hash) |
 
 **Design notes:**
+
 - `_job_duration` (elapsed time) rather than `_job_completed_time` because duration is more informative for performance analysis
 - `varchar(64)` for version is sufficient for git hashes (40 chars for SHA-1, 7-8 for short hash)
 - `datetime(3)` provides millisecond precision
@@ -118,6 +120,7 @@ add_job_metadata_columns(schema)
 ```
 
 This utility:
+
 - ALTERs the table to add the three hidden columns
 - Does NOT populate existing rows (metadata remains NULL)
 - Future `populate()` calls will populate metadata for new rows
@@ -127,17 +130,20 @@ This utility:
 ### Declaration-time
 
 When `config.jobs.add_job_metadata=True` and a Computed/Imported table is declared:
+
 - Hidden metadata columns are added to the table definition
 - Only master tables receive metadata columns; Part tables never get them
 
 ### Population-time
 
 After `make()` completes successfully:
+
 1. Check if the table has hidden metadata columns
 2. If yes: UPDATE the just-inserted rows with start_time, duration, version
 3. If no: Silently skip (no error, no ALTER)
 
 This applies to both:
+
 - **Direct mode** (`reserve_jobs=False`): Single-process populate
 - **Distributed mode** (`reserve_jobs=True`): Multi-worker with job table coordination
 
@@ -190,6 +196,7 @@ def from_clause(self):
 Replace `_left: List[bool]` with `_joins: List[Tuple[bool, List[str]]]`
 
 Each join stores:
+
 - `left`: Whether it's a left join
 - `using_attrs`: Non-hidden common attributes to join on
 

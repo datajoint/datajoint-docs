@@ -61,6 +61,7 @@ arrays : <object@main>    # Explicitly names store
 ```
 
 **Rules:**
+
 - `stores.default` must be a string naming a configured store
 - Required for `<blob>`, `<attach>`, `<object>`, `<npy>` without explicit `@store`
 - Each project typically uses one primary store for integrated data
@@ -76,6 +77,7 @@ recording : <filepath@raw_data>  # Explicitly names store
 ```
 
 **Rules:**
+
 - `stores.filepath_default` must be a string naming a configured store
 - Required for `<filepath@>` without explicit store name
 - Often configured differently from `stores.default` because filepath references are not part of OAS
@@ -140,6 +142,7 @@ Each store is divided into sections controlled by prefix configuration. The `*_p
 | `filepath_prefix` | `null` | Filepath section (optional) | `<filepath@>` |
 
 **Validation rules:**
+
 1. All prefixes must be mutually exclusive (no nesting)
 2. `hash_prefix` and `schema_prefix` are reserved for DataJoint
 3. `filepath_prefix` is optional:
@@ -182,6 +185,7 @@ lists both layouts.
 ```
 
 Results in these sections:
+
 - `{location}/content_addressed/{schema}/{hash}` — hash-addressed
 - `{location}/structured_data/{schema}/{table}/{key}/` — schema-addressed
 - `{location}/user_files/{user_path}` — filepath (required prefix)
@@ -353,6 +357,7 @@ dj.config.save_template('datajoint.json', create_secrets_dir=True)
 6. Store metadata in relational database as JSON
 
 **Properties:**
+
 - **Immutable**: Content defines path, cannot be changed
 - **Deduplicated**: Identical content stored once
 - **Integrity**: Hash validates content on retrieval
@@ -427,6 +432,7 @@ Primary key values are encoded as: `{attr}={value}`
 - Order matches table definition
 
 **Properties:**
+
 - **Mutable**: Can overwrite by writing to same path
 - **Streaming**: fsspec integration for lazy loading
 - **Organized**: Hierarchical structure mirrors data relationships
@@ -498,6 +504,7 @@ This allows a single `partition_pattern` to apply to multiple tables, with autom
 **Path collision prevention:**
 
 The random token ensures uniqueness:
+
 - 8 characters (default): 62^8 = ~218 trillion combinations
 - Collision probability negligible for typical table sizes
 - Token regenerated on each write
@@ -526,6 +533,7 @@ Or if `filepath_prefix = null`:
 6. No file copying occurs
 
 **Properties:**
+
 - **Path-only storage**: DataJoint stores path string, no file management
 - **No lifecycle management**: No garbage collection, transaction safety, or deduplication
 - **User-managed**: User controls file creation, organization, and lifecycle

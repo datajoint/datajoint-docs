@@ -110,15 +110,18 @@ chunk = arr[::100]
 ```
 
 **Modes:**
+
 - `'r'` - Read-only (recommended)
 - `'r+'` - Read-write (modifications persist)
 - `'c'` - Copy-on-write (changes not saved)
 
 **Performance characteristics:**
+
 - Local filesystem stores: memory-maps the file directly (zero-copy)
 - Remote stores (S3, GCS): downloads to local cache first, then memory-maps
 
 **When to use:**
+
 - Arrays too large to fit in memory
 - Only need random access to portions of the array
 - Processing data in chunks
@@ -253,12 +256,14 @@ arr = np.load('/path/to/store/_schema/my_schema/recording/recording_id=1/wavefor
 | `<hash@>` | raw bytes | Hash | No | No | N/A |
 
 **Addressing schemes:**
+
 - **Schema-addressed**: Path mirrors database structure. Browsable, one location per entity.
 - **Hash-addressed**: Path from content hash. Automatic deduplication.
 
 ## When to Use `<npy@>`
 
 **Use `<npy@>` when:**
+
 - Storing single numpy arrays
 - Interoperability matters (non-Python tools)
 - You want lazy loading with metadata inspection
@@ -267,12 +272,14 @@ arr = np.load('/path/to/store/_schema/my_schema/recording/recording_id=1/wavefor
 - Browsable object store organization is valuable
 
 **Use `<blob@>` when:**
+
 - Storing arbitrary Python objects (dicts, lists, mixed types)
 - Arrays are small and eager loading is fine
 - MATLAB compatibility with DataJoint's mYm format is needed
 - Deduplication is beneficial (hash-addressed)
 
 **Use `<object@>` when:**
+
 - Storing files/folders (Zarr, HDF5, multi-file outputs)
 - Content is not a single numpy array
 

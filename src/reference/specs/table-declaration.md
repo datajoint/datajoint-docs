@@ -351,6 +351,7 @@ Format: `<codec_name>` or `<codec_name@store>`
 | `<object>` | N/A (in-store only) | `json` | Object storage (Zarr, HDF5) |
 
 In-store storage syntax:
+
 - `<blob@>` - default store
 - `<blob@store_name>` - named store
 
@@ -386,6 +387,7 @@ attribute_name = default_value : type
 ### 5.3 Constant Literals
 
 These values are used without quotes in SQL:
+
 - `NULL`
 - `CURRENT_TIMESTAMP`
 
@@ -505,6 +507,7 @@ class Session(dj.Manual):
 ### 6.8 Referential Actions
 
 All foreign keys use:
+
 - `ON UPDATE CASCADE` - Parent key changes propagate
 - `ON DELETE RESTRICT` - Cannot delete parent with children
 
@@ -589,6 +592,7 @@ class Master(dj.Manual):
 ### 8.3 Master Reference
 
 Within Part definition, use:
+
 - `-> master` (lowercase keyword)
 - `-> MasterClassName` (class name)
 
@@ -675,6 +679,7 @@ When `config['jobs.add_job_metadata'] = True`, auto-populated tables receive:
 ### 10.3 Insert-Time Validation
 
 The `table.validate()` method checks:
+
 - Required fields present
 - NULL constraints satisfied
 - Primary key completeness
