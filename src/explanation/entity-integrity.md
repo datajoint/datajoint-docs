@@ -239,7 +239,7 @@ this table?"*
 - Adding a dimension makes the grain **finer**: a part table that adds `blob_idx`
   (`Detection.Blob` below) has grain **(… × blob)** — one row per blob of a
   detection.
-- A computed table's grain is the combination of dimensions at which its `make()`
+- An autopopulated table's grain is the combination of dimensions at which its `make()`
   produces rows — its
   [`key_source`](../reference/specs/autopopulate.md). *A computation operates at
   its grain.*
@@ -305,11 +305,12 @@ class SubjectProfile(dj.Manual):
 one profile per subject. In schema diagrams, such tables have
 **non-underlined names**.
 
-### Computed tables never introduce dimensions
+### Autopopulated tables introduce dimensions only through part tables
 
-A `Computed` table's primary key is fully inherited from its dependencies.
-New entity types are introduced by Manual or Lookup tables, not by
-computation:
+An autopopulated table — `Computed` or `Imported` — runs its `make()` once per
+key in its [`key_source`](../reference/specs/autopopulate.md), so the master's
+primary key is fully inherited from its dependencies. The master introduces no
+dimension of its own:
 
 ```python
 @schema
@@ -322,10 +323,8 @@ class SessionSummary(dj.Computed):
     """
 ```
 
-### Part tables CAN introduce dimensions
-
-Unlike Computed master tables, part tables can introduce new dimensions
-when a single computation produces multiple related results:
+When one `make()` call produces several results that need their own identifier,
+that new dimension goes in a **part table**:
 
 ```python
 @schema
@@ -349,6 +348,12 @@ class Detection(dj.Computed):
 
 `Detection` inherits its dimensions; `Detection.Blob` introduces `blob_idx`
 to identify individual blobs within each detection.
+
+> **Introducing a new dimension in an autopopulated table requires a part
+> table.**
+
+The master row and its part rows are inserted together in one transaction, so
+the new dimension is populated atomically with the computation that defines it.
 
 ### Dimensions and attribute lineage
 
