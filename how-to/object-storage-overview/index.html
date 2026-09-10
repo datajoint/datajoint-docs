@@ -7043,7 +7043,7 @@
 <li><strong>Object storage:</strong> Arrays, files, datasets (large data &gt; 1 MB)</li>
 <li><strong>Full referential integrity:</strong> Maintained across both layers</li>
 </ul>
-<p>Read: <a href="../../explanation/data-pipelines/#object-augmented-schemas/">Object-Augmented Schemas</a> for conceptual overview.</p>
+<p>Read: <a href="../../explanation/data-pipelines/#object-augmented-schemas">Object-Augmented Schemas</a> for conceptual overview.</p>
 <h2 id="three-storage-modes">Three Storage Modes<a class="headerlink" href="#three-storage-modes" title="Permanent link">&para;</a></h2>
 <h3 id="in-table-storage-blob">In-Table Storage (<code>&lt;blob&gt;</code>)<a class="headerlink" href="#in-table-storage-blob" title="Permanent link">&para;</a></h3>
 <p><strong>What:</strong> Data stored directly in database column
@@ -7086,7 +7086,7 @@
 <strong>Why:</strong> No file lifecycle management, no deduplication, user controls paths</p>
 <div class="highlight"><pre><span></span><code><span class="n">raw_data</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">filepath</span><span class="o">@&gt;</span>    <span class="c1"># User-managed path</span>
 </code></pre></div>
-<p><strong>Guide:</strong> <a href="../use-object-storage/#filepath-references">Use Object Storage</a></p>
+<p><strong>Guide:</strong> <a href="../use-object-storage/#lazy-loading-with-objectref">Use Object Storage</a></p>
 <h2 id="documentation-by-level">Documentation by Level<a class="headerlink" href="#documentation-by-level" title="Permanent link">&para;</a></h2>
 <h3 id="getting-started">Getting Started<a class="headerlink" href="#getting-started" title="Permanent link">&para;</a></h3>
 <ol>
@@ -7170,7 +7170,7 @@
 <h3 id="explanations">Explanations<a class="headerlink" href="#explanations" title="Permanent link">&para;</a></h3>
 <ul>
 <li><a href="../../explanation/type-system/">Type System</a> — Conceptual overview</li>
-<li><a href="../../explanation/data-pipelines/#object-augmented-schemas/">Data Pipelines (OAS section)</a> — Why OAS exists</li>
+<li><a href="../../explanation/data-pipelines/#object-augmented-schemas">Data Pipelines (OAS section)</a> — Why OAS exists</li>
 <li><a href="../../explanation/custom-codecs/">Custom Codecs</a> — Design patterns</li>
 </ul>
 <h2 id="common-workflows">Common Workflows<a class="headerlink" href="#common-workflows" title="Permanent link">&para;</a></h2>
@@ -7187,7 +7187,7 @@
 <ol>
 <li><a href="../choose-storage-type/">Choose a Storage Type</a> — Determine new codec</li>
 <li>Add new column with object storage codec</li>
-<li>Migrate data (see <a href="../use-object-storage/#migration-patterns">Use Object Storage</a>)</li>
+<li>Migrate data (see <a href="../choose-storage-type/#migration-between-storage-types">Use Object Storage</a>)</li>
 <li>Verify data integrity</li>
 <li>Drop old column (see <a href="../alter-tables/">Alter Tables</a>)</li>
 </ol>
@@ -7198,7 +7198,7 @@
 <li>Use <code>&lt;object@&gt;</code> or <code>&lt;npy@&gt;</code> (not <code>&lt;blob@&gt;</code>)</li>
 <li><a href="../configure-storage/">Configure Object Storage</a> — Ensure adequate storage</li>
 <li>For Zarr: Store as <code>&lt;object@&gt;</code> with <code>.zarr</code> extension</li>
-<li>For streaming: Use <code>ObjectRef.fsmap</code> (see <a href="../use-object-storage/#streaming-access">Use Object Storage</a>)</li>
+<li>For streaming: Use <code>ObjectRef.fsmap</code> (see <a href="../use-object-storage/#lazy-loading-with-objectref">Use Object Storage</a>)</li>
 </ol>
 <p><strong>Key advantage:</strong> No need to download full dataset into memory</p>
 <hr />
@@ -7270,12 +7270,12 @@ Write-once data with potential duplicates?
 <tr>
 <td>Data not deduplicated</td>
 <td>Using wrong codec</td>
-<td><a href="../choose-storage-type/#deduplication">Choose a Storage Type</a></td>
+<td><a href="../choose-storage-type/#data-not-deduplicated">Choose a Storage Type</a></td>
 </tr>
 <tr>
 <td>Path conflicts with reserved</td>
 <td><code>&lt;filepath@&gt;</code> using <code>_hash/</code> or <code>_schema/</code></td>
-<td><a href="../use-object-storage/#filepath-references">Use Object Storage</a></td>
+<td><a href="../use-object-storage/#lazy-loading-with-objectref">Use Object Storage</a></td>
 </tr>
 <tr>
 <td>Missing files after delete</td>
