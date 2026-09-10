@@ -86,14 +86,24 @@ raw_path : <filepath@raw>         # Portable file reference
 status = "pending" : varchar(20)  # String default
 count = 0 : int32                 # Numeric default
 notes = '' : varchar(1000)        # Empty string default (preferred for strings)
+stage = '' : enum('', 'draft', 'reviewed', 'released')  # Empty-string member (preferred for enums)
 created = CURRENT_TIMESTAMP : datetime  # Auto-timestamp
 ratio = NULL : float64            # Nullable (only NULL can be default)
 ```
 
 **Nullable attributes:** An attribute is nullable if and only if its default is `NULL`.
 DataJoint does not allow other defaults for nullable attributes—this prevents ambiguity
-about whether an attribute is optional. For strings, prefer empty string `''` as the
-default rather than `NULL`.
+about whether an attribute is optional.
+
+**`varchar`, `char`, and `enum` attributes should default to `''`, not `NULL`.** `NULL`
+and `''` both read as "nothing," and once an attribute allows both, every query and every
+`make()` body has to handle two representations of the same absence. For `enum`, this
+means adding `''` as an explicit member rather than making the attribute nullable—the
+empty string is then just another value the type already enumerates, not a second
+absence-mechanism layered on top of it. Reserve `NULL` for an attribute that is
+genuinely optional and where "not yet known" must be distinguishable from "known to be
+empty"—a case that arises rarely for text, and rarer still for a closed set of values a
+schema author chose in the first place.
 
 ## Comments
 
