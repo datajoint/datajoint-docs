@@ -74,8 +74,14 @@ This integration is opt-in and configured explicitly; it is not automatic.
 Interchange in either direction uses the standards the surrounding ecosystem
 speaks. DataJoint's lineage is expressed in its own schema; where it is exchanged
 with external governance, audit, and cataloging systems, it maps to industry
-lineage and provenance standards such as OpenLineage or W3C PROV. Compliance with
-industry provenance standards is ensured by the DataJoint Platform.
+lineage and provenance standards such as OpenLineage or W3C PROV.
+
+The DataJoint Platform supports compliance with industry provenance standards for
+the computation it manages. What an exported account can carry depends on what was
+captured: platform-managed computation records the code version, the worker, and
+timings for every computed row, while data entered or populated outside the
+platform carries less. Compliance is a property of the deployment, not of the
+format.
 
 ## See also
 
