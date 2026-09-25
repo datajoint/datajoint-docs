@@ -63,6 +63,7 @@ Specs clarify exact behavior when documentation or examples are ambiguous.
 
 1. [Master-Part Relationships](master-part.md) — Compositional modeling
 2. [Virtual Schemas](virtual-schemas.md) — Schema introspection without source
+3. [Branch Resolution](branch-resolution.md) — Draft tables beside a pipeline's own
 
 ## Document Structure
 
@@ -85,6 +86,7 @@ Each specification follows a consistent structure:
 | [Table Declaration](table-declaration.md) | None | [Define Tables](../../how-to/define-tables.md/) | [Relational Workflow Model](../../explanation/relational-workflow-model.md/) |
 | [Master-Part Relationships](master-part.md) | Table Declaration | [Model Relationships](../../how-to/model-relationships.ipynb/) | [Data Pipelines](../../explanation/data-pipelines.md/) |
 | [Virtual Schemas](virtual-schemas.md) | Table Declaration | — | — |
+| [Branch Resolution](branch-resolution.md) | Table Declaration | — | — |
 
 **Key concepts:** Table tiers (Manual, Lookup, Imported, Computed, Part), foreign keys, dependency graphs, compositional modeling
 
