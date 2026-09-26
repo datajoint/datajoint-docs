@@ -152,9 +152,11 @@ The rule matters for a new part under an existing master. Resolved independently
 
 ### 3.5 A name collision raises
 
-A branch declaring a class whose name already exists in the logical schema binds to the existing table. Where the class's `definition` differs from what is declared there, this raises: the alternative is that the caller believes it created a table it in fact adopted, which is worse than a refusal. Where the definitions agree, it binds without declaring, exactly as an ordinary re-import does.
+A branch declaring a class whose name already exists in the logical schema binds to the existing table. Where the class's shape differs from what is declared there, this raises: the alternative is that the caller believes it created a table it in fact adopted, which is worse than a refusal. Where it agrees, the class binds without declaring, exactly as an ordinary re-import does.
 
-A separate draft namespace cannot produce this failure, because there a collision yields a second table. Resolution to the same logical schema has to refuse it explicitly.
+**Shape means the primary key, in order, and the set of attribute names** — compared against the live heading, which is authoritative. It deliberately does not mean the whole definition. The only way to recover a definition string from a declared table is to reconstruct it, and that reconstruction is lossy in known ways: a functional index does not survive it, and `bigint unsigned` comes back as `int64`. A comparison built on it would refuse tables that are in fact identical, which is a worse failure than the one this rule exists to prevent. A changed attribute *type* on a colliding name therefore goes undetected in this release; the durable fix is a stored definition hash, which the machinery behind §4.3 makes cheap to add.
+
+A separate draft namespace cannot produce this failure at all, because there a collision yields a second table. Resolution to the same logical schema has to refuse it explicitly.
 
 ### 3.6 Interaction with `create_tables`
 
@@ -269,7 +271,9 @@ A reader that never imported the customer's module reaches a pipeline through `d
 
 This is what §4.3 is for. Recording the reference where the catalog can be read back, rather than holding it in the declaring process, only pays off if a reader that imported nothing can also find the tables the references connect.
 
-`schema.list_tables()` matches both physical names on a branch for the same reason — a listing that disagreed with the generated classes would be worse than either alone.
+`schema.list_tables()` matches both physical names on a branch for the same reason — a listing that disagreed with the generated classes would be worse than either alone. `schema['SomeTable']` resolves by the same rule as declaration, so it returns a table in the schema its class is bound to rather than one in the logical schema that may not exist.
+
+**A name that maps to one class from both schemas raises.** Two physical tables of different tiers — `subject` in the logical schema, `#subject` in the draft — produce the same class name. Off a branch the second is silently skipped, because it cannot arise there; on a branch it is a real ambiguity and the load refuses rather than picking one.
 
 **`schema.drop()` refuses on a branch.** It drops the schema it is bound to, which is the logical one, so on a branch the thing a caller can now see would stop being the thing that gets dropped — and the call would take the pipeline's schema out from under a live draft. On a branch it raises, naming both physical schemas. This is the one path by which a branch session could destroy structure the pipeline owns, and dropping a branch's schemas is the caller's operation (§8), not this one's.
 
