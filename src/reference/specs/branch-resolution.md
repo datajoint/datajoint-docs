@@ -88,7 +88,9 @@ Everything else about the identifier — that it is six characters, that it star
 
 ### 1.4 The setting is read at activation and then frozen
 
-`Schema.activate()` reads `branch` once and stores the result. Changing `branch` on a connection that has already registered a schema raises: table classes are bound to a resolved physical schema at decoration time, and a mid-session change would leave them bound to the previous one with no signal that anything moved.
+`Schema.activate()` reads `branch` once and stores the result. A connection remembers the branch its first schema activated under, and **activating a second schema under a different branch raises**, naming the branch the connection already holds. Table classes are bound to a resolved physical schema at decoration time, so a mid-session change would otherwise leave them bound to the previous one with no signal that anything moved.
+
+The refusal lands at the next activation rather than at the moment the setting changes: the config object holds no reference back to the connections reading it, and the first point at which a changed value could do damage is the next activation. To work on two branches at once, open a connection per branch — which §1.2 makes possible.
 
 ## 2. Physical name derivation
 
@@ -300,7 +302,7 @@ Two of these are the ones a careless implementation breaks, because both would b
 |---|---|
 | `branch` contains characters outside `[A-Za-z0-9_]` | raises at activation, naming the offending value |
 | a derived physical name exceeds the backend's identifier limit | raises at activation, naming the schema that would overflow |
-| `branch` is changed on a connection with a registered schema | raises, naming the registered schema |
+| a schema is activated under a different branch than the connection already holds | raises, naming the branch the connection holds |
 | the draft schema does not exist and the login may not create it | raises, naming the draft schema and stating that it must be provisioned |
 | a branch declares a class whose name exists in the logical schema with a different definition | raises, naming both the class and the logical schema |
 | a branch declares a new part under a master in the logical schema | raises, naming the master and its schema |
