@@ -146,7 +146,9 @@ One query per schema at activation, listing the logical schema's table names, ca
 
 `Schema._decorate_master()` decorates a master and its parts with one schema object. Parts do **not** resolve independently: a part binds to whatever its master resolved to.
 
-The rule matters for a new part under an existing master. Resolved independently it would exist in neither schema and land in the draft, giving a part in `br_a1b2c3_proj_ephys` whose master is in `proj_ephys` — which breaks the master–part naming invariant that `Diagram.add_parts` and `part_integrity` both rely on. Bound with its master it resolves to the logical schema, where this release cannot declare it, and raises the error in §7.
+The rule matters for a new part under an existing master. Resolved independently it would exist in neither schema and land in the draft, giving a part in `br_a1b2c3_proj_ephys` whose master is in `proj_ephys`. A master and its parts are associated by **name prefix within one schema**, in four independent places, and splitting them across schemas breaks all four: the dependency loader reconstructs a master's name inside the same quoted schema and would look for one that does not exist; `Table.parts()` matches on the master's `full_table_name` prefix; `Diagram.add_parts` requires the two to share a schema outright; and the master–part integrity checks in `delete` and `drop` key on the same extraction. Bound with its master the part resolves to the logical schema, where this release cannot declare it, and raises the error in §7.
+
+**A new master declared with its own parts is a different case, and it works.** Master and parts resolve together into the draft schema, so the prefix invariant holds inside it exactly as it does in any other schema. Only a part added under a master that already lives in the logical schema is refused.
 
 ### 3.5 A name collision raises
 
@@ -156,7 +158,9 @@ A separate draft namespace cannot produce this failure, because there a collisio
 
 ### 3.6 Interaction with `create_tables`
 
-The resolution runs whatever `create_tables` is set to; only the declaration that follows is gated. With `create_tables=False` on a branch, a table existing in neither schema resolves to the branch schema and is not declared, and the resulting error names the branch schema so the message is actionable.
+The resolution runs whatever `create_tables` is set to; only the declaration that follows is gated. With `create_tables=False` on a branch, a table existing in neither schema resolves to the branch schema and is not declared.
+
+Decoration itself still succeeds, which is today's behavior and does not change. The error arrives at first heading access — *the table `<database>`.`<table_name>` is not defined* — and because the class is bound to the draft, that message names the draft schema without any new code. No eager check is added: one would change what `create_tables=False` does for every session that is not on a branch.
 
 ## 4. Symbolic references
 
@@ -195,6 +199,8 @@ The reference is recorded in a hidden table in the schema that holds the referen
 
 One row per referencing column, which is the shape the dependency loader already consumes from the catalog. The table is created on first declaration into the branch schema and rewritten per table at each re-declaration, so a branch that drops and re-declares its draft carries no stale rows.
 
+**`~edge` holds plain columns and declares no foreign key of its own.** The two backends exclude hidden tables from the foreign-key graph on opposite sides — MySQL filters the referenced table, PostgreSQL the referencing one — so a `~` table that declared a constraint would enter the graph on one backend and stay out of it on the other, and where it entered it would arrive as a node with an empty primary key. No hidden table declares one today, and this one does not become the first.
+
 Three alternatives were considered and rejected. Column comments cannot carry it: the heading parser reads exactly one leading `:marker:`, and a foreign-key column already inherits the parent's comment, which may itself carry one. `~lineage` cannot carry it: it records where an attribute was *first* defined, and the origin of a twice-inherited attribute is not its immediate parent. Holding the edge only in the declaring process cannot carry it either, because catalog-driven readers — the diagram, any tool that did not import the module — would not see it.
 
 ### 4.4 How the dependency graph reads `~edge`
@@ -203,7 +209,9 @@ On a branch, `Dependencies.load()` unions `~edge` rows into the same structure i
 
 Acyclicity is still checked, over a graph carrying the symbolic edges.
 
-Everything downstream then works unchanged: `parents()`, `children()`, `descendants()`, `key_source`, `Diagram`, and the cascade walk all read one graph. If any of them needs an edit to accommodate a symbolic edge, the edge has been recorded in the wrong place.
+**The union happens inside `load()`, never as a layer applied afterwards.** The graph is a multigraph whose edges are keyed by that attribute tuple, and adding an edge under a key that is already present merges into it rather than sitting beside it. `load()` also rebuilds from empty every time, and registering a schema or declaring a table both discard the graph — so edges added after a load would be silently replaced or silently dropped. A symbolic edge and a catalog edge can never collide on the same key, because the referencing table is either in a draft schema or it is not.
+
+Everything downstream then works unchanged: `parents()`, `children()`, `descendants()`, `key_source`, `Diagram`, `describe()`, `alter()`, and the cascade walk all read one graph. `describe()` is the sharpest case — it reconstructs a table's `->` lines from its parents in the graph rather than from stored SQL, so a branch table with no database constraint still describes with its references intact. If any of these needs an edit to accommodate a symbolic edge, the edge has been recorded in the wrong place.
 
 **The read is gated on a branch being set.** A session with no branch reads no `~edge` table and issues no query for one. The consequence is deliberate and is the mechanism behind §5.2: an off-branch session cannot see a branch's references, so it can neither traverse into a draft nor be blocked by one.
 
@@ -255,6 +263,16 @@ Object paths embed the schema the table is in, for both storage schemes — hash
 
 Garbage collection is where this has to be handled and is not yet: see §9.
 
+### 5.7 Virtual modules and generated classes
+
+A reader that never imported the customer's module reaches a pipeline through `dj.VirtualModule` or `schema.make_classes()`, which build table classes by listing what the schema holds. **On a branch they list both physical schemas**, so a draft's tables become classes alongside the pipeline's, and a draft master's parts reattach to it normally because both are found in the same listing. Off a branch, one schema and one query, unchanged.
+
+This is what §4.3 is for. Recording the reference where the catalog can be read back, rather than holding it in the declaring process, only pays off if a reader that imported nothing can also find the tables the references connect.
+
+`schema.list_tables()` matches both physical names on a branch for the same reason — a listing that disagreed with the generated classes would be worse than either alone.
+
+**`schema.drop()` refuses on a branch.** It drops the schema it is bound to, which is the logical one, so on a branch the thing a caller can now see would stop being the thing that gets dropped — and the call would take the pipeline's schema out from under a live draft. On a branch it raises, naming both physical schemas. This is the one path by which a branch session could destroy structure the pipeline owns, and dropping a branch's schemas is the caller's operation (§8), not this one's.
+
 ## 6. Behavior with no branch set
 
 This is the invariant the feature is built around, and it is stated as behavior rather than as intent because it is what every existing deployment depends on.
@@ -282,7 +300,8 @@ Two of these are the ones a careless implementation breaks, because both would b
 | the draft schema does not exist and the login may not create it | raises, naming the draft schema and stating that it must be provisioned |
 | a branch declares a class whose name exists in the logical schema with a different definition | raises, naming both the class and the logical schema |
 | a branch declares a new part under a master in the logical schema | raises, naming the master and its schema |
-| a table resolves to the branch schema with `create_tables=False` | raises, naming the branch schema |
+| a table resolves to the branch schema with `create_tables=False` | decoration succeeds; the existing error arrives at first heading access and names the draft schema |
+| `schema.drop()` is called on a branch | raises, naming both physical schemas |
 
 ## 8. Where the library stops, and what the caller owns
 
@@ -304,7 +323,7 @@ The division matters, because it decides how much of a joint code-and-schema lif
 
 **Draft and pipeline tables draw as two schemas.** The diagram shows both and connects them (§5.4); grouping them into one logical cluster is not implemented.
 
-**No branch-aware teardown in the library.** Dropping a branch's schemas is a caller operation. A `drop` that knows which tables belong to a branch is a convenience on top of it.
+**No branch-aware teardown in the library.** Dropping a branch's schemas is a caller operation, and `schema.drop()` refuses on a branch rather than guessing which schema was meant (§5.7). A `drop` that knows which tables belong to a branch is a convenience on top of it.
 
 **Garbage collection is not branch-aware.** `GarbageCollector` is bound to a set of schemas when it is constructed, and orphan detection is confined to those schemas. A collection run over the pipeline's schemas alone will read a live branch's payloads as orphans and delete them, because the rows referencing them are in a schema the collector was not given. Until the collector takes branch schemas as part of its schema set, run it over the pipeline's schemas only when no branch is live, or construct it with every active branch's schemas included.
 
