@@ -66,7 +66,7 @@ for row in table:
 
 ### Basic Fetch Operations
 
-| Old Pattern (1.x) | New Pattern (2.0) |
+| Old Pattern (pre-2.x) | New Pattern (2.0) |
 |-------------------|-------------------|
 | `table.fetch()` | `table.to_arrays()` or `table.to_dicts()` |
 | `table.fetch(format="array")` | `table.to_arrays()` |
@@ -75,7 +75,7 @@ for row in table:
 
 ### Attribute Fetching
 
-| Old Pattern (1.x) | New Pattern (2.0) |
+| Old Pattern (pre-2.x) | New Pattern (2.0) |
 |-------------------|-------------------|
 | `table.fetch('a')` | `table.to_arrays('a')` |
 | `a, b = table.fetch('a', 'b')` | `a, b = table.to_arrays('a', 'b')` |
@@ -83,7 +83,7 @@ for row in table:
 
 ### Primary Key Fetching
 
-| Old Pattern (1.x) | New Pattern (2.0) |
+| Old Pattern (pre-2.x) | New Pattern (2.0) |
 |-------------------|-------------------|
 | `table.fetch('KEY')` | `table.keys()` |
 | `table.fetch(dj.key)` | `table.keys()` |
@@ -100,7 +100,7 @@ a = table.to_arrays('a')
 
 ### Ordering, Limiting, Offset
 
-| Old Pattern (1.x) | New Pattern (2.0) |
+| Old Pattern (pre-2.x) | New Pattern (2.0) |
 |-------------------|-------------------|
 | `table.fetch(order_by='name')` | `table.to_arrays(order_by='name')` |
 | `table.fetch(limit=10)` | `table.to_arrays(limit=10)` |
@@ -108,7 +108,7 @@ a = table.to_arrays('a')
 
 ### Single Row Fetch (fetch1)
 
-| Old Pattern (1.x) | New Pattern (2.0) |
+| Old Pattern (pre-2.x) | New Pattern (2.0) |
 |-------------------|-------------------|
 | `table.fetch1()` | `table.fetch1()` (unchanged) |
 | `a, b = table.fetch1('a', 'b')` | `a, b = table.fetch1('a', 'b')` (unchanged) |
@@ -116,14 +116,14 @@ a = table.to_arrays('a')
 
 ### Configuration
 
-| Old Pattern (1.x) | New Pattern (2.0) |
+| Old Pattern (pre-2.x) | New Pattern (2.0) |
 |-------------------|-------------------|
 | `dj.config['fetch_format'] = 'frame'` | Use `.to_pandas()` explicitly |
 | `with dj.config.override(fetch_format='frame'):` | Use `.to_pandas()` in the block |
 
 ### Iteration
 
-| Old Pattern (1.x) | New Pattern (2.0) |
+| Old Pattern (pre-2.x) | New Pattern (2.0) |
 |-------------------|-------------------|
 | `for row in table:` | `for row in table:` (same syntax, now lazy!) |
 | `list(table)` | `table.to_dicts()` |
@@ -254,7 +254,7 @@ table = Experiment().to_arrow()
 The new iteration is significantly more efficient:
 
 ```python
-# Old (1.x): N+1 queries
+# Old (pre-2.x): N+1 queries
 # 1. fetch("KEY") gets ALL keys
 # 2. fetch1() for EACH key
 
