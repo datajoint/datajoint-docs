@@ -225,9 +225,9 @@ If `DJ_STORES` contains invalid JSON, DataJoint raises `ValueError` at config-lo
 ## Env-var-only deployments
 
 !!! version-added "New in 2.2.4"
-    `DJ_IGNORE_CONFIG_FILE=true` plus `DJ_STORES` gives a deployment a hard guarantee that no file on disk contributes to config — only env vars do. This is how the DataJoint platform configures pipelines.
+    `DJ_IGNORE_CONFIG_FILE=true` plus `DJ_STORES` gives a deployment a hard guarantee that no file on disk contributes to config — only env vars do. This is how the DataJoint Platform configures pipelines.
 
-For Kubernetes, Lambda, the DataJoint platform, or any deployment where the container image must not carry configuration:
+For Kubernetes, Lambda, the DataJoint Platform, or any deployment where the container image must not carry configuration:
 
 ```bash
 export DJ_IGNORE_CONFIG_FILE=true

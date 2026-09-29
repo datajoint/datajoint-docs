@@ -1,6 +1,6 @@
 # About DataJoint
 
-DataJoint is an open-source framework for building scientific data pipelines.
+The **DataJoint Library** is open-source software for building scientific data pipelines.
 It was created to address the challenges of managing complex, interconnected
 data in research laboratories.
 

@@ -15,7 +15,7 @@ If your work utilizes **DataJoint Elements**, please cite the following manuscri
 
 - **RRID**: [RRID:SCR_021894](https://scicrunch.org/resolver/SCR_021894)
 
-You should also cite the **DataJoint Core manuscript** detailed below.
+You should also cite the **DataJoint Relational Model manuscript** detailed below.
 
 ## Citing DataJoint 2.0
 
