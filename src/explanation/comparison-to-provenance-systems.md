@@ -74,8 +74,7 @@ This integration is opt-in and configured explicitly; it is not automatic.
 Interchange in either direction uses the standards the surrounding ecosystem
 speaks. DataJoint's lineage is expressed in its own schema; where it is exchanged
 with external governance, audit, and cataloging systems, it maps to industry
-lineage and provenance standards such as OpenLineage or W3C PROV. Compliance with
-industry provenance standards is ensured by the DataJoint Platform.
+lineage and provenance standards such as OpenLineage or W3C PROV.
 
 ## See also
 
