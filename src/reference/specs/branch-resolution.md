@@ -120,6 +120,18 @@ Off a branch, `activate()` creates a missing schema when `create_schema=True`. O
 
 Creating a schema is a higher privilege than writing inside one, and it is the privilege that cannot be scoped uniformly across backends — PostgreSQL cannot restrict `CREATE SCHEMA` by name. Where the session's login may not create the draft schema, the failure names the draft schema and says it must be provisioned before use, rather than reporting a generic permission error.
 
+### 2.4 A branch may introduce a schema, and its base is created with it
+
+A branch is not limited to extending schemas that already exist. `dj.Schema('proj_new')` on a branch, where `proj_new` exists nowhere, is an ordinary thing for a proposal to do — a new stage of the pipeline arrives as a new module.
+
+**When the base schema does not exist, creating the draft creates it too, empty.** The reason is not tidiness. A draft exists to be merged: the branch's tables are declared for real, off the branch, when the code lands. A draft whose base schema can never exist is a draft that can never be promoted, so the base is part of what the branch is proposing and is created with it.
+
+It also keeps the rest of the object honest. `exists`, `list_tables()`, `make_classes` and `drop()` all read the logical schema, and a `Schema` whose logical half does not exist answers every one of those questions wrongly while the branch believes it is working.
+
+**The base stays empty until the merge.** Nothing weakens the binding rule: with the base empty, every table the branch declares exists in neither schema and lands in the draft (§3.1). What the branch adds to the pipeline's namespace is a name and nothing else — no table, no row.
+
+Two consequences follow, and both belong in the open. This needs `CREATE` on the base name, which a credential scoped to the `br_` prefix does not have; where it is refused the error names the base schema and says it must be provisioned, the same shape as the draft case above. And a branch that is abandoned leaves an empty base schema behind that no committed code describes — holding nothing, but nobody's job to remove.
+
 ## 3. Declaration-time binding
 
 ### 3.1 Where a table binds
@@ -304,6 +316,7 @@ Two of these are the ones a careless implementation breaks, because both would b
 | a derived physical name exceeds the backend's identifier limit | raises at activation, naming the schema that would overflow |
 | a schema is activated under a different branch than the connection already holds | raises, naming the branch the connection holds |
 | the draft schema does not exist and the login may not create it | raises, naming the draft schema and stating that it must be provisioned |
+| the base schema does not exist and the login may not create it | raises, naming the base schema and stating that it must be provisioned |
 | a branch declares a class whose name exists in the logical schema with a different definition | raises, naming both the class and the logical schema |
 | a branch declares a new part under a master in the logical schema | raises, naming the master and its schema |
 | a table resolves to the branch schema with `create_tables=False` | decoration succeeds; the existing error arrives at first heading access and names the draft schema |
