@@ -145,18 +145,55 @@ work in practice.
 
 ### Workflow steps and table tiers
 
-Tables are classified into tiers by data-entry mode:
+A table's tier answers one question: **what puts rows in this table?**
 
-| Tier | Role | `make()` |
+| Tier | What puts rows in it | `make()` |
 |------|------|----------|
-| **Manual** | Rows entered at runtime from outside the pipeline (people, forms, instruments, imports) | No |
-| **Lookup** | Reference rows defined in the schema itself via `contents` | No |
-| **Imported** | Reach out to data sources outside DataJoint (instruments, ELNs, external databases) | Yes |
-| **Computed** | Derive their contents entirely from upstream DataJoint tables | Yes |
+| **Lookup** | The code, through the table's own `contents` | No |
+| **Manual** | A writer outside the table — a person, an instrument, an entry script | No |
+| **Imported** | The table itself, through `make()`, reading an external source | Yes |
+| **Computed** | The table itself, through `make()`, deriving from other DataJoint tables | Yes |
+
+The axis is *what writes the rows*, never *who caused them to be written*. Two
+of the names suggest otherwise, so it is worth saying plainly:
+
+- **Manual** does not mean hand-entered. It means the rows arrive from outside
+  the table, by whatever means — a technician typing into a form, a LIMS feed, an
+  instrument, or a nightly entry script. An automated feed still writes to a
+  Manual table.
+- **Imported** does not say where the data came from. It says what the table
+  does: its own `make()` reaches out and fetches. A table filled *by something
+  else* is Manual, however far away the data originated.
+
+Crossing where the rows come from with what writes them separates the two
+questions, and shows why only four combinations exist:
+
+| Rows come from | Written from outside the table | Written by the table's own `make()` |
+|---|---|---|
+| The committed schema | **Lookup** | — |
+| Outside the pipeline | **Manual** | **Imported** |
+| Other DataJoint tables | — | **Computed** |
+
+`Part` is absent because it is not a fifth answer to the same question. A part
+table is a structural role: it inherits its master's tier and is written in the
+same transaction as its master. Any tier can serve as a master.
 
 Imported and Computed tables define computations via `make()` methods. The
 `make()` method specifies how each entity is derived — declared within the
 table definition, not in an external workflow file.
+
+!!! warning "The mistake the names invite"
+    A designer building an automated feed reasons: *this table is not filled by
+    hand, so it is not Manual; the data comes from outside, so it is Imported* —
+    and declares `dj.Imported`. But an Imported table is populated by its own
+    `make()`, and this one has none, so the insert is refused. The fix that
+    presents itself is `allow_direct_insert=True`, which silences a guard
+    reporting a real modeling error.
+
+    The result is recognizable: an auto-populated table with **no `make()`**, a
+    permanent `allow_direct_insert=True`, and `populate()` that silently does
+    nothing — with the pipeline's boundary drawn one table away from where it
+    actually sits. Such a table is a **Manual** table.
 
 #### Manual vs. Lookup
 
