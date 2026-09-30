@@ -8,8 +8,13 @@ relative links inside notebook markdown cells.  Such a link therefore reaches
 the browser verbatim and 404s.
 
 This checker works on the built output instead, so it sees exactly what a
-reader's browser would request: every ``<a href>`` must resolve to a real file
-in the build, and any fragment must match an ``id`` on the target page.
+reader's browser would request: every ``<a href>`` and ``<img src>`` must
+resolve to a real file in the build, and any fragment on an HTML target must
+match an ``id`` on that page.
+
+Checking ``<img src>`` also keeps ``svg_theme.py`` honest: that hook rewrites
+figure tags to point at variants it generates separately, and nothing else
+notices when the two halves disagree.
 
 Usage:
     python scripts/check_links.py [site_dir]
@@ -31,11 +36,12 @@ ROOT_ABSOLUTE = "/"
 
 
 class PageParser(HTMLParser):
-    """Collect outgoing hrefs and available anchor ids from one page."""
+    """Collect outgoing hrefs, image srcs, and available anchor ids from one page."""
 
     def __init__(self):
         super().__init__(convert_charrefs=True)
         self.hrefs: list[str] = []
+        self.srcs: list[str] = []
         self.ids: set[str] = set()
 
     def handle_starttag(self, tag, attrs):
@@ -47,6 +53,8 @@ class PageParser(HTMLParser):
             self.ids.add(value)
         if tag == "a" and (href := attrs.get("href")):
             self.hrefs.append(href)
+        if tag == "img" and (src := attrs.get("src")):
+            self.srcs.append(src)
 
 
 def parse(path: Path) -> PageParser:
@@ -83,7 +91,8 @@ def main() -> int:
         rel_page = page.relative_to(site)
         if str(rel_page).startswith(EXCLUDED_PREFIXES):
             continue
-        for href in doc.hrefs:
+        references = (*(("page", h) for h in doc.hrefs), *(("image", s) for s in doc.srcs))
+        for kind, href in references:
             if EXTERNAL.match(href):
                 continue
             path, fragment = urldefrag(href)
@@ -95,15 +104,18 @@ def main() -> int:
             ):
                 continue
             if not target.is_file():
-                failures.append(f"{rel_page}: '{href}' -> no such page")
+                failures.append(f"{rel_page}: '{href}' -> no such {kind}")
                 continue
-            if fragment:
+            # A fragment names an anchor only on an HTML page.  On anything else
+            # it is a selector hook -- svg_theme.py marks figure variants with
+            # #only-light / #only-dark -- and there is no document to look it up in.
+            if fragment and target.suffix == ".html":
                 target_doc = parsed.get(target) or parse(target)
                 if fragment not in target_doc.ids:
                     failures.append(f"{rel_page}: '{href}' -> no anchor '#{fragment}'")
 
     if failures:
-        print(f"{len(failures)} broken internal link(s) in the built site:\n")
+        print(f"{len(failures)} broken internal reference(s) in the built site:\n")
         for failure in failures:
             print(f"  {failure}")
         print(
@@ -113,7 +125,7 @@ def main() -> int:
         )
         return 1
 
-    print(f"OK: internal links resolve across {len(pages)} built pages")
+    print(f"OK: internal links and images resolve across {len(pages)} built pages")
     return 0
 
 
