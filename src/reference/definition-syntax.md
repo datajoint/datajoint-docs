@@ -36,7 +36,11 @@ core_type      = int32 | float64 | varchar(n) | ...
 codec_type     = "<" name ["@" [store]] ">"
 ```
 
-## A table with an empty primary key holds one row
+## Singleton Tables
+
+!!! version-added "New in 2.1"
+
+    Singleton tables were introduced in DataJoint 2.1.
 
 The primary key section may be empty. A table declared that way is a **singleton**: it holds at
 most one row, which is what you want for global configuration, pipeline-wide parameters, or a
@@ -54,7 +58,7 @@ class Config(dj.Lookup):
     """
 ```
 
-`insert1` takes no key, a second insert raises, `fetch1()` returns the row, and
+`insert1` takes no key, a second insert raises `DuplicateError`, `fetch1()` returns the row, and
 `heading.primary_key` is `[]`. Internally the table carries a hidden `_singleton` attribute as
 its key, which is excluded from the heading, from `fetch()` results, and from join matching.
 
