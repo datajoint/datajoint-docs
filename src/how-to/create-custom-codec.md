@@ -23,12 +23,12 @@ class GraphCodec(dj.Codec):
     def get_dtype(self, is_store: bool) -> str:
         return "<blob>"  # Delegate to blob for serialization
 
-    def encode(self, value, *, key=None, store_name=None):
+    def encode(self, value, *, key=None, context=None, store_name=None):
         import networkx as nx
         assert isinstance(value, nx.Graph)
         return list(value.edges)
 
-    def decode(self, stored, *, key=None):
+    def decode(self, stored, *, key=None, context=None):
         import networkx as nx
         return nx.Graph(stored)
 ```
@@ -69,26 +69,28 @@ Common return values:
 - `"<blob>"` — Chain to blob codec (in-table storage)
 - `"<blob@>"` — Blob in object storage
 
-### `encode(value, *, key=None, store_name=None)`
+### `encode(value, *, key=None, context=None, store_name=None)`
 
 Convert Python object to storable format:
 
 ```python
-def encode(self, value, *, key=None, store_name=None):
-    # value: Python object to store
-    # key: Primary key dict (for path construction)
+def encode(self, value, *, key=None, context=None, store_name=None):
+    # value:      Python object to store
+    # key:        Primary key dict (for path construction)
+    # context:    schema, table, field, and the calling connection's config
     # store_name: Target store name
     return serialized_representation
 ```
 
-### `decode(stored, *, key=None)`
+### `decode(stored, *, key=None, context=None)`
 
 Reconstruct Python object:
 
 ```python
-def decode(self, stored, *, key=None):
-    # stored: Data from storage
-    # key: Primary key dict
+def decode(self, stored, *, key=None, context=None):
+    # stored:  Data from storage
+    # key:     Primary key dict
+    # context: schema, table, field, and the calling connection's config
     return python_object
 ```
 
@@ -114,12 +116,12 @@ class ImageCodec(dj.Codec):
     def get_dtype(self, is_store: bool) -> str:
         return "<blob>"  # Chain to blob codec
 
-    def encode(self, value, *, key=None, store_name=None):
+    def encode(self, value, *, key=None, context=None, store_name=None):
         # Convert PIL Image to numpy array
         # Blob codec handles numpy serialization
         return np.array(value)
 
-    def decode(self, stored, *, key=None):
+    def decode(self, stored, *, key=None, context=None):
         from PIL import Image
         return Image.fromarray(stored)
 ```
@@ -137,10 +139,10 @@ class ZarrCodec(dj.Codec):
             raise DataJointError("<zarr> requires @ (store only)")
         return "<object@>"  # Schema-addressed storage
 
-    def encode(self, path, *, key=None, store_name=None):
+    def encode(self, path, *, key=None, context=None, store_name=None):
         return path  # Path to zarr directory
 
-    def decode(self, stored, *, key=None):
+    def decode(self, stored, *, key=None, context=None):
         return stored  # Returns ObjectRef for lazy access
 ```
 
@@ -153,14 +155,14 @@ class ParquetCodec(dj.SchemaCodec):
 
     # get_dtype inherited: requires @, returns "json"
 
-    def encode(self, df, *, key=None, store_name=None):
-        schema, table, field, pk = self._extract_context(key)
+    def encode(self, df, *, key=None, context=None, store_name=None):
+        schema, table, field, pk = self._extract_context(key, context)
         path, _ = self._build_path(schema, table, field, pk, ext=".parquet")
         backend = self._get_backend(store_name)
         # ... upload parquet file
         return {"path": path, "store": store_name, "shape": list(df.shape)}
 
-    def decode(self, stored, *, key=None):
+    def decode(self, stored, *, key=None, context=None):
         return ParquetRef(stored, self._get_backend(stored.get("store")))
 ```
 
@@ -200,7 +202,7 @@ class MedicalImageCodec(dj.Codec):
     def get_dtype(self, is_store: bool) -> str:
         return "<blob@>" if is_store else "<blob>"
 
-    def encode(self, image, *, key=None, store_name=None):
+    def encode(self, image, *, key=None, context=None, store_name=None):
         return {
             'array': sitk.GetArrayFromImage(image),
             'spacing': image.GetSpacing(),
@@ -208,7 +210,7 @@ class MedicalImageCodec(dj.Codec):
             'direction': image.GetDirection(),
         }
 
-    def decode(self, stored, *, key=None):
+    def decode(self, stored, *, key=None, context=None):
         image = sitk.GetImageFromArray(stored['array'])
         image.SetSpacing(stored['spacing'])
         image.SetOrigin(stored['origin'])
