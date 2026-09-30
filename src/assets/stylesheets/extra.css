@@ -308,3 +308,22 @@
 .jp-OutputArea-output code {
   font-size: 0.8rem;
 }
+
+/* -------------------------------------------------------------------
+   Theme-aware figures
+
+   scripts/svg_theme.py emits each themed figure twice, tagged #only-light
+   and #only-dark, because an SVG embedded with <img> cannot see the palette
+   toggle on the host page. These rules pick the variant that matches the
+   scheme the reader actually selected.
+   ------------------------------------------------------------------- */
+
+.md-typeset img[src$="#only-dark"] {
+  display: none;
+}
+[data-md-color-scheme="slate"] .md-typeset img[src$="#only-light"] {
+  display: none;
+}
+[data-md-color-scheme="slate"] .md-typeset img[src$="#only-dark"] {
+  display: inline;
+}

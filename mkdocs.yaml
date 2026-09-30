@@ -185,6 +185,9 @@ theme:
       toggle:
         icon: material/brightness-4
         name: Switch to light mode
+hooks:
+  # Resolve figure light/dark palettes against the site toggle, not the OS.
+  - scripts/svg_theme.py
 plugins:
   - search
   - redirects:

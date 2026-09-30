@@ -12,7 +12,7 @@ A **scientific data pipeline** extends beyond a database with computations. It i
 
 At the heart of every DataJoint pipeline is an **open-source core** of three components that handle schema, computation, and storage. The managed **DataJoint Platform** extends this core with services for AI access, data ingestion, exploration, security, collaboration, and visualization.
 
-![DataJoint Platform Architecture](../images/dj-platform.svg/)
+![DataJoint Platform Architecture](../images/dj-platform.svg)
 
 | Open-Source Core | Purpose |
 |------------------|---------|
