@@ -213,7 +213,7 @@ The reference is recorded in a hidden table in the schema that holds the referen
 | `column_name` | child-side attribute |
 | `referenced_column_name` | parent-side attribute |
 
-One row per referencing column, which is the shape the dependency loader already consumes from the catalog. The table is created on first declaration into the branch schema and rewritten per table at each re-declaration, so a branch that drops and re-declares its draft carries no stale rows.
+One row per referencing column, which is the shape the dependency loader already consumes from the catalog. The table is created on first declaration into the branch schema and rewritten per table at each redeclaration, so a branch that drops and redeclares its draft carries no stale rows.
 
 **`~edge` holds plain columns and declares no foreign key of its own.** The two backends exclude hidden tables from the foreign-key graph on opposite sides — MySQL filters the referenced table, PostgreSQL the referencing one — so a `~` table that declared a constraint would enter the graph on one backend and stay out of it on the other, and where it entered it would arrive as a node with an empty primary key. No hidden table declares one today, and this one does not become the first.
 
@@ -326,19 +326,27 @@ Two of these are the ones a careless implementation breaks, because both would b
 
 The division matters, because it decides how much of a joint code-and-schema lifecycle is a library concern. It is not one.
 
-**Lifecycle.** Checking a commit out, dropping a branch's draft tables, re-declaring them at the new commit, and tearing everything down when the branch is deleted. The library declares and binds; sequencing those acts is the caller's.
+**Lifecycle.** Checking a commit out, dropping a branch's draft tables, redeclaring them at the new commit, and tearing everything down when the branch is deleted. The library declares and binds; sequencing those acts is the caller's.
+
+A checkout **converges on re-run rather than rolling back**. DataJoint refuses to declare a table inside a transaction, so the drop-and-redeclare cycle — including the `~lineage` and `~edge` writes — cannot be made atomic through the library. A checkout interrupted halfway leaves a partly built draft, and running it again completes it. A caller that needs all-or-nothing has to get it outside the library.
+
+**Dropping the draft at the merge is part of the merge.** Once a branch's table is declared for real in the logical schema, the draft's copy still carries lineage naming the draft's physical schema (§5.5), so joining the two raises a lineage mismatch. The draft must go when the branch does.
 
 **Authorization.** The library does not enforce that a branch may only add. Create-only is a property of the credential the session holds — create inside one draft schema, read on the pipeline's schema — and a library-side flag would be advisory, which is not a boundary. It holds on every access path, including a direct connection, precisely because it is not in the library.
 
 **Branch identity.** Generating branch identifiers, deciding who may hold a branch, reserving name prefixes, enumerating live branches.
 
-**Provisioning.** Creating the draft schema where the session's own login may not (§2.3).
+**Provisioning.** Creating the draft schema where the session's own login may not (§2.3), and creating the base schema for a branch that introduces one (§2.4). A credential scoped to the `br_` prefix cannot create a name outside it, so under the create-only model above, base schemas are always the caller's to provision — and, for a branch that is abandoned, the caller's to remove.
+
+**Draft ownership on PostgreSQL.** Only a table's owner may drop it there, and ownership cannot be granted. A draft declared by one person is therefore not rebuildable by another, so two people on one branch — which the branch-as-the-unit model invites — need the draft tables owned by a role both hold rather than by whichever of them declared first. Taking turns is enough to hit it; it does not need concurrent work. MySQL has no equivalent problem, because `DROP` is an ordinary grant there.
 
 ## 9. Limits in this release
 
 **Additive only.** A branch adds tables. Changing an existing table's structure needs the same table in two versions, which the partition cannot express.
 
-**No private draft.** A draft is as visible as the schema-level access that reaches it. The library offers no per-branch read restriction, and none of the common git providers has a per-branch read permission to mirror.
+**No private draft.** A draft is as visible as the schema-level access that reaches it. The library offers no per-branch read restriction, and none of the common git providers has a per-branch read permission to mirror. On PostgreSQL the *names* go further than the rows: schema and table names are readable by any login through the system catalogs, even where `list_schemas()` and `information_schema` hide them and the rows themselves stay unreadable. A branch name is not a secret on either backend, and on PostgreSQL neither is the shape of what it declares.
+
+**A read-only login on PostgreSQL cannot yet drive a branch session.** Primary keys are read from `information_schema`, which hides constraints on tables a login neither owns nor may write, so a login holding only `USAGE` and `SELECT` sees an empty primary key on every table it reads: `parents(primary=True)` comes back empty, `key_source` raises, and a row count builds invalid SQL. Foreign keys are unaffected, because they are read from a catalog any login may read — so such a session knows how tables link but not what keys them. The read access §8 describes for a branch session is exactly that kind of login, which makes this a precondition for branching on PostgreSQL rather than a consequence of it. It is a pre-existing library defect, not one this design introduces, and it is tracked separately.
 
 **Draft and pipeline tables draw as two schemas.** The diagram shows both and connects them (§5.4); grouping them into one logical cluster is not implemented.
 
