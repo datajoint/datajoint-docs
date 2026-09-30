@@ -53,11 +53,15 @@ within-pipeline derivation and external-origin provenance are different
 questions, and a complete record often wants both.
 
 Inside DataJoint, the origin of externally-sourced data is recorded at the
-pipeline's entry-point tables — a Manual insert or an Imported `make()` records
-the source identity alongside the data, exactly as at any manual data-entry
-point. A single ingestion step may populate several such tables that carry no
+pipeline's entry-point tables. Since 2.3.4 that record has a standard shape: a
+hidden `_prov` attribute on every Manual table, written by the framework from
+deployment configuration and from the executing context rather than by the
+author — see
+[Extrinsic Provenance at Entry Tables](../reference/specs/boundary-provenance.md).
+A single ingestion step may populate several such tables that carry no
 foreign-key dependency on the loader (the
-[fan-out ingestion pattern](fan-out-ingestion.md)), each recording its own origin.
+[fan-out ingestion pattern](fan-out-ingestion.md)); rows written from inside that
+loader record it, which is the link the absent foreign key would have carried.
 
 At the boundary, the two integrate **in both directions** — when explicitly
 configured:
