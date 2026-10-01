@@ -167,12 +167,15 @@ Subject & "_prov IS NULL"
 Subject & "JSON_VALUE(_prov, '$.source.system') = 'PyRat'"
 ```
 
-!!! warning "Do not use the mapping form on a hidden attribute"
+!!! warning "The mapping form does not reach a hidden attribute"
 
-    `Subject & {"_prov.system": "PyRat"}` is **silently ignored** — no `WHERE`
-    clause is emitted and every row is returned. A restriction that quietly
-    returns everything is worse than one that raises, so write the condition as
-    a string until that is fixed. Tracked in
+    `Subject & {"_prov.system": "PyRat"}` returns **every row**. A mapping
+    restriction ignores attributes it cannot match, which is deliberate and
+    useful — it is what lets `Session & key` work when `key` carries attributes
+    from a more detailed table. A hidden attribute is invisible to that matching,
+    so the predicate is dropped along with it.
+
+    Write the condition as a string, which reaches the column directly. Tracked in
     [datajoint-python#1561](https://github.com/datajoint/datajoint-python/issues/1561).
 
 **Reading the value back requires SQL** until 2.4. There is no public API that

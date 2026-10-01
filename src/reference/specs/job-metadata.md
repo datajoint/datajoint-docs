@@ -361,8 +361,9 @@ SessionAnalysis().to_dicts()  # Returns only visible attributes
     ```
 
     Restricting on one works, written as a condition **string** —
-    `SessionAnalysis & "_job_duration > 10"`. The mapping form is silently
-    ignored on a hidden attribute and returns every row
+    `SessionAnalysis & "_job_duration > 10"`. The mapping form returns every
+    row: it ignores attributes it cannot match, by design, and a hidden
+    attribute is invisible to that matching
     ([#1561](https://github.com/datajoint/datajoint-python/issues/1561)).
 
     A supported accessor is planned for 2.4, covering the job-metadata

@@ -44,8 +44,10 @@ Subject & "_prov IS NULL"
 len(Subject & "_prov IS NULL"), len(Subject)
 ```
 
-Write the condition as a **string**. The mapping form is silently ignored on a
-hidden attribute — it emits no `WHERE` clause and returns every row
+Write the condition as a **string**. The mapping form returns every row here: it
+ignores attributes it cannot match — deliberately, so that `Session & key` works
+when `key` carries attributes from a more detailed table — and a hidden
+attribute is invisible to that matching
 ([#1561](https://github.com/datajoint/datajoint-python/issues/1561)):
 
 ```python
