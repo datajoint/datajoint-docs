@@ -214,13 +214,19 @@ which will cover `_prov` and the job-metadata attributes together.
 
 | Module | Role |
 |--------|------|
-| `datajoint/provenance.py` | payload assembly, tier test, the ingesting context |
+| `datajoint/provenance.py` | payload assembly and the ingesting context |
 | `datajoint/settings.py` | `ProvenanceSettings`, exposed as `config.provenance` |
-| `datajoint/declare.py` | adds the column to Manual tables at declaration |
-| `datajoint/adapters/` | `provenance_columns()` — `json` on MySQL, `jsonb` on PostgreSQL |
+| `datajoint/declare.py` | `PROV_DEFINITION`, and adding it to Manual tables at declaration |
+| `datajoint/user_tables.py` | `is_tier`, the shared tier test |
 | `datajoint/table.py` | appends the value on the insert path |
 | `datajoint/autopopulate.py` | scopes the ingesting context to a `make()` call |
 | `datajoint/deploy.py` | `add_prov_column` |
+
+The column is declared the way a user attribute is —
+`_prov = null : json # extrinsic provenance ...` — and compiled by the same
+`compile_attribute`, so the backend mapping to `json` or `jsonb` comes from the
+adapter's type system rather than from a per-adapter method. No adapter
+implements anything of its own for it.
 
 ## See Also
 
