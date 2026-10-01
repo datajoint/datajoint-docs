@@ -155,17 +155,39 @@ Rows already present keep `NULL`. Provenance is recorded at insert and is never 
 
 ## Querying
 
-`_prov` is excluded from `heading.attributes`, so it does not appear in `to_dicts()`, in `describe()`, or in a join. Read it explicitly:
+`_prov` is excluded from `heading.attributes`, so it does not appear in `to_dicts()`, in `describe()`, or in a join.
+
+**Restricting** on it works, written as a SQL condition string:
 
 ```python
 # Rows with no recorded origin
 Subject & "_prov IS NULL"
 
-# Rows from a particular external system
-Subject & {"_prov.system": "PyRat"}
+# Rows from a particular external system (MySQL)
+Subject & "JSON_VALUE(_prov, '$.source.system') = 'PyRat'"
 ```
 
-JSON path restriction is portable: DataJoint translates it to `json_value()` on MySQL and `jsonb_extract_path_text()` on PostgreSQL. See the [JSON type](type-system.md).
+!!! warning "Do not use the mapping form on a hidden attribute"
+
+    `Subject & {"_prov.system": "PyRat"}` is **silently ignored** — no `WHERE`
+    clause is emitted and every row is returned. A restriction that quietly
+    returns everything is worse than one that raises, so write the condition as
+    a string until that is fixed. Tracked in
+    [datajoint-python#1561](https://github.com/datajoint/datajoint-python/issues/1561).
+
+**Reading the value back requires SQL** until 2.4. There is no public API that
+returns a hidden attribute — `to_arrays('_prov')` and `proj('_prov')` both raise:
+
+```python
+# Until 2.4
+rows = Subject.connection.query(
+    f"SELECT subject_id, _prov FROM {Subject.full_table_name}"
+).fetchall()
+```
+
+A supported accessor is planned for 2.4
+([datajoint-python#1562](https://github.com/datajoint/datajoint-python/issues/1562)),
+which will cover `_prov` and the job-metadata attributes together.
 
 !!! note "Range queries on capture time"
 

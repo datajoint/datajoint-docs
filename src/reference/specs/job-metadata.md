@@ -343,9 +343,31 @@ class SessionAnalysis(dj.Computed):
 SessionAnalysis().heading.names  # ['session_id', 'result']
 SessionAnalysis().to_dicts()  # Returns only visible attributes
 
-# Access hidden attributes explicitly if needed:
-SessionAnalysis().to_arrays('_job_start_time', '_job_duration', '_job_version')
+# Reading them back requires SQL until 2.4 — see below.
 ```
+
+!!! warning "There is no public API for reading a hidden attribute yet"
+
+    `to_arrays('_job_start_time')` and `proj('_job_start_time')` both raise
+    `DataJointError: Attribute '_job_start_time' not found.` — the heading
+    excludes hidden names, so they cannot be addressed through the query API.
+    Until 2.4, read them with SQL:
+
+    ```python
+    rows = SessionAnalysis.connection.query(
+        f"SELECT _job_start_time, _job_duration, _job_version "
+        f"FROM {SessionAnalysis.full_table_name}"
+    ).fetchall()
+    ```
+
+    Restricting on one works, written as a condition **string** —
+    `SessionAnalysis & "_job_duration > 10"`. The mapping form is silently
+    ignored on a hidden attribute and returns every row
+    ([#1561](https://github.com/datajoint/datajoint-python/issues/1561)).
+
+    A supported accessor is planned for 2.4, covering the job-metadata
+    attributes and `_prov` together
+    ([#1562](https://github.com/datajoint/datajoint-python/issues/1562)).
 
 ## Summary of Design Decisions
 

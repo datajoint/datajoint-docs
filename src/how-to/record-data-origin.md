@@ -44,16 +44,32 @@ Subject & "_prov IS NULL"
 len(Subject & "_prov IS NULL"), len(Subject)
 ```
 
-```python
-# Rows that came from a particular system
-Subject & {"_prov.system": "PyRat"}
-```
-
-To read the whole record for a row:
+Write the condition as a **string**. The mapping form is silently ignored on a
+hidden attribute — it emits no `WHERE` clause and returns every row
+([#1561](https://github.com/datajoint/datajoint-python/issues/1561)):
 
 ```python
-(Subject & {"subject_id": 1}).proj("_prov").to_dicts()
+# Rows that came from a particular system (MySQL)
+Subject & "JSON_VALUE(_prov, '$.source.system') = 'PyRat'"
+
+# Subject & {"_prov.system": "PyRat"}   <- returns everything; do not use
 ```
+
+## Read the record back
+
+Until 2.4 this needs SQL. `to_arrays("_prov")` and `proj("_prov")` both raise,
+because a hidden attribute cannot be named through the query API
+([#1562](https://github.com/datajoint/datajoint-python/issues/1562) adds a
+supported accessor):
+
+```python
+rows = Subject.connection.query(
+    f"SELECT subject_id, _prov FROM {Subject.full_table_name}"
+).fetchall()
+```
+
+On MySQL the value comes back as a JSON string and needs `json.loads`; on
+PostgreSQL psycopg2 returns a dict already.
 
 ## Turn capture off
 
