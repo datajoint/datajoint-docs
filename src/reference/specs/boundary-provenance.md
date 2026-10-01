@@ -38,6 +38,10 @@ Manual tables only.
 | `dj.Computed` | No | Provenance is entailed by the foreign-key graph |
 | `dj.Part` | No | A part inherits its master's |
 
+The slot is granted by matching the Manual tier, not by excluding the other
+tiers' prefixes, so DataJoint's own system tables — job queues, lineage — never
+carry it either.
+
 **Why not Imported.** An Imported table already records agent, time and version through [job metadata](job-metadata.md) when `config.jobs.add_job_metadata` is on, so a `_prov` there would record the same facts twice. The half that is *not* covered — which specific file, endpoint, or instrument session its `make()` read — is known per row inside the `make()` body, which configuration cannot supply.
 
 In a well-modeled pipeline the external source is registered as a Manual row and the Imported table reaches it through a declared foreign key, which makes that table's provenance structural. An Imported table reading a source no Manual row records is the modeling problem described in [Table Declaration](table-declaration.md); the fix is to register the source, not to add a slot.
