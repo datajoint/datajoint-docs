@@ -51,11 +51,18 @@ attribute is invisible to that matching
 ([#1561](https://github.com/datajoint/datajoint-python/issues/1561)):
 
 ```python
-# Rows that came from a particular system (MySQL)
+# MySQL
 Subject & "JSON_VALUE(_prov, '$.source.system') = 'PyRat'"
+
+# PostgreSQL
+Subject & "jsonb_extract_path_text(_prov, 'source', 'system') = 'PyRat'"
 
 # Subject & {"_prov.system": "PyRat"}   <- returns everything; do not use
 ```
+
+`_prov IS NULL` and `_prov IS NOT NULL` are the same on both backends. Filtering
+on a field inside the JSON is not: the mapping form is what would normally make
+that portable, and it does not reach a hidden attribute.
 
 ## Read the record back
 

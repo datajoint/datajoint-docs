@@ -160,11 +160,21 @@ Rows already present keep `NULL`. Provenance is recorded at insert and is never 
 **Restricting** on it works, written as a SQL condition string:
 
 ```python
-# Rows with no recorded origin
+# Rows with no recorded origin — portable
 Subject & "_prov IS NULL"
+```
 
-# Rows from a particular external system (MySQL)
+Filtering on a field *inside* the JSON has no portable spelling today. The
+mapping form, which DataJoint would normally translate for you, does not reach a
+hidden attribute (below), so the condition has to name the backend's own
+function:
+
+```python
+# MySQL
 Subject & "JSON_VALUE(_prov, '$.source.system') = 'PyRat'"
+
+# PostgreSQL
+Subject & "jsonb_extract_path_text(_prov, 'source', 'system') = 'PyRat'"
 ```
 
 !!! warning "The mapping form does not reach a hidden attribute"
@@ -175,7 +185,9 @@ Subject & "JSON_VALUE(_prov, '$.source.system') = 'PyRat'"
     from a more detailed table. A hidden attribute is invisible to that matching,
     so the predicate is dropped along with it.
 
-    Write the condition as a string, which reaches the column directly. Tracked in
+    Write the condition as a string, which reaches the column directly — at the
+    cost of portability, since DataJoint's own JSON-path translation is what the
+    mapping form would have given you. Tracked in
     [datajoint-python#1561](https://github.com/datajoint/datajoint-python/issues/1561).
 
 **Reading the value back requires SQL** until 2.4. There is no public API that
