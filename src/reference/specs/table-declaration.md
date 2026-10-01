@@ -187,16 +187,19 @@ Names with leading underscore are reserved for platform-managed columns
 need to control visibility at the call site, use proj().
 ```
 
-**Platform-managed hidden attributes** are added automatically when DataJoint declares certain table types. Users do not write these in the definition; the framework injects them programmatically after parsing.
+**Platform-managed hidden attributes** are added automatically when DataJoint declares certain table types. Users do not write these in the definition; the framework writes them in the same DataJoint notation and compiles them through the same path, once the user's lines are parsed.
 
 | Hidden attribute | Added to | Purpose |
 |------------------|----------|---------|
 | `_job_start_time` | `Computed`, `Imported` | Wall-clock start of the populate call |
 | `_job_duration` | `Computed`, `Imported` | Elapsed seconds for the populate call |
 | `_job_version` | `Computed`, `Imported` | Library version that produced the row |
-| `_singleton` | Singleton tables | Implementation detail of the singleton pattern |
+| `_prov` | `Manual` | [Extrinsic provenance](boundary-provenance.md) for a row that entered from outside |
+| `_singleton` | Tables that declare no primary key | Implementation detail of the singleton pattern |
 
-These columns are populated by DataJoint internals via raw SQL during the `populate()` lifecycle, not via `insert`/`update1`. They are filtered out of every public API surface so they don't clutter joins, fetches, or displays.
+Part tables receive none of them, and neither do DataJoint's own system tables — the job queue and the lineage registry — because each slot is granted by matching its tier, not by excluding the others' prefixes.
+
+DataJoint internals write these values; `insert` and `update1` reject them. `_job_*` is written by raw `UPDATE` after `make()` returns, `_prov` on the insert path, `_singleton` by its default. They are filtered out of every public API surface so they don't clutter joins, fetches, or displays.
 
 **Behavior.** The filter is implemented in `Heading.attributes`, which all visible code paths consume; raw SQL strings bypass it.
 
@@ -240,6 +243,11 @@ MyTable & "_job_start_time > '2024-01-01'"
 # Dict restriction is silently dropped — does NOT filter
 MyTable & {'_job_start_time': some_date}   # ⚠ ignored
 ```
+
+A supported accessor is planned for 2.4, covering the job-metadata attributes
+and `_prov` together
+([datajoint-python#1562](https://github.com/datajoint/datajoint-python/issues/1562)).
+Until then, raw SQL is the only way to read one back.
 
 **Use a regular attribute instead.** When you want a column that's part of the schema-level contract (backing an index, storing a derived value, etc.) but isn't featured in default displays, declare it as a regular attribute and use `proj()` at the call site if you want to omit it from a particular query result. For example, a hash column backing a unique index:
 
@@ -650,7 +658,7 @@ When `config['jobs.add_job_metadata'] = True`, auto-populated tables receive:
 | Column | Type | Description |
 |--------|------|-------------|
 | `_job_start_time` | `datetime(3)` | Job start timestamp |
-| `_job_duration` | `float64` | Duration in seconds |
+| `_job_duration` | `float32` | Duration in seconds |
 | `_job_version` | `varchar(64)` | Code version |
 
 ---

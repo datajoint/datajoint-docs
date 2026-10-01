@@ -38,6 +38,10 @@ Manual tables only.
 | `dj.Computed` | No | Provenance is entailed by the foreign-key graph |
 | `dj.Part` | No | A part inherits its master's |
 
+The slot is granted by matching the Manual tier, not by excluding the other
+tiers' prefixes, so DataJoint's own system tables — job queues, lineage — never
+carry it either.
+
 **Why not Imported.** An Imported table already records agent, time and version through [job metadata](job-metadata.md) when `config.jobs.add_job_metadata` is on, so a `_prov` there would record the same facts twice. The half that is *not* covered — which specific file, endpoint, or instrument session its `make()` read — is known per row inside the `make()` body, which configuration cannot supply.
 
 In a well-modeled pipeline the external source is registered as a Manual row and the Imported table reaches it through a declared foreign key, which makes that table's provenance structural. An Imported table reading a source no Manual row records is the modeling problem described in [Table Declaration](table-declaration.md); the fix is to register the source, not to add a slot.
@@ -151,17 +155,56 @@ Rows already present keep `NULL`. Provenance is recorded at insert and is never 
 
 ## Querying
 
-`_prov` is excluded from `heading.attributes`, so it does not appear in `to_dicts()`, in `describe()`, or in a join. Read it explicitly:
+`_prov` is excluded from `heading.attributes`, so it does not appear in `to_dicts()`, in `describe()`, or in a join.
+
+**Restricting** on it works, written as a SQL condition string:
 
 ```python
-# Rows with no recorded origin
+# Rows with no recorded origin — portable
 Subject & "_prov IS NULL"
-
-# Rows from a particular external system
-Subject & {"_prov.system": "PyRat"}
 ```
 
-JSON path restriction is portable: DataJoint translates it to `json_value()` on MySQL and `jsonb_extract_path_text()` on PostgreSQL. See the [JSON type](type-system.md).
+Filtering on a field *inside* the JSON needs backend-specific SQL **because the
+attribute is hidden**, not because JSON paths are awkward. On an ordinary JSON
+attribute the mapping form is portable — DataJoint translates `{"data.system":
+"PyRat"}` to `json_value()` on MySQL and `jsonb_extract_path_text()` on
+PostgreSQL. That translation is unavailable here only because the mapping form
+cannot reach a hidden attribute (below):
+
+```python
+# MySQL
+Subject & "JSON_VALUE(_prov, '$.source.system') = 'PyRat'"
+
+# PostgreSQL
+Subject & "jsonb_extract_path_text(_prov, 'source', 'system') = 'PyRat'"
+```
+
+!!! warning "The mapping form does not reach a hidden attribute"
+
+    `Subject & {"_prov.system": "PyRat"}` returns **every row**. A mapping
+    restriction ignores attributes it cannot match, which is deliberate and
+    useful — it is what lets `Session & key` work when `key` carries attributes
+    from a more detailed table. A hidden attribute is invisible to that matching,
+    so the predicate is dropped along with it.
+
+    Write the condition as a string, which reaches the column directly — at the
+    cost of portability, since DataJoint's own JSON-path translation is what the
+    mapping form would have given you. Tracked in
+    [datajoint-python#1561](https://github.com/datajoint/datajoint-python/issues/1561).
+
+**Reading the value back requires SQL** until 2.4. There is no public API that
+returns a hidden attribute — `to_arrays('_prov')` and `proj('_prov')` both raise:
+
+```python
+# Until 2.4
+rows = Subject.connection.query(
+    f"SELECT subject_id, _prov FROM {Subject.full_table_name}"
+).fetchall()
+```
+
+A supported accessor is planned for 2.4
+([datajoint-python#1562](https://github.com/datajoint/datajoint-python/issues/1562)),
+which will cover `_prov` and the job-metadata attributes together.
 
 !!! note "Range queries on capture time"
 
@@ -171,13 +214,19 @@ JSON path restriction is portable: DataJoint translates it to `json_value()` on 
 
 | Module | Role |
 |--------|------|
-| `datajoint/provenance.py` | payload assembly, tier test, the ingesting context |
+| `datajoint/provenance.py` | payload assembly and the ingesting context |
 | `datajoint/settings.py` | `ProvenanceSettings`, exposed as `config.provenance` |
-| `datajoint/declare.py` | adds the column to Manual tables at declaration |
-| `datajoint/adapters/` | `provenance_columns()` — `json` on MySQL, `jsonb` on PostgreSQL |
+| `datajoint/declare.py` | `PROV_DEFINITION`, and adding it to Manual tables at declaration |
+| `datajoint/user_tables.py` | `is_tier`, the shared tier test |
 | `datajoint/table.py` | appends the value on the insert path |
 | `datajoint/autopopulate.py` | scopes the ingesting context to a `make()` call |
 | `datajoint/deploy.py` | `add_prov_column` |
+
+The column is declared the way a user attribute is —
+`_prov = null : json # extrinsic provenance ...` — and compiled by the same
+`compile_attribute`, so the backend mapping to `json` or `jsonb` comes from the
+adapter's type system rather than from a per-adapter method. No adapter
+implements anything of its own for it.
 
 ## See Also
 

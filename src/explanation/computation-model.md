@@ -228,6 +228,10 @@ This adds to computed tables:
 - `_job_duration` — How long it took
 - `_job_version` — Code version (if configured)
 
+They are hidden: filtered out of the heading, out of `to_dicts()`, and out of
+join matching. See [Hidden Job Metadata](../reference/specs/job-metadata.md) for
+how to query them.
+
 ## The Three-Part Make Model
 
 For long-running computations (hours or days), holding a database transaction

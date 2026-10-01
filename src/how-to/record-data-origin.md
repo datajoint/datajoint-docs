@@ -44,16 +44,43 @@ Subject & "_prov IS NULL"
 len(Subject & "_prov IS NULL"), len(Subject)
 ```
 
+Write the condition as a **string**. The mapping form returns every row here: it
+ignores attributes it cannot match — deliberately, so that `Session & key` works
+when `key` carries attributes from a more detailed table — and a hidden
+attribute is invisible to that matching
+([#1561](https://github.com/datajoint/datajoint-python/issues/1561)):
+
 ```python
-# Rows that came from a particular system
-Subject & {"_prov.system": "PyRat"}
+# MySQL
+Subject & "JSON_VALUE(_prov, '$.source.system') = 'PyRat'"
+
+# PostgreSQL
+Subject & "jsonb_extract_path_text(_prov, 'source', 'system') = 'PyRat'"
+
+# Subject & {"_prov.system": "PyRat"}   <- returns everything; do not use
 ```
 
-To read the whole record for a row:
+`_prov IS NULL` and `_prov IS NOT NULL` are the same on both backends. Filtering
+on a field inside the JSON is not — **because `_prov` is hidden**, not because
+JSON paths are hard. On an ordinary JSON attribute `{"data.system": "PyRat"}` is
+portable and DataJoint translates it per backend; that route is closed here only
+because the mapping form cannot reach a hidden attribute.
+
+## Read the record back
+
+Until 2.4 this needs SQL. `to_arrays("_prov")` and `proj("_prov")` both raise,
+because a hidden attribute cannot be named through the query API
+([#1562](https://github.com/datajoint/datajoint-python/issues/1562) adds a
+supported accessor):
 
 ```python
-(Subject & {"subject_id": 1}).proj("_prov").to_dicts()
+rows = Subject.connection.query(
+    f"SELECT subject_id, _prov FROM {Subject.full_table_name}"
+).fetchall()
 ```
+
+On MySQL the value comes back as a JSON string and needs `json.loads`; on
+PostgreSQL psycopg2 returns a dict already.
 
 ## Turn capture off
 

@@ -988,16 +988,23 @@ When `config['jobs.add_job_metadata'] = True`, auto-populated tables receive hid
 | Column | Type | Description |
 |--------|------|-------------|
 | `_job_start_time` | `datetime(3)` | When computation began |
-| `_job_duration` | `float64` | Duration in seconds |
+| `_job_duration` | `float32` | Duration in seconds |
 | `_job_version` | `varchar(64)` | Code version |
 
 ```python
-# Fetch with job metadata
-Analysis().to_arrays('result', '_job_duration')
-
-# Query slow computations
+# Query slow computations -- a condition string reaches the column
 slow = Analysis & '_job_duration > 3600'
+
+# Reading the values back requires SQL until 2.4
+rows = Analysis.connection.query(
+    f"SELECT _job_start_time, _job_duration FROM {Analysis.full_table_name}"
+).fetchall()
 ```
+
+`to_arrays('_job_duration')` and `proj('_job_duration')` raise: the heading
+excludes hidden names, so they cannot be addressed through the query API. See
+[Hidden Job Metadata](job-metadata.md#querying-and-fetching) for the full
+account and for what 2.4 adds.
 
 ---
 
