@@ -61,8 +61,10 @@ Subject & "jsonb_extract_path_text(_prov, 'source', 'system') = 'PyRat'"
 ```
 
 `_prov IS NULL` and `_prov IS NOT NULL` are the same on both backends. Filtering
-on a field inside the JSON is not: the mapping form is what would normally make
-that portable, and it does not reach a hidden attribute.
+on a field inside the JSON is not — **because `_prov` is hidden**, not because
+JSON paths are hard. On an ordinary JSON attribute `{"data.system": "PyRat"}` is
+portable and DataJoint translates it per backend; that route is closed here only
+because the mapping form cannot reach a hidden attribute.
 
 ## Read the record back
 

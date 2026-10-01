@@ -164,10 +164,12 @@ Rows already present keep `NULL`. Provenance is recorded at insert and is never 
 Subject & "_prov IS NULL"
 ```
 
-Filtering on a field *inside* the JSON has no portable spelling today. The
-mapping form, which DataJoint would normally translate for you, does not reach a
-hidden attribute (below), so the condition has to name the backend's own
-function:
+Filtering on a field *inside* the JSON needs backend-specific SQL **because the
+attribute is hidden**, not because JSON paths are awkward. On an ordinary JSON
+attribute the mapping form is portable — DataJoint translates `{"data.system":
+"PyRat"}` to `json_value()` on MySQL and `jsonb_extract_path_text()` on
+PostgreSQL. That translation is unavailable here only because the mapping form
+cannot reach a hidden attribute (below):
 
 ```python
 # MySQL
