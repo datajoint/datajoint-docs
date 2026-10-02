@@ -167,7 +167,7 @@ If table lacks partition attributes, it follows normal path structure.
 
 | Setting | Environment | Default | Description |
 | --------- | ------------- | --------- | ------------- |
-| `provenance.capture` | `DJ_PROVENANCE_CAPTURE` | `True` | Declare the hidden `_prov` attribute on Manual tables and fill it on insert *(new in 2.3.4)* |
+| `provenance.capture` | `DJ_PROVENANCE_CAPTURE` | `False` | Declare the hidden `_prov` attribute on Manual tables and fill it on insert *(new in 2.3.4)* |
 | `provenance.source` | `DJ_PROVENANCE_SOURCE` | `{}` | External source identity recorded on every row this process enters *(new in 2.3.4)* |
 
 `provenance.source` is a JSON object naming the system this process draws from,
