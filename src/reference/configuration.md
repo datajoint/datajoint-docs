@@ -163,6 +163,23 @@ If table lacks partition attributes, it follows normal path structure.
 | `jobs.add_job_metadata` | `False` | Add hidden metadata to computed tables |
 | `jobs.allow_new_pk_fields_in_computed_tables` | `False` | Allow non-FK primary key fields |
 
+## Provenance Settings
+
+| Setting | Environment | Default | Description |
+| --------- | ------------- | --------- | ------------- |
+| `provenance.capture` | `DJ_PROVENANCE_CAPTURE` | `False` | Declare the hidden `_prov` attribute on Manual tables and fill it on insert *(new in 2.3.4)* |
+| `provenance.source` | `DJ_PROVENANCE_SOURCE` | `{}` | External source identity recorded on every row this process enters *(new in 2.3.4)* |
+
+`provenance.source` is a JSON object naming the system this process draws from,
+set per deployment rather than in pipeline code:
+
+```bash
+export DJ_PROVENANCE_SOURCE='{"system": "PyRat", "endpoint": "https://pyrat.example.org/api/v2"}'
+```
+
+See [Extrinsic Provenance at Entry Tables](specs/boundary-provenance.md) for what is
+recorded and [Record Data Origin](../how-to/record-data-origin.md) for the task-oriented guide.
+
 ## Display Settings
 
 | Setting | Environment | Default | Description |

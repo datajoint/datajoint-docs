@@ -125,6 +125,12 @@ This utility:
 - Does NOT populate existing rows (metadata remains NULL)
 - Future `populate()` calls will populate metadata for new rows
 
+It compiles the columns through the same path a declaration uses, so a
+retrofitted column is indistinguishable in the catalog from a declared one —
+same backend type, same `:type:` comment. Before 2.3.4 it built the `ALTER` by
+hand with backtick-quoted identifiers, which is a syntax error on PostgreSQL,
+so the retrofit had never run there.
+
 ## Behavior
 
 ### Declaration-time
@@ -234,21 +240,33 @@ This ensures join attribute computation automatically excludes hidden attributes
 
 ### 1. Declaration (declare.py)
 
-```python
-def declare(full_table_name, definition, context):
-    # ... existing code ...
+The three columns are written in DataJoint notation, exactly as a user writes an
+attribute:
 
-    # Add hidden job metadata for auto-populated tables
-    if config.jobs.add_job_metadata and table_tier in (TableTier.COMPUTED, TableTier.IMPORTED):
-        # Only for master tables, not parts
-        if not is_part_table:
-            job_metadata_sql = [
-                "`_job_start_time` datetime(3) DEFAULT NULL",
-                "`_job_duration` float DEFAULT NULL",
-                "`_job_version` varchar(64) DEFAULT ''",
-            ]
-            attribute_sql.extend(job_metadata_sql)
+```python
+JOB_METADATA_DEFINITION = (
+    "_job_start_time = null : datetime(3) # when computation began",
+    "_job_duration = null : float32 # computation duration in seconds",
+    '_job_version = "" : varchar(64) # code version',
+)
 ```
+
+`prepare_declare` compiles them through the same `compile_attribute` that
+handles every user line, once the user's lines are parsed, and only when the
+stripped table name matches the `Computed` or `Imported` tier — which is what
+excludes part tables and DataJoint's own system tables.
+
+Going through the type system rather than a hand-written string is what makes
+the columns correct on every backend: `core_type_to_sql("datetime(3)")` yields
+`datetime(3)` on MySQL and `timestamp(3)` on PostgreSQL. A hand-written
+`datetime(3)` had produced a bare `timestamp` on PostgreSQL, silently at
+microsecond precision
+([#1566](https://github.com/datajoint/datajoint-python/issues/1566)).
+
+Each column also carries a `:type:` comment recording the DataJoint type it was
+declared from, which `heading` reads back as `original_type`. On PostgreSQL that
+comment is a separate `COMMENT ON` statement, since the backend does not accept
+one inline.
 
 ### 2. Population (autopopulate.py)
 
@@ -343,9 +361,41 @@ class SessionAnalysis(dj.Computed):
 SessionAnalysis().heading.names  # ['session_id', 'result']
 SessionAnalysis().to_dicts()  # Returns only visible attributes
 
-# Access hidden attributes explicitly if needed:
-SessionAnalysis().to_arrays('_job_start_time', '_job_duration', '_job_version')
+# Reading them back requires SQL until 2.4 -- see below.
 ```
+
+## Querying and Fetching
+
+A condition **string** reaches the column; everything that goes through the
+heading does not.
+
+| Pattern | Result |
+|---|---|
+| `Analysis & "_job_duration > 3600"` | Works — the string passes to SQL unchanged |
+| `Analysis & {"_job_duration": 3600}` | **Returns every row** — see below |
+| `Analysis.to_arrays("_job_duration")` | Raises ``DataJointError: Attribute `_job_duration` not found.`` |
+| `Analysis.proj("_job_duration")` | Raises the same |
+| `Analysis.to_dicts()` | Visible attributes only |
+| `Analysis & dj.Top(order_by="_job_duration")` | Works — `ORDER BY` is not validated against the heading |
+
+The mapping form silently ignores an attribute it cannot match. That is
+deliberate and useful — it is what lets `Session & key` work when `key` carries
+attributes from a more detailed table — but a hidden attribute is invisible to
+that matching, so the predicate is dropped along with it
+([#1561](https://github.com/datajoint/datajoint-python/issues/1561)).
+
+**Reading the values back requires SQL until 2.4:**
+
+```python
+rows = SessionAnalysis.connection.query(
+    f"SELECT _job_start_time, _job_duration, _job_version "
+    f"FROM {SessionAnalysis.full_table_name}"
+).fetchall()
+```
+
+A supported accessor is planned for 2.4, covering the job-metadata attributes
+and `_prov` together
+([#1562](https://github.com/datajoint/datajoint-python/issues/1562)).
 
 ## Summary of Design Decisions
 

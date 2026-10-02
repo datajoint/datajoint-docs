@@ -108,6 +108,8 @@ This adds hidden attributes to computed tables:
 - `_job_duration` — How long it took
 - `_job_version` — Code version (if configured)
 
+Restricting on one works as a condition string — `SessionAnalysis & "_job_duration > 3600"` — but reading the values back needs SQL until 2.4. See [Querying and Fetching](../reference/specs/job-metadata.md#querying-and-fetching).
+
 ## Simple Progress Script
 
 ```python
