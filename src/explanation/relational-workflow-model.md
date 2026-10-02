@@ -147,25 +147,20 @@ work in practice.
 
 Tables are classified into tiers by what puts rows in them.
 
-| Tier | What puts rows in it | `make()` |
-|------|------|----------|
-| **Lookup** | The schema definition itself — the table's committed `contents` | No |
-| **Manual** | A writer outside the table — a person, an instrument, an entry script | No |
-| **Imported** | The table itself, through `make()`, reading an external source | Yes |
-| **Computed** | The table itself, through `make()`, deriving from other DataJoint tables | Yes |
+| Tier | Rows come from | What puts them there | `make()` |
+|------|----------------|----------------------|----------|
+| **Lookup** | The committed schema | The table's own `contents`, versioned with the code | No |
+| **Manual** | Outside the pipeline | A writer outside the table — a person, an instrument, an entry script | No |
+| **Imported** | Outside the pipeline | The table itself, fetching through `make()` | Yes |
+| **Computed** | Other DataJoint tables | The table itself, deriving through `make()` | Yes |
 
-Two things vary independently: where the rows come from, and what writes them.
-Crossing them gives four combinations, and those are the four tiers:
+**Manual** and **Imported** share an origin and differ in the writer: the data
+comes from outside the pipeline either way, and what changes is whether the
+table fetches it itself.
 
-| Rows come from | Written from outside the table | Written by the table's own `make()` |
-|---|---|---|
-| The committed schema | **Lookup** | — |
-| Outside the pipeline | **Manual** | **Imported** |
-| Other DataJoint tables | — | **Computed** |
-
-`Part` is absent because it is not a fifth answer to the same question. A part
-table fills a structural role: it inherits its master's tier and is written in
-the same transaction. Any tier can serve as a master.
+`Part` is absent because it is not a tier of its own. A part table fills a
+structural role: it inherits its master's tier and is written in the same
+transaction. Any tier can serve as a master.
 
 The `make()` method specifies how each entity is derived — declared within the
 table definition, not in an external workflow file.
