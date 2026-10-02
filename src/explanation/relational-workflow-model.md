@@ -145,11 +145,11 @@ work in practice.
 
 ### Workflow steps and table tiers
 
-A table's tier answers one question: **what puts rows in this table?**
+Tables are classified into tiers by what puts rows in them.
 
 | Tier | What puts rows in it | `make()` |
 |------|------|----------|
-| **Lookup** | The code, through the table's own `contents` | No |
+| **Lookup** | The schema definition itself — the table's committed `contents` | No |
 | **Manual** | A writer outside the table — a person, an instrument, an entry script | No |
 | **Imported** | The table itself, through `make()`, reading an external source | Yes |
 | **Computed** | The table itself, through `make()`, deriving from other DataJoint tables | Yes |
