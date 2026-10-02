@@ -155,7 +155,7 @@ A table's tier answers one question: **what puts rows in this table?**
 | **Computed** | The table itself, through `make()`, deriving from other DataJoint tables | Yes |
 
 The axis is *what writes the rows*, never *who caused them to be written*. Two
-of the names suggest otherwise, so it is worth saying plainly:
+of the names suggest otherwise:
 
 - **Manual** does not mean hand-entered. It means the rows arrive from outside
   the table, by whatever means — a technician typing into a form, a LIMS feed, an
@@ -165,8 +165,8 @@ of the names suggest otherwise, so it is worth saying plainly:
   does: its own `make()` reaches out and fetches. A table filled *by something
   else* is Manual, however far away the data originated.
 
-Crossing where the rows come from with what writes them separates the two
-questions, and shows why only four combinations exist:
+Cross where the rows come from with what writes them, and only four
+combinations exist:
 
 | Rows come from | Written from outside the table | Written by the table's own `make()` |
 |---|---|---|
@@ -175,11 +175,10 @@ questions, and shows why only four combinations exist:
 | Other DataJoint tables | — | **Computed** |
 
 `Part` is absent because it is not a fifth answer to the same question. A part
-table is a structural role: it inherits its master's tier and is written in the
-same transaction as its master. Any tier can serve as a master.
+table fills a structural role: it inherits its master's tier and is written in
+the same transaction. Any tier can serve as a master.
 
-Imported and Computed tables define computations via `make()` methods. The
-`make()` method specifies how each entity is derived — declared within the
+The `make()` method specifies how each entity is derived — declared within the
 table definition, not in an external workflow file.
 
 !!! warning "The mistake the names invite"
