@@ -154,9 +154,19 @@ Tables are classified into tiers by what puts rows in them.
 | **Imported** | Outside the pipeline | The table itself, fetching through `make()` | Yes |
 | **Computed** | Other DataJoint tables | The table itself, deriving through `make()` | Yes |
 
-**Manual** and **Imported** share an origin and differ in the writer: the data
-comes from outside the pipeline either way, and what changes is whether the
-table fetches it itself.
+The table shows **Manual** and **Imported** drawing on the same origin. What
+separates them is who initiates the write.
+
+A Manual table is written by an external process, on that process's schedule.
+An Imported table is filled automatically: `populate()` works through the keys
+its parents already hold and calls `make()` for each one still missing.
+
+Their primary keys follow from that. `populate()` has to know which entity it
+is working on before `make()` runs, so every attribute of an Imported table's
+primary key arrives through a foreign key. A Manual table carries no such
+constraint — it may sit at the head of the pipeline with no parent at all, and
+may introduce primary-key attributes of its own. That is what makes it the
+place a new entity enters.
 
 !!! version-added "New in 2.3.4"
 
