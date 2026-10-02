@@ -158,6 +158,16 @@ Tables are classified into tiers by what puts rows in them.
 comes from outside the pipeline either way, and what changes is whether the
 table fetches it itself.
 
+!!! version-added "New in 2.3.4"
+
+    Three tiers gain a second name: **`dj.Entry`** for `dj.Manual`,
+    **`dj.Ingest`** for `dj.Imported`, and **`dj.Compute`** for `dj.Computed`.
+    Each pair is one class, so either name declares the same table, and both
+    names are permanent. `dj.Lookup` and `dj.Part` are unchanged.
+
+    These pages use the original names. The new ones become primary in 2.4
+    ([datajoint-python#1546](https://github.com/datajoint/datajoint-python/issues/1546)).
+
 `Part` is absent because it is not a tier of its own. A part table fills a
 structural role: it inherits its master's tier and is written in the same
 transaction. Any tier can serve as a master.
