@@ -7,37 +7,19 @@ a single formal system in which data structure, computational
 dependencies, and integrity constraints are all queryable, enforceable,
 and machine-readable. This unification is what makes DataJoint a
 *computational substrate* rather than a database in the conventional
-sense. The worked example below shows the model in action; its place in
-the lineage of relational modeling follows.
+sense.
 
-## A worked example
+## A two-schema imaging pipeline
 
-Diagrams in this documentation use the same notation as `dj.Diagram` in
-`datajoint-python`: **Manual** tables are green rounded boxes, **Lookup**
-tables are gray rounded boxes, **Imported** tables are blue ellipses, and
-**Computed** tables are orange ellipses. A **Part** table is a small plain box
-grouped with its master inside a light box (the *entity cluster*). Tier is conveyed by shape and
-color, and **edge thickness** shows how a child relates to its parent — a
-thick line means the child **extends** the parent (one per parent); a thin
-line means the child is **contained within** the parent (many per parent).
-Edges are drawn without
-arrowheads, so **direction is read from the layout**. A diagram uses a
-single orientation throughout — either left-to-right or top-to-bottom —
-and which one is usually obvious at a glance. This one is left-to-right,
-so every foreign key points from an upstream table on the left to the
-downstream table that depends on it on the right (a top-to-bottom diagram
-reads the same way, upstream at the top). The one
-exception is a **master–part** group: a Part is drawn level with its
-master rather than downstream of it, but a part's foreign key always
-references its master, so the part is always downstream. They are placed
-together because a master and its parts are always populated in a single
-transaction. Tables are grouped into their **schemas** — the labeled
-boxes — and dependencies cross schema boundaries freely. An **underlined**
-name marks a **new entity type** — the table introduces a new key
-attribute, a new *schema dimension*, so it holds many rows per parent —
-while a plain name is **composed from existing entities**, extending one
-or combining several, inheriting its whole key and adding no new
-dimension. The legend below the figure keys the full notation.
+Diagrams here use the same notation as `dj.Diagram`; the legend below the
+figure keys it in full, and the [Diagram specification](../reference/specs/diagram.md)
+is the reference.
+
+The legend cannot show the orientation or the schema boundaries. A diagram
+holds a single orientation throughout — left-to-right or top-to-bottom — and this one is left-to-right, so
+every foreign key runs from an upstream table on the left to the table that
+depends on it on the right. And dependencies cross schema boundaries freely:
+the labeled boxes group tables, they do not contain them.
 
 ![Worked-example imaging pipeline diagram spanning two schemas: experiment (Mouse → Session → Scan) and analysis (AverageFrame → Segmentation → Fluorescence, with Lookup SegmentationParam feeding Segmentation, and the Part tables Roi on Segmentation and Trace on Fluorescence).](../images/rwm-pipeline.svg)
 
@@ -49,20 +31,21 @@ The pipeline spans two schemas: **`experiment`** holds the raw, manually
 entered tables, and **`analysis`** holds everything derived from them.
 `Mouse`, `Session`, and `Scan` are **Manual** tables entered by the
 experimenter. `SegmentationParam` is a **Lookup** table holding reference
-parameter sets. `AverageFrame` is **Imported** — its `make()` reads the
-TIFF identified by `Scan` (a dependency reaching across from `experiment`
-into `analysis`) and stores the mean fluorescence frame.
-`Segmentation` is **Computed** — its primary key fans in from both
-`AverageFrame` and `SegmentationParam`, so every average frame is
-segmented with every parameter set automatically; its **Part** table
-`Roi` holds the individual regions found in each segmentation.
-`Fluorescence` then extracts per-ROI time-series from each segmentation,
-and its **Part** table `Trace` stores one trace per region — each `Trace`
-row tied back to the `Roi` it measures. A master and its parts form one
-entity, inserted and deleted together. No external scheduler is consulted:
-the foreign-key graph dictates what may run, what must run first, and what
-already exists. The pipeline DAG and the database schema are the same
-object.
+parameter sets.
+
+In `analysis`, `AverageFrame` is **Imported** — its `make()` reads the TIFF
+identified by `Scan`, a dependency reaching across from `experiment`, and
+stores the mean fluorescence frame. `Segmentation` is **Computed**: its primary
+key fans in from both `AverageFrame` and `SegmentationParam`, so every average
+frame is segmented with every parameter set, and its **Part** table `Roi` holds
+the regions found in each segmentation. `Fluorescence` then extracts per-ROI
+time-series from each segmentation, and its **Part** table `Trace` stores one
+trace per region, each tied back to the `Roi` it measures. A master and its
+parts form one entity, inserted and deleted together.
+
+The foreign-key graph dictates what may run, what must run first, and what
+already exists — no external scheduler is consulted. The pipeline DAG and the
+database schema are the same object.
 
 ## Three interpretations of the relational model
 
@@ -84,26 +67,24 @@ above illustrates.
 | **Data lineage** | Not addressed | Not addressed | **Structural** |
 | **Implementation gap** | High | High | **None** |
 
-## A semantic interpretation, not a departure
+## What the model adds to the classical reading
 
 The Relational Workflow Model layers a semantic interpretation on the
 classical relational model; it does not replace any of it. Tables, rows,
 primary and foreign keys, normalization, and the query algebra keep
-their classical meaning. The model adds four readings on top:
-
-- Tables also represent **workflow steps**.
-- Rows also represent **workflow artifacts**, traceable to their inputs.
-- Foreign keys also prescribe **execution order** — the dependency graph *is* the pipeline DAG, enforced by the database.
-- **Computed and Imported tables carry their own `make()` methods**, declaring derivation logic in the schema itself rather than in an external workflow file.
+their classical meaning. What the model adds is in the third column of the table above, plus one thing
+that table states tersely: Computed and Imported tables carry their own
+`make()` methods, so derivation logic is declared in the schema itself rather
+than in an external workflow file.
 
 Under this interpretation the schema becomes *active*. A row exists in a
 Computed table if and only if its upstream key exists, its `make()` has
 run, and its result satisfies the declared constraints. The schema is the
 executable specification of the work.
 
-## The deliberate trade-off
+## Tighter coupling, in exchange for one formal system
 
-DataJoint accepts tighter coupling deliberately, in exchange for one
+DataJoint accepts tighter coupling, in exchange for one
 formal system that spans data structure, computation, dependencies, and
 integrity. See
 [Comparison to Workflow Languages](comparison-to-workflow-languages.md)
@@ -111,7 +92,7 @@ for the structural treatment — what file-based workflows and task
 orchestrators each offer, what each omits, and when to use them
 alongside DataJoint.
 
-## Substrate consequences
+## Lineage and reproducibility
 
 Because dependencies are declared before any computation runs, lineage
 and reproducibility become **properties of the substrate**, not artifacts assembled
@@ -125,25 +106,23 @@ log. The lineage graph is already in the schema; mapping it to external
 standards such as W3C PROV or OpenLineage is a translation, not a
 reconstruction.
 
-The same property makes the schema a shared contract between humans and
-the machines that increasingly collaborate with them. The schema is
-**self-describing**: an agent can introspect table structure, dependencies,
-and state programmatically. Operations are **safe by default**: invalid
-joins, type mismatches, and referential violations fail cleanly rather
-than corrupting data silently. The dependency graph is **explicit**:
-agents reason about execution order without implicit knowledge. Core
-operations are **idempotent**: retries on failure are without side effects.
-And all state — job status, computation progress, errors — is
-**queryable**, so the work is observable as it happens. These are the
-properties that let agents participate in scientific workflows with the
-same transactional guarantees that protect human-initiated work.
+## Grounding for AI agents
 
-## Beneath the model
+The same property makes the schema a shared contract between humans and the
+machines that increasingly collaborate with them.
 
-The remaining sections detail the structural elements that make the model
-work in practice.
+| Property | What it means |
+|---|---|
+| Self-describing | An agent introspects table structure, dependencies, and state programmatically |
+| Safe by default | Invalid joins, type mismatches, and referential violations fail cleanly rather than corrupting data silently |
+| Explicit dependencies | Execution order is read from the graph, not from implicit knowledge |
+| Idempotent | Retries after a failure have no side effects |
+| Queryable state | Job status, progress, and errors are observable while the work runs |
 
-### Workflow steps and table tiers
+These are what let agents participate in scientific workflows with the same
+transactional guarantees that protect human-initiated work.
+
+## Workflow steps and table tiers
 
 Tables are classified into tiers by what puts rows in them.
 
@@ -185,7 +164,7 @@ transaction. Any tier can serve as a master.
 The `make()` method specifies how each entity is derived — declared within the
 table definition, not in an external workflow file.
 
-#### Manual vs. Lookup
+### Manual vs. Lookup
 
 Manual and Lookup tables are both **entry points** — their rows are entered
 rather than derived by a `make()` — but they differ in *where the rows come
@@ -216,14 +195,14 @@ review-and-deploy (CI/CD) process as any other schema change — versioned and
 reproducible across deployments. Manual content, by contrast, is entered at
 runtime and never touches the codebase.
 
-### Master-part relationships
+## Master-part relationships
 
 Master-part relationships declare transactional grouping directly in the
 schema. The master table represents the workflow step; part tables hold
 the items produced together. Insertions and deletions cascade as a unit,
 enforcing transactional semantics without application code.
 
-### Workflow normalization
+## Workflow normalization
 
 > "Every table represents an entity type created at a specific workflow
 > step, and all attributes describe that entity as it exists at that
@@ -241,7 +220,7 @@ that depend on `Session`. The discipline prevents tables that accumulate
 attributes from different workflow stages, obscuring lineage and
 complicating updates.
 
-### Entity integrity
+## Entity integrity
 
 All data is represented as well-formed entity sets with primary keys
 identifying each entity uniquely. When upstream data is deleted, dependent
@@ -250,7 +229,7 @@ external storage. To correct errors, you delete, reinsert, and recompute,
 ensuring every result represents a consistent computation from valid
 inputs.
 
-### Query algebra and algebraic closure
+## Query algebra and algebraic closure
 
 DataJoint provides a five-operator algebra:
 
@@ -263,7 +242,7 @@ DataJoint provides a five-operator algebra:
 | **Union** | `+` | Combine entity sets with compatible structure |
 
 The algebra achieves *algebraic closure*: every operator produces a valid
-entity set with a well-defined primary key, enabling unlimited composition.
+entity set with a well-defined primary key, so operators compose without limit.
 This preservation of entity integrity — every query result is itself a
 proper entity set with clear identity — distinguishes DataJoint's algebra
 from SQL, where query results lack both a well-defined primary key and a
@@ -293,8 +272,6 @@ object-augmented schemas, semantic matching by attribute lineage, an
 extensible type system, and distributed job coordination. DataJoint's
 schema definition language and query algebra were first formalized in
 [Yatsenko et al., 2018](https://doi.org/10.48550/arXiv.1807.11104).
-
-### See also
 
 - [Data Pipelines](data-pipelines.md) — table tiers, schema organization, and the DAG in practice
 - [Computation Model](computation-model.md) — the `make()` contract, `populate()`, and the key source
