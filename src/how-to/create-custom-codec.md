@@ -90,7 +90,7 @@ Reconstruct Python object:
 def decode(self, stored, *, key=None, context=None):
     # stored:  Data from storage
     # key:     Primary key dict
-    # context: schema, table, field, and the calling connection's config
+    # context: the calling connection's config (only `config`, on this path)
     return python_object
 ```
 
@@ -157,13 +157,15 @@ class ParquetCodec(dj.SchemaCodec):
 
     def encode(self, df, *, key=None, context=None, store_name=None):
         schema, table, field, pk = self._extract_context(key, context)
-        path, _ = self._build_path(schema, table, field, pk, ext=".parquet")
-        backend = self._get_backend(store_name)
+        config = self._codec_config(key, context)
+        path, _ = self._build_path(schema, table, field, pk, ext=".parquet", config=config)
+        backend = self._get_backend(store_name, config=config)
         # ... upload parquet file
         return {"path": path, "store": store_name, "shape": list(df.shape)}
 
     def decode(self, stored, *, key=None, context=None):
-        return ParquetRef(stored, self._get_backend(stored.get("store")))
+        config = self._codec_config(key, context)
+        return ParquetRef(stored, self._get_backend(stored.get("store"), config=config))
 ```
 
 ## Auto-Registration

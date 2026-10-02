@@ -81,8 +81,9 @@ class ParquetCodec(dj.SchemaCodec):
     def encode(self, df, *, key=None, context=None, store_name=None):
         import io
         schema, table, field, pk = self._extract_context(key, context)
-        path, _ = self._build_path(schema, table, field, pk, ext=".parquet")
-        backend = self._get_backend(store_name)
+        config = self._codec_config(key, context)
+        path, _ = self._build_path(schema, table, field, pk, ext=".parquet", config=config)
+        backend = self._get_backend(store_name, config=config)
 
         buffer = io.BytesIO()
         df.to_parquet(buffer)
@@ -91,7 +92,8 @@ class ParquetCodec(dj.SchemaCodec):
         return {"path": path, "store": store_name, "shape": list(df.shape)}
 
     def decode(self, stored, *, key=None, context=None):
-        return ParquetRef(stored, self._get_backend(stored.get("store")))
+        config = self._codec_config(key, context)
+        return ParquetRef(stored, self._get_backend(stored.get("store"), config=config))
 
 # Use in table definition (store only)
 @schema
@@ -147,14 +149,18 @@ class SchemaCodec(Codec, register=False):
         return "json"
 
     def _extract_context(self, key: dict, context: dict | None = None) -> tuple[str, str, str, dict]:
-        """Parse key into (schema, table, field, primary_key)."""
+        """Parse key and context into (schema, table, field, primary_key)."""
         ...
 
-    def _build_path(self, schema, table, field, pk, ext=None) -> tuple[str, str]:
+    def _codec_config(self, key: dict = None, context: dict = None):
+        """The calling connection's config, or None."""
+        ...
+
+    def _build_path(self, schema, table, field, pk, ext=None, store_name=None, config=None) -> tuple[str, str]:
         """Build schema-addressed path: {schema}/{table}/{pk}/{field}{ext}"""
         ...
 
-    def _get_backend(self, store_name: str = None):
+    def _get_backend(self, store_name: str = None, config=None):
         """Get storage backend by name."""
         ...
 ```
@@ -243,7 +249,7 @@ def decode(self, stored: Any, *, key: dict | None = None, context: dict | None =
     Args:
         stored: Data retrieved from storage
         key: Primary key values
-        context: schema, table, field, and the calling connection's config
+        context: the calling connection's config, under `config`
 
     Returns:
         The reconstructed Python object
@@ -261,8 +267,11 @@ one of them matters for correctness:
 |-----|---------|
 | `schema` | Database the row belongs to |
 | `table` | Table the row belongs to |
-| `field` | Attribute being encoded or decoded |
+| `field` | Attribute being encoded |
 | `config` | **The calling connection's configuration** |
+
+On `decode` only `config` is present. The stored metadata already holds the
+location, so `schema`, `table` and `field` are not resolved a second time.
 
 Always thread `config` into `_build_path()` and `_get_backend()`. Both fall
 back to the global `dj.config` without it, and in a process holding connections
