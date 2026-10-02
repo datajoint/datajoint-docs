@@ -154,19 +154,8 @@ A table's tier answers one question: **what puts rows in this table?**
 | **Imported** | The table itself, through `make()`, reading an external source | Yes |
 | **Computed** | The table itself, through `make()`, deriving from other DataJoint tables | Yes |
 
-The axis is *what writes the rows*, never *who caused them to be written*. Two
-of the names suggest otherwise:
-
-- **Manual** does not mean hand-entered. It means the rows arrive from outside
-  the table, by whatever means — a technician typing into a form, a LIMS feed, an
-  instrument, or a nightly entry script. An automated feed still writes to a
-  Manual table.
-- **Imported** does not say where the data came from. It says what the table
-  does: its own `make()` reaches out and fetches. A table filled *by something
-  else* is Manual, however far away the data originated.
-
-Cross where the rows come from with what writes them, and only four
-combinations exist:
+Two things vary independently: where the rows come from, and what writes them.
+Crossing them gives four combinations, and those are the four tiers:
 
 | Rows come from | Written from outside the table | Written by the table's own `make()` |
 |---|---|---|
@@ -180,19 +169,6 @@ the same transaction. Any tier can serve as a master.
 
 The `make()` method specifies how each entity is derived — declared within the
 table definition, not in an external workflow file.
-
-!!! warning "The mistake the names invite"
-    A designer building an automated feed reasons: *this table is not filled by
-    hand, so it is not Manual; the data comes from outside, so it is Imported* —
-    and declares `dj.Imported`. But an Imported table is populated by its own
-    `make()`, and this one has none, so the insert is refused. The fix that
-    presents itself is `allow_direct_insert=True`, which silences a guard
-    reporting a real modeling error.
-
-    The result is recognizable: an auto-populated table with **no `make()`**, a
-    permanent `allow_direct_insert=True`, and `populate()` that silently does
-    nothing — with the pipeline's boundary drawn one table away from where it
-    actually sits. Such a table is a **Manual** table.
 
 #### Manual vs. Lookup
 
