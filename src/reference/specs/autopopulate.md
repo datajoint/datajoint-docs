@@ -966,6 +966,86 @@ Analysis.jobs.refresh(stale_timeout=3600)  # Clean up after 1 hour
 Analysis.jobs.refresh(orphan_timeout=3600)  # Reset after 1 hour
 ```
 
+### 12.5 Signals and Interruption
+
+`populate()` installs a **SIGTERM** handler, and only in distributed mode
+(`reserve_jobs=True`) — direct mode installs nothing. The handler covers one
+whole `populate()` call, every key in the batch included, and the previous
+handler is restored when the call returns. No handler is installed for SIGINT,
+SIGHUP, or SIGQUIT.
+
+This matters for anyone managing worker lifecycle, since container orchestrators
+send SIGTERM on eviction and expect a graceful drain.
+
+#### SIGTERM
+
+The handler raises `SystemExit`, which `populate()` catches in order to unwind
+deliberately:
+
+1. the open transaction is cancelled, discarding the interrupted `make()`'s database writes;
+2. the job is recorded as `error` with the message `SystemExit: SIGTERM received`;
+3. the exception is re-raised **even under `suppress_errors=True`**, so the call ends instead of advancing to the next key.
+
+Only database writes are rolled back. Whatever `make()` wrote to object storage
+or the filesystem stays there.
+
+!!! warning "The interrupted key is not retried automatically"
+    The job stays in `error`. `refresh()` re-adds only keys that have no row in
+    the jobs table at all, and `reserve()` picks up only `pending` rows, so an
+    `error` row blocks its key until someone deletes it — see
+    [12.3](#123-error-recovery-distributed-mode). Error messages are not matched
+    against any pattern, and nothing requeues them.
+
+#### Ctrl-C
+
+`KeyboardInterrupt` is caught the same way but **is not** re-raised the way
+`SystemExit` is. Under `suppress_errors=True` it aborts only the current
+`make()`, is recorded as a job error, and `populate()` proceeds to the next key:
+
+```python
+# Ctrl-C interrupts one key here, not the run
+Analysis.populate(reserve_jobs=True, suppress_errors=True)
+```
+
+Under the default `suppress_errors=False` it propagates and ends the call. To
+stop a suppressed run from outside the process, send SIGTERM rather than SIGINT.
+
+#### A signal with no handler
+
+SIGKILL, SIGHUP, an OOM kill, or power loss ends the process outright. The
+server rolls back the open transaction when the connection drops, but nothing
+writes an error row: the job stays **`reserved`**, and no worker will take it.
+
+Recovery requires an explicit `refresh(orphan_timeout=...)` as in 12.4.
+`populate()`'s own auto-refresh never passes one and no configuration key sets
+it, so orphaned jobs are reclaimed only when an operator asks for it.
+
+!!! warning "`orphan_timeout` matches age, not liveness"
+    A job is reclaimed once its `reserved_time` is older than the timeout,
+    whether or not its worker is still alive. A legitimately long `make()` that
+    outlives the timeout is re-queued while still computing, and a second worker
+    can then start the same key. Set the timeout above the longest `make()` you
+    expect. Reclaiming also resets the job's priority and discards the evidence
+    recorded at reservation — `host`, `pid`, and `connection_id`.
+
+#### Under multiprocessing
+
+`processes=N` forks workers after the handler is installed, so children inherit
+it, and SIGTERM to the process group gives each child the same
+cancel-and-record behavior. When the parent unwinds it terminates the pool,
+which sends SIGTERM to the children, so in-flight child jobs may record their
+own `SystemExit: SIGTERM received` rows.
+
+#### Summary
+
+| Interruption | Transaction | Job row afterwards | Recovered by |
+|---|---|---|---|
+| SIGTERM, distributed mode | cancelled | `error` | deleting the error row |
+| Ctrl-C, `suppress_errors=True` | cancelled | `error` | deleting the error row |
+| Ctrl-C, default | cancelled | `error` | deleting the error row |
+| SIGKILL, OOM, power loss | rolled back when the connection drops | stays `reserved` | `refresh(orphan_timeout=...)` |
+| Any signal, direct mode | no handler; process terminates | no job row exists | re-running `populate()` |
+
 ---
 
 ## 13. Configuration
