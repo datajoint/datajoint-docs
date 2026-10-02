@@ -84,13 +84,13 @@ This is the design rather than a limitation. A field an operator can set is weak
 
 | Setting | Environment | Default | Description |
 |---------|-------------|---------|-------------|
-| `provenance.capture` | `DJ_PROVENANCE_CAPTURE` | `True` | Declare `_prov` on Manual tables and fill it on insert |
+| `provenance.capture` | `DJ_PROVENANCE_CAPTURE` | `False` | Declare `_prov` on Manual tables and fill it on insert |
 | `provenance.source` | `DJ_PROVENANCE_SOURCE` | `{}` | External source identity recorded on every row this process enters |
 
 ```python
 import datajoint as dj
 
-dj.config.provenance.capture          # True
+dj.config.provenance.capture          # False until a deployment enables it
 dj.config.provenance.source = {"system": "PyRat", "endpoint": "https://pyrat.example.org/api/v2"}
 ```
 
@@ -112,11 +112,11 @@ export DJ_PROVENANCE_SOURCE='{"system": "PyRat", "endpoint": "https://pyrat.exam
 
     Rows inserted before the change keep what was configured then, and rows after keep the new value. Nothing records that the setting moved. Set it once at start-up.
 
-### Capture defaults on
+### Capture defaults off
 
-A slot that is absent on most tables is a slot nobody codes against. With capture off by default, no consumer could assume the column exists, and "which rows have no recorded origin" would be conditional on each table's declaration-time configuration rather than a query.
+Capture changes the DDL of every Manual table declared after it is enabled, adding one hidden nullable column. That is a deployment's decision rather than a library default, so upgrading to 2.3.4 leaves an unchanged schema declaring exactly what it declared under 2.3.3. [`jobs.add_job_metadata`](job-metadata.md) defaults off for the same reason, and does the same kind of thing.
 
-Stated plainly: a Manual table declared under 2.3.4 differs in DDL from one declared under 2.3.3. The difference is one hidden nullable column.
+A deployment that turns it on gets the property that makes the slot worth having: across that deployment, "which rows have no recorded origin" is a query rather than an audit. What it cannot assume is that a table declared elsewhere, under someone else's configuration, carries the column — [retrofitting](#retrofitting-existing-tables) is what settles that.
 
 ## Behavior
 

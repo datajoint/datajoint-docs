@@ -1,8 +1,18 @@
 # Record Data Origin
 
-Data entering a pipeline from outside carries no dependency that says where it came from. DataJoint records that origin for you on every Manual table, from configuration rather than from your insert code.
+Data entering a pipeline from outside carries no dependency that says where it came from. Turn capture on and DataJoint records that origin for you on every Manual table, from configuration rather than from your insert code.
 
 !!! version-added "New in 2.3.4"
+
+## Turn capture on
+
+Capture is off by default, so a table declared without it carries no column and records nothing. Enable it where you set credentials and stores, before the tables are declared:
+
+```bash
+export DJ_PROVENANCE_CAPTURE=true
+```
+
+Turning it off again does not remove the column from tables that already have it, and does not stop those tables from recording.
 
 ## Configure the source
 
@@ -81,16 +91,6 @@ rows = Subject.connection.query(
 
 On MySQL the value comes back as a JSON string and needs `json.loads`; on
 PostgreSQL psycopg2 returns a dict already.
-
-## Turn capture off
-
-Capture is on by default. To declare tables without the column:
-
-```bash
-export DJ_PROVENANCE_CAPTURE=false
-```
-
-Turning it off does not remove the column from tables that already have it, and does not stop those tables from recording.
 
 ## Add the column to existing tables
 
