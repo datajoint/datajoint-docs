@@ -41,13 +41,13 @@ class GraphCodec(dj.Codec):
     def get_dtype(self, is_store: bool) -> str:
         return "<blob>"  # Delegate to blob for serialization
 
-    def encode(self, graph, *, key=None, store_name=None):
+    def encode(self, graph, *, key=None, context=None, store_name=None):
         return {
             'nodes': list(graph.nodes(data=True)),
             'edges': list(graph.edges(data=True)),
         }
 
-    def decode(self, stored, *, key=None):
+    def decode(self, stored, *, key=None, context=None):
         G = nx.Graph()
         G.add_nodes_from(stored['nodes'])
         G.add_edges_from(stored['edges'])
@@ -78,11 +78,12 @@ class ParquetCodec(dj.SchemaCodec):
 
     # get_dtype inherited: returns "json", requires @
 
-    def encode(self, df, *, key=None, store_name=None):
+    def encode(self, df, *, key=None, context=None, store_name=None):
         import io
-        schema, table, field, pk = self._extract_context(key)
-        path, _ = self._build_path(schema, table, field, pk, ext=".parquet")
-        backend = self._get_backend(store_name)
+        schema, table, field, pk = self._extract_context(key, context)
+        config = self._codec_config(key, context)
+        path, _ = self._build_path(schema, table, field, pk, ext=".parquet", config=config)
+        backend = self._get_backend(store_name, config=config)
 
         buffer = io.BytesIO()
         df.to_parquet(buffer)
@@ -90,8 +91,9 @@ class ParquetCodec(dj.SchemaCodec):
 
         return {"path": path, "store": store_name, "shape": list(df.shape)}
 
-    def decode(self, stored, *, key=None):
-        return ParquetRef(stored, self._get_backend(stored.get("store")))
+    def decode(self, stored, *, key=None, context=None):
+        config = self._codec_config(key, context)
+        return ParquetRef(stored, self._get_backend(stored.get("store"), config=config))
 
 # Use in table definition (store only)
 @schema
@@ -118,12 +120,12 @@ class Codec(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def encode(self, value, *, key=None, store_name=None) -> Any:
+    def encode(self, value, *, key=None, context=None, store_name=None) -> Any:
         """Encode Python value for storage."""
         ...
 
     @abstractmethod
-    def decode(self, stored, *, key=None) -> Any:
+    def decode(self, stored, *, key=None, context=None) -> Any:
         """Decode stored value back to Python."""
         ...
 
@@ -146,15 +148,19 @@ class SchemaCodec(Codec, register=False):
             raise DataJointError(f"<{self.name}> requires @ (store only)")
         return "json"
 
-    def _extract_context(self, key: dict) -> tuple[str, str, str, dict]:
-        """Parse key into (schema, table, field, primary_key)."""
+    def _extract_context(self, key: dict, context: dict | None = None) -> tuple[str, str, str, dict]:
+        """Parse key and context into (schema, table, field, primary_key)."""
         ...
 
-    def _build_path(self, schema, table, field, pk, ext=None) -> tuple[str, str]:
+    def _codec_config(self, key: dict = None, context: dict = None):
+        """The calling connection's config, or None."""
+        ...
+
+    def _build_path(self, schema, table, field, pk, ext=None, store_name=None, config=None) -> tuple[str, str]:
         """Build schema-addressed path: {schema}/{table}/{pk}/{field}{ext}"""
         ...
 
-    def _get_backend(self, store_name: str = None):
+    def _get_backend(self, store_name: str = None, config=None):
         """Get storage backend by name."""
         ...
 ```
@@ -220,11 +226,12 @@ def get_dtype(self, is_store: bool) -> str:
 Converts Python objects to the format expected by `get_dtype()`:
 
 ```python
-def encode(self, value: Any, *, key: dict | None = None, store_name: str | None = None) -> Any:
+def encode(self, value: Any, *, key: dict | None = None, context: dict | None = None, store_name: str | None = None) -> Any:
     """
     Args:
         value: The Python object to store
-        key: Primary key values (for context-dependent encoding)
+        key: Primary key values
+        context: schema, table, field, and the calling connection's config
         store_name: Target store name (for in-store storage)
 
     Returns:
@@ -237,18 +244,68 @@ def encode(self, value: Any, *, key: dict | None = None, store_name: str | None 
 Converts stored values back to Python objects:
 
 ```python
-def decode(self, stored: Any, *, key: dict | None = None) -> Any:
+def decode(self, stored: Any, *, key: dict | None = None, context: dict | None = None) -> Any:
     """
     Args:
         stored: Data retrieved from storage
-        key: Primary key values (for context-dependent decoding)
+        key: Primary key values
+        context: the calling connection's config, under `config`
 
     Returns:
         The reconstructed Python object
     """
 ```
 
-### 5. The `validate()` Method (Optional)
+### 5. The `context` Argument
+
+!!! version-added "New in 2.3.4"
+
+`context` carries the four facts a codec needs about where it is running, and
+one of them matters for correctness:
+
+| Key | Meaning |
+|-----|---------|
+| `schema` | Database the row belongs to |
+| `table` | Table the row belongs to |
+| `field` | Attribute being encoded |
+| `config` | **The calling connection's configuration** |
+
+On `decode` only `config` is present. The stored metadata already holds the
+location, so `schema`, `table` and `field` are not resolved a second time.
+
+Always thread `config` into `_build_path()` and `_get_backend()`. Both fall
+back to the global `dj.config` without it, and in a process holding connections
+for several users the global one belongs to none of them — so the fallback
+resolves a *different store* silently rather than raising. Read it with the
+inherited helper, which prefers `context` and needs no `.get()` of your own:
+
+```python
+config = self._codec_config(key, context)
+```
+
+!!! warning "The pre-2.3.4 form is deprecated"
+
+    Before 2.3.4 these four arrived inside `key` under `_schema`, `_table`,
+    `_field` and `_config`. DataJoint still populates them, so a codec written
+    against that form keeps working — but reading them through
+    `_extract_context(key)` raises a `DeprecationWarning`, and **the compatibility
+    code is removed in 2.4**.
+
+    Declare `context` in new codecs. Migrating an existing one is two lines:
+
+    ```python
+    # before
+    def encode(self, value, *, key=None, store_name=None):
+        schema, table, field, pk = self._extract_context(key)
+        config = (key or {}).get("_config")
+
+    # after
+    def encode(self, value, *, key=None, context=None, store_name=None):
+        schema, table, field, pk = self._extract_context(key, context)
+        config = self._codec_config(key, context)
+    ```
+
+### 6. The `validate()` Method (Optional)
 
 Called automatically before `encode()` during INSERT operations:
 
@@ -328,12 +385,12 @@ class CompressedJsonCodec(dj.Codec):
     def get_dtype(self, is_store: bool) -> str:
         return "<blob>"  # Delegate serialization to blob codec
 
-    def encode(self, value, *, key=None, store_name=None):
+    def encode(self, value, *, key=None, context=None, store_name=None):
         import json, zlib
         json_bytes = json.dumps(value).encode('utf-8')
         return zlib.compress(json_bytes)
 
-    def decode(self, stored, *, key=None):
+    def decode(self, stored, *, key=None, context=None):
         import json, zlib
         json_bytes = zlib.decompress(stored)
         return json.loads(json_bytes.decode('utf-8'))
@@ -430,13 +487,13 @@ class GraphCodec(dj.Codec):
     def get_dtype(self, is_store: bool) -> str:
         return "<blob>"
 
-    def encode(self, graph, *, key=None, store_name=None):
+    def encode(self, graph, *, key=None, context=None, store_name=None):
         return {
             'nodes': list(graph.nodes(data=True)),
             'edges': list(graph.edges(data=True)),
         }
 
-    def decode(self, stored, *, key=None):
+    def decode(self, stored, *, key=None, context=None):
         G = nx.Graph()
         G.add_nodes_from(stored['nodes'])
         G.add_edges_from(stored['edges'])
@@ -448,13 +505,13 @@ class WeightedGraphCodec(dj.Codec):
     def get_dtype(self, is_store: bool) -> str:
         return "<blob>"
 
-    def encode(self, graph, *, key=None, store_name=None):
+    def encode(self, graph, *, key=None, context=None, store_name=None):
         return {
             'nodes': list(graph.nodes(data=True)),
             'edges': [(u, v, d) for u, v, d in graph.edges(data=True)],
         }
 
-    def decode(self, stored, *, key=None):
+    def decode(self, stored, *, key=None, context=None):
         G = nx.Graph()
         G.add_nodes_from(stored['nodes'])
         for u, v, d in stored['edges']:
@@ -557,11 +614,11 @@ class SpikeTrainCodec(dj.Codec):
         if len(value) > 1 and not np.all(np.diff(value) >= 0):
             raise ValueError("Spike times must be sorted")
 
-    def encode(self, spike_times, *, key=None, store_name=None):
+    def encode(self, spike_times, *, key=None, context=None, store_name=None):
         # Store as differences (smaller values, better compression)
         return np.diff(spike_times, prepend=0).astype(np.float32)
 
-    def decode(self, stored, *, key=None):
+    def decode(self, stored, *, key=None, context=None):
         # Reconstruct original spike times
         return np.cumsum(stored).astype(np.float64)
 ```
@@ -581,10 +638,10 @@ class ModelCodec(dj.Codec):
         # Use hash-addressed storage for large models
         return "<hash>" if is_store else "<blob>"
 
-    def encode(self, model, *, key=None, store_name=None):
+    def encode(self, model, *, key=None, context=None, store_name=None):
         return pickle.dumps(model, protocol=pickle.HIGHEST_PROTOCOL)
 
-    def decode(self, stored, *, key=None):
+    def decode(self, stored, *, key=None, context=None):
         return pickle.loads(stored)
 
     def validate(self, value):
@@ -632,10 +689,10 @@ class ConfigCodec(dj.Codec):
     def validate(self, value):
         jsonschema.validate(value, self.SCHEMA)
 
-    def encode(self, config, *, key=None, store_name=None):
+    def encode(self, config, *, key=None, context=None, store_name=None):
         return config  # JSON type handles serialization
 
-    def decode(self, stored, *, key=None):
+    def decode(self, stored, *, key=None, context=None):
         return stored
 ```
 
@@ -652,13 +709,13 @@ class VersionedDataCodec(dj.Codec):
     def get_dtype(self, is_store: bool) -> str:
         return "<blob>"
 
-    def encode(self, value, *, key=None, store_name=None):
+    def encode(self, value, *, key=None, context=None, store_name=None):
         version = key.get("schema_version", 1) if key else 1
         if version >= 2:
             return {"v": 2, "data": self._encode_v2(value)}
         return {"v": 1, "data": self._encode_v1(value)}
 
-    def decode(self, stored, *, key=None):
+    def decode(self, stored, *, key=None, context=None):
         version = stored.get("v", 1)
         if version >= 2:
             return self._decode_v2(stored["data"])
@@ -694,7 +751,7 @@ class ZarrCodec(dj.Codec):
             raise dj.DataJointError("<zarr> requires @ (in-store only)")
         return "<object>"  # Delegate to object storage
 
-    def encode(self, value, *, key=None, store_name=None):
+    def encode(self, value, *, key=None, context=None, store_name=None):
         import zarr
         import tempfile
 
@@ -711,7 +768,7 @@ class ZarrCodec(dj.Codec):
 
         raise TypeError(f"Expected zarr.Array or path, got {type(value)}")
 
-    def decode(self, stored, *, key=None):
+    def decode(self, stored, *, key=None, context=None):
         # ObjectCodec returns ObjectRef, use its fsmap for zarr
         import zarr
         return zarr.open(stored.fsmap, mode='r')
@@ -735,12 +792,12 @@ class ZarrCodec(dj.Codec):
 Nullable columns may pass `None` to your codec:
 
 ```python
-def encode(self, value, *, key=None, store_name=None):
+def encode(self, value, *, key=None, context=None, store_name=None):
     if value is None:
         return None  # Pass through for nullable columns
     return self._actual_encode(value)
 
-def decode(self, stored, *, key=None):
+def decode(self, stored, *, key=None, context=None):
     if stored is None:
         return None
     return self._actual_decode(stored)
@@ -804,13 +861,13 @@ class MyCodec(dj.Codec):
 If your encoding format might change:
 
 ```python
-def encode(self, value, *, key=None, store_name=None):
+def encode(self, value, *, key=None, context=None, store_name=None):
     return {
         "_version": 2,
         "_data": self._encode_v2(value),
     }
 
-def decode(self, stored, *, key=None):
+def decode(self, stored, *, key=None, context=None):
     version = stored.get("_version", 1)
     data = stored.get("_data", stored)
 
