@@ -1,4 +1,4 @@
-# Migrate to DataJoint 2.x
+# Migrate to DataJoint Library 2.x
 
 Upgrade existing pipelines from legacy DataJoint (the pre-2.0 `0.x` series)
 directly to the latest DataJoint 2.x — currently **2.3**.
@@ -534,7 +534,7 @@ git push origin main
 # Create feature branch
 git checkout -b pre/v2.0
 
-# Install DataJoint 2.0
+# Install DataJoint Library 2.0
 pip install --upgrade pip
 pip install "datajoint>=2.0.0"
 

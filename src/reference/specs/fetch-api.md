@@ -1,4 +1,4 @@
-# DataJoint 2.0+ Fetch API Specification
+# DataJoint Library Fetch API Specification
 
 ## Overview
 
