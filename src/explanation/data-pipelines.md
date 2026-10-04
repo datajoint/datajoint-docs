@@ -10,7 +10,7 @@ A **scientific data pipeline** extends beyond a database with computations. It i
 
 ## Pipeline Architecture
 
-At the heart of every DataJoint pipeline is the **DataJoint Library**, which is open source: it defines the schema, specifies the computations, and runs the queries. The pipeline rests on three components the library coordinates: a code repository, a relational database, and an object store. The managed **DataJoint Platform** extends these with services for AI access, data ingestion, exploration, security, collaboration, and visualization.
+At the heart of every DataJoint pipeline is the **DataJoint Library**, which is open source: it defines the schema, specifies the computations, and compiles the queries. The pipeline rests on three components the library coordinates: a code repository, a relational database, and an object store. The managed **DataJoint Platform** extends these with services for AI access, data ingestion, exploration, security, collaboration, and visualization.
 
 ![DataJoint Platform Architecture](../images/dj-platform.svg/)
 
