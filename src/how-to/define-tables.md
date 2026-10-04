@@ -30,7 +30,7 @@ class MyTable(dj.Manual):
 
 | Type | Base Class | Purpose |
 |------|------------|---------|
-| Manual | `dj.Manual` | Data inserted directly from outside the pipeline (forms, instruments, ingestion scripts) |
+| Manual | `dj.Manual` | Data inserted directly from outside the pipeline (forms, instruments, entry scripts) |
 | Lookup | `dj.Lookup` | Reference data defined in the schema via `contents` |
 | Imported | `dj.Imported` | Populated by `make()` from an external source |
 | Computed | `dj.Computed` | Populated by `make()` from other tables |
@@ -266,8 +266,8 @@ data management?**
   process, not a runtime insert.
 - Use **`dj.Manual`** when the rows are **populated at runtime** and their quality
   is guaranteed by the **data-management process** — validation, curation, and
-  access control at ingest, not code review. Subjects, sessions, samples, or
-  anything typed into a form, ingested from a file, or read from an instrument.
+  access control at entry, not code review. Subjects, sessions, samples, or
+  anything typed into a form, loaded from a file, or read from an instrument.
 
 This resolves the case that "where a row comes from" leaves ambiguous: a controlled
 vocabulary that is **populated at runtime** — gene symbols loaded from an external

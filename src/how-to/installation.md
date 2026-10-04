@@ -159,7 +159,7 @@ Session.insert1({'subject_id': 1, 'session_idx': 1, 'session_date': '2026-01-06'
 SessionAnalysis.populate()
 ```
 
-`Subject` and `Session` are entered by hand; `SessionAnalysis` derives from `Session` and fills
+`Subject` and `Session` are written from outside the pipeline; `SessionAnalysis` derives from `Session` and fills
 itself when you call `populate()`. That dependency — declared with `->` — is the whole of the
 [Relational Workflow Model](../explanation/relational-workflow-model.md) in miniature.
 

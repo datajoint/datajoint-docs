@@ -46,11 +46,11 @@ class MyCodec(dj.Codec):
         """Return storage type."""
         return "<blob>"  # Chain to blob serialization
 
-    def encode(self, value, *, key=None, store_name=None):
+    def encode(self, value, *, key=None, context=None, store_name=None):
         """Convert Python object to storable form."""
         return serialize(value)
 
-    def decode(self, stored, *, key=None):
+    def decode(self, stored, *, key=None, context=None):
         """Convert stored form back to Python object."""
         return deserialize(stored)
 ```
@@ -82,7 +82,7 @@ class GraphCodec(dj.Codec):
         # Store as blob (internal) or blob@ (external)
         return "<blob@>" if is_store else "<blob>"
 
-    def encode(self, graph, *, key=None, store_name=None):
+    def encode(self, graph, *, key=None, context=None, store_name=None):
         """Serialize graph to dict."""
         return {
             'directed': graph.is_directed(),
@@ -90,7 +90,7 @@ class GraphCodec(dj.Codec):
             'edges': list(graph.edges(data=True)),
         }
 
-    def decode(self, stored, *, key=None):
+    def decode(self, stored, *, key=None, context=None):
         """Reconstruct graph from dict."""
         cls = nx.DiGraph if stored['directed'] else nx.Graph
         G = cls()
@@ -141,13 +141,13 @@ class BamCodec(dj.Codec):
             raise dj.DataJointError("<bam> requires in-store storage: use <bam@>")
         return "<object@>"  # Path-addressed storage for file structure
 
-    def encode(self, alignments, *, key=None, store_name=None):
+    def encode(self, alignments, *, key=None, context=None, store_name=None):
         """Write alignments to BAM format."""
         # alignments is a pysam.AlignmentFile or list of reads
         # Storage handled by <object> codec
         return alignments
 
-    def decode(self, stored, *, key=None):
+    def decode(self, stored, *, key=None, context=None):
         """Return ObjectRef for lazy BAM access."""
         return stored  # ObjectRef with .open() method
 ```
@@ -165,7 +165,7 @@ class MedicalImageCodec(dj.Codec):
     def get_dtype(self, is_store: bool) -> str:
         return "<blob@>" if is_store else "<blob>"
 
-    def encode(self, image, *, key=None, store_name=None):
+    def encode(self, image, *, key=None, context=None, store_name=None):
         """Serialize SimpleITK image."""
         # Preserve spacing, origin, direction
         buffer = io.BytesIO()
@@ -176,7 +176,7 @@ class MedicalImageCodec(dj.Codec):
             'origin': image.GetOrigin(),
         }
 
-    def decode(self, stored, *, key=None):
+    def decode(self, stored, *, key=None, context=None):
         """Reconstruct SimpleITK image."""
         buffer = io.BytesIO(stored['data'])
         return sitk.ReadImage(buffer)
@@ -200,11 +200,11 @@ class CompressedGraphCodec(dj.Codec):
     def get_dtype(self, is_store: bool) -> str:
         return "<graph>"  # Chain to graph codec
 
-    def encode(self, graph, *, key=None, store_name=None):
+    def encode(self, graph, *, key=None, context=None, store_name=None):
         # Simplify before passing to graph codec
         return nx.to_sparse6_bytes(graph)
 
-    def decode(self, stored, *, key=None):
+    def decode(self, stored, *, key=None, context=None):
         return nx.from_sparse6_bytes(stored)
 ```
 
@@ -261,7 +261,7 @@ class StrictGraphCodec(dj.Codec):
         if value.number_of_nodes() == 0:
             raise dj.DataJointError("Graph must have at least one node")
 
-    def encode(self, graph, *, key=None, store_name=None):
+    def encode(self, graph, *, key=None, context=None, store_name=None):
         self.validate(graph)
         return {...}
 ```
@@ -280,7 +280,7 @@ class StrictGraphCodec(dj.Codec):
 ### 2. Preserve Metadata
 
 ```python
-def encode(self, obj, *, key=None, store_name=None):
+def encode(self, obj, *, key=None, context=None, store_name=None):
     return {
         'data': serialize(obj),
         'version': '1.0',  # For future compatibility
@@ -292,7 +292,7 @@ def encode(self, obj, *, key=None, store_name=None):
 ### 3. Handle Versioning
 
 ```python
-def decode(self, stored, *, key=None):
+def decode(self, stored, *, key=None, context=None):
     version = stored.get('version', '0.9')
     if version == '1.0':
         return deserialize_v1(stored)

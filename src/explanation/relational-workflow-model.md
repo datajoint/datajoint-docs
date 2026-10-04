@@ -145,17 +145,44 @@ work in practice.
 
 ### Workflow steps and table tiers
 
-Tables are classified into tiers by data-entry mode:
+Tables are classified into tiers by what puts rows in them.
 
-| Tier | Role | `make()` |
-|------|------|----------|
-| **Manual** | Rows entered at runtime from outside the pipeline (people, forms, instruments, imports) | No |
-| **Lookup** | Reference rows defined in the schema itself via `contents` | No |
-| **Imported** | Reach out to data sources outside DataJoint (instruments, ELNs, external databases) | Yes |
-| **Computed** | Derive their contents entirely from upstream DataJoint tables | Yes |
+| Tier | Rows come from | What puts them there | `make()` |
+|------|----------------|----------------------|----------|
+| **Lookup** | The committed schema | The table's own `contents`, versioned with the code | No |
+| **Manual** | Outside the pipeline | A writer outside the table — a person, an instrument, an entry script | No |
+| **Imported** | Outside the pipeline | The table itself, fetching through `make()` | Yes |
+| **Computed** | Other DataJoint tables | The table itself, deriving through `make()` | Yes |
 
-Imported and Computed tables define computations via `make()` methods. The
-`make()` method specifies how each entity is derived — declared within the
+The table shows **Manual** and **Imported** drawing on the same origin. What
+separates them is who initiates the write.
+
+A Manual table is written by an external process, on that process's schedule.
+An Imported table is filled automatically: `populate()` works through the keys
+its parents already hold and calls `make()` for each one still missing.
+
+Their primary keys follow from that. `populate()` has to know which entity it
+is working on before `make()` runs, so every attribute of an Imported table's
+primary key arrives through a foreign key. A Manual table carries no such
+constraint — it may sit at the head of the pipeline with no parent at all, and
+may introduce primary-key attributes of its own. That is what makes it the
+place a new entity enters.
+
+!!! version-added "New in 2.3.4"
+
+    Three tiers gain a second name: **`dj.Entry`** for `dj.Manual`,
+    **`dj.Ingest`** for `dj.Imported`, and **`dj.Compute`** for `dj.Computed`.
+    Each pair is one class, so either name declares the same table, and both
+    names are permanent. `dj.Lookup` and `dj.Part` are unchanged.
+
+    These pages use the original names. The new ones become primary in 2.4
+    ([datajoint-python#1546](https://github.com/datajoint/datajoint-python/issues/1546)).
+
+`Part` is absent because it is not a tier of its own. A part table fills a
+structural role: it inherits its master's tier and is written in the same
+transaction. Any tier can serve as a master.
+
+The `make()` method specifies how each entity is derived — declared within the
 table definition, not in an external workflow file.
 
 #### Manual vs. Lookup

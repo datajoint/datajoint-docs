@@ -59,7 +59,7 @@ Subject.insert(rows, ignore_extra_fields=True)
 
 The sections above target **Manual** tables — the tier whose rows are inserted
 directly, from outside the DataJoint pipeline (whether entered by hand through a
-form or GUI, or loaded by an automated ingestion tool). Other tiers get their
+form or GUI, or loaded by an automated entry script). Other tiers get their
 rows a different way, and inserting into them directly breaks reproducibility:
 
 - **Computed and Imported tables** — their rows are produced only by `make()`
