@@ -6004,6 +6004,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#changes-in-234" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Changes in 2.3.4
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#changes-in-233" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -6458,6 +6469,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#changes-in-234" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Changes in 2.3.4
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#changes-in-233" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -6639,7 +6661,7 @@
 
 <h1 id="whats-new-in-datajoint-23">What's New in DataJoint 2.3<a class="headerlink" href="#whats-new-in-datajoint-23" title="Permanent link">&para;</a></h1>
 <p>DataJoint 2.3 adds a first-class <strong>upstream read surface</strong> — <code>Diagram.trace</code> and <code>self.upstream</code> — which make "a computed row derives only from its declared upstream inputs" easy to follow inside <code>make()</code> and easy to query afterward. It also ships the <strong>SparkAdapter Codec Protocol</strong> for typed rendering to Spark-native types, <strong><code>dj.deploy.set_replica_identity</code></strong> for PostgreSQL change-data-capture, and a <strong>cascade fix</strong> for Part-of-Part and renamed-foreign-key chains.</p>
-<p>Later releases on the line added <strong>redesigned diagram rendering</strong> on the DataJoint brand palette, with a light/dark <a href="../../reference/configuration/#display-settings"><code>display.diagram_theme</code></a> setting, and <strong>S3 stores that resolve an ambient AWS identity</strong> instead of requiring static keys.</p>
+<p>Later releases on the line added <strong>redesigned diagram rendering</strong> on the DataJoint brand palette, with a light/dark <a href="../../reference/configuration/#display-settings"><code>display.diagram_theme</code></a> setting, <strong>S3 stores that resolve an ambient AWS identity</strong> instead of requiring static keys, and <strong>extrinsic provenance at the pipeline's entry points</strong> — a hidden <code>_prov</code> attribute the framework records on every row arriving from outside.</p>
 <blockquote>
 <p><strong>Upgrading from 2.0, 2.1, or 2.2?</strong> No API breaks — every feature on the 2.3 line is additive.
 Two fixes in 2.3.3 do, however, reject input that previously passed silently: a misspelled native
@@ -6649,6 +6671,15 @@ second stored the array's text representation — so anything affected was losin
 working. See <a href="#changes-in-233">Changes in 2.3.3</a>.</p>
 <p><strong>Citation:</strong> Yatsenko D, Nguyen TT. <em>DataJoint 2.0: A Computational Substrate for Agentic Scientific Workflows.</em> arXiv:2602.16585. 2026. <a href="https://doi.org/10.48550/arXiv.2602.16585">doi:10.48550/arXiv.2602.16585</a></p>
 </blockquote>
+<h2 id="changes-in-234">Changes in 2.3.4<a class="headerlink" href="#changes-in-234" title="Permanent link">&para;</a></h2>
+<p>2.3.4 is a patch release on the 2.3 line. If you are upgrading from <strong>2.3.3</strong>:</p>
+<ul>
+<li><strong>Rows that enter the pipeline record where they came from.</strong> A <code>Manual</code> table can carry a hidden <code>_prov</code> attribute, declared when a deployment enables <code>provenance.capture</code> and filled on insert. Inside a pipeline provenance is structural — a computed row cannot exist without its declared upstream, so the foreign-key graph is the lineage — but at the boundary that runs out, and until now each pipeline invented its own record of external origin. <code>_prov</code> gives the boundary one shape, so that "which rows have no recorded origin" is a query rather than an audit. <strong>No author writes it:</strong> <code>insert()</code> takes no provenance argument, and the content comes from deployment configuration (<code>provenance.source</code>), from the connection (user, host, database, time, code version), and — for an insert running inside a <code>make()</code> — from the ingesting table and key. That last source is what makes the <a href="../../explanation/fan-out-ingestion/">fan-out ingestion pattern</a> traceable without a foreign key. A field the operator can set is weaker evidence than one the system sets, which is the point for an audit; anything an author wants to record deliberately belongs in the data model as a visible attribute, where queries can reach it. A table declared before capture was enabled has no column and records nothing until <code>dj.deploy.add_prov_column</code> adds it. See <a href="../../reference/specs/boundary-provenance/">Extrinsic Provenance at Entry Tables</a>, <a href="../../how-to/record-data-origin/">Record Data Origin</a> and <a href="https://github.com/datajoint/datajoint-python/issues/1547">#1547</a>.</li>
+<li><strong>New settings: <code>provenance.capture</code> and <code>provenance.source</code>.</strong> Capture defaults to <strong>off</strong>, like <code>jobs.add_job_metadata</code> and for the same reason: it changes the DDL of every <code>Manual</code> table declared afterwards, so upgrading to 2.3.4 leaves an unchanged schema declaring exactly what it declared under 2.3.3. <code>provenance.source</code> names the external system a process draws from, set per deployment through <code>DJ_PROVENANCE_SOURCE</code>, the config file, or the secrets directory rather than in pipeline code. See <a href="../../reference/configuration/#provenance-settings">Configuration</a>.</li>
+<li><strong>Three tiers gain a second name.</strong> <code>dj.Entry</code>, <code>dj.Ingest</code> and <code>dj.Compute</code> join <code>dj.Manual</code>, <code>dj.Imported</code> and <code>dj.Computed</code>. Each pair is one class rather than a subclass, so a table declared either way is identical — same SQL prefix, same tier detection, same <code>describe()</code> and diagram — and both names are permanent, with no deprecation and nothing to migrate. <code>dj.Lookup</code> and <code>dj.Part</code> are unchanged. The documentation keeps the original names for now; adopting the new ones as primary is slated for 2.4 (<a href="https://github.com/datajoint/datajoint-python/issues/1546">#1546</a>). See <a href="../../explanation/relational-workflow-model/">Relational Workflow Model</a> and <a href="https://github.com/datajoint/datajoint-python/issues/1546">#1546</a>.</li>
+<li><strong>Every platform-managed column goes through the DataJoint type system.</strong> <code>_job_start_time</code>, <code>_job_duration</code>, <code>_job_version</code>, <code>_prov</code> and <code>_singleton</code> are declared in DataJoint notation and compiled by the same path as a user attribute, so each backend's mapping comes from one place. This fixes two PostgreSQL defects: <code>_job_start_time</code> was declared as a bare <code>timestamp</code> and so took microsecond precision where MySQL got <code>datetime(3)</code> (<a href="https://github.com/datajoint/datajoint-python/issues/1566">#1566</a>), and <code>migrate.add_job_metadata_columns</code> built its <code>ALTER</code> with backtick-quoted identifiers, which is a syntax error there — the retrofit had never run on PostgreSQL. Existing tables are untouched; only new declarations and retrofits change. See <a href="https://github.com/datajoint/datajoint-python/issues/1567">#1567</a>.</li>
+<li><strong>Codecs receive connection context explicitly.</strong> <code>encode()</code> and <code>decode()</code> now take a <code>context</code> argument carrying <code>schema</code>, <code>table</code>, <code>field</code> and <code>config</code>, so <code>key</code> means what it means everywhere else in DataJoint — the primary key. Passing the calling connection's <code>config</code> matters: <code>_build_path</code> and <code>_get_backend</code> fall back to the global <code>dj.config</code> without it, which in a process holding connections for several users belongs to none of them and resolves a different store silently rather than raising. Two third-party codecs hit exactly that, both following the <code>SchemaCodec</code> docstring, which is updated here. <strong>Nothing breaks:</strong> DataJoint passes <code>context</code> only to codecs whose signature declares it, the pre-2.3.4 underscore keys are still populated in <code>key</code>, and <code>_extract_context(key)</code> still accepts one argument — it warns only when it falls back to those keys. Codecs written before 2.3.4 keep working unchanged; <code>key</code> reverting to primary-key-only, and <code>config</code> becoming required, wait for 2.4. See <a href="../../tutorials/advanced/custom-codecs/">Custom Codecs</a> and <a href="https://github.com/datajoint/datajoint-python/issues/1550">#1550</a>.</li>
+</ul>
 <h2 id="changes-in-233">Changes in 2.3.3<a class="headerlink" href="#changes-in-233" title="Permanent link">&para;</a></h2>
 <p>2.3.3 is a patch release on the 2.3 line. If you are upgrading from <strong>2.3.2</strong>:</p>
 <ul>
