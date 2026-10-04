@@ -37,7 +37,18 @@ services:
       retries: 10
 
   minio:
-    image: minio/minio:latest
+    # MinIO withdrew its public images: `minio/minio` on Docker Hub is gone
+    # entirely, any tag, and `quay.io/minio/minio` now requires authentication.
+    # Chainguard publishes a maintained build that needs no credentials and is
+    # drop-in here -- it ships `mc`, so the healthcheck below is unchanged.
+    # Matches what datajoint-python's test fixture uses.
+    #
+    # It runs as `nonroot`, and a `minio_data` volume left behind by the old
+    # root-owned image is not writable by it: MinIO exits with "Unable to write
+    # to the backend". A fresh volume inherits the image's world-writable /data
+    # and is fine, so `docker compose down -v` once clears it. CI runners start
+    # clean and never see this.
+    image: ${MINIO_IMAGE:-cgr.dev/chainguard/minio:latest}
     environment:
       MINIO_ROOT_USER: datajoint
       MINIO_ROOT_PASSWORD: datajoint
