@@ -2893,6 +2893,8 @@
       
         
       
+        
+      
     
     
     
@@ -2950,6 +2952,34 @@
     
   
     Insert Data
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/record-data-origin/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Record Data Origin
   
 
     
@@ -4631,6 +4661,8 @@
       
         
       
+        
+      
     
     
     
@@ -4828,6 +4860,34 @@
     
   
     Job Metadata
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../specs/boundary-provenance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Entry Provenance
   
 
     
@@ -5178,6 +5238,17 @@
     <span class="md-ellipsis">
       
         Jobs Settings
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#provenance-settings" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Provenance Settings
       
     </span>
   </a>
@@ -6520,6 +6591,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#provenance-settings" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Provenance Settings
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#display-settings" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -7088,6 +7170,37 @@
 </tr>
 </tbody>
 </table>
+<h2 id="provenance-settings">Provenance Settings<a class="headerlink" href="#provenance-settings" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Setting</th>
+<th>Environment</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>provenance.capture</code></td>
+<td><code>DJ_PROVENANCE_CAPTURE</code></td>
+<td><code>False</code></td>
+<td>Declare the hidden <code>_prov</code> attribute on Manual tables and fill it on insert <em>(new in 2.3.4)</em></td>
+</tr>
+<tr>
+<td><code>provenance.source</code></td>
+<td><code>DJ_PROVENANCE_SOURCE</code></td>
+<td><code>{}</code></td>
+<td>External source identity recorded on every row this process enters <em>(new in 2.3.4)</em></td>
+</tr>
+</tbody>
+</table>
+<p><code>provenance.source</code> is a JSON object naming the system this process draws from,
+set per deployment rather than in pipeline code:</p>
+<div class="highlight"><pre><span></span><code><span class="nb">export</span><span class="w"> </span><span class="nv">DJ_PROVENANCE_SOURCE</span><span class="o">=</span><span class="s1">'{"system": "PyRat", "endpoint": "https://pyrat.example.org/api/v2"}'</span>
+</code></pre></div>
+<p>See <a href="../specs/boundary-provenance/">Extrinsic Provenance at Entry Tables</a> for what is
+recorded and <a href="../../how-to/record-data-origin/">Record Data Origin</a> for the task-oriented guide.</p>
 <h2 id="display-settings">Display Settings<a class="headerlink" href="#display-settings" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

@@ -2893,6 +2893,8 @@
       
         
       
+        
+      
     
     
     
@@ -2950,6 +2952,34 @@
     
   
     Insert Data
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../how-to/record-data-origin/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Record Data Origin
   
 
     
@@ -4858,6 +4888,56 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#json-path-access" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        JSON path access
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="JSON path access">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#extracted-values-are-text" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Extracted values are text
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ordering-comparisons" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ordering comparisons
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-is-not-supported" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What is not supported
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -5165,6 +5245,8 @@
       
         
       
+        
+      
     
     
     
@@ -5362,6 +5444,34 @@
     
   
     Job Metadata
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../boundary-provenance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Entry Provenance
   
 
     
@@ -7052,6 +7162,56 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#json-path-access" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        JSON path access
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="JSON path access">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#extracted-values-are-text" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Extracted values are text
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ordering-comparisons" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ordering comparisons
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-is-not-supported" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What is not supported
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -7992,8 +8152,59 @@ just use <code>varchar</code>. A string is simpler and more transparent.</p>
 <li>Used as dtype by built-in codecs (<code>&lt;object@&gt;</code>, <code>&lt;hash@&gt;</code>, <code>&lt;filepath@store&gt;</code>)</li>
 <li>Stores arbitrary JSON-serializable data</li>
 <li>Automatically uses appropriate type for database backend</li>
-<li>Supports JSON path queries where available</li>
+<li>Supports JSON path access in restriction and projection — see below</li>
 </ul>
+<h3 id="json-path-access">JSON path access<a class="headerlink" href="#json-path-access" title="Permanent link">&para;</a></h3>
+<p>A field inside a <code>json</code> attribute is addressed as <code>attribute.path</code>, in both
+restriction and projection. DataJoint translates the path per backend, so the
+same expression runs on MySQL and PostgreSQL:</p>
+<div class="highlight"><pre><span></span><code><span class="nd">@schema</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Equipment</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
+<span class="s2">    name  : varchar(32)</span>
+<span class="s2">    ---</span>
+<span class="s2">    specs : json</span>
+<span class="s2">    """</span>
+</code></pre></div>
+<p><strong>Restriction</strong> — a mapping whose key carries the path:</p>
+<div class="highlight"><pre><span></span><code><span class="n">Equipment</span> <span class="o">&amp;</span> <span class="p">{</span><span class="s2">"specs.vendor"</span><span class="p">:</span> <span class="s2">"Acme"</span><span class="p">}</span>
+</code></pre></div>
+<p><strong>Projection</strong> — a named attribute whose value is the path:</p>
+<div class="highlight"><pre><span></span><code><span class="n">Equipment</span><span class="o">.</span><span class="n">proj</span><span class="p">(</span><span class="n">vendor</span><span class="o">=</span><span class="s2">"specs.vendor"</span><span class="p">)</span>
+</code></pre></div>
+<p>Both emit <code>json_value()</code> on MySQL and <code>jsonb_extract_path_text()</code> on
+PostgreSQL. Nested fields and array elements use dots and brackets:
+<code>specs.probe.serial</code>, <code>specs.channels[0]</code>.</p>
+<h4 id="extracted-values-are-text">Extracted values are text<a class="headerlink" href="#extracted-values-are-text" title="Permanent link">&para;</a></h4>
+<p>Both backend functions return text, so a numeric or boolean field comes back as
+a string unless a type is requested:</p>
+<div class="highlight"><pre><span></span><code><span class="n">Equipment</span><span class="o">.</span><span class="n">proj</span><span class="p">(</span><span class="n">ch</span><span class="o">=</span><span class="s2">"specs.channels"</span><span class="p">)</span>            <span class="c1"># '64'  — str</span>
+<span class="n">Equipment</span><span class="o">.</span><span class="n">proj</span><span class="p">(</span><span class="n">ch</span><span class="o">=</span><span class="s2">"specs.channels:unsigned"</span><span class="p">)</span>   <span class="c1"># 64    — int</span>
+</code></pre></div>
+<p>The annotation is <code>path:type</code>. Portable spellings are <code>unsigned</code>, <code>signed</code> and
+<code>decimal(M,D)</code>.</p>
+<div class="admonition warning">
+<p class="admonition-title">Two defects to know about when filtering</p>
+<p><strong>Compare against a string.</strong> A restriction value that is a Python <code>int</code> or
+<code>bool</code> is not coerced to match the extracted text. <code>&amp; {"specs.calibrated":
+True}</code> returns <strong>no rows</strong> on MySQL and raises on PostgreSQL; write
+<code>&amp; {"specs.calibrated": "true"}</code> and <code>&amp; {"specs.channels": "64"}</code> until
+<a href="https://github.com/datajoint/datajoint-python/issues/1564">#1564</a> is fixed.</p>
+<p><strong><code>:int</code> is not portable.</strong> It works on PostgreSQL and raises on MySQL, whose
+<code>RETURNING</code> clause does not accept it. Use <code>unsigned</code> or <code>signed</code>, which work
+on both — <a href="https://github.com/datajoint/datajoint-python/issues/1563">#1563</a>.</p>
+</div>
+<h4 id="ordering-comparisons">Ordering comparisons<a class="headerlink" href="#ordering-comparisons" title="Permanent link">&para;</a></h4>
+<p>A path yields text, so <code>&gt;</code> and <code>&lt;</code> need a typed projection first:</p>
+<div class="highlight"><pre><span></span><code><span class="n">big</span> <span class="o">=</span> <span class="n">Equipment</span><span class="o">.</span><span class="n">proj</span><span class="p">(</span><span class="n">ch</span><span class="o">=</span><span class="s2">"specs.channels:unsigned"</span><span class="p">)</span> <span class="o">&amp;</span> <span class="s2">"ch &gt; 32"</span>
+</code></pre></div>
+<h4 id="what-is-not-supported">What is not supported<a class="headerlink" href="#what-is-not-supported" title="Permanent link">&para;</a></h4>
+<p>Comparing a whole JSON object — <code>&amp; {"specs": {"vendor": "Acme", "channels": 64}}</code> —
+raises a syntax error. Restrict on a path, or normalize the field into a column.</p>
+<p>Hidden attributes — platform-managed columns whose names begin with <code>_</code>, such as
+<code>_job_version</code> — cannot be reached by the mapping form at all: the predicate is
+dropped and every row is returned
+(<a href="https://github.com/datajoint/datajoint-python/issues/1561">#1561</a>).</p>
 <h2 id="built-in-codecs">Built-in Codecs<a class="headerlink" href="#built-in-codecs" title="Permanent link">&para;</a></h2>
 <h3 id="blob-blob-serialized-python-objects"><code>&lt;blob&gt;</code> / <code>&lt;blob@&gt;</code> - Serialized Python Objects<a class="headerlink" href="#blob-blob-serialized-python-objects" title="Permanent link">&para;</a></h3>
 <p><strong>Supports both in-table and in-store storage.</strong></p>

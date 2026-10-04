@@ -14,7 +14,7 @@
         <link rel="prev" href="../trace/">
       
       
-        <link rel="next" href="../object-store-configuration/">
+        <link rel="next" href="../boundary-provenance/">
       
       
         
@@ -2893,6 +2893,8 @@
       
         
       
+        
+      
     
     
     
@@ -2950,6 +2952,34 @@
     
   
     Insert Data
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../how-to/record-data-origin/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Record Data Origin
   
 
     
@@ -4635,6 +4665,8 @@
       
         
       
+        
+      
     
     
     
@@ -5189,6 +5221,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#querying-and-fetching" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Querying and Fetching
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#summary-of-design-decisions" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -5203,6 +5246,34 @@
   
 </nav>
       
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../boundary-provenance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Entry Provenance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
     </li>
   
 
@@ -6863,6 +6934,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#querying-and-fetching" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Querying and Fetching
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#summary-of-design-decisions" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -7066,6 +7148,11 @@ To add metadata columns to existing tables, use the migration utility (not autom
 <li>Does NOT populate existing rows (metadata remains NULL)</li>
 <li>Future <code>populate()</code> calls will populate metadata for new rows</li>
 </ul>
+<p>It compiles the columns through the same path a declaration uses, so a
+retrofitted column is indistinguishable in the catalog from a declared one —
+same backend type, same <code>:type:</code> comment. Before 2.3.4 it built the <code>ALTER</code> by
+hand with backtick-quoted identifiers, which is a syntax error on PostgreSQL,
+so the retrofit had never run there.</p>
 <h2 id="behavior">Behavior<a class="headerlink" href="#behavior" title="Permanent link">&para;</a></h2>
 <h3 id="declaration-time">Declaration-time<a class="headerlink" href="#declaration-time" title="Permanent link">&para;</a></h3>
 <p>When <code>config.jobs.add_job_metadata=True</code> and a Computed/Imported table is declared:</p>
@@ -7177,20 +7264,28 @@ To add metadata columns to existing tables, use the migration utility (not autom
 </table>
 <h2 id="implementation-details">Implementation Details<a class="headerlink" href="#implementation-details" title="Permanent link">&para;</a></h2>
 <h3 id="1-declaration-declarepy">1. Declaration (declare.py)<a class="headerlink" href="#1-declaration-declarepy" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">declare</span><span class="p">(</span><span class="n">full_table_name</span><span class="p">,</span> <span class="n">definition</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
-    <span class="c1"># ... existing code ...</span>
-
-    <span class="c1"># Add hidden job metadata for auto-populated tables</span>
-    <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">jobs</span><span class="o">.</span><span class="n">add_job_metadata</span> <span class="ow">and</span> <span class="n">table_tier</span> <span class="ow">in</span> <span class="p">(</span><span class="n">TableTier</span><span class="o">.</span><span class="n">COMPUTED</span><span class="p">,</span> <span class="n">TableTier</span><span class="o">.</span><span class="n">IMPORTED</span><span class="p">):</span>
-        <span class="c1"># Only for master tables, not parts</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">is_part_table</span><span class="p">:</span>
-            <span class="n">job_metadata_sql</span> <span class="o">=</span> <span class="p">[</span>
-                <span class="s2">"`_job_start_time` datetime(3) DEFAULT NULL"</span><span class="p">,</span>
-                <span class="s2">"`_job_duration` float DEFAULT NULL"</span><span class="p">,</span>
-                <span class="s2">"`_job_version` varchar(64) DEFAULT ''"</span><span class="p">,</span>
-            <span class="p">]</span>
-            <span class="n">attribute_sql</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">job_metadata_sql</span><span class="p">)</span>
+<p>The three columns are written in DataJoint notation, exactly as a user writes an
+attribute:</p>
+<div class="highlight"><pre><span></span><code><span class="n">JOB_METADATA_DEFINITION</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="s2">"_job_start_time = null : datetime(3) # when computation began"</span><span class="p">,</span>
+    <span class="s2">"_job_duration = null : float32 # computation duration in seconds"</span><span class="p">,</span>
+    <span class="s1">'_job_version = "" : varchar(64) # code version'</span><span class="p">,</span>
+<span class="p">)</span>
 </code></pre></div>
+<p><code>prepare_declare</code> compiles them through the same <code>compile_attribute</code> that
+handles every user line, once the user's lines are parsed, and only when the
+stripped table name matches the <code>Computed</code> or <code>Imported</code> tier — which is what
+excludes part tables and DataJoint's own system tables.</p>
+<p>Going through the type system rather than a hand-written string is what makes
+the columns correct on every backend: <code>core_type_to_sql("datetime(3)")</code> yields
+<code>datetime(3)</code> on MySQL and <code>timestamp(3)</code> on PostgreSQL. A hand-written
+<code>datetime(3)</code> had produced a bare <code>timestamp</code> on PostgreSQL, silently at
+microsecond precision
+(<a href="https://github.com/datajoint/datajoint-python/issues/1566">#1566</a>).</p>
+<p>Each column also carries a <code>:type:</code> comment recording the DataJoint type it was
+declared from, which <code>heading</code> reads back as <code>original_type</code>. On PostgreSQL that
+comment is a separate <code>COMMENT ON</code> statement, since the backend does not accept
+one inline.</p>
 <h3 id="2-population-autopopulatepy">2. Population (autopopulate.py)<a class="headerlink" href="#2-population-autopopulatepy" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">_populate1</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">callback</span><span class="p">,</span> <span class="n">use_jobs</span><span class="p">,</span> <span class="n">jobs</span><span class="p">):</span>
     <span class="n">start_time</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
@@ -7273,9 +7368,59 @@ To add metadata columns to existing tables, use the migration utility (not autom
 <span class="n">SessionAnalysis</span><span class="p">()</span><span class="o">.</span><span class="n">heading</span><span class="o">.</span><span class="n">names</span>  <span class="c1"># ['session_id', 'result']</span>
 <span class="n">SessionAnalysis</span><span class="p">()</span><span class="o">.</span><span class="n">to_dicts</span><span class="p">()</span>  <span class="c1"># Returns only visible attributes</span>
 
-<span class="c1"># Access hidden attributes explicitly if needed:</span>
-<span class="n">SessionAnalysis</span><span class="p">()</span><span class="o">.</span><span class="n">to_arrays</span><span class="p">(</span><span class="s1">'_job_start_time'</span><span class="p">,</span> <span class="s1">'_job_duration'</span><span class="p">,</span> <span class="s1">'_job_version'</span><span class="p">)</span>
+<span class="c1"># Reading them back requires SQL until 2.4 -- see below.</span>
 </code></pre></div>
+<h2 id="querying-and-fetching">Querying and Fetching<a class="headerlink" href="#querying-and-fetching" title="Permanent link">&para;</a></h2>
+<p>A condition <strong>string</strong> reaches the column; everything that goes through the
+heading does not.</p>
+<table>
+<thead>
+<tr>
+<th>Pattern</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Analysis &amp; "_job_duration &gt; 3600"</code></td>
+<td>Works — the string passes to SQL unchanged</td>
+</tr>
+<tr>
+<td><code>Analysis &amp; {"_job_duration": 3600}</code></td>
+<td><strong>Returns every row</strong> — see below</td>
+</tr>
+<tr>
+<td><code>Analysis.to_arrays("_job_duration")</code></td>
+<td>Raises <code>DataJointError: Attribute `_job_duration` not found.</code></td>
+</tr>
+<tr>
+<td><code>Analysis.proj("_job_duration")</code></td>
+<td>Raises the same</td>
+</tr>
+<tr>
+<td><code>Analysis.to_dicts()</code></td>
+<td>Visible attributes only</td>
+</tr>
+<tr>
+<td><code>Analysis &amp; dj.Top(order_by="_job_duration")</code></td>
+<td>Works — <code>ORDER BY</code> is not validated against the heading</td>
+</tr>
+</tbody>
+</table>
+<p>The mapping form silently ignores an attribute it cannot match. That is
+deliberate and useful — it is what lets <code>Session &amp; key</code> work when <code>key</code> carries
+attributes from a more detailed table — but a hidden attribute is invisible to
+that matching, so the predicate is dropped along with it
+(<a href="https://github.com/datajoint/datajoint-python/issues/1561">#1561</a>).</p>
+<p><strong>Reading the values back requires SQL until 2.4:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="n">rows</span> <span class="o">=</span> <span class="n">SessionAnalysis</span><span class="o">.</span><span class="n">connection</span><span class="o">.</span><span class="n">query</span><span class="p">(</span>
+    <span class="sa">f</span><span class="s2">"SELECT _job_start_time, _job_duration, _job_version "</span>
+    <span class="sa">f</span><span class="s2">"FROM </span><span class="si">{</span><span class="n">SessionAnalysis</span><span class="o">.</span><span class="n">full_table_name</span><span class="si">}</span><span class="s2">"</span>
+<span class="p">)</span><span class="o">.</span><span class="n">fetchall</span><span class="p">()</span>
+</code></pre></div>
+<p>A supported accessor is planned for 2.4, covering the job-metadata attributes
+and <code>_prov</code> together
+(<a href="https://github.com/datajoint/datajoint-python/issues/1562">#1562</a>).</p>
 <h2 id="summary-of-design-decisions">Summary of Design Decisions<a class="headerlink" href="#summary-of-design-decisions" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

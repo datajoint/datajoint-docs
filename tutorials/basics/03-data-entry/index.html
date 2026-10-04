@@ -745,6 +745,15 @@
 </nav>
 </li>
 <li class="md-nav__item">
+<a class="md-nav__link" href="#where-the-rows-came-from">
+<span class="md-ellipsis">
+      
+        Where the Rows Came From
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
 <a class="md-nav__link" href="#master-part-tables-and-transactions">
 <span class="md-ellipsis">
       
@@ -1540,6 +1549,18 @@
 </a>
 </li>
 <li class="md-nav__item">
+<a class="md-nav__link" href="../../../how-to/record-data-origin/">
+<span class="md-ellipsis">
+    
+  
+    Record Data Origin
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
 <a class="md-nav__link" href="../../../how-to/query-data/">
 <span class="md-ellipsis">
     
@@ -2309,6 +2330,18 @@
 </a>
 </li>
 <li class="md-nav__item">
+<a class="md-nav__link" href="../../../reference/specs/boundary-provenance/">
+<span class="md-ellipsis">
+    
+  
+    Entry Provenance
+  
+
+    
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
 <a class="md-nav__link" href="../../../reference/specs/object-store-configuration/">
 <span class="md-ellipsis">
     
@@ -2926,6 +2959,15 @@
 </li>
 </ul>
 </nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#where-the-rows-came-from">
+<span class="md-ellipsis">
+      
+        Where the Rows Came From
+      
+    </span>
+</a>
 </li>
 <li class="md-nav__item">
 <a class="md-nav__link" href="#master-part-tables-and-transactions">
@@ -4679,6 +4721,27 @@ print(f"Total subjects: {len(Subject())}")</div>
 </pre>
 </div>
 </div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=5157ffa1">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<h2 id="where-the-rows-came-from">Where the Rows Came From<a class="anchor-link" href="#where-the-rows-came-from">¶</a></h2><p>Entering data is the moment a pipeline meets the outside world. Downstream of it, provenance is structural — a computed row cannot exist without its declared inputs, so the foreign-key graph is the lineage. At entry there is no such graph to lean on.</p>
+<p>Where a deployment has turned provenance capture on, DataJoint records the origin of every row inserted into a <code>Manual</code> table in a hidden <code>_prov</code> attribute. You do not write it, and <code>insert()</code> takes no argument for it:</p>
+<div class="highlight"><pre><span></span><span class="n">Session</span><span class="o">.</span><span class="n">insert1</span><span class="p">({</span><span class="s2">"session_id"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">"session_date"</span><span class="p">:</span> <span class="s2">"2026-09-30"</span><span class="p">})</span>
+</pre></div>
+<p>What gets recorded comes from deployment configuration and from the connection — the external system named in <code>dj.config.provenance.source</code>, the connecting user and host, the insert time, and the code version. A row inserted from inside an <code>Imported</code> table's <code>make()</code> also records which table and key wrote it.</p>
+<p>Because the attribute is hidden it does not appear in <code>to_dicts()</code> or in a join, so read it explicitly:</p>
+<div class="highlight"><pre><span></span><span class="c1"># rows that have no recorded origin</span>
+<span class="n">Session</span> <span class="o">&amp;</span> <span class="s2">"_prov IS NULL"</span>
+</pre></div>
+<p>Write the condition as a string. The mapping form (<code>{"_prov.system": ...}</code>) returns every row: a mapping restriction ignores attributes it cannot match — which is what lets <code>Session &amp; key</code> work when <code>key</code> carries attributes from a more detailed table — and a hidden attribute is invisible to that matching. Reading the value back needs SQL until 2.4 — <code>to_arrays("_prov")</code> raises.</p>
+<p>To record something specific to one row — which file, which LIMS record — model it as an ordinary attribute instead. A modelled column is queryable and joinable; <code>_prov</code> is deliberately neither. See <a href="../../../how-to/record-data-origin/">Record Data Origin</a>.</p>
 </div>
 </div>
 </div>

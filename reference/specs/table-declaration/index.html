@@ -2893,6 +2893,8 @@
       
         
       
+        
+      
     
     
     
@@ -2950,6 +2952,34 @@
     
   
     Insert Data
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../how-to/record-data-origin/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Record Data Origin
   
 
     
@@ -5485,6 +5515,8 @@
       
         
       
+        
+      
     
     
     
@@ -5682,6 +5714,34 @@
     
   
     Job Metadata
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../boundary-provenance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Entry Provenance
   
 
     
@@ -8099,7 +8159,7 @@ Names with leading underscore are reserved for platform-managed columns
 (e.g. _job_start_time, _singleton). Use a regular attribute name; if you
 need to control visibility at the call site, use proj().
 </code></pre></div>
-<p><strong>Platform-managed hidden attributes</strong> are added automatically when DataJoint declares certain table types. Users do not write these in the definition; the framework injects them programmatically after parsing.</p>
+<p><strong>Platform-managed hidden attributes</strong> are added automatically when DataJoint declares certain table types. Users do not write these in the definition; the framework writes them in the same DataJoint notation and compiles them through the same path, once the user's lines are parsed.</p>
 <table>
 <thead>
 <tr>
@@ -8125,13 +8185,19 @@ need to control visibility at the call site, use proj().
 <td>Library version that produced the row</td>
 </tr>
 <tr>
+<td><code>_prov</code></td>
+<td><code>Manual</code></td>
+<td><a href="../boundary-provenance/">Extrinsic provenance</a> for a row that entered from outside</td>
+</tr>
+<tr>
 <td><code>_singleton</code></td>
-<td>Singleton tables</td>
+<td>Tables that declare no primary key</td>
 <td>Implementation detail of the singleton pattern</td>
 </tr>
 </tbody>
 </table>
-<p>These columns are populated by DataJoint internals via raw SQL during the <code>populate()</code> lifecycle, not via <code>insert</code>/<code>update1</code>. They are filtered out of every public API surface so they don't clutter joins, fetches, or displays.</p>
+<p>Part tables receive none of them, and neither do DataJoint's own system tables — the job queue and the lineage registry — because each slot is granted by matching its tier, not by excluding the others' prefixes.</p>
+<p>DataJoint internals write these values; <code>insert</code> and <code>update1</code> reject them. <code>_job_*</code> is written by raw <code>UPDATE</code> after <code>make()</code> returns, <code>_prov</code> on the insert path, <code>_singleton</code> by its default. They are filtered out of every public API surface so they don't clutter joins, fetches, or displays.</p>
 <p><strong>Behavior.</strong> The filter is implemented in <code>Heading.attributes</code>, which all visible code paths consume; raw SQL strings bypass it.</p>
 <table>
 <thead>
@@ -8222,6 +8288,10 @@ need to control visibility at the call site, use proj().
 <span class="c1"># Dict restriction is silently dropped — does NOT filter</span>
 <span class="n">MyTable</span> <span class="o">&amp;</span> <span class="p">{</span><span class="s1">'_job_start_time'</span><span class="p">:</span> <span class="n">some_date</span><span class="p">}</span>   <span class="c1"># ⚠ ignored</span>
 </code></pre></div>
+<p>A supported accessor is planned for 2.4, covering the job-metadata attributes
+and <code>_prov</code> together
+(<a href="https://github.com/datajoint/datajoint-python/issues/1562">datajoint-python#1562</a>).
+Until then, raw SQL is the only way to read one back.</p>
 <p><strong>Use a regular attribute instead.</strong> When you want a column that's part of the schema-level contract (backing an index, storing a derived value, etc.) but isn't featured in default displays, declare it as a regular attribute and use <code>proj()</code> at the call site if you want to omit it from a particular query result. For example, a hash column backing a unique index:</p>
 <div class="highlight"><pre><span></span><code><span class="nd">@schema</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">TaskParams</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
@@ -8772,7 +8842,7 @@ unique index(attr1, attr2, ...)
 </tr>
 <tr>
 <td><code>_job_duration</code></td>
-<td><code>float64</code></td>
+<td><code>float32</code></td>
 <td>Duration in seconds</td>
 </tr>
 <tr>

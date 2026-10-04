@@ -8,31 +8,31 @@
       
       
       
-        <link rel="canonical" href="https://docs.datajoint.com/how-to/object-storage-overview/">
+        <link rel="canonical" href="https://docs.datajoint.com/reference/specs/boundary-provenance/">
       
       
-        <link rel="prev" href="../monitor-progress/">
+        <link rel="prev" href="../job-metadata/">
       
       
-        <link rel="next" href="../choose-storage-type/">
+        <link rel="next" href="../object-store-configuration/">
       
       
         
       
       
-      <link rel="icon" href="../../assets/images/company-logo-blue.png">
+      <link rel="icon" href="../../../assets/images/company-logo-blue.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
     
     
       
-        <title>Overview - DataJoint Documentation</title>
+        <title>Entry Provenance - DataJoint Documentation</title>
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.ec1eaa64.min.css">
       
         
-        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
       
       
 
@@ -51,11 +51,11 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/_mkdocstrings.css">
+      <link rel="stylesheet" href="../../../assets/_mkdocstrings.css">
     
-      <link rel="stylesheet" href="../../assets/stylesheets/extra.css">
+      <link rel="stylesheet" href="../../../assets/stylesheets/extra.css">
     
-    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -108,7 +108,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#object-storage-overview" class="md-skip">
+        <a href="#extrinsic-provenance-at-entry-tables" class="md-skip">
           Skip to content
         </a>
       
@@ -151,7 +151,7 @@
 
 <header class="md-header md-header--shadow" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="../.." title="DataJoint Documentation" class="md-header__button md-logo" aria-label="DataJoint Documentation" data-md-component="logo">
+    <a href="../../.." title="DataJoint Documentation" class="md-header__button md-logo" aria-label="DataJoint Documentation" data-md-component="logo">
       
   
   <?xml version="1.0" encoding="utf-8"?>
@@ -175,7 +175,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Overview
+              Entry Provenance
             
           </span>
         </div>
@@ -291,7 +291,7 @@
 
 <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="../.." title="DataJoint Documentation" class="md-nav__button md-logo" aria-label="DataJoint Documentation" data-md-component="logo">
+    <a href="../../.." title="DataJoint Documentation" class="md-nav__button md-logo" aria-label="DataJoint Documentation" data-md-component="logo">
       
   
   <?xml version="1.0" encoding="utf-8"?>
@@ -325,7 +325,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../.." class="md-nav__link">
+      <a href="../../.." class="md-nav__link">
         
   
   
@@ -381,7 +381,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../explanation/" class="md-nav__link ">
+            <a href="../../../explanation/" class="md-nav__link ">
               
   
   
@@ -478,7 +478,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../explanation/data-pipelines/" class="md-nav__link">
+      <a href="../../../explanation/data-pipelines/" class="md-nav__link">
         
   
   
@@ -506,7 +506,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../explanation/faq/" class="md-nav__link">
+      <a href="../../../explanation/faq/" class="md-nav__link">
         
   
   
@@ -615,7 +615,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../explanation/relational-workflow-model/" class="md-nav__link">
+      <a href="../../../explanation/relational-workflow-model/" class="md-nav__link">
         
   
   
@@ -643,7 +643,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../explanation/data-integrity/" class="md-nav__link">
+      <a href="../../../explanation/data-integrity/" class="md-nav__link">
         
   
   
@@ -671,7 +671,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../explanation/entity-integrity/" class="md-nav__link">
+      <a href="../../../explanation/entity-integrity/" class="md-nav__link">
         
   
   
@@ -699,7 +699,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../explanation/referential-integrity/" class="md-nav__link">
+      <a href="../../../explanation/referential-integrity/" class="md-nav__link">
         
   
   
@@ -727,7 +727,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../explanation/normalization/" class="md-nav__link">
+      <a href="../../../explanation/normalization/" class="md-nav__link">
         
   
   
@@ -755,7 +755,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../explanation/transactions/" class="md-nav__link">
+      <a href="../../../explanation/transactions/" class="md-nav__link">
         
   
   
@@ -783,7 +783,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../explanation/computation-model/" class="md-nav__link">
+      <a href="../../../explanation/computation-model/" class="md-nav__link">
         
   
   
@@ -811,7 +811,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../explanation/fan-out-ingestion/" class="md-nav__link">
+      <a href="../../../explanation/fan-out-ingestion/" class="md-nav__link">
         
   
   
@@ -839,7 +839,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../explanation/schema-as-workflow-specification/" class="md-nav__link">
+      <a href="../../../explanation/schema-as-workflow-specification/" class="md-nav__link">
         
   
   
@@ -867,7 +867,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../explanation/comparison-to-workflow-languages/" class="md-nav__link">
+      <a href="../../../explanation/comparison-to-workflow-languages/" class="md-nav__link">
         
   
   
@@ -895,7 +895,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../explanation/comparison-to-provenance-systems/" class="md-nav__link">
+      <a href="../../../explanation/comparison-to-provenance-systems/" class="md-nav__link">
         
   
   
@@ -986,7 +986,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../explanation/query-algebra/" class="md-nav__link">
+      <a href="../../../explanation/query-algebra/" class="md-nav__link">
         
   
   
@@ -1014,7 +1014,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../explanation/semantic-matching/" class="md-nav__link">
+      <a href="../../../explanation/semantic-matching/" class="md-nav__link">
         
   
   
@@ -1107,7 +1107,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../explanation/type-system/" class="md-nav__link">
+      <a href="../../../explanation/type-system/" class="md-nav__link">
         
   
   
@@ -1135,7 +1135,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../explanation/custom-codecs/" class="md-nav__link">
+      <a href="../../../explanation/custom-codecs/" class="md-nav__link">
         
   
   
@@ -1163,7 +1163,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../explanation/spark-adapters/" class="md-nav__link">
+      <a href="../../../explanation/spark-adapters/" class="md-nav__link">
         
   
   
@@ -1252,7 +1252,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../explanation/postgresql-cdc-replication/" class="md-nav__link">
+      <a href="../../../explanation/postgresql-cdc-replication/" class="md-nav__link">
         
   
   
@@ -1322,7 +1322,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../tutorials/" class="md-nav__link ">
+            <a href="../../../tutorials/" class="md-nav__link ">
               
   
   
@@ -1427,7 +1427,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../tutorials/basics/01-first-pipeline/" class="md-nav__link">
+      <a href="../../../tutorials/basics/01-first-pipeline/" class="md-nav__link">
         
   
   
@@ -1455,7 +1455,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../tutorials/basics/02-schema-design/" class="md-nav__link">
+      <a href="../../../tutorials/basics/02-schema-design/" class="md-nav__link">
         
   
   
@@ -1483,7 +1483,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../tutorials/basics/03-data-entry/" class="md-nav__link">
+      <a href="../../../tutorials/basics/03-data-entry/" class="md-nav__link">
         
   
   
@@ -1511,7 +1511,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../tutorials/basics/04-queries/" class="md-nav__link">
+      <a href="../../../tutorials/basics/04-queries/" class="md-nav__link">
         
   
   
@@ -1539,7 +1539,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../tutorials/basics/05-computation/" class="md-nav__link">
+      <a href="../../../tutorials/basics/05-computation/" class="md-nav__link">
         
   
   
@@ -1567,7 +1567,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../tutorials/basics/06-object-storage/" class="md-nav__link">
+      <a href="../../../tutorials/basics/06-object-storage/" class="md-nav__link">
         
   
   
@@ -1664,7 +1664,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../tutorials/examples/university/" class="md-nav__link">
+      <a href="../../../tutorials/examples/university/" class="md-nav__link">
         
   
   
@@ -1692,7 +1692,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../tutorials/examples/hotel-reservations/" class="md-nav__link">
+      <a href="../../../tutorials/examples/hotel-reservations/" class="md-nav__link">
         
   
   
@@ -1720,7 +1720,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../tutorials/examples/languages/" class="md-nav__link">
+      <a href="../../../tutorials/examples/languages/" class="md-nav__link">
         
   
   
@@ -1748,7 +1748,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../tutorials/examples/fractal-pipeline/" class="md-nav__link">
+      <a href="../../../tutorials/examples/fractal-pipeline/" class="md-nav__link">
         
   
   
@@ -1776,7 +1776,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../tutorials/examples/blob-detection/" class="md-nav__link">
+      <a href="../../../tutorials/examples/blob-detection/" class="md-nav__link">
         
   
   
@@ -1871,7 +1871,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../tutorials/domain/calcium-imaging/calcium-imaging/" class="md-nav__link">
+      <a href="../../../tutorials/domain/calcium-imaging/calcium-imaging/" class="md-nav__link">
         
   
   
@@ -1899,7 +1899,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../tutorials/domain/electrophysiology/electrophysiology/" class="md-nav__link">
+      <a href="../../../tutorials/domain/electrophysiology/electrophysiology/" class="md-nav__link">
         
   
   
@@ -1927,7 +1927,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../tutorials/domain/electrophysiology/ephys-with-npy/" class="md-nav__link">
+      <a href="../../../tutorials/domain/electrophysiology/ephys-with-npy/" class="md-nav__link">
         
   
   
@@ -1955,7 +1955,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../tutorials/domain/allen-ccf/allen-ccf/" class="md-nav__link">
+      <a href="../../../tutorials/domain/allen-ccf/allen-ccf/" class="md-nav__link">
         
   
   
@@ -2054,7 +2054,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../tutorials/advanced/sql-comparison/" class="md-nav__link">
+      <a href="../../../tutorials/advanced/sql-comparison/" class="md-nav__link">
         
   
   
@@ -2082,7 +2082,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../tutorials/advanced/json-type/" class="md-nav__link">
+      <a href="../../../tutorials/advanced/json-type/" class="md-nav__link">
         
   
   
@@ -2110,7 +2110,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../tutorials/advanced/distributed/" class="md-nav__link">
+      <a href="../../../tutorials/advanced/distributed/" class="md-nav__link">
         
   
   
@@ -2138,7 +2138,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../tutorials/advanced/custom-codecs/" class="md-nav__link">
+      <a href="../../../tutorials/advanced/custom-codecs/" class="md-nav__link">
         
   
   
@@ -2166,7 +2166,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../tutorials/advanced/instances/" class="md-nav__link">
+      <a href="../../../tutorials/advanced/instances/" class="md-nav__link">
         
   
   
@@ -2194,7 +2194,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../tutorials/advanced/three-part-make/" class="md-nav__link">
+      <a href="../../../tutorials/advanced/three-part-make/" class="md-nav__link">
         
   
   
@@ -2234,10 +2234,8 @@
       
   
   
-    
   
   
-  
     
     
       
@@ -2266,15 +2264,15 @@
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../" class="md-nav__link ">
+            <a href="../../../how-to/" class="md-nav__link ">
               
   
   
@@ -2298,7 +2296,7 @@
             
           </div>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_4">
             <span class="md-nav__icon md-icon"></span>
             
@@ -2379,7 +2377,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../installation/" class="md-nav__link">
+      <a href="../../../how-to/installation/" class="md-nav__link">
         
   
   
@@ -2407,7 +2405,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../manage-secrets/" class="md-nav__link">
+      <a href="../../../how-to/manage-secrets/" class="md-nav__link">
         
   
   
@@ -2435,7 +2433,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../configure-database/" class="md-nav__link">
+      <a href="../../../how-to/configure-database/" class="md-nav__link">
         
   
   
@@ -2463,7 +2461,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../use-instances/" class="md-nav__link">
+      <a href="../../../how-to/use-instances/" class="md-nav__link">
         
   
   
@@ -2491,7 +2489,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../configure-storage/" class="md-nav__link">
+      <a href="../../../how-to/configure-storage/" class="md-nav__link">
         
   
   
@@ -2519,7 +2517,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../use-cli/" class="md-nav__link">
+      <a href="../../../how-to/use-cli/" class="md-nav__link">
         
   
   
@@ -2616,7 +2614,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../define-tables/" class="md-nav__link">
+      <a href="../../../how-to/define-tables/" class="md-nav__link">
         
   
   
@@ -2644,7 +2642,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../model-relationships/" class="md-nav__link">
+      <a href="../../../how-to/model-relationships/" class="md-nav__link">
         
   
   
@@ -2672,7 +2670,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../master-part/" class="md-nav__link">
+      <a href="../../../how-to/master-part/" class="md-nav__link">
         
   
   
@@ -2700,7 +2698,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../design-primary-keys/" class="md-nav__link">
+      <a href="../../../how-to/design-primary-keys/" class="md-nav__link">
         
   
   
@@ -2728,7 +2726,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../read-diagrams/" class="md-nav__link">
+      <a href="../../../how-to/read-diagrams/" class="md-nav__link">
         
   
   
@@ -2819,7 +2817,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../manage-pipeline-project/" class="md-nav__link">
+      <a href="../../../how-to/manage-pipeline-project/" class="md-nav__link">
         
   
   
@@ -2847,7 +2845,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../deploy-production/" class="md-nav__link">
+      <a href="../../../how-to/deploy-production/" class="md-nav__link">
         
   
   
@@ -2946,7 +2944,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../insert-data/" class="md-nav__link">
+      <a href="../../../how-to/insert-data/" class="md-nav__link">
         
   
   
@@ -2974,7 +2972,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../record-data-origin/" class="md-nav__link">
+      <a href="../../../how-to/record-data-origin/" class="md-nav__link">
         
   
   
@@ -3002,7 +3000,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../query-data/" class="md-nav__link">
+      <a href="../../../how-to/query-data/" class="md-nav__link">
         
   
   
@@ -3030,7 +3028,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../fetch-results/" class="md-nav__link">
+      <a href="../../../how-to/fetch-results/" class="md-nav__link">
         
   
   
@@ -3058,7 +3056,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../delete-data/" class="md-nav__link">
+      <a href="../../../how-to/delete-data/" class="md-nav__link">
         
   
   
@@ -3086,7 +3084,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../update-data/" class="md-nav__link">
+      <a href="../../../how-to/update-data/" class="md-nav__link">
         
   
   
@@ -3181,7 +3179,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../run-computations/" class="md-nav__link">
+      <a href="../../../how-to/run-computations/" class="md-nav__link">
         
   
   
@@ -3209,7 +3207,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../distributed-computing/" class="md-nav__link">
+      <a href="../../../how-to/distributed-computing/" class="md-nav__link">
         
   
   
@@ -3237,7 +3235,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../handle-errors/" class="md-nav__link">
+      <a href="../../../how-to/handle-errors/" class="md-nav__link">
         
   
   
@@ -3265,7 +3263,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../monitor-progress/" class="md-nav__link">
+      <a href="../../../how-to/monitor-progress/" class="md-nav__link">
         
   
   
@@ -3298,10 +3296,8 @@
                 
   
   
-    
   
   
-  
     
     
       
@@ -3329,11 +3325,11 @@
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_6" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_6" >
         
           
           <label class="md-nav__link" for="__nav_4_6" id="__nav_4_6_label" tabindex="0">
@@ -3354,7 +3350,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_6_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_6_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_4_6">
             <span class="md-nav__icon md-icon"></span>
             
@@ -3369,37 +3365,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Overview
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../../../how-to/object-storage-overview/" class="md-nav__link">
         
   
   
@@ -3415,404 +3384,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#quick-navigation-by-task" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Quick Navigation by Task
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#conceptual-understanding" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Conceptual Understanding
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#three-storage-modes" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Three Storage Modes
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Three Storage Modes">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#in-table-storage-blob" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        In-Table Storage (&lt;blob&gt;)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#object-store-integrated" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Object Store (Integrated)
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Object Store (Integrated)">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#hash-addressed-blob-attach" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Hash-Addressed (&lt;blob@&gt;, &lt;attach@&gt;)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#schema-addressed-npy-object" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Schema-Addressed (&lt;npy@&gt;, &lt;object@&gt;)
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#filepath-references-filepath" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Filepath References (&lt;filepath@&gt;)
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#documentation-by-level" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Documentation by Level
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Documentation by Level">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#getting-started" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Getting Started
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#intermediate" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Intermediate
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#advanced" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Advanced
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#technical-reference" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Technical Reference
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Technical Reference">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#specifications" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Specifications
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#explanations" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Explanations
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#common-workflows" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Common Workflows
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Common Workflows">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#workflow-1-adding-object-storage-to-existing-pipeline" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Workflow 1: Adding Object Storage to Existing Pipeline
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#workflow-2-migrating-from-in-table-to-object-store" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Workflow 2: Migrating from In-Table to Object Store
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#workflow-3-working-with-very-large-arrays-1-gb" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Workflow 3: Working with Very Large Arrays (&gt; 1 GB)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#workflow-4-building-custom-domain-types" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Workflow 4: Building Custom Domain Types
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#decision-trees" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Decision Trees
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Decision Trees">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#which-storage-mode" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        "Which storage mode?"
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#which-codec-for-object-storage" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        "Which codec for object storage?"
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#troubleshooting" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Troubleshooting
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Troubleshooting">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#common-issues" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Common Issues
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#getting-help" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Getting Help
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#see-also" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        See Also
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="See Also">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#related-concepts" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Related Concepts
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#related-how-tos" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Related How-Tos
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#related-tutorials" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Related Tutorials
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -3825,7 +3396,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../choose-storage-type/" class="md-nav__link">
+      <a href="../../../how-to/choose-storage-type/" class="md-nav__link">
         
   
   
@@ -3853,7 +3424,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../use-object-storage/" class="md-nav__link">
+      <a href="../../../how-to/use-object-storage/" class="md-nav__link">
         
   
   
@@ -3881,7 +3452,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../staged-insert/" class="md-nav__link">
+      <a href="../../../how-to/staged-insert/" class="md-nav__link">
         
   
   
@@ -3909,7 +3480,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../use-npy-codec/" class="md-nav__link">
+      <a href="../../../how-to/use-npy-codec/" class="md-nav__link">
         
   
   
@@ -3937,7 +3508,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../use-plugin-codecs/" class="md-nav__link">
+      <a href="../../../how-to/use-plugin-codecs/" class="md-nav__link">
         
   
   
@@ -3965,7 +3536,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../create-custom-codec/" class="md-nav__link">
+      <a href="../../../how-to/create-custom-codec/" class="md-nav__link">
         
   
   
@@ -3993,7 +3564,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../manage-large-data/" class="md-nav__link">
+      <a href="../../../how-to/manage-large-data/" class="md-nav__link">
         
   
   
@@ -4021,7 +3592,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../garbage-collection/" class="md-nav__link">
+      <a href="../../../how-to/garbage-collection/" class="md-nav__link">
         
   
   
@@ -4114,7 +3685,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../migrate-to-v20/" class="md-nav__link">
+      <a href="../../../how-to/migrate-to-v20/" class="md-nav__link">
         
   
   
@@ -4142,7 +3713,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../alter-tables/" class="md-nav__link">
+      <a href="../../../how-to/alter-tables/" class="md-nav__link">
         
   
   
@@ -4170,7 +3741,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../backup-restore/" class="md-nav__link">
+      <a href="../../../how-to/backup-restore/" class="md-nav__link">
         
   
   
@@ -4259,7 +3830,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../testing/" class="md-nav__link">
+      <a href="../../../how-to/testing/" class="md-nav__link">
         
   
   
@@ -4299,8 +3870,10 @@
       
   
   
+    
   
   
+  
     
     
       
@@ -4327,15 +3900,15 @@
       
     
     
-    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../reference/" class="md-nav__link ">
+            <a href="../../" class="md-nav__link ">
               
   
   
@@ -4359,7 +3932,7 @@
             
           </div>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_5">
             <span class="md-nav__icon md-icon"></span>
             
@@ -4374,8 +3947,10 @@
                 
   
   
+    
   
   
+  
     
     
       
@@ -4397,15 +3972,15 @@
       
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_1" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_1" checked>
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../reference/specs/" class="md-nav__link ">
+            <a href="../" class="md-nav__link ">
               
   
   
@@ -4429,7 +4004,7 @@
             
           </div>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_1_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_1_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_5_1">
             <span class="md-nav__icon md-icon"></span>
             
@@ -4447,7 +4022,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/specs/database-backends/" class="md-nav__link">
+      <a href="../database-backends/" class="md-nav__link">
         
   
   
@@ -4534,7 +4109,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/specs/table-declaration/" class="md-nav__link">
+      <a href="../table-declaration/" class="md-nav__link">
         
   
   
@@ -4562,7 +4137,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/specs/master-part/" class="md-nav__link">
+      <a href="../master-part/" class="md-nav__link">
         
   
   
@@ -4590,7 +4165,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/specs/virtual-schemas/" class="md-nav__link">
+      <a href="../virtual-schemas/" class="md-nav__link">
         
   
   
@@ -4618,7 +4193,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/specs/branch-resolution/" class="md-nav__link">
+      <a href="../branch-resolution/" class="md-nav__link">
         
   
   
@@ -4715,7 +4290,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/specs/query-algebra/" class="md-nav__link">
+      <a href="../query-algebra/" class="md-nav__link">
         
   
   
@@ -4743,7 +4318,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/specs/semantic-matching/" class="md-nav__link">
+      <a href="../semantic-matching/" class="md-nav__link">
         
   
   
@@ -4771,7 +4346,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/specs/primary-keys/" class="md-nav__link">
+      <a href="../primary-keys/" class="md-nav__link">
         
   
   
@@ -4799,7 +4374,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/specs/fetch-api/" class="md-nav__link">
+      <a href="../fetch-api/" class="md-nav__link">
         
   
   
@@ -4827,7 +4402,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/specs/diagram/" class="md-nav__link">
+      <a href="../diagram/" class="md-nav__link">
         
   
   
@@ -4924,7 +4499,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/specs/type-system/" class="md-nav__link">
+      <a href="../type-system/" class="md-nav__link">
         
   
   
@@ -4952,7 +4527,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/specs/codec-api/" class="md-nav__link">
+      <a href="../codec-api/" class="md-nav__link">
         
   
   
@@ -4980,7 +4555,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/specs/npy-codec/" class="md-nav__link">
+      <a href="../npy-codec/" class="md-nav__link">
         
   
   
@@ -5008,7 +4583,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/specs/spark-adapter/" class="md-nav__link">
+      <a href="../spark-adapter/" class="md-nav__link">
         
   
   
@@ -5036,7 +4611,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/specs/storage-adapter-api/" class="md-nav__link">
+      <a href="../storage-adapter-api/" class="md-nav__link">
         
   
   
@@ -5069,8 +4644,10 @@
                 
   
   
+    
   
   
+  
     
     
       
@@ -5096,11 +4673,11 @@
       
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_1_5" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_1_5" checked>
         
           
           <label class="md-nav__link" for="__nav_5_1_5" id="__nav_5_1_5_label" tabindex="0">
@@ -5121,7 +4698,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_5_1_5_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_5_1_5_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_5_1_5">
             <span class="md-nav__icon md-icon"></span>
             
@@ -5139,7 +4716,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/specs/data-manipulation/" class="md-nav__link">
+      <a href="../data-manipulation/" class="md-nav__link">
         
   
   
@@ -5167,7 +4744,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/specs/staged-insert/" class="md-nav__link">
+      <a href="../staged-insert/" class="md-nav__link">
         
   
   
@@ -5195,7 +4772,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/specs/cascade/" class="md-nav__link">
+      <a href="../cascade/" class="md-nav__link">
         
   
   
@@ -5223,7 +4800,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/specs/autopopulate/" class="md-nav__link">
+      <a href="../autopopulate/" class="md-nav__link">
         
   
   
@@ -5251,7 +4828,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/specs/trace/" class="md-nav__link">
+      <a href="../trace/" class="md-nav__link">
         
   
   
@@ -5279,7 +4856,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/specs/job-metadata/" class="md-nav__link">
+      <a href="../job-metadata/" class="md-nav__link">
         
   
   
@@ -5304,10 +4881,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../../reference/specs/boundary-provenance/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Entry Provenance
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -5323,6 +4927,220 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#motivation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Motivation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-attribute" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Attribute
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#which-tables-carry-it" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Which Tables Carry It
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#content" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Content
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Content">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-author-cannot-write-it" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The author cannot write it
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Configuration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#capture-defaults-off" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Capture defaults off
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#behavior" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Behavior
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Behavior">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#at-declaration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        At declaration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#at-insert" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        At insert
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#inside-make" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Inside make()
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#retrofitting-existing-tables" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Retrofitting Existing Tables
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#querying" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Querying
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#implementation-details" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Implementation Details
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#see-also" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        See Also
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -5335,7 +5153,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/specs/object-store-configuration/" class="md-nav__link">
+      <a href="../object-store-configuration/" class="md-nav__link">
         
   
   
@@ -5424,7 +5242,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/specs/deploy-operations/" class="md-nav__link">
+      <a href="../deploy-operations/" class="md-nav__link">
         
   
   
@@ -5521,7 +5339,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/specs/thread-safe-mode/" class="md-nav__link">
+      <a href="../thread-safe-mode/" class="md-nav__link">
         
   
   
@@ -5557,7 +5375,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/configuration/" class="md-nav__link">
+      <a href="../../configuration/" class="md-nav__link">
         
   
   
@@ -5585,7 +5403,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/definition-syntax/" class="md-nav__link">
+      <a href="../../definition-syntax/" class="md-nav__link">
         
   
   
@@ -5613,7 +5431,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/operators/" class="md-nav__link">
+      <a href="../../operators/" class="md-nav__link">
         
   
   
@@ -5641,7 +5459,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/errors/" class="md-nav__link">
+      <a href="../../errors/" class="md-nav__link">
         
   
   
@@ -5669,7 +5487,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../elements/" class="md-nav__link">
+      <a href="../../../elements/" class="md-nav__link">
         
   
   
@@ -5727,7 +5545,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../api/" class="md-nav__link ">
+            <a href="../../../api/" class="md-nav__link ">
               
   
   
@@ -5769,7 +5587,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../api/datajoint/" class="md-nav__link">
+      <a href="../../../api/datajoint/" class="md-nav__link">
         
   
   
@@ -5841,7 +5659,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../api/datajoint/" class="md-nav__link ">
+            <a href="../../../api/datajoint/" class="md-nav__link ">
               
   
   
@@ -5883,7 +5701,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../api/datajoint/blob/" class="md-nav__link">
+      <a href="../../../api/datajoint/blob/" class="md-nav__link">
         
   
   
@@ -5911,7 +5729,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../api/datajoint/codecs/" class="md-nav__link">
+      <a href="../../../api/datajoint/codecs/" class="md-nav__link">
         
   
   
@@ -5939,7 +5757,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../api/datajoint/connection/" class="md-nav__link">
+      <a href="../../../api/datajoint/connection/" class="md-nav__link">
         
   
   
@@ -5967,7 +5785,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../api/datajoint/diagram/" class="md-nav__link">
+      <a href="../../../api/datajoint/diagram/" class="md-nav__link">
         
   
   
@@ -5995,7 +5813,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../api/datajoint/errors/" class="md-nav__link">
+      <a href="../../../api/datajoint/errors/" class="md-nav__link">
         
   
   
@@ -6023,7 +5841,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../api/datajoint/expression/" class="md-nav__link">
+      <a href="../../../api/datajoint/expression/" class="md-nav__link">
         
   
   
@@ -6051,7 +5869,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../api/datajoint/hash_registry/" class="md-nav__link">
+      <a href="../../../api/datajoint/hash_registry/" class="md-nav__link">
         
   
   
@@ -6079,7 +5897,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../api/datajoint/heading/" class="md-nav__link">
+      <a href="../../../api/datajoint/heading/" class="md-nav__link">
         
   
   
@@ -6107,7 +5925,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../api/datajoint/jobs/" class="md-nav__link">
+      <a href="../../../api/datajoint/jobs/" class="md-nav__link">
         
   
   
@@ -6135,7 +5953,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../api/datajoint/migrate/" class="md-nav__link">
+      <a href="../../../api/datajoint/migrate/" class="md-nav__link">
         
   
   
@@ -6163,7 +5981,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../api/datajoint/schemas/" class="md-nav__link">
+      <a href="../../../api/datajoint/schemas/" class="md-nav__link">
         
   
   
@@ -6191,7 +6009,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../api/datajoint/settings/" class="md-nav__link">
+      <a href="../../../api/datajoint/settings/" class="md-nav__link">
         
   
   
@@ -6219,7 +6037,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../api/datajoint/table/" class="md-nav__link">
+      <a href="../../../api/datajoint/table/" class="md-nav__link">
         
   
   
@@ -6247,7 +6065,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../api/datajoint/user_tables/" class="md-nav__link">
+      <a href="../../../api/datajoint/user_tables/" class="md-nav__link">
         
   
   
@@ -6329,7 +6147,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../about/" class="md-nav__link ">
+            <a href="../../../about/" class="md-nav__link ">
               
   
   
@@ -6371,7 +6189,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../about/whats-new-23/" class="md-nav__link">
+      <a href="../../../about/whats-new-23/" class="md-nav__link">
         
   
   
@@ -6399,7 +6217,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../about/whats-new-22/" class="md-nav__link">
+      <a href="../../../about/whats-new-22/" class="md-nav__link">
         
   
   
@@ -6427,7 +6245,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../about/whats-new-21/" class="md-nav__link">
+      <a href="../../../about/whats-new-21/" class="md-nav__link">
         
   
   
@@ -6455,7 +6273,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../about/whats-new-2/" class="md-nav__link">
+      <a href="../../../about/whats-new-2/" class="md-nav__link">
         
   
   
@@ -6483,7 +6301,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../about/history/" class="md-nav__link">
+      <a href="../../../about/history/" class="md-nav__link">
         
   
   
@@ -6511,7 +6329,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../about/versioning/" class="md-nav__link">
+      <a href="../../../about/versioning/" class="md-nav__link">
         
   
   
@@ -6567,7 +6385,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../about/citation/" class="md-nav__link">
+      <a href="../../../about/citation/" class="md-nav__link">
         
   
   
@@ -6595,7 +6413,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../about/publications/" class="md-nav__link">
+      <a href="../../../about/publications/" class="md-nav__link">
         
   
   
@@ -6623,7 +6441,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../about/contributing/" class="md-nav__link">
+      <a href="../../../about/contributing/" class="md-nav__link">
         
   
   
@@ -6678,10 +6496,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#quick-navigation-by-task" class="md-nav__link">
+  <a href="#overview" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Quick Navigation by Task
+        Overview
       
     </span>
   </a>
@@ -6689,10 +6507,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#conceptual-understanding" class="md-nav__link">
+  <a href="#motivation" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Conceptual Understanding
+        Motivation
       
     </span>
   </a>
@@ -6700,72 +6518,44 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#three-storage-modes" class="md-nav__link">
+  <a href="#the-attribute" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Three Storage Modes
+        The Attribute
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Three Storage Modes">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#which-tables-carry-it" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Which Tables Carry It
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#content" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Content
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Content">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#in-table-storage-blob" class="md-nav__link">
+  <a href="#the-author-cannot-write-it" class="md-nav__link">
     <span class="md-ellipsis">
       
-        In-Table Storage (&lt;blob&gt;)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#object-store-integrated" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Object Store (Integrated)
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Object Store (Integrated)">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#hash-addressed-blob-attach" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Hash-Addressed (&lt;blob@&gt;, &lt;attach@&gt;)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#schema-addressed-npy-object" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Schema-Addressed (&lt;npy@&gt;, &lt;object@&gt;)
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#filepath-references-filepath" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Filepath References (&lt;filepath@&gt;)
+        The author cannot write it
       
     </span>
   </a>
@@ -6778,44 +6568,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#documentation-by-level" class="md-nav__link">
+  <a href="#configuration" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Documentation by Level
+        Configuration
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Documentation by Level">
+    <nav class="md-nav" aria-label="Configuration">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#getting-started" class="md-nav__link">
+  <a href="#capture-defaults-off" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Getting Started
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#intermediate" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Intermediate
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#advanced" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Advanced
+        Capture defaults off
       
     </span>
   </a>
@@ -6828,22 +6596,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#technical-reference" class="md-nav__link">
+  <a href="#behavior" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Technical Reference
+        Behavior
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Technical Reference">
+    <nav class="md-nav" aria-label="Behavior">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#specifications" class="md-nav__link">
+  <a href="#at-declaration" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Specifications
+        At declaration
       
     </span>
   </a>
@@ -6851,10 +6619,21 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#explanations" class="md-nav__link">
+  <a href="#at-insert" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Explanations
+        At insert
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#inside-make" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Inside make()
       
     </span>
   </a>
@@ -6867,141 +6646,35 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-workflows" class="md-nav__link">
+  <a href="#retrofitting-existing-tables" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common Workflows
+        Retrofitting Existing Tables
       
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="Common Workflows">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#workflow-1-adding-object-storage-to-existing-pipeline" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Workflow 1: Adding Object Storage to Existing Pipeline
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#workflow-2-migrating-from-in-table-to-object-store" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Workflow 2: Migrating from In-Table to Object Store
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#workflow-3-working-with-very-large-arrays-1-gb" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Workflow 3: Working with Very Large Arrays (&gt; 1 GB)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#workflow-4-building-custom-domain-types" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Workflow 4: Building Custom Domain Types
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#decision-trees" class="md-nav__link">
+  <a href="#querying" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Decision Trees
+        Querying
       
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="Decision Trees">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#which-storage-mode" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        "Which storage mode?"
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#which-codec-for-object-storage" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        "Which codec for object storage?"
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#troubleshooting" class="md-nav__link">
+  <a href="#implementation-details" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Troubleshooting
+        Implementation Details
       
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="Troubleshooting">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#common-issues" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Common Issues
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#getting-help" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Getting Help
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -7013,45 +6686,6 @@
       
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="See Also">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#related-concepts" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Related Concepts
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#related-how-tos" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Related How-Tos
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#related-tutorials" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Related Tutorials
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -7075,329 +6709,280 @@
   
 
 
-<h1 id="object-storage-overview">Object Storage Overview<a class="headerlink" href="#object-storage-overview" title="Permanent link">&para;</a></h1>
-<p>Navigate DataJoint's object storage documentation to find what you need.</p>
-<h2 id="quick-navigation-by-task">Quick Navigation by Task<a class="headerlink" href="#quick-navigation-by-task" title="Permanent link">&para;</a></h2>
-<p><strong>I want to...</strong></p>
+<h1 id="extrinsic-provenance-at-entry-tables">Extrinsic Provenance at Entry Tables<a class="headerlink" href="#extrinsic-provenance-at-entry-tables" title="Permanent link">&para;</a></h1>
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>Rows that enter a pipeline from outside carry a hidden <code>_prov</code> attribute recording where they came from. The framework declares the attribute on Manual tables and fills it on insert; no author writes it.</p>
+<div class="admonition version-added">
+<p class="admonition-title">New in 2.3.4</p>
+<p><code>dj.Entry</code> is available from 2.3.4 as a permanent alias for <code>dj.Manual</code>. This page uses <code>dj.Manual</code> throughout; both names declare the same table.</p>
+</div>
+<h2 id="motivation">Motivation<a class="headerlink" href="#motivation" title="Permanent link">&para;</a></h2>
+<p>Inside a pipeline, provenance is <strong>structural</strong>. A Computed table's row cannot exist unless its declared upstream exists and is correct, so the foreign-key graph <em>is</em> the lineage. Nothing has to be recorded for that to hold.</p>
+<p>At the boundary the structure runs out. Rows arrive in Manual tables from a person, an instrument, or an automated feed, and the graph has nothing to say about where they came from. Before 2.3.4 each pipeline answered that question its own way — a <code>source_file</code> column here, a <code>notes</code> varchar there, an ingestion log somewhere else, or nothing at all.</p>
+<p><code>_prov</code> gives the boundary one shape, so that two pipelines answer "where did this row come from" the same way, and so that "which rows have no recorded origin" is a query rather than an audit.</p>
+<h2 id="the-attribute">The Attribute<a class="headerlink" href="#the-attribute" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
-<th>Task</th>
-<th>Guide</th>
-<th>Est. Time</th>
+<th>Attribute</th>
+<th>Type</th>
+<th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>✅ Decide which storage type to use</td>
-<td><a href="../choose-storage-type/">Choose a Storage Type</a></td>
-<td>5-10 min</td>
-</tr>
-<tr>
-<td>✅ Set up S3, MinIO, or file storage</td>
-<td><a href="../configure-storage/">Configure Object Storage</a></td>
-<td>10-15 min</td>
-</tr>
-<tr>
-<td>✅ Store and retrieve large data</td>
-<td><a href="../use-object-storage/">Use Object Storage</a></td>
-<td>15-20 min</td>
-</tr>
-<tr>
-<td>✅ Work with NumPy arrays efficiently</td>
-<td><a href="../use-npy-codec/">Use NPY Codec</a></td>
-<td>10 min</td>
-</tr>
-<tr>
-<td>✅ Create domain-specific types</td>
-<td><a href="../create-custom-codec/">Create Custom Codec</a></td>
-<td>30-45 min</td>
-</tr>
-<tr>
-<td>✅ Optimize storage performance</td>
-<td><a href="../manage-large-data/">Manage Large Data</a></td>
-<td>20 min</td>
-</tr>
-<tr>
-<td>✅ Clean up unused data</td>
-<td><a href="../garbage-collection/">Garbage Collection</a></td>
-<td>10 min</td>
+<td><code>_prov</code></td>
+<td><code>json</code> (MySQL) / <code>jsonb</code> (PostgreSQL)</td>
+<td>Extrinsic provenance for a row that entered from outside the pipeline. <code>NULL</code> when nothing was recorded.</td>
 </tr>
 </tbody>
 </table>
-<h2 id="conceptual-understanding">Conceptual Understanding<a class="headerlink" href="#conceptual-understanding" title="Permanent link">&para;</a></h2>
-<p><strong>Why does DataJoint have object storage?</strong></p>
-<p>Traditional databases excel at structured, relational data but struggle with large arrays, files, and streaming data. DataJoint's <strong>Object-Augmented Schema (OAS)</strong> unifies relational tables with object storage into a single coherent system:</p>
-<ul>
-<li><strong>Relational database:</strong> Metadata, keys, relationships (structured data &lt; 1 MB)</li>
-<li><strong>Object storage:</strong> Arrays, files, datasets (large data &gt; 1 MB)</li>
-<li><strong>Full referential integrity:</strong> Maintained across both layers</li>
-</ul>
-<p>Read: <a href="../../explanation/data-pipelines/#object-augmented-schemas">Object-Augmented Schemas</a> for conceptual overview.</p>
-<h2 id="three-storage-modes">Three Storage Modes<a class="headerlink" href="#three-storage-modes" title="Permanent link">&para;</a></h2>
-<h3 id="in-table-storage-blob">In-Table Storage (<code>&lt;blob&gt;</code>)<a class="headerlink" href="#in-table-storage-blob" title="Permanent link">&para;</a></h3>
-<p><strong>What:</strong> Data stored directly in database column
-<strong>When:</strong> Small objects &lt; 1 MB (JSON, thumbnails, small arrays)
-<strong>Why:</strong> Fast access, transactional consistency, no store setup</p>
-<div class="highlight"><pre><span></span><code><span class="n">metadata</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">blob</span><span class="o">&gt;</span>         <span class="c1"># Stored in MySQL</span>
-</code></pre></div>
-<p><strong>Guide:</strong> <a href="../use-object-storage/#in-table-vs-object-store">Use Object Storage</a></p>
-<hr />
-<h3 id="object-store-integrated">Object Store (Integrated)<a class="headerlink" href="#object-store-integrated" title="Permanent link">&para;</a></h3>
-<p><strong>What:</strong> DataJoint-managed storage in S3, file systems, or cloud storage
-<strong>When:</strong> Large data (arrays, files, datasets) needing lifecycle management
-<strong>Why:</strong> Deduplication, garbage collection, transaction safety, referential integrity</p>
-<p><strong>Two addressing schemes:</strong></p>
-<h4 id="hash-addressed-blob-attach">Hash-Addressed (<code>&lt;blob@&gt;</code>, <code>&lt;attach@&gt;</code>)<a class="headerlink" href="#hash-addressed-blob-attach" title="Permanent link">&para;</a></h4>
-<ul>
-<li>Content-based paths (MD5 hash)</li>
-<li>Automatic deduplication</li>
-<li>Best for: Write-once data, attachments</li>
-</ul>
-<div class="highlight"><pre><span></span><code><span class="n">waveform</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">blob</span><span class="o">@&gt;</span>        <span class="c1"># Hash: _hash/{schema}/{hash}</span>
-<span class="n">document</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">attach</span><span class="o">@&gt;</span>      <span class="c1"># Hash: _hash/{schema}/{hash}</span>
-</code></pre></div>
-<h4 id="schema-addressed-npy-object">Schema-Addressed (<code>&lt;npy@&gt;</code>, <code>&lt;object@&gt;</code>)<a class="headerlink" href="#schema-addressed-npy-object" title="Permanent link">&para;</a></h4>
-<ul>
-<li>Key-based paths (browsable)</li>
-<li>Streaming access, partial reads</li>
-<li>Best for: Zarr, HDF5, large arrays</li>
-</ul>
-<div class="highlight"><pre><span></span><code><span class="n">traces</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">npy</span><span class="o">@&gt;</span>           <span class="c1"># Schema: _schema/{schema}/{table}/{key}/</span>
-<span class="n">volume</span> <span class="p">:</span> <span class="o">&lt;</span><span class="nb">object</span><span class="o">@&gt;</span>        <span class="c1"># Schema: _schema/{schema}/{table}/{key}/</span>
-</code></pre></div>
-<p><strong>Guides:</strong></p>
-<ul>
-<li><a href="../choose-storage-type/">Choose a Storage Type</a> — Decision criteria</li>
-<li><a href="../use-object-storage/">Use Object Storage</a> — How to use codecs</li>
-</ul>
-<hr />
-<h3 id="filepath-references-filepath">Filepath References (<code>&lt;filepath@&gt;</code>)<a class="headerlink" href="#filepath-references-filepath" title="Permanent link">&para;</a></h3>
-<p><strong>What:</strong> User-managed file paths (DataJoint stores path string only)
-<strong>When:</strong> Existing data archives, externally managed files
-<strong>Why:</strong> No file lifecycle management, no deduplication, user controls paths</p>
-<div class="highlight"><pre><span></span><code><span class="n">raw_data</span> <span class="p">:</span> <span class="o">&lt;</span><span class="n">filepath</span><span class="o">@&gt;</span>    <span class="c1"># User-managed path</span>
-</code></pre></div>
-<p><strong>Guide:</strong> <a href="../use-object-storage/#lazy-loading-with-objectref">Use Object Storage</a></p>
-<h2 id="documentation-by-level">Documentation by Level<a class="headerlink" href="#documentation-by-level" title="Permanent link">&para;</a></h2>
-<h3 id="getting-started">Getting Started<a class="headerlink" href="#getting-started" title="Permanent link">&para;</a></h3>
-<ol>
-<li>
-<p><strong><a href="../choose-storage-type/">Choose a Storage Type</a></strong> — Start here</p>
-<ul>
-<li>Quick decision tree (5 minutes)</li>
-<li>Size guidelines (&lt; 1 MB, 1-100 MB, &gt; 100 MB)</li>
-<li>Access pattern considerations</li>
-<li>Lifecycle management options</li>
-</ul>
-</li>
-<li>
-<p><strong><a href="../configure-storage/">Configure Object Storage</a></strong> — Setup</p>
-<ul>
-<li>File system, S3, MinIO configuration</li>
-<li>Single vs multiple stores</li>
-<li>Credentials management</li>
-<li>Store verification</li>
-</ul>
-</li>
-<li>
-<p><strong><a href="../use-object-storage/">Use Object Storage</a></strong> — Basic usage</p>
-<ul>
-<li>Insert/fetch patterns</li>
-<li>In-table vs object store</li>
-<li>Addressing schemes (hash vs schema)</li>
-<li>ObjectRef for lazy access</li>
-</ul>
-</li>
-</ol>
-<h3 id="intermediate">Intermediate<a class="headerlink" href="#intermediate" title="Permanent link">&para;</a></h3>
-<ol>
-<li>
-<p><strong><a href="../use-npy-codec/">Use NPY Codec</a></strong> — NumPy arrays</p>
-<ul>
-<li>Lazy loading (doesn't load until accessed)</li>
-<li>Efficient slicing (fetch subsets)</li>
-<li>Shape/dtype metadata</li>
-<li>When to use <code>&lt;npy@&gt;</code> vs <code>&lt;blob@&gt;</code></li>
-</ul>
-</li>
-<li>
-<p><strong><a href="../manage-large-data/">Manage Large Data</a></strong> — Optimization</p>
-<ul>
-<li>Storage tiers (hot/warm/cold)</li>
-<li>Compression strategies</li>
-<li>Batch operations</li>
-<li>Performance tuning</li>
-</ul>
-</li>
-<li>
-<p><strong><a href="../garbage-collection/">Garbage Collection</a></strong> — Cleanup</p>
-<ul>
-<li>Automatic cleanup for integrated storage</li>
-<li>Manual cleanup for filepath references</li>
-<li>Orphan detection</li>
-<li>Recovery procedures</li>
-</ul>
-</li>
-</ol>
-<h3 id="advanced">Advanced<a class="headerlink" href="#advanced" title="Permanent link">&para;</a></h3>
-<ol>
-<li><strong><a href="../create-custom-codec/">Create Custom Codec</a></strong> — Extensibility<ul>
-<li>Domain-specific types</li>
-<li>Codec API (encode/decode)</li>
-<li>HashCodec vs SchemaCodec patterns</li>
-<li>Integration with existing formats</li>
-</ul>
-</li>
-</ol>
-<h2 id="technical-reference">Technical Reference<a class="headerlink" href="#technical-reference" title="Permanent link">&para;</a></h2>
-<p>For implementation details and specifications:</p>
-<h3 id="specifications">Specifications<a class="headerlink" href="#specifications" title="Permanent link">&para;</a></h3>
-<ul>
-<li><a href="../../reference/specs/type-system/">Type System Spec</a> — Three-layer architecture</li>
-<li><a href="../../reference/specs/codec-api/">Codec API Spec</a> — Custom codec interface</li>
-<li><a href="../../reference/specs/npy-codec/">NPY Codec Spec</a> — NumPy array storage</li>
-<li><a href="../../reference/specs/object-store-configuration/">Object Store Configuration Spec</a> — Store config details</li>
-</ul>
-<h3 id="explanations">Explanations<a class="headerlink" href="#explanations" title="Permanent link">&para;</a></h3>
-<ul>
-<li><a href="../../explanation/type-system/">Type System</a> — Conceptual overview</li>
-<li><a href="../../explanation/data-pipelines/#object-augmented-schemas">Data Pipelines (OAS section)</a> — Why OAS exists</li>
-<li><a href="../../explanation/custom-codecs/">Custom Codecs</a> — Design patterns</li>
-</ul>
-<h2 id="common-workflows">Common Workflows<a class="headerlink" href="#common-workflows" title="Permanent link">&para;</a></h2>
-<h3 id="workflow-1-adding-object-storage-to-existing-pipeline">Workflow 1: Adding Object Storage to Existing Pipeline<a class="headerlink" href="#workflow-1-adding-object-storage-to-existing-pipeline" title="Permanent link">&para;</a></h3>
-<ol>
-<li><a href="../configure-storage/">Configure Object Storage</a> — Set up store</li>
-<li><a href="../choose-storage-type/">Choose a Storage Type</a> — Select codec</li>
-<li>Update table definitions with <code>@</code> modifier</li>
-<li><a href="../use-object-storage/">Use Object Storage</a> — Insert/fetch patterns</li>
-</ol>
-<p><strong>Estimate:</strong> 30-60 minutes</p>
-<hr />
-<h3 id="workflow-2-migrating-from-in-table-to-object-store">Workflow 2: Migrating from In-Table to Object Store<a class="headerlink" href="#workflow-2-migrating-from-in-table-to-object-store" title="Permanent link">&para;</a></h3>
-<ol>
-<li><a href="../choose-storage-type/">Choose a Storage Type</a> — Determine new codec</li>
-<li>Add new column with object storage codec</li>
-<li>Migrate data (see <a href="../choose-storage-type/#migration-between-storage-types">Use Object Storage</a>)</li>
-<li>Verify data integrity</li>
-<li>Drop old column (see <a href="../alter-tables/">Alter Tables</a>)</li>
-</ol>
-<p><strong>Estimate:</strong> 1-2 hours for small datasets</p>
-<hr />
-<h3 id="workflow-3-working-with-very-large-arrays-1-gb">Workflow 3: Working with Very Large Arrays (&gt; 1 GB)<a class="headerlink" href="#workflow-3-working-with-very-large-arrays-1-gb" title="Permanent link">&para;</a></h3>
-<ol>
-<li>Use <code>&lt;object@&gt;</code> or <code>&lt;npy@&gt;</code> (not <code>&lt;blob@&gt;</code>)</li>
-<li><a href="../configure-storage/">Configure Object Storage</a> — Ensure adequate storage</li>
-<li>For Zarr: Store as <code>&lt;object@&gt;</code> with <code>.zarr</code> extension</li>
-<li>For streaming: Use <code>ObjectRef.fsmap</code> (see <a href="../use-object-storage/#lazy-loading-with-objectref">Use Object Storage</a>)</li>
-</ol>
-<p><strong>Key advantage:</strong> No need to download full dataset into memory</p>
-<hr />
-<h3 id="workflow-4-building-custom-domain-types">Workflow 4: Building Custom Domain Types<a class="headerlink" href="#workflow-4-building-custom-domain-types" title="Permanent link">&para;</a></h3>
-<ol>
-<li>Read <a href="../../explanation/custom-codecs/">Custom Codecs</a> — Understand patterns</li>
-<li><a href="../create-custom-codec/">Create Custom Codec</a> — Implementation guide</li>
-<li><a href="../../reference/specs/codec-api/">Codec API Spec</a> — Technical reference</li>
-<li>Test with small dataset</li>
-<li>Deploy to production</li>
-</ol>
-<p><strong>Estimate:</strong> 2-4 hours for simple codecs</p>
-<h2 id="decision-trees">Decision Trees<a class="headerlink" href="#decision-trees" title="Permanent link">&para;</a></h2>
-<h3 id="which-storage-mode">"Which storage mode?"<a class="headerlink" href="#which-storage-mode" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code>Is data &lt; 1 MB per row?
-├─ YES → &lt;blob&gt; (in-table)
-└─ NO  → Continue...
-
-Is data managed externally?
-├─ YES → &lt;filepath@&gt; (user-managed reference)
-└─ NO  → Continue...
-
-Need streaming or partial reads?
-├─ YES → &lt;object@&gt; or &lt;npy@&gt; (schema-addressed)
-└─ NO  → &lt;blob@&gt; (hash-addressed, full download)
-</code></pre></div>
-<p><strong>Full guide:</strong> <a href="../choose-storage-type/">Choose a Storage Type</a></p>
-<hr />
-<h3 id="which-codec-for-object-storage">"Which codec for object storage?"<a class="headerlink" href="#which-codec-for-object-storage" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code>NumPy arrays that benefit from lazy loading?
-├─ YES → &lt;npy@&gt;
-└─ NO  → Continue...
-
-Large files (&gt; 100 MB) needing streaming?
-├─ YES → &lt;object@&gt;
-└─ NO  → Continue...
-
-Write-once data with potential duplicates?
-├─ YES → &lt;blob@&gt; (deduplication via hashing)
-└─ NO  → &lt;blob@&gt; or &lt;object@&gt; (choose based on access pattern)
-</code></pre></div>
-<p><strong>Full guide:</strong> <a href="../choose-storage-type/#storage-type-comparison">Choose a Storage Type</a></p>
-<h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
-<h3 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h3>
+<p>Hidden attributes are prefixed with <code>_</code>: stored in the database, filtered out of <code>heading.attributes</code>, and excluded from query composition.</p>
+<p><strong>Why JSON rather than typed columns.</strong> The useful key set is not settled, and deployments add to it. A JSON document absorbs a new key as a configuration change; typed columns would freeze the set at declaration and make every later addition an <code>ALTER</code> across every Manual table in every deployment. Filtering on a field stays portable — see <a href="#querying">Querying</a>.</p>
+<h2 id="which-tables-carry-it">Which Tables Carry It<a class="headerlink" href="#which-tables-carry-it" title="Permanent link">&para;</a></h2>
+<p>Manual tables only.</p>
 <table>
 <thead>
 <tr>
-<th>Problem</th>
-<th>Likely Cause</th>
-<th>Solution Guide</th>
+<th>Tier</th>
+<th>Carries <code>_prov</code></th>
+<th>Why</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>"Store not configured"</td>
-<td>Missing stores config</td>
-<td><a href="../configure-storage/">Configure Object Storage</a></td>
+<td><code>dj.Manual</code></td>
+<td><strong>Yes</strong></td>
+<td>The pipeline's boundary with the outside world</td>
 </tr>
 <tr>
-<td>Out of memory loading array</td>
-<td>Using <code>&lt;blob@&gt;</code> for huge data</td>
-<td><a href="../choose-storage-type/">Choose a Storage Type</a> → Use <code>&lt;object@&gt;</code></td>
+<td><code>dj.Lookup</code></td>
+<td>No</td>
+<td>Rows come from the committed <code>contents</code>, so the code is the record</td>
 </tr>
 <tr>
-<td>Slow fetches</td>
-<td>Wrong codec choice</td>
-<td><a href="../manage-large-data/">Manage Large Data</a></td>
+<td><code>dj.Imported</code></td>
+<td>No</td>
+<td>See below</td>
 </tr>
 <tr>
-<td>Data not deduplicated</td>
-<td>Using wrong codec</td>
-<td><a href="../choose-storage-type/#data-not-deduplicated">Choose a Storage Type</a></td>
+<td><code>dj.Computed</code></td>
+<td>No</td>
+<td>Provenance is entailed by the foreign-key graph</td>
 </tr>
 <tr>
-<td>Path conflicts with reserved</td>
-<td><code>&lt;filepath@&gt;</code> using <code>_hash/</code> or <code>_schema/</code></td>
-<td><a href="../use-object-storage/#lazy-loading-with-objectref">Use Object Storage</a></td>
-</tr>
-<tr>
-<td>Missing files after delete</td>
-<td>Expected behavior for integrated storage</td>
-<td><a href="../garbage-collection/">Garbage Collection</a></td>
+<td><code>dj.Part</code></td>
+<td>No</td>
+<td>A part inherits its master's</td>
 </tr>
 </tbody>
 </table>
-<h3 id="getting-help">Getting Help<a class="headerlink" href="#getting-help" title="Permanent link">&para;</a></h3>
-<ul>
-<li>Check <a href="../../explanation/faq/">FAQ</a> for common questions</li>
-<li>Search <a href="https://github.com/datajoint/datajoint-python/discussions">GitHub Discussions</a></li>
-<li>Review specification for exact behavior</li>
-</ul>
+<p>The slot is granted by matching the Manual tier, not by excluding the other
+tiers' prefixes, so DataJoint's own system tables — job queues, lineage — never
+carry it either.</p>
+<p><strong>Why not Imported.</strong> An Imported table already records agent, time and version through <a href="../job-metadata/">job metadata</a> when <code>config.jobs.add_job_metadata</code> is on, so a <code>_prov</code> there would record the same facts twice. The half that is <em>not</em> covered — which specific file, endpoint, or instrument session its <code>make()</code> read — is known per row inside the <code>make()</code> body, which configuration cannot supply.</p>
+<p>In a well-modeled pipeline the external source is registered as a Manual row and the Imported table reaches it through a declared foreign key, which makes that table's provenance structural. An Imported table reading a source no Manual row records is the modeling problem described in <a href="../table-declaration/">Table Declaration</a>; the fix is to register the source, not to add a slot.</p>
+<h2 id="content">Content<a class="headerlink" href="#content" title="Permanent link">&para;</a></h2>
+<p>Three sources fill the attribute, and <strong>none of them is the insert call site</strong>.</p>
+<table>
+<thead>
+<tr>
+<th>Source</th>
+<th>Supplies</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Configuration</td>
+<td><code>config.provenance.source</code> — the deployment constant naming the external system this process draws from</td>
+</tr>
+<tr>
+<td>Ambient connection state</td>
+<td>the connecting user, host and database; the insert time; the code version</td>
+</tr>
+<tr>
+<td>Ambient execution state</td>
+<td>the ingesting table and key, when the insert runs inside a <code>make()</code></td>
+</tr>
+</tbody>
+</table>
+<p>A recorded document:</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">"time"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2026-09-30T14:22:05.481203+00:00"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"agent"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">"user"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ingest_svc"</span><span class="p">,</span><span class="w"> </span><span class="nt">"host"</span><span class="p">:</span><span class="w"> </span><span class="s2">"db.example.org"</span><span class="p">,</span><span class="w"> </span><span class="nt">"database_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"lab_subjects"</span><span class="p">},</span>
+<span class="w">  </span><span class="nt">"version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"a1b2c3d"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"source"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">"system"</span><span class="p">:</span><span class="w"> </span><span class="s2">"PyRat"</span><span class="p">,</span><span class="w"> </span><span class="nt">"endpoint"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://pyrat.example.org/api/v2"</span><span class="p">},</span>
+<span class="w">  </span><span class="nt">"context"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">"table"</span><span class="p">:</span><span class="w"> </span><span class="s2">"`lab`.`_ingest`"</span><span class="p">,</span><span class="w"> </span><span class="nt">"key"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">"file_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">7</span><span class="p">},</span><span class="w"> </span><span class="nt">"version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"a1b2c3d"</span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Keys are omitted when they have nothing to report: <code>source</code> when none is configured, <code>context</code> outside a <code>make()</code>, <code>version</code> when <code>config.jobs.version_method</code> is disabled. When only <code>time</code> would remain the attribute is left <code>NULL</code>, because a bare timestamp says nothing about origin.</p>
+<p><code>time</code> is the client's UTC clock at insert, not the server's.</p>
+<h3 id="the-author-cannot-write-it">The author cannot write it<a class="headerlink" href="#the-author-cannot-write-it" title="Permanent link">&para;</a></h3>
+<p><code>insert()</code> takes no provenance argument, and passing <code>_prov</code> in a row raises <code>KeyError</code> — hidden attributes are not in the heading.</p>
+<p>This is the design rather than a limitation. A field an operator can set is weaker evidence than one the system sets, which is what <em>attributable</em> and <em>contemporaneous</em> require of externally-sourced data. It also removes the failure mode a supported-but-optional field would have: there is nothing left for a pipeline to neglect.</p>
+<p><strong>Anything an author wants to record deliberately belongs in the data model</strong>, as an ordinary visible attribute. Pipeline code can restrict and join on a modeled column; it cannot on a hidden one. The two do different jobs — <code>_prov</code> is the audit record, a modeled column is the domain link. See <a href="../../../explanation/fan-out-ingestion/">Fan-Out Ingestion</a>, where both appear side by side.</p>
+<h2 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Setting</th>
+<th>Environment</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>provenance.capture</code></td>
+<td><code>DJ_PROVENANCE_CAPTURE</code></td>
+<td><code>False</code></td>
+<td>Declare <code>_prov</code> on Manual tables and fill it on insert</td>
+</tr>
+<tr>
+<td><code>provenance.source</code></td>
+<td><code>DJ_PROVENANCE_SOURCE</code></td>
+<td><code>{}</code></td>
+<td>External source identity recorded on every row this process enters</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">datajoint</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dj</span>
+
+<span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">provenance</span><span class="o">.</span><span class="n">capture</span>          <span class="c1"># False until a deployment enables it</span>
+<span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">provenance</span><span class="o">.</span><span class="n">source</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"system"</span><span class="p">:</span> <span class="s2">"PyRat"</span><span class="p">,</span> <span class="s2">"endpoint"</span><span class="p">:</span> <span class="s2">"https://pyrat.example.org/api/v2"</span><span class="p">}</span>
+</code></pre></div>
+<p>Deployments set these where they set stores and credentials, not in pipeline code:</p>
+<div class="highlight"><pre><span></span><code><span class="nb">export</span><span class="w"> </span><span class="nv">DJ_PROVENANCE_SOURCE</span><span class="o">=</span><span class="s1">'{"system": "PyRat", "endpoint": "https://pyrat.example.org/api/v2"}'</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">    </span><span class="nt">"provenance"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">"source"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">"system"</span><span class="p">:</span><span class="w"> </span><span class="s2">"PyRat"</span><span class="p">,</span><span class="w"> </span><span class="nt">"endpoint"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://pyrat.example.org/api/v2"</span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Changing the source mid-process is silent</p>
+<p>Rows inserted before the change keep what was configured then, and rows after keep the new value. Nothing records that the setting moved. Set it once at start-up.</p>
+</div>
+<h3 id="capture-defaults-off">Capture defaults off<a class="headerlink" href="#capture-defaults-off" title="Permanent link">&para;</a></h3>
+<p>Capture changes the DDL of every Manual table declared after it is enabled, adding one hidden nullable column. That is a deployment's decision rather than a library default, so upgrading to 2.3.4 leaves an unchanged schema declaring exactly what it declared under 2.3.3. <a href="../job-metadata/"><code>jobs.add_job_metadata</code></a> defaults off for the same reason, and does the same kind of thing.</p>
+<p>A deployment that turns it on gets the property that makes the slot worth having: across that deployment, "which rows have no recorded origin" is a query rather than an audit. What it cannot assume is that a table declared elsewhere, under someone else's configuration, carries the column — <a href="#retrofitting-existing-tables">retrofitting</a> is what settles that.</p>
+<h2 id="behavior">Behavior<a class="headerlink" href="#behavior" title="Permanent link">&para;</a></h2>
+<h3 id="at-declaration">At declaration<a class="headerlink" href="#at-declaration" title="Permanent link">&para;</a></h3>
+<p>With <code>provenance.capture</code> true, <code>_prov</code> is added to the <code>CREATE TABLE</code> of every Manual table that is not a part. Turning capture off later does not remove the column from tables that already have it.</p>
+<h3 id="at-insert">At insert<a class="headerlink" href="#at-insert" title="Permanent link">&para;</a></h3>
+<p>Every <code>insert()</code> and <code>insert1()</code> into a Manual table that carries the column appends the assembled document. A table declared without the column is left alone and the insert succeeds — silently, which is what <a href="#retrofitting-existing-tables">retrofitting</a> addresses.</p>
+<h3 id="inside-make">Inside <code>make()</code><a class="headerlink" href="#inside-make" title="Permanent link">&para;</a></h3>
+<p>An insert executed inside a <code>make()</code> records the ingesting table and key in <code>context</code>. This is what makes the <a href="../../../explanation/fan-out-ingestion/">fan-out ingestion pattern</a> traceable: rows written into Manual tables that carry no foreign key back to the loader still record what wrote them.</p>
+<h2 id="retrofitting-existing-tables">Retrofitting Existing Tables<a class="headerlink" href="#retrofitting-existing-tables" title="Permanent link">&para;</a></h2>
+<p>Tables declared before 2.3.4, or while capture was off, have no column and record nothing. <code>datajoint.deploy.add_prov_column</code> adds the slot:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">datajoint.deploy</span><span class="w"> </span><span class="kn">import</span> <span class="n">add_prov_column</span>
+
+<span class="c1"># Preview</span>
+<span class="n">add_prov_column</span><span class="p">(</span><span class="n">schema</span><span class="p">,</span> <span class="n">dry_run</span><span class="o">=</span><span class="kc">True</span><span class="p">)[</span><span class="s2">"ddl"</span><span class="p">]</span>
+
+<span class="c1"># Apply to every Manual table in a schema</span>
+<span class="n">add_prov_column</span><span class="p">(</span><span class="n">schema</span><span class="p">,</span> <span class="n">dry_run</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+<span class="c1"># Or a single table</span>
+<span class="n">add_prov_column</span><span class="p">(</span><span class="n">Subject</span><span class="p">,</span> <span class="n">dry_run</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</code></pre></div>
+<p>It is idempotent — a table that already has the column is reported and left alone — and it lives in <code>datajoint.deploy</code> rather than <code>datajoint.migrate</code> for that reason.</p>
+<p>Rows already present keep <code>NULL</code>. Provenance is recorded at insert and is never reconstructed after the fact.</p>
+<h2 id="querying">Querying<a class="headerlink" href="#querying" title="Permanent link">&para;</a></h2>
+<p><code>_prov</code> is excluded from <code>heading.attributes</code>, so it does not appear in <code>to_dicts()</code>, in <code>describe()</code>, or in a join.</p>
+<p><strong>Restricting</strong> on it works, written as a SQL condition string:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Rows with no recorded origin — portable</span>
+<span class="n">Subject</span> <span class="o">&amp;</span> <span class="s2">"_prov IS NULL"</span>
+</code></pre></div>
+<p>Filtering on a field <em>inside</em> the JSON needs backend-specific SQL <strong>because the
+attribute is hidden</strong>, not because JSON paths are awkward. On an ordinary JSON
+attribute the mapping form is portable — DataJoint translates <code>{"data.system":
+"PyRat"}</code> to <code>json_value()</code> on MySQL and <code>jsonb_extract_path_text()</code> on
+PostgreSQL. That translation is unavailable here only because the mapping form
+cannot reach a hidden attribute (below):</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># MySQL</span>
+<span class="n">Subject</span> <span class="o">&amp;</span> <span class="s2">"JSON_VALUE(_prov, '$.source.system') = 'PyRat'"</span>
+
+<span class="c1"># PostgreSQL</span>
+<span class="n">Subject</span> <span class="o">&amp;</span> <span class="s2">"jsonb_extract_path_text(_prov, 'source', 'system') = 'PyRat'"</span>
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">The mapping form does not reach a hidden attribute</p>
+<p><code>Subject &amp; {"_prov.system": "PyRat"}</code> returns <strong>every row</strong>. A mapping
+restriction ignores attributes it cannot match, which is deliberate and
+useful — it is what lets <code>Session &amp; key</code> work when <code>key</code> carries attributes
+from a more detailed table. A hidden attribute is invisible to that matching,
+so the predicate is dropped along with it.</p>
+<p>Write the condition as a string, which reaches the column directly — at the
+cost of portability, since DataJoint's own JSON-path translation is what the
+mapping form would have given you. Tracked in
+<a href="https://github.com/datajoint/datajoint-python/issues/1561">datajoint-python#1561</a>.</p>
+</div>
+<p><strong>Reading the value back requires SQL</strong> until 2.4. There is no public API that
+returns a hidden attribute — <code>to_arrays('_prov')</code> and <code>proj('_prov')</code> both raise:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Until 2.4</span>
+<span class="n">rows</span> <span class="o">=</span> <span class="n">Subject</span><span class="o">.</span><span class="n">connection</span><span class="o">.</span><span class="n">query</span><span class="p">(</span>
+    <span class="sa">f</span><span class="s2">"SELECT subject_id, _prov FROM </span><span class="si">{</span><span class="n">Subject</span><span class="o">.</span><span class="n">full_table_name</span><span class="si">}</span><span class="s2">"</span>
+<span class="p">)</span><span class="o">.</span><span class="n">fetchall</span><span class="p">()</span>
+</code></pre></div>
+<p>A supported accessor is planned for 2.4
+(<a href="https://github.com/datajoint/datajoint-python/issues/1562">datajoint-python#1562</a>),
+which will cover <code>_prov</code> and the job-metadata attributes together.</p>
+<div class="admonition note">
+<p class="admonition-title">Range queries on capture time</p>
+<p>Filtering by <code>time</code> goes through JSON extraction, so it does not use an index. If that becomes hot for a deployment, add a generated column over the JSON path and index it; no change to the pipeline or to DataJoint is needed.</p>
+</div>
+<h2 id="implementation-details">Implementation Details<a class="headerlink" href="#implementation-details" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Module</th>
+<th>Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>datajoint/provenance.py</code></td>
+<td>payload assembly and the ingesting context</td>
+</tr>
+<tr>
+<td><code>datajoint/settings.py</code></td>
+<td><code>ProvenanceSettings</code>, exposed as <code>config.provenance</code></td>
+</tr>
+<tr>
+<td><code>datajoint/declare.py</code></td>
+<td><code>PROV_DEFINITION</code>, and adding it to Manual tables at declaration</td>
+</tr>
+<tr>
+<td><code>datajoint/user_tables.py</code></td>
+<td><code>is_tier</code>, the shared tier test</td>
+</tr>
+<tr>
+<td><code>datajoint/table.py</code></td>
+<td>appends the value on the insert path</td>
+</tr>
+<tr>
+<td><code>datajoint/autopopulate.py</code></td>
+<td>scopes the ingesting context to a <code>make()</code> call</td>
+</tr>
+<tr>
+<td><code>datajoint/deploy.py</code></td>
+<td><code>add_prov_column</code></td>
+</tr>
+</tbody>
+</table>
+<p>The column is declared the way a user attribute is —
+<code>_prov = null : json # extrinsic provenance ...</code> — and compiled by the same
+<code>compile_attribute</code>, so the backend mapping to <code>json</code> or <code>jsonb</code> comes from the
+adapter's type system rather than from a per-adapter method. No adapter
+implements anything of its own for it.</p>
 <h2 id="see-also">See Also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
-<h3 id="related-concepts">Related Concepts<a class="headerlink" href="#related-concepts" title="Permanent link">&para;</a></h3>
 <ul>
-<li><a href="../../explanation/type-system/">Type System</a> — Three-layer type architecture</li>
-<li><a href="../../explanation/data-pipelines/">Data Pipelines</a> — Object-Augmented Schemas</li>
-</ul>
-<h3 id="related-how-tos">Related How-Tos<a class="headerlink" href="#related-how-tos" title="Permanent link">&para;</a></h3>
-<ul>
-<li><a href="../manage-secrets/">Manage Secrets</a> — Credentials for S3/cloud storage</li>
-<li><a href="../define-tables/">Define Tables</a> — Table definition syntax</li>
-<li><a href="../insert-data/">Insert Data</a> — Data insertion patterns</li>
-</ul>
-<h3 id="related-tutorials">Related Tutorials<a class="headerlink" href="#related-tutorials" title="Permanent link">&para;</a></h3>
-<ul>
-<li><a href="../../tutorials/basics/06-object-storage/">Object Storage Tutorial</a> — Hands-on learning</li>
-<li><a href="../../tutorials/advanced/custom-codecs/">Custom Codecs Tutorial</a> — Build your own codec</li>
+<li><a href="../job-metadata/">Hidden Job Metadata</a> — the same hidden-attribute mechanism, for the automated tiers</li>
+<li><a href="../../../how-to/record-data-origin/">Record Data Origin</a> — the task-oriented guide</li>
+<li><a href="../../../explanation/fan-out-ingestion/">Fan-Out Ingestion</a> — where a loader writes into tables that do not depend on it</li>
+<li><a href="../../../explanation/comparison-to-provenance-systems/">Comparison to Provenance Systems</a> — what DataJoint records and what it leaves to provenance systems</li>
 </ul>
 
 
@@ -7532,12 +7117,12 @@ Write-once data with potential duplicates?
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.sections", "navigation.indexes", "toc.follow", "announce.dismiss"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.sections", "navigation.indexes", "toc.follow", "announce.dismiss"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      <script src="../../../assets/javascripts/bundle.d7400e89.min.js"></script>
       
-        <script src="../../javascripts/mathjax.js"></script>
+        <script src="../../../javascripts/mathjax.js"></script>
       
         <script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
       

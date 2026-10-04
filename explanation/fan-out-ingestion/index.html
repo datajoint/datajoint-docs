@@ -897,10 +897,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#the-responsibility-it-carries-record-where-the-data-came-from" class="md-nav__link">
+  <a href="#the-origin-is-recorded-for-you-and-modelled-by-you" class="md-nav__link">
     <span class="md-ellipsis">
       
-        The responsibility it carries: record where the data came from
+        The origin is recorded for you, and modelled by you
       
     </span>
   </a>
@@ -2999,6 +2999,8 @@
       
         
       
+        
+      
     
     
     
@@ -3056,6 +3058,34 @@
     
   
     Insert Data
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/record-data-origin/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Record Data Origin
   
 
     
@@ -4735,6 +4765,8 @@
       
         
       
+        
+      
     
     
     
@@ -4932,6 +4964,34 @@
     
   
     Job Metadata
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/specs/boundary-provenance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Entry Provenance
   
 
     
@@ -6317,10 +6377,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#the-responsibility-it-carries-record-where-the-data-came-from" class="md-nav__link">
+  <a href="#the-origin-is-recorded-for-you-and-modelled-by-you" class="md-nav__link">
     <span class="md-ellipsis">
       
-        The responsibility it carries: record where the data came from
+        The origin is recorded for you, and modelled by you
       
     </span>
   </a>
@@ -6421,19 +6481,28 @@ data is loaded would become a schema migration, and every row would permanently
 carry whichever loader existed when it was created. The pattern avoids that by
 <em>declining</em> the FK on purpose, rather than letting an undeclared dependency slip
 in unnoticed.</p>
-<h2 id="the-responsibility-it-carries-record-where-the-data-came-from">The responsibility it carries: record where the data came from<a class="headerlink" href="#the-responsibility-it-carries-record-where-the-data-came-from" title="Permanent link">&para;</a></h2>
+<h2 id="the-origin-is-recorded-for-you-and-modelled-by-you">The origin is recorded for you, and modelled by you<a class="headerlink" href="#the-origin-is-recorded-for-you-and-modelled-by-you" title="Permanent link">&para;</a></h2>
 <p>Because the foreign-key link to the source is absent, the traceability it would
-have provided must be supplied another way. <strong>Each table the pattern populates is
-responsible for recording its own origin</strong> — the source identity the row was
-derived from (file path, checksum, instrument session, operator, timestamp,
-external record id). This is the same responsibility every <code>Manual</code> and
-<code>Imported</code> entry-point table already carries: data entering the pipeline from
-outside must record where it came from, because the pipeline's own structure
-cannot vouch for it.</p>
-<p>Recording that origin at the point of entry is all DataJoint asks. Formalizing
-and standardizing it beyond that — retention, audit trails, cross-system
-exchange — is left to the provenance and governance systems a pipeline
-interoperates with; see <a href="../comparison-to-provenance-systems/">Comparison to Provenance Systems</a>.</p>
+have provided has to come from somewhere else. Two things supply it, and they do
+different jobs.</p>
+<p><strong>DataJoint records the origin automatically.</strong> Every row written into a <code>Manual</code>
+table carries a hidden <code>_prov</code> attribute, and a row written from inside an
+ingesting <code>make()</code> records the ingesting table and its key — exactly the link the
+missing foreign key would have carried. Nothing in the <code>make()</code> body asks for
+this, and nothing can forge it: the attribute is framework-owned and no insert
+can set it. What it records beyond that comes from deployment configuration —
+the external system, the connecting user, the time, the code version. See
+<a href="../../reference/specs/boundary-provenance/">Extrinsic Provenance at Entry Tables</a>.</p>
+<p><strong>You model the link the pipeline itself needs to query.</strong> Hidden attributes are
+deliberately excluded from query composition, so <code>_prov</code> cannot be joined or
+restricted on the way an ordinary attribute can. Where downstream code has to
+follow the row back to its source — and in the example above it does — keep the
+<code>source_file</code> column. <code>_prov</code> is the audit record; the modelled column is the
+domain link.</p>
+<p>Beyond recording the origin at the point of entry, the rest — retention, audit
+trails, cross-system exchange — is left to the provenance and governance systems
+a pipeline interoperates with; see
+<a href="../comparison-to-provenance-systems/">Comparison to Provenance Systems</a>.</p>
 <h2 id="when-to-use-it">When to use it<a class="headerlink" href="#when-to-use-it" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>Use fan-out</strong> when one source legitimately populates several independent

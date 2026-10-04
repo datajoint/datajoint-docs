@@ -1,6 +1,6 @@
 # DataJoint Documentation (Full)
 
-Generated: 2026-10-04 20:00:30 UTC
+Generated: 2026-10-04 20:03:56 UTC
 Commit: unknown
 Branch: unknown
 
@@ -74,11 +74,15 @@ within-pipeline derivation and external-origin provenance are different
 questions, and a complete record often wants both.
 
 Inside DataJoint, the origin of externally-sourced data is recorded at the
-pipeline's entry-point tables — a Manual insert or an Imported `make()` records
-the source identity alongside the data, exactly as at any manual data-entry
-point. A single ingestion step may populate several such tables that carry no
+pipeline's entry-point tables. Since 2.3.4 that record has a standard shape: a
+hidden `_prov` attribute on every Manual table, written by the framework from
+deployment configuration and from the executing context rather than by the
+author — see
+[Extrinsic Provenance at Entry Tables](../reference/specs/boundary-provenance.md).
+A single ingestion step may populate several such tables that carry no
 foreign-key dependency on the loader (the
-[fan-out ingestion pattern](fan-out-ingestion.md)), each recording its own origin.
+[fan-out ingestion pattern](fan-out-ingestion.md)); rows written from inside that
+loader record it, which is the link the absent foreign key would have carried.
 
 At the boundary, the two integrate **in both directions** — when explicitly
 configured:
@@ -473,6 +477,10 @@ This adds to computed tables:
 - `_job_start_time` — When computation started
 - `_job_duration` — How long it took
 - `_job_version` — Code version (if configured)
+
+They are hidden: filtered out of the heading, out of `to_dicts()`, and out of
+join matching. See [Hidden Job Metadata](../reference/specs/job-metadata.md) for
+how to query them.
 
 ## The Three-Part Make Model
 
@@ -2072,21 +2080,32 @@ carry whichever loader existed when it was created. The pattern avoids that by
 *declining* the FK on purpose, rather than letting an undeclared dependency slip
 in unnoticed.
 
-## The responsibility it carries: record where the data came from
+## The origin is recorded for you, and modelled by you
 
 Because the foreign-key link to the source is absent, the traceability it would
-have provided must be supplied another way. **Each table the pattern populates is
-responsible for recording its own origin** — the source identity the row was
-derived from (file path, checksum, instrument session, operator, timestamp,
-external record id). This is the same responsibility every `Manual` and
-`Imported` entry-point table already carries: data entering the pipeline from
-outside must record where it came from, because the pipeline's own structure
-cannot vouch for it.
+have provided has to come from somewhere else. Two things supply it, and they do
+different jobs.
 
-Recording that origin at the point of entry is all DataJoint asks. Formalizing
-and standardizing it beyond that — retention, audit trails, cross-system
-exchange — is left to the provenance and governance systems a pipeline
-interoperates with; see [Comparison to Provenance Systems](comparison-to-provenance-systems.md).
+**DataJoint records the origin automatically.** Every row written into a `Manual`
+table carries a hidden `_prov` attribute, and a row written from inside an
+ingesting `make()` records the ingesting table and its key — exactly the link the
+missing foreign key would have carried. Nothing in the `make()` body asks for
+this, and nothing can forge it: the attribute is framework-owned and no insert
+can set it. What it records beyond that comes from deployment configuration —
+the external system, the connecting user, the time, the code version. See
+[Extrinsic Provenance at Entry Tables](../reference/specs/boundary-provenance.md).
+
+**You model the link the pipeline itself needs to query.** Hidden attributes are
+deliberately excluded from query composition, so `_prov` cannot be joined or
+restricted on the way an ordinary attribute can. Where downstream code has to
+follow the row back to its source — and in the example above it does — keep the
+`source_file` column. `_prov` is the audit record; the modelled column is the
+domain link.
+
+Beyond recording the origin at the point of entry, the rest — retention, audit
+trails, cross-system exchange — is left to the provenance and governance systems
+a pipeline interoperates with; see
+[Comparison to Provenance Systems](comparison-to-provenance-systems.md).
 
 ## When to use it
 
@@ -7518,6 +7537,30 @@ Subject.insert1(
 )
 print(f"Total subjects: {len(Subject())}")
 ```
+
+
+## Where the Rows Came From
+
+Entering data is the moment a pipeline meets the outside world. Downstream of it, provenance is structural — a computed row cannot exist without its declared inputs, so the foreign-key graph is the lineage. At entry there is no such graph to lean on.
+
+Where a deployment has turned provenance capture on, DataJoint records the origin of every row inserted into a `Manual` table in a hidden `_prov` attribute. You do not write it, and `insert()` takes no argument for it:
+
+```python
+Session.insert1({"session_id": 1, "session_date": "2026-09-30"})
+```
+
+What gets recorded comes from deployment configuration and from the connection — the external system named in `dj.config.provenance.source`, the connecting user and host, the insert time, and the code version. A row inserted from inside an `Imported` table's `make()` also records which table and key wrote it.
+
+Because the attribute is hidden it does not appear in `to_dicts()` or in a join, so read it explicitly:
+
+```python
+# rows that have no recorded origin
+Session & "_prov IS NULL"
+```
+
+Write the condition as a string. The mapping form (`{"_prov.system": ...}`) returns every row: a mapping restriction ignores attributes it cannot match — which is what lets `Session & key` work when `key` carries attributes from a more detailed table — and a hidden attribute is invisible to that matching. Reading the value back needs SQL until 2.4 — `to_arrays("_prov")` raises.
+
+To record something specific to one row — which file, which LIMS record — model it as an ordinary attribute instead. A modelled column is queryable and joinable; `_prov` is deliberately neither. See [Record Data Origin](../../../how-to/record-data-origin/).
 
 
 ## Master-Part Tables and Transactions
@@ -23085,6 +23128,8 @@ This adds hidden attributes to computed tables:
 - `_job_duration` — How long it took
 - `_job_version` — Code version (if configured)
 
+Restricting on one works as a condition string — `SessionAnalysis & "_job_duration > 3600"` — but reading the values back needs SQL until 2.4. See [Querying and Fetching](../reference/specs/job-metadata.md#querying-and-fetching).
+
 ## Simple Progress Script
 
 ```python
@@ -24310,6 +24355,148 @@ sandwich.drop(prompt=False)
 howto_analysis.drop(prompt=False)
 schema.drop(prompt=False)
 ```
+
+
+---
+## File: how-to/record-data-origin.md
+
+# Record Data Origin
+
+Data entering a pipeline from outside carries no dependency that says where it came from. Turn capture on and DataJoint records that origin for you on every Manual table, from configuration rather than from your insert code.
+
+!!! version-added "New in 2.3.4"
+
+## Turn capture on
+
+Capture is off by default, so a table declared without it carries no column and records nothing. Enable it where you set credentials and stores, before the tables are declared:
+
+```bash
+export DJ_PROVENANCE_CAPTURE=true
+```
+
+Turning it off again does not remove the column from tables that already have it, and does not stop those tables from recording.
+
+## Configure the source
+
+Name the external system this process draws from. Set it where you set credentials and stores — not in pipeline code:
+
+```bash
+export DJ_PROVENANCE_SOURCE='{"system": "PyRat", "endpoint": "https://pyrat.example.org/api/v2"}'
+```
+
+or in `datajoint.json`:
+
+```json
+{
+    "provenance": {
+        "source": {"system": "PyRat", "endpoint": "https://pyrat.example.org/api/v2"}
+    }
+}
+```
+
+Every row this process inserts into a Manual table now records that source, along with the connecting user and host, the insert time, and the code version.
+
+Nothing else is required. There is no argument to pass and no field to remember:
+
+```python
+Subject.insert1({"subject_id": 1, "species": "mouse"})
+```
+
+Even when the source offers little — a nightly sync against a colony-management API — recording "received from PyRat at 02:15" beats recording nothing.
+
+## Check that rows are carrying an origin
+
+The attribute is hidden, so it does not appear in `to_dicts()` or in a join. Query it directly:
+
+```python
+# Rows with no recorded origin
+Subject & "_prov IS NULL"
+
+# How many, out of how many
+len(Subject & "_prov IS NULL"), len(Subject)
+```
+
+Write the condition as a **string**. The mapping form returns every row here: it
+ignores attributes it cannot match — deliberately, so that `Session & key` works
+when `key` carries attributes from a more detailed table — and a hidden
+attribute is invisible to that matching
+([#1561](https://github.com/datajoint/datajoint-python/issues/1561)):
+
+```python
+# MySQL
+Subject & "JSON_VALUE(_prov, '$.source.system') = 'PyRat'"
+
+# PostgreSQL
+Subject & "jsonb_extract_path_text(_prov, 'source', 'system') = 'PyRat'"
+
+# Subject & {"_prov.system": "PyRat"}   <- returns everything; do not use
+```
+
+`_prov IS NULL` and `_prov IS NOT NULL` are the same on both backends. Filtering
+on a field inside the JSON is not — **because `_prov` is hidden**, not because
+JSON paths are hard. On an ordinary JSON attribute `{"data.system": "PyRat"}` is
+portable and DataJoint translates it per backend; that route is closed here only
+because the mapping form cannot reach a hidden attribute.
+
+## Read the record back
+
+Until 2.4 this needs SQL. `to_arrays("_prov")` and `proj("_prov")` both raise,
+because a hidden attribute cannot be named through the query API
+([#1562](https://github.com/datajoint/datajoint-python/issues/1562) adds a
+supported accessor):
+
+```python
+rows = Subject.connection.query(
+    f"SELECT subject_id, _prov FROM {Subject.full_table_name}"
+).fetchall()
+```
+
+On MySQL the value comes back as a JSON string and needs `json.loads`; on
+PostgreSQL psycopg2 returns a dict already.
+
+## Add the column to existing tables
+
+Tables declared before 2.3.4 — or while capture was off — have no column, and inserts into them record nothing without complaining. Add the slot:
+
+```python
+from datajoint.deploy import add_prov_column
+
+# See what would change
+add_prov_column(schema, dry_run=True)["ddl"]
+
+# Apply it
+add_prov_column(schema, dry_run=False)
+```
+
+Safe to re-run: a table that already has the column is reported and left alone. Rows already present keep `NULL` — provenance is recorded when a row is inserted and is never reconstructed afterwards.
+
+## What you cannot do, and what to do instead
+
+**You cannot write `_prov` yourself.** Passing it in a row raises an error.
+
+That is deliberate. A field the operator can set is weaker evidence than one the system sets, which is the whole point for an audit. It also means the record cannot be half-filled by inconsistent discipline across a team.
+
+**When you want to record something specific to a row** — which file a value came from, which LIMS record, which operator — model it as an ordinary attribute:
+
+```python
+@schema
+class Subject(dj.Manual):
+    definition = """
+    subject_id   : int32
+    ---
+    species      : varchar(64)
+    lims_record  : varchar(64)    # the external record this row was created from
+    """
+```
+
+A modeled column is visible, queryable, and joinable; `_prov` is none of those, by design. Use `_prov` as the audit record and a modeled column as the domain link. Both can describe the same arrival.
+
+## See Also
+
+- [Extrinsic Provenance at Entry Tables](../reference/specs/boundary-provenance.md) — the specification
+- [Insert Data](insert-data.md) — inserting into Manual tables
+- [Fan-Out Ingestion](../explanation/fan-out-ingestion.md) — one loader writing into several entry-point tables
+- [Configuration](../reference/configuration.md) — where settings come from
 
 
 ---
@@ -27020,6 +27207,23 @@ If table lacks partition attributes, it follows normal path structure.
 | `jobs.add_job_metadata` | `False` | Add hidden metadata to computed tables |
 | `jobs.allow_new_pk_fields_in_computed_tables` | `False` | Allow non-FK primary key fields |
 
+## Provenance Settings
+
+| Setting | Environment | Default | Description |
+| --------- | ------------- | --------- | ------------- |
+| `provenance.capture` | `DJ_PROVENANCE_CAPTURE` | `False` | Declare the hidden `_prov` attribute on Manual tables and fill it on insert *(new in 2.3.4)* |
+| `provenance.source` | `DJ_PROVENANCE_SOURCE` | `{}` | External source identity recorded on every row this process enters *(new in 2.3.4)* |
+
+`provenance.source` is a JSON object naming the system this process draws from,
+set per deployment rather than in pipeline code:
+
+```bash
+export DJ_PROVENANCE_SOURCE='{"system": "PyRat", "endpoint": "https://pyrat.example.org/api/v2"}'
+```
+
+See [Extrinsic Provenance at Entry Tables](specs/boundary-provenance.md) for what is
+recorded and [Record Data Origin](../how-to/record-data-origin.md) for the task-oriented guide.
+
 ## Display Settings
 
 | Setting | Environment | Default | Description |
@@ -28997,16 +29201,23 @@ When `config['jobs.add_job_metadata'] = True`, auto-populated tables receive hid
 | Column | Type | Description |
 |--------|------|-------------|
 | `_job_start_time` | `datetime(3)` | When computation began |
-| `_job_duration` | `float64` | Duration in seconds |
+| `_job_duration` | `float32` | Duration in seconds |
 | `_job_version` | `varchar(64)` | Code version |
 
 ```python
-# Fetch with job metadata
-Analysis().to_arrays('result', '_job_duration')
-
-# Query slow computations
+# Query slow computations -- a condition string reaches the column
 slow = Analysis & '_job_duration > 3600'
+
+# Reading the values back requires SQL until 2.4
+rows = Analysis.connection.query(
+    f"SELECT _job_start_time, _job_duration FROM {Analysis.full_table_name}"
+).fetchall()
 ```
+
+`to_arrays('_job_duration')` and `proj('_job_duration')` raise: the heading
+excludes hidden names, so they cannot be addressed through the query API. See
+[Hidden Job Metadata](job-metadata.md#querying-and-fetching) for the full
+account and for what 2.4 adds.
 
 ---
 
@@ -29069,6 +29280,247 @@ def make_fetch(self, key, **kwargs): return data
 def make_compute(self, key, data): return result
 def make_insert(self, key, result): self.insert1(...)
 ```
+
+
+---
+## File: reference/specs/boundary-provenance.md
+
+# Extrinsic Provenance at Entry Tables
+
+## Overview
+
+Rows that enter a pipeline from outside carry a hidden `_prov` attribute recording where they came from. The framework declares the attribute on Manual tables and fills it on insert; no author writes it.
+
+!!! version-added "New in 2.3.4"
+
+    `dj.Entry` is available from 2.3.4 as a permanent alias for `dj.Manual`. This page uses `dj.Manual` throughout; both names declare the same table.
+
+## Motivation
+
+Inside a pipeline, provenance is **structural**. A Computed table's row cannot exist unless its declared upstream exists and is correct, so the foreign-key graph *is* the lineage. Nothing has to be recorded for that to hold.
+
+At the boundary the structure runs out. Rows arrive in Manual tables from a person, an instrument, or an automated feed, and the graph has nothing to say about where they came from. Before 2.3.4 each pipeline answered that question its own way — a `source_file` column here, a `notes` varchar there, an ingestion log somewhere else, or nothing at all.
+
+`_prov` gives the boundary one shape, so that two pipelines answer "where did this row come from" the same way, and so that "which rows have no recorded origin" is a query rather than an audit.
+
+## The Attribute
+
+| Attribute | Type | Description |
+|-----------|------|-------------|
+| `_prov` | `json` (MySQL) / `jsonb` (PostgreSQL) | Extrinsic provenance for a row that entered from outside the pipeline. `NULL` when nothing was recorded. |
+
+Hidden attributes are prefixed with `_`: stored in the database, filtered out of `heading.attributes`, and excluded from query composition.
+
+**Why JSON rather than typed columns.** The useful key set is not settled, and deployments add to it. A JSON document absorbs a new key as a configuration change; typed columns would freeze the set at declaration and make every later addition an `ALTER` across every Manual table in every deployment. Filtering on a field stays portable — see [Querying](#querying).
+
+## Which Tables Carry It
+
+Manual tables only.
+
+| Tier | Carries `_prov` | Why |
+|------|-----------------|-----|
+| `dj.Manual` | **Yes** | The pipeline's boundary with the outside world |
+| `dj.Lookup` | No | Rows come from the committed `contents`, so the code is the record |
+| `dj.Imported` | No | See below |
+| `dj.Computed` | No | Provenance is entailed by the foreign-key graph |
+| `dj.Part` | No | A part inherits its master's |
+
+The slot is granted by matching the Manual tier, not by excluding the other
+tiers' prefixes, so DataJoint's own system tables — job queues, lineage — never
+carry it either.
+
+**Why not Imported.** An Imported table already records agent, time and version through [job metadata](job-metadata.md) when `config.jobs.add_job_metadata` is on, so a `_prov` there would record the same facts twice. The half that is *not* covered — which specific file, endpoint, or instrument session its `make()` read — is known per row inside the `make()` body, which configuration cannot supply.
+
+In a well-modeled pipeline the external source is registered as a Manual row and the Imported table reaches it through a declared foreign key, which makes that table's provenance structural. An Imported table reading a source no Manual row records is the modeling problem described in [Table Declaration](table-declaration.md); the fix is to register the source, not to add a slot.
+
+## Content
+
+Three sources fill the attribute, and **none of them is the insert call site**.
+
+| Source | Supplies |
+|---|---|
+| Configuration | `config.provenance.source` — the deployment constant naming the external system this process draws from |
+| Ambient connection state | the connecting user, host and database; the insert time; the code version |
+| Ambient execution state | the ingesting table and key, when the insert runs inside a `make()` |
+
+A recorded document:
+
+```json
+{
+  "time": "2026-09-30T14:22:05.481203+00:00",
+  "agent": {"user": "ingest_svc", "host": "db.example.org", "database_name": "lab_subjects"},
+  "version": "a1b2c3d",
+  "source": {"system": "PyRat", "endpoint": "https://pyrat.example.org/api/v2"},
+  "context": {"table": "`lab`.`_ingest`", "key": {"file_id": 7}, "version": "a1b2c3d"}
+}
+```
+
+Keys are omitted when they have nothing to report: `source` when none is configured, `context` outside a `make()`, `version` when `config.jobs.version_method` is disabled. When only `time` would remain the attribute is left `NULL`, because a bare timestamp says nothing about origin.
+
+`time` is the client's UTC clock at insert, not the server's.
+
+### The author cannot write it
+
+`insert()` takes no provenance argument, and passing `_prov` in a row raises `KeyError` — hidden attributes are not in the heading.
+
+This is the design rather than a limitation. A field an operator can set is weaker evidence than one the system sets, which is what *attributable* and *contemporaneous* require of externally-sourced data. It also removes the failure mode a supported-but-optional field would have: there is nothing left for a pipeline to neglect.
+
+**Anything an author wants to record deliberately belongs in the data model**, as an ordinary visible attribute. Pipeline code can restrict and join on a modeled column; it cannot on a hidden one. The two do different jobs — `_prov` is the audit record, a modeled column is the domain link. See [Fan-Out Ingestion](../../explanation/fan-out-ingestion.md), where both appear side by side.
+
+## Configuration
+
+| Setting | Environment | Default | Description |
+|---------|-------------|---------|-------------|
+| `provenance.capture` | `DJ_PROVENANCE_CAPTURE` | `False` | Declare `_prov` on Manual tables and fill it on insert |
+| `provenance.source` | `DJ_PROVENANCE_SOURCE` | `{}` | External source identity recorded on every row this process enters |
+
+```python
+import datajoint as dj
+
+dj.config.provenance.capture          # False until a deployment enables it
+dj.config.provenance.source = {"system": "PyRat", "endpoint": "https://pyrat.example.org/api/v2"}
+```
+
+Deployments set these where they set stores and credentials, not in pipeline code:
+
+```bash
+export DJ_PROVENANCE_SOURCE='{"system": "PyRat", "endpoint": "https://pyrat.example.org/api/v2"}'
+```
+
+```json
+{
+    "provenance": {
+        "source": {"system": "PyRat", "endpoint": "https://pyrat.example.org/api/v2"}
+    }
+}
+```
+
+!!! warning "Changing the source mid-process is silent"
+
+    Rows inserted before the change keep what was configured then, and rows after keep the new value. Nothing records that the setting moved. Set it once at start-up.
+
+### Capture defaults off
+
+Capture changes the DDL of every Manual table declared after it is enabled, adding one hidden nullable column. That is a deployment's decision rather than a library default, so upgrading to 2.3.4 leaves an unchanged schema declaring exactly what it declared under 2.3.3. [`jobs.add_job_metadata`](job-metadata.md) defaults off for the same reason, and does the same kind of thing.
+
+A deployment that turns it on gets the property that makes the slot worth having: across that deployment, "which rows have no recorded origin" is a query rather than an audit. What it cannot assume is that a table declared elsewhere, under someone else's configuration, carries the column — [retrofitting](#retrofitting-existing-tables) is what settles that.
+
+## Behavior
+
+### At declaration
+
+With `provenance.capture` true, `_prov` is added to the `CREATE TABLE` of every Manual table that is not a part. Turning capture off later does not remove the column from tables that already have it.
+
+### At insert
+
+Every `insert()` and `insert1()` into a Manual table that carries the column appends the assembled document. A table declared without the column is left alone and the insert succeeds — silently, which is what [retrofitting](#retrofitting-existing-tables) addresses.
+
+### Inside `make()`
+
+An insert executed inside a `make()` records the ingesting table and key in `context`. This is what makes the [fan-out ingestion pattern](../../explanation/fan-out-ingestion.md) traceable: rows written into Manual tables that carry no foreign key back to the loader still record what wrote them.
+
+## Retrofitting Existing Tables
+
+Tables declared before 2.3.4, or while capture was off, have no column and record nothing. `datajoint.deploy.add_prov_column` adds the slot:
+
+```python
+from datajoint.deploy import add_prov_column
+
+# Preview
+add_prov_column(schema, dry_run=True)["ddl"]
+
+# Apply to every Manual table in a schema
+add_prov_column(schema, dry_run=False)
+
+# Or a single table
+add_prov_column(Subject, dry_run=False)
+```
+
+It is idempotent — a table that already has the column is reported and left alone — and it lives in `datajoint.deploy` rather than `datajoint.migrate` for that reason.
+
+Rows already present keep `NULL`. Provenance is recorded at insert and is never reconstructed after the fact.
+
+## Querying
+
+`_prov` is excluded from `heading.attributes`, so it does not appear in `to_dicts()`, in `describe()`, or in a join.
+
+**Restricting** on it works, written as a SQL condition string:
+
+```python
+# Rows with no recorded origin — portable
+Subject & "_prov IS NULL"
+```
+
+Filtering on a field *inside* the JSON needs backend-specific SQL **because the
+attribute is hidden**, not because JSON paths are awkward. On an ordinary JSON
+attribute the mapping form is portable — DataJoint translates `{"data.system":
+"PyRat"}` to `json_value()` on MySQL and `jsonb_extract_path_text()` on
+PostgreSQL. That translation is unavailable here only because the mapping form
+cannot reach a hidden attribute (below):
+
+```python
+# MySQL
+Subject & "JSON_VALUE(_prov, '$.source.system') = 'PyRat'"
+
+# PostgreSQL
+Subject & "jsonb_extract_path_text(_prov, 'source', 'system') = 'PyRat'"
+```
+
+!!! warning "The mapping form does not reach a hidden attribute"
+
+    `Subject & {"_prov.system": "PyRat"}` returns **every row**. A mapping
+    restriction ignores attributes it cannot match, which is deliberate and
+    useful — it is what lets `Session & key` work when `key` carries attributes
+    from a more detailed table. A hidden attribute is invisible to that matching,
+    so the predicate is dropped along with it.
+
+    Write the condition as a string, which reaches the column directly — at the
+    cost of portability, since DataJoint's own JSON-path translation is what the
+    mapping form would have given you. Tracked in
+    [datajoint-python#1561](https://github.com/datajoint/datajoint-python/issues/1561).
+
+**Reading the value back requires SQL** until 2.4. There is no public API that
+returns a hidden attribute — `to_arrays('_prov')` and `proj('_prov')` both raise:
+
+```python
+# Until 2.4
+rows = Subject.connection.query(
+    f"SELECT subject_id, _prov FROM {Subject.full_table_name}"
+).fetchall()
+```
+
+A supported accessor is planned for 2.4
+([datajoint-python#1562](https://github.com/datajoint/datajoint-python/issues/1562)),
+which will cover `_prov` and the job-metadata attributes together.
+
+!!! note "Range queries on capture time"
+
+    Filtering by `time` goes through JSON extraction, so it does not use an index. If that becomes hot for a deployment, add a generated column over the JSON path and index it; no change to the pipeline or to DataJoint is needed.
+
+## Implementation Details
+
+| Module | Role |
+|--------|------|
+| `datajoint/provenance.py` | payload assembly and the ingesting context |
+| `datajoint/settings.py` | `ProvenanceSettings`, exposed as `config.provenance` |
+| `datajoint/declare.py` | `PROV_DEFINITION`, and adding it to Manual tables at declaration |
+| `datajoint/user_tables.py` | `is_tier`, the shared tier test |
+| `datajoint/table.py` | appends the value on the insert path |
+| `datajoint/autopopulate.py` | scopes the ingesting context to a `make()` call |
+| `datajoint/deploy.py` | `add_prov_column` |
+
+The column is declared the way a user attribute is —
+`_prov = null : json # extrinsic provenance ...` — and compiled by the same
+`compile_attribute`, so the backend mapping to `json` or `jsonb` comes from the
+adapter's type system rather than from a per-adapter method. No adapter
+implements anything of its own for it.
+
+## See Also
+
+- [Hidden Job Metadata](job-metadata.md) — the same hidden-attribute mechanism, for the automated tiers
+- [Record Data Origin](../../how-to/record-data-origin.md) — the task-oriented guide
+- [Fan-Out Ingestion](../../explanation/fan-out-ingestion.md) — where a loader writes into tables that do not depend on it
+- [Comparison to Provenance Systems](../../explanation/comparison-to-provenance-systems.md) — what DataJoint records and what it leaves to provenance systems
 
 
 ---
@@ -32719,6 +33171,12 @@ This utility:
 - Does NOT populate existing rows (metadata remains NULL)
 - Future `populate()` calls will populate metadata for new rows
 
+It compiles the columns through the same path a declaration uses, so a
+retrofitted column is indistinguishable in the catalog from a declared one —
+same backend type, same `:type:` comment. Before 2.3.4 it built the `ALTER` by
+hand with backtick-quoted identifiers, which is a syntax error on PostgreSQL,
+so the retrofit had never run there.
+
 ## Behavior
 
 ### Declaration-time
@@ -32828,21 +33286,33 @@ This ensures join attribute computation automatically excludes hidden attributes
 
 ### 1. Declaration (declare.py)
 
-```python
-def declare(full_table_name, definition, context):
-    # ... existing code ...
+The three columns are written in DataJoint notation, exactly as a user writes an
+attribute:
 
-    # Add hidden job metadata for auto-populated tables
-    if config.jobs.add_job_metadata and table_tier in (TableTier.COMPUTED, TableTier.IMPORTED):
-        # Only for master tables, not parts
-        if not is_part_table:
-            job_metadata_sql = [
-                "`_job_start_time` datetime(3) DEFAULT NULL",
-                "`_job_duration` float DEFAULT NULL",
-                "`_job_version` varchar(64) DEFAULT ''",
-            ]
-            attribute_sql.extend(job_metadata_sql)
+```python
+JOB_METADATA_DEFINITION = (
+    "_job_start_time = null : datetime(3) # when computation began",
+    "_job_duration = null : float32 # computation duration in seconds",
+    '_job_version = "" : varchar(64) # code version',
+)
 ```
+
+`prepare_declare` compiles them through the same `compile_attribute` that
+handles every user line, once the user's lines are parsed, and only when the
+stripped table name matches the `Computed` or `Imported` tier — which is what
+excludes part tables and DataJoint's own system tables.
+
+Going through the type system rather than a hand-written string is what makes
+the columns correct on every backend: `core_type_to_sql("datetime(3)")` yields
+`datetime(3)` on MySQL and `timestamp(3)` on PostgreSQL. A hand-written
+`datetime(3)` had produced a bare `timestamp` on PostgreSQL, silently at
+microsecond precision
+([#1566](https://github.com/datajoint/datajoint-python/issues/1566)).
+
+Each column also carries a `:type:` comment recording the DataJoint type it was
+declared from, which `heading` reads back as `original_type`. On PostgreSQL that
+comment is a separate `COMMENT ON` statement, since the backend does not accept
+one inline.
 
 ### 2. Population (autopopulate.py)
 
@@ -32937,9 +33407,41 @@ class SessionAnalysis(dj.Computed):
 SessionAnalysis().heading.names  # ['session_id', 'result']
 SessionAnalysis().to_dicts()  # Returns only visible attributes
 
-# Access hidden attributes explicitly if needed:
-SessionAnalysis().to_arrays('_job_start_time', '_job_duration', '_job_version')
+# Reading them back requires SQL until 2.4 -- see below.
 ```
+
+## Querying and Fetching
+
+A condition **string** reaches the column; everything that goes through the
+heading does not.
+
+| Pattern | Result |
+|---|---|
+| `Analysis & "_job_duration > 3600"` | Works — the string passes to SQL unchanged |
+| `Analysis & {"_job_duration": 3600}` | **Returns every row** — see below |
+| `Analysis.to_arrays("_job_duration")` | Raises ``DataJointError: Attribute `_job_duration` not found.`` |
+| `Analysis.proj("_job_duration")` | Raises the same |
+| `Analysis.to_dicts()` | Visible attributes only |
+| `Analysis & dj.Top(order_by="_job_duration")` | Works — `ORDER BY` is not validated against the heading |
+
+The mapping form silently ignores an attribute it cannot match. That is
+deliberate and useful — it is what lets `Session & key` work when `key` carries
+attributes from a more detailed table — but a hidden attribute is invisible to
+that matching, so the predicate is dropped along with it
+([#1561](https://github.com/datajoint/datajoint-python/issues/1561)).
+
+**Reading the values back requires SQL until 2.4:**
+
+```python
+rows = SessionAnalysis.connection.query(
+    f"SELECT _job_start_time, _job_duration, _job_version "
+    f"FROM {SessionAnalysis.full_table_name}"
+).fetchall()
+```
+
+A supported accessor is planned for 2.4, covering the job-metadata attributes
+and `_prov` together
+([#1562](https://github.com/datajoint/datajoint-python/issues/1562)).
 
 ## Summary of Design Decisions
 
@@ -37182,16 +37684,19 @@ Names with leading underscore are reserved for platform-managed columns
 need to control visibility at the call site, use proj().
 ```
 
-**Platform-managed hidden attributes** are added automatically when DataJoint declares certain table types. Users do not write these in the definition; the framework injects them programmatically after parsing.
+**Platform-managed hidden attributes** are added automatically when DataJoint declares certain table types. Users do not write these in the definition; the framework writes them in the same DataJoint notation and compiles them through the same path, once the user's lines are parsed.
 
 | Hidden attribute | Added to | Purpose |
 |------------------|----------|---------|
 | `_job_start_time` | `Computed`, `Imported` | Wall-clock start of the populate call |
 | `_job_duration` | `Computed`, `Imported` | Elapsed seconds for the populate call |
 | `_job_version` | `Computed`, `Imported` | Library version that produced the row |
-| `_singleton` | Singleton tables | Implementation detail of the singleton pattern |
+| `_prov` | `Manual` | [Extrinsic provenance](boundary-provenance.md) for a row that entered from outside |
+| `_singleton` | Tables that declare no primary key | Implementation detail of the singleton pattern |
 
-These columns are populated by DataJoint internals via raw SQL during the `populate()` lifecycle, not via `insert`/`update1`. They are filtered out of every public API surface so they don't clutter joins, fetches, or displays.
+Part tables receive none of them, and neither do DataJoint's own system tables — the job queue and the lineage registry — because each slot is granted by matching its tier, not by excluding the others' prefixes.
+
+DataJoint internals write these values; `insert` and `update1` reject them. `_job_*` is written by raw `UPDATE` after `make()` returns, `_prov` on the insert path, `_singleton` by its default. They are filtered out of every public API surface so they don't clutter joins, fetches, or displays.
 
 **Behavior.** The filter is implemented in `Heading.attributes`, which all visible code paths consume; raw SQL strings bypass it.
 
@@ -37235,6 +37740,11 @@ MyTable & "_job_start_time > '2024-01-01'"
 # Dict restriction is silently dropped — does NOT filter
 MyTable & {'_job_start_time': some_date}   # ⚠ ignored
 ```
+
+A supported accessor is planned for 2.4, covering the job-metadata attributes
+and `_prov` together
+([datajoint-python#1562](https://github.com/datajoint/datajoint-python/issues/1562)).
+Until then, raw SQL is the only way to read one back.
 
 **Use a regular attribute instead.** When you want a column that's part of the schema-level contract (backing an index, storing a derived value, etc.) but isn't featured in default displays, declare it as a regular attribute and use `proj()` at the call site if you want to omit it from a particular query result. For example, a hash column backing a unique index:
 
@@ -37645,7 +38155,7 @@ When `config['jobs.add_job_metadata'] = True`, auto-populated tables receive:
 | Column | Type | Description |
 |--------|------|-------------|
 | `_job_start_time` | `datetime(3)` | Job start timestamp |
-| `_job_duration` | `float64` | Duration in seconds |
+| `_job_duration` | `float32` | Duration in seconds |
 | `_job_version` | `varchar(64)` | Code version |
 
 ---
@@ -38771,7 +39281,82 @@ The `json` database type:
 - Used as dtype by built-in codecs (`<object@>`, `<hash@>`, `<filepath@store>`)
 - Stores arbitrary JSON-serializable data
 - Automatically uses appropriate type for database backend
-- Supports JSON path queries where available
+- Supports JSON path access in restriction and projection — see below
+
+### JSON path access
+
+A field inside a `json` attribute is addressed as `attribute.path`, in both
+restriction and projection. DataJoint translates the path per backend, so the
+same expression runs on MySQL and PostgreSQL:
+
+```python
+@schema
+class Equipment(dj.Manual):
+    definition = """
+    name  : varchar(32)
+    ---
+    specs : json
+    """
+```
+
+**Restriction** — a mapping whose key carries the path:
+
+```python
+Equipment & {"specs.vendor": "Acme"}
+```
+
+**Projection** — a named attribute whose value is the path:
+
+```python
+Equipment.proj(vendor="specs.vendor")
+```
+
+Both emit `json_value()` on MySQL and `jsonb_extract_path_text()` on
+PostgreSQL. Nested fields and array elements use dots and brackets:
+`specs.probe.serial`, `specs.channels[0]`.
+
+#### Extracted values are text
+
+Both backend functions return text, so a numeric or boolean field comes back as
+a string unless a type is requested:
+
+```python
+Equipment.proj(ch="specs.channels")            # '64'  — str
+Equipment.proj(ch="specs.channels:unsigned")   # 64    — int
+```
+
+The annotation is `path:type`. Portable spellings are `unsigned`, `signed` and
+`decimal(M,D)`.
+
+!!! warning "Two defects to know about when filtering"
+
+    **Compare against a string.** A restriction value that is a Python `int` or
+    `bool` is not coerced to match the extracted text. `& {"specs.calibrated":
+    True}` returns **no rows** on MySQL and raises on PostgreSQL; write
+    `& {"specs.calibrated": "true"}` and `& {"specs.channels": "64"}` until
+    [#1564](https://github.com/datajoint/datajoint-python/issues/1564) is fixed.
+
+    **`:int` is not portable.** It works on PostgreSQL and raises on MySQL, whose
+    `RETURNING` clause does not accept it. Use `unsigned` or `signed`, which work
+    on both — [#1563](https://github.com/datajoint/datajoint-python/issues/1563).
+
+#### Ordering comparisons
+
+A path yields text, so `>` and `<` need a typed projection first:
+
+```python
+big = Equipment.proj(ch="specs.channels:unsigned") & "ch > 32"
+```
+
+#### What is not supported
+
+Comparing a whole JSON object — `& {"specs": {"vendor": "Acme", "channels": 64}}` —
+raises a syntax error. Restrict on a path, or normalize the field into a column.
+
+Hidden attributes — platform-managed columns whose names begin with `_`, such as
+`_job_version` — cannot be reached by the mapping form at all: the predicate is
+dropped and every row is returned
+([#1561](https://github.com/datajoint/datajoint-python/issues/1561)).
 
 ## Built-in Codecs
 
