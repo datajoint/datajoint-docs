@@ -4318,6 +4318,8 @@
       
         
       
+        
+      
     
     
     
@@ -4431,6 +4433,34 @@
     
   
     Virtual Schemas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/specs/branch-resolution/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Branch Resolution
   
 
     
@@ -6747,7 +6777,7 @@
 <tr>
 <td>Manual</td>
 <td><code>dj.Manual</code></td>
-<td>Data inserted directly from outside the pipeline (forms, instruments, ingestion scripts)</td>
+<td>Data inserted directly from outside the pipeline (forms, instruments, entry scripts)</td>
 </tr>
 <tr>
 <td>Lookup</td>
@@ -7040,8 +7070,8 @@ data management?</strong></p>
   process, not a runtime insert.</li>
 <li>Use <strong><code>dj.Manual</code></strong> when the rows are <strong>populated at runtime</strong> and their quality
   is guaranteed by the <strong>data-management process</strong> — validation, curation, and
-  access control at ingest, not code review. Subjects, sessions, samples, or
-  anything typed into a form, ingested from a file, or read from an instrument.</li>
+  access control at entry, not code review. Subjects, sessions, samples, or
+  anything typed into a form, loaded from a file, or read from an instrument.</li>
 </ul>
 <p>This resolves the case that "where a row comes from" leaves ambiguous: a controlled
 vocabulary that is <strong>populated at runtime</strong> — gene symbols loaded from an external

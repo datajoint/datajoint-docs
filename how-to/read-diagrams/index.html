@@ -1942,6 +1942,18 @@
   </span>
 </a>
 </li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../reference/specs/branch-resolution/">
+<span class="md-ellipsis">
+    
+  
+    Branch Resolution
+  
+
+    
+  </span>
+</a>
+</li>
 </ul>
 </nav>
 </li>
@@ -3864,7 +3876,7 @@ dj.Diagram(Customer) + dj.Diagram(CustomerPreferences)</div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <p><strong>Equivalent ER Diagram:</strong></p>
-<img alt="ER One-to-One" src="/images/er-one-to-one.svg" width="280"/>
+<img alt="ER One-to-One" src="/images/er-one-to-one.light.svg#only-light" width="280"/><img alt="ER One-to-One" src="/images/er-one-to-one.dark.svg#only-dark" width="280"/>
 <p><strong>DataJoint vs ER:</strong> The thick solid line immediately shows this is one-to-one. In ER notation, you must read the crow's foot symbols (<code>||--o|</code>).</p>
 <p><strong>Note:</strong> <code>CustomerPreferences</code> is <strong>not underlined</strong> — it exists in the Customer dimension space.</p>
 </div>
@@ -3946,7 +3958,7 @@ dj.Diagram(Customer) + dj.Diagram(Account)</div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <p><strong>Equivalent ER Diagram:</strong></p>
-<img alt="ER One-to-Many" src="/images/er-one-to-many.svg" width="280"/>
+<img alt="ER One-to-Many" src="/images/er-one-to-many.light.svg#only-light" width="280"/><img alt="ER One-to-Many" src="/images/er-one-to-many.dark.svg#only-dark" width="280"/>
 <p><strong>DataJoint vs ER:</strong> The thin solid line shows containment — accounts belong to customers. In ER, you see <code>||--o{</code> (one-to-many).</p>
 <p><strong>Note:</strong> <code>Account</code> is <strong>underlined</strong> — it introduces the Account dimension.</p>
 </div>
@@ -4044,7 +4056,7 @@ dj.Diagram(Department) + dj.Diagram(Employee)</div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <p><strong>Equivalent ER Diagram:</strong></p>
-<img alt="ER Reference" src="/images/er-reference.svg" width="280"/>
+<img alt="ER Reference" src="/images/er-reference.light.svg#only-light" width="280"/><img alt="ER Reference" src="/images/er-reference.dark.svg#only-dark" width="280"/>
 <p><strong>DataJoint vs ER:</strong> Both show one-to-many, but DataJoint's dashed line tells you immediately that Employee has independent identity. In ER, you must examine whether the FK is part of the PK.</p>
 <p><strong>Note:</strong> Both tables are <strong>underlined</strong> — each introduces its own dimension.</p>
 </div>
@@ -4302,7 +4314,7 @@ dj.Diagram(Student) + dj.Diagram(Course) + dj.Diagram(Enrollment)</div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <p><strong>Equivalent ER Diagram:</strong></p>
-<img alt="ER Many-to-Many" src="/images/er-many-to-many.svg" width="400"/>
+<img alt="ER Many-to-Many" src="/images/er-many-to-many.light.svg#only-light" width="400"/><img alt="ER Many-to-Many" src="/images/er-many-to-many.dark.svg#only-dark" width="400"/>
 <p><strong>DataJoint vs ER:</strong> Both show the association table pattern. DataJoint's converging solid lines immediately indicate the composite primary key.</p>
 <p><strong>Note:</strong> <code>Enrollment</code> is <strong>not underlined</strong> — it exists in the space defined by Student × Course dimensions.</p>
 </div>

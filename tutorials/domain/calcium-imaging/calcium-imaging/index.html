@@ -1905,6 +1905,18 @@
   </span>
 </a>
 </li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../../reference/specs/branch-resolution/">
+<span class="md-ellipsis">
+    
+  
+    Branch Resolution
+  
+
+    
+  </span>
+</a>
+</li>
 </ul>
 </nav>
 </li>
@@ -3611,7 +3623,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <li>Use <strong>Lookup tables</strong> for analysis parameters</li>
 <li>Use <strong>Part tables</strong> for one-to-many results</li>
 </ul>
-<h2 id="the-pipeline">The Pipeline<a class="anchor-link" href="#the-pipeline">¶</a></h2><img alt="Calcium Imaging Pipeline" src="/images/calcium-pipeline.svg" width="700"/>
+<h2 id="the-pipeline">The Pipeline<a class="anchor-link" href="#the-pipeline">¶</a></h2><img alt="Calcium Imaging Pipeline" src="/images/calcium-pipeline.light.svg#only-light" width="700"/><img alt="Calcium Imaging Pipeline" src="/images/calcium-pipeline.dark.svg#only-dark" width="700"/>
 <p><strong>Legend:</strong> Green = Manual, Gray = Lookup, Blue = Imported, Orange = Computed; a Part table is the small white box grouped with its master; an underlined name introduces a new dimension</p>
 <p>Each scan produces a TIFF movie. We compute an average frame, segment cells using threshold-based detection, and extract fluorescence traces for each detected ROI.</p>
 </div>
@@ -5281,7 +5293,7 @@ plt.tight_layout()</div>
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <p><strong>Legend:</strong></p>
 <ul>
-<li><strong>Green rounded boxes</strong>: Manual tables (data entered at runtime — by a person, an instrument, or an ingestion script)</li>
+<li><strong>Green rounded boxes</strong>: Manual tables (data entered at runtime — by a person, an instrument, or an entry script)</li>
 <li><strong>Gray rounded boxes</strong>: Lookup tables (parameters, part of the schema definition)</li>
 <li><strong>Blue ellipses</strong>: Imported tables (data from files)</li>
 <li><strong>Orange ellipses</strong>: Computed tables (derived from other tables)</li>

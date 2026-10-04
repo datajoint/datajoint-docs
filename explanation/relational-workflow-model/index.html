@@ -4258,6 +4258,8 @@
       
         
       
+        
+      
     
     
     
@@ -4371,6 +4373,34 @@
     
   
     Virtual Schemas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/specs/branch-resolution/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Branch Resolution
   
 
     
@@ -6632,8 +6662,8 @@ attribute, a new <em>schema dimension</em>, so it holds many rows per parent —
 while a plain name is <strong>composed from existing entities</strong>, extending one
 or combining several, inheriting its whole key and adding no new
 dimension. The legend below the figure keys the full notation.</p>
-<p><img alt="Worked-example imaging pipeline diagram spanning two schemas: experiment (Mouse → Session → Scan) and analysis (AverageFrame → Segmentation → Fluorescence, with Lookup SegmentationParam feeding Segmentation, and the Part tables Roi on Segmentation and Trace on Fluorescence)." src="../../images/rwm-pipeline.svg" /></p>
-<p><img alt="Legend: table tiers — Manual (green rounded box), Lookup (gray rounded box), Imported (blue ellipse), Computed (orange ellipse), Part (smaller plain box); an underlined name is a new entity type (a new schema dimension, many rows per parent) while a plain name is composed from existing entities (one row per parent); edge thickness — thick means the child extends the parent, thin means the child is contained within the parent; a dashed rounded box is a schema module (labeled in the corner); a gray box encloses a master with its parts; edges have no arrowheads, so direction follows the layout." src="../../images/rwm-legend.svg" /></p>
+<p><img alt="Worked-example imaging pipeline diagram spanning two schemas: experiment (Mouse → Session → Scan) and analysis (AverageFrame → Segmentation → Fluorescence, with Lookup SegmentationParam feeding Segmentation, and the Part tables Roi on Segmentation and Trace on Fluorescence)." src="../../images/rwm-pipeline.light.svg#only-light" /><img alt="Worked-example imaging pipeline diagram spanning two schemas: experiment (Mouse → Session → Scan) and analysis (AverageFrame → Segmentation → Fluorescence, with Lookup SegmentationParam feeding Segmentation, and the Part tables Roi on Segmentation and Trace on Fluorescence)." src="../../images/rwm-pipeline.dark.svg#only-dark" /></p>
+<p><img alt="Legend: table tiers — Manual (green rounded box), Lookup (gray rounded box), Imported (blue ellipse), Computed (orange ellipse), Part (smaller plain box); an underlined name is a new entity type (a new schema dimension, many rows per parent) while a plain name is composed from existing entities (one row per parent); edge thickness — thick means the child extends the parent, thin means the child is contained within the parent; a dashed rounded box is a schema module (labeled in the corner); a gray box encloses a master with its parts; edges have no arrowheads, so direction follows the layout." src="../../images/rwm-legend.light.svg#only-light" /><img alt="Legend: table tiers — Manual (green rounded box), Lookup (gray rounded box), Imported (blue ellipse), Computed (orange ellipse), Part (smaller plain box); an underlined name is a new entity type (a new schema dimension, many rows per parent) while a plain name is composed from existing entities (one row per parent); edge thickness — thick means the child extends the parent, thin means the child is contained within the parent; a dashed rounded box is a schema module (labeled in the corner); a gray box encloses a master with its parts; edges have no arrowheads, so direction follows the layout." src="../../images/rwm-legend.dark.svg#only-dark" /></p>
 <p>The notation is specified in full in the <a href="../../reference/specs/diagram/">Diagram specification</a>. The concepts it depicts are explained in depth elsewhere: <a href="../entity-integrity/">entity integrity</a> (keys, entity types, and schema dimensions), <a href="../../reference/specs/master-part/">master–part tables</a> (the entity group and its all-or-nothing populate), the <a href="../computation-model/">computation model</a> (how <code>make()</code> produces Imported and Computed tables), and <a href="../semantic-matching/">semantic matching</a> (why a name means the same thing everywhere it appears).</p>
 <p>The pipeline spans two schemas: <strong><code>experiment</code></strong> holds the raw, manually
 entered tables, and <strong><code>analysis</code></strong> holds everything derived from them.
@@ -6766,40 +6796,67 @@ same transactional guarantees that protect human-initiated work.</p>
 <p>The remaining sections detail the structural elements that make the model
 work in practice.</p>
 <h3 id="workflow-steps-and-table-tiers">Workflow steps and table tiers<a class="headerlink" href="#workflow-steps-and-table-tiers" title="Permanent link">&para;</a></h3>
-<p>Tables are classified into tiers by data-entry mode:</p>
+<p>Tables are classified into tiers by what puts rows in them.</p>
 <table>
 <thead>
 <tr>
 <th>Tier</th>
-<th>Role</th>
+<th>Rows come from</th>
+<th>What puts them there</th>
 <th><code>make()</code></th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><strong>Manual</strong></td>
-<td>Rows entered at runtime from outside the pipeline (people, forms, instruments, imports)</td>
+<td><strong>Lookup</strong></td>
+<td>The committed schema</td>
+<td>The table's own <code>contents</code>, versioned with the code</td>
 <td>No</td>
 </tr>
 <tr>
-<td><strong>Lookup</strong></td>
-<td>Reference rows defined in the schema itself via <code>contents</code></td>
+<td><strong>Manual</strong></td>
+<td>Outside the pipeline</td>
+<td>A writer outside the table — a person, an instrument, an entry script</td>
 <td>No</td>
 </tr>
 <tr>
 <td><strong>Imported</strong></td>
-<td>Reach out to data sources outside DataJoint (instruments, ELNs, external databases)</td>
+<td>Outside the pipeline</td>
+<td>The table itself, fetching through <code>make()</code></td>
 <td>Yes</td>
 </tr>
 <tr>
 <td><strong>Computed</strong></td>
-<td>Derive their contents entirely from upstream DataJoint tables</td>
+<td>Other DataJoint tables</td>
+<td>The table itself, deriving through <code>make()</code></td>
 <td>Yes</td>
 </tr>
 </tbody>
 </table>
-<p>Imported and Computed tables define computations via <code>make()</code> methods. The
-<code>make()</code> method specifies how each entity is derived — declared within the
+<p>The table shows <strong>Manual</strong> and <strong>Imported</strong> drawing on the same origin. What
+separates them is who initiates the write.</p>
+<p>A Manual table is written by an external process, on that process's schedule.
+An Imported table is filled automatically: <code>populate()</code> works through the keys
+its parents already hold and calls <code>make()</code> for each one still missing.</p>
+<p>Their primary keys follow from that. <code>populate()</code> has to know which entity it
+is working on before <code>make()</code> runs, so every attribute of an Imported table's
+primary key arrives through a foreign key. A Manual table carries no such
+constraint — it may sit at the head of the pipeline with no parent at all, and
+may introduce primary-key attributes of its own. That is what makes it the
+place a new entity enters.</p>
+<div class="admonition version-added">
+<p class="admonition-title">New in 2.3.4</p>
+<p>Three tiers gain a second name: <strong><code>dj.Entry</code></strong> for <code>dj.Manual</code>,
+<strong><code>dj.Ingest</code></strong> for <code>dj.Imported</code>, and <strong><code>dj.Compute</code></strong> for <code>dj.Computed</code>.
+Each pair is one class, so either name declares the same table, and both
+names are permanent. <code>dj.Lookup</code> and <code>dj.Part</code> are unchanged.</p>
+<p>These pages use the original names. The new ones become primary in 2.4
+(<a href="https://github.com/datajoint/datajoint-python/issues/1546">datajoint-python#1546</a>).</p>
+</div>
+<p><code>Part</code> is absent because it is not a tier of its own. A part table fills a
+structural role: it inherits its master's tier and is written in the same
+transaction. Any tier can serve as a master.</p>
+<p>The <code>make()</code> method specifies how each entity is derived — declared within the
 table definition, not in an external workflow file.</p>
 <h4 id="manual-vs-lookup">Manual vs. Lookup<a class="headerlink" href="#manual-vs-lookup" title="Permanent link">&para;</a></h4>
 <p>Manual and Lookup tables are both <strong>entry points</strong> — their rows are entered

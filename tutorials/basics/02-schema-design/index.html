@@ -2008,6 +2008,18 @@
   </span>
 </a>
 </li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../../reference/specs/branch-resolution/">
+<span class="md-ellipsis">
+    
+  
+    Branch Resolution
+  
+
+    
+  </span>
+</a>
+</li>
 </ul>
 </nav>
 </li>
@@ -3871,45 +3883,46 @@ schema = dj.Schema('tutorial_design')</div>
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="table-tiers">Table Tiers<a class="anchor-link" href="#table-tiers">¶</a></h2><p>DataJoint has four table tiers, each serving a different purpose:</p>
+<h2 id="table-tiers">Table Tiers<a class="anchor-link" href="#table-tiers">¶</a></h2><p>DataJoint has four table tiers, classified by what puts rows in them.</p>
 <table>
 <thead>
 <tr>
 <th>Tier</th>
 <th>Class</th>
-<th>Purpose</th>
-<th>Data Entry</th>
+<th>What puts rows in it</th>
+<th>Typical use</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><strong>Manual</strong></td>
 <td><code>dj.Manual</code></td>
+<td>A writer outside the table — an operator, an instrument, an entry script</td>
 <td>Core experimental data</td>
-<td>Inserted directly by operators, instruments, or ingestion scripts</td>
 </tr>
 <tr>
 <td><strong>Lookup</strong></td>
 <td><code>dj.Lookup</code></td>
-<td>Reference/configuration data</td>
-<td>Pre-populated, rarely changes</td>
+<td>The schema definition itself — the table's committed <code>contents</code></td>
+<td>Reference and configuration data</td>
 </tr>
 <tr>
 <td><strong>Imported</strong></td>
 <td><code>dj.Imported</code></td>
-<td>Data from external sources (files, instruments, databases)</td>
-<td>Auto-populated via <code>make()</code></td>
+<td>The table's own <code>make()</code>, reading an external source</td>
+<td>Files, instruments, external databases</td>
 </tr>
 <tr>
 <td><strong>Computed</strong></td>
 <td><code>dj.Computed</code></td>
-<td>Derived/processed data</td>
-<td>Auto-populated via <code>make()</code></td>
+<td>The table's own <code>make()</code>, deriving from other tables</td>
+<td>Derived and processed data</td>
 </tr>
 </tbody>
 </table>
-<p><strong>Manual</strong> tables are not necessarily populated by hand—they contain data entered into the pipeline by operators, instruments, or ingestion scripts using <code>insert</code> commands. In contrast, <strong>Imported</strong> and <strong>Computed</strong> tables are auto-populated by calling the <code>.populate()</code> method, which invokes the <code>make()</code> callback for each missing entry.</p>
-<h3 id="manual-tables">Manual Tables<a class="anchor-link" href="#manual-tables">¶</a></h3><p>Manual tables store data that is inserted directly—the starting point of your pipeline.</p>
+<p>Rows reach a <strong>Manual</strong> table from outside it, through <code>insert</code> — a person typing, an instrument, or a nightly entry script all write the same way. <strong>Imported</strong> and <strong>Computed</strong> are the tiers the framework fills: calling <code>.populate()</code> invokes <code>make()</code> for each missing entry.</p>
+<p>See <a href="../../../explanation/relational-workflow-model/#workflow-steps-and-table-tiers">the Relational Workflow Model</a> for the full axis, including why <code>Part</code> is not a fifth tier.</p>
+<h3 id="manual-tables">Manual Tables<a class="anchor-link" href="#manual-tables">¶</a></h3><p>Manual tables store rows written from outside the table—the starting point of your pipeline.</p>
 </div>
 </div>
 </div>
@@ -5396,7 +5409,7 @@ SessionSummary()</div>
 <li>Keep keys minimal but sufficient for uniqueness</li>
 </ul>
 <h3 id="2-use-appropriate-table-tiers">2. Use Appropriate Table Tiers<a class="anchor-link" href="#2-use-appropriate-table-tiers">¶</a></h3><ul>
-<li><strong>Manual</strong>: Data inserted directly — by operators, instruments, or ingestion scripts</li>
+<li><strong>Manual</strong>: Data inserted directly — by operators, instruments, or entry scripts</li>
 <li><strong>Lookup</strong>: Configuration, parameters, reference data</li>
 <li><strong>Imported</strong>: Data read from external sources (recordings, images, instruments)</li>
 <li><strong>Computed</strong>: Derived analyses and summaries</li>

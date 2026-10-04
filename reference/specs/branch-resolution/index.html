@@ -1,0 +1,7759 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://docs.datajoint.com/reference/specs/branch-resolution/">
+      
+      
+        <link rel="prev" href="../virtual-schemas/">
+      
+      
+        <link rel="next" href="../query-algebra/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../assets/images/company-logo-blue.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Branch Resolution - DataJoint Documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Slab:300,300i,400,400i,700,700i%7CSource+Code+Pro:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto Slab";--md-code-font:"Source Code Pro"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/_mkdocstrings.css">
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  <!-- Roboto for headings (body uses Roboto Slab, code uses Source Code Pro via theme.font) -->
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap">
+	<script
+		src="https://www.datadoghq-browser-agent.com/us1/v4/datadog-rum.js"
+		type="text/javascript">
+	</script>
+	<script>
+		window.DD_RUM && window.DD_RUM.init({
+			clientToken: 'pub10d7870188992f8c006cf7ba1f160a3f',
+			applicationId: '36a4de35-5eaa-435a-8c56-048c1b4d5d8c',
+			site: 'datadoghq.com',
+			service: 'datajoint-docs',
+			env: 'production',
+			sessionSampleRate: 100,
+			sessionReplaySampleRate: 100,
+			trackUserInteractions: true,
+			trackResources: true,
+			trackLongTasks: true,
+			defaultPrivacyLevel: 'mask-user-input',
+		});
+
+		window.DD_RUM &&
+		window.DD_RUM.startSessionReplayRecording();
+	</script>
+  
+  <!-- Add scripts that need to run afterwards here -->
+
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="datajoint" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#branch-resolution-draft-tables-beside-a-pipelines-own-specification" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+        <aside class="md-banner">
+          <div class="md-banner__inner md-grid md-typeset">
+            
+              <button class="md-banner__button md-icon" aria-label="Don't show this again">
+                
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+              </button>
+            
+            
+  <div class="md-banner">
+    <div class="md-banner__inner md-grid md-typeset">
+      <p>
+        📖 You are viewing documentation for <strong>DataJoint 2.3+</strong>
+        ·
+        <a href="https://docs.datajoint.com/how-to/migrate-to-v20/">
+          Migration guide for legacy users (pre-2.0)
+        </a>
+      </p>
+    </div>
+  </div>
+
+          </div>
+          
+            <script>var el=document.querySelector("[data-md-component=announce]");if(el){var content=el.querySelector(".md-typeset");__md_hash(content.innerHTML)===__md_get("__announce")&&(el.hidden=!0)}</script>
+          
+        </aside>
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="DataJoint Documentation" class="md-header__button md-logo" aria-label="DataJoint Documentation" data-md-component="logo">
+      
+  
+  <?xml version="1.0" encoding="utf-8"?>
+<!-- DataJoint mark (the sail). Renders via currentColor; styled to DataJoint Blue in extra.css. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 152 217.82" width="152" height="217.82">
+  <path d="M0,217.82c0,0,75.61-75.61,82.82-217.82c0,0,18.01,115.21,70.24,156.61C153.06,156.61,102.62,149.41,0,217.82L0,217.82z"/>
+</svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            DataJoint Documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Branch Resolution
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="datajoint" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/datajoint/datajoint-docs" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    datajoint/datajoint-docs
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="DataJoint Documentation" class="md-nav__button md-logo" aria-label="DataJoint Documentation" data-md-component="logo">
+      
+  
+  <?xml version="1.0" encoding="utf-8"?>
+<!-- DataJoint mark (the sail). Renders via currentColor; styled to DataJoint Blue in extra.css. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 152 217.82" width="152" height="217.82">
+  <path d="M0,217.82c0,0,75.61-75.61,82.82-217.82c0,0,18.01,115.21,70.24,156.61C153.06,156.61,102.62,149.41,0,217.82L0,217.82z"/>
+</svg>
+
+    </a>
+    DataJoint Documentation
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/datajoint/datajoint-docs" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    datajoint/datajoint-docs
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../explanation/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Concepts
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2" id="__nav_2_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Concepts
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_1" id="__nav_2_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Overview
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../explanation/data-pipelines/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Data Pipelines
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../explanation/faq/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    FAQ
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2" id="__nav_2_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Data Model
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Data Model
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../explanation/relational-workflow-model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Relational Workflow Model
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../explanation/data-integrity/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Data Integrity
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../explanation/entity-integrity/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Entity Integrity
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../explanation/referential-integrity/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Referential Integrity
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../explanation/normalization/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Normalization
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../explanation/transactions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Transactions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../explanation/computation-model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Computation Model
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../explanation/fan-out-ingestion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fan-Out Ingestion
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../explanation/schema-as-workflow-specification/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Schema as a Workflow Specification
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../explanation/comparison-to-workflow-languages/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Comparison to Workflow Languages
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../explanation/comparison-to-provenance-systems/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Comparison to Provenance Systems
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_3" id="__nav_2_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Queries
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Queries
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../explanation/query-algebra/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Query Algebra
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../explanation/semantic-matching/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Semantic Matching
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_4" id="__nav_2_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Storage
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Storage
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../explanation/type-system/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Type System
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../explanation/custom-codecs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Custom Codecs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../explanation/spark-adapters/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Spark Adapters
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_5" id="__nav_2_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Operations
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Operations
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../explanation/postgresql-cdc-replication/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PostgreSQL CDC and Replica Identity
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../tutorials/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorials
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tutorials
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_1" id="__nav_3_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Basics
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Basics
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tutorials/basics/01-first-pipeline/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    A Simple Pipeline
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tutorials/basics/02-schema-design/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Schema Design
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tutorials/basics/03-data-entry/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Data Entry
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tutorials/basics/04-queries/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Queries
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tutorials/basics/05-computation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Computation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tutorials/basics/06-object-storage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Object-Augmented Schemas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_2" id="__nav_3_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Examples
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Examples
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tutorials/examples/university/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    University Database
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tutorials/examples/hotel-reservations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hotel Reservation System
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tutorials/examples/languages/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Languages and Proficiency
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tutorials/examples/fractal-pipeline/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fractal Image Pipeline
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tutorials/examples/blob-detection/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Blob Detection Pipeline
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_3" id="__nav_3_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Domain
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Domain
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tutorials/domain/calcium-imaging/calcium-imaging/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Calcium Imaging Pipeline
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tutorials/domain/electrophysiology/electrophysiology/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Electrophysiology Pipeline
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tutorials/domain/electrophysiology/ephys-with-npy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Electrophysiology Pipeline with Object Storage
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tutorials/domain/allen-ccf/allen-ccf/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Allen Common Coordinate Framework (CCF)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_4" id="__nav_3_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Advanced
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Advanced
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tutorials/advanced/sql-comparison/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DataJoint for SQL Users
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tutorials/advanced/json-type/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    JSON Data Type
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tutorials/advanced/distributed/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Distributed Computing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tutorials/advanced/custom-codecs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Custom Codecs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tutorials/advanced/instances/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Working with Instances
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tutorials/advanced/three-part-make/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The Three-Part — Long Computations Without Long Transactions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../how-to/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    How-To
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    How-To
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_1" id="__nav_4_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Setup
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Setup
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../how-to/installation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../how-to/manage-secrets/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Manage Secrets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../how-to/configure-database/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configure Database
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../how-to/use-instances/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Use Isolated Instances
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../how-to/configure-storage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configure Object Storage
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../how-to/use-cli/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Command-Line Interface
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_2" id="__nav_4_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Schema Design
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Schema Design
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../how-to/define-tables/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Define Tables
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../how-to/model-relationships/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Model Relationships
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../how-to/master-part/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Master-Part Tables
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../how-to/design-primary-keys/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Design Primary Keys
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../how-to/read-diagrams/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Read Schema Diagrams
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_3" id="__nav_4_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Project Management
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Project Management
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../how-to/manage-pipeline-project/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Manage Pipeline Project
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../how-to/deploy-production/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deploy to Production
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_4" id="__nav_4_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Data Operations
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Data Operations
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../how-to/insert-data/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Insert Data
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../how-to/query-data/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Query Data
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../how-to/fetch-results/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fetch Results
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../how-to/delete-data/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Delete Data
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../how-to/update-data/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Update Data
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_5" id="__nav_4_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Computation
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Computation
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../how-to/run-computations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Run Computations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../how-to/distributed-computing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Distributed Computing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../how-to/handle-errors/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Handle Errors
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../how-to/monitor-progress/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Monitor Progress
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_6" id="__nav_4_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Object Storage
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Object Storage
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../how-to/object-storage-overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../how-to/choose-storage-type/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Choose Storage Type
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../how-to/use-object-storage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Use Object Storage
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../how-to/staged-insert/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Staged Insert
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../how-to/use-npy-codec/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Use NPY Codec
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../how-to/use-plugin-codecs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Use Plugin Codecs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../how-to/create-custom-codec/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Create Custom Codecs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../how-to/manage-large-data/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Manage Large Data
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../how-to/garbage-collection/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Clean Up Storage
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_7" id="__nav_4_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Maintenance
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Maintenance
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../how-to/migrate-to-v20/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Migrate to 2.x
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../how-to/alter-tables/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Alter Tables
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../how-to/backup-restore/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Backup and Restore
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_8" id="__nav_4_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Testing
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Testing
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../how-to/testing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Testing Best Practices
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reference
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_5" id="__nav_5_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_1" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Specifications
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_5_1" id="__nav_5_1_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_1_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Specifications
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../database-backends/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Database Backends
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_1_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_5_1_2" id="__nav_5_1_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Schema Definition
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_5_1_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5_1_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Schema Definition
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../table-declaration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Table Declaration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../master-part/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Master-Part
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../virtual-schemas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Virtual Schemas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Branch Resolution
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Branch Resolution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#why-this-exists" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why this exists
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#concepts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Concepts
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Concepts">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-logical-schema-and-the-physical-schemas-that-realize-it" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The logical schema, and the physical schemas that realize it
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-branch-is-the-unit-not-the-person" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The branch is the unit, not the person
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#additive-only" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Additive only
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-the-databasebranch-setting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. The database.branch setting
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. The database.branch setting">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#11-declaration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.1 Declaration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#12-the-setting-is-per-connection-not-per-process" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.2 The setting is per connection, not per process
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#13-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.3 Validation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#14-the-setting-is-read-at-activation-and-then-frozen" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.4 The setting is read at activation and then frozen
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-physical-name-derivation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Physical name derivation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Physical name derivation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21-the-derived-name" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1 The derived name
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-both-names-register-on-the-connection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2 Both names register on the connection
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23-the-draft-schema-is-created-on-first-declaration-into-it" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.3 The draft schema is created on first declaration into it
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#24-a-branch-may-introduce-a-schema-and-its-base-is-created-with-it" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.4 A branch may introduce a schema, and its base is created with it
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-declaration-time-binding" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Declaration-time binding
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Declaration-time binding">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-where-a-table-binds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 Where a table binds
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-why-declaration-time-resolution-is-required" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 Why declaration-time resolution is required
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-what-the-lookup-costs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.3 What the lookup costs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#34-a-part-binds-where-its-master-binds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.4 A part binds where its master binds
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#35-a-name-collision-raises" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.5 A name collision raises
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#36-interaction-with-create_tables" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.6 Interaction with create_tables
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-symbolic-references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Symbolic references
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Symbolic references">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-the-reference-is-recorded-in-datajoint-not-in-the-database" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 The reference is recorded in DataJoint, not in the database
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-what-declaration-emits" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 What declaration emits
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#43-the-edge-table" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.3 The ~edge table
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#44-how-the-dependency-graph-reads-edge" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.4 How the dependency graph reads ~edge
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#45-what-the-constraint-used-to-buy-and-where-it-is-recovered" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.5 What the constraint used to buy, and where it is recovered
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-what-each-operation-does-on-a-branch" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. What each operation does on a branch
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. What each operation does on a branch">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51-populate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.1 populate
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52-delete" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.2 delete
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#53-drop" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.3 drop
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#54-diagram" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.4 Diagram
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#55-semantic-matching-and-lineage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.5 Semantic matching and lineage
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#56-object-storage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.6 Object storage
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#57-virtual-modules-and-generated-classes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.7 Virtual modules and generated classes
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-behavior-with-no-branch-set" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Behavior with no branch set
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-errors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Errors
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-where-the-library-stops-and-what-the-caller-owns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Where the library stops, and what the caller owns
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-limits-in-this-release" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Limits in this release
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        References
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_1_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_1_3" id="__nav_5_1_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Query Algebra
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_5_1_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_1_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Query Algebra
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../query-algebra/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Query Operators
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../semantic-matching/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Semantic Matching
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../primary-keys/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Primary Keys
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../fetch-api/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fetch API
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../diagram/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Diagram
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_1_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_1_4" id="__nav_5_1_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Type System
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_5_1_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_1_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Type System
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../type-system/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Types
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../codec-api/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Codec API
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../npy-codec/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    NPY Codec
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../spark-adapter/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SparkAdapter Protocol
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../storage-adapter-api/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Storage Adapter API
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_1_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_1_5" id="__nav_5_1_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Data Operations
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_5_1_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_1_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Data Operations
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../data-manipulation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Data Manipulation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../staged-insert/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Staged Insert
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cascade/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cascade
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../autopopulate/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AutoPopulate
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../trace/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Upstream Trace
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../job-metadata/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Job Metadata
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../object-store-configuration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Object Store Configuration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_1_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_1_6" id="__nav_5_1_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deployment
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_5_1_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_1_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Deployment
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../deploy-operations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deployment Operations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_2" id="__nav_5_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Instance & Thread Safety
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Instance & Thread Safety
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../thread-safe-mode/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Thread-Safe Mode
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../configuration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../definition-syntax/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Definition Syntax
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../operators/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Operators
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../errors/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Errors
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../elements/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Elements
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../api/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_6" id="__nav_6_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    API
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../api/datajoint/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Package
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_2" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../api/datajoint/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Datajoint
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_6_2" id="__nav_6_2_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Datajoint
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../api/datajoint/blob/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Blob
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../api/datajoint/codecs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Codecs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../api/datajoint/connection/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Connection
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../api/datajoint/diagram/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Diagram
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../api/datajoint/errors/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Errors
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../api/datajoint/expression/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Expressions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../api/datajoint/hash_registry/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hash Registry
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../api/datajoint/heading/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Heading
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../api/datajoint/jobs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Jobs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../api/datajoint/migrate/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Migrate
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../api/datajoint/schemas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Schema
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../api/datajoint/settings/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Settings
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../api/datajoint/table/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Table
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../api/datajoint/user_tables/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Table Types
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../about/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    About
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_7" id="__nav_7_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    About
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../about/whats-new-23/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    What's New in 2.3
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../about/whats-new-22/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    What's New in 2.2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../about/whats-new-21/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    What's New in 2.1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../about/whats-new-2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    What's New in 2.0
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../about/history/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    History
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../about/versioning/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Documentation Versioning
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="https://www.datajoint.com/contact" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Platform
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../about/citation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Citation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../about/publications/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Publications
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../about/contributing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contributing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#why-this-exists" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why this exists
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#concepts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Concepts
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Concepts">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-logical-schema-and-the-physical-schemas-that-realize-it" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The logical schema, and the physical schemas that realize it
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-branch-is-the-unit-not-the-person" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The branch is the unit, not the person
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#additive-only" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Additive only
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-the-databasebranch-setting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. The database.branch setting
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. The database.branch setting">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#11-declaration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.1 Declaration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#12-the-setting-is-per-connection-not-per-process" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.2 The setting is per connection, not per process
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#13-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.3 Validation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#14-the-setting-is-read-at-activation-and-then-frozen" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.4 The setting is read at activation and then frozen
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-physical-name-derivation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Physical name derivation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Physical name derivation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21-the-derived-name" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1 The derived name
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-both-names-register-on-the-connection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2 Both names register on the connection
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23-the-draft-schema-is-created-on-first-declaration-into-it" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.3 The draft schema is created on first declaration into it
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#24-a-branch-may-introduce-a-schema-and-its-base-is-created-with-it" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.4 A branch may introduce a schema, and its base is created with it
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-declaration-time-binding" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Declaration-time binding
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Declaration-time binding">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-where-a-table-binds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 Where a table binds
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-why-declaration-time-resolution-is-required" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 Why declaration-time resolution is required
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-what-the-lookup-costs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.3 What the lookup costs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#34-a-part-binds-where-its-master-binds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.4 A part binds where its master binds
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#35-a-name-collision-raises" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.5 A name collision raises
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#36-interaction-with-create_tables" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.6 Interaction with create_tables
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-symbolic-references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Symbolic references
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Symbolic references">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-the-reference-is-recorded-in-datajoint-not-in-the-database" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 The reference is recorded in DataJoint, not in the database
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-what-declaration-emits" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 What declaration emits
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#43-the-edge-table" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.3 The ~edge table
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#44-how-the-dependency-graph-reads-edge" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.4 How the dependency graph reads ~edge
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#45-what-the-constraint-used-to-buy-and-where-it-is-recovered" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.5 What the constraint used to buy, and where it is recovered
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-what-each-operation-does-on-a-branch" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. What each operation does on a branch
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. What each operation does on a branch">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51-populate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.1 populate
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52-delete" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.2 delete
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#53-drop" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.3 drop
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#54-diagram" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.4 Diagram
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#55-semantic-matching-and-lineage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.5 Semantic matching and lineage
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#56-object-storage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.6 Object storage
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#57-virtual-modules-and-generated-classes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.7 Virtual modules and generated classes
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-behavior-with-no-branch-set" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Behavior with no branch set
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-errors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Errors
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-where-the-library-stops-and-what-the-caller-owns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Where the library stops, and what the caller owns
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-limits-in-this-release" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Limits in this release
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        References
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="branch-resolution-draft-tables-beside-a-pipelines-own-specification">Branch Resolution: draft tables beside a pipeline's own — Specification<a class="headerlink" href="#branch-resolution-draft-tables-beside-a-pipelines-own-specification" title="Permanent link">&para;</a></h1>
+<p>This document specifies how a DataJoint session bound to a <strong>branch</strong> declares new tables into a draft schema beside the pipeline's own, while the pipeline's declared tables stay where they are and behave as they always have.</p>
+<div class="admonition version-added">
+<p class="admonition-title">New in DataJoint 2.3.4</p>
+<p>A session with <code>database.branch</code> unset behaves exactly as it did before. Every rule below is reached only when a branch is set; §6 states that invariant and how it is tested.</p>
+</div>
+<p>The motivating use is an agent proposing new structure on a git branch: it declares new tables, populates a bounded sample, and opens a pull request. Nothing it declares may alter, drop, or block anything the pipeline already holds.</p>
+<p>For the operations this changes, see <a href="../cascade/">Cascade</a>, <a href="../autopopulate/">AutoPopulate</a>, and <a href="../table-declaration/">Table Declaration</a>.</p>
+<h2 id="why-this-exists">Why this exists<a class="headerlink" href="#why-this-exists" title="Permanent link">&para;</a></h2>
+<p>New structure has to be tried somewhere before it merges. The obvious places all cost something:</p>
+<ul>
+<li><strong>Declaring into the pipeline's own schema</strong> leaves tables behind that no committed code describes — the drift direction that cannot self-heal, because a deploy creates tables that code declares but never removes tables it does not.</li>
+<li><strong>Declaring into a separate draft schema named in the code</strong> puts a temporary binding in the customer's source file, so what was tested is not what merges, and every difference between them is a place the test stops meaning anything.</li>
+<li><strong>Copying the pipeline</strong> pays for the ancestors' object payloads, which do not travel free across a schema boundary, and it is branching by another name.</li>
+</ul>
+<p>Branch resolution removes the <em>elsewhere</em>. On a branch, <code>dj.Schema('proj_ephys')</code> resolves to the pipeline's schema and to a draft schema holding what this branch adds. The source file is byte-identical on the branch and on <code>main</code> after the merge:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># ephys_analysis.py — unchanged by the branch, unchanged by the merge</span>
+<span class="n">schema</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">Schema</span><span class="p">(</span><span class="s1">'proj_ephys'</span><span class="p">)</span>
+
+<span class="nd">@schema</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ArtifactScore</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Computed</span><span class="p">):</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
+<span class="s2">    -&gt; Recording</span>
+<span class="s2">    -&gt; ArtifactParams</span>
+<span class="s2">    ---</span>
+<span class="s2">    score : float</span>
+<span class="s2">    """</span>
+</code></pre></div>
+<h2 id="concepts">Concepts<a class="headerlink" href="#concepts" title="Permanent link">&para;</a></h2>
+<h3 id="the-logical-schema-and-the-physical-schemas-that-realize-it">The logical schema, and the physical schemas that realize it<a class="headerlink" href="#the-logical-schema-and-the-physical-schemas-that-realize-it" title="Permanent link">&para;</a></h3>
+<p>What the user names is a <strong>logical schema</strong>. On a branch it is realized by two <strong>physical schemas</strong>, partitioned by provenance:</p>
+<table>
+<thead>
+<tr>
+<th>physical schema</th>
+<th>holds</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>proj_ephys</code></td>
+<td>the tables the pipeline has declared</td>
+</tr>
+<tr>
+<td><code>br_a1b2c3_proj_ephys</code></td>
+<td>the tables this branch adds</td>
+</tr>
+</tbody>
+</table>
+<p>The partition has no overlap. A table is in exactly one side of it, so the draft is never a mirror or a copy — calling it a shadow invites re-implementing it as one.</p>
+<p>Off a branch there is one physical schema and the distinction does not arise.</p>
+<h3 id="the-branch-is-the-unit-not-the-person">The branch is the unit, not the person<a class="headerlink" href="#the-branch-is-the-unit-not-the-person" title="Permanent link">&para;</a></h3>
+<p>A draft schema is keyed by branch. Two branches never collide; two people on one branch share a draft on purpose, because that is what lets a reviewer check the branch out and materialize the same tables at the same commit. The library enforces nothing about who may hold a branch — that is the platform's, and §8 draws the line.</p>
+<h3 id="additive-only">Additive only<a class="headerlink" href="#additive-only" title="Permanent link">&para;</a></h3>
+<p>The partition works because a branch adds tables and modifies none. Structure that changes an existing table — a new attribute on a populated table, a changed type — needs the same table in two versions, which a partition cannot express. This release is additive only, and §9 records it as a limit.</p>
+<h2 id="1-the-databasebranch-setting">1. The <code>database.branch</code> setting<a class="headerlink" href="#1-the-databasebranch-setting" title="Permanent link">&para;</a></h2>
+<h3 id="11-declaration">1.1 Declaration<a class="headerlink" href="#11-declaration" title="Permanent link">&para;</a></h3>
+<p><code>DatabaseSettings</code> gains one field:</p>
+<div class="highlight"><pre><span></span><code><span class="n">branch</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+    <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">validation_alias</span><span class="o">=</span><span class="s2">"DJ_BRANCH"</span><span class="p">,</span>
+    <span class="n">description</span><span class="o">=</span><span class="s2">"Branch identifier. None means the session is not on a branch."</span><span class="p">,</span>
+<span class="p">)</span>
+</code></pre></div>
+<p>with the matching <code>ENV_VAR_MAPPING</code> entry <code>"database.branch": "DJ_BRANCH"</code>. Precedence follows every other database setting: environment variable over config file over default.</p>
+<div class="highlight"><pre><span></span><code><span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">database</span><span class="o">.</span><span class="n">branch</span> <span class="o">=</span> <span class="s2">"a1b2c3"</span>      <span class="c1"># or DJ_BRANCH=a1b2c3 in the environment</span>
+</code></pre></div>
+<h3 id="12-the-setting-is-per-connection-not-per-process">1.2 The setting is per connection, not per process<a class="headerlink" href="#12-the-setting-is-per-connection-not-per-process" title="Permanent link">&para;</a></h3>
+<p><code>branch</code> lives on <code>DatabaseSettings</code> and is read through <code>Connection._config</code>, which accepts a per-connection override. One process may therefore hold a branch connection and a trunk connection at the same time, which promotion checks and diff tooling need. A module-level global would force the process into one branch.</p>
+<h3 id="13-validation">1.3 Validation<a class="headerlink" href="#13-validation" title="Permanent link">&para;</a></h3>
+<p>The library validates only what it must: that the value yields a legal identifier. It accepts <code>[A-Za-z0-9_]+</code> and rejects a value that would push a derived name past the backend's identifier limit, naming the schema that would overflow.</p>
+<p>Everything else about the identifier — that it is six characters, that it starts with a digit, that <code>br_</code> is reserved as an organization-name prefix — belongs to whatever creates branches. The library does not generate branch identifiers and does not parse meaning out of them.</p>
+<h3 id="14-the-setting-is-read-at-activation-and-then-frozen">1.4 The setting is read at activation and then frozen<a class="headerlink" href="#14-the-setting-is-read-at-activation-and-then-frozen" title="Permanent link">&para;</a></h3>
+<p><code>Schema.activate()</code> reads <code>branch</code> once and stores the result. A connection remembers the branch its first schema activated under, and <strong>activating a second schema under a different branch raises</strong>, naming the branch the connection already holds. Table classes are bound to a resolved physical schema at decoration time, so a mid-session change would otherwise leave them bound to the previous one with no signal that anything moved.</p>
+<p>The refusal lands at the next activation rather than at the moment the setting changes: the config object holds no reference back to the connections reading it, and the first point at which a changed value could do damage is the next activation. To work on two branches at once, open a connection per branch — which §1.2 makes possible.</p>
+<h2 id="2-physical-name-derivation">2. Physical name derivation<a class="headerlink" href="#2-physical-name-derivation" title="Permanent link">&para;</a></h2>
+<h3 id="21-the-derived-name">2.1 The derived name<a class="headerlink" href="#21-the-derived-name" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>branch set    →  br_{branch_id}_{schema}
+branch unset  →  {schema}
+</code></pre></div>
+<p><code>Schema</code> keeps both names:</p>
+<table>
+<thead>
+<tr>
+<th>attribute</th>
+<th>value on a branch</th>
+<th>value off a branch</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>schema.database</code></td>
+<td><code>proj_ephys</code></td>
+<td><code>proj_ephys</code></td>
+</tr>
+<tr>
+<td><code>schema.branch_database</code></td>
+<td><code>br_a1b2c3_proj_ephys</code></td>
+<td><code>None</code></td>
+</tr>
+</tbody>
+</table>
+<p><code>schema.database</code> remains what the caller typed, so every existing use of it — diagram selection, lineage, error messages — keeps meaning the logical schema.</p>
+<h3 id="22-both-names-register-on-the-connection">2.2 Both names register on the connection<a class="headerlink" href="#22-both-names-register-on-the-connection" title="Permanent link">&para;</a></h3>
+<p><code>Connection.register()</code> keys <code>connection.schemas</code> by name, and <code>Dependencies.load()</code> builds its graph over <code>set(connection.schemas)</code>. A branch therefore registers <strong>both</strong> names, which is what puts the draft's tables and the pipeline's tables in one dependency graph. Without it, <code>populate</code> on a draft table cannot see its parents.</p>
+<h3 id="23-the-draft-schema-is-created-on-first-declaration-into-it">2.3 The draft schema is created on first declaration into it<a class="headerlink" href="#23-the-draft-schema-is-created-on-first-declaration-into-it" title="Permanent link">&para;</a></h3>
+<p>Off a branch, <code>activate()</code> creates a missing schema when <code>create_schema=True</code>. On a branch it defers: the draft schema is created when a table first resolves to it, not when the module is imported. A branch that imports ten modules and extends one leaves one draft schema, not ten empty ones.</p>
+<p>Creating a schema is a higher privilege than writing inside one, and it is the privilege that cannot be scoped uniformly across backends — PostgreSQL cannot restrict <code>CREATE SCHEMA</code> by name. Where the session's login may not create the draft schema, the failure names the draft schema and says it must be provisioned before use, rather than reporting a generic permission error.</p>
+<h3 id="24-a-branch-may-introduce-a-schema-and-its-base-is-created-with-it">2.4 A branch may introduce a schema, and its base is created with it<a class="headerlink" href="#24-a-branch-may-introduce-a-schema-and-its-base-is-created-with-it" title="Permanent link">&para;</a></h3>
+<p>A branch is not limited to extending schemas that already exist. <code>dj.Schema('proj_new')</code> on a branch, where <code>proj_new</code> exists nowhere, is an ordinary thing for a proposal to do — a new stage of the pipeline arrives as a new module.</p>
+<p><strong>When the base schema does not exist, creating the draft creates it too, empty.</strong> The reason is not tidiness. A draft exists to be merged: the branch's tables are declared for real, off the branch, when the code lands. A draft whose base schema can never exist is a draft that can never be promoted, so the base is part of what the branch is proposing and is created with it.</p>
+<p>It also keeps the rest of the object honest. <code>exists</code>, <code>list_tables()</code>, <code>make_classes</code> and <code>drop()</code> all read the logical schema, and a <code>Schema</code> whose logical half does not exist answers every one of those questions wrongly while the branch believes it is working.</p>
+<p><strong>The base stays empty until the merge.</strong> Nothing weakens the binding rule: with the base empty, every table the branch declares exists in neither schema and lands in the draft (§3.1). What the branch adds to the pipeline's namespace is a name and nothing else — no table, no row.</p>
+<p>Two consequences follow, and both belong in the open. This needs <code>CREATE</code> on the base name, which a credential scoped to the <code>br_</code> prefix does not have; where it is refused the error names the base schema and says it must be provisioned, the same shape as the draft case above. And a branch that is abandoned leaves an empty base schema behind that no committed code describes — holding nothing, but nobody's job to remove.</p>
+<h2 id="3-declaration-time-binding">3. Declaration-time binding<a class="headerlink" href="#3-declaration-time-binding" title="Permanent link">&para;</a></h2>
+<h3 id="31-where-a-table-binds">3.1 Where a table binds<a class="headerlink" href="#31-where-a-table-binds" title="Permanent link">&para;</a></h3>
+<p>A table binds to the <strong>branch schema if it exists in neither physical schema</strong>, and to the <strong>logical schema if it already exists there</strong>.</p>
+<table>
+<thead>
+<tr>
+<th>the table exists in</th>
+<th>binds to</th>
+<th>declared by this session?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>the logical schema</td>
+<td>the logical schema</td>
+<td>no — it is already declared</td>
+</tr>
+<tr>
+<td>the branch schema only</td>
+<td>the branch schema</td>
+<td>no — it is already declared</td>
+</tr>
+<tr>
+<td>neither</td>
+<td>the branch schema</td>
+<td>yes</td>
+</tr>
+</tbody>
+</table>
+<p>One lookup, at decoration time only. There is no read-time resolution: once <code>Recording</code> is bound to <code>proj_ephys.recording</code>, every query against it is an ordinary query, <code>full_table_name</code> is its real name in its real schema, and part naming is untouched.</p>
+<h3 id="32-why-declaration-time-resolution-is-required">3.2 Why declaration-time resolution is required<a class="headerlink" href="#32-why-declaration-time-resolution-is-required" title="Permanent link">&para;</a></h3>
+<p><code>Schema._decorate_table()</code> assigns <code>table_class.database</code> and then declares the table when it is not already declared. <code>Table.is_declared</code> queries only the <strong>bound</strong> database. Deriving a physical name without this rule therefore binds every class in the module to the branch schema, finds none of them declared there, and re-creates the whole pipeline — <code>Subject</code>, <code>Session</code>, <code>Recording</code> — empty in the branch schema, from the branch's own definitions. The new tables then hang off empty parents, <code>key_source</code> is empty, and <code>populate</code> does nothing while reporting success.</p>
+<p>The resolution has to precede the assignment for the same reason: after binding, there is no longer a way to ask whether the table exists in the logical schema.</p>
+<h3 id="33-what-the-lookup-costs">3.3 What the lookup costs<a class="headerlink" href="#33-what-the-lookup-costs" title="Permanent link">&para;</a></h3>
+<p>One query per schema at activation, listing the logical schema's table names, cached on the <code>Schema</code> object. Off a branch the lookup does not run and no query is issued.</p>
+<h3 id="34-a-part-binds-where-its-master-binds">3.4 A part binds where its master binds<a class="headerlink" href="#34-a-part-binds-where-its-master-binds" title="Permanent link">&para;</a></h3>
+<p><code>Schema._decorate_master()</code> decorates a master and its parts with one schema object. Parts do <strong>not</strong> resolve independently: a part binds to whatever its master resolved to.</p>
+<p>The rule matters for a new part under an existing master. Resolved independently it would exist in neither schema and land in the draft, giving a part in <code>br_a1b2c3_proj_ephys</code> whose master is in <code>proj_ephys</code>. A master and its parts are associated by <strong>name prefix within one schema</strong>, in four independent places, and splitting them across schemas breaks all four: the dependency loader reconstructs a master's name inside the same quoted schema and would look for one that does not exist; <code>Table.parts()</code> matches on the master's <code>full_table_name</code> prefix; <code>Diagram.add_parts</code> requires the two to share a schema outright; and the master–part integrity checks in <code>delete</code> and <code>drop</code> key on the same extraction. Bound with its master the part resolves to the logical schema, where this release cannot declare it, and raises the error in §7.</p>
+<p><strong>A new master declared with its own parts is a different case, and it works.</strong> Master and parts resolve together into the draft schema, so the prefix invariant holds inside it exactly as it does in any other schema. Only a part added under a master that already lives in the logical schema is refused.</p>
+<h3 id="35-a-name-collision-raises">3.5 A name collision raises<a class="headerlink" href="#35-a-name-collision-raises" title="Permanent link">&para;</a></h3>
+<p>A branch declaring a class whose name already exists in the logical schema binds to the existing table. Where the class's shape differs from what is declared there, this raises: the alternative is that the caller believes it created a table it in fact adopted, which is worse than a refusal. Where it agrees, the class binds without declaring, exactly as an ordinary re-import does.</p>
+<p><strong>Shape means the primary key, in order, and the set of attribute names</strong> — compared against the live heading, which is authoritative. It deliberately does not mean the whole definition. The only way to recover a definition string from a declared table is to reconstruct it, and that reconstruction is lossy in known ways: a functional index does not survive it, and <code>bigint unsigned</code> comes back as <code>int64</code>. A comparison built on it would refuse tables that are in fact identical, which is a worse failure than the one this rule exists to prevent. A changed attribute <em>type</em> on a colliding name therefore goes undetected in this release; the durable fix is a stored definition hash, which the machinery behind §4.3 makes cheap to add.</p>
+<p>A separate draft namespace cannot produce this failure at all, because there a collision yields a second table. Resolution to the same logical schema has to refuse it explicitly.</p>
+<h3 id="36-interaction-with-create_tables">3.6 Interaction with <code>create_tables</code><a class="headerlink" href="#36-interaction-with-create_tables" title="Permanent link">&para;</a></h3>
+<p>The resolution runs whatever <code>create_tables</code> is set to; only the declaration that follows is gated. With <code>create_tables=False</code> on a branch, a table existing in neither schema resolves to the branch schema and is not declared.</p>
+<p>Decoration itself still succeeds, which is today's behavior and does not change. The error arrives at first heading access — <em>the table <code>&lt;database&gt;</code>.<code>&lt;table_name&gt;</code> is not defined</em> — and because the class is bound to the draft, that message names the draft schema without any new code. No eager check is added: one would change what <code>create_tables=False</code> does for every session that is not on a branch.</p>
+<h2 id="4-symbolic-references">4. Symbolic references<a class="headerlink" href="#4-symbolic-references" title="Permanent link">&para;</a></h2>
+<h3 id="41-the-reference-is-recorded-in-datajoint-not-in-the-database">4.1 The reference is recorded in DataJoint, not in the database<a class="headerlink" href="#41-the-reference-is-recorded-in-datajoint-not-in-the-database" title="Permanent link">&para;</a></h3>
+<p><strong>A table declared into a branch schema declares no foreign key in the database.</strong> Not only the references that cross into the pipeline's schema — all of them, including references between two draft tables. One rule with no predicate.</p>
+<p>The reference itself is unchanged in the definition. <code>-&gt; Recording</code> means the same thing on the branch and after the merge; only the emitted SQL differs. There is no definition-level marker and no <code>[SYMBOLIC]</code> option, because a marker in the definition would put a branch artifact in the customer's source file, which is what §Why this exists rules out.</p>
+<h3 id="42-what-declaration-emits">4.2 What declaration emits<a class="headerlink" href="#42-what-declaration-emits" title="Permanent link">&para;</a></h3>
+<p>Foreign-key compilation has two halves, and a branch runs the first only.</p>
+<table>
+<thead>
+<tr>
+<th>half</th>
+<th>on a branch</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>copy the parent's primary-key columns into the child, with their types, comments and <code>:type:</code> markers</td>
+<td>unchanged</td>
+</tr>
+<tr>
+<td>fill the lineage mapping <code>child_attr → (parent_table, parent_attr)</code></td>
+<td>unchanged</td>
+</tr>
+<tr>
+<td>emit the supporting index on the referencing columns</td>
+<td>unchanged</td>
+</tr>
+<tr>
+<td>emit <code>FOREIGN KEY (…) REFERENCES … ON UPDATE CASCADE ON DELETE RESTRICT</code></td>
+<td><strong>omitted</strong></td>
+</tr>
+</tbody>
+</table>
+<p>The index is kept. It is not the constraint, and on PostgreSQL DataJoint emits it because the server never indexes referencing columns and offers no setting to make it — dropping it would change join performance for nothing.</p>
+<p>Because the lineage mapping is filled either way, <a href="../semantic-matching/">semantic matching</a> is unaffected: joins and restrictions match on attribute lineage, which comes from that mapping and never from the constraint.</p>
+<h3 id="43-the-edge-table">4.3 The <code>~edge</code> table<a class="headerlink" href="#43-the-edge-table" title="Permanent link">&para;</a></h3>
+<p>The reference is recorded in a hidden table in the schema that holds the referencing table, following the convention of <code>~lineage</code> and <code>~jobs</code>:</p>
+<table>
+<thead>
+<tr>
+<th>column</th>
+<th>meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>constraint_name</code></td>
+<td>identifier for the reference, unique within the schema</td>
+</tr>
+<tr>
+<td><code>referencing_table</code></td>
+<td>fully qualified child table name</td>
+</tr>
+<tr>
+<td><code>referenced_table</code></td>
+<td>fully qualified parent table name</td>
+</tr>
+<tr>
+<td><code>column_name</code></td>
+<td>child-side attribute</td>
+</tr>
+<tr>
+<td><code>referenced_column_name</code></td>
+<td>parent-side attribute</td>
+</tr>
+</tbody>
+</table>
+<p>One row per referencing column, which is the shape the dependency loader already consumes from the catalog. The table is created on first declaration into the branch schema and rewritten per table at each redeclaration, so a branch that drops and redeclares its draft carries no stale rows.</p>
+<p><strong><code>~edge</code> holds plain columns and declares no foreign key of its own.</strong> The two backends exclude hidden tables from the foreign-key graph on opposite sides — MySQL filters the referenced table, PostgreSQL the referencing one — so a <code>~</code> table that declared a constraint would enter the graph on one backend and stay out of it on the other, and where it entered it would arrive as a node with an empty primary key. No hidden table declares one today, and this one does not become the first.</p>
+<p>Three alternatives were considered and rejected. Column comments cannot carry it: the heading parser reads exactly one leading <code>:marker:</code>, and a foreign-key column already inherits the parent's comment, which may itself carry one. <code>~lineage</code> cannot carry it: it records where an attribute was <em>first</em> defined, and the origin of a twice-inherited attribute is not its immediate parent. Holding the edge only in the declaring process cannot carry it either, because catalog-driven readers — the diagram, any tool that did not import the module — would not see it.</p>
+<h3 id="44-how-the-dependency-graph-reads-edge">4.4 How the dependency graph reads <code>~edge</code><a class="headerlink" href="#44-how-the-dependency-graph-reads-edge" title="Permanent link">&para;</a></h3>
+<p>On a branch, <code>Dependencies.load()</code> unions <code>~edge</code> rows into the same structure it fills from the catalog, keyed as catalog edges are: by the tuple of child-side attribute names, which identifies a parallel edge without depending on a database-internal constraint name. Edge properties are derived identically — <code>attr_map</code> from the column pairs, <code>aliased</code> where any pair differs, <code>primary</code> where the child-side attributes fall inside the child's own primary key, <code>multi</code> where they are not the whole of it. The child's primary key comes from the catalog, so <code>primary</code> and <code>multi</code> are as accurate as they are for a real constraint.</p>
+<p>Acyclicity is still checked, over a graph carrying the symbolic edges.</p>
+<p><strong>The union happens inside <code>load()</code>, never as a layer applied afterwards.</strong> The graph is a multigraph whose edges are keyed by that attribute tuple, and adding an edge under a key that is already present merges into it rather than sitting beside it. <code>load()</code> also rebuilds from empty every time, and registering a schema or declaring a table both discard the graph — so edges added after a load would be silently replaced or silently dropped. A symbolic edge and a catalog edge can never collide on the same key, because the referencing table is either in a draft schema or it is not.</p>
+<p>Everything downstream then works unchanged: <code>parents()</code>, <code>children()</code>, <code>descendants()</code>, <code>key_source</code>, <code>Diagram</code>, <code>describe()</code>, <code>alter()</code>, and the cascade walk all read one graph. <code>describe()</code> is the sharpest case — it reconstructs a table's <code>-&gt;</code> lines from its parents in the graph rather than from stored SQL, so a branch table with no database constraint still describes with its references intact. If any of these needs an edit to accommodate a symbolic edge, the edge has been recorded in the wrong place.</p>
+<p><strong>The read is gated on a branch being set.</strong> A session with no branch reads no <code>~edge</code> table and issues no query for one. The consequence is deliberate and is the mechanism behind §5.2: an off-branch session cannot see a branch's references, so it can neither traverse into a draft nor be blocked by one.</p>
+<h3 id="45-what-the-constraint-used-to-buy-and-where-it-is-recovered">4.5 What the constraint used to buy, and where it is recovered<a class="headerlink" href="#45-what-the-constraint-used-to-buy-and-where-it-is-recovered" title="Permanent link">&para;</a></h3>
+<p>Two things are given up, and neither is recovered inside the branch.</p>
+<p><strong>Parent existence is no longer checked by the database.</strong> DataJoint relies on the constraint for it. Inside a branch, a <code>make()</code> inserting a key outside its key source succeeds quietly rather than being refused.</p>
+<p><strong>Nothing proves the constraints will build.</strong> Collation mismatches, type mismatches and index failures surface when the merged definitions are declared for real.</p>
+<p>Both are recovered in the same place and neither is the library's to run: declaring the merged definitions with real foreign keys into a throwaway schema, and dropping it. That is a continuous-integration step against the merged code, which is where declaration is headed regardless.</p>
+<h2 id="5-what-each-operation-does-on-a-branch">5. What each operation does on a branch<a class="headerlink" href="#5-what-each-operation-does-on-a-branch" title="Permanent link">&para;</a></h2>
+<h3 id="51-populate">5.1 <code>populate</code><a class="headerlink" href="#51-populate" title="Permanent link">&para;</a></h3>
+<p>Unchanged. <code>key_source</code> is the join of the parents reached through <code>parents(primary=True, …)</code>, and a symbolic edge is a parent edge like any other. A draft <code>Computed</code> table whose references are symbolic computes the same keys it would compute with real constraints.</p>
+<p>Job queues are unchanged: <code>~jobs</code> lives in the table's own schema, so a draft table's queue lives in the draft schema and disappears with it.</p>
+<h3 id="52-delete">5.2 <code>delete</code><a class="headerlink" href="#52-delete" title="Permanent link">&para;</a></h3>
+<p><strong>Within a branch session, the cascade follows symbolic edges.</strong> A branch's own references have no constraint behind them, so a cascade that skipped them would leave rows in a draft child referencing a deleted draft parent, with nothing to catch it.</p>
+<p><strong>A session with no branch set never reaches a draft.</strong> <code>Diagram.cascade</code> expands through <code>load_all_downstream()</code>, which discovers new schemas by reading foreign keys from the catalog. A branch leaves no catalog row, so a branch schema is never discovered, never loaded, and never walked. This holds on every backend and on every access path, including a direct connection from a laptop, because it follows from what is in the catalog rather than from a privilege that could be widened.</p>
+<p>The cost is the other half of §4.5: a delete of a pipeline row that a draft references succeeds, and the draft row is left referencing nothing. A draft holds a bounded sample rebuilt whenever the branch is checked out, so it is accepted rather than mitigated.</p>
+<h3 id="53-drop">5.3 <code>drop</code><a class="headerlink" href="#53-drop" title="Permanent link">&para;</a></h3>
+<p><code>Table.drop()</code> expands through the same downstream walk and inherits the same two behaviors: complete within a branch session, and unable to reach a draft from a session with no branch set. Dropping a table the pipeline holds therefore succeeds while a draft references it; the draft's reference fails to resolve at the branch's next checkout, which is where it is legible.</p>
+<h3 id="54-diagram">5.4 <code>Diagram</code><a class="headerlink" href="#54-diagram" title="Permanent link">&para;</a></h3>
+<p><code>Diagram(schema)</code> selects nodes by matching a physical schema name against fully qualified table names. On a branch it matches <strong>either</strong> physical name, so a diagram built from a branch session shows the pipeline's tables and the branch's additions together, connected by the symbolic edges.</p>
+<p>Drawing them as one cluster rather than as two schemas is presentation and is not in this release; §9 records it.</p>
+<h3 id="55-semantic-matching-and-lineage">5.5 Semantic matching and lineage<a class="headerlink" href="#55-semantic-matching-and-lineage" title="Permanent link">&para;</a></h3>
+<p>Attribute lineage is unaffected for inherited attributes. <code>_populate_lineage</code> copies the <strong>parent's</strong> recorded lineage for every foreign-key attribute, so a draft table referencing <code>Recording</code> inherits <code>proj_ephys.recording.session_id</code> and matches the pipeline's own attributes across joins and restrictions.</p>
+<p>An attribute <strong>originating</strong> in a draft table records the draft's physical schema — <code>br_a1b2c3_proj_ephys.artifact_score.score</code>. That is deliberate. Recording the logical name would claim an origin in a schema where the attribute does not exist, and a reader inspecting that schema's <code>~lineage</code> would not find it. The row lives and dies with the schema holding it, so the value never outlives the physical name it names.</p>
+<h3 id="56-object-storage">5.6 Object storage<a class="headerlink" href="#56-object-storage" title="Permanent link">&para;</a></h3>
+<p>Object paths embed the schema the table is in, for both storage schemes — hash-addressed payloads under a per-schema deduplication subtree, schema-addressed payloads under a per-schema, per-table path. On a branch this is the draft's physical schema, with no special case: paths use the schema's name, whatever it is. A branch's payloads therefore live under their own prefix and are identifiable as the branch's.</p>
+<p>Garbage collection is where this has to be handled and is not yet: see §9.</p>
+<h3 id="57-virtual-modules-and-generated-classes">5.7 Virtual modules and generated classes<a class="headerlink" href="#57-virtual-modules-and-generated-classes" title="Permanent link">&para;</a></h3>
+<p>A reader that never imported the customer's module reaches a pipeline through <code>dj.VirtualModule</code> or <code>schema.make_classes()</code>, which build table classes by listing what the schema holds. <strong>On a branch they list both physical schemas</strong>, so a draft's tables become classes alongside the pipeline's, and a draft master's parts reattach to it normally because both are found in the same listing. Off a branch, one schema and one query, unchanged.</p>
+<p>This is what §4.3 is for. Recording the reference where the catalog can be read back, rather than holding it in the declaring process, only pays off if a reader that imported nothing can also find the tables the references connect.</p>
+<p><code>schema.list_tables()</code> matches both physical names on a branch for the same reason — a listing that disagreed with the generated classes would be worse than either alone. <code>schema['SomeTable']</code> resolves by the same rule as declaration, so it returns a table in the schema its class is bound to rather than one in the logical schema that may not exist.</p>
+<p><strong>A name that maps to one class from both schemas raises.</strong> Two physical tables of different tiers — <code>subject</code> in the logical schema, <code>#subject</code> in the draft — produce the same class name. Off a branch the second is silently skipped, because it cannot arise there; on a branch it is a real ambiguity and the load refuses rather than picking one.</p>
+<p><strong><code>schema.drop()</code> refuses on a branch.</strong> It drops the schema it is bound to, which is the logical one, so on a branch the thing a caller can now see would stop being the thing that gets dropped — and the call would take the pipeline's schema out from under a live draft. On a branch it raises, naming both physical schemas. This is the one path by which a branch session could destroy structure the pipeline owns, and dropping a branch's schemas is the caller's operation (§8), not this one's.</p>
+<h2 id="6-behavior-with-no-branch-set">6. Behavior with no branch set<a class="headerlink" href="#6-behavior-with-no-branch-set" title="Permanent link">&para;</a></h2>
+<p>This is the invariant the feature is built around, and it is stated as behavior rather than as intent because it is what every existing deployment depends on.</p>
+<p>With <code>database.branch</code> unset:</p>
+<table>
+<thead>
+<tr>
+<th>surface</th>
+<th>behavior</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>name derivation</td>
+<td>identity; <code>activate()</code> registers one schema</td>
+</tr>
+<tr>
+<td>declaration-time binding</td>
+<td>the lookup does not run; no query is issued</td>
+</tr>
+<tr>
+<td><code>Dependencies.load()</code></td>
+<td>the same queries as before; no <code>~edge</code> read</td>
+</tr>
+<tr>
+<td>foreign-key compilation</td>
+<td>the same constraint and the same index</td>
+</tr>
+<tr>
+<td><code>key_source</code>, <code>delete</code>, <code>drop</code>, <code>Diagram</code></td>
+<td>unchanged</td>
+</tr>
+<tr>
+<td>lineage, object paths, job queues</td>
+<td>unchanged</td>
+</tr>
+</tbody>
+</table>
+<p>Two of these are the ones a careless implementation breaks, because both would be per-import or per-load round trips paid by every user: the declaration-time existence lookup (§3.3) and the <code>~edge</code> union (§4.4). Both are gated on a branch being set, and both are verified by counting queries rather than by reading the code — a module import and a <code>Dependencies.load()</code> must issue the same number of queries as before the feature existed.</p>
+<h2 id="7-errors">7. Errors<a class="headerlink" href="#7-errors" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>condition</th>
+<th>behavior</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>branch</code> contains characters outside <code>[A-Za-z0-9_]</code></td>
+<td>raises at activation, naming the offending value</td>
+</tr>
+<tr>
+<td>a derived physical name exceeds the backend's identifier limit</td>
+<td>raises at activation, naming the schema that would overflow</td>
+</tr>
+<tr>
+<td>a schema is activated under a different branch than the connection already holds</td>
+<td>raises, naming the branch the connection holds</td>
+</tr>
+<tr>
+<td>the draft schema does not exist and the login may not create it</td>
+<td>raises, naming the draft schema and stating that it must be provisioned</td>
+</tr>
+<tr>
+<td>the base schema does not exist and the login may not create it</td>
+<td>raises, naming the base schema and stating that it must be provisioned</td>
+</tr>
+<tr>
+<td>a branch declares a class whose name exists in the logical schema with a different definition</td>
+<td>raises, naming both the class and the logical schema</td>
+</tr>
+<tr>
+<td>a branch declares a new part under a master in the logical schema</td>
+<td>raises, naming the master and its schema</td>
+</tr>
+<tr>
+<td>a table resolves to the branch schema with <code>create_tables=False</code></td>
+<td>decoration succeeds; the existing error arrives at first heading access and names the draft schema</td>
+</tr>
+<tr>
+<td><code>schema.drop()</code> is called on a branch</td>
+<td>raises, naming both physical schemas</td>
+</tr>
+</tbody>
+</table>
+<h2 id="8-where-the-library-stops-and-what-the-caller-owns">8. Where the library stops, and what the caller owns<a class="headerlink" href="#8-where-the-library-stops-and-what-the-caller-owns" title="Permanent link">&para;</a></h2>
+<p>The division matters, because it decides how much of a joint code-and-schema lifecycle is a library concern. It is not one.</p>
+<p><strong>Lifecycle.</strong> Checking a commit out, dropping a branch's draft tables, redeclaring them at the new commit, and tearing everything down when the branch is deleted. The library declares and binds; sequencing those acts is the caller's.</p>
+<p>A checkout <strong>converges on re-run rather than rolling back</strong>. DataJoint refuses to declare a table inside a transaction, so the drop-and-redeclare cycle — including the <code>~lineage</code> and <code>~edge</code> writes — cannot be made atomic through the library. A checkout interrupted halfway leaves a partly built draft, and running it again completes it. A caller that needs all-or-nothing has to get it outside the library.</p>
+<p><strong>Dropping the draft at the merge is part of the merge.</strong> Once a branch's table is declared for real in the logical schema, the draft's copy still carries lineage naming the draft's physical schema (§5.5), so joining the two raises a lineage mismatch. The draft must go when the branch does.</p>
+<p><strong>Authorization.</strong> The library does not enforce that a branch may only add. Create-only is a property of the credential the session holds — create inside one draft schema, read on the pipeline's schema — and a library-side flag would be advisory, which is not a boundary. It holds on every access path, including a direct connection, precisely because it is not in the library.</p>
+<p><strong>Branch identity.</strong> Generating branch identifiers, deciding who may hold a branch, reserving name prefixes, enumerating live branches.</p>
+<p><strong>Provisioning.</strong> Creating the draft schema where the session's own login may not (§2.3), and creating the base schema for a branch that introduces one (§2.4). A credential scoped to the <code>br_</code> prefix cannot create a name outside it, so under the create-only model above, base schemas are always the caller's to provision — and, for a branch that is abandoned, the caller's to remove.</p>
+<p><strong>Draft ownership on PostgreSQL.</strong> Only a table's owner may drop it there, and ownership cannot be granted. A draft declared by one person is therefore not rebuildable by another, so two people on one branch — which the branch-as-the-unit model invites — need the draft tables owned by a role both hold rather than by whichever of them declared first. Taking turns is enough to hit it; it does not need concurrent work. MySQL has no equivalent problem, because <code>DROP</code> is an ordinary grant there.</p>
+<h2 id="9-limits-in-this-release">9. Limits in this release<a class="headerlink" href="#9-limits-in-this-release" title="Permanent link">&para;</a></h2>
+<p><strong>Additive only.</strong> A branch adds tables. Changing an existing table's structure needs the same table in two versions, which the partition cannot express.</p>
+<p><strong>No private draft.</strong> A draft is as visible as the schema-level access that reaches it. The library offers no per-branch read restriction, and none of the common git providers has a per-branch read permission to mirror. On PostgreSQL the <em>names</em> go further than the rows: schema and table names are readable by any login through the system catalogs, even where <code>list_schemas()</code> and <code>information_schema</code> hide them and the rows themselves stay unreadable. A branch name is not a secret on either backend, and on PostgreSQL neither is the shape of what it declares.</p>
+<p><strong>A read-only login on PostgreSQL cannot yet drive a branch session.</strong> Primary keys are read from <code>information_schema</code>, which hides constraints on tables a login neither owns nor may write, so a login holding only <code>USAGE</code> and <code>SELECT</code> sees an empty primary key on every table it reads: <code>parents(primary=True)</code> comes back empty, <code>key_source</code> raises, and a row count builds invalid SQL. Foreign keys are unaffected, because they are read from a catalog any login may read — so such a session knows how tables link but not what keys them. The read access §8 describes for a branch session is exactly that kind of login, which makes this a precondition for branching on PostgreSQL rather than a consequence of it. It is a pre-existing library defect, not one this design introduces, and it is tracked separately.</p>
+<p><strong>Draft and pipeline tables draw as two schemas.</strong> The diagram shows both and connects them (§5.4); grouping them into one logical cluster is not implemented.</p>
+<p><strong>No branch-aware teardown in the library.</strong> Dropping a branch's schemas is a caller operation, and <code>schema.drop()</code> refuses on a branch rather than guessing which schema was meant (§5.7). A <code>drop</code> that knows which tables belong to a branch is a convenience on top of it.</p>
+<p><strong>Garbage collection is not branch-aware.</strong> <code>GarbageCollector</code> is bound to a set of schemas when it is constructed, and orphan detection is confined to those schemas. A collection run over the pipeline's schemas alone will read a live branch's payloads as orphans and delete them, because the rows referencing them are in a schema the collector was not given. Until the collector takes branch schemas as part of its schema set, run it over the pipeline's schemas only when no branch is live, or construct it with every active branch's schemas included.</p>
+<h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="../table-declaration/">Table Declaration Specification</a> — definition grammar, foreign-key syntax, hidden attributes</li>
+<li><a href="../cascade/">Cascade Specification</a> — the dependency graph and the propagation rules <code>delete</code> and <code>drop</code> walk</li>
+<li><a href="../autopopulate/">AutoPopulate Specification</a> — <code>key_source</code> and the <code>make()</code> contract</li>
+<li><a href="../semantic-matching/">Semantic Matching Specification</a> — attribute lineage and how joins and restrictions match</li>
+<li><a href="../diagram/">Diagram Specification</a> — node selection and rendering</li>
+<li><a href="../master-part/">Master-Part Specification</a> — the naming invariant §3.4 preserves</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+    <a href="https://www.datajoint.com" target="_blank" rel="noopener" title="DataJoint" class="md-social__link">
+      <?xml version="1.0" encoding="utf-8"?>
+<!-- DataJoint mark (the sail). Renders via currentColor; styled to DataJoint Blue in extra.css. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 152 217.82" width="152" height="217.82">
+  <path d="M0,217.82c0,0,75.61-75.61,82.82-217.82c0,0,18.01,115.21,70.24,156.61C153.06,156.61,102.62,149.41,0,217.82L0,217.82z"/>
+</svg>
+    </a>
+  
+    
+    
+    
+    
+    <a href="https://docs.datajoint.com" target="_blank" rel="noopener" title="DataJoint Documentation" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 21.5c-1.35-.85-3.8-1.5-5.5-1.5-1.65 0-3.35.3-4.75 1.05-.1.05-.15.05-.25.05-.25 0-.5-.25-.5-.5V6c.6-.45 1.25-.75 2-1 1.11-.35 2.33-.5 3.5-.5 1.95 0 4.05.4 5.5 1.5 1.45-1.1 3.55-1.5 5.5-1.5 1.17 0 2.39.15 3.5.5.75.25 1.4.55 2 1v14.6c0 .25-.25.5-.5.5-.1 0-.15 0-.25-.05-1.4-.75-3.1-1.05-4.75-1.05-1.7 0-4.15.65-5.5 1.5M12 8v11.5c1.35-.85 3.8-1.5 5.5-1.5 1.2 0 2.4.15 3.5.5V7c-1.1-.35-2.3-.5-3.5-.5-1.7 0-4.15.65-5.5 1.5m1 3.5c1.11-.68 2.6-1 4.5-1 .91 0 1.76.09 2.5.28V9.23c-.87-.15-1.71-.23-2.5-.23q-2.655 0-4.5.84zm4.5.17c-1.71 0-3.21.26-4.5.79v1.69c1.11-.65 2.6-.99 4.5-.99 1.04 0 1.88.08 2.5.24v-1.5c-.87-.16-1.71-.23-2.5-.23m2.5 2.9c-.87-.16-1.71-.24-2.5-.24-1.83 0-3.33.27-4.5.8v1.69c1.11-.66 2.6-.99 4.5-.99 1.04 0 1.88.08 2.5.24z"/></svg>
+    </a>
+  
+    
+    
+    
+    
+    <a href="https://github.com/datajoint/datajoint-python/discussions" target="_blank" rel="noopener" title="Discussions" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M384 144c0 97.2-86 176-192 176-26.7 0-52.1-5-75.2-14l-81.6 43.2c-9.3 4.9-20.7 3.2-28.2-4.2s-9.2-18.9-4.2-28.2l35.6-67.2C14.3 220.2 0 183.6 0 144 0 46.8 86-32 192-32s192 78.8 192 176m0 368c-94.1 0-172.4-62.1-188.8-144 120-1.5 224.3-86.9 235.8-202.7 83.3 19.2 145 88.3 145 170.7 0 39.6-14.3 76.2-38.4 105.6l35.6 67.2c4.9 9.3 3.2 20.7-4.2 28.2s-18.9 9.2-28.2 4.2L459.2 498c-23.1 9-48.5 14-75.2 14"/></svg>
+    </a>
+  
+    
+    
+    
+    
+    <a href="https://www.linkedin.com/company/datajoint" target="_blank" rel="noopener" title="LinkedIn" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M416 32H31.9C14.3 32 0 46.5 0 64.3v383.4C0 465.5 14.3 480 31.9 480H416c17.6 0 32-14.5 32-32.3V64.3c0-17.8-14.4-32.3-32-32.3M135.4 416H69V202.2h66.5V416zM102.2 96a38.5 38.5 0 1 1 0 77 38.5 38.5 0 1 1 0-77m282.1 320h-66.4V312c0-24.8-.5-56.7-34.5-56.7-34.6 0-39.9 27-39.9 54.9V416h-66.4V202.2h63.7v29.2h.9c8.9-16.8 30.6-34.5 62.9-34.5 67.2 0 79.7 44.3 79.7 101.9z"/></svg>
+    </a>
+  
+    
+    
+    
+    
+    <a href="https://twitter.com/datajoint" target="_blank" rel="noopener" title="Twitter" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M459.4 151.7c.3 4.5.3 9.1.3 13.6 0 138.7-105.6 298.6-298.6 298.6-59.5 0-114.7-17.2-161.1-47.1 8.4 1 16.6 1.3 25.3 1.3 49.1 0 94.2-16.6 130.3-44.8-46.1-1-84.8-31.2-98.1-72.8 6.5 1 13 1.6 19.8 1.6 9.4 0 18.8-1.3 27.6-3.6-48.1-9.7-84.1-52-84.1-103v-1.3c14 7.8 30.2 12.7 47.4 13.3-28.3-18.8-46.8-51-46.8-87.4 0-19.5 5.2-37.4 14.3-53C87.4 130.8 165 172.4 252.1 176.9c-1.6-7.8-2.6-15.9-2.6-24C249.5 95.1 296.3 48 354.4 48c30.2 0 57.5 12.7 76.7 33.1 23.7-4.5 46.5-13.3 66.6-25.3-7.8 24.4-24.4 44.8-46.1 57.8 21.1-2.3 41.6-8.1 60.4-16.2-14.3 20.8-32.2 39.3-52.6 54.3"/></svg>
+    </a>
+  
+    
+    
+    
+    
+    <a href="https://github.com/datajoint" target="_blank" rel="noopener" title="GitHub" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+    
+    
+    
+    
+    <a href="https://hub.docker.com/u/datajoint" target="_blank" rel="noopener" title="DockerHub" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M349.9 236.3h-66.1v-59.4h66.1zm0-204.3h-66.1v60.7h66.1zm78.2 144.8H362v59.4h66.1zm-156.3-72.1h-66.1v60.1h66.1zm78.1 0h-66.1v60.1h66.1zm276.8 100c-14.4-9.7-47.6-13.2-73.1-8.4-3.3-24-16.7-44.9-41.1-63.7l-14-9.3-9.3 14c-18.4 27.8-23.4 73.6-3.7 103.8-8.7 4.7-25.8 11.1-48.4 10.7H2.4c-8.7 50.8 5.8 116.8 44 162.1 37.1 43.9 92.7 66.2 165.4 66.2 157.4 0 273.9-72.5 328.4-204.2 21.4.4 67.6.1 91.3-45.2 1.5-2.5 6.6-13.2 8.5-17.1zm-511.1-27.9h-66v59.4h66.1v-59.4zm78.1 0h-66.1v59.4h66.1zm78.1 0h-66.1v59.4h66.1zm-78.1-72.1h-66.1v60.1h66.1z"/></svg>
+    </a>
+  
+    
+    
+    
+    
+    <a href="https://pypi.org/user/datajointbot" target="_blank" rel="noopener" title="PyPI" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.8 200.5c-7.7-30.9-22.3-54.2-53.4-54.2h-40.1v47.4c0 36.8-31.2 67.8-66.8 67.8H172.7c-29.2 0-53.4 25-53.4 54.3v101.8c0 29 25.2 46 53.4 54.3 33.8 9.9 66.3 11.7 106.8 0 26.9-7.8 53.4-23.5 53.4-54.3v-40.7H226.2v-13.6h160.2c31.1 0 42.6-21.7 53.4-54.2 11.2-33.5 10.7-65.7 0-108.6M286.2 444.7a20.4 20.4 0 1 1 0-40.7 20.4 20.4 0 1 1 0 40.7M167.8 248.1h106.8c29.7 0 53.4-24.5 53.4-54.3V91.9c0-29-24.4-50.7-53.4-55.6-35.8-5.9-74.7-5.6-106.8.1-45.2 8-53.4 24.7-53.4 55.6v40.7h106.9v13.6h-147c-31.1 0-58.3 18.7-66.8 54.2-9.8 40.7-10.2 66.1 0 108.6 7.6 31.6 25.7 54.2 56.8 54.2H101v-48.8c0-35.3 30.5-66.4 66.8-66.4m-6.6-183.4a20.4 20.4 0 1 1 0 40.8 20.4 20.4 0 1 1 0-40.8"/></svg>
+    </a>
+  
+    
+    
+    
+    
+    <a href="https://stackoverflow.com/questions/tagged/datajoint" target="_blank" rel="noopener" title="StackOverflow" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M291 311 95.3 269.7 87.1 309l195.7 41zm51-87L188.5 95.7 163 126.5l153.5 128.3zm-31.2 39.7L129.5 179l-16.7 36.5L294 300zM262.3 32l-32 24 119.3 160.3 32-24zm20.5 328h-200v39.7h200zm39.7 80H43V320H3v160h359.5V320h-40z"/></svg>
+    </a>
+  
+    
+    
+    
+    
+    <a href="https://www.youtube.com/@datajoint" target="_blank" rel="noopener" title="YouTube" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M549.7 124.1c-6.2-23.7-24.8-42.3-48.3-48.6C458.9 64 288.1 64 288.1 64S117.3 64 74.7 75.5c-23.5 6.3-42 24.9-48.3 48.6C15 167 15 256.4 15 256.4s0 89.4 11.4 132.3c6.3 23.6 24.8 41.5 48.3 47.8C117.3 448 288.1 448 288.1 448s170.8 0 213.4-11.5c23.5-6.3 42-24.2 48.3-47.8 11.4-42.9 11.4-132.3 11.4-132.3s0-89.4-11.4-132.3zM232.2 337.6V175.2l142.7 81.2z"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.sections", "navigation.indexes", "toc.follow", "announce.dismiss"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../../../javascripts/mathjax.js"></script>
+      
+        <script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+        <script src="https://js-na1.hs-scripts.com/23133402.js"></script>
+      
+    
+  </body>
+</html>

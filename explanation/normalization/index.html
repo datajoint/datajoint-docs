@@ -4352,6 +4352,8 @@
       
         
       
+        
+      
     
     
     
@@ -4465,6 +4467,34 @@
     
   
     Virtual Schemas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/specs/branch-resolution/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Branch Resolution
   
 
     
@@ -6992,7 +7022,7 @@ table structure. DataJoint takes a different approach: design tables around
 <span class="s2">    weight : float32</span>
 <span class="s2">    """</span>
 </code></pre></div>
-<p><img alt="Fully normalized mouse-housing schema, left to right: Mouse and Cage as entity tables; CageAssignment and MouseWeight as event tables keyed by date, each depending on Mouse. CageAssignment references Cage as a secondary (dashed) foreign key." src="../../images/norm-mouse-housing.svg" /></p>
+<p><img alt="Fully normalized mouse-housing schema, left to right: Mouse and Cage as entity tables; CageAssignment and MouseWeight as event tables keyed by date, each depending on Mouse. CageAssignment references Cage as a secondary (dashed) foreign key." src="../../images/norm-mouse-housing.light.svg#only-light" /><img alt="Fully normalized mouse-housing schema, left to right: Mouse and Cage as entity tables; CageAssignment and MouseWeight as event tables keyed by date, each depending on Mouse. CageAssignment references Cage as a secondary (dashed) foreign key." src="../../images/norm-mouse-housing.dark.svg#only-dark" /></p>
 <p>This fully normalized design:</p>
 <ul>
 <li><strong>Intrinsic attributes only</strong> — <code>Mouse</code> contains only attributes determined at creation (birth date, sex)</li>
@@ -7070,7 +7100,7 @@ shipment, because that sequence is not expressed anywhere.</p>
 <span class="s2">    recipient_signature : varchar(100)</span>
 <span class="s2">    """</span>
 </code></pre></div>
-<p><img alt="Workflow-normalized order schema, left to right: Order (referencing Product and Customer as secondary, dashed foreign keys), then a one-to-one chain Order → Payment → Shipment → Delivery, each step a separate table." src="../../images/norm-order-workflow.svg" /></p>
+<p><img alt="Workflow-normalized order schema, left to right: Order (referencing Product and Customer as secondary, dashed foreign keys), then a one-to-one chain Order → Payment → Shipment → Delivery, each step a separate table." src="../../images/norm-order-workflow.light.svg#only-light" /><img alt="Workflow-normalized order schema, left to right: Order (referencing Product and Customer as secondary, dashed foreign keys), then a one-to-one chain Order → Payment → Shipment → Delivery, each step a separate table." src="../../images/norm-order-workflow.dark.svg#only-dark" /></p>
 <p>The foreign keys now form a chain — <code>Order → Payment → Shipment → Delivery</code> —
 that is simultaneously the referential-integrity structure and the workflow
 diagram. Every attribute is non-nullable, because a row exists only once its step

@@ -4208,6 +4208,8 @@
       
         
       
+        
+      
     
     
     
@@ -4321,6 +4323,34 @@
     
   
     Virtual Schemas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/specs/branch-resolution/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Branch Resolution
   
 
     
@@ -6506,7 +6536,7 @@
 </ul>
 <h2 id="pipeline-architecture">Pipeline Architecture<a class="headerlink" href="#pipeline-architecture" title="Permanent link">&para;</a></h2>
 <p>At the heart of every DataJoint pipeline is an <strong>open-source core</strong> of three components that handle schema, computation, and storage. The managed <strong>DataJoint Platform</strong> extends this core with services for AI access, data ingestion, exploration, security, collaboration, and visualization.</p>
-<p><img alt="DataJoint Platform Architecture" src="../../images/dj-platform.svg" /></p>
+<p><img alt="DataJoint Platform Architecture" src="../../images/dj-platform.light.svg#only-light" /><img alt="DataJoint Platform Architecture" src="../../images/dj-platform.dark.svg#only-dark" /></p>
 <table>
 <thead>
 <tr>
@@ -6541,7 +6571,7 @@ weight and line style describe an individual foreign key, so they are read at th
 not here. Below, <code>lab → session</code> and <code>session → imaging</code> each bundle two foreign keys,
 <code>reference</code> supplies both <code>session</code> and <code>imaging</code>, and fourteen tables (including parts)
 collapse to four nodes.</p>
-<p><img alt="Pipeline DAG at the module level" src="../../images/pipeline-modules-collapsed.svg" /></p>
+<p><img alt="Pipeline DAG at the module level" src="../../images/pipeline-modules-collapsed.light.svg#only-light" /><img alt="Pipeline DAG at the module level" src="../../images/pipeline-modules-collapsed.dark.svg#only-dark" /></p>
 <p><strong>Table level — the expanded view.</strong> Each node is a table; the dashed clusters group the
 tables of each module. Each edge is an individual foreign key constraint — the two foreign
 keys that cross the <code>session → imaging</code> boundary (<code>Scan → ScanQuality</code> and
@@ -6550,7 +6580,7 @@ bundled edge above; likewise <code>Subject → Session</code> and <code>User →
 <code>lab → session</code>. Each edge here carries the full notation — line weight for cardinality, line
 style for whether the reference is part of the child's primary key — as specified in
 <a href="../../reference/specs/diagram/">Diagram</a>.</p>
-<p><img alt="Pipeline DAG at the table level" src="../../images/pipeline-modules.svg" /></p>
+<p><img alt="Pipeline DAG at the table level" src="../../images/pipeline-modules.light.svg#only-light" /><img alt="Pipeline DAG at the table level" src="../../images/pipeline-modules.dark.svg#only-dark" /></p>
 <p>This dual structure ensures that both code dependencies and data dependencies flow in the
 same direction: collapsing every module's tables into a single node must itself yield a DAG.</p>
 <h3 id="dag-constraints">DAG Constraints<a class="headerlink" href="#dag-constraints" title="Permanent link">&para;</a></h3>
@@ -6586,7 +6616,7 @@ same direction: collapsing every module's tables into a single node must itself 
 │       └── imaging.py    # imaging schema (imports session, reference)
 </code></pre></div>
 <p>Within a schema, tables form their own DAG. Drilling into the <code>imaging</code> module: computed tables, including two masters with their part tables — <code>Segmentation</code> with <code>Segmentation.Roi</code>, and <code>Fluorescence</code> with <code>Fluorescence.Trace</code>, whose rows reference individual ROIs:</p>
-<p><img alt="The imaging module expanded" src="../../images/imaging-schema.svg" /></p>
+<p><img alt="The imaging module expanded" src="../../images/imaging-schema.light.svg#only-light" /><img alt="The imaging module expanded" src="../../images/imaging-schema.dark.svg#only-dark" /></p>
 <p>For practical guidance on organizing multi-schema pipelines, configuring repositories, and managing team access, see <a href="../../how-to/manage-pipeline-project/">Manage a Pipeline Project</a>.</p>
 <h2 id="object-augmented-schemas">Object-Augmented Schemas<a class="headerlink" href="#object-augmented-schemas" title="Permanent link">&para;</a></h2>
 <p>Scientific data often includes large objects—images, recordings, time series, instrument outputs—that don't fit efficiently in relational tables. DataJoint addresses this through <strong>Object-Augmented Schemas (OAS)</strong>, a hybrid storage architecture that preserves relational semantics while handling arbitrarily large data.</p>
