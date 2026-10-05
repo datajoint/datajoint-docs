@@ -7154,7 +7154,7 @@ match content stored under an old prefix.</p>
 <h2 id="configuring-stores-via-environment-variables">Configuring stores via environment variables<a class="headerlink" href="#configuring-stores-via-environment-variables" title="Permanent link">&para;</a></h2>
 <div class="admonition version-added">
 <p class="admonition-title">New in 2.2.4</p>
-<p><code>DJ_STORES</code> carries a JSON-encoded copy of the <code>stores</code> dict for env-var-only deployments (Kubernetes pods, Lambda, the DataJoint platform). Combined with <code>DJ_IGNORE_CONFIG_FILE=true</code>, it removes the need for any file on disk.</p>
+<p><code>DJ_STORES</code> carries a JSON-encoded copy of the <code>stores</code> dict for env-var-only deployments (Kubernetes pods, Lambda, the DataJoint Platform). Combined with <code>DJ_IGNORE_CONFIG_FILE=true</code>, it removes the need for any file on disk.</p>
 </div>
 <p>The JSON shape is identical to the <code>stores</code> block of <code>datajoint.json</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="nb">export</span><span class="w"> </span><span class="nv">DJ_STORES</span><span class="o">=</span><span class="s1">'{</span>

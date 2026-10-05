@@ -1,6 +1,6 @@
 # DataJoint Documentation (Full)
 
-Generated: 2026-10-05 16:00:17 UTC
+Generated: 2026-10-05 16:00:25 UTC
 Commit: unknown
 Branch: unknown
 
@@ -1310,12 +1310,12 @@ A **scientific data pipeline** extends beyond a database with computations. It i
 
 ## Pipeline Architecture
 
-At the heart of every DataJoint pipeline is an **open-source core** of three components that handle schema, computation, and storage. The managed **DataJoint Platform** extends this core with services for AI access, data ingestion, exploration, security, collaboration, and visualization.
+At the heart of every DataJoint pipeline is the **DataJoint Library**, which is open source: it defines the schema, specifies the computations, and compiles the queries. The pipeline rests on three components the library coordinates: a code repository, a relational database, and an object store. The managed **DataJoint Platform** extends these with services for AI access, data ingestion, exploration, security, collaboration, and visualization.
 
 ![DataJoint Platform Architecture](../images/dj-platform.svg)
 
-| Open-Source Core | Purpose |
-|------------------|---------|
+| Pipeline Component | Purpose |
+|--------------------|---------|
 | **Code Repository** | Version-controlled pipeline definitions, `make` methods, configuration |
 | **Relational Database** | System of record for metadata, relationships, and integrity enforcement |
 | **Object Store** | Scalable storage for large scientific data (images, recordings, signals) |
@@ -15857,7 +15857,7 @@ table.insert1({'session_id': 4, 'recording': '_schema/myschema/...'}) # Error!
 ## Configuring stores via environment variables
 
 !!! version-added "New in 2.2.4"
-    `DJ_STORES` carries a JSON-encoded copy of the `stores` dict for env-var-only deployments (Kubernetes pods, Lambda, the DataJoint platform). Combined with `DJ_IGNORE_CONFIG_FILE=true`, it removes the need for any file on disk.
+    `DJ_STORES` carries a JSON-encoded copy of the `stores` dict for env-var-only deployments (Kubernetes pods, Lambda, the DataJoint Platform). Combined with `DJ_IGNORE_CONFIG_FILE=true`, it removes the need for any file on disk.
 
 The JSON shape is identical to the `stores` block of `datajoint.json`:
 
@@ -18365,7 +18365,7 @@ Install DataJoint Python and set up your environment.
 - Network access to database server
 - Linux, macOS, or Windows (see [Platform support](#platform-support))
 
-## Install DataJoint 2.0+
+## Install the DataJoint Library
 
 ```bash
 pip install datajoint
@@ -19423,9 +19423,9 @@ If `DJ_STORES` contains invalid JSON, DataJoint raises `ValueError` at config-lo
 ## Env-var-only deployments
 
 !!! version-added "New in 2.2.4"
-    `DJ_IGNORE_CONFIG_FILE=true` plus `DJ_STORES` gives a deployment a hard guarantee that no file on disk contributes to config — only env vars do. This is how the DataJoint platform configures pipelines.
+    `DJ_IGNORE_CONFIG_FILE=true` plus `DJ_STORES` gives a deployment a hard guarantee that no file on disk contributes to config — only env vars do. This is how the DataJoint Platform configures pipelines.
 
-For Kubernetes, Lambda, the DataJoint platform, or any deployment where the container image must not carry configuration:
+For Kubernetes, Lambda, the DataJoint Platform, or any deployment where the container image must not carry configuration:
 
 ```bash
 export DJ_IGNORE_CONFIG_FILE=true
@@ -19983,7 +19983,7 @@ schema.drop(prompt=False)
 ---
 ## File: how-to/migrate-to-v20.md
 
-# Migrate to DataJoint 2.x
+# Migrate to DataJoint Library 2.x
 
 Upgrade existing pipelines from legacy DataJoint (the pre-2.0 `0.x` series)
 directly to the latest DataJoint 2.x — currently **2.3**.
@@ -20519,7 +20519,7 @@ git push origin main
 # Create feature branch
 git checkout -b pre/v2.0
 
-# Install DataJoint 2.0
+# Install DataJoint Library 2.0
 pip install --upgrade pip
 pip install "datajoint>=2.0.0"
 
@@ -27307,7 +27307,7 @@ export DJ_IGNORE_CONFIG_FILE=true
 ```
 
 !!! version-added "New in 2.2.4"
-    `DJ_STORES` carries a JSON-encoded copy of the `stores` block. `DJ_IGNORE_CONFIG_FILE=true` skips `datajoint.json`, the project `.secrets/`, and `/run/secrets/datajoint/` — useful for env-var-only deployments (Kubernetes pods, the DataJoint platform). See [Manage Secrets](../how-to/manage-secrets.md#env-var-only-deployments).
+    `DJ_STORES` carries a JSON-encoded copy of the `stores` block. `DJ_IGNORE_CONFIG_FILE=true` skips `datajoint.json`, the project `.secrets/`, and `/run/secrets/datajoint/` — useful for env-var-only deployments (Kubernetes pods, the DataJoint Platform). See [Manage Secrets](../how-to/manage-secrets.md#env-var-only-deployments).
 
 ## Programmatic Access
 
@@ -32588,7 +32588,7 @@ Operational methods remain available regardless.
 ---
 ## File: reference/specs/fetch-api.md
 
-# DataJoint 2.0+ Fetch API Specification
+# DataJoint Library Fetch API Specification
 
 ## Overview
 
@@ -34313,7 +34313,7 @@ The `stores` block can be loaded from any of:
 | Source | Precedence | When Used |
 |--------|------------|-----------|
 | `dj.config["stores"][...]` (programmatic) | 1 (highest) | Runtime overrides in scripts/notebooks |
-| `DJ_STORES` env var | 2 | Env-var-only deployments (Kubernetes, the DataJoint platform) — *new in 2.2.4* |
+| `DJ_STORES` env var | 2 | Env-var-only deployments (Kubernetes, the DataJoint Platform) — *new in 2.2.4* |
 | `stores` block of `datajoint.json` | 3 | Local development, committed project config |
 | `.secrets/stores.<name>.<attr>` files | 4 (fills missing attrs only) | Local credentials kept out of `datajoint.json` |
 
@@ -38793,7 +38793,7 @@ Teams adopt the read surface incrementally:
 
 ## What is not in this specification
 
-- **Enforcement of the `make()` contract.** `trace` and `self.upstream` make the contract easy to follow and to inspect, but the open-source framework does not check it at runtime. Confirming that a `make()` reads only from its declared ancestors and writes only to its target, across every access path, is a code-inspection problem — performed by the DataJoint platform's code-deployment CI/CD (static analysis where sound, agentic review for the dynamic cases), backed by commit-pinned governed execution. See the [make() reproducibility contract](autopopulate.md#43-the-make-reproducibility-contract).
+- **Enforcement of the `make()` contract.** `trace` and `self.upstream` make the contract easy to follow and to inspect, but the DataJoint Library does not check it at runtime. Confirming that a `make()` reads only from its declared ancestors and writes only to its target, across every access path, is a code-inspection problem — performed by the DataJoint Platform's code-deployment CI/CD (static analysis where sound, agentic review for the dynamic cases), backed by commit-pinned governed execution. See the [make() reproducibility contract](autopopulate.md#43-the-make-reproducibility-contract).
 - **Row-level lineage metadata in storage**. The features here provide the *graph operation* and the *per-`make()` read surface*; persisting per-row upstream projections (the dj-delta-style silver-layer features) is a downstream consumer concern, tracked separately.
 
 ## References
@@ -40007,7 +40007,7 @@ If your work utilizes **DataJoint Elements**, please cite the following manuscri
 
 - **RRID**: [RRID:SCR_021894](https://scicrunch.org/resolver/SCR_021894)
 
-You should also cite the **DataJoint Core manuscript** detailed below.
+You should also cite the **DataJoint Relational Model manuscript** detailed below.
 
 ## Citing DataJoint 2.0
 
@@ -40224,7 +40224,7 @@ Today, DataJoint is used in hundreds of research labs worldwide for managing sci
 
 # About DataJoint
 
-DataJoint is an open-source framework for building scientific data pipelines.
+The **DataJoint Library** is open-source software for building scientific data pipelines.
 It was created to address the challenges of managing complex, interconnected
 data in research laboratories.
 
@@ -40992,7 +40992,7 @@ DataJoint 2.2 introduces **isolated instances** and **thread-safe mode** for app
 2.2.4 is a patch release on the 2.2 line, adding **env-var-only configuration of object storage** and a **public plugin contract for third-party storage protocols**. If you are upgrading from **2.2.0–2.2.3** there are no breaking changes — the new environment variables are purely additive.
 
 - **`DJ_STORES`** — configure object stores entirely from the environment. The variable holds a JSON object identical to the `stores` block of `datajoint.json`, so config moves between file and env var by copy-paste. See [Manage Secrets](../how-to/manage-secrets.md) and [Configure Object Storage](../how-to/configure-storage.md).
-- **`DJ_IGNORE_CONFIG_FILE`** — set to `true` to skip `datajoint.json` and the `.secrets/` and `/run/secrets/datajoint/` directories entirely, so only environment variables and defaults apply. Intended for env-var-only deployments (Kubernetes, Lambda, the DataJoint platform).
+- **`DJ_IGNORE_CONFIG_FILE`** — set to `true` to skip `datajoint.json` and the `.secrets/` and `/run/secrets/datajoint/` directories entirely, so only environment variables and defaults apply. Intended for env-var-only deployments (Kubernetes, Lambda, the DataJoint Platform).
 - **`.secrets/stores.<name>.<attr>` accepts any attribute**, not just `access_key` / `secret_key` — plugin-registered adapters can supply their own fields (a Bearer `token`, an `api_key`, etc.).
 - **Storage-adapter plugin contract.** The `datajoint.storage` entry-point group is now part of the public API: third-party packages register additional storage protocols by subclassing `dj.StorageAdapter` and declaring an entry point. Built-in `file`/`s3`/`gcs`/`azure` are unaffected. See [Storage Adapter API](../reference/specs/storage-adapter-api.md).
 
@@ -41337,7 +41337,7 @@ The graph-driven approach resolves every known limitation of the prior error-dri
 ---
 ## File: about/whats-new-23.md
 
-# What's New in DataJoint 2.3
+# What's New in DataJoint Library 2.3
 
 DataJoint 2.3 adds a first-class **upstream read surface** — `Diagram.trace` and `self.upstream` — which make "a computed row derives only from its declared upstream inputs" easy to follow inside `make()` and easy to query afterward. It also ships the **SparkAdapter Codec Protocol** for typed rendering to Spark-native types, **`dj.deploy.set_replica_identity`** for PostgreSQL change-data-capture, and a **cascade fix** for Part-of-Part and renamed-foreign-key chains.
 

@@ -6595,12 +6595,12 @@
 <li>Supports reproducibility and data lineage throughout</li>
 </ul>
 <h2 id="pipeline-architecture">Pipeline Architecture<a class="headerlink" href="#pipeline-architecture" title="Permanent link">&para;</a></h2>
-<p>At the heart of every DataJoint pipeline is an <strong>open-source core</strong> of three components that handle schema, computation, and storage. The managed <strong>DataJoint Platform</strong> extends this core with services for AI access, data ingestion, exploration, security, collaboration, and visualization.</p>
+<p>At the heart of every DataJoint pipeline is the <strong>DataJoint Library</strong>, which is open source: it defines the schema, specifies the computations, and compiles the queries. The pipeline rests on three components the library coordinates: a code repository, a relational database, and an object store. The managed <strong>DataJoint Platform</strong> extends these with services for AI access, data ingestion, exploration, security, collaboration, and visualization.</p>
 <p><img alt="DataJoint Platform Architecture" src="../../images/dj-platform.light.svg#only-light" /><img alt="DataJoint Platform Architecture" src="../../images/dj-platform.dark.svg#only-dark" /></p>
 <table>
 <thead>
 <tr>
-<th>Open-Source Core</th>
+<th>Pipeline Component</th>
 <th>Purpose</th>
 </tr>
 </thead>

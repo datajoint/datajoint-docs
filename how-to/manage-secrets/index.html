@@ -7477,9 +7477,9 @@ keys need to be minted or stored. Set both only for static credentials.</p>
 <h2 id="env-var-only-deployments">Env-var-only deployments<a class="headerlink" href="#env-var-only-deployments" title="Permanent link">&para;</a></h2>
 <div class="admonition version-added">
 <p class="admonition-title">New in 2.2.4</p>
-<p><code>DJ_IGNORE_CONFIG_FILE=true</code> plus <code>DJ_STORES</code> gives a deployment a hard guarantee that no file on disk contributes to config — only env vars do. This is how the DataJoint platform configures pipelines.</p>
+<p><code>DJ_IGNORE_CONFIG_FILE=true</code> plus <code>DJ_STORES</code> gives a deployment a hard guarantee that no file on disk contributes to config — only env vars do. This is how the DataJoint Platform configures pipelines.</p>
 </div>
-<p>For Kubernetes, Lambda, the DataJoint platform, or any deployment where the container image must not carry configuration:</p>
+<p>For Kubernetes, Lambda, the DataJoint Platform, or any deployment where the container image must not carry configuration:</p>
 <div class="highlight"><pre><span></span><code><span class="nb">export</span><span class="w"> </span><span class="nv">DJ_IGNORE_CONFIG_FILE</span><span class="o">=</span><span class="nb">true</span>
 <span class="nb">export</span><span class="w"> </span><span class="nv">DJ_HOST</span><span class="o">=</span>db.example.com
 <span class="nb">export</span><span class="w"> </span><span class="nv">DJ_USER</span><span class="o">=</span><span class="k">$(</span>vault<span class="w"> </span><span class="nb">read</span><span class="w"> </span>-field<span class="o">=</span>username<span class="w"> </span>secret/datajoint<span class="k">)</span>
