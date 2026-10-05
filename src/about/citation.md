@@ -1,6 +1,6 @@
 # Citation Guidelines
 
-When your work uses the DataJoint Library (Python or MATLAB) or DataJoint Elements, please cite the
+When your work uses the DataJoint Library, its earlier MATLAB implementation, or DataJoint Elements, please cite the
 respective manuscripts and include their associated Research Resource Identifiers
 (RRIDs). Proper citation helps credit the contributors and supports the broader
 scientific community by highlighting the tools used in research.
@@ -40,7 +40,7 @@ citation:
 
 ## Citing the DataJoint Library for Python or MATLAB
 
-For work using the **DataJoint Library** for Python or MATLAB, cite the following
+For work using the **DataJoint Library** (Python) or its earlier, now discontinued MATLAB implementation ([datajoint-matlab](https://github.com/datajoint/datajoint-matlab)), cite the following
 manuscript:
 
 - **Manuscript**: Yatsenko D, Reimer J, Ecker AS, Walker EY, Sinz F, Berens P,
