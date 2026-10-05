@@ -40,7 +40,7 @@ citation:
 
 ## Citing DataJoint for Python or MATLAB
 
-For work using the **DataJoint Library** (Python) or its earlier, now discontinued MATLAB implementation ([datajoint-matlab](https://github.com/datajoint/datajoint-matlab)), cite the following
+For work using the **DataJoint Library** (Python) or its earlier MATLAB implementation (no longer actively maintained but still available at [datajoint-matlab](https://github.com/datajoint/datajoint-matlab)), cite the following
 manuscript:
 
 - **Manuscript**: Yatsenko D, Reimer J, Ecker AS, Walker EY, Sinz F, Berens P,
