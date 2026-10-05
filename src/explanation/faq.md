@@ -6,7 +6,7 @@ DataJoint provides a custom data definition language and [query algebra](query-a
 
 ### The Definition Language
 
-DataJoint's [definition language](../reference/specs/table-declaration.md/) is a standalone scripting language for declaring table schemas — not Python syntax embedded in strings. The DataJoint Library is implemented in Python, but neither its data definitions nor its query operations rely on Python syntax or Python data structures: definitions are parsed by DataJoint itself, and queries are compiled into SQL against the schema. Therefore, other languages can be supported as necessary.
+DataJoint's [definition language](../reference/specs/table-declaration.md/) is a standalone scripting language for declaring table schemas — not Python syntax embedded in strings. The DataJoint Library is implemented in Python, but neither its data definitions nor its query operations rely on Python syntax or Python data structures: definitions are parsed by DataJoint itself, and queries are compiled into SQL against the schema. The same definitions and operations could therefore be supported by implementations in other languages.
 
 ### Composite Primary Keys: A Clarity Comparison
 
