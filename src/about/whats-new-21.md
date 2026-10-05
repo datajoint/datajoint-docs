@@ -1,4 +1,4 @@
-# What's New in DataJoint 2.1
+# What's New in DataJoint Library 2.1
 
 DataJoint 2.1 adds **PostgreSQL as a production backend**, **enhanced diagram visualization**, and **singleton tables**.
 

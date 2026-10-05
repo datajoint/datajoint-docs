@@ -1,6 +1,6 @@
 # Installation
 
-Install DataJoint Python and set up your environment.
+Install the DataJoint Library (the `datajoint` client API package) and set up your environment.
 
 ## Requirements
 
