@@ -1,6 +1,6 @@
 # DataJoint Documentation (Full)
 
-Generated: 2026-10-05 16:30:58 UTC
+Generated: 2026-10-05 16:48:30 UTC
 Commit: unknown
 Branch: unknown
 
@@ -6385,7 +6385,7 @@ This tutorial introduces DataJoint by building a simple research lab database. Y
 
 We'll work with **Manual tables** only—tables whose rows are written from outside the table, here by you. A Manual table is not necessarily hand-filled; an instrument or an entry script writes to one the same way. Later tutorials introduce automated computation.
 
-> **Database Backend:** All tutorials work identically on **MySQL** and **PostgreSQL** (PostgreSQL support added in DataJoint Python 2.1). The examples shown here were executed on PostgreSQL, but you can follow along using either backend.
+> **Database Backend:** All tutorials work identically on **MySQL** and **PostgreSQL** (PostgreSQL support added in DataJoint Library 2.1). The examples shown here were executed on PostgreSQL, but you can follow along using either backend.
 
 For complete working examples, see:
 - [University Database](../../examples/university/) — Academic records with complex queries
@@ -18370,7 +18370,7 @@ if Subject.validate(rows):
 
 # Installation
 
-Install DataJoint Python and set up your environment.
+Install the DataJoint Library (the `datajoint` client API package) and set up your environment.
 
 ## Requirements
 
@@ -31132,7 +31132,7 @@ print(f"Store: {store}")
 
 ## Overview
 
-This document specifies data manipulation operations in DataJoint Python: insert, update, and delete. These operations maintain referential integrity across the pipeline while supporting the **workflow normalization** paradigm.
+This document specifies data manipulation operations in the DataJoint Library: insert, update, and delete. These operations maintain referential integrity across the pipeline while supporting the **workflow normalization** paradigm.
 
 ## 1. Workflow Normalization Philosophy
 
@@ -35495,7 +35495,7 @@ dj.U('a', 'b') * A  # DataJointError with migration guidance
 
 ## Overview
 
-This document specifies the query algebra in DataJoint Python. Query expressions are composable objects that represent database queries. All operators return new QueryExpression objects without modifying the original—expressions are immutable.
+This document specifies the query algebra in the DataJoint Library. Query expressions are composable objects that represent database queries. All operators return new QueryExpression objects without modifying the original—expressions are immutable.
 
 ## 1. Query Expression Fundamentals
 
@@ -37598,7 +37598,7 @@ _discover_adapters()
 
 ## Overview
 
-This document specifies the table declaration mechanism in DataJoint Python. Table declarations define the schema structure using a domain-specific language (DSL) embedded in Python class definitions.
+This document specifies the table declaration mechanism in the DataJoint Library. Table declarations define the schema structure using a domain-specific language (DSL) embedded in Python class definitions.
 
 ## 1. Table Class Structure
 
@@ -40086,7 +40086,7 @@ refs = scan_hash_references(schema, verbose=True)
 
 # Citation Guidelines
 
-When your work uses the DataJoint Python, MATLAB, or Elements framework, please cite the
+When your work uses the DataJoint Library, its earlier MATLAB implementation, or DataJoint Elements, please cite the
 respective manuscripts and include their associated Research Resource Identifiers
 (RRIDs). Proper citation helps credit the contributors and supports the broader
 scientific community by highlighting the tools used in research.
@@ -40124,9 +40124,9 @@ citation:
 
 - **RRID**: [RRID:SCR_014543](https://scicrunch.org/resolver/SCR_014543)
 
-## Citing DataJoint Python and MATLAB
+## Citing DataJoint for Python or MATLAB
 
-For work using **DataJoint Python** or **DataJoint MATLAB**, cite the following
+For work using the **DataJoint Library** (Python) or its earlier MATLAB implementation (no longer actively maintained but still available at [datajoint-matlab](https://github.com/datajoint/datajoint-matlab)), cite the following
 manuscript:
 
 - **Manuscript**: Yatsenko D, Reimer J, Ecker AS, Walker EY, Sinz F, Berens P,
@@ -40318,7 +40318,7 @@ Today, DataJoint is used in hundreds of research labs worldwide for managing sci
 
 # About DataJoint
 
-The **DataJoint Library** is open-source software for building scientific data pipelines.
+The **DataJoint Library** is the open-source client API library for building scientific data pipelines: the `datajoint` Python package through which you declare schemas, populate tables, and query data.
 It was created to address the challenges of managing complex, interconnected
 data in research laboratories.
 
@@ -40650,7 +40650,7 @@ For complete version history, see the [changelog](https://github.com/datajoint/d
 ---
 ## File: about/whats-new-2.md
 
-# What's New in DataJoint 2.0
+# What's New in DataJoint Library 2.0
 
 DataJoint 2.0 is a major release that establishes DataJoint as a mature framework for scientific data pipelines. The version jump from 0.14 to 2.0 reflects the significance of these changes.
 
@@ -40943,7 +40943,7 @@ Most users complete Phases 1-2 in a single session. Phases 3-4 only apply if you
 ---
 ## File: about/whats-new-21.md
 
-# What's New in DataJoint 2.1
+# What's New in DataJoint Library 2.1
 
 DataJoint 2.1 adds **PostgreSQL as a production backend**, **enhanced diagram visualization**, and **singleton tables**.
 
@@ -41073,7 +41073,7 @@ See [Table Declaration](../reference/specs/table-declaration.md#25-singleton-tab
 ---
 ## File: about/whats-new-22.md
 
-# What's New in DataJoint 2.2
+# What's New in DataJoint Library 2.2
 
 DataJoint 2.2 introduces **isolated instances** and **thread-safe mode** for applications that need multiple independent database connections, and **graph-driven diagram operations** that replace the legacy error-driven cascade with a reliable, inspectable approach for all users.
 
