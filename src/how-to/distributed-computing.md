@@ -119,14 +119,28 @@ SessionAnalysis.populate(reserve_jobs=True)
 
 ## Orphan Detection
 
-Jobs from crashed workers are automatically recovered:
+A worker killed outright — SIGKILL, an OOM kill, a lost node — leaves its job
+`reserved` with no error row, and no other worker will take it. Recovering it
+takes an explicit refresh:
 
 ```python
 # Refresh with orphan timeout (seconds)
 SessionAnalysis.jobs.refresh(orphan_timeout=3600)
 ```
 
-Reserved jobs older than the timeout are reset to pending.
+Reserved jobs older than the timeout are reset to pending. Nothing does this on
+your behalf: `orphan_timeout` has no default and no configuration key, and the
+refresh that `populate()` runs for itself never passes one. Schedule the call, or
+run it when a worker is known to have died.
+
+Choose the timeout above the longest `make()` you expect. Jobs are reclaimed by
+the age of their reservation, not by checking whether the worker is alive, so a
+computation that outlives the timeout is re-queued while it is still running and
+a second worker can start the same key.
+
+A worker that receives SIGTERM is a different case — it records an error and
+needs no orphan handling. See
+[Signals and Interruption](../reference/specs/autopopulate.md#125-signals-and-interruption).
 
 ## Configuration
 
