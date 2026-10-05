@@ -38,7 +38,7 @@ citation:
 
 - **RRID**: [RRID:SCR_014543](https://scicrunch.org/resolver/SCR_014543)
 
-## Citing the DataJoint Library for Python or MATLAB
+## Citing DataJoint for Python or MATLAB
 
 For work using the **DataJoint Library** (Python) or its earlier, now discontinued MATLAB implementation ([datajoint-matlab](https://github.com/datajoint/datajoint-matlab)), cite the following
 manuscript:
