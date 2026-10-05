@@ -34,11 +34,21 @@ MEDIA_OPEN = re.compile(
 )
 
 IMG_TAG = re.compile(r"<img\b[^>]*?>", re.IGNORECASE)
-IMG_SRC = re.compile(r'\bsrc\s*=\s*"([^"]+?)"', re.IGNORECASE)
+IMG_SRC = re.compile(r"""\bsrc\s*=\s*(["'])(.+?)\1""", re.IGNORECASE)
 
-# Populated by on_files, consumed by on_post_page: the stems of the figures
+# Figures are keyed by their path under ``images/`` rather than by bare stem, so
+# that two figures of the same name in different subdirectories cannot collide.
+IMAGES_PREFIX = re.compile(rf"(?:^|/){re.escape(IMAGES_SUBDIR)}/")
+
+# Populated by on_files, consumed by on_post_page: the keys of the figures
 # that actually carry a dark block.
 _themed: set = set()
+
+
+def _image_key(path):
+    """Return a figure's path relative to the images directory, or None."""
+    match = IMAGES_PREFIX.search(path)
+    return path[match.end() :] if match else None
 
 
 def _split_media_block(text):
@@ -76,7 +86,7 @@ def on_files(files, config):
         if not file.src_uri.endswith(".svg"):
             continue
         if MEDIA_OPEN.search(Path(file.abs_src_path).read_text(encoding="utf-8")):
-            _themed.add(Path(file.src_uri).stem)
+            _themed.add(file.src_uri[len(IMAGES_SUBDIR) + 1 :])
     return files
 
 
@@ -89,11 +99,17 @@ def on_post_page(output, page, config):
         src = IMG_SRC.search(tag)
         if not src:
             return tag
-        path = src.group(1)
-        stem = Path(path.split("#")[0].split("?")[0]).stem
-        if not path.lower().endswith(".svg") or stem not in _themed:
+        path = src.group(2)
+        # Strip any query or fragment before testing and slicing.  The variants
+        # carry their own #only-light / #only-dark marker, which the CSS keys on,
+        # so whatever the author wrote there cannot survive the rewrite anyway.
+        bare = path.split("#", 1)[0].split("?", 1)[0]
+        if not bare.lower().endswith(".svg"):
             return tag
-        base = path[: -len(".svg")]
+        key = _image_key(bare)
+        if key is None or key not in _themed:
+            return tag
+        base = bare[: -len(".svg")]
         light = IMG_SRC.sub(lambda _: f'src="{base}.light.svg#only-light"', tag, count=1)
         dark = IMG_SRC.sub(lambda _: f'src="{base}.dark.svg#only-dark"', tag, count=1)
         return light + dark
@@ -105,7 +121,7 @@ def on_post_build(config):
     images = Path(config["site_dir"]) / IMAGES_SUBDIR
     if not images.is_dir():
         return
-    for svg in sorted(images.glob("*.svg")):
+    for svg in sorted(images.rglob("*.svg")):
         if svg.name.endswith((".light.svg", ".dark.svg")):
             continue
         pair = variants(svg.read_text(encoding="utf-8"))
