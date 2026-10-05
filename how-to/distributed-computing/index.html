@@ -6737,11 +6737,23 @@
 <span class="n">SessionAnalysis</span><span class="o">.</span><span class="n">populate</span><span class="p">(</span><span class="n">reserve_jobs</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </code></pre></div>
 <h2 id="orphan-detection">Orphan Detection<a class="headerlink" href="#orphan-detection" title="Permanent link">&para;</a></h2>
-<p>Jobs from crashed workers are automatically recovered:</p>
+<p>A worker killed outright — SIGKILL, an OOM kill, a lost node — leaves its job
+<code>reserved</code> with no error row, and no other worker will take it. Recovering it
+takes an explicit refresh:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Refresh with orphan timeout (seconds)</span>
 <span class="n">SessionAnalysis</span><span class="o">.</span><span class="n">jobs</span><span class="o">.</span><span class="n">refresh</span><span class="p">(</span><span class="n">orphan_timeout</span><span class="o">=</span><span class="mi">3600</span><span class="p">)</span>
 </code></pre></div>
-<p>Reserved jobs older than the timeout are reset to pending.</p>
+<p>Reserved jobs older than the timeout are reset to pending. Nothing does this on
+your behalf: <code>orphan_timeout</code> has no default and no configuration key, and the
+refresh that <code>populate()</code> runs for itself never passes one. Schedule the call, or
+run it when a worker is known to have died.</p>
+<p>Choose the timeout above the longest <code>make()</code> you expect. Jobs are reclaimed by
+the age of their reservation, not by checking whether the worker is alive, so a
+computation that outlives the timeout is re-queued while it is still running and
+a second worker can start the same key.</p>
+<p>A worker that receives SIGTERM is a different case — it records an error and
+needs no orphan handling. See
+<a href="../../reference/specs/autopopulate/#125-signals-and-interruption">Signals and Interruption</a>.</p>
 <h2 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">datajoint</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dj</span>
 

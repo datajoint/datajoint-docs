@@ -2606,6 +2606,64 @@
     </span>
 </a>
 </li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#125-signals-and-interruption">
+<span class="md-ellipsis">
+      
+        12.5 Signals and Interruption
+      
+    </span>
+</a>
+<nav aria-label="12.5 Signals and Interruption" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#sigterm">
+<span class="md-ellipsis">
+      
+        SIGTERM
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#ctrl-c">
+<span class="md-ellipsis">
+      
+        Ctrl-C
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#a-signal-with-no-handler">
+<span class="md-ellipsis">
+      
+        A signal with no handler
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#under-multiprocessing">
+<span class="md-ellipsis">
+      
+        Under multiprocessing
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#summary">
+<span class="md-ellipsis">
+      
+        Summary
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
 </ul>
 </nav>
 </li>
@@ -3834,6 +3892,64 @@
     </span>
 </a>
 </li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#125-signals-and-interruption">
+<span class="md-ellipsis">
+      
+        12.5 Signals and Interruption
+      
+    </span>
+</a>
+<nav aria-label="12.5 Signals and Interruption" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#sigterm">
+<span class="md-ellipsis">
+      
+        SIGTERM
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#ctrl-c">
+<span class="md-ellipsis">
+      
+        Ctrl-C
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#a-signal-with-no-handler">
+<span class="md-ellipsis">
+      
+        A signal with no handler
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#under-multiprocessing">
+<span class="md-ellipsis">
+      
+        Under multiprocessing
+      
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#summary">
+<span class="md-ellipsis">
+      
+        Summary
+      
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
 </ul>
 </nav>
 </li>
@@ -4774,6 +4890,106 @@ version : varchar(255)              # Code version
 <p><strong>Orphaned jobs</strong>: Reserved jobs whose worker crashed
 <div class="highlight"><pre><span></span><code><span class="n">Analysis</span><span class="o">.</span><span class="n">jobs</span><span class="o">.</span><span class="n">refresh</span><span class="p">(</span><span class="n">orphan_timeout</span><span class="o">=</span><span class="mi">3600</span><span class="p">)</span>  <span class="c1"># Reset after 1 hour</span>
 </code></pre></div></p>
+<h3 id="125-signals-and-interruption">12.5 Signals and Interruption<a class="headerlink" href="#125-signals-and-interruption" title="Permanent link">¶</a></h3>
+<p><code>populate()</code> installs a <strong>SIGTERM</strong> handler, and only in distributed mode
+(<code>reserve_jobs=True</code>) — direct mode installs nothing. The handler covers one
+whole <code>populate()</code> call, every key in the batch included, and the previous
+handler is restored when the call returns. No handler is installed for SIGINT,
+SIGHUP, or SIGQUIT.</p>
+<p>This matters for anyone managing worker lifecycle, since container orchestrators
+send SIGTERM on eviction and expect a graceful drain.</p>
+<h4 id="sigterm">SIGTERM<a class="headerlink" href="#sigterm" title="Permanent link">¶</a></h4>
+<p>The handler raises <code>SystemExit</code>, which <code>populate()</code> catches in order to unwind
+deliberately:</p>
+<ol>
+<li>the open transaction is cancelled, discarding the interrupted <code>make()</code>'s database writes;</li>
+<li>the job is recorded as <code>error</code> with the message <code>SystemExit: SIGTERM received</code>;</li>
+<li>the exception is re-raised <strong>even under <code>suppress_errors=True</code></strong>, so the call ends instead of advancing to the next key.</li>
+</ol>
+<p>Only database writes are rolled back. Whatever <code>make()</code> wrote to object storage
+or the filesystem stays there.</p>
+<div class="admonition warning">
+<p class="admonition-title">The interrupted key is not retried automatically</p>
+<p>The job stays in <code>error</code>. <code>refresh()</code> re-adds only keys that have no row in
+the jobs table at all, and <code>reserve()</code> picks up only <code>pending</code> rows, so an
+<code>error</code> row blocks its key until someone deletes it — see
+<a href="#123-error-recovery-distributed-mode">12.3</a>. Error messages are not matched
+against any pattern, and nothing requeues them.</p>
+</div>
+<h4 id="ctrl-c">Ctrl-C<a class="headerlink" href="#ctrl-c" title="Permanent link">¶</a></h4>
+<p><code>KeyboardInterrupt</code> is caught the same way but <strong>is not</strong> re-raised the way
+<code>SystemExit</code> is. Under <code>suppress_errors=True</code> it aborts only the current
+<code>make()</code>, is recorded as a job error, and <code>populate()</code> proceeds to the next key:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Ctrl-C interrupts one key here, not the run</span>
+<span class="n">Analysis</span><span class="o">.</span><span class="n">populate</span><span class="p">(</span><span class="n">reserve_jobs</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">suppress_errors</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</code></pre></div>
+<p>Under the default <code>suppress_errors=False</code> it propagates and ends the call. To
+stop a suppressed run from outside the process, send SIGTERM rather than SIGINT.</p>
+<h4 id="a-signal-with-no-handler">A signal with no handler<a class="headerlink" href="#a-signal-with-no-handler" title="Permanent link">¶</a></h4>
+<p>SIGKILL, SIGHUP, an OOM kill, or power loss ends the process outright. The
+server rolls back the open transaction when the connection drops, but nothing
+writes an error row: the job stays <strong><code>reserved</code></strong>, and no worker will take it.</p>
+<p>Recovery requires an explicit <code>refresh(orphan_timeout=...)</code> as in 12.4.
+<code>populate()</code>'s own auto-refresh never passes one and no configuration key sets
+it, so orphaned jobs are reclaimed only when an operator asks for it.</p>
+<div class="admonition warning">
+<p class="admonition-title"><code>orphan_timeout</code> matches age, not liveness</p>
+<p>A job is reclaimed once its <code>reserved_time</code> is older than the timeout,
+whether or not its worker is still alive. A legitimately long <code>make()</code> that
+outlives the timeout is re-queued while still computing, and a second worker
+can then start the same key. Set the timeout above the longest <code>make()</code> you
+expect. Reclaiming also resets the job's priority and discards the evidence
+recorded at reservation — <code>host</code>, <code>pid</code>, and <code>connection_id</code>.</p>
+</div>
+<h4 id="under-multiprocessing">Under multiprocessing<a class="headerlink" href="#under-multiprocessing" title="Permanent link">¶</a></h4>
+<p><code>processes=N</code> forks workers after the handler is installed, so children inherit
+it, and SIGTERM to the process group gives each child the same
+cancel-and-record behavior. When the parent unwinds it terminates the pool,
+which sends SIGTERM to the children, so in-flight child jobs may record their
+own <code>SystemExit: SIGTERM received</code> rows.</p>
+<h4 id="summary">Summary<a class="headerlink" href="#summary" title="Permanent link">¶</a></h4>
+<table>
+<thead>
+<tr>
+<th>Interruption</th>
+<th>Transaction</th>
+<th>Job row afterwards</th>
+<th>Recovered by</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SIGTERM, distributed mode</td>
+<td>cancelled</td>
+<td><code>error</code></td>
+<td>deleting the error row</td>
+</tr>
+<tr>
+<td>Ctrl-C, <code>suppress_errors=True</code></td>
+<td>cancelled</td>
+<td><code>error</code></td>
+<td>deleting the error row</td>
+</tr>
+<tr>
+<td>Ctrl-C, default</td>
+<td>cancelled</td>
+<td><code>error</code></td>
+<td>deleting the error row</td>
+</tr>
+<tr>
+<td>SIGKILL, OOM, power loss</td>
+<td>rolled back when the connection drops</td>
+<td>stays <code>reserved</code></td>
+<td><code>refresh(orphan_timeout=...)</code></td>
+</tr>
+<tr>
+<td>Any signal, direct mode</td>
+<td>no handler; process terminates</td>
+<td>no job row exists</td>
+<td>re-running <code>populate()</code></td>
+</tr>
+</tbody>
+</table>
 <hr/>
 <h2 id="13-configuration">13. Configuration<a class="headerlink" href="#13-configuration" title="Permanent link">¶</a></h2>
 <div class="highlight"><pre><span></span><code><span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">'jobs.auto_refresh'</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>       <span class="c1"># Auto-refresh on populate</span>
