@@ -9,7 +9,7 @@ Install DataJoint Python and set up your environment.
 - Network access to database server
 - Linux, macOS, or Windows (see [Platform support](#platform-support))
 
-## Install DataJoint 2.0+
+## Install the DataJoint Library
 
 ```bash
 pip install datajoint

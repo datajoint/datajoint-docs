@@ -123,7 +123,7 @@ The `stores` block can be loaded from any of:
 | Source | Precedence | When Used |
 |--------|------------|-----------|
 | `dj.config["stores"][...]` (programmatic) | 1 (highest) | Runtime overrides in scripts/notebooks |
-| `DJ_STORES` env var | 2 | Env-var-only deployments (Kubernetes, the DataJoint platform) — *new in 2.2.4* |
+| `DJ_STORES` env var | 2 | Env-var-only deployments (Kubernetes, the DataJoint Platform) — *new in 2.2.4* |
 | `stores` block of `datajoint.json` | 3 | Local development, committed project config |
 | `.secrets/stores.<name>.<attr>` files | 4 (fills missing attrs only) | Local credentials kept out of `datajoint.json` |
 

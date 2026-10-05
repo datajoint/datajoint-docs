@@ -286,7 +286,7 @@ export DJ_IGNORE_CONFIG_FILE=true
 ```
 
 !!! version-added "New in 2.2.4"
-    `DJ_STORES` carries a JSON-encoded copy of the `stores` block. `DJ_IGNORE_CONFIG_FILE=true` skips `datajoint.json`, the project `.secrets/`, and `/run/secrets/datajoint/` — useful for env-var-only deployments (Kubernetes pods, the DataJoint platform). See [Manage Secrets](../how-to/manage-secrets.md#env-var-only-deployments).
+    `DJ_STORES` carries a JSON-encoded copy of the `stores` block. `DJ_IGNORE_CONFIG_FILE=true` skips `datajoint.json`, the project `.secrets/`, and `/run/secrets/datajoint/` — useful for env-var-only deployments (Kubernetes pods, the DataJoint Platform). See [Manage Secrets](../how-to/manage-secrets.md#env-var-only-deployments).
 
 ## Programmatic Access
 

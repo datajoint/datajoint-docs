@@ -1,4 +1,4 @@
-# What's New in DataJoint 2.3
+# What's New in DataJoint Library 2.3
 
 DataJoint 2.3 adds a first-class **upstream read surface** — `Diagram.trace` and `self.upstream` — which make "a computed row derives only from its declared upstream inputs" easy to follow inside `make()` and easy to query afterward. It also ships the **SparkAdapter Codec Protocol** for typed rendering to Spark-native types, **`dj.deploy.set_replica_identity`** for PostgreSQL change-data-capture, and a **cascade fix** for Part-of-Part and renamed-foreign-key chains.
 
