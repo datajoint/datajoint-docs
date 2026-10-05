@@ -9,7 +9,7 @@ and machine-readable. This unification is what makes DataJoint a
 *computational substrate* rather than a database in the conventional
 sense.
 
-## A two-schema imaging pipeline
+## An example imaging pipeline
 
 Diagrams here use the same notation as `dj.Diagram`; the legend below the
 figure keys it in full, and the [Diagram specification](../reference/specs/diagram.md)
