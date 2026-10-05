@@ -5240,6 +5240,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#singleton-tables" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Singleton Tables
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#foreign-keys" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -6475,6 +6486,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#singleton-tables" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Singleton Tables
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#foreign-keys" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -6643,7 +6665,7 @@
 </code></pre></div>
 <h2 id="grammar">Grammar<a class="headerlink" href="#grammar" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code>definition     = [comment] pk_section "---" secondary_section
-pk_section     = attribute_line+
+pk_section     = attribute_line*
 secondary_section = attribute_line*
 
 attribute_line = [foreign_key | attribute]
@@ -6657,6 +6679,29 @@ type           = core_type | codec_type | native_type
 core_type      = int32 | float64 | varchar(n) | ...
 codec_type     = "&lt;" name ["@" [store]] "&gt;"
 </code></pre></div>
+<h2 id="singleton-tables">Singleton Tables<a class="headerlink" href="#singleton-tables" title="Permanent link">&para;</a></h2>
+<div class="admonition version-added">
+<p class="admonition-title">New in 2.1</p>
+<p>Singleton tables were introduced in DataJoint 2.1.</p>
+</div>
+<p>The primary key section may be empty. A table declared that way is a <strong>singleton</strong>: it holds at
+most one row, which is what you want for global configuration, pipeline-wide parameters, or a
+single summary. Start the definition with the <code>---</code> separator and declare only secondary
+attributes.</p>
+<div class="highlight"><pre><span></span><code><span class="nd">@schema</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Config</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Lookup</span><span class="p">):</span>
+    <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
+<span class="s2">    # Global configuration</span>
+<span class="s2">    ---</span>
+<span class="s2">    setting1 : varchar(100)</span>
+<span class="s2">    setting2 : int32</span>
+<span class="s2">    """</span>
+</code></pre></div>
+<p><code>insert1</code> takes no key, a second insert raises <code>DuplicateError</code>, <code>fetch1()</code> returns the row, and
+<code>heading.primary_key</code> is <code>[]</code>. Internally the table carries a hidden <code>_singleton</code> attribute as
+its key, which is excluded from the heading, from <code>fetch()</code> results, and from join matching.</p>
+<p>See <a href="../specs/table-declaration/#25-singleton-tables-empty-primary-keys">Table Declaration</a> for
+the full behavior.</p>
 <h2 id="foreign-keys">Foreign Keys<a class="headerlink" href="#foreign-keys" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><span class="o">-&gt;</span> <span class="n">ParentTable</span>                    <span class="c1"># Inherit all PK attributes</span>
 <span class="o">-&gt;</span> <span class="n">ParentTable</span><span class="o">.</span><span class="n">proj</span><span class="p">(</span><span class="n">new</span><span class="o">=</span><span class="s1">'old'</span><span class="p">)</span>    <span class="c1"># Rename attributes</span>
@@ -6763,7 +6808,6 @@ schema author chose in the first place.</p>
 <h2 id="validation">Validation<a class="headerlink" href="#validation" title="Permanent link">&para;</a></h2>
 <p>DataJoint validates definitions at declaration time:</p>
 <ul>
-<li>Primary key must have at least one attribute</li>
 <li>Attribute names must be valid identifiers</li>
 <li>Types must be recognized</li>
 <li>Foreign key references must exist</li>
