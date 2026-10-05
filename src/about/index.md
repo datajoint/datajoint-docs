@@ -1,6 +1,6 @@
 # About DataJoint
 
-The **DataJoint Library** is the open-source client API library for building scientific data pipelines: the Python package (`datajoint`) through which you declare schemas, populate tables, and query data.
+The **DataJoint Library** is the open-source client API library for building scientific data pipelines — the `datajoint` Python package, with a MATLAB implementation — through which you declare schemas, populate tables, and query data.
 It was created to address the challenges of managing complex, interconnected
 data in research laboratories.
 
