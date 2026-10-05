@@ -6,7 +6,7 @@ DataJoint provides a custom data definition language and [query algebra](query-a
 
 ### The Definition Language
 
-DataJoint's [definition language](../reference/specs/table-declaration.md/) is a standalone scripting language for declaring table schemas — not Python syntax embedded in strings. It is designed for uniform support across multiple host languages (Python, MATLAB, and potentially others). The same definition works identically regardless of which language you use.
+DataJoint's [definition language](../reference/specs/table-declaration.md/) is a standalone scripting language for declaring table schemas — not Python syntax embedded in strings. The DataJoint Library is implemented in Python, but neither its data definitions nor its query operations rely on Python syntax or Python data structures: definitions are parsed by DataJoint itself, and queries are compiled into SQL against the schema. The same definitions and operations could therefore be supported by implementations in other languages.
 
 ### Composite Primary Keys: A Clarity Comparison
 
@@ -67,7 +67,7 @@ All in two characters. As pipelines grow to dozens of tables with deep dependenc
 | **Readable** | Looks like a specification: `---` separates primary from secondary attributes, `#` for comments |
 | **Concise** | `mouse_id : int32` vs `mouse_id = Column(Integer, primary_key=True)` |
 | **Database-first** | `table.describe()` shows the same format; virtual schemas reconstruct definitions from database metadata |
-| **Language-agnostic** | Same syntax for Python, MATLAB, future implementations |
+| **Language-agnostic** | Parsed by DataJoint, not the Python interpreter — nothing in it is Python-specific |
 | **Separation of concerns** | Definition string = structure (what); class = behavior (how: `make()` methods) |
 
 The definition string **is** the specification — a declarative language that describes entities and their relationships, independent of any host language's syntax.
