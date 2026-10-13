@@ -289,7 +289,7 @@ Teams adopt the read surface incrementally:
 ## What is not in this specification
 
 - **Enforcement of the `make()` contract.** `trace` and `self.upstream` make the contract easy to follow and to inspect, but the DataJoint Library does not check it at runtime. Confirming that a `make()` reads only from its declared ancestors and writes only to its target, across every access path, is a code-inspection problem — performed by the DataJoint Platform's code-deployment CI/CD (static analysis where sound, agentic review for the dynamic cases), backed by commit-pinned governed execution. See the [make() reproducibility contract](autopopulate.md#43-the-make-reproducibility-contract).
-- **Row-level lineage metadata in storage**. The features here provide the *graph operation* and the *per-`make()` read surface*; persisting per-row upstream projections (the dj-delta-style silver-layer features) is a downstream consumer concern, tracked separately.
+- **Row-level lineage metadata in storage**. The features here provide the *graph operation* and the *per-`make()` read surface*; persisting per-row upstream projections (as silver-layer publishing does) is a downstream consumer concern, tracked separately.
 
 ## References
 
