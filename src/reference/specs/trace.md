@@ -2,17 +2,15 @@
 
 This document specifies two interlocking features that give DataJoint a first-class **upstream read surface** — a way to query, from any set of rows, the exact ancestor rows they were derived from:
 
-1. **`Diagram.trace(table_expr)`** — the upstream mirror of `Diagram.cascade()`; walks the FK graph from a restricted table expression to every ancestor.
+1. **`Diagram.trace(table_expr)`** — the upstream mirror of `Diagram.cascade()`; selects every row the seed's rows depend on.
 2. **`self.upstream`** — a property on `AutoPopulate` tables that exposes the trace for the current `key` during `make()` execution.
 
-The two are designed as a unit. `trace` is the underlying graph operation; `self.upstream` is the ergonomic surface for `make()`. Together they make the "read from declared upstream" convention easy to follow and to inspect — which is exactly what makes a `make()` reproducible and statically verifiable (see the [make() reproducibility contract](autopopulate.md#43-the-make-reproducibility-contract)).
+The two are designed as a unit. `trace` is the underlying graph operation; `self.upstream` is the ergonomic surface for `make()`. Together they make the "read from declared upstream" convention easy to follow and to inspect — which is what makes a `make()` reproducible and statically verifiable (see the [make() reproducibility contract](autopopulate.md#43-the-make-reproducibility-contract)).
 
 !!! version-added "New in DataJoint 2.3"
     Introduced together. Existing code that does not use these features is unaffected.
 
-For the related downstream operation, see [Cascade Specification](cascade.md). For `make()` itself, see [AutoPopulate Specification](autopopulate.md).
-
-Trace is the **upstream** case of the diagram-traversal algebra — the additive traversal `expand(direction="up")`, the mirror of cascade's downstream `expand(direction="down")`. The shared rules (the edge rule R1 and the group rule R2) are derived once in the [Diagram spec's Design Rationale](diagram.md#traversal-algebra); this page specifies the upstream-specific behavior and the `self.upstream` surface on top of them.
+A trace is the `up` case of `Diagram.expand`: `Diagram.trace(seed)` equals `Diagram.expand(seed, "up")`. The rows it selects are defined once, in the [Diagram specification's Operations](diagram.md#operations); this page specifies the upstream-specific behavior and the `self.upstream` surface. For the downstream case, see the [Cascade Specification](cascade.md). For `make()` itself, see the [AutoPopulate Specification](autopopulate.md).
 
 ## Why this exists
 
@@ -21,26 +19,28 @@ A computed row's reproducibility rests on the convention that `make(self, key)` 
 1. A way to **construct** the upstream view as a query object: `Diagram.trace()`.
 2. A way to **expose** that view ergonomically inside `make()` so users naturally do the right thing: `self.upstream`.
 
-Without (1), downstream tools that need row-level lineage (data-lineage viewers, CDC publishers, audit logs) have to reimplement the FK walk themselves — repeatedly, with subtly different bugs. Without (2), even users who follow the convention write awkward boilerplate (`(Upstream & key).fetch1(...)` everywhere).
+Without (1), downstream tools that need row-level lineage (data-lineage viewers, CDC publishers, audit logs) have to reimplement the foreign-key walk themselves — repeatedly, with subtly different bugs. Without (2), even users who follow the convention write awkward boilerplate (`(Upstream & key).fetch1(...)` everywhere).
 
 ## Concepts
 
 ### Trace as the upstream mirror of cascade
 
-`Diagram.cascade()` walks **downstream** from a restricted seed and answers *"what is affected if these rows are deleted?"* `Diagram.trace()` walks **upstream** and answers *"what contributed to these rows?"*. They are the two directions of the same traversal (`expand`), over the same dependency graph and the same rules — only the direction differs:
+`Diagram.cascade()` walks **downstream** from a restricted seed and answers *"what is affected if these rows are deleted?"* `Diagram.trace()` walks **upstream** and answers *"what contributed to these rows?"* They are the two directions of one traversal, `expand`, over the same dependency graph and the same rules:
 
-| Method | `expand` direction | Question answered |
-|---|---|---|
-| `Diagram.cascade(expr)` | `down` | What's affected if these rows are deleted? |
-| `Diagram.trace(expr)` | `up` | What contributed to these rows? |
+| Method | `expand` direction | Rows | Question answered |
+|---|---|---|---|
+| `Diagram.cascade(expr, part_integrity="cascade")` | `down` | `D(S)` | What's affected if these rows are deleted? |
+| `Diagram.trace(expr)` | `up` | `U(S)` | What contributed to these rows? |
 
-Convergence is always **union** — an ancestor contributes to a child row if it is reachable via *any* foreign-key path. This is reachability, not an intersection; there is no AND-flavored upstream analog.
+`U(S)` is the smallest set of rows that contains the seed rows `S`, the rows each of its rows references through a foreign key, and the whole master-part instance of each of its rows. It is consistent on its own: every foreign key of its rows resolves inside it, and every instance in it is whole ([T5](diagram.md#derived-results)).
 
-### Reusing the propagation rules
+The two directions are exact mirrors ([T3](diagram.md#derived-results)): a row `y` depends on a row `x` exactly when deleting `x` would delete `y`. Results combine by union: an ancestor contributes if it is reachable through *any* foreign-key path, and there is no intersection.
 
-`trace` applies the **edge rule R1** in the upstream direction — the same rule `cascade` applies downstream — plus the **group rule R2** for master–part. Both are derived once in the [Diagram spec's Traversal algebra](diagram.md#traversal-algebra); a renamed FK is relabelled through the edge's attribute map, Part-of-Part chains are walked naturally, and parallel foreign keys are each handled independently.
+### The rules upstream
 
-This is why `trace` cannot ship before the upstream primitives exist in the codebase. As of DataJoint 2.3 they are in place (added with [#1429's cascade fix](https://github.com/datajoint/datajoint-python/pull/1468)), and `trace` is a direct consumer.
+`trace` crosses each foreign key upward by **restriction**: the parent is restricted to the rows referenced by at least one restricted child row, `parent & child_restricted.proj(...)`, with renamed attributes mapped back through the foreign key's `attr_map`. A condition on the child is never copied to the parent, because it describes child rows ([R1](diagram.md#r1-the-edge-rule)). A child row whose foreign key has a NULL column references nothing through it.
+
+The group rule ([R2](diagram.md#r2-the-group-rule)) applies upward as it does downward: a part row brings its master and all of its master's part rows, and a master row brings all its part rows. Parallel foreign keys are each crossed on their own.
 
 ### The `make()` read/write boundary
 
@@ -50,11 +50,11 @@ DataJoint's `make(self, key)` convention has always been:
 Read from self's declared upstream dependencies; write to self (and its Parts).
 ```
 
-This is the **read/write boundary**: data flows in from declared ancestors and out to the target table and its Parts. Anything that crosses this boundary in another direction undermines reproducibility — a `fetch` from an undeclared table makes that dependency invisible to the FK graph; an `insert` into another table sneaks rows past it. (The full rule set is the [make() reproducibility contract](autopopulate.md#43-the-make-reproducibility-contract).)
+This is the **read/write boundary**: data flows in from declared ancestors and out to the target table and its Parts. Anything that crosses this boundary in another direction undermines reproducibility — a `fetch` from an undeclared table makes that dependency invisible to the foreign-key graph; an `insert` into another table sneaks rows past it. (The full rule set is the [make() reproducibility contract](autopopulate.md#43-the-make-reproducibility-contract).)
 
 `self.upstream` makes the read side of this boundary the path of least resistance:
 
-- **`self.upstream`** is the recommended read channel. Reading through it keeps every dependency visible to the FK graph and pre-restricted to the current `key`.
+- **`self.upstream`** is the recommended read channel. Reading through it keeps every dependency visible to the foreign-key graph and pre-restricted to the current `key`.
 - **`self`** (and its Parts) is the write target.
 
 ## 1. `Diagram.trace(table_expr)`
@@ -69,28 +69,28 @@ def trace(cls, table_expr: QueryExpression) -> Diagram:
 
 | Parameter | Type | Description |
 |---|---|---|
-| `table_expr` | `QueryExpression` | A (possibly restricted) table expression. The trace propagates this restriction upstream through the FK graph. |
+| `table_expr` | `QueryExpression` | The seed: one table with any restriction (see [Seeds](diagram.md#seeds)). |
 
-Returns a `Diagram` instance whose nodes are the seed and all of its ancestors (across all loaded schemas), each carrying a restriction derived from the seed.
+Returns an expanded `Diagram` in the `up` direction. Its nodes are the seed's table and every table reachable upward from it, across all loaded schemas, including the parts of every master reached. Each node holds that table's rows in `U(S)`, possibly none.
 
 ### Behavior
 
-`trace` mirrors `cascade`:
+1. Load the dependency graph via `connection.dependencies.load_all_upstream()`, the upstream analog of `load_all_downstream` ([#1423](https://github.com/datajoint/datajoint-python/issues/1423)). It discovers every schema reachable through foreign keys from the seed's schema, including schemas the current process has not activated.
+2. Compute `U(S)` in one pass over the tables in reverse topological order: each table is restricted by its seed and by the restricted rows of its children; each master-part group by the masters its members reach, after which each part takes all part rows of those masters ([Computation](diagram.md#computation)).
+3. Keep the seed's table and the tables reachable upward, with groups taken whole. Descendants of the seed and unrelated tables are not included.
 
-1. Load the dependency graph via `connection.dependencies.load_all_upstream()` — the upstream analog of `load_all_downstream`, introduced with `Diagram.trace` ([#1423](https://github.com/datajoint/datajoint-python/issues/1423)). It discovers all schemas reachable via reverse FK edges from the seed's schema.
-2. Take the seed's restriction and propagate it **upstream** along the FK graph. For each edge `parent -> child`, when the child has a restriction, apply the edge rule R1 upstream (its **copy**, **rename**, or **project** case — see the [Diagram spec's Traversal algebra](diagram.md#traversal-algebra)) to derive the parent's restriction.
-3. Trim the resulting graph to **seed + ancestors only**. Descendants of the seed and unrelated ancestors are not included.
-4. Convergence is **OR**: an ancestor entity is included if reachable through *any* FK path from the seed (consistent with how a child row "comes from" any of its FK parents).
+The trace stays symbolic: no rows are read until a node is indexed, counted, or fetched. The one exception is a group whose internal foreign key renames the master's key, which is evaluated while the trace is built ([groups that iterate](diagram.md#groups-that-iterate)).
 
-The graph traversal is dual to `cascade`'s. `cascade` walks `seed + descendants(seed)`; `trace` walks `seed + ancestors(seed)`. Both apply rules edge-by-edge; both terminate because the dependency graph is a DAG.
+!!! version-changed "Changed in 2.4"
+    A trace includes all parts of every master it reaches, and the ancestors of those parts ([#1481](https://github.com/datajoint/datajoint-python/issues/1481)). In 2.3 it included a part only if the part lay on a foreign-key path to the seed. Upward crossings are always restrictions; 2.3 copied some conditions upward, which is correct only for keys of existing child rows.
 
 ### Indexing: `trace[T]`
 
-The primary user-facing operation. Returns the ancestor's table pre-restricted through the FK join path.
+The primary user-facing operation. Returns the table pre-restricted to its rows in the trace.
 
 ```python
 trace = dj.Diagram.trace(MyChild & key)
-session = trace[Session]              # QueryExpression: Session restricted to ancestors of MyChild & key
+session = trace[Session]              # QueryExpression: Session restricted to the rows MyChild & key depends on
 session.fetch1("session_date")
 trace[ExtractTraces].to_arrays("trace")
 ```
@@ -100,16 +100,18 @@ The argument may be:
 - **A Table subclass** (e.g. `Session`) — convenient when the class is in scope.
 - **A string** giving a table's fully-qualified or class name (e.g. `"experiment.Session"` or `"Session"`) — for when it isn't.
 
-In both cases the result is the ancestor pre-restricted through the FK join path, returned as a `FreeTable` (a full `QueryExpression`, so every query operator and the fetch API apply).
+In both cases the result is a full `QueryExpression`, so every query operator and the fetch API apply.
 
-Requesting a table that is not an ancestor (or the seed itself) of `table_expr` raises `DataJointError`. This is the same guarantee that `cascade` provides for descendants.
+Requesting a table that is not a node of the trace raises `DataJointError`. A node with zero rows, such as a part of an ancestor master that has no rows for this seed, returns an empty expression.
 
 ### Other methods
 
 | Method | Behavior |
 |---|---|
-| `trace.counts()` | `dict[str, int]` mapping each contributing table's full table name (e.g. `` `imaging`.`subject` ``) to its row count under the seed's restriction. Includes the seed alongside its ancestors. Mirror of `cascade.counts()`. |
-| `iter(trace)` | Iterate over pre-restricted `FreeTable`s in topological order (parents/roots first). |
+| `trace.counts()` | `dict[str, int]` mapping each node's full table name (e.g. `` `imaging`.`subject` ``) to its row count. Includes the seed. Mirror of `cascade.counts()`. |
+| `iter(trace)` | Iterate over pre-restricted `FreeTable`s in topological order (parents first). |
+| `trace.prune()` | Remove nodes with zero rows. Allowed on traces, unlike cascades (new in 2.4). |
+| `trace1 + trace2` | For two traces, the union of their rows, table by table (new in 2.4). |
 
 All `QueryExpression` operators (`join`, `aggr`, `proj`, `restrict`, `&`, `*`) work on the values returned by `trace[T]`. The trace is a *view* into the graph; the returned `QueryExpression`s are first-class.
 
@@ -176,28 +178,47 @@ trace.counts()
 #  '`imaging`.`__extract_traces`': 1, '`imaging`.`__summary`': 1}
 ```
 
-For a renamed-FK case (paralleling [Cascade Spec §Worked Example 1](cascade.md#example-1-part-of-part-with-renamed-fk)), R1's **rename** case reverses the rename so `trace[Ancestor]` returns the ancestor with its native column names regardless of how the seed's columns are named.
+For a renamed foreign key, the restriction maps the attributes back through `attr_map`, so `trace[Ancestor]` returns the ancestor with its own column names however the seed's columns are named ([S4](traversal-shapes.md#s4-renamed-foreign-key)).
+
+For a **merge table** — a master whose parts each reference a different upstream table — the trace from a downstream row reaches the merge master, its part row, and the upstream table that part names ([G5](traversal-shapes.md#g5-merge-table)):
+
+```python
+trace = dj.Diagram.trace(Analysis & {"recording_id": 1})
+trace[Recording.Ephys]     # the part row of recording 1
+trace[EphysSource]         # the source that produced recording 1
+```
 
 ## 2. `self.upstream` inside `make()`
 
 ### Where it's set
 
-Before invoking `make(self, key)`, the framework records the current key but defers constructing the trace. `self.upstream = Diagram.trace(self & key)` is built the first time the user accesses `self.upstream` inside `make()` and memoized for the rest of the call; `make()` implementations that never read `self.upstream` never build the trace. Both the key and the memoized trace are cleared after `make()` returns (including when it raises).
+Before invoking `make(self, key)`, the framework records the current key but defers constructing the trace. The trace is built the first time `make()` accesses `self.upstream`, and memoized for the rest of the call; `make()` implementations that never read `self.upstream` never build it. Both the key and the memoized trace are cleared after `make()` returns (including when it raises).
 
-Once built, the trace diagram is reused for the remainder of the call. The underlying SQL is not issued until the user indexes into an ancestor: `self.upstream[Session]` builds a `QueryExpression`, and `.fetch1()` on that expression triggers a SELECT. Fetch results are not cached — each `self.upstream[T]` access returns a fresh `QueryExpression`, so reading the same ancestor twice issues two SELECTs.
+The row for `key` does not exist yet while `make()` runs, so `self.upstream` cannot be a trace of `self & key`, which selects nothing. It is built from the parents that row will have: for each foreign key `e` in the table's primary key, the parent row `P_e & relabel_e(key)` (the key's values renamed onto `P_e`'s primary key), and
+
+```
+self.upstream = ⋃ over primary foreign keys e of  Diagram.trace(P_e & relabel_e(key))
+```
+
+the table-by-table union of those traces. Foreign keys outside the primary key are not included, because their values are not known before the insert. See [`self.upstream`](diagram.md#operations) in the Diagram specification.
+
+!!! version-changed "Changed in 2.4"
+    In 2.3, `self.upstream` was `Diagram.trace(self & key)`, which returned the parents only because the engine copied the key's condition upward. The 2.4 construction starts from the parent rows directly, and adds the parts of ancestor masters and their ancestors.
+
+Once built, the trace is reused for the remainder of the call. The underlying SQL is not issued until the user indexes into an ancestor: `self.upstream[Session]` builds a `QueryExpression`, and `.fetch1()` on that expression triggers a SELECT. Fetch results are not cached — each `self.upstream[T]` access returns a fresh `QueryExpression`, so reading the same ancestor twice issues two SELECTs.
 
 ### What it returns
 
-`self.upstream[T]` returns the same value `dj.Diagram.trace(self & key)[T]` would return — the ancestor table pre-restricted to the rows that contributed to the current `key`. All `QueryExpression` operators work; the standard fetch API (`fetch`, `fetch1`, `to_arrays`, `to_dicts`, `to_pandas`) is fully supported.
+`self.upstream[T]` returns the ancestor table `T` pre-restricted to the rows that the current `key` depends on. All `QueryExpression` operators work; the standard fetch API (`fetch`, `fetch1`, `to_arrays`, `to_dicts`, `to_pandas`) is fully supported.
 
 ### Allowed table set
 
 `self.upstream` exposes:
 
-- All declared ancestors of `self` (transitively, including renamed-FK chains).
-- **All Parts of every ancestor Master.** By the group rule R2 (see the [Diagram spec's Traversal algebra](diagram.md#traversal-algebra)), a master-part group is one item: once an ancestor Master is in the trace, its whole part-group comes with it — not only those Parts that happen to lie on an FK path to `self`. This is the upstream mirror of `part_integrity="cascade"` treating the group atomically.
+- all ancestors of `self` reached through its primary foreign keys (transitively, including renamed foreign keys);
+- **all parts of every ancestor master**, and their ancestors. By the group rule, a master-part group is one entity: once an ancestor master is in the trace, its whole group comes with it, not only those parts that happen to lie on a foreign-key path to `self`. This is the upstream mirror of `part_integrity="cascade"` treating the group as one.
 
-Requesting any table outside this set raises `DataJointError` — including tables that exist in the schema but are not ancestors of `self`. This is the same guarantee `Diagram.trace(...)` provides; `self.upstream` is just the per-`make()` instance of it.
+Requesting any table outside this set raises `DataJointError` — including tables that exist in the schema but are not ancestors of `self`. A table's own parts are descendants, not ancestors; read them directly as `self.PartName`.
 
 ### Examples
 
@@ -287,6 +308,8 @@ Teams adopt the read surface incrementally:
 2. **Start using `self.upstream` in new `make()` implementations.** Reads become ergonomic; nothing else changes.
 3. **Migrate existing `make()` implementations** as opportunity allows. Replace `(Upstream & key).fetch(...)` with `self.upstream[Upstream].fetch(...)`. No semantic difference — but the read is now visibly confined to the declared upstream.
 
+In 2.4, traces and `self.upstream` also include the parts of ancestor masters and their ancestors. Code that relied on `trace[T]` raising for such a table now receives its rows.
+
 ## What is not in this specification
 
 - **Enforcement of the `make()` contract.** `trace` and `self.upstream` make the contract easy to follow and to inspect, but the open-source framework does not check it at runtime. Confirming that a `make()` reads only from its declared ancestors and writes only to its target, across every access path, is a code-inspection problem — performed by the DataJoint platform's code-deployment CI/CD (static analysis where sound, agentic review for the dynamic cases), backed by commit-pinned governed execution. See the [make() reproducibility contract](autopopulate.md#43-the-make-reproducibility-contract).
@@ -294,9 +317,10 @@ Teams adopt the read surface incrementally:
 
 ## References
 
-- Source (shipped in 2.3): `src/datajoint/diagram.py` (`Diagram.trace`), `src/datajoint/autopopulate.py` (`AutoPopulate.upstream`). Implemented in [#1471](https://github.com/datajoint/datajoint-python/pull/1471) (trace) and [#1473](https://github.com/datajoint/datajoint-python/pull/1473) (self.upstream), building on the cascade rules from [#1468](https://github.com/datajoint/datajoint-python/pull/1468).
-- Issues: [#1423](https://github.com/datajoint/datajoint-python/issues/1423) (Diagram.trace), [#1424](https://github.com/datajoint/datajoint-python/issues/1424) (self.upstream).
-- [Cascade Specification](cascade.md) — the downstream case of the same edge rule R1 and group rule R2 shared with `trace`.
+- Source: `src/datajoint/diagram.py` (`Diagram.expand`, `Diagram.trace`), `src/datajoint/autopopulate.py` (`AutoPopulate.upstream`). First implemented in [#1471](https://github.com/datajoint/datajoint-python/pull/1471) (trace) and [#1473](https://github.com/datajoint/datajoint-python/pull/1473) (self.upstream).
+- Issues: [#1423](https://github.com/datajoint/datajoint-python/issues/1423) (Diagram.trace), [#1424](https://github.com/datajoint/datajoint-python/issues/1424) (self.upstream), [#1481](https://github.com/datajoint/datajoint-python/issues/1481) (parts of ancestor masters).
+- [Diagram Specification](diagram.md#traversal-specification) — the definitions of `U` and the rules it is computed by.
+- [Traversal Shape Catalog](traversal-shapes.md) — worked examples, with the rows each trace returns.
+- [Cascade Specification](cascade.md) — the downstream case of the same traversal.
 - [AutoPopulate Specification](autopopulate.md) — `make()` execution model and the make() reproducibility contract.
-- [Diagram Specification](diagram.md) — graph operations on the dependency graph.
-- [Entity Integrity](../../explanation/entity-integrity.md) — schema dimensions and FK semantics.
+- [Entity Integrity](../../explanation/entity-integrity.md) — schema dimensions and foreign-key semantics.

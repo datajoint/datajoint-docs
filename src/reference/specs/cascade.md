@@ -1,211 +1,122 @@
 # Cascade Specification
 
-This document specifies how DataJoint propagates restrictions across the foreign-key (FK) graph for **cascade delete** and **cascade preview** operations. It defines the propagation rules, the role of `part_integrity`, and the Part-to-Master upward propagation that handles renamed FKs and Part-of-Part chains.
+A cascade starts at a restricted **seed** table and deletes, together with the seed's rows, every row that depends on them, in an order the database accepts. It is the `down` case of `Diagram.expand`: the rows it selects are defined once, in the [Diagram specification's Operations](diagram.md#operations), and computed by the rules in [Computation](diagram.md#computation). This page specifies how `Table.delete()` and its preview, `Diagram.cascade()`, use those rows.
 
 For the user-facing entry points, see [Delete Data](../../how-to/delete-data.md). For dependent concepts, see [Master-Part](master-part.md), [Diagram](diagram.md), and [Data Manipulation](data-manipulation.md).
 
-Cascade is the **downstream** case of the diagram-traversal algebra — the additive traversal `expand(direction="down")`. The rules it uses (the edge rule R1 and the group rule R2), and why they take the form they do, are derived once in the [Diagram spec's Design Rationale](diagram.md#traversal-algebra); this page specifies the cascade-specific behavior on top of them.
+## Entry points
 
-## Overview
+- `Table.delete(part_integrity=...)` deletes the rows.
+- `Diagram.cascade(table_expr, part_integrity=...)` holds the same rows without deleting them, for `counts()`, iteration, `d[T]`, and display.
 
-A *cascade* starts at a (possibly restricted) **seed** table and propagates the restriction to every table that depends on it via foreign keys, so that a delete or preview affects all dependents consistently. Cascade is invoked by:
-
-- `Table.delete(part_integrity=...)` — executes the cascade as a delete.
-- `Diagram.cascade(table_expr, part_integrity=...).counts()` — preview, no mutation.
-
-Both follow the same propagation rules; only the terminal step (delete vs. count) differs.
+Both compute the same rows from the same plan; only the last step differs.
 
 ## Dependency graph
 
-DataJoint loads its FK structure into a directed acyclic graph (`Connection.dependencies`, a `networkx.MultiDiGraph` — a multigraph so that parallel foreign keys, including renamed ones, are each their own edge rather than needing synthetic alias nodes). The graph encodes two kinds of structure:
+DataJoint loads its foreign-key structure into a directed acyclic graph (`Connection.dependencies`, a `networkx.MultiDiGraph`, so that parallel foreign keys, including renamed ones, are each their own edge). The graph encodes:
 
 | Element | Encodes |
 |---|---|
 | **Node** | A table, named by its fully-qualified SQL identifier (e.g. ``` `schema`.`table_name` ```). The graph stores the table's primary key set as node data. |
-| **Edge `parent -> child`** | An FK constraint from `child` to `parent`. Edge data: `attr_map` (dict mapping child's FK columns -> parent's referenced columns), `aliased` (true iff any column was renamed), `primary` (true iff the FK is in the child's primary key). |
-| **Parallel edges** | A child can reference the same parent through more than one foreign key — for example two renamed (`.proj()`) references — so the same `parent -> child` pair may be connected by multiple edges, each carrying its own `attr_map`/`aliased`/`primary`. |
+| **Edge `parent -> child`** | A foreign key from `child` to `parent`. Edge data: `attr_map` (dict mapping the child's foreign-key columns to the parent's referenced columns), `aliased` (true if any column was renamed), `primary` (true if the foreign key is in the child's primary key). |
+| **Parallel edges** | A child can reference the same parent through more than one foreign key, for example through two renamed (`.proj()`) references. Each is its own edge with its own `attr_map`, `aliased`, and `primary`. |
 
-The cascade engine operates on a copy of this graph (the `Diagram` class), recording per-table restrictions in `_cascade_restrictions` and the set of restricted attributes in `_restriction_attrs`.
+`Diagram.cascade()` first calls `dependencies.load_all_downstream()`, which adds every schema that references a loaded schema through foreign keys, including schemas the current process has not activated ([X1](traversal-shapes.md#x1-unloaded-downstream-schema)).
 
-## Restriction propagation across an edge
+## What a cascade deletes
 
-Cascade propagates a restriction across each foreign-key edge by the **edge rule R1** — derived in the [Diagram spec's Traversal algebra](diagram.md#traversal-algebra) — restricting the neighbor by the restricted table, projected/renamed onto the shared foreign-key columns. R1 has three degenerate cases, keyed by whether the foreign key renames columns and whether the restricted attributes are the neighbor's whole primary key:
+`S` is the set of rows the seed selects. `D(S)` is the closure of `S` under foreign-key children and master-part instances; `D1(S)` is the closure under foreign-key children alone ([definitions](diagram.md#operations)).
 
-- **copy** — non-renamed, and the restricted attributes are the neighbor's primary-key attributes: carry the same predicate unchanged (the columns share names).
-- **rename** — renamed foreign key: project the restricted table with its columns renamed through the edge's attribute map to the neighbor's names.
-- **project** — non-renamed, but the restricted attributes are *not* (only) the neighbor's primary key: project the restricted table onto the shared foreign-key columns so the join matches on the right columns.
+| `part_integrity` | Deletes |
+|---|---|
+| `"cascade"` | `D(S)`. Whichever member of a master-part group the cascade reaches, the whole instance goes: a reached part row lifts to its master, and the master brings all its part rows. |
+| `"ignore"` | `D1(S)`. Masters and parts are treated as plain tables, so a part row can be deleted while its master and sibling part rows stay. The caller is responsible for the consequences. |
+| `"enforce"` (default) | `D1(S)`, if it contains the master of every part row in it. Otherwise `delete()` raises `DataJointError` **before deleting anything**, naming a part row and its master. |
 
-Cascade applies R1 **forward** (parent to child) for the delete/preview walk. After each step the child's restricted-attribute set is updated, and the child becomes a propagation source for its own children in the next pass. For `part_integrity="cascade"`, R1 is also applied **upstream** (child to parent) to lift a Part's restriction to its Master — the same rule with tail and head swapped.
+By [T7](diagram.md#derived-results), `enforce` deletes exactly when `D1(S) = D(S)`, that is, when the group rule would add nothing; in that case `"enforce"` and `"cascade"` delete the same rows.
 
-## Cascade flow
+!!! version-changed "Changed in 2.4"
+    - `"enforce"` is checked per part row, before the delete. In 2.3 it was a table-level check after the delete, which could miss an orphaned part row when an unrelated master row was deleted in the same cascade. The 2.4 check is stricter.
+    - With `"cascade"`, a master joins the delete only if one of its part rows did. In 2.3 the part's condition was copied to the master, which could delete masters that had no matching part row ([#1591](https://github.com/datajoint/datajoint-python/issues/1591); [G1](traversal-shapes.md#g1-part-to-master-lift)).
+    - A downward copy of a condition across a nullable foreign key could delete rows whose foreign key references nothing, and in a diamond it could miss rows ([#1590](https://github.com/datajoint/datajoint-python/issues/1590); [S3](traversal-shapes.md#s3-nullable-foreign-key-sharing-a-primary-key-column), [S7](traversal-shapes.md#s7-diamond-reached-through-a-secondary-foreign-key)).
+    - A `dj.Top` seed was ignored ([#1589](https://github.com/datajoint/datajoint-python/issues/1589); [K4](traversal-shapes.md#k4-djtop-seed)).
+    - A seed restricted by one of its descendants was silently not deleted ([#1496](https://github.com/datajoint/datajoint-python/issues/1496); [K1](traversal-shapes.md#k1-seed-restricted-by-a-descendant)).
+
+`part_integrity` accepts only `"enforce"`, `"ignore"`, or `"cascade"`; any other value raises `ValueError`.
+
+**Parts that violate A1.** The group rule applies to parts whose heading contains the master's primary key under the master's own attribute names ([A1](diagram.md#model-and-assumptions)). A part that holds the master's key only under renamed attributes is traversed as a plain table, with a warning at declaration, in every mode ([G6](traversal-shapes.md#g6-a-part-violating-a1)).
+
+## Preview
+
+`Diagram.cascade(...)` is symbolic. It holds restrictions, not rows, and reads nothing from the database until `counts()`, iteration, or `d[T]` evaluates them. It never materializes keys, with one exception: in a group whose internal foreign key renames the master's key, the master keys are evaluated while the diagram is built ([groups that iterate](diagram.md#groups-that-iterate)).
+
+Its nodes are every table the cascade can reach, including tables with zero matching rows, and `prune()` refuses to remove them: a table empty when the preview is built can gain rows before the delete runs. The counts of a preview equal the counts the delete then removes, unless the data change in between.
+
+## Delete execution
+
+`Table.delete()` runs these steps inside one transaction:
+
+1. **Plan.** Build the `down` plan for the seed, as for the preview.
+2. **Check.** With `"enforce"`, check that `D1(S)` contains the master of each of its part rows. If not, raise before any DELETE.
+3. **Materialize.** Replace the restrictions that would read an already-emptied table by the literal keys they select (next section).
+4. **Delete.** Delete table by table in reverse topological order: leaves first, the seed's table and other ancestors last.
+5. **Backstop.** With `"enforce"`, check at the table level that no part rows were deleted without master rows, and roll back otherwise.
 
 ```mermaid
 flowchart TB
-    A[seed table_expr] --> B[Diagram.cascade]
-    B --> C{seed is a Part?<br/>part_integrity=cascade?}
-    C -- yes --> D[Upward walk:<br/>_propagate_part_to_master]
-    C -- no --> E[Forward propagation<br/>over descendants]
-    D --> E
-    E --> F{any new master pulled in?}
-    F -- yes --> E
-    F -- no --> G[Build subgraph,<br/>count or delete]
+    A[seed] --> B[plan: D or D1, symbolic]
+    B --> C{part_integrity = enforce?}
+    C -- yes --> D{D1 holds every part row's master?}
+    D -- no --> E[raise, nothing deleted]
+    D -- yes --> F
+    C -- no --> F[materialize lifts and non-literal seeds]
+    F --> G[DELETE in reverse topological order]
+    G --> H[table-level backstop, then commit]
 ```
 
-The engine performs **multiple passes** when `part_integrity="cascade"` is in effect: each pass forward-propagates over all `allowed_nodes`, and a pass may pull in a new master (with its descendants) that requires another pass. The loop terminates because the graph is a DAG and only finitely many nodes can be added.
+With `safemode=True`, `delete()` shows the per-table counts inside the transaction and asks before committing.
 
 ## Delete-time materialization
 
-Downward expansion for **delete** carries a constraint that preview (count) does not: a table's restriction must not reference a table that is deleted *earlier* in the plan.
+Downward expansion for a delete carries a constraint that the preview does not: a table's restriction must not read a table that is deleted before it, or the table itself.
 
-`Table.delete` executes its per-table deletes in **reverse-topological order** (leaves first — see [Data Manipulation](data-manipulation.md)), so every downstream table is emptied before the table it depends on. If a table's restriction were left as a `QueryExpression` referencing a downstream table — which happens whenever the cascade **seed** is itself restricted by a descendant ([#1496](https://github.com/datajoint/datajoint-python/issues/1496)), or when the master's restriction is left pointing at an already-walked part — that subquery would run against a table already emptied by an earlier step, match zero rows, and silently strand the rows that should have been deleted.
+`Table.delete()` deletes in reverse topological order, so every downstream table is emptied before the tables it depends on. A restriction that still read a downstream table when its own DELETE ran would match nothing, and the rows it should delete would stay. This happens when the seed is restricted by one of its descendants ([K1](traversal-shapes.md#k1-seed-restricted-by-a-descendant)) or by its own table ([K2](traversal-shapes.md#k2-self-referencing-seed)), and for every part-to-master lift, since a part is deleted before its master.
 
-The fix is to **materialize** any such restriction to a literal key set at plan time, before any row is deleted, while the referenced table still holds its rows. Materialization is applied by delete-order reason on **every backend**, not made backend-conditional: the reverse-topological ordering strands rows regardless of engine. (MySQL additionally rejects a DELETE whose subquery targets the table being modified — error 1093 — but PostgreSQL, which permits that self-reference, still needs materialization for the ordering reason, so this is not a MySQL-only concern.) Where materialization is refused, the engine fails closed with a legible error rather than deleting through a stale subquery. Preview/`counts()` issues no deletes and so pays none of this cost.
+Before the first DELETE, the engine therefore materializes each restriction whose *local* terms read a table deleted no later than its own: every lift, and every seed whose restriction is not already literal keys. Terms inherited from a parent are safe, because the parent is deleted after its children. Large key sets are applied in chunks. The full rule is in [Materialization happens only at delete time](diagram.md#materialization-happens-only-at-delete-time).
 
-The master-key materialization in [Part-to-Master upward propagation](#materialization-at-the-master) below is the specific instance of this rule for the `part_integrity="cascade"` walk.
+The rule follows from the delete order and applies on every backend. MySQL also rejects a DELETE whose subquery reads the table being deleted (error 1093), and PostgreSQL permits it; materializing first avoids both the stranded rows and the error.
 
-## `part_integrity` modes
+## Concurrency
 
-Master-Part integrity reflects the contract that a Master row exists for every Part row that references it. Three modes govern how cascade enforces or relaxes that contract:
+Part rows are deleted as `part & (restricted master keys)`, with the master's keys materialized. If another session inserts a part row for one of those masters after the part DELETE, the master's DELETE fails on the part's foreign key (`ON DELETE RESTRICT`), the transaction rolls back, and no part row is left without its master. A foreign-key error during a cascade reports two likely causes: a row inserted concurrently, or a downstream schema the connection cannot see.
 
-| Mode | Behavior |
-|---|---|
-| `"enforce"` (default) | If a delete would remove a Part row without removing the corresponding Master row, the entire delete is rolled back with `DataJointError`. The Master row is checked **after** the delete; the integrity violation is detected post-hoc and reversed. The *intent* is row-level (each deleted Part row should have its Master deleted), but the shipped post-check is **table-level** — see [Limitations](#limitations) for the resulting rare false negatives and false positives. |
-| `"ignore"` | No upward propagation; no post-check. Master and Part are treated as **regular tables** — each is restricted only through its own foreign keys, and a Part row may be left orphaned when its Master row is preserved. Caller is responsible for the consequences. |
-| `"cascade"` | **The master-part group is treated as one item.** Whichever member the cascade encounters first, the whole group comes with it: if the **Master** is reached first, all of its Parts are included; if a **Part** is reached first, the restriction is lifted to its Master (via the upward walk below) and then all of the Master's Parts are included (siblings of the originating Part included). This is the group rule R2 (see the [Diagram spec's Traversal algebra](diagram.md#traversal-algebra)) applied in either direction of travel. |
+## Worked example: a seed restricted by a descendant
 
-This document focuses on the `"cascade"` mode; the `"enforce"` and `"ignore"` modes do not change the propagation graph.
+With the [K1](traversal-shapes.md#k1-seed-restricted-by-a-descendant) schema, the seed `Subject & (Session & "quality = 0")` selects subjects 1 and 2.
 
-## Part-to-Master upward propagation
+1. **Plan.** `Subject` holds the seed. `Session` holds `Session & Subject_restricted.proj()`, and so on down: `Trial` and `Flag`.
+2. **Materialize.** The seed reads `Session`, which is deleted before `Subject`, so it is replaced by the keys of subjects 1 and 2. The other restrictions are inherited from parents and stay symbolic.
+3. **Delete.** `Trial`, `Flag`, and `Session` rows of subjects 1 and 2 are deleted first, then `Subject` rows 1 and 2.
 
-When `part_integrity="cascade"` and the cascade reaches (or starts at) a Part node, the engine triggers an **upward walk** of the FK graph from the Part to its Master, applying the edge rule R1 upstream at each edge. Reaching the Master first needs no walk — its Parts are pulled in by ordinary forward propagation.
+Without step 2, the DELETE on `Subject` would run after the sessions of quality 0 were gone, match nothing, and leave subjects 1 and 2 in place ([#1496](https://github.com/datajoint/datajoint-python/issues/1496)).
 
-### Identifying the Master
-
-The Master is identified by **naming convention** via `dependencies.extract_master`: a Part table's SQL name ends in `master__partname`, and the Master is the prefix before the `__`. The graph must contain a node with that Master name; otherwise the upward walk is skipped.
-
-### Walking the FK path
-
-The walk enumerates **every** simple FK path from Master to Part (`nx.all_simple_edge_paths`), so a Part reachable through more than one foreign-key chain — or through parallel edges between the same pair — is restricted through all of them, combined with OR ([#1492](https://github.com/datajoint/datajoint-python/pull/1492)):
-
-```
-Master -> [intermediate Part(s)] -> Part
-```
-
-Each edge along a path applies the edge rule R1 (see the [Diagram spec's Traversal algebra](diagram.md#traversal-algebra)) in the upstream direction, per the edge's metadata (`attr_map`, renamed-or-not). **Intermediate Parts in a Part-of-Part chain are restricted along the way** — not only the Master.
-
-### Materialization at the Master
-
-After the upward walk completes, the Master's accumulated restrictions are **materialized** to a literal value tuple via `(master_ft & restrictions).proj().to_arrays()` and stored as a single condition. Subsequent forward propagation from the Master back down to its other Parts then generates `WHERE pk IN (literal-list)` rather than `WHERE pk IN (SELECT ... FROM <originating-part>)`.
-
-This is the [delete-time materialization](#delete-time-materialization) rule applied here: the originating Part is deleted before the Master (reverse-topological order), so a Master restriction left pointing at that Part would match zero rows and strand the Master — the very compositional-integrity violation the upward walk exists to prevent. Capturing the Master's primary keys while the Part still holds its rows avoids that, and as a bonus avoids the self-referential subquery MySQL rejects with error 1093.
-
-Intermediate Parts in the chain are **not** materialized — they appear only as restrictions on the path, not as forward-cascade sources, so the self-reference issue doesn't arise there.
-
-## Seed-is-Part case
-
-When `Table.delete(part_integrity="cascade")` is invoked on a Part directly (e.g. `Master.PartB.delete(part_integrity="cascade")`), the cascade seed is the Part itself. A leaf Part has no out-edges, so the main propagation loop — which fires the `part_integrity` block from inside the `out_edges` iteration — would not trigger.
-
-The engine handles this case by invoking the upward walk explicitly for the seed before the main loop runs. After the walk pulls in the Master and any intermediate Parts, the main loop then forward-cascades from the Master to its remaining descendants in the usual way.
-
-## Worked examples
-
-### Example 1: Part-of-Part with renamed FK
-
-```python
-import datajoint as dj
-
-schema = dj.Schema("imaging")
-
-@schema
-class Subject(dj.Manual):
-    definition = """
-    subject_id : int32
-    """
-
-    class Session(dj.Part):
-        definition = """
-        -> master
-        session_id : int32
-        """
-
-    class Recording(dj.Part):
-        definition = """
-        -> Subject.Session.proj(src_subject='subject_id', src_session='session_id')
-        recording_id : int32
-        """
-```
-
-`Recording`'s columns are `{src_subject, src_session, recording_id}` — none of them are named `subject_id`. The FK from `Subject.Session -> Subject.Recording` is aliased.
-
-When `(Subject.Recording & {"recording_id": 5}).delete(part_integrity="cascade")` runs:
-
-1. **Seed-is-Part check.** `extract_master(Recording) == Subject`. Trigger the upward walk.
-2. **FK path.** The simple FK path from Master to Part is `[Subject, Subject.Session, Subject.Recording]` (`nx.all_simple_edge_paths`).
-3. **Walk reversed** (R1 upstream at each edge).
-   - Edge `Subject.Session -> Subject.Recording`: renamed FK — the **rename** case. `Subject.Session` is restricted by `Subject.Recording.proj(subject_id='src_subject', session_id='src_session')`.
-   - Edge `Subject -> Subject.Session`: not renamed, but the child's restricted attributes `{subject_id, session_id}` are not (only) the parent's primary key `{subject_id}` (`session_id` is not in it) — the **project** case. `Subject` is restricted by `Subject.Session` projected onto its foreign-key columns, which for this primary FK is just `subject_id`.
-4. **Materialize Master.** `Subject`'s restriction is fetched into a value tuple; replaces the chained `QueryExpression`.
-5. **Forward pass.** Master forward-cascades back down to `Subject.Session` and `Subject.Recording` (and any sibling Parts not on the original path), now with the materialized restriction.
-
-Without the FK walk (the pre-fix behavior), the engine joined `subject_ft.proj() & recording_ft.proj()` on shared attribute names. `Subject` has `subject_id`; `Recording` has `src_subject`. No shared columns -> empty restriction -> Master not restricted. This is the failure mode from [#1429](https://github.com/datajoint/datajoint-python/issues/1429) Case 1.
-
-### Example 2: Part-of-Part with no Master reference in PartB
-
-```python
-@schema
-class Master(dj.Manual):
-    definition = """
-    master_id : int32
-    """
-
-    class PartA(dj.Part):
-        definition = """
-        -> master
-        part_a_id : int32
-        """
-
-    class PartB(dj.Part):
-        definition = """
-        -> Master.PartA
-        part_b_id : int32
-        """
-```
-
-`PartB`'s definition references `Master.PartA`, not `master` directly. The FK chain Master -> PartA -> PartB still exists in the dependency graph (PartA's FK to Master is `aliased=False`; PartA -> PartB is also `aliased=False`).
-
-For `(Master.PartB & {"master_id": 1}).delete(part_integrity="cascade")`:
-
-1. Upward walk: PartB -> PartA -> Master (R1 upstream at each edge).
-   - Edge PartA -> PartB: not renamed, and the child's restricted attributes `{master_id}` are within the parent's primary key `{master_id, part_a_id}` — the **copy** case. `PartA` inherits `PartB`'s restriction directly.
-   - Edge Master -> PartA: not renamed, and `{master_id}` is the parent's primary key `{master_id}` — the **copy** case. `Master` inherits `PartA`'s restriction.
-2. Materialize Master.
-3. Forward cascade Master -> PartA -> PartB picks up all sibling rows under `master_id=1`.
-
-Without the FK walk (the pre-fix behavior), the engine jumped directly from PartB to Master via `master_ft.proj() & partB_ft.proj()`. PartA was never restricted, and the chain semantics were silently incorrect. This is [#1429](https://github.com/datajoint/datajoint-python/issues/1429) Case 2.
-
-## Algorithmic complexity
-
-For a cascade subgraph with N nodes and E edges, propagation runs in at most O(N · E) edge visits per pass, with at most one pass per master pulled in by upward propagation. For typical schemas (small Master-Part groups, shallow chains), the cost is dominated by the materialization fetch at the Master — one `SELECT ... FROM master_ft` over the restricted master rows.
-
-## What is not part of this specification
-
-- **`Diagram.trace()`** for general upstream restriction propagation: a related but distinct feature that **shipped in 2.3** and applies the same edge rule R1 upstream. `trace()` exposes upstream propagation as a first-class operator; the cascade engine's upward walk in this document is the same machinery applied inside `part_integrity="cascade"`. See the [Upstream Trace Specification](trace.md) for `trace`'s API and semantics.
-- **Custom propagation rules** (user-defined): not supported. R1 and its three cases (copy, rename, project) cover the cases the FK graph can produce.
-- **Cross-schema cascade**: handled by `dependencies.load_all_downstream()` called from `Diagram.cascade()`; orthogonal to the propagation rules described here.
+The [Traversal Shape Catalog](traversal-shapes.md) gives the rows for the other shapes: lifts ([G1](traversal-shapes.md#g1-part-to-master-lift)), part-of-part chains ([G2](traversal-shapes.md#g2-part-of-part-with-two-chains)), a second foreign key to the master ([G3](traversal-shapes.md#g3-a-second-renamed-foreign-key-to-its-own-master)), chained instances ([G4](traversal-shapes.md#g4-renamed-sibling-foreign-key-chained-across-three-instances)), and merge tables ([G5](traversal-shapes.md#g5-merge-table)).
 
 ## Limitations
 
-The following are known, documented behaviors of the cascade engine as shipped:
+- **Materialization memory.** Materialized keys are held in memory, one key per selected row of a lifted master or a materialized seed. Large key sets are applied in chunks.
+- **Zero-row nodes.** A table the cascade can reach but whose restriction selects nothing appears with a count of 0 in `counts()` and in iteration. This is by design.
 
-- **Materialization memory cost.** The master restriction is materialized via `to_arrays()` (required by the reverse-topological delete order — not merely MySQL error 1093; see [Materialization at the Master](#materialization-at-the-master)). The cost is bounded by the number of distinct master rows referenced by the matching parts. Cascade **preview** (`Diagram.cascade(...).counts()`) pays the same materialization cost as an actual delete.
-- **Empty-match sentinel.** When no master rows match, the master carries an always-false restriction and appears with zero rows in `counts()` and iteration. This is by design, not an error.
-- **Enforce granularity.** The `part_integrity="enforce"` post-check is **table-level**: it verifies that *some* rows of the master table were deleted whenever part rows were, not that each deleted part row's *specific* master row was deleted. As a result, rare false negatives (an unrelated master row happened to be deleted in the same cascade, masking a genuine orphan) and false positives (deleting already-orphaned part rows whose master was removed earlier) are possible.
+## What is not part of this specification
+
+- **`Diagram.trace()`**: the `up` case of the same traversal; see the [Upstream Trace Specification](trace.md).
+- **Custom propagation rules**: not supported. The edge rule and the group rule cover every case the foreign-key graph can produce.
 
 ## References
 
-- Source: `src/datajoint/diagram.py` — `Diagram.cascade`, `_propagate_restrictions`, `_apply_propagation_rule`, `_apply_propagation_rule_upward`, `_propagate_part_to_master`.
-- Source: `src/datajoint/dependencies.py` — dependency-graph construction, `extract_master`.
-- Issue: [datajoint-python #1429](https://github.com/datajoint/datajoint-python/issues/1429) — bug report and motivating examples for the upward propagation rules.
-- [Master-Part Specification](master-part.md) — Part-Master contract.
-- [Diagram Specification](diagram.md) — graph operations on the dependency graph.
-- [Data Manipulation Specification](data-manipulation.md) — `delete()` and `delete_quick()` user-facing API.
+- Source: `src/datajoint/diagram.py` (`Diagram.expand`, `Diagram.cascade`), `src/datajoint/dependencies.py` (dependency graph, `topo_sort`, `extract_master`).
+- Issues: [#1429](https://github.com/datajoint/datajoint-python/issues/1429) (part-to-master lift with renamed foreign keys and part-of-part chains), [#1496](https://github.com/datajoint/datajoint-python/issues/1496) (delete-time materialization), [#1589](https://github.com/datajoint/datajoint-python/issues/1589), [#1590](https://github.com/datajoint/datajoint-python/issues/1590), [#1591](https://github.com/datajoint/datajoint-python/issues/1591) (rows deleted outside the cascade).
+- [Diagram Specification](diagram.md#traversal-specification) — the definitions of `D`, `D1`, and the computation.
+- [Traversal Shape Catalog](traversal-shapes.md) — worked examples.
+- [Master-Part Specification](master-part.md) — the master-part contract.
+- [Data Manipulation Specification](data-manipulation.md) — `delete()` and `delete_quick()`.
