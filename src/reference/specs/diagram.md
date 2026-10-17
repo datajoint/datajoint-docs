@@ -301,7 +301,7 @@ The definitions are about rows; the computation is about tables and restrictions
 
 **Parallel foreign keys.** Two foreign keys between the same pair of tables are separate references, each with its own `attr_map` ([S5](traversal-shapes.md#s5-parallel-foreign-keys)).
 
-**A1, owned parts.** A part is **owned** by its master if a foreign key in the part's primary key references the master, or references an owned part of the same master. The references along this chain may rename attributes. A foreign key in the primary key cannot be NULL, so every row of an owned part references a row at each step of the chain. A master and its owned parts form the master's **group**.
+**A1, owned parts.** A part is **owned** by its master if a foreign key in the part's primary key references the master, or references an owned part of the same master. A foreign key is in the primary key when all its attributes are primary-key attributes of the part, wherever the reference is declared. The references along this chain may rename attributes. A foreign key in the primary key cannot be NULL, so every row of an owned part references a row at each step of the chain. A master and its owned parts form the master's **group**.
 
 The **owning attributes** of an owned part are the part's attributes that the chain maps onto the master's primary key:
 
@@ -318,7 +318,7 @@ For a row `r` of an owned part:
 
 For a master row `m`, `inst(m)` is `m` together with the rows of its owned parts whose owning attributes equal `m`'s key. For any other row `r`, `inst(r) = {r}`.
 
-A part that is not owned gets a warning at declaration, and it is a plain table in traversal, in `topo_sort`, and in the declaration check: it has no master and no instance. This covers a part that does not reference its master, one that references it only through a secondary or nullable foreign key, and one that references it only through a part that is not owned ([G6](traversal-shapes.md#g6-a-part-its-master-does-not-own)).
+A part that is not owned gets a warning at declaration, and it is a plain table in traversal, in `topo_sort`, and in the declaration check: it has no master and no instance. This covers a part that does not reference its master, one that references it only through a foreign key with attributes outside the primary key (a secondary or nullable reference), and one that references it only through a part that is not owned ([G6](traversal-shapes.md#g6-a-part-its-master-does-not-own)).
 
 !!! version-added "New in 2.4"
     Ownership decides which parts belong to a master's group ([#1619](https://github.com/datajoint/datajoint-python/issues/1619)). In 2.3, every part was grouped with its master by its table name.
