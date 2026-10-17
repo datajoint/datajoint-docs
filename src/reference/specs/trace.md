@@ -40,7 +40,7 @@ The two directions are exact mirrors ([T3](diagram.md#derived-results)): a row `
 
 `trace` crosses each foreign key upward by **restriction**: the parent is restricted to the rows referenced by at least one restricted child row, `parent & child_restricted.proj(...)`, with renamed attributes mapped back through the foreign key's `attr_map`. A condition on the child is never copied to the parent, because it describes child rows ([R1](diagram.md#r1-the-edge-rule)). A child row whose foreign key has a NULL column references nothing through it.
 
-The group rule ([R2](diagram.md#r2-the-group-rule)) applies upward as it does downward: a part row brings its master and all of its master's part rows, and a master row brings all its part rows. Parallel foreign keys are each crossed on their own.
+The group rule ([R2](diagram.md#r2-the-group-rule)) applies upward as it does downward: a row of an owned part brings its master and the master's owned part rows, and a master row brings its owned part rows. A part that its master does not own is a plain table ([A1](diagram.md#model-and-assumptions)). Parallel foreign keys are each crossed on their own.
 
 ### The `make()` read/write boundary
 
@@ -79,10 +79,10 @@ Returns an expanded `Diagram` in the `up` direction. Its nodes are the seed's ta
 2. Compute `U(S)` in one pass over the tables in reverse topological order: each table is restricted by its seed and by the restricted rows of its children; each master-part group by the masters its members reach, after which each part takes all part rows of those masters ([Computation](diagram.md#computation)).
 3. Keep the seed's table and the tables reachable upward, with groups taken whole. Descendants of the seed and unrelated tables are not included.
 
-The trace stays symbolic: no rows are read until a node is indexed, counted, or fetched. The one exception is a group whose internal foreign key renames the master's key, which is evaluated while the trace is built ([groups that iterate](diagram.md#groups-that-iterate)).
+The trace stays symbolic: no rows are read until a node is indexed, counted, or fetched. The one exception is a group where a foreign key between members does not map owning attributes onto owning attributes; its master keys are evaluated while the trace is built ([groups that iterate](diagram.md#groups-that-iterate)).
 
 !!! version-changed "Changed in 2.4"
-    A trace includes all parts of every master it reaches, and the ancestors of those parts ([#1481](https://github.com/datajoint/datajoint-python/issues/1481)). In 2.3 it included a part only if the part lay on a foreign-key path to the seed. Upward crossings are always restrictions; 2.3 copied some conditions upward, which is correct only for keys of existing child rows.
+    A trace includes all owned parts of every master it reaches, and the ancestors of those parts ([#1481](https://github.com/datajoint/datajoint-python/issues/1481)). In 2.3 it included a part only if the part lay on a foreign-key path to the seed. Upward crossings are always restrictions; 2.3 copied some conditions upward, which is correct only for keys of existing child rows.
 
 ### Indexing: `trace[T]`
 
@@ -216,7 +216,7 @@ Once built, the trace is reused for the remainder of the call. The underlying SQ
 `self.upstream` exposes:
 
 - all ancestors of `self` reached through its primary foreign keys (transitively, including renamed foreign keys);
-- **all parts of every ancestor master**, and their ancestors. By the group rule, a master-part group is one entity: once an ancestor master is in the trace, its whole group comes with it, not only those parts that happen to lie on a foreign-key path to `self`. This is the upstream mirror of `part_integrity="cascade"` treating the group as one.
+- **all owned parts of every ancestor master**, and their ancestors. By the group rule, a master-part group is one entity: once an ancestor master is in the trace, its whole group comes with it, not only those parts that happen to lie on a foreign-key path to `self`. This is the upstream mirror of `part_integrity="cascade"` treating the group as one.
 
 Requesting any table outside this set raises `DataJointError` — including tables that exist in the schema but are not ancestors of `self`. A table's own parts are descendants, not ancestors; read them directly as `self.PartName`.
 

@@ -179,7 +179,7 @@ The preview of `(table_expr).delete(part_integrity=...)`. It loads every schema 
 | `"ignore"` | `D1(S)`: the rows reached through foreign keys alone, with part tables treated as plain tables |
 | `"enforce"` (default) | `D1(S)`. `Table.delete()` deletes these rows only if they include the master of every part row among them, and otherwise raises before deleting anything |
 
-`part_integrity` accepts only `"enforce"`, `"ignore"`, or `"cascade"`; any other value raises `ValueError`. The [Cascade Specification](cascade.md) covers the delete itself.
+With `"enforce"`, the preview holds `D1(S)` and does not raise; the check runs in `Table.delete()`. `part_integrity` accepts only `"enforce"`, `"ignore"`, or `"cascade"`; any other value raises `ValueError`. The [Cascade Specification](cascade.md) covers the delete itself.
 
 !!! version-changed "Changed in 2.4"
     `"enforce"` checks each part row's own master, before any row is deleted. In 2.3 it was a table-level check run after the delete. With `"cascade"`, a master joins the delete only if one of its part rows did ([#1591](https://github.com/datajoint/datajoint-python/issues/1591)).
@@ -301,14 +301,27 @@ The definitions are about rows; the computation is about tables and restrictions
 
 **Parallel foreign keys.** Two foreign keys between the same pair of tables are separate references, each with its own `attr_map` ([S5](traversal-shapes.md#s5-parallel-foreign-keys)).
 
-**A1, the owning reference.** A part's heading contains its master's primary key under the master's attribute names, with no NULLs, inherited through `-> master` or through a foreign key to a sibling part that satisfies A1 itself. For a part row `r`:
+**A1, owned parts.** A part is **owned** by its master if a foreign key in the part's primary key references the master, or references an owned part of the same master. The references along this chain may rename attributes. A foreign key in the primary key cannot be NULL, so every row of an owned part references a row at each step of the chain. A master and its owned parts form the master's **group**.
 
-- `master(r)` is the master row with that key;
-- `inst(r)`, the **instance** of `r`, is `master(r)` together with every part row, in any part of the master, that has the same master key.
+The **owning attributes** of an owned part are the part's attributes that the chain maps onto the master's primary key:
 
-For a master row `m`, `inst(m)` is `m` with all its part rows. For a row `r` of a plain table, `inst(r) = {r}`.
+- for `-> master` in the primary key, the master's own key attributes;
+- for `-> master.proj(m_id="master_id")`, the attribute `m_id`;
+- for a reference to an owned part, the attributes that the reference maps onto that part's owning attributes ([G7](traversal-shapes.md#g7-owned-part-of-part-with-renamed-attributes)).
 
-A part that violates A1 gets a warning at declaration and is traversed as a plain table: it has no master and no instance ([G6](traversal-shapes.md#g6-a-part-violating-a1)).
+If a part has several owning chains, its owning attributes come from an unrenamed `-> master` if it has one, and otherwise from the first owning reference in its definition.
+
+For a row `r` of an owned part:
+
+- `master(r)` is the master row whose primary key equals `r`'s owning attributes;
+- `inst(r)`, the **instance** of `r`, is `master(r)` together with every row of every owned part of the same master whose owning attributes have the same values.
+
+For a master row `m`, `inst(m)` is `m` together with the rows of its owned parts whose owning attributes equal `m`'s key. For any other row `r`, `inst(r) = {r}`.
+
+A part that is not owned gets a warning at declaration, and it is a plain table in traversal, in `topo_sort`, and in the declaration check: it has no master and no instance. This covers a part that does not reference its master, one that references it only through a secondary or nullable foreign key, and one that references it only through a part that is not owned ([G6](traversal-shapes.md#g6-a-part-its-master-does-not-own)).
+
+!!! version-added "New in 2.4"
+    Ownership decides which parts belong to a master's group ([#1619](https://github.com/datajoint/datajoint-python/issues/1619)). In 2.3, every part was grouped with its master by its table name.
 
 **Row relations.** For a row `r`:
 
@@ -391,13 +404,15 @@ The argument is T4's with `parent` in place of `child`.
 
 `U(D(S))` is `U` of `D(S)`, so T5 applies to it with `D(S)` as the seed. For non-idempotence, take a table `A` with two child tables `B` and `C`, and a row `a` with one child `b` in `B` and one child `c` in `C`. With `S = {b}`, `both(S) = U({b}) = {a, b}`, and `both({a, b}) = U({a, b, c}) = {a, b, c}`: the second application picks up `a`'s other descendant.
 
-**T7, enforce.** Under A1, `D1(S)` is lift-closed if and only if `D1(S) = D(S)`.
+**T7, enforce.** `D1(S)` is lift-closed if and only if `D1(S) = D(S)`.
 
-Under A1, every part row of an instance can be reached from its master row by `child` steps, through `-> master` or through sibling parts that carry the same key. So if `D1(S)` contains the master of each of its part rows, it contains their whole instances, is closed under `down`, and equals `D(S)`. Conversely, `D(S)` is closed under `inst`, so if `D1(S) = D(S)` it is lift-closed. `enforce` therefore deletes only when the group rule would add nothing.
+Every row of an owned part can be reached from its master row by `child` steps along its owning chain: each reference in the chain lies in a primary key, so it is never NULL, and it maps owning attributes onto owning attributes, so it stays in the same instance. So if `D1(S)` contains the master of each of its part rows, it contains their whole instances, is closed under `down`, and equals `D(S)`. Conversely, `D(S)` is closed under `inst`, so if `D1(S) = D(S)` it is lift-closed. `enforce` therefore deletes only when the group rule would add nothing.
 
-**T8, ordering.** Under A1, `topo_sort` succeeds if and only if the group quotient `Q` is acyclic. The **group quotient** `Q` is the table-level foreign-key graph with each master and its parts merged into a single node.
+**T8, ordering.** `topo_sort` succeeds if and only if the group quotient `Q` is acyclic. The **group quotient** `Q` is the table-level foreign-key graph with each master and its owned parts merged into a single node; a part that is not owned stays a node of its own.
 
-`topo_sort` sorts the table graph after adding, for each part, an edge from each of the part's parents outside its group to its master. Under A1 the master reaches each of its parts, so a cycle in `Q` becomes a cycle in that graph. Conversely, a cycle in that graph cannot stay inside one group, because foreign keys between tables never form a cycle, so it maps to a cycle in `Q`. Declaring a part that would close a cycle in `Q` is refused ([X2](traversal-shapes.md#x2-group-cycle-refused-at-declaration)), so `Q` stays acyclic.
+`topo_sort` keeps each owned part right after its master, so it sorts the table graph after adding, for each owned part, an edge from each of the part's parents outside its group to its master. The master reaches each owned part along its owning chain, so a cycle in `Q` becomes a cycle in that graph. Conversely, a cycle in that graph cannot stay inside one group, because foreign keys between tables never form a cycle, so it maps to a cycle in `Q`.
+
+The declaration check keeps `Q` acyclic ([#1619](https://github.com/datajoint/datajoint-python/issues/1619); [X2](traversal-shapes.md#x2-group-cycle-refused-at-declaration)). An owned part may reference its master, an owned part of the same master, or a table that does not depend on its master, with groups taken whole; parts the master does not own count as outside the group. A reference to any other table would close a cycle in `Q`, and the declaration is refused before any table is created.
 
 ### Computation
 
@@ -411,12 +426,15 @@ The engine computes the rows above as restrictions on tables, without reading th
 C & P_restricted.proj(<P's key attributes, renamed to their names in C>)
 ```
 
-The parent's condition may instead be **copied** to the child unchanged, but only when the attributes it names are among `e`'s attributes, `e` is not renamed, and none of `e`'s columns is nullable. Then each child row holds the same values under the same names as the parent row it references, and it references one, so the copied condition selects exactly the children. [S3](traversal-shapes.md#s3-nullable-foreign-key-sharing-a-primary-key-column) shows the nullable case, [S4](traversal-shapes.md#s4-renamed-foreign-key) the renamed case, and [S7](traversal-shapes.md#s7-diamond-reached-through-a-secondary-foreign-key) a condition on an attribute the child holds through a different parent.
+The parent's condition may instead be **copied** to the child unchanged, but only when the attributes it names are among `e`'s attributes, `e` is not renamed, and none of `e`'s columns is nullable. Here, the attributes a condition names are every key of a dict, including keys that are not attributes of the parent, and the whole heading of a query expression. Under these conditions each child row holds the same values under the same names as the parent row it references, and it references one, so the copied condition selects exactly the children. [S3](traversal-shapes.md#s3-nullable-foreign-key-sharing-a-primary-key-column) shows the nullable case, [S4](traversal-shapes.md#s4-renamed-foreign-key) the renamed case, and [S7](traversal-shapes.md#s7-diamond-reached-through-a-secondary-foreign-key) a condition on an attribute the child holds through a different parent.
 
-A copy is a shortcut: it must select the same rows as the restriction, so the condition must also mean the same thing on the child as on the parent. Two kinds of condition can change meaning when moved, and are not copied:
+A copy is a shortcut, and it must select the same rows as the restriction. Two kinds of condition would change meaning if moved, and the rule above already keeps them from being copied:
 
 - a dict with keys that are not attributes of the parent: they are ignored on the parent but can match attributes of the child;
 - a query expression that shares more attributes with the child than with the parent: a restriction by a query expression matches on all shared attributes. Copied to `Session`, the seed condition of [K1](traversal-shapes.md#k1-seed-restricted-by-a-descendant), `Session & "quality = 0"`, would match on every attribute of `Session` and select only the sessions of quality 0. Copied the same way, the seed `Subject - (Session & "quality = 0")` would select every session of another quality, including sessions of subjects that are not deleted.
+
+!!! note
+    The 2.3 engine copies the compiled SQL predicate, which reads only the parent's columns. That is why 2.3 copies dict conditions, and conditions given as query expressions, correctly. The 2.4 plan refers to conditions rather than to compiled SQL, so the rule above applies.
 
 **Parallel foreign keys** combine with OR: a child row is reached if any of its foreign keys references a restricted row.
 
@@ -434,7 +452,7 @@ The one shortcut upward applies to keys materialized from the child table itself
 
 For a master `M` and its part `Pi`, with `R(T)` the restriction on table `T`:
 
-- **lift:** `M & R(Pi).proj(*M.primary_key)` — the masters of the restricted part rows. A1 puts the master's key in every part row, so the lift is one step on that key, with no walk along the foreign keys between parts ([G2](traversal-shapes.md#g2-part-of-part-with-two-chains)). Another foreign key from the part to its master is not used for the lift ([G3](traversal-shapes.md#g3-a-second-renamed-foreign-key-to-its-own-master)).
+- **lift:** `M & R(Pi).proj(m1="o1", m2="o2", …)` — the masters of the restricted part rows. Each owning attribute `o` of `Pi` is renamed to the attribute `m` of the master's key that it maps onto; for an unrenamed `-> master` this is `M & R(Pi).proj()`. Every owned part row holds its owning attributes, so the lift is one step, with no walk along the foreign keys between parts ([G2](traversal-shapes.md#g2-part-of-part-with-two-chains), [G7](traversal-shapes.md#g7-owned-part-of-part-with-renamed-attributes)). The part's other references to its master are not used for the lift ([G3](traversal-shapes.md#g3-a-second-renamed-foreign-key-to-its-own-master)).
 - **re-expand:** `Pi & R(M)` — every part row of the restricted masters.
 
 The lift is existential: a master joins only if at least one of its part rows did ([G1](traversal-shapes.md#g1-part-to-master-lift)).
@@ -446,18 +464,20 @@ Because `Q` is acyclic (T8), the engine visits each node of `Q` once: in `topo_s
 - A **plain table** `T` gets `R(T)` = its seed ∪ R1 from each restricted neighbor on the incoming side (its parents for `down`, its children for `up`).
 - A **group** with master `M` gets `R(M)` = the seed on `M` ∪ R1 into `M` ∪ lift(R1 into each part ∪ the seed on each part). Then each part `Pi` gets `Pi & R(M)`.
 
-`up` is the same pass with every edge reversed. The pass is exact because every neighbor on the incoming side is final before it is used (`Q` is acyclic), and because a foreign key inside a group maps the master's key to itself, so steps inside a group never leave the instances already in `R(M)`. The next subsection covers the groups where that fails.
+`up` is the same pass with every edge reversed. The pass is exact because every neighbor on the incoming side is final before it is used (`Q` is acyclic), and because every foreign key inside a group maps owning attributes onto owning attributes, so steps inside a group never leave the instances already in `R(M)`. The next subsection covers the groups where that fails.
 
 #### Groups that iterate
 
-A foreign key inside a group that renames the master's key links different instances of the group. In [G4](traversal-shapes.md#g4-renamed-sibling-foreign-key-chained-across-three-instances), a `Carry` row of run 2 references a `Step` row of run 1; in [G3](traversal-shapes.md#g3-a-second-renamed-foreign-key-to-its-own-master), a part references another row of its own master. The engine detects such a foreign key from its `attr_map`. For that group only, it evaluates the lifted master keys and repeats the group step until no new key appears. This is the only place where a traversal reads rows before a delete.
+A group iterates if and only if some foreign key inside it does not map the referencing part's owning attributes onto the referenced table's owning attributes (for the master, its primary key). Such a foreign key links different instances of the group. In [G4](traversal-shapes.md#g4-renamed-sibling-foreign-key-chained-across-three-instances), a `Carry` row of run 2 references a `Step` row of run 1 through `prev_run`, which is not an owning attribute of `Carry`; in [G3](traversal-shapes.md#g3-a-second-renamed-foreign-key-to-its-own-master), a part references another row of its own master through `other_session`. Renaming the master's key is one way this happens. A foreign key references the whole primary key, which contains the referenced table's owning attributes, so every reference inside a group carries a master key; the question is only whether it is the referencing part's own.
+
+The engine detects such a foreign key from its `attr_map`. For that group only, it evaluates the lifted master keys and repeats the group step until no new key appears. This is the only place where a traversal reads rows before a delete.
 
 #### Seeds
 
 - A seed is one table with any restriction. Projections, joins, aggregations, and unions are refused as seeds. The restriction itself may use them, for example a subquery on a descendant ([K1](traversal-shapes.md#k1-seed-restricted-by-a-descendant)) or on the seed's own table ([K2](traversal-shapes.md#k2-self-referencing-seed)).
 - A `dj.Top` seed is first replaced by the primary keys it selects ([K4](traversal-shapes.md#k4-djtop-seed)).
 - A dict that names none of the table's attributes means all rows, as in any restriction ([Query Algebra §2.4](query-algebra.md#24-dictionary-conditions)). As a seed, it raises a warning ([K6](traversal-shapes.md#k6-unrestricted-seed)).
-- A materialized seed (a dict, a list of dicts, or `.keys()`) may cross an edge by **relabeling**: keeping only the keys the foreign key carries, renamed through `attr_map`. Relabeling is used where it selects the same rows as R1: downward, when the foreign key has no nullable column or the keys name all its columns; upward, only for keys read from the child table that contain all its columns. A live seed — a string or a query expression — crosses by restriction. Both give the same rows ([K3](traversal-shapes.md#k3-seed-kinds-give-the-same-rows)).
+- A materialized seed (a dict, a list of dicts, or `.keys()`) may cross an edge by **relabeling**: keeping only the keys the foreign key carries, renamed through `attr_map`. Relabeling is used only where it selects the same rows as R1. Downward, every key must name, among the parent's attributes, only attributes the foreign key carries; and if the foreign key has a nullable column, every key must name all of the foreign key's attributes, none of them NULL. Otherwise relabeling changes the rows: `Session & {"quality": 0}` relabels to `{}` across `Trial`'s foreign key and would select every trial, and on the schema of [S3](traversal-shapes.md#s3-nullable-foreign-key-sharing-a-primary-key-column), `Surgery & {"subject_id": 1, "surgery_id": None}` selects no surgery but, relabeled, would select session (1, 2; NULL). Upward, relabeling applies only to keys read from the child table that contain all of the foreign key's columns. A live seed — a string or a query expression — crosses by restriction. Both give the same rows ([K3](traversal-shapes.md#k3-seed-kinds-give-the-same-rows)).
 - The attributes a string condition names are read from its text outside any subquery.
 
 #### The plan
@@ -487,11 +507,11 @@ Without this, a restriction that reads a table emptied earlier in the same delet
 
 A diagram returned by `expand()`, `cascade()`, or `trace()` is an **expanded diagram**. It has a direction, and it obeys the following contract.
 
-- **Nodes.** The node set is the *table-level reach* of the seed's table: the tables reached by following foreign keys in the direction of travel, together with the master and all parts of every group that has a reached member. (For `D1`, the group step is left out.) For `both`, it is the upward reach of the downward reach. A node may hold zero rows.
+- **Nodes.** The node set is the *table-level reach* of the seed's table: the tables reached by following foreign keys in the direction of travel, together with the master and all owned parts of every group that has a reached member. (For `D1`, the group step is left out.) For `both`, it is the upward reach of the downward reach. A node may hold zero rows.
 - **`d[T]`** returns `T` restricted to its rows, in every direction, and raises `DataJointError` if `T` is not a node.
 - **`counts()`** works, and **iteration** runs in topological order.
 - **Copying** a diagram, `dj.Diagram(d)`, keeps its direction.
-- **`d1 + d2`** of two diagrams with the same direction holds, for each table, the union of their rows (T2). Adding diagrams of different directions raises.
+- **`d1 + d2`** of two diagrams with the same direction holds, for each table, the union of their rows (T2). It raises for diagrams of different directions, for an expanded diagram and one that is not expanded, and for two `cascade()` diagrams with different `part_integrity` modes.
 - **`-`, `*`, `+ n`, and `- n`** raise.
 - **`prune()`** raises for `down` and is allowed for `up` and `both`.
 

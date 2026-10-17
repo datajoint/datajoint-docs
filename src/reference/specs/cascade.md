@@ -29,7 +29,7 @@ DataJoint loads its foreign-key structure into a directed acyclic graph (`Connec
 
 | `part_integrity` | Deletes |
 |---|---|
-| `"cascade"` | `D(S)`. Whichever member of a master-part group the cascade reaches, the whole instance goes: a reached part row lifts to its master, and the master brings all its part rows. |
+| `"cascade"` | `D(S)`. Whichever member of a master's group the cascade reaches, the whole instance goes: a reached row of an owned part lifts to its master, and the master brings all its owned part rows. |
 | `"ignore"` | `D1(S)`. Masters and parts are treated as plain tables, so a part row can be deleted while its master and sibling part rows stay. The caller is responsible for the consequences. |
 | `"enforce"` (default) | `D1(S)`, if it contains the master of every part row in it. Otherwise `delete()` raises `DataJointError` **before deleting anything**, naming a part row and its master. |
 
@@ -39,16 +39,17 @@ By [T7](diagram.md#derived-results), `enforce` deletes exactly when `D1(S) = D(S
     - `"enforce"` is checked per part row, before the delete. In 2.3 it was a table-level check after the delete, which could miss an orphaned part row when an unrelated master row was deleted in the same cascade. The 2.4 check is stricter.
     - With `"cascade"`, a master joins the delete only if one of its part rows did. In 2.3 the part's condition was copied to the master, which could delete masters that had no matching part row ([#1591](https://github.com/datajoint/datajoint-python/issues/1591); [G1](traversal-shapes.md#g1-part-to-master-lift)).
     - A downward copy of a condition across a nullable foreign key could delete rows whose foreign key references nothing, and in a diamond it could miss rows ([#1590](https://github.com/datajoint/datajoint-python/issues/1590); [S3](traversal-shapes.md#s3-nullable-foreign-key-sharing-a-primary-key-column), [S7](traversal-shapes.md#s7-diamond-reached-through-a-secondary-foreign-key)).
+    - Parts belong to a master's group by ownership rather than by table name ([#1619](https://github.com/datajoint/datajoint-python/issues/1619)). A part-of-part chain with renamed attributes lifts; a part that references its master only through a secondary or nullable foreign key is a plain table.
     - A `dj.Top` seed was ignored ([#1589](https://github.com/datajoint/datajoint-python/issues/1589); [K4](traversal-shapes.md#k4-djtop-seed)).
     - A seed restricted by one of its descendants was silently not deleted ([#1496](https://github.com/datajoint/datajoint-python/issues/1496); [K1](traversal-shapes.md#k1-seed-restricted-by-a-descendant)).
 
 `part_integrity` accepts only `"enforce"`, `"ignore"`, or `"cascade"`; any other value raises `ValueError`.
 
-**Parts that violate A1.** The group rule applies to parts whose heading contains the master's primary key under the master's own attribute names ([A1](diagram.md#model-and-assumptions)). A part that holds the master's key only under renamed attributes is traversed as a plain table, with a warning at declaration, in every mode ([G6](traversal-shapes.md#g6-a-part-violating-a1)).
+**Parts the master does not own.** The group rule applies to the parts a master owns: a part whose primary key references the master, directly or through another owned part, possibly under renamed attributes ([A1](diagram.md#model-and-assumptions)). A part that references its master only through a secondary or nullable foreign key, or not at all, is traversed as a plain table in every mode, with a warning at declaration ([G6](traversal-shapes.md#g6-a-part-its-master-does-not-own)). A part-of-part chain with renamed attributes, as in [#1429](https://github.com/datajoint/datajoint-python/issues/1429) Case 1, is owned and lifts to its master ([G7](traversal-shapes.md#g7-owned-part-of-part-with-renamed-attributes)).
 
 ## Preview
 
-`Diagram.cascade(...)` is symbolic. It holds restrictions, not rows, and reads nothing from the database until `counts()`, iteration, or `d[T]` evaluates them. It never materializes keys, with one exception: in a group whose internal foreign key renames the master's key, the master keys are evaluated while the diagram is built ([groups that iterate](diagram.md#groups-that-iterate)).
+`Diagram.cascade(...)` is symbolic. It holds restrictions, not rows, and reads nothing from the database until `counts()`, iteration, or `d[T]` evaluates them. It never materializes keys, with one exception: in a group where a foreign key between members does not map owning attributes onto owning attributes, the master keys are evaluated while the diagram is built ([groups that iterate](diagram.md#groups-that-iterate)). With `"enforce"`, the preview holds `D1(S)` and does not raise; the check runs when `delete()` starts.
 
 Its nodes are every table the cascade can reach, including tables with zero matching rows, and `prune()` refuses to remove them: a table empty when the preview is built can gain rows before the delete runs. The counts of a preview equal the counts the delete then removes, unless the data change in between.
 
@@ -83,6 +84,8 @@ Downward expansion for a delete carries a constraint that the preview does not: 
 `Table.delete()` deletes in reverse topological order, so every downstream table is emptied before the tables it depends on. A restriction that still read a downstream table when its own DELETE ran would match nothing, and the rows it should delete would stay. This happens when the seed is restricted by one of its descendants ([K1](traversal-shapes.md#k1-seed-restricted-by-a-descendant)) or by its own table ([K2](traversal-shapes.md#k2-self-referencing-seed)), and for every part-to-master lift, since a part is deleted before its master.
 
 Before the first DELETE, the engine therefore materializes each restriction whose *local* terms read a table deleted no later than its own: every lift, and every seed whose restriction is not already literal keys. Terms inherited from a parent are safe, because the parent is deleted after its children. Large key sets are applied in chunks. The full rule is in [Materialization happens only at delete time](diagram.md#materialization-happens-only-at-delete-time).
+
+This generalizes the seed fix in [#1611](https://github.com/datajoint/datajoint-python/pull/1611) (2.3.5), which replaces a delete seed whose conditions contain a subquery by the primary keys it selects, as a `dj.Top` seed already was. In 2.4 the same holds for every seed whose restriction is not literal keys, and for every lift.
 
 The rule follows from the delete order and applies on every backend. MySQL also rejects a DELETE whose subquery reads the table being deleted (error 1093), and PostgreSQL permits it; materializing first avoids both the stranded rows and the error.
 

@@ -28,7 +28,8 @@ Each shape has a tiny schema, a few rows, one or more seeds, and the exact rows 
 | [G3](#g3-a-second-renamed-foreign-key-to-its-own-master) | A second, renamed foreign key to its own master | Only the owning reference lifts |
 | [G4](#g4-renamed-sibling-foreign-key-chained-across-three-instances) | Renamed sibling foreign key, chained across three instances | The group step iterates |
 | [G5](#g5-merge-table) | Merge table | A trace reaches the parts of an ancestor master |
-| [G6](#g6-a-part-violating-a1) | A part violating A1 | Traversed as a plain table |
+| [G6](#g6-a-part-its-master-does-not-own) | A part its master does not own | Traversed as a plain table |
+| [G7](#g7-owned-part-of-part-with-renamed-attributes) | Owned part-of-part with renamed attributes | The lift renames the owning attributes |
 | [K1](#k1-seed-restricted-by-a-descendant) | Seed restricted by a descendant | Seeds are materialized before deleting |
 | [K2](#k2-self-referencing-seed) | Self-referencing seed | Same, for a seed that reads its own table |
 | [K3](#k3-seed-kinds-give-the-same-rows) | Seed kinds give the same rows | Dict, list, string, subquery, `AndList`, `Not` |
@@ -425,7 +426,7 @@ class Session(dj.Manual):
         """
 ```
 
-`Session.Link` belongs to its session through `-> master` (the owning reference, A1) and points to another session through a renamed foreign key.
+`Session.Link` is owned through `-> master`, so its owning attribute is `session_id`. It points to another session through a second, renamed foreign key.
 
 | Table | Columns | Rows |
 |---|---|---|
@@ -437,7 +438,7 @@ class Session(dj.Manual):
 | `Session.Link & {"session_id": 1}` | down | `Session.Link`: (1, 1), (3, 1)<br>`Session`: 1, 3 |
 | `Session.Link & {"session_id": 1}` | up | `Session.Link`: (1, 1)<br>`Session`: 1, 2 |
 
-**Why.** Link (1, 1) lifts through its owning reference to session 1, not to session 2. Deleting session 1 then deletes link (3, 1), which points to it, and so the rest of instance 3. Upward, link (1, 1) reads session 2, a parent, but not link (3, 1), a child. The renamed foreign key links one instance to another, so this group is [iterated](diagram.md#groups-that-iterate).
+**Why.** Link (1, 1) lifts through its owning attribute to session 1, not to session 2. Deleting session 1 then deletes link (3, 1), which points to it, and so the rest of instance 3. Upward, link (1, 1) reads session 2, a parent, but not link (3, 1), a child. The second foreign key maps `other_session`, which is not an owning attribute, onto the master's key; it links one instance to another, so this group [iterates](diagram.md#groups-that-iterate).
 
 With `part_integrity="enforce"`, `(Session & {"session_id": 1}).delete()` raises: it would delete link (3, 1) without session 3.
 
@@ -480,7 +481,7 @@ A `Carry` row of one run references a `Step` row of an earlier run.
 | `Run & {"run_id": 2}` | up | `Run`: 1, 2<br>`Run.Step`: (1, 1), (2, 1)<br>`Run.Carry`: (2, 1) |
 | `Run & {"run_id": 2}` | both | `Run`: 1, 2, 3<br>`Run.Step`: (1, 1), (2, 1), (3, 1)<br>`Run.Carry`: (2, 1), (3, 1) |
 
-**Why.** Deleting run 1 deletes step (1, 1), so carry (2, 1), which references it, and so the rest of run 2; that reaches carry (3, 1) and run 3. Run 4 is untouched. One pass over the group would stop at run 1. The engine detects the renamed key and repeats the group step: the master keys grow as {1}, {1, 2}, {1, 2, 3}, and a fourth round adds nothing. Upward the chain runs the other way, from run 2 back to run 1.
+**Why.** Deleting run 1 deletes step (1, 1), so carry (2, 1), which references it, and so the rest of run 2; that reaches carry (3, 1) and run 3. Run 4 is untouched. One pass over the group would stop at run 1. `Carry`'s reference to `Step` maps `prev_run`, not `Carry`'s owning attribute `run_id`, onto `Step`'s owning attribute, so the engine repeats the group step: the master keys grow as {1}, {1, 2}, {1, 2, 3}, and a fourth round adds nothing. Upward the chain runs the other way, from run 2 back to run 1.
 
 ### G5. Merge table
 
@@ -551,7 +552,7 @@ trace[ImagingSource]    # empty: a node with zero rows, not an error
 
 **Why.** Upward, recording 1 brings its whole instance. Its `Ephys` part row references the source that produced the recording, so `trace[EphysSource]` resolves ([#1481](https://github.com/datajoint/datajoint-python/issues/1481)). Downward, deleting ephys source 2 deletes the part row that names it, so the whole of recording 2, and its analysis. With `part_integrity="enforce"` that delete raises, because the part row would go without its master.
 
-### G6. A part violating A1
+### G6. A part its master does not own
 
 ```python
 @schema
@@ -562,25 +563,74 @@ class Probe(dj.Manual):
 
     class Channel(dj.Part):
         definition = """
-        -> master.proj(host_id="probe_id")
         channel_id : int32
+        ---
+        -> master
         """
 ```
 
-`Probe.Channel` references its master only under a renamed key, so its heading does not contain `probe_id` and it violates A1. Declaring it raises a warning, and it is traversed as a plain table: no lift and no instance.
+`Probe.Channel` references its master only through a secondary foreign key, so the master does not own it. Declaring it raises a warning, and it is traversed as a plain table: no lift and no instance. A nullable reference, `-> [nullable] master`, has the same effect.
 
 | Table | Columns | Rows |
 |---|---|---|
 | `Probe` | `probe_id` | 1, 2 |
-| `Probe.Channel` | `host_id, channel_id` | (1, 1), (1, 2), (2, 1) |
+| `Probe.Channel` | `channel_id; probe_id` | (1; 1), (2; 1), (3; 2) |
 
 | Seed | Direction | Rows returned |
 |---|---|---|
-| `Probe.Channel & {"host_id": 1, "channel_id": 1}` | down | `Probe.Channel`: (1, 1) |
-| `Probe.Channel & {"host_id": 1, "channel_id": 1}` | up | `Probe.Channel`: (1, 1)<br>`Probe`: 1 |
-| `Probe & {"probe_id": 1}` | down | `Probe`: 1<br>`Probe.Channel`: (1, 1), (1, 2) |
+| `Probe.Channel & {"channel_id": 1}` | down | `Probe.Channel`: 1 |
+| `Probe.Channel & {"channel_id": 1}` | up | `Probe.Channel`: 1<br>`Probe`: 1 |
+| `Probe & {"probe_id": 1}` | down | `Probe`: 1<br>`Probe.Channel`: 1, 2 |
 
-**Why.** As a plain table, the channel reaches its probe only as a parent: downward nothing lifts, and upward channel (1, 2) is not part of channel (1, 1)'s instance. Deleting the probe still deletes its channels, as children.
+**Why.** As a plain table, the channel reaches its probe only as a parent: downward nothing lifts, and upward channel 2 is not part of channel 1's instance. Deleting the probe still deletes its channels, as children. Moving the reference into the primary key, as `-> master` or renamed as `-> master.proj(host_id="probe_id")`, would make the part owned.
+
+### G7. Owned part-of-part with renamed attributes
+
+The part-of-part shape of [#1429](https://github.com/datajoint/datajoint-python/issues/1429), Case 1:
+
+```python
+@schema
+class Master(dj.Manual):
+    definition = """
+    master_id : int32
+    """
+
+    class PartA(dj.Part):
+        definition = """
+        -> master
+        part_a_id : int32
+        """
+
+    class PartB(dj.Part):
+        definition = """
+        -> Master.PartA.proj(src_master="master_id", src_part="part_a_id")
+        part_b_id : int32
+        """
+
+
+@schema
+class Report(dj.Manual):
+    definition = """
+    -> Master
+    report_id : int32
+    """
+```
+
+`PartB` has no attribute named `master_id`. It is owned through its primary-key reference to `PartA`, which is owned, and its owning attribute is `src_master`, which that reference maps onto `PartA`'s `master_id`.
+
+| Table | Columns | Rows |
+|---|---|---|
+| `Master` | `master_id` | 1, 2, 3 |
+| `Master.PartA` | `master_id, part_a_id` | (1, 10), (1, 11), (2, 20) |
+| `Master.PartB` | `src_master, src_part, part_b_id` | (1, 10, 100), (1, 11, 110), (2, 20, 200) |
+| `Report` | `master_id, report_id` | (1, 1), (2, 1) |
+
+| Seed | Direction | Rows returned |
+|---|---|---|
+| `Master.PartB & {"part_b_id": 100}` | down | `Master.PartB`: (1, 10, 100), (1, 11, 110)<br>`Master`: 1<br>`Master.PartA`: (1, 10), (1, 11)<br>`Report`: (1, 1) |
+| `Master.PartB & {"part_b_id": 100}` | up | `Master.PartB`: (1, 10, 100), (1, 11, 110)<br>`Master`: 1<br>`Master.PartA`: (1, 10), (1, 11) |
+
+**Why.** The lift renames the owning attribute onto the master's key, `Master & R(PartB).proj(master_id="src_master")`, and selects master 1 in one step. Master 1 brings its whole instance, including part B row (1, 11, 110), which the seed did not name, and, downward, its report. The reference from `PartB` to `PartA` maps `src_master` onto `PartA`'s owning attribute, so the group needs no iteration. With `part_integrity="enforce"`, deleting the seed raises, because part B row (1, 10, 100) would go without master 1.
 
 ---
 
@@ -792,7 +842,7 @@ class Session(dj.Manual):
 
 **Result.** Declaring `Session.Note` raises `DataJointError` before any table is created. The message names the part (`Session.Note`), its parent (`Review`), and the cycle: `Session` → `Review` → `Session.Note`, which belongs to `Session`'s group. No rows change.
 
-**Why.** A part may reference its master, a sibling part, or a table whose ancestors, with groups taken whole, do not include its master. `Review` depends on `Session`, so `Session.Note` would make the group its own ancestor: a cycle in the group quotient `Q`. That would make every cascade, trace, and `list_tables()` on the connection fail to order the tables (T8). Two groups whose parts reference each other's masters form the same kind of cycle and are refused the same way.
+**Why.** `Session.Note` is owned, because `-> master` is in its primary key. An owned part may reference its master, an owned part of the same master, or a table that does not depend on its master, with groups taken whole; parts the master does not own count as outside the group ([#1619](https://github.com/datajoint/datajoint-python/issues/1619)). `Review` depends on `Session`, so `Session.Note` would make the group its own ancestor: a cycle in the group quotient `Q`, and DataJoint could no longer order these tables for delete, drop, or trace (T8). Two groups whose owned parts reference each other's masters form the same kind of cycle and are refused the same way. A part that is not owned is a plain table, so its references cannot close a group cycle.
 
 ---
 
