@@ -85,7 +85,7 @@ Downward expansion for a delete carries a constraint that the preview does not: 
 
 Before the first DELETE, the engine therefore materializes each restriction whose *local* terms read a table deleted no later than its own: every lift, and every seed whose restriction is not already literal keys. Terms inherited from a parent are safe, because the parent is deleted after its children. Large key sets are applied in chunks. The full rule is in [Materialization happens only at delete time](diagram.md#materialization-happens-only-at-delete-time).
 
-This generalizes the seed fix in [#1611](https://github.com/datajoint/datajoint-python/pull/1611) (2.3.5), which replaces a delete seed whose conditions contain a subquery by the primary keys it selects, as a `dj.Top` seed already was. In 2.4 the same holds for every seed whose restriction is not literal keys, and for every lift.
+This generalizes the 2.3.5 seed fix ([#1610](https://github.com/datajoint/datajoint-python/issues/1610)), which replaces a delete seed whose conditions contain a subquery by the primary keys it selects, as a `dj.Top` seed already was. In 2.4 the same holds for every seed whose restriction is not literal keys, and for every lift.
 
 The rule follows from the delete order and applies on every backend. MySQL also rejects a DELETE whose subquery reads the table being deleted (error 1093), and PostgreSQL permits it; materializing first avoids both the stranded rows and the error.
 
