@@ -1,10 +1,10 @@
 # Diagram Specification
 
-Schema visualization as directed acyclic graphs.
+Schema visualization as directed acyclic graphs, and traversal of the rows they connect.
 
 ## Overview
 
-`dj.Diagram` visualizes DataJoint schemas as directed graphs showing tables and their foreign key relationships. It provides multiple output formats including SVG, PNG, and Mermaid syntax.
+`dj.Diagram` visualizes DataJoint schemas as directed graphs showing tables and their foreign key relationships. It provides multiple output formats including SVG, PNG, and Mermaid syntax. It also computes, for a restricted table, the rows that depend on it or that it depends on: the rows a delete must remove, the inputs of a `make()`, or a self-contained export.
 
 ## Design Principles
 
@@ -12,6 +12,7 @@ Schema visualization as directed acyclic graphs.
 2. **Graph algebra**: Combine and filter diagrams with set operators
 3. **Visual encoding**: Table tiers distinguished by shape and color
 4. **Flexible layout**: Configurable direction and schema grouping
+5. **One traversal**: `cascade` and `trace` are the two directions of `expand`, defined once in the [Traversal specification](#traversal-specification)
 
 ---
 
@@ -92,6 +93,9 @@ dj.Diagram(ComputedTable) - 10
 
 **Note:** Order matters. `diagram + 1 - 1` may differ from `diagram - 1 + 1`.
 
+!!! version-added "New in 2.4"
+    On a diagram returned by `expand()`, `cascade()`, or `trace()`, only `d1 + d2` of two diagrams with the same direction is defined; the other operators raise. See [Expanded diagrams](#expanded-diagrams).
+
 ### Collapsing Schemas
 
 !!! version-added "New in 2.1"
@@ -122,7 +126,39 @@ dj.Diagram(Subject) + dj.Diagram(analysis).collapse()
 !!! version-added "New in 2.2"
     Operational methods (`Diagram.cascade()`, `restrict`, `counts`, `prune`) were added in DataJoint 2.2.
 
-Diagrams can propagate restrictions through the dependency graph and inspect affected data using the graph structure. These methods turn Diagram from a visualization tool into a graph computation and inspection component. All mutation operations (delete, drop) are executed by `Table.delete()` and `Table.drop()`, which use Diagram internally.
+!!! version-added "New in 2.4"
+    `Diagram.expand()` is the one traversal behind `cascade()` and `trace()`. Its rows are defined in the [Traversal specification](#traversal-specification) below.
+
+A diagram can compute, for a restricted table, the rows a delete must remove, the rows a `make()` may read, or the rows an export must carry. The methods in this section compute and inspect those rows without changing any data. `Table.delete()` and `Table.drop()` use them internally and carry out the mutation.
+
+### `Diagram.expand()` (class method)
+
+```python
+dj.Diagram.expand(seed, direction="down")
+```
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `seed` | QueryExpression | — | One table with any restriction (see [Seeds](#seeds)) |
+| `direction` | str | `"down"` | `"down"`, `"up"`, or `"both"` |
+
+**Returns:** a `Diagram` whose nodes are the tables the expansion reaches, each holding the rows of that table in the expansion.
+
+| `direction` | Rows | Used for |
+|---|---|---|
+| `"down"` | `D(S)`: the seed rows and every row that depends on them | delete, impact analysis |
+| `"up"` | `U(S)`: the seed rows and every row they depend on | the inputs of `make()`, lineage |
+| `"both"` | `U(D(S))`: a region around the seed that is consistent on its own | export |
+
+`S` is the set of rows the seed selects. `D`, `U`, and `U(D(S))` are defined under [Operations](#operations).
+
+```python
+# Every row that depends on subject 1, by table
+dj.Diagram.expand(Subject & {"subject_id": 1}, "down").counts()
+
+# Everything a selected session was derived from
+dj.Diagram.expand(Session & {"subject_id": 1, "session_id": 2}, "up")[Subject]
+```
 
 ### `Diagram.cascade()` (class method)
 
@@ -130,31 +166,28 @@ Diagrams can propagate restrictions through the dependency graph and inspect aff
 dj.Diagram.cascade(table_expr, part_integrity="enforce")
 ```
 
-Create a cascade diagram for delete. Builds a complete dependency graph from the table expression, includes all descendants across all loaded schemas, propagates the restriction downstream using **OR** semantics — a descendant row is marked for deletion if *any* ancestor path reaches it — and **trims** to the cascade subgraph.
+The preview of `(table_expr).delete(part_integrity=...)`. It loads every schema downstream of the seed and holds the rows the delete would remove.
 
 | Parameter | Type | Default | Description |
 |-----------|------|---------|-------------|
-| `table_expr` | QueryExpression | — | A restricted table expression (e.g., `Session & 'subject_id=1'`) |
+| `table_expr` | QueryExpression | — | The seed, e.g. `Session & {"subject_id": 1}` |
 | `part_integrity` | str | `"enforce"` | Master-part integrity policy |
 
-**Returns:** New `Diagram` containing only the seed table and its descendants, with cascade restrictions applied.
+| `part_integrity` | Rows |
+|---|---|
+| `"cascade"` | `D(S)`, the same rows as `expand(table_expr, "down")` |
+| `"ignore"` | `D1(S)`: the rows reached through foreign keys alone, with part tables treated as plain tables |
+| `"enforce"` (default) | `D1(S)`. `Table.delete()` deletes these rows only if they include the master of every part row among them, and otherwise raises before deleting anything |
 
-**`part_integrity` values:**
+`part_integrity` accepts only `"enforce"`, `"ignore"`, or `"cascade"`; any other value raises `ValueError`. The [Cascade Specification](cascade.md) covers the delete itself.
 
-| Value | Behavior |
-|-------|----------|
-| `"enforce"` | Default. The preview itself never errors; master-part integrity is enforced by `Table.delete()`'s post-check, which rolls back the delete if part rows would be removed without their masters (see [Cascade Spec](cascade.md#part_integrity-modes)). |
-| `"ignore"` | Allow deleting parts without masters |
-| `"cascade"` | Propagate restriction upward from part to master, then re-propagate downstream to all sibling parts |
-
-With `"cascade"`, the restriction flows **upward** from a part table to its master: the restricted part rows identify which master rows are affected, those masters receive a restriction, and that restriction propagates back downstream through the normal cascade — deleting the entire compositional unit (master + all parts), not just the originally matched part rows.
+!!! version-changed "Changed in 2.4"
+    `"enforce"` checks each part row's own master, before any row is deleted. In 2.3 it was a table-level check run after the delete. With `"cascade"`, a master joins the delete only if one of its part rows did ([#1591](https://github.com/datajoint/datajoint-python/issues/1591)).
 
 ```python
-# Preview cascade impact across all loaded schemas
-dj.Diagram.cascade(Session & {'subject_id': 'M001'}).counts()
+# Preview the impact of a delete across all loaded schemas
+dj.Diagram.cascade(Session & {"subject_id": 1}).counts()
 ```
-
-`part_integrity` accepts only `"enforce"`, `"ignore"`, or `"cascade"`; any other value raises `ValueError`.
 
 ### `Diagram.trace()` (class method)
 
@@ -162,51 +195,27 @@ dj.Diagram.cascade(Session & {'subject_id': 'M001'}).counts()
 dj.Diagram.trace(table_expr)
 ```
 
-The **upstream mirror of `cascade()`**. Where `cascade()` walks downstream to every descendant, `trace()` walks **upstream** from a (possibly restricted) table expression to every ancestor across all loaded schemas, propagating the restriction along the way. Like `cascade()`, convergence is **OR** — an ancestor is included if reachable through *any* FK path from the seed.
-
-| Parameter | Type | Default | Description |
-|-----------|------|---------|-------------|
-| `table_expr` | QueryExpression | — | A restricted table expression whose ancestry is traced |
-
-**Returns:** New `Diagram` containing the seed and its ancestors, each pre-restricted through the FK join path.
-
-Access a pre-restricted ancestor by indexing the trace:
+The rows `table_expr` depends on: `U(S)`, the same rows as `expand(table_expr, "up")`. It loads every schema upstream of the seed. The [Upstream Trace Specification](trace.md) covers its use and `self.upstream`, the per-`make()` instance of a trace.
 
 ```python
 trace = dj.Diagram.trace(MyChild & key)
-session = trace[Session]              # Session restricted to ancestors of MyChild & key
-session.fetch1('session_date')
+trace[Session].fetch1("session_date")
 ```
 
-`trace()` reuses the same **upward propagation rules** (U1/U2/U3) documented in the [Cascade Spec](cascade.md#upward-propagation-child-parent). The [Upstream Trace Specification §1](trace.md#1-diagramtracetable_expr) is the normative spec for its API and semantics; inside `make()`, `self.upstream` is the per-`key` instance of a trace.
+!!! version-changed "Changed in 2.4"
+    A trace includes all parts of every master it reaches, and the ancestors of those parts ([#1481](https://github.com/datajoint/datajoint-python/issues/1481)). In 2.3 it included a part only if the part lay on a foreign-key path to the seed.
 
-### `restrict()`
+### Indexing: `d[T]`
 
 ```python
-diag.restrict(table_expr)
+d[Session]                  # a Table class or instance
+d["Session"]               # a class name, or a full table name
 ```
 
-Select a subset of data for export or inspection. Starting from a restricted table expression, propagate the restriction downstream through all descendants using **AND** semantics — a descendant row is included only if *all* restricted ancestors match. The full diagram is preserved (ancestors, unrelated tables) so that `restrict()` can be called again from a different seed table, building up a multi-condition subset incrementally.
+Returns table `T` restricted to its rows in the expansion, as a query expression, in every direction. It raises `DataJointError` if `T` is not a node of the diagram. A node can hold zero rows; indexing it returns an empty expression.
 
-| Parameter | Type | Default | Description |
-|-----------|------|---------|-------------|
-| `table_expr` | QueryExpression | — | A restricted table expression |
-
-**Returns:** New `Diagram` with restrict conditions applied. The graph is not trimmed.
-
-**Constraints:**
-
-- **Chainable** — call multiple times to add conditions from different seed tables
-- Cannot be called on a Diagram produced by `Diagram.cascade()`
-- `table_expr.full_table_name` must be a node in the diagram
-
-```python
-# Chain multiple restrictions (AND semantics)
-diag = dj.Diagram(schema)
-restricted = (diag
-    .restrict(Subject & {'species': 'mouse'})
-    .restrict(Session & 'session_date > "2024-01-01"'))
-```
+!!! version-changed "Changed in 2.4"
+    In 2.3, indexing worked only on diagrams returned by `trace()`.
 
 ### `counts()`
 
@@ -214,14 +223,12 @@ restricted = (diag
 diag.counts()
 ```
 
-Return affected row counts per table without modifying data. Works with both `cascade()` and `restrict()` restrictions.
+Returns the number of rows each node holds, without modifying data.
 
-**Returns:** `dict[str, int]` — mapping of full table names to affected row counts.
-
-**Requires:** `Diagram.cascade()` or `restrict()` must be called first.
+**Returns:** `dict[str, int]` — full table name to row count. Tables in the diagram with no rows map to 0.
 
 ```python
-counts = dj.Diagram.cascade(Session & {'subject_id': 'M001'}).counts()
+counts = dj.Diagram.cascade(Session & {"subject_id": 1}).counts()
 # {'`lab`.`session`': 3, '`lab`.`trial`': 45, '`lab`.`processed_data`': 45}
 ```
 
@@ -231,23 +238,15 @@ counts = dj.Diagram.cascade(Session & {'subject_id': 'M001'}).counts()
 diag.prune()
 ```
 
-Remove tables with zero matching rows from the diagram view. This only affects the diagram object — no tables or data are modified in the database. Without prior restrictions, removes physically empty tables from the diagram. After `restrict()`, removes tables where the restricted query yields zero rows.
+Removes the nodes that hold zero rows from the diagram. No table or data is modified. On a diagram that was not expanded, it removes physically empty tables.
 
-**Returns:** New `Diagram` with empty tables removed.
-
-**Constraints:** Cannot be used on a Diagram produced by `Diagram.cascade()`. Cascade diagrams must retain all descendant tables because a table empty at cascade time could have rows by the time `delete()` executes.
-
-**Note:** Queries the database to determine row counts. The underlying graph structure is preserved — subsequent `restrict()` calls can still seed at any table in the schema.
+**Constraints:** `prune()` raises on a `down` diagram, including any diagram returned by `cascade()`. A delete must keep every table it reaches, because a table that is empty when the diagram is built can gain rows before the delete runs. `prune()` is allowed on `up` and `both` diagrams.
 
 ```python
-# Export workflow: restrict, prune, visualize
-export = (dj.Diagram(schema)
-    .restrict(Subject & {'species': 'mouse'})
-    .restrict(Session & 'session_date > "2024-01-01"')
-    .prune())
-
-export.counts()    # only tables with matching rows
-export             # visualize the export subgraph
+# Export region around one subject, without empty tables
+region = dj.Diagram.expand(Subject & {"subject_id": 1}, "both").prune()
+region.counts()
+region             # display the region
 ```
 
 ### Iteration
@@ -259,130 +258,271 @@ Diagrams support iteration in topological order:
 | `for ft in diagram` | Parents first | Data export, inspection |
 | `for ft in reversed(diagram)` | Leaves first | Cascade delete, drop |
 
-Each iteration yields a `FreeTable` with any cascade or restrict conditions applied. Only nodes in the diagram's visible set (`nodes_to_show`) are yielded.
+Each iteration yields a `FreeTable` restricted to the node's rows. Only nodes in the diagram's visible set (`nodes_to_show`) are yielded.
 
 `Table.delete()` and `Table.drop()` use `reversed(diagram)` internally to execute mutations in safe dependency order.
 
-### Restriction Propagation
+### `restrict()`
 
-When `cascade()` or `restrict()` propagates a restriction from a parent table to a child table, one of three rules applies depending on the foreign key relationship:
+!!! version-deprecated "Deprecated in 2.4, removed in 3.0"
+    `Diagram.restrict()` emits a `DeprecationWarning`. Its behavior is frozen. Use `Diagram.expand()`; see [Retiring `restrict`](#retiring-restrict) for the migration.
 
-**Rule 1 — Direct copy:** When the foreign key is non-renamed and the restriction attributes are a subset of the child's primary key, the restriction is copied directly to the child.
+```python
+diag.restrict(table_expr)
+```
 
-**Rule 2 — Renamed projection:** When the foreign key uses attribute renaming (e.g., `subject_id` → `animal_id`), the parent is projected with the attribute mapping to match the child's column names.
+Restricts a full diagram for export: the restriction propagates downstream, and where several restricted ancestors meet, a row is kept only if it matches all of them (AND). The full diagram is preserved, including ancestors and unrelated tables, so `restrict()` can be chained from other seeds. It cannot be called on a diagram produced by `cascade()`.
 
-**Rule 3 — Full projection:** When the foreign key is non-renamed but the restriction uses attributes not in the child's primary key, the parent is projected (all attributes) and used as a restriction on the child.
+### Unloaded schemas
 
-**Convergence behavior:**
-
-When a child table has multiple restricted ancestors, the convergence rule depends on the mode:
-
-- **`cascade()` (OR):** A child row is affected if *any* path from a restricted ancestor reaches it. This is appropriate for delete — if any reason exists to delete a row, it should be deleted.
-- **`restrict()` (AND):** A child row is included only if *all* restricted ancestors match. This is appropriate for export — only rows satisfying every condition are selected.
-
-**Multiple foreign keys to the same parent:**
-
-When a child table references the same parent through multiple foreign keys (e.g., `source_mouse` and `target_mouse` both referencing `Mouse`), these paths always combine with **OR** regardless of the propagation mode. Each foreign key path is an independent reason for the child row to be affected — this is structural, not operation-dependent.
-
-**Unloaded schemas:**
-
-If a descendant table lives in a schema that hasn't been activated (loaded into the dependency graph), the graph-driven delete won't know about it. The final `DELETE` on the parent will fail with a foreign key error. DataJoint catches this and produces an actionable error message identifying which schema needs to be activated.
+`expand()`, `cascade()`, and `trace()` first load every schema reachable through foreign keys in the direction of travel, including schemas the current process has not activated ([X1](traversal-shapes.md#x1-unloaded-downstream-schema)). If a delete still fails with a foreign-key error, DataJoint names the two likely causes: a downstream schema the connection cannot see, or a row inserted concurrently.
 
 ---
 
-## Traversal algebra
+## Traversal specification
 
-This design rationale derives the traversal operations from first principles. The operational methods above (`cascade` and `trace`) are not separate features — they are the two directions of **one traversal**, `expand`, over the dependency graph, derived here so the *rules*, not just the API, are the specification. The model is a single operation `expand(seed, direction)` — `cascade` is the downstream case, `trace` the upstream case — built on **two rules**: an edge rule (R1) and a group rule (R2).
+!!! version-added "New in 2.4"
+    This section is the normative definition of `Diagram.expand()`, `cascade()`, and `trace()`. The test suite checks the engine against an executable copy of these definitions, and the [Traversal Shape Catalog](traversal-shapes.md) works through one example per schema shape.
 
-### 1. The one primitive: propagating a restriction across a foreign key
+The definitions are about rows; the computation is about tables and restrictions.
 
-A **restriction** on a table is a subset of its rows, written as a condition.
+### Base principles
 
-Every foreign key `child -> parent` defines a function: each child row references exactly one parent row. Propagating a restriction across that edge is itself a **restriction** — restrict the neighbor by the restricted table, matched on the foreign-key attributes (`&` with a query expression). It works in either direction:
+- **P1, referential integrity.** Every foreign-key value names an existing parent row.
+- **P2, compositional integrity.** A master row and its part rows are one entity. They are inserted together and deleted together.
+- **P3, reproducibility.** `make(key)` reads only rows that `key` depends on.
+- **P4, minimality.** An operation touches no row it does not have to.
 
-- **downstream** (a restriction on the parent, carried to the child): `child & parent_restricted` — the child rows whose parent is in the restricted set.
-- **upstream** (a restriction on the child, carried to the parent): `parent & child_restricted` — the parent rows referenced by the restricted child.
+### Model and assumptions
 
-Downstream and upstream are the *same* operation pointed opposite ways along the same foreign key. This is the whole engine; everything below is how the edge rule degenerates, what parts add, and how you accumulate across many edges.
+**Foreign-key references.** A foreign key `e` of a child table `C` references a parent table `P`. Its attribute map `attr_map_e` pairs attributes of `C` with the primary-key attributes of `P`; the names differ when the declaration renames them with `.proj()`. For a row `c` of `C`, `ref_e(c)` is the row of `P` whose primary key equals `c`'s values on those attributes. By P1, that row exists.
 
-### 2. The edge rule (R1, referential)
+**A2, NULLs.** If any of `c`'s attributes in `e` is NULL, `ref_e(c)` is undefined: `c` references nothing through `e`. This is SQL's MATCH SIMPLE rule, which both supported backends apply: a foreign key with a NULL column is not checked. Foreign keys can share columns ([S3](traversal-shapes.md#s3-nullable-foreign-key-sharing-a-primary-key-column)), so a row can have some columns of a foreign key set and others NULL. Such a row still references nothing through that foreign key.
 
-**Base case — the foreign key is the whole primary key, not renamed, no parts.** The parent's primary key is embedded verbatim in the child's, with the same column names. A primary-key restriction on the parent is a predicate on exactly those columns, which the child also has, by the same names. So: **carry the restriction unchanged** — the identical predicate that selects the parent rows already selects the matching child rows. This is why the same primary-key restriction rides the whole diagram.
+**Parallel foreign keys.** Two foreign keys between the same pair of tables are separate references, each with its own `attr_map` ([S5](traversal-shapes.md#s5-parallel-foreign-keys)).
 
-**Complication A — secondary foreign key.** The parent's key lands in the child's *secondary* (non-primary) attributes. A raw predicate still selects the right child rows, but the restriction is no longer a statement about the child's *identity*, so it cannot be promoted to the child's primary key and ridden further. Keep it relational: project the restricted parent to its key and restrict the child by it, matched on the foreign-key columns.
+**A1, the owning reference.** A part's heading contains its master's primary key under the master's attribute names, with no NULLs, inherited through `-> master` or through a foreign key to a sibling part that satisfies A1 itself. For a part row `r`:
 
-**Complication B — renamed foreign key.** The referencing columns have different names in the child. The parent's predicate names columns the child lacks. Fix, mechanically: rename the restriction's columns through the foreign key's attribute map before restricting (reverse the rename going upstream).
+- `master(r)` is the master row with that key;
+- `inst(r)`, the **instance** of `r`, is `master(r)` together with every part row, in any part of the master, that has the same master key.
 
-> **R1 (edge rule):** propagate a restriction across a foreign-key edge by **restricting** the neighbor by the restricted table (`&`), projected/renamed onto the shared foreign-key columns. When the foreign key is the whole primary key and unrenamed, the projection is the identity and the restriction collapses to "apply the same predicate."
+For a master row `m`, `inst(m)` is `m` with all its part rows. For a row `r` of a plain table, `inst(r) = {r}`.
 
-### 3. The group rule (R2, compositional)
+A part that violates A1 gets a warning at declaration and is traversed as a plain table: it has no master and no instance ([G6](traversal-shapes.md#g6-a-part-violating-a1)).
 
-Part tables add **compositional** integrity on top of referential integrity: a master and its parts are one entity, created and deleted all-or-nothing.
+**Row relations.** For a row `r`:
 
-- **master -> part** needs nothing new — a part carries `-> master` in its primary key, so R1 already sweeps in all parts of a restricted master.
-- **part -> master** is the new rule. A restriction landing on part rows satisfies referential integrity by touching just those rows, but leaves a fragment of an entity. So it must **lift existentially to the master** (the master is in if *any* of its parts is), and the master re-expands to **all** its parts.
+- `child(r) = {c : ref_e(c) = r for some foreign key e}` — the rows that reference `r`;
+- `parent(r) = {ref_e(r) : e a foreign key of r's table, ref_e(r) defined}` — the rows `r` references;
+- `down(r) = child(r) ∪ inst(r)`;
+- `up(r) = parent(r) ∪ inst(r)`.
 
-> **R2 (group rule):** a restriction touching any part of a master's group brings the whole group — existential lift part -> master, then expand master -> all parts.
+`up` is exactly the converse of `down`: `y ∈ down(x)` if and only if `x ∈ up(y)`. `parent` is the converse of `child`, and sharing an instance is symmetric.
 
-R2 is a closure over the master–part grouping, which is exactly why foreign-key restrictions alone cannot express it.
+### Operations
 
-### 4. The one operation: expand
+A set of rows `X` is **closed under** a relation `R` when, for every row `x` in `X`, all of `R(x)` is in `X` too. The **closure** of a set `S` under `R` is the smallest set that contains `S` and is closed under `R`. It is computed by starting from `S` and adding `R`-neighbors until nothing new appears; in mathematical terms it is the *least fixed point* of that step. Every closure here is finite because the database is.
 
-There is one traversal. Seed a single restricted table and grow outward by R1 + R2, accumulating reachable rows by **union** (a table is reached if reachable via any path). It is directional, `direction="down" | "up" | "both"` (default `"down"`):
+Let `S` be the set of rows the seed selects. Then:
 
-- `direction="down"` — descendants: the **delete blast radius**. This is `cascade`.
-- `direction="up"` — ancestors: the **valid query sources** a `make()` may read under the reproducibility contract. This is `trace`; inside `make()`, `self.upstream` is `expand(self & key, direction="up")`.
-- `direction="both"` — a referentially-consistent **export region** around the seed: everything the seed rows depend on and everything derived from them.
+- `D(S)` is the closure of `S` under `down`;
+- `U(S)` is the closure of `S` under `up`;
+- `D1(S)` is the closure of `S` under `child` alone, with no instance step.
 
-A single-seed closure is always consistent and never needs an intersection: tracing up pulls exactly the referenced ancestors, cascading down pulls exactly the dependents. Every requirement is a case of `expand`: blast radius (`down`), `make()` sources (`up`), and "all data for this entity" / consistent export (`both`).
+| Call | Rows |
+|---|---|
+| `expand(seed, "down")` | `D(S)` |
+| `expand(seed, "up")` | `U(S)` |
+| `expand(seed, "both")` | `U(D(S))` |
 
-**Multiple conditions do not need a second operation.** A filter over several *independent* tables (e.g. "data for `subject_id=5` **and** `method_id=5`") is still `expand`. Either the conditions share a common descendant that inherits both keys — seed that descendant with the combined condition and `expand(both)` — or they do not, in which case no table is downstream of both, there is nothing to intersect, and the result is the union of the individual expansions. A per-table "conjunction of upstream conditions" carving is a UI-layer composition of `expand`s (a Navigator concern), not a core operation.
+**Why `both` is `U(D(S))`.** An export region must be importable on its own: every foreign key in it must resolve inside it, and every instance in it must be whole. `U(D(S))` is the smallest such region that contains everything derived from `S` (T6). The other two combinations fail:
 
-### 5. Why this is the whole story
+- `D(U(S))` adds every descendant of every ancestor. For a seed under a shared lookup table, that is most of the database.
+- `D(S) ∪ U(S)` misses the other parents of the descendants. In [S5](traversal-shapes.md#s5-parallel-foreign-keys), exporting neuron 1 this way would carry synapse (3, 1) without neuron 3.
 
-- **It is pure reachability.** A restriction reaches a table if it reaches it via *any* foreign-key path, so convergence is always **union** — there is no intersection to reason about and no second, subtractive operation.
-- **One data structure.** A diagram is a set of tables, each holding one row-set; `expand` unions reachable rows into it as it grows.
-- **Materialization is a delete-time concern, not part of traversal.** Freezing a group's keys before deleting (delete runs parts-before-masters) matters only when a traversal feeds `delete`; the read-only closures never pay for it.
+**Delete.** `Table.delete(part_integrity=...)` and its preview `Diagram.cascade()`:
 
-### 6. Renamed foreign keys and the seed restriction
+| `part_integrity` | Deletes |
+|---|---|
+| `"cascade"` | `D(S)` |
+| `"ignore"` | `D1(S)`. A part row can be deleted while its master and sibling part rows stay. |
+| `"enforce"` (default) | `D1(S)`, if it is **lift-closed**: it contains `master(r)` for every part row `r` in it. Otherwise it raises **before deleting anything**, naming a part row and its master. |
 
-Each time a restriction crosses a foreign key it must be re-expressed in the neighbor's attribute names. Renaming is the only thing that changes names across an edge, so it is the only place this needs care, and the *shape* of the seed restriction decides how. A restriction is one of three kinds:
+By T7, `enforce` deletes `D(S)` when the group rule would add nothing to `D1(S)`, and refuses otherwise.
 
-- **materialized** — a dict of primary-key values, or a sequence of them (literal `attr: value` rows, e.g. `A.keys()`);
-- **subquery** — a query expression (another table, possibly restricted);
-- **string** — a raw SQL predicate over attribute names, e.g. `'weight > 10'`.
+**Trace.** `Diagram.trace(seed)` selects `U(S)`.
 
-Only the materialized kind is *frozen literal values*; the other two are *live* (evaluated against current data). This split decides whether a renamed edge is crossed by simply relabelling or must be crossed relationally.
+**`self.upstream`.** `make(key)` runs before the row for `key` is inserted, so `self & key` selects nothing, and `U(∅) = ∅` would leave `self.upstream` empty. `self.upstream` therefore starts from the parents that row will have. For each foreign key `e` of the table that lies in its primary key, `relabel_e(key)` renames `key`'s values onto the primary key of the parent `P_e` through `attr_map_e`, and
 
-**Kind 1 — materialized (relabel fast-path).** Crossing a renamed foreign key, the neighbor's restriction is obtained by **renaming the dict's keys through the edge, values unchanged**: keep the referenced attributes (relabelled) and drop any key field that does not exist on the neighbor. Going upstream this drops the child's own identity attributes, leaving exactly the parent's key; going downstream nothing is dropped and the child's own key attributes stay unconstrained (a partial key). Renamings chain, so a key relabels edge by edge. This is exact because the renaming is pure (values and types preserved) and attribute identity across the edge is fixed by the edge's pairing, not by coincidental name matches. A sequence of dicts (e.g. `A.keys()`) is the OR of its members and relabels element by element; the walk stays symbolic — no subqueries — and, being frozen literals, is stable and delete-safe.
+```
+self.upstream = ⋃ over primary foreign keys e of  expand(P_e & relabel_e(key), "up")
+```
 
-*Which attributes cross an edge:* an attribute propagates across an edge iff that edge **carries** it (the foreign key references it). A data attribute (`weight`) is carried by no edge and never propagates — a key containing one is really an `A & cond` case (Kind 2/3), reducible to Kind 1 by materializing to keys first, `(A & cond).keys()`. A *secondary* foreign-key attribute propagates along its own edge even though it is not part of the primary key. So the test is per edge — *does the key cover the attributes this edge carries?* — not a global "is the key primary-key-only?".
+Foreign keys outside the primary key are left out: their values are not known before the insert. By T2, `self.upstream` is `U` of the parents of the row being computed.
 
-*Direction, because a foreign key is a function:* **down** (parent to children) is the preimage — a parent key relabels to a partial child key and always suffices. **Up** (child to parent) is the image — to name the referenced parent by relabelling, the key must include the parent's **full primary key** (in the child's names). When it doesn't, the relabel fast-path cannot fire and `expand` **materializes** — queries the child for the actual referenced parent keys — and continues.
+!!! version-changed "Changed in 2.4"
+    In 2.3, `self.upstream` was `Diagram.trace(self & key)`. It returned the parents only because the engine copied the key's condition upward, which is not sound for other seeds (see [R1](#r1-the-edge-rule)).
 
-**Kinds 2 & 3 — live (restrict-then-project).** A subquery or string restriction has no literal values to relabel; cross the edge **relationally** — restrict `A` by the condition, project it onto the neighbor's referenced attributes (renamed), and restrict the neighbor. A string cannot cross as text (it may name attributes the foreign key doesn't carry, and rewriting SQL to the neighbor's names is not reliable); only its *effect* crosses, through the referenced-attribute values of the surviving `A` rows. Any live restriction becomes relabel-able (and delete-safe) the moment it is materialized to keys, `(A & r).keys()` — which is exactly what `cascade` does at plan time.
+### Derived results
 
-### 7. The group rule and the relabel fast-path
+Each result below follows from the definitions and is checked by the test suite.
 
-R2 needs **no new key machinery** — it is the relabel fast-path run twice, with the part-specific attribute deliberately lost in between. For a master `Session` (primary key `session_id`) and part `Session.Trial` (primary key `(session_id, trial_id)`):
+**T1, closure.** `D`, `U`, and `D1` are *extensive* (`X(S) ⊇ S`), *monotone* (`A ⊆ B` implies `X(A) ⊆ X(B)`), and *idempotent* (`X(X(S)) = X(S)`).
 
-- **master to part (down):** the ordinary relabel — `Session & {'session_id': 5}` becomes the partial key `{'session_id': 5}` on `Session.Trial`, selecting *every* trial of session 5. "All parts follow the master" falls straight out of the down rule.
-- **part to master (up), the existential lift:** relabel-drop — `Session.Trial & {'session_id': 5, 'trial_id': 2}` keeps `session_id`, drops the part-specific `trial_id`, giving `{'session_id': 5}`. A sequence of part keys across many trials all drop to the same master key and de-duplicate, so the OR-over-siblings is free.
-- **master to all parts (re-expansion):** *not* a relabel of the seed — a fresh downstream step from the recovered master key, `{'session_id': 5}` on `Session` relabels down to `{'session_id': 5}` on `Session.Trial`, which drops the `trial_id` constraint and so *widens* from "trial 2" to all trials.
+Every closure under a relation has these properties: the result contains `S` by construction, a larger starting set reaches at least the same rows, and a set that is already closed gains nothing from closing it again.
 
-**The signature: a key that reaches a part via its master carries no part-specific constraint.** The lift *narrows* the key to the master; the re-expansion *widens* it to all parts; the part-specific attribute is destroyed by the lift and cannot be recovered. That loss *is* compositional atomicity in key terms — the whole part-group comes along precisely because the returning key no longer distinguishes one part from its siblings.
+**T2, additivity.** `X(A ∪ B) = X(A) ∪ X(B)` for `X` = `D`, `U`, `D1`, and for `both`.
 
-Corollaries: a materialized-key seed stays materialized through the whole part -> master -> parts round trip, so it is delete-safe for free (the delete-order materialization only ever fires for *live* seeds); and the same mechanism serves both directions — the mutating part->master cascade (`expand` down feeding a delete) and the upstream `trace` (`expand` up) that surfaces an ancestor master's parts.
+Each step adds the neighbors of a single row, so a row is in `X(S)` exactly when a chain of steps leads to it from one row of `S`, and that is the case for `A ∪ B` exactly when it is the case for `A` or for `B`. For `both`, `U(D(A ∪ B)) = U(D(A) ∪ D(B)) = U(D(A)) ∪ U(D(B))`. So several seeds give the union of their expansions: `expand` never needs an intersection, `d1 + d2` of the same direction is exact, and `self.upstream` is built as a union.
 
-### Summary
+**T3, duality.** `y ∈ D({x})` if and only if `x ∈ U({y})`.
 
-| direction | operation | serves |
-|---|---|---|
-| `down` | `expand(seed, "down")` = `cascade` | delete blast radius |
-| `up` | `expand(seed, "up")` = `trace` | `make()` sources (`self.upstream`) |
-| `both` | `expand(seed, "both")` | consistent export region / "all data for this entity" |
+A chain of `down` steps from `x` to `y`, read backwards, is a chain of `up` steps from `y` to `x`, because `up` is the converse of `down`. So deleting `x` invalidates exactly the rows whose upstream contains `x`. Because a delete lifts part rows to their master, a trace must include the parts of an ancestor master, and their ancestors ([#1481](https://github.com/datajoint/datajoint-python/issues/1481); [G5](traversal-shapes.md#g5-merge-table)). `ignore`'s `D1` is likewise dual to a trace without the instance step.
 
-One operation, one data structure, two rules — R1 (edge restriction) and R2 (group). `cascade` and `trace` are the downstream and upstream cases of `expand`; a filter over several independent tables composes `expand`s rather than adding a new operation.
+**T4, delete safety.** If the database satisfies P1, removing `D(S)` keeps P1 and removes each instance either whole or not at all (P2). `D(S)` is the smallest superset of `S` with both properties (P4).
+
+`D(S)` contains every child of every row in it, so no remaining row references a removed one; and it contains the instance of every row in it, so no instance is split. Conversely, a removed set `X ⊇ S` that keeps P1 must contain the children of its rows, and one that keeps instances whole must contain their instances. Such an `X` is closed under `down` and so contains `D(S)`.
+
+**T5, read boundary.** `U(S)` is consistent on its own: every foreign key of its rows resolves inside it, and every instance in it is whole. It is the smallest superset of `S` with that property, and so the set of rows `S` depends on (P3).
+
+The argument is T4's with `parent` in place of `child`.
+
+**T6, `both`.** `U(D(S))` contains `D(S)`, is closed under `up`, and so is consistent on its own and contains every instance it touches. It is the smallest set with these properties that contains `D(S)`. `both` is extensive and monotone but not idempotent.
+
+`U(D(S))` is `U` of `D(S)`, so T5 applies to it with `D(S)` as the seed. For non-idempotence, take a table `A` with two child tables `B` and `C`, and a row `a` with one child `b` in `B` and one child `c` in `C`. With `S = {b}`, `both(S) = U({b}) = {a, b}`, and `both({a, b}) = U({a, b, c}) = {a, b, c}`: the second application picks up `a`'s other descendant.
+
+**T7, enforce.** Under A1, `D1(S)` is lift-closed if and only if `D1(S) = D(S)`.
+
+Under A1, every part row of an instance can be reached from its master row by `child` steps, through `-> master` or through sibling parts that carry the same key. So if `D1(S)` contains the master of each of its part rows, it contains their whole instances, is closed under `down`, and equals `D(S)`. Conversely, `D(S)` is closed under `inst`, so if `D1(S) = D(S)` it is lift-closed. `enforce` therefore deletes only when the group rule would add nothing.
+
+**T8, ordering.** Under A1, `topo_sort` succeeds if and only if the group quotient `Q` is acyclic. The **group quotient** `Q` is the table-level foreign-key graph with each master and its parts merged into a single node.
+
+`topo_sort` sorts the table graph after adding, for each part, an edge from each of the part's parents outside its group to its master. Under A1 the master reaches each of its parts, so a cycle in `Q` becomes a cycle in that graph. Conversely, a cycle in that graph cannot stay inside one group, because foreign keys between tables never form a cycle, so it maps to a cycle in `Q`. Declaring a part that would close a cycle in `Q` is refused ([X2](traversal-shapes.md#x2-group-cycle-refused-at-declaration)), so `Q` stays acyclic.
+
+### Computation
+
+The engine computes the rows above as restrictions on tables, without reading the rows, except where noted.
+
+#### R1, the edge rule
+
+**Down.** Crossing a foreign key `e` from a restricted parent `P` to the child `C`, the child is restricted by the restricted parent, projected onto `P`'s primary key, with each key attribute renamed to its name in `C` through `attr_map_e`:
+
+```
+C & P_restricted.proj(<P's key attributes, renamed to their names in C>)
+```
+
+The parent's condition may instead be **copied** to the child unchanged, but only when the attributes it names are among `e`'s attributes, `e` is not renamed, and none of `e`'s columns is nullable. Then each child row holds the same values under the same names as the parent row it references, and it references one, so the copied condition selects exactly the children. [S3](traversal-shapes.md#s3-nullable-foreign-key-sharing-a-primary-key-column) shows the nullable case, [S4](traversal-shapes.md#s4-renamed-foreign-key) the renamed case, and [S7](traversal-shapes.md#s7-diamond-reached-through-a-secondary-foreign-key) a condition on an attribute the child holds through a different parent.
+
+A copy is a shortcut: it must select the same rows as the restriction, so the condition must also mean the same thing on the child as on the parent. Two kinds of condition can change meaning when moved, and are not copied:
+
+- a dict with keys that are not attributes of the parent: they are ignored on the parent but can match attributes of the child;
+- a query expression that shares more attributes with the child than with the parent: a restriction by a query expression matches on all shared attributes. Copied to `Session`, the seed condition of [K1](traversal-shapes.md#k1-seed-restricted-by-a-descendant), `Session & "quality = 0"`, would match on every attribute of `Session` and select only the sessions of quality 0. Copied the same way, the seed `Subject - (Session & "quality = 0")` would select every session of another quality, including sessions of subjects that are not deleted.
+
+**Parallel foreign keys** combine with OR: a child row is reached if any of its foreign keys references a restricted row.
+
+**Up.** Crossing `e` from a restricted child `C` to the parent `P` is always the restriction
+
+```
+P & C_restricted.proj(<e's attributes in C, renamed to their names in P>)
+```
+
+This selects the parent rows referenced by at least one restricted child row. It is never a copy: a condition on the child describes child rows, and copied to the parent it would select parents that no restricted child references ([S2](traversal-shapes.md#s2-secondary-foreign-key), [S3](traversal-shapes.md#s3-nullable-foreign-key-sharing-a-primary-key-column)).
+
+The one shortcut upward applies to keys materialized from the child table itself (for example `(C & cond).keys()`) that include every column of `e`: these may be relabeled through `attr_map_e`. They name existing child rows, so the relabeled keys name exactly the referenced parents. A user-supplied key dict may name rows that do not exist, so it crosses upward by restriction too ([K5](traversal-shapes.md#k5-empty-seeds)).
+
+#### R2, the group rule
+
+For a master `M` and its part `Pi`, with `R(T)` the restriction on table `T`:
+
+- **lift:** `M & R(Pi).proj(*M.primary_key)` — the masters of the restricted part rows. A1 puts the master's key in every part row, so the lift is one step on that key, with no walk along the foreign keys between parts ([G2](traversal-shapes.md#g2-part-of-part-with-two-chains)). Another foreign key from the part to its master is not used for the lift ([G3](traversal-shapes.md#g3-a-second-renamed-foreign-key-to-its-own-master)).
+- **re-expand:** `Pi & R(M)` — every part row of the restricted masters.
+
+The lift is existential: a master joins only if at least one of its part rows did ([G1](traversal-shapes.md#g1-part-to-master-lift)).
+
+#### One pass over the group quotient
+
+Because `Q` is acyclic (T8), the engine visits each node of `Q` once: in `topo_sort` order for `down`, and in reverse order for `up`.
+
+- A **plain table** `T` gets `R(T)` = its seed ∪ R1 from each restricted neighbor on the incoming side (its parents for `down`, its children for `up`).
+- A **group** with master `M` gets `R(M)` = the seed on `M` ∪ R1 into `M` ∪ lift(R1 into each part ∪ the seed on each part). Then each part `Pi` gets `Pi & R(M)`.
+
+`up` is the same pass with every edge reversed. The pass is exact because every neighbor on the incoming side is final before it is used (`Q` is acyclic), and because a foreign key inside a group maps the master's key to itself, so steps inside a group never leave the instances already in `R(M)`. The next subsection covers the groups where that fails.
+
+#### Groups that iterate
+
+A foreign key inside a group that renames the master's key links different instances of the group. In [G4](traversal-shapes.md#g4-renamed-sibling-foreign-key-chained-across-three-instances), a `Carry` row of run 2 references a `Step` row of run 1; in [G3](traversal-shapes.md#g3-a-second-renamed-foreign-key-to-its-own-master), a part references another row of its own master. The engine detects such a foreign key from its `attr_map`. For that group only, it evaluates the lifted master keys and repeats the group step until no new key appears. This is the only place where a traversal reads rows before a delete.
+
+#### Seeds
+
+- A seed is one table with any restriction. Projections, joins, aggregations, and unions are refused as seeds. The restriction itself may use them, for example a subquery on a descendant ([K1](traversal-shapes.md#k1-seed-restricted-by-a-descendant)) or on the seed's own table ([K2](traversal-shapes.md#k2-self-referencing-seed)).
+- A `dj.Top` seed is first replaced by the primary keys it selects ([K4](traversal-shapes.md#k4-djtop-seed)).
+- A dict that names none of the table's attributes means all rows, as in any restriction ([Query Algebra §2.4](query-algebra.md#24-dictionary-conditions)). As a seed, it raises a warning ([K6](traversal-shapes.md#k6-unrestricted-seed)).
+- A materialized seed (a dict, a list of dicts, or `.keys()`) may cross an edge by **relabeling**: keeping only the keys the foreign key carries, renamed through `attr_map`. Relabeling is used where it selects the same rows as R1: downward, when the foreign key has no nullable column or the keys name all its columns; upward, only for keys read from the child table that contain all its columns. A live seed — a string or a query expression — crosses by restriction. Both give the same rows ([K3](traversal-shapes.md#k3-seed-kinds-give-the-same-rows)).
+- The attributes a string condition names are read from its text outside any subquery.
+
+#### The plan
+
+The engine first builds a **plan**: an intermediate form, not SQL. Its nodes are `Seed`, `Restrict(src, attr_map)`, `Lift(part)`, `Reexpand(master)`, `Or`, and `Literal`. A node refers to the restrictions it uses by a handle to another node; compiled SQL is never copied from one restriction into another. The plan compiles to query expressions for the database. It can also be evaluated against rows held in memory, which is how the test suite compares it with the definitions above.
+
+#### Materialization happens only at delete time
+
+Traversal and preview (`counts()`, iteration, `d[T]`) stay symbolic, apart from [groups that iterate](#groups-that-iterate). Before the first DELETE, the engine **materializes** a node, replacing its restriction by the literal keys it selects, when one of the node's local terms reads a table that is deleted no later than the node itself. A *local term* is the node's seed or a lift into it. The terms a node inherits through R1 from a parent are safe: `Table.delete()` deletes in reverse topological order, so a parent still holds its rows when its children are deleted.
+
+In practice:
+
+- every lift is materialized, because a part is deleted before its master;
+- a seed is materialized unless its restriction is literal keys, because a string or query-expression restriction is SQL text whose reads cannot be inspected ([K1](traversal-shapes.md#k1-seed-restricted-by-a-descendant), [K2](traversal-shapes.md#k2-self-referencing-seed));
+- large key sets are applied in chunks.
+
+Without this, a restriction that reads a table emptied earlier in the same delete would match nothing, and its rows would stay behind ([#1496](https://github.com/datajoint/datajoint-python/issues/1496)).
+
+#### Concurrency
+
+- Part rows are deleted as `Pi & R(M)`, with `M` materialized. A part row inserted by another session after that DELETE makes the master's DELETE fail on its foreign key (`ON DELETE RESTRICT`), so the transaction rolls back and the part row is never left without its master.
+- The foreign-key error message mentions concurrent inserts.
+- `enforce` runs the `down` plan once its check passes. By T7, its rows are `D1(S)`.
+- The table-level check after the delete stays as a cheap backstop.
+
+### Expanded diagrams
+
+A diagram returned by `expand()`, `cascade()`, or `trace()` is an **expanded diagram**. It has a direction, and it obeys the following contract.
+
+- **Nodes.** The node set is the *table-level reach* of the seed's table: the tables reached by following foreign keys in the direction of travel, together with the master and all parts of every group that has a reached member. (For `D1`, the group step is left out.) For `both`, it is the upward reach of the downward reach. A node may hold zero rows.
+- **`d[T]`** returns `T` restricted to its rows, in every direction, and raises `DataJointError` if `T` is not a node.
+- **`counts()`** works, and **iteration** runs in topological order.
+- **Copying** a diagram, `dj.Diagram(d)`, keeps its direction.
+- **`d1 + d2`** of two diagrams with the same direction holds, for each table, the union of their rows (T2). Adding diagrams of different directions raises.
+- **`-`, `*`, `+ n`, and `- n`** raise.
+- **`prune()`** raises for `down` and is allowed for `up` and `both`.
+
+!!! version-changed "Changed in 2.4"
+    In 2.3, copying a diagram dropped its direction, and `d1 + d2` silently dropped the right operand's restrictions.
+
+### Retiring `restrict`
+
+`Diagram.restrict()` is deprecated in 2.4: it emits a `DeprecationWarning`, its behavior is frozen, and it is removed in 3.0. It intersected the conditions that reached a table (AND), which can split an instance, keeping a master with only some of its parts ([#1501](https://github.com/datajoint/datajoint-python/issues/1501)). `expand` takes unions instead, so its results are larger: they hold everything the seed reaches, and never part of an instance.
+
+| Use of `restrict` | Replacement |
+|---|---|
+| One condition, for export | `dj.Diagram.expand(Session & cond, "both")` |
+| One condition, for impact | `dj.Diagram.expand(Session & cond, "down")` |
+| Several conditions that share a descendant | Seed the descendant with all of them, e.g. `dj.Diagram.expand(Session & (Subject & cond_a) & cond_b, "both")` |
+| Per-table AND across several seeds | The recipe below |
+
+The recipe intersects, table by table, the rows that separate `down` expansions reach:
+
+```python
+seeds = [Subject & {"species": "mouse"}, Session & "session_date > '2024-01-01'"]
+carved = {}
+for diagram in (dj.Diagram.expand(seed, "down") for seed in seeds):
+    for table in diagram:  # restricted FreeTable, parents first
+        name = table.full_table_name
+        carved[name] = carved[name] & table.proj() if name in carved else table
+```
+
+Each `carved[name]` holds the rows that every seed reaching that table reaches. Unlike `restrict`, a single seed's paths combine by union. The result is not closed: it can split an instance and need not be importable on its own, so use it for inspection, and seed a common descendant for export.
+
+The [Traversal Shape Catalog](traversal-shapes.md) gives the exact rows for each schema shape the specification distinguishes.
 
 ---
 
@@ -569,7 +709,7 @@ combined = dj.Diagram.from_sequence([schema1, schema2, schema3])
 
 ## Dependencies
 
-Operational methods (`cascade`, `restrict`, `counts`, `prune`) use `networkx`, which is always installed as a core dependency.
+Operational methods (`expand`, `cascade`, `trace`, `counts`, `prune`) use `networkx`, which is always installed as a core dependency.
 
 Diagram **visualization** requires optional dependencies:
 
@@ -584,6 +724,10 @@ If visualization dependencies are missing, `dj.Diagram` displays a warning and p
 ## See Also
 
 - [How to Read Diagrams](../../how-to/read-diagrams.ipynb)
+- [Traversal Shape Catalog](traversal-shapes.md) — Worked examples of `expand`, one per schema shape
+- [Cascade Specification](cascade.md) — The delete case of `expand`
+- [Upstream Trace Specification](trace.md) — The upstream case of `expand` and `self.upstream`
+- [Master-Part](master-part.md) — Master-part groups
 - [Delete Data](../../how-to/delete-data.md) — Cascade inspection and delete workflow
 - [What's New in 2.2](../../about/whats-new-22.md) — Motivation and design
 - [Data Manipulation](data-manipulation.md) — Insert, update, delete specification
