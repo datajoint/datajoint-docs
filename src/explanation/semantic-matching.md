@@ -23,9 +23,9 @@ Semantic matching applies to **all binary operators** that combine two query exp
 | Anti-restriction | `A - B` | Namesakes must be homologous |
 | Aggregation | `A.aggr(B, ...)` | Namesakes must be homologous |
 | Extension | `A.extend(B)` | Namesakes must be homologous |
-| Union | `A + B` | Namesakes must be homologous |
+| Union | `A + B` | Same primary key; no secondary attribute in common |
 
-In each case, DataJoint verifies that any common attribute names between the two operands share the same lineage before proceeding with the operation.
+In each case except union, DataJoint verifies that any common attribute names between the two operands share the same lineage before proceeding with the operation. Union matches the operands' primary keys by name and refuses any secondary attribute they have in common.
 
 These concepts were first introduced in Yatsenko et al., 2018[^1].
 
@@ -69,12 +69,15 @@ schema_name.table_name.attribute_name
 
 ### Lineage Assignment Rules
 
+Lineage follows foreign keys. A table's native primary-key attributes start a lineage, and each foreign key passes it on to the referencing table. Any other attribute has no lineage: a native secondary attribute, an attribute computed in a projection, or a key that `dj.U` promotes from a secondary attribute.
+
 | Attribute Type | Lineage Value |
 |----------------|---------------|
 | Native primary key | `this_schema.this_table.attr_name` |
 | FK-inherited (primary or secondary) | Traced to original definition |
 | Native secondary | `None` |
 | Computed (in projection) | `None` |
+| Promoted to a key by `dj.U` | `None` |
 
 ### Example
 
@@ -123,7 +126,7 @@ When two expressions are joined, DataJoint checks all namesake attributes (attri
 |----------|--------|
 | Same name, same lineage (both non-null) | **Match** — attributes are joined |
 | Same name, different lineage | **Error** — non-homologous namesakes |
-| Same name, either lineage is null | **Error** — cannot verify homology |
+| Same name, no lineage on either side | **Error** — unrelated namesakes: that side does not inherit the attribute through a foreign key |
 | Different names | **No match** — attributes kept separate |
 
 ## When Semantic Matching Fails
@@ -158,6 +161,50 @@ This means you're trying to join tables that have a namesake attribute (`id`) wi
        """
    ```
 
+### Joining on unrelated namesakes
+
+!!! version-changed "Changed in 2.4"
+    Before 2.4, this case reported a missing `~lineage` entry and suggested `schema.rebuild_lineage()`, which cannot change the outcome ([#1640](https://github.com/datajoint/datajoint-python/issues/1640)).
+
+Two tables can each declare a secondary attribute with the same name:
+
+```python
+@schema
+class Segmentation(dj.Manual):
+    definition = """
+    -> Image
+    ---
+    input_hash : varchar(64)
+    cell_count : int32
+    """
+
+@schema
+class Profile(dj.Manual):
+    definition = """
+    -> Image
+    ---
+    input_hash : varchar(64)
+    mean_area : float32
+    """
+
+Segmentation * Profile
+```
+
+```
+DataJointError: Cannot join on attribute `input_hash`: neither side inherits it
+through a foreign key, so the two are unrelated. Use .proj() to rename or exclude
+it on one side.
+```
+
+No foreign key relates the two `input_hash` attributes, so they have no lineage, and DataJoint does not join on them. The same applies to attributes computed in two projections, and to keys that `dj.U` promotes on both sides. Rename or exclude the attribute on one side:
+
+```python
+Segmentation * Profile.proj("mean_area")                                # exclude input_hash
+Segmentation * Profile.proj("mean_area", profile_hash="input_hash")    # keep it under another name
+```
+
+When only one side has no lineage, the message says which lineage the other side traces it to.
+
 ## The `~lineage` table
 
 Lineage is stored per-schema in a hidden table called `~lineage`. DataJoint writes one row per `(table, attribute)` pair recording the lineage string for that attribute, and consults `~lineage` whenever it needs to compare lineages across query expressions.
@@ -185,14 +232,6 @@ schema.rebuild_lineage()
 # Option 2: migration helper with dry-run preview
 migrate.rebuild_lineage(schema, dry_run=True)   # show what would change
 migrate.rebuild_lineage(schema, dry_run=False)  # apply
-```
-
-This is also the recovery path when a join fails with:
-
-```
-DataJointError: Cannot join on attribute `X`: lineage missing on one side
-(None vs ...). This usually indicates a stale `~lineage` entry from an older
-DataJoint version or an incomplete declare. Run `schema.rebuild_lineage()` ...
 ```
 
 `rebuild_lineage()` is safe to run on a healthy schema — it's idempotent and produces the same end state regardless of starting condition.
