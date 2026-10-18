@@ -309,7 +309,7 @@ The **owning attributes** of an owned part are the part's attributes that the ch
 - for `-> master.proj(m_id="master_id")`, the attribute `m_id`;
 - for a reference to an owned part, the attributes that the reference maps onto that part's owning attributes ([G7](traversal-shapes.md#g7-owned-part-of-part-with-renamed-attributes)).
 
-If a part has several owning chains, its owning attributes come from an unrenamed `-> master` if it has one, and otherwise from the first owning reference in its definition.
+If a part has several owning chains, its owning attributes come from an unrenamed `-> master` if it has one, and otherwise from the owning reference whose attributes come first in the part's heading, which follows the order of the definition.
 
 For a row `r` of an owned part:
 
@@ -416,7 +416,7 @@ The declaration check keeps `Q` acyclic ([#1619](https://github.com/datajoint/da
 
 ### Computation
 
-The engine computes the rows above as restrictions on tables, without reading the rows, except where noted.
+The engine computes the rows above as restrictions on tables, without reading the rows, except where noted. In the formulas below, a projection `.proj(...)` keeps only the attributes it lists, renamed as shown, so no other attribute of the source takes part in the match.
 
 #### R1, the edge rule
 
@@ -482,11 +482,11 @@ The engine detects such a foreign key from its `attr_map`. For that group only, 
 
 #### The plan
 
-The engine first builds a **plan**: an intermediate form, not SQL. Its nodes are `Seed`, `Restrict(src, attr_map)`, `Lift(part)`, `Reexpand(master)`, `Or`, and `Literal`. A node refers to the restrictions it uses by a handle to another node; compiled SQL is never copied from one restriction into another. The plan compiles to query expressions for the database. It can also be evaluated against rows held in memory, which is how the test suite compares it with the definitions above.
+The engine first builds a **plan**: an intermediate form, not SQL. Its nodes are `Seed`, `Restrict(src, attr_map)`, `Lift(part)`, `Reexpand(master)`, `Or`, and `Literal`. A node refers to the restrictions it uses by a handle to another node; compiled SQL is not copied from one restriction into another, except that a copy under R1 applies the seed's own compiled condition to the child. The plan compiles to query expressions for the database. It can also be evaluated against rows held in memory, which is how the test suite compares it with the definitions above.
 
 #### Materialization happens only at delete time
 
-Traversal and preview (`counts()`, iteration, `d[T]`) stay symbolic, apart from [groups that iterate](#groups-that-iterate). Before the first DELETE, the engine **materializes** a node, replacing its restriction by the literal keys it selects, when one of the node's local terms reads a table that is deleted no later than the node itself. A *local term* is the node's seed or a lift into it. The terms a node inherits through R1 from a parent are safe: `Table.delete()` deletes in reverse topological order, so a parent still holds its rows when its children are deleted.
+Traversal and preview (`counts()`, iteration, `d[T]`) stay symbolic, apart from [groups that iterate](#groups-that-iterate) and `dj.Top` seeds, which are replaced by their keys when the traversal starts. Before the first DELETE, the engine **materializes** a node, replacing its restriction by the literal keys it selects, when one of the node's local terms reads a table that is deleted no later than the node itself. A *local term* is the node's seed or a lift into it. The terms a node inherits through R1 from a parent are safe: `Table.delete()` deletes in reverse topological order, so a parent still holds its rows when its children are deleted.
 
 In practice:
 
