@@ -1,6 +1,6 @@
 # Citation Guidelines
 
-When your work uses the DataJoint Python, MATLAB, or Elements framework, please cite the
+When your work uses the DataJoint Library, its earlier MATLAB implementation, or DataJoint Elements, please cite the
 respective manuscripts and include their associated Research Resource Identifiers
 (RRIDs). Proper citation helps credit the contributors and supports the broader
 scientific community by highlighting the tools used in research.
@@ -15,7 +15,7 @@ If your work utilizes **DataJoint Elements**, please cite the following manuscri
 
 - **RRID**: [RRID:SCR_021894](https://scicrunch.org/resolver/SCR_021894)
 
-You should also cite the **DataJoint Core manuscript** detailed below.
+You should also cite the **DataJoint Relational Model manuscript** detailed below.
 
 ## Citing DataJoint 2.0
 
@@ -38,9 +38,9 @@ citation:
 
 - **RRID**: [RRID:SCR_014543](https://scicrunch.org/resolver/SCR_014543)
 
-## Citing DataJoint Python and MATLAB
+## Citing DataJoint for Python or MATLAB
 
-For work using **DataJoint Python** or **DataJoint MATLAB**, cite the following
+For work using the **DataJoint Library** (Python) or its earlier MATLAB implementation (no longer actively maintained but still available at [datajoint-matlab](https://github.com/datajoint/datajoint-matlab)), cite the following
 manuscript:
 
 - **Manuscript**: Yatsenko D, Reimer J, Ecker AS, Walker EY, Sinz F, Berens P,

@@ -7,6 +7,7 @@ Job execution metadata (start time, duration, code version) should be persisted 
 ## Motivation
 
 The current job table (`~~table_name`) tracks execution metadata, but:
+
 1. Job entries are deleted after completion (unless `keep_completed=True`)
 2. Users often need to know when and with what code version each row was computed
 3. This metadata should be transparent - not cluttering the user-facing schema
@@ -22,6 +23,7 @@ Hidden attributes (prefixed with `_`) provide the solution: stored in the databa
 | `_job_version` | varchar(64) | Code version (e.g., git commit hash) |
 
 **Design notes:**
+
 - `_job_duration` (elapsed time) rather than `_job_completed_time` because duration is more informative for performance analysis
 - `varchar(64)` for version is sufficient for git hashes (40 chars for SHA-1, 7-8 for short hash)
 - `datetime(3)` provides millisecond precision
@@ -118,26 +120,36 @@ add_job_metadata_columns(schema)
 ```
 
 This utility:
+
 - ALTERs the table to add the three hidden columns
 - Does NOT populate existing rows (metadata remains NULL)
 - Future `populate()` calls will populate metadata for new rows
+
+It compiles the columns through the same path a declaration uses, so a
+retrofitted column is indistinguishable in the catalog from a declared one —
+same backend type, same `:type:` comment. Before 2.3.4 it built the `ALTER` by
+hand with backtick-quoted identifiers, which is a syntax error on PostgreSQL,
+so the retrofit had never run there.
 
 ## Behavior
 
 ### Declaration-time
 
 When `config.jobs.add_job_metadata=True` and a Computed/Imported table is declared:
+
 - Hidden metadata columns are added to the table definition
 - Only master tables receive metadata columns; Part tables never get them
 
 ### Population-time
 
 After `make()` completes successfully:
+
 1. Check if the table has hidden metadata columns
 2. If yes: UPDATE the just-inserted rows with start_time, duration, version
 3. If no: Silently skip (no error, no ALTER)
 
 This applies to both:
+
 - **Direct mode** (`reserve_jobs=False`): Single-process populate
 - **Distributed mode** (`reserve_jobs=True`): Multi-worker with job table coordination
 
@@ -190,6 +202,7 @@ def from_clause(self):
 Replace `_left: List[bool]` with `_joins: List[Tuple[bool, List[str]]]`
 
 Each join stores:
+
 - `left`: Whether it's a left join
 - `using_attrs`: Non-hidden common attributes to join on
 
@@ -227,21 +240,33 @@ This ensures join attribute computation automatically excludes hidden attributes
 
 ### 1. Declaration (declare.py)
 
-```python
-def declare(full_table_name, definition, context):
-    # ... existing code ...
+The three columns are written in DataJoint notation, exactly as a user writes an
+attribute:
 
-    # Add hidden job metadata for auto-populated tables
-    if config.jobs.add_job_metadata and table_tier in (TableTier.COMPUTED, TableTier.IMPORTED):
-        # Only for master tables, not parts
-        if not is_part_table:
-            job_metadata_sql = [
-                "`_job_start_time` datetime(3) DEFAULT NULL",
-                "`_job_duration` float DEFAULT NULL",
-                "`_job_version` varchar(64) DEFAULT ''",
-            ]
-            attribute_sql.extend(job_metadata_sql)
+```python
+JOB_METADATA_DEFINITION = (
+    "_job_start_time = null : datetime(3) # when computation began",
+    "_job_duration = null : float32 # computation duration in seconds",
+    '_job_version = "" : varchar(64) # code version',
+)
 ```
+
+`prepare_declare` compiles them through the same `compile_attribute` that
+handles every user line, once the user's lines are parsed, and only when the
+stripped table name matches the `Computed` or `Imported` tier — which is what
+excludes part tables and DataJoint's own system tables.
+
+Going through the type system rather than a hand-written string is what makes
+the columns correct on every backend: `core_type_to_sql("datetime(3)")` yields
+`datetime(3)` on MySQL and `timestamp(3)` on PostgreSQL. A hand-written
+`datetime(3)` had produced a bare `timestamp` on PostgreSQL, silently at
+microsecond precision
+([#1566](https://github.com/datajoint/datajoint-python/issues/1566)).
+
+Each column also carries a `:type:` comment recording the DataJoint type it was
+declared from, which `heading` reads back as `original_type`. On PostgreSQL that
+comment is a separate `COMMENT ON` statement, since the backend does not accept
+one inline.
 
 ### 2. Population (autopopulate.py)
 
@@ -336,9 +361,41 @@ class SessionAnalysis(dj.Computed):
 SessionAnalysis().heading.names  # ['session_id', 'result']
 SessionAnalysis().to_dicts()  # Returns only visible attributes
 
-# Access hidden attributes explicitly if needed:
-SessionAnalysis().to_arrays('_job_start_time', '_job_duration', '_job_version')
+# Reading them back requires SQL until 2.4 -- see below.
 ```
+
+## Querying and Fetching
+
+A condition **string** reaches the column; everything that goes through the
+heading does not.
+
+| Pattern | Result |
+|---|---|
+| `Analysis & "_job_duration > 3600"` | Works — the string passes to SQL unchanged |
+| `Analysis & {"_job_duration": 3600}` | **Returns every row** — see below |
+| `Analysis.to_arrays("_job_duration")` | Raises ``DataJointError: Attribute `_job_duration` not found.`` |
+| `Analysis.proj("_job_duration")` | Raises the same |
+| `Analysis.to_dicts()` | Visible attributes only |
+| `Analysis & dj.Top(order_by="_job_duration")` | Works — `ORDER BY` is not validated against the heading |
+
+The mapping form silently ignores an attribute it cannot match. That is
+deliberate and useful — it is what lets `Session & key` work when `key` carries
+attributes from a more detailed table — but a hidden attribute is invisible to
+that matching, so the predicate is dropped along with it
+([#1561](https://github.com/datajoint/datajoint-python/issues/1561)).
+
+**Reading the values back requires SQL until 2.4:**
+
+```python
+rows = SessionAnalysis.connection.query(
+    f"SELECT _job_start_time, _job_duration, _job_version "
+    f"FROM {SessionAnalysis.full_table_name}"
+).fetchall()
+```
+
+A supported accessor is planned for 2.4, covering the job-metadata attributes
+and `_prov` together
+([#1562](https://github.com/datajoint/datajoint-python/issues/1562)).
 
 ## Summary of Design Decisions
 

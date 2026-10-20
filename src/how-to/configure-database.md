@@ -30,14 +30,17 @@ This file should be committed to version control.
 
 ## Secrets Directory (`.secrets/`)
 
-Store credentials in `.secrets/datajoint.json`:
+Store credentials as one plain-text file per setting:
 
-```json
-{
-  "database.user": "myuser",
-  "database.password": "mypassword"
-}
+```bash
+mkdir -p .secrets
+echo "myuser"     > .secrets/database.user
+echo "mypassword" > .secrets/database.password
+chmod 600 .secrets/*
 ```
+
+Only `database.user`, `database.password`, and `stores.<name>.<attr>` are read from this
+directory — see [Manage Secrets](manage-secrets.md#option-1-secrets-directory-recommended-for-development).
 
 **Important:** Add `.secrets/` to your `.gitignore`:
 
@@ -60,7 +63,7 @@ Environment variables take precedence over config files.
 ## Configuration Settings
 
 | Setting | Environment | Default | Description |
-|---------|-------------|---------|-------------|
+| --------- | ------------- | --------- | ------------- |
 | `database.host` | `DJ_HOST` | `localhost` | Database server hostname |
 | `database.port` | `DJ_PORT` | Auto | Database server port (3306 for MySQL, 5432 for PostgreSQL) |
 | `database.user` | `DJ_USER` | — | Database username |
@@ -104,8 +107,8 @@ with dj.config.override(database={'host': 'test-server'}):
 
 1. Programmatic settings (highest priority)
 2. Environment variables
-3. `.secrets/datajoint.json`
-4. `datajoint.json`
+3. `datajoint.json`
+4. `.secrets/`
 5. Default values (lowest priority)
 
 ## TLS Configuration
@@ -304,4 +307,3 @@ staging = dj.Instance(host="staging.example.com", user="dev", password="...")
 ```
 
 See [Use Isolated Instances](use-instances.md/) for a complete guide.
-

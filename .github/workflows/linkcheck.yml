@@ -26,3 +26,29 @@ jobs:
             'src/**/*.md'
             'src/**/*.ipynb'
           fail: true
+
+  # The check above resolves links against the *source* tree, which cannot see
+  # this class of bug: mkdocs-jupyter does not rewrite relative links inside
+  # notebook markdown cells, so a source-valid link like
+  # `../explanation/entity-integrity.md` ships verbatim and 404s. Only the built
+  # output shows what a reader's browser actually requests.
+  built-site:
+    name: Check internal links in the built site
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+          cache-dependency-path: pip_requirements.txt
+
+      - name: Install docs toolchain
+        run: pip install -r pip_requirements.txt
+
+      - name: Build site
+        run: mkdocs build --strict --site-dir site
+
+      - name: Check internal links
+        run: python scripts/check_links.py site

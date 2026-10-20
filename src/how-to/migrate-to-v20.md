@@ -1,9 +1,26 @@
-# Migrate to DataJoint 2.0
+# Migrate to DataJoint Library 2.x
 
-Upgrade existing pipelines from legacy DataJoint (pre-2.0) to DataJoint 2.0+.
+Upgrade existing pipelines from legacy DataJoint (the pre-2.0 `0.x` series)
+directly to the latest DataJoint 2.x — currently **2.3**.
 
 > **This guide is optimized for AI coding assistants.** Point your AI agent at this
 > document and it will execute the migration with your oversight.
+
+!!! tip "Which version do I migrate to?"
+
+    Migrate **straight to the latest 2.x release** (currently 2.3) — there is no
+    need to step through 2.0 → 2.1 → 2.2 → 2.3. A single upgrade takes a `0.x`
+    pipeline all the way to 2.3.
+
+    Everything this guide calls "2.0" is the **migration surface** — the type
+    system, explicit codecs, and unified `stores` introduced in 2.0. Later
+    releases build on it without adding migration steps: **2.1** added the
+    PostgreSQL backend and configurable diagram layout, **2.2** added the jobs
+    layer and diagram operations, and **2.3** added the upstream/provenance API.
+    Installing the latest release gives you all of them.
+
+    Complete the migration while on **2.3 or earlier**: the `datajoint.migrate`
+    helper is scheduled for removal in 2.4/2.5.
 
 !!! warning "Temporary module"
 
@@ -14,7 +31,7 @@ Upgrade existing pipelines from legacy DataJoint (pre-2.0) to DataJoint 2.0+.
 ### System Requirements
 
 | Component | Legacy (pre-2.0) | DataJoint 2.0+ |
-|-----------|-----------------|---------------|
+| ----------- | ----------------- | --------------- |
 | **Python** | 3.8+ | **3.10+** |
 | **MySQL** | 5.7+ | **8.0+** |
 | **Character encoding** | (varies) | **UTF-8 (utf8mb4)** |
@@ -55,7 +72,7 @@ Table & "name = 'Alice'"
 Table & "date > '2024-01-01'"
 ```
 
-See [Database Backends Specification](../reference/specs/database-backends.md#string-quoting/) for details.
+See [Database Backends Specification](../reference/specs/database-backends.md#string-quoting) for details.
 
 ### Before You Start: Testing Recommendation
 
@@ -83,7 +100,7 @@ Tests provide immediate ROI during migration and ongoing value for development.
 DataJoint 2.0 introduces a unified type system with three tiers:
 
 | Tier | Description | Examples | Migration |
-|------|-------------|----------|-----------|
+| ------ | ------------- | ---------- | ----------- |
 | **Native** | Raw MySQL types | `int unsigned`, `tinyint` | Auto-converted to core types |
 | **Core** | Standardized portable types | `int64`, `float64`, `varchar(100)`, `json` | Phase I |
 | **Codec** | Serialization to blob or storage | `<blob>`, `<blob@store>`, `<npy@>` | Phase I-III |
@@ -97,9 +114,10 @@ DataJoint 2.0 makes serialization **explicit** with codecs. In pre-2.0, `longblo
 #### Migration: Legacy → 2.0
 
 | pre-2.0 (Implicit) | 2.0 (Explicit) | Storage | Migration |
-|-------------------|----------------|---------|-----------|
+| ------------------- | ---------------- | --------- | ----------- |
 | `longblob` | `<blob>` | In-table | Phase I code, Phase III data |
 | `mediumblob` | `<blob>` | In-table | Phase I code, Phase III data |
+| `blob`, `tinyblob` | `<blob>` | In-table | Phase I code, Phase III data |
 | `attach` | `<attach>` | In-table | Phase I code, Phase III data |
 | `blob@store` | `<blob@store>` | In-store (hash) | Phase I code, Phase III data |
 | `attach@store` | `<attach@store>` | In-store (hash) | Phase I code, Phase III data |
@@ -141,7 +159,7 @@ COMMENT ':<blob@store>:large array in object storage'
 In pre-2.0, `longblob` columns automatically deserialized Python objects using DataJoint's binary serialization format. DataJoint 2.0 identifies blob columns by checking for `:<blob>:` in the column comment. **Without this marker, blob columns are treated as raw binary data and will NOT be deserialized.**
 
 | Column Comment | DataJoint 2.0 Behavior |
-|----------------|----------------------|
+| ---------------- | ---------------------- |
 | `:<blob>:neural data` | ✓ Deserializes to Python/NumPy objects |
 | `neural data` (no marker) | ✗ Returns raw bytes (no deserialization) |
 
@@ -236,7 +254,7 @@ DataJoint 2.0 replaces `external.*` with unified `stores.*` configuration:
 ### Query API Changes
 
 | pre-2.0 | 2.0 | Phase |
-|--------|-----|-------|
+| -------- | ----- | ------- |
 | `table.fetch()` | `table.to_arrays()` or `table.to_dicts()` | I |
 | `table.fetch(..., format="frame")` | `table.to_pandas(...)` | I |
 | `table.fetch1()` | `table.fetch1()` (unchanged) | — |
@@ -258,7 +276,7 @@ DataJoint 2.0 replaces `external.*` with unified `stores.*` configuration:
 ## Migration Overview
 
 | Phase | Goal | Code Changes | Schema/Store Changes | Production Impact |
-|-------|------|--------------|----------------------|-------------------|
+| ------- | ------ | -------------- | ---------------------- | ------------------- |
 | **I** | Branch & code migration | All API updates, type syntax, **all codecs** (in-table and in-store) | Empty `_v2` schemas + test stores | **None** |
 | **II** | Test compatibility | — | Populate `_v2` schemas with sample data, test equivalence | **None** |
 | **III** | Migrate production data | — | Multiple migration options | **Varies** |
@@ -516,7 +534,7 @@ git push origin main
 # Create feature branch
 git checkout -b pre/v2.0
 
-# Install DataJoint 2.0
+# Install DataJoint Library 2.0
 pip install --upgrade pip
 pip install "datajoint>=2.0.0"
 
@@ -689,7 +707,7 @@ Now configure database connection and stores.
 
 DataJoint 2.0 uses:
 
-- **`.secrets/datajoint.json`** for credentials (gitignored)
+- **`.secrets/database.user`** and **`.secrets/database.password`** for credentials (gitignored)
 - **`datajoint.json`** for non-sensitive settings (checked in)
 - **`stores.*`** instead of `external.*`
 
@@ -706,18 +724,18 @@ echo ".secrets/" >> .gitignore
 python -c "import datajoint as dj; dj.config.save_template()"
 ```
 
-**Edit `.secrets/datajoint.json`:**
-```json
-{
-  "database.host": "your-database-host",
-  "database.user": "your-username",
-  "database.password": "your-password"
-}
+**Fill in the credential files under `.secrets/`** — one value per file:
+```bash
+echo "your-username" > .secrets/database.user
+echo "your-password" > .secrets/database.password
 ```
 
-**Edit `datajoint.json`:**
+**Edit `datajoint.json`**:
 ```json
 {
+  "database": {
+    "host": "your-database-host"
+  },
   "loglevel": "INFO",
   "safemode": true,
   "display.limit": 12,
@@ -1076,19 +1094,43 @@ Convert ALL types and codecs in Phase I:
 **Integer and Float Types:**
 
 | pre-2.0 | 2.0 | Category |
-|--------|-----|----------|
+| -------- | ----- | ---------- |
 | `int unsigned` | `int64` | Core type |
 | `int` | `int32` | Core type |
 | `smallint unsigned` | `int32` | Core type |
+| `smallint` | `int16` | Core type |
 | `tinyint unsigned` | `int16` | Core type |
-| `bigint unsigned` | `int64` | Core type |
+| `tinyint` | `int8` | Core type |
+| `mediumint unsigned` | `int32` | Core type |
+| `mediumint` | `int32` | Core type |
+| `bigint unsigned` | `int64` | Core type — see the caution below |
+| `bigint` | `int64` | Core type |
 | `float` | `float32` | Core type |
 | `double` | `float64` | Core type |
+| `decimal(M,D)` | Unchanged | Core type |
+| `decimal(M,D) unsigned` | `decimal(M,D)` | Native type — see below |
+
+DataJoint 2.0 provides no unsigned integer types, so an unsigned column widens to the
+next signed type that holds its full range. Choose a signed type with sufficient range
+rather than reaching for a native spelling.
+
+!!! warning "`bigint unsigned` is the one lossy case"
+
+    Values above 2<sup>63</sup>-1 do not fit in `int64`. `dj.migrate` labels these
+    columns `int64` and logs a warning naming each one. Verify the stored range before
+    migrating, and keep the column native if you genuinely need the top half of the
+    unsigned range.
+
+**Modifiers and aliases on `decimal`:** `decimal` is a core type only in its canonical
+two-argument form. `decimal(M,D) unsigned`, `decimal(M)`, `numeric(M,D)`, `dec(M,D)`
+and `fixed(M,D)` remain declarable but are treated as native types, with the usual
+portability warning. Dropping `unsigned` costs only the non-negativity constraint, not
+precision, so converting to `decimal(M,D)` is the recommended move.
 
 **String, Date, and Structured Types:**
 
 | pre-2.0 | 2.0 | Notes |
-|--------|-----|-------|
+| -------- | ----- | ------- |
 | `varchar(N)`, `char(N)` | Unchanged | Core types |
 | `date` | Unchanged | Core type |
 | `enum('a', 'b')` | Unchanged | Core type |
@@ -1104,7 +1146,7 @@ Convert ALL types and codecs in Phase I:
 **Codecs:**
 
 | pre-2.0 | 2.0 | Category |
-|--------|-----|----------|
+| -------- | ----- | ---------- |
 | `longblob` | `<blob>` | Codec (in-table) |
 | `attach` | `<attach>` | Codec (in-table) |
 | `blob@store` | `<blob@store>` | Codec (in-store) |
@@ -1158,7 +1200,7 @@ SCOPE - PHASE I:
 
 1. Convert ALL type syntax to 2.0 core types
 2. Convert ALL legacy codecs (in-table AND in-store)
-   - In-table: longblob → <blob>, mediumblob → <blob>, attach → <attach>
+   - In-table: longblob → <blob>, mediumblob → <blob>, blob → <blob>, tinyblob → <blob>, attach → <attach>
    - In-store (legacy only): blob@store → <blob@store>, attach@store → <attach@store>, filepath@store → <filepath@store>
 3. Code will use TEST stores configured in datajoint.json
 4. Do NOT add new 2.0 codecs (<npy@>, <object@>) - these are for Phase IV adoption
@@ -1173,11 +1215,15 @@ Core Types (Integer and Float):
   smallint → int16
   tinyint unsigned → int16
   tinyint → int8
-  bigint unsigned → int64
+  mediumint unsigned → int32
+  mediumint → int32
+  bigint unsigned → int64  # lossy above 2**63-1; verify the stored range
   bigint → int64
   float → float32
   double → float64
-  decimal(M,D) → decimal(M,D)  # unchanged
+  decimal(M,D) → decimal(M,D)  # unchanged (core type)
+  decimal(M,D) unsigned → decimal(M,D)  # drop the modifier; native otherwise
+  decimal(M) / numeric(M,D) / dec(M,D) / fixed(M,D) → decimal(M,D)  # native otherwise
 
 Core Types (String and Date):
   varchar(N) → varchar(N)  # unchanged (core type)
@@ -2407,23 +2453,27 @@ on your needs. Migration is complete - these are optional enhancements.
 ### New Features Overview
 
 **Schema-addressed storage** (`<npy@>`, `<object@>`)
+
 - Lazy-loading arrays with fsspec integration
 - Hierarchical organization by primary key
 - Mutable objects with streaming access
 - See: [Object Storage Tutorial](../tutorials/basics/06-object-storage.ipynb/)
 
 **Semantic matching**
+
 - Lineage-based join validation (enabled by default with `*` operator)
 - Catches errors from incompatible data combinations
 - See: [Semantic Matching Spec](../reference/specs/semantic-matching.md/)
 
 **Jobs 2.0**
+
 - Per-table job tracking (`~~table_name`)
 - Priority-based populate (with `reserve_jobs=True`)
 - Improved distributed computing coordination
 - See: [Distributed Computing Tutorial](../tutorials/advanced/distributed.ipynb/)
 
 **Custom codecs**
+
 - Domain-specific data types
 - Extensible type system
 - See: [Custom Codecs Tutorial](../tutorials/advanced/custom-codecs.ipynb/)
@@ -2517,22 +2567,26 @@ print(get_store_spec('main'))
 ## Summary
 
 **Phase I:** Branch and code migration (~1-4 hours with AI)
+
 - Create `pre/v2.0` branch
 - Update all code to 2.0 API
 - Create empty `_v2` schemas
 
 **Phase II:** Test with sample data (~1-2 days)
+
 - Insert test data
 - Validate functionality
 - Test new features
 
 **Phase III:** Migrate production data (~1-7 days)
+
 - Choose migration option
 - Copy or migrate data
 - Validate integrity
 - Execute cutover
 
 **Phase IV:** Adopt new features (ongoing)
+
 - Object storage
 - Semantic matching
 - Custom codecs

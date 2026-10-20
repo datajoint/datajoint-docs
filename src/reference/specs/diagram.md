@@ -596,23 +596,41 @@ save(filename, format=None)
 
 Each table tier has a distinct visual style:
 
-| Tier | Shape | Fill Color | Font Color |
-|------|-------|------------|------------|
-| **Manual** | rectangle | green | dark green |
-| **Lookup** | plain text | gray | black |
-| **Computed** | ellipse | red | dark red |
-| **Imported** | ellipse | blue | dark blue |
-| **Part** | plain text | transparent | black |
+| Tier | Shape | Fill | Stroke | Text |
+|------|-------|------|--------|------|
+| **Manual** | rounded box | green `#E8F0E9` | `#3E7A52` | `#28513A` |
+| **Lookup** | rounded box | gray `#F0F0F1` | `#808285` | `#5A5C5F` |
+| **Imported** | ellipse | blue `#E0F4FC` | `#00A0DF` | `#00537A` |
+| **Computed** | ellipse | orange `#FFEDE5` | `#FF5113` | `#B23200` |
+| **Part** | rounded box (smaller, muted) | white `#FFFFFF` | `#B9BBBE` | `#55585C` |
+
+The dark theme derives by rule (same hue per tier, fills inverted toward navy-tinted
+darks, text brightened to WCAG AA); the adaptive SVG embeds both via a
+`prefers-color-scheme` block.
 
 ### Edge Styles
 
 | Style | Meaning |
 |-------|---------|
-| Solid line | Primary foreign key |
-| Dashed line | Non-primary foreign key |
-| Thick line | Master-Part relationship |
-| Thin line | Multi-valued foreign key |
-| Orange line | Renamed foreign key (via `.proj()`) — hover the edge for the column-rename tooltip |
+| Solid line | Primary foreign key (in the child's primary key) |
+| Dashed line | Secondary foreign key (below the `---`) |
+| Thick line | **1:1** dependency — the foreign key constitutes the child's *entire* primary key |
+| Thin line | **Multi-valued** dependency — the child has primary-key attributes beyond those the foreign key contributes |
+| Amber line | Renamed foreign key (via `.proj()`) — amber `#C77D3A`, distinct from the orange **Computed** tier above; hover the edge for the column-rename tooltip |
+
+**Line weight encodes cardinality, and only cardinality — it is binary.** A
+thick edge is a one-to-one dependency: the parent's key fills the child's entire
+primary key. A thin edge is one-to-many: the child adds primary-key attributes of
+its own — whether newly declared (e.g. `scan_number`) or inherited from *another*
+foreign key (a key composed from two parents). This is rename-safe: what matters
+is whether the foreign key covers the child's whole primary key, not whether the
+attribute names match, so a **renamed** foreign key can still be 1:1 (thick).
+
+Master-part is **not** a weight. A part almost always adds a key attribute, so a
+master→part edge is **thin** under this same rule. The weight rule is the same
+fact as the [underline rule](#node-labels) viewed from the edge: a table that
+introduces a new key attribute is exactly a table whose incoming dependency is
+multi-valued.
 
 ### Node Labels
 
@@ -696,20 +714,22 @@ print(dj.Diagram(schema).make_mermaid())
 
 Output:
 ```mermaid
-flowchart TB
-    classDef manual fill:#90EE90,stroke:#006400
-    classDef lookup fill:#D3D3D3,stroke:#696969
-    classDef computed fill:#FFB6C1,stroke:#8B0000
-    classDef imported fill:#ADD8E6,stroke:#00008B
-    classDef part fill:#FFFFFF,stroke:#000000
+flowchart LR
+    classDef manual fill:#E7F3EC,stroke:#2F7D5B,color:#1B5138
+    classDef lookup fill:#F2F4F7,stroke:#A9B1BD,color:#495261
+    classDef computed fill:#FBEAEC,stroke:#B23A48,color:#7C2430
+    classDef imported fill:#E2ECFA,stroke:#2A5FA5,color:#123A6D
+    classDef part fill:#FFFFFF,stroke:#9AA6B8,color:#46536B
 
-    subgraph my_pipeline
+    subgraph my_pipeline["my_pipeline"]
         Mouse[Mouse]:::manual
         Session[Session]:::manual
         Neuron([Neuron]):::computed
     end
     Mouse --> Session
     Session --> Neuron
+    linkStyle 0 stroke:#3A424F,stroke-width:1px
+    linkStyle 1 stroke:#3A424F,stroke-width:2px
 ```
 
 ### Combining Diagrams
@@ -731,13 +751,18 @@ combined = dj.Diagram.from_sequence([schema1, schema2, schema3])
 
 Operational methods (`expand`, `cascade`, `trace`, `counts`, `prune`) use `networkx`, which is always installed as a core dependency.
 
-Diagram **visualization** requires optional dependencies:
+Diagram **visualization** additionally requires:
 
-```bash
-pip install matplotlib pygraphviz
-```
+- **Graphviz** — the `dot` executable. The default notebook display, `_repr_svg_()`, goes through
+  `make_svg()` → `make_dot()` → pydot → `dot`, so this is the path nearly all usage hits. `pydot`
+  ships with DataJoint, but Graphviz itself is a system package that `pip` cannot install
+  (`brew install graphviz`, `sudo apt-get install graphviz`). Without it, rendering raises
+  `FileNotFoundError` — see
+  [Installation → Troubleshooting](../../how-to/installation.md#djdiagram-raises-filenotfounderror).
+- **matplotlib** — only for `Diagram.draw()`, a separate `make_image()` path that most usage never
+  touches: `pip install datajoint[viz]`.
 
-If visualization dependencies are missing, `dj.Diagram` displays a warning and provides a stub class. Operational methods remain available regardless.
+Operational methods remain available regardless.
 
 ---
 

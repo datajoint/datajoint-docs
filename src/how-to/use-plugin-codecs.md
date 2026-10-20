@@ -253,6 +253,7 @@ Plugin codecs evolve over time. Following versioning best practices ensures your
 ### Built-in vs Plugin Codec Versioning
 
 **Built-in codecs** (`<blob>`, `<npy@>`, `<object@>`, etc.) are versioned with DataJoint:
+
 - ✅ Shipped with datajoint-python
 - ✅ Versioned by DataJoint release (2.0.0, 2.1.0, 3.0.0)
 - ✅ Upgraded when you upgrade DataJoint
@@ -260,6 +261,7 @@ Plugin codecs evolve over time. Following versioning best practices ensures your
 - ❌ **No explicit codec_version field needed** - DataJoint version is the codec version
 
 **Plugin codecs** (dj-zarr-codecs, dj-photon-codecs, etc.) have independent lifecycles:
+
 - ✅ Installed separately from DataJoint
 - ✅ Independent version numbers (0.1.0 → 1.0.0 → 2.0.0)
 - ✅ Users choose when to upgrade
@@ -326,11 +328,13 @@ def decode(self, stored, *, key=None):
 ### When to Bump Versions
 
 **Bump data format version when:**
+
 - ✅ Changing storage structure or encoding algorithm
 - ✅ Modifying metadata schema
 - ✅ Changing compression parameters that affect decode
 
 **Don't bump for:**
+
 - ❌ Bug fixes that don't affect stored data format
 - ❌ Performance improvements to encode/decode logic
 - ❌ Adding new optional features (store version in attributes instead)
@@ -454,6 +458,7 @@ def decode(self, stored, *, key=None):
 ### Real-World Example: dj-photon-codecs Evolution
 
 **Version 1.0** (current):
+
 - Stores Anscombe-transformed data
 - Fixed compression (Blosc zstd level 5)
 - Fixed chunking (100 frames)

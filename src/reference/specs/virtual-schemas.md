@@ -76,6 +76,7 @@ table = schema.get_table('experiment')  # also works
 ```
 
 **Parameters:**
+
 - `name` (str): Table name in CamelCase or snake_case
 
 **Returns:** `FreeTable` instance
@@ -177,6 +178,7 @@ Session & "date > '2024-01-01'"
 ```
 
 **Parameters:**
+
 - `into` (dict, optional): Namespace to populate. Defaults to caller's locals.
 
 ### 4.2 Generated Class Types

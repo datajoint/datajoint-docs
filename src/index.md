@@ -2,7 +2,7 @@
 
 !!! tip "Upgrading from 0.14.x?"
 
-    - **Migration guide:** [Migrate to 2.0](how-to/migrate-to-v20.md)
+    - **Migration guide:** [Migrate to 2.x](how-to/migrate-to-v20.md)
     - **Legacy docs:** [datajoint.github.io](https://datajoint.github.io/datajoint-python)
 
 ## About DataJoint
@@ -25,7 +25,7 @@
 
     ---
 
-    Build your first pipeline with hands-on Jupyter notebooks
+    Learn DataJoint through complete, worked Jupyter-notebook pipelines
 
     [:octicons-arrow-right-24: Start learning](tutorials/index.md)
 
@@ -57,7 +57,7 @@
 
     ---
 
-    A cloud platform for automated analysis workflows. It relies on DataJoint Python and DataJoint Elements.
+    A cloud platform for automated analysis workflows. It relies on the DataJoint Library and DataJoint Elements.
 
     [:octicons-arrow-right-24: Learn more](https://datajoint.com/){:target="_blank"} | [Sign-in](https://works.datajoint.com){:target="_blank"}
 
@@ -65,4 +65,4 @@
 
 ---
 
-**New to DataJoint?** Start with the [:octicons-arrow-right-24: Quick Start tutorial](tutorials/index.md).
+**New to DataJoint?** Visit [:octicons-arrow-right-24: Installation](how-to/installation.md) to install DataJoint and run your first pipeline, then work through the [:octicons-arrow-right-24: Tutorials](tutorials/index.md).

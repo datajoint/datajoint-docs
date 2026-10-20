@@ -20,6 +20,7 @@ This document defines a three-layer type architecture:
 Codec types resolve through core types to native types: `<blob>` → `bytes` → `LONGBLOB`.
 
 **Syntax distinction:**
+
 - Core types: `int32`, `float64`, `varchar(255)` - no brackets
 - Codec types: `<blob>`, `<object@store>`, `<filepath@main>` - angle brackets
 - The `@` character indicates store (object storage vs in-table)
@@ -68,6 +69,7 @@ See [Encoding and Collation Policy](#encoding-and-collation-policy) for details.
 
 **Timezone policy:** All `datetime` values should be stored as **UTC**. Timezone conversion is a
 presentation concern handled by the application layer, not the database. This ensures:
+
 - Reproducible computations regardless of server or client timezone settings
 - Simple arithmetic on temporal values (no DST ambiguity)
 - Portable data across systems and regions
@@ -149,6 +151,7 @@ status = "active" : varchar(20)
 ```
 
 **Auto-increment policy:** DataJoint discourages `AUTO_INCREMENT` / `SERIAL` because:
+
 - Breaks reproducibility (IDs depend on insertion order)
 - Makes pipelines non-deterministic
 - Complicates data migration and replication
@@ -177,6 +180,7 @@ definitions. This ensures consistent behavior across all tables and simplifies p
 | Collation | `utf8mb4_bin` | `C` |
 
 **Policy:**
+
 - **UTF-8 required**: DataJoint validates charset is UTF-8 compatible at connection time
 - **Case-sensitive by default**: Binary collation (`utf8mb4_bin` / `C`) ensures predictable comparisons
 - **No per-column overrides**: `CHARACTER SET` and `COLLATE` are rejected in type definitions
@@ -467,10 +471,86 @@ column_name JSONB NOT NULL
 ```
 
 The `json` database type:
+
 - Used as dtype by built-in codecs (`<object@>`, `<hash@>`, `<filepath@store>`)
 - Stores arbitrary JSON-serializable data
 - Automatically uses appropriate type for database backend
-- Supports JSON path queries where available
+- Supports JSON path access in restriction and projection — see below
+
+### JSON path access
+
+A field inside a `json` attribute is addressed as `attribute.path`, in both
+restriction and projection. DataJoint translates the path per backend, so the
+same expression runs on MySQL and PostgreSQL:
+
+```python
+@schema
+class Equipment(dj.Manual):
+    definition = """
+    name  : varchar(32)
+    ---
+    specs : json
+    """
+```
+
+**Restriction** — a mapping whose key carries the path:
+
+```python
+Equipment & {"specs.vendor": "Acme"}
+```
+
+**Projection** — a named attribute whose value is the path:
+
+```python
+Equipment.proj(vendor="specs.vendor")
+```
+
+Both emit `json_value()` on MySQL and `jsonb_extract_path_text()` on
+PostgreSQL. Nested fields and array elements use dots and brackets:
+`specs.probe.serial`, `specs.channels[0]`.
+
+#### Extracted values are text
+
+Both backend functions return text, so a numeric or boolean field comes back as
+a string unless a type is requested:
+
+```python
+Equipment.proj(ch="specs.channels")            # '64'  — str
+Equipment.proj(ch="specs.channels:unsigned")   # 64    — int
+```
+
+The annotation is `path:type`. Portable spellings are `unsigned`, `signed` and
+`decimal(M,D)`.
+
+!!! warning "Two defects to know about when filtering"
+
+    **Compare against a string.** A restriction value that is a Python `int` or
+    `bool` is not coerced to match the extracted text. `& {"specs.calibrated":
+    True}` returns **no rows** on MySQL and raises on PostgreSQL; write
+    `& {"specs.calibrated": "true"}` and `& {"specs.channels": "64"}` until
+    [#1564](https://github.com/datajoint/datajoint-python/issues/1564) is fixed.
+
+    **`:int` is not portable.** It works on PostgreSQL and raises on MySQL, whose
+    `RETURNING` clause does not accept it. Use `unsigned` or `signed`, which work
+    on both — [#1563](https://github.com/datajoint/datajoint-python/issues/1563).
+
+#### Ordering comparisons
+
+A path yields text, so `>` and `<` need a typed projection first:
+
+```python
+big = Equipment.proj(ch="specs.channels:unsigned") & "ch > 32"
+```
+
+#### What is not supported
+
+Comparing a whole JSON object — `& {"specs": {"vendor": "Acme", "channels": 64}}` —
+raises a syntax error. Restrict on a path, or normalize the field into a column.
+
+Hidden attributes — platform-managed columns whose names begin with `_`, such as
+`_job_version` — cannot be reached by the mapping form at all: the predicate is
+dropped and every row is returned
+([#1561](https://github.com/datajoint/datajoint-python/issues/1561)).
 
 ## Built-in Codecs
 
@@ -652,6 +732,7 @@ def garbage_collect(store_name):
 | GC | Ref counted | Ref counted | With row | Ref counted | User managed |
 
 **When to use each:**
+
 - **`<blob>`**: Serialized Python objects (NumPy arrays, dicts). Use `<blob@>` for large/duplicated data
 - **`<attach>`**: File attachments with filename preserved. Use `<attach@>` for large files
 - **`<object@>`**: Large/complex file structures (Zarr, HDF5) where DataJoint controls organization
@@ -712,6 +793,7 @@ Content-addressed storage uses **MD5** (128-bit, 32-char hex) rather than SHA256
 **Why not SHA256?**
 
 SHA256 is the modern standard for content-addressable storage (Git, Docker, IPFS). However:
+
 - These systems prioritize cryptographic security against adversarial collision attacks
 - Scientific data pipelines face no adversarial threat model
 - The practical benefits (storage, speed, compatibility) outweigh theoretical security gains
@@ -773,6 +855,7 @@ def migrate_external_store(schema, store_name):
 ```
 
 **Migration considerations:**
+
 - Legacy UUIDs were based on MD5 content hash stored as `binary(16)` (UUID format)
 - New system uses `char(32)` MD5 hex strings stored in JSON
 - The hash algorithm is unchanged (MD5), only the storage format differs

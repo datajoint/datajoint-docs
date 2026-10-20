@@ -7,7 +7,7 @@ Configure DataJoint for production environments with controlled schema changes a
 Development and production environments have different requirements:
 
 | Concern | Development | Production |
-|---------|-------------|------------|
+| --------- | ------------- | ------------ |
 | Schema changes | Automatic table creation | Controlled, explicit changes only |
 | Naming | Ad-hoc schema names | Consistent project prefixes |
 | Configuration | Local settings | Environment-based |
@@ -50,7 +50,7 @@ Or in `datajoint.json`:
 With `create_tables=False`:
 
 | Action | Development (True) | Production (False) |
-|--------|-------------------|-------------------|
+| -------- | ------------------- | ------------------- |
 | Access existing table | Works | Works |
 | Access missing table | Creates it | **Raises error** |
 | Explicit `Schema(create_tables=True)` | Creates | Creates (override) |
@@ -167,8 +167,8 @@ Use different configurations for development, staging, and production.
 DataJoint loads settings in priority order:
 
 1. **Environment variables** (highest priority)
-2. **Secrets directory** (`.secrets/`)
-3. **Config file** (`datajoint.json`)
+2. **Config file** (`datajoint.json`)
+3. **Secrets directory** (`.secrets/`)
 4. **Defaults** (lowest priority)
 
 ### Development Setup
@@ -331,7 +331,7 @@ if __name__ == '__main__':
 ## Summary
 
 | Setting | Development | Production |
-|---------|-------------|------------|
+| --------- | ------------- | ------------ |
 | `database.create_tables` | `true` | `false` |
 | `database.database_prefix` | `""` or `dev_` | `prod_` |
 | `safemode` | `true` | `false` (automated) |

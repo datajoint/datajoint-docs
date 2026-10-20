@@ -1,0 +1,24 @@
+name: Markdown Lint
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  swallowed-lists:
+    name: Check for swallowed Markdown lists
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      # A list with no blank line after its paragraph lead-in renders as a
+      # run-on paragraph with literal dashes. MkDocs does not warn, so the
+      # page just quietly looks wrong.
+      - name: Check list spacing
+        run: python scripts/check_markdown_lists.py src

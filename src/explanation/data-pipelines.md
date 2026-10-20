@@ -10,12 +10,12 @@ A **scientific data pipeline** extends beyond a database with computations. It i
 
 ## Pipeline Architecture
 
-At the heart of every DataJoint pipeline is an **open-source core** of three components that handle schema, computation, and storage. The managed **DataJoint Platform** extends this core with services for AI access, data ingestion, exploration, security, collaboration, and visualization.
+At the heart of every DataJoint pipeline is the **DataJoint Library**, which is open source: it defines the schema, specifies the computations, and compiles the queries. The pipeline rests on three components the library coordinates: a code repository, a relational database, and an object store. The managed **DataJoint Platform** extends these with services for AI access, data ingestion, exploration, security, collaboration, and visualization.
 
-![DataJoint Platform Architecture](../images/dj-platform.svg/)
+![DataJoint Platform Architecture](../images/dj-platform.svg)
 
-| Open-Source Core | Purpose |
-|------------------|---------|
+| Pipeline Component | Purpose |
+|--------------------|---------|
 | **Code Repository** | Version-controlled pipeline definitions, `make` methods, configuration |
 | **Relational Database** | System of record for metadata, relationships, and integrity enforcement |
 | **Object Store** | Scalable storage for large scientific data (images, recordings, signals) |
@@ -24,18 +24,33 @@ These components work together: code defines the schema and computations, the da
 
 ## Pipeline as a DAG
 
-A DataJoint pipeline forms a **Directed Acyclic Graph (DAG)** at two levels:
+A DataJoint pipeline forms a **Directed Acyclic Graph (DAG)** at two levels, and the same
+pipeline can be viewed at either one.
 
-![Pipeline DAG Structure](../images/pipeline-illustration.png/)
+**Module level — the collapsed view.** Each node is a Python module, which corresponds to a
+database schema. There is one edge per pair of schemas, standing for a bundle of dependencies:
+every foreign key reference between the two schemas' tables, together with the Python import
+dependency between their modules. A collapsed edge records only that the bundle exists — line
+weight and line style describe an individual foreign key, so they are read at the table level,
+not here. Below, `lab → session` and `session → imaging` each bundle two foreign keys,
+`reference` supplies both `session` and `imaging`, and fourteen tables (including parts)
+collapse to four nodes.
 
-**Nodes** represent Python modules, which correspond to database schemas.
+![Pipeline DAG at the module level](../images/pipeline-modules-collapsed.svg)
 
-**Edges** represent:
+**Table level — the expanded view.** Each node is a table; the dashed clusters group the
+tables of each module. Each edge is an individual foreign key constraint — the two foreign
+keys that cross the `session → imaging` boundary (`Scan → ScanQuality` and
+`ScanInfo → MotionCorrection`) appear separately here, having collapsed into the single
+bundled edge above; likewise `Subject → Session` and `User → Session` across
+`lab → session`. Each edge here carries the full notation — line weight for cardinality, line
+style for whether the reference is part of the child's primary key — as specified in
+[Diagram](../reference/specs/diagram.md).
 
-- Python import dependencies between modules
-- Bundles of foreign key references between schemas
+![Pipeline DAG at the table level](../images/pipeline-modules.svg)
 
-This dual structure ensures that both code dependencies and data dependencies flow in the same direction.
+This dual structure ensures that both code dependencies and data dependencies flow in the
+same direction: collapsing every module's tables into a single node must itself yield a DAG.
 
 ### DAG Constraints
 
@@ -63,20 +78,22 @@ This model treats the database schema as an **executable workflow specification*
 
 ## Schema Organization
 
-Each schema corresponds to a dedicated Python module. The module import structure mirrors the foreign key dependencies between schemas:
-
-![Schema Structure](../images/schema-illustration.png/)
+Each schema corresponds to a dedicated Python module, and the module import structure mirrors the foreign key dependencies between schemas. The pipeline above is organized as:
 
 ```
 my_pipeline/
 ├── src/
 │   └── my_pipeline/
 │       ├── __init__.py
-│       ├── subject.py      # subject schema (no dependencies)
-│       ├── session.py      # session schema (depends on subject)
-│       ├── acquisition.py  # acquisition schema (depends on session)
-│       └── analysis.py     # analysis schema (depends on acquisition)
+│       ├── lab.py        # lab schema (no dependencies)
+│       ├── reference.py  # reference schema (no dependencies)
+│       ├── session.py    # session schema (imports lab, reference)
+│       └── imaging.py    # imaging schema (imports session, reference)
 ```
+
+Within a schema, tables form their own DAG. Drilling into the `imaging` module: computed tables, including two masters with their part tables — `Segmentation` with `Segmentation.Roi`, and `Fluorescence` with `Fluorescence.Trace`, whose rows reference individual ROIs:
+
+![The imaging module expanded](../images/imaging-schema.svg)
 
 For practical guidance on organizing multi-schema pipelines, configuring repositories, and managing team access, see [Manage a Pipeline Project](../how-to/manage-pipeline-project.md/).
 
@@ -117,14 +134,18 @@ When a database row is deleted, its associated stored objects are garbage-collec
 Different attributes can route to different stores:
 
 ```python
-class Recording(dj.Imported):
+class ScanInfo(dj.Imported):
     definition = """
-    -> Session
+    -> Scan
     ---
-    raw_data : <blob@fast>       # Hot storage for active analysis
+    nframes : int32
+    fps : float32
+    raw_movie : <blob@fast>      # Hot storage for active analysis
     archive : <blob@cold>        # Cold storage for long-term retention
     """
 ```
+
+Here the pipeline's `ScanInfo` table keeps its scalar metadata (`nframes`, `fps`) in the database while routing its payloads to two different stores.
 
 This architecture lets teams work with terabyte-scale datasets while retaining the query power, integrity guarantees, and reproducibility of the relational model.
 
@@ -132,11 +153,11 @@ This architecture lets teams work with terabyte-scale datasets while retaining t
 
 A typical data pipeline workflow:
 
-1. **Acquisition** — Data is collected from instruments, experiments, or external sources. Raw files land in object storage; metadata populates Manual tables.
+1. **Acquisition** — Data is collected from instruments, experiments, or external sources. Raw files land in object storage; metadata populates Manual tables (`Session`, `Scan`).
 
-2. **Import** — Automated processes parse raw data, extract signals, and populate Imported tables with structured results.
+2. **Import** — Automated processes parse raw data, extract signals, and populate Imported tables with structured results (`ScanInfo`).
 
-3. **Computation** — The `populate()` mechanism identifies new data and triggers downstream processing. Compute resources execute transformations and populate Computed tables.
+3. **Computation** — The `populate()` mechanism identifies new data and triggers downstream processing. Compute resources execute transformations and populate Computed tables (`MotionCorrection`, `Segmentation`, `Fluorescence`).
 
 4. **Query & Analysis** — Users query results across the pipeline, combining data from multiple stages to generate insights, reports, or visualizations.
 

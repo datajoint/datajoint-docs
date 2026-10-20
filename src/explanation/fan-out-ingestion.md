@@ -14,6 +14,13 @@ loader — reads one source and inserts into several **entry-point tables**
 (`Manual` or `Imported`) that are *not* foreign-key children of the ingesting
 table:
 
+![The fan-out ingestion pattern. On the left, RecordingFile, a green rounded box for the Manual tier with its name underlined, joined by a thick navy line without an arrowhead to Ingest, a blue ellipse for the Imported tier whose name is not underlined — the edge is thick because Ingest declares only a foreign key to RecordingFile, so that key covers its whole primary key, and the name is plain because it introduces no key attribute of its own. From Ingest, three dashed navy arrows fan out to the right under the label "insert + source_file", each ending at a green rounded Manual box with an underlined name: Subject, Session and Recording. The arrowheads mark these as writes rather than dependencies, since a dependency edge carries none, and a note reads "no foreign key back to Ingest". A legend keys the Imported and Manual tiers, distinguishes a dependency (no arrowhead) from a write that is not a dependency, and notes that an underlined name introduces a primary-key attribute of its own.](../images/fan-out-ingestion.svg)
+
+The figure shows what the dependency graph does not: `dj.Diagram` pointed at this
+schema renders `Subject`, `Session`, and `Recording` as three unconnected nodes,
+because there is no foreign key for it to follow. The dashed arrows are the writes
+that the graph cannot record.
+
 ```python
 @schema
 class RecordingFile(dj.Manual):        # the source record
@@ -54,21 +61,32 @@ carry whichever loader existed when it was created. The pattern avoids that by
 *declining* the FK on purpose, rather than letting an undeclared dependency slip
 in unnoticed.
 
-## The responsibility it carries: record where the data came from
+## The origin is recorded for you, and modelled by you
 
 Because the foreign-key link to the source is absent, the traceability it would
-have provided must be supplied another way. **Each table the pattern populates is
-responsible for recording its own origin** — the source identity the row was
-derived from (file path, checksum, instrument session, operator, timestamp,
-external record id). This is the same responsibility every `Manual` and
-`Imported` entry-point table already carries: data entering the pipeline from
-outside must record where it came from, because the pipeline's own structure
-cannot vouch for it.
+have provided has to come from somewhere else. Two things supply it, and they do
+different jobs.
 
-Recording that origin at the point of entry is all DataJoint asks. Formalizing
-and standardizing it beyond that — retention, audit trails, cross-system
-exchange — is left to the provenance and governance systems a pipeline
-interoperates with; see [Comparison to Provenance Systems](comparison-to-provenance-systems.md).
+**DataJoint records the origin automatically.** Every row written into a `Manual`
+table carries a hidden `_prov` attribute, and a row written from inside an
+ingesting `make()` records the ingesting table and its key — exactly the link the
+missing foreign key would have carried. Nothing in the `make()` body asks for
+this, and nothing can forge it: the attribute is framework-owned and no insert
+can set it. What it records beyond that comes from deployment configuration —
+the external system, the connecting user, the time, the code version. See
+[Extrinsic Provenance at Entry Tables](../reference/specs/boundary-provenance.md).
+
+**You model the link the pipeline itself needs to query.** Hidden attributes are
+deliberately excluded from query composition, so `_prov` cannot be joined or
+restricted on the way an ordinary attribute can. Where downstream code has to
+follow the row back to its source — and in the example above it does — keep the
+`source_file` column. `_prov` is the audit record; the modelled column is the
+domain link.
+
+Beyond recording the origin at the point of entry, the rest — retention, audit
+trails, cross-system exchange — is left to the provenance and governance systems
+a pipeline interoperates with; see
+[Comparison to Provenance Systems](comparison-to-provenance-systems.md).
 
 ## When to use it
 

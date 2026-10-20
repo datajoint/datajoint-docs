@@ -11,5 +11,11 @@ mkdocs-literate-nav
 mkdocs-autorefs
 mkdocs-redirects
 
+# Pinned so the committed diagram figures stay byte-reproducible: pydot's SVG
+# writer changed between 3.x and 4.x (XML prolog, attribute order, cluster
+# titles), which reshuffles every generated SVG without changing the picture.
+# See scripts/gen_pipeline_diagrams.py.
+pydot==3.0.4
+
 # DataJoint from master for tutorials
 git+https://github.com/datajoint/datajoint-python.git@master

@@ -21,7 +21,7 @@ class TableName(dj.Manual):
 
 ```
 definition     = [comment] pk_section "---" secondary_section
-pk_section     = attribute_line+
+pk_section     = attribute_line*
 secondary_section = attribute_line*
 
 attribute_line = [foreign_key | attribute]
@@ -35,6 +35,35 @@ type           = core_type | codec_type | native_type
 core_type      = int32 | float64 | varchar(n) | ...
 codec_type     = "<" name ["@" [store]] ">"
 ```
+
+## Singleton Tables
+
+!!! version-added "New in 2.1"
+
+    Singleton tables were introduced in DataJoint 2.1.
+
+The primary key section may be empty. A table declared that way is a **singleton**: it holds at
+most one row, which is what you want for global configuration, pipeline-wide parameters, or a
+single summary. Start the definition with the `---` separator and declare only secondary
+attributes.
+
+```python
+@schema
+class Config(dj.Lookup):
+    definition = """
+    # Global configuration
+    ---
+    setting1 : varchar(100)
+    setting2 : int32
+    """
+```
+
+`insert1` takes no key, a second insert raises `DuplicateError`, `fetch1()` returns the row, and
+`heading.primary_key` is `[]`. Internally the table carries a hidden `_singleton` attribute as
+its key, which is excluded from the heading, from `fetch()` results, and from join matching.
+
+See [Table Declaration](specs/table-declaration.md#25-singleton-tables-empty-primary-keys) for
+the full behavior.
 
 ## Foreign Keys
 
@@ -86,14 +115,24 @@ raw_path : <filepath@raw>         # Portable file reference
 status = "pending" : varchar(20)  # String default
 count = 0 : int32                 # Numeric default
 notes = '' : varchar(1000)        # Empty string default (preferred for strings)
+stage = '' : enum('', 'draft', 'reviewed', 'released')  # Empty-string member (preferred for enums)
 created = CURRENT_TIMESTAMP : datetime  # Auto-timestamp
 ratio = NULL : float64            # Nullable (only NULL can be default)
 ```
 
 **Nullable attributes:** An attribute is nullable if and only if its default is `NULL`.
 DataJoint does not allow other defaults for nullable attributes—this prevents ambiguity
-about whether an attribute is optional. For strings, prefer empty string `''` as the
-default rather than `NULL`.
+about whether an attribute is optional.
+
+**`varchar`, `char`, and `enum` attributes should default to `''`, not `NULL`.** `NULL`
+and `''` both read as "nothing," and once an attribute allows both, every query and every
+`make()` body has to handle two representations of the same absence. For `enum`, this
+means adding `''` as an explicit member rather than making the attribute nullable—the
+empty string is then just another value the type already enumerates, not a second
+absence-mechanism layered on top of it. Reserve `NULL` for an attribute that is
+genuinely optional and where "not yet known" must be distinguishable from "known to be
+empty"—a case that arises rarely for text, and rarer still for a closed set of values a
+schema author chose in the first place.
 
 ## Comments
 
@@ -139,7 +178,6 @@ class Session(dj.Manual):
 
 DataJoint validates definitions at declaration time:
 
-- Primary key must have at least one attribute
 - Attribute names must be valid identifiers
 - Types must be recognized
 - Foreign key references must exist

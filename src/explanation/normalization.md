@@ -215,6 +215,8 @@ class MouseWeight(dj.Manual):
     """
 ```
 
+![Fully normalized mouse-housing schema, left to right: Mouse and Cage as entity tables; CageAssignment and MouseWeight as event tables keyed by date, each depending on Mouse. CageAssignment references Cage as a secondary (dashed) foreign key.](../images/norm-mouse-housing.svg)
+
 This fully normalized design:
 
 - **Intrinsic attributes only** — `Mouse` contains only attributes determined at creation (birth date, sex)
@@ -298,6 +300,8 @@ class Delivery(dj.Manual):
     recipient_signature : varchar(100)
     """
 ```
+
+![Workflow-normalized order schema, left to right: Order (referencing Product and Customer as secondary, dashed foreign keys), then a one-to-one chain Order → Payment → Shipment → Delivery, each step a separate table.](../images/norm-order-workflow.svg)
 
 The foreign keys now form a chain — `Order → Payment → Shipment → Delivery` —
 that is simultaneously the referential-integrity structure and the workflow

@@ -79,6 +79,7 @@ nav:
           - Deploy to Production: how-to/deploy-production.md
       - Data Operations:
           - Insert Data: how-to/insert-data.md
+          - Record Data Origin: how-to/record-data-origin.md
           - Query Data: how-to/query-data.md
           - Fetch Results: how-to/fetch-results.md
           - Delete Data: how-to/delete-data.md
@@ -99,7 +100,7 @@ nav:
           - Manage Large Data: how-to/manage-large-data.md
           - Clean Up Storage: how-to/garbage-collection.md
       - Maintenance:
-          - Migrate to 2.0: how-to/migrate-to-v20.md
+          - Migrate to 2.x: how-to/migrate-to-v20.md
           - Alter Tables: how-to/alter-tables.md
           - Backup and Restore: how-to/backup-restore.md
       - Testing:
@@ -113,6 +114,7 @@ nav:
               - Table Declaration: reference/specs/table-declaration.md
               - Master-Part: reference/specs/master-part.md
               - Virtual Schemas: reference/specs/virtual-schemas.md
+              - Branch Resolution: reference/specs/branch-resolution.md
           - Query Algebra:
               - Query Operators: reference/specs/query-algebra.md
               - Semantic Matching: reference/specs/semantic-matching.md
@@ -133,6 +135,7 @@ nav:
               - AutoPopulate: reference/specs/autopopulate.md
               - Upstream Trace: reference/specs/trace.md
               - Job Metadata: reference/specs/job-metadata.md
+              - Entry Provenance: reference/specs/boundary-provenance.md
               - Object Store Configuration: reference/specs/object-store-configuration.md
           - Deployment:
               - Deployment Operations: reference/specs/deploy-operations.md
@@ -186,6 +189,9 @@ theme:
       toggle:
         icon: material/brightness-4
         name: Switch to light mode
+hooks:
+  # Resolve figure light/dark palettes against the site toggle, not the OS.
+  - scripts/svg_theme.py
 plugins:
   - search
   - redirects:
@@ -258,7 +264,7 @@ markdown_extensions:
       generic: true
 extra:
   generator: false # Disable watermark
-  datajoint_version: "2.3"  # DataJoint Python version this documentation covers
+  datajoint_version: "2.3"  # DataJoint Library version this documentation covers
   social:
     - icon: main/company-logo
       link: https://www.datajoint.com

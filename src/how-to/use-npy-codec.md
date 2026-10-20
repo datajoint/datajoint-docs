@@ -7,6 +7,7 @@ Store NumPy arrays with lazy loading and metadata access.
 The `<npy@>` codec stores NumPy arrays as portable `.npy` files in object storage. On fetch, you get an `NpyRef` that provides metadata without downloading.
 
 **Key benefits:**
+
 - Access shape, dtype, size without I/O
 - Lazy loading - download only when needed
 - Memory mapping - random access to large arrays
@@ -130,11 +131,13 @@ slice = arr[1000:2000, :]  # Efficient for large arrays
 ```
 
 **Modes:**
+
 - `'r'` - Read-only (recommended)
 - `'r+'` - Read-write
 - `'c'` - Copy-on-write (changes not saved)
 
 **Performance:**
+
 - Local filesystem stores: mmaps directly (no copy)
 - Remote stores (S3): downloads to cache first, then mmaps
 
@@ -206,6 +209,7 @@ for key in Recording.keys():
 ### When to Use Each
 
 **Use `<npy@>` when:**
+
 - Arrays are large (> 10 MB)
 - You need to inspect shape/dtype before loading
 - Fetching many rows but processing few
@@ -213,6 +217,7 @@ for key in Recording.keys():
 - Interoperability matters (non-Python tools)
 
 **Use `<blob@>` when:**
+
 - Arrays are small (< 10 MB)
 - Same arrays appear in multiple rows (deduplication)
 - Storing non-array Python objects (dicts, lists)

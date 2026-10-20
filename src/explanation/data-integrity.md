@@ -75,9 +75,28 @@ each column: `int32`, `int64`, `float32`, `float64`, `decimal(p, s)`,
 `varchar(N)`, `char(N)`, `date`, `datetime`, `uuid`, and `enum(...)` for
 closed categorical sets. Choosing `sex : enum('M', 'F', 'U')` instead of a
 free-text field means an invalid category can never be stored, and
-`decimal(5, 2)` fixes both magnitude and precision. The type system is
-extensible: custom codecs attach domain rules to structured and object-backed
-attributes as well.
+`decimal(5, 2)` fixes both magnitude and precision.
+
+The type system is **extensible**, and this is where DataJoint carries domain
+integrity beyond the scalar SQL types. Through
+[Object-Augmented Schemas](data-pipelines.md#object-augmented-schemas) and the
+[codec system](../how-to/create-custom-codec.md), an attribute can hold a
+domain-specific datatype — a calcium-imaging movie, a spike-sorting result, a
+fitted model — whose contents live in object storage but are addressed and
+governed by the schema. A [codec](../reference/specs/codec-api.md) *defines* that
+datatype: it can run **arbitrary validation checks** when a value is encoded —
+rejecting anything outside the domain's valid set, exactly as `enum` does for a
+category — and it exposes **typed access methods** for reading the value back.
+The check runs at encode time, *before* anything is written, so an invalid
+value is rejected up front and the row that would reference it is never
+committed — the same guarantee scalar columns give, extended to object-backed
+types. The stored object is integrated with the row's lifecycle rather than
+being an opaque side file: it is addressed by the schema and reclaimed by
+[garbage collection](../how-to/garbage-collection.md) when no row references it
+(object stores are not transactional participants, so a failed insert leaves at
+most an unreferenced object, never a bad value in the table).
+Domain integrity therefore holds uniformly — from `int32` and `enum` to
+arbitrary structured and object-backed types.
 
 ### 2. Completeness
 

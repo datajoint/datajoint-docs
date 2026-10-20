@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="400" viewBox="0 0 900 400" font-family="Helvetica, sans-serif">
+<style>
+  svg { background-color: #FFFFFF; }
+  .edge { stroke: #171C39; fill: none; }
+  .note { fill: #808285; font-size: 12.5px; }
+  .arrow { fill: #171C39; }
+@media (prefers-color-scheme: dark) {
+    svg { background-color: #161A21; }
+    .edge { stroke: #AEB6C2; }
+    .note { fill: #9DA0A4; }
+    .arrow { fill: #AEB6C2; }
+    .f-manual { fill: #16281F; stroke: #6BBF94; }
+    .t-manual { fill: #BCE6CF; }
+    .u-manual { stroke: #BCE6CF; }
+    .f-imported { fill: #0F2433; stroke: #33B8E8; }
+    .t-imported { fill: #BEE7F9; }
+    .u-imported { stroke: #BEE7F9; }
+}
+</style>
+<defs><marker id="wr" markerWidth="7" markerHeight="7" refX="6" refY="2.4" orient="auto"><path class="arrow" d="M0,0 L6,2.4 L0,4.8 Z"/></marker></defs>
+<rect class="f-manual" x="28.0" y="127.0" width="168" height="46" rx="7" fill="#E8F0E9" stroke="#3E7A52" stroke-width="1.6"/>
+<text class="t-manual" x="112" y="155" text-anchor="middle" font-size="15" font-weight="600" fill="#28513A">RecordingFile</text>
+<line class="u-manual" x1="58.4" y1="158.5" x2="165.6" y2="158.5" stroke="#28513A" stroke-width="1.1"/>
+<line class="edge" x1="198" y1="150" x2="266" y2="150" stroke-width="3.2"/>
+<ellipse class="f-imported" cx="336" cy="150" rx="70" ry="26" fill="#E0F4FC" stroke="#00A0DF" stroke-width="1.6"/>
+<text class="t-imported" x="336" y="155" text-anchor="middle" font-size="15" font-weight="600" fill="#00537A">Ingest</text>
+<rect class="f-manual" x="668.0" y="33.0" width="168" height="46" rx="7" fill="#E8F0E9" stroke="#3E7A52" stroke-width="1.6"/>
+<text class="t-manual" x="752" y="61" text-anchor="middle" font-size="15" font-weight="600" fill="#28513A">Subject</text>
+<line class="u-manual" x1="723.1" y1="64.5" x2="780.9" y2="64.5" stroke="#28513A" stroke-width="1.1"/>
+<path class="edge" d="M410,150 C520,150 556,56 662,56" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#wr)"/>
+<rect class="f-manual" x="668.0" y="127.0" width="168" height="46" rx="7" fill="#E8F0E9" stroke="#3E7A52" stroke-width="1.6"/>
+<text class="t-manual" x="752" y="155" text-anchor="middle" font-size="15" font-weight="600" fill="#28513A">Session</text>
+<line class="u-manual" x1="723.1" y1="158.5" x2="780.9" y2="158.5" stroke="#28513A" stroke-width="1.1"/>
+<path class="edge" d="M410,150 C520,150 556,150 662,150" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#wr)"/>
+<rect class="f-manual" x="668.0" y="221.0" width="168" height="46" rx="7" fill="#E8F0E9" stroke="#3E7A52" stroke-width="1.6"/>
+<text class="t-manual" x="752" y="249" text-anchor="middle" font-size="15" font-weight="600" fill="#28513A">Recording</text>
+<line class="u-manual" x1="714.9" y1="252.5" x2="789.1" y2="252.5" stroke="#28513A" stroke-width="1.1"/>
+<path class="edge" d="M410,150 C520,150 556,244 662,244" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#wr)"/>
+<text class="note" x="536" y="26" text-anchor="middle" font-weight="600">insert + source_file</text>
+<text class="note" x="536" y="268" text-anchor="middle" font-style="italic">no foreign key back to Ingest</text>
+<line class="edge" x1="24" y1="304" x2="876" y2="304" stroke-width="0.8" opacity="0.28"/>
+<ellipse class="f-imported" cx="42" cy="325" rx="16" ry="8" fill="#E0F4FC" stroke="#00A0DF" stroke-width="1.4"/>
+<text class="note" x="68" y="330">Imported</text>
+<rect class="f-manual" x="152" y="317" width="32" height="16" rx="7" fill="#E8F0E9" stroke="#3E7A52" stroke-width="1.4"/>
+<text class="note" x="192" y="330">Manual</text>
+<line class="edge" x1="300" y1="325" x2="340" y2="325" stroke-width="3.2"/>
+<text class="note" x="348" y="330">dependency (no arrowhead)</text>
+<line class="edge" x1="546" y1="325" x2="586" y2="325" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#wr)"/>
+<text class="note" x="594" y="330">a write, not a dependency</text>
+<text class="note" x="68" y="356" font-style="italic">an underlined name introduces a primary-key attribute of its own</text>
+</svg>

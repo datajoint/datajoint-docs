@@ -2,76 +2,15 @@
 
 Learn DataJoint by building real pipelines.
 
-These tutorials guide you through building data pipelines step by step. Each tutorial
-is a Jupyter notebook that you can run interactively. Start with the basics and
-progress to domain-specific and advanced topics.
+These tutorials guide you through building data pipelines step by step. Each tutorial is a
+Jupyter notebook, published here with its code and its executed outputs, so you can follow the
+whole pipeline without leaving the page. Start with the basics and progress to domain-specific
+and advanced topics.
 
-## Quick Start
-
-Install DataJoint:
-
-```bash
-pip install datajoint
-```
-
-Configure database credentials in your project (see [Configuration](../reference/configuration.md)):
-
-```bash
-# Create datajoint.json for non-sensitive settings
-echo '{"database": {"host": "localhost", "port": 3306}}' > datajoint.json
-
-# Create secrets directory for credentials
-mkdir -p .secrets
-echo "root" > .secrets/database.user
-echo "password" > .secrets/database.password
-```
-
-Define and populate a simple pipeline:
-
-```python
-import datajoint as dj
-
-schema = dj.Schema('my_pipeline')
-
-@schema
-class Subject(dj.Manual):
-    definition = """
-    subject_id : int32
-    ---
-    name : varchar(100)
-    date_of_birth : date
-    """
-
-@schema
-class Session(dj.Manual):
-    definition = """
-    -> Subject
-    session_idx : int16
-    ---
-    session_date : date
-    """
-
-@schema
-class SessionAnalysis(dj.Computed):
-    definition = """
-    -> Session
-    ---
-    result : float64
-    """
-
-    def make(self, key):
-        # Compute result for this session
-        self.insert1({**key, 'result': 42.0})
-
-# Insert data
-Subject.insert1({'subject_id': 1, 'name': 'M001', 'date_of_birth': '2026-01-15'})
-Session.insert1({'subject_id': 1, 'session_idx': 1, 'session_date': '2026-01-06'})
-
-# Run computations
-SessionAnalysis.populate()
-```
-
-Continue learning with the structured tutorials below.
+**Want to run them yourself?** Every notebook can be downloaded and executed against your own
+MySQL or PostgreSQL database. [Installation](../how-to/installation.md) covers the setup:
+DataJoint, a database, Jupyter, and
+[getting the notebooks](../how-to/installation.md#running-the-tutorial-notebooks).
 
 ## Learning Paths
 
@@ -198,19 +137,3 @@ Extending DataJoint for specialized use cases:
 - [JSON Data Type](advanced/json-type.ipynb) — Semi-structured data in tables
 - [Distributed Computing](advanced/distributed.ipynb) — Multi-process and cluster workflows
 - [Custom Codecs](advanced/custom-codecs.ipynb) — Extending the type system
-
-## Running the Tutorials
-
-```bash
-# Clone the repository
-git clone https://github.com/datajoint/datajoint-docs.git
-cd datajoint-docs
-
-# Start the tutorial environment
-docker compose up -d
-
-# Launch Jupyter
-jupyter lab src/tutorials/
-```
-
-All tutorials use a local MySQL database that resets between sessions.
