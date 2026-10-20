@@ -1,4 +1,4 @@
-# What's New in DataJoint 2.0
+# What's New in DataJoint Library 2.0
 
 DataJoint 2.0 is a major release that establishes DataJoint as a mature framework for scientific data pipelines. The version jump from 0.14 to 2.0 reflects the significance of these changes.
 

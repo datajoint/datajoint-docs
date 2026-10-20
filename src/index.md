@@ -57,7 +57,7 @@
 
     ---
 
-    A cloud platform for automated analysis workflows. It relies on DataJoint Python and DataJoint Elements.
+    A cloud platform for automated analysis workflows. It relies on the DataJoint Library and DataJoint Elements.
 
     [:octicons-arrow-right-24: Learn more](https://datajoint.com/){:target="_blank"} | [Sign-in](https://works.datajoint.com){:target="_blank"}
 

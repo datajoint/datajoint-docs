@@ -1,4 +1,4 @@
-# What's New in DataJoint 2.2
+# What's New in DataJoint Library 2.2
 
 DataJoint 2.2 introduces **isolated instances** and **thread-safe mode** for applications that need multiple independent database connections, and **graph-driven diagram operations** that replace the legacy error-driven cascade with a reliable, inspectable approach for all users.
 

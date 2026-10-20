@@ -2,7 +2,7 @@
 
 ## Overview
 
-This document specifies data manipulation operations in DataJoint Python: insert, update, and delete. These operations maintain referential integrity across the pipeline while supporting the **workflow normalization** paradigm.
+This document specifies data manipulation operations in the DataJoint Library: insert, update, and delete. These operations maintain referential integrity across the pipeline while supporting the **workflow normalization** paradigm.
 
 ## 1. Workflow Normalization Philosophy
 

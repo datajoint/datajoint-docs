@@ -67,7 +67,7 @@ nav[("index.md",)] = "index.md"
 # This prevents section-index from using 'admin' as the section landing page
 with mkdocs_gen_files.open("api/datajoint/index.md", "w") as f:
     f.write("# datajoint\n\n")
-    f.write("DataJoint Python library modules.\n\n")
+    f.write("DataJoint Library modules.\n\n")
     f.write("## Submodules\n\n")
     f.write("| Module | Description |\n")
     f.write("|--------|-------------|\n")

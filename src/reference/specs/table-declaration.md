@@ -2,7 +2,7 @@
 
 ## Overview
 
-This document specifies the table declaration mechanism in DataJoint Python. Table declarations define the schema structure using a domain-specific language (DSL) embedded in Python class definitions.
+This document specifies the table declaration mechanism in the DataJoint Library. Table declarations define the schema structure using a domain-specific language (DSL) embedded in Python class definitions.
 
 ## 1. Table Class Structure
 
