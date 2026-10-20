@@ -434,7 +434,7 @@ A copy is a shortcut, and it must select the same rows as the restriction. Two k
 - a query expression that shares more attributes with the child than with the parent: a restriction by a query expression matches on all shared attributes. Copied to `Session`, the seed condition of [K1](traversal-shapes.md#k1-seed-restricted-by-a-descendant), `Session & "quality = 0"`, would match on every attribute of `Session` and select only the sessions of quality 0. Copied the same way, the seed `Subject - (Session & "quality = 0")` would select every session of another quality, including sessions of subjects that are not deleted.
 
 !!! note
-    The 2.3 engine copies the compiled SQL predicate, which reads only the parent's columns. That is why 2.3 copies dict conditions, and conditions given as query expressions, correctly. (A seed restricted by a query expression failed in 2.3 for a different reason, before any copy; 2.3.5 replaces such a seed by its keys, [#1610](https://github.com/datajoint/datajoint-python/issues/1610).) The 2.4 plan refers to conditions rather than to compiled SQL, so the rule above applies.
+    The 2.3 engine copies the compiled SQL predicate, which reads only the parent's columns. That is why 2.3 copies dict conditions, and conditions given as query expressions, correctly. (A seed restricted by a query expression fails in 2.3 for a different reason, before any copy: [#1610](https://github.com/datajoint/datajoint-python/issues/1610). In 2.4 such a seed is materialized at delete time.) The 2.4 plan refers to conditions rather than to compiled SQL, so the rule above applies.
 
 **Parallel foreign keys** combine with OR: a child row is reached if any of its foreign keys references a restricted row.
 
