@@ -188,7 +188,7 @@ Session.restrict(Trial, semantic_check=False)
 ### 2.10 NULL Semantics
 
 !!! version-changed "Changed in 2.3.7"
-    Before 2.3.7, `A - B` compiled to `NOT IN`. When the operands shared a nullable attribute, a row of A with NULL in it was in neither `A & B` nor `A - B`, and a NULL in B could remove rows of A that match no row of B. With a single shared attribute, one NULL in B's column emptied `A - B`.
+    Before 2.3.7, `A - B` compiled to `NOT IN`. When the operands shared a nullable attribute, a row of A with NULL in it could be in neither `A & B` nor `A - B` (it was whenever a row of B agreed with it on its non-NULL shared attributes), and a NULL in B could remove rows of A that match no row of B. With a single shared attribute, one NULL in B's column emptied `A - B`.
 
 For restriction by a query expression B, matching uses the same equality as join (§4.3): a row of A matches a row of B when every shared attribute is non-NULL and equal in both. **NULL never matches**, not even another NULL. Consequently, for every A and B:
 
@@ -1001,27 +1001,27 @@ Session.aggr(Trial, n='count(*)') & "n > 10"
 
 ### 13.4.1 Restriction by a Query Expression
 
-When the condition is a query expression B, the restriction compiles to a subquery over the attributes `c1, …, cn` that A and B share (§2.5). The examples show MySQL quoting; PostgreSQL emits the same text with double-quoted identifiers (§13.6.3).
+When the condition is a query expression B, the restriction compiles to a subquery over the attributes `c1, …, cn` that A and B share (§2.5), in the order of B's heading. The examples show MySQL quoting; PostgreSQL emits the same text with double-quoted identifiers (§13.6.3).
 
 **Restriction** `A & B` compiles to a row-value `IN`:
 
 ```sql
-(`c1`, `c2`) in (SELECT `c1`, `c2` FROM ...)
+(`c1`, `c2`) in (SELECT `c1`,`c2` FROM ...)
 ```
 
 **Complement** `A - B`, and equally `A & dj.Not(B)`, compiles to a correlated `NOT EXISTS`. The implementation emits it on one line; it is wrapped here for reading:
 
 ```sql
-NOT EXISTS (SELECT 1 FROM (SELECT `c1` AS `$k0`, `c2` AS `$k1` FROM (SELECT `c1`, `c2` FROM ...) AS `$s`)
+NOT EXISTS (SELECT 1 FROM (SELECT `c1` AS `$k0`, `c2` AS `$k1` FROM (SELECT `c1`,`c2` FROM ...) AS `$s`)
             AS `$r` WHERE `$r`.`$k0` = `c1` AND `$r`.`$k1` = `c2`)
 ```
 
-Here ``SELECT `c1`, `c2` FROM ...`` is B's own SQL, selecting only the shared attributes. Rules for this form:
+Here ``SELECT `c1`,`c2` FROM ...`` is B's own SQL, selecting only the shared attributes. Rules for this form:
 
 - **Renamed operand columns.** Inside the derived table `$r`, B's columns are renamed `$k0`, `$k1`, …. The outer names `c1`, `c2` therefore cannot resolve to B and always refer to A. They stay unqualified, so the condition remains valid wherever those attributes are in scope, e.g. when restrictions are merged in a join or propagated during a cascade delete.
 - **Aliases.** The aliases `$s`, `$r`, `$k0`, `$k1`, … begin with `$`, which no attribute name can (declared names begin with a letter, hidden ones with `_`). They are quoted by the adapter. The same aliases are reused at every nesting level; each reference binds to its nearest scope.
 - **One `=` per attribute, joined by `AND`.** NULL-safe equality (`<=>`, `IS NOT DISTINCT FROM`) is not used, because it would make NULL match NULL (§2.10). Row-value equality is not used either.
-- **No `NOT IN`.** `x NOT IN (subquery)` is NULL, not true, when `x` is NULL or when the subquery yields a NULL, so it drops rows that belong in `A - B` (§2.10). On PostgreSQL it also slows sharply once the operand outgrows `work_mem`.
+- **No `NOT IN`.** `x NOT IN (subquery)` is NULL, not true, when `x` is NULL and the subquery is not empty, or when `x` is not found and the subquery yields a NULL, so it drops rows that belong in `A - B` (§2.10). On PostgreSQL it also slows sharply once the operand outgrows `work_mem`.
 - **Performance.** MySQL 8.0.18+ and PostgreSQL decorrelate this form in a top-level `WHERE`, and it stays fast in a single-table `DELETE`, in a MySQL `HAVING` clause (restriction of an aggregation, §13.4) and under `OR`. On MySQL 8.0.17 those three cases took more than 60 s in benchmarks, which is why 8.0.18 is the minimum version ([Database Backends](database-backends.md#version-support-policy)).
 - `A & B` keeps `IN`. Because negation is pushed down (below), `IN` only appears in a positive context, where it returns the same rows as `EXISTS`.
 
@@ -1033,11 +1033,11 @@ Here ``SELECT `c1`, `c2` FROM ...`` is B's own SQL, selecting only the shared at
 | `A - dj.AndList([B, C])` | `A & [dj.Not(B), dj.Not(C)]`: `(NOT EXISTS (…B…) OR NOT EXISTS (…C…))` |
 | `A & dj.Not([B, C])`, `A & dj.Not(dj.AndList([B, C]))` | Same as `A - [B, C]` and `A - dj.AndList([B, C])` |
 
-De Morgan's laws hold in SQL three-valued logic, so string and dict items in a negated list select the same rows either way. The empty cases are unchanged: `A - []` is A, and `A - dj.AndList([])` is empty. A negated string or dict condition is enclosed in `NOT (…)` as a whole: `T - {"i": 1, "j": 2}` excludes only the rows where both `i = 1` and `j = 2`.
+De Morgan's laws hold in SQL three-valued logic, so string and dict items in a negated list select the same rows either way. The empty cases are unchanged: `A - []` is A, and `A - dj.AndList([])` is empty. A negated string or dict condition is enclosed in `NOT (…)` as a whole: `T - {"i": 1, "j": 2}` excludes only the rows where both `i = 1` and `j = 2` (before 2.3.7, `NOT` applied only to the first term).
 
-**Operand wrapping.** If B is an aggregation, a union, or limited by `dj.Top`, it is first wrapped as a derived table (`SELECT … FROM (…B…) AS …`), for both `IN` and `NOT EXISTS`. Its `GROUP BY`/`HAVING`, `UNION` or `LIMIT` must complete before the shared attributes are selected from it, and MySQL does not accept `LIMIT` directly inside `IN`.
+**Operand wrapping.** If B is an aggregation, a union, or limited by `dj.Top`, it is first wrapped as a derived table (`SELECT … FROM (…B…) as …`), for both `IN` and `NOT EXISTS`. Its `GROUP BY`/`HAVING`, `UNION` or `LIMIT` must complete before the shared attributes are selected from it, and MySQL does not accept `LIMIT` directly inside `IN`.
 
-**No shared attributes.** If A and B share no attributes, no subquery is emitted: B is evaluated as a boolean (§2.5).
+**No shared attributes.** If A and B share no attributes, no subquery is emitted: B is evaluated as a boolean, by a separate query when the restriction is built (§2.5).
 
 ### 13.5 Projection Rules (`.proj()`)
 
