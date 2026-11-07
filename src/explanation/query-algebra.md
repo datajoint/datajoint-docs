@@ -53,6 +53,8 @@ Mouse - StudyMouse
 Session - Recording
 ```
 
+For a query expression B, `A & B` and `A - B` split A into two disjoint parts. Matching uses the same equality as join, so a NULL in a shared attribute never matches anything ([NULL semantics](../reference/specs/query-algebra.md#210-null-semantics)).
+
 ### Top N (`dj.Top`)
 
 Select a limited number of entities with ordering:

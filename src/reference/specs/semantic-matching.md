@@ -188,7 +188,7 @@ Equivalent to `A.restrict(B, semantic_check=True)`.
 
 #### `A - B` (Anti-restriction)
 
-Restriction with negation. Semantic checking applies.
+The complement of `A & B` within A: the rows of A that match no row of B ([Query Algebra §2.10](query-algebra.md#210-null-semantics)). Semantic checking applies.
 
 To bypass semantic checking: `A.restrict(dj.Not(B), semantic_check=False)`
 

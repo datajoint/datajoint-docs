@@ -64,7 +64,7 @@ result = expression.restrict(condition, semantic_check=True)
 |------|---------|----------|
 | String | `"x > 5"` | SQL WHERE condition |
 | Dict | `{"status": "active"}` | Equality on attributes |
-| QueryExpression | `OtherTable` | Rows with matching keys in other table |
+| QueryExpression | `OtherTable` | Rows matching at least one row of the other expression on all shared attributes (§2.5) |
 | List/Tuple/Set | `[cond1, cond2]` | OR of conditions |
 | Boolean | `True` / `False` | No effect / empty result |
 | pandas.DataFrame | `df` | OR of row conditions |
@@ -121,7 +121,11 @@ Session & "nonexistent = 'value'"
 
 ### 2.5 Restriction by Query Expression
 
-Restrict to rows with matching primary keys in another expression:
+`A & B` keeps the rows of A that match at least one row of B. Matching is on **all shared attributes**: every attribute name that A and B have in common (their namesakes), primary or secondary, not only the primary key. A row of A matches a row of B when every shared attribute is equal in both; NULL never matches (§2.10).
+
+- With `semantic_check=True` (the default), every namesake must be homologous (§2.9), or the restriction raises an error.
+- Hidden attributes (prefixed with `_`) never take part in matching.
+- If A and B share no attributes, B acts as a boolean: `A & B` is all of A when B is non-empty, and empty otherwise.
 
 ```python
 # Sessions that have at least one trial
@@ -155,6 +159,10 @@ Session - Trial
 Session - {"subject_id": 1}
 ```
 
+For a query expression B, `A - B` is the **complement** of `A & B` within A: the rows of A that match no row of B (§2.5). `A & dj.Not(B)` is the same as `A - B`. Together, `A & B` and `A - B` partition A (§2.10).
+
+For a string or dict condition, `A - cond` keeps the rows for which `cond` is false. Rows for which `cond` is NULL are in neither `A & cond` nor `A - cond` (§2.10).
+
 ### 2.8 Chaining Restrictions
 
 Sequential restrictions combine with AND:
@@ -177,15 +185,39 @@ Session & Trial
 Session.restrict(Trial, semantic_check=False)
 ```
 
-### 2.10 Algebraic Properties
+### 2.10 NULL Semantics
+
+!!! version-changed "Changed in 2.3.7"
+    Before 2.3.7, `A - B` compiled to `NOT IN`. When the operands shared a nullable attribute, a row of A with NULL in it was in neither `A & B` nor `A - B`, and a NULL in B could remove rows of A that match no row of B. With a single shared attribute, one NULL in B's column emptied `A - B`.
+
+For restriction by a query expression B, matching uses the same equality as join (§4.3): a row of A matches a row of B when every shared attribute is non-NULL and equal in both. **NULL never matches**, not even another NULL. Consequently, for every A and B:
+
+1. A row of A with NULL in any shared attribute is never in `A & B` and is always in `A - B`.
+2. A row of B with NULL in any shared attribute matches no row of A. It removes no rows from `A - B`.
+3. **`A & B` and `A - B` partition A.** Every row of A is in exactly one of them; `A - B` is the complement of `A & B` within A.
+4. **Consistency with join.** `A & B` contains exactly the rows of A that appear in `A * B`.
+
+These rules also hold for `A & dj.Not(B)`, which equals `A - B`, and for lists and `dj.AndList`s whose items are all query expressions. For example, `A & [B, C]` and `A - [B, C]` partition A, because negation is applied item by item (§13.4.1).
+
+Implementations must not match with NULL-safe equality (`<=>`, `IS NOT DISTINCT FROM`), which would make NULL match NULL and break rules 1 and 4. They must not compile the complement to `NOT IN`, which breaks rules 1 to 3.
+
+**String and dict conditions follow SQL three-valued logic and do not carry the partition guarantee.** These are SQL predicates. A row for which the predicate is NULL (unknown) is in neither `A & cond` nor `A - cond`:
+
+- `A & "x > 5"` and `A - "x > 5"` both omit the rows where `x` is NULL.
+- In a dict condition, a `None` value compiles to `IS NULL` and matches NULL. Any other value compiles to `=`, so a row with NULL in that attribute is in neither `A & {"x": 1}` nor `A - {"x": 1}`.
+
+To place such rows explicitly, say so in the condition, e.g. `A & "x IS NULL OR x <= 5"`.
+
+### 2.11 Algebraic Properties
 
 | Property | Value |
 |----------|-------|
 | Primary Key | Preserved: PK(result) = PK(input) |
 | Attributes | Preserved: all attributes retained |
 | Entity Type | Preserved |
+| Partition | For a query expression B: `A & B` and `A - B` are disjoint and their union is A (§2.10) |
 
-### 2.11 Error Conditions
+### 2.12 Error Conditions
 
 | Condition | Error |
 |-----------|-------|
@@ -571,8 +603,12 @@ Mouse + Rat
 -- With secondary attributes
 (SELECT A.* FROM A LEFT JOIN B USING (pk))
 UNION
-(SELECT B.* FROM B WHERE (B.pk) NOT IN (SELECT A.pk FROM A))
+(SELECT B.* FROM B WHERE NOT EXISTS (
+   SELECT 1 FROM (SELECT pk AS $k0 FROM (SELECT pk FROM A) AS $s) AS $r
+   WHERE $r.$k0 = pk))
 ```
+
+The second branch is `B - A` (§2.7), compiled as in §13.4.1. It matches on the primary key only, because the operands share no secondary attributes (§7.2).
 
 ### 7.6 Algebraic Properties
 
@@ -758,6 +794,8 @@ Subqueries are generated automatically when needed:
 | Aggregation operand | Yes |
 | Union operand | Yes |
 | Restriction after TOP | Yes |
+| Restriction operand that is an aggregation, a union, or limited by `dj.Top` | Yes |
+| Complement by a query expression (`A - B`) | Yes (operand renamed in a derived table, §13.4.1) |
 
 ---
 
@@ -961,6 +999,46 @@ Session.aggr(Trial, n='count(*)') & "n > 10"
 # PostgreSQL: SELECT * FROM (...GROUP BY pk) AS _s1 WHERE n > 10
 ```
 
+### 13.4.1 Restriction by a Query Expression
+
+When the condition is a query expression B, the restriction compiles to a subquery over the attributes `c1, …, cn` that A and B share (§2.5). The examples show MySQL quoting; PostgreSQL emits the same text with double-quoted identifiers (§13.6.3).
+
+**Restriction** `A & B` compiles to a row-value `IN`:
+
+```sql
+(`c1`, `c2`) in (SELECT `c1`, `c2` FROM ...)
+```
+
+**Complement** `A - B`, and equally `A & dj.Not(B)`, compiles to a correlated `NOT EXISTS`. The implementation emits it on one line; it is wrapped here for reading:
+
+```sql
+NOT EXISTS (SELECT 1 FROM (SELECT `c1` AS `$k0`, `c2` AS `$k1` FROM (SELECT `c1`, `c2` FROM ...) AS `$s`)
+            AS `$r` WHERE `$r`.`$k0` = `c1` AND `$r`.`$k1` = `c2`)
+```
+
+Here ``SELECT `c1`, `c2` FROM ...`` is B's own SQL, selecting only the shared attributes. Rules for this form:
+
+- **Renamed operand columns.** Inside the derived table `$r`, B's columns are renamed `$k0`, `$k1`, …. The outer names `c1`, `c2` therefore cannot resolve to B and always refer to A. They stay unqualified, so the condition remains valid wherever those attributes are in scope, e.g. when restrictions are merged in a join or propagated during a cascade delete.
+- **Aliases.** The aliases `$s`, `$r`, `$k0`, `$k1`, … begin with `$`, which no attribute name can (declared names begin with a letter, hidden ones with `_`). They are quoted by the adapter. The same aliases are reused at every nesting level; each reference binds to its nearest scope.
+- **One `=` per attribute, joined by `AND`.** NULL-safe equality (`<=>`, `IS NOT DISTINCT FROM`) is not used, because it would make NULL match NULL (§2.10). Row-value equality is not used either.
+- **No `NOT IN`.** `x NOT IN (subquery)` is NULL, not true, when `x` is NULL or when the subquery yields a NULL, so it drops rows that belong in `A - B` (§2.10). On PostgreSQL it also slows sharply once the operand outgrows `work_mem`.
+- **Performance.** MySQL 8.0.18+ and PostgreSQL decorrelate this form in a top-level `WHERE`, and it stays fast in a single-table `DELETE`, in a MySQL `HAVING` clause (restriction of an aggregation, §13.4) and under `OR`. On MySQL 8.0.17 those three cases took more than 60 s in benchmarks, which is why 8.0.18 is the minimum version ([Database Backends](database-backends.md#version-support-policy)).
+- `A & B` keeps `IN`. Because negation is pushed down (below), `IN` only appears in a positive context, where it returns the same rows as `EXISTS`.
+
+**Negation through lists.** Negation is pushed down to the items of a list (De Morgan's laws), so that a positive `IN` never appears under `NOT`:
+
+| Expression | Compiles as |
+|------------|-------------|
+| `A - [B, C]` | `A & dj.AndList([dj.Not(B), dj.Not(C)])`: `NOT EXISTS (…B…) AND NOT EXISTS (…C…)` |
+| `A - dj.AndList([B, C])` | `A & [dj.Not(B), dj.Not(C)]`: `(NOT EXISTS (…B…) OR NOT EXISTS (…C…))` |
+| `A & dj.Not([B, C])`, `A & dj.Not(dj.AndList([B, C]))` | Same as `A - [B, C]` and `A - dj.AndList([B, C])` |
+
+De Morgan's laws hold in SQL three-valued logic, so string and dict items in a negated list select the same rows either way. The empty cases are unchanged: `A - []` is A, and `A - dj.AndList([])` is empty. A negated string or dict condition is enclosed in `NOT (…)` as a whole: `T - {"i": 1, "j": 2}` excludes only the rows where both `i = 1` and `j = 2`.
+
+**Operand wrapping.** If B is an aggregation, a union, or limited by `dj.Top`, it is first wrapped as a derived table (`SELECT … FROM (…B…) AS …`), for both `IN` and `NOT EXISTS`. Its `GROUP BY`/`HAVING`, `UNION` or `LIMIT` must complete before the shared attributes are selected from it, and MySQL does not accept `LIMIT` directly inside `IN`.
+
+**No shared attributes.** If A and B share no attributes, no subquery is emitted: B is evaluated as a boolean (§2.5).
+
 ### 13.5 Projection Rules (`.proj()`)
 
 **Modify in place** when:
@@ -1124,8 +1202,11 @@ Union performs an outer join:
 (SELECT A.pk, A.secondary, NULL as B.secondary FROM A)
 UNION
 (SELECT B.pk, NULL as A.secondary, B.secondary FROM B
- WHERE B.pk NOT IN (SELECT pk FROM A))
+ WHERE NOT EXISTS (SELECT 1 FROM (SELECT pk AS $k0 FROM (SELECT pk FROM A) AS $s) AS $r
+                   WHERE $r.$k0 = pk))
 ```
+
+The second branch is `B - A` on the primary key (§13.4.1).
 
 All union inputs become subqueries except unrestricted unions.
 
@@ -1148,6 +1229,8 @@ Before execution, `finalize()` recursively projects out unnecessary attributes f
 | Aggregation as join operand | GROUP BY must complete first | Wrap operand |
 | Restrict on aggregated attribute | HAVING result must materialize (PostgreSQL) | Wrap aggregation |
 | Union operands | UNION requires complete subqueries | Wrap both |
+| Restriction by an aggregation, a union, or a Top-limited expression | `GROUP BY`, `UNION` or `LIMIT` must complete before the shared attributes are selected | Wrap operand |
+| Complement by a query expression (`A - B`) | Outer attribute names must not resolve to the operand | Rename operand columns in a derived table (§13.4.1) |
 | PostgreSQL HAVING with alias | Standard SQL compliance | Wrap + convert to WHERE |
 
 ---

@@ -5,7 +5,7 @@ Install the DataJoint Library (the `datajoint` client API package) and set up yo
 ## Requirements
 
 - Python 3.10+
-- MySQL 8.0.13+ or PostgreSQL 15+
+- MySQL 8.0.18+ or PostgreSQL 15+ (DataJoint warns when it connects to an older MySQL server)
 - Network access to database server
 - Linux, macOS, or Windows (see [Platform support](#platform-support))
 
