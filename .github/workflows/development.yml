@@ -4,24 +4,30 @@ on:
     branches:
       - main
   workflow_dispatch:
+permissions:
+  contents: read
 jobs:
   deploy-docs:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     env:
       DOCKER_CLIENT_TIMEOUT: "120"
       COMPOSE_HTTP_TIMEOUT: "120"
-      DJBOT_GH_TOKEN: ${{secrets.djbot_gh_token}}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          persist-credentials: false
       - name: Checkout datajoint-python
-        uses: actions/checkout@v2
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
         with:
           repository: datajoint/datajoint-python
           ref: master
           path: datajoint-python
+          persist-credentials: false
       - name: Compile docs static artifacts
         run: |
-          BOT_PAT=$DJBOT_GH_TOKEN MODE=BUILD DJ_PYTHON_PATH=./datajoint-python HOST_UID=$(id -u) docker compose up --exit-code-from docs --build
+          MODE=BUILD DJ_PYTHON_PATH=./datajoint-python HOST_UID=$(id -u) docker compose up --exit-code-from docs --build
       - name: Commit documentation changes
         run: |
           git clone https://github.com/${GITHUB_REPOSITORY}.git \
@@ -36,8 +42,9 @@ jobs:
           # The above command will fail if no changes were present, so we ignore
           # the return code.
       - name: Push changes
-        uses: ad-m/github-push-action@master
-        with:
-          branch: gh-pages
-          directory: gh-pages
-          github_token: ${{secrets.GITHUB_TOKEN}}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git -C gh-pages push \
+              "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" \
+              HEAD:gh-pages
