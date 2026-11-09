@@ -21,7 +21,7 @@
       
       
       <link rel="icon" href="../../../assets/images/company-logo-blue.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.0">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.1">
     
     
       
@@ -7355,11 +7355,10 @@ Default from <code>config.jobs.default_priority</code>.</p>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>Seconds after which jobs are checked for staleness.
-Jobs older than this are removed if key not in key_source.
-Default from <code>config.jobs.stale_timeout</code>. Set to 0 to skip the
-age-based check; the cleanup of success and error records whose
-keys have left both key_source and the target runs regardless.</p>
+                <p>Grace period in seconds for jobs whose keys are no longer in
+key_source: such jobs are removed once older than this. 0 means no
+grace period, and removes them on this refresh. Default None uses
+<code>config.jobs.stale_timeout</code>.</p>
               </div>
             </td>
             <td>
@@ -7421,7 +7420,8 @@ Default None (no orphan cleanup).</p>
 <li>
 <p>Remove vanished jobs, judged against the unrestricted key_source:</p>
 <p>a. success and error records whose keys are in neither key_source nor target, at any age
- b. stale jobs (except <code>ignore</code>): older than stale_timeout, keys not in key_source</p>
+ b. stale jobs (except <code>ignore</code>): keys not in key_source, older than stale_timeout
+    (at any age when stale_timeout is 0)</p>
 </li>
 <li>
 <p>Remove orphaned jobs: reserved jobs older than orphan_timeout (if specified)</p>
@@ -7945,7 +7945,7 @@ multiple workers could reserve the same job simultaneously.</p>
       <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.sections", "navigation.indexes", "toc.follow", "announce.dismiss"], "search": "../../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../../../assets/javascripts/bundle.c21346df.min.js"></script>
+      <script src="../../../assets/javascripts/bundle.a5f9d56c.min.js"></script>
       
         <script src="../../../javascripts/mathjax.js"></script>
       
