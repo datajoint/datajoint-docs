@@ -1,4 +1,4 @@
-FROM python:3.12-alpine
+FROM python:3.15-alpine
 
 WORKDIR /main
 COPY mkdocs.yaml mkdocs.yaml
