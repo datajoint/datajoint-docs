@@ -5,7 +5,7 @@ This document specifies the `SparkAdapter` Protocol — an opt-in contract that 
 The Protocol is intentionally small: a single method, no inheritance, no abstract-method surface area on the existing `Codec` base class. Consumers detect support via `isinstance(codec, SparkAdapter)`.
 
 !!! version-added "New in DataJoint 2.3"
-    Introduced for the Databricks Linked Delta Tables ("silver layer") integration. Independent of any consumer: any codec author can implement `to_spark()` and any downstream tool can check for it.
+    Introduced for publishing DataJoint tables to a Databricks silver layer. Independent of any consumer: any codec author can implement `to_spark()` and any downstream tool can check for it.
 
 For the `Codec` base class itself, see [Codec API Specification](codec-api.md). For background on why the protocol is needed, see [Spark Adapters and Silver-Layer Publishing](../../explanation/spark-adapters.md).
 
@@ -13,7 +13,7 @@ For the `Codec` base class itself, see [Codec API Specification](codec-api.md). 
 
 DataJoint's `<blob@>` codec stores arbitrary Python values — numpy arrays, lists, dicts, custom objects — as serialized binary. That generality is the right call for most use cases, but it makes the column **opaque** to consumers that need typed access at query time: SQL engines, dataframe libraries, BI tools, federated query systems. Such consumers can only treat blob columns as `BINARY` and rely on the application to decode.
 
-The downstream concrete case is **Databricks Linked Delta Tables** (the "silver layer"): every column must render to Spark-native types so the data is queryable with Spark SQL, exposed through Delta Sharing, and usable by Genie / BI without round-tripping through DataJoint. A `BINARY` blob doesn't qualify.
+The downstream concrete case is a **Databricks silver layer**: every column must render to Spark-native types so the data is queryable with Spark SQL, exposed through Delta Sharing, and usable by Genie / BI without round-tripping through DataJoint. A `BINARY` blob doesn't qualify.
 
 `SparkAdapter` is the minimum framework-side contract to make typed rendering possible **without** forcing every codec to support it. Generic codecs (`<blob@>`, `<hash@>`) remain unsupported by design. Typed codecs (`<float_array@>`, `<image_2d@>`, future shapes) opt in by implementing the method.
 
@@ -155,7 +155,7 @@ class PointWithLabelCodec(dj.Codec):
 
 ## Consumer pattern
 
-A simplified silver-layer publish loop (the actual `datajoint-databricks` consumer is more elaborate):
+A simplified silver-layer publish loop (a production consumer is more elaborate):
 
 ```python
 def publish_row_to_silver(table, key, target_table):

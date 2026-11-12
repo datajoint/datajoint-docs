@@ -109,7 +109,7 @@ DataJoint's `<blob@>` codec stores arbitrary Python values as serialized binary 
 
 - It's a small, opt-in `@runtime_checkable` `Protocol` — no inheritance, no abstract-method burden on existing codecs.
 - Generic codecs (`<blob@>`, `<hash@>`) remain non-adapting by design; typed codecs (`<float_array@>`, `<image_2d@>`, and future shapes) opt in.
-- The downstream driver is Databricks Linked Delta Tables (the "silver layer"), where every column must render to a Spark-native type to be queryable.
+- The downstream driver is publishing to a Databricks silver layer, where every column must render to a Spark-native type to be queryable.
 
 See the [SparkAdapter Codec Protocol Specification](../reference/specs/spark-adapter.md) and the [explainer](../explanation/spark-adapters.md).
 
