@@ -56,6 +56,9 @@ Subject - Session          # Subjects without sessions
 Session - {'subject_id': 'M001'}
 ```
 
+!!! note
+    `A & B` and `A - B` match on every attribute the two share, and NULL never matches. If they share a nullable attribute, rows of A with NULL there are in `A - B`, never in `A & B` (since 2.3.7). A string condition such as `"x > 5"` excludes rows where `x` is NULL from both `A & "x > 5"` and `A - "x > 5"`. See [NULL semantics](../reference/specs/query-algebra.md#210-null-semantics).
+
 ## Projection (`.proj()`)
 
 Select, rename, or compute attributes:

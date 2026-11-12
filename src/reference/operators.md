@@ -7,7 +7,7 @@ DataJoint provides a small set of operators for querying data. All operators ret
 | Operator | Syntax | Description |
 |----------|--------|-------------|
 | Restriction | `A & condition` | Select rows matching condition |
-| Anti-restriction | `A - condition` | Select rows NOT matching condition |
+| Anti-restriction | `A - condition` | Select rows NOT matching condition (for a query expression, the complement of `A & condition`) |
 | Projection | `A.proj(...)` | Select, rename, or compute attributes |
 | Join | `A * B` | Combine tables on matching attributes |
 | Extension | `A.extend(B)` | Add attributes from B, keeping all rows of A |
@@ -29,7 +29,7 @@ Session & "duration BETWEEN 30 AND 60"
 Session & {'subject_id': 'M001'}
 Session & {'subject_id': 'M001', 'session_idx': 1}
 
-# Query expression (matching keys)
+# Query expression (match on all shared attributes)
 Session & Subject                    # Sessions for subjects in Subject table
 Session & (Subject & "sex = 'M'")    # Sessions for male subjects
 
@@ -101,6 +101,8 @@ Session - {'subject_id': 'M001'}
 # Sessions without trials
 Session - Trial
 ```
+
+For a query expression B, `A - B` contains exactly the rows of A that are not in `A & B`. A NULL in a shared attribute never matches, so a row of A with NULL there is always in `A - B`. String and dict conditions follow SQL three-valued logic instead: a row for which the condition is NULL is in neither result. See [NULL semantics](specs/query-algebra.md#210-null-semantics).
 
 ---
 

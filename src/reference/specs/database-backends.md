@@ -9,7 +9,7 @@ DataJoint supports multiple database backends through a unified adapter architec
 
 | Backend | Minimum Version | Tested in CI | Default Port | Status |
 |---------|-----------------|--------------|--------------|--------|
-| MySQL | 8.0.13 | 8.0, 8.4 (LTS) | 3306 | Production |
+| MySQL | 8.0.18 | 8.0, 8.4 (LTS) | 3306 | Production |
 | PostgreSQL | 15 | 15 | 5432 | Production |
 | MariaDB | — | — | — | **Not supported** |
 
@@ -20,6 +20,13 @@ services such as AWS RDS:
 
 - **MySQL** — the **8.0** and **8.4** LTS lines; CI exercises both (see
   [datajoint-python#1498](https://github.com/datajoint/datajoint-python/pull/1498)).
+- **MySQL minimum: 8.0.18** (since DataJoint 2.3.7). The complement of a restriction (`A - B`)
+  compiles to a correlated `NOT EXISTS` over a derived table
+  ([Query Algebra §13.4.1](query-algebra.md#1341-restriction-by-a-query-expression)). MySQL 8.0.17
+  decorrelates this form in a top-level `SELECT`, but in a single-table `DELETE`, in a `HAVING`
+  clause or under `OR` it took more than 60 s in benchmarks where 8.0.18 took 0.1–0.7 s. Job refresh in `populate(reserve_jobs=True)` issues such a
+  single-table `DELETE`. Below 8.0.18 the client **warns on connection** and keeps working;
+  results are correct, only slower.
 - **PostgreSQL** — **15** and later.
 - **MySQL 9.x is not a supported target.** The 9.x series is a sequence of short-lived *Innovation*
   releases — there is no 9.x LTS, and it is not offered as a standard managed-service engine. DataJoint
