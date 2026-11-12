@@ -22,7 +22,9 @@ DataJoint loads configuration in this priority order (highest to lowest):
 4. **Secrets directory** — `.secrets/database.user`, `.secrets/database.password`, `.secrets/stores.<name>.<attr>` (each fills a value the file and env didn't already set)
 5. **Default values** — Built-in defaults
 
-Higher priority sources override lower ones. Set `DJ_IGNORE_CONFIG_FILE=true` *(new in 2.2.4)* to skip both `datajoint.json` and the secrets directory entirely — see [Env-var-only deployments](#env-var-only-deployments) below.
+Higher priority sources override lower ones, with one limit on environment variables. They take precedence over `datajoint.json` only for `DJ_HOST`, `DJ_USER`, `DJ_PASS`, `DJ_PORT`, `DJ_BACKEND`, `DJ_DATABASE_NAME`, `DJ_DATABASE_PREFIX`, `DJ_CREATE_TABLES`, `DJ_LOG_LEVEL`, `DJ_STORES` and the diagram display settings. For other settings, including `database.use_tls` (`DJ_USE_TLS`), a value in `datajoint.json` replaces the environment variable.
+
+Set `DJ_CONFIG_FILE` *(new in 2.3.6)* to load one named configuration file with no search. Set `DJ_IGNORE_CONFIG_FILE=true` *(new in 2.2.3)* to skip both `datajoint.json` and the secrets directory entirely — see [Env-var-only deployments](#env-var-only-deployments) below.
 
 ## `.secrets/` Directory Structure
 
@@ -220,7 +222,8 @@ If `DJ_STORES` contains invalid JSON, DataJoint raises `ValueError` at config-lo
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `DJ_IGNORE_CONFIG_FILE` | `false` | If `true`, skip `datajoint.json`, the project `.secrets/`, and `/run/secrets/datajoint/`. Only env vars and defaults apply. *(new in 2.2.4)* |
+| `DJ_IGNORE_CONFIG_FILE` | `false` | If `true`, skip `datajoint.json`, the project `.secrets/`, and `/run/secrets/datajoint/`. Only env vars and defaults apply. *(new in 2.2.3)* |
+| `DJ_CONFIG_FILE` | — | Path of the configuration file to load at import, with no search. The `.secrets/` directory next to it is also used. A relative path is resolved against the working directory, and `~` is expanded. If the file does not exist, `import datajoint` raises `FileNotFoundError`. Ignored when `DJ_IGNORE_CONFIG_FILE=true`. *(new in 2.3.6)* |
 
 ## Env-var-only deployments
 
@@ -244,6 +247,72 @@ With `DJ_IGNORE_CONFIG_FILE=true`, DataJoint skips:
 - the Docker/Kubernetes `/run/secrets/datajoint/` directory
 
 Only env vars (`DJ_HOST`, `DJ_USER`, `DJ_PASS`, `DJ_STORES`, …) and built-in defaults apply. No file under any parent directory of the working directory can contribute to config.
+
+## Configuration on Shared Hosts
+
+On a machine that several people use, such as a lab server or a computing cluster, other users
+may be able to put files where DataJoint looks for its configuration. A configuration file
+placed by someone else could change where DataJoint connects or where it stores data.
+
+!!! version-changed "Changed in 2.3.6"
+    On Linux and macOS, DataJoint skips configuration files and secrets that another user could
+    have placed. On Windows, there is no ownership check, and the search is unchanged.
+
+### What DataJoint Skips
+
+The search for `datajoint.json`, for the `.secrets/` directory and `/run/secrets/datajoint/`,
+and for the secret files in them skips an item when both of these are true:
+
+- It is owned by another user (not root).
+- It is in a directory that every user can write, such as `/tmp`, or below such a directory
+  that lacks the sticky bit. The sticky bit, shown as the `t` in `drwxrwxrwt` on `/tmp`, stops
+  users from removing or renaming each other's files.
+
+Each skipped item is logged as a warning that names it, so `DJ_LOG_LEVEL=ERROR` hides it. The
+search does not continue to parent directories past a skipped `datajoint.json`.
+
+A configuration file, secret file or secrets directory that is used and that every user can
+write also produces a warning. Restrict it with `chmod o-w`. A secrets directory that every user
+can write but that has the sticky bit, such as a root-owned `/run/secrets/datajoint` with mode
+1777, produces no warning; each file in it is still checked.
+
+These setups can be affected:
+
+- shared volumes with mode 0777 that another account fills, such as a Kubernetes `emptyDir`
+  written by a helper container that runs as a different user;
+- container images whose files belong to a build user, are made writable by everyone with
+  `chmod -R 777`, and run under a different user ID (for example on OpenShift);
+- Amazon EFS access-point roots with mode 0777, when the process runs as a different user;
+- NFS exports with root squashing (the server treats the client's root user as an unprivileged
+  user);
+- WSL `/mnt/c`, when running as root or as another WSL user.
+
+### Use a Skipped File
+
+If you trust a skipped file, do one of these:
+
+- set `DJ_CONFIG_FILE` to its path;
+- call `dj.config.load(path)`;
+- change its owner with `chown`;
+- remove write permission for other users from the directory with `chmod o-w`.
+
+Supply skipped secrets through environment variables.
+
+### Shared Group Directories
+
+Files in a directory that only your group can write are still loaded, including one under a
+sticky `/scratch`. So every member of the group can change the configuration your sessions load.
+The search also continues up through parent directories, so a `datajoint.json` in a shared
+directory above your project is loaded when your project has none.
+
+- Keep a `datajoint.json` in each project, or set `DJ_CONFIG_FILE`. The search stops at the
+  first `datajoint.json` it finds.
+- Let only people you trust write to group directories that hold DataJoint projects.
+- Do not run DataJoint from a directory that another user created, such as one under `/tmp`,
+  unless you trust that user.
+- For services and shared pipelines, set `DJ_IGNORE_CONFIG_FILE=true` and supply every setting
+  through environment variables. Setting environment variables alone is not enough, because
+  they do not override every setting in a file (see [Configuration Priority](#configuration-priority)).
 
 ## Security Best Practices
 
@@ -275,7 +344,7 @@ export DJ_PASS=$(vault read -field=password secret/datajoint/db)
 # Stores: one JSON-encoded env var (new in 2.2.4)
 export DJ_STORES=$(vault read -format=json -field=stores secret/datajoint)
 
-# Optional: guarantee no file on disk contributes to config (new in 2.2.4)
+# Optional: guarantee no file on disk contributes to config (new in 2.2.3)
 export DJ_IGNORE_CONFIG_FILE=true
 ```
 
@@ -446,7 +515,10 @@ print("secrets dir:", find_secrets_dir(config_path))
 ```
 
 If `find_config_file()` returns `None`, no `datajoint.json` was found via the
-upward search — values come from environment variables and defaults only.
+upward search — values come from environment variables and defaults only. From 2.3.6, it also
+returns `None` when the file found was skipped because another user could have placed it; the
+log then has a warning that names the file. See
+[Configuration on Shared Hosts](#configuration-on-shared-hosts).
 
 ### Permission Errors
 

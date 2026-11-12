@@ -2,14 +2,75 @@
 
 DataJoint 2.3 adds a first-class **upstream read surface** — `Diagram.trace` and `self.upstream` — which make "a computed row derives only from its declared upstream inputs" easy to follow inside `make()` and easy to query afterward. It also ships the **SparkAdapter Codec Protocol** for typed rendering to Spark-native types, **`dj.deploy.set_replica_identity`** for PostgreSQL change-data-capture, and a **cascade fix** for Part-of-Part and renamed-foreign-key chains.
 
-Later releases on the line added **redesigned diagram rendering** on the DataJoint brand palette, with a light/dark [`display.diagram_theme`](../reference/configuration.md#display-settings) setting, **S3 stores that resolve an ambient AWS identity** instead of requiring static keys, and **extrinsic provenance at the pipeline's entry points** — a hidden `_prov` attribute the framework records on every row arriving from outside. 2.3.5 fixes **cascade deletes that removed rows outside the delete**, and a restricted distributed `populate` that removed other workers' jobs.
+Later releases on the line added **redesigned diagram rendering** on the DataJoint brand palette, with a light/dark [`display.diagram_theme`](../reference/configuration.md#display-settings) setting, **S3 stores that resolve an ambient AWS identity** instead of requiring static keys, and **extrinsic provenance at the pipeline's entry points** — a hidden `_prov` attribute the framework records on every row arriving from outside. 2.3.5 fixes **cascade deletes that removed rows outside the delete**, and a restricted distributed `populate` that removed other workers' jobs. 2.3.6 is a **security release**.
 
 > **Upgrading from 2.0, 2.1, or 2.2?** No API breaks — every feature on the 2.3 line is additive.
 > Two fixes in 2.3.3 do, however, reject input that previously passed silently: a misspelled native
 > type is now caught at declaration, and inserting a NumPy array into a **native** `blob` attribute
 > now raises. Both cases were already broken — the first produced invalid DDL at the server, the
 > second stored the array's text representation — so anything affected was losing data rather than
-> working. See [Changes in 2.3.3](#changes-in-233).
+> working. See [Changes in 2.3.3](#changes-in-233). The security fixes in 2.3.6 also refuse some
+> input and settings that earlier releases accepted. See [Changes in 2.3.6](#changes-in-236).
+
+## Changes in 2.3.6
+
+2.3.6 is a security release on the 2.3 line: it fixes five security issues, described in the [security advisories](https://github.com/datajoint/datajoint-python/security/advisories), and every earlier release has at least one of them. If you are upgrading from **2.3.5**:
+
+- **`<filepath@>` paths must stay inside their store.** A path with a `..` part, or an absolute path outside a `file` store's `location`, now raises `DataJointError` on insert.
+    - Rows already stored this way, such as some migrated from 0.14, can still be fetched. Reading or downloading the fetched value raises `DataJointError`.
+    - An absolute path inside the store's `location` is now saved relative to the store. The fetched `.path` is that relative path, not the string you inserted.
+    - The check compares paths as written. It does not resolve symbolic links.
+    - A path in a reserved section is now recognized in any letter case and after a leading `./`. For example, `_HASH/x` and `./_hash/x` raise `ValueError`.
+    - To accept paths outside the store, set `dj.config.allow_filepath_outside_store = True` or the environment variable `DJ_ALLOW_FILEPATH_OUTSIDE_STORE=true`. This turns the check off for every `<filepath@>` value, so use it only with data you trust.
+
+    See [Paths outside the store](../how-to/configure-storage.md#paths-outside-the-store).
+
+- **Attachments and objects are saved only inside the download folder.**
+    - A stored attachment name that is empty, `.` or `..`, or that contains `/`, `\` or a NUL character (character code 0), raises `DataJointError` on fetch, and nothing is written.
+    - On Windows, a name containing `:` is also refused. For example, an attachment named `12:00.txt` that was inserted from Linux or macOS cannot be fetched on Windows. Fetch such attachments on Linux or macOS.
+    - If the download folder already holds a different file, a folder or a symbolic link with the attachment's name, the attachment is saved under the next free name (`name_1.ext`, `name_2.ext`, ...). DataJoint never writes through a symbolic link.
+    - An `<object@>` path with a `..` part is refused.
+    - Downloading an `<object@>` folder checks every file in it before anything is written. Downloaded files keep the same layout as before.
+
+    See [Use Object Storage](../how-to/use-object-storage.md#attachments).
+
+- **`use_tls` settings now take effect as documented.** TLS is the encryption of the connection to the database server.
+    - `use_tls=True` or a `use_tls` dict now requires TLS. If the server does not offer TLS, the connection fails before the user name and password are sent. On MySQL, 2.3.5 could connect without encryption.
+    - The default, `use_tls=None`, uses TLS whenever the server offers it. It connects without TLS only when the server does not offer TLS or, on PostgreSQL, does not accept TLS connections from this client. A failed TLS setup or a failed login is no longer retried without TLS. If TLS cannot be set up with an older server, set `use_tls=False`.
+    - `use_tls=False` now turns TLS off. Before, the setting did not reach the database driver, so the connection could use TLS anyway. A server that accepts only encrypted connections now refuses the connection. Remove `use_tls=False`, or set `use_tls=True`.
+    - On PostgreSQL, the `ca`, `cert`, `key` and `password` keys of a `use_tls` dict are now used. With `ca`, the server's certificate and host name are verified.
+    - `dj.Instance` and `dj.Connection` now read `database.use_tls` (or `DJ_USE_TLS`) when `use_tls` is not given, as `dj.conn()` already did.
+    - `dj.conn(use_tls=True)` or `dj.conn(use_tls={...})` now reconnects an existing connection with that setting, unless the connection already meets it. Before, the argument was ignored.
+
+    See [TLS configuration](../how-to/configure-database.md#tls-configuration).
+
+- **Restriction values are checked and always quoted.**
+    - A value in a dict, record-array or DataFrame restriction must be a string, number, boolean, `None`, date, `datetime`, `datetime.time`, `Decimal`, list, a UUID (for a `uuid` attribute), or a dict (for a JSON path). Other values now raise `DataJointError`. Before, they were written into the query unquoted, and most of them did not give a correct query.
+    - Values to convert first include bytes, `numpy.datetime64` (convert to `datetime.datetime`), 0-d NumPy arrays (use `.item()`), `datetime.timedelta` (PyMySQL returns it for MySQL `time` columns), tuples, NaN and infinity. If pandas converted a DataFrame's date columns to `datetime64`, use `df.astype(object)`.
+    - The return type in a JSON attribute key (`attr.path:type`) must be a standard type, such as an integer, floating-point, decimal, character, date or JSON type. Other types raise `DataJointError`. You can write such a condition as an SQL string restriction instead.
+    - A key that starts with an attribute name but is not a valid JSON path, such as `params.bad path`, raises `DataJointError`. Keys that name no attribute are still ignored.
+    - List values, and dict values given for a JSON path, are written as quoted text and compared by their exact text. Before, a list of strings produced invalid SQL. On MySQL, a dict for a JSON path whose strings contain a double quote or a backslash can now match rows it did not match before.
+    - Values stay inside their quotes whatever the server's string settings, such as MySQL's `NO_BACKSLASH_ESCAPES`. This change by itself does not change which rows match under default settings.
+
+    See [Query Operators](../reference/operators.md).
+
+- **Foreign-key references are read as table names and never run as Python code.** This applies when a table is declared and in `alter()`.
+    - The supported forms are `Parent`, `module.Parent` and `Master.Part`, each optionally in parentheses or followed by `()`, and `.proj()` with string arguments, such as `Parent.proj(new_id='parent_id')`.
+    - Other forms raise a `DataJointError` that lists the supported forms: a variable, `...` or `**dict` passed to `.proj()`; a call to any other method or function; a string with an `r`, `u` or `f` prefix; a string split into adjacent parts, such as `'a' 'b'`; a name that begins with two underscores. Rewrite such references in a supported form.
+    - If the error says a name is not defined, make sure the parent table's class is defined or imported in the module where the table is declared. For `alter()`, you can instead pass that namespace with `context=`.
+    - In `describe()` output, line breaks in names, comments, default values, types and index columns become spaces, and a backslash or double quote in a column name of a projected reference is escaped.
+
+    See [Foreign keys](../reference/definition-syntax.md#foreign-keys).
+
+- **Compressed blobs are checked against their recorded size.** A compressed blob whose data expands beyond the recorded size in its header is refused before it is fully expanded. A corrupt compressed blob raises `DataJointError` instead of `zlib.error`, so code that caught `zlib.error` should catch `DataJointError`. This does not limit the memory a valid blob can use. See [Errors](../reference/errors.md).
+
+- **Configuration files on shared hosts (Linux and macOS).** The search for `datajoint.json` and the secrets directory now skips, with a logged warning, a file or folder that another user (not root) owns in a folder that every user can write, such as `/tmp`. Files in a shared group folder are still loaded. A configuration file, secret file or secrets folder that is used and that every user can write produces a warning. The new environment variable `DJ_CONFIG_FILE` names the configuration file to load, with no search. On Windows, the search is unchanged. See [Configuration on shared hosts](../how-to/manage-secrets.md#configuration-on-shared-hosts).
+
+- **Each user has their own cache for memory-mapped arrays.** Arrays from remote stores opened with `mmap_mode` are now cached in `<tempdir>/datajoint_mmap_<uid>`, which only you can read. `<tempdir>` is the system's temporary folder, such as `/tmp`, and `<uid>` is your numeric user ID. The first such load after upgrading downloads each array again. The old shared folder `<tempdir>/datajoint_mmap` is no longer used and can be deleted. On Windows, the cache stays in `<tempdir>/datajoint_mmap`, inside each user's own temporary folder. See [Memory mapping](../how-to/use-npy-codec.md#memory-mapping).
+
+- **PyMySQL 1.1.1 or later is required**, up from 0.7.2, because of a security issue in earlier PyMySQL releases (CVE-2024-36039).
+
+Upgrade with `pip install --upgrade "datajoint>=2.3.6"`. The conda-forge package follows within about an hour of PyPI. Releases before 2.0, including 0.14, are no longer supported and will not receive a fix. To move to 2.x, see the [Migration Guide](../how-to/migrate-to-v20.md).
 
 > **Citation:** Yatsenko D, Nguyen TT. *DataJoint 2.0: A Computational Substrate for Agentic Scientific Workflows.* arXiv:2602.16585. 2026. [doi:10.48550/arXiv.2602.16585](https://doi.org/10.48550/arXiv.2602.16585)
 

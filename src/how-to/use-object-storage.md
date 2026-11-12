@@ -190,6 +190,23 @@ Document.insert1({
 })
 ```
 
+On fetch, the attachment is saved in the download folder (`download_path`) under its stored
+file name.
+
+!!! version-changed "Changed in 2.3.6"
+    An attachment is saved only inside the download folder.
+
+    - A stored name that is empty, `.` or `..`, or that contains `/`, `\` or a NUL character
+      (character code 0), raises `DataJointError`, and nothing is written.
+    - On Windows, a name containing `:` is also refused. Fetch such attachments on Linux or
+      macOS.
+    - If the download folder already holds a different file, a folder or a symbolic link with
+      that name, the attachment is saved under the next free name (`name_1.ext`,
+      `name_2.ext`, ...). DataJoint never writes through a symbolic link.
+
+    For `<object@>` values, a path with a `..` part is refused. Downloading an `<object@>`
+    folder checks every file in it before anything is written.
+
 ## NumPy Arrays with `<npy@>`
 
 The `<npy@>` codec stores NumPy arrays as portable `.npy` files with lazy loading:
