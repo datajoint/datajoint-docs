@@ -33,7 +33,7 @@ directly to the latest DataJoint 2.x — currently **2.3**.
 | Component | Legacy (pre-2.0) | DataJoint 2.0+ |
 | ----------- | ----------------- | --------------- |
 | **Python** | 3.8+ | **3.10+** |
-| **MySQL** | 5.7+ | **8.0+** |
+| **MySQL** | 5.7+ | **8.0.18+** (8.0.13+ before 2.3.7) |
 | **Character encoding** | (varies) | **UTF-8 (utf8mb4)** |
 | **Collation** | (varies) | **utf8mb4_bin** |
 

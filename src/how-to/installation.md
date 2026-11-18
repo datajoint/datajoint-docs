@@ -4,10 +4,14 @@ Install the DataJoint Library (the `datajoint` client API package) and set up yo
 
 ## Requirements
 
-- Python 3.10+
-- MySQL 8.0.13+ or PostgreSQL 15+
-- Network access to database server
+- Python 3.10 – 3.15
+- A database server: MySQL 8.0.18+ (the 8.0 and 8.4 LTS lines) or PostgreSQL 15+. DataJoint warns
+  when it connects to an older MySQL server. See [Database Backends](../reference/specs/database-backends.md).
+- A database driver: `pymysql` for MySQL is installed with DataJoint; the PostgreSQL driver
+  (`psycopg2-binary` 2.9+) comes with `pip install datajoint[postgres]`
+- Network access to the database server
 - Linux, macOS, or Windows (see [Platform support](#platform-support))
+- Optional: [Graphviz](#djdiagram-raises-filenotfounderror), a system package, to render `dj.Diagram`
 
 ## Install the DataJoint Library
 
@@ -195,8 +199,8 @@ Two dependencies are worth installing up front:
 
 DataJoint runs on **Linux, macOS, and Windows**.
 
-- CI validates the **full test suite — including database integration** — on Linux, across both ends of the supported Python range (3.10 and 3.14).
-- The **unit-test suite additionally runs on Windows** (Python 3.10 and 3.14). This covers OS-specific behavior — notably filesystem path handling for file-protocol object stores and garbage collection, where native path separators must not leak into store paths.
+- CI validates the **full test suite — including database integration** — on Linux, at both ends of the supported Python range and the previous newest release (3.10, 3.14 and 3.15), against MySQL 8.0 and 8.4 and PostgreSQL 15.
+- The **unit-test suite additionally runs on Windows** (Python 3.10, 3.14 and 3.15). This covers OS-specific behavior — notably filesystem path handling for file-protocol object stores and garbage collection, where native path separators must not leak into store paths.
 - macOS is a supported development platform.
 
 ## Troubleshooting
