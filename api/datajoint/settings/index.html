@@ -6805,6 +6805,14 @@ from environment variables, secrets directories, and JSON config files.</p>
 <p>A value set by a higher source is not overridden by a lower one. In particular
 <code>datajoint.json</code> takes precedence over <code>.secrets/</code>: the secrets directory
 only supplies values the config file and environment leave unset.</p>
+<p>The search for <code>datajoint.json</code> and <code>.secrets/</code> skips, with a warning, a
+file or directory owned by another user (other than root) that anyone on the
+machine could have placed there: one in a world-writable directory such as
+<code>/tmp</code>, or below a world-writable directory that lacks the sticky bit. Files
+in a shared project directory (e.g. a group directory under a sticky
+<code>/scratch</code>) are still used. To use a skipped file, name it explicitly:
+<code>dj.config.load(path)</code> or the <code>DJ_CONFIG_FILE</code> environment variable.
+<code>DJ_IGNORE_CONFIG_FILE=true</code> turns the search off.</p>
 
 
 <p><span class="doc-section-title">Examples:</span></p>
@@ -6866,7 +6874,10 @@ only supplies values the config file and environment leave unset.</p>
 
         <p>Search for datajoint.json in current and parent directories.</p>
 <p>Searches upward from <code>start</code> until finding the config file or hitting
-a project boundary (<code>.git</code>, <code>.hg</code>) or filesystem root.</p>
+a project boundary (<code>.git</code>, <code>.hg</code>) or filesystem root. A file that
+another user could have placed there ends the search without a result:
+one owned by another user (not root) in a world-writable directory such as
+<code>/tmp</code>, or below a world-writable directory without the sticky bit.</p>
 
 
 <p><span class="doc-section-title">Parameters:</span></p>
@@ -6951,6 +6962,8 @@ a project boundary (<code>.git</code>, <code>.hg</code>) or filesystem root.</p>
 <li><code>.secrets/</code> in same directory as datajoint.json (project secrets)</li>
 <li><code>/run/secrets/datajoint/</code> (Docker/Kubernetes secrets)</li>
 </ol>
+<p>A directory that another user could have placed there is not used, under
+the same rule as <code>find_config_file</code>.</p>
 
 
 <p><span class="doc-section-title">Parameters:</span></p>
@@ -7030,6 +7043,8 @@ a project boundary (<code>.git</code>, <code>.hg</code>) or filesystem root.</p>
     <div class="doc doc-contents ">
 
         <p>Read a secret value from a file in the secrets directory.</p>
+<p>A file that another user could have placed there is ignored, under the
+same rule as <code>find_config_file</code>.</p>
 
 
 <p><span class="doc-section-title">Parameters:</span></p>

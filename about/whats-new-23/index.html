@@ -6004,6 +6004,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#changes-in-235" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Changes in 2.3.5
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#changes-in-234" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -6469,6 +6480,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#changes-in-235" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Changes in 2.3.5
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#changes-in-234" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -6661,7 +6683,7 @@
 
 <h1 id="whats-new-in-datajoint-library-23">What's New in DataJoint Library 2.3<a class="headerlink" href="#whats-new-in-datajoint-library-23" title="Permanent link">&para;</a></h1>
 <p>DataJoint 2.3 adds a first-class <strong>upstream read surface</strong> — <code>Diagram.trace</code> and <code>self.upstream</code> — which make "a computed row derives only from its declared upstream inputs" easy to follow inside <code>make()</code> and easy to query afterward. It also ships the <strong>SparkAdapter Codec Protocol</strong> for typed rendering to Spark-native types, <strong><code>dj.deploy.set_replica_identity</code></strong> for PostgreSQL change-data-capture, and a <strong>cascade fix</strong> for Part-of-Part and renamed-foreign-key chains.</p>
-<p>Later releases on the line added <strong>redesigned diagram rendering</strong> on the DataJoint brand palette, with a light/dark <a href="../../reference/configuration/#display-settings"><code>display.diagram_theme</code></a> setting, <strong>S3 stores that resolve an ambient AWS identity</strong> instead of requiring static keys, and <strong>extrinsic provenance at the pipeline's entry points</strong> — a hidden <code>_prov</code> attribute the framework records on every row arriving from outside.</p>
+<p>Later releases on the line added <strong>redesigned diagram rendering</strong> on the DataJoint brand palette, with a light/dark <a href="../../reference/configuration/#display-settings"><code>display.diagram_theme</code></a> setting, <strong>S3 stores that resolve an ambient AWS identity</strong> instead of requiring static keys, and <strong>extrinsic provenance at the pipeline's entry points</strong> — a hidden <code>_prov</code> attribute the framework records on every row arriving from outside. 2.3.5 fixes <strong>cascade deletes that removed rows outside the delete</strong>, and a restricted distributed <code>populate</code> that removed other workers' jobs.</p>
 <blockquote>
 <p><strong>Upgrading from 2.0, 2.1, or 2.2?</strong> No API breaks — every feature on the 2.3 line is additive.
 Two fixes in 2.3.3 do, however, reject input that previously passed silently: a misspelled native
@@ -6671,6 +6693,24 @@ second stored the array's text representation — so anything affected was losin
 working. See <a href="#changes-in-233">Changes in 2.3.3</a>.</p>
 <p><strong>Citation:</strong> Yatsenko D, Nguyen TT. <em>DataJoint 2.0: A Computational Substrate for Agentic Scientific Workflows.</em> arXiv:2602.16585. 2026. <a href="https://doi.org/10.48550/arXiv.2602.16585">doi:10.48550/arXiv.2602.16585</a></p>
 </blockquote>
+<h2 id="changes-in-235">Changes in 2.3.5<a class="headerlink" href="#changes-in-235" title="Permanent link">&para;</a></h2>
+<p>2.3.5 is a patch release on the 2.3 line, and it is recommended for every 2.3 deployment: several of its fixes stop operations from removing data they should have kept. If you are upgrading from <strong>2.3.4</strong>:</p>
+<ul>
+<li><strong>Cascade deletes remove only the rows they reach.</strong> In three cases, a delete removed rows outside the cascade, without an error:
+    - <code>(T &amp; dj.Top(n)).delete()</code> ignored the <code>Top</code> and deleted every row matching the other conditions, together with their descendants. <code>delete_quick()</code> did the same. The delete now starts from the rows the <code>Top</code> selects (<a href="https://github.com/datajoint/datajoint-python/issues/1589">#1589</a>).
+    - A child table whose nullable foreign key shares a primary-key column with the parent lost the rows whose foreign key is NULL, although those rows reference nothing. In a diamond, a child reached through a secondary foreign key could instead be missed, and the delete failed with a misleading "unloaded schema" error. The cascade now copies a parent's condition to a child only when the foreign key carries every attribute the condition names, without renaming, and lies in the child's primary key. Otherwise it restricts the child by the restricted parent (<a href="https://github.com/datajoint/datajoint-python/issues/1590">#1590</a>).
+    - With <code>part_integrity="cascade"</code>, deleting part rows deleted masters that had no matching part rows, and everything downstream of them. A master now joins the cascade only if one of its part rows did (<a href="https://github.com/datajoint/datajoint-python/issues/1591">#1591</a>).<p><code>dj.Diagram.cascade(...).counts()</code> previews the corrected set. On earlier releases, restrict a delete by the primary keys it should remove: <code>(T &amp; (T &amp; cond).keys()).delete()</code>.</p>
+</li>
+</ul>
+<ul>
+<li><strong>On PostgreSQL, dropping a table no longer drops other tables' columns.</strong> An enum attribute is declared with a PostgreSQL enum type named by its values, so tables whose enum attributes have the same values share one type. Dropping a table dropped its enum types with <code>CASCADE</code>, which also dropped every other column of that type, with its data. Every jobs table has the same <code>status</code> enum, so dropping one jobs table removed <code>status</code> from all the others in the schema. An enum type is now dropped only when no column uses it (<a href="https://github.com/datajoint/datajoint-python/issues/1630">#1630</a>).</li>
+<li><strong><code>alter()</code> keeps an attribute's values when it renames it.</strong> A comment that opens with <code>{old_name}</code> renames that attribute. For a core-type attribute (<code>float32</code>, <code>int32</code>, and the like), <code>alter()</code> missed the marker and dropped the old attribute before adding the new one: on MySQL every value became <code>0.0</code>, or NULL for a nullable attribute; on PostgreSQL a nullable attribute lost its values. MySQL now renames with <code>CHANGE</code>. PostgreSQL refuses the rename before changing anything; renaming there comes in 2.4 (<a href="https://github.com/datajoint/datajoint-python/issues/1631">#1631</a>). See <a href="../../how-to/alter-tables/">Alter Tables</a>.</li>
+<li><strong>A restricted <code>populate(reserve_jobs=True)</code> keeps other workers' jobs.</strong> <code>populate(*restrictions, reserve_jobs=True)</code> refreshed the jobs table against the restricted <code>key_source</code>, so every job outside the restriction looked obsolete. Reservations held by other workers and error records were deleted once they were older than <code>stale_timeout</code>. Cleanup now checks keys against the full <code>key_source</code>; the restrictions only limit which jobs are added. Success and error records of rows that were deleted upstream are now removed on every refresh instead of lingering for up to <code>stale_timeout</code> (<a href="https://github.com/datajoint/datajoint-python/issues/1594">#1594</a>; part of <a href="https://github.com/datajoint/datajoint-python/issues/1577">#1577</a>). See <a href="../../how-to/distributed-computing/">Distributed Computing</a>.</li>
+<li><strong>Jobs record <code>completed_time</code> to the millisecond.</strong> <code>reserved_time</code> was recorded with milliseconds but <code>completed_time</code> was truncated to the second on MySQL, so a job finishing within the second it was reserved appeared to complete before it started. Both are now taken from the server clock at the column's precision (<a href="https://github.com/datajoint/datajoint-python/issues/1600">#1600</a>).</li>
+<li><strong><code>alter()</code> resolves foreign keys in the table's own module.</strong> Called from another module (a migration script, or a notebook that imports the pipeline), <code>Table.alter()</code> looked up foreign-key references in the caller's namespace and failed with <code>Foreign key reference ... could not be resolved</code>. It now uses the namespace the table was declared in, as <code>Part.alter()</code> already did. Pass <code>context=</code> to override (<a href="https://github.com/datajoint/datajoint-python/issues/1602">#1602</a>). See <a href="../../how-to/alter-tables/">Alter Tables</a>.</li>
+<li><strong>MySQL column-level privilege errors raise <code>AccessError</code>.</strong> MySQL error 1143 (SELECT denied on a column) came through as a raw <code>pymysql</code> error, while the table-level 1142 already became <code>dj.errors.AccessError</code>. Both now raise <code>AccessError</code>, as on PostgreSQL (<a href="https://github.com/datajoint/datajoint-python/issues/1586">#1586</a>).</li>
+<li><strong>Python 3.15 support.</strong> <code>requires-python</code> now spans <code>&gt;=3.10,&lt;3.16</code>, and CI runs the suite on 3.15. On Python 3.15 only, <code>deepdiff</code> is held below 9 until its dependencies publish 3.15 wheels. DataJoint uses it only to check that a three-part <code>make</code> reads the same data twice, which behaves the same on 8.6.</li>
+</ul>
 <h2 id="changes-in-234">Changes in 2.3.4<a class="headerlink" href="#changes-in-234" title="Permanent link">&para;</a></h2>
 <p>2.3.4 is a patch release on the 2.3 line. If you are upgrading from <strong>2.3.3</strong>:</p>
 <ul>

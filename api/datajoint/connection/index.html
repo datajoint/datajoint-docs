@@ -6865,7 +6865,7 @@ the <code>conn</code> function that provides access to a persistent connection i
                 <code>adapter</code>
             </td>
             <td>
-                  <code><span title="DatabaseAdapter">DatabaseAdapter</span></code>
+                  <code>DatabaseAdapter</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -7016,7 +7016,10 @@ If connection information is not provided, it is taken from config.</p>
             <td>
               <div class="doc-md-description">
                 <p>TLS encryption option: True (required), False (no TLS),
-None (preferred, default), or dict for manual configuration.</p>
+None (preferred, default), or dict for manual configuration
+(TLS required; <code>ca</code>, <code>cert</code>, <code>key</code>; with <code>ca</code>, the server
+certificate is verified). The existing connection is reconnected with
+these unless it already satisfies them.</p>
               </div>
             </td>
             <td>
@@ -7230,7 +7233,11 @@ Most parameters should be set in the configuration file.</p>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>TLS encryption option.</p>
+                <p>TLS encryption option: True (required), False (no TLS),
+None (default; <code>database.use_tls</code> from config, and TLS if the
+server supports it when that is unset), or dict for manual
+configuration (TLS required; <code>ca</code>, <code>cert</code>, <code>key</code>; with <code>ca</code>,
+the server certificate is verified).</p>
               </div>
             </td>
             <td>
@@ -7708,7 +7715,7 @@ None disables caching.</p>
       <tbody>
           <tr class="doc-section-item">
             <td>
-                  <code><span title="cursor">cursor</span></code>
+                  <code>cursor</code>
             </td>
             <td>
               <div class="doc-md-description">
