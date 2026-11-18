@@ -86,4 +86,3 @@ For pipelines that are predominantly internal (no analytic publish), `<blob@>` e
 - Spec: [Codec API](../reference/specs/codec-api.md) — the base `Codec` interface.
 - How-to: [Use Plugin Codecs](../how-to/use-plugin-codecs.md) — installing and registering codec plugins.
 - How-to: [Create Custom Codecs](../how-to/create-custom-codec.md) — writing your own codec.
-- Strategic background: Databricks integration's Linked Delta Tables — covered in `datajoint-databricks/DECISIONS.md` (internal repo; summary on request).
