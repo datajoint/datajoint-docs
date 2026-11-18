@@ -158,7 +158,7 @@ result = A.join(B, semantic_check=False)  # bypass semantic check
 - `other`: Another query expression to join with
 - `semantic_check` (bool): If `True` (default), raise error on non-homologous namesakes. If `False`, perform natural join without lineage checking.
 
-**Raises**: `DataJointError` if `semantic_check=True` and namesake attributes have different lineages.
+**Raises**: `DataJointError` if `semantic_check=True` and a namesake attribute has different lineages on the two sides, or no lineage on either side.
 
 #### `expr.restrict(other, semantic_check=True)`
 
@@ -174,7 +174,7 @@ result = A.restrict(B, semantic_check=False)  # bypass semantic check
 - `other`: Restriction condition (expression, dict, string, etc.)
 - `semantic_check` (bool): If `True` (default), raise error on non-homologous namesakes when restricting by another expression. If `False`, no lineage checking.
 
-**Raises**: `DataJointError` if `semantic_check=True` and namesake attributes have different lineages.
+**Raises**: `DataJointError` if `semantic_check=True` and a namesake attribute has different lineages on the two sides, or no lineage on either side.
 
 ### Operators
 
@@ -194,7 +194,7 @@ To bypass semantic checking: `A.restrict(dj.Not(B), semantic_check=False)`
 
 #### `A + B` (Union)
 
-Union of expressions. Requires all namesake attributes to have matching lineage.
+Union of expressions. The operands must have the same primary key and no secondary attribute in common. Union does not compare lineage.
 
 ### Universal Set (`dj.U`)
 
@@ -243,6 +243,8 @@ CREATE TABLE `schema_name`.`~lineage` (
 3. For native PK attributes: set lineage to `schema.table.attribute`
 4. Native secondary attributes: no entry (lineage = None)
 
+Lineage follows foreign keys, so an attribute that no foreign key brings in has none: a native secondary attribute, an attribute computed in a projection, or a key promoted by `dj.U`. Two namesakes with no lineage on either side are unrelated, whether or not they are in a primary key.
+
 **At table drop**:
 
 - Delete all lineage entries for the table
@@ -284,6 +286,27 @@ This property is:
 DataJointError: Cannot join on attribute `id`: different lineages
 (university.student.id vs university.course.id).
 Use .proj() to rename one of the attributes.
+```
+
+### Unrelated Namesakes
+
+!!! version-changed "Changed in 2.4"
+    Replaces the "lineage missing on one side" error, which suggested `schema.rebuild_lineage()` ([#1640](https://github.com/datajoint/datajoint-python/issues/1640)).
+
+Neither side has lineage for the attribute:
+
+```
+DataJointError: Cannot join on attribute `input_hash`: neither side inherits it
+through a foreign key, so the two are unrelated. Use .proj() to rename or exclude
+it on one side.
+```
+
+One side has none:
+
+```
+DataJointError: Cannot join on attribute `image_id`: one side traces it to
+lab.image.image_id, but the other does not inherit it through a foreign key, so
+the two are unrelated. Use .proj() to rename or exclude it on one side.
 ```
 
 ### Missing Lineage Warning
