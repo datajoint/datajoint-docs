@@ -359,19 +359,24 @@ Subject.delete()
 
 ### 4.4 Safe Mode
 
-When `prompt=True` (default from config):
+When `prompt=True` (default from config), `delete()` logs the row count of each
+affected table, runs the cascade inside its transaction, and then, if any rows matched,
+asks:
 
-```
-About to delete:
-  Subject: 1 rows
-  Session: 5 rows
-  Trial: 150 rows
-  SessionAnalysis: 150 rows
-
+```text
 Commit deletes? [yes, No]:
 ```
 
-Disable for automated scripts:
+Answering `yes` commits. Answering `no`, or pressing Enter, rolls everything back.
+Any other answer repeats the question.
+
+The transaction stays open while the question waits, so other users' writes and schema
+changes on the affected tables may wait too, and reads can queue behind a waiting schema
+change. On a shared server, an unanswered prompt can stall other users, so this mode is
+intended for interactive development. With the default
+`transaction=True`, `prompt=True` inside an ongoing transaction raises `DataJointError`.
+
+Disable for production and automated scripts (Section 9.5):
 
 ```python
 Subject.delete(prompt=False)
@@ -386,6 +391,10 @@ Subject.delete(prompt=False)
 # Non-transactional (for nested transactions)
 (Subject & condition).delete(transaction=False)
 ```
+
+With `transaction=False`, `delete()` asks no confirmation, even with `prompt=True`. Each
+`DELETE` takes effect as it runs, and `delete()` does not roll it back; an enclosing
+transaction, if any, decides whether the deletes are committed.
 
 ### 4.6 Part Table Constraints
 
@@ -655,15 +664,21 @@ for row in all_rows:
     Subject.insert1(row)  # Slow!
 ```
 
-### 9.5 Safe Deletion in Production
+### 9.5 Deletion in Production
+
+The confirmation prompt is for interactive development (Section 4.4). In production,
+preview the delete outside any transaction, then delete without the prompt:
 
 ```python
-# Always use prompt in interactive sessions
-(Subject & condition).delete(prompt=True)
-
-# Disable only in tested automated scripts
-(Subject & condition).delete(prompt=False)
+restricted = Subject & condition
+dj.Diagram.cascade(restricted).counts()  # preview
+restricted.delete(prompt=False)
 ```
+
+If `delete()` gets a `part_integrity`, pass the same value to the preview so that both
+cover the same rows. The `part_integrity` check runs only in `delete()`, not in the preview.
+
+See [Delete Data](../../how-to/delete-data.md#interactive-and-production-deletes).
 
 ---
 

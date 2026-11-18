@@ -285,6 +285,12 @@ When a child references the same parent through multiple foreign keys (e.g., `so
 
 ### Safe Delete Workflow
 
+!!! note "Current guidance"
+    The prompt waits for an answer while the delete transaction is open, so it is meant
+    for development. In production, preview with `Diagram.cascade()` and then delete with
+    `prompt=False`. This replaces the advice below that the prompt is safer than a preview
+    made before the delete. See [Interactive and Production Deletes](../how-to/delete-data.md#interactive-and-production-deletes).
+
 With `safemode=True` (the default), `delete()` provides a built-in preview-and-confirm workflow:
 
 1. Builds the cascade diagram and computes all affected tables
