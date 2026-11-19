@@ -70,9 +70,12 @@ committing.
 
 In **production**, the definition changes only in a **deployment step**, planned and
 applied as one, before the code that needs the change starts. Everything else that
-uses the pipeline, which the specification calls **run time** (populate jobs,
-notebooks, dashboards, scripts), changes only data. A change is developed elsewhere,
-on a development target, and reaches production by review and deployment.
+uses the pipeline, which the specification calls **run time** (workers, notebooks,
+dashboards, scripts), changes only data. Computed tables are populated only by
+dedicated **workers** running a clean checkout of the deployed commit, so the code
+version recorded with each computed row is exactly the code that computed it. A
+change is developed elsewhere, on a development target, and reaches production by
+review and deployment.
 
 The mode belongs to a **target**, one database that a pipeline runs on, not to the
 code. The same code can run in development on a scratch database and in production

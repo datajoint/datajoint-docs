@@ -12,7 +12,8 @@ DataJoint is designed to uphold these modes. Enforcement comes from database pri
 | **Data** | The rows of its Manual, Imported and Computed tables and their parts |
 | **Target** | One database that a pipeline runs on. The mode is a property of a target, not of the code |
 | **Pipeline** | The code and its main target. "A pipeline is in production" means its main target is |
-| **Run time** | Every process that uses the pipeline other than a deployment step: populate jobs, notebooks, dashboards, scripts |
+| **Run time** | Every process that uses the pipeline other than a deployment step: workers, notebooks, dashboards, scripts |
+| **Worker** | A process dedicated to populating auto-populated tables, running a clean checkout of the committed code at the deployed version |
 | **Deployment step** | The one step that changes a production target's definition, before the code that needs the change starts |
 | **Development** | A mode in which the definition and the data may change together, from any process |
 | **Production** | A mode in which the definition changes only in a deployment step, and run time changes only data |
@@ -33,6 +34,7 @@ Changing the definition is mostly DDL (declaring, altering and dropping tables),
 | Who depends on the data | Only the pipeline's developers | Others: people entering data, jobs, readers of results, other pipelines |
 | When the definition changes | Any time, from any process: tables declared as their classes are decorated, `alter()`, `drop()` | Only in a deployment step |
 | What run time may do | Change both definition and data | Change data only |
+| Who populates | Anyone, from any code, committed or not | Only workers, from a clean checkout of the deployed commit |
 | Lookup contents | Seeded by DataJoint from `contents`, and edited as needed | Seeded and changed only by deployment, with the code |
 | Hidden tables (jobs tables, `~lineage`) | Declared by DataJoint as needed | Declared by deployment, ahead of time |
 | Deleting data | Interactively, with a prompt | Previewed, then deleted without a prompt |
@@ -58,7 +60,7 @@ A pipeline moves to production when someone outside its developers starts to dep
 
 1. The definition is recorded as code, under version control, at a known version.
 2. Every table is declared on the main target, including the hidden tables: the jobs table of each auto-populated table and each schema's `~lineage` table. Lookup contents are set.
-3. Run time switches to logins that can change data only, with automatic table creation turned off (recommendation 3).
+3. Run time switches to logins that can change data only, with automatic table creation turned off (recommendation 4), and populating moves to workers (recommendation 3).
 
 ### 3. Production
 
@@ -78,19 +80,21 @@ Under this standard, a pipeline does not go back from production to development:
 
 **2. Enforce it with database privileges.** Run-time logins hold no privilege to create, alter or drop tables or schemas, and none to insert into or delete from Lookup tables. Only the deployment step uses a login that can change the definition. Privileges hold whatever code runs, including code written outside DataJoint. Keeping Lookup tables read-only differs by backend: PostgreSQL can grant on every table in a schema and then revoke on the Lookup tables, while MySQL cannot narrow a schema-level grant, so the run-time login's write grants are given table by table and renewed in each deployment step that declares tables.
 
-**3. Declare everything ahead of time, and turn off automatic creation.** The deployment step declares every table the code needs, hidden tables included, so run time never needs to declare one. For run time, set `dj.config.database.create_tables` (or `DJ_CREATE_TABLES`) to false, and don't pass `create_tables=True` to `dj.Schema` in run-time code, since an explicit argument overrides the configuration. A missing table is then reported as missing instead of being declared. `dj.Schema` also creates a missing schema unless given `create_schema=False`; with the privileges of recommendation 2, that attempt is refused.
+**3. Only workers populate.** In production, `populate()` and `make()` run only in workers, never in a user's notebook or script. A worker runs a clean checkout of the committed code at the deployed version, so the version that job metadata records on each row (the git commit) is exactly the code that computed it; code with uncommitted changes would record a commit it doesn't match. Privileges back the rule: worker logins may insert into auto-populated tables and their parts (and update them, when job metadata is on, and write the jobs tables), while user logins hold no insert or update privilege on them. Users read, enter data into Manual tables, and delete, previewed first; a delete cascades through auto-populated tables, so user logins keep the privilege to delete from them.
 
-**4. Keep Lookup tables for definition only.** A Lookup table's rows are set by its `contents` and change only with the code. A table whose rows are entered while the pipeline runs is a Manual table (also available as `dj.Entry`), whether a person or an automated process enters them. DataJoint inserts a Lookup's `contents` when the table holds fewer rows than its `contents`, but it never updates or deletes Lookup rows, so a deployment step that changes or removes `contents` values applies those changes itself.
+**4. Declare everything ahead of time, and turn off automatic creation.** The deployment step declares every table the code needs, hidden tables included, so run time never needs to declare one. For run time, set `dj.config.database.create_tables` (or `DJ_CREATE_TABLES`) to false, and don't pass `create_tables=True` to `dj.Schema` in run-time code, since an explicit argument overrides the configuration. A missing table is then reported as missing instead of being declared. `dj.Schema` also creates a missing schema unless given `create_schema=False`; with the privileges of recommendation 2, that attempt is refused.
 
-**5. Treat a changed `make()` as a change to the definition.** Deploy it together with a decision about the rows computed by the old code: delete them so that they are computed again, or keep them, knowingly. Recording a version on each computed row (job metadata, with `jobs.add_job_metadata` and a `jobs.version_method`) lets old rows be told apart from new ones.
+**5. Keep Lookup tables for definition only.** A Lookup table's rows are set by its `contents` and change only with the code. A table whose rows are entered while the pipeline runs is a Manual table (also available as `dj.Entry`), whether a person or an automated process enters them. DataJoint inserts a Lookup's `contents` when the table holds fewer rows than its `contents`, but it never updates or deletes Lookup rows, so a deployment step that changes or removes `contents` values applies those changes itself.
 
-**6. Preview, then delete.** Preview a delete with `dj.Diagram.cascade(...).counts()`, then run it with `delete(prompt=False)`. An interactive prompt holds the delete's transaction open, and its locks with it, until someone answers. The preview and the delete are separate transactions, so run the delete soon after the preview, and preview again if other processes may have changed the affected rows.
+**6. Treat a changed `make()` as a change to the definition.** Deploy it together with a decision about the rows computed by the old code: delete them so that they are computed again, or keep them, knowingly. Recording a version on each computed row (job metadata, with `jobs.add_job_metadata` and a `jobs.version_method`) lets old rows be told apart from new ones.
 
-**7. Classify each change as additive or revising** before deploying it, and manage each kind as described in [Additive and revising changes](#additive-and-revising-changes).
+**7. Preview, then delete.** Preview a delete with `dj.Diagram.cascade(...).counts()`, then run it with `delete(prompt=False)`. An interactive prompt holds the delete's transaction open, and its locks with it, until someone answers. The preview and the delete are separate transactions, so run the delete soon after the preview, and preview again if other processes may have changed the affected rows.
 
-**8. Check each `make()` against the reproducibility contract before deploying it.** DataJoint enforces only part of the contract at run time; the rest is checked before a change reaches production. See [Where the contract is enforced](#where-the-contract-is-enforced).
+**8. Classify each change as additive or revising** before deploying it, and manage each kind as described in [Additive and revising changes](#additive-and-revising-changes).
 
-**9. Record where rows come from.** For computed rows, turn on job metadata: `jobs.add_job_metadata` when the deployment step declares the tables (`datajoint.migrate.add_job_metadata_columns` adds the columns to tables declared without them), and `jobs.version_method="git"` in the processes that populate, run from a checkout of the deployed version, so that each computed row records the code version that wrote it. For rows entered from outside, decide on extrinsic provenance capture before the first deployment declares the Manual tables, and turn `provenance.capture` on in every process that enters data. See [Provenance](#provenance).
+**9. Check each `make()` against the reproducibility contract before deploying it.** DataJoint enforces only part of the contract at run time; the rest is checked before a change reaches production. See [Where the contract is enforced](#where-the-contract-is-enforced).
+
+**10. Record where rows come from.** For computed rows, turn on job metadata: `jobs.add_job_metadata` when the deployment step declares the tables (`datajoint.migrate.add_job_metadata_columns` adds the columns to tables declared without them), and `jobs.version_method="git"` in the workers, which run a clean checkout of the deployed commit (recommendation 3), so that each computed row records exactly the code version that wrote it. For rows entered from outside, decide on extrinsic provenance capture before the first deployment declares the Manual tables, and turn `provenance.capture` on in every process that enters data. See [Provenance](#provenance).
 
 ## Additive and revising changes
 
@@ -136,7 +140,7 @@ DataJoint records where a row came from in two ways, and the two modes treat the
 **Intrinsic provenance**, the pipeline's structural lineage, follows from its structure. A computed row exists only because its `make()` ran on rows upstream of it, and the foreign keys record which ones; deleting an upstream row deletes everything computed from it. Nothing has to be recorded for this to hold, as long as each `make()` observes the [reproducibility contract](autopopulate.md#43-the-make-reproducibility-contract). What the structure cannot say is *which version* of the definition produced a row: the foreign keys stay the same when a `make()` changes. [Job metadata](job-metadata.md) records that version on each computed master row (`_job_version`), when it is turned on and the populating process runs from a git checkout.
 
 - In **development**, the definition changes in place, so a row's intrinsic provenance points at a definition that may no longer exist. That is acceptable while the rows are disposable.
-- In **production**, the definition changes only in a deployment step, at a recorded version of the code. With job metadata on, each computed row names the version that wrote it, and a revising change to a `make()` comes with an explicit decision about the rows the old version wrote.
+- In **production**, the definition changes only in a deployment step, at a recorded version of the code. Workers run the deployed commit, so with job metadata on, each computed row names the version that wrote it, and a revising change to a `make()` comes with an explicit decision about the rows the old version wrote.
 
 **Extrinsic provenance** is recorded where the structure runs out: at Manual tables, where rows enter from outside. With `provenance.capture` on, DataJoint declares a hidden `_prov` attribute on Manual tables, and fills it on every insert made by a process that also has capture on ([Extrinsic Provenance at Entry Tables](boundary-provenance.md)).
 
@@ -147,8 +151,8 @@ DataJoint records where a row came from in two ways, and the two modes treat the
 
 The [contract](autopopulate.md#43-the-make-reproducibility-contract) keeps every computed row traceable to its declared, key-restricted inputs: `make()` reads only from its upstream cone, writes its result to its own table and its parts (and records the source wherever else it writes), computes one entity per call, and takes no result-affecting input from outside the pipeline.
 
-- In **development**, the contract is a convention. An experiment may break it, for example by inserting a row directly to look at a result, and the rows it produces are disposable.
-- In **production**, every row others depend on must satisfy it, so each `make()` is checked before it is deployed, and run time is kept from breaking the parts that can be checked as it runs.
+- In **development**, the contract is a convention. Anyone may populate, from uncommitted code, and an experiment may break the contract, for example by inserting a row directly to look at a result; the rows it produces are disposable.
+- In **production**, every row others depend on must satisfy it, so each `make()` is checked before it is deployed, only workers run it, from the deployed commit, and privileges keep everyone else from inserting computed rows.
 
 #### Where the contract is enforced
 
@@ -159,9 +163,10 @@ The [contract](autopopulate.md#43-the-make-reproducibility-contract) keeps every
 | DataJoint, at run time | `self.upstream` exists only inside `make()`, restricted to the current key; indexing it with a table that is not an ancestor raises | Read only upstream, when reads go through `self.upstream` |
 | DataJoint, at run time | In the tripartite (three-part) `make()`, `make_fetch` runs again inside the transaction, and the job fails if its result differs from the first call ("Referential integrity failed! The `make_fetch` data has changed") | Not one of the rules: a guard that keeps the inputs the same while the result is computed |
 | Review and the deployment step, before code reaches production | Each `make()` reads only from its upstream cone, writes its result to its own table and its parts and records the source wherever else it writes, keeps no state across calls, and takes no result-affecting input from outside the pipeline (`make_kwargs` only orchestrate) | All rules; the only place the reads, the isolation and the outside inputs are checked |
-| Database privileges, optionally | The logins that populate a table may insert into it and its parts (and update it, when job metadata is on); other logins hold no insert privilege on auto-populated tables or their parts | Populate-only, for master and parts, whatever code runs, including `allow_direct_insert=True` |
+| Database privileges, in production | Only worker logins may insert into auto-populated tables and their parts (and update them, when job metadata is on); user logins hold no insert privilege on them | Populate-only, for master and parts, whatever code runs, including `allow_direct_insert=True` |
+| Workers, in production | `make()` runs only in workers, from a clean checkout of the deployed commit, so the code that ran is the code that was checked and the version recorded with each row | The checked code is the code that ran |
 
-At run time, DataJoint enforces populate-only for master tables and the all-or-nothing write, and the read rule only for reads made through `self.upstream`. Nothing at run time checks reads made any other way, that a call computes exactly one entity, keeps no state across calls, or takes no outside input; those are checked before deployment. In production, `allow_direct_insert=True` belongs only in a deployment step's data migration, never in run-time code.
+At run time, DataJoint enforces populate-only for master tables and the all-or-nothing write, and the read rule only for reads made through `self.upstream`. Nothing at run time checks reads made any other way, that a call computes exactly one entity, keeps no state across calls, or takes no outside input; those are checked before deployment. In production, `allow_direct_insert=True` belongs only in a deployment step's data migration, never in run-time code, and the privileges refuse it anywhere else.
 
 ### Lookup seeding
 
@@ -181,7 +186,7 @@ A deployment step brings a production target's definition to a new version of th
 5. **Pause** the run-time work that depends on what a revising change touches.
 6. **Apply** the changes with a login that can change the definition: declarations (hidden tables included), alterations, drops, Lookup contents (new rows inserted; changed or removed rows applied as a data migration), data migrations from `datajoint.migrate`, and environment operations from `datajoint.deploy`.
 7. **Record** the version of the code the target now matches.
-8. **Start** run time on the new code.
+8. **Start** run time on the new code, with workers on a clean checkout of the deployed commit.
 
 A deployment step should be safe to run again after a failure. Operations in `datajoint.deploy` are idempotent; a one-shot migration should check whether it has already been applied.
 
