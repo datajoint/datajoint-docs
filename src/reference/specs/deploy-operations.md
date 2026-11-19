@@ -33,10 +33,14 @@ Changing the definition is mostly DDL (declaring, altering and dropping tables),
 | Who depends on the data | Only the pipeline's developers | Others: people entering data, jobs, readers of results, other pipelines |
 | When the definition changes | Any time, from any process: tables declared as their classes are decorated, `alter()`, `drop()` | Only in a deployment step |
 | What run time may do | Change both definition and data | Change data only |
-| Lookup contents | Edited as needed | Changed only by deployment, with the code |
+| Lookup contents | Seeded by DataJoint from `contents`, and edited as needed | Seeded and changed only by deployment, with the code |
 | Hidden tables (jobs tables, `~lineage`) | Declared by DataJoint as needed | Declared by deployment, ahead of time |
 | Deleting data | Interactively, with a prompt | Previewed, then deleted without a prompt |
 | Trying a change | On the target itself | On a development target, then deployed |
+| Additive and revising changes | Both applied as written | Additive: deployed without pausing work. Revising: reviewed, deployed with dependent work paused |
+| `make()` reproducibility contract | A convention; an experiment may break it | Checked before each deployment, and backed at run time by DataJoint and by privileges |
+| Intrinsic provenance (structural lineage) | Holds against the current definition, which may have changed since a row was computed | Holds against the deployed version of the definition, which job metadata records on each computed row when it is on |
+| Extrinsic provenance (`_prov`) | Optional | Decided at the first deployment; when on, recorded on every row entered from outside |
 
 Some targets stay in development for as long as they exist: a scratch database, the throwaway database a test suite starts, or a copy of a production pipeline used to try a change. A copy made to try a change is a development target of the same pipeline.
 
@@ -82,14 +86,89 @@ Under this standard, a pipeline does not go back from production to development:
 
 **6. Preview, then delete.** Preview a delete with `dj.Diagram.cascade(...).counts()`, then run it with `delete(prompt=False)`. An interactive prompt holds the delete's transaction open, and its locks with it, until someone answers. The preview and the delete are separate transactions, so run the delete soon after the preview, and preview again if other processes may have changed the affected rows.
 
-**7. Classify each change before deploying it.**
+**7. Classify each change as additive or revising** before deploying it, and manage each kind as described in [Additive and revising changes](#additive-and-revising-changes).
 
-| Kind | Examples | How to deploy |
+**8. Check each `make()` against the reproducibility contract before deploying it.** DataJoint enforces only part of the contract at run time; the rest is checked before a change reaches production. See [Where the contract is enforced](#where-the-contract-is-enforced).
+
+**9. Record where rows come from.** For computed rows, turn on job metadata: `jobs.add_job_metadata` when the deployment step declares the tables (`datajoint.migrate.add_job_metadata_columns` adds the columns to tables declared without them), and `jobs.version_method="git"` in the processes that populate, run from a checkout of the deployed version, so that each computed row records the code version that wrote it. For rows entered from outside, decide on extrinsic provenance capture before the first deployment declares the Manual tables, and turn `provenance.capture` on in every process that enters data. See [Provenance](#provenance).
+
+## Additive and revising changes
+
+A change to a production pipeline is one of two kinds, told apart by what it does to what already exists.
+
+An **additive change** extends the pipeline and leaves everything that exists as it was: the previous version of the code keeps working against it, no existing row changes value or meets a new constraint, and the database can apply it while the pipeline runs.
+
+A **revising change** is any other: it removes, renames, narrows or constrains what running code reads or writes, or changes what existing rows mean.
+
+| Change | Kind | Why |
 |---|---|---|
-| **Additive** | A new table; a new secondary attribute that is nullable or has a default, on a Manual table | In a deployment step, without pausing run-time work |
-| **Revising** | Changing a type, a key or a dependency; dropping an attribute or a table; changing a `make()` or a Lookup's contents; a new attribute on an auto-populated table, which comes with a changed `make()` | In a deployment step, after review, with the run-time work that depends on what it changes paused while it is applied |
+| A new schema, or a new table other than a part table | Additive | Its constraints apply only to its own rows, which are new |
+| A new secondary attribute that is nullable or has a constant default, under a name no other table of the pipeline uses | Additive | Existing rows take NULL or the default. Code that copies whole rows into another table must ignore the extra attribute |
+| New Lookup rows | Additive | Nothing computed so far used them |
+| A relaxed constraint: a required attribute made nullable, a default added | Additive | Every row and write that was valid stays valid; code that reads the attribute must accept NULL |
+| A new part table | Revising | Its master's `make()` changes to fill it, and existing masters were computed without it |
+| A dropped or renamed table or attribute | Revising | The previous code names it, and its queries fail |
+| A new attribute under a name another table already uses | Revising | Joins and restrictions between the two tables, which worked before, now raise a semantic-matching error |
+| A changed primary key, or a changed or removed dependency | Revising | Rows change identity or upstream, and the rows computed from them no longer follow |
+| A constraint on existing rows: a unique index, `NOT NULL`, a new foreign key | Revising | Existing rows may violate it, and writes that were valid may be refused |
+| A widened type that the database applies only by copying the table | Revising | Code keeps working, but the copy locks the table while it runs |
+| A narrowed type, or a change of type that changes the values code reads | Revising | Existing values may not fit, and code may receive values of a different kind |
+| A changed `make()` | Revising | Rows computed by the old code stay in place |
+| A changed or removed Lookup row, or any other data migration | Revising | It rewrites rows that other rows or running code depend on |
+
+A deployment's kind is the most demanding kind among its changes: one revising change makes the deployment revising. A new attribute on a Computed or Imported table is additive in itself, but the `make()` change that fills it is revising. Some revising changes, such as a new unique index or foreign key, are beyond `alter()` and are applied in the deployment step with SQL.
+
+**How each kind is managed.**
+
+| | Development | Production |
+|---|---|---|
+| Additive | Applied as written | Applied in a deployment step, without pausing run-time work |
+| Revising | Applied as written | Reviewed; applied in a deployment step with the run-time work that depends on what it changes paused, together with its data migration: what happens to rows computed under the old definition (deleted and computed again, or kept with their recorded version) |
 
 Even an additive change to an existing table takes a brief exclusive lock while it is applied, and waits for open transactions on that table to finish, so it is best applied when no long transactions are running. Processes already running keep the table headings they loaded until they restart.
+
+## How the modes differ: provenance, the `make()` contract and Lookup seeding
+
+### Provenance
+
+DataJoint records where a row came from in two ways, and the two modes treat them differently.
+
+**Intrinsic provenance**, the pipeline's structural lineage, follows from its structure. A computed row exists only because its `make()` ran on rows upstream of it, and the foreign keys record which ones; deleting an upstream row deletes everything computed from it. Nothing has to be recorded for this to hold, as long as each `make()` observes the [reproducibility contract](autopopulate.md#43-the-make-reproducibility-contract). What the structure cannot say is *which version* of the definition produced a row: the foreign keys stay the same when a `make()` changes. [Job metadata](job-metadata.md) records that version on each computed master row (`_job_version`), when it is turned on and the populating process runs from a git checkout.
+
+- In **development**, the definition changes in place, so a row's intrinsic provenance points at a definition that may no longer exist. That is acceptable while the rows are disposable.
+- In **production**, the definition changes only in a deployment step, at a recorded version of the code. With job metadata on, each computed row names the version that wrote it, and a revising change to a `make()` comes with an explicit decision about the rows the old version wrote.
+
+**Extrinsic provenance** is recorded where the structure runs out: at Manual tables, where rows enter from outside. With `provenance.capture` on, DataJoint declares a hidden `_prov` attribute on Manual tables, and fills it on every insert made by a process that also has capture on ([Extrinsic Provenance at Entry Tables](boundary-provenance.md)).
+
+- In **development**, capture is optional; rows entered while building a pipeline are usually test data.
+- In **production**, capture is a decision for the first deployment, because it changes how Manual tables are declared. A Manual table declared without the attribute gets it from `datajoint.deploy.add_prov_column` in a deployment step; rows that were already there keep a NULL. Each run-time process that enters data runs with `provenance.capture` on and sets `provenance.source` once, at start-up; otherwise the attribute stays NULL.
+
+### The `make()` reproducibility contract
+
+The [contract](autopopulate.md#43-the-make-reproducibility-contract) keeps every computed row traceable to its declared, key-restricted inputs: `make()` reads only from its upstream cone, writes its result to its own table and its parts (and records the source wherever else it writes), computes one entity per call, and takes no result-affecting input from outside the pipeline.
+
+- In **development**, the contract is a convention. An experiment may break it, for example by inserting a row directly to look at a result, and the rows it produces are disposable.
+- In **production**, every row others depend on must satisfy it, so each `make()` is checked before it is deployed, and run time is kept from breaking the parts that can be checked as it runs.
+
+#### Where the contract is enforced
+
+| Where | What it enforces | Rules covered |
+|---|---|---|
+| DataJoint, at run time | A direct insert into an auto-populated master table outside `make()` raises, unless the caller passes `allow_direct_insert=True`. Inserts into its part tables are not checked | Populate-only, for the master table |
+| DataJoint, at run time | Each `make()` call runs in its own transaction, so its entity and its parts are inserted together or not at all | Write the result to `self` and its parts, as one unit |
+| DataJoint, at run time | `self.upstream` exists only inside `make()`, restricted to the current key; indexing it with a table that is not an ancestor raises | Read only upstream, when reads go through `self.upstream` |
+| DataJoint, at run time | In the tripartite (three-part) `make()`, `make_fetch` runs again inside the transaction, and the job fails if its result differs from the first call ("Referential integrity failed! The `make_fetch` data has changed") | Not one of the rules: a guard that keeps the inputs the same while the result is computed |
+| Review and the deployment step, before code reaches production | Each `make()` reads only from its upstream cone, writes its result to its own table and its parts and records the source wherever else it writes, keeps no state across calls, and takes no result-affecting input from outside the pipeline (`make_kwargs` only orchestrate) | All rules; the only place the reads, the isolation and the outside inputs are checked |
+| Database privileges, optionally | The logins that populate a table may insert into it and its parts (and update it, when job metadata is on); other logins hold no insert privilege on auto-populated tables or their parts | Populate-only, for master and parts, whatever code runs, including `allow_direct_insert=True` |
+
+At run time, DataJoint enforces populate-only for master tables and the all-or-nothing write, and the read rule only for reads made through `self.upstream`. Nothing at run time checks reads made any other way, that a call computes exactly one entity, keeps no state across calls, or takes no outside input; those are checked before deployment. In production, `allow_direct_insert=True` belongs only in a deployment step's data migration, never in run-time code.
+
+### Lookup seeding
+
+A Lookup table's rows are part of its definition, listed in its `contents`. DataJoint seeds them when the table's class is decorated: if the table holds fewer rows than its `contents`, it inserts the missing ones. It never updates or deletes Lookup rows, and it skips Lookup tables with auto-increment keys.
+
+- In **development**, seeding on decoration is the whole mechanism. Developers edit `contents`, or the rows themselves, as they find the right values; changed and removed rows are fixed by hand.
+- In **production**, the deployment step seeds the contents, so seeding on decoration finds nothing to insert and run time needs no write privilege on Lookup tables. Because seeding runs whenever a process decorates the class, a row removed from the table must also be removed from `contents`, and every process restarted on the new code; otherwise an old process inserts it again, or fails at import for lack of privilege. New rows are an additive change. A changed or removed row is a revising change applied as a data migration. Deleting a Lookup row deletes everything that depends on it, Manual rows included. Changing a key value cascades the new key to the rows that reference it. Updating a non-key value leaves the rows computed from the old value unchanged, so the migration decides which of them to delete and compute again.
 
 ## The deployment step
 
@@ -97,11 +176,12 @@ A deployment step brings a production target's definition to a new version of th
 
 1. **Start from a known version** of the code, under version control.
 2. **Compare** the definition in that code with the target's, and list each difference.
-3. **Classify** each difference as additive or revising, and review the revising ones.
-4. **Pause** the run-time work that depends on what a revising change touches.
-5. **Apply** the changes with a login that can change the definition: declarations (hidden tables included), alterations, drops, Lookup contents, data migrations from `datajoint.migrate`, and environment operations from `datajoint.deploy`.
-6. **Record** the version of the code the target now matches.
-7. **Start** run time on the new code.
+3. **Classify** each difference as [additive or revising](#additive-and-revising-changes), and review the revising ones.
+4. **Check** each new or changed `make()` against the [reproducibility contract](#where-the-contract-is-enforced).
+5. **Pause** the run-time work that depends on what a revising change touches.
+6. **Apply** the changes with a login that can change the definition: declarations (hidden tables included), alterations, drops, Lookup contents (new rows inserted; changed or removed rows applied as a data migration), data migrations from `datajoint.migrate`, and environment operations from `datajoint.deploy`.
+7. **Record** the version of the code the target now matches.
+8. **Start** run time on the new code.
 
 A deployment step should be safe to run again after a failure. Operations in `datajoint.deploy` are idempotent; a one-shot migration should check whether it has already been applied.
 

@@ -45,8 +45,8 @@ Changes to the definition don't reach existing rows that way:
 
 - Changing a `make()` leaves every row computed by the old code in place. By
   default, nothing on a row tells old rows from new ones.
-- Adding a Lookup row, or changing a value in one, leaves the rows computed from
-  the old values as they were.
+- Adding a Lookup row, or changing a non-key value in one, leaves the rows computed
+  from the old values as they were.
 - Altering an attribute's type rewrites stored values. Dropping a table deletes its
   rows and everything that depends on them.
 - Tables are declared when their classes are decorated, usually at import. Renaming
@@ -77,6 +77,15 @@ on a development target, and reaches production by review and deployment.
 The mode belongs to a **target**, one database that a pipeline runs on, not to the
 code. The same code can run in development on a scratch database and in production
 on the pipeline's main database.
+
+Changes to a production pipeline come in two kinds. An **additive** change extends
+the pipeline without touching what exists, such as a new table, so running code
+keeps working and no existing row changes. A **revising** change alters what
+exists, such as a dropped attribute, a changed `make()` or a changed Lookup row, so
+it is reviewed, and the work that depends on it is paused while it is applied. In
+development, both kinds are simply applied. The two kinds, and how provenance, the
+`make()` reproducibility contract and Lookup seeding differ between the modes, are
+specified in [Pipeline Lifecycle and Deployment](../reference/specs/deploy-operations.md#additive-and-revising-changes).
 
 ## How the modes are upheld
 
