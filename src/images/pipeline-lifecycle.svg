@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="320" viewBox="0 0 900 320" font-family="Helvetica, sans-serif">
+<style>
+  svg { background-color: #FFFFFF; }
+  .edge { stroke: #171C39; fill: none; }
+  .arrow { fill: #171C39; }
+  .title { fill: #171C39; }
+  .body { fill: #3A3F4B; }
+  .note { fill: #808285; }
+@media (prefers-color-scheme: dark) {
+    svg { background-color: #161A21; }
+    .edge { stroke: #AEB6C2; }
+    .arrow { fill: #AEB6C2; }
+    .title { fill: #E6E8EC; }
+    .body { fill: #C9CDD4; }
+    .note { fill: #9DA0A4; }
+    .f-dev { fill: #1E222B; stroke: #9DA0A4; }
+    .f-prod { fill: #0F2433; stroke: #33B8E8; }
+    .f-target { fill: #161A21; stroke: #9DA0A4; }
+}
+</style>
+<defs><marker id="ah" markerWidth="9" markerHeight="9" refX="8" refY="3.5" orient="auto"><path class="arrow" d="M0,0 L8,3.5 L0,7 Z"/></marker></defs>
+
+<!-- Development -->
+<rect class="f-dev" x="40" y="40" width="260" height="110" rx="10" fill="#F2F3F5" stroke="#808285" stroke-width="1.6"/>
+<text class="title" x="170" y="76" text-anchor="middle" font-size="18" font-weight="600" fill="#171C39">Development</text>
+<text class="body" x="170" y="104" text-anchor="middle" font-size="13.5" fill="#3A3F4B">Definition and data change</text>
+<text class="body" x="170" y="123" text-anchor="middle" font-size="13.5" fill="#3A3F4B">together, from any process</text>
+
+<!-- First deployment step: one-way -->
+<line class="edge" x1="302" y1="95" x2="552" y2="95" stroke="#171C39" stroke-width="2" marker-end="url(#ah)"/>
+<text class="title" x="428" y="83" text-anchor="middle" font-size="14" font-weight="600" fill="#171C39">first deployment step</text>
+<text class="note" x="428" y="116" text-anchor="middle" font-size="12.5" fill="#808285">one-way under this standard</text>
+
+<!-- Production -->
+<rect class="f-prod" x="560" y="40" width="300" height="110" rx="10" fill="#E0F4FC" stroke="#00A0DF" stroke-width="1.6"/>
+<text class="title" x="710" y="74" text-anchor="middle" font-size="18" font-weight="600" fill="#171C39">Production</text>
+<text class="body" x="710" y="100" text-anchor="middle" font-size="13.5" fill="#3A3F4B">Definition changes only in a</text>
+<text class="body" x="710" y="118" text-anchor="middle" font-size="13.5" fill="#3A3F4B">deployment step; run time</text>
+<text class="body" x="710" y="136" text-anchor="middle" font-size="13.5" fill="#3A3F4B">changes only data</text>
+
+<!-- Each change: developed on a development target, reviewed, deployed -->
+<line class="edge" x1="710" y1="216" x2="710" y2="156" stroke="#171C39" stroke-width="2" marker-end="url(#ah)"/>
+<text class="title" x="722" y="183" font-size="14" font-weight="600" fill="#171C39">deployment step</text>
+<text class="note" x="722" y="201" font-size="12.5" fill="#808285">for each change, after review</text>
+
+<!-- Development target -->
+<rect class="f-target" x="560" y="218" width="300" height="80" rx="10" fill="#FFFFFF" stroke="#808285" stroke-width="1.6" stroke-dasharray="6 4"/>
+<text class="title" x="710" y="244" text-anchor="middle" font-size="15" font-weight="600" fill="#171C39">Development target</text>
+<text class="body" x="710" y="265" text-anchor="middle" font-size="13" fill="#3A3F4B">where each change is developed,</text>
+<text class="body" x="710" y="283" text-anchor="middle" font-size="13" fill="#3A3F4B">on a copy or a separate database</text>
+</svg>

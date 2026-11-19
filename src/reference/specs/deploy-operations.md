@@ -42,12 +42,7 @@ Some targets stay in development for as long as they exist: a scratch database, 
 
 ## Lifecycle of a pipeline
 
-```
- development ──(first deployment step)──▶ production ──(deployment step)──▶ production …
-                                              │
-                                              └─ each change: developed on a development
-                                                 target, reviewed, then deployed
-```
+![The lifecycle of a pipeline. On the left, a gray box labeled Development: definition and data change together, from any process. An arrow labeled "first deployment step", with the note "one-way under this standard", leads right to a blue box labeled Production: definition changes only in a deployment step; run time changes only data. Below Production, a dashed box labeled Development target, where each change is developed, on a copy or a separate database. An arrow from it up to Production is labeled "deployment step", for each change, after review.](../../images/pipeline-lifecycle.svg)
 
 ### 1. Development
 
