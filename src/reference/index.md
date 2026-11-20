@@ -18,6 +18,7 @@ Detailed specifications of DataJoint's behavior and semantics.
 ## Quick Reference
 
 - [Configuration](configuration.md) — All `dj.config` options
+- [Backend Performance](backend-performance.md) — MySQL and PostgreSQL benchmarked on the same DataJoint queries
 - [Definition Syntax](definition-syntax.md) — Table definition grammar
 - [Operators](operators.md) — Query operator summary
 - [Errors](errors.md) — Exception types and meanings

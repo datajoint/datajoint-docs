@@ -1,0 +1,120 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 310" width="760" height="310" role="img" aria-label="Time relative to MySQL 8.0 by query level, in-table blobs">
+
+  <style>
+    .bg { fill: #fcfcfb; }
+    .t1 { fill: #0b0b0b; font: 600 13px system-ui, -apple-system, sans-serif; }
+    .t2 { fill: #52514e; font: 12px system-ui, -apple-system, sans-serif; }
+    .t3 { fill: #52514e; font: 11px system-ui, -apple-system, sans-serif; }
+    .grid { stroke: #e4e3df; stroke-width: 1; }
+    .ref { stroke: #8f8d86; stroke-width: 1.5; stroke-dasharray: 4 3; }
+    .ci { stroke-width: 2; stroke-linecap: round; }
+    .my { stroke: #2a78d6; } .my.f { fill: #2a78d6; } .my.h { fill: #fcfcfb; }
+    .pg { stroke: #eb6834; } .pg.f { fill: #eb6834; } .pg.h { fill: #fcfcfb; }
+    @media (prefers-color-scheme: dark) {
+      .bg { fill: #1a1a19; }
+      .t1 { fill: #f0efec; }
+      .t2, .t3 { fill: #c3c2b7; }
+      .grid { stroke: #33332f; }
+      .ref { stroke: #8a8880; }
+      .my { stroke: #3987e5; } .my.f { fill: #3987e5; } .my.h { fill: #1a1a19; }
+      .pg { stroke: #d95926; } .pg.f { fill: #d95926; } .pg.h { fill: #1a1a19; }
+    }
+  </style>
+<rect class="bg" width="760" height="310"/>
+<text x="16" y="22" class="t1">Time relative to MySQL 8.0, by level (in-table blobs)</text>
+<circle cx="21" cy="40" r="5" class="my f" stroke-width="2"/>
+<text x="31" y="44" class="t2">MySQL 8.4</text>
+<circle cx="114" cy="40" r="5" class="pg h" stroke-width="2"/>
+<text x="124" y="44" class="t2">PostgreSQL 16</text>
+<circle cx="235" cy="40" r="5" class="pg f" stroke-width="2"/>
+<text x="245" y="44" class="t2">PostgreSQL 17</text>
+<line x1="351" x2="369" y1="40" y2="40" class="ref"/>
+<text x="375" y="44" class="t2">MySQL 8.0 = 1×</text>
+<text x="246.0" y="74" class="t1" text-anchor="middle">cold</text>
+<line x1="197.5" x2="197.5" y1="84" y2="264" class="grid"/>
+<text x="197.5" y="280" class="t3" text-anchor="middle">0.5×</text>
+<line x1="284.9" x2="284.9" y1="84" y2="264" class="ref"/>
+<text x="284.9" y="280" class="t3" text-anchor="middle">1×</text>
+<line x1="372.4" x2="372.4" y1="84" y2="264" class="grid"/>
+<text x="372.4" y="280" class="t3" text-anchor="middle">2×</text>
+<text x="86" y="103.0" class="t2" text-anchor="end">Cascade (K1)</text>
+<circle cx="308.9" cy="92.0" r="4.5" class="my f" stroke-width="2"><title>MySQL 8.4, Cascade (K1), cold: 1.21× MySQL 8.0</title></circle>
+<circle cx="242.1" cy="99.0" r="4.5" class="pg h" stroke-width="2"><title>PostgreSQL 16, Cascade (K1), cold: 0.71× MySQL 8.0</title></circle>
+<circle cx="238.0" cy="106.0" r="4.5" class="pg f" stroke-width="2"><title>PostgreSQL 17, Cascade (K1), cold: 0.69× MySQL 8.0</title></circle>
+<text x="86" y="133.0" class="t2" text-anchor="end">Level 1</text>
+<line x1="271.6" x2="283.0" y1="122.0" y2="122.0" class="ci my"/>
+<circle cx="276.6" cy="122.0" r="4.5" class="my f" stroke-width="2"><title>MySQL 8.4, Level 1, cold: 0.94× MySQL 8.0</title></circle>
+<line x1="168.3" x2="232.4" y1="129.0" y2="129.0" class="ci pg"/>
+<circle cx="197.1" cy="129.0" r="4.5" class="pg h" stroke-width="2"><title>PostgreSQL 16, Level 1, cold: 0.50× MySQL 8.0</title></circle>
+<line x1="163.7" x2="229.6" y1="136.0" y2="136.0" class="ci pg"/>
+<circle cx="194.1" cy="136.0" r="4.5" class="pg f" stroke-width="2"><title>PostgreSQL 17, Level 1, cold: 0.49× MySQL 8.0</title></circle>
+<text x="86" y="163.0" class="t2" text-anchor="end">Level 2</text>
+<line x1="274.0" x2="279.8" y1="152.0" y2="152.0" class="ci my"/>
+<circle cx="277.0" cy="152.0" r="4.5" class="my f" stroke-width="2"><title>MySQL 8.4, Level 2, cold: 0.94× MySQL 8.0</title></circle>
+<line x1="165.6" x2="227.6" y1="159.0" y2="159.0" class="ci pg"/>
+<circle cx="197.0" cy="159.0" r="4.5" class="pg h" stroke-width="2"><title>PostgreSQL 16, Level 2, cold: 0.50× MySQL 8.0</title></circle>
+<line x1="166.7" x2="227.9" y1="166.0" y2="166.0" class="ci pg"/>
+<circle cx="197.4" cy="166.0" r="4.5" class="pg f" stroke-width="2"><title>PostgreSQL 17, Level 2, cold: 0.50× MySQL 8.0</title></circle>
+<text x="86" y="193.0" class="t2" text-anchor="end">Level 3</text>
+<line x1="274.8" x2="291.7" y1="182.0" y2="182.0" class="ci my"/>
+<circle cx="282.7" cy="182.0" r="4.5" class="my f" stroke-width="2"><title>MySQL 8.4, Level 3, cold: 0.98× MySQL 8.0</title></circle>
+<line x1="129.2" x2="219.2" y1="189.0" y2="189.0" class="ci pg"/>
+<circle cx="166.9" cy="189.0" r="4.5" class="pg h" stroke-width="2"><title>PostgreSQL 16, Level 3, cold: 0.39× MySQL 8.0</title></circle>
+<line x1="133.9" x2="221.1" y1="196.0" y2="196.0" class="ci pg"/>
+<circle cx="170.0" cy="196.0" r="4.5" class="pg f" stroke-width="2"><title>PostgreSQL 17, Level 3, cold: 0.40× MySQL 8.0</title></circle>
+<text x="86" y="223.0" class="t2" text-anchor="end">Level 4</text>
+<line x1="274.9" x2="326.7" y1="212.0" y2="212.0" class="ci my"/>
+<circle cx="294.2" cy="212.0" r="4.5" class="my f" stroke-width="2"><title>MySQL 8.4, Level 4, cold: 1.08× MySQL 8.0</title></circle>
+<line x1="119.0" x2="228.0" y1="219.0" y2="219.0" class="ci pg"/>
+<circle cx="168.5" cy="219.0" r="4.5" class="pg h" stroke-width="2"><title>PostgreSQL 16, Level 4, cold: 0.40× MySQL 8.0</title></circle>
+<line x1="120.9" x2="228.1" y1="226.0" y2="226.0" class="ci pg"/>
+<circle cx="169.2" cy="226.0" r="4.5" class="pg f" stroke-width="2"><title>PostgreSQL 17, Level 4, cold: 0.40× MySQL 8.0</title></circle>
+<text x="86" y="253.0" class="t2" text-anchor="end">Level 5</text>
+<line x1="275.7" x2="366.7" y1="242.0" y2="242.0" class="ci my"/>
+<circle cx="307.6" cy="242.0" r="4.5" class="my f" stroke-width="2"><title>MySQL 8.4, Level 5, cold: 1.20× MySQL 8.0</title></circle>
+<line x1="122.3" x2="230.2" y1="249.0" y2="249.0" class="ci pg"/>
+<circle cx="166.6" cy="249.0" r="4.5" class="pg h" stroke-width="2"><title>PostgreSQL 16, Level 5, cold: 0.39× MySQL 8.0</title></circle>
+<line x1="121.3" x2="224.6" y1="256.0" y2="256.0" class="ci pg"/>
+<circle cx="164.6" cy="256.0" r="4.5" class="pg f" stroke-width="2"><title>PostgreSQL 17, Level 5, cold: 0.39× MySQL 8.0</title></circle>
+<text x="586.0" y="74" class="t1" text-anchor="middle">warm</text>
+<line x1="537.5" x2="537.5" y1="84" y2="264" class="grid"/>
+<text x="537.5" y="280" class="t3" text-anchor="middle">0.5×</text>
+<line x1="624.9" x2="624.9" y1="84" y2="264" class="ref"/>
+<text x="624.9" y="280" class="t3" text-anchor="middle">1×</text>
+<line x1="712.4" x2="712.4" y1="84" y2="264" class="grid"/>
+<text x="712.4" y="280" class="t3" text-anchor="middle">2×</text>
+<circle cx="613.7" cy="92.0" r="4.5" class="my f" stroke-width="2"><title>MySQL 8.4, Cascade (K1), warm: 0.92× MySQL 8.0</title></circle>
+<circle cx="675.6" cy="99.0" r="4.5" class="pg h" stroke-width="2"><title>PostgreSQL 16, Cascade (K1), warm: 1.49× MySQL 8.0</title></circle>
+<circle cx="672.8" cy="106.0" r="4.5" class="pg f" stroke-width="2"><title>PostgreSQL 17, Cascade (K1), warm: 1.46× MySQL 8.0</title></circle>
+<line x1="610.1" x2="621.1" y1="122.0" y2="122.0" class="ci my"/>
+<circle cx="615.5" cy="122.0" r="4.5" class="my f" stroke-width="2"><title>MySQL 8.4, Level 1, warm: 0.93× MySQL 8.0</title></circle>
+<line x1="631.0" x2="669.1" y1="129.0" y2="129.0" class="ci pg"/>
+<circle cx="651.1" cy="129.0" r="4.5" class="pg h" stroke-width="2"><title>PostgreSQL 16, Level 1, warm: 1.23× MySQL 8.0</title></circle>
+<line x1="632.6" x2="678.8" y1="136.0" y2="136.0" class="ci pg"/>
+<circle cx="655.6" cy="136.0" r="4.5" class="pg f" stroke-width="2"><title>PostgreSQL 17, Level 1, warm: 1.28× MySQL 8.0</title></circle>
+<line x1="610.0" x2="621.7" y1="152.0" y2="152.0" class="ci my"/>
+<circle cx="615.9" cy="152.0" r="4.5" class="my f" stroke-width="2"><title>MySQL 8.4, Level 2, warm: 0.93× MySQL 8.0</title></circle>
+<line x1="625.0" x2="672.0" y1="159.0" y2="159.0" class="ci pg"/>
+<circle cx="649.3" cy="159.0" r="4.5" class="pg h" stroke-width="2"><title>PostgreSQL 16, Level 2, warm: 1.21× MySQL 8.0</title></circle>
+<line x1="623.7" x2="678.0" y1="166.0" y2="166.0" class="ci pg"/>
+<circle cx="652.1" cy="166.0" r="4.5" class="pg f" stroke-width="2"><title>PostgreSQL 17, Level 2, warm: 1.24× MySQL 8.0</title></circle>
+<line x1="612.7" x2="654.4" y1="182.0" y2="182.0" class="ci my"/>
+<circle cx="629.4" cy="182.0" r="4.5" class="my f" stroke-width="2"><title>MySQL 8.4, Level 3, warm: 1.04× MySQL 8.0</title></circle>
+<line x1="607.2" x2="681.6" y1="189.0" y2="189.0" class="ci pg"/>
+<circle cx="645.8" cy="189.0" r="4.5" class="pg h" stroke-width="2"><title>PostgreSQL 16, Level 3, warm: 1.18× MySQL 8.0</title></circle>
+<line x1="600.1" x2="676.2" y1="196.0" y2="196.0" class="ci pg"/>
+<circle cx="638.5" cy="196.0" r="4.5" class="pg f" stroke-width="2"><title>PostgreSQL 17, Level 3, warm: 1.11× MySQL 8.0</title></circle>
+<line x1="615.3" x2="639.1" y1="212.0" y2="212.0" class="ci my"/>
+<circle cx="626.2" cy="212.0" r="4.5" class="my f" stroke-width="2"><title>MySQL 8.4, Level 4, warm: 1.01× MySQL 8.0</title></circle>
+<line x1="601.8" x2="710.1" y1="219.0" y2="219.0" class="ci pg"/>
+<circle cx="651.2" cy="219.0" r="4.5" class="pg h" stroke-width="2"><title>PostgreSQL 16, Level 4, warm: 1.23× MySQL 8.0</title></circle>
+<line x1="611.3" x2="713.0" y1="226.0" y2="226.0" class="ci pg"/>
+<circle cx="656.6" cy="226.0" r="4.5" class="pg f" stroke-width="2"><title>PostgreSQL 17, Level 4, warm: 1.29× MySQL 8.0</title></circle>
+<line x1="615.7" x2="679.2" y1="242.0" y2="242.0" class="ci my"/>
+<circle cx="640.9" cy="242.0" r="4.5" class="my f" stroke-width="2"><title>MySQL 8.4, Level 5, warm: 1.14× MySQL 8.0</title></circle>
+<line x1="556.6" x2="634.2" y1="249.0" y2="249.0" class="ci pg"/>
+<circle cx="596.6" cy="249.0" r="4.5" class="pg h" stroke-width="2"><title>PostgreSQL 16, Level 5, warm: 0.80× MySQL 8.0</title></circle>
+<line x1="553.8" x2="634.1" y1="256.0" y2="256.0" class="ci pg"/>
+<circle cx="595.8" cy="256.0" r="4.5" class="pg f" stroke-width="2"><title>PostgreSQL 17, Level 5, warm: 0.79× MySQL 8.0</title></circle>
+<text x="736" y="302" class="t3" text-anchor="end">below 1× = faster than MySQL 8.0 · log scale</text>
+</svg>
