@@ -12,20 +12,20 @@ Development and production environments have different requirements:
 | Naming | Ad-hoc schema names | Consistent project prefixes |
 | Configuration | Local settings | Environment-based |
 
-DataJoint 2.0+ provides settings to enforce production discipline.
+The settings on this page support production, but they are only part of it. In production, the definition changes only in a deployment step, and run-time logins hold privileges to change data only; database privileges, not settings, enforce that. See [Pipeline Lifecycle and Deployment](../reference/specs/deploy-operations.md) for the lifecycle and the recommendations, and [Development and Production](../explanation/development-and-production.md) for the reasoning.
 
 ## Prevent Automatic Table Creation
 
-By default, DataJoint creates tables automatically when you first access them. This is convenient during development but dangerous in production—a typo or code bug could create unintended tables.
+By default, DataJoint creates a table automatically when its class is decorated with `@schema`, usually at import. This is convenient during development but dangerous in production—a typo or code bug could create unintended tables.
 
-### Enable Production Mode
+### Turn Off Automatic Table Creation
 
 Set `create_tables=False` to prevent automatic table creation:
 
 ```python
 import datajoint as dj
 
-# Production mode: no automatic table creation
+# Production: no automatic table creation
 dj.config.database.create_tables = False
 ```
 
@@ -198,11 +198,11 @@ export DJ_HOST=prod-db.example.com
 export DJ_USER=prod_user
 export DJ_PASS=prod_password
 
-# Production mode
+# Production: no automatic table creation
 export DJ_CREATE_TABLES=false
 export DJ_DATABASE_PREFIX=myproject_
 
-# Disable interactive prompts
+# Disable interactive prompts; preview deletes with dj.Diagram.cascade(...).counts()
 export DJ_SAFEMODE=false
 ```
 
@@ -339,6 +339,7 @@ if __name__ == '__main__':
 
 ## See Also
 
+- [Pipeline Lifecycle and Deployment](../reference/specs/deploy-operations.md) — Development and production, and the deployment step
 - [Manage Pipeline Project](manage-pipeline-project.md) — Project organization
 - [Configuration Reference](../reference/configuration.md/) — All settings
 - [Manage Secrets](manage-secrets.md) — Credential management

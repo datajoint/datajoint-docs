@@ -171,7 +171,7 @@ This automatic check addresses the load-bearing failure mode: a partial declare 
 
 ### Manual lineage rebuild
 
-When the in-memory check is not enough — stale rows that exist but carry the wrong value, schemas whose tables have not been re-decorated under DataJoint 2.3+, or schemas in `create_tables=False` production mode — call `schema.rebuild_lineage()` or the equivalent migration helper:
+When the in-memory check is not enough — stale rows that exist but carry the wrong value, schemas whose tables have not been re-decorated under DataJoint 2.3+, or schemas in production with `create_tables=False` — call `schema.rebuild_lineage()` or the equivalent migration helper:
 
 ```python
 import datajoint as dj

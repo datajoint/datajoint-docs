@@ -368,7 +368,7 @@ These challenges grow with team size and pipeline complexity. The [DataJoint Pla
 
 ## See Also
 
-- [Deploy to Production](deploy-production.md) — Production mode and environment configuration
+- [Deploy to Production](deploy-production.md) — Production configuration and environment
 - [Data Pipelines](../explanation/data-pipelines.md/) — Conceptual overview and architecture
 - [Configure Object Storage](configure-storage.md) — Storage setup
 - [Distributed Computing](distributed-computing.md) — Multi-worker pipelines

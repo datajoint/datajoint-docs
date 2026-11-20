@@ -5,7 +5,7 @@ This page explains how DataJoint integrates with **change-data-capture (CDC)** c
 !!! version-added "New in DataJoint 2.3"
     The `datajoint.deploy` module — including `set_replica_identity` — ships in DataJoint 2.3. PostgreSQL `REPLICA IDENTITY` configuration was not part of the framework in earlier releases; users on 2.2.x must apply the `ALTER TABLE` statements manually.
 
-For the normative API specification, see [Deployment Operations](../reference/specs/deploy-operations.md).
+For the normative API specification, see [Pipeline Lifecycle and Deployment](../reference/specs/deploy-operations.md#the-datajointdeploy-module).
 
 ## What is REPLICA IDENTITY?
 
@@ -99,6 +99,6 @@ deploy.set_replica_identity(schema, mode="default", dry_run=False)
 
 ## Related
 
-- Specification: [Deployment Operations](../reference/specs/deploy-operations.md) — normative API
+- Specification: [Pipeline Lifecycle and Deployment](../reference/specs/deploy-operations.md#the-datajointdeploy-module) — normative API
 - PostgreSQL: [Logical Replication — Replica Identity](https://www.postgresql.org/docs/current/logical-replication-publication.html)
 - Databricks: [Lakehouse Sync](https://docs.databricks.com/aws/en/oltp/projects/lakehouse-sync)
