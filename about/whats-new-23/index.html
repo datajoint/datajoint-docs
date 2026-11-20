@@ -21,7 +21,7 @@
       
       
       <link rel="icon" href="../../assets/images/company-logo-blue.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.1">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.2">
     
     
       
@@ -6004,6 +6004,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#changes-in-236" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Changes in 2.3.6
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#changes-in-235" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -6480,6 +6491,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#changes-in-236" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Changes in 2.3.6
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#changes-in-235" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -6683,14 +6705,78 @@
 
 <h1 id="whats-new-in-datajoint-library-23">What's New in DataJoint Library 2.3<a class="headerlink" href="#whats-new-in-datajoint-library-23" title="Permanent link">&para;</a></h1>
 <p>DataJoint 2.3 adds a first-class <strong>upstream read surface</strong> — <code>Diagram.trace</code> and <code>self.upstream</code> — which make "a computed row derives only from its declared upstream inputs" easy to follow inside <code>make()</code> and easy to query afterward. It also ships the <strong>SparkAdapter Codec Protocol</strong> for typed rendering to Spark-native types, <strong><code>dj.deploy.set_replica_identity</code></strong> for PostgreSQL change-data-capture, and a <strong>cascade fix</strong> for Part-of-Part and renamed-foreign-key chains.</p>
-<p>Later releases on the line added <strong>redesigned diagram rendering</strong> on the DataJoint brand palette, with a light/dark <a href="../../reference/configuration/#display-settings"><code>display.diagram_theme</code></a> setting, <strong>S3 stores that resolve an ambient AWS identity</strong> instead of requiring static keys, and <strong>extrinsic provenance at the pipeline's entry points</strong> — a hidden <code>_prov</code> attribute the framework records on every row arriving from outside. 2.3.5 fixes <strong>cascade deletes that removed rows outside the delete</strong>, and a restricted distributed <code>populate</code> that removed other workers' jobs.</p>
+<p>Later releases on the line added <strong>redesigned diagram rendering</strong> on the DataJoint brand palette, with a light/dark <a href="../../reference/configuration/#display-settings"><code>display.diagram_theme</code></a> setting, <strong>S3 stores that resolve an ambient AWS identity</strong> instead of requiring static keys, and <strong>extrinsic provenance at the pipeline's entry points</strong> — a hidden <code>_prov</code> attribute the framework records on every row arriving from outside. 2.3.5 fixes <strong>cascade deletes that removed rows outside the delete</strong>, and a restricted distributed <code>populate</code> that removed other workers' jobs. 2.3.6 is a <strong>security release</strong>.</p>
 <blockquote>
 <p><strong>Upgrading from 2.0, 2.1, or 2.2?</strong> No API breaks — every feature on the 2.3 line is additive.
 Two fixes in 2.3.3 do, however, reject input that previously passed silently: a misspelled native
 type is now caught at declaration, and inserting a NumPy array into a <strong>native</strong> <code>blob</code> attribute
 now raises. Both cases were already broken — the first produced invalid DDL at the server, the
 second stored the array's text representation — so anything affected was losing data rather than
-working. See <a href="#changes-in-233">Changes in 2.3.3</a>.</p>
+working. See <a href="#changes-in-233">Changes in 2.3.3</a>. The security fixes in 2.3.6 also refuse some
+input and settings that earlier releases accepted. See <a href="#changes-in-236">Changes in 2.3.6</a>.</p>
+</blockquote>
+<h2 id="changes-in-236">Changes in 2.3.6<a class="headerlink" href="#changes-in-236" title="Permanent link">&para;</a></h2>
+<p>2.3.6 is a security release on the 2.3 line: it fixes five security issues, described in the <a href="https://github.com/datajoint/datajoint-python/security/advisories">security advisories</a>, and every earlier release has at least one of them. If you are upgrading from <strong>2.3.5</strong>:</p>
+<ul>
+<li><strong><code>&lt;filepath@&gt;</code> paths must stay inside their store.</strong> A path with a <code>..</code> part, or an absolute path outside a <code>file</code> store's <code>location</code>, now raises <code>DataJointError</code> on insert.
+    - Rows already stored this way, such as some migrated from 0.14, can still be fetched. Reading or downloading the fetched value raises <code>DataJointError</code>.
+    - An absolute path inside the store's <code>location</code> is now saved relative to the store. The fetched <code>.path</code> is that relative path, not the string you inserted.
+    - The check compares paths as written. It does not resolve symbolic links.
+    - A path in a reserved section is now recognized in any letter case and after a leading <code>./</code>. For example, <code>_HASH/x</code> and <code>./_hash/x</code> raise <code>ValueError</code>.
+    - To accept paths outside the store, set <code>dj.config.allow_filepath_outside_store = True</code> or the environment variable <code>DJ_ALLOW_FILEPATH_OUTSIDE_STORE=true</code>. This turns the check off for every <code>&lt;filepath@&gt;</code> value, so use it only with data you trust.<p>See <a href="../../how-to/configure-storage/#paths-outside-the-store">Paths outside the store</a>.</p>
+</li>
+</ul>
+<ul>
+<li><strong>Attachments and objects are saved only inside the download folder.</strong>
+    - A stored attachment name that is empty, <code>.</code> or <code>..</code>, or that contains <code>/</code>, <code>\</code> or a NUL character (character code 0), raises <code>DataJointError</code> on fetch, and nothing is written.
+    - On Windows, a name containing <code>:</code> is also refused. For example, an attachment named <code>12:00.txt</code> that was inserted from Linux or macOS cannot be fetched on Windows. Fetch such attachments on Linux or macOS.
+    - If the download folder already holds a different file, a folder or a symbolic link with the attachment's name, the attachment is saved under the next free name (<code>name_1.ext</code>, <code>name_2.ext</code>, ...). DataJoint never writes through a symbolic link.
+    - An <code>&lt;object@&gt;</code> path with a <code>..</code> part is refused.
+    - Downloading an <code>&lt;object@&gt;</code> folder checks every file in it before anything is written. Downloaded files keep the same layout as before.<p>See <a href="../../how-to/use-object-storage/#attachments">Use Object Storage</a>.</p>
+</li>
+</ul>
+<ul>
+<li><strong><code>use_tls</code> settings now take effect as documented.</strong> TLS is the encryption of the connection to the database server.
+    - <code>use_tls=True</code> or a <code>use_tls</code> dict now requires TLS. If the server does not offer TLS, the connection fails before the user name and password are sent. On MySQL, 2.3.5 could connect without encryption.
+    - The default, <code>use_tls=None</code>, uses TLS whenever the server offers it. It connects without TLS only when the server does not offer TLS or, on PostgreSQL, does not accept TLS connections from this client. A failed TLS setup or a failed login is no longer retried without TLS. If TLS cannot be set up with an older server, set <code>use_tls=False</code>.
+    - <code>use_tls=False</code> now turns TLS off. Before, the setting did not reach the database driver, so the connection could use TLS anyway. A server that accepts only encrypted connections now refuses the connection. Remove <code>use_tls=False</code>, or set <code>use_tls=True</code>.
+    - On PostgreSQL, the <code>ca</code>, <code>cert</code>, <code>key</code> and <code>password</code> keys of a <code>use_tls</code> dict are now used. With <code>ca</code>, the server's certificate and host name are verified.
+    - <code>dj.Instance</code> and <code>dj.Connection</code> now read <code>database.use_tls</code> (or <code>DJ_USE_TLS</code>) when <code>use_tls</code> is not given, as <code>dj.conn()</code> already did.
+    - <code>dj.conn(use_tls=True)</code> or <code>dj.conn(use_tls={...})</code> now reconnects an existing connection with that setting, unless the connection already meets it. Before, the argument was ignored.<p>See <a href="../../how-to/configure-database/#tls-configuration">TLS configuration</a>.</p>
+</li>
+</ul>
+<ul>
+<li><strong>Restriction values are checked and always quoted.</strong>
+    - A value in a dict, record-array or DataFrame restriction must be a string, number, boolean, <code>None</code>, date, <code>datetime</code>, <code>datetime.time</code>, <code>Decimal</code>, list, a UUID (for a <code>uuid</code> attribute), or a dict (for a JSON path). Other values now raise <code>DataJointError</code>. Before, they were written into the query unquoted, and most of them did not give a correct query.
+    - Values to convert first include bytes, <code>numpy.datetime64</code> (convert to <code>datetime.datetime</code>), 0-d NumPy arrays (use <code>.item()</code>), <code>datetime.timedelta</code> (PyMySQL returns it for MySQL <code>time</code> columns), tuples, NaN and infinity. If pandas converted a DataFrame's date columns to <code>datetime64</code>, use <code>df.astype(object)</code>.
+    - The return type in a JSON attribute key (<code>attr.path:type</code>) must be a standard type, such as an integer, floating-point, decimal, character, date or JSON type. Other types raise <code>DataJointError</code>. You can write such a condition as an SQL string restriction instead.
+    - A key that starts with an attribute name but is not a valid JSON path, such as <code>params.bad path</code>, raises <code>DataJointError</code>. Keys that name no attribute are still ignored.
+    - List values, and dict values given for a JSON path, are written as quoted text and compared by their exact text. Before, a list of strings produced invalid SQL. On MySQL, a dict for a JSON path whose strings contain a double quote or a backslash can now match rows it did not match before.
+    - Values stay inside their quotes whatever the server's string settings, such as MySQL's <code>NO_BACKSLASH_ESCAPES</code>. This change by itself does not change which rows match under default settings.<p>See <a href="../../reference/operators/">Query Operators</a>.</p>
+</li>
+</ul>
+<ul>
+<li><strong>Foreign-key references are read as table names and never run as Python code.</strong> This applies when a table is declared and in <code>alter()</code>.
+    - The supported forms are <code>Parent</code>, <code>module.Parent</code> and <code>Master.Part</code>, each optionally in parentheses or followed by <code>()</code>, and <code>.proj()</code> with string arguments, such as <code>Parent.proj(new_id='parent_id')</code>.
+    - Other forms raise a <code>DataJointError</code> that lists the supported forms: a variable, <code>...</code> or <code>**dict</code> passed to <code>.proj()</code>; a call to any other method or function; a string with an <code>r</code>, <code>u</code> or <code>f</code> prefix; a string split into adjacent parts, such as <code>'a' 'b'</code>; a name that begins with two underscores. Rewrite such references in a supported form.
+    - If the error says a name is not defined, make sure the parent table's class is defined or imported in the module where the table is declared. For <code>alter()</code>, you can instead pass that namespace with <code>context=</code>.
+    - In <code>describe()</code> output, line breaks in names, comments, default values, types and index columns become spaces, and a backslash or double quote in a column name of a projected reference is escaped.<p>See <a href="../../reference/definition-syntax/#foreign-keys">Foreign keys</a>.</p>
+</li>
+</ul>
+<ul>
+<li><strong>Compressed blobs are checked against their recorded size.</strong> A compressed blob whose data expands beyond the recorded size in its header is refused before it is fully expanded. A corrupt compressed blob raises <code>DataJointError</code> instead of <code>zlib.error</code>, so code that caught <code>zlib.error</code> should catch <code>DataJointError</code>. This does not limit the memory a valid blob can use. See <a href="../../reference/errors/">Errors</a>.</li>
+</ul>
+<ul>
+<li><strong>Configuration files on shared hosts (Linux and macOS).</strong> The search for <code>datajoint.json</code> and the secrets directory now skips, with a logged warning, a file or folder that another user (not root) owns in a folder that every user can write, such as <code>/tmp</code>. Files in a shared group folder are still loaded. A configuration file, secret file or secrets folder that is used and that every user can write produces a warning. The new environment variable <code>DJ_CONFIG_FILE</code> names the configuration file to load, with no search. On Windows, the search is unchanged. See <a href="../../how-to/manage-secrets/#configuration-on-shared-hosts">Configuration on shared hosts</a>.</li>
+</ul>
+<ul>
+<li><strong>Each user has their own cache for memory-mapped arrays.</strong> Arrays from remote stores opened with <code>mmap_mode</code> are now cached in <code>&lt;tempdir&gt;/datajoint_mmap_&lt;uid&gt;</code>, which only you can read. <code>&lt;tempdir&gt;</code> is the system's temporary folder, such as <code>/tmp</code>, and <code>&lt;uid&gt;</code> is your numeric user ID. The first such load after upgrading downloads each array again. The old shared folder <code>&lt;tempdir&gt;/datajoint_mmap</code> is no longer used and can be deleted. On Windows, the cache stays in <code>&lt;tempdir&gt;/datajoint_mmap</code>, inside each user's own temporary folder. See <a href="../../how-to/use-npy-codec/#memory-mapping">Memory mapping</a>.</li>
+</ul>
+<ul>
+<li><strong>PyMySQL 1.1.1 or later is required</strong>, up from 0.7.2, because of a security issue in earlier PyMySQL releases (CVE-2024-36039).</li>
+</ul>
+<p>Upgrade with <code>pip install --upgrade "datajoint&gt;=2.3.6"</code>. The conda-forge package follows within about an hour of PyPI. Releases before 2.0, including 0.14, are no longer supported and will not receive a fix. To move to 2.x, see the <a href="../../how-to/migrate-to-v20/">Migration Guide</a>.</p>
+<blockquote>
 <p><strong>Citation:</strong> Yatsenko D, Nguyen TT. <em>DataJoint 2.0: A Computational Substrate for Agentic Scientific Workflows.</em> arXiv:2602.16585. 2026. <a href="https://doi.org/10.48550/arXiv.2602.16585">doi:10.48550/arXiv.2602.16585</a></p>
 </blockquote>
 <h2 id="changes-in-235">Changes in 2.3.5<a class="headerlink" href="#changes-in-235" title="Permanent link">&para;</a></h2>

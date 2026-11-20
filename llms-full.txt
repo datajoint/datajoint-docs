@@ -1,6 +1,6 @@
 # DataJoint Documentation (Full)
 
-Generated: 2026-11-18 17:10:52 UTC
+Generated: 2026-11-20 17:08:35 UTC
 Commit: unknown
 Branch: unknown
 
@@ -14800,6 +14800,7 @@ raw_data : <filepath@>      # User-managed file
 - ❌ No transaction safety
 - ❌ No deduplication
 - ❌ Must avoid `_hash/` and `_schema/` prefixes
+- ❌ Must stay inside the store: no `..` parts, and no absolute paths outside a `file` store's location (see [Paths Outside the Store](configure-storage.md#paths-outside-the-store))
 
 **Best for:**
 
@@ -15212,7 +15213,7 @@ export DJ_USER=myuser
 export DJ_PASS=mypassword
 ```
 
-Environment variables take precedence over config files.
+Environment variables take precedence over config files, with one exception among the settings below: a `database.use_tls` value in `datajoint.json` replaces `DJ_USE_TLS`.
 
 ## Configuration Settings
 
@@ -15224,7 +15225,7 @@ Environment variables take precedence over config files.
 | `database.password` | `DJ_PASS` | — | Database password |
 | `database.backend` | `DJ_BACKEND` | `mysql` | Database backend: `mysql` or `postgresql` |
 | `database.name` | `DJ_DATABASE_NAME` | `None` | Database name (PostgreSQL only). Defaults to `"postgres"` |
-| `database.use_tls` | `DJ_TLS` | `True` | Use TLS encryption |
+| `database.use_tls` | `DJ_USE_TLS` | `None` | Use TLS encryption: unset (`None`) uses TLS when the server offers it, `true` requires it, `false` turns it off. See [TLS Configuration](#tls-configuration) |
 | `database.reconnect` | — | `True` | Auto-reconnect on timeout |
 | `safemode` | — | `True` | Prompt before destructive operations |
 
@@ -15267,7 +15268,24 @@ with dj.config.override(database={'host': 'test-server'}):
 
 ## TLS Configuration
 
-For production, always use TLS:
+TLS encrypts the connection between DataJoint and the database server, so that others on the
+network cannot read the data or the password. The `use_tls` option takes four forms:
+
+| Value | Effect |
+| ------- | -------- |
+| `None` (default) | Use TLS if the server offers it. Connect without TLS only if the server does not offer TLS or, on PostgreSQL, does not accept TLS connections from this client. The server's certificate is not verified. |
+| `True` | Require TLS. If TLS cannot be set up, the connection fails before the user name and password are sent. The server's certificate is not verified. |
+| `False` | Do not use TLS. A server that accepts only encrypted connections refuses the connection. |
+| dict | Require TLS with the options in the dict. With `"ca"`, the server's certificate is verified. |
+
+!!! version-changed "Changed in 2.3.6"
+    `True` and a dict now require TLS, and `False` now turns TLS off. The default no longer
+    retries without TLS after a failed TLS setup or a failed login. `dj.Instance` and
+    `dj.Connection` now follow `database.use_tls`. See
+    [Changes in 2.3.6](../about/whats-new-23.md#changes-in-236).
+
+In `datajoint.json` or `DJ_USE_TLS`, set `true` or `false`, or leave the setting out for the
+default. To require TLS:
 
 ```json
 {
@@ -15275,13 +15293,58 @@ For production, always use TLS:
 }
 ```
 
-For local development without TLS:
+For a local development server without TLS:
 
 ```json
 {
   "database.use_tls": false
 }
 ```
+
+### Verify the Server's Certificate
+
+`True` encrypts the connection but does not check that the server is the one you meant to
+reach. To check that, pass a dict with `"ca"`: the path to the certificate of the authority
+that signed the server's certificate (the CA certificate, usually a `.pem` file from your
+database administrator or cloud provider). A dict cannot be stored in `datajoint.json`, so pass
+it in code:
+
+```python
+import datajoint as dj
+
+conn = dj.conn(use_tls={"ca": "/path/to/ca.pem"})
+```
+
+With `"ca"`, DataJoint checks both the certificate and that its name matches the host you
+connect to. A self-signed certificate often has a name that does not match the host. In that
+case, add `"check_hostname": False`. The certificate is still checked against `"ca"`; only the
+name check is skipped:
+
+```python
+inst = dj.Instance(
+    host="db.example.com",
+    user="analyst",
+    password=password,
+    use_tls={"ca": "/path/to/ca.pem", "check_hostname": False},
+)
+```
+
+For a server that asks for a client certificate, add `"cert"` and `"key"` (the paths to your
+certificate and its private key). On PostgreSQL, a dict may hold `"ca"`, `"cert"`, `"key"`,
+`"password"` (for an encrypted key) and `"check_hostname"`; other keys are ignored with a
+warning.
+
+### Which Calls Use the Setting
+
+`dj.conn()`, `dj.Instance` and `dj.Connection` use `database.use_tls` (or `DJ_USE_TLS`) when
+you do not pass `use_tls`. A `use_tls` argument overrides the configuration for that
+connection.
+
+`dj.conn()` returns the existing connection when there is one. `dj.conn(use_tls=True)` or
+`dj.conn(use_tls={...})` reconnects it with that setting, unless it already meets it: a
+connection made with a dict meets `True`, and a dict is met only by a connection made with the
+same dict. Inside a transaction, the reconnect raises `DataJointError`. `dj.conn(use_tls=False)`
+does not change an existing connection; use `dj.conn(use_tls=False, reset=True)`.
 
 ## PostgreSQL Backend
 
@@ -15825,7 +15888,7 @@ The `<filepath@>` codec stores paths to files that you manage. DataJoint does no
 @schema
 class RawData(dj.Manual):
     definition = """
-    session_id : int
+    session_id : int32
     ---
     recording : <filepath@acquisition>  # User-managed file path
     """
@@ -15843,6 +15906,9 @@ table.insert1({'session_id': 4, 'recording': '_schema/myschema/...'}) # Error!
 # table.insert1({'session_id': 5, 'recording': 'content_addressed/file.dat'})  # Error!
 ```
 
+From 2.3.6, the reserved-section check ignores letter case and a leading `./`, so `_HASH/x` and
+`./_hash/x` also raise `ValueError`.
+
 **Key characteristics of `<filepath@>`:**
 
 - Stores path string only (DataJoint does not manage the files)
@@ -15853,6 +15919,56 @@ table.insert1({'session_id': 4, 'recording': '_schema/myschema/...'}) # Error!
 - Validates file exists on insert
 - Cannot use reserved sections (configured by `hash_prefix` and `schema_prefix`)
 - Can be restricted to specific prefix using `filepath_prefix` configuration
+- Must stay inside the store (see below)
+
+### Paths Outside the Store
+
+!!! version-changed "Changed in 2.3.6"
+    `<filepath@>` paths that lead outside their store are refused unless
+    `allow_filepath_outside_store` is set.
+
+A `<filepath@>` path must stay inside its store. DataJoint refuses:
+
+- a path with a `..` part;
+- for a `file` store, an absolute path outside the store's `location`.
+
+Inserting such a path raises `DataJointError`. Rows stored earlier with such paths, such as some
+migrated from DataJoint 0.14, can still be fetched, but reading or downloading the fetched value
+raises `DataJointError`.
+
+An absolute path inside a `file` store's `location` is accepted and saved relative to the store.
+The fetched `.path` is that relative path, not the string you inserted. A relative `location` is
+resolved against the working directory, as in earlier releases, so absolute paths are compared
+with that resolved location.
+
+The check compares paths as written. It does not resolve symbolic links, which has two
+consequences:
+
+- If the store's `location` is a symbolic link, or passes through one, an absolute path through
+  the link's target is refused. For example, on macOS `/tmp` links to `/private/tmp`, so with
+  `location` set to `/tmp/store`, a path returned by `Path.resolve()` starts with `/private/tmp`
+  and is refused. Give the path relative to the store, or under `location` exactly as written in
+  the configuration.
+- A symbolic link inside a `file` store is followed, even if it points outside the store. Control
+  who can create files and links in the store.
+
+To accept paths outside the store, for example for references migrated from 0.14 that
+deliberately point elsewhere, turn the check off:
+
+```python
+dj.config.allow_filepath_outside_store = True
+```
+
+or set the environment variable `DJ_ALLOW_FILEPATH_OUTSIDE_STORE=true`.
+
+!!! warning "Use only with trusted data"
+    This setting turns the check off for every `<filepath@>` value in the process. A stored path
+    can then point DataJoint at any file the process can reach. Set it only when everyone who
+    can insert into your `<filepath@>` columns is trusted.
+
+The setting applies to `<filepath@>` only. Paths of `<blob@>`, `<attach@>`, `<object@>` and
+`<npy@>` values are always checked. The error message names the setting and says that it
+applies only to `<filepath@>` values.
 
 ## Configuring stores via environment variables
 
@@ -19234,7 +19350,9 @@ DataJoint loads configuration in this priority order (highest to lowest):
 4. **Secrets directory** — `.secrets/database.user`, `.secrets/database.password`, `.secrets/stores.<name>.<attr>` (each fills a value the file and env didn't already set)
 5. **Default values** — Built-in defaults
 
-Higher priority sources override lower ones. Set `DJ_IGNORE_CONFIG_FILE=true` *(new in 2.2.4)* to skip both `datajoint.json` and the secrets directory entirely — see [Env-var-only deployments](#env-var-only-deployments) below.
+Higher priority sources override lower ones, with one limit on environment variables. They take precedence over `datajoint.json` only for `DJ_HOST`, `DJ_USER`, `DJ_PASS`, `DJ_PORT`, `DJ_BACKEND`, `DJ_DATABASE_NAME`, `DJ_DATABASE_PREFIX`, `DJ_CREATE_TABLES`, `DJ_LOG_LEVEL`, `DJ_STORES` and the diagram display settings. For other settings, including `database.use_tls` (`DJ_USE_TLS`), a value in `datajoint.json` replaces the environment variable.
+
+Set `DJ_CONFIG_FILE` *(new in 2.3.6)* to load one named configuration file with no search. Set `DJ_IGNORE_CONFIG_FILE=true` *(new in 2.2.3)* to skip both `datajoint.json` and the secrets directory entirely — see [Env-var-only deployments](#env-var-only-deployments) below.
 
 ## `.secrets/` Directory Structure
 
@@ -19432,7 +19550,8 @@ If `DJ_STORES` contains invalid JSON, DataJoint raises `ValueError` at config-lo
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `DJ_IGNORE_CONFIG_FILE` | `false` | If `true`, skip `datajoint.json`, the project `.secrets/`, and `/run/secrets/datajoint/`. Only env vars and defaults apply. *(new in 2.2.4)* |
+| `DJ_IGNORE_CONFIG_FILE` | `false` | If `true`, skip `datajoint.json`, the project `.secrets/`, and `/run/secrets/datajoint/`. Only env vars and defaults apply. *(new in 2.2.3)* |
+| `DJ_CONFIG_FILE` | — | Path of the configuration file to load at import, with no search. The `.secrets/` directory next to it is also used. A relative path is resolved against the working directory, and `~` is expanded. If the file does not exist, `import datajoint` raises `FileNotFoundError`. Ignored when `DJ_IGNORE_CONFIG_FILE=true`. *(new in 2.3.6)* |
 
 ## Env-var-only deployments
 
@@ -19456,6 +19575,72 @@ With `DJ_IGNORE_CONFIG_FILE=true`, DataJoint skips:
 - the Docker/Kubernetes `/run/secrets/datajoint/` directory
 
 Only env vars (`DJ_HOST`, `DJ_USER`, `DJ_PASS`, `DJ_STORES`, …) and built-in defaults apply. No file under any parent directory of the working directory can contribute to config.
+
+## Configuration on Shared Hosts
+
+On a machine that several people use, such as a lab server or a computing cluster, other users
+may be able to put files where DataJoint looks for its configuration. A configuration file
+placed by someone else could change where DataJoint connects or where it stores data.
+
+!!! version-changed "Changed in 2.3.6"
+    On Linux and macOS, DataJoint skips configuration files and secrets that another user could
+    have placed. On Windows, there is no ownership check, and the search is unchanged.
+
+### What DataJoint Skips
+
+The search for `datajoint.json`, for the `.secrets/` directory and `/run/secrets/datajoint/`,
+and for the secret files in them skips an item when both of these are true:
+
+- It is owned by another user (not root).
+- It is in a directory that every user can write, such as `/tmp`, or below such a directory
+  that lacks the sticky bit. The sticky bit, shown as the `t` in `drwxrwxrwt` on `/tmp`, stops
+  users from removing or renaming each other's files.
+
+Each skipped item is logged as a warning that names it, so `DJ_LOG_LEVEL=ERROR` hides it. The
+search does not continue to parent directories past a skipped `datajoint.json`.
+
+A configuration file, secret file or secrets directory that is used and that every user can
+write also produces a warning. Restrict it with `chmod o-w`. A secrets directory that every user
+can write but that has the sticky bit, such as a root-owned `/run/secrets/datajoint` with mode
+1777, produces no warning; each file in it is still checked.
+
+These setups can be affected:
+
+- shared volumes with mode 0777 that another account fills, such as a Kubernetes `emptyDir`
+  written by a helper container that runs as a different user;
+- container images whose files belong to a build user, are made writable by everyone with
+  `chmod -R 777`, and run under a different user ID (for example on OpenShift);
+- Amazon EFS access-point roots with mode 0777, when the process runs as a different user;
+- NFS exports with root squashing (the server treats the client's root user as an unprivileged
+  user);
+- WSL `/mnt/c`, when running as root or as another WSL user.
+
+### Use a Skipped File
+
+If you trust a skipped file, do one of these:
+
+- set `DJ_CONFIG_FILE` to its path;
+- call `dj.config.load(path)`;
+- change its owner with `chown`;
+- remove write permission for other users from the directory with `chmod o-w`.
+
+Supply skipped secrets through environment variables.
+
+### Shared Group Directories
+
+Files in a directory that only your group can write are still loaded, including one under a
+sticky `/scratch`. So every member of the group can change the configuration your sessions load.
+The search also continues up through parent directories, so a `datajoint.json` in a shared
+directory above your project is loaded when your project has none.
+
+- Keep a `datajoint.json` in each project, or set `DJ_CONFIG_FILE`. The search stops at the
+  first `datajoint.json` it finds.
+- Let only people you trust write to group directories that hold DataJoint projects.
+- Do not run DataJoint from a directory that another user created, such as one under `/tmp`,
+  unless you trust that user.
+- For services and shared pipelines, set `DJ_IGNORE_CONFIG_FILE=true` and supply every setting
+  through environment variables. Setting environment variables alone is not enough, because
+  they do not override every setting in a file (see [Configuration Priority](#configuration-priority)).
 
 ## Security Best Practices
 
@@ -19487,7 +19672,7 @@ export DJ_PASS=$(vault read -field=password secret/datajoint/db)
 # Stores: one JSON-encoded env var (new in 2.2.4)
 export DJ_STORES=$(vault read -format=json -field=stores secret/datajoint)
 
-# Optional: guarantee no file on disk contributes to config (new in 2.2.4)
+# Optional: guarantee no file on disk contributes to config (new in 2.2.3)
 export DJ_IGNORE_CONFIG_FILE=true
 ```
 
@@ -19658,7 +19843,10 @@ print("secrets dir:", find_secrets_dir(config_path))
 ```
 
 If `find_config_file()` returns `None`, no `datajoint.json` was found via the
-upward search — values come from environment variables and defaults only.
+upward search — values come from environment variables and defaults only. From 2.3.6, it also
+returns `None` when the file found was skipped because another user could have placed it; the
+log then has a warning that names the file. See
+[Configuration on Shared Hosts](#configuration-on-shared-hosts).
 
 ### Permission Errors
 
@@ -20001,6 +20189,8 @@ schema.drop(prompt=False)
 
 Upgrade existing pipelines from legacy DataJoint (the pre-2.0 `0.x` series)
 directly to the latest DataJoint 2.x — currently **2.3**.
+
+Releases before 2.0, including 0.14, are no longer supported and will not receive a fix.
 
 > **This guide is optimized for AI coding assistants.** Point your AI agent at this
 > document and it will execute the migration with your oversight.
@@ -26253,6 +26443,23 @@ Document.insert1({
 })
 ```
 
+On fetch, the attachment is saved in the download folder (`download_path`) under its stored
+file name.
+
+!!! version-changed "Changed in 2.3.6"
+    An attachment is saved only inside the download folder.
+
+    - A stored name that is empty, `.` or `..`, or that contains `/`, `\` or a NUL character
+      (character code 0), raises `DataJointError`, and nothing is written.
+    - On Windows, a name containing `:` is also refused. Fetch such attachments on Linux or
+      macOS.
+    - If the download folder already holds a different file, a folder or a symbolic link with
+      that name, the attachment is saved under the next free name (`name_1.ext`,
+      `name_2.ext`, ...). DataJoint never writes through a symbolic link.
+
+    For `<object@>` values, a path with a `..` part is refused. Downloading an `<object@>`
+    folder checks every file in it before anything is written.
+
 ## NumPy Arrays with `<npy@>`
 
 The `<npy@>` codec stores NumPy arrays as portable `.npy` files with lazy loading:
@@ -27048,6 +27255,26 @@ Configuration is loaded in priority order:
 3. **Secrets directory** (`.secrets/`)
 4. **Defaults** (lowest priority)
 
+### Configuration File Search
+
+When `datajoint` is imported, it looks for configuration files in this order:
+
+1. If `DJ_IGNORE_CONFIG_FILE=true`, no file is read. Only environment variables and defaults apply.
+2. If `DJ_CONFIG_FILE` is set, that file is loaded and no search is made *(new in 2.3.6)*. A relative path is resolved against the working directory, and `~` is expanded. If the file does not exist, `import datajoint` raises `FileNotFoundError`.
+3. Otherwise, DataJoint looks for `datajoint.json` in the working directory, then in each parent directory. The search stops at the first `datajoint.json`, at a directory that holds `.git` or `.hg`, or at the root of the file system.
+4. The secrets directory is `.secrets/` next to the configuration file. If there is none, DataJoint uses `/run/secrets/datajoint/` when it exists.
+
+`dj.config.load(path)` loads a file explicitly at any time.
+
+!!! version-changed "Changed in 2.3.6"
+    On Linux and macOS, the search skips, with a logged warning, a configuration file, secrets
+    directory or secret file that another user (not root) owns and that sits in a directory every
+    user can write, such as `/tmp`. Files in a shared group directory are still loaded. A file or
+    directory that is used and that every user can write produces a warning. A file named by
+    `DJ_CONFIG_FILE` or passed to `dj.config.load()` is loaded without the ownership check. The
+    `.secrets/` directory next to a `DJ_CONFIG_FILE` file is still checked. On Windows, the search has no ownership check.
+    See [Configuration on Shared Hosts](../how-to/manage-secrets.md#configuration-on-shared-hosts).
+
 ## Database Settings
 
 | Setting | Environment | Default | Description |
@@ -27059,7 +27286,7 @@ Configuration is loaded in priority order:
 | `database.password` | `DJ_PASS` | — | Database password (required) |
 | `database.name` | `DJ_DATABASE_NAME` | `None` | Database name for PostgreSQL connections. Defaults to `"postgres"` if not set. *(new in 2.2.1)* |
 | `database.reconnect` | — | `True` | Auto-reconnect on connection loss |
-| `database.use_tls` | `DJ_USE_TLS` | `None` | Enable TLS encryption *(env var new in 2.1)* |
+| `database.use_tls` | `DJ_USE_TLS` | `None` | TLS encryption: unset (`None`) uses TLS when the server offers it, `true` requires it, `false` turns it off. A dict with certificate options is passed in code. See [TLS Configuration](../how-to/configure-database.md#tls-configuration) *(env var new in 2.1)* |
 | `database.database_prefix` | `DJ_DATABASE_PREFIX` | `""` | *(Deprecated — use `database.name` instead)* Prefix for database/schema names |
 | `database.create_tables` | `DJ_CREATE_TABLES` | `True` | Default for `Schema(create_tables=)`. Set `False` for production mode |
 
@@ -27235,8 +27462,10 @@ recorded and [Record Data Origin](../how-to/record-data-origin.md) for the task-
 | `cache` | — | `None` | Path for query result cache |
 | `query_cache` | — | `None` | Path for compiled query cache |
 | `download_path` | — | `.` | Download location for attachments/filepaths |
+| `allow_filepath_outside_store` | `DJ_ALLOW_FILEPATH_OUTSIDE_STORE` | `False` | Accept `<filepath@>` paths that lead outside their store. Use only with trusted data; see [Paths outside the store](../how-to/configure-storage.md#paths-outside-the-store). *(new in 2.3.6)* |
 | `stores` | `DJ_STORES` | `{}` | JSON-encoded `stores` dict. Replaces the `stores` block from `datajoint.json`. *(new in 2.2.4)* |
-| `ignore_config_file` | `DJ_IGNORE_CONFIG_FILE` | `False` | Skip `datajoint.json` and the secrets directory. *(new in 2.2.4)* |
+| `ignore_config_file` | `DJ_IGNORE_CONFIG_FILE` | `False` | Skip `datajoint.json` and the secrets directory. *(new in 2.2.3)* |
+| — | `DJ_CONFIG_FILE` | — | Path of the configuration file to load, with no search. See [Configuration File Search](#configuration-file-search). *(new in 2.3.6)* |
 
 ## Example Configuration
 
@@ -27316,7 +27545,7 @@ export DJ_STORES='{
   }
 }'
 
-# Skip datajoint.json and .secrets/ entirely (new in 2.2.4)
+# Skip datajoint.json and .secrets/ entirely (new in 2.2.3)
 export DJ_IGNORE_CONFIG_FILE=true
 ```
 
@@ -27384,7 +27613,7 @@ schema = inst.Schema("my_schema")
 | `user` | str | — | Database username (required) |
 | `password` | str | — | Database password (required) |
 | `port` | int | from config | Database port |
-| `use_tls` | bool or dict | `None` | TLS configuration |
+| `use_tls` | bool or dict | from config | TLS configuration. When not given, `database.use_tls` from this instance's config applies *(from 2.3.6)*. See [TLS Configuration](../how-to/configure-database.md#tls-configuration) |
 | `**kwargs` | — | — | Config overrides (e.g., `safemode=False`, `database__reconnect=False`) |
 
 ### Attributes and Methods
@@ -34411,7 +34640,7 @@ The `stores` block can be loaded from any of:
 | `stores` block of `datajoint.json` | 3 | Local development, committed project config |
 | `.secrets/stores.<name>.<attr>` files | 4 (fills missing attrs only) | Local credentials kept out of `datajoint.json` |
 
-When `DJ_STORES` is set, it replaces the `stores` block loaded from `datajoint.json` wholesale. The `.secrets/` directory still runs after `DJ_STORES` and fills in attributes that `DJ_STORES` omits — useful for hybrid setups (env-var store config + file-based credentials). To disable file-based config sources entirely, set `DJ_IGNORE_CONFIG_FILE=true` *(new in 2.2.4)*.
+When `DJ_STORES` is set, it replaces the `stores` block loaded from `datajoint.json` wholesale. The `.secrets/` directory still runs after `DJ_STORES` and fills in attributes that `DJ_STORES` omits — useful for hybrid setups (env-var store config + file-based credentials). To disable file-based config sources entirely, set `DJ_IGNORE_CONFIG_FILE=true` *(new in 2.2.3)*.
 
 See [Manage Secrets](../../how-to/manage-secrets.md#env-var-only-deployments) and [Storage Adapter API](storage-adapter-api.md) for adapter-specific field names.
 
@@ -40548,6 +40777,8 @@ This page explains how version information is indicated throughout the DataJoint
 
 If you're using legacy DataJoint (version 0.14.x or earlier), please visit the [legacy documentation](https://datajoint.github.io/datajoint-python) or follow the [Migration Guide](../how-to/migrate-to-v20.md) to upgrade.
 
+Releases before 2.0, including 0.14, are no longer supported and will not receive a fix.
+
 ## Version Indicators
 
 ### Global Indicators
@@ -40641,8 +40872,8 @@ For DataJoint 0.x documentation, visit:
 |---------|--------------|---------------|
 | 2.1 | 2026 | PostgreSQL multi-backend support |
 | 2.0 | 2026 | Redesigned fetch API, unified stores, per-table jobs, semantic matching |
-| 0.14.x | 2020-2025 | Legacy version with external storage |
-| 0.13.x | 2019 | Legacy version |
+| 0.14.x | 2020-2025 | Legacy version with external storage (no longer supported) |
+| 0.13.x | 2019 | Legacy version (no longer supported) |
 
 For complete version history, see the [changelog](https://github.com/datajoint/datajoint-python/releases).
 
@@ -41435,14 +41666,75 @@ The graph-driven approach resolves every known limitation of the prior error-dri
 
 DataJoint 2.3 adds a first-class **upstream read surface** — `Diagram.trace` and `self.upstream` — which make "a computed row derives only from its declared upstream inputs" easy to follow inside `make()` and easy to query afterward. It also ships the **SparkAdapter Codec Protocol** for typed rendering to Spark-native types, **`dj.deploy.set_replica_identity`** for PostgreSQL change-data-capture, and a **cascade fix** for Part-of-Part and renamed-foreign-key chains.
 
-Later releases on the line added **redesigned diagram rendering** on the DataJoint brand palette, with a light/dark [`display.diagram_theme`](../reference/configuration.md#display-settings) setting, **S3 stores that resolve an ambient AWS identity** instead of requiring static keys, and **extrinsic provenance at the pipeline's entry points** — a hidden `_prov` attribute the framework records on every row arriving from outside. 2.3.5 fixes **cascade deletes that removed rows outside the delete**, and a restricted distributed `populate` that removed other workers' jobs.
+Later releases on the line added **redesigned diagram rendering** on the DataJoint brand palette, with a light/dark [`display.diagram_theme`](../reference/configuration.md#display-settings) setting, **S3 stores that resolve an ambient AWS identity** instead of requiring static keys, and **extrinsic provenance at the pipeline's entry points** — a hidden `_prov` attribute the framework records on every row arriving from outside. 2.3.5 fixes **cascade deletes that removed rows outside the delete**, and a restricted distributed `populate` that removed other workers' jobs. 2.3.6 is a **security release**.
 
 > **Upgrading from 2.0, 2.1, or 2.2?** No API breaks — every feature on the 2.3 line is additive.
 > Two fixes in 2.3.3 do, however, reject input that previously passed silently: a misspelled native
 > type is now caught at declaration, and inserting a NumPy array into a **native** `blob` attribute
 > now raises. Both cases were already broken — the first produced invalid DDL at the server, the
 > second stored the array's text representation — so anything affected was losing data rather than
-> working. See [Changes in 2.3.3](#changes-in-233).
+> working. See [Changes in 2.3.3](#changes-in-233). The security fixes in 2.3.6 also refuse some
+> input and settings that earlier releases accepted. See [Changes in 2.3.6](#changes-in-236).
+
+## Changes in 2.3.6
+
+2.3.6 is a security release on the 2.3 line: it fixes five security issues, described in the [security advisories](https://github.com/datajoint/datajoint-python/security/advisories), and every earlier release has at least one of them. If you are upgrading from **2.3.5**:
+
+- **`<filepath@>` paths must stay inside their store.** A path with a `..` part, or an absolute path outside a `file` store's `location`, now raises `DataJointError` on insert.
+    - Rows already stored this way, such as some migrated from 0.14, can still be fetched. Reading or downloading the fetched value raises `DataJointError`.
+    - An absolute path inside the store's `location` is now saved relative to the store. The fetched `.path` is that relative path, not the string you inserted.
+    - The check compares paths as written. It does not resolve symbolic links.
+    - A path in a reserved section is now recognized in any letter case and after a leading `./`. For example, `_HASH/x` and `./_hash/x` raise `ValueError`.
+    - To accept paths outside the store, set `dj.config.allow_filepath_outside_store = True` or the environment variable `DJ_ALLOW_FILEPATH_OUTSIDE_STORE=true`. This turns the check off for every `<filepath@>` value, so use it only with data you trust.
+
+    See [Paths outside the store](../how-to/configure-storage.md#paths-outside-the-store).
+
+- **Attachments and objects are saved only inside the download folder.**
+    - A stored attachment name that is empty, `.` or `..`, or that contains `/`, `\` or a NUL character (character code 0), raises `DataJointError` on fetch, and nothing is written.
+    - On Windows, a name containing `:` is also refused. For example, an attachment named `12:00.txt` that was inserted from Linux or macOS cannot be fetched on Windows. Fetch such attachments on Linux or macOS.
+    - If the download folder already holds a different file, a folder or a symbolic link with the attachment's name, the attachment is saved under the next free name (`name_1.ext`, `name_2.ext`, ...). DataJoint never writes through a symbolic link.
+    - An `<object@>` path with a `..` part is refused.
+    - Downloading an `<object@>` folder checks every file in it before anything is written. Downloaded files keep the same layout as before.
+
+    See [Use Object Storage](../how-to/use-object-storage.md#attachments).
+
+- **`use_tls` settings now take effect as documented.** TLS is the encryption of the connection to the database server.
+    - `use_tls=True` or a `use_tls` dict now requires TLS. If the server does not offer TLS, the connection fails before the user name and password are sent. On MySQL, 2.3.5 could connect without encryption.
+    - The default, `use_tls=None`, uses TLS whenever the server offers it. It connects without TLS only when the server does not offer TLS or, on PostgreSQL, does not accept TLS connections from this client. A failed TLS setup or a failed login is no longer retried without TLS. If TLS cannot be set up with an older server, set `use_tls=False`.
+    - `use_tls=False` now turns TLS off. Before, the setting did not reach the database driver, so the connection could use TLS anyway. A server that accepts only encrypted connections now refuses the connection. Remove `use_tls=False`, or set `use_tls=True`.
+    - On PostgreSQL, the `ca`, `cert`, `key` and `password` keys of a `use_tls` dict are now used. With `ca`, the server's certificate and host name are verified.
+    - `dj.Instance` and `dj.Connection` now read `database.use_tls` (or `DJ_USE_TLS`) when `use_tls` is not given, as `dj.conn()` already did.
+    - `dj.conn(use_tls=True)` or `dj.conn(use_tls={...})` now reconnects an existing connection with that setting, unless the connection already meets it. Before, the argument was ignored.
+
+    See [TLS configuration](../how-to/configure-database.md#tls-configuration).
+
+- **Restriction values are checked and always quoted.**
+    - A value in a dict, record-array or DataFrame restriction must be a string, number, boolean, `None`, date, `datetime`, `datetime.time`, `Decimal`, list, a UUID (for a `uuid` attribute), or a dict (for a JSON path). Other values now raise `DataJointError`. Before, they were written into the query unquoted, and most of them did not give a correct query.
+    - Values to convert first include bytes, `numpy.datetime64` (convert to `datetime.datetime`), 0-d NumPy arrays (use `.item()`), `datetime.timedelta` (PyMySQL returns it for MySQL `time` columns), tuples, NaN and infinity. If pandas converted a DataFrame's date columns to `datetime64`, use `df.astype(object)`.
+    - The return type in a JSON attribute key (`attr.path:type`) must be a standard type, such as an integer, floating-point, decimal, character, date or JSON type. Other types raise `DataJointError`. You can write such a condition as an SQL string restriction instead.
+    - A key that starts with an attribute name but is not a valid JSON path, such as `params.bad path`, raises `DataJointError`. Keys that name no attribute are still ignored.
+    - List values, and dict values given for a JSON path, are written as quoted text and compared by their exact text. Before, a list of strings produced invalid SQL. On MySQL, a dict for a JSON path whose strings contain a double quote or a backslash can now match rows it did not match before.
+    - Values stay inside their quotes whatever the server's string settings, such as MySQL's `NO_BACKSLASH_ESCAPES`. This change by itself does not change which rows match under default settings.
+
+    See [Query Operators](../reference/operators.md).
+
+- **Foreign-key references are read as table names and never run as Python code.** This applies when a table is declared and in `alter()`.
+    - The supported forms are `Parent`, `module.Parent` and `Master.Part`, each optionally in parentheses or followed by `()`, and `.proj()` with string arguments, such as `Parent.proj(new_id='parent_id')`.
+    - Other forms raise a `DataJointError` that lists the supported forms: a variable, `...` or `**dict` passed to `.proj()`; a call to any other method or function; a string with an `r`, `u` or `f` prefix; a string split into adjacent parts, such as `'a' 'b'`; a name that begins with two underscores. Rewrite such references in a supported form.
+    - If the error says a name is not defined, make sure the parent table's class is defined or imported in the module where the table is declared. For `alter()`, you can instead pass that namespace with `context=`.
+    - In `describe()` output, line breaks in names, comments, default values, types and index columns become spaces, and a backslash or double quote in a column name of a projected reference is escaped.
+
+    See [Foreign keys](../reference/definition-syntax.md#foreign-keys).
+
+- **Compressed blobs are checked against their recorded size.** A compressed blob whose data expands beyond the recorded size in its header is refused before it is fully expanded. A corrupt compressed blob raises `DataJointError` instead of `zlib.error`, so code that caught `zlib.error` should catch `DataJointError`. This does not limit the memory a valid blob can use. See [Errors](../reference/errors.md).
+
+- **Configuration files on shared hosts (Linux and macOS).** The search for `datajoint.json` and the secrets directory now skips, with a logged warning, a file or folder that another user (not root) owns in a folder that every user can write, such as `/tmp`. Files in a shared group folder are still loaded. A configuration file, secret file or secrets folder that is used and that every user can write produces a warning. The new environment variable `DJ_CONFIG_FILE` names the configuration file to load, with no search. On Windows, the search is unchanged. See [Configuration on shared hosts](../how-to/manage-secrets.md#configuration-on-shared-hosts).
+
+- **Each user has their own cache for memory-mapped arrays.** Arrays from remote stores opened with `mmap_mode` are now cached in `<tempdir>/datajoint_mmap_<uid>`, which only you can read. `<tempdir>` is the system's temporary folder, such as `/tmp`, and `<uid>` is your numeric user ID. The first such load after upgrading downloads each array again. The old shared folder `<tempdir>/datajoint_mmap` is no longer used and can be deleted. On Windows, the cache stays in `<tempdir>/datajoint_mmap`, inside each user's own temporary folder. See [Memory mapping](../how-to/use-npy-codec.md#memory-mapping).
+
+- **PyMySQL 1.1.1 or later is required**, up from 0.7.2, because of a security issue in earlier PyMySQL releases (CVE-2024-36039).
+
+Upgrade with `pip install --upgrade "datajoint>=2.3.6"`. The conda-forge package follows within about an hour of PyPI. Releases before 2.0, including 0.14, are no longer supported and will not receive a fix. To move to 2.x, see the [Migration Guide](../how-to/migrate-to-v20.md).
 
 > **Citation:** Yatsenko D, Nguyen TT. *DataJoint 2.0: A Computational Substrate for Agentic Scientific Workflows.* arXiv:2602.16585. 2026. [doi:10.48550/arXiv.2602.16585](https://doi.org/10.48550/arXiv.2602.16585)
 

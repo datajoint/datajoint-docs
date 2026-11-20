@@ -21,7 +21,7 @@
       
       
       <link rel="icon" href="../../assets/images/company-logo-blue.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.1">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.2">
     
     
       
@@ -2603,6 +2603,34 @@
       
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="TLS Configuration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#verify-the-servers-certificate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verify the Server's Certificate
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#which-calls-use-the-setting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Which Calls Use the Setting
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -6661,6 +6689,34 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="TLS Configuration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#verify-the-servers-certificate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verify the Server's Certificate
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#which-calls-use-the-setting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Which Calls Use the Setting
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -6867,7 +6923,7 @@ directory — see <a href="../manage-secrets/#option-1-secrets-directory-recomme
 <span class="nb">export</span><span class="w"> </span><span class="nv">DJ_USER</span><span class="o">=</span>myuser
 <span class="nb">export</span><span class="w"> </span><span class="nv">DJ_PASS</span><span class="o">=</span>mypassword
 </code></pre></div>
-<p>Environment variables take precedence over config files.</p>
+<p>Environment variables take precedence over config files, with one exception among the settings below: a <code>database.use_tls</code> value in <code>datajoint.json</code> replaces <code>DJ_USE_TLS</code>.</p>
 <h2 id="configuration-settings">Configuration Settings<a class="headerlink" href="#configuration-settings" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -6917,9 +6973,9 @@ directory — see <a href="../manage-secrets/#option-1-secrets-directory-recomme
 </tr>
 <tr>
 <td><code>database.use_tls</code></td>
-<td><code>DJ_TLS</code></td>
-<td><code>True</code></td>
-<td>Use TLS encryption</td>
+<td><code>DJ_USE_TLS</code></td>
+<td><code>None</code></td>
+<td>Use TLS encryption: unset (<code>None</code>) uses TLS when the server offers it, <code>true</code> requires it, <code>false</code> turns it off. See <a href="#tls-configuration">TLS Configuration</a></td>
 </tr>
 <tr>
 <td><code>database.reconnect</code></td>
@@ -6963,16 +7019,86 @@ directory — see <a href="../manage-secrets/#option-1-secrets-directory-recomme
 <li>Default values (lowest priority)</li>
 </ol>
 <h2 id="tls-configuration">TLS Configuration<a class="headerlink" href="#tls-configuration" title="Permanent link">&para;</a></h2>
-<p>For production, always use TLS:</p>
+<p>TLS encrypts the connection between DataJoint and the database server, so that others on the
+network cannot read the data or the password. The <code>use_tls</code> option takes four forms:</p>
+<table>
+<thead>
+<tr>
+<th>Value</th>
+<th>Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>None</code> (default)</td>
+<td>Use TLS if the server offers it. Connect without TLS only if the server does not offer TLS or, on PostgreSQL, does not accept TLS connections from this client. The server's certificate is not verified.</td>
+</tr>
+<tr>
+<td><code>True</code></td>
+<td>Require TLS. If TLS cannot be set up, the connection fails before the user name and password are sent. The server's certificate is not verified.</td>
+</tr>
+<tr>
+<td><code>False</code></td>
+<td>Do not use TLS. A server that accepts only encrypted connections refuses the connection.</td>
+</tr>
+<tr>
+<td>dict</td>
+<td>Require TLS with the options in the dict. With <code>"ca"</code>, the server's certificate is verified.</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition version-changed">
+<p class="admonition-title">Changed in 2.3.6</p>
+<p><code>True</code> and a dict now require TLS, and <code>False</code> now turns TLS off. The default no longer
+retries without TLS after a failed TLS setup or a failed login. <code>dj.Instance</code> and
+<code>dj.Connection</code> now follow <code>database.use_tls</code>. See
+<a href="../../about/whats-new-23/#changes-in-236">Changes in 2.3.6</a>.</p>
+</div>
+<p>In <code>datajoint.json</code> or <code>DJ_USE_TLS</code>, set <code>true</code> or <code>false</code>, or leave the setting out for the
+default. To require TLS:</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">"database.use_tls"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
 <span class="p">}</span>
 </code></pre></div>
-<p>For local development without TLS:</p>
+<p>For a local development server without TLS:</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">"database.use_tls"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span>
 <span class="p">}</span>
 </code></pre></div>
+<h3 id="verify-the-servers-certificate">Verify the Server's Certificate<a class="headerlink" href="#verify-the-servers-certificate" title="Permanent link">&para;</a></h3>
+<p><code>True</code> encrypts the connection but does not check that the server is the one you meant to
+reach. To check that, pass a dict with <code>"ca"</code>: the path to the certificate of the authority
+that signed the server's certificate (the CA certificate, usually a <code>.pem</code> file from your
+database administrator or cloud provider). A dict cannot be stored in <code>datajoint.json</code>, so pass
+it in code:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">datajoint</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dj</span>
+
+<span class="n">conn</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">conn</span><span class="p">(</span><span class="n">use_tls</span><span class="o">=</span><span class="p">{</span><span class="s2">"ca"</span><span class="p">:</span> <span class="s2">"/path/to/ca.pem"</span><span class="p">})</span>
+</code></pre></div>
+<p>With <code>"ca"</code>, DataJoint checks both the certificate and that its name matches the host you
+connect to. A self-signed certificate often has a name that does not match the host. In that
+case, add <code>"check_hostname": False</code>. The certificate is still checked against <code>"ca"</code>; only the
+name check is skipped:</p>
+<div class="highlight"><pre><span></span><code><span class="n">inst</span> <span class="o">=</span> <span class="n">dj</span><span class="o">.</span><span class="n">Instance</span><span class="p">(</span>
+    <span class="n">host</span><span class="o">=</span><span class="s2">"db.example.com"</span><span class="p">,</span>
+    <span class="n">user</span><span class="o">=</span><span class="s2">"analyst"</span><span class="p">,</span>
+    <span class="n">password</span><span class="o">=</span><span class="n">password</span><span class="p">,</span>
+    <span class="n">use_tls</span><span class="o">=</span><span class="p">{</span><span class="s2">"ca"</span><span class="p">:</span> <span class="s2">"/path/to/ca.pem"</span><span class="p">,</span> <span class="s2">"check_hostname"</span><span class="p">:</span> <span class="kc">False</span><span class="p">},</span>
+<span class="p">)</span>
+</code></pre></div>
+<p>For a server that asks for a client certificate, add <code>"cert"</code> and <code>"key"</code> (the paths to your
+certificate and its private key). On PostgreSQL, a dict may hold <code>"ca"</code>, <code>"cert"</code>, <code>"key"</code>,
+<code>"password"</code> (for an encrypted key) and <code>"check_hostname"</code>; other keys are ignored with a
+warning.</p>
+<h3 id="which-calls-use-the-setting">Which Calls Use the Setting<a class="headerlink" href="#which-calls-use-the-setting" title="Permanent link">&para;</a></h3>
+<p><code>dj.conn()</code>, <code>dj.Instance</code> and <code>dj.Connection</code> use <code>database.use_tls</code> (or <code>DJ_USE_TLS</code>) when
+you do not pass <code>use_tls</code>. A <code>use_tls</code> argument overrides the configuration for that
+connection.</p>
+<p><code>dj.conn()</code> returns the existing connection when there is one. <code>dj.conn(use_tls=True)</code> or
+<code>dj.conn(use_tls={...})</code> reconnects it with that setting, unless it already meets it: a
+connection made with a dict meets <code>True</code>, and a dict is met only by a connection made with the
+same dict. Inside a transaction, the reconnect raises <code>DataJointError</code>. <code>dj.conn(use_tls=False)</code>
+does not change an existing connection; use <code>dj.conn(use_tls=False, reset=True)</code>.</p>
 <h2 id="postgresql-backend">PostgreSQL Backend<a class="headerlink" href="#postgresql-backend" title="Permanent link">&para;</a></h2>
 <div class="admonition version-added">
 <p class="admonition-title">New in 2.1</p>

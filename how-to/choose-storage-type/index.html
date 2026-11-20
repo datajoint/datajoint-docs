@@ -21,7 +21,7 @@
       
       
       <link rel="icon" href="../../assets/images/company-logo-blue.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.1">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.2">
     
     
       
@@ -7591,6 +7591,7 @@
 <li>❌ No transaction safety</li>
 <li>❌ No deduplication</li>
 <li>❌ Must avoid <code>_hash/</code> and <code>_schema/</code> prefixes</li>
+<li>❌ Must stay inside the store: no <code>..</code> parts, and no absolute paths outside a <code>file</code> store's location (see <a href="../configure-storage/#paths-outside-the-store">Paths Outside the Store</a>)</li>
 </ul>
 <p><strong>Best for:</strong></p>
 <ul>

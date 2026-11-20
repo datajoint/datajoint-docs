@@ -21,7 +21,7 @@
       
       
       <link rel="icon" href="../../assets/images/company-logo-blue.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.1">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.2">
     
     
       
@@ -6965,6 +6965,23 @@
     <span class="s1">'report'</span><span class="p">:</span> <span class="n">AttachFileType</span><span class="p">(</span><span class="s1">'/path/to/report.pdf'</span><span class="p">)</span>
 <span class="p">})</span>
 </code></pre></div>
+<p>On fetch, the attachment is saved in the download folder (<code>download_path</code>) under its stored
+file name.</p>
+<div class="admonition version-changed">
+<p class="admonition-title">Changed in 2.3.6</p>
+<p>An attachment is saved only inside the download folder.</p>
+<ul>
+<li>A stored name that is empty, <code>.</code> or <code>..</code>, or that contains <code>/</code>, <code>\</code> or a NUL character
+  (character code 0), raises <code>DataJointError</code>, and nothing is written.</li>
+<li>On Windows, a name containing <code>:</code> is also refused. Fetch such attachments on Linux or
+  macOS.</li>
+<li>If the download folder already holds a different file, a folder or a symbolic link with
+  that name, the attachment is saved under the next free name (<code>name_1.ext</code>,
+  <code>name_2.ext</code>, ...). DataJoint never writes through a symbolic link.</li>
+</ul>
+<p>For <code>&lt;object@&gt;</code> values, a path with a <code>..</code> part is refused. Downloading an <code>&lt;object@&gt;</code>
+folder checks every file in it before anything is written.</p>
+</div>
 <h2 id="numpy-arrays-with-npy">NumPy Arrays with <code>&lt;npy@&gt;</code><a class="headerlink" href="#numpy-arrays-with-npy" title="Permanent link">&para;</a></h2>
 <p>The <code>&lt;npy@&gt;</code> codec stores NumPy arrays as portable <code>.npy</code> files with lazy loading:</p>
 <div class="highlight"><pre><span></span><code><span class="nd">@schema</span>

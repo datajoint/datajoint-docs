@@ -21,7 +21,7 @@
       
       
       <link rel="icon" href="../../assets/images/company-logo-blue.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.1">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.2">
     
     
       
@@ -2687,6 +2687,56 @@
       
     </span>
   </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuration-on-shared-hosts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration on Shared Hosts
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Configuration on Shared Hosts">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-datajoint-skips" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What DataJoint Skips
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#use-a-skipped-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use a Skipped File
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#shared-group-directories" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Shared Group Directories
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -6977,6 +7027,56 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#configuration-on-shared-hosts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration on Shared Hosts
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Configuration on Shared Hosts">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-datajoint-skips" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What DataJoint Skips
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#use-a-skipped-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use a Skipped File
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#shared-group-directories" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Shared Group Directories
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#security-best-practices" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -7272,7 +7372,8 @@
 <li><strong>Secrets directory</strong> — <code>.secrets/database.user</code>, <code>.secrets/database.password</code>, <code>.secrets/stores.&lt;name&gt;.&lt;attr&gt;</code> (each fills a value the file and env didn't already set)</li>
 <li><strong>Default values</strong> — Built-in defaults</li>
 </ol>
-<p>Higher priority sources override lower ones. Set <code>DJ_IGNORE_CONFIG_FILE=true</code> <em>(new in 2.2.4)</em> to skip both <code>datajoint.json</code> and the secrets directory entirely — see <a href="#env-var-only-deployments">Env-var-only deployments</a> below.</p>
+<p>Higher priority sources override lower ones, with one limit on environment variables. They take precedence over <code>datajoint.json</code> only for <code>DJ_HOST</code>, <code>DJ_USER</code>, <code>DJ_PASS</code>, <code>DJ_PORT</code>, <code>DJ_BACKEND</code>, <code>DJ_DATABASE_NAME</code>, <code>DJ_DATABASE_PREFIX</code>, <code>DJ_CREATE_TABLES</code>, <code>DJ_LOG_LEVEL</code>, <code>DJ_STORES</code> and the diagram display settings. For other settings, including <code>database.use_tls</code> (<code>DJ_USE_TLS</code>), a value in <code>datajoint.json</code> replaces the environment variable.</p>
+<p>Set <code>DJ_CONFIG_FILE</code> <em>(new in 2.3.6)</em> to load one named configuration file with no search. Set <code>DJ_IGNORE_CONFIG_FILE=true</code> <em>(new in 2.2.3)</em> to skip both <code>datajoint.json</code> and the secrets directory entirely — see <a href="#env-var-only-deployments">Env-var-only deployments</a> below.</p>
 <h2 id="secrets-directory-structure"><code>.secrets/</code> Directory Structure<a class="headerlink" href="#secrets-directory-structure" title="Permanent link">&para;</a></h2>
 <p>Create a <code>.secrets/</code> directory in your project root:</p>
 <div class="highlight"><pre><span></span><code>project/
@@ -7470,7 +7571,12 @@ keys need to be minted or stored. Set both only for static credentials.</p>
 <tr>
 <td><code>DJ_IGNORE_CONFIG_FILE</code></td>
 <td><code>false</code></td>
-<td>If <code>true</code>, skip <code>datajoint.json</code>, the project <code>.secrets/</code>, and <code>/run/secrets/datajoint/</code>. Only env vars and defaults apply. <em>(new in 2.2.4)</em></td>
+<td>If <code>true</code>, skip <code>datajoint.json</code>, the project <code>.secrets/</code>, and <code>/run/secrets/datajoint/</code>. Only env vars and defaults apply. <em>(new in 2.2.3)</em></td>
+</tr>
+<tr>
+<td><code>DJ_CONFIG_FILE</code></td>
+<td>—</td>
+<td>Path of the configuration file to load at import, with no search. The <code>.secrets/</code> directory next to it is also used. A relative path is resolved against the working directory, and <code>~</code> is expanded. If the file does not exist, <code>import datajoint</code> raises <code>FileNotFoundError</code>. Ignored when <code>DJ_IGNORE_CONFIG_FILE=true</code>. <em>(new in 2.3.6)</em></td>
 </tr>
 </tbody>
 </table>
@@ -7493,6 +7599,65 @@ keys need to be minted or stored. Set both only for static credentials.</p>
 <li>the Docker/Kubernetes <code>/run/secrets/datajoint/</code> directory</li>
 </ul>
 <p>Only env vars (<code>DJ_HOST</code>, <code>DJ_USER</code>, <code>DJ_PASS</code>, <code>DJ_STORES</code>, …) and built-in defaults apply. No file under any parent directory of the working directory can contribute to config.</p>
+<h2 id="configuration-on-shared-hosts">Configuration on Shared Hosts<a class="headerlink" href="#configuration-on-shared-hosts" title="Permanent link">&para;</a></h2>
+<p>On a machine that several people use, such as a lab server or a computing cluster, other users
+may be able to put files where DataJoint looks for its configuration. A configuration file
+placed by someone else could change where DataJoint connects or where it stores data.</p>
+<div class="admonition version-changed">
+<p class="admonition-title">Changed in 2.3.6</p>
+<p>On Linux and macOS, DataJoint skips configuration files and secrets that another user could
+have placed. On Windows, there is no ownership check, and the search is unchanged.</p>
+</div>
+<h3 id="what-datajoint-skips">What DataJoint Skips<a class="headerlink" href="#what-datajoint-skips" title="Permanent link">&para;</a></h3>
+<p>The search for <code>datajoint.json</code>, for the <code>.secrets/</code> directory and <code>/run/secrets/datajoint/</code>,
+and for the secret files in them skips an item when both of these are true:</p>
+<ul>
+<li>It is owned by another user (not root).</li>
+<li>It is in a directory that every user can write, such as <code>/tmp</code>, or below such a directory
+  that lacks the sticky bit. The sticky bit, shown as the <code>t</code> in <code>drwxrwxrwt</code> on <code>/tmp</code>, stops
+  users from removing or renaming each other's files.</li>
+</ul>
+<p>Each skipped item is logged as a warning that names it, so <code>DJ_LOG_LEVEL=ERROR</code> hides it. The
+search does not continue to parent directories past a skipped <code>datajoint.json</code>.</p>
+<p>A configuration file, secret file or secrets directory that is used and that every user can
+write also produces a warning. Restrict it with <code>chmod o-w</code>. A secrets directory that every user
+can write but that has the sticky bit, such as a root-owned <code>/run/secrets/datajoint</code> with mode
+1777, produces no warning; each file in it is still checked.</p>
+<p>These setups can be affected:</p>
+<ul>
+<li>shared volumes with mode 0777 that another account fills, such as a Kubernetes <code>emptyDir</code>
+  written by a helper container that runs as a different user;</li>
+<li>container images whose files belong to a build user, are made writable by everyone with
+  <code>chmod -R 777</code>, and run under a different user ID (for example on OpenShift);</li>
+<li>Amazon EFS access-point roots with mode 0777, when the process runs as a different user;</li>
+<li>NFS exports with root squashing (the server treats the client's root user as an unprivileged
+  user);</li>
+<li>WSL <code>/mnt/c</code>, when running as root or as another WSL user.</li>
+</ul>
+<h3 id="use-a-skipped-file">Use a Skipped File<a class="headerlink" href="#use-a-skipped-file" title="Permanent link">&para;</a></h3>
+<p>If you trust a skipped file, do one of these:</p>
+<ul>
+<li>set <code>DJ_CONFIG_FILE</code> to its path;</li>
+<li>call <code>dj.config.load(path)</code>;</li>
+<li>change its owner with <code>chown</code>;</li>
+<li>remove write permission for other users from the directory with <code>chmod o-w</code>.</li>
+</ul>
+<p>Supply skipped secrets through environment variables.</p>
+<h3 id="shared-group-directories">Shared Group Directories<a class="headerlink" href="#shared-group-directories" title="Permanent link">&para;</a></h3>
+<p>Files in a directory that only your group can write are still loaded, including one under a
+sticky <code>/scratch</code>. So every member of the group can change the configuration your sessions load.
+The search also continues up through parent directories, so a <code>datajoint.json</code> in a shared
+directory above your project is loaded when your project has none.</p>
+<ul>
+<li>Keep a <code>datajoint.json</code> in each project, or set <code>DJ_CONFIG_FILE</code>. The search stops at the
+  first <code>datajoint.json</code> it finds.</li>
+<li>Let only people you trust write to group directories that hold DataJoint projects.</li>
+<li>Do not run DataJoint from a directory that another user created, such as one under <code>/tmp</code>,
+  unless you trust that user.</li>
+<li>For services and shared pipelines, set <code>DJ_IGNORE_CONFIG_FILE=true</code> and supply every setting
+  through environment variables. Setting environment variables alone is not enough, because
+  they do not override every setting in a file (see <a href="#configuration-priority">Configuration Priority</a>).</li>
+</ul>
 <h2 id="security-best-practices">Security Best Practices<a class="headerlink" href="#security-best-practices" title="Permanent link">&para;</a></h2>
 <h3 id="development-environment">Development Environment<a class="headerlink" href="#development-environment" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># 1. Initialize secrets directory</span>
@@ -7517,7 +7682,7 @@ chmod<span class="w"> </span><span class="m">600</span><span class="w"> </span>.
 <span class="c1"># Stores: one JSON-encoded env var (new in 2.2.4)</span>
 <span class="nb">export</span><span class="w"> </span><span class="nv">DJ_STORES</span><span class="o">=</span><span class="k">$(</span>vault<span class="w"> </span><span class="nb">read</span><span class="w"> </span>-format<span class="o">=</span>json<span class="w"> </span>-field<span class="o">=</span>stores<span class="w"> </span>secret/datajoint<span class="k">)</span>
 
-<span class="c1"># Optional: guarantee no file on disk contributes to config (new in 2.2.4)</span>
+<span class="c1"># Optional: guarantee no file on disk contributes to config (new in 2.2.3)</span>
 <span class="nb">export</span><span class="w"> </span><span class="nv">DJ_IGNORE_CONFIG_FILE</span><span class="o">=</span><span class="nb">true</span>
 </code></pre></div>
 <h3 id="cicd-environment">CI/CD Environment<a class="headerlink" href="#cicd-environment" title="Permanent link">&para;</a></h3>
@@ -7641,7 +7806,10 @@ secrets loader, so they can hold any settings and use any filenames. Assigning t
 <span class="nb">print</span><span class="p">(</span><span class="s2">"secrets dir:"</span><span class="p">,</span> <span class="n">find_secrets_dir</span><span class="p">(</span><span class="n">config_path</span><span class="p">))</span>
 </code></pre></div>
 <p>If <code>find_config_file()</code> returns <code>None</code>, no <code>datajoint.json</code> was found via the
-upward search — values come from environment variables and defaults only.</p>
+upward search — values come from environment variables and defaults only. From 2.3.6, it also
+returns <code>None</code> when the file found was skipped because another user could have placed it; the
+log then has a warning that names the file. See
+<a href="#configuration-on-shared-hosts">Configuration on Shared Hosts</a>.</p>
 <h3 id="permission-errors">Permission Errors<a class="headerlink" href="#permission-errors" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># Fix .secrets/ permissions</span>
 chmod<span class="w"> </span><span class="m">700</span><span class="w"> </span>.secrets

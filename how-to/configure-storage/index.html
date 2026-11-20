@@ -21,7 +21,7 @@
       
       
       <link rel="icon" href="../../assets/images/company-logo-blue.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.1">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.2">
     
     
       
@@ -2724,6 +2724,17 @@
     <span class="md-ellipsis">
       
         User-Managed Filepath Storage
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paths-outside-the-store" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Paths Outside the Store
       
     </span>
   </a>
@@ -6682,6 +6693,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#paths-outside-the-store" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Paths Outside the Store
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -7123,7 +7145,7 @@ match content stored under an old prefix.</p>
 <div class="highlight"><pre><span></span><code><span class="nd">@schema</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">RawData</span><span class="p">(</span><span class="n">dj</span><span class="o">.</span><span class="n">Manual</span><span class="p">):</span>
     <span class="n">definition</span> <span class="o">=</span> <span class="s2">"""</span>
-<span class="s2">    session_id : int</span>
+<span class="s2">    session_id : int32</span>
 <span class="s2">    ---</span>
 <span class="s2">    recording : &lt;filepath@acquisition&gt;  # User-managed file path</span>
 <span class="s2">    """</span>
@@ -7140,6 +7162,8 @@ match content stored under an old prefix.</p>
 <span class="c1"># If you configured custom prefixes like "content_addressed", those would also be blocked</span>
 <span class="c1"># table.insert1({'session_id': 5, 'recording': 'content_addressed/file.dat'})  # Error!</span>
 </code></pre></div>
+<p>From 2.3.6, the reserved-section check ignores letter case and a leading <code>./</code>, so <code>_HASH/x</code> and
+<code>./_hash/x</code> also raise <code>ValueError</code>.</p>
 <p><strong>Key characteristics of <code>&lt;filepath@&gt;</code>:</strong></p>
 <ul>
 <li>Stores path string only (DataJoint does not manage the files)</li>
@@ -7150,7 +7174,51 @@ match content stored under an old prefix.</p>
 <li>Validates file exists on insert</li>
 <li>Cannot use reserved sections (configured by <code>hash_prefix</code> and <code>schema_prefix</code>)</li>
 <li>Can be restricted to specific prefix using <code>filepath_prefix</code> configuration</li>
+<li>Must stay inside the store (see below)</li>
 </ul>
+<h3 id="paths-outside-the-store">Paths Outside the Store<a class="headerlink" href="#paths-outside-the-store" title="Permanent link">&para;</a></h3>
+<div class="admonition version-changed">
+<p class="admonition-title">Changed in 2.3.6</p>
+<p><code>&lt;filepath@&gt;</code> paths that lead outside their store are refused unless
+<code>allow_filepath_outside_store</code> is set.</p>
+</div>
+<p>A <code>&lt;filepath@&gt;</code> path must stay inside its store. DataJoint refuses:</p>
+<ul>
+<li>a path with a <code>..</code> part;</li>
+<li>for a <code>file</code> store, an absolute path outside the store's <code>location</code>.</li>
+</ul>
+<p>Inserting such a path raises <code>DataJointError</code>. Rows stored earlier with such paths, such as some
+migrated from DataJoint 0.14, can still be fetched, but reading or downloading the fetched value
+raises <code>DataJointError</code>.</p>
+<p>An absolute path inside a <code>file</code> store's <code>location</code> is accepted and saved relative to the store.
+The fetched <code>.path</code> is that relative path, not the string you inserted. A relative <code>location</code> is
+resolved against the working directory, as in earlier releases, so absolute paths are compared
+with that resolved location.</p>
+<p>The check compares paths as written. It does not resolve symbolic links, which has two
+consequences:</p>
+<ul>
+<li>If the store's <code>location</code> is a symbolic link, or passes through one, an absolute path through
+  the link's target is refused. For example, on macOS <code>/tmp</code> links to <code>/private/tmp</code>, so with
+  <code>location</code> set to <code>/tmp/store</code>, a path returned by <code>Path.resolve()</code> starts with <code>/private/tmp</code>
+  and is refused. Give the path relative to the store, or under <code>location</code> exactly as written in
+  the configuration.</li>
+<li>A symbolic link inside a <code>file</code> store is followed, even if it points outside the store. Control
+  who can create files and links in the store.</li>
+</ul>
+<p>To accept paths outside the store, for example for references migrated from 0.14 that
+deliberately point elsewhere, turn the check off:</p>
+<div class="highlight"><pre><span></span><code><span class="n">dj</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">allow_filepath_outside_store</span> <span class="o">=</span> <span class="kc">True</span>
+</code></pre></div>
+<p>or set the environment variable <code>DJ_ALLOW_FILEPATH_OUTSIDE_STORE=true</code>.</p>
+<div class="admonition warning">
+<p class="admonition-title">Use only with trusted data</p>
+<p>This setting turns the check off for every <code>&lt;filepath@&gt;</code> value in the process. A stored path
+can then point DataJoint at any file the process can reach. Set it only when everyone who
+can insert into your <code>&lt;filepath@&gt;</code> columns is trusted.</p>
+</div>
+<p>The setting applies to <code>&lt;filepath@&gt;</code> only. Paths of <code>&lt;blob@&gt;</code>, <code>&lt;attach@&gt;</code>, <code>&lt;object@&gt;</code> and
+<code>&lt;npy@&gt;</code> values are always checked. The error message names the setting and says that it
+applies only to <code>&lt;filepath@&gt;</code> values.</p>
 <h2 id="configuring-stores-via-environment-variables">Configuring stores via environment variables<a class="headerlink" href="#configuring-stores-via-environment-variables" title="Permanent link">&para;</a></h2>
 <div class="admonition version-added">
 <p class="admonition-title">New in 2.2.4</p>

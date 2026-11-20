@@ -21,7 +21,7 @@
       
       
       <link rel="icon" href="../../assets/images/company-logo-blue.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.1">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.2">
     
     
       
@@ -5198,6 +5198,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Configuration Sources">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#configuration-file-search" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration File Search
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -6544,6 +6561,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Configuration Sources">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#configuration-file-search" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration File Search
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -6806,6 +6840,25 @@
 <li><strong>Secrets directory</strong> (<code>.secrets/</code>)</li>
 <li><strong>Defaults</strong> (lowest priority)</li>
 </ol>
+<h3 id="configuration-file-search">Configuration File Search<a class="headerlink" href="#configuration-file-search" title="Permanent link">&para;</a></h3>
+<p>When <code>datajoint</code> is imported, it looks for configuration files in this order:</p>
+<ol>
+<li>If <code>DJ_IGNORE_CONFIG_FILE=true</code>, no file is read. Only environment variables and defaults apply.</li>
+<li>If <code>DJ_CONFIG_FILE</code> is set, that file is loaded and no search is made <em>(new in 2.3.6)</em>. A relative path is resolved against the working directory, and <code>~</code> is expanded. If the file does not exist, <code>import datajoint</code> raises <code>FileNotFoundError</code>.</li>
+<li>Otherwise, DataJoint looks for <code>datajoint.json</code> in the working directory, then in each parent directory. The search stops at the first <code>datajoint.json</code>, at a directory that holds <code>.git</code> or <code>.hg</code>, or at the root of the file system.</li>
+<li>The secrets directory is <code>.secrets/</code> next to the configuration file. If there is none, DataJoint uses <code>/run/secrets/datajoint/</code> when it exists.</li>
+</ol>
+<p><code>dj.config.load(path)</code> loads a file explicitly at any time.</p>
+<div class="admonition version-changed">
+<p class="admonition-title">Changed in 2.3.6</p>
+<p>On Linux and macOS, the search skips, with a logged warning, a configuration file, secrets
+directory or secret file that another user (not root) owns and that sits in a directory every
+user can write, such as <code>/tmp</code>. Files in a shared group directory are still loaded. A file or
+directory that is used and that every user can write produces a warning. A file named by
+<code>DJ_CONFIG_FILE</code> or passed to <code>dj.config.load()</code> is loaded without the ownership check. The
+<code>.secrets/</code> directory next to a <code>DJ_CONFIG_FILE</code> file is still checked. On Windows, the search has no ownership check.
+See <a href="../../how-to/manage-secrets/#configuration-on-shared-hosts">Configuration on Shared Hosts</a>.</p>
+</div>
 <h2 id="database-settings">Database Settings<a class="headerlink" href="#database-settings" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -6863,7 +6916,7 @@
 <td><code>database.use_tls</code></td>
 <td><code>DJ_USE_TLS</code></td>
 <td><code>None</code></td>
-<td>Enable TLS encryption <em>(env var new in 2.1)</em></td>
+<td>TLS encryption: unset (<code>None</code>) uses TLS when the server offers it, <code>true</code> requires it, <code>false</code> turns it off. A dict with certificate options is passed in code. See <a href="../../how-to/configure-database/#tls-configuration">TLS Configuration</a> <em>(env var new in 2.1)</em></td>
 </tr>
 <tr>
 <td><code>database.database_prefix</code></td>
@@ -7292,6 +7345,12 @@ recorded and <a href="../../how-to/record-data-origin/">Record Data Origin</a> f
 <td>Download location for attachments/filepaths</td>
 </tr>
 <tr>
+<td><code>allow_filepath_outside_store</code></td>
+<td><code>DJ_ALLOW_FILEPATH_OUTSIDE_STORE</code></td>
+<td><code>False</code></td>
+<td>Accept <code>&lt;filepath@&gt;</code> paths that lead outside their store. Use only with trusted data; see <a href="../../how-to/configure-storage/#paths-outside-the-store">Paths outside the store</a>. <em>(new in 2.3.6)</em></td>
+</tr>
+<tr>
 <td><code>stores</code></td>
 <td><code>DJ_STORES</code></td>
 <td><code>{}</code></td>
@@ -7301,7 +7360,13 @@ recorded and <a href="../../how-to/record-data-origin/">Record Data Origin</a> f
 <td><code>ignore_config_file</code></td>
 <td><code>DJ_IGNORE_CONFIG_FILE</code></td>
 <td><code>False</code></td>
-<td>Skip <code>datajoint.json</code> and the secrets directory. <em>(new in 2.2.4)</em></td>
+<td>Skip <code>datajoint.json</code> and the secrets directory. <em>(new in 2.2.3)</em></td>
+</tr>
+<tr>
+<td>—</td>
+<td><code>DJ_CONFIG_FILE</code></td>
+<td>—</td>
+<td>Path of the configuration file to load, with no search. See <a href="#configuration-file-search">Configuration File Search</a>. <em>(new in 2.3.6)</em></td>
 </tr>
 </tbody>
 </table>
@@ -7371,7 +7436,7 @@ recorded and <a href="../../how-to/record-data-origin/">Record Data Origin</a> f
 <span class="s1">  }</span>
 <span class="s1">}'</span>
 
-<span class="c1"># Skip datajoint.json and .secrets/ entirely (new in 2.2.4)</span>
+<span class="c1"># Skip datajoint.json and .secrets/ entirely (new in 2.2.3)</span>
 <span class="nb">export</span><span class="w"> </span><span class="nv">DJ_IGNORE_CONFIG_FILE</span><span class="o">=</span><span class="nb">true</span>
 </code></pre></div>
 <div class="admonition version-added">
@@ -7453,8 +7518,8 @@ recorded and <a href="../../how-to/record-data-origin/">Record Data Origin</a> f
 <tr>
 <td><code>use_tls</code></td>
 <td>bool or dict</td>
-<td><code>None</code></td>
-<td>TLS configuration</td>
+<td>from config</td>
+<td>TLS configuration. When not given, <code>database.use_tls</code> from this instance's config applies <em>(from 2.3.6)</em>. See <a href="../../how-to/configure-database/#tls-configuration">TLS Configuration</a></td>
 </tr>
 <tr>
 <td><code>**kwargs</code></td>
