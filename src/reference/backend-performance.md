@@ -7,13 +7,18 @@ PostgreSQL 16 and PostgreSQL 17. It covers:
 - complex queries nested one to five levels deep;
 - blobs stored in the table, blobs in a file store, and JSON attributes.
 
-!!! note "Version measured"
-    DataJoint `master` at `eefe74b4` (2.3.5 development) with
-    [datajoint-python#1671](https://github.com/datajoint/datajoint-python/pull/1671) merged in, and
-    subquery pruning on (`prune_subqueries = True`). Pruning
-    keeps unused columns, such as blobs, out of the subqueries that the database materializes.
-    Without it, MySQL copies whole rows into temporary tables for Top, aggregation and union
-    subqueries; see [datajoint-python#1665](https://github.com/datajoint/datajoint-python/issues/1665).
+!!! note "Applies to DataJoint 2.4 and later"
+    These results are for DataJoint 2.4 and later, which prune unused columns from nested
+    subqueries ([datajoint-python#1671](https://github.com/datajoint/datajoint-python/pull/1671)).
+    Pruning is on by default (`prune_subqueries = True`). It keeps unused columns, such as blobs,
+    out of the subqueries that the database materializes. Releases before 2.4 select every column
+    at every level, so MySQL copies whole rows, blobs included, into temporary tables for Top,
+    aggregation and union subqueries. On MySQL 8.0 with in-table blobs and a cold cache, pruning
+    made those queries 26–560× faster.
+    [datajoint-python#1665](https://github.com/datajoint/datajoint-python/issues/1665) describes
+    the benefits of pruning, with the benchmark that measured them.
+
+    The build measured is DataJoint `master` at `eefe74b4` with #1671 merged in.
 
 ## Summary
 
