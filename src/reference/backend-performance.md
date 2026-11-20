@@ -14,7 +14,7 @@ PostgreSQL 16 and PostgreSQL 17. It covers:
     out of the subqueries that the database materializes. Releases before 2.4 select every column
     at every level, so MySQL copies whole rows, blobs included, into temporary tables for Top,
     aggregation and union subqueries. On MySQL 8.0 with in-table blobs and a cold cache, pruning
-    made those queries 26–560× faster. Earlier versions on MySQL may therefore perform
+    made those queries 26–560× faster. Earlier DataJoint versions on MySQL may therefore perform
     substantially worse than reported here.
     [datajoint-python#1665](https://github.com/datajoint/datajoint-python/issues/1665) describes
     the benefits of pruning, with the benchmark that measured them.
