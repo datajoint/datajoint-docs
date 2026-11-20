@@ -58,7 +58,7 @@ export DJ_USER=myuser
 export DJ_PASS=mypassword
 ```
 
-Environment variables take precedence over config files.
+Environment variables take precedence over config files, with one exception among the settings below: a `database.use_tls` value in `datajoint.json` replaces `DJ_USE_TLS`.
 
 ## Configuration Settings
 
@@ -70,7 +70,7 @@ Environment variables take precedence over config files.
 | `database.password` | `DJ_PASS` | — | Database password |
 | `database.backend` | `DJ_BACKEND` | `mysql` | Database backend: `mysql` or `postgresql` |
 | `database.name` | `DJ_DATABASE_NAME` | `None` | Database name (PostgreSQL only). Defaults to `"postgres"` |
-| `database.use_tls` | `DJ_TLS` | `True` | Use TLS encryption |
+| `database.use_tls` | `DJ_USE_TLS` | `None` | Use TLS encryption: unset (`None`) uses TLS when the server offers it, `true` requires it, `false` turns it off. See [TLS Configuration](#tls-configuration) |
 | `database.reconnect` | — | `True` | Auto-reconnect on timeout |
 | `safemode` | — | `True` | Prompt before destructive operations |
 
@@ -113,7 +113,24 @@ with dj.config.override(database={'host': 'test-server'}):
 
 ## TLS Configuration
 
-For production, always use TLS:
+TLS encrypts the connection between DataJoint and the database server, so that others on the
+network cannot read the data or the password. The `use_tls` option takes four forms:
+
+| Value | Effect |
+| ------- | -------- |
+| `None` (default) | Use TLS if the server offers it. Connect without TLS only if the server does not offer TLS or, on PostgreSQL, does not accept TLS connections from this client. The server's certificate is not verified. |
+| `True` | Require TLS. If TLS cannot be set up, the connection fails before the user name and password are sent. The server's certificate is not verified. |
+| `False` | Do not use TLS. A server that accepts only encrypted connections refuses the connection. |
+| dict | Require TLS with the options in the dict. With `"ca"`, the server's certificate is verified. |
+
+!!! version-changed "Changed in 2.3.6"
+    `True` and a dict now require TLS, and `False` now turns TLS off. The default no longer
+    retries without TLS after a failed TLS setup or a failed login. `dj.Instance` and
+    `dj.Connection` now follow `database.use_tls`. See
+    [Changes in 2.3.6](../about/whats-new-23.md#changes-in-236).
+
+In `datajoint.json` or `DJ_USE_TLS`, set `true` or `false`, or leave the setting out for the
+default. To require TLS:
 
 ```json
 {
@@ -121,13 +138,58 @@ For production, always use TLS:
 }
 ```
 
-For local development without TLS:
+For a local development server without TLS:
 
 ```json
 {
   "database.use_tls": false
 }
 ```
+
+### Verify the Server's Certificate
+
+`True` encrypts the connection but does not check that the server is the one you meant to
+reach. To check that, pass a dict with `"ca"`: the path to the certificate of the authority
+that signed the server's certificate (the CA certificate, usually a `.pem` file from your
+database administrator or cloud provider). A dict cannot be stored in `datajoint.json`, so pass
+it in code:
+
+```python
+import datajoint as dj
+
+conn = dj.conn(use_tls={"ca": "/path/to/ca.pem"})
+```
+
+With `"ca"`, DataJoint checks both the certificate and that its name matches the host you
+connect to. A self-signed certificate often has a name that does not match the host. In that
+case, add `"check_hostname": False`. The certificate is still checked against `"ca"`; only the
+name check is skipped:
+
+```python
+inst = dj.Instance(
+    host="db.example.com",
+    user="analyst",
+    password=password,
+    use_tls={"ca": "/path/to/ca.pem", "check_hostname": False},
+)
+```
+
+For a server that asks for a client certificate, add `"cert"` and `"key"` (the paths to your
+certificate and its private key). On PostgreSQL, a dict may hold `"ca"`, `"cert"`, `"key"`,
+`"password"` (for an encrypted key) and `"check_hostname"`; other keys are ignored with a
+warning.
+
+### Which Calls Use the Setting
+
+`dj.conn()`, `dj.Instance` and `dj.Connection` use `database.use_tls` (or `DJ_USE_TLS`) when
+you do not pass `use_tls`. A `use_tls` argument overrides the configuration for that
+connection.
+
+`dj.conn()` returns the existing connection when there is one. `dj.conn(use_tls=True)` or
+`dj.conn(use_tls={...})` reconnects it with that setting, unless it already meets it: a
+connection made with a dict meets `True`, and a dict is met only by a connection made with the
+same dict. Inside a transaction, the reconnect raises `DataJointError`. `dj.conn(use_tls=False)`
+does not change an existing connection; use `dj.conn(use_tls=False, reset=True)`.
 
 ## PostgreSQL Backend
 

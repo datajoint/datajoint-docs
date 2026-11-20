@@ -127,7 +127,7 @@ The `stores` block can be loaded from any of:
 | `stores` block of `datajoint.json` | 3 | Local development, committed project config |
 | `.secrets/stores.<name>.<attr>` files | 4 (fills missing attrs only) | Local credentials kept out of `datajoint.json` |
 
-When `DJ_STORES` is set, it replaces the `stores` block loaded from `datajoint.json` wholesale. The `.secrets/` directory still runs after `DJ_STORES` and fills in attributes that `DJ_STORES` omits — useful for hybrid setups (env-var store config + file-based credentials). To disable file-based config sources entirely, set `DJ_IGNORE_CONFIG_FILE=true` *(new in 2.2.4)*.
+When `DJ_STORES` is set, it replaces the `stores` block loaded from `datajoint.json` wholesale. The `.secrets/` directory still runs after `DJ_STORES` and fills in attributes that `DJ_STORES` omits — useful for hybrid setups (env-var store config + file-based credentials). To disable file-based config sources entirely, set `DJ_IGNORE_CONFIG_FILE=true` *(new in 2.2.3)*.
 
 See [Manage Secrets](../../how-to/manage-secrets.md#env-var-only-deployments) and [Storage Adapter API](storage-adapter-api.md) for adapter-specific field names.
 
