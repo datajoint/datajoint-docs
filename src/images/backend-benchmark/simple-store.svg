@@ -1,0 +1,174 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 586" width="760" height="586" role="img" aria-label="Simple-query latency per engine, blobs in a file store">
+
+  <style>
+    .bg { fill: #fcfcfb; }
+    .t1 { fill: #0b0b0b; font: 600 13px system-ui, -apple-system, sans-serif; }
+    .t2 { fill: #52514e; font: 12px system-ui, -apple-system, sans-serif; }
+    .t3 { fill: #52514e; font: 11px system-ui, -apple-system, sans-serif; }
+    .grid { stroke: #e4e3df; stroke-width: 1; }
+    .ref { stroke: #8f8d86; stroke-width: 1.5; stroke-dasharray: 4 3; }
+    .ci { stroke-width: 2; stroke-linecap: round; }
+    .my { stroke: #2a78d6; } .my.f { fill: #2a78d6; } .my.h { fill: #fcfcfb; }
+    .pg { stroke: #eb6834; } .pg.f { fill: #eb6834; } .pg.h { fill: #fcfcfb; }
+    @media (prefers-color-scheme: dark) {
+      .bg { fill: #1a1a19; }
+      .t1 { fill: #f0efec; }
+      .t2, .t3 { fill: #c3c2b7; }
+      .grid { stroke: #33332f; }
+      .ref { stroke: #8a8880; }
+      .my { stroke: #3987e5; } .my.f { fill: #3987e5; } .my.h { fill: #1a1a19; }
+      .pg { stroke: #d95926; } .pg.f { fill: #d95926; } .pg.h { fill: #1a1a19; }
+    }
+  </style>
+<rect class="bg" width="760" height="586"/>
+<text x="16" y="22" class="t1">Fetch by primary key: median latency, whisker to p95 (blobs in a file store)</text>
+<circle cx="21" cy="40" r="5" class="my h" stroke-width="2"/>
+<text x="31" y="44" class="t2">MySQL 8.0</text>
+<circle cx="114" cy="40" r="5" class="my f" stroke-width="2"/>
+<text x="124" y="44" class="t2">MySQL 8.4</text>
+<circle cx="207" cy="40" r="5" class="pg h" stroke-width="2"/>
+<text x="217" y="44" class="t2">PostgreSQL 16</text>
+<circle cx="328" cy="40" r="5" class="pg f" stroke-width="2"/>
+<text x="338" y="44" class="t2">PostgreSQL 17</text>
+<line x1="66.0" x2="66.0" y1="64" y2="540" class="grid"/>
+<text x="66.0" y="556" class="t3" text-anchor="middle">50 µs</text>
+<line x1="154.5" x2="154.5" y1="64" y2="540" class="grid"/>
+<text x="154.5" y="556" class="t3" text-anchor="middle">100 µs</text>
+<line x1="243.1" x2="243.1" y1="64" y2="540" class="grid"/>
+<text x="243.1" y="556" class="t3" text-anchor="middle">200 µs</text>
+<line x1="360.2" x2="360.2" y1="64" y2="540" class="grid"/>
+<text x="360.2" y="556" class="t3" text-anchor="middle">500 µs</text>
+<line x1="448.8" x2="448.8" y1="64" y2="540" class="grid"/>
+<text x="448.8" y="556" class="t3" text-anchor="middle">1.00 ms</text>
+<line x1="537.3" x2="537.3" y1="64" y2="540" class="grid"/>
+<text x="537.3" y="556" class="t3" text-anchor="middle">2.00 ms</text>
+<line x1="654.4" x2="654.4" y1="64" y2="540" class="grid"/>
+<text x="654.4" y="556" class="t3" text-anchor="middle">5.00 ms</text>
+<text x="54" y="85.0" class="t2" text-anchor="end">S1</text>
+<line x1="149.3" x2="438.7" y1="71.2" y2="71.2" class="ci my"/>
+<circle cx="149.3" cy="71.2" r="4" class="my h" stroke-width="2"><title>MySQL 8.0 S1: p50 96 µs, p95 924 µs</title></circle>
+<line x1="130.7" x2="158.3" y1="77.8" y2="77.8" class="ci my"/>
+<circle cx="130.7" cy="77.8" r="4" class="my f" stroke-width="2"><title>MySQL 8.4 S1: p50 83 µs, p95 103 µs</title></circle>
+<line x1="122.8" x2="443.7" y1="84.2" y2="84.2" class="ci pg"/>
+<circle cx="122.8" cy="84.2" r="4" class="pg h" stroke-width="2"><title>PostgreSQL 16 S1: p50 78 µs, p95 961 µs</title></circle>
+<line x1="112.6" x2="157.1" y1="90.8" y2="90.8" class="ci pg"/>
+<circle cx="112.6" cy="90.8" r="4" class="pg f" stroke-width="2"><title>PostgreSQL 17 S1: p50 72 µs, p95 102 µs</title></circle>
+<text x="54" y="119.0" class="t2" text-anchor="end">S2</text>
+<line x1="299.1" x2="333.0" y1="105.2" y2="105.2" class="ci my"/>
+<circle cx="299.1" cy="105.2" r="4" class="my h" stroke-width="2"><title>MySQL 8.0 S2: p50 310 µs, p95 404 µs</title></circle>
+<line x1="291.0" x2="303.2" y1="111.8" y2="111.8" class="ci my"/>
+<circle cx="291.0" cy="111.8" r="4" class="my f" stroke-width="2"><title>MySQL 8.4 S2: p50 291 µs, p95 320 µs</title></circle>
+<line x1="291.5" x2="319.6" y1="118.2" y2="118.2" class="ci pg"/>
+<circle cx="291.5" cy="118.2" r="4" class="pg h" stroke-width="2"><title>PostgreSQL 16 S2: p50 292 µs, p95 364 µs</title></circle>
+<line x1="287.5" x2="311.7" y1="124.8" y2="124.8" class="ci pg"/>
+<circle cx="287.5" cy="124.8" r="4" class="pg f" stroke-width="2"><title>PostgreSQL 17 S2: p50 283 µs, p95 342 µs</title></circle>
+<text x="54" y="153.0" class="t2" text-anchor="end">S3</text>
+<line x1="678.8" x2="693.2" y1="139.2" y2="139.2" class="ci my"/>
+<circle cx="678.8" cy="139.2" r="4" class="my h" stroke-width="2"><title>MySQL 8.0 S3: p50 6.05 ms, p95 6.77 ms</title></circle>
+<line x1="673.6" x2="687.2" y1="145.8" y2="145.8" class="ci my"/>
+<circle cx="673.6" cy="145.8" r="4" class="my f" stroke-width="2"><title>MySQL 8.4 S3: p50 5.81 ms, p95 6.46 ms</title></circle>
+<line x1="676.0" x2="685.9" y1="152.2" y2="152.2" class="ci pg"/>
+<circle cx="676.0" cy="152.2" r="4" class="pg h" stroke-width="2"><title>PostgreSQL 16 S3: p50 5.92 ms, p95 6.40 ms</title></circle>
+<line x1="682.2" x2="695.3" y1="158.8" y2="158.8" class="ci pg"/>
+<circle cx="682.2" cy="158.8" r="4" class="pg f" stroke-width="2"><title>PostgreSQL 17 S3: p50 6.22 ms, p95 6.88 ms</title></circle>
+<text x="54" y="187.0" class="t2" text-anchor="end">S4</text>
+<line x1="176.8" x2="224.6" y1="173.2" y2="173.2" class="ci my"/>
+<circle cx="176.8" cy="173.2" r="4" class="my h" stroke-width="2"><title>MySQL 8.0 S4: p50 119 µs, p95 173 µs</title></circle>
+<line x1="175.7" x2="203.8" y1="179.8" y2="179.8" class="ci my"/>
+<circle cx="175.7" cy="179.8" r="4" class="my f" stroke-width="2"><title>MySQL 8.4 S4: p50 118 µs, p95 147 µs</title></circle>
+<line x1="164.4" x2="198.5" y1="186.2" y2="186.2" class="ci pg"/>
+<circle cx="164.4" cy="186.2" r="4" class="pg h" stroke-width="2"><title>PostgreSQL 16 S4: p50 108 µs, p95 141 µs</title></circle>
+<line x1="162.0" x2="194.8" y1="192.8" y2="192.8" class="ci pg"/>
+<circle cx="162.0" cy="192.8" r="4" class="pg f" stroke-width="2"><title>PostgreSQL 17 S4: p50 106 µs, p95 137 µs</title></circle>
+<text x="54" y="221.0" class="t2" text-anchor="end">S5</text>
+<line x1="212.2" x2="241.2" y1="207.2" y2="207.2" class="ci my"/>
+<circle cx="212.2" cy="207.2" r="4" class="my h" stroke-width="2"><title>MySQL 8.0 S5: p50 157 µs, p95 197 µs</title></circle>
+<line x1="224.6" x2="322.4" y1="213.8" y2="213.8" class="ci my"/>
+<circle cx="224.6" cy="213.8" r="4" class="my f" stroke-width="2"><title>MySQL 8.4 S5: p50 173 µs, p95 372 µs</title></circle>
+<line x1="206.4" x2="237.2" y1="220.2" y2="220.2" class="ci pg"/>
+<circle cx="206.4" cy="220.2" r="4" class="pg h" stroke-width="2"><title>PostgreSQL 16 S5: p50 150 µs, p95 191 µs</title></circle>
+<line x1="203.8" x2="233.8" y1="226.8" y2="226.8" class="ci pg"/>
+<circle cx="203.8" cy="226.8" r="4" class="pg f" stroke-width="2"><title>PostgreSQL 17 S5: p50 147 µs, p95 186 µs</title></circle>
+<text x="54" y="255.0" class="t2" text-anchor="end">S6</text>
+<line x1="404.1" x2="422.5" y1="241.2" y2="241.2" class="ci my"/>
+<circle cx="404.1" cy="241.2" r="4" class="my h" stroke-width="2"><title>MySQL 8.0 S6: p50 705 µs, p95 814 µs</title></circle>
+<line x1="396.1" x2="423.4" y1="247.8" y2="247.8" class="ci my"/>
+<circle cx="396.1" cy="247.8" r="4" class="my f" stroke-width="2"><title>MySQL 8.4 S6: p50 662 µs, p95 820 µs</title></circle>
+<line x1="398.2" x2="427.4" y1="254.2" y2="254.2" class="ci pg"/>
+<circle cx="398.2" cy="254.2" r="4" class="pg h" stroke-width="2"><title>PostgreSQL 16 S6: p50 673 µs, p95 846 µs</title></circle>
+<line x1="395.9" x2="414.7" y1="260.8" y2="260.8" class="ci pg"/>
+<circle cx="395.9" cy="260.8" r="4" class="pg f" stroke-width="2"><title>PostgreSQL 17 S6: p50 661 µs, p95 766 µs</title></circle>
+<text x="54" y="289.0" class="t2" text-anchor="end">S7</text>
+<line x1="500.1" x2="541.2" y1="275.2" y2="275.2" class="ci my"/>
+<circle cx="500.1" cy="275.2" r="4" class="my h" stroke-width="2"><title>MySQL 8.0 S7: p50 1.49 ms, p95 2.06 ms</title></circle>
+<line x1="497.0" x2="505.4" y1="281.8" y2="281.8" class="ci my"/>
+<circle cx="497.0" cy="281.8" r="4" class="my f" stroke-width="2"><title>MySQL 8.4 S7: p50 1.46 ms, p95 1.56 ms</title></circle>
+<line x1="484.6" x2="496.7" y1="288.2" y2="288.2" class="ci pg"/>
+<circle cx="484.6" cy="288.2" r="4" class="pg h" stroke-width="2"><title>PostgreSQL 16 S7: p50 1.32 ms, p95 1.46 ms</title></circle>
+<line x1="481.7" x2="494.6" y1="294.8" y2="294.8" class="ci pg"/>
+<circle cx="481.7" cy="294.8" r="4" class="pg f" stroke-width="2"><title>PostgreSQL 17 S7: p50 1.29 ms, p95 1.43 ms</title></circle>
+<text x="54" y="323.0" class="t2" text-anchor="end">S8</text>
+<line x1="667.3" x2="678.2" y1="309.2" y2="309.2" class="ci my"/>
+<circle cx="667.3" cy="309.2" r="4" class="my h" stroke-width="2"><title>MySQL 8.0 S8: p50 5.53 ms, p95 6.02 ms</title></circle>
+<line x1="664.3" x2="676.4" y1="315.8" y2="315.8" class="ci my"/>
+<circle cx="664.3" cy="315.8" r="4" class="my f" stroke-width="2"><title>MySQL 8.4 S8: p50 5.40 ms, p95 5.94 ms</title></circle>
+<line x1="674.7" x2="702.5" y1="322.2" y2="322.2" class="ci pg"/>
+<circle cx="674.7" cy="322.2" r="4" class="pg h" stroke-width="2"><title>PostgreSQL 16 S8: p50 5.86 ms, p95 7.28 ms</title></circle>
+<line x1="668.5" x2="678.5" y1="328.8" y2="328.8" class="ci pg"/>
+<circle cx="668.5" cy="328.8" r="4" class="pg f" stroke-width="2"><title>PostgreSQL 17 S8: p50 5.58 ms, p95 6.04 ms</title></circle>
+<text x="54" y="357.0" class="t2" text-anchor="end">S9</text>
+<line x1="493.6" x2="512.1" y1="343.2" y2="343.2" class="ci my"/>
+<circle cx="493.6" cy="343.2" r="4" class="my h" stroke-width="2"><title>MySQL 8.0 S9: p50 1.42 ms, p95 1.64 ms</title></circle>
+<line x1="486.7" x2="491.8" y1="349.8" y2="349.8" class="ci my"/>
+<circle cx="486.7" cy="349.8" r="4" class="my f" stroke-width="2"><title>MySQL 8.4 S9: p50 1.35 ms, p95 1.40 ms</title></circle>
+<line x1="493.3" x2="507.9" y1="356.2" y2="356.2" class="ci pg"/>
+<circle cx="493.3" cy="356.2" r="4" class="pg h" stroke-width="2"><title>PostgreSQL 16 S9: p50 1.42 ms, p95 1.59 ms</title></circle>
+<line x1="490.2" x2="506.4" y1="362.8" y2="362.8" class="ci pg"/>
+<circle cx="490.2" cy="362.8" r="4" class="pg f" stroke-width="2"><title>PostgreSQL 17 S9: p50 1.38 ms, p95 1.57 ms</title></circle>
+<text x="54" y="391.0" class="t2" text-anchor="end">S10</text>
+<line x1="133.8" x2="175.7" y1="377.2" y2="377.2" class="ci my"/>
+<circle cx="133.8" cy="377.2" r="4" class="my h" stroke-width="2"><title>MySQL 8.0 S10: p50 85 µs, p95 118 µs</title></circle>
+<line x1="121.2" x2="150.7" y1="383.8" y2="383.8" class="ci my"/>
+<circle cx="121.2" cy="383.8" r="4" class="my f" stroke-width="2"><title>MySQL 8.4 S10: p50 77 µs, p95 97 µs</title></circle>
+<line x1="110.8" x2="154.6" y1="390.2" y2="390.2" class="ci pg"/>
+<circle cx="110.8" cy="390.2" r="4" class="pg h" stroke-width="2"><title>PostgreSQL 16 S10: p50 71 µs, p95 100 µs</title></circle>
+<line x1="109.0" x2="154.5" y1="396.8" y2="396.8" class="ci pg"/>
+<circle cx="109.0" cy="396.8" r="4" class="pg f" stroke-width="2"><title>PostgreSQL 17 S10: p50 70 µs, p95 100 µs</title></circle>
+<text x="54" y="425.0" class="t2" text-anchor="end">S11</text>
+<line x1="110.8" x2="153.3" y1="411.2" y2="411.2" class="ci my"/>
+<circle cx="110.8" cy="411.2" r="4" class="my h" stroke-width="2"><title>MySQL 8.0 S11: p50 71 µs, p95 99 µs</title></circle>
+<line x1="105.3" x2="132.3" y1="417.8" y2="417.8" class="ci my"/>
+<circle cx="105.3" cy="417.8" r="4" class="my f" stroke-width="2"><title>MySQL 8.4 S11: p50 68 µs, p95 84 µs</title></circle>
+<line x1="99.5" x2="146.6" y1="424.2" y2="424.2" class="ci pg"/>
+<circle cx="99.5" cy="424.2" r="4" class="pg h" stroke-width="2"><title>PostgreSQL 16 S11: p50 65 µs, p95 94 µs</title></circle>
+<line x1="97.5" x2="145.3" y1="430.8" y2="430.8" class="ci pg"/>
+<circle cx="97.5" cy="430.8" r="4" class="pg f" stroke-width="2"><title>PostgreSQL 17 S11: p50 64 µs, p95 93 µs</title></circle>
+<text x="54" y="459.0" class="t2" text-anchor="end">SJ1</text>
+<line x1="177.8" x2="296.9" y1="445.2" y2="445.2" class="ci my"/>
+<circle cx="177.8" cy="445.2" r="4" class="my h" stroke-width="2"><title>MySQL 8.0 SJ1: p50 120 µs, p95 305 µs</title></circle>
+<line x1="158.3" x2="182.1" y1="451.8" y2="451.8" class="ci my"/>
+<circle cx="158.3" cy="451.8" r="4" class="my f" stroke-width="2"><title>MySQL 8.4 SJ1: p50 103 µs, p95 124 µs</title></circle>
+<line x1="139.7" x2="177.8" y1="458.2" y2="458.2" class="ci pg"/>
+<circle cx="139.7" cy="458.2" r="4" class="pg h" stroke-width="2"><title>PostgreSQL 16 SJ1: p50 89 µs, p95 120 µs</title></circle>
+<line x1="136.8" x2="173.6" y1="464.8" y2="464.8" class="ci pg"/>
+<circle cx="136.8" cy="464.8" r="4" class="pg f" stroke-width="2"><title>PostgreSQL 17 SJ1: p50 87 µs, p95 116 µs</title></circle>
+<text x="54" y="493.0" class="t2" text-anchor="end">SJ2</text>
+<line x1="537.4" x2="558.8" y1="479.2" y2="479.2" class="ci my"/>
+<circle cx="537.4" cy="479.2" r="4" class="my h" stroke-width="2"><title>MySQL 8.0 SJ2: p50 2.00 ms, p95 2.37 ms</title></circle>
+<line x1="517.5" x2="530.5" y1="485.8" y2="485.8" class="ci my"/>
+<circle cx="517.5" cy="485.8" r="4" class="my f" stroke-width="2"><title>MySQL 8.4 SJ2: p50 1.71 ms, p95 1.90 ms</title></circle>
+<line x1="476.7" x2="494.6" y1="492.2" y2="492.2" class="ci pg"/>
+<circle cx="476.7" cy="492.2" r="4" class="pg h" stroke-width="2"><title>PostgreSQL 16 SJ2: p50 1.24 ms, p95 1.43 ms</title></circle>
+<line x1="471.5" x2="528.6" y1="498.8" y2="498.8" class="ci pg"/>
+<circle cx="471.5" cy="498.8" r="4" class="pg f" stroke-width="2"><title>PostgreSQL 17 SJ2: p50 1.19 ms, p95 1.87 ms</title></circle>
+<text x="54" y="527.0" class="t2" text-anchor="end">SJ3</text>
+<line x1="196.6" x2="229.0" y1="513.2" y2="513.2" class="ci my"/>
+<circle cx="196.6" cy="513.2" r="4" class="my h" stroke-width="2"><title>MySQL 8.0 SJ3: p50 139 µs, p95 179 µs</title></circle>
+<line x1="191.0" x2="210.5" y1="519.8" y2="519.8" class="ci my"/>
+<circle cx="191.0" cy="519.8" r="4" class="my f" stroke-width="2"><title>MySQL 8.4 SJ3: p50 133 µs, p95 155 µs</title></circle>
+<line x1="191.0" x2="222.3" y1="526.2" y2="526.2" class="ci pg"/>
+<circle cx="191.0" cy="526.2" r="4" class="pg h" stroke-width="2"><title>PostgreSQL 16 SJ3: p50 133 µs, p95 170 µs</title></circle>
+<line x1="192.9" x2="304.0" y1="532.8" y2="532.8" class="ci pg"/>
+<circle cx="192.9" cy="532.8" r="4" class="pg f" stroke-width="2"><title>PostgreSQL 17 SJ3: p50 135 µs, p95 322 µs</title></circle>
+<text x="736" y="578" class="t3" text-anchor="end">log scale</text>
+</svg>

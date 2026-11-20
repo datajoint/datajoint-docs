@@ -43,6 +43,12 @@ Or via environment variable:
 export DJ_BACKEND=postgresql
 ```
 
+## Performance
+
+The same DataJoint queries were benchmarked on MySQL 8.0, MySQL 8.4, PostgreSQL 16 and PostgreSQL 17,
+covering simple fetches by primary key, complex queries nested up to five levels, in-table blobs,
+blobs in a file store and JSON. See [Backend Performance](../backend-performance.md).
+
 ## Adapter Architecture
 
 DataJoint uses database adapters to generate backend-specific SQL while maintaining a consistent API.
