@@ -13,6 +13,19 @@ Configuration is loaded in priority order:
 3. **Secrets directory** (`.secrets/`)
 4. **Defaults** (lowest priority)
 
+An environment variable takes precedence over `datajoint.json` for every setting that has one. The
+tables below name each setting's variable.
+
+!!! version-changed "Changed in 2.3.7"
+    Before 2.3.7, an environment variable took precedence over `datajoint.json` only for some
+    settings. For `database.reconnect` (`DJ_RECONNECT`), `database.use_tls` (`DJ_USE_TLS`),
+    `jobs.*` (`DJ_JOBS_*`), `provenance.*` (`DJ_PROVENANCE_*`), `safemode` (`DJ_SAFEMODE`),
+    `query_cache` (`DJ_QUERY_CACHE`), `download_path` (`DJ_DOWNLOAD_PATH`), `ignore_config_file`
+    (`DJ_IGNORE_CONFIG_FILE`) and `allow_filepath_outside_store`
+    (`DJ_ALLOW_FILEPATH_OUTSIDE_STORE`), a value in `datajoint.json` replaced the environment
+    variable. Now the environment variable wins for these too. A deployment that relied on the
+    file to override one of these variables should unset the variable.
+
 ### Configuration File Search
 
 When `datajoint` is imported, it looks for configuration files in this order:
@@ -33,6 +46,14 @@ When `datajoint` is imported, it looks for configuration files in this order:
     `.secrets/` directory next to a `DJ_CONFIG_FILE` file is still checked. On Windows, the search has no ownership check.
     See [Configuration on Shared Hosts](../how-to/manage-secrets.md#configuration-on-shared-hosts).
 
+!!! version-changed "Changed in 2.3.7"
+    A skipped file or directory also issues a Python `UserWarning`, so a logging setup that hides
+    warnings no longer hides it. A file that another user owns, used from a directory that not every
+    user can write (such as a shared group directory), is logged at info level with its path and the
+    owner's user ID. Ownership is compared with the effective user ID. The configuration file found
+    at import is logged at debug level (`Loading configuration from <path>`), so `import datajoint`
+    prints nothing at the default level; set `DJ_LOG_LEVEL=debug` to see which file was loaded.
+
 ## Database Settings
 
 | Setting | Environment | Default | Description |
@@ -43,9 +64,9 @@ When `datajoint` is imported, it looks for configuration files in this order:
 | `database.user` | `DJ_USER` | — | Database username (required) |
 | `database.password` | `DJ_PASS` | — | Database password (required) |
 | `database.name` | `DJ_DATABASE_NAME` | `None` | Database name for PostgreSQL connections. Defaults to `"postgres"` if not set. *(new in 2.2.1)* |
-| `database.reconnect` | — | `True` | Auto-reconnect on connection loss |
+| `database.reconnect` | `DJ_RECONNECT` | `True` | Auto-reconnect on connection loss |
 | `database.use_tls` | `DJ_USE_TLS` | `None` | TLS encryption: unset (`None`) uses TLS when the server offers it, `true` requires it, `false` turns it off. A dict with certificate options is passed in code. See [TLS Configuration](../how-to/configure-database.md#tls-configuration) *(env var new in 2.1)* |
-| `database.database_prefix` | `DJ_DATABASE_PREFIX` | `""` | *(Deprecated — use `database.name` instead)* Prefix for database/schema names |
+| `database.database_prefix` | `DJ_DATABASE_PREFIX` | `""` | *Deprecated; will be removed in a future release.* Not applied to schema names: include a prefix in the name passed to `dj.Schema`. To select a PostgreSQL database, use `database.name` |
 | `database.create_tables` | `DJ_CREATE_TABLES` | `True` | Default for `Schema(create_tables=)`. Set `False` for production mode |
 
 ## Connection Settings
@@ -173,15 +194,32 @@ If table lacks partition attributes, it follows normal path structure.
 
 ## Jobs Settings
 
-| Setting | Default | Description |
-| --------- | --------- | ------------- |
-| `jobs.auto_refresh` | `True` | Auto-refresh job queue on populate |
-| `jobs.keep_completed` | `False` | Retain success records in jobs table |
-| `jobs.stale_timeout` | `3600` | Seconds before stale job cleanup |
-| `jobs.default_priority` | `5` | Default priority (0-255, lower = more urgent) |
-| `jobs.version_method` | `None` | Version tracking: `git`, `none`, or `None` (disabled) |
-| `jobs.add_job_metadata` | `False` | Add hidden metadata to computed tables |
-| `jobs.allow_new_pk_fields_in_computed_tables` | `False` | Allow non-FK primary key fields |
+| Setting | Environment | Default | Description |
+| --------- | ------------- | --------- | ------------- |
+| `jobs.auto_refresh` | `DJ_JOBS_AUTO_REFRESH` | `True` | Auto-refresh job queue on populate |
+| `jobs.keep_completed` | `DJ_JOBS_KEEP_COMPLETED` | `False` | Retain success records in jobs table |
+| `jobs.stale_timeout` | `DJ_JOBS_STALE_TIMEOUT` | `3600` | Seconds before stale job cleanup |
+| `jobs.default_priority` | `DJ_JOBS_DEFAULT_PRIORITY` | `5` | Default priority (0-255, lower = more urgent) |
+| `jobs.version_method` | `DJ_JOBS_VERSION_METHOD` | `None` | Version tracking: `git`, `none`, or `None` (disabled) |
+| `jobs.add_job_metadata` | `DJ_JOBS_ADD_JOB_METADATA` | `False` | Add hidden metadata to computed tables |
+| `jobs.allow_new_pk_fields_in_computed_tables` | `DJ_JOBS_ALLOW_NEW_PK_FIELDS_IN_COMPUTED_TABLES` | `False` | Allow non-FK primary key fields |
+
+## Blob Settings
+
+| Setting | Environment | Default | Description |
+| --------- | ------------- | --------- | ------------- |
+| `blob.max_decompressed_size` | `DJ_BLOB_MAX_DECOMPRESSED_SIZE` | `None` | Largest uncompressed size, in bytes, of a compressed blob that is read. `None`: no limit *(new in 2.3.7)* |
+
+A compressed blob records its uncompressed size. When `blob.max_decompressed_size` is set, a
+`<blob>`, `<blob@>` or `<blob@store>` value whose recorded size exceeds it raises
+`DataJointError` on fetch, before anything is decompressed. Uncompressed blobs are not checked:
+they are already in memory. The limit is unset by default, so nothing changes unless a deployment
+sets it. A deployment that reads blobs written by others can set it to bound the memory one blob
+can take:
+
+```bash
+export DJ_BLOB_MAX_DECOMPRESSED_SIZE=2147483648  # 2 GiB
+```
 
 ## Provenance Settings
 
@@ -209,21 +247,26 @@ recorded and [Record Data Origin](../how-to/record-data-origin.md) for the task-
 | `display.show_tuple_count` | — | `True` | Show row count in output |
 | `display.diagram_direction` | `DJ_DIAGRAM_DIRECTION` | `LR` | Diagram layout: `LR` (left-right) or `TB` (top-bottom) *(new in 2.1)* |
 | `display.diagram_theme` | `DJ_DIAGRAM_THEME` | `auto` | Diagram color theme: `auto` (one SVG that follows the viewer's light or dark mode), `light`, or `dark` *(new in 2.3.3)* |
+| `display.diagram_fontname` | `DJ_DIAGRAM_FONTNAME` | `Helvetica` | Typeface of node and schema labels in Graphviz diagrams. Graphviz sizes nodes with the face it finds on the rendering machine, so set it only where the face is installed. Mermaid output names no typeface *(new in 2.3.7)* |
 
 ## Top-Level Settings
 
 | Setting | Environment | Default | Description |
 | --------- | ------------- | --------- | ------------- |
-| `loglevel` | `DJ_LOG_LEVEL` | `INFO` | Log level: `DEBUG`, `INFO`, `WARNING`, `ERROR`, `CRITICAL` |
-| `safemode` | — | `True` | Require confirmation for destructive operations |
-| `enable_python_native_blobs` | — | `True` | Allow Python-native blob serialization |
-| `cache` | — | `None` | Path for query result cache |
-| `query_cache` | — | `None` | Path for compiled query cache |
-| `download_path` | — | `.` | Download location for attachments/filepaths |
+| `loglevel` | `DJ_LOG_LEVEL` | `INFO` | Log level: `DEBUG`, `INFO`, `WARNING`, `ERROR`, `CRITICAL`, in any case (`error` is accepted from 2.3.7). A `loglevel` in `datajoint.json` applies from import on *(from 2.3.7)* |
+| `safemode` | `DJ_SAFEMODE` | `True` | Require confirmation for destructive operations |
+| `query_cache` | `DJ_QUERY_CACHE` | `None` | Path for query result cache |
+| `download_path` | `DJ_DOWNLOAD_PATH` | `.` | Download location for attachments/filepaths |
 | `allow_filepath_outside_store` | `DJ_ALLOW_FILEPATH_OUTSIDE_STORE` | `False` | Accept `<filepath@>` paths that lead outside their store. Use only with trusted data; see [Paths outside the store](../how-to/configure-storage.md#paths-outside-the-store). *(new in 2.3.6)* |
 | `stores` | `DJ_STORES` | `{}` | JSON-encoded `stores` dict. Replaces the `stores` block from `datajoint.json`. *(new in 2.2.4)* |
 | `ignore_config_file` | `DJ_IGNORE_CONFIG_FILE` | `False` | Skip `datajoint.json` and the secrets directory. *(new in 2.2.3)* |
 | — | `DJ_CONFIG_FILE` | — | Path of the configuration file to load, with no search. See [Configuration File Search](#configuration-file-search). *(new in 2.3.6)* |
+
+!!! version-changed "Changed in 2.3.7"
+    A `loglevel` set in `datajoint.json` now takes effect at import. Before, the logger was reset to
+    `DJ_LOG_LEVEL`, or to `INFO` when that was unset, after the file had been read, so
+    `dj.config.loglevel` could read `WARNING` while `INFO` records were still printed.
+    `DJ_LOG_LEVEL` still takes precedence over the file.
 
 ## Example Configuration
 
