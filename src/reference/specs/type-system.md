@@ -505,8 +505,8 @@ Equipment & {"specs.vendor": "Acme"}
 Equipment.proj(vendor="specs.vendor")
 ```
 
-Both emit `json_value()` on MySQL and `jsonb_extract_path_text()` on
-PostgreSQL. Nested fields and array elements use dots and brackets:
+Both read the path with `json_value()` on MySQL and `jsonb_extract_path_text()`
+on PostgreSQL. Nested fields and array elements use dots and brackets:
 `specs.probe.serial`, `specs.channels[0]`.
 
 #### Extracted values are text
@@ -515,31 +515,93 @@ Both backend functions return text, so a numeric or boolean field comes back as
 a string unless a type is requested:
 
 ```python
-Equipment.proj(ch="specs.channels")            # '64'  — str
-Equipment.proj(ch="specs.channels:unsigned")   # 64    — int
+Equipment.proj(ch="specs.channels")       # '64'  — str
+Equipment.proj(ch="specs.channels:int")   # 64    — int
 ```
 
-The annotation is `path:type`. Portable spellings are `unsigned`, `signed` and
-`decimal(M,D)`.
+#### Type annotations
 
-!!! warning "Two defects to know about when filtering"
+The annotation is `path:type`. It takes MySQL's `RETURNING` spellings and the
+common PostgreSQL spellings. DataJoint converts each one to the matching type of
+the backend, so the same annotation works on both:
 
-    **Compare against a string.** A restriction value that is a Python `int` or
-    `bool` is not coerced to match the extracted text. `& {"specs.calibrated":
-    True}` returns **no rows** on MySQL and raises on PostgreSQL; write
-    `& {"specs.calibrated": "true"}` and `& {"specs.channels": "64"}` until
-    [#1564](https://github.com/datajoint/datajoint-python/issues/1564) is fixed.
+| Annotation | MySQL | PostgreSQL |
+|---|---|---|
+| `int`, `integer`, `smallint`, `bigint`, `int2`, `int4`, `int8` | `signed` | as written |
+| `tinyint`, `mediumint` | `signed` | `smallint`, `integer` |
+| `signed`, `unsigned` | as written | `bigint` |
+| `decimal(p,s)`, `numeric(p,s)` | `decimal(p,s)` | as written |
+| `decimal`, `numeric` without precision | `decimal(65,30)` | `numeric` |
+| `double`, `double precision`, `float`, `real`, `float4`, `float8` | as written | as written; `double` becomes `double precision` |
+| `bool`, `boolean` | `signed` | as written |
+| `char`, `varchar`, `text` | `char` | `text` |
+| `char(n)`, `varchar(n)` | `char(n)` | `varchar(n)` |
+| `date`, `time` | as written | as written |
+| `datetime`, `timestamp` | `datetime` | `timestamp` |
+| `json`, `jsonb` | `json` | the JSON value, as `json` or `jsonb` |
 
-    **`:int` is not portable.** It works on PostgreSQL and raises on MySQL, whose
-    `RETURNING` clause does not accept it. Use `unsigned` or `signed`, which work
-    on both — [#1563](https://github.com/datajoint/datajoint-python/issues/1563).
+Some results still differ between the backends:
+
+- A decimal without precision keeps the value exactly on both. MySQL returns it
+  with 30 decimal places, `Decimal('2.500000000000000000000000000000')`, which
+  equals `Decimal('2.5')`.
+- A boolean comes back as `1` or `0` on MySQL and as `True` or `False` on
+  PostgreSQL.
+- A string longer than `n` in `char(n)` or `varchar(n)` comes back as `NULL` on
+  MySQL and cut to `n` characters on PostgreSQL.
+- `uuid`, `interval`, `bit`, `timetz`, `timestamptz` and the `with time zone`
+  forms exist only on PostgreSQL. On MySQL they raise a `DataJointError` that
+  lists the annotations that work on both backends.
+
+#### Restricting by value
+
+A string value is compared with the extracted text. `"64"` matches a stored
+`64` or `"64"`, and `"true"` matches a stored `true`:
+
+```python
+Equipment & {"specs.vendor": "Acme"}
+Equipment & {"specs.channels": "64"}
+```
+
+A `bool` or a number (`int`, `float`, `Decimal`, and their NumPy types) is
+compared with the JSON value itself: `json_extract(...) = cast('64' as json)` on
+MySQL, `jsonb_extract_path(...) = '64'::jsonb` on PostgreSQL. The result is the
+same on both backends:
+
+```python
+Equipment & {"specs.calibrated": True}
+Equipment & {"specs.channels": 64}
+```
+
+- Numbers compare by value: `64` matches a stored `64` or `64.0`, and
+  `Decimal("2.50")` matches `2.5`.
+- `True` and `False` match only JSON `true` and `false`, not `1`, `0` or a
+  string.
+- A number or a boolean does not match a JSON string: `{"specs.channels": 64}`
+  does not match `"64"`.
+- A row without the key matches neither the restriction nor its complement
+  (`-`). A JSON `null` is a value unequal to every number, so the complement
+  includes it.
+- NaN and infinity raise a `DataJointError`, since JSON cannot represent them.
+
+A key with a type annotation compares the converted value instead:
+`Equipment & {"specs.channels:int": 64}`.
+
+!!! version-changed "Changed in 2.3.7"
+
+    Earlier releases compared every restriction value with the extracted text.
+    On MySQL, `True` missed the rows holding JSON `true`, and `False` matched
+    every value that does not read as a number. On PostgreSQL, a `bool` or a
+    number raised an error. `:int` and the other PostgreSQL spellings were a
+    syntax error on MySQL. On those releases, restrict by strings (`"true"`,
+    `"64"`) and annotate with `signed`, `unsigned` or `decimal(M,D)`.
 
 #### Ordering comparisons
 
 A path yields text, so `>` and `<` need a typed projection first:
 
 ```python
-big = Equipment.proj(ch="specs.channels:unsigned") & "ch > 32"
+big = Equipment.proj(ch="specs.channels:int") & "ch > 32"
 ```
 
 #### What is not supported
