@@ -531,27 +531,47 @@ the backend, so the same annotation works on both:
 | `tinyint`, `mediumint` | `signed` | `smallint`, `integer` |
 | `signed`, `unsigned` | as written | `bigint` |
 | `decimal(p,s)`, `numeric(p,s)` | `decimal(p,s)` | as written |
-| `decimal`, `numeric` without precision | `decimal(65,30)` | `numeric` |
+| `decimal`, `numeric` without precision | `decimal(65,30)` | as written |
 | `double`, `double precision`, `float`, `real`, `float4`, `float8` | as written | as written; `double` becomes `double precision` |
 | `bool`, `boolean` | `signed` | as written |
-| `char`, `varchar`, `text` | `char` | `text` |
+| `char`, `text` | `char` | `text` |
+| `varchar` | `char` | as written: `varchar` without a length has no limit |
 | `char(n)`, `varchar(n)` | `char(n)` | `varchar(n)` |
 | `date`, `time` | as written | as written |
 | `datetime`, `timestamp` | `datetime` | `timestamp` |
 | `json`, `jsonb` | `json` | the JSON value, as `json` or `jsonb` |
 
+Only `decimal` and `numeric` take two arguments, the precision and the scale.
+`char(n)`, `varchar(n)`, `float(p)` and the time types (`time(n)`,
+`datetime(n)`, `timestamp(n)`) take one, and an integer display width such as
+`int(11)` is dropped. A type given more arguments than it takes, such as
+`float(10,2)` or `date(3)`, raises a `DataJointError`.
+
 Some results still differ between the backends:
 
-- A decimal without precision keeps the value exactly on both. MySQL returns it
-  with 30 decimal places, `Decimal('2.500000000000000000000000000000')`, which
-  equals `Decimal('2.5')`.
+- A decimal without precision is exact on PostgreSQL, with any number of
+  digits. On MySQL it is `decimal(65,30)`: the value comes back with 30 decimal
+  places, such as `Decimal('2.500000000000000000000000000000')`, which equals
+  `Decimal('2.5')`. Digits beyond the 30th decimal place are rounded (`1e-40`
+  becomes `0`), and a value of `1e35` or more in magnitude comes back as
+  `NULL`. MySQL also stores a JSON number that has a fraction as a 64-bit
+  float, which keeps about 17 significant digits.
 - A boolean comes back as `1` or `0` on MySQL and as `True` or `False` on
   PostgreSQL.
+- A `json` or `jsonb` annotation returns the JSON text as a string on MySQL,
+  such as `'{"a": 1}'` or `'"Acme"'`, and the decoded value on PostgreSQL, such
+  as `{'a': 1}` or `'Acme'`.
+- A value that the type cannot hold, such as `"abc"` under `:int` or `:date`,
+  comes back as `NULL` on MySQL and fails the whole query on PostgreSQL. An
+  integer annotation on a number with a fraction rounds it on MySQL (`2.7`
+  becomes `3`, `2.5` becomes `2`) and fails the query on PostgreSQL.
 - A string longer than `n` in `char(n)` or `varchar(n)` comes back as `NULL` on
   MySQL and cut to `n` characters on PostgreSQL.
 - `uuid`, `interval`, `bit`, `timetz`, `timestamptz` and the `with time zone`
   forms exist only on PostgreSQL. On MySQL they raise a `DataJointError` that
-  lists the annotations that work on both backends.
+  lists the annotations that work on both backends. On PostgreSQL, `bit` alone
+  becomes `bit varying`: `bit` there means `bit(1)` and keeps only the first
+  bit.
 
 #### Restricting by value
 
