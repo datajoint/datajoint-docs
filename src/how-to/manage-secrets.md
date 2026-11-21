@@ -316,8 +316,10 @@ directory above your project is loaded when your project has none.
 - Do not run DataJoint from a directory that another user created, such as one under `/tmp`,
   unless you trust that user.
 - For services and shared pipelines, set `DJ_IGNORE_CONFIG_FILE=true` and supply every setting
-  through environment variables. Setting environment variables alone is not enough, because
-  they do not override every setting in a file (see [Configuration Priority](#configuration-priority)).
+  through environment variables. Setting environment variables alone is not enough: they take
+  precedence over the file only for settings that have a variable, and settings without one,
+  such as `display.limit` or `connection.charset`, are still read from the file (see
+  [Configuration Priority](#configuration-priority)).
 
 ## Security Best Practices
 

@@ -58,7 +58,15 @@ export DJ_USER=myuser
 export DJ_PASS=mypassword
 ```
 
-Environment variables take precedence over config files, with one exception among the settings below: a `database.use_tls` value in `datajoint.json` replaces `DJ_USE_TLS`.
+An environment variable takes precedence over `datajoint.json` for every setting that has one.
+The table below names each setting's variable.
+
+!!! version-changed "Changed in 2.3.7"
+    Before 2.3.7, a value in `datajoint.json` replaced the environment variable for some settings,
+    among them `database.use_tls` (`DJ_USE_TLS`), `database.reconnect` (`DJ_RECONNECT`) and
+    `safemode` (`DJ_SAFEMODE`). A deployment that relied on the file to override one of these
+    variables should unset the variable. See
+    [Configuration Sources](../reference/configuration.md#configuration-sources).
 
 ## Configuration Settings
 
@@ -71,8 +79,8 @@ Environment variables take precedence over config files, with one exception amon
 | `database.backend` | `DJ_BACKEND` | `mysql` | Database backend: `mysql` or `postgresql` |
 | `database.name` | `DJ_DATABASE_NAME` | `None` | Database name (PostgreSQL only). Defaults to `"postgres"` |
 | `database.use_tls` | `DJ_USE_TLS` | `None` | Use TLS encryption: unset (`None`) uses TLS when the server offers it, `true` requires it, `false` turns it off. See [TLS Configuration](#tls-configuration) |
-| `database.reconnect` | — | `True` | Auto-reconnect on timeout |
-| `safemode` | — | `True` | Prompt before destructive operations |
+| `database.reconnect` | `DJ_RECONNECT` | `True` | Auto-reconnect on timeout |
+| `safemode` | `DJ_SAFEMODE` | `True` | Prompt before destructive operations |
 
 ## Test Connection
 
