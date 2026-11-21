@@ -22,7 +22,7 @@ DataJoint loads configuration in this priority order (highest to lowest):
 4. **Secrets directory** — `.secrets/database.user`, `.secrets/database.password`, `.secrets/stores.<name>.<attr>` (each fills a value the file and env didn't already set)
 5. **Default values** — Built-in defaults
 
-Higher priority sources override lower ones, with one limit on environment variables. They take precedence over `datajoint.json` only for `DJ_HOST`, `DJ_USER`, `DJ_PASS`, `DJ_PORT`, `DJ_BACKEND`, `DJ_DATABASE_NAME`, `DJ_DATABASE_PREFIX`, `DJ_CREATE_TABLES`, `DJ_LOG_LEVEL`, `DJ_STORES` and the diagram display settings. For other settings, including `database.use_tls` (`DJ_USE_TLS`), a value in `datajoint.json` replaces the environment variable.
+Higher priority sources override lower ones. An environment variable takes precedence over `datajoint.json` for every setting that has one; the [Configuration Reference](../reference/configuration.md) names each setting's variable. Before 2.3.7, that held only for some settings: for others, including `database.use_tls` (`DJ_USE_TLS`), `database.reconnect` (`DJ_RECONNECT`) and the jobs settings (`DJ_JOBS_*`), a value in `datajoint.json` replaced the environment variable.
 
 Set `DJ_CONFIG_FILE` *(new in 2.3.6)* to load one named configuration file with no search. Set `DJ_IGNORE_CONFIG_FILE=true` *(new in 2.2.3)* to skip both `datajoint.json` and the secrets directory entirely — see [Env-var-only deployments](#env-var-only-deployments) below.
 
@@ -268,8 +268,13 @@ and for the secret files in them skips an item when both of these are true:
   that lacks the sticky bit. The sticky bit, shown as the `t` in `drwxrwxrwt` on `/tmp`, stops
   users from removing or renaming each other's files.
 
-Each skipped item is logged as a warning that names it, so `DJ_LOG_LEVEL=ERROR` hides it. The
-search does not continue to parent directories past a skipped `datajoint.json`.
+Each skipped item is logged as a warning that names it. From 2.3.7, it also issues a Python
+`UserWarning`, so a log level such as `DJ_LOG_LEVEL=ERROR` no longer hides it. The search does not
+continue to parent directories past a skipped `datajoint.json`.
+
+From 2.3.7, when DataJoint uses a file or secrets directory that another user owns (its
+directory is not writable by every user), it logs this at info level, with the path and the
+owner's user ID. Ownership is compared with the effective user ID.
 
 A configuration file, secret file or secrets directory that is used and that every user can
 write also produces a warning. Restrict it with `chmod o-w`. A secrets directory that every user

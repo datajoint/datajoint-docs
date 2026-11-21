@@ -90,51 +90,42 @@ class NewTable(dj.Manual):
 NewTable()  # Creates the table
 ```
 
-## Use Database Prefixes
+## Use Schema Name Prefixes
 
-When multiple projects share a database server, use prefixes to avoid naming collisions and organize schemas.
+When multiple projects share a database server, give the schemas of each project a common prefix to avoid naming collisions and organize schemas.
 
-### Configure Database Prefix
+### Name Schemas with the Prefix
+
+Write the prefix into the name passed to `dj.Schema`. DataJoint uses the name as given:
+
+```python
+import datajoint as dj
+
+subject_schema = dj.Schema('myproject_subject')
+session_schema = dj.Schema('myproject_session')
+ephys_schema = dj.Schema('myproject_ephys')
+```
+
+To keep the prefix in one place, define it once in the pipeline code. A pipeline that runs against several targets with different prefixes can read it from a variable of its own:
+
+```python
+import os
+
+import datajoint as dj
+
+# MYPROJECT_SCHEMA_PREFIX is the pipeline's own variable, not a DataJoint setting
+SCHEMA_PREFIX = os.environ.get('MYPROJECT_SCHEMA_PREFIX', 'myproject_')
+
+subject_schema = dj.Schema(SCHEMA_PREFIX + 'subject')   # myproject_subject
+session_schema = dj.Schema(SCHEMA_PREFIX + 'session')   # myproject_session
+ephys_schema = dj.Schema(SCHEMA_PREFIX + 'ephys')       # myproject_ephys
+```
 
 !!! version-deprecated "Deprecated in 2.2.1"
-    `database_prefix` is deprecated. For PostgreSQL, use `database.name` to select a database instead. `database_prefix` will be removed in 2.3.
-
-```python
-import datajoint as dj
-
-dj.config.database.database_prefix = 'myproject_'
-```
-
-Or via environment variable:
-
-```bash
-export DJ_DATABASE_PREFIX=myproject_
-```
-
-Or in `datajoint.json`:
-
-```json
-{
-  "database": {
-    "database_prefix": "myproject_"
-  }
-}
-```
-
-### Apply Prefix to Schemas
-
-Use the prefix when creating schemas:
-
-```python
-import datajoint as dj
-
-prefix = dj.config.database.database_prefix  # 'myproject_'
-
-# Schema names include prefix
-subject_schema = dj.Schema(prefix + 'subject')   # myproject_subject
-session_schema = dj.Schema(prefix + 'session')   # myproject_session
-ephys_schema = dj.Schema(prefix + 'ephys')       # myproject_ephys
-```
+    The `database.database_prefix` setting (`DJ_DATABASE_PREFIX`) is deprecated and will be
+    removed in a future release. It is not applied to schema names. While it is set, activating a
+    schema issues a `DeprecationWarning`. Do not use it in production configuration. To select a
+    PostgreSQL database, use `database.name`.
 
 ### Benefits
 
@@ -171,6 +162,14 @@ DataJoint loads settings in priority order:
 3. **Secrets directory** (`.secrets/`)
 4. **Defaults** (lowest priority)
 
+An environment variable takes precedence over `datajoint.json` for every setting that has one, so one committed `datajoint.json` can serve every environment, with the production values set in the environment. The [Configuration Reference](../reference/configuration.md) names each setting's variable.
+
+!!! version-changed "Changed in 2.3.7"
+    Before 2.3.7, a value in `datajoint.json` replaced the environment variable for some settings,
+    among them `database.reconnect` (`DJ_RECONNECT`), `database.use_tls` (`DJ_USE_TLS`), `safemode`
+    (`DJ_SAFEMODE`) and the jobs settings (`DJ_JOBS_*`). A deployment that relied on the file to
+    override one of these variables should unset the variable.
+
 ### Development Setup
 
 **datajoint.json** (committed):
@@ -200,7 +199,6 @@ export DJ_PASS=prod_password
 
 # Production mode
 export DJ_CREATE_TABLES=false
-export DJ_DATABASE_PREFIX=myproject_
 
 # Disable interactive prompts
 export DJ_SAFEMODE=false
@@ -218,7 +216,6 @@ services:
     environment:
       - DJ_HOST=db.example.com
       - DJ_CREATE_TABLES=false
-      - DJ_DATABASE_PREFIX=prod_
     volumes:
       # Mount secrets directory
       - type: bind
@@ -285,12 +282,16 @@ export DJ_PASS=<from-secret-manager>
 
 # Production behavior
 export DJ_CREATE_TABLES=false
-export DJ_DATABASE_PREFIX=prod_
 export DJ_SAFEMODE=false
 
 # Logging
 export DJ_LOG_LEVEL=WARNING
+
+# Optional (new in 2.3.7): refuse a compressed blob that would expand beyond 2 GiB
+export DJ_BLOB_MAX_DECOMPRESSED_SIZE=2147483648
 ```
+
+`DJ_LOG_LEVEL` can also be set as `loglevel` in `datajoint.json`; from 2.3.7, that value applies from import on. `DJ_BLOB_MAX_DECOMPRESSED_SIZE` bounds the memory that one blob can take when the pipeline reads blobs written by others; see [Blob Settings](../reference/configuration.md#blob-settings).
 
 ### Verification Script
 
@@ -306,10 +307,6 @@ def verify_production_config():
     # Check create_tables is disabled
     if dj.config.database.create_tables:
         errors.append("create_tables should be False in production")
-
-    # Check database prefix is set
-    if not dj.config.database.database_prefix:
-        errors.append("database_prefix should be set in production")
 
     # Check not pointing to localhost
     if dj.config.database.host == 'localhost':
@@ -333,7 +330,6 @@ if __name__ == '__main__':
 | Setting | Development | Production |
 | --------- | ------------- | ------------ |
 | `database.create_tables` | `true` | `false` |
-| `database.database_prefix` | `""` or `dev_` | `prod_` |
 | `safemode` | `true` | `false` (automated) |
 | `loglevel` | `DEBUG` | `WARNING` |
 
