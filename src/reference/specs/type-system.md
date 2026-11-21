@@ -541,9 +541,10 @@ the backend, so the same annotation works on both:
 | `datetime`, `timestamp` | `datetime` | `timestamp` |
 | `json`, `jsonb` | `json` | the JSON value, as `json` or `jsonb` |
 
-Each annotation except `unsigned` has the same range on both backends, and each
-has the same precision (MySQL returns single-precision values with 6 significant
-digits, and MySQL 8.0.21 compares them in double precision; see below):
+Each integer and floating-point annotation except `unsigned` has the same range
+on both backends, and each has the same precision (MySQL returns
+single-precision values with 6 significant digits, and MySQL 8.0.21 compares
+them in double precision; see below):
 
 - Floating-point precision follows PostgreSQL: `float` alone is double
   precision and `real` is single precision. MySQL's own `REAL` is double
@@ -595,6 +596,11 @@ Some results still differ between the backends:
   the query on PostgreSQL.
 - A string longer than `n` in `char(n)` or `varchar(n)` comes back as `NULL` on
   MySQL and cut to `n` characters on PostgreSQL.
+- `time`, `datetime` and `timestamp` without `(n)` drop the fraction of a
+  second on MySQL (`03:04:05.567` becomes `03:04:05`) and keep microseconds on
+  PostgreSQL; write `(6)` to get the same value on both. A `time` outside
+  00:00:00 to 24:00:00, such as `25:00:00` or a negative time, comes back on
+  MySQL and fails the query on PostgreSQL.
 - `uuid`, `interval`, `bit`, `timetz`, `timestamptz` and the `with time zone`
   forms exist only on PostgreSQL. On MySQL they raise a `DataJointError` that
   lists the annotations that work on both backends. On PostgreSQL, `bit` alone
