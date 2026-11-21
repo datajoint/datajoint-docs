@@ -25,9 +25,9 @@ Deleting a row automatically cascades to all dependent tables:
 
 This maintains referential integrity—no orphaned records remain.
 
-## Confirmation Prompt
+## Interactive and Production Deletes
 
-The `prompt` parameter controls confirmation behavior:
+The `prompt` parameter controls whether `delete()` asks for confirmation:
 
 ```python
 # Uses dj.config['safemode'] setting (default behavior)
@@ -40,16 +40,65 @@ The `prompt` parameter controls confirmation behavior:
 (Subject & key).delete(prompt=True)
 ```
 
-When prompted, you'll see what will be deleted:
+### Confirmation Prompt for Development
 
-```
-About to delete:
-  1 rows from `lab`.`subject`
-  5 rows from `lab`.`session`
-  127 rows from `lab`.`trial`
+With `prompt=True`, `delete()` logs the row count of each affected table, opens a
+transaction, runs the whole cascade inside it, and then, if any rows matched, asks
+whether to commit.
+Answering `yes` commits. Answering `no`, or pressing Enter, rolls everything back.
+Any other answer repeats the question:
 
-Proceed? [yes, No]:
+```text
+[2026-01-15 10:30:00] `lab`.`subject` (1 tuples)
+[2026-01-15 10:30:00] `lab`.`session` (5 tuples)
+[2026-01-15 10:30:00] `lab`.`trial` (127 tuples)
+[2026-01-15 10:30:00] Deleting 127 rows from `lab`.`trial`
+[2026-01-15 10:30:00] Deleting 5 rows from `lab`.`session`
+[2026-01-15 10:30:00] Deleting 1 rows from `lab`.`subject`
+Commit deletes? [yes, No]:
 ```
+
+This mode is meant for prototyping and development, where you watch the delete
+happen and can back out of it.
+
+!!! warning "The prompt waits inside an open transaction"
+    When the question appears, the deletes have already run and the transaction stays
+    open until someone answers. While it waits, other users' writes and schema changes
+    on the affected tables may wait too, and reads can queue behind a waiting schema
+    change such as `ALTER TABLE`. On a shared server, an unanswered prompt can stall
+    other users.
+
+### Production Deletes
+
+In production, decide what to delete before any transaction opens. Preview the delete,
+then run it with `prompt=False`:
+
+```python
+import datajoint as dj
+
+restricted = Session & {'subject_id': 'M001'}
+
+# 1. Preview: read-only, opens no transaction
+counts = dj.Diagram.cascade(restricted).counts()
+# {'`lab`.`session`': 3, '`lab`.`trial`': 45, '`lab`.`processed_data`': 45}
+
+# 2. After reviewing the counts, delete without the prompt
+restricted.delete(prompt=False)
+```
+
+If you pass `part_integrity` to `delete()`, pass the same value to `Diagram.cascade()`,
+so that the preview covers the same rows. The `part_integrity` check itself runs only in
+`delete()`: with `"enforce"`, a delete that would remove part rows without their
+master raises an error and rolls back (when `delete()` runs its own transaction), and
+the preview does not warn about it.
+
+`delete(prompt=False)` runs the cascade in a transaction and commits as soon as the
+deletes finish. The preview opens no transaction, so rows can change between the preview
+and the delete; the delete removes whatever matches the restriction when it runs.
+[Inspecting Cascade Before Deleting](#inspecting-cascade-before-deleting) shows the
+counts and a diagram of the affected tables, and how to iterate the cascade to see the
+rows themselves. See [Deploy to Production](deploy-production.md) for turning off
+`safemode` in production processes.
 
 ## Safe Mode Configuration
 
@@ -61,7 +110,7 @@ import datajoint as dj
 # Check current setting
 print(dj.config['safemode'])
 
-# Disable prompts globally (use with caution)
+# Disable prompts globally (production processes)
 dj.config['safemode'] = False
 
 # Re-enable prompts
@@ -92,6 +141,10 @@ with schema.connection.transaction:
     (Table2 & key2).delete(transaction=False)
     Table3.insert(rows)
 ```
+
+With `transaction=False`, `delete()` asks no confirmation, even with `prompt=True`.
+Each `DELETE` takes effect as it runs, and `delete()` does not roll it back. Inside
+your own transaction, as above, that transaction commits or rolls back the deletes.
 
 ## Part Tables
 
@@ -194,24 +247,32 @@ print(f"Deleted {count} subjects")
 !!! version-added "New in 2.2"
     Cascade inspection via `dj.Diagram` was added in DataJoint 2.2.
 
-With `safemode=True` (the default), `delete()` provides a built-in safety workflow: it executes the cascade inside a transaction, shows all affected tables and row counts, and asks **"Commit deletes?"** before committing. Declining rolls back all changes.
-
-For programmatic preview without executing, or for complex scenarios — working across schemas or visualizing the dependency graph — use `Diagram.cascade()` to inspect the cascade:
+`delete(prompt=True)` logs the affected tables and row counts, but it asks for confirmation only after running the deletes inside an open transaction (see [Interactive and Production Deletes](#interactive-and-production-deletes)). To preview a delete without running it, to work across schemas, or to visualize the dependency graph, use `Diagram.cascade()`:
 
 ```python
 import datajoint as dj
 
+restricted = Session & {'subject_id': 'M001'}
+
 # 1. Preview: see affected tables and row counts (across all loaded schemas)
-cascade = dj.Diagram.cascade(Session & {'subject_id': 'M001'})
+cascade = dj.Diagram.cascade(restricted)
 counts = cascade.counts()
 # {'`lab`.`session`': 3, '`lab`.`trial`': 45, '`lab`.`processed_data`': 45}
 
 # 2. Visualize the cascade subgraph (in Jupyter)
 cascade
 
-# 3. Execute via Table.delete() after reviewing
-(Session & {'subject_id': 'M001'}).delete(prompt=False)
+# 3. See the rows: each item is a table restricted to the rows to be deleted
+for table in cascade:
+    print(table.full_table_name, len(table))
+    print(table.head(5))  # first rows; table.keys() returns all primary keys
+
+# 4. Execute via Table.delete() after reviewing
+restricted.delete(prompt=False)
 ```
+
+If you delete with a non-default `part_integrity`, pass the same value to
+`Diagram.cascade()`.
 
 ### When to Use
 

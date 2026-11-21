@@ -183,8 +183,11 @@ table in reverse topological order. To keep that cascade all-or-nothing, `delete
 runs inside a transaction by default (`transaction=True`), so a failure partway
 through rolls back the entire cascade rather than leaving descendants deleted and
 ancestors intact. The only reason to opt out with `delete(transaction=False)` is
-when the delete is already running inside a transaction you opened, since a nested
-transaction is not allowed.
+when the delete is already running inside a transaction you opened: with `prompt=True`
+a nested transaction raises an error, and with `prompt=False` `delete()` joins the open
+transaction on its own. With `transaction=False`, `delete()` asks no
+confirmation and does not roll back its own deletes: each `DELETE` takes effect as it
+runs, and your transaction decides whether they are committed.
 
 ## See also
 
