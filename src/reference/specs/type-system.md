@@ -541,7 +541,9 @@ the backend, so the same annotation works on both:
 | `datetime`, `timestamp` | `datetime` | `timestamp` |
 | `json`, `jsonb` | `json` | the JSON value, as `json` or `jsonb` |
 
-Each annotation has the same precision and range on both backends:
+Each annotation except `unsigned` has the same range on both backends, and each
+has the same precision (MySQL returns single-precision values with 6 significant
+digits, and MySQL 8.0.21 compares them in double precision; see below):
 
 - Floating-point precision follows PostgreSQL: `float` alone is double
   precision and `real` is single precision. MySQL's own `REAL` is double
