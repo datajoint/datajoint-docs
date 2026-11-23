@@ -40,7 +40,7 @@ The Docker environment includes MySQL, PostgreSQL, MinIO, and all dependencies.
 
 ### Native Python
 
-**Prerequisites:** Python 3.10+, and a supported backend — MySQL 8.0+ or PostgreSQL (peer backends)
+**Prerequisites:** Python 3.10 – 3.15, and a supported backend — MySQL 8.0.18+ or PostgreSQL 15+ (peer backends)
 
 ```bash
 # Setup
