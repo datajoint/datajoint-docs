@@ -2191,9 +2191,14 @@ print(f"Migrated {result['rows_migrated']} pointers")
 **What this does:**
 
 - Reads legacy BINARY(16) UUID pointers from `~external_*` hidden tables
+- Finds each file where pre-2.0 DataJoint stored it, through `dest_store`, which must point to the pre-2.0 location
 - Creates new JSON metadata with file path, store name, hash
 - Writes JSON to the `<blob@store>` column (code written in Phase I)
-- Does NOT copy files (unless `copy_files=True`)
+- Does NOT copy files (`copy_files=True` is not implemented yet)
+
+Every file is looked up before any row changes. If a pointer has no entry in the hidden table, or its file is missing, the function raises an error and changes nothing.
+
+The column must be able to hold the JSON metadata. A column still in the pre-2.0 layout (BINARY(16)) is refused. Convert such a column with `migrate_external` or `migrate_filepath`, as in [Option B, Step 4](#step-4-migrate-external-storage-if-applicable).
 
 **Result:** Files stay in place, but 2.0 code can now access them via the new codec system.
 
@@ -2346,24 +2351,36 @@ print(f"Rebuilt lineage: {result['lineage_entries']} entries")
 
 If you use `blob@store`, `attach@store`, or `filepath@store`:
 
+Configure each store under its pre-2.0 name, with its pre-2.0 location. If your pre-2.0 configuration set `subfolding` for the store, set the same value; otherwise the pre-2.0 default, `[2, 2]`, is used to find the files. Files stay where they are.
+
 ```python
 from datajoint.migrate import migrate_external, migrate_filepath
 
 # Preview external blob/attach migration
 result = migrate_external(schema, dry_run=True)
 print(f"Found {result['columns_found']} external columns")
+for detail in result['details']:
+    for problem in detail.get('problems', []):
+        print(f"  Cannot migrate: {problem}")
 
 # Apply migration (adds _v2 columns with JSON metadata)
 result = migrate_external(schema, dry_run=False)
 print(f"Migrated {result['rows_migrated']} rows")
 
 # Similarly for filepath columns
+result = migrate_filepath(schema, dry_run=True)
 result = migrate_filepath(schema, dry_run=False)
 
 # After verification, finalize (rename columns)
-result = migrate_external(schema, finalize=True)
-result = migrate_filepath(schema, finalize=True)
+result = migrate_external(schema, dry_run=False, finalize=True)
+result = migrate_filepath(schema, dry_run=False, finalize=True)
 ```
+
+**What this does:**
+
+- Looks up every file where pre-2.0 DataJoint stored it before changing anything. If a file is missing, the migration raises an error and changes nothing. The preview lists these files.
+- Adds a `<name>_v2` column for each in-store column, with the type marker (for example `:<blob@raw>:`) in its comment. Fetch the `_v2` columns with DataJoint 2.0 to verify them before you finalize.
+- Finalizing renames each original column to `<name>_v1` and gives its name to the migrated column. It needs `dry_run=False`: with the default `dry_run=True`, it only previews.
 
 #### Step 5: Verify Migration
 
