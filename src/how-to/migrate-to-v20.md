@@ -2155,6 +2155,12 @@ for table in tables:
     print(f"{table}: copied {result['rows_copied']} rows")
 ```
 
+**Tables with in-store columns:** `copy_table_data` converts `blob@store`, `attach@store`, and `filepath@store` columns as it copies them. Each must be declared with the same codec in your 2.0 code, for example `<blob@raw>` for a pre-2.0 `blob@raw` column. Files stay where they are:
+
+- The 2.0 store named in the declaration must point to the pre-2.0 location (step 0). If your pre-2.0 configuration set `subfolding` for the store, set the same value; otherwise the pre-2.0 default, `[2, 2]`, is used to find the files.
+- Every file is looked up before anything is copied, through that store, which must be configured and reachable. If a file is missing, or has no entry in the pre-2.0 `~external_<store>` table, `copy_table_data` raises an error and copies nothing.
+- A pre-2.0 in-store column copied into a column with a different codec, such as `<blob>`, is refused.
+
 #### 3. Populate Computed Tables
 
 ```python
@@ -2167,22 +2173,20 @@ Analysis.populate(display_progress=True)
 
 #### 4. Migrate In-Store Metadata
 
-**Important:** Your code already handles in-store codecs (converted in Phase I). This step just updates metadata format.
+Tables copied with `copy_table_data` in step 2 are already converted, and tables populated in step 3 store their files with 2.0. For them, no further step is needed.
 
-If you have tables using `<blob@>`, `<attach@>`, or `<filepath@>` codecs, migrate the storage metadata from legacy BINARY(16) UUID format to 2.0 JSON format:
+To convert one in-store column of a table that is still in the pre-2.0 layout, use `migrate_external_pointers_v2`. For example, use it on a copy made with `create_parallel_schema(..., copy_data=True)`, or to give a store a new 2.0 name:
 
 ```python
 from datajoint.migrate import migrate_external_pointers_v2
 
-# Update metadata format (UUID → JSON)
-# This does NOT move files—just updates database pointers
 result = migrate_external_pointers_v2(
-    schema='my_pipeline_v2',
+    schema='my_pipeline_copy',
     table='recording',
     attribute='signal',
-    source_store='raw',  # Legacy pre-2.0 store name
+    source_store='raw',  # Pre-2.0 store name, as in the column comment
     dest_store='raw',  # 2.0 store name (from datajoint.json)
-    copy_files=False,  # Keep files in place (recommended)
+    copy_files=False,  # Keep files in place
 )
 
 print(f"Migrated {result['rows_migrated']} pointers")
@@ -2190,17 +2194,14 @@ print(f"Migrated {result['rows_migrated']} pointers")
 
 **What this does:**
 
-- Reads legacy BINARY(16) UUID pointers from `~external_*` hidden tables
+- Reads the pre-2.0 pointers in the column and looks each one up in the schema's `~external_<source_store>` table
 - Finds each file where pre-2.0 DataJoint stored it, through `dest_store`, which must point to the pre-2.0 location
-- Creates new JSON metadata with file path, store name, hash
-- Writes JSON to the `<blob@store>` column (code written in Phase I)
+- Adds a JSON column with the 2.0 metadata, then renames the original column to `<name>_v1` and gives its name to the new column, with the comment `:<blob@dest_store>:` (or `attach`, `filepath`). A required column stays required.
 - Does NOT copy files (`copy_files=True` is not implemented yet)
 
-Every file is looked up before any row changes. If a pointer has no entry in the hidden table, or its file is missing, the function raises an error and changes nothing.
+Every file is looked up before anything changes. If a pointer has no entry in the hidden table, or its file is missing, the function raises an error and changes nothing. A column already declared by 2.0 holds no pre-2.0 pointers, so it is refused.
 
-The column must be able to hold the JSON metadata. A column still in the pre-2.0 layout (BINARY(16)) is refused. Convert such a column with `migrate_external` or `migrate_filepath`, as in [Option B, Step 4](#step-4-migrate-external-storage-if-applicable).
-
-**Result:** Files stay in place, but 2.0 code can now access them via the new codec system.
+**Result:** Files stay in place, and 2.0 code reads them through the in-store codecs.
 
 #### 5. Validate Data Integrity
 
@@ -2369,7 +2370,13 @@ print(f"Migrated {result['rows_migrated']} rows")
 
 # Similarly for filepath columns
 result = migrate_filepath(schema, dry_run=True)
+print(f"Found {result['columns_found']} filepath columns")
+for detail in result['details']:
+    for problem in detail.get('problems', []):
+        print(f"  Cannot migrate: {problem}")
+
 result = migrate_filepath(schema, dry_run=False)
+print(f"Migrated {result['rows_migrated']} rows")
 
 # After verification, finalize (rename columns)
 result = migrate_external(schema, dry_run=False, finalize=True)
@@ -2379,8 +2386,11 @@ result = migrate_filepath(schema, dry_run=False, finalize=True)
 **What this does:**
 
 - Looks up every file where pre-2.0 DataJoint stored it before changing anything. If a file is missing, the migration raises an error and changes nothing. The preview lists these files.
-- Adds a `<name>_v2` column for each in-store column, with the type marker (for example `:<blob@raw>:`) in its comment. Fetch the `_v2` columns with DataJoint 2.0 to verify them before you finalize.
-- Finalizing renames each original column to `<name>_v1` and gives its name to the migrated column. It needs `dry_run=False`: with the default `dry_run=True`, it only previews.
+- The preview looks up the files too, so every store must be configured and reachable before you run it. This is one existence check per file, which is one request per file on S3.
+- Adds a `<name>_v2` column for each in-store column, with the type marker (for example `:<blob@raw>:`) in its comment. Fetch the `_v2` columns with DataJoint 2.0 to verify them before you finalize. If a step fails, the `_v2` columns the run added are dropped again, and the original columns are unchanged.
+- Finalizing renames each original column to `<name>_v1` and gives its name to the migrated column. A required column stays required. It needs `dry_run=False`: with the default `dry_run=True`, it only previews. It first checks that every `_v2` column exists and reads in 2.0, and changes nothing otherwise.
+
+**If you ran this step with an earlier DataJoint 2.x release:** those releases wrote values that 2.0 cannot read. Rerun the migration with `dry_run=False` and the current release. It rewrites `_v2` columns that do not read, and skips the ones that do; the preview shows them with the action `rewrite`. If you had already finalized, it rewrites the finalized columns from the pointers kept in `<name>_v1`, with the action `repair`. The original pointers are never changed, so no data is lost.
 
 #### Step 5: Verify Migration
 
