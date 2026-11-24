@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="250" viewBox="0 0 900 250" font-family="Helvetica, sans-serif">
+<style>
+  svg { background-color: #FFFFFF; }
+  .edge { stroke: #171C39; fill: none; }
+  .arrow { fill: #171C39; }
+  .title { fill: #171C39; }
+  .body { fill: #3A3F4B; }
+  .note { fill: #808285; }
+  .rule { stroke: #C9CDD4; }
+@media (prefers-color-scheme: dark) {
+    svg { background-color: #161A21; }
+    .edge { stroke: #AEB6C2; }
+    .arrow { fill: #AEB6C2; }
+    .title { fill: #E6E8EC; }
+    .body { fill: #C9CDD4; }
+    .note { fill: #9DA0A4; }
+    .rule { stroke: #3A3F4B; }
+    .f-dev { fill: #161A21; stroke: #9DA0A4; }
+    .f-prod { fill: #0F2433; stroke: #33B8E8; }
+}
+</style>
+<defs><marker id="ah" markerWidth="9" markerHeight="9" refX="8" refY="3.5" orient="auto"><path class="arrow" d="M0,0 L8,3.5 L0,7 Z"/></marker></defs>
+
+<!-- Development pipeline -->
+<rect class="f-dev" x="40" y="30" width="270" height="180" rx="10" fill="#FFFFFF" stroke="#808285" stroke-width="1.6" stroke-dasharray="6 4"/>
+<text class="title" x="175" y="62" text-anchor="middle" font-size="17" font-weight="600" fill="#171C39">Development pipeline</text>
+<line class="rule" x1="60" y1="78" x2="290" y2="78" stroke="#C9CDD4" stroke-width="1"/>
+<text class="body" x="175" y="110" text-anchor="middle" font-size="14" font-family="Menlo, monospace" fill="#3A3F4B">dev_subject</text>
+<text class="body" x="175" y="136" text-anchor="middle" font-size="14" font-family="Menlo, monospace" fill="#3A3F4B">dev_session</text>
+<text class="body" x="175" y="162" text-anchor="middle" font-size="14" font-family="Menlo, monospace" fill="#3A3F4B">dev_ephys</text>
+<text class="note" x="175" y="192" text-anchor="middle" font-size="12" fill="#808285">schemas under a dev_ prefix</text>
+
+<!-- Production pipeline -->
+<rect class="f-prod" x="590" y="30" width="270" height="180" rx="10" fill="#E0F4FC" stroke="#00A0DF" stroke-width="1.6"/>
+<text class="title" x="725" y="62" text-anchor="middle" font-size="17" font-weight="600" fill="#171C39">Production pipeline</text>
+<line class="rule" x1="610" y1="78" x2="840" y2="78" stroke="#C9CDD4" stroke-width="1"/>
+<text class="body" x="725" y="110" text-anchor="middle" font-size="14" font-family="Menlo, monospace" fill="#3A3F4B">subject</text>
+<text class="body" x="725" y="136" text-anchor="middle" font-size="14" font-family="Menlo, monospace" fill="#3A3F4B">session</text>
+<text class="body" x="725" y="162" text-anchor="middle" font-size="14" font-family="Menlo, monospace" fill="#3A3F4B">ephys</text>
+
+<!-- Code: development to production -->
+<line class="edge" x1="312" y1="90" x2="582" y2="90" stroke="#171C39" stroke-width="2" marker-end="url(#ah)"/>
+<text class="title" x="450" y="78" text-anchor="middle" font-size="14" font-weight="600" fill="#171C39">code</text>
+<text class="note" x="450" y="108" text-anchor="middle" font-size="12.5" fill="#808285">review, merge, release, deployment step</text>
+
+<!-- Data: production to development -->
+<line class="edge" x1="588" y1="160" x2="318" y2="160" stroke="#171C39" stroke-width="2" stroke-dasharray="5 4" marker-end="url(#ah)"/>
+<text class="title" x="450" y="150" text-anchor="middle" font-size="14" font-weight="600" fill="#171C39">data copy, optional</text>
+<text class="note" x="450" y="178" text-anchor="middle" font-size="12.5" fill="#808285">computed rows never move to production;</text>
+<text class="note" x="450" y="194" text-anchor="middle" font-size="12.5" fill="#808285">Manual rows enter only through its entry path</text>
+</svg>

@@ -81,7 +81,7 @@ A change is designed on a development pipeline, declared for that change and ret
 
 ![The cycle of a change to a production pipeline, left to right. A dashed box, Development pipeline: design and try the change, with definition and data changing together; its product is verified code. An arrow to Review and merge: code reviewed, with its classification and data migration. An arrow to Release: a versioned commit, where each new or changed make() is checked, marked "contract checked". An arrow to Deployment step: applies the release (definition, Lookup contents, then data migration), marked "DDL applied". An arrow to Production: run time changes data only, and workers run make() from a fresh checkout, marked "contract enforced". A dashed arrow from Production back to the Development pipeline is labeled "data copy, optional: production to development"; computed rows never move to production, and Manual rows enter it only through its entry path. A legend says the deployment step is the only step that changes production's definition, while in a development pipeline DDL runs any time, and that the make() reproducibility contract is checked in full at release and enforced in part at run time by DataJoint, by privileges, and by workers running the released code.](../../images/change-cycle.svg)
 
-1. **Declare** a development pipeline from the deployed commit, so that it starts with production's definition. Where it lives is up to the deployment: a separate database or schema prefix, a copy-on-write branch of the production database (a copy that shares production's stored data until either side changes it), or memory, where the tooling supports it. A branch starts with production's rows, which is a copy from production to development.
+1. **Declare** a development pipeline from the deployed commit, so that it starts with production's definition. Where it lives is up to the deployment: a separate database or schema prefix, a copy-on-write branch of the production database (a copy that shares production's stored data until either side changes it), or memory, where the tooling supports it. An in-memory development pipeline suits quick prototyping: it needs no database privileges and leaves nothing behind. A branch starts with production's rows, which is a copy from production to development.
 2. **Copy data in**, if the change needs it: usually a restricted subset of production's rows, enough to try the change on representative data.
 3. **Design and try** the change. The definition and the data change together, in the fast loop of change, populate and compare.
 4. **Commit** the change and have it reviewed, with its classification as [additive or revising](#additive-and-revising-changes) and the data migration it needs.
@@ -209,15 +209,19 @@ A Lookup table's rows are part of its definition, listed in its `contents`. Data
 
 ## The deployment step
 
-A deployment step brings a production target's definition to a release, a new version of the code whose `make()` methods were checked against the [reproducibility contract](#where-the-contract-is-enforced) when it was released. It should:
+A deployment step brings a production target's definition to a release, a new version of the code whose `make()` methods were checked against the [reproducibility contract](#where-the-contract-is-enforced) when it was released. DataJoint provides the operations a deployment step uses (declaration, `datajoint.migrate`, `datajoint.deploy`); the step itself is carried out by whatever deploys the pipeline, a platform or a team's own tooling. This section lists what must happen in it, without specifying how:
 
 1. **Start from a release**, a known version of the code under version control.
 2. **Compare** the definition in that code with the target's, and list each difference.
 3. **Classify** each difference as [additive or revising](#additive-and-revising-changes), and review the revising ones.
 4. **Pause** the run-time work that depends on what a revising change touches.
-5. **Apply** the changes with a login that can change the definition: declarations (hidden tables included), alterations, drops, Lookup contents (new rows inserted; changed or removed rows applied as a data migration), data migrations from `datajoint.migrate`, and environment operations from `datajoint.deploy`.
-6. **Record** the version of the code the target now matches.
-7. **Start** run time on the new code, with workers on a fresh, clean checkout of the deployed commit.
+5. **Declare and alter**, with a login that can change the definition: new tables and their parts, every hidden table (the jobs table of each auto-populated table and each schema's `~lineage` table), alterations and drops.
+6. **Set Lookup contents**: insert new rows, and apply changed or removed rows as a data migration.
+7. **Migrate data**: the data migration that goes with the change, decided for the rows computed under the old definition, and any `datajoint.migrate` operations, such as adding job metadata or provenance columns.
+8. **Grant** run-time logins their data privileges on new tables (recommendation 2).
+9. **Configure the environment** with `datajoint.deploy` operations.
+10. **Record** the version of the code the target now matches.
+11. **Start** run time on the new code, with workers on a fresh, clean checkout of the deployed commit.
 
 A deployment step should be safe to run again after a failure. Operations in `datajoint.deploy` are idempotent; a one-shot migration should check whether it has already been applied.
 

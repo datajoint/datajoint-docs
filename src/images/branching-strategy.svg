@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="230" viewBox="0 0 900 230" font-family="Helvetica, sans-serif">
+<style>
+  svg { background-color: #FFFFFF; }
+  .edge { stroke: #171C39; fill: none; }
+  .arrow { fill: #171C39; }
+  .title { fill: #171C39; }
+  .body { fill: #3A3F4B; }
+  .note { fill: #808285; }
+  .main { stroke: #00A0DF; fill: none; }
+  .dot { fill: #FFFFFF; stroke: #171C39; }
+  .dot-main { fill: #FFFFFF; stroke: #00A0DF; }
+@media (prefers-color-scheme: dark) {
+    svg { background-color: #161A21; }
+    .edge { stroke: #AEB6C2; }
+    .arrow { fill: #AEB6C2; }
+    .title { fill: #E6E8EC; }
+    .body { fill: #C9CDD4; }
+    .note { fill: #9DA0A4; }
+    .main { stroke: #33B8E8; }
+    .dot { fill: #161A21; stroke: #AEB6C2; }
+    .dot-main { fill: #161A21; stroke: #33B8E8; }
+    .arrow-main { fill: #33B8E8; }
+}
+</style>
+<defs>
+  <marker id="ah" markerWidth="9" markerHeight="9" refX="8" refY="3.5" orient="auto"><path class="arrow" d="M0,0 L8,3.5 L0,7 Z"/></marker>
+  <marker id="ahm" markerUnits="userSpaceOnUse" markerWidth="14" markerHeight="14" refX="12" refY="6" orient="auto"><path class="arrow-main" d="M0,0 L13,6 L0,12 Z" fill="#00A0DF"/></marker>
+</defs>
+
+<!-- main -->
+<text class="title" x="40" y="64" font-size="15" font-weight="600" font-family="Menlo, monospace" fill="#171C39">main</text>
+<line class="main" x1="96" y1="60" x2="860" y2="60" stroke="#00A0DF" stroke-width="3" marker-end="url(#ahm)"/>
+
+<!-- feature branch: ephys-v2 -->
+<path class="edge" d="M150,60 C150,110 170,170 220,170 L560,170 C610,170 640,110 640,60" stroke="#171C39" stroke-width="2"/>
+<text class="body" x="390" y="194" text-anchor="middle" font-size="13.5" font-family="Menlo, monospace" fill="#3A3F4B">feature/ephys-v2</text>
+
+<!-- hotfix branch: fix-recording -->
+<path class="edge" d="M370,60 C370,90 385,115 420,115 L480,115 C510,115 520,90 520,60" stroke="#171C39" stroke-width="2"/>
+<text class="body" x="450" y="138" text-anchor="middle" font-size="13.5" font-family="Menlo, monospace" fill="#3A3F4B">hotfix/fix-recording</text>
+
+<!-- branch and merge points -->
+<circle class="dot-main" cx="150" cy="60" r="6" fill="#FFFFFF" stroke="#00A0DF" stroke-width="2.5"/>
+<circle class="dot-main" cx="370" cy="60" r="6" fill="#FFFFFF" stroke="#00A0DF" stroke-width="2.5"/>
+<circle class="dot-main" cx="520" cy="60" r="6" fill="#FFFFFF" stroke="#00A0DF" stroke-width="2.5"/>
+<circle class="dot-main" cx="640" cy="60" r="6" fill="#FFFFFF" stroke="#00A0DF" stroke-width="2.5"/>
+<text class="note" x="520" y="40" text-anchor="middle" font-size="12" fill="#808285">merge</text>
+<text class="note" x="640" y="40" text-anchor="middle" font-size="12" fill="#808285">merge</text>
+
+<text class="note" x="450" y="220" text-anchor="middle" font-size="12.5" fill="#808285">each branch is reviewed before it merges; a release is made from main and applied by a deployment step</text>
+</svg>

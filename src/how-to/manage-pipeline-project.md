@@ -327,33 +327,13 @@ SCHEMA_VERSIONS = {
 
 ### Development vs Production
 
-```
-┌─────────────────┐     ┌─────────────────┐
-│   Development   │     │   Production    │
-├─────────────────┤     ├─────────────────┤
-│ dev_subject     │     │ subject         │
-│ dev_session     │     │ session         │
-│ dev_ephys       │     │ ephys           │
-└─────────────────┘     └─────────────────┘
-        │   code: review, release,  ▲
-        │   deployment step         │
-        └───────────────────────────┘
-          data: production → development
-```
+![Two boxes. On the left, a dashed box labeled Development pipeline holds the schemas dev_subject, dev_session and dev_ephys, under a dev_ prefix. On the right, a blue box labeled Production pipeline holds the schemas subject, session and ephys. A solid arrow from development to production is labeled "code: review, merge, release, deployment step". A dashed arrow from production back to development is labeled "data copy, optional"; computed rows never move to production, and Manual rows enter it only through its entry path.](../images/dev-prod-schemas.svg)
 
 Schemas under a `dev_` prefix are a development pipeline, where a change is designed and tried. What reaches production is the code, not the schemas or their rows: the change is reviewed and merged, released, and applied by a deployment step. Production rows may be copied into development to try a change. Computed rows never move the other way; Manual rows can be entered into production from development through production's entry path ([recommendation 11](../reference/specs/deploy-operations.md#recommendations-for-production)). See [Pipeline Lifecycle and Deployment](../reference/specs/deploy-operations.md#4-changing-a-production-pipeline).
 
 ### Branching Strategy
 
-```
-main ────────────────────────────────────▶
-       │              │
-       │ feature/     │ hotfix/
-       ▼              ▼
-    ephys-v2      fix-recording
-       │              │
-       └──────────────┴──▶ main
-```
+![The main branch runs left to right. A branch named feature/ephys-v2 leaves main early and merges back late; a shorter branch named hotfix/fix-recording leaves main later and merges back before it. Each branch is reviewed before it merges; a release is made from main and applied by a deployment step.](../images/branching-strategy.svg)
 
 ## Summary of Complexities
 

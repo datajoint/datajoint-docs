@@ -79,7 +79,7 @@ A change to a production pipeline is designed on a temporary **development
 pipeline**, declared from production's deployed code for that change: in a separate
 database, on a copy-on-write branch of the production database (a copy that shares
 production's stored data until either side changes it), or in memory, where the
-tooling supports it. There the definition and the data change together, as in any
+tooling supports it, which suits quick prototyping. There the definition and the data change together, as in any
 development work. Its product is verified code, not data: the change is reviewed and
 merged, released once each `make()` is checked against the reproducibility contract,
 and applied to production by a deployment step, the only step that runs DDL there.
