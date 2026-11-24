@@ -80,13 +80,17 @@ Every managed path embeds the schema name (`{hash_prefix}/{schema}/...` and
 `{schema_prefix}/{schema}/...`), so garbage collection is **per-schema**: each
 schema is scanned against its own subtree. You may pass any subset of the
 schemas sharing a store — a schema not passed is simply not scanned; its live
-objects are never seen and never at risk.
+objects are never seen and never at risk. The root-level layout
+(`schema_prefix: ""`) is the exception: there, a file in a subfolder of
+`{schema}/` that only rows of other schemas reference is listed as an orphan.
+See [Root-Level Layout](#root-level-layout).
 
 ```python
 # Clean several schemas at once...
 stats = dj.gc.GarbageCollector(schema_raw, schema_processed, schema_analysis).collect(dry_run=False)
 
 # ...or just one — safe even when others share the same store
+# (except in the root-level layout; see Root-Level Layout below)
 stats = dj.gc.GarbageCollector(schema_raw).collect(dry_run=False)
 ```
 
