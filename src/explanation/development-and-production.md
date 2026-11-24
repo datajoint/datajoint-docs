@@ -89,8 +89,7 @@ that code ever shipped. Production computes its own rows, in workers, from the
 deployed commit.
 
 The mode belongs to a **target**, one database that a pipeline runs on, not to the
-code, and a target keeps its mode for as long as it exists, except when a pipeline
-that others already depend on adopts the standard in place. The same code can run in
+code, and a target keeps its mode for as long as it exists. The same code can run in
 development on a scratch database and in production on the pipeline's production
 target. A development pipeline therefore never becomes the production pipeline: the
 production pipeline is declared empty, from the committed code, by its first
@@ -115,10 +114,17 @@ Enforcement comes from the database's privileges, not from a DataJoint setting: 
 run-time login that cannot change the definition keeps it from changing, whatever
 code runs.
 
-The recommendations are a standard that individual deployments can vary. A single
-developer working alone may keep a pipeline in development for its whole life,
-which is sound while nobody else depends on it. A team serving many users may add
-review, approval and scheduled windows to its deployment step.
+Development is what DataJoint does by default, and it is how most DataJoint
+pipelines have been operated, including many that others depend on. The production
+conventions are new, and nothing requires a pipeline to adopt them. A pipeline may
+stay in development for its whole life, as long as those who use it accept that its
+definition may change underneath them and that its rows carry none of production's
+guarantees. A pipeline that wants those guarantees gets them in a new production
+pipeline, declared from its code; it is not converted in place.
+
+The recommendations are a standard that individual deployments can vary. A team
+serving many users may add review, approval and scheduled windows to its deployment
+step.
 
 ## See also
 

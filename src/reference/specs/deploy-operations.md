@@ -2,7 +2,7 @@
 
 This document specifies the lifecycle of a DataJoint pipeline across two modes, **development** and **production**, and the **deployment step** that changes a pipeline's definition in production. It then specifies the `datajoint.deploy` module, which holds operations meant for deployment steps.
 
-DataJoint is designed to uphold these modes. Enforcement comes from database privileges, not from a DataJoint setting: DataJoint has no setting that selects a mode, attempts what the code asks, and the server refuses what the login lacks. Everything DataJoint does at run time can be prepared for in a deployment step, so that a production target needs no privilege at run time beyond changing data. The rule, the lifecycle and the recommendations below are a standard for operating a DataJoint pipeline; individual deployments can vary, for example by adding review, approval or scheduled windows to the deployment step, or by keeping a single-developer pipeline in development for its whole life. For the reasoning behind the two modes, see [Development and Production](../../explanation/development-and-production.md).
+DataJoint is designed to uphold these modes. Enforcement comes from database privileges, not from a DataJoint setting: DataJoint has no setting that selects a mode, attempts what the code asks, and the server refuses what the login lacks. Everything DataJoint does at run time can be prepared for in a deployment step, so that a production target needs no privilege at run time beyond changing data. The rule, the lifecycle and the recommendations below are a standard for operating a DataJoint pipeline; individual deployments can vary, for example by adding review, approval or scheduled windows to the deployment step, or by keeping a pipeline in development for its whole life. For the reasoning behind the two modes, see [Development and Production](../../explanation/development-and-production.md).
 
 ## Terms
 
@@ -10,7 +10,7 @@ DataJoint is designed to uphold these modes. Enforcement comes from database pri
 |---|---|
 | **Definition** | What the pipeline is: its tables, attributes, keys and dependencies; the `make()` method of each auto-populated table; and, under this standard, the contents of its Lookup tables |
 | **Data** | The rows of its Manual, Imported and Computed tables and their parts |
-| **Target** | One database that a pipeline runs on. The mode is a property of a target, not of the code, and a target keeps its mode for as long as it exists, except when a pipeline others already depend on adopts this standard (see [Creating the production pipeline](#2-creating-the-production-pipeline)) |
+| **Target** | One database that a pipeline runs on. The mode is a property of a target, not of the code, and a target keeps its mode for as long as it exists |
 | **Pipeline** | The code and a target it runs on. A production pipeline and the development pipelines declared from its code are separate pipelines: they share code, not data |
 | **Development pipeline** | A pipeline in development: the pipeline before its first deployment step, or a temporary one declared from a production pipeline's deployed code to design one change and retired after it. Its product is verified code for review and merge, not data |
 | **Release** | A merged, versioned commit whose `make()` methods have been checked against the reproducibility contract. A deployment step applies a release to a target |
@@ -49,7 +49,7 @@ Changing the definition is mostly DDL (declaring, altering and dropping tables),
 | Intrinsic provenance (structural lineage) | Holds against the current definition, which may have changed since a row was computed | Holds against the deployed version of the definition, which job metadata records on each computed row when it is on |
 | Extrinsic provenance (`_prov`) | Optional | Decided at the first deployment; when on, recorded on every row entered from outside |
 
-A target keeps its mode for as long as it exists. Development targets include a scratch database, the throwaway database a test suite starts, and each development pipeline declared to design a change to a production pipeline.
+A target keeps its mode for as long as it exists. Development targets include every pipeline operated with DataJoint's default behavior, a scratch database, the throwaway database a test suite starts, and each development pipeline declared to design a change to a production pipeline.
 
 ## Lifecycle of a pipeline
 
@@ -69,7 +69,7 @@ When others are ready to depend on the pipeline (data entered by others, results
 
 The development pipeline is not converted, and its rows stay where they are. The production pipeline fills only through its own paths: Manual and Imported data are entered or imported again from their sources, and workers compute the rest from the deployed commit. Every row in production is under its provenance controls from the first.
 
-A pipeline that others already depend on when it adopts this standard is not declared again. This is the one case in which a target changes mode: its first deployment step brings its existing target under the production rules in place, and its existing rows stay as they are. Rows computed before job metadata was turned on carry no recorded version, and rows entered before provenance capture carry none.
+DataJoint's default behavior is development, and most DataJoint pipelines in use today, including many that others depend on, are development pipelines; the conventions for production are new. Nothing requires a pipeline to move: a pipeline may stay in development for its whole life, as long as those who use it accept that its definition may change underneath them and that its rows carry none of production's guarantees. A pipeline that adopts the production conventions gains those guarantees only for the rows of a production pipeline created as above. An existing pipeline is not converted in place.
 
 ### 3. Production
 
