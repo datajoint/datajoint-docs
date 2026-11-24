@@ -80,13 +80,17 @@ Every managed path embeds the schema name (`{hash_prefix}/{schema}/...` and
 `{schema_prefix}/{schema}/...`), so garbage collection is **per-schema**: each
 schema is scanned against its own subtree. You may pass any subset of the
 schemas sharing a store — a schema not passed is simply not scanned; its live
-objects are never seen and never at risk.
+objects are never seen and never at risk. The root-level layout
+(`schema_prefix: ""`) is the exception: there, a file in a subfolder of
+`{schema}/` that only rows of other schemas reference is listed as an orphan.
+See [Root-Level Layout](#root-level-layout).
 
 ```python
 # Clean several schemas at once...
 stats = dj.gc.GarbageCollector(schema_raw, schema_processed, schema_analysis).collect(dry_run=False)
 
 # ...or just one — safe even when others share the same store
+# (except in the root-level layout; see Root-Level Layout below)
 stats = dj.gc.GarbageCollector(schema_raw).collect(dry_run=False)
 ```
 
@@ -208,6 +212,34 @@ DataJoint uses two storage patterns:
   collected
 - GC never touches the store's declared `filepath_prefix` namespace
   (user-managed `<filepath@>` files)
+- In the root-level layout (`schema_prefix: ""`), GC keeps the files listed
+  below
+
+### Root-Level Layout
+
+Files migrated from pre-2.0 DataJoint stay where it stored them,
+`{database}/...`, which is then inside the schema-addressed section, and
+`<filepath@>` files may lie there too. In this layout only, GC keeps these
+files:
+
+- A file that a hash reference (such as a migrated `<blob@>` or `<attach@>`
+  value) or a `<filepath@>` reference points to counts as referenced.
+- A file named as pre-2.0 DataJoint named blobs and attachments (32 hex digits,
+  optionally followed by `.` and a name) is never an orphan.
+- A file directly under `{schema}/`, with no subfolder, is never an orphan.
+  2.0 schema-addressed paths are `{schema}/{table}/...`, so such a file is a
+  pre-2.0 file stored without subfolding, or a blob that pre-2.0 DataJoint had
+  migrated from an earlier release.
+- The section of a schema that still has pre-2.0 `~external_*` tables is not
+  listed at all, and the report names the schema under `skipped_schemas`.
+
+GC reads references only from the schemas it collects, in the store it
+collects. A file in a subfolder of `{schema}/` that is not named as pre-2.0
+DataJoint named its files, and that only rows of other schemas reference (for
+example a `<filepath@>` file referenced from another schema), is still listed
+as an orphan. Pass every schema whose rows reference files in the store, such
+as a copy migrated with `legacy_database`, to the same collector, and preview
+with `dry_run=True` before deleting. See [Migrate to 2.0](migrate-to-v20.md).
 
 ## Troubleshooting
 
