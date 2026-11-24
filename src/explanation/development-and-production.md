@@ -82,11 +82,16 @@ production's stored data until either side changes it), or in memory, where the
 tooling supports it. There the definition and the data change together, as in any
 development work. Its product is verified code, not data: the change is reviewed and
 merged, released once each `make()` is checked against the reproducibility contract,
-and applied to production by a deployment step, the only step that runs DDL there. Data moves only one way. Production rows may be copied into a development
-pipeline to try a change on real data, but rows from development are never copied
-into production, because nothing on them says which code computed them, or whether
-that code ever shipped. Production computes its own rows, in workers, from the
-deployed commit.
+and applied to production by a deployment step, the only step that runs DDL there.
+
+Data moves mostly one way. Production rows may be copied into a development pipeline
+to try a change on real data. Computed rows from development are never copied into
+production, because nothing on them says which code computed them, or whether that
+code ever shipped; production computes its own rows, in workers, from the deployed
+commit. Manual rows are different: they hold data entered from outside, and a
+development pipeline, even one that keeps running, can serve production as an outside
+source, entered through production's entry path with the source recorded. The
+specification lists what to watch for when doing so.
 
 The mode belongs to a **target**, one database that a pipeline runs on, not to the
 code, and a target keeps its mode for as long as it exists. The same code can run in

@@ -338,10 +338,10 @@ SCHEMA_VERSIONS = {
         │   code: review, release,  ▲
         │   deployment step         │
         └───────────────────────────┘
-          data: production → development only
+          data: production → development
 ```
 
-Schemas under a `dev_` prefix are a development pipeline, where a change is designed and tried. What reaches production is the code, not the schemas or their rows: the change is reviewed and merged, released, and applied by a deployment step. Production rows may be copied into development to try a change; rows are never copied the other way. See [Pipeline Lifecycle and Deployment](../reference/specs/deploy-operations.md#4-changing-a-production-pipeline).
+Schemas under a `dev_` prefix are a development pipeline, where a change is designed and tried. What reaches production is the code, not the schemas or their rows: the change is reviewed and merged, released, and applied by a deployment step. Production rows may be copied into development to try a change. Computed rows never move the other way; Manual rows can be entered into production from development through production's entry path ([recommendation 11](../reference/specs/deploy-operations.md#recommendations-for-production)). See [Pipeline Lifecycle and Deployment](../reference/specs/deploy-operations.md#4-changing-a-production-pipeline).
 
 ### Branching Strategy
 
