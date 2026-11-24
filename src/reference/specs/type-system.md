@@ -654,7 +654,7 @@ Equipment & {"specs.channels": 64}
 A key with a type annotation compares the converted value instead:
 `Equipment & {"specs.channels:int": 64}`.
 
-!!! version-changed "Changed in 2.3.7"
+!!! version-changed "Changed in 2.4"
 
     Earlier releases compared every restriction value with the extracted text.
     On MySQL, `True` missed the rows holding JSON `true`, and `False` matched
