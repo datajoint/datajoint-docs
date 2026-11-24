@@ -2161,7 +2161,16 @@ for table in tables:
 - Every file is looked up before anything is copied, through that store, which must be configured and reachable. If a file is missing, or has no entry in the pre-2.0 `~external_<store>` table, `copy_table_data` raises an error and copies nothing.
 - A pre-2.0 in-store column copied into a column with a different codec, such as `<blob>`, is refused.
 - Pre-2.0 DataJoint put blob and attachment files under the name of the database it wrote them from, `{database}/...`. `copy_table_data` looks for them under `source_schema`. If the source is itself a copy, such as one made with `create_parallel_schema`, pass the original name as `legacy_database='my_pipeline'`. Without it, the files are not found and nothing is copied; the error says to pass `legacy_database`.
-- Keep the default `schema_prefix` (`_schema`) on a store that points to the pre-2.0 location. With `schema_prefix: ""` (the root-level layout), the store's schema-addressed section is `{database}/`, the folder that also holds the pre-2.0 files. Garbage collection does not delete them there: it counts files that migrated rows reference, never removes a file named as pre-2.0 DataJoint named blobs and attachments, and skips a schema that still has `~external_*` tables. But it cannot see files that only rows of other schemas reference. Run garbage collection on such a store only if you must, and preview with `dry_run=True` first.
+- Keep the default `schema_prefix` (`_schema`) on a store that points to the pre-2.0 location. With `schema_prefix: ""` (the root-level layout), garbage collection keeps the files listed below.
+
+With `schema_prefix: ""`, the store's schema-addressed section is `{database}/`, the folder that also holds the pre-2.0 files, and `<filepath@>` files may lie there too. In this layout only, garbage collection keeps these files:
+
+- A file that a hash reference (such as a migrated `<blob@>` or `<attach@>` value) or a `<filepath@>` reference points to counts as referenced.
+- A file named as pre-2.0 DataJoint named blobs and attachments (32 hex digits, optionally followed by `.` and a name) is never an orphan.
+- A file directly under `{database}/`, with no subfolder, is never an orphan. 2.0 schema-addressed paths are `{schema}/{table}/...`, so such a file is a pre-2.0 file stored without subfolding, or a blob that pre-2.0 DataJoint had migrated from an earlier release.
+- The section of a schema that still has pre-2.0 `~external_*` tables is not listed at all, and the report names the schema under `skipped_schemas`.
+
+Garbage collection reads references only from the schemas it collects, in the store it collects. A file in a subfolder of `{database}/` that is not named as pre-2.0 DataJoint named its files, and that only rows of other schemas reference (for example a `<filepath@>` file referenced from another schema), is still listed as an orphan. Pass every schema whose rows reference files in the store, such as a copy migrated with `legacy_database`, to the same collector, and preview with `dry_run=True` before deleting. See [Clean Up Object Storage](garbage-collection.md#root-level-layout).
 
 #### 3. Populate Computed Tables
 
