@@ -208,6 +208,13 @@ DataJoint uses two storage patterns:
   collected
 - GC never touches the store's declared `filepath_prefix` namespace
   (user-managed `<filepath@>` files)
+- Files migrated from pre-2.0 DataJoint stay at `{schema}/...`, inside this
+  section when a store sets `schema_prefix: ""`. GC does not delete them
+  there: files that migrated rows reference count as referenced, files named
+  as pre-2.0 DataJoint named blobs and attachments are never orphans, and a
+  schema that still has pre-2.0 `~external_*` tables is not listed (the
+  report names it under `skipped_schemas`). See
+  [Migrate to 2.0](migrate-to-v20.md)
 
 ## Troubleshooting
 

@@ -2157,9 +2157,11 @@ for table in tables:
 
 **Tables with in-store columns:** `copy_table_data` converts `blob@store`, `attach@store`, and `filepath@store` columns as it copies them. Each must be declared with the same codec in your 2.0 code, for example `<blob@raw>` for a pre-2.0 `blob@raw` column. Files stay where they are:
 
-- The 2.0 store named in the declaration must point to the pre-2.0 location (step 0). If your pre-2.0 configuration set `subfolding` for the store, set the same value; otherwise the pre-2.0 default, `[2, 2]`, is used to find the files.
+- The 2.0 store named in the declaration must point to the pre-2.0 location (step 0). If your pre-2.0 configuration set `subfolding` for the store, set the same value. Otherwise leave it out or set it to `null` (as the configuration template writes it): the pre-2.0 default, `[2, 2]`, is then used to find the files. Set `[]` only if your pre-2.0 store turned subfolding off.
 - Every file is looked up before anything is copied, through that store, which must be configured and reachable. If a file is missing, or has no entry in the pre-2.0 `~external_<store>` table, `copy_table_data` raises an error and copies nothing.
 - A pre-2.0 in-store column copied into a column with a different codec, such as `<blob>`, is refused.
+- Pre-2.0 DataJoint put blob and attachment files under the name of the database it wrote them from, `{database}/...`. `copy_table_data` looks for them under `source_schema`. If the source is itself a copy, such as one made with `create_parallel_schema`, pass the original name as `legacy_database='my_pipeline'`. Without it, the files are not found and nothing is copied; the error says to pass `legacy_database`.
+- Keep the default `schema_prefix` (`_schema`) on a store that points to the pre-2.0 location. With `schema_prefix: ""` (the root-level layout), the store's schema-addressed section is `{database}/`, the folder that also holds the pre-2.0 files. Garbage collection does not delete them there: it counts files that migrated rows reference, never removes a file named as pre-2.0 DataJoint named blobs and attachments, and skips a schema that still has `~external_*` tables. But it cannot see files that only rows of other schemas reference. Run garbage collection on such a store only if you must, and preview with `dry_run=True` first.
 
 #### 3. Populate Computed Tables
 
@@ -2175,10 +2177,12 @@ Analysis.populate(display_progress=True)
 
 Tables copied with `copy_table_data` in step 2 are already converted, and tables populated in step 3 store their files with 2.0. For them, no further step is needed.
 
-To convert one in-store column of a table that is still in the pre-2.0 layout, use `migrate_external_pointers_v2`. For example, use it on a copy made with `create_parallel_schema(..., copy_data=True)`, or to give a store a new 2.0 name:
+To convert one in-store column of a table that is still in the pre-2.0 layout, use `migrate_external_pointers_v2`. For example, use it on a copy made with `create_parallel_schema(..., copy_data=True)`, or to give a store a new 2.0 name. The copy keeps the pre-2.0 layout and its `~external_*` tables, but its files stay under the original database name, so name the original with `legacy_database`:
 
 ```python
-from datajoint.migrate import migrate_external_pointers_v2
+from datajoint.migrate import create_parallel_schema, migrate_external_pointers_v2
+
+create_parallel_schema('my_pipeline', 'my_pipeline_copy', copy_data=True)
 
 result = migrate_external_pointers_v2(
     schema='my_pipeline_copy',
@@ -2186,7 +2190,7 @@ result = migrate_external_pointers_v2(
     attribute='signal',
     source_store='raw',  # Pre-2.0 store name, as in the column comment
     dest_store='raw',  # 2.0 store name (from datajoint.json)
-    copy_files=False,  # Keep files in place
+    legacy_database='my_pipeline',  # The database pre-2.0 DataJoint wrote the files from
 )
 
 print(f"Migrated {result['rows_migrated']} pointers")
@@ -2195,11 +2199,13 @@ print(f"Migrated {result['rows_migrated']} pointers")
 **What this does:**
 
 - Reads the pre-2.0 pointers in the column and looks each one up in the schema's `~external_<source_store>` table
-- Finds each file where pre-2.0 DataJoint stored it, through `dest_store`, which must point to the pre-2.0 location
+- Finds each file where pre-2.0 DataJoint stored it, through `dest_store`, which must point to the pre-2.0 location. Blob and attachment files are under `legacy_database`, which defaults to `schema`; on a copy, pass the original name.
 - Adds a JSON column with the 2.0 metadata, then renames the original column to `<name>_v1` and gives its name to the new column, with the comment `:<blob@dest_store>:` (or `attach`, `filepath`). A required column stays required.
 - Does NOT copy files (`copy_files=True` is not implemented yet)
 
 Every file is looked up before anything changes. If a pointer has no entry in the hidden table, or its file is missing, the function raises an error and changes nothing. A column already declared by 2.0 holds no pre-2.0 pointers, so it is refused.
+
+`create_parallel_schema` copies tables with foreign key checks off for its session, because it creates them in name order and the `~external_*` tables sort last. The copy's foreign keys point to the copy's own tables. To migrate a whole copy in place instead, follow Option B on it and pass `legacy_database='my_pipeline'` to `migrate_external` (`migrate_filepath` needs no such argument, because filepath paths are stored in full).
 
 **Result:** Files stay in place, and 2.0 code reads them through the in-store codecs.
 
@@ -2352,7 +2358,7 @@ print(f"Rebuilt lineage: {result['lineage_entries']} entries")
 
 If you use `blob@store`, `attach@store`, or `filepath@store`:
 
-Configure each store under its pre-2.0 name, with its pre-2.0 location. If your pre-2.0 configuration set `subfolding` for the store, set the same value; otherwise the pre-2.0 default, `[2, 2]`, is used to find the files. Files stay where they are.
+Configure each store under its pre-2.0 name, with its pre-2.0 location, and keep its default `schema_prefix` (see the note on garbage collection under Option A, step 2). If your pre-2.0 configuration set `subfolding` for the store, set the same value. Otherwise leave it out or set it to `null` (as the configuration template writes it): the pre-2.0 default, `[2, 2]`, is then used to find the files. Set `[]` only if your pre-2.0 store turned subfolding off. Files stay where they are.
 
 ```python
 from datajoint.migrate import migrate_external, migrate_filepath
@@ -2386,11 +2392,21 @@ result = migrate_filepath(schema, dry_run=False, finalize=True)
 **What this does:**
 
 - Looks up every file where pre-2.0 DataJoint stored it before changing anything. If a file is missing, the migration raises an error and changes nothing. The preview lists these files.
+- Blob and attachment files are under the name of the database pre-2.0 DataJoint wrote them from. If you migrate a copy of the schema rather than the schema itself, pass the original name: `migrate_external(schema, dry_run=False, legacy_database='my_pipeline')`, and the same for the preview.
 - The preview looks up the files too, so every store must be configured and reachable before you run it. This is one existence check per file, which is one request per file on S3.
 - Adds a `<name>_v2` column for each in-store column, with the type marker (for example `:<blob@raw>:`) in its comment. Fetch the `_v2` columns with DataJoint 2.0 to verify them before you finalize. If a step fails, the `_v2` columns the run added are dropped again, and the original columns are unchanged.
-- Finalizing renames each original column to `<name>_v1` and gives its name to the migrated column. A required column stays required. It needs `dry_run=False`: with the default `dry_run=True`, it only previews. It first checks that every `_v2` column exists and reads in 2.0, and changes nothing otherwise.
+- Finalizing renames each original column to `<name>_v1` and gives its name to the migrated column. A required column stays required, except one that an earlier release already finalized (see below). It needs `dry_run=False`: with the default `dry_run=True`, it only previews. It first checks that every `_v2` column exists and reads in 2.0, and changes nothing otherwise.
 
 **If you ran this step with an earlier DataJoint 2.x release:** those releases wrote values that 2.0 cannot read. Rerun the migration with `dry_run=False` and the current release. It rewrites `_v2` columns that do not read, and skips the ones that do; the preview shows them with the action `rewrite`. If you had already finalized, it rewrites the finalized columns from the pointers kept in `<name>_v1`, with the action `repair`. The original pointers are never changed, so no data is lost.
+
+Repair cannot restore `NOT NULL`. The earlier release's finalize made every migrated column optional and did not record which ones were required, so a repaired column stays optional. The preview marks these columns with `nullable: True`, and the run logs a warning for each. If a column was required, restore it in SQL, keeping its comment:
+
+```sql
+ALTER TABLE `my_pipeline`.`recording`
+  MODIFY COLUMN `signal` JSON NOT NULL COMMENT ':<blob@raw>:raw signal';
+```
+
+`alter()` cannot make this change while the table keeps its `<name>_v1` columns, because their pre-2.0 type, `binary(16)`, is not accepted in a 2.0 definition.
 
 #### Step 5: Verify Migration
 
