@@ -10,6 +10,8 @@ This page explains how version information is indicated throughout the DataJoint
 
 If you're using legacy DataJoint (version 0.14.x or earlier), please visit the [legacy documentation](https://datajoint.github.io/datajoint-python) or follow the [Migration Guide](../how-to/migrate-to-v20.md) to upgrade.
 
+Releases before 2.0, including 0.14, are no longer supported and will not receive a fix.
+
 ## Version Indicators
 
 ### Global Indicators
@@ -103,7 +105,7 @@ For DataJoint 0.x documentation, visit:
 |---------|--------------|---------------|
 | 2.1 | 2026 | PostgreSQL multi-backend support |
 | 2.0 | 2026 | Redesigned fetch API, unified stores, per-table jobs, semantic matching |
-| 0.14.x | 2020-2025 | Legacy version with external storage |
-| 0.13.x | 2019 | Legacy version |
+| 0.14.x | 2020-2025 | Legacy version with external storage (no longer supported) |
+| 0.13.x | 2019 | Legacy version (no longer supported) |
 
 For complete version history, see the [changelog](https://github.com/datajoint/datajoint-python/releases).

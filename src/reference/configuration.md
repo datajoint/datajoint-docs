@@ -13,6 +13,26 @@ Configuration is loaded in priority order:
 3. **Secrets directory** (`.secrets/`)
 4. **Defaults** (lowest priority)
 
+### Configuration File Search
+
+When `datajoint` is imported, it looks for configuration files in this order:
+
+1. If `DJ_IGNORE_CONFIG_FILE=true`, no file is read. Only environment variables and defaults apply.
+2. If `DJ_CONFIG_FILE` is set, that file is loaded and no search is made *(new in 2.3.6)*. A relative path is resolved against the working directory, and `~` is expanded. If the file does not exist, `import datajoint` raises `FileNotFoundError`.
+3. Otherwise, DataJoint looks for `datajoint.json` in the working directory, then in each parent directory. The search stops at the first `datajoint.json`, at a directory that holds `.git` or `.hg`, or at the root of the file system.
+4. The secrets directory is `.secrets/` next to the configuration file. If there is none, DataJoint uses `/run/secrets/datajoint/` when it exists.
+
+`dj.config.load(path)` loads a file explicitly at any time.
+
+!!! version-changed "Changed in 2.3.6"
+    On Linux and macOS, the search skips, with a logged warning, a configuration file, secrets
+    directory or secret file that another user (not root) owns and that sits in a directory every
+    user can write, such as `/tmp`. Files in a shared group directory are still loaded. A file or
+    directory that is used and that every user can write produces a warning. A file named by
+    `DJ_CONFIG_FILE` or passed to `dj.config.load()` is loaded without the ownership check. The
+    `.secrets/` directory next to a `DJ_CONFIG_FILE` file is still checked. On Windows, the search has no ownership check.
+    See [Configuration on Shared Hosts](../how-to/manage-secrets.md#configuration-on-shared-hosts).
+
 ## Database Settings
 
 | Setting | Environment | Default | Description |
@@ -24,7 +44,7 @@ Configuration is loaded in priority order:
 | `database.password` | `DJ_PASS` | — | Database password (required) |
 | `database.name` | `DJ_DATABASE_NAME` | `None` | Database name for PostgreSQL connections. Defaults to `"postgres"` if not set. *(new in 2.2.1)* |
 | `database.reconnect` | — | `True` | Auto-reconnect on connection loss |
-| `database.use_tls` | `DJ_USE_TLS` | `None` | Enable TLS encryption *(env var new in 2.1)* |
+| `database.use_tls` | `DJ_USE_TLS` | `None` | TLS encryption: unset (`None`) uses TLS when the server offers it, `true` requires it, `false` turns it off. A dict with certificate options is passed in code. See [TLS Configuration](../how-to/configure-database.md#tls-configuration) *(env var new in 2.1)* |
 | `database.database_prefix` | `DJ_DATABASE_PREFIX` | `""` | *(Deprecated — use `database.name` instead)* Prefix for database/schema names |
 | `database.create_tables` | `DJ_CREATE_TABLES` | `True` | Default for `Schema(create_tables=)`. Set `False` for production mode |
 
@@ -200,8 +220,10 @@ recorded and [Record Data Origin](../how-to/record-data-origin.md) for the task-
 | `cache` | — | `None` | Path for query result cache |
 | `query_cache` | — | `None` | Path for compiled query cache |
 | `download_path` | — | `.` | Download location for attachments/filepaths |
+| `allow_filepath_outside_store` | `DJ_ALLOW_FILEPATH_OUTSIDE_STORE` | `False` | Accept `<filepath@>` paths that lead outside their store. Use only with trusted data; see [Paths outside the store](../how-to/configure-storage.md#paths-outside-the-store). *(new in 2.3.6)* |
 | `stores` | `DJ_STORES` | `{}` | JSON-encoded `stores` dict. Replaces the `stores` block from `datajoint.json`. *(new in 2.2.4)* |
-| `ignore_config_file` | `DJ_IGNORE_CONFIG_FILE` | `False` | Skip `datajoint.json` and the secrets directory. *(new in 2.2.4)* |
+| `ignore_config_file` | `DJ_IGNORE_CONFIG_FILE` | `False` | Skip `datajoint.json` and the secrets directory. *(new in 2.2.3)* |
+| — | `DJ_CONFIG_FILE` | — | Path of the configuration file to load, with no search. See [Configuration File Search](#configuration-file-search). *(new in 2.3.6)* |
 
 ## Example Configuration
 
@@ -281,7 +303,7 @@ export DJ_STORES='{
   }
 }'
 
-# Skip datajoint.json and .secrets/ entirely (new in 2.2.4)
+# Skip datajoint.json and .secrets/ entirely (new in 2.2.3)
 export DJ_IGNORE_CONFIG_FILE=true
 ```
 
@@ -349,7 +371,7 @@ schema = inst.Schema("my_schema")
 | `user` | str | — | Database username (required) |
 | `password` | str | — | Database password (required) |
 | `port` | int | from config | Database port |
-| `use_tls` | bool or dict | `None` | TLS configuration |
+| `use_tls` | bool or dict | from config | TLS configuration. When not given, `database.use_tls` from this instance's config applies *(from 2.3.6)*. See [TLS Configuration](../how-to/configure-database.md#tls-configuration) |
 | `**kwargs` | — | — | Config overrides (e.g., `safemode=False`, `database__reconnect=False`) |
 
 ### Attributes and Methods

@@ -357,7 +357,7 @@ The `<filepath@>` codec stores paths to files that you manage. DataJoint does no
 @schema
 class RawData(dj.Manual):
     definition = """
-    session_id : int
+    session_id : int32
     ---
     recording : <filepath@acquisition>  # User-managed file path
     """
@@ -375,6 +375,9 @@ table.insert1({'session_id': 4, 'recording': '_schema/myschema/...'}) # Error!
 # table.insert1({'session_id': 5, 'recording': 'content_addressed/file.dat'})  # Error!
 ```
 
+From 2.3.6, the reserved-section check ignores letter case and a leading `./`, so `_HASH/x` and
+`./_hash/x` also raise `ValueError`.
+
 **Key characteristics of `<filepath@>`:**
 
 - Stores path string only (DataJoint does not manage the files)
@@ -385,6 +388,56 @@ table.insert1({'session_id': 4, 'recording': '_schema/myschema/...'}) # Error!
 - Validates file exists on insert
 - Cannot use reserved sections (configured by `hash_prefix` and `schema_prefix`)
 - Can be restricted to specific prefix using `filepath_prefix` configuration
+- Must stay inside the store (see below)
+
+### Paths Outside the Store
+
+!!! version-changed "Changed in 2.3.6"
+    `<filepath@>` paths that lead outside their store are refused unless
+    `allow_filepath_outside_store` is set.
+
+A `<filepath@>` path must stay inside its store. DataJoint refuses:
+
+- a path with a `..` part;
+- for a `file` store, an absolute path outside the store's `location`.
+
+Inserting such a path raises `DataJointError`. Rows stored earlier with such paths, such as some
+migrated from DataJoint 0.14, can still be fetched, but reading or downloading the fetched value
+raises `DataJointError`.
+
+An absolute path inside a `file` store's `location` is accepted and saved relative to the store.
+The fetched `.path` is that relative path, not the string you inserted. A relative `location` is
+resolved against the working directory, as in earlier releases, so absolute paths are compared
+with that resolved location.
+
+The check compares paths as written. It does not resolve symbolic links, which has two
+consequences:
+
+- If the store's `location` is a symbolic link, or passes through one, an absolute path through
+  the link's target is refused. For example, on macOS `/tmp` links to `/private/tmp`, so with
+  `location` set to `/tmp/store`, a path returned by `Path.resolve()` starts with `/private/tmp`
+  and is refused. Give the path relative to the store, or under `location` exactly as written in
+  the configuration.
+- A symbolic link inside a `file` store is followed, even if it points outside the store. Control
+  who can create files and links in the store.
+
+To accept paths outside the store, for example for references migrated from 0.14 that
+deliberately point elsewhere, turn the check off:
+
+```python
+dj.config.allow_filepath_outside_store = True
+```
+
+or set the environment variable `DJ_ALLOW_FILEPATH_OUTSIDE_STORE=true`.
+
+!!! warning "Use only with trusted data"
+    This setting turns the check off for every `<filepath@>` value in the process. A stored path
+    can then point DataJoint at any file the process can reach. Set it only when everyone who
+    can insert into your `<filepath@>` columns is trusted.
+
+The setting applies to `<filepath@>` only. Paths of `<blob@>`, `<attach@>`, `<object@>` and
+`<npy@>` values are always checked. The error message names the setting and says that it
+applies only to `<filepath@>` values.
 
 ## Configuring stores via environment variables
 

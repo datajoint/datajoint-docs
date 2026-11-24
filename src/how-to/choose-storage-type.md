@@ -476,6 +476,7 @@ raw_data : <filepath@>      # User-managed file
 - ❌ No transaction safety
 - ❌ No deduplication
 - ❌ Must avoid `_hash/` and `_schema/` prefixes
+- ❌ Must stay inside the store: no `..` parts, and no absolute paths outside a `file` store's location (see [Paths Outside the Store](configure-storage.md#paths-outside-the-store))
 
 **Best for:**
 

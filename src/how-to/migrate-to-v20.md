@@ -3,6 +3,8 @@
 Upgrade existing pipelines from legacy DataJoint (the pre-2.0 `0.x` series)
 directly to the latest DataJoint 2.x — currently **2.3**.
 
+Releases before 2.0, including 0.14, are no longer supported and will not receive a fix.
+
 > **This guide is optimized for AI coding assistants.** Point your AI agent at this
 > document and it will execute the migration with your oversight.
 
