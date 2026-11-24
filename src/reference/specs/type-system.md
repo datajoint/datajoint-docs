@@ -505,8 +505,8 @@ Equipment & {"specs.vendor": "Acme"}
 Equipment.proj(vendor="specs.vendor")
 ```
 
-Both emit `json_value()` on MySQL and `jsonb_extract_path_text()` on
-PostgreSQL. Nested fields and array elements use dots and brackets:
+Both read the path with `json_value()` on MySQL and `jsonb_extract_path_text()`
+on PostgreSQL. Nested fields and array elements use dots and brackets:
 `specs.probe.serial`, `specs.channels[0]`.
 
 #### Extracted values are text
@@ -515,31 +515,164 @@ Both backend functions return text, so a numeric or boolean field comes back as
 a string unless a type is requested:
 
 ```python
-Equipment.proj(ch="specs.channels")            # '64'  — str
-Equipment.proj(ch="specs.channels:unsigned")   # 64    — int
+Equipment.proj(ch="specs.channels")       # '64'  — str
+Equipment.proj(ch="specs.channels:int")   # 64    — int
 ```
 
-The annotation is `path:type`. Portable spellings are `unsigned`, `signed` and
-`decimal(M,D)`.
+#### Type annotations
 
-!!! warning "Two defects to know about when filtering"
+The annotation is `path:type`. It takes MySQL's `RETURNING` spellings and the
+common PostgreSQL spellings. DataJoint converts each one to the matching type of
+the backend, so the same annotation works on both:
 
-    **Compare against a string.** A restriction value that is a Python `int` or
-    `bool` is not coerced to match the extracted text. `& {"specs.calibrated":
-    True}` returns **no rows** on MySQL and raises on PostgreSQL; write
-    `& {"specs.calibrated": "true"}` and `& {"specs.channels": "64"}` until
-    [#1564](https://github.com/datajoint/datajoint-python/issues/1564) is fixed.
+| Annotation | MySQL | PostgreSQL |
+|---|---|---|
+| `int`, `integer`, `smallint`, `bigint`, `tinyint`, `mediumint`, `int2`, `int4`, `int8` | `signed` | `bigint` |
+| `signed`, `unsigned` | as written | `bigint` |
+| `decimal(p,s)`, `numeric(p,s)` | `decimal(p,s)` | as written |
+| `decimal`, `numeric` without precision | `decimal(65,30)` | as written |
+| `float`, `double`, `double precision`, `float8`, `float(p)` with `p` from 25 to 53 | `double` | `double precision` |
+| `real`, `float4`, `float(p)` with `p` up to 24 | `float` | `real` |
+| `bool`, `boolean` | `signed` | as written |
+| `char`, `text` | `char` | `text` |
+| `varchar` | `char` | as written: `varchar` without a length has no limit |
+| `char(n)`, `varchar(n)` | `char(n)` | `varchar(n)` |
+| `date`, `time` | as written | as written |
+| `datetime`, `timestamp` | `datetime` | `timestamp` |
+| `json`, `jsonb` | `json` | the JSON value, as `json` or `jsonb` |
 
-    **`:int` is not portable.** It works on PostgreSQL and raises on MySQL, whose
-    `RETURNING` clause does not accept it. Use `unsigned` or `signed`, which work
-    on both — [#1563](https://github.com/datajoint/datajoint-python/issues/1563).
+Each integer and floating-point annotation except `unsigned` has the same range
+on both backends, and each has the same precision (MySQL returns
+single-precision values with 6 significant digits, and MySQL 8.0.21 compares
+them in double precision; see below):
+
+- Floating-point precision follows PostgreSQL: `float` alone is double
+  precision and `real` is single precision. MySQL's own `REAL` is double
+  precision, and its `RETURNING FLOAT` is single precision whatever the
+  precision argument, so DataJoint converts both.
+- Every integer annotation except `unsigned` is a 64-bit signed integer.
+  MySQL's `RETURNING` has no smaller integer types, so a size such as `int` or
+  `smallint` does not narrow the range on either backend: a value beyond 32
+  bits comes back whole under `:int`.
+
+Only `decimal` and `numeric` take two arguments, the precision and the scale.
+`char(n)`, `varchar(n)`, `float(p)` and the time types (`time(n)`,
+`datetime(n)`, `timestamp(n)`) take one, and an integer display width such as
+`int(11)` is dropped. A type given more arguments than it takes, such as
+`float(10,2)` or `date(3)`, raises a `DataJointError`, and so does `float(p)`
+with `p` outside 1 to 53.
+
+Some results still differ between the backends:
+
+- A decimal without precision is exact on PostgreSQL, with any number of
+  digits. On MySQL it is `decimal(65,30)`: the value comes back with 30 decimal
+  places, such as `Decimal('2.500000000000000000000000000000')`, which equals
+  `Decimal('2.5')`. Digits beyond the 30th decimal place are rounded (`1e-40`
+  becomes `0`), and a value of `1e35` or more in magnitude comes back as
+  `NULL`. MySQL also stores a JSON number that has a fraction as a 64-bit
+  float, which keeps 15 to 17 significant digits.
+- A single-precision annotation (`real`, `float4`, `float(p)` with `p` up to
+  24) comes back with 6 significant digits on MySQL, so `1234567.89` becomes
+  `1234570.0`, and on PostgreSQL as the shortest decimal that reads back as the
+  same single-precision value, `1234567.9`. MySQL 8.0.21 also compares it in
+  double precision, so `{"specs.gain:real": 0.1}` matches a stored `0.1` there;
+  PostgreSQL, MySQL 8.0.46 and MySQL 8.4 compare the single-precision value,
+  and it matches on none of them. Use `float` or `double` where the value must
+  be the same.
+- `unsigned` is a 64-bit unsigned integer on MySQL and `bigint` on PostgreSQL,
+  which has no unsigned type. A negative value comes back as `NULL` on MySQL
+  and as is on PostgreSQL. A value from `2**63` to `2**64 - 1` comes back on
+  MySQL and fails the query on PostgreSQL.
+- A boolean comes back as `1` or `0` on MySQL and as `True` or `False` on
+  PostgreSQL.
+- A `json` or `jsonb` annotation returns the JSON text as a string on MySQL,
+  such as `'{"a": 1}'` or `'"Acme"'`, and the decoded value on PostgreSQL, such
+  as `{'a': 1}` or `'Acme'`.
+- A value that the type cannot hold, such as `"abc"` under `:int` or `:date`,
+  or an integer outside the 64-bit range (`-2**63` to `2**63 - 1`) under an
+  integer annotation other than `unsigned`, comes back as `NULL` on MySQL and
+  fails the whole query on PostgreSQL. An integer annotation on a number with a
+  fraction rounds it on MySQL (`2.7` becomes `3`, `2.5` becomes `2`) and fails
+  the query on PostgreSQL.
+- A string longer than `n` in `char(n)` or `varchar(n)` comes back as `NULL` on
+  MySQL and cut to `n` characters on PostgreSQL.
+- `time`, `datetime` and `timestamp` without `(n)` drop the fraction of a
+  second on MySQL (`03:04:05.567` becomes `03:04:05`) and keep microseconds on
+  PostgreSQL; write `(6)` to get the same value on both. A `time` outside
+  00:00:00 to 24:00:00, such as `25:00:00` or a negative time, comes back on
+  MySQL and fails the query on PostgreSQL.
+- `uuid`, `interval`, `bit`, `timetz`, `timestamptz` and the `with time zone`
+  forms exist only on PostgreSQL. On MySQL they raise a `DataJointError` that
+  lists the annotations that work on both backends. On PostgreSQL, `bit` alone
+  becomes `bit varying`: `bit` there means `bit(1)` and keeps only the first
+  bit.
+- MySQL holds a JSON integer outside the range `-2**63` to `2**64 - 1`, and
+  every JSON number with a fraction or an exponent, as a 64-bit float, which
+  keeps 15 to 17 significant digits. PostgreSQL keeps the exact number. A
+  restriction by such a number compares the rounded values on MySQL and the
+  exact values on PostgreSQL, so numbers that differ only beyond the 15th
+  significant digit can match on MySQL and not on PostgreSQL:
+  `{"specs.count": 2**70}` also matches a stored `2**70 + 1` on MySQL, and
+  `{"specs.gain": Decimal("0.10000000000000000001")}` matches a stored `0.1`.
+  Integers within that range, and numbers with up to 15 significant digits,
+  match the same rows on both.
+
+#### Restricting by value
+
+A string value is compared with the extracted text. `"64"` matches a stored
+`64` or `"64"`, and `"true"` matches a stored `true`:
+
+```python
+Equipment & {"specs.vendor": "Acme"}
+Equipment & {"specs.channels": "64"}
+```
+
+A `bool` or a number (`int`, `float`, `Decimal`, and their NumPy types) is
+compared with the JSON value itself: `json_extract(...) = cast('64' as json)` on
+MySQL, `jsonb_extract_path(...) = '64'::jsonb` on PostgreSQL. The result is the
+same on both backends for integers within the 64-bit range and for numbers with
+up to 15 significant digits:
+
+```python
+Equipment & {"specs.calibrated": True}
+Equipment & {"specs.channels": 64}
+```
+
+- Numbers compare by value: `64` matches a stored `64` or `64.0`, and
+  `Decimal("2.50")` matches `2.5`. On MySQL, a number outside the 64-bit
+  integer range or with more than 15 significant digits can be rounded first,
+  as the last item of the list above describes.
+- `True` and `False` match only JSON `true` and `false`, not `1`, `0` or a
+  string.
+- A number or a boolean does not match a JSON string: `{"specs.channels": 64}`
+  does not match `"64"`.
+- A row without the key matches neither the restriction nor its complement
+  (`-`). A JSON `null` is a value unequal to every number, so the complement
+  includes it.
+- NaN and infinity raise a `DataJointError`, since JSON cannot represent them.
+
+A key with a type annotation compares the converted value instead:
+`Equipment & {"specs.channels:int": 64}`.
+
+!!! version-changed "Changed in 2.4"
+
+    Earlier releases compared every restriction value with the extracted text.
+    On MySQL, `True` missed the rows holding JSON `true`, and `False` matched
+    every value that does not read as a number. On PostgreSQL, a `bool` or a
+    number raised an error. `:int` and the other PostgreSQL spellings were a
+    syntax error on MySQL. `float` was single precision on MySQL and double
+    precision on PostgreSQL, and `real` the reverse. On PostgreSQL, `signed`,
+    `unsigned`, `int` and `smallint` were 32- or 16-bit, so a larger value
+    failed the whole query. On those releases, restrict by strings (`"true"`,
+    `"64"`) and annotate with `signed`, `unsigned`, `double` or
+    `decimal(M,D)`.
 
 #### Ordering comparisons
 
 A path yields text, so `>` and `<` need a typed projection first:
 
 ```python
-big = Equipment.proj(ch="specs.channels:unsigned") & "ch > 32"
+big = Equipment.proj(ch="specs.channels:int") & "ch > 32"
 ```
 
 #### What is not supported
