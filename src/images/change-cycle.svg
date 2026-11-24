@@ -1,0 +1,95 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="980" height="400" viewBox="0 0 980 400" font-family="Helvetica, sans-serif">
+<style>
+  svg { background-color: #FFFFFF; }
+  .edge { stroke: #171C39; fill: none; }
+  .arrow { fill: #171C39; }
+  .title { fill: #171C39; }
+  .body { fill: #3A3F4B; }
+  .note { fill: #808285; }
+  .ddl { fill: #FFF1D6; stroke: #C77700; }
+  .ddl-t { fill: #6B3F00; }
+  .con { fill: #E3F5EC; stroke: #2E8F62; }
+  .con-t { fill: #1B5239; }
+@media (prefers-color-scheme: dark) {
+    svg { background-color: #161A21; }
+    .edge { stroke: #AEB6C2; }
+    .arrow { fill: #AEB6C2; }
+    .title { fill: #E6E8EC; }
+    .body { fill: #C9CDD4; }
+    .note { fill: #9DA0A4; }
+    .f-dev { fill: #161A21; stroke: #9DA0A4; }
+    .f-step { fill: #1E222B; stroke: #9DA0A4; }
+    .f-prod { fill: #0F2433; stroke: #33B8E8; }
+    .ddl { fill: #3A2A0E; stroke: #F5A623; }
+    .ddl-t { fill: #FFD58A; }
+    .con { fill: #10301F; stroke: #4CC38A; }
+    .con-t { fill: #A6E8C4; }
+}
+</style>
+<defs><marker id="ah" markerWidth="9" markerHeight="9" refX="8" refY="3.5" orient="auto"><path class="arrow" d="M0,0 L8,3.5 L0,7 Z"/></marker></defs>
+
+<!-- 1. Development pipeline -->
+<rect class="f-dev" x="20" y="40" width="170" height="150" rx="10" fill="#FFFFFF" stroke="#808285" stroke-width="1.6" stroke-dasharray="6 4"/>
+<text class="title" x="105" y="68" text-anchor="middle" font-size="15" font-weight="600" fill="#171C39">Development</text>
+<text class="title" x="105" y="86" text-anchor="middle" font-size="15" font-weight="600" fill="#171C39">pipeline</text>
+<text class="body" x="105" y="110" text-anchor="middle" font-size="12.5" fill="#3A3F4B">design and try the change;</text>
+<text class="body" x="105" y="127" text-anchor="middle" font-size="12.5" fill="#3A3F4B">definition and data</text>
+<text class="body" x="105" y="144" text-anchor="middle" font-size="12.5" fill="#3A3F4B">change together</text>
+<text class="note" x="105" y="172" text-anchor="middle" font-size="11.5" fill="#808285">product: verified code</text>
+
+<line class="edge" x1="192" y1="115" x2="207" y2="115" stroke="#171C39" stroke-width="2" marker-end="url(#ah)"/>
+
+<!-- 2. Review and merge -->
+<rect class="f-step" x="210" y="40" width="170" height="150" rx="10" fill="#F2F3F5" stroke="#808285" stroke-width="1.6"/>
+<text class="title" x="295" y="68" text-anchor="middle" font-size="15" font-weight="600" fill="#171C39">Review and merge</text>
+<text class="body" x="295" y="110" text-anchor="middle" font-size="12.5" fill="#3A3F4B">code reviewed, with its</text>
+<text class="body" x="295" y="127" text-anchor="middle" font-size="12.5" fill="#3A3F4B">classification and</text>
+<text class="body" x="295" y="144" text-anchor="middle" font-size="12.5" fill="#3A3F4B">data migration</text>
+
+<line class="edge" x1="382" y1="115" x2="397" y2="115" stroke="#171C39" stroke-width="2" marker-end="url(#ah)"/>
+
+<!-- 3. Release -->
+<rect class="f-step" x="400" y="40" width="170" height="150" rx="10" fill="#F2F3F5" stroke="#808285" stroke-width="1.6"/>
+<text class="title" x="485" y="68" text-anchor="middle" font-size="15" font-weight="600" fill="#171C39">Release</text>
+<text class="body" x="485" y="110" text-anchor="middle" font-size="12.5" fill="#3A3F4B">a versioned commit;</text>
+<text class="body" x="485" y="127" text-anchor="middle" font-size="12.5" fill="#3A3F4B">each new or changed</text>
+<text class="body" x="485" y="144" text-anchor="middle" font-size="12.5" fill="#3A3F4B"><tspan font-family="Menlo, monospace">make()</tspan> is checked</text>
+<rect class="con" x="415" y="156" width="140" height="24" rx="12" fill="#E3F5EC" stroke="#2E8F62" stroke-width="1.4"/>
+<text class="con-t" x="485" y="172" text-anchor="middle" font-size="11.5" font-weight="600" fill="#1B5239">contract checked</text>
+
+<line class="edge" x1="572" y1="115" x2="587" y2="115" stroke="#171C39" stroke-width="2" marker-end="url(#ah)"/>
+
+<!-- 4. Deploy -->
+<rect class="f-step" x="590" y="40" width="170" height="150" rx="10" fill="#F2F3F5" stroke="#808285" stroke-width="1.6"/>
+<text class="title" x="675" y="68" text-anchor="middle" font-size="15" font-weight="600" fill="#171C39">Deployment step</text>
+<text class="body" x="675" y="110" text-anchor="middle" font-size="12.5" fill="#3A3F4B">applies the release:</text>
+<text class="body" x="675" y="127" text-anchor="middle" font-size="12.5" fill="#3A3F4B">definition, Lookup contents,</text>
+<text class="body" x="675" y="144" text-anchor="middle" font-size="12.5" fill="#3A3F4B">then data migration</text>
+<rect class="ddl" x="605" y="156" width="140" height="24" rx="12" fill="#FFF1D6" stroke="#C77700" stroke-width="1.4"/>
+<text class="ddl-t" x="675" y="172" text-anchor="middle" font-size="11.5" font-weight="600" fill="#6B3F00">DDL applied</text>
+
+<line class="edge" x1="762" y1="115" x2="777" y2="115" stroke="#171C39" stroke-width="2" marker-end="url(#ah)"/>
+
+<!-- 5. Production run time -->
+<rect class="f-prod" x="780" y="40" width="180" height="150" rx="10" fill="#E0F4FC" stroke="#00A0DF" stroke-width="1.6"/>
+<text class="title" x="870" y="68" text-anchor="middle" font-size="15" font-weight="600" fill="#171C39">Production</text>
+<text class="body" x="870" y="110" text-anchor="middle" font-size="12.5" fill="#3A3F4B">run time changes data only;</text>
+<text class="body" x="870" y="127" text-anchor="middle" font-size="12.5" fill="#3A3F4B">workers run <tspan font-family="Menlo, monospace">make()</tspan> from</text>
+<text class="body" x="870" y="144" text-anchor="middle" font-size="12.5" fill="#3A3F4B">a fresh checkout</text>
+<rect class="con" x="795" y="156" width="150" height="24" rx="12" fill="#E3F5EC" stroke="#2E8F62" stroke-width="1.4"/>
+<text class="con-t" x="870" y="172" text-anchor="middle" font-size="11.5" font-weight="600" fill="#1B5239">contract enforced</text>
+
+<!-- Data copy: production to development only -->
+<path class="edge" d="M870,192 L870,240 L105,240 L105,198" stroke="#171C39" stroke-width="2" stroke-dasharray="5 4" marker-end="url(#ah)"/>
+<text class="title" x="487" y="232" text-anchor="middle" font-size="13.5" font-weight="600" fill="#171C39">data copy, optional: production to development only</text>
+<text class="note" x="487" y="260" text-anchor="middle" font-size="12" fill="#808285">rows from the development pipeline are never copied into production</text>
+
+<!-- Legend -->
+<rect class="ddl" x="20" y="300" width="110" height="24" rx="12" fill="#FFF1D6" stroke="#C77700" stroke-width="1.4"/>
+<text class="ddl-t" x="75" y="316" text-anchor="middle" font-size="11.5" font-weight="600" fill="#6B3F00">DDL applied</text>
+<text class="body" x="142" y="316" font-size="12.5" fill="#3A3F4B">the only step that changes production's definition; in a development pipeline, DDL runs any time</text>
+<rect class="con" x="20" y="338" width="110" height="24" rx="12" fill="#E3F5EC" stroke="#2E8F62" stroke-width="1.4"/>
+<text class="con-t" x="75" y="354" text-anchor="middle" font-size="11.5" font-weight="600" fill="#1B5239">contract</text>
+<text class="body" x="142" y="354" font-size="12.5" fill="#3A3F4B">the <tspan font-family="Menlo, monospace">make()</tspan> reproducibility contract: checked in full at release; enforced in part at run time</text>
+<text class="body" x="142" y="372" font-size="12.5" fill="#3A3F4B">by DataJoint, by privileges, and by workers running the released code</text>
+</svg>

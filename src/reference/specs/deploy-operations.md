@@ -10,11 +10,13 @@ DataJoint is designed to uphold these modes. Enforcement comes from database pri
 |---|---|
 | **Definition** | What the pipeline is: its tables, attributes, keys and dependencies; the `make()` method of each auto-populated table; and, under this standard, the contents of its Lookup tables |
 | **Data** | The rows of its Manual, Imported and Computed tables and their parts |
-| **Target** | One database that a pipeline runs on. The mode is a property of a target, not of the code |
-| **Pipeline** | The code and its main target. "A pipeline is in production" means its main target is |
+| **Target** | One database that a pipeline runs on. The mode is a property of a target, not of the code, and a target keeps its mode for as long as it exists, except when a pipeline others already depend on adopts this standard (see [Creating the production pipeline](#2-creating-the-production-pipeline)) |
+| **Pipeline** | The code and a target it runs on. A production pipeline and the development pipelines declared from its code are separate pipelines: they share code, not data |
+| **Development pipeline** | A pipeline in development: the pipeline before its first deployment step, or a temporary one declared from a production pipeline's deployed code to design one change and retired after it. Its product is verified code for review and merge, not data |
+| **Release** | A merged, versioned commit whose `make()` methods have been checked against the reproducibility contract. A deployment step applies a release to a target |
 | **Run time** | Every process that uses the pipeline other than a deployment step: workers, notebooks, dashboards, scripts |
-| **Worker** | A process dedicated to populating auto-populated tables, running a clean checkout of the committed code at the deployed version |
-| **Deployment step** | The one step that changes a production target's definition, before the code that needs the change starts |
+| **Worker** | A process dedicated to populating auto-populated tables, running a fresh, clean checkout of the committed code at the deployed version |
+| **Deployment step** | The one step that changes a production target's definition, by applying a release, before the code that needs the change starts |
 | **Development** | A mode in which the definition and the data may change together, from any process |
 | **Production** | A mode in which the definition changes only in a deployment step, and run time changes only data |
 
@@ -24,6 +26,7 @@ The standard rests on one rule:
 
 > In development, the definition and the data may change together, in any process.
 > In production, the definition changes only in a deployment step, planned and applied as one, and run time changes only data.
+> Data may be copied from production to development, never from development to production.
 
 Changing the definition is mostly DDL (declaring, altering and dropping tables), and changing data is DML (inserting and deleting rows), but the correspondence is not exact. Writing a Lookup table's rows is treated as a change to the definition, and so is changing a `make()` method, which runs no SQL at all.
 
@@ -38,29 +41,35 @@ Changing the definition is mostly DDL (declaring, altering and dropping tables),
 | Lookup contents | Seeded by DataJoint from `contents`, and edited as needed | Seeded and changed only by deployment, with the code |
 | Hidden tables (jobs tables, `~lineage`) | Declared by DataJoint as needed | Declared by deployment, ahead of time |
 | Deleting data | Interactively, with a prompt | Previewed, then deleted without a prompt |
-| Trying a change | On the target itself | On a development target, then deployed |
+| How it begins | Declared from code: empty, or, to change a production pipeline, with a copy of production data | Declared empty, from committed code, by its first deployment step |
+| Where its rows come from | Anywhere: test entries, uncommitted code, copies of production data | Only from production's own paths: entry and import, and workers running the deployed commit. Never copied from development |
+| Trying a change | On the pipeline itself | On a development pipeline declared from the deployed commit, then merged and deployed |
 | Additive and revising changes | Both applied as written | Additive: deployed without pausing work. Revising: reviewed, deployed with dependent work paused |
-| `make()` reproducibility contract | A convention; an experiment may break it | Checked before each deployment, and backed at run time by DataJoint and by privileges |
+| `make()` reproducibility contract | A convention; an experiment may break it | Checked in each release, and backed at run time by DataJoint and by privileges |
 | Intrinsic provenance (structural lineage) | Holds against the current definition, which may have changed since a row was computed | Holds against the deployed version of the definition, which job metadata records on each computed row when it is on |
 | Extrinsic provenance (`_prov`) | Optional | Decided at the first deployment; when on, recorded on every row entered from outside |
 
-Some targets stay in development for as long as they exist: a scratch database, the throwaway database a test suite starts, or a copy of a production pipeline used to try a change. A copy made to try a change is a development target of the same pipeline.
+A target keeps its mode for as long as it exists. Development targets include a scratch database, the throwaway database a test suite starts, and each development pipeline declared to design a change to a production pipeline.
 
 ## Lifecycle of a pipeline
 
-![The lifecycle of a pipeline. On the left, a gray box labeled Development: definition and data change together, from any process. An arrow labeled "first deployment step", with the note "one-way under this standard", leads right to a blue box labeled Production: definition changes only in a deployment step; run time changes only data. Below Production, a dashed box labeled Development target, where each change is developed, on a copy or a separate database. An arrow from it up to Production is labeled "deployment step", for each change, after review.](../../images/pipeline-lifecycle.svg)
+![The lifecycle of a pipeline. On the left, a gray box labeled Development: definition and data change together, from any process. An arrow labeled "first deployment step", with the note "declares production empty, from code", leads right to a blue box labeled Production: definition changes only in a deployment step; run time changes only data. Below Production, a dashed box labeled Development pipeline: temporary, one per change, declared from production's deployed code. A solid arrow from it up to Production is labeled "merge, release, then deployment step", for each change, after review. A dashed arrow from Production down to it is labeled "data copy", optional, and never the other way.](../../images/pipeline-lifecycle.svg)
 
 ### 1. Development
 
-A pipeline starts in development. Its developers declare, populate, compare, alter, drop and redeclare as they need to. Everything DataJoint does on its own suits this mode.
+A pipeline starts in development. Its developers declare, populate, compare, alter, drop and redeclare as they need to. Everything DataJoint does on its own suits this mode. A development pipeline is disposable: its rows serve the design of the pipeline, not its users.
 
-### 2. Moving to production
+### 2. Creating the production pipeline
 
-A pipeline moves to production when someone outside its developers starts to depend on it: data entered by others, results read by others, or another pipeline built on it. The move is the pipeline's first deployment step:
+When others are ready to depend on the pipeline (data entered by others, results read by others, or another pipeline built on it), a production pipeline is created, empty, by its first deployment step:
 
-1. The definition is recorded as code, under version control, at a known version.
-2. Every table is declared on the main target, including the hidden tables: the jobs table of each auto-populated table and each schema's `~lineage` table. Lookup contents are set.
-3. Run time switches to logins that can change data only, with automatic table creation turned off (recommendation 4), and populating moves to workers (recommendation 3).
+1. The definition is recorded as code, under version control, in a release: a versioned commit whose `make()` methods have been checked against the [reproducibility contract](#where-the-contract-is-enforced).
+2. Every table is declared on a new target, the production target, including the hidden tables: the jobs table of each auto-populated table and each schema's `~lineage` table. Lookup contents are set. Job metadata and extrinsic provenance capture are decided here, because they change how tables are declared (recommendation 10).
+3. Run time uses logins that can change data only, with automatic table creation turned off (recommendation 4), and populating is done by workers (recommendation 3).
+
+The development pipeline is not converted, and its rows stay where they are. The production pipeline fills only through its own paths: Manual and Imported data are entered or imported again from their sources, and workers compute the rest from the deployed commit. Every row in production is under its provenance controls from the first.
+
+A pipeline that others already depend on when it adopts this standard is not declared again. This is the one case in which a target changes mode: its first deployment step brings its existing target under the production rules in place, and its existing rows stay as they are. Rows computed before job metadata was turned on carry no recorded version, and rows entered before provenance capture carry none.
 
 ### 3. Production
 
@@ -68,11 +77,23 @@ Run time changes only data. The recommendations below hold for as long as the pi
 
 ### 4. Changing a production pipeline
 
-A change is developed on a development target, a separate database or a copy of the pipeline with representative data, where the fast loop of change, populate and compare still works. It reaches production only through review and a deployment step.
+A change is designed on a development pipeline, declared for that change and retired after it. The development pipeline's product is verified code, for review and merge; its rows are never carried forward.
 
-### 5. Production is one-way
+![The cycle of a change to a production pipeline, left to right. A dashed box, Development pipeline: design and try the change, with definition and data changing together; its product is verified code. An arrow to Review and merge: code reviewed, with its classification and data migration. An arrow to Release: a versioned commit, where each new or changed make() is checked, marked "contract checked". An arrow to Deployment step: applies the release (definition, Lookup contents, then data migration), marked "DDL applied". An arrow to Production: run time changes data only, and workers run make() from a fresh checkout, marked "contract enforced". A dashed arrow from Production back to the Development pipeline is labeled "data copy, optional: production to development only"; rows from the development pipeline are never copied into production. A legend says the deployment step is the only step that changes production's definition, while in a development pipeline DDL runs any time, and that the make() reproducibility contract is checked in full at release and enforced in part at run time by DataJoint, by privileges, and by workers running the released code.](../../images/change-cycle.svg)
 
-Under this standard, a pipeline does not go back from production to development: once others hold its data, a direct change to its definition would reach them unannounced. If nobody depends on a pipeline any longer, its operators may choose to treat it as being in development again. A new pipeline that starts from a production pipeline's code is a different pipeline, with its own main target, and starts in development.
+1. **Declare** a development pipeline from the deployed commit, so that it starts with production's definition. Where it lives is up to the deployment: a separate database or schema prefix, a copy-on-write branch of the production database (a copy that shares production's stored data until either side changes it), or memory, where the tooling supports it. A branch starts with production's rows, which is a copy from production to development.
+2. **Copy data in**, if the change needs it: usually a restricted subset of production's rows, enough to try the change on representative data.
+3. **Design and try** the change. The definition and the data change together, in the fast loop of change, populate and compare.
+4. **Commit** the change and have it reviewed, with its classification as [additive or revising](#additive-and-revising-changes) and the data migration it needs.
+5. **Merge** the code.
+6. **Release** it: each new or changed `make()` is checked against the [reproducibility contract](#where-the-contract-is-enforced), and the release records the version.
+7. **Deploy** the release to production in a [deployment step](#the-deployment-step): the definition changes first, then the data migration, written as code and run against production's own rows.
+8. **Compute** the new results in production, in workers running a fresh checkout of the deployed commit. Rows computed in the development pipeline are discarded, not copied.
+9. **Retire** the development pipeline.
+
+### 5. Development and production are separate pipelines
+
+Neither turns into the other. A development pipeline never becomes a production pipeline, since its rows would enter production without production's controls. A production pipeline does not go back to development: once others hold its data, a direct change to its definition would reach them unannounced. When nobody depends on a production pipeline any longer, it is retired. A new pipeline that starts from a production pipeline's code is a different pipeline, with its own target, and starts in development.
 
 ## Recommendations for production
 
@@ -80,7 +101,7 @@ Under this standard, a pipeline does not go back from production to development:
 
 **2. Enforce it with database privileges.** Run-time logins hold no privilege to create, alter or drop tables or schemas, and none to insert into or delete from Lookup tables. Only the deployment step uses a login that can change the definition. Privileges hold whatever code runs, including code written outside DataJoint. Keeping Lookup tables read-only differs by backend: PostgreSQL can grant on every table in a schema and then revoke on the Lookup tables, while MySQL cannot narrow a schema-level grant, so the run-time login's write grants are given table by table and renewed in each deployment step that declares tables.
 
-**3. Only workers populate.** In production, `populate()` and `make()` run only in workers, never in a user's notebook or script. A worker runs a clean checkout of the committed code at the deployed version, so the version that job metadata records on each row (the git commit) is exactly the code that computed it; code with uncommitted changes would record a commit it doesn't match. Privileges back the rule: worker logins may insert into auto-populated tables and their parts (and update them, when job metadata is on, and write the jobs tables), while user logins hold no insert or update privilege on them. Users read, enter data into Manual tables, and delete, previewed first; a delete cascades through auto-populated tables, so user logins keep the privilege to delete from them.
+**3. Only workers populate.** In production, `populate()` and `make()` run only in workers, never in a user's notebook or script. A worker runs a fresh, clean checkout of the committed code at the deployed version, so the version that job metadata records on each row (the git commit) is exactly the code that computed it; code with uncommitted changes would record a commit it doesn't match. Privileges back the rule: worker logins may insert into auto-populated tables and their parts (and update them, when job metadata is on, and write the jobs tables), while user logins hold no insert or update privilege on them. Users read, enter data into Manual tables, and delete, previewed first; a delete cascades through auto-populated tables, so user logins keep the privilege to delete from them.
 
 **4. Declare everything ahead of time, and turn off automatic creation.** The deployment step declares every table the code needs, hidden tables included, so run time never needs to declare one. For run time, set `dj.config.database.create_tables` (or `DJ_CREATE_TABLES`) to false, and don't pass `create_tables=True` to `dj.Schema` in run-time code, since an explicit argument overrides the configuration. A missing table is then reported as missing instead of being declared. `dj.Schema` also creates a missing schema unless given `create_schema=False`; with the privileges of recommendation 2, that attempt is refused.
 
@@ -92,9 +113,11 @@ Under this standard, a pipeline does not go back from production to development:
 
 **8. Classify each change as additive or revising** before deploying it, and manage each kind as described in [Additive and revising changes](#additive-and-revising-changes).
 
-**9. Check each `make()` against the reproducibility contract before deploying it.** DataJoint enforces only part of the contract at run time; the rest is checked before a change reaches production. See [Where the contract is enforced](#where-the-contract-is-enforced).
+**9. Check each `make()` against the reproducibility contract when releasing it.** DataJoint enforces only part of the contract at run time; the rest is checked in the release, before a deployment step applies it. See [Where the contract is enforced](#where-the-contract-is-enforced).
 
-**10. Record where rows come from.** For computed rows, turn on job metadata: `jobs.add_job_metadata` when the deployment step declares the tables (`datajoint.migrate.add_job_metadata_columns` adds the columns to tables declared without them), and `jobs.version_method="git"` in the workers, which run a clean checkout of the deployed commit (recommendation 3), so that each computed row records exactly the code version that wrote it. For rows entered from outside, decide on extrinsic provenance capture before the first deployment declares the Manual tables, and turn `provenance.capture` on in every process that enters data. See [Provenance](#provenance).
+**10. Record where rows come from.** For computed rows, turn on job metadata: `jobs.add_job_metadata` when the deployment step declares the tables (`datajoint.migrate.add_job_metadata_columns` adds the columns to tables declared without them), and `jobs.version_method="git"` in the workers, which run a fresh, clean checkout of the deployed commit (recommendation 3), so that each computed row records exactly the code version that wrote it. For rows entered from outside, decide on extrinsic provenance capture before the first deployment declares the Manual tables, and turn `provenance.capture` on in every process that enters data. See [Provenance](#provenance).
+
+**11. Never copy data from development to production.** Rows in a development pipeline may have been computed by uncommitted code, under a definition that never shipped, or entered as tests, and nothing on them says which. Copied into production, they would carry a code version they don't match, or none, and bypass recommendations 3, 9 and 10. Data moves the other way only: production rows may be copied into a development pipeline. A change to production's data is a data migration, written as code, reviewed with the change and run in the deployment step against production's own rows.
 
 ## Additive and revising changes
 
@@ -152,7 +175,7 @@ DataJoint records where a row came from in two ways, and the two modes treat the
 The [contract](autopopulate.md#43-the-make-reproducibility-contract) keeps every computed row traceable to its declared, key-restricted inputs: `make()` reads only from its upstream cone, writes its result to its own table and its parts (and records the source wherever else it writes), computes one entity per call, and takes no result-affecting input from outside the pipeline.
 
 - In **development**, the contract is a convention. Anyone may populate, from uncommitted code, and an experiment may break the contract, for example by inserting a row directly to look at a result; the rows it produces are disposable.
-- In **production**, every row others depend on must satisfy it, so each `make()` is checked before it is deployed, only workers run it, from the deployed commit, and privileges keep everyone else from inserting computed rows.
+- In **production**, every row others depend on must satisfy it, so each `make()` is checked when it is released, only workers run it, from a fresh checkout of the deployed commit, and privileges keep everyone else from inserting computed rows.
 
 #### Where the contract is enforced
 
@@ -162,11 +185,11 @@ The [contract](autopopulate.md#43-the-make-reproducibility-contract) keeps every
 | DataJoint, at run time | Each `make()` call runs in its own transaction, so its entity and its parts are inserted together or not at all | Write the result to `self` and its parts, as one unit |
 | DataJoint, at run time | `self.upstream` exists only inside `make()`, restricted to the current key; indexing it with a table that is not an ancestor raises | Read only upstream, when reads go through `self.upstream` |
 | DataJoint, at run time | In the tripartite (three-part) `make()`, `make_fetch` runs again inside the transaction, and the job fails if its result differs from the first call ("Referential integrity failed! The `make_fetch` data has changed") | Not one of the rules: a guard that keeps the inputs the same while the result is computed |
-| Review and the deployment step, before code reaches production | Each `make()` reads only from its upstream cone, writes its result to its own table and its parts and records the source wherever else it writes, keeps no state across calls, and takes no result-affecting input from outside the pipeline (`make_kwargs` only orchestrate) | All rules; the only place the reads, the isolation and the outside inputs are checked |
+| Review and release, before a deployment step applies the code | Each `make()` reads only from its upstream cone, writes its result to its own table and its parts and records the source wherever else it writes, keeps no state across calls, and takes no result-affecting input from outside the pipeline (`make_kwargs` only orchestrate) | All rules; the only place the reads, the isolation and the outside inputs are checked |
 | Database privileges, in production | Only worker logins may insert into auto-populated tables and their parts (and update them, when job metadata is on); user logins hold no insert privilege on them | Populate-only, for master and parts, whatever code runs, including `allow_direct_insert=True` |
-| Workers, in production | `make()` runs only in workers, from a clean checkout of the deployed commit, so the code that ran is the code that was checked and the version recorded with each row | The checked code is the code that ran |
+| Workers, in production | `make()` runs only in workers, from a fresh, clean checkout of the deployed commit, so the code that ran is the code that was checked and the version recorded with each row | The checked code is the code that ran |
 
-At run time, DataJoint enforces populate-only for master tables and the all-or-nothing write, and the read rule only for reads made through `self.upstream`. Nothing at run time checks reads made any other way, that a call computes exactly one entity, keeps no state across calls, or takes no outside input; those are checked before deployment. In production, `allow_direct_insert=True` belongs only in a deployment step's data migration, never in run-time code, and the privileges refuse it anywhere else.
+At run time, DataJoint enforces populate-only for master tables and the all-or-nothing write, and the read rule only for reads made through `self.upstream`. Nothing at run time checks reads made any other way, that a call computes exactly one entity, keeps no state across calls, or takes no outside input; those are checked in the release, before deployment. In production, `allow_direct_insert=True` belongs only in a deployment step's data migration, never in run-time code, and the privileges refuse it anywhere else.
 
 ### Lookup seeding
 
@@ -177,16 +200,15 @@ A Lookup table's rows are part of its definition, listed in its `contents`. Data
 
 ## The deployment step
 
-A deployment step brings a production target's definition to a new version of the code. It should:
+A deployment step brings a production target's definition to a release, a new version of the code whose `make()` methods were checked against the [reproducibility contract](#where-the-contract-is-enforced) when it was released. It should:
 
-1. **Start from a known version** of the code, under version control.
+1. **Start from a release**, a known version of the code under version control.
 2. **Compare** the definition in that code with the target's, and list each difference.
 3. **Classify** each difference as [additive or revising](#additive-and-revising-changes), and review the revising ones.
-4. **Check** each new or changed `make()` against the [reproducibility contract](#where-the-contract-is-enforced).
-5. **Pause** the run-time work that depends on what a revising change touches.
-6. **Apply** the changes with a login that can change the definition: declarations (hidden tables included), alterations, drops, Lookup contents (new rows inserted; changed or removed rows applied as a data migration), data migrations from `datajoint.migrate`, and environment operations from `datajoint.deploy`.
-7. **Record** the version of the code the target now matches.
-8. **Start** run time on the new code, with workers on a clean checkout of the deployed commit.
+4. **Pause** the run-time work that depends on what a revising change touches.
+5. **Apply** the changes with a login that can change the definition: declarations (hidden tables included), alterations, drops, Lookup contents (new rows inserted; changed or removed rows applied as a data migration), data migrations from `datajoint.migrate`, and environment operations from `datajoint.deploy`.
+6. **Record** the version of the code the target now matches.
+7. **Start** run time on the new code, with workers on a fresh, clean checkout of the deployed commit.
 
 A deployment step should be safe to run again after a failure. Operations in `datajoint.deploy` are idempotent; a one-shot migration should check whether it has already been applied.
 

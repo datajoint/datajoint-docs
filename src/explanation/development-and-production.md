@@ -72,14 +72,30 @@ In **production**, the definition changes only in a **deployment step**, planned
 applied as one, before the code that needs the change starts. Everything else that
 uses the pipeline, which the specification calls **run time** (workers, notebooks,
 dashboards, scripts), changes only data. Computed tables are populated only by
-dedicated **workers** running a clean checkout of the deployed commit, so the code
-version recorded with each computed row is exactly the code that computed it. A
-change is developed elsewhere, on a development target, and reaches production by
-review and deployment.
+dedicated **workers** running a fresh, clean checkout of the deployed commit, so the code
+version recorded with each computed row is exactly the code that computed it.
+
+A change to a production pipeline is designed on a temporary **development
+pipeline**, declared from production's deployed code for that change: in a separate
+database, on a copy-on-write branch of the production database (a copy that shares
+production's stored data until either side changes it), or in memory, where the
+tooling supports it. There the definition and the data change together, as in any
+development work. Its product is verified code, not data: the change is reviewed and
+merged, released once each `make()` is checked against the reproducibility contract,
+and applied to production by a deployment step, the only step that runs DDL there. Data moves only one way. Production rows may be copied into a development
+pipeline to try a change on real data, but rows from development are never copied
+into production, because nothing on them says which code computed them, or whether
+that code ever shipped. Production computes its own rows, in workers, from the
+deployed commit.
 
 The mode belongs to a **target**, one database that a pipeline runs on, not to the
-code. The same code can run in development on a scratch database and in production
-on the pipeline's main database.
+code, and a target keeps its mode for as long as it exists, except when a pipeline
+that others already depend on adopts the standard in place. The same code can run in
+development on a scratch database and in production on the pipeline's production
+target. A development pipeline therefore never becomes the production pipeline: the
+production pipeline is declared empty, from the committed code, by its first
+deployment step, and fills only through production's own paths, under production's
+controls from its first row.
 
 Changes to a production pipeline come in two kinds. An **additive** change extends
 the pipeline without touching what exists, such as a new table, so running code

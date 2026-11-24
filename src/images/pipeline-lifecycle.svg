@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="900" height="320" viewBox="0 0 900 320" font-family="Helvetica, sans-serif">
+<svg xmlns="http://www.w3.org/2000/svg" width="980" height="330" viewBox="0 0 980 330" font-family="Helvetica, sans-serif">
 <style>
   svg { background-color: #FFFFFF; }
   .edge { stroke: #171C39; fill: none; }
@@ -26,10 +26,10 @@
 <text class="body" x="170" y="104" text-anchor="middle" font-size="13.5" fill="#3A3F4B">Definition and data change</text>
 <text class="body" x="170" y="123" text-anchor="middle" font-size="13.5" fill="#3A3F4B">together, from any process</text>
 
-<!-- First deployment step: one-way -->
+<!-- First deployment step: declares production empty, from code -->
 <line class="edge" x1="302" y1="95" x2="552" y2="95" stroke="#171C39" stroke-width="2" marker-end="url(#ah)"/>
 <text class="title" x="428" y="83" text-anchor="middle" font-size="14" font-weight="600" fill="#171C39">first deployment step</text>
-<text class="note" x="428" y="116" text-anchor="middle" font-size="12.5" fill="#808285">one-way under this standard</text>
+<text class="note" x="428" y="116" text-anchor="middle" font-size="12.5" fill="#808285">declares production empty, from code</text>
 
 <!-- Production -->
 <rect class="f-prod" x="560" y="40" width="300" height="110" rx="10" fill="#E0F4FC" stroke="#00A0DF" stroke-width="1.6"/>
@@ -38,14 +38,20 @@
 <text class="body" x="710" y="118" text-anchor="middle" font-size="13.5" fill="#3A3F4B">deployment step; run time</text>
 <text class="body" x="710" y="136" text-anchor="middle" font-size="13.5" fill="#3A3F4B">changes only data</text>
 
-<!-- Each change: developed on a development target, reviewed, deployed -->
-<line class="edge" x1="710" y1="216" x2="710" y2="156" stroke="#171C39" stroke-width="2" marker-end="url(#ah)"/>
-<text class="title" x="722" y="183" font-size="14" font-weight="600" fill="#171C39">deployment step</text>
-<text class="note" x="722" y="201" font-size="12.5" fill="#808285">for each change, after review</text>
+<!-- Each change: designed on a development pipeline, merged, deployed -->
+<line class="edge" x1="650" y1="226" x2="650" y2="156" stroke="#171C39" stroke-width="2" marker-end="url(#ah)"/>
+<text class="title" x="638" y="180" text-anchor="end" font-size="14" font-weight="600" fill="#171C39">merge, release, then</text>
+<text class="title" x="638" y="197" text-anchor="end" font-size="14" font-weight="600" fill="#171C39">deployment step</text>
+<text class="note" x="638" y="215" text-anchor="end" font-size="12.5" fill="#808285">for each change, after review</text>
 
-<!-- Development target -->
-<rect class="f-target" x="560" y="218" width="300" height="80" rx="10" fill="#FFFFFF" stroke="#808285" stroke-width="1.6" stroke-dasharray="6 4"/>
-<text class="title" x="710" y="244" text-anchor="middle" font-size="15" font-weight="600" fill="#171C39">Development target</text>
-<text class="body" x="710" y="265" text-anchor="middle" font-size="13" fill="#3A3F4B">where each change is developed,</text>
-<text class="body" x="710" y="283" text-anchor="middle" font-size="13" fill="#3A3F4B">on a copy or a separate database</text>
+<!-- Data copies flow one way: production to development -->
+<line class="edge" x1="770" y1="152" x2="770" y2="222" stroke="#171C39" stroke-width="2" stroke-dasharray="5 4" marker-end="url(#ah)"/>
+<text class="title" x="782" y="188" font-size="14" font-weight="600" fill="#171C39">data copy</text>
+<text class="note" x="782" y="206" font-size="12.5" fill="#808285">optional; never the other way</text>
+
+<!-- Development pipeline -->
+<rect class="f-target" x="560" y="228" width="300" height="84" rx="10" fill="#FFFFFF" stroke="#808285" stroke-width="1.6" stroke-dasharray="6 4"/>
+<text class="title" x="710" y="255" text-anchor="middle" font-size="15" font-weight="600" fill="#171C39">Development pipeline</text>
+<text class="body" x="710" y="276" text-anchor="middle" font-size="13" fill="#3A3F4B">temporary, one per change, declared</text>
+<text class="body" x="710" y="294" text-anchor="middle" font-size="13" fill="#3A3F4B">from production's deployed code</text>
 </svg>
