@@ -8,8 +8,13 @@ between real-world entities and their representations in the database:
 - Each real-world entity corresponds to **exactly one** database record.
 - Each database record corresponds to **exactly one** real-world entity.
 
-The correspondence is *bidirectional*. A primary-key constraint alone is not
-sufficient; uniqueness inside the database is only half the requirement.
+The correspondence is *bidirectional*, and it relates the database to the
+world, so no database can enforce it alone. The primary key gives uniqueness
+inside the database: no two records share a key, and no key value is null. The
+correspondence also needs an **identification process**, the procedure by
+which each entity receives its key. Tables that hold results the pipeline
+computes take that process from the tables upstream (see
+[Inherited identity](#inherited-identity)).
 
 ## Two required components
 
@@ -18,8 +23,18 @@ Neither suffices on its own.
 
 | Component | Where it lives | What it does |
 |---|---|---|
-| **Real-world identification process** | Outside the database | Establishes and maintains a reliable, unique association between each real-world entity and its identifier (ear tag, student ID, VIN, ISBN, SSN). |
+| **Real-world identification process** | Outside the database | Assigns each real-world entity its identifier (ear tag, student ID, VIN, ISBN, SSN), stably and injectively. |
 | **Database uniqueness constraint** | Inside the database | Enforces — via the primary key — that no two records share the same identifier. |
+
+The identification process must be stable and injective:
+
+- **Stable** — the same entity receives the same key every time it is
+  presented. A process that is not stable gives one entity two records, and the
+  primary key cannot detect the duplicate, because the two keys differ.
+- **Injective** — two different entities never receive the same key. A process
+  that is not injective presents a second entity under a key already in the
+  table, and the insert is rejected, so that entity goes unrecorded or is taken
+  for the first.
 
 The database can enforce uniqueness but cannot create it. The real-world
 identification process is what links a physical entity to its identifier in
@@ -30,11 +45,11 @@ the first place; the database mirrors and protects that association.
 When designing the primary key for a table, answer all three:
 
 1. **How do I prevent duplicate records?** — The same entity must not appear
-   twice. The primary-key constraint handles this once the entity has been
-   identified.
+   twice. A stable identification process gives the entity the same key each
+   time, and the primary-key constraint then rejects the second insert.
 2. **How do I prevent record sharing?** — Two different entities must not
-   share the same record. This is what the real-world identification process
-   prevents; the database alone cannot.
+   share the same record. An injective identification process prevents this;
+   the database alone cannot.
 3. **How do I match an entity to its record?** — When an entity arrives, how
    do I find the record that represents it? This depends on the
    identification mechanism — ear tag, barcode, government ID, token issued
@@ -60,11 +75,12 @@ class Mouse(dj.Manual):
     """
 ```
 
-The database enforces the first question through the primary-key constraint.
-The second and third questions require a **physical identification system**
-— ear tags, microchips, barcodes, RFID — that links physical entities to
-their identifiers. Without that, the database is enforcing uniqueness of an
-identifier with no reliable connection to anything real.
+The primary key rejects a second record under the same ear tag. Preventing
+duplicates (one mouse under two tags) and sharing (two mice under one tag) both
+rest on a **physical identification system** — ear tags, microchips, barcodes,
+RFID — that links physical entities to their identifiers. Without that, the
+database is enforcing uniqueness of an identifier with no reliable connection
+to anything real.
 
 ## Primary-key requirements
 
@@ -79,8 +95,8 @@ In practice, entity integrity is largely a matter of **primary-key design** —
 choosing a key that truly identifies each entity, and shaping entity types so
 each has a good natural key. The mechanics of choosing and declaring those keys
 are covered in the [Design Primary Keys](../how-to/design-primary-keys.md)
-how-to; this page explains *why* the primary key is what carries entity
-integrity.
+how-to; this page explains what the primary key contributes to entity
+integrity and what the identification process must supply.
 
 ### Explicit keys, no auto-increment
 
@@ -144,10 +160,12 @@ do not see or reference it. Surrogate keys are appropriate for:
 - Privacy-sensitive contexts where natural identifiers should not be stored.
 - Internal references that never leave the system.
 
-Surrogate keys do not require an external identification system precisely
-because they are never used to match physical entities to records. The
-database still enforces their uniqueness, but the "real-world process" half
-of entity integrity does not apply.
+No label carries a surrogate key outside the database, so the identification
+process is whatever generates the key. A key generated afresh at each insertion
+is injective but not stable: repeating the insertion creates a second record
+for the same entity, and no key collision reports it. Entity integrity holds
+only when the key is generated once for each entity and reused wherever that
+entity is referenced.
 
 ```python
 @schema
@@ -301,9 +319,9 @@ class SubjectProfile(dj.Manual):
     """
 ```
 
-`SubjectProfile` represents a one-to-one extension of `Subject` — exactly
-one profile per subject. In schema diagrams, such tables have
-**non-underlined names**.
+`SubjectProfile` represents a one-to-one extension of `Subject` — at most
+one profile per subject. A subject without a profile has not reached that
+step. In schema diagrams, such tables have **non-underlined names**.
 
 ### Autopopulated tables introduce dimensions only through part tables
 
@@ -384,20 +402,35 @@ See [Semantic Matching](semantic-matching.md) for the full mechanism.
 | **Thick solid line** | One-to-one extension (no new dimension) |
 | Thin solid line | Containment (may introduce a dimension) |
 
-## Partial entity integrity
+## Inherited identity
 
-Some applications need only one direction of the 1:1 mapping:
+A table whose primary key is inherited whole from one parent identifies no new
+entities: it records further facts about entities identified upstream. Its
+rows are entered under the parent's keys, so its identification process is the
+parent's. If entity integrity holds for the parent, it holds for the table,
+with no identification process of its own. `SubjectProfile` above has entity
+integrity whenever `Subject` does.
 
-- **Record → entity (uniqueness only).** Each record corresponds to at most
-  one entity, but an entity may have multiple records.
-- **Entity → record (completeness only).** Each entity has a record, but
-  records may be shared.
+Autopopulated tables inherit identity in the same way. The primary key of a
+`Computed` or `Imported` master combines the keys of its primary parents, so
+each row corresponds to one combination of parent entities. Its part tables
+add the key attributes that `make()` assigns to the members of the set it
+produces, and `make()` inserts each member once, in the transaction that
+inserts its master. Entity integrity therefore carries over from the `Manual`
+and `Lookup` tables, where entities enter the pipeline, to every autopopulated
+table downstream, provided each `make()` assigns distinct keys to the distinct
+members it produces.
 
-A social platform might ensure each account ties to at most one person
-(record→entity) without preventing one person from creating multiple
-accounts (entity→record not enforced). Design the primary key to match the
-actual requirement — full bidirectional integrity is sometimes more than
-the application needs.
+## Entity integrity holds for the entity type a table represents
+
+The design starts by deciding which entity type each table represents. A
+social platform's `Account` table represents accounts: each account has
+exactly one record, and each record is exactly one account. One person may
+open several accounts, and the table still has entity integrity, because it
+identifies accounts. A person is a different entity type, which this table
+does not identify. If the platform must also hold each person to one account,
+that is a second requirement with its own identification process for people,
+such as a verified government ID.
 
 ## When no natural key exists
 
@@ -425,7 +458,9 @@ enforces the entity-to-token binding.
 Entity integrity for real-world entities **always requires some external
 identification process** alongside the database constraints — whether it is
 ear tags on mice, ID cards for students, barcodes on samples, or a
-token-issuance protocol for anonymous respondents.
+token-issuance protocol for anonymous respondents. Tables with
+[inherited identity](#inherited-identity) take that process from the tables
+upstream.
 
 ## Best practices
 
@@ -434,8 +469,8 @@ token-issuance protocol for anonymous respondents.
 3. **Keep keys minimal** — include only what is necessary for uniqueness.
 4. **Document key semantics** — explain what the key represents in the
    real world.
-5. **Match the application's actual integrity requirement** — full,
-   partial, or token-based.
+5. **Decide which entity type each table represents**, and design the
+   identification process for that type.
 
 ## Common mistakes
 
@@ -491,15 +526,16 @@ class Patient(dj.Manual):
 
 Entity integrity is the bidirectional one-to-one correspondence between
 real-world entities and their database records. It rests on **two required
-components**: a real-world identification process that creates the
-association, and a database uniqueness constraint that enforces it. Neither
-component alone is enough.
+components**: a real-world identification process that assigns each entity its
+key, stably and injectively, and a database uniqueness constraint that keeps
+key values unique. Neither component alone is enough.
 
 The three questions — *how do I prevent duplicates, prevent record sharing,
 and match entities to records?* — operationalize this definition. The
 primary key, declared above the `---` separator and supplied explicitly at
 insertion, is the database's half of the answer. The real-world process is
-yours to design.
+yours to design. A table whose key is inherited whole, and every autopopulated
+table, inherits its identity from the tables upstream.
 
 ## See also
 
