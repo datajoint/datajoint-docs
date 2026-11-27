@@ -17,15 +17,19 @@ the same design.
 |------|---------------|
 | **Codd** (mathematical) | Every non-key attribute depends on *the key, the whole key, and nothing but the key.* |
 | **Chen** (entity) | Each table represents *one entity type*, and every attribute describes that entity. |
-| **DataJoint** (workflow) | Each table represents *one workflow step*, and foreign keys prescribe the order of operations. |
+| **DataJoint** (workflow) | Each table holds the facts about one entity type that arise at *one workflow step*, and foreign keys prescribe the order of operations. |
 
-The remarkable fact is that these three lenses **converge on the same schema**.
-Codd reasons abstractly about functional dependencies; Chen reasons concretely
-about the entities in a domain; DataJoint reasons operationally about when each
-entity comes into being. Faced with the same tangled table, all three prescribe
-the same decomposition. They differ only in the reasoning that gets you there —
-and in strictness: the workflow lens is the tightest of the three, as the
-[e-commerce example below](#workflow-normalization-is-stricter-than-3nf) shows.
+The three lenses ask different questions of the same design. Codd asks which
+values determine which; Chen asks what entities the domain contains; DataJoint
+asks when each fact comes into being. Each lens catches what the others cannot
+see, so they are not ranks on one scale. Functional dependencies cannot record
+what an entity is or when a fact arises: a table can satisfy every normal form
+and still merge workflow steps, as the
+[order lifecycle below](#a-table-in-third-normal-form-can-still-merge-workflow-steps)
+shows. A design built entity by entity tends to satisfy the classical normal
+forms as a consequence, because an attribute determined by something other than
+its entity describes that something instead. The analysis of functional
+dependencies then serves as a check on the design.
 
 ### The mathematical lens: classical normal forms
 
@@ -74,9 +78,10 @@ Peter Chen's Entity-Relationship Model (1976) reframes normalization around the
   mouse). This is the entity-level reading of 3NF.
 - **Completely** — the attribute depends on the entire key, not a part of it.
   This is the entity-level reading of 2NF.
-- **Non-optionally** — the attribute is present for every instance. Attributes
-  that are `NULL` for many rows are a hint that two entity types have been folded
-  together.
+- **Non-optionally** — the attribute applies to every instance of the entity
+  type. A nullable attribute is for a value that may be unknown when a
+  particular instance is entered. Attributes that are `NULL` for many rows are
+  a hint that two entity types have been folded together.
 
 A relationship with its own attributes is itself an entity type. An enrollment
 that carries a `grade` is not merely an edge between `Student` and `Course`; it
@@ -96,18 +101,24 @@ promote it to its own table.
 
 DataJoint adds a dimension the first two leave implicit: *time*. Entity
 normalization asks *what* entities exist; workflow normalization asks *when and
-how* each one is created. A table represents not just an entity type but an
-entity type produced at a specific step of a workflow, and its foreign keys do
+how* each fact about them comes into being. A table holds the facts about one
+entity type that arise at one step of a workflow, and its foreign keys do
 double duty — enforcing referential integrity *and* prescribing the order in
 which steps may run. The rest of this page develops that lens.
 
 ## The Workflow Normalization Principle
 
-> **"Every table represents an entity type that is created at a specific step
-> in a workflow, and all attributes describe that entity as it exists at that
-> workflow step."**
+> **"Every table represents the facts about one entity type that come into
+> being at one step of a workflow, and all of its attributes describe that
+> entity as it exists at that step."**
 
-This principle naturally leads to well-normalized schemas.
+Most steps produce entities of their own: a session, a recording, a
+segmentation. Some entity types have facts that arise at several steps.
+Workflow normalization then splits the type across several tables, one per
+step, and the tables share the entity's identity. The first step's table
+identifies the entities. Each later table takes its entire primary key from a
+foreign key to an earlier one, so it extends that table one to one and
+[inherits its identity](entity-integrity.md#inherited-identity).
 
 ## The Intrinsic Attributes Principle
 
@@ -202,7 +213,6 @@ class CageAssignment(dj.Manual):
     assignment_date : date
     ---
     -> Cage
-    removal_date=null : date
     """
 
 @schema
@@ -225,12 +235,17 @@ This fully normalized design:
 - **Later events separate** — Cage assignments, weight measurements happen after initial tracking
 - **History preserved** — Can track cage moves over time without data loss
 
-## Workflow normalization is stricter than 3NF
+`CageAssignment` carries no end date. A move is a new `CageAssignment` row, and
+the earlier assignment ends where the next one begins. An end that is recorded
+on its own, such as a mouse leaving the colony, is a later event and belongs in
+a later table (see [Temporal Associations](#temporal-associations)).
 
-The three lenses converge, but they are not equally demanding. A table can
-satisfy Codd's normal forms *and* entity normalization and still violate workflow
-normalization. Consider an e-commerce `Order` that records the whole lifecycle of
-an order in a single row:
+## A table in third normal form can still merge workflow steps
+
+A table can satisfy Codd's normal forms *and* entity normalization and still
+violate workflow normalization, because neither functional dependencies nor
+entity types record when a fact comes into being. Consider an e-commerce `Order`
+that records the whole lifecycle of an order in a single row:
 
 ```
 Order
@@ -265,8 +280,8 @@ Splitting by workflow step fixes all of this:
 class Order(dj.Manual):
     definition = """
     order_id : int32
-    order_date : datetime
     ---
+    order_date : datetime
     -> Product
     -> Customer
     """
@@ -305,17 +320,26 @@ class Delivery(dj.Manual):
 
 The foreign keys now form a chain — `Order → Payment → Shipment → Delivery` —
 that is simultaneously the referential-integrity structure and the workflow
-diagram. Every attribute is non-nullable, because a row exists only once its step
-has actually happened. There are no `NULL`s standing in for "not yet," no updates
-as the order advances, and the order of operations is enforced by construction.
-As a bonus, workflow state becomes a query: paid-but-not-yet-shipped orders are
-simply `Payment - Shipment`.
+diagram. The four tables represent one entity type, the order, split by the
+step at which each fact arises. `Order` identifies each order, and `Payment`,
+`Shipment`, and `Delivery` are keyed by `order_id` alone, each extending the
+step before it one to one. Every attribute is non-nullable, because a row exists
+only once its step has actually happened. There are no `NULL`s standing in for
+"not yet," no updates as the order advances, and the order of operations is
+enforced by construction. As a bonus, workflow state becomes a query:
+paid-but-not-yet-shipped orders are simply `Payment - Shipment`.
+
+Null keeps one meaning: the value was not provided when the row was created,
+because it was unknown or does not apply. A value that becomes known later is a
+row of a later table, and until then it is an absent row.
 
 !!! note
-    This is what "stricter than 3NF" means in practice. Codd and Chen separate
-    data by *dependency* and by *entity type*; the workflow lens additionally
-    separates it by *when it comes into being*. Every workflow-normalized schema
-    is in 3NF, but not every 3NF schema is workflow-normalized.
+    Codd and Chen separate data by *dependency* and by *entity type*; the
+    workflow lens separates it by *when it comes into being*. `payment_date`,
+    `shipment_date`, and `delivery_date` are each determined by `order_id`
+    alone, so no functional dependency tells them apart, and all three describe
+    the order, so the entity lens keeps them together. Only the step at which
+    each fact arises separates them.
 
 ## Updates as a design smell
 
@@ -334,17 +358,19 @@ that *does* change over time lives in its own table — usually with a date or
 timestamp in the primary key, so a change is recorded as a new row rather than an
 overwrite. "Updating" a mouse's weight is an `INSERT` into `MouseWeight`;
 correcting a step means `DELETE` the affected row and let the cascade remove
-everything derived from it, then recompute. Both preserve history and keep
-derived results consistent with their inputs.
+everything downstream of it, then reinsert and recompute. Both preserve history
+and keep derived results consistent with their inputs.
 
 Reaching for `UPDATE` in ordinary operation is a signal that something is
 mismodeled — a time-varying attribute was left inside an entity table, or two
 workflow steps were merged. DataJoint does provide `update1()`, but it is a
-surgical tool for correcting data-entry errors, and only when nothing downstream
-depends on the attribute being changed. The reason is that an in-place edit to an
-upstream row silently invalidates every downstream result derived from it: the
-foreign keys still match, so the database raises no error, yet the derived rows
-now reflect inputs that no longer exist. Deleting instead of updating makes that
+surgical tool for correcting data-entry errors, and only in a row that nothing
+depends on, directly or as a part of a master that something depends on.
+`update1()` does not look for dependent rows, so that judgment is the caller's.
+The reason is that an in-place edit to an upstream row silently invalidates
+every downstream result derived from it: the foreign keys still match, so the
+database raises no error, yet the derived rows now reflect inputs that no
+longer exist. Deleting instead of updating makes that
 dependency explicit — the cascade forces you to recompute what depended on the
 corrected value, keeping the pipeline reproducible.
 
@@ -376,7 +402,8 @@ If not intrinsic → separate table for the relationship or event
 
 ### Lookup Tables
 
-Store reference data that doesn't change:
+Declare reference data with the table. The rows in `contents` are part of the
+schema definition and are versioned with the code:
 
 ```python
 @schema
@@ -394,7 +421,7 @@ class Species(dj.Lookup):
 
 ### Parameter Sets
 
-Store versioned configurations:
+Store versioned configurations. A new parameter set is a new row in `contents`:
 
 ```python
 @schema
@@ -405,6 +432,10 @@ class AnalysisParams(dj.Lookup):
     threshold : float32
     window_size : int32
     """
+    contents = [
+        (1, 0.5, 100),
+        (2, 0.8, 200),
+    ]
 ```
 
 ### Temporal Tracking
@@ -434,7 +465,14 @@ class GroupAssignment(dj.Manual):
     assignment_date : date
     ---
     -> ExperimentalGroup
-    removal_date=null : date
+    """
+
+@schema
+class GroupRemoval(dj.Manual):
+    definition = """
+    -> GroupAssignment         # an assignment ends at most once
+    ---
+    removal_date : date
     """
 
 @schema
@@ -449,6 +487,12 @@ class HousingAssignment(dj.Manual):
 ```
 
 **Key pattern:** The relationship itself (subject-to-group, animal-to-cage) is **not intrinsic** to either entity. It's a temporal event that happens during the workflow.
+
+The end of an assignment is a later event, so it is a row of a later table.
+`GroupRemoval` takes its entire primary key from `GroupAssignment`, and the
+assignments still in force are `GroupAssignment - GroupRemoval`. A nullable
+`removal_date` on `GroupAssignment` would make null stand for "not yet" and
+would need an update to fill.
 
 ## Benefits in DataJoint
 
@@ -471,11 +515,13 @@ class HousingAssignment(dj.Manual):
       the key.
     - **Chen (entity):** each table is one entity type; every attribute describes
       it directly, completely, and non-optionally.
-    - **DataJoint (workflow):** each table is one workflow step; foreign keys
-      define the order of operations.
+    - **DataJoint (workflow):** each table holds the facts about one entity
+      type that arise at one workflow step; foreign keys define the order of
+      operations.
 
-    All three converge on the same schema. The workflow lens is the strictest,
-    because it also separates data by *when* it is created.
+    Each lens catches what the others cannot see. Functional dependencies and
+    entity types do not record *when* a fact comes into being; the workflow
+    lens does.
 
 **Core principles:**
 
@@ -491,12 +537,12 @@ class HousingAssignment(dj.Manual):
 - Does this attribute change over time? (Yes → temporal table)
 - Is this a relationship or event? (Yes → association/event table)
 
-Following these principles achieves **full workflow entity normalization** where each table represents a single, well-defined entity type entered at a specific workflow step.
+Following these principles achieves **full workflow entity normalization** where each table holds the facts about a single, well-defined entity type that arise at one workflow step.
 
 ## See also
 
-- [Entity Integrity](entity-integrity.md) — the uniqueness guarantee that a
-  normalized table's primary key enforces
+- [Entity Integrity](entity-integrity.md) — the one-to-one correspondence
+  between entities and rows, and the primary key's part in it
 - [Design Primary Keys](../how-to/design-primary-keys.md) — choosing the keys
   that identify each normalized entity
 - [Model Relationships](../how-to/model-relationships.ipynb) — connecting
