@@ -8,12 +8,12 @@ session that actually happened, a measurement is a number in a known range.
 Data integrity is the discipline of turning those real-world rules into
 **database constraints** that the engine enforces automatically.
 
-The distinguishing property of a constraint is that it *cannot be bypassed*.
-Validation written in application code protects only the one program that
-runs it; a second script or a collaborator's notebook can write straight
-past it. A constraint declared in the schema is enforced for every client,
-on every write, with no cooperation required — the rule lives with the data,
-not with any one program that touches it.
+The distinguishing property of a constraint is that *the database engine
+enforces it on every write*. Validation written in application code protects
+only the one program that runs it; a second script or a collaborator's
+notebook can write straight past it. A constraint declared in the schema is
+enforced for every client, on every write, with no cooperation required — the
+rule lives with the data, not with any one program that touches it.
 
 DataJoint organizes these guarantees into seven types of integrity. The
 first four are classical relational guarantees; the last three extend them
@@ -122,9 +122,12 @@ The **primary key** — the attributes declared above the `---` separator —
 enforces the database half of this guarantee by rejecting duplicate keys.
 DataJoint requires every table to have a primary key and requires key values
 to be supplied explicitly (there is no auto-increment), so a client must
-commit to *which* entity it is inserting. The other half — reliably binding a
-physical entity to its identifier — is a real-world process such as an ear
-tag or barcode, which the database mirrors but cannot create. See
+commit to *which* entity it is inserting. The other half is the
+identification process that assigns each entity its key, such as an ear tag or
+a barcode. It must be stable (the same entity always receives the same key)
+and injective (two entities never receive the same key), and the database
+mirrors it but cannot create it. A table whose key is inherited whole from a
+parent takes its identity from that parent. See
 [Entity Integrity](entity-integrity.md) for the full treatment.
 
 ### 4. Referential integrity
@@ -136,8 +139,9 @@ pointers to records that were never created or have since been removed.
 DataJoint declares references with the foreign-key arrow `->`, which inherits
 the referenced table's primary key into the dependent table and enforces that
 the referenced row exists before a dependent row can be inserted. Removal is
-symmetric: deleting an entity **cascades** to everything that depends on it,
-so the database never enters a state with orphaned references. This is a
+symmetric: deleting a row **cascades** to everything downstream of it, which
+is every row that references it directly or through other rows, so the
+database never enters a state with orphaned references. This is a
 row-level guarantee: objects held in integrated object storage are *not* removed
 synchronously with their rows (hash-addressed storage is deduplicated, and
 immediate deletion is unsafe under concurrency) — they are reclaimed
@@ -156,9 +160,14 @@ represents the composite entity; its part tables hold the components produced
 with it. When a master and its parts are populated together by `make()`
 (Computed and Imported tables), their insertion is one transaction, so a partial
 composite is never committed; for Manual master-part sets this atomicity is
-maintained by convention (a single transaction). Deletion cascades from master
-to parts in either case. See
-[Master-Part](../reference/specs/master-part.md).
+maintained by convention (a single transaction). Deletion keeps the composite
+whole in either case. Deleting a master row removes all of its parts. A delete
+that would remove part rows and leave their master, whether issued on the part
+table or reaching the part through another of its parents, is refused by
+default; with `part_integrity="cascade"` it extends to the master and all of
+its parts.
+See [Master-Part](../reference/specs/master-part.md) and the
+[`part_integrity` modes](../reference/specs/cascade.md#part_integrity-modes).
 
 ### 6. Consistency
 
@@ -184,25 +193,36 @@ inputs it was derived from.
 The same foreign-key graph that enforces referential integrity is a
 **directed acyclic graph** (DAG) that prescribes execution order. Because it
 is acyclic, there is always a valid sequence in which entities can be
-created. `populate()` walks this graph, computing each entity only after its
-upstream dependencies exist, and cascade deletes remove downstream results
-when their inputs become invalid. The dependency graph and the pipeline are
-the same object, which is why results stay traceable to their declared inputs
-and remain reproducible. See
+created. Each table's `populate()` computes only the keys whose upstream rows
+exist, so populating the tables in dependency order completes the workflow,
+and cascade deletes remove downstream results when their inputs are deleted.
+The dependency graph and the pipeline are the same object, which is why
+results stay traceable to their declared inputs and remain reproducible. See
 [The Relational Workflow Model](relational-workflow-model.md).
 
 ## Why declared constraints matter
 
-The seven types share one property that application-level checks cannot
-match: they are enforced by the database for every client, always.
+Declared constraints (attribute types, required attributes, primary keys, and
+foreign keys) share one property that application-level checks cannot match:
+the database engine enforces them for every client, on every write.
 
-- **Unbypassable** — no program can write invalid data, however it connects.
+- **Enforced by the engine** — a write that violates a declared constraint is
+  rejected, whichever program issues it.
 - **Automatic** — the engine checks every write; no developer has to remember
   to call a validator.
 - **Concurrent-safe** — the guarantees hold under simultaneous access by many
   users and processes.
 - **Self-describing** — the schema states the rules explicitly, so the
   constraints double as documentation that both people and agents can read.
+
+The seven types of integrity are built on these constraints, and some need
+more than the engine provides. Entity integrity needs an identification
+process outside the database. Compositional integrity needs a master and its
+parts to be inserted in one transaction, which `populate()` does for Computed
+and Imported tables and which is a convention for Manual tables. Codec
+validation and cascading deletes run in the DataJoint library, so they cover
+the writes made through it. Reproducible results need every `make()` to follow
+the `make()` contract of the [computation model](computation-model.md).
 
 A schema that declares its integrity rules is an executable specification of
 what valid data looks like: invalid states are refused at the point of entry
