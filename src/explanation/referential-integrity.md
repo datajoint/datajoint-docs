@@ -88,20 +88,41 @@ Session.insert1(('M09999', 1, '2026-03-01'))  # IntegrityError: no such subject
 
 The mirror of the insert rule: a parent cannot leave dependent children
 stranded. Standard SQL rejects a delete that would orphan children. DataJoint
-instead **cascades** the delete — removing a parent removes every child that
-depends on it, and every child of those children, down the whole hierarchy. It
-warns you first, because the reach can be large. The restriction falls on the
-**parent**: you may always delete a child, but deleting a parent takes its
-descendants with it.
+instead **cascades** the delete. Deleting a row removes everything downstream
+of it: every row that references it, and every row that references those,
+through secondary foreign keys as through primary ones. By default, `delete()`
+shows what the cascade will remove and asks for confirmation, because the
+reach can be large.
 
-### 4. Update restriction on key values
+A master and its parts leave the database as one entity. Deleting a master row
+removes all of its part rows. A delete that would remove part rows and leave
+their master, whether issued on the part table or reaching the part through
+another of its parents, is refused under the default
+`part_integrity="enforce"`. With `part_integrity="cascade"`, the delete
+extends to the master, to all of its parts, and to everything downstream of
+them. The default check compares tables, not rows; the
+[cascade specification](../reference/specs/cascade.md#part_integrity-modes)
+describes the three modes and the cases the check misses.
 
-Key values are not edited in place. DataJoint does not support updating a
-primary-key or foreign-key value, because doing so would silently invalidate
-every relationship built on it. The intended pattern is to delete the affected
-records and reinsert them. In a pipeline this preserves a clean rule: if an
-input changes, the results derived from it are removed and recomputed, never
+The restriction falls on the **parent**: a child that is not a part can always
+be deleted without its parent, but deleting a parent takes everything
+downstream with it.
+
+### 4. Rows are not edited in place
+
+A child row is created in view of its parent row as a whole: a computation
+reads the parent's attributes, not only its key. Editing a parent row in place
+leaves every foreign key satisfied while the rows that depend on it reflect
+values that no longer exist. DataJoint therefore manipulates whole rows. To
+change an input, delete the affected rows, let the cascade remove what depends
+on them, and reinsert. In a pipeline this preserves a clean rule: if an input
+changes, the results computed from it are removed and recomputed, never
 quietly rewritten.
+
+`update1()` is a repair for entry errors. It never changes a primary-key
+value. It can change any secondary attribute, a secondary foreign key
+included, and it does not look for rows that depend on the one it changes.
+Reserve it for a row that nothing depends on.
 
 ### 5. Indexing the foreign-key columns
 
@@ -128,11 +149,12 @@ Read the insert restriction again through this lens. "The parent must exist
 before the child can reference it" is not only an integrity rule; it is an
 execution order. The set of foreign keys across a schema therefore defines a
 [directed acyclic graph](relational-workflow-model.md) — the pipeline DAG,
-which is also the schema diagram. Nothing external schedules the work; the
-foreign-key graph itself dictates what may run, what must run first, and what
-already exists. Cascade delete acquires the same double meaning: removing an
-invalidated input automatically removes every downstream result computed from
-it, keeping the pipeline consistent without any audit step. This unification of
+which is also the schema diagram. The foreign-key graph determines what may
+run, what must run first, and what is pending; a person or a scheduler still
+calls `populate()` on each table. Cascade delete acquires the same double
+meaning: removing an invalidated input automatically removes every downstream
+result computed from it, keeping the pipeline consistent without any audit
+step. This unification of
 constraint and execution order is what makes lineage and reproducibility
 [structural properties of the schema](relational-workflow-model.md) rather than
 something reconstructed after the fact.
