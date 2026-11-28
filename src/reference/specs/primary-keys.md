@@ -85,10 +85,12 @@ When both `A → B` and `B → A` hold, the left operand takes precedence (use P
 
 #### Examples
 
+In every example on this page, an attribute that both operands have is inherited through a foreign key on each side, so the two share a lineage. A secondary attribute declared in the table itself has no lineage, and a join on it is rejected (see [Namesakes Without Lineage](semantic-matching.md#namesakes-without-lineage)).
+
 **Example 1: B → A**
 ```
 A: x*, y*
-B: x*, z*, y    (y is secondary in B, so z → y)
+B: x*, z*, y    (y is a secondary attribute of B, inherited through a foreign key)
 ```
 
 - A → B? PK(B) = {x, z}. Is z in PK(A) or secondary in A? No (z not in A). **No.**
@@ -97,8 +99,8 @@ B: x*, z*, y    (y is secondary in B, so z → y)
 
 **Example 2: Both directions (bijection-like)**
 ```
-A: x*, y*, z    (z is secondary in A)
-B: y*, z*, x    (x is secondary in B)
+A: x*, y*, z    (z is a secondary attribute of A, inherited through a foreign key)
+B: y*, z*, x    (x is a secondary attribute of B, inherited through a foreign key)
 ```
 
 - A → B? PK(B) = {y, z}. Is z in PK(A) or secondary in A? Yes (secondary). **Yes.**
@@ -108,7 +110,7 @@ B: y*, z*, x    (x is secondary in B)
 **Example 3: Neither direction**
 ```
 A: x*, y*
-B: z*, x    (x is secondary in B)
+B: z*, x    (x is a secondary attribute of B, inherited through a foreign key)
 ```
 
 - A → B? PK(B) = {z}. Is z in PK(A) or secondary in A? No. **No.**
@@ -136,18 +138,18 @@ Trial: session_id*, trial_num*    (references Session)
 
 ### Design Tradeoff: Predictability vs. Minimality
 
-The join primary key rule prioritizes **predictability** over **minimality**. In some cases, the resulting primary key may not be minimal (i.e., it may contain functionally redundant attributes).
+The join primary key rule prioritizes **predictability** over **minimality**. In some cases, the resulting primary key may not be minimal (i.e., it may contain redundant attributes).
 
 **Example of non-minimal result:**
 ```
 A: x*, y*
-B: z*, x    (x is secondary in B, so z → x)
+B: z*, x    (x is a secondary attribute of B, inherited through a foreign key)
 ```
 
 The mathematically minimal primary key for `A * B` would be `{y, z}` because:
 
-- `z → x` (from B's structure)
-- `{y, z} → {x, y, z}` (z gives us x, and we have y)
+- each value of `z` has one value of `x` (from B's structure)
+- `{y, z}` therefore fixes `{x, y, z}` (z gives us x, and we have y)
 
 However, `{y, z}` is problematic:
 
@@ -161,7 +163,7 @@ This creates confusion: what kind of entity does `{y, z}` identify?
 
 - Is immediately recognizable as "one A entity paired with one B entity"
 - Contains A's full primary key and B's full primary key
-- May have redundancy (`x` is determined by `z`) but is semantically clear
+- May have redundancy (`z` fixes `x`) but is semantically clear
 
 **Rationale:** A predictable, interpretable primary key reduces confusion and errors. Projection keeps the whole primary key, so a query that needs the smaller key constructs it explicitly, as `dj.U('y', 'z') & (A * B)`.
 

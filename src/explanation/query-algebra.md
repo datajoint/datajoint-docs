@@ -28,7 +28,7 @@ graph LR
     V --> B
 ```
 
-## Restriction (`&` and `-`)
+## Restriction and Anti-restriction (`&`, `-`)
 
 Filter entities based on conditions.
 
@@ -173,6 +173,9 @@ Session.extend(Experimenter)   # Every session; NULL where none is named
 Trial.extend(Session & "session_date > '2024-01-01'")
 # Every trial; session_date is NULL for trials of sessions on or before that date
 ```
+
+!!! version-changed "Changed after 2.3.6"
+    Through release 2.3.6, a restriction on the right operand is applied after the left join, which drops the entities of the left operand that the restriction leaves without a match, as a join does. The same holds for aggregation and for a union of operands with secondary attributes, which use the same left join. Later releases keep these entities.
 
 When every entity of the left operand has a match, as under a required foreign key to an unrestricted table, `A.extend(B)` returns the same rows as `A * B`.
 

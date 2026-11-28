@@ -304,6 +304,19 @@ imaging.image.image_id, but the other does not inherit it through a foreign key,
 so the two are unrelated. Use .proj() to rename or exclude it on one side.
 ```
 
+!!! version-changed "Changed after 2.3.6"
+    Through release 2.3.6, both conditions raise one message, which suggests rebuilding lineage:
+
+    ```text
+    DataJointError: Cannot join on attribute `name`: lineage missing on one side
+    (None vs ...). This usually indicates a stale `~lineage` entry from an older
+    DataJoint version or an incomplete declare. Run `schema.rebuild_lineage()` to
+    recompute lineage from current FK definitions. If the lineages are genuinely
+    different, use `.proj()` to rename one of the attributes.
+    ```
+
+    A rebuild gives a declared secondary attribute or a computed one no lineage. Rename or exclude it with `.proj()`.
+
 ### Missing Lineage Warning
 
 ```

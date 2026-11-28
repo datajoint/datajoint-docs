@@ -203,6 +203,9 @@ two are unrelated. Use .proj() to rename or exclude it on one side.
 
 The attribute named is usually a secondary attribute declared in the table, or one computed in a projection. Such an attribute has no lineage, and a rebuild gives it none: rename or exclude it with `.proj()`, as the message says. A rebuild is the remedy only for a primary key attribute, or an attribute inherited through a foreign key, whose `~lineage` row is missing.
 
+!!! version-changed "Changed after 2.3.6"
+    Through release 2.3.6, both conditions raise ``Cannot join on attribute `X`: lineage missing on one side (None vs ...)``, and the message suggests `schema.rebuild_lineage()`. For a declared secondary attribute or a computed one, the remedy on those releases is the same: rename or exclude it with `.proj()`.
+
 `rebuild_lineage()` is safe to run on a healthy schema — it's idempotent and produces the same end state regardless of starting condition.
 
 ## Examples
