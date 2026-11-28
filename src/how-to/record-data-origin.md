@@ -1,6 +1,6 @@
 # Record Data Origin
 
-Data entering a pipeline from outside carries no dependency that says where it came from. Turn capture on and DataJoint records that origin for you on every Manual table, from configuration rather than from your insert code.
+Data entering a pipeline from outside carries no dependency that says where it came from. Turn capture on and DataJoint records that origin for you on every Entry table, from configuration rather than from your insert code.
 
 !!! version-added "New in 2.3.4"
 
@@ -32,7 +32,7 @@ or in `datajoint.json`:
 }
 ```
 
-Every row this process inserts into a Manual table now records that source, along with the connecting user and host, the insert time, and the code version.
+Every row this process inserts into an Entry table now records that source, along with the connecting user and host, the insert time, and the code version.
 
 Nothing else is required. There is no argument to pass and no field to remember:
 
@@ -118,7 +118,7 @@ That is deliberate. A field the operator can set is weaker evidence than one the
 
 ```python
 @schema
-class Subject(dj.Manual):
+class Subject(dj.Entry):
     definition = """
     subject_id   : int32
     ---
@@ -132,6 +132,6 @@ A modeled column is visible, queryable, and joinable; `_prov` is none of those, 
 ## See Also
 
 - [Extrinsic Provenance at Entry Tables](../reference/specs/boundary-provenance.md) — the specification
-- [Insert Data](insert-data.md) — inserting into Manual tables
+- [Insert Data](insert-data.md) — inserting into Entry tables
 - [Fan-Out Ingestion](../explanation/fan-out-ingestion.md) — one loader writing into several entry-point tables
 - [Configuration](../reference/configuration.md) — where settings come from

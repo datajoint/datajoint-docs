@@ -14,7 +14,7 @@ Scientific workflows frequently use composite primary keys built from foreign ke
 
 ```python
 # DataJoint - two characters declare dependency, foreign key, and inherit primary key
-class Scan(dj.Manual):
+class Scan(dj.Entry):
     definition = """
     -> Session
     scan_idx : int16
@@ -101,7 +101,7 @@ The object store is part of the relational model — queryable and integrity-pro
 | Query model | SQL strings | Object navigation | Relational algebra operators |
 | Dependencies | Implicit in application | Implicit in application | Explicit in schema |
 | Large objects | Binary blobs / manual | Binary blobs / manual | Object-Augmented Schema |
-| Computation | External to database | External to database | First-class ([Computed tables](computation-model.md)) |
+| Computation | External to database | External to database | First-class ([Compute tables](computation-model.md)) |
 | Target audience | Database administrators | Web developers | Research teams |
 
 ---

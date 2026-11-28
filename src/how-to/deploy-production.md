@@ -64,7 +64,7 @@ dj.config.database.create_tables = False
 schema = dj.Schema('myproject_ephys')
 
 @schema
-class Recording(dj.Manual):
+class Recording(dj.Entry):
     definition = """
     recording_id : int
     ---
@@ -84,7 +84,7 @@ When you need to create tables during a controlled migration:
 schema = dj.Schema('myproject_ephys', create_tables=True)
 
 @schema
-class NewTable(dj.Manual):
+class NewTable(dj.Entry):
     definition = """..."""
 
 NewTable()  # Creates the table

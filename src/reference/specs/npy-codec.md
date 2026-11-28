@@ -24,7 +24,7 @@ import datajoint as dj
 import numpy as np
 
 @schema
-class Recording(dj.Manual):
+class Recording(dj.Entry):
     definition = """
     recording_id : int
     ---
@@ -160,7 +160,7 @@ NpyRef(shape=(1000, 32), dtype=float64, loaded)
 
 ```python
 @schema
-class Recording(dj.Manual):
+class Recording(dj.Entry):
     definition = """
     recording_id : int
     ---

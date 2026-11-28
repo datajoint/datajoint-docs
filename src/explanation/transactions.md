@@ -55,7 +55,7 @@ import datajoint as dj
 schema = dj.Schema("bank")
 
 @schema
-class Account(dj.Manual):
+class Account(dj.Entry):
     definition = """
     account_number : int32
     ---
@@ -143,7 +143,7 @@ roll back together, leaving nothing behind to clean up.
 
 ```python
 @schema
-class ProcessedData(dj.Computed):
+class ProcessedData(dj.Compute):
     definition = """
     -> RawData
     ---

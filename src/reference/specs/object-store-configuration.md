@@ -227,7 +227,7 @@ Use named stores in table definitions:
 
 ```python
 @schema
-class Recording(dj.Manual):
+class Recording(dj.Entry):
     definition = """
     recording_id : uuid
     ---
@@ -367,7 +367,7 @@ dj.config.save_template('datajoint.json', create_secrets_dir=True)
 ```python
 # Table definition
 @schema
-class Experiment(dj.Manual):
+class Experiment(dj.Entry):
     definition = """
     experiment_id : int
     ---
@@ -441,7 +441,7 @@ Primary key values are encoded as: `{attr}={value}`
 
 ```python
 @schema
-class Recording(dj.Manual):
+class Recording(dj.Entry):
     definition = """
     subject_id : int
     session_id : int
@@ -471,7 +471,7 @@ Recording.insert1({
 # partition_pattern = "subject_id/session_date"
 
 @schema
-class Recording(dj.Manual):
+class Recording(dj.Entry):
     definition = """
     subject_id : int
     session_date : date
@@ -587,7 +587,7 @@ table.insert1({'id': 4, 'file': 'raw/subject01/rec.bin'})  # OK
 
 ```python
 @schema
-class RawRecording(dj.Manual):
+class RawRecording(dj.Entry):
     definition = """
     recording_id : uuid
     ---

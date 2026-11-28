@@ -103,7 +103,7 @@ Usage:
 
 ```python
 @schema
-class Connectivity(dj.Computed):
+class Connectivity(dj.Compute):
     definition = """
     -> Neurons
     ---
@@ -312,7 +312,7 @@ class WellDocumentedCodec(dj.Codec):
     Examples
     --------
     >>> @schema
-    ... class Results(dj.Computed):
+    ... class Results(dj.Compute):
     ...     definition = '''
     ...     -> Experiment
     ...     ---

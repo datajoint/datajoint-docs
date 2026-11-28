@@ -29,7 +29,7 @@ import datajoint as dj
 schema = dj.Schema('my_schema')
 
 @schema
-class Recording(dj.Manual):
+class Recording(dj.Entry):
     definition = """
     recording_id : int
     ---
@@ -74,7 +74,7 @@ import numpy as np
 schema = dj.Schema('neuroscience')
 
 @schema
-class Recording(dj.Manual):
+class Recording(dj.Entry):
     definition = """
     recording_id : int
     ---

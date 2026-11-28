@@ -11,7 +11,7 @@ schema = dj.Schema()
 
 
 @schema
-class Lab(dj.Manual):
+class Lab(dj.Entry):
     definition = """
     lab : varchar(32)
     ---
@@ -20,7 +20,7 @@ class Lab(dj.Manual):
 
 
 @schema
-class Subject(dj.Manual):
+class Subject(dj.Entry):
     definition = """
     subject_id : varchar(16)
     ---
@@ -31,7 +31,7 @@ class Subject(dj.Manual):
 
 
 @schema
-class Session(dj.Manual):
+class Session(dj.Entry):
     definition = """
     -> Subject
     session_date : date

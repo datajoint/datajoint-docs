@@ -174,7 +174,7 @@ For datasets too large for DataJoint:
 
 ```python
 @schema
-class LargeDataset(dj.Manual):
+class LargeDataset(dj.Entry):
     definition = """
     dataset_id : uuid
     ---

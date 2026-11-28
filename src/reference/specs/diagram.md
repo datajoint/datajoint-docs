@@ -342,10 +342,10 @@ Each table tier has a distinct visual style:
 
 | Tier | Shape | Fill | Stroke | Text |
 |------|-------|------|--------|------|
-| **Manual** | rounded box | green `#E8F0E9` | `#3E7A52` | `#28513A` |
+| **Entry** | rounded box | green `#E8F0E9` | `#3E7A52` | `#28513A` |
 | **Lookup** | rounded box | gray `#F0F0F1` | `#808285` | `#5A5C5F` |
-| **Imported** | ellipse | blue `#E0F4FC` | `#00A0DF` | `#00537A` |
-| **Computed** | ellipse | orange `#FFEDE5` | `#FF5113` | `#B23200` |
+| **Ingest** | ellipse | blue `#E0F4FC` | `#00A0DF` | `#00537A` |
+| **Compute** | ellipse | orange `#FFEDE5` | `#FF5113` | `#B23200` |
 | **Part** | rounded box (smaller, muted) | white `#FFFFFF` | `#B9BBBE` | `#55585C` |
 
 The dark theme derives by rule (same hue per tier, fills inverted toward navy-tinted
@@ -360,7 +360,7 @@ darks, text brightened to WCAG AA); the adaptive SVG embeds both via a
 | Dashed line | Secondary foreign key (below the `---`) |
 | Thick line | **1:1** dependency — the foreign key constitutes the child's *entire* primary key |
 | Thin line | **Multi-valued** dependency — the child has primary-key attributes beyond those the foreign key contributes |
-| Amber line | Renamed foreign key (via `.proj()`) — amber `#C77D3A`, distinct from the orange **Computed** tier above; hover the edge for the column-rename tooltip |
+| Amber line | Renamed foreign key (via `.proj()`) — amber `#C77D3A`, distinct from the orange **Compute** tier above; hover the edge for the column-rename tooltip |
 
 **Line weight encodes cardinality, and only cardinality — it is binary.** A
 thick edge is a one-to-one dependency: the parent's key fills the child's entire

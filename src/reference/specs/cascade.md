@@ -121,7 +121,7 @@ import datajoint as dj
 schema = dj.Schema("imaging")
 
 @schema
-class Subject(dj.Manual):
+class Subject(dj.Entry):
     definition = """
     subject_id : int32
     """
@@ -157,7 +157,7 @@ Without the FK walk (the pre-fix behavior), the engine joined `subject_ft.proj()
 
 ```python
 @schema
-class Master(dj.Manual):
+class Master(dj.Entry):
     definition = """
     master_id : int32
     """

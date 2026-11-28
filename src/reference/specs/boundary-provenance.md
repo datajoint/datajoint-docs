@@ -2,17 +2,17 @@
 
 ## Overview
 
-Rows that enter a pipeline from outside carry a hidden `_prov` attribute recording where they came from. The framework declares the attribute on Manual tables and fills it on insert; no author writes it.
+Rows that enter a pipeline from outside carry a hidden `_prov` attribute recording where they came from. The framework declares the attribute on Entry tables and fills it on insert; no author writes it.
 
 !!! version-added "New in 2.3.4"
 
-    `dj.Entry` is available from 2.3.4 as a permanent alias for `dj.Manual`. This page uses `dj.Manual` throughout; both names declare the same table.
+    `dj.Entry` is available from 2.3.4, and `dj.Manual` remains a permanent alias for it; both names declare the same table.
 
 ## Motivation
 
-Inside a pipeline, provenance is **structural**. A Computed table's row cannot exist unless its declared upstream exists and is correct, so the foreign-key graph *is* the lineage. Nothing has to be recorded for that to hold.
+Inside a pipeline, provenance is **structural**. A Compute table's row cannot exist unless its declared upstream exists and is correct, so the foreign-key graph *is* the lineage. Nothing has to be recorded for that to hold.
 
-At the boundary the structure runs out. Rows arrive in Manual tables from a person, an instrument, or an automated feed, and the graph has nothing to say about where they came from. Before 2.3.4 each pipeline answered that question its own way — a `source_file` column here, a `notes` varchar there, an ingestion log somewhere else, or nothing at all.
+At the boundary the structure runs out. Rows arrive in Entry tables from a person, an instrument, or an automated feed, and the graph has nothing to say about where they came from. Before 2.3.4 each pipeline answered that question its own way — a `source_file` column here, a `notes` varchar there, an ingestion log somewhere else, or nothing at all.
 
 `_prov` gives the boundary one shape, so that two pipelines answer "where did this row come from" the same way, and so that "which rows have no recorded origin" is a query rather than an audit.
 
@@ -24,27 +24,27 @@ At the boundary the structure runs out. Rows arrive in Manual tables from a pers
 
 Hidden attributes are prefixed with `_`: stored in the database, filtered out of `heading.attributes`, and excluded from query composition.
 
-**Why JSON rather than typed columns.** The useful key set is not settled, and deployments add to it. A JSON document absorbs a new key as a configuration change; typed columns would freeze the set at declaration and make every later addition an `ALTER` across every Manual table in every deployment. Filtering on a field stays portable — see [Querying](#querying).
+**Why JSON rather than typed columns.** The useful key set is not settled, and deployments add to it. A JSON document absorbs a new key as a configuration change; typed columns would freeze the set at declaration and make every later addition an `ALTER` across every Entry table in every deployment. Filtering on a field stays portable — see [Querying](#querying).
 
 ## Which Tables Carry It
 
-Manual tables only.
+Entry tables only.
 
 | Tier | Carries `_prov` | Why |
 |------|-----------------|-----|
-| `dj.Manual` | **Yes** | The pipeline's boundary with the outside world |
+| `dj.Entry` | **Yes** | The pipeline's boundary with the outside world |
 | `dj.Lookup` | No | Rows come from the committed `contents`, so the code is the record |
-| `dj.Imported` | No | See below |
-| `dj.Computed` | No | Provenance is entailed by the foreign-key graph |
+| `dj.Ingest` | No | See below |
+| `dj.Compute` | No | Provenance is entailed by the foreign-key graph |
 | `dj.Part` | No | A part inherits its master's |
 
-The slot is granted by matching the Manual tier, not by excluding the other
+The slot is granted by matching the Entry tier, not by excluding the other
 tiers' prefixes, so DataJoint's own system tables — job queues, lineage — never
 carry it either.
 
-**Why not Imported.** An Imported table already records agent, time and version through [job metadata](job-metadata.md) when `config.jobs.add_job_metadata` is on, so a `_prov` there would record the same facts twice. The half that is *not* covered — which specific file, endpoint, or instrument session its `make()` read — is known per row inside the `make()` body, which configuration cannot supply.
+**Why not Ingest.** An Ingest table already records agent, time and version through [job metadata](job-metadata.md) when `config.jobs.add_job_metadata` is on, so a `_prov` there would record the same facts twice. The half that is *not* covered — which specific file, endpoint, or instrument session its `make()` read — is known per row inside the `make()` body, which configuration cannot supply.
 
-In a well-modeled pipeline the external source is registered as a Manual row and the Imported table reaches it through a declared foreign key, which makes that table's provenance structural. An Imported table reading a source no Manual row records is the modeling problem described in [Table Declaration](table-declaration.md); the fix is to register the source, not to add a slot.
+In a well-modeled pipeline the external source is registered as an Entry row and the Ingest table reaches it through a declared foreign key, which makes that table's provenance structural. An Ingest table reading a source no Entry row records is the modeling problem described in [Table Declaration](table-declaration.md); the fix is to register the source, not to add a slot.
 
 ## Content
 
@@ -84,7 +84,7 @@ This is the design rather than a limitation. A field an operator can set is weak
 
 | Setting | Environment | Default | Description |
 |---------|-------------|---------|-------------|
-| `provenance.capture` | `DJ_PROVENANCE_CAPTURE` | `False` | Declare `_prov` on Manual tables and fill it on insert |
+| `provenance.capture` | `DJ_PROVENANCE_CAPTURE` | `False` | Declare `_prov` on Entry tables and fill it on insert |
 | `provenance.source` | `DJ_PROVENANCE_SOURCE` | `{}` | External source identity recorded on every row this process enters |
 
 ```python
@@ -114,7 +114,7 @@ export DJ_PROVENANCE_SOURCE='{"system": "PyRat", "endpoint": "https://pyrat.exam
 
 ### Capture defaults off
 
-Capture changes the DDL of every Manual table declared after it is enabled, adding one hidden nullable column. That is a deployment's decision rather than a library default, so upgrading to 2.3.4 leaves an unchanged schema declaring exactly what it declared under 2.3.3. [`jobs.add_job_metadata`](job-metadata.md) defaults off for the same reason, and does the same kind of thing.
+Capture changes the DDL of every Entry table declared after it is enabled, adding one hidden nullable column. That is a deployment's decision rather than a library default, so upgrading to 2.3.4 leaves an unchanged schema declaring exactly what it declared under 2.3.3. [`jobs.add_job_metadata`](job-metadata.md) defaults off for the same reason, and does the same kind of thing.
 
 A deployment that turns it on gets the property that makes the slot worth having: across that deployment, "which rows have no recorded origin" is a query rather than an audit. What it cannot assume is that a table declared elsewhere, under someone else's configuration, carries the column — [retrofitting](#retrofitting-existing-tables) is what settles that.
 
@@ -122,15 +122,15 @@ A deployment that turns it on gets the property that makes the slot worth having
 
 ### At declaration
 
-With `provenance.capture` true, `_prov` is added to the `CREATE TABLE` of every Manual table that is not a part. Turning capture off later does not remove the column from tables that already have it.
+With `provenance.capture` true, `_prov` is added to the `CREATE TABLE` of every Entry table that is not a part. Turning capture off later does not remove the column from tables that already have it.
 
 ### At insert
 
-Every `insert()` and `insert1()` into a Manual table that carries the column appends the assembled document. A table declared without the column is left alone and the insert succeeds — silently, which is what [retrofitting](#retrofitting-existing-tables) addresses.
+Every `insert()` and `insert1()` into an Entry table that carries the column appends the assembled document. A table declared without the column is left alone and the insert succeeds — silently, which is what [retrofitting](#retrofitting-existing-tables) addresses.
 
 ### Inside `make()`
 
-An insert executed inside a `make()` records the ingesting table and key in `context`. This is what makes the [fan-out ingestion pattern](../../explanation/fan-out-ingestion.md) traceable: rows written into Manual tables that carry no foreign key back to the loader still record what wrote them.
+An insert executed inside a `make()` records the ingesting table and key in `context`. This is what makes the [fan-out ingestion pattern](../../explanation/fan-out-ingestion.md) traceable: rows written into Entry tables that carry no foreign key back to the loader still record what wrote them.
 
 ## Retrofitting Existing Tables
 
@@ -142,7 +142,7 @@ from datajoint.deploy import add_prov_column
 # Preview
 add_prov_column(schema, dry_run=True)["ddl"]
 
-# Apply to every Manual table in a schema
+# Apply to every Entry table in a schema
 add_prov_column(schema, dry_run=False)
 
 # Or a single table
@@ -216,7 +216,7 @@ which will cover `_prov` and the job-metadata attributes together.
 |--------|------|
 | `datajoint/provenance.py` | payload assembly and the ingesting context |
 | `datajoint/settings.py` | `ProvenanceSettings`, exposed as `config.provenance` |
-| `datajoint/declare.py` | `PROV_DEFINITION`, and adding it to Manual tables at declaration |
+| `datajoint/declare.py` | `PROV_DEFINITION`, and adding it to Entry tables at declaration |
 | `datajoint/user_tables.py` | `is_tier`, the shared tier test |
 | `datajoint/table.py` | appends the value on the insert path |
 | `datajoint/autopopulate.py` | scopes the ingesting context to a `make()` call |

@@ -88,7 +88,7 @@ trade-off worth taking. The argument is developed at length in
 
 The two categories are not mutually exclusive at the structural level. Any
 CWL workflow can be mechanically converted to a DataJoint schema: each tool
-step becomes a Computed table, the step DAG becomes a foreign-key chain,
+step becomes a Compute table, the step DAG becomes a foreign-key chain,
 and the scatter/gather patterns map onto primary keys. The conversion is
 reversible — a DataJoint schema exports to CWL or Nextflow DSL2 with one
 table per process and channel wiring mirroring the FK chain. The internal

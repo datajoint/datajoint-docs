@@ -259,7 +259,7 @@ Schema-addressed OAS storage for complex, multi-part objects (files, folders, Za
 - **dtype**: `json` (stores path, store name, metadata)
 
 ```python
-class Analysis(dj.Computed):
+class Analysis(dj.Compute):
     definition = """
     -> Recording
     ---
@@ -380,7 +380,7 @@ between environments (dev → prod, cloud → local) by changing store configura
 updating data.
 
 ```python
-class RawData(dj.Manual):
+class RawData(dj.Entry):
     definition = """
     session_id : int32
     ---
@@ -485,7 +485,7 @@ same expression runs on MySQL and PostgreSQL:
 
 ```python
 @schema
-class Equipment(dj.Manual):
+class Equipment(dj.Entry):
     definition = """
     name  : varchar(32)
     ---
@@ -612,7 +612,7 @@ class BlobCodec(dj.Codec):
 
 Usage:
 ```python
-class SessionAnalysis(dj.Computed):
+class SessionAnalysis(dj.Compute):
     definition = """
     -> Session
     ---
@@ -654,7 +654,7 @@ class AttachCodec(dj.Codec):
 
 Usage:
 ```python
-class Attachments(dj.Manual):
+class Attachments(dj.Entry):
     definition = """
     attachment_id : int32
     ---

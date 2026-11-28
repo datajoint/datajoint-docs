@@ -16,7 +16,7 @@ The `Schema` object connects to the database and creates the schema (database) i
 
 ```python
 @schema
-class MyTable(dj.Manual):
+class MyTable(dj.Entry):
     definition = """
     # Table comment (optional)
     primary_attr : type      # attribute comment
@@ -30,10 +30,10 @@ class MyTable(dj.Manual):
 
 | Type | Base Class | Purpose |
 |------|------------|---------|
-| Manual | `dj.Manual` | Data inserted directly from outside the pipeline (forms, instruments, entry scripts) |
+| Entry | `dj.Entry` | Data inserted directly from outside the pipeline (forms, instruments, entry scripts) |
 | Lookup | `dj.Lookup` | Reference data defined in the schema via `contents` |
-| Imported | `dj.Imported` | Populated by `make()` from an external source |
-| Computed | `dj.Computed` | Populated by `make()` from other tables |
+| Ingest | `dj.Ingest` | Populated by `make()` from an external source |
+| Compute | `dj.Compute` | Populated by `make()` from other tables |
 | Part | `dj.Part` | Child of master table |
 
 ## Primary Key (Above `---`)
@@ -192,7 +192,7 @@ Native types are flagged with a warning at declaration time but are allowed. Cor
 
 ```python
 @schema
-class Session(dj.Manual):
+class Session(dj.Entry):
     definition = """
     -> Subject                # References Subject table
     session_idx : int32
@@ -215,7 +215,7 @@ Use modifiers in brackets to change foreign key behavior:
 
 ```python
 @schema
-class SessionAnnotation(dj.Manual):
+class SessionAnnotation(dj.Entry):
     definition = """
     -> Session
     ---
@@ -251,7 +251,7 @@ class TaskType(dj.Lookup):
     ]
 ```
 
-### Manual or Lookup?
+### Entry or Lookup?
 
 Both tiers hold rows that are *entered* rather than computed. The deciding
 question is **which process is accountable for the rows' quality: code review, or
@@ -264,7 +264,7 @@ data management?**
   controlled vocabularies *when code-seeded*. Updating a Lookup means editing
   `contents` and redeploying, so the change flows through your normal CI/CD
   process, not a runtime insert.
-- Use **`dj.Manual`** when the rows are **populated at runtime** and their quality
+- Use **`dj.Entry`** when the rows are **populated at runtime** and their quality
   is guaranteed by the **data-management process** — validation, curation, and
   access control at entry, not code review. Subjects, sessions, samples, or
   anything typed into a form, loaded from a file, or read from an instrument.
@@ -273,7 +273,7 @@ This resolves the case that "where a row comes from" leaves ambiguous: a control
 vocabulary that is **populated at runtime** — gene symbols loaded from an external
 reference, ontology terms discovered during processing. It reads like a Lookup, but
 its rows are runtime data governed by the data-management process, so it is
-`dj.Manual`. It still gets domain integrity from a `unique index` on its term; it
+`dj.Entry`. It still gets domain integrity from a `unique index` on its term; it
 simply is not code-reviewed schema content. Make `gene_symbol` a `dj.Lookup` only
 when you seed a fixed, reviewed list in `contents`.
 
@@ -281,7 +281,7 @@ when you seed a fixed, reviewed list in `contents`.
 
 ```python
 @schema
-class Session(dj.Manual):
+class Session(dj.Entry):
     definition = """
     -> Subject
     session_idx : int32
@@ -299,11 +299,11 @@ class Session(dj.Manual):
         """
 ```
 
-## Computed Tables
+## Compute Tables
 
 ```python
 @schema
-class SessionStats(dj.Computed):
+class SessionStats(dj.Compute):
     definition = """
     -> Session
     ---
@@ -343,7 +343,7 @@ Tables are declared in the database when the `@schema` decorator applies to the 
 
 ```python
 @schema  # Table is declared here
-class Session(dj.Manual):
+class Session(dj.Entry):
     definition = """
     session_id : int32
     ---

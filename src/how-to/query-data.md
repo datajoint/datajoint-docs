@@ -76,7 +76,7 @@ Subject.proj(..., '-notes')
 # Rename
 Subject.proj(animal_species='species')
 
-# Computed
+# Compute
 Subject.proj(weight_kg='weight / 1000')
 ```
 

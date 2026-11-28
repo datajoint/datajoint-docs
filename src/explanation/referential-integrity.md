@@ -51,7 +51,7 @@ parent's key rather than inventing a parallel one.
 
 ```python
 @schema
-class Session(dj.Manual):
+class Session(dj.Entry):
     definition = """
     -> Subject                 # embeds subject_id : varchar(16)
     session_idx : int32

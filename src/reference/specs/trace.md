@@ -120,13 +120,13 @@ import datajoint as dj
 schema = dj.Schema("imaging")
 
 @schema
-class Subject(dj.Manual):
+class Subject(dj.Entry):
     definition = """
     subject_id : int32
     """
 
 @schema
-class Session(dj.Manual):
+class Session(dj.Entry):
     definition = """
     -> Subject
     session_id : int32
@@ -135,14 +135,14 @@ class Session(dj.Manual):
     """
 
 @schema
-class Scan(dj.Imported):
+class Scan(dj.Ingest):
     definition = """
     -> Session
     scan_id : int32
     """
 
 @schema
-class ExtractTraces(dj.Computed):
+class ExtractTraces(dj.Compute):
     definition = """
     -> Scan
     ---
@@ -150,7 +150,7 @@ class ExtractTraces(dj.Computed):
     """
 
 @schema
-class Summary(dj.Computed):
+class Summary(dj.Compute):
     definition = """
     -> ExtractTraces
     ---
@@ -246,7 +246,7 @@ End-to-end:
 import datajoint as dj
 
 @schema
-class Spectrum(dj.Computed):
+class Spectrum(dj.Compute):
     definition = """
     -> Recording
     ---

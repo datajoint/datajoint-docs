@@ -23,7 +23,7 @@ class ProcessingParams(dj.Lookup):
 
 
 @schema
-class ProcessedSession(dj.Computed):
+class ProcessedSession(dj.Compute):
     definition = """
     -> acquisition.Session
     -> ProcessingParams
@@ -37,7 +37,7 @@ class ProcessedSession(dj.Computed):
 
 
 @schema
-class EventDetection(dj.Computed):
+class EventDetection(dj.Compute):
     definition = """
     -> ProcessedSession
     event_id : int32

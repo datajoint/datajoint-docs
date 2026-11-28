@@ -88,7 +88,7 @@ Each specification follows a consistent structure:
 | [Virtual Schemas](virtual-schemas.md) | Table Declaration | — | — |
 | [Branch Resolution](branch-resolution.md) | Table Declaration | — | — |
 
-**Key concepts:** Table tiers (Manual, Lookup, Imported, Computed, Part), foreign keys, dependency graphs, compositional modeling
+**Key concepts:** Table tiers (Entry, Lookup, Ingest, Compute, Part), foreign keys, dependency graphs, compositional modeling
 
 ---
 

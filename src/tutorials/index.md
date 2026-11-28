@@ -40,7 +40,7 @@ Choose your learning path based on your goals:
 
 **Path:**
 
-1. [Computation](basics/05-computation.ipynb) — Automated processing with Imported/Computed tables
+1. [Computation](basics/05-computation.ipynb) — Automated processing with Ingest/Compute tables
 2. [Object Storage](basics/06-object-storage.ipynb) — Handle large data (arrays, files, images)
 3. [Distributed Computing](advanced/distributed.ipynb) — Multi-worker parallel execution
 4. Practice: [Fractal Pipeline](examples/fractal-pipeline.ipynb) or [Blob Detection](examples/blob-detection.ipynb)
@@ -107,7 +107,7 @@ Core concepts for getting started with DataJoint:
 2. [Schema Design](basics/02-schema-design.ipynb) — Primary keys, relationships, and table tiers
 3. [Data Entry](basics/03-data-entry.ipynb) — Inserting and managing data
 4. [Queries](basics/04-queries.ipynb) — Operators and fetching results
-5. [Computation](basics/05-computation.ipynb) — Imported and Computed tables
+5. [Computation](basics/05-computation.ipynb) — Ingest and Compute tables
 6. [Object Storage](basics/06-object-storage.ipynb) — Blobs, attachments, and object stores
 
 ## Examples

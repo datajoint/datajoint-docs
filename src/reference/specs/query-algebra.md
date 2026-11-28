@@ -688,7 +688,7 @@ schema.table.attribute
 Foreign key inheritance preserves lineage:
 
 ```python
-class Session(dj.Manual):
+class Session(dj.Entry):
     definition = """
     -> Subject          # Inherits subject_id with Subject's lineage
     session_id : int

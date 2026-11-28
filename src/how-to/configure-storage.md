@@ -151,7 +151,7 @@ Use named stores in table definitions:
 
 ```python
 @schema
-class Recording(dj.Manual):
+class Recording(dj.Entry):
     definition = """
     recording_id : uuid
     ---
@@ -355,7 +355,7 @@ The `<filepath@>` codec stores paths to files that you manage. DataJoint does no
 
 ```python
 @schema
-class RawData(dj.Manual):
+class RawData(dj.Entry):
     definition = """
     session_id : int32
     ---

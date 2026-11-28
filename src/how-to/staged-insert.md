@@ -23,7 +23,7 @@ import datajoint as dj
 schema = dj.Schema('imaging')
 
 @schema
-class ImagingSession(dj.Manual):
+class ImagingSession(dj.Entry):
     definition = """
     subject_id : int32
     session_id : int32

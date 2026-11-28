@@ -23,14 +23,14 @@ Semantic matching is enabled by default in DataJoint 2.0. For most well-designed
 
 ```python
 # Two tables with generic 'id' attribute
-class Student(dj.Manual):
+class Student(dj.Entry):
     definition = """
     id : int64
     ---
     name : varchar(100)
     """
 
-class Course(dj.Manual):
+class Course(dj.Entry):
     definition = """
     id : int64
     ---
@@ -55,7 +55,7 @@ Student().join(Course(), semantic_check=False)  # OK, but be careful!
 
 **Option 3: Use descriptive names (best practice)**
 ```python
-class Student(dj.Manual):
+class Student(dj.Entry):
     definition = """
     student_id : int64
     ---

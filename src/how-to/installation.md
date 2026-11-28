@@ -122,7 +122,7 @@ import datajoint as dj
 schema = dj.Schema('my_pipeline')
 
 @schema
-class Subject(dj.Manual):
+class Subject(dj.Entry):
     definition = """
     subject_id : int32
     ---
@@ -131,7 +131,7 @@ class Subject(dj.Manual):
     """
 
 @schema
-class Session(dj.Manual):
+class Session(dj.Entry):
     definition = """
     -> Subject
     session_idx : int16
@@ -140,7 +140,7 @@ class Session(dj.Manual):
     """
 
 @schema
-class SessionAnalysis(dj.Computed):
+class SessionAnalysis(dj.Compute):
     definition = """
     -> Session
     ---

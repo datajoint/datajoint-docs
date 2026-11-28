@@ -23,19 +23,19 @@ the labeled boxes group tables, they do not contain them.
 
 ![Worked-example imaging pipeline diagram spanning two schemas: experiment (Mouse → Session → Scan) and analysis (AverageFrame → Segmentation → Fluorescence, with Lookup SegmentationParam feeding Segmentation, and the Part tables Roi on Segmentation and Trace on Fluorescence).](../images/rwm-pipeline.svg)
 
-![Legend: table tiers — Manual (green rounded box), Lookup (gray rounded box), Imported (blue ellipse), Computed (orange ellipse), Part (smaller plain box); an underlined name is a new entity type (a new schema dimension, many rows per parent) while a plain name is composed from existing entities (one row per parent); edge thickness — thick means the child extends the parent, thin means the child is contained within the parent; a dashed rounded box is a schema module (labeled in the corner); a gray box encloses a master with its parts; edges have no arrowheads, so direction follows the layout.](../images/rwm-legend.svg)
+![Legend: table tiers — Entry (green rounded box), Lookup (gray rounded box), Ingest (blue ellipse), Compute (orange ellipse), Part (smaller plain box); an underlined name is a new entity type (a new schema dimension, many rows per parent) while a plain name is composed from existing entities (one row per parent); edge thickness — thick means the child extends the parent, thin means the child is contained within the parent; a dashed rounded box is a schema module (labeled in the corner); a gray box encloses a master with its parts; edges have no arrowheads, so direction follows the layout.](../images/rwm-legend.svg)
 
-The notation is specified in full in the [Diagram specification](../reference/specs/diagram.md). The concepts it depicts are explained in depth elsewhere: [entity integrity](entity-integrity.md) (keys, entity types, and schema dimensions), [master–part tables](../reference/specs/master-part.md) (the entity group and its all-or-nothing populate), the [computation model](computation-model.md) (how `make()` produces Imported and Computed tables), and [semantic matching](semantic-matching.md) (why a name means the same thing everywhere it appears).
+The notation is specified in full in the [Diagram specification](../reference/specs/diagram.md). The concepts it depicts are explained in depth elsewhere: [entity integrity](entity-integrity.md) (keys, entity types, and schema dimensions), [master–part tables](../reference/specs/master-part.md) (the entity group and its all-or-nothing populate), the [computation model](computation-model.md) (how `make()` produces Ingest and Compute tables), and [semantic matching](semantic-matching.md) (why a name means the same thing everywhere it appears).
 
 The pipeline spans two schemas: **`experiment`** holds the raw, manually
 entered tables, and **`analysis`** holds everything derived from them.
-`Mouse`, `Session`, and `Scan` are **Manual** tables entered by the
+`Mouse`, `Session`, and `Scan` are **Entry** tables entered by the
 experimenter. `SegmentationParam` is a **Lookup** table holding reference
 parameter sets.
 
-In `analysis`, `AverageFrame` is **Imported** — its `make()` reads the TIFF
+In `analysis`, `AverageFrame` is **Ingest** — its `make()` reads the TIFF
 identified by `Scan`, a dependency reaching across from `experiment`, and
-stores the mean fluorescence frame. `Segmentation` is **Computed**: its primary
+stores the mean fluorescence frame. `Segmentation` is **Compute**: its primary
 key fans in from both `AverageFrame` and `SegmentationParam`, so every average
 frame is segmented with every parameter set, and its **Part** table `Roi` holds
 the regions found in each segmentation. `Fluorescence` then extracts per-ROI
@@ -73,12 +73,12 @@ The Relational Workflow Model layers a semantic interpretation on the
 classical relational model; it does not replace any of it. Tables, rows,
 primary and foreign keys, normalization, and the query algebra keep
 their classical meaning. What the model adds is in the third column of the table above, plus one thing
-that table states tersely: Computed and Imported tables carry their own
+that table states tersely: Compute and Ingest tables carry their own
 `make()` methods, so derivation logic is declared in the schema itself rather
 than in an external workflow file.
 
 Under this interpretation the schema becomes *active*. A row exists in a
-Computed table if and only if its upstream key exists, its `make()` has
+Compute table if and only if its upstream key exists, its `make()` has
 run, and its result satisfies the declared constraints. The schema is the
 executable specification of the work.
 
@@ -129,20 +129,20 @@ Tables are classified into tiers by what puts rows in them.
 | Tier | Rows come from | What puts them there | `make()` |
 |------|----------------|----------------------|----------|
 | **Lookup** | The committed schema | The table's own `contents`, versioned with the code | No |
-| **Manual** | Outside the pipeline | A writer outside the table — a person, an instrument, an entry script | No |
-| **Imported** | Outside the pipeline | The table itself, fetching through `make()` | Yes |
-| **Computed** | Other DataJoint tables | The table itself, deriving through `make()` | Yes |
+| **Entry** | Outside the pipeline | A writer outside the table — a person, an instrument, an entry script | No |
+| **Ingest** | Outside the pipeline | The table itself, fetching through `make()` | Yes |
+| **Compute** | Other DataJoint tables | The table itself, deriving through `make()` | Yes |
 
-The table shows **Manual** and **Imported** drawing on the same origin. What
+The table shows **Entry** and **Ingest** drawing on the same origin. What
 separates them is who initiates the write.
 
-A Manual table is written by an external process, on that process's schedule.
-An Imported table is filled automatically: `populate()` works through the keys
+An Entry table is written by an external process, on that process's schedule.
+An Ingest table is filled automatically: `populate()` works through the keys
 its parents already hold and calls `make()` for each one still missing.
 
 Their primary keys follow from that. `populate()` has to know which entity it
-is working on before `make()` runs, so every attribute of an Imported table's
-primary key arrives through a foreign key. A Manual table carries no such
+is working on before `make()` runs, so every attribute of an Ingest table's
+primary key arrives through a foreign key. An Entry table carries no such
 constraint — it may sit at the head of the pipeline with no parent at all, and
 may introduce primary-key attributes of its own. That is what makes it the
 place a new entity enters.
@@ -154,7 +154,7 @@ place a new entity enters.
     Each pair is one class, so either name declares the same table, and both
     names are permanent. `dj.Lookup` and `dj.Part` are unchanged.
 
-    These pages use the original names. The new ones become primary in 2.4
+    These pages use the new names. They become primary in the library in 2.4
     ([datajoint-python#1546](https://github.com/datajoint/datajoint-python/issues/1546)).
 
 `Part` is absent because it is not a tier of its own. A part table fills a
@@ -164,16 +164,16 @@ transaction. Any tier can serve as a master.
 The `make()` method specifies how each entity is derived — declared within the
 table definition, not in an external workflow file.
 
-### Manual vs. Lookup
+### Entry vs. Lookup
 
-Manual and Lookup tables are both **entry points** — their rows are entered
+Entry and Lookup tables are both **entry points** — their rows are entered
 rather than derived by a `make()` — but they differ in *where the rows come
 from*:
 
-- A **Manual** table's rows arrive at **runtime**, from outside the pipeline: a
+- An **Entry** table's rows arrive at **runtime**, from outside the pipeline: a
   person typing into a form, a LIMS, an instrument, or an import from another
   system. Its contents are specific to a particular project or experiment and
-  differ from one deployment to the next. Manual tables are the pipeline's origin
+  differ from one deployment to the next. Entry tables are the pipeline's origin
   points — e.g. `Mouse`, `Session`, `Scan`.
 - A **Lookup** table's rows are **part of the schema definition**, declared in
   code through the `contents` attribute and versioned alongside the table. Its
@@ -184,15 +184,15 @@ from*:
 
 The quick test is *where does a row come from?* If it is fixed in the committed
 schema (`contents`), it is a **Lookup**; if it arrives at runtime, it is a
-**Manual** table. A common mistake is to use a Lookup for data that is actually
+**Entry** table. A common mistake is to use a Lookup for data that is actually
 entered at runtime (for example, filled in through a dashboard form). If a
 table's rows do not come from its committed `contents`, it belongs in the
-**Manual** tier.
+**Entry** tier.
 
 Because Lookup content lives in the code, **changing it is a code change**:
 you edit `contents` and redeploy, so updates flow through the same
 review-and-deploy (CI/CD) process as any other schema change — versioned and
-reproducible across deployments. Manual content, by contrast, is entered at
+reproducible across deployments. Entry content, by contrast, is entered at
 runtime and never touches the codebase.
 
 ## Master-part relationships
@@ -215,7 +215,7 @@ key. **Workflow normalization** extends these principles with a temporal
 dimension: each table's attributes must describe its entity *as it exists
 at the workflow step the table represents*. A `Session` table holds
 attributes known when the session is entered (date, experimenter,
-subject); analysis parameters determined later belong in Computed tables
+subject); analysis parameters determined later belong in Compute tables
 that depend on `Session`. The discipline prevents tables that accumulate
 attributes from different workflow stages, obscuring lineage and
 complicating updates.

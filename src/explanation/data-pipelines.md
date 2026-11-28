@@ -71,7 +71,7 @@ DataJoint pipelines are built on the [Relational Workflow Model](relational-work
 
 - **Tables represent workflow steps**, not just data storage
 - **Foreign keys encode dependencies**, prescribing the order of operations
-- **Table tiers** (Lookup, Manual, Imported, Computed) classify how data enters the pipeline
+- **Table tiers** (Lookup, Entry, Ingest, Compute) classify how data enters the pipeline
 - **The schema forms a DAG** that defines valid execution sequences
 
 This model treats the database schema as an **executable workflow specification**—defining not just what data exists but when and how it comes into existence.
@@ -134,7 +134,7 @@ When a database row is deleted, its associated stored objects are garbage-collec
 Different attributes can route to different stores:
 
 ```python
-class ScanInfo(dj.Imported):
+class ScanInfo(dj.Ingest):
     definition = """
     -> Scan
     ---
@@ -153,11 +153,11 @@ This architecture lets teams work with terabyte-scale datasets while retaining t
 
 A typical data pipeline workflow:
 
-1. **Acquisition** — Data is collected from instruments, experiments, or external sources. Raw files land in object storage; metadata populates Manual tables (`Session`, `Scan`).
+1. **Acquisition** — Data is collected from instruments, experiments, or external sources. Raw files land in object storage; metadata populates Entry tables (`Session`, `Scan`).
 
-2. **Import** — Automated processes parse raw data, extract signals, and populate Imported tables with structured results (`ScanInfo`).
+2. **Import** — Automated processes parse raw data, extract signals, and populate Ingest tables with structured results (`ScanInfo`).
 
-3. **Computation** — The `populate()` mechanism identifies new data and triggers downstream processing. Compute resources execute transformations and populate Computed tables (`MotionCorrection`, `Segmentation`, `Fluorescence`).
+3. **Computation** — The `populate()` mechanism identifies new data and triggers downstream processing. Compute resources execute transformations and populate Compute tables (`MotionCorrection`, `Segmentation`, `Fluorescence`).
 
 4. **Query & Analysis** — Users query results across the pipeline, combining data from multiple stages to generate insights, reports, or visualizations.
 

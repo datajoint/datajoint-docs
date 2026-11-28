@@ -13,7 +13,7 @@ So the notation is borrowed rather than emitted. Everything a reader already kno
 to read is kept identical to generated diagrams -- see ``src/images/rwm-legend.svg`` and
 ``how-to/read-diagrams.ipynb``:
 
-* **Tier by shape and color.** ``Manual`` is a green rounded box, ``Imported`` a blue
+* **Tier by shape and color.** ``Entry`` is a green rounded box, ``Ingest`` a blue
   ellipse. Fills, strokes and text are the tier colors ``dj.Diagram`` itself emits
   (datajoint-python #1544), light and dark.
 * **Dependency edges are navy and carry no arrowheads** -- direction follows the layout.
@@ -146,11 +146,11 @@ def main():
     f, s, _ = TIER["imported"]
     svg.append(f'<ellipse class="f-imported" cx="42" cy="{ly - 5}" rx="16" ry="8" '
                f'fill="{f}" stroke="{s}" stroke-width="1.4"/>')
-    svg.append(f'<text class="note" x="68" y="{ly}">Imported</text>')
+    svg.append(f'<text class="note" x="68" y="{ly}">Ingest</text>')
     f, s, _ = TIER["manual"]
     svg.append(f'<rect class="f-manual" x="152" y="{ly - 13}" width="32" height="16" '
                f'rx="7" fill="{f}" stroke="{s}" stroke-width="1.4"/>')
-    svg.append(f'<text class="note" x="192" y="{ly}">Manual</text>')
+    svg.append(f'<text class="note" x="192" y="{ly}">Entry</text>')
 
     svg.append(f'<line class="edge" x1="300" y1="{ly - 5}" x2="340" y2="{ly - 5}" '
                f'stroke-width="3.2"/>')

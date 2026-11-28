@@ -24,7 +24,7 @@ whenever it exists:
 
 ```python
 @schema
-class Subject(dj.Manual):
+class Subject(dj.Entry):
     definition = """
     subject_id : varchar(16)    # Lab-assigned ID like 'M001'
     ---
@@ -44,7 +44,7 @@ Combine attributes when a single attribute isn't unique:
 
 ```python
 @schema
-class Session(dj.Manual):
+class Session(dj.Entry):
     definition = """
     -> Subject
     session_idx : int32        # Session number within subject
@@ -61,7 +61,7 @@ Use UUIDs when natural keys don't exist:
 
 ```python
 @schema
-class Experiment(dj.Manual):
+class Experiment(dj.Entry):
     definition = """
     experiment_id : uuid
     ---
@@ -106,7 +106,7 @@ Foreign keys above the `---` become part of the primary key:
 
 ```python
 @schema
-class Trial(dj.Manual):
+class Trial(dj.Entry):
     definition = """
     -> Session                  # In primary key
     trial_idx : int32          # In primary key
@@ -162,7 +162,7 @@ Once a table has data, primary keys cannot be changed. Plan carefully:
 ```python
 # Consider future needs
 @schema
-class Scan(dj.Manual):
+class Scan(dj.Entry):
     definition = """
     -> Session
     scan_idx : int16           # Might need int32 for high-throughput

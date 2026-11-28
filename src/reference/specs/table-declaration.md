@@ -10,7 +10,7 @@ This document specifies the table declaration mechanism in the DataJoint Library
 
 ```python
 @schema
-class TableName(dj.Manual):
+class TableName(dj.Entry):
     definition = """
     # table comment
     primary_attr : int32
@@ -23,10 +23,10 @@ class TableName(dj.Manual):
 
 | Tier | Base Class | Table Prefix | Purpose |
 |------|------------|--------------|---------|
-| Manual | `dj.Manual` | (none) | Data inserted at runtime from outside the pipeline (users, instruments, entry scripts); quality assured by the data-management process |
+| Entry | `dj.Entry` | (none) | Data inserted at runtime from outside the pipeline (users, instruments, entry scripts); quality assured by the data-management process |
 | Lookup | `dj.Lookup` | `#` | Reference data defined in the schema via `contents`; quality assured by code review |
-| Imported | `dj.Imported` | `_` | Populated by `make()` from an external source |
-| Computed | `dj.Computed` | `__` | Derived from other tables |
+| Ingest | `dj.Ingest` | `_` | Populated by `make()` from an external source |
+| Compute | `dj.Compute` | `__` | Derived from other tables |
 | Part | `dj.Part` | `master__` | Detail records of master table |
 
 ### 1.3 Class Naming Rules
@@ -191,10 +191,10 @@ need to control visibility at the call site, use proj().
 
 | Hidden attribute | Added to | Purpose |
 |------------------|----------|---------|
-| `_job_start_time` | `Computed`, `Imported` | Wall-clock start of the populate call |
-| `_job_duration` | `Computed`, `Imported` | Elapsed seconds for the populate call |
-| `_job_version` | `Computed`, `Imported` | Library version that produced the row |
-| `_prov` | `Manual` | [Extrinsic provenance](boundary-provenance.md) for a row that entered from outside |
+| `_job_start_time` | `Compute`, `Ingest` | Wall-clock start of the populate call |
+| `_job_duration` | `Compute`, `Ingest` | Elapsed seconds for the populate call |
+| `_job_version` | `Compute`, `Ingest` | Library version that produced the row |
+| `_prov` | `Entry` | [Extrinsic provenance](boundary-provenance.md) for a row that entered from outside |
 | `_singleton` | Tables that declare no primary key | Implementation detail of the singleton pattern |
 
 Part tables receive none of them, and neither do DataJoint's own system tables — the job queue and the lineage registry — because each slot is granted by matching its tier, not by excluding the others' prefixes.
@@ -253,7 +253,7 @@ Until then, raw SQL is the only way to read one back.
 
 ```python
 @schema
-class TaskParams(dj.Manual):
+class TaskParams(dj.Entry):
     definition = """
     task_id : int32
     ---
@@ -449,7 +449,7 @@ Foreign keys automatically inherit all primary key attributes from the reference
 
 ```python
 # Parent
-class Subject(dj.Manual):
+class Subject(dj.Entry):
     definition = """
     subject_id : int32
     ---
@@ -457,7 +457,7 @@ class Subject(dj.Manual):
     """
 
 # Child - inherits subject_id
-class Session(dj.Manual):
+class Session(dj.Entry):
     definition = """
     -> Subject
     session_id : int32
@@ -578,7 +578,7 @@ index(last_name, (YEAR(birth_date)))
 
 ```python
 @schema
-class Master(dj.Manual):
+class Master(dj.Entry):
     definition = """
     master_id : int32
     """
@@ -617,8 +617,8 @@ Within Part definition, use:
 
 ### 9.1 Classes
 
-- `dj.Imported` - Data from external sources
-- `dj.Computed` - Derived from other DataJoint tables
+- `dj.Ingest` - Data from external sources
+- `dj.Compute` - Derived from other DataJoint tables
 
 ### 9.2 Primary Key Constraint
 
@@ -626,7 +626,7 @@ All primary key attributes must come from foreign key references.
 
 **Valid:**
 ```python
-class Analysis(dj.Computed):
+class Analysis(dj.Compute):
     definition = """
     -> Session
     -> Parameter
@@ -637,7 +637,7 @@ class Analysis(dj.Computed):
 
 **Invalid** (by default):
 ```python
-class Analysis(dj.Computed):
+class Analysis(dj.Compute):
     definition = """
     -> Session
     analysis_id : int32    # ERROR: non-FK primary key
@@ -732,7 +732,7 @@ Core types and codecs are preserved in comments:
 | `declare.py` | Definition parsing, SQL generation |
 | `heading.py` | Attribute metadata, type reconstruction |
 | `table.py` | Base Table class, declaration interface |
-| `user_tables.py` | Tier classes (Manual, Computed, etc.) |
+| `user_tables.py` | Tier classes (Entry, Compute, etc.) |
 | `schemas.py` | Schema binding, table decoration |
 | `codecs.py` | Codec registry and resolution |
 | `lineage.py` | Attribute lineage tracking |

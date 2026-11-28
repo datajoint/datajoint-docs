@@ -29,11 +29,11 @@ import datajoint as dj
 schema = dj.Schema('lab')
 
 @schema
-class Subject(dj.Manual):  # Subject class → `lab`.`subject` table
+class Subject(dj.Entry):  # Subject class → `lab`.`subject` table
     ...
 
 @schema
-class Session(dj.Manual):  # Session class → `lab`.`session` table
+class Session(dj.Entry):  # Session class → `lab`.`session` table
     ...
 ```
 
@@ -187,10 +187,10 @@ Classes are created based on table naming conventions:
 
 | Table Name Pattern | Generated Class |
 |-------------------|-----------------|
-| `subject` | `dj.Manual` |
+| `subject` | `dj.Entry` |
 | `#lookup_table` | `dj.Lookup` |
-| `_imported_table` | `dj.Imported` |
-| `__computed_table` | `dj.Computed` |
+| `_imported_table` | `dj.Ingest` |
+| `__computed_table` | `dj.Compute` |
 | `master__part` | `dj.Part` |
 
 ### 4.3 Part Table Handling
@@ -232,7 +232,7 @@ external = dj.virtual_schema('external_lab')
 
 # Reference external tables in queries
 @my_schema
-class Analysis(dj.Computed):
+class Analysis(dj.Compute):
     definition = """
     -> external.Session
     ---

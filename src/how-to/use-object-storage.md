@@ -35,7 +35,7 @@ Use the `@` modifier for:
 
 ```python
 @schema
-class Recording(dj.Manual):
+class Recording(dj.Entry):
     definition = """
     recording_id : uuid
     ---
@@ -85,7 +85,7 @@ Use different stores for different data types:
 
 ```python
 @schema
-class Experiment(dj.Manual):
+class Experiment(dj.Entry):
     definition = """
     experiment_id : uuid
     ---
@@ -141,7 +141,7 @@ Table.insert1({'id': 2, 'array': data})  # References same object
 
 ```python
 @schema
-class Dataset(dj.Manual):
+class Dataset(dj.Entry):
     definition = """
     dataset_id : uuid
     ---
@@ -175,7 +175,7 @@ Preserve original filenames with `<attach@>`:
 
 ```python
 @schema
-class Document(dj.Manual):
+class Document(dj.Entry):
     definition = """
     doc_id : uuid
     ---
@@ -213,7 +213,7 @@ The `<npy@>` codec stores NumPy arrays as portable `.npy` files with lazy loadin
 
 ```python
 @schema
-class Recording(dj.Manual):
+class Recording(dj.Entry):
     definition = """
     recording_id : int32
     ---

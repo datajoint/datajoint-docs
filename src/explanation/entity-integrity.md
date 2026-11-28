@@ -50,7 +50,7 @@ When designing the primary key for a table, answer all three:
 
 ```python
 @schema
-class Mouse(dj.Manual):
+class Mouse(dj.Entry):
     definition = """
     ear_tag : char(6)   # unique ear tag (e.g., 'M00142')
     ---
@@ -151,7 +151,7 @@ of entity integrity does not apply.
 
 ```python
 @schema
-class InternalRecord(dj.Manual):
+class InternalRecord(dj.Entry):
     definition = """
     record_id : uuid    # internal identifier
     ---
@@ -172,7 +172,7 @@ foreign keys: a child entity is identified within the context of its parent.
 
 ```python
 @schema
-class Recording(dj.Manual):
+class Recording(dj.Entry):
     definition = """
     -> Session
     recording_idx : int32   # recording number within session
@@ -199,7 +199,7 @@ A foreign key serves two distinct purposes in DataJoint:
 
 ```python
 @schema
-class Segmentation(dj.Computed):
+class Segmentation(dj.Compute):
     definition = """
     -> Scan
     ---
@@ -251,7 +251,7 @@ represents; DataJoint generalizes it from recorded fact rows to *computed* rows.
 
 ```python
 @schema
-class Subject(dj.Manual):
+class Subject(dj.Entry):
     definition = """
     subject_id : varchar(16)   # NEW dimension: subject_id
     ---
@@ -259,7 +259,7 @@ class Subject(dj.Manual):
     """
 
 @schema
-class Session(dj.Manual):
+class Session(dj.Entry):
     definition = """
     -> Subject                 # inherits subject_id
     session_idx : int32        # NEW dimension: session_idx
@@ -268,7 +268,7 @@ class Session(dj.Manual):
     """
 
 @schema
-class Trial(dj.Manual):
+class Trial(dj.Entry):
     definition = """
     -> Session                 # inherits subject_id, session_idx
     trial_idx : int32          # NEW dimension: trial_idx
@@ -293,7 +293,7 @@ existing dimension rather than introducing a new one:
 
 ```python
 @schema
-class SubjectProfile(dj.Manual):
+class SubjectProfile(dj.Entry):
     definition = """
     -> Subject                 # PK = (subject_id) only
     ---
@@ -307,14 +307,14 @@ one profile per subject. In schema diagrams, such tables have
 
 ### Autopopulated tables introduce dimensions only through part tables
 
-An autopopulated table — `Computed` or `Imported` — runs its `make()` once per
+An autopopulated table — `Compute` or `Ingest` — runs its `make()` once per
 key in its [`key_source`](../reference/specs/autopopulate.md), so the master's
 primary key is fully inherited from its dependencies. The master introduces no
 dimension of its own:
 
 ```python
 @schema
-class SessionSummary(dj.Computed):
+class SessionSummary(dj.Compute):
     definition = """
     -> Session                 # PK = (subject_id, session_idx)
     ---
@@ -328,7 +328,7 @@ that new dimension goes in a **part table**:
 
 ```python
 @schema
-class Detection(dj.Computed):
+class Detection(dj.Compute):
     definition = """
     -> Image
     -> DetectionParams
@@ -443,7 +443,7 @@ token-issuance protocol for anonymous respondents.
 
 ```python
 # Wrong: experiment_id alone isn't unique
-class Trial(dj.Manual):
+class Trial(dj.Entry):
     definition = """
     experiment_id : int64
     ---
@@ -462,7 +462,7 @@ the key, so a single entity fragments into several records:
 ```python
 # Wrong: `technician` describes who took the reading; it doesn't identify it —
 # the same measurement recorded under two technicians becomes two entities
-class Measurement(dj.Manual):
+class Measurement(dj.Entry):
     definition = """
     subject_id : int32
     timestamp : datetime(6)
@@ -479,7 +479,7 @@ descriptive below the `---`.
 
 ```python
 # Risky: names can change
-class Patient(dj.Manual):
+class Patient(dj.Entry):
     definition = """
     patient_name : varchar(100)   # What if they change their name?
     ---

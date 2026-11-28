@@ -50,10 +50,10 @@
 
   <!-- ============ LEFT PANEL: pipeline diagram (dj.Diagram notation) ============
        Node styling mirrors the modernized dj.Diagram light theme:
-         Manual   rectangle  fill #E8F0E9 stroke #3E7A52
+         Entry   rectangle  fill #E8F0E9 stroke #3E7A52
          Lookup   rectangle  fill #F0F0F1 stroke #808285
-         Imported oval       fill #E0F4FC stroke #00A0DF
-         Computed oval       fill #FFEDE5 stroke #FF5113
+         Ingest oval       fill #E0F4FC stroke #00A0DF
+         Compute oval       fill #FFEDE5 stroke #FF5113
          Part     rectangle  fill #FFFFFF stroke #B9BBBE
        Edge thickness encodes cardinality: thick = 1:1 (the FK is the child's
        whole primary key), thin = one-to-many. A master and its parts sit in a
@@ -73,19 +73,19 @@
     <line x1="250" y1="422" x2="250" y2="448" stroke-width="1.4"/>
   </g>
 
-  <!-- Manual: Subject -->
+  <!-- Entry: Subject -->
   <rect x="135" y="40" width="130" height="44" rx="6" fill="#E8F0E9" stroke="#3E7A52" stroke-width="1.6"/>
   <text x="200" y="69" text-anchor="middle" fill="#28513A" font-weight="600">Subject</text>
 
-  <!-- Manual: Session -->
+  <!-- Entry: Session -->
   <rect x="135" y="110" width="130" height="44" rx="6" fill="#E8F0E9" stroke="#3E7A52" stroke-width="1.6"/>
   <text x="200" y="139" text-anchor="middle" fill="#28513A" font-weight="600">Session</text>
 
-  <!-- Manual: Scan -->
+  <!-- Entry: Scan -->
   <rect x="135" y="180" width="130" height="44" rx="6" fill="#E8F0E9" stroke="#3E7A52" stroke-width="1.6"/>
   <text x="200" y="209" text-anchor="middle" fill="#28513A" font-weight="600">Scan</text>
 
-  <!-- Imported: AverageFrame -->
+  <!-- Ingest: AverageFrame -->
   <ellipse cx="200" cy="290" rx="94" ry="28" fill="#E0F4FC" stroke="#00A0DF" stroke-width="1.6"/>
   <text x="200" y="298" text-anchor="middle" fill="#00537A" font-weight="600">AverageFrame</text>
 
@@ -93,7 +93,7 @@
   <rect x="327" y="256" width="236" height="44" rx="6" fill="#F0F0F1" stroke="#808285" stroke-width="1.6"/>
   <text x="445" y="285" text-anchor="middle" fill="#5A5C5F" font-weight="600">SegmentationParams</text>
 
-  <!-- Computed: Segmentation (master) -->
+  <!-- Compute: Segmentation (master) -->
   <ellipse cx="250" cy="392" rx="102" ry="30" fill="#FFEDE5" stroke="#FF5113" stroke-width="1.6"/>
   <text x="250" y="400" text-anchor="middle" fill="#B23200" font-weight="700">Segmentation</text>
 
@@ -115,7 +115,7 @@
   <g font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace"
      font-size="16" fill="#24292e">
     <text x="610" y="92"><tspan fill="#005cc5">@schema</tspan></text>
-    <text x="610" y="113"><tspan fill="#005cc5">class</tspan> <tspan fill="#6f42c1" font-weight="600">Segmentation</tspan>(dj.Computed):</text>
+    <text x="610" y="113"><tspan fill="#005cc5">class</tspan> <tspan fill="#6f42c1" font-weight="600">Segmentation</tspan>(dj.Compute):</text>
     <text x="648" y="134">definition = <tspan fill="#22863a">"""</tspan></text>
     <text x="648" y="155" fill="#22863a">-&gt; AverageFrame</text>
     <text x="648" y="176" fill="#22863a">-&gt; SegmentationParams</text>

@@ -32,7 +32,7 @@ semantics.
 ## Grammar
 
 A DataJoint schema is declared as a set of table definitions. Each
-table carries a tier — `Manual`, `Lookup`, `Imported`, or `Computed` —
+table carries a tier — `Entry`, `Lookup`, `Ingest`, or `Compute` —
 and a `definition` string that uses a compact data definition language (DDL).
 The DDL distinguishes
 primary key attributes (above `---`) from secondary attributes (below
@@ -42,7 +42,7 @@ pipeline:
 
 ```python
 @schema
-class Scan(dj.Manual):
+class Scan(dj.Entry):
     definition = """
     -> Session
     scan_idx     : int32          # scan within session
@@ -52,7 +52,7 @@ class Scan(dj.Manual):
     """
 
 @schema
-class AverageFrame(dj.Imported):
+class AverageFrame(dj.Ingest):
     definition = """
     -> Scan
     ---
@@ -72,7 +72,7 @@ class SegmentationParam(dj.Lookup):
     """
 
 @schema
-class Segmentation(dj.Computed):
+class Segmentation(dj.Compute):
     definition = """
     -> AverageFrame
     -> SegmentationParam
@@ -86,7 +86,7 @@ class Segmentation(dj.Computed):
 ```
 
 Every element of this excerpt is part of the formal language. The
-tier (`dj.Computed`) is a semantic decoration: the engine will populate
+tier (`dj.Compute`) is a semantic decoration: the engine will populate
 this table automatically by invoking `make()` for every upstream key.
 The arrows are typed foreign keys that inherit the referenced table's
 primary key into the current one — they are simultaneously referential
@@ -152,7 +152,7 @@ forcing eager I/O. See [Type System](type-system.md).
 
 Workflow orchestrators sequence tasks; the schema specifies states.
 `populate()` reads the schema, computes the *key source* — the set of
-upstream keys not yet present in a Computed or Imported table — and
+upstream keys not yet present in a Compute or Ingest table — and
 invokes `make()` on each missing entity until the table is in
 compliance with its declared dependencies. The engine brings the world
 into agreement with the specification, not the other way around. Runs
