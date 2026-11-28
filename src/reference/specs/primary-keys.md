@@ -85,7 +85,7 @@ When both `A → B` and `B → A` hold, the left operand takes precedence (use P
 
 #### Examples
 
-In every example on this page, an attribute that both operands have is inherited through a foreign key on each side, so the two share a lineage. A secondary attribute declared in the table itself has no lineage, and a join on it is rejected (see [Namesakes Without Lineage](semantic-matching.md#namesakes-without-lineage)).
+In every example on this page, an attribute that both operands have is a copy of one declared primary key attribute: declared in one operand and inherited through a foreign key by the other, or inherited by both from a common parent. The two therefore share a lineage. A secondary attribute declared in the table itself has no lineage, and a join on it is rejected (see [Namesakes Without Lineage](semantic-matching.md#namesakes-without-lineage)).
 
 **Example 1: B → A**
 ```
