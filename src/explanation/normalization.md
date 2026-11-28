@@ -462,9 +462,8 @@ Track relationships or assignments that change over time:
 class GroupAssignment(dj.Manual):
     definition = """
     -> Subject
-    assignment_date : date
-    ---
     -> ExperimentalGroup
+    assignment_date : date
     """
 
 @schema

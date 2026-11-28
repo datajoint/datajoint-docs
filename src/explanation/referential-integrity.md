@@ -96,9 +96,9 @@ master and all parts of any master-part entity so reached, subject to the
 shows what the cascade will remove and asks for confirmation, because the
 reach can be large.
 
-A master and its parts leave the database as one entity. Deleting a master row
-removes all of its part rows. A delete that would remove part rows and leave
-their master, whether issued on the part table or reaching the part through
+Deletion is designed to remove a master and its parts as one entity. Deleting
+a master row removes all of its part rows. A delete that would remove part
+rows and leave their master, whether issued on the part table or reaching the part through
 another of its parents, is refused under the default
 `part_integrity="enforce"`. With `part_integrity="cascade"`, the delete
 extends to the master, to all of its parts, and to everything downstream of
@@ -106,9 +106,9 @@ them. The default check compares tables, not rows; the
 [cascade specification](../reference/specs/cascade.md#part_integrity-modes)
 describes the three modes and the cases the check misses.
 
-The restriction falls on the **parent**: a child that is not a part can always
-be deleted without its parent, but deleting a parent takes everything
-downstream with it.
+The restriction falls on the **parent**: deleting a parent takes everything
+downstream with it. A child can be deleted without its parent, subject to
+`part_integrity` when the child is a part or the cascade from it reaches one.
 
 ### 4. Rows change by deletion and reinsertion
 
@@ -124,7 +124,8 @@ quietly rewritten.
 `update1()` is a repair for entry errors. It never changes a primary-key
 value. It can change any secondary attribute, a secondary foreign key
 included, and it does not look for rows that depend on the one it changes.
-Reserve it for a row that nothing depends on.
+Reserve it for a row that nothing depends on, directly or as a part of a master
+that something depends on.
 
 ### 5. Indexing the foreign-key columns
 
@@ -155,7 +156,7 @@ which is also the schema diagram. The foreign-key graph determines what may
 run, what must run first, and what is pending; a person or a scheduler still
 calls `populate()` on each table. Cascade delete acquires the same double
 meaning: removing an invalidated input automatically removes every downstream
-result computed from it, keeping the pipeline consistent without any audit
+result computed from it, so the pipeline stays consistent without an audit
 step. This unification of
 constraint and execution order is what makes lineage and reproducibility
 [structural properties of the schema](relational-workflow-model.md) rather than

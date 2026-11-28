@@ -163,11 +163,11 @@ represents the composite entity; its part tables hold the components produced
 with it. When a master and its parts are populated together by `make()`
 (Computed and Imported tables), their insertion is one transaction, so a partial
 composite is never committed; for Manual master-part sets this atomicity is
-maintained by convention (a single transaction). Deletion keeps the composite
-whole in either case. Deleting a master row removes all of its parts. A delete
-that would remove part rows and leave their master, whether issued on the part
-table or reaching the part through another of its parents, is refused by
-default; the default check compares tables, not rows. With
+maintained by convention (a single transaction). Deletion is designed to keep
+the composite whole in either case. Deleting a master row removes all of its
+parts. A delete that would remove part rows and leave their master, whether
+issued on the part table or reaching the part through another of its parents,
+is refused by default; the default check compares tables, not rows. With
 `part_integrity="cascade"` the delete extends to the master and all of its
 parts.
 See [Master-Part](../reference/specs/master-part.md) and the

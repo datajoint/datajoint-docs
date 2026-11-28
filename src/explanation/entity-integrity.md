@@ -13,9 +13,9 @@ world, so no database can enforce it alone. The primary key gives uniqueness
 inside the database: no two records share a key, and no key value is null. The
 correspondence also needs an **identification process**, the procedure by
 which each entity receives its key. An autopopulated master, and any table
-whose key is inherited whole, takes that process from the tables upstream; the
-members held in the part tables of an autopopulated master are identified by
-the keys `make()` assigns (see [Inherited identity](#inherited-identity)).
+whose key is inherited whole from one parent, takes that process from the
+tables upstream; the members held in the part tables of an autopopulated
+master are identified by the keys `make()` assigns (see [Inherited identity](#inherited-identity)).
 
 ## Two required components
 
@@ -412,8 +412,8 @@ parent's. If entity integrity holds for the parent, it holds for the table,
 with no identification process of its own. `SubjectProfile` above has entity
 integrity whenever `Subject` does.
 
-An autopopulated master inherits identity in the same way. The primary key of a
-`Computed` or `Imported` master combines the keys of its primary parents, so
+An autopopulated master inherits its identity from its primary parents. The
+primary key of a `Computed` or `Imported` master combines their keys, so
 each row corresponds to one combination of parent entities. Its part tables
 add the key attributes that `make()` assigns to the members of the set it
 produces, and `make()` inserts each member once, in the transaction that
@@ -535,9 +535,9 @@ The three questions — *how do I prevent duplicates, prevent record sharing,
 and match entities to records?* — operationalize this definition. The
 primary key, declared above the `---` separator and supplied explicitly at
 insertion, is the database's half of the answer. The real-world process is
-yours to design. A table whose key is inherited whole, and every autopopulated
-master, inherits its identity from the tables upstream; the part tables of an
-autopopulated master add the keys `make()` assigns to the members it produces.
+yours to design. A table whose key is inherited whole from one parent, and
+every autopopulated master, inherits its identity from the tables upstream;
+the part tables of an autopopulated master add the keys `make()` assigns to the members it produces.
 
 ## See also
 
