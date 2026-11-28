@@ -76,6 +76,8 @@ schema_name.table_name.attribute_name
 | Native secondary | `None` |
 | Computed (in projection) | `None` |
 
+Only attributes with a lineage can be matched. A secondary attribute declared in a table describes that table's entities and has no lineage, so two operands that share one are rejected until it is renamed or projected away on one side. The rule holds even when both operands are restrictions of the same table.
+
 ### Example
 
 ```python
@@ -113,7 +115,7 @@ Notice that `Trial.session_id` has the same lineage as `Session.session_id` beca
 | **Homologous attributes** | Attributes with the same lineage |
 | **Namesake attributes** | Attributes with the same name |
 | **Homologous namesakes** | Same name AND same lineage — used for join matching |
-| **Non-homologous namesakes** | Same name BUT different lineage — cause join errors |
+| **Non-homologous namesakes** | Same name BUT different lineage, or no lineage — cause join errors |
 
 ## Semantic Matching Rules
 
@@ -123,7 +125,7 @@ When two expressions are joined, DataJoint checks all namesake attributes (attri
 |----------|--------|
 | Same name, same lineage (both non-null) | **Match** — attributes are joined |
 | Same name, different lineage | **Error** — non-homologous namesakes |
-| Same name, either lineage is null | **Error** — cannot verify homology |
+| Same name, either attribute has no lineage | **Error** — an attribute without lineage is never matched |
 | Different names | **No match** — attributes kept separate |
 
 ## When Semantic Matching Fails
@@ -187,13 +189,19 @@ migrate.rebuild_lineage(schema, dry_run=True)   # show what would change
 migrate.rebuild_lineage(schema, dry_run=False)  # apply
 ```
 
-This is also the recovery path when a join fails with:
+Two errors report a namesake without lineage:
 
+```text
+DataJointError: Cannot join on attribute `X`: neither side inherits it through
+a foreign key, so the two are unrelated. Use .proj() to rename or exclude it on
+one side.
+
+DataJointError: Cannot join on attribute `X`: one side traces it to
+schema.table.X, but the other does not inherit it through a foreign key, so the
+two are unrelated. Use .proj() to rename or exclude it on one side.
 ```
-DataJointError: Cannot join on attribute `X`: lineage missing on one side
-(None vs ...). This usually indicates a stale `~lineage` entry from an older
-DataJoint version or an incomplete declare. Run `schema.rebuild_lineage()` ...
-```
+
+The attribute named is usually a secondary attribute declared in the table, or one computed in a projection. Such an attribute has no lineage, and a rebuild gives it none: rename or exclude it with `.proj()`, as the message says. A rebuild is the remedy only for a primary key attribute, or an attribute inherited through a foreign key, whose `~lineage` row is missing.
 
 `rebuild_lineage()` is safe to run on a healthy schema — it's idempotent and produces the same end state regardless of starting condition.
 

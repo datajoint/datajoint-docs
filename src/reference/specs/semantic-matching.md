@@ -158,7 +158,7 @@ result = A.join(B, semantic_check=False)  # bypass semantic check
 - `other`: Another query expression to join with
 - `semantic_check` (bool): If `True` (default), raise error on non-homologous namesakes. If `False`, perform natural join without lineage checking.
 
-**Raises**: `DataJointError` if `semantic_check=True` and namesake attributes have different lineages.
+**Raises**: `DataJointError` if `semantic_check=True` and namesake attributes have different lineages or no lineage.
 
 #### `expr.restrict(other, semantic_check=True)`
 
@@ -174,7 +174,7 @@ result = A.restrict(B, semantic_check=False)  # bypass semantic check
 - `other`: Restriction condition (expression, dict, string, etc.)
 - `semantic_check` (bool): If `True` (default), raise error on non-homologous namesakes when restricting by another expression. If `False`, no lineage checking.
 
-**Raises**: `DataJointError` if `semantic_check=True` and namesake attributes have different lineages.
+**Raises**: `DataJointError` if `semantic_check=True` and namesake attributes have different lineages or no lineage.
 
 ### Operators
 
@@ -284,6 +284,24 @@ This property is:
 DataJointError: Cannot join on attribute `id`: different lineages
 (university.student.id vs university.course.id).
 Use .proj() to rename one of the attributes.
+```
+
+### Namesakes Without Lineage
+
+A secondary attribute declared in a table and an attribute computed in a projection have no lineage. When both operands have such an attribute under one name:
+
+```text
+DataJointError: Cannot join on attribute `name`: neither side inherits it through
+a foreign key, so the two are unrelated. Use .proj() to rename or exclude it on
+one side.
+```
+
+When one operand's attribute has a lineage and the other's has none:
+
+```text
+DataJointError: Cannot join on attribute `image_id`: one side traces it to
+imaging.image.image_id, but the other does not inherit it through a foreign key,
+so the two are unrelated. Use .proj() to rename or exclude it on one side.
 ```
 
 ### Missing Lineage Warning

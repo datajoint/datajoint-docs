@@ -18,7 +18,7 @@ restricted = original & "session_date > '2024-01-01'"  # New object
 
 ### 1.2 Primary Key Preservation
 
-For most binary operators, the primary key of the result is the primary key of the **left operand**:
+For every operator except join, the primary key of the result is the primary key of the **left operand**:
 
 - `A & condition` → PK(A)
 - `A - condition` → PK(A)
@@ -28,14 +28,16 @@ For most binary operators, the primary key of the result is the primary key of t
 - `A + B` → PK(A) = PK(B)
 - `dj.U('x', 'y') & table` → PK(U) = (x, y)
 
-The **only exception** is **Join** (`A * B`), where the result's primary key depends on functional dependencies between operands:
+The **only exception** is **Join** (`A * B`), where the result's primary key depends on which operand determines the other:
 
 | Condition | Result PK |
 |-----------|-----------|
 | A → B (A determines B) | PK(A) |
-| B → A (B determines A) | PK(B) |
+| B → A only (B determines A) | PK(B) |
 | Both directions | PK(A) |
 | Neither direction | PK(A) ∪ PK(B) |
+
+`A → B` holds when every primary key attribute of B is an attribute of A, primary or secondary. Trial contains Session's primary key, so Trial → Session, and `Session * Trial` has Trial's primary key.
 
 ### 1.3 Lazy Evaluation
 
@@ -64,7 +66,7 @@ result = expression.restrict(condition, semantic_check=True)
 |------|---------|----------|
 | String | `"x > 5"` | SQL WHERE condition |
 | Dict | `{"status": "active"}` | Equality on attributes |
-| QueryExpression | `OtherTable` | Rows with matching keys in other table |
+| QueryExpression | `OtherTable` | Rows that match a row of the other expression on every shared attribute |
 | List/Tuple/Set | `[cond1, cond2]` | OR of conditions |
 | Boolean | `True` / `False` | No effect / empty result |
 | pandas.DataFrame | `df` | OR of row conditions |
@@ -121,7 +123,7 @@ Session & "nonexistent = 'value'"
 
 ### 2.5 Restriction by Query Expression
 
-Restrict to rows with matching primary keys in another expression:
+Restrict to the rows that match at least one row of another expression. Two rows match when they agree on every attribute the expressions share, primary or secondary:
 
 ```python
 # Sessions that have at least one trial
@@ -288,7 +290,7 @@ Cannot exclude primary key attributes.
 ### 4.1 Syntax
 
 ```python
-result = A * B                                    # Inner join
+result = A * B                                    # Join
 result = A.join(B, semantic_check=True, left=False)
 ```
 
@@ -321,12 +323,12 @@ See [Section 9: Semantic Matching](#9-semantic-matching) for details on attribut
 
 ### 4.4 Primary Key Determination
 
-The result's primary key depends on functional dependencies:
+The result's primary key depends on which operand determines the other:
 
 | Condition | Result PK | Attribute Order |
 |-----------|-----------|-----------------|
 | A → B | PK(A) | A's attributes first |
-| B → A | PK(B) | B's attributes first |
+| B → A only | PK(B) | B's attributes first |
 | Both | PK(A) | A's attributes first |
 | Neither | PK(A) ∪ PK(B) | A's PK, then B's additional PK |
 
@@ -335,25 +337,28 @@ The result's primary key depends on functional dependencies:
 ### 4.5 Examples
 
 ```python
-# Session → Trial (Session's PK is subset of Trial's PK)
+# Trial → Session (Trial contains Session's primary key)
 Session * Trial
-# Result PK: (subject_id, session_id) — same as Session
+# Result PK: (subject_id, session_id, trial_id) — same as Trial
 
 # Neither determines the other
 Subject * Experimenter
 # Result PK: (subject_id, experimenter_id) — union of PKs
 ```
 
-### 4.6 Left Join
+### 4.6 Left Join (`.extend()`)
 
 Preserve all rows from left operand:
 
 ```python
-# All sessions, with trial data where available
-Session.join(Trial, left=True)
+# Every trial, with the attributes of its session
+Trial.join(Session, left=True)    # Same as Trial.extend(Session)
+
+# Rejected: trial_id is not an attribute of Session
+Session.join(Trial, left=True)    # DataJointError
 ```
 
-**Constraint**: Left join requires A → B to prevent NULL values in result's primary key.
+**Constraint**: Left join requires A → B to prevent NULL values in result's primary key. To keep every session and summarize its trials, use aggregation: `Session.aggr(Trial, ...)` (§5).
 
 ### 4.7 Semantic Matching
 
@@ -371,7 +376,7 @@ TableA.join(TableB, semantic_check=False)
 
 | Property | Value |
 |----------|-------|
-| Primary Key | Depends on functional dependencies |
+| Primary Key | PK(A) if A → B; otherwise PK(B) if B → A; otherwise PK(A) ∪ PK(B) |
 | Attributes | Union of both operands' attributes |
 | Commutativity | Result rows same, but PK/order may differ |
 
@@ -392,7 +397,7 @@ TableA.join(TableB, semantic_check=False)
 ```python
 result = A.aggr(B, ...)                           # All A attributes
 result = A.aggr(B, 'attr1', 'attr2')              # PK + specified from A
-result = A.aggr(B, ..., count='count(*)')         # With aggregate
+result = A.aggr(B, ..., mean_x='avg(x)')          # With aggregate
 result = A.aggr(B, ..., exclude_nonmatching=True) # Only rows with matches
 ```
 
@@ -401,7 +406,7 @@ result = A.aggr(B, ..., exclude_nonmatching=True) # Only rows with matches
 | Parameter | Default | Description |
 |-----------|---------|-------------|
 | `*attributes` | — | Attributes from A to include |
-| `exclude_nonmatching` | `False` | If True, exclude rows from A that have no matches in B (INNER JOIN). Default keeps all rows (LEFT JOIN). |
+| `exclude_nonmatching` | `False` | If True, exclude rows from A that have no matches in B (INNER JOIN), which returns the same rows as `(A & B).aggr(B, ...)`. Default keeps all rows (LEFT JOIN). |
 | `**named_attributes` | — | Computed aggregates |
 
 ### 5.3 Requirement
@@ -414,7 +419,7 @@ Geometrically, aggregation **reduces the grain**: it projects the finer grain of
 
 ```python
 # Count
-Session.aggr(Trial, n_trials='count(*)')
+Session.aggr(Trial, n_trials='count(trial_id)')
 
 # Sum, average, min, max
 Session.aggr(Trial,
@@ -436,11 +441,13 @@ Session.aggr(Trial, n_correct='sum(correct = 1)')
 ```sql
 SELECT A.pk1, A.pk2, A.secondary, agg_func(B.col) AS new_attr
 FROM A
-[LEFT] JOIN B USING (pk1, pk2)
+[LEFT] JOIN B USING (<shared attributes>)
 WHERE <A restrictions>
 GROUP BY A.pk1, A.pk2
 HAVING <B restrictions>
 ```
+
+The join matches on every attribute that A and B share: A's primary key, which B must contain, and any other attribute of the same name.
 
 ### 5.6 Restriction Behavior
 
@@ -449,10 +456,10 @@ Restrictions on B attributes → HAVING clause (after GROUP BY)
 
 ```python
 # WHERE: only 2024 sessions, then count trials
-(Session & "YEAR(session_date) = 2024").aggr(Trial, n='count(*)')
+(Session & "YEAR(session_date) = 2024").aggr(Trial, n='count(trial_id)')
 
 # HAVING: sessions with more than 10 trials
-Session.aggr(Trial, n='count(*)') & "n > 10"
+Session.aggr(Trial, n='count(trial_id)') & "n > 10"
 ```
 
 ### 5.7 Default Behavior: Keep All Rows
@@ -467,7 +474,7 @@ Session.aggr(Trial, n='count(trial_id)')
 Session.aggr(Trial, n='count(trial_id)', exclude_nonmatching=True)
 ```
 
-Note: Use `count(pk_attr)` rather than `count(*)` to correctly count 0 for sessions without trials. `count(*)` counts all rows including the NULL-filled left join row.
+Note: To count matches, count a primary key attribute of B that is not an attribute of A, such as `trial_id`. `count(*)` returns 1 for a session without trials, because it counts the NULL-filled row of the left join. Counting an attribute that A and B share returns 1 as well: in that row the attribute holds A's value.
 
 ### 5.8 Algebraic Properties
 
@@ -510,10 +517,10 @@ A.join(B, left=True)
 
 ### 6.4 Use Case
 
-Add optional attributes without losing rows:
+Add the attributes of B to every row of A:
 
 ```python
-# Add experimenter info to sessions (some sessions may lack experimenter)
+# Add experimenter attributes to sessions; NULL where a session names no experimenter
 Session.extend(Experimenter)
 ```
 
@@ -552,7 +559,8 @@ result = A + B
 Combines entity sets from both operands:
 
 ```python
-# All subjects that are either mice or rats
+# Mouse and Rat both reference Subject and declare different secondary
+# attributes: one row per subject in either table
 Mouse + Rat
 ```
 
@@ -563,15 +571,16 @@ Mouse + Rat
 | PK only in both | Union of PKs |
 | A has secondary attrs | A's secondaries (NULL for B-only rows) |
 | B has secondary attrs | B's secondaries (NULL for A-only rows) |
-| Overlapping PKs | A's values take precedence |
+| Entity in both A and B | One row with the secondaries of both |
 
 ### 7.5 SQL Implementation
 
 ```sql
 -- With secondary attributes
-(SELECT A.* FROM A LEFT JOIN B USING (pk))
+(SELECT pk, a_secondary, b_secondary FROM A LEFT JOIN B USING (pk))
 UNION
-(SELECT B.* FROM B WHERE (B.pk) NOT IN (SELECT A.pk FROM A))
+(SELECT pk, NULL AS a_secondary, b_secondary FROM B
+ WHERE (pk) NOT IN (SELECT pk FROM A))
 ```
 
 ### 7.6 Algebraic Properties
@@ -597,7 +606,7 @@ UNION
 ### 8.1 Syntax
 
 ```python
-dj.U()                    # Singular entity (one row, no attributes)
+dj.U()                    # Singleton (one row, no attributes)
 dj.U('attr1', 'attr2')    # Set of all combinations
 ```
 
@@ -647,6 +656,8 @@ dj.U('year', 'month').aggr(
 )
 ```
 
+A universal set is for grouping attributes that are the primary key of no table. When a table has them as its primary key, aggregate over that table. `Experimenter.aggr(Session, n='count(session_id)')` returns every experimenter, including those without sessions. `dj.U('experimenter_id').aggr(Session, n='count(*)')` returns only the values of `experimenter_id` present in `Session`.
+
 ### 8.5 Primary Key Behavior
 
 | Usage | Result PK |
@@ -679,11 +690,13 @@ dj.U('invalid') & Student     # Error: 'invalid' not found
 
 ### 9.1 Attribute Lineage
 
-Every attribute has a lineage tracing to its original definition:
+A primary key attribute declared in a table has a lineage that names the table and the attribute:
 
 ```
 schema.table.attribute
 ```
+
+An attribute inherited through a foreign key, into the primary key or as a secondary attribute, keeps the lineage of the parent's attribute. A secondary attribute declared in a table has no lineage, and neither does an attribute computed in a projection or an aggregation. Under the semantic check an attribute without lineage is never matched: operands that share one are rejected.
 
 Foreign key inheritance preserves lineage:
 
@@ -704,10 +717,10 @@ Two attributes are **homologous namesakes** if they have:
 
 ### 9.3 Non-Homologous Namesakes
 
-Attributes with same name but different lineage create semantic collisions:
+Attributes with the same name but different lineage, or with no lineage, create semantic collisions:
 
 ```python
-# Both have 'name' but from different origins
+# Both declare a secondary attribute 'name', which has no lineage
 Student * Course  # Error if both have 'name' attribute
 ```
 
@@ -956,7 +969,7 @@ Session.proj(year='YEAR(session_date)') & "year = 2024"
 **Aggregation special case**: Restrictions after aggregation go to HAVING (MySQL) or require subquery (PostgreSQL):
 
 ```python
-Session.aggr(Trial, n='count(*)') & "n > 10"
+Session.aggr(Trial, n='count(trial_id)') & "n > 10"
 # MySQL:      ... GROUP BY pk HAVING n > 10
 # PostgreSQL: SELECT * FROM (...GROUP BY pk) AS _s1 WHERE n > 10
 ```
@@ -1007,9 +1020,9 @@ Session * Trial
 # SQL: SELECT ... FROM session JOIN trial USING (pk)
 
 # Subquery required: aggregation as join operand
-Session * Session.aggr(Trial, n='count(*)')
+Session * Session.aggr(Trial, n='count(trial_id)')
 # SQL: SELECT ... FROM session JOIN (
-#        SELECT pk, count(*) as n FROM session
+#        SELECT pk, count(trial_id) as n FROM session
 #        LEFT JOIN trial USING (pk) GROUP BY pk
 #      ) AS _s1 USING (pk)
 ```
@@ -1020,7 +1033,7 @@ Aggregation produces a query with `GROUP BY`. The grouped expression is joined:
 
 ```sql
 SELECT A.pk, A.secondary, agg_func(B.col) AS computed
-FROM A LEFT JOIN B USING (pk)
+FROM A LEFT JOIN B USING (<shared attributes>)
 WHERE <restrictions on A attributes>
 GROUP BY A.pk
 HAVING <restrictions on B or computed attributes>
@@ -1121,10 +1134,10 @@ In PostgreSQL, double quotes denote identifiers, not string literals. Dictionary
 Union performs an outer join:
 
 ```sql
-(SELECT A.pk, A.secondary, NULL as B.secondary FROM A)
+(SELECT pk, a_secondary, b_secondary FROM A LEFT JOIN B USING (pk))
 UNION
-(SELECT B.pk, NULL as A.secondary, B.secondary FROM B
- WHERE B.pk NOT IN (SELECT pk FROM A))
+(SELECT pk, NULL AS a_secondary, b_secondary FROM B
+ WHERE (pk) NOT IN (SELECT pk FROM A))
 ```
 
 All union inputs become subqueries except unrestricted unions.
@@ -1171,7 +1184,7 @@ Before execution, `finalize()` recursively projects out unnecessary attributes f
 | Restrict | `A & cond` | PK(A) |
 | Anti-restrict | `A - cond` | PK(A) |
 | Project | `A.proj(...)` | PK(A) |
-| Join | `A * B` | Depends on A→B |
+| Join | `A * B` | PK(A) if A → B; otherwise PK(B) if B → A; otherwise PK(A) ∪ PK(B) |
 | Aggregate | `A.aggr(B, ...)` | PK(A) |
 | Extend | `A.extend(B)` | PK(A) |
 | Union | `A + B` | PK(A) = PK(B) |

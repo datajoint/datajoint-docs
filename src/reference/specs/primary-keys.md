@@ -4,53 +4,58 @@ In DataJoint, the result of each query operator produces a valid **entity set** 
 
 ## General Principle
 
-The primary key of a query result identifies unique entities in that result. For most operators, the primary key is preserved from the left operand. For joins, the primary key depends on the functional dependencies between the operands.
+The primary key of a query result identifies unique entities in that result. For most operators, the primary key is preserved from the left operand. For joins, the primary key depends on which operand determines the other.
 
 ## Integration with Semantic Matching
 
 Primary key determination is applied **after** [semantic compatibility](semantic-matching.md) is verified. The evaluation order is:
 
 1. **Semantic Check**: `assert_join_compatibility()` ensures all namesakes are homologous (same lineage)
-2. **PK Determination**: The functional dependency relationship is computed using attribute names
+2. **PK Determination**: Whether each operand determines the other is computed from attribute names
 3. **Left Join Validation**: If `left=True`, verify A → B
 
 This ordering is important because:
 
 - After semantic matching passes, namesakes represent semantically equivalent attributes
-- The name-based functional dependency check is therefore semantically valid
+- The name-based determination check is therefore semantically valid
 - Attribute names in the context of a semantically-valid join represent the same entity
 
-The functional dependency relationship is derived from the structure of primary keys and secondary attributes and their names in the two operands:
+Which operand determines the other is derived from the structure of primary keys and secondary attributes and their names in the two operands:
 
 - `A → B` holds when every attribute in PK(B) appears (by name) somewhere in A (either as a primary key or secondary attribute)
 - After semantic matching passes, namesakes represent semantically equivalent attributes, so checking by name is valid
-- Renamed attributes (same lineage, different names) don't participate in natural joins
+- Renamed attributes (same lineage, different names) are not namesakes and are not matched
 
 ## Notation
 
 In the examples below, `*` marks primary key attributes:
 
 - `A(x*, y*, z)` means A has primary key `{x, y}` and secondary attribute `z`
-- `A → B` means "A functionally determines B" (defined below)
+- `A → B` means "A determines B" (defined below)
 
 ### Rules by Operator
 
-| Operator | Primary Key Rule |
-|----------|------------------|
-| `A & B` (restriction) | PK(A) — preserved from left operand |
-| `A - B` (anti-restriction) | PK(A) — preserved from left operand |
-| `A.proj(...)` (projection) | PK(A) — preserved from left operand |
-| `A.aggr(B, ...)` (aggregation) | PK(A) — preserved from left operand |
-| `A.extend(B)` (extension) | PK(A) — requires A → B |
-| `A * B` (join) | Depends on functional dependencies (see below) |
+| Operator | Requires | Primary Key | Entity Type |
+|----------|----------|-------------|-------------|
+| `A & c` (restriction) | — | PK(A) | A's |
+| `A - c` (anti-restriction) | — | PK(A) | A's |
+| `A.proj(...)` (projection) | Keeps PK(A); its attributes may be renamed | PK(A), as renamed | A's |
+| `A * B` (join) | — | PK(A) if A → B; otherwise PK(B) if B → A; otherwise PK(A) ∪ PK(B) | A's if A → B; B's if only B → A; otherwise pairs of one A entity and one B entity |
+| `A.extend(B)` (extension) | A → B | PK(A) | A's |
+| `A.aggr(B, ...)` (aggregation) | B → A | PK(A) | A's |
+| `A + B` (union) | PK(A) = PK(B); no secondary attributes in common | PK(A) | The one that the shared primary key identifies |
+| `dj.U(X) & A` (universal set, restricted) | X among A's attributes | X | Combinations of values of X |
+| `dj.U(X).aggr(B, ...)` (universal set, aggregated) | X among B's attributes | X | Combinations of values of X |
+
+The condition `c` is a string, a dictionary, a query expression, or a collection of these. X stands for the attributes named in `dj.U(...)`.
 
 ### Join Primary Key Rule
 
-The join operator requires special handling because it combines two entity sets. The primary key of `A * B` depends on the **functional dependency relationship** between the operands.
+The join operator requires special handling because it combines two entity sets. The primary key of `A * B` depends on which operand **determines** the other.
 
 #### Definitions
 
-**A → B (A functionally determines B)**: Every attribute in PK(B) is in A.
+**A → B (A determines B)**: Every attribute in PK(B) is in A.
 
 ```
 A → B  iff  ∀b ∈ PK(B): b ∈ A
@@ -58,9 +63,9 @@ A → B  iff  ∀b ∈ PK(B): b ∈ A
 
 Since `PK(A) ∪ secondary(A) = all attributes in A`, this is equivalent to saying every attribute in B's primary key exists somewhere in A (as either a primary key or secondary attribute).
 
-Intuitively, `A → B` means that knowing A's primary key is sufficient to determine B's primary key through the functional dependencies implied by A's structure.
+Each entity of A then matches at most one entity of B, because A's attributes hold the primary key of its match. The test reads the operands' headings, never their contents.
 
-**B → A (B functionally determines A)**: Every attribute in PK(A) is in B.
+**B → A (B determines A)**: Every attribute in PK(A) is in B.
 
 ```
 B → A  iff  ∀a ∈ PK(A): a ∈ B
@@ -110,7 +115,7 @@ B: z*, x    (x is secondary in B)
 - B → A? PK(A) = {x, y}. Is y in PK(B) or secondary in B? No (y not in B). **No.**
 - Result: **PK(A * B) = {x, y, z}** (union) with A's attributes first.
 
-**Example 4: A → B (subordinate relationship)**
+**Example 4: B → A (each Trial belongs to one Session)**
 ```
 Session: session_id*
 Trial: session_id*, trial_num*    (references Session)
@@ -158,7 +163,7 @@ This creates confusion: what kind of entity does `{y, z}` identify?
 - Contains A's full primary key and B's full primary key
 - May have redundancy (`x` is determined by `z`) but is semantically clear
 
-**Rationale:** Users can always project away redundant attributes if they need the minimal key. But starting with a predictable, interpretable primary key reduces confusion and errors.
+**Rationale:** A predictable, interpretable primary key reduces confusion and errors. Projection keeps the whole primary key, so a query that needs the smaller key constructs it explicitly, as `dj.U('y', 'z') & (A * B)`.
 
 ### Attribute Ordering
 
@@ -172,14 +177,14 @@ The primary key attributes always appear **first** in the result's attribute lis
 
 With these rules, join is **not commutative** in terms of:
 
-1. **Primary key selection**: `A * B` may have a different PK than `B * A` when functional dependency holds in one direction but not the other
+1. **Primary key selection**: `A * B` and `B * A` have different primary keys only when both `A → B` and `B → A` hold and PK(A) ≠ PK(B): each order takes its left operand's key. When the dependency holds in one direction only, or in neither, both orders have the same primary key attributes
 2. **Attribute ordering**: The left operand's attributes appear first (unless B → A)
 
 The **result set** (the actual rows returned) remains the same regardless of order, but the **schema** (primary key and attribute order) may differ.
 
 ### Left Join Constraint
 
-For left joins (`A.join(B, left=True)`), the functional dependency **A → B is required**.
+For left joins (`A.join(B, left=True)`), the condition **A → B is required**.
 
 **Why this constraint exists:**
 
@@ -205,15 +210,17 @@ Left join attempt: FAILS because z could be NULL for unmatched A rows
 Session: session_id*, date
 Trial: session_id*, trial_num*, stimulus    (references Session)
 
-Session.join(Trial, left=True)  # OK: Session → Trial
-# PK = {session_id}, all sessions retained even without trials
+Trial.join(Session, left=True)  # OK: Trial → Session
+# PK = {session_id, trial_num}, every trial retained
+
+Session.join(Trial, left=True)  # Error: trial_num is not in Session
 ```
 
 **Error message:**
 ```
 DataJointError: Left join requires the left operand to determine the right operand (A → B).
-The following attributes from the right operand's primary key are not determined by
-the left operand: ['z']. Use an inner join or restructure the query.
+The following attributes from the right operand's primary key are not in the left
+operand: ['z']. Use an inner join or restructure the query.
 ```
 
 ### Conceptual Note: Left Join as Extension
@@ -224,7 +231,7 @@ When `A → B`, the left join `A.join(B, left=True)` is conceptually distinct fr
 |--------|---------------------|----------------------|
 | Conceptual model | Cartesian product restricted to matching rows | Extend A with attributes from B |
 | Row count | May increase, decrease, or stay same | Always equals len(A) |
-| Primary key | Depends on functional dependencies | Always PK(A) |
+| Primary key | Depends on which operand determines the other | Always PK(A) |
 | Relation to projection | Different operation | Variation of projection |
 
 **The extension perspective:**
@@ -295,7 +302,7 @@ A.join(B, left=True, allow_nullable_pk=True)  # PK = PK(A) ∪ PK(B)
 
 #### When to Use It
 
-This parameter is primarily **internal**. It exists because aggregation (`aggr`) needs a left join but has the opposite functional dependency requirement (`B → A` instead of `A → B`). The bypass is safe in aggregation because the `GROUP BY` clause resets the primary key to `PK(A)`.
+This parameter is primarily **internal**. It exists because aggregation (`aggr`) needs a left join but has the opposite requirement (`B → A` instead of `A → B`). The bypass is safe in aggregation because the `GROUP BY` clause resets the primary key to `PK(A)`.
 
 Users should generally avoid this parameter. If you need left join behavior without `A → B`:
 

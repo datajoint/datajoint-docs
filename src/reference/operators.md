@@ -12,7 +12,9 @@ DataJoint provides a small set of operators for querying data. All operators ret
 | Join | `A * B` | Combine tables on matching attributes |
 | Extension | `A.extend(B)` | Add attributes from B, keeping all rows of A |
 | Aggregation | `A.aggr(B, ...)` | Group B by A's primary key and compute summaries |
-| Union | `A + B` | Combine entity sets |
+| Union | `A + B` | Combine entity sets that have the same primary key |
+| Universal set | `dj.U('x') & A` | Distinct values of x in A, keyed by x |
+| | `dj.U('x').aggr(B, ...)` | Group B by x and compute summaries |
 
 ---
 
@@ -29,7 +31,7 @@ Session & "duration BETWEEN 30 AND 60"
 Session & {'subject_id': 'M001'}
 Session & {'subject_id': 'M001', 'session_idx': 1}
 
-# Query expression (matching keys)
+# Query expression (rows that match on every shared attribute)
 Session & Subject                    # Sessions for subjects in Subject table
 Session & (Subject & "sex = 'M'")    # Sessions for male subjects
 
@@ -150,13 +152,21 @@ Subject * Session * Experimenter
 (Subject & "sex = 'M'") * Session
 ```
 
-**Primary key of result**: Determined by functional dependencies between operands. See [Query Algebra Specification](specs/query-algebra.md) for details.
+**Primary key of result**: `A` determines `B` (`A → B`) when every primary key attribute of `B` is an attribute of `A`, primary or secondary.
+
+| Condition | Primary key of `A * B` |
+|-----------|------------------------|
+| `A → B` | PK(A) |
+| `B → A` only | PK(B) |
+| Neither | PK(A) ∪ PK(B) |
+
+`Subject * Session` has Session's primary key, because Session contains Subject's primary key. See [Primary Keys](specs/primary-keys.md) for details.
 
 ---
 
 ## Extension (`.extend()`)
 
-Add attributes from another table while preserving all rows. This is useful for adding optional attributes.
+Add attributes from another table while preserving all rows. The added attributes are NULL in rows of A that match no row of B.
 
 ```python
 # Add experimenter info to sessions
@@ -190,7 +200,7 @@ Session.aggr(
 Subject.aggr(Session, n_sessions='count(session_idx)')
 ```
 
-**Default behavior**: Keeps all rows from the grouping table (left operand), even those without matches. Use `count(pk_attribute)` to get 0 for entities without matches.
+**Default behavior**: Keeps all rows from the grouping table (left operand), even those without matches. To get 0 for entities without matches, count a primary key attribute of B that is not in A, such as `session_idx`. `count(*)` returns 1 for them, because it counts the NULL-filled row of the left join.
 
 ```python
 # All subjects, including those with 0 sessions
@@ -205,7 +215,7 @@ Subject.aggr(Session, n_sessions='count(session_idx)', exclude_nonmatching=True)
 | Function | Description |
 |----------|-------------|
 | `count(attr)` | Count non-NULL values |
-| `count(*)` | Count all rows (including NULL) |
+| `count(*)` | Count all rows, including the NULL-filled row of an unmatched entity |
 | `sum(attr)` | Sum of values |
 | `avg(attr)` | Average |
 | `min(attr)` | Minimum |
@@ -220,7 +230,8 @@ Subject.aggr(Session, n_sessions='count(session_idx)', exclude_nonmatching=True)
 Combine entity sets from two tables with the same primary key.
 
 ```python
-# All subjects that are either mice or rats
+# Mouse and Rat both reference Subject and declare different secondary
+# attributes: one row per subject in either table
 Mouse + Rat
 ```
 
@@ -228,6 +239,8 @@ Mouse + Rat
 
 - Same primary key attributes
 - No overlapping secondary attributes
+
+An entity present in both operands appears once, with the secondary attributes of both. An entity present in only one has NULL in the other's secondary attributes.
 
 ---
 
@@ -250,10 +263,9 @@ dj.U('year', 'month') & Session.proj(year='YEAR(session_date)', month='MONTH(ses
 ```python
 # Count sessions by date (session_date is not a primary key)
 dj.U('session_date').aggr(Session, n='count(session_idx)')
-
-# Count by experimenter
-dj.U('experimenter_id').aggr(Session, n='count(session_idx)')
 ```
+
+Use `dj.U` when no table has the grouping attributes as its primary key. When one does, aggregate over that table: `Experimenter.aggr(Session, n='count(session_idx)')` returns every experimenter, including those without sessions, whereas `dj.U('experimenter_id').aggr(Session, n='count(*)')` returns only the experimenters that appear in `Session`.
 
 ### Universal Aggregation (Single Row Result)
 
@@ -295,7 +307,7 @@ Subject * Session & condition    # Same as: (Subject * Session) & condition
 
 ## Semantic Matching
 
-DataJoint uses **semantic matching** for joins and restrictions by query expression. Attributes match only if they have:
+DataJoint uses **semantic matching** for joins, restrictions and anti-restrictions by query expression, extensions, and aggregations. Attributes match only if they have:
 
 1. The same name
 2. The same origin (traced through foreign key lineage)
@@ -306,7 +318,7 @@ This prevents accidental matches on attributes that happen to share names but re
 # These match on subject_id because Session references Subject
 Subject * Session  # Correct: subject_id has same lineage
 
-# These would error if both have 'name' from different origins
+# A secondary attribute that a table declares has no origin to share
 Student * Course   # Error if both define their own 'name' attribute
 ```
 
