@@ -11,10 +11,12 @@ Primary key attributes:
 - Cannot be changed after insertion
 - Are inherited by dependent tables via foreign keys
 
-The primary key is how a table enforces
+The primary key is the database's part of
 [entity integrity](../explanation/entity-integrity.md) — the one-to-one
-correspondence between rows and the real-world entities they represent. Every
-principle below follows from that responsibility.
+correspondence between rows and the real-world entities they represent. It
+keeps key values unique and non-null. The correspondence also needs an
+identification process that gives the same entity the same key every time and
+never gives two entities the same key. The principles below serve both.
 
 ## Natural Keys
 
@@ -173,8 +175,9 @@ class Scan(dj.Manual):
 
 ## See Also
 
-- [Entity Integrity](../explanation/entity-integrity.md) — why every table needs
-  a primary key and how it enforces the one-to-one correspondence with entities
+- [Entity Integrity](../explanation/entity-integrity.md) — what the primary key
+  contributes to the one-to-one correspondence with entities, and what the
+  identification process must supply
 - [Normalization](../explanation/normalization.md) — organizing attributes so
   each fact lives in exactly one place
 - [Define Tables](define-tables.md) — Table definition syntax
