@@ -140,8 +140,7 @@ Session.extend(Experimenter)
 
 ```python
 result = (
-    Subject
-    & "sex = 'M'"
+    (Subject & "sex = 'M'")
     * Session
     & "duration > 30"
 ).proj('species', 'session_date', 'duration')
@@ -159,7 +158,7 @@ Use parentheses for clarity:
 
 ```python
 (Subject & condition) * Session    # Restrict then join
-Subject * (Session & condition)    # Join then restrict
+Subject * (Session & condition)    # Restrict Session, then join
 ```
 
 ## View Query

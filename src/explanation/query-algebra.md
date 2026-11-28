@@ -1,10 +1,10 @@
 # Query Algebra
 
-DataJoint provides a powerful query algebra built on five core operators: restriction, join, projection, aggregation, and union. These operators work on **entity sets** (query expressions) and always return entity sets, enabling arbitrary composition.
+DataJoint queries are written in a query algebra whose operators are restriction, anti-restriction, projection, join, extension, aggregation, and union. The universal set `dj.U` supplies an entity set for attributes that are the primary key of no table. Every operator takes **entity sets** (tables and other query expressions) and returns an entity set, so any result can be the operand of another operator.
 
 ## Algebraic Closure
 
-A fundamental property of DataJoint's query algebra is **algebraic closure**: every query result is itself a valid entity set with a well-defined **entity type** — you always know what kind of entity the result represents, identified by a specific primary key. Unlike SQL where query results are unstructured "bags of rows," DataJoint determines the entity type of each result based on the operator and the functional dependencies between operands.
+A fundamental property of DataJoint's query algebra is **algebraic closure**: every query result is itself a valid entity set with a well-defined **entity type** — you always know what kind of entity the result represents, identified by a specific primary key. Unlike SQL where query results are unstructured "bags of rows," DataJoint determines the entity type of each result from the operator and from which operand determines the other.
 
 This means operators can be chained indefinitely — the output of any operation is a valid input to any other operation. See [Primary Keys](../reference/specs/primary-keys.md/) for the precise rules.
 
@@ -14,23 +14,27 @@ This means operators can be chained indefinitely — the output of any operation
 graph LR
     A[Entity Set] --> R[Restriction &]
     A --> J[Join *]
-    A --> E[Extend .extend]
+    A --> E[Extension .extend]
     A --> P[Projection .proj]
     A --> G[Aggregation .aggr]
     A --> U[Union +]
+    A --> V[Universal set dj.U]
     R --> B[Entity Set]
     J --> B
     E --> B
     P --> B
     G --> B
     U --> B
+    V --> B
 ```
 
-## Restriction (`&` and `-`)
+## Restriction and Anti-restriction (`&`, `-`)
 
 Filter entities based on conditions.
 
-### Include (`&`)
+### Restriction (`&`)
+
+`A & c` keeps the entities of `A` that match the condition `c`.
 
 ```python
 # Mice born after 2024
@@ -43,7 +47,9 @@ Session & {'mouse_id': 42}
 Session & (Mouse & "strain = 'C57BL/6'")
 ```
 
-### Exclude (`-`)
+### Anti-restriction (`-`)
+
+`A - c` keeps the entities of `A` that do not match it.
 
 ```python
 # Mice NOT in the study
@@ -85,9 +91,31 @@ DataJoint joins are **natural joins** that:
 - Respect declared dependencies (no accidental matches)
 - Produce the intersection of matching entities
 
-### Extend (`.extend()`)
+### Primary Key of a Join
 
-Add attributes from another entity set while preserving all entities in the original set.
+`A` **determines** `B`, written `A → B`, when every primary key attribute of `B` is an attribute of `A`, primary or secondary. Each entity of `A` then matches at most one entity of `B`.
+
+| Case | Primary key of `A * B` | Each row is |
+|------|------------------------|-------------|
+| `A → B` | PK(A) | An entity of `A` |
+| `B → A` only | PK(B) | An entity of `B` |
+| Neither | PK(A) ∪ PK(B) | A pair: one entity of `A` and one of `B` |
+
+```python
+# Trial contains Session's primary key, so Trial → Session
+Session * Trial
+# PK: (session_id, trial_num), the same as Trial's: one row per trial
+
+# Neither determines the other
+Mouse * Experimenter
+# PK: (mouse_id, experimenter_id): one row per pair
+```
+
+`A * B` and `B * A` return the same rows. See [Primary Keys](../reference/specs/primary-keys.md) for the full rule, with examples of each case.
+
+## Extension (`.extend()`)
+
+Attach the attributes of another entity set to every entity of the left operand.
 
 ```python
 # Add session info to each trial
@@ -99,26 +127,26 @@ SpikeTime.extend(Neuron)  # Adds cell_type, depth to SpikeTime
 
 **How it differs from join:**
 
-- **Join (`*`)**: Returns only matching entities (inner join), primary key is the union of both PKs
-- **Extend**: Returns all entities from the left side (left join), primary key stays as the left side's PK
+- **Join (`*`)**: Returns only the entities that match. The primary key follows the rule above.
+- **Extension**: Returns every entity of the left operand, with NULL in the added attributes where nothing matches. The primary key is the left operand's.
 
 **Primary key formation:**
 
 ```python
-# Join: PK is union of both primary keys
+# Join: Trial determines Session, so the PK is Trial's
 result = Session * Trial
 # PK: (session_id, trial_num)
 
-# Extend: PK stays as left side's PK
+# Extension: PK stays as the left operand's
 result = Trial.extend(Session)
 # PK: (session_id, trial_num) - same as Trial
 # session_date is added as a non-primary attribute
 ```
 
-**Requirement:** The left side must **determine** the right side. This means all primary key attributes from the right side must exist in the left side. This requirement ensures:
+**Requirement:** The left operand must **determine** the right operand: every primary key attribute of the right operand must exist in the left operand. This requirement ensures:
 
-1. Every entity in the left side can match at most one entity in the right side
-2. The left side's primary key uniquely identifies entities in the result
+1. Every entity in the left operand can match at most one entity in the right operand
+2. The left operand's primary key uniquely identifies entities in the result
 3. No NULL values appear in the result's primary key
 
 ```python
@@ -134,13 +162,24 @@ Session.extend(Trial)  ✗  # Error: trial_num not in Session
 # A session has multiple trials - PK would be ambiguous
 ```
 
-**Why use extend?**
+A join drops the entities of the left operand that have no match, and extension keeps them. An entity has no match when its optional reference is empty, when the right operand is restricted, or when the two tables share a parent and the right one has no row for the entity.
 
-1. **Preserve all entities**: When you need attributes from a parent but want to keep all children (even orphans)
-2. **Clear intent**: Expresses "add attributes" rather than "combine entity sets"
-3. **No filtering**: Guarantees the same number of entities in the result
+```python
+# Session declares an optional reference: -> [nullable] Experimenter
+Session * Experimenter         # Only the sessions that name an experimenter
+Session.extend(Experimenter)   # Every session; NULL where none is named
 
-Think of extend as projection-like: it adds attributes to existing entities without changing which entities are present.
+# Restricted right operand
+Trial.extend(Session & "session_date > '2024-01-01'")
+# Every trial; session_date is NULL for trials of sessions on or before that date
+```
+
+!!! version-changed "Changed after 2.3.6"
+    Through release 2.3.6, a restriction on the right operand is applied after the left join, which drops the entities of the left operand that the restriction leaves without a match, as a join does. The same holds for aggregation and for a union of operands with secondary attributes, which use the same left join. Later releases keep these entities.
+
+When every entity of the left operand has a match, as under a required foreign key to an unrestricted table, `A.extend(B)` returns the same rows as `A * B`.
+
+Extension is projection-like: it adds attributes to existing entities without changing which entities are present.
 
 ## Projection (`.proj()`)
 
@@ -173,46 +212,65 @@ Session.proj(
 ### Aggregate in projection
 
 ```python
-# Count recordings per session
-Session.aggr(Recording, n_recordings='COUNT(*)')
+# Count trials per session
+Session.aggr(Trial, n_trials='COUNT(trial_num)')
 ```
 
 ## Aggregation (`.aggr()`)
 
-Summarize across groups.
+`A.aggr(B, ...)` computes, for each entity of `A`, summaries over the entities of `B` that match it. `B` must contain every primary key attribute of `A`. The result has one row per entity of `A`, with `A`'s primary key. An entity with no match is kept and summarized over no entities: a count of its matches is zero, and an aggregate that is undefined over an empty set, such as an average, is NULL.
 
 ```python
-# Average spike rate per neuron
-Neuron.aggr(
-    SpikeTime,
-    avg_rate='AVG(spike_rate)',
-    total_spikes='COUNT(*)'
-)
-
-# Statistics per session
+# Trials per session and their success rate
 Session.aggr(
     Trial,
-    n_trials='COUNT(*)',
+    n_trials='COUNT(trial_num)',
     success_rate='AVG(success)'
 )
+
+# Average spike rate per neuron
+Neuron.aggr(SpikeTime, avg_rate='AVG(spike_rate)')
 ```
+
+To count matches, count a primary key attribute of `B` that `A` does not have, such as `trial_num`. `COUNT(*)` returns 1 for an entity with no match, because it counts the row that the underlying left join pads with NULLs.
 
 ## Union (`+`)
 
-Combine entity sets with the same attributes.
+Combine two entity sets that have the same primary key and no secondary attributes in common. An entity present in both operands appears once, with the secondary attributes of both. An entity present in only one has NULL in the other's secondary attributes.
 
 ```python
-# All subjects from two studies
-StudyA_Subjects + StudyB_Subjects
+# Both tables are keyed by Session's primary key and declare different
+# secondary attributes: one row per session that has either summary
+BehaviorSummary + ImagingSummary
 
-# Combine results from different analyses
-AnalysisV1 + AnalysisV2
+# Both keyed by Session's primary key, with secondary attributes of the
+# same names: combine their keys
+AnalysisV1.proj() + AnalysisV2.proj()
 ```
 
 Requirements:
 
-- Same primary key structure
-- Compatible attribute types
+- The same primary key
+- No secondary attribute names in common
+
+## Universal Sets (`dj.U`)
+
+`dj.U('a', 'b')` stands for the entity set of all value combinations of the named attributes, with those attributes as its primary key. It appears in two forms: restricted by a query expression, and as the left operand of an aggregation.
+
+```python
+# The distinct session dates, as an entity set keyed by session_date
+dj.U('session_date') & Session
+
+# Sessions per date
+dj.U('session_date').aggr(Session, n='COUNT(*)')
+
+# One row that summarizes all sessions
+dj.U().aggr(Session, n='COUNT(*)', mean_duration='AVG(duration)')
+```
+
+A universal set is for grouping attributes that are the primary key of no table. When a table has them as its primary key, aggregate over that table: `Experimenter.aggr(Session, n='COUNT(session_id)')` returns every experimenter, including those with no sessions, whereas `dj.U('experimenter_id').aggr(Session, n='COUNT(*)')` returns only the experimenters that appear in `Session`.
+
+See the [Query Algebra Specification](../reference/specs/query-algebra.md#8-universal-sets-dju) for the accepted and rejected forms.
 
 ## Operator Composition
 
@@ -239,7 +297,7 @@ See [Semantic Matching](semantic-matching.md) for details.
 
 These concepts were first introduced in Yatsenko et al., 2018[^1].
 
-[^1]: Yatsenko D, Walker EY, Tolias AS (2018). DataJoint Elements: Data Workflows for Neurophysiology. [arXiv:1807.11104](https://doi.org/10.48550/arXiv.1807.11104)
+[^1]: Yatsenko D, Walker EY, Tolias AS (2018). DataJoint: A Simpler Relational Data Model. [arXiv:1807.11104](https://doi.org/10.48550/arXiv.1807.11104)
 
 ## Fetching Results
 
@@ -266,12 +324,11 @@ row = (query & key).fetch1()
 
 | Operator | Symbol/Method | Purpose |
 |----------|---------------|---------|
-| Restriction | `&`, `-` | Filter entities |
-| Join | `*` | Combine entity sets (inner join) |
-| Extend | `.extend()` | Add attributes (left join) |
-| Projection | `.proj()` | Select/transform attributes |
-| Aggregation | `.aggr()` | Summarize groups |
-| Union | `+` | Combine parallel sets |
-
-These core operators, combined with workflow-aware join semantics, provide
-complete query capability for scientific data pipelines.
+| Restriction | `&` | Keep the entities that match a condition |
+| Anti-restriction | `-` | Keep the entities that do not match it |
+| Join | `*` | Combine the matching entities of two sets |
+| Extension | `.extend()` | Add another set's attributes, keeping every entity |
+| Projection | `.proj()` | Select, rename, and compute attributes |
+| Aggregation | `.aggr()` | Summarize the matching entities of another set |
+| Union | `+` | Combine sets that have the same primary key |
+| Universal set | `dj.U()` | Key an entity set by attributes that are the primary key of no table |
