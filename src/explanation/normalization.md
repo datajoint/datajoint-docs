@@ -79,9 +79,9 @@ Peter Chen's Entity-Relationship Model (1976) reframes normalization around the
 - **Completely** — the attribute depends on the entire key, not a part of it.
   This is the entity-level reading of 2NF.
 - **Non-optionally** — the attribute applies to every instance of the entity
-  type. A nullable attribute is for a value that may be unknown when a
-  particular instance is entered. Attributes that are `NULL` for many rows are
-  a hint that two entity types have been folded together.
+  type. A nullable attribute is for a value that may be unknown, or may not
+  apply, when a particular instance is entered. Attributes that are `NULL` for
+  many rows are a hint that two entity types have been folded together.
 
 A relationship with its own attributes is itself an entity type. An enrollment
 that carries a `grade` is not merely an edge between `Student` and `Course`; it
@@ -326,7 +326,7 @@ step at which each fact arises. `Order` identifies each order, and `Payment`,
 step before it one to one. Every attribute is non-nullable, because a row exists
 only once its step has actually happened. There are no `NULL`s standing in for
 "not yet," no updates as the order advances, and the order of operations is
-enforced by construction. As a bonus, workflow state becomes a query:
+enforced by construction. Workflow state becomes a query:
 paid-but-not-yet-shipped orders are simply `Payment - Shipment`.
 
 Null keeps one meaning: the value was not provided when the row was created,
@@ -489,8 +489,11 @@ class HousingAssignment(dj.Manual):
 **Key pattern:** The relationship itself (subject-to-group, animal-to-cage) is **not intrinsic** to either entity. It's a temporal event that happens during the workflow.
 
 The end of an assignment is a later event, so it is a row of a later table.
-`GroupRemoval` takes its entire primary key from `GroupAssignment`, and the
-assignments still in force are `GroupAssignment - GroupRemoval`. A nullable
+`GroupRemoval` takes its entire primary key from `GroupAssignment`. A subject
+may belong to several groups at once, so a new group assignment does not end an
+earlier one, as a new cage assignment does; each group assignment ends with its
+own `GroupRemoval` row, and the assignments still in force are
+`GroupAssignment - GroupRemoval`. A nullable
 `removal_date` on `GroupAssignment` would make null stand for "not yet" and
 would need an update to fill.
 

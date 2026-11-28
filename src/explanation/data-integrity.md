@@ -140,8 +140,11 @@ DataJoint declares references with the foreign-key arrow `->`, which inherits
 the referenced table's primary key into the dependent table and enforces that
 the referenced row exists before a dependent row can be inserted. Removal is
 symmetric: deleting a row **cascades** to everything downstream of it, which
-is every row that references it directly or through other rows, so the
-database never enters a state with orphaned references. This is a
+is every row that references it, directly or through other rows, together with
+the master and all parts of any master-part entity so reached, subject to the
+`part_integrity` mode described under
+[compositional integrity](#5-compositional-integrity). The database therefore
+never enters a state with orphaned references. This is a
 row-level guarantee: objects held in integrated object storage are *not* removed
 synchronously with their rows (hash-addressed storage is deduplicated, and
 immediate deletion is unsafe under concurrency) — they are reclaimed
@@ -164,8 +167,9 @@ maintained by convention (a single transaction). Deletion keeps the composite
 whole in either case. Deleting a master row removes all of its parts. A delete
 that would remove part rows and leave their master, whether issued on the part
 table or reaching the part through another of its parents, is refused by
-default; with `part_integrity="cascade"` it extends to the master and all of
-its parts.
+default; the default check compares tables, not rows. With
+`part_integrity="cascade"` the delete extends to the master and all of its
+parts.
 See [Master-Part](../reference/specs/master-part.md) and the
 [`part_integrity` modes](../reference/specs/cascade.md#part_integrity-modes).
 
@@ -195,7 +199,9 @@ The same foreign-key graph that enforces referential integrity is a
 is acyclic, there is always a valid sequence in which entities can be
 created. Each table's `populate()` computes only the keys whose upstream rows
 exist, so populating the tables in dependency order completes the workflow,
-and cascade deletes remove downstream results when their inputs are deleted.
+apart from keys whose `make()` fails. With job reservation, a failed key is
+held in an error state until it is cleared. Cascade deletes remove downstream
+results when their inputs are deleted.
 The dependency graph and the pipeline are the same object, which is why
 results stay traceable to their declared inputs and remain reproducible. See
 [The Relational Workflow Model](relational-workflow-model.md).

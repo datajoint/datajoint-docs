@@ -90,7 +90,9 @@ The mirror of the insert rule: a parent cannot leave dependent children
 stranded. Standard SQL rejects a delete that would orphan children. DataJoint
 instead **cascades** the delete. Deleting a row removes everything downstream
 of it: every row that references it, and every row that references those,
-through secondary foreign keys as through primary ones. By default, `delete()`
+through secondary foreign keys as through primary ones, together with the
+master and all parts of any master-part entity so reached, subject to the
+`part_integrity` mode in the next paragraph. By default, `delete()`
 shows what the cascade will remove and asks for confirmation, because the
 reach can be large.
 
@@ -108,7 +110,7 @@ The restriction falls on the **parent**: a child that is not a part can always
 be deleted without its parent, but deleting a parent takes everything
 downstream with it.
 
-### 4. Rows are not edited in place
+### 4. Rows change by deletion and reinsertion
 
 A child row is created in view of its parent row as a whole: a computation
 reads the parent's attributes, not only its key. Editing a parent row in place
