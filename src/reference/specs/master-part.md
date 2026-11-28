@@ -13,11 +13,11 @@ Master-Part relationships model compositional data where a master entity contain
 
 ### 1.1 Master Table
 
-Any table class (`Manual`, `Lookup`, `Imported`, `Computed`) can serve as a master:
+Any table class (`Entry`, `Lookup`, `Ingest`, `Compute`) can serve as a master:
 
 ```python
 @schema
-class Session(dj.Manual):
+class Session(dj.Entry):
     definition = """
     subject_id : varchar(16)
     session_idx : int16
@@ -32,7 +32,7 @@ Part tables are nested classes inheriting from `dj.Part`:
 
 ```python
 @schema
-class Session(dj.Manual):
+class Session(dj.Entry):
     definition = """
     subject_id : varchar(16)
     session_idx : int16
@@ -87,9 +87,9 @@ Master-Part relationships enforce **compositional integrity**:
 3. **Atomicity**: Master and parts form a logical unit
 4. **Transitive completeness**: a dependency on the master is a dependency on all of its parts
 
-For Computed and Imported tables, a master and its parts are inserted
+For Compute and Ingest tables, a master and its parts are inserted
 atomically: `populate()` wraps each `make()` call in a transaction, so the
-master and all of its parts commit together or not at all. For Manual
+master and all of its parts commit together or not at all. For Entry
 master-part sets this atomicity is a convention rather than an enforced
 guarantee — insert the master and its parts within a single transaction
 (`with schema.connection.transaction:`) to preserve it. Deletion cascades in either
@@ -146,12 +146,12 @@ with schema.connection.transaction:
     Session.Trial.insert(trials_data)
 ```
 
-### 3.3 Computed Tables with Parts
+### 3.3 Compute Tables with Parts
 
 In `make()` methods, use `self.insert1()` for master and `self.PartName.insert()` for parts:
 
 ```python
-class ProcessedSession(dj.Computed):
+class ProcessedSession(dj.Compute):
     definition = """
     -> Session
     ---
@@ -343,7 +343,7 @@ Session.aggr(
 ### 7.2 Naming Conventions
 
 ```python
-class Master(dj.Manual):
+class Master(dj.Entry):
     class Detail(dj.Part):      # Singular, descriptive
         ...
     class Items(dj.Part):       # Or plural for collections
@@ -355,7 +355,7 @@ class Master(dj.Manual):
 Include minimal additional keys beyond master reference:
 
 ```python
-class Session(dj.Manual):
+class Session(dj.Entry):
     definition = """
     session_id : int64
     ---
@@ -378,13 +378,13 @@ Part tables cannot have their own parts. For hierarchical data:
 ```python
 # Instead of nested parts, use separate tables with FKs
 @schema
-class Session(dj.Manual):
+class Session(dj.Entry):
     definition = """..."""
     class Trial(dj.Part):
         definition = """..."""
 
 @schema
-class TrialEvent(dj.Manual):  # Not a Part, but references Trial
+class TrialEvent(dj.Entry):  # Not a Part, but references Trial
     definition = """
     -> Session.Trial
     event_idx : int16

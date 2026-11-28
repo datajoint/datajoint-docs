@@ -65,7 +65,7 @@ class Probe(dj.Lookup):
     """
 
 @schema
-class Recording(dj.Imported):
+class Recording(dj.Ingest):
     definition = """
     -> session.Session
     -> Probe
@@ -86,7 +86,7 @@ from . import imaging
 schema = dj.Schema('analysis')
 
 @schema
-class MultiModalAnalysis(dj.Computed):
+class MultiModalAnalysis(dj.Compute):
     definition = """
     -> ephys.Recording
     -> imaging.Scan

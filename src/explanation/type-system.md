@@ -164,7 +164,7 @@ import datajoint as dj
 
 # Codec is available immediately after install
 @schema
-class Analysis(dj.Computed):
+class Analysis(dj.Compute):
     definition = """
     -> Recording
     ---
@@ -206,7 +206,7 @@ Stores NumPy arrays, dicts, lists, and other Python objects using DataJoint's cu
 - UUID, Decimal
 
 ```python
-class Results(dj.Computed):
+class Results(dj.Compute):
     definition = """
     -> Analysis
     ---
@@ -226,7 +226,7 @@ class Results(dj.Computed):
 Stores files with filename preserved.
 
 ```python
-class Config(dj.Manual):
+class Config(dj.Entry):
     definition = """
     config_id : int
     ---
@@ -240,7 +240,7 @@ class Config(dj.Manual):
 Schema-addressed storage for NumPy arrays as standard `.npy` files. Returns `NpyRef` which provides metadata access (shape, dtype) without downloading.
 
 ```python
-class Recording(dj.Computed):
+class Recording(dj.Compute):
     definition = """
     -> Session
     ---
@@ -275,7 +275,7 @@ result = np.mean(ref)  # Downloads automatically
 Schema-addressed storage for files and folders. Path mirrors the database structure within the store's schema-addressed section: `{schema_prefix}/{schema}/{table}/{pk}/{attribute}_{token}` (`schema_prefix` defaults to `_schema`).
 
 ```python
-class RecordingAnalysis(dj.Computed):
+class RecordingAnalysis(dj.Compute):
     definition = """
     -> Recording
     ---
@@ -290,7 +290,7 @@ Accepts files, folders, or bytes. Returns `ObjectRef` for lazy access.
 References to independently-managed files with portable paths.
 
 ```python
-class RawData(dj.Manual):
+class RawData(dj.Entry):
     definition = """
     session_id : int
     ---
@@ -341,7 +341,7 @@ class GraphCodec(dj.Codec):
 Usage:
 
 ```python
-class Network(dj.Computed):
+class Network(dj.Compute):
     definition = """
     -> Analysis
     ---

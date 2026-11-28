@@ -33,7 +33,7 @@ MODULE_INFO = {
     "datajoint.connection": ("Connection", "Database connection management"),
     "datajoint.schemas": ("Schema", "Schema and VirtualModule classes"),
     "datajoint.table": ("Table", "Base Table and FreeTable classes"),
-    "datajoint.user_tables": ("Table Types", "Manual, Lookup, Imported, Computed, Part"),
+    "datajoint.user_tables": ("Table Types", "Lookup, Entry, Ingest, Compute, Part (Entry, Ingest, and Compute are also available as Manual, Imported, and Computed)"),
     "datajoint.expression": ("Expressions", "Query expressions and operators"),
     "datajoint.heading": ("Heading", "Table heading and attributes"),
     "datajoint.diagram": ("Diagram", "Schema visualization"),

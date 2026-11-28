@@ -14,7 +14,7 @@ schema = dj.Schema("session")
 
 
 @schema
-class Session(dj.Manual):
+class Session(dj.Entry):
     definition = """
     -> Subject
     session_date : date
@@ -25,7 +25,7 @@ class Session(dj.Manual):
 
 
 @schema
-class Scan(dj.Manual):
+class Scan(dj.Entry):
     definition = """
     -> Session
     scan_idx : int32
@@ -36,7 +36,7 @@ class Scan(dj.Manual):
 
 
 @schema
-class ScanInfo(dj.Imported):
+class ScanInfo(dj.Ingest):
     definition = """
     -> Scan
     ---

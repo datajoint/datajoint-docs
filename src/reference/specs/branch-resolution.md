@@ -24,7 +24,7 @@ Branch resolution removes the *elsewhere*. On a branch, `dj.Schema('proj_ephys')
 schema = dj.Schema('proj_ephys')
 
 @schema
-class ArtifactScore(dj.Computed):
+class ArtifactScore(dj.Compute):
     definition = """
     -> Recording
     -> ArtifactParams
@@ -245,7 +245,7 @@ Both are recovered in the same place and neither is the library's to run: declar
 
 ### 5.1 `populate`
 
-Unchanged. `key_source` is the join of the parents reached through `parents(primary=True, …)`, and a symbolic edge is a parent edge like any other. A draft `Computed` table whose references are symbolic computes the same keys it would compute with real constraints.
+Unchanged. `key_source` is the join of the parents reached through `parents(primary=True, …)`, and a symbolic edge is a parent edge like any other. A draft `Compute` table whose references are symbolic computes the same keys it would compute with real constraints.
 
 Job queues are unchanged: `~jobs` lives in the table's own schema, so a draft table's queue lives in the draft schema and disappears with it.
 

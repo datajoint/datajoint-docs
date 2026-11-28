@@ -14,7 +14,7 @@ schema = dj.Schema("imaging")
 
 
 @schema
-class ScanQuality(dj.Computed):
+class ScanQuality(dj.Compute):
     definition = """
     -> Scan
     ---
@@ -23,7 +23,7 @@ class ScanQuality(dj.Computed):
 
 
 @schema
-class MotionCorrection(dj.Computed):
+class MotionCorrection(dj.Compute):
     definition = """
     -> ScanInfo
     ---
@@ -33,7 +33,7 @@ class MotionCorrection(dj.Computed):
 
 
 @schema
-class Segmentation(dj.Computed):
+class Segmentation(dj.Compute):
     definition = """
     -> MotionCorrection
     -> SegmentationMethod
@@ -51,7 +51,7 @@ class Segmentation(dj.Computed):
 
 
 @schema
-class Fluorescence(dj.Computed):
+class Fluorescence(dj.Compute):
     definition = """
     -> Segmentation
     ---

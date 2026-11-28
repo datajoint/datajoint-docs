@@ -51,7 +51,7 @@ Start: What type of data are you storing?
 ```python
 # <blob> and <blob@>: Insert Python objects, get Python objects back
 @schema
-class Analysis(dj.Computed):
+class Analysis(dj.Compute):
     definition = """
     -> Experiment
     ---
@@ -76,7 +76,7 @@ print(data['confusion_matrix'])   # numpy array
 ```python
 # <npy@>: Insert array-like objects, get array-like objects back
 @schema
-class Recording(dj.Manual):
+class Recording(dj.Entry):
     definition = """
     recording_id : uuid
     ---
@@ -118,7 +118,7 @@ Try to keep in-table blobs under ~1-10 MB, but this depends on your specific use
 
 ```python
 @schema
-class Experiment(dj.Manual):
+class Experiment(dj.Entry):
     definition = """
     experiment_id : uuid
     ---
@@ -158,7 +158,7 @@ class Experiment(dj.Manual):
 Use `<blob@>` (hash-addressed):
 
 ```python
-class ProcessedImage(dj.Computed):
+class ProcessedImage(dj.Compute):
     definition = """
     -> RawImage
     ---
@@ -179,7 +179,7 @@ img = (ProcessedImage & key).fetch1('processed')
 Use `<object@>` (schema-addressed):
 
 ```python
-class ScanVolume(dj.Manual):
+class ScanVolume(dj.Entry):
     definition = """
     scan_id : uuid
     ---
@@ -205,7 +205,7 @@ slice_data = z[100:200, :, :]  # Fetch only this slice
 Use `<npy@>` (optimized for NumPy):
 
 ```python
-class NeuralActivity(dj.Computed):
+class NeuralActivity(dj.Compute):
     definition = """
     -> Recording
     ---
@@ -237,7 +237,7 @@ shape = ref.shape             # Metadata without loading
 Use `<blob@>`, `<npy@>`, or `<object@>`:
 
 ```python
-class ManagedData(dj.Manual):
+class ManagedData(dj.Entry):
     definition = """
     data_id : uuid
     ---
@@ -265,7 +265,7 @@ class ManagedData(dj.Manual):
 Use `<filepath@>`:
 
 ```python
-class ExternalData(dj.Manual):
+class ExternalData(dj.Entry):
     definition = """
     data_id : uuid
     ---
@@ -491,8 +491,8 @@ raw_data : <filepath@>      # User-managed file
 
 ```python
 @schema
-class RawImage(dj.Manual):
-    """Imported from microscope"""
+class RawImage(dj.Entry):
+    """Ingest from microscope"""
     definition = """
     image_id : uuid
     ---
@@ -500,7 +500,7 @@ class RawImage(dj.Manual):
     """
 
 @schema
-class CalibratedImage(dj.Computed):
+class CalibratedImage(dj.Compute):
     """Calibrated, moderate size"""
     definition = """
     -> RawImage
@@ -509,7 +509,7 @@ class CalibratedImage(dj.Computed):
     """
 
 @schema
-class Thumbnail(dj.Computed):
+class Thumbnail(dj.Compute):
     """Preview for dashboard"""
     definition = """
     -> CalibratedImage
@@ -530,7 +530,7 @@ class Thumbnail(dj.Computed):
 
 ```python
 @schema
-class RecordingSession(dj.Manual):
+class RecordingSession(dj.Entry):
     """Recording metadata"""
     definition = """
     session_id : uuid
@@ -539,7 +539,7 @@ class RecordingSession(dj.Manual):
     """
 
 @schema
-class ContinuousData(dj.Imported):
+class ContinuousData(dj.Ingest):
     """Raw voltage traces"""
     definition = """
     -> RecordingSession
@@ -548,7 +548,7 @@ class ContinuousData(dj.Imported):
     """
 
 @schema
-class SpikeWaveforms(dj.Computed):
+class SpikeWaveforms(dj.Compute):
     """Extracted spike shapes"""
     definition = """
     -> ContinuousData
@@ -558,7 +558,7 @@ class SpikeWaveforms(dj.Computed):
     """
 
 @schema
-class UnitStats(dj.Computed):
+class UnitStats(dj.Compute):
     """Summary statistics"""
     definition = """
     -> SpikeWaveforms
@@ -579,7 +579,7 @@ class UnitStats(dj.Computed):
 
 ```python
 @schema
-class Movie(dj.Manual):
+class Movie(dj.Entry):
     """Raw calcium imaging movie"""
     definition = """
     movie_id : uuid
@@ -588,7 +588,7 @@ class Movie(dj.Manual):
     """
 
 @schema
-class SegmentedCells(dj.Computed):
+class SegmentedCells(dj.Compute):
     """Cell masks"""
     definition = """
     -> Movie
@@ -597,7 +597,7 @@ class SegmentedCells(dj.Computed):
     """
 
 @schema
-class FluorescenceTraces(dj.Computed):
+class FluorescenceTraces(dj.Compute):
     """Extracted time series"""
     definition = """
     -> SegmentedCells
@@ -607,7 +607,7 @@ class FluorescenceTraces(dj.Computed):
     """
 
 @schema
-class TraceSummary(dj.Computed):
+class TraceSummary(dj.Compute):
     """Event detection results"""
     definition = """
     -> FluorescenceTraces
@@ -716,7 +716,7 @@ backup : <blob@archive>         # Uses named store (archive)
 ```python
 # Add new column with object storage
 @schema
-class MyTable(dj.Manual):
+class MyTable(dj.Entry):
     definition = """
     id : int
     ---
@@ -737,7 +737,7 @@ for key in MyTable.fetch('KEY'):
 ```python
 # For large files that need streaming
 @schema
-class Recording(dj.Manual):
+class Recording(dj.Entry):
     definition = """
     recording_id : uuid
     ---

@@ -22,7 +22,7 @@ class AnalysisParams(dj.Lookup):
 
 
 @schema
-class SubjectAnalysis(dj.Computed):
+class SubjectAnalysis(dj.Compute):
     definition = """
     -> acquisition.Subject
     -> AnalysisParams
@@ -36,7 +36,7 @@ class SubjectAnalysis(dj.Computed):
 
 
 @schema
-class CrossSessionAnalysis(dj.Computed):
+class CrossSessionAnalysis(dj.Compute):
     definition = """
     -> acquisition.Subject
     -> processing.ProcessingParams

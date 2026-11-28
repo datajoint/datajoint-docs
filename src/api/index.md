@@ -12,7 +12,7 @@ Documentation is generated automatically from NumPy-style docstrings in the sour
 | [datajoint](datajoint.md) | Main package exports |
 | [Schema](datajoint/schemas.md) | Schema and VirtualModule classes |
 | [Table](datajoint/table.md) | Base Table and FreeTable classes |
-| [Table Types](datajoint/user_tables.md) | Manual, Lookup, Imported, Computed, Part |
+| [Table Types](datajoint/user_tables.md) | Lookup, Entry, Ingest, Compute, Part (Entry, Ingest, and Compute are also available as Manual, Imported, and Computed) |
 | [Expressions](datajoint/expression.md) | Query expressions and operators |
 | [Fetch](datajoint/fetch.md) | Data retrieval methods |
 | [Connection](datajoint/connection.md) | Database connection management |

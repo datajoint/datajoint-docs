@@ -52,7 +52,7 @@ Or in `datajoint.json`:
 
 ```python
 @schema
-class Recording(dj.Manual):
+class Recording(dj.Entry):
     definition = """
     recording_id : int32
     ---
@@ -158,11 +158,11 @@ for rec in large:
     process(arr)
 ```
 
-### Computed Tables
+### Compute Tables
 
 ```python
 @schema
-class FilteredTrace(dj.Computed):
+class FilteredTrace(dj.Compute):
     definition = """
     -> RawData
     ---

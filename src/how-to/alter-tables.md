@@ -32,7 +32,7 @@ This compares the current code definition with the database and generates `ALTER
 ```python
 # Original
 @schema
-class Subject(dj.Manual):
+class Subject(dj.Entry):
     definition = """
     subject_id : varchar(16)
     ---
@@ -41,7 +41,7 @@ class Subject(dj.Manual):
 
 # Updated - add column
 @schema
-class Subject(dj.Manual):
+class Subject(dj.Entry):
     definition = """
     subject_id : varchar(16)
     ---
@@ -67,7 +67,7 @@ Subject.alter()
 ```python
 # Change varchar(32) to varchar(100)
 @schema
-class Subject(dj.Manual):
+class Subject(dj.Entry):
     definition = """
     subject_id : varchar(16)
     ---
@@ -85,7 +85,7 @@ DataJoint tracks renames via comment metadata:
 # Original: species
 # Renamed to: species_name
 @schema
-class Subject(dj.Manual):
+class Subject(dj.Entry):
     definition = """
     subject_id : varchar(16)
     ---
@@ -123,7 +123,7 @@ Cannot modify primary key attributes:
 ```python
 # This will raise NotImplementedError
 @schema
-class Subject(dj.Manual):
+class Subject(dj.Entry):
     definition = """
     new_id : uuid               # Changed primary key
     ---
@@ -172,7 +172,7 @@ For unsupported changes, use this pattern:
 ```python
 # 1. Create new table with desired structure
 @schema
-class SubjectNew(dj.Manual):
+class SubjectNew(dj.Entry):
     definition = """
     subject_id : uuid            # New primary key type
     ---

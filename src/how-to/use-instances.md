@@ -26,7 +26,7 @@ Use `inst.Schema()` instead of `dj.Schema()`:
 schema = inst.Schema("my_experiment")
 
 @schema
-class Subject(dj.Manual):
+class Subject(dj.Entry):
     definition = """
     subject_id : int32
     ---
@@ -126,7 +126,7 @@ def test_insert(test_instance):
     inst, schema = test_instance
 
     @schema
-    class Item(dj.Manual):
+    class Item(dj.Entry):
         definition = """
         item_id : int32
         ---

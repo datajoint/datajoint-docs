@@ -2,7 +2,7 @@
 
 ## Overview
 
-AutoPopulate is DataJoint's mechanism for automated computation. Tables that inherit from `dj.Computed` or `dj.Imported` automatically populate themselves by executing a `make()` method for each entry defined by their dependencies.
+AutoPopulate is DataJoint's mechanism for automated computation. Tables that inherit from `dj.Compute` or `dj.Ingest` automatically populate themselves by executing a `make()` method for each entry defined by their dependencies.
 
 This specification covers:
 
@@ -20,16 +20,16 @@ This specification covers:
 
 | Type | Base Class | Purpose |
 |------|------------|---------|
-| Computed | `dj.Computed` | Results derived from other DataJoint tables |
-| Imported | `dj.Imported` | Data ingested from external sources (files, instruments) |
+| Compute | `dj.Compute` | Results derived from other DataJoint tables |
+| Ingest | `dj.Ingest` | Data ingested from external sources (files, instruments) |
 
-Both types share the same AutoPopulate mechanism. The distinction is semantic—`Imported` indicates external data sources while `Computed` indicates derivation from existing tables.
+Both types share the same AutoPopulate mechanism. The distinction is semantic—`Ingest` indicates external data sources while `Compute` indicates derivation from existing tables.
 
 ### 1.2 Basic Structure
 
 ```python
 @schema
-class FilteredImage(dj.Computed):
+class FilteredImage(dj.Compute):
     definition = """
     -> RawImage
     ---
@@ -54,7 +54,7 @@ Auto-populated tables must have primary keys composed entirely of foreign key re
 ```python
 # Correct: all PK attributes from foreign keys
 @schema
-class Analysis(dj.Computed):
+class Analysis(dj.Compute):
     definition = """
     -> Session
     -> AnalysisMethod
@@ -64,7 +64,7 @@ class Analysis(dj.Computed):
 
 # Error: non-FK primary key attribute
 @schema
-class Analysis(dj.Computed):
+class Analysis(dj.Compute):
     definition = """
     -> Session
     method : varchar(32)   # Not allowed - use FK to lookup table
@@ -91,7 +91,7 @@ By default, DataJoint automatically calculates `key_source` as the join of all t
 
 ```python
 @schema
-class SpikeDetection(dj.Computed):
+class SpikeDetection(dj.Compute):
     definition = """
     -> Recording
     -> DetectionMethod
@@ -129,7 +129,7 @@ Override `key_source` to customize which entries to compute:
 
 ```python
 @schema
-class QualityAnalysis(dj.Computed):
+class QualityAnalysis(dj.Compute):
     definition = """
     -> Session
     ---
@@ -306,7 +306,7 @@ These requirements are the surface of a broader rule set — the make() reproduc
 
 ### 4.3 The make() reproducibility contract
 
-The value of an auto-populated table is that every one of its rows is a *reproducible* result — **fully traceable to its declared inputs**: the row is derived solely from its declared, key-restricted upstream inputs plus the recorded `make()` code, with nothing entering from outside the dependency graph. That guarantee rests on a small set of rules — the **make() reproducibility contract** — that every `make()` should observe. The rules apply to both `dj.Computed` and `dj.Imported` tables.
+The value of an auto-populated table is that every one of its rows is a *reproducible* result — **fully traceable to its declared inputs**: the row is derived solely from its declared, key-restricted upstream inputs plus the recorded `make()` code, with nothing entering from outside the dependency graph. That guarantee rests on a small set of rules — the **make() reproducibility contract** — that every `make()` should observe. The rules apply to both `dj.Compute` and `dj.Ingest` tables.
 
 1. **Populate-only.** Rows are produced only by `make()`, invoked through `populate()` — never inserted directly. Direct inserts into an auto-populated table are rejected at runtime.
 
@@ -314,9 +314,9 @@ The value of an auto-populated table is that every one of its rows is a *reprodu
 
 3. **Read only upstream, restricted to the job.** A `make(key)` fetches only from tables upstream of the target — the declared ancestors reachable by following the foreign keys embedded in the primary key — and only the rows reachable from the current `key`. This key-restricted set of ancestors is the entity's *upstream cone*, exposed as `self.upstream` (see [§4.4](#44-accessing-source-data)). Reading anything else — a table that is not an ancestor, or entities under a different `key` — breaks the contract and makes the result depend on data the pipeline does not track.
 
-4. **Write the result to `self` and its Parts.** The derived result is inserted into `self` and the table's Part tables, atomically, as one unit. A `make()` *may* also write to other destinations — other Manual tables, files, external systems (the [fan-out ingestion pattern](../../explanation/fan-out-ingestion.md)) — but such writes leave the pipeline's dependency graph, so the `make()` must record the source identity at each destination (as it would at any Manual-table entry point) to keep that data traceable.
+4. **Write the result to `self` and its Parts.** The derived result is inserted into `self` and the table's Part tables, atomically, as one unit. A `make()` *may* also write to other destinations — other Entry tables, files, external systems (the [fan-out ingestion pattern](../../explanation/fan-out-ingestion.md)) — but such writes leave the pipeline's dependency graph, so the `make()` must record the source identity at each destination (as it would at any Entry-table entry point) to keep that data traceable.
 
-5. **No other result-affecting input.** Anything that changes *what* is computed must enter through a declared upstream table (typically a Lookup or Manual parameter table), so it is part of the dependency graph. `make_kwargs` forwarded through `populate(make_kwargs=...)` may *orchestrate* a run (batching, parallelism, logging) but must never *parameterize* the result — see [§4.6](#46-additional-make-arguments).
+5. **No other result-affecting input.** Anything that changes *what* is computed must enter through a declared upstream table (typically a Lookup or Entry parameter table), so it is part of the dependency graph. `make_kwargs` forwarded through `populate(make_kwargs=...)` may *orchestrate* a run (batching, parallelism, logging) but must never *parameterize* the result — see [§4.6](#46-additional-make-arguments).
 
 In one line: **read from `self.upstream`, write to `self`.** The read/write boundary is what makes each computed result self-contained and reproducible — every row was produced by a specific `make()` call over a specific, declared, key-restricted set of upstream entities.
 
@@ -382,7 +382,7 @@ Because `make_fetch` performs no writes and `make_compute` touches no database, 
 
 ```python
 @schema
-class HeavyComputation(dj.Computed):
+class HeavyComputation(dj.Compute):
     definition = """
     -> Recording
     ---
@@ -439,7 +439,7 @@ Pass extra arguments via `make_kwargs`:
 
 ```python
 @schema
-class ConfigurableAnalysis(dj.Computed):
+class ConfigurableAnalysis(dj.Compute):
     definition = """
     -> Session
     ---
@@ -575,13 +575,13 @@ that groups several related inserts — never in `make()`.
 
 ## 6. Part Tables
 
-### 6.1 Part Tables in Computed Tables
+### 6.1 Part Tables in Compute Tables
 
-Computed tables can have Part tables for detailed results:
+Compute tables can have Part tables for detailed results:
 
 ```python
 @schema
-class SpikeSorting(dj.Computed):
+class SpikeSorting(dj.Compute):
     definition = """
     -> Recording
     ---
@@ -643,7 +643,7 @@ The key source is based on the master table's primary key only:
 SpikeSorting.key_source  # Recording keys
 ```
 
-### 6.5 Deleting Computed Parts
+### 6.5 Deleting Compute Parts
 
 Deleting master entries cascades to parts:
 

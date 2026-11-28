@@ -145,7 +145,7 @@ Subject.insert1({"subject_id": 1, "unknown_field": "x"}, ignore_extra_fields=Tru
 
 ### 2.6 Auto-Populated Tables
 
-Computed and Imported tables normally only accept inserts from their `make()` method:
+Compute and Ingest tables normally only accept inserts from their `make()` method:
 
 ```python
 # Raises DataJointError by default
@@ -269,7 +269,7 @@ Session.update1({"session_id": 5, "notes": "Excluded from analysis"})
 **Inappropriate (use delete + insert + populate instead):**
 ```python
 # DON'T: Update source data that affects computed results
-Trial.update1({"trial_id": 1, "stimulus": "new_stim"})  # Computed tables now stale!
+Trial.update1({"trial_id": 1, "stimulus": "new_stim"})  # Compute tables now stale!
 
 # DO: Delete and recompute
 (Trial & {"trial_id": 1}).delete()  # Cascades to computed tables
@@ -498,7 +498,7 @@ Part tables are inserted via their master:
 
 ```python
 @schema
-class Session(dj.Manual):
+class Session(dj.Entry):
     definition = """
     session_id : int
     ---

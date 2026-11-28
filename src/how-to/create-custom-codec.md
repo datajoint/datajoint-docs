@@ -37,7 +37,7 @@ class GraphCodec(dj.Codec):
 
 ```python
 @schema
-class Connectivity(dj.Manual):
+class Connectivity(dj.Entry):
     definition = """
     conn_id : int
     ---
@@ -225,7 +225,7 @@ class MedicalImageCodec(dj.Codec):
 
 
 @schema
-class Scan(dj.Manual):
+class Scan(dj.Entry):
     definition = """
     scan_id : uuid
     ---

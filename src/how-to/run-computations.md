@@ -168,7 +168,7 @@ SessionAnalysis.jobs
 
 ```python
 @schema
-class SessionAnalysis(dj.Computed):
+class SessionAnalysis(dj.Compute):
     definition = """
     -> Session
     ---
@@ -192,7 +192,7 @@ For computations taking hours or days:
 
 ```python
 @schema
-class LongComputation(dj.Computed):
+class LongComputation(dj.Compute):
     definition = """
     -> RawData
     ---
@@ -227,7 +227,7 @@ class LongComputation(dj.Computed):
 
 ```python
 @schema
-class FilteredComputation(dj.Computed):
+class FilteredComputation(dj.Compute):
     definition = """
     -> RawData
     ---

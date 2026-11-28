@@ -37,14 +37,14 @@ The natural join is elegant and powerful, but it has a well-known weakness: it r
 
 ```python
 # Classic natural join pitfall
-class Student(dj.Manual):
+class Student(dj.Entry):
     definition = """
     id : int64  # student ID
     ---
     name : varchar(100)
     """
 
-class Course(dj.Manual):
+class Course(dj.Entry):
     definition = """
     id : int64  # course ID
     ---
@@ -79,14 +79,14 @@ schema_name.table_name.attribute_name
 ### Example
 
 ```python
-class Session(dj.Manual):         # table: session
+class Session(dj.Entry):         # table: session
     definition = """
     session_id : int64
     ---
     session_date : date
     """
 
-class Trial(dj.Manual):           # table: trial
+class Trial(dj.Entry):           # table: trial
     definition = """
     -> Session
     trial_num : int32
@@ -150,7 +150,7 @@ This means you're trying to join tables that have a namesake attribute (`id`) wi
 
 3. **Use descriptive names** in your schema design (best practice):
    ```python
-   class Student(dj.Manual):
+   class Student(dj.Entry):
        definition = """
        student_id : int64  # not just 'id'
        ---
@@ -202,14 +202,14 @@ DataJoint version or an incomplete declare. Run `schema.rebuild_lineage()` ...
 ### Valid Join (Shared Lineage)
 
 ```python
-class Student(dj.Manual):
+class Student(dj.Entry):
     definition = """
     student_id : int64
     ---
     name : varchar(100)
     """
 
-class Enrollment(dj.Manual):
+class Enrollment(dj.Entry):
     definition = """
     -> Student
     -> Course
@@ -226,20 +226,20 @@ Student() * Enrollment()
 Lineage is preserved through multiple levels of foreign key inheritance:
 
 ```python
-class Session(dj.Manual):
+class Session(dj.Entry):
     definition = """
     session_id : int64
     ---
     session_date : date
     """
 
-class Trial(dj.Manual):
+class Trial(dj.Entry):
     definition = """
     -> Session
     trial_num : int32
     """
 
-class Response(dj.Computed):
+class Response(dj.Compute):
     definition = """
     -> Trial
     ---
@@ -257,21 +257,21 @@ Trial() * Response()
 Lineage works for secondary (non-primary-key) foreign key attributes too:
 
 ```python
-class Course(dj.Manual):
+class Course(dj.Entry):
     definition = """
     course_id : int unsigned
     ---
     title : varchar(100)
     """
 
-class FavoriteCourse(dj.Manual):
+class FavoriteCourse(dj.Entry):
     definition = """
     student_id : int unsigned
     ---
     -> Course
     """
 
-class RequiredCourse(dj.Manual):
+class RequiredCourse(dj.Entry):
     definition = """
     major_id : int unsigned
     ---
@@ -287,14 +287,14 @@ FavoriteCourse() * RequiredCourse()
 When you rename a foreign key, the new name gets the same lineage as the original:
 
 ```python
-class Person(dj.Manual):
+class Person(dj.Entry):
     definition = """
     person_id : int unsigned
     ---
     full_name : varchar(100)
     """
 
-class Marriage(dj.Manual):
+class Marriage(dj.Entry):
     definition = """
     -> Person.proj(husband='person_id')
     -> Person.proj(wife='person_id')

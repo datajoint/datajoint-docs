@@ -33,7 +33,7 @@ different type of integrity:
 
 ```python
 @schema
-class Mouse(dj.Manual):
+class Mouse(dj.Entry):
     definition = """
     mouse_id : char(6)          # unique ear-tag identifier
     ---
@@ -42,7 +42,7 @@ class Mouse(dj.Manual):
     """
 
 @schema
-class Session(dj.Manual):
+class Session(dj.Entry):
     definition = """
     -> Mouse                    # references a real mouse
     session_idx : int32
@@ -154,8 +154,8 @@ some parts without others — would leave a partial, misleading entity.
 DataJoint expresses this with the **master-part** relationship. The master
 represents the composite entity; its part tables hold the components produced
 with it. When a master and its parts are populated together by `make()`
-(Computed and Imported tables), their insertion is one transaction, so a partial
-composite is never committed; for Manual master-part sets this atomicity is
+(Compute and Ingest tables), their insertion is one transaction, so a partial
+composite is never committed; for Entry master-part sets this atomicity is
 maintained by convention (a single transaction). Deletion cascades from master
 to parts in either case. See
 [Master-Part](../reference/specs/master-part.md).

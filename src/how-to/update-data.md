@@ -12,7 +12,7 @@ rare and deliberate, never part of a routine workflow.
 
 ## Prefer delete + reinsert
 
-To replace a Manual entity's data, delete the row and insert the corrected one.
+To replace an Entry entity's data, delete the row and insert the corrected one.
 Because foreign keys cascade, this keeps every dependent record consistent:
 
 ```python
@@ -50,7 +50,7 @@ Subject.update1({"subject_id": 1001, "genotype": "wild-type"})
 ## What you cannot change
 
 - **Primary keys** — immutable after insertion; delete and reinsert.
-- **Computed / Imported results** — produced by `make()`; delete and recompute
+- **Compute / Ingest results** — produced by `make()`; delete and recompute
   rather than update. See
   [Insert Data → What Not to Insert](insert-data.md#what-not-to-insert).
 

@@ -6,7 +6,7 @@ schema = dj.Schema("lab")
 
 
 @schema
-class Lab(dj.Manual):
+class Lab(dj.Entry):
     definition = """
     lab_name : varchar(32)
     ---
@@ -15,7 +15,7 @@ class Lab(dj.Manual):
 
 
 @schema
-class User(dj.Manual):
+class User(dj.Entry):
     definition = """
     -> Lab
     user_name : varchar(32)
@@ -25,7 +25,7 @@ class User(dj.Manual):
 
 
 @schema
-class Subject(dj.Manual):
+class Subject(dj.Entry):
     definition = """
     subject_id : int32
     ---

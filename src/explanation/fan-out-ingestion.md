@@ -9,12 +9,12 @@ carries in return.
 
 ## The shape
 
-An ingestion routine — typically an `Imported` table's `make()`, or a manual
+An ingestion routine — typically an `Ingest` table's `make()`, or a manual
 loader — reads one source and inserts into several **entry-point tables**
-(`Manual` or `Imported`) that are *not* foreign-key children of the ingesting
+(`Entry` or `Ingest`) that are *not* foreign-key children of the ingesting
 table:
 
-![The fan-out ingestion pattern. On the left, RecordingFile, a green rounded box for the Manual tier with its name underlined, joined by a thick navy line without an arrowhead to Ingest, a blue ellipse for the Imported tier whose name is not underlined — the edge is thick because Ingest declares only a foreign key to RecordingFile, so that key covers its whole primary key, and the name is plain because it introduces no key attribute of its own. From Ingest, three dashed navy arrows fan out to the right under the label "insert + source_file", each ending at a green rounded Manual box with an underlined name: Subject, Session and Recording. The arrowheads mark these as writes rather than dependencies, since a dependency edge carries none, and a note reads "no foreign key back to Ingest". A legend keys the Imported and Manual tiers, distinguishes a dependency (no arrowhead) from a write that is not a dependency, and notes that an underlined name introduces a primary-key attribute of its own.](../images/fan-out-ingestion.svg)
+![The fan-out ingestion pattern. On the left, RecordingFile, a green rounded box for the Entry tier with its name underlined, joined by a thick navy line without an arrowhead to Ingest, a blue ellipse for the Ingest tier whose name is not underlined — the edge is thick because Ingest declares only a foreign key to RecordingFile, so that key covers its whole primary key, and the name is plain because it introduces no key attribute of its own. From Ingest, three dashed navy arrows fan out to the right under the label "insert + source_file", each ending at a green rounded Entry box with an underlined name: Subject, Session and Recording. The arrowheads mark these as writes rather than dependencies, since a dependency edge carries none, and a note reads "no foreign key back to Ingest". A legend keys the Ingest and Entry tiers, distinguishes a dependency (no arrowhead) from a write that is not a dependency, and notes that an underlined name introduces a primary-key attribute of its own.](../images/fan-out-ingestion.svg)
 
 The figure shows what the dependency graph does not: `dj.Diagram` pointed at this
 schema renders `Subject`, `Session`, and `Recording` as three unconnected nodes,
@@ -23,7 +23,7 @@ that the graph cannot record.
 
 ```python
 @schema
-class RecordingFile(dj.Manual):        # the source record
+class RecordingFile(dj.Entry):        # the source record
     definition = """
     file_id : uuid
     ---
@@ -31,7 +31,7 @@ class RecordingFile(dj.Manual):        # the source record
     """
 
 @schema
-class Ingest(dj.Imported):
+class Ingest(dj.Ingest):
     definition = """
     -> RecordingFile
     """
@@ -67,7 +67,7 @@ Because the foreign-key link to the source is absent, the traceability it would
 have provided has to come from somewhere else. Two things supply it, and they do
 different jobs.
 
-**DataJoint records the origin automatically.** Every row written into a `Manual`
+**DataJoint records the origin automatically.** Every row written into an `Entry`
 table carries a hidden `_prov` attribute, and a row written from inside an
 ingesting `make()` records the ingesting table and its key — exactly the link the
 missing foreign key would have carried. Nothing in the `make()` body asks for

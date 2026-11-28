@@ -55,7 +55,7 @@ class GraphCodec(dj.Codec):
 
 # Use in table definition
 @schema
-class Connectivity(dj.Manual):
+class Connectivity(dj.Entry):
     definition = '''
     conn_id : int
     ---
@@ -97,7 +97,7 @@ class ParquetCodec(dj.SchemaCodec):
 
 # Use in table definition (store only)
 @schema
-class Results(dj.Manual):
+class Results(dj.Entry):
     definition = '''
     result_id : int
     ---
@@ -363,7 +363,7 @@ class GraphCodec(dj.Codec):
 import myproject.codecs  # Ensure codecs are registered
 
 @schema
-class Networks(dj.Manual):
+class Networks(dj.Entry):
     definition = '''
     id : int
     ---
@@ -528,7 +528,7 @@ pip install dj-graph-codecs
 ```python
 # Codecs are automatically discovered and available
 @schema
-class Networks(dj.Manual):
+class Networks(dj.Entry):
     definition = '''
     network_id : int
     ---
@@ -653,7 +653,7 @@ class ModelCodec(dj.Codec):
 Usage:
 ```python
 @schema
-class Models(dj.Manual):
+class Models(dj.Entry):
     definition = '''
     model_id : int
     ---

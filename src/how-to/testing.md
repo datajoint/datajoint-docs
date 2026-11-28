@@ -121,7 +121,7 @@ def shared_schema(dj_connection):
 ```python
 def test_insert_and_fetch(schema):
     @schema
-    class Subject(dj.Manual):
+    class Subject(dj.Entry):
         definition = """
         subject_id : int32
         ---
@@ -136,12 +136,12 @@ def test_insert_and_fetch(schema):
     assert result["name"] == "Alice"
 ```
 
-### Testing Computed Tables
+### Testing Compute Tables
 
 ```python
 def test_computed_table(schema):
     @schema
-    class Source(dj.Manual):
+    class Source(dj.Entry):
         definition = """
         id : int32
         ---
@@ -149,7 +149,7 @@ def test_computed_table(schema):
         """
 
     @schema
-    class Computed(dj.Computed):
+    class Compute(dj.Compute):
         definition = """
         -> Source
         ---
@@ -164,10 +164,10 @@ def test_computed_table(schema):
     Source.insert1({"id": 1, "value": 3.5})
 
     # Run computation
-    Computed.populate()
+    Compute.populate()
 
     # Verify
-    assert Computed.fetch1("doubled") == 7.0
+    assert Compute.fetch1("doubled") == 7.0
 ```
 
 ### Testing Foreign Key Constraints
@@ -175,13 +175,13 @@ def test_computed_table(schema):
 ```python
 def test_referential_integrity(schema):
     @schema
-    class Parent(dj.Manual):
+    class Parent(dj.Entry):
         definition = """
         parent_id : int32
         """
 
     @schema
-    class Child(dj.Manual):
+    class Child(dj.Entry):
         definition = """
         -> Parent
         child_id : int32
@@ -201,13 +201,13 @@ def test_referential_integrity(schema):
 ```python
 def test_cascade_delete(schema):
     @schema
-    class Parent(dj.Manual):
+    class Parent(dj.Entry):
         definition = """
         parent_id : int32
         """
 
     @schema
-    class Child(dj.Manual):
+    class Child(dj.Entry):
         definition = """
         -> Parent
         child_id : int32
@@ -257,7 +257,7 @@ def test_blob_storage(schema, blob_store):
     import numpy as np
 
     @schema
-    class ArrayData(dj.Manual):
+    class ArrayData(dj.Entry):
         definition = """
         id : int32
         ---
@@ -362,7 +362,7 @@ Test the same logic with different inputs:
 ])
 def test_doubling(schema, value, expected):
     @schema
-    class Numbers(dj.Manual):
+    class Numbers(dj.Entry):
         definition = """
         id : int32
         ---
@@ -370,7 +370,7 @@ def test_doubling(schema, value, expected):
         """
 
     @schema
-    class Doubled(dj.Computed):
+    class Doubled(dj.Compute):
         definition = """
         -> Numbers
         ---
@@ -391,7 +391,7 @@ def test_doubling(schema, value, expected):
 ```python
 def test_duplicate_insert_raises(schema):
     @schema
-    class Data(dj.Manual):
+    class Data(dj.Entry):
         definition = """
         id : int32
         """
@@ -409,7 +409,7 @@ def test_duplicate_insert_raises(schema):
 def sample_subjects(schema):
     """Create Subject table with sample data."""
     @schema
-    class Subject(dj.Manual):
+    class Subject(dj.Entry):
         definition = """
         subject_id : varchar(16)
         ---

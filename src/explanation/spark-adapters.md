@@ -36,7 +36,7 @@ The path to silver eligibility is to **choose a typed codec for the column** in 
 
 ```python
 @schema
-class Recording(dj.Imported):
+class Recording(dj.Ingest):
     definition = """
     -> Session
     ---

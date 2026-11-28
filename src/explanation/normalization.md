@@ -142,7 +142,7 @@ table structure. DataJoint takes a different approach: design tables around
 
 ```python
 # Wrong: cage info repeated for every mouse
-class Mouse(dj.Manual):
+class Mouse(dj.Entry):
     definition = """
     mouse_id : int32
     ---
@@ -157,7 +157,7 @@ class Mouse(dj.Manual):
 
 ```python
 @schema
-class Cage(dj.Manual):
+class Cage(dj.Entry):
     definition = """
     cage_id : int32
     ---
@@ -165,7 +165,7 @@ class Cage(dj.Manual):
     """
 
 @schema
-class Mouse(dj.Manual):
+class Mouse(dj.Entry):
     definition = """
     mouse_id : int32
     ---
@@ -177,7 +177,7 @@ class Mouse(dj.Manual):
 
 ```python
 @schema
-class Cage(dj.Manual):
+class Cage(dj.Entry):
     definition = """
     cage_id : int32
     ---
@@ -185,7 +185,7 @@ class Cage(dj.Manual):
     """
 
 @schema
-class Mouse(dj.Manual):
+class Mouse(dj.Entry):
     definition = """
     mouse_id : int32
     ---
@@ -196,7 +196,7 @@ class Mouse(dj.Manual):
     """
 
 @schema
-class CageAssignment(dj.Manual):
+class CageAssignment(dj.Entry):
     definition = """
     -> Mouse
     assignment_date : date
@@ -206,7 +206,7 @@ class CageAssignment(dj.Manual):
     """
 
 @schema
-class MouseWeight(dj.Manual):
+class MouseWeight(dj.Entry):
     definition = """
     -> Mouse
     weigh_date : date
@@ -262,7 +262,7 @@ Splitting by workflow step fixes all of this:
 
 ```python
 @schema
-class Order(dj.Manual):
+class Order(dj.Entry):
     definition = """
     order_id : int32
     order_date : datetime
@@ -272,7 +272,7 @@ class Order(dj.Manual):
     """
 
 @schema
-class Payment(dj.Manual):
+class Payment(dj.Entry):
     definition = """
     -> Order                    # can't pay before ordering
     ---
@@ -282,7 +282,7 @@ class Payment(dj.Manual):
     """
 
 @schema
-class Shipment(dj.Manual):
+class Shipment(dj.Entry):
     definition = """
     -> Payment                  # can't ship before payment clears
     ---
@@ -292,7 +292,7 @@ class Shipment(dj.Manual):
     """
 
 @schema
-class Delivery(dj.Manual):
+class Delivery(dj.Entry):
     definition = """
     -> Shipment                 # can't deliver before shipping
     ---
@@ -413,7 +413,7 @@ Track measurements or observations over time:
 
 ```python
 @schema
-class SubjectWeight(dj.Manual):
+class SubjectWeight(dj.Entry):
     definition = """
     -> Subject
     weight_date : date
@@ -428,7 +428,7 @@ Track relationships or assignments that change over time:
 
 ```python
 @schema
-class GroupAssignment(dj.Manual):
+class GroupAssignment(dj.Entry):
     definition = """
     -> Subject
     assignment_date : date
@@ -438,7 +438,7 @@ class GroupAssignment(dj.Manual):
     """
 
 @schema
-class HousingAssignment(dj.Manual):
+class HousingAssignment(dj.Entry):
     definition = """
     -> Animal
     move_date : date

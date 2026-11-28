@@ -6,7 +6,7 @@ DataJoint's declarative table definition language.
 
 ```python
 @schema
-class TableName(dj.Manual):
+class TableName(dj.Entry):
     definition = """
     # Table comment
     primary_attr1 : type    # comment
@@ -158,7 +158,7 @@ definition = """
 
 ```python
 @schema
-class Session(dj.Manual):
+class Session(dj.Entry):
     definition = """
     # Experimental session
     -> Subject

@@ -79,7 +79,7 @@ Handle expected errors gracefully:
 
 ```python
 @schema
-class SessionAnalysis(dj.Computed):
+class SessionAnalysis(dj.Compute):
     definition = """
     -> Session
     ---

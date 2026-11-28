@@ -1,4 +1,4 @@
-# Hidden Job Metadata in Computed Tables
+# Hidden Job Metadata in Compute Tables
 
 ## Overview
 
@@ -57,7 +57,7 @@ class JobsSettings(BaseSettings):
     add_job_metadata: bool = Field(
         default=False,
         description="Add hidden job metadata attributes (_job_start_time, _job_duration, _job_version) "
-        "to Computed and Imported tables during declaration. Tables created without this setting "
+        "to Compute and Ingest tables during declaration. Tables created without this setting "
         "will not receive metadata updates during populate."
     )
 ```
@@ -89,7 +89,7 @@ with dj.config.override(jobs={"add_job_metadata": True}):
 
 | Setting | Effect on Job Metadata |
 |---------|----------------------|
-| `add_job_metadata=True` | New Computed/Imported tables get hidden metadata columns |
+| `add_job_metadata=True` | New Compute/Ingest tables get hidden metadata columns |
 | `add_job_metadata=False` | Tables declared without metadata columns (default) |
 | `version_method="git"` | `_job_version` populated with git short hash |
 | `version_method="none"` | `_job_version` left empty |
@@ -115,7 +115,7 @@ from datajoint.migrate import add_job_metadata_columns
 # Add hidden metadata columns to specific table
 add_job_metadata_columns(MyComputedTable)
 
-# Add to all Computed/Imported tables in a schema
+# Add to all Compute/Ingest tables in a schema
 add_job_metadata_columns(schema)
 ```
 
@@ -135,7 +135,7 @@ so the retrofit had never run there.
 
 ### Declaration-time
 
-When `config.jobs.add_job_metadata=True` and a Computed/Imported table is declared:
+When `config.jobs.add_job_metadata=True` and a Compute/Ingest table is declared:
 
 - Hidden metadata columns are added to the table definition
 - Only master tables receive metadata columns; Part tables never get them
@@ -253,7 +253,7 @@ JOB_METADATA_DEFINITION = (
 
 `prepare_declare` compiles them through the same `compile_attribute` that
 handles every user line, once the user's lines are parsed, and only when the
-stripped table name matches the `Computed` or `Imported` tier — which is what
+stripped table name matches the `Compute` or `Ingest` tier — which is what
 excludes part tables and DataJoint's own system tables.
 
 Going through the type system rather than a hand-written string is what makes
@@ -343,7 +343,7 @@ def _get_job_version() -> str:
 dj.config.jobs.add_job_metadata = True
 
 @schema
-class SessionAnalysis(dj.Computed):
+class SessionAnalysis(dj.Compute):
     definition = """
     -> Session
     ---

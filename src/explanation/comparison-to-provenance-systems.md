@@ -54,7 +54,7 @@ questions, and a complete record often wants both.
 
 Inside DataJoint, the origin of externally-sourced data is recorded at the
 pipeline's entry-point tables. Since 2.3.4 that record has a standard shape: a
-hidden `_prov` attribute on every Manual table, written by the framework from
+hidden `_prov` attribute on every Entry table, written by the framework from
 deployment configuration and from the executing context rather than by the
 author — see
 [Extrinsic Provenance at Entry Tables](../reference/specs/boundary-provenance.md).
